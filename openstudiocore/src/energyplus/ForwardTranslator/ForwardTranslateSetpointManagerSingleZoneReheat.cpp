@@ -78,7 +78,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZone
   {
     if( boost::optional<ModelObject> mo = thermalZone->inletPortList().airLoopHVACModelObject() )
     {
-      if( node = mo->optionalCast<Node>() )
+      if( (node = mo->optionalCast<Node>()) )
       {
         idfObject.setString(SetpointManager_SingleZone_ReheatFields::ZoneInletNodeName,node->name().get());
       }

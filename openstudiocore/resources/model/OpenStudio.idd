@@ -1,4 +1,4 @@
-!IDD_Version 1.0.5
+!IDD_Version 1.0.7
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -7137,6 +7137,61 @@ OS:AirLoopHVAC:ZoneSplitter,
        \begin-extensible
        \object-list ConnectionNames
 
+OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
+       \min-fields 5
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3, \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4, \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5, \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1, \field Maximum Air Flow Rate
+       \type real
+       \autosizable
+       \units m3/s
+       \minimum 0
+  A6, \field Reheat Coil Name
+       \type object-list
+       \object-list HeatingCoilName
+  N2, \field Maximum Hot Water or Steam Flow Rate
+       \note Not used when reheat coil type is gas or electric
+       \type real
+       \autosizable
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0
+  N3, \field Minimum Hot Water or Steam Flow Rate
+       \note Not used when reheat coil type is gas or electric
+       \type real
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0
+       \default 0.0
+  N4, \field Convergence Tolerance
+       \type real
+       \minimum> 0
+       \default 0.001
+  N5; \field Maximum Reheat Air Temperature
+       \note Specifies the maximum allowable supply air temperature leaving the reheat coil.
+       \note If left blank, there is no limit and no default. If unknown, 35C (95F) is recommended.
+       \type real
+       \units C
+       \minimum> 0
+       \default 35.0
+
 OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \min-fields 1
   A1, \field Handle
@@ -7208,7 +7263,80 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type real
        \minimum> 0
        \default 0.001
-
+       
+OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
+       \memo Central air system terminal unit, single duct, constant volume, with cooled beam
+       \memo (active or passive).
+       \min-fields 14
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3, \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4, \field Cooled Beam Type
+       \type choice
+       \required-field
+       \key Active
+       \key Passive
+  A5, \field Supply Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A6, \field Supply Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A7, \field Cooling Coil Name
+							\note  Needs to match the cooled beam cooling coil object CoolingCoilCooledBeam
+       \type object-list
+       \required-field
+       \object-list CoolingCoilCooledBeam
+  N1, \field Supply Air Volumetric Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \default autosize
+  N2, \field Maximum Total Chilled Water Volumetric Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \default autosize
+  N3, \field Number of Beams
+       \note Number of individual beam units in the zone
+       \type integer
+       \minimum> 0
+       \autosizable
+       \default autosize
+  N4, \field Beam Length
+       \note Length of an individual beam unit
+       \type real
+       \units m
+       \minimum> 0.0
+       \autosizable
+       \default autosize
+  N5, \field Design Inlet Water Temperature
+       \type real
+       \units C
+       \minimum 0.0
+       \default 15.0
+  N6, \field Design Outlet Water Temperature
+       \type real
+       \units C
+       \minimum 0.0
+       \default 17.0
+  N7; \field Coefficient of Induction Kin
+       \type real
+       \autocalculatable
+       \minimum 0.0
+       \maximum 4.0
+       \default Autocalculate
+       
 OS:AirTerminal:SingleDuct:Uncontrolled,
        \min-fields 6
   A1, \field Handle
@@ -7234,7 +7362,73 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \autosizable
        \units m3/s
        \minimum 0
-
+	   
+OS:AirTerminal:SingleDuct:VAV:NoReheat,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4,  \field Air Outlet Node Name
+       \note the inlet node to the terminal unit and the damper
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Air Inlet Node Name
+       \note the inlet node to the terminal unit and the damper
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Maximum Air Flow Rate
+       \type real
+       \autosizable
+       \units m3/s
+       \minimum 0
+  A6 , \field Zone Minimum Air Flow Input Method
+       \note Constant = Constant Minimum Air Flow Fraction (a fraction of Maximum Air Flow Rate)
+       \note FixedFlowRate = Fixed Minimum Air Flow Rate (a fixed minimum air volume flow rate)
+       \note Scheduled = Scheduled Minimum Air Flow Fraction (a fraction of Maximum Air Flow
+       \type choice
+       \key Constant
+       \key FixedFlowRate
+       \key Scheduled
+  N2 , \field Constant Minimum Air Flow Fraction
+       \note This field is used if the field Zone Minimum Air Flow Input Method is Constant
+       \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
+       \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
+       \note If both this field and the following field are entered, the larger result is used.
+       \type real
+       \default 0.3
+  N3 , \field Fixed Minimum Air Flow Rate
+       \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
+       \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
+       \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
+       \note If both this field and the previous field are entered, the larger result is used.
+       \type real
+       \units m3/s
+       \default 0.0
+  A7 , \field Minimum Air Flow Fraction Schedule Name
+       \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
+       \note Schedule values are fractions, 0.0 to 1.0.
+       \note If the field Constant Minimum Air Flow Fraction is blank, then the average of the
+       \note minimum and maximum schedule values is used for sizing normal-action reheat coils.
+       \type object-list
+       \object-list ScheduleNames
+  A8 ; \field Design Specification Outdoor Air Object Name
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
+       \note unit will increase flow as needed to meet this outdoor air requirement.
+       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
+       \note be computed based on the current number of occupants in the zone.
+       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
+       \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
+	   
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
   A1, \field Handle
@@ -7979,7 +8173,6 @@ OS:DistrictCooling,
        \type object-list
        \object-list ConnectionNames
   N1 ; \field Nominal Capacity
-       \required-field
        \units W
        \minimum 0.0
        \default 1000000
@@ -8000,11 +8193,162 @@ OS:DistrictHeating,
        \type object-list
        \object-list ConnectionNames
   N1 ; \field Nominal Capacity
-       \required-field
        \units W
        \minimum 0.0
        \default 1000000
      
+OS:GroundHeatExchanger:Vertical,
+        \extensible:2
+        \min-fields 21
+        \max-fields 219
+        \memo Variable short time step vertical ground heat exchanger model based on
+        \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
+        \memo Vertical Ground Loop Heat Exchangers
+        \memo The Fluid Type in the associated condenser loop must be same for which the
+        \memo g-functions below are calculated.
+  A1,   \field Handle
+        \type handle
+        \required-field
+  A2,   \field Name
+        \type alpha
+        \required-field
+        \reference ConnectionObject
+  A3,   \field Inlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  A4,   \field Outlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  N1,   \field Maximum Flow Rate
+        \type real
+        \units m3/s
+        \minimum> 0.0
+        \ip-units gal/min
+  N2,   \field Number of Bore Holes
+        \type integer
+        \minimum> 0.0
+  N3,   \field Bore Hole Length
+        \type real
+        \units m
+        \minimum> 0.0
+  N4,   \field Bore Hole Radius
+        \type real
+        \units m
+        \minimum> 0.0
+  N5,   \field Ground Thermal Conductivity
+        \type real
+        \units W/m-K
+        \minimum> 0.0
+  N6,   \field Ground Thermal Heat Capacity
+        \type real
+        \units J/m3-K
+        \minimum> 0.0
+  N7,   \field Ground Temperature
+        \type real
+        \units C
+        \minimum> 0.0
+  N8,   \field Design Flow Rate
+        \type real
+        \units m3/s
+        \minimum> 0.0
+        \ip-units gal/min
+  N9,   \field Grout Thermal Conductivity
+        \type real
+        \units W/m-K
+        \minimum> 0.0
+  N10,  \field Pipe Thermal Conductivity
+        \type real
+        \units W/m-K
+        \minimum> 0.0
+  N11,  \field Pipe Out Diameter
+        \type real
+        \units m
+        \minimum> 0.0
+        \ip-units in
+  N12,  \field U-Tube Distance
+        \type real
+        \units m
+        \minimum> 0.0
+  N13,  \field Pipe Thickness
+        \type real
+        \units m
+        \minimum> 0.0
+        \ip-units in
+  N14,  \field Maximum Length of Simulation
+        \type real
+        \minimum> 0.0
+  N15,  \field G-Function Reference Ratio
+        \type real
+        \units dimensionless
+        \minimum> 0.0
+        \default 0.0005
+  N16,  \field G-Function Ln(T/Ts) Value
+        \type real
+        \begin-extensible
+  N17;  \field G-Function G Value
+        \type real
+
+OS:Coil:Cooling:CooledBeam,
+						 \min-fields 13
+		A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference CoolingCoilCooledBeam
+       \reference ConnectionObject
+  A3 ,\field Chilled Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4 ,\field Chilled Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1, \field Coil Surface Area per Coil Length
+       \type real
+       \units m2/m
+       \minimum 0.0
+       \default 5.422
+  N2 ,\field Model Parameter a
+       \type real
+       \minimum 0.0
+       \default 15.3
+  N3 , \field Model Parameter n1
+       \type real
+       \minimum 0.0
+       \default 0.0
+  N4, \field Model Parameter n2
+       \type real
+       \minimum 0.0
+       \default 0.84
+  N5, \field Model Parameter n3
+       \type real
+       \minimum 0.0
+       \default 0.12
+  N6, \field Model Parameter a0
+       \note Free area of the coil in plan view per unit beam length
+       \type real
+       \units m2/m
+       \minimum 0.0
+       \default 0.171
+  N7, \field Model Parameter K1
+       \type real
+       \minimum 0.0
+       \default 0.0057
+  N8, \field Model Parameter n
+       \type real
+       \minimum 0.0
+       \default 0.4 
+  N9; \field Leaving Pipe Inside Diameter
+       \type real
+       \units m
+       \minimum> 0.0
+       \default 0.0145
+       
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
   A1, \field Handle
@@ -8652,7 +8996,6 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N5,  \field Rated Cooling Coefficient of Performance
-       \required-field
        \type real
        \units W/W
        \minimum> 0.0
@@ -10717,6 +11060,178 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \required-field
        \minimum 0
 
+OS:EvaporativeFluidCooler:SingleSpeed,
+       \min-fields 10
+       \memo This model is based on Merkel's theory, which is also the basis
+       \memo for the cooling tower model in EnergyPlus. The Evaporative fluid cooler
+       \memo is modeled as a counter flow heat exchanger.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+       \note Fluid Cooler Name
+  A3 , \field Water Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note Name of Fluid Cooler water inlet node
+  A4 , \field Water Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note Name of Fluid Cooler water outlet node
+  N1 , \field Design Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2 , \field Fan Power at Design Air Flow Rate
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power
+  N3 , \field Design Spray Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \ip-units gal/min
+  A5 , \field Performance Input Method
+       \type Choice
+       \key UFactorTimesAreaAndDesignWaterFlowRate
+       \key StandardDesignCapacity
+       \key UserSpecifiedDesignCapacity
+       \note User can define fluid cooler thermal performance by specifying the fluid cooler UA
+       \note and the Design Water Flow Rate, or by specifying the fluid cooler Standard Design
+       \note Capacity or by specifying Design Capacity for Non standard conditions.
+  A6 , \field Outdoor Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note Enter the name of an outdoor air node
+  N4 , \field Standard Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Standard design capacity with entering water at 35C (95F), leaving water at
+       \note 29.44C (85F), entering air at 25.56C (78F) wet-bulb temperature and 35C (95F)
+       \note dry-bulb temperature. Design water flow rate assumed to be 5.382E-8 m3/s per watt
+       \note (3 gpm/ton). Standard design capacity times (1.25) gives the actual fluid cooler
+       \note heat rejection at these operating conditions.
+       \note Only used for Performance Input Method = StandardDesignCapacity;
+       \note for other input methods, this field is ignored.
+       \note The standard conditions mentioned above for Standard design capacity are already
+       \note specified in the EnergyPlus. So the input fields such as design entering water
+       \note temp., design entering air wet-bulb and dry-bulb temp. and design water flow rate, if
+       \note provided in the input, will be ignored for the StandardDesignCapacity performance input
+       \note method. Also, the standard conditions are for water as a fluid type so this performance input
+       \note method can only be used with water as a fluid type (as specified in CondenserLoop object).
+  N5 , \field U-factor Times Area Value at Design Air Flow Rate
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 2100000.0
+       \autosizable
+       \note Only used for Performance Input Method = UFactorTimesAreaAndDesignWaterFlowRate;
+       \note for other Performance Input Methods, this field is ignored.
+  N6 , \field Design Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \ip-units gal/min
+       \note Input value is ignored if fluid cooler Performance Input Method= StandardDesignCapacity.
+  N7 , \field User Specified Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+  N8 , \field Design Entering Water Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+       \note Design Entering Water Temperature must be greater than Design Entering Air Temperature.
+  N9 , \field Design Entering Air Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+       \note Design Entering Air Temperature must be greater than Design Entering Air Wet-bulb
+       \note Temperature.
+  N10, \field Design Entering Air Wet-bulb Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+       \note Design Entering Air Wet-bulb Temperature must be less than Design Entering Air
+       \note Temperature.
+  A7 , \field Capacity Control
+       \type choice
+       \key FanCycling
+       \key FluidBypass
+       \default FanCycling
+  N11, \field Sizing Factor
+       \note Multiplies the autosized capacity and flow rates
+       \type real
+       \minimum> 0.0
+       \default 1.0
+  A8 , \field Evaporation Loss Mode
+       \type choice
+       \key LossFactor
+       \key SaturatedExit
+       \default SaturatedExit
+  N12, \field Evaporation Loss Factor
+       \type real
+       \units percent/K
+       \note Rate of water evaporation from the Fluid Cooler and lost to the outdoor air [%/K]
+       \note Empirical correlation is used to calculate default loss factor if it not explicitly provided.
+  N13, \field Drift Loss Percent
+       \type real
+       \default 0.008
+       \units percent
+       \note Rate of drift loss as a percentage of circulating spray water flow rate
+       \note Default value for this field in under investigation. For now Cooling towerӳ drift loss
+       \note percent default value is taken here.
+  A9 , \field Blowdown Calculation Mode
+       \type choice
+       \key ConcentrationRatio
+       \key ScheduledRate
+       \default ConcentrationRatio
+  N14, \field Blowdown Concentration Ratio
+       \type real
+       \minimum 2.0
+       \default 3.0
+       \note Characterizes the rate of blowdown in the Evaporative Fluid Cooler.
+       \note Blowdown is water intentionally drained from the basin in order to offset the build
+       \note up of solids in the water that would otherwise occur because of evaporation.
+       \note Ratio of solids in the blowdown water to solids in the make up water.
+       \note Default value for this field in under investigation. For now Cooling towerӳ
+       \note Blowdown Concentration Ratio percent default value is taken here.
+  A10, \field Blowdown Makeup Water Usage Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Makeup water usage due to blowdown results from occasionally draining a small
+       \note amount of water in the Fluid Cooler basin to purge scale or other contaminants to
+       \note reduce their concentration in order to maintain an acceptable level of water quality.
+       \note Schedule values should reflect water usage in m3/s.
+  A11; \field Supply Water Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
+
 OS:Fan:ConstantVolume,
        \min-fields 10
   A1, \field Handle
@@ -10884,7 +11399,6 @@ OS:Fan:OnOff,
        \default 0.6
   N2, \field Pressure Rise
        \type real
-       \required-field
        \units Pa
        \ip-units inH2O
        \default 250.0
@@ -13872,6 +14386,126 @@ OS:LifeCycleCost:UsePriceEscalation,
        \type real
        \begin-extensible
 
+OS:UtilityBill,
+       \extensible:7
+       \min-fields 10
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field       
+  A3, \field Fuel Type
+       \type choice
+       \required-field
+       \key Electricity
+       \key Gas
+       \key Gasoline
+       \key Diesel      
+       \key FuelOil_1
+       \key FuelOil_2
+       \key Propane
+       \key Water
+       \key Steam
+       \key DistrictCooling
+       \key DistrictHeating
+       \key EnergyTransfer
+  A4, \field Meter Install Location
+       \note Location the meter associated with this utility bill object is installed.
+       \type choice
+       \key Facility
+       \key Building
+       \key HVAC
+       \key Zone
+       \key System
+       \key Plant
+       \default Facility
+  A5, \field Meter Specific Install Location
+       \note Specific location the meter associated with this utility bill object is installed.
+       \note Empty field indicates no specific location.
+  A6, \field Meter End Use Category
+       \note Type of end use that meter is associated with.  
+       \note Empty field indicates all end uses are included.
+       \type choice
+       \key Heating
+       \key Cooling
+       \key InteriorLights
+       \key ExteriorLights
+       \key InteriorEquipment
+       \key ExteriorEquipment
+       \key Fans
+       \key Pumps
+       \key HeatRejection
+       \key Humidifier
+       \key HeatRecovery
+       \key WaterSystems
+       \key Refrigeration
+       \key Generators
+  A7, \field Meter Specific End Use
+       \note Specific type of end use that meter is associated with.  
+       \note Empty field indicates all end uses are included.
+  A8, \field Consumption Unit
+       \note Units that fuel consumption is measured in.  Valid choices depend on Fuel Type.
+       \type choice
+       \required-field
+       \key kBtu
+       \key MBtu
+       \key kWh
+       \key MWh
+       \key therms
+       \key RTh
+       \key tons
+       \key lbs
+       \key kLbs
+       \key MLbs
+       \key gal
+       \key L
+       \key cf
+       \key m3
+       \key Ccf
+       \key Mcf
+       \key MMcf
+  N1, \field Consumption Unit Conversion Factor
+       \note Number of J per unit of fuel consumption 
+       \note or number of m^3 per unit of water consumption.
+       \type real
+       \required-field  
+  A9, \field Peak Demand Unit
+       \note Valid choices depend on Fuel Type.  
+       \note Currently Peak demand is only supported for Electricity.
+       \type choice
+       \key kW
+       \key MW
+       \key W
+  N2, \field Timesteps in Peak Demand Window
+       \type integer
+       \minimum 1
+       \default 1
+  N3, \field Billing Period Begin Month
+       \begin-extensible
+       \type integer
+       \required-field
+       \minimum 1
+       \maximum 12
+  N4, \field Billing Period Begin Day of Month
+       \type integer
+       \required-field
+       \minimum 1
+       \maximum 31
+  N5, \field Billing Period Begin Year
+       \type integer
+       \required-field
+  N6, \field Number of Days in Billing Period
+       \type integer
+       \required-field
+       \minimum 1
+  N7, \field Billing Period Consumption
+       \type real
+  N8, \field Billing Period Peak Demand
+       \type real
+  N9; \field Billing Period Total Cost
+       \type real
+
 \group OpenStudio Output Requests
 
 OS:OutputControl:ReportingTolerances,
@@ -13986,5 +14620,4 @@ OS:Output:Variable,
   A6; \field Schedule Name
        \type object-list
        \object-list ScheduleNames
-
 

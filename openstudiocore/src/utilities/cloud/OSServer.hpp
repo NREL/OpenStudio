@@ -60,6 +60,12 @@ namespace openstudio{
     std::vector<UUID> projectUUIDs(int msec=30000); 
     std::vector<UUID> lastProjectUUIDs() const; 
 
+    bool createProject(const UUID& projectUUID, int msec=30000); 
+    bool lastCreateProjectSuccess() const; 
+
+    bool deleteProject(const UUID& projectUUID, int msec=30000); 
+    bool lastDeleteProjectSuccess() const; 
+
     std::vector<UUID> analysisUUIDs(const UUID& projectUUID, int msec=30000); 
     std::vector<UUID> lastAnalysisUUIDs() const; 
 
@@ -75,8 +81,14 @@ namespace openstudio{
     bool start(const UUID& analysisUUID, int msec=30000);
     bool lastStartSuccess() const;
 
+    bool isAnalysisQueued(const UUID& analysisUUID, int msec=30000);
+    bool lastIsAnalysisQueued() const;
+
     bool isAnalysisRunning(const UUID& analysisUUID, int msec=30000);
     bool lastIsAnalysisRunning() const;
+
+    bool isAnalysisComplete(const UUID& analysisUUID, int msec=30000);
+    bool lastIsAnalysisComplete() const;
 
     bool stop(const UUID& analysisUUID, int msec=30000);
     bool lastStopSuccess() const;
@@ -84,14 +96,17 @@ namespace openstudio{
     std::vector<UUID> dataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastDataPointUUIDs() const;
 
-    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
-    std::vector<UUID> lastRunningDataPointUUIDs() const;
-
     std::vector<UUID> queuedDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastQueuedDataPointUUIDs() const;
 
+    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastRunningDataPointUUIDs() const;
+
     std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastCompleteDataPointUUIDs() const;
+
+    std::vector<UUID> downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastDownloadReadyDataPointUUIDs() const;
 
     std::string dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec=30000);
     std::string lastDataPointJSON() const;
@@ -113,6 +128,10 @@ namespace openstudio{
 
     bool requestProjectUUIDs(); 
 
+    bool requestCreateProject(const UUID& projectUUID); 
+
+    bool requestDeleteProject(const UUID& projectUUID); 
+
     bool requestAnalysisUUIDs(const UUID& projectUUID); 
 
     bool startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON);
@@ -123,7 +142,11 @@ namespace openstudio{
 
     bool requestStart(const UUID& analysisUUID);
 
+    bool requestIsAnalysisQueued(const UUID& analysisUUID);
+
     bool requestIsAnalysisRunning(const UUID& analysisUUID);
+
+    bool requestIsAnalysisComplete(const UUID& analysisUUID);
 
     bool requestStop(const UUID& analysisUUID);
 
@@ -135,9 +158,26 @@ namespace openstudio{
 
     bool requestCompleteDataPointUUIDs(const UUID& analysisUUID);
 
+    bool requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID);
+
     bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
 
     bool startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath);
+
+    //@}
+    /** @name Signals, Slots, Threads */
+    //@{
+
+    /** Connect signal from this OSServer to slot on qObject. */
+    bool connect(const char* signal,
+                 const QObject* qObject,
+                 const char* slot,
+                 Qt::ConnectionType type = Qt::AutoConnection) const;
+
+    /** Disconnect signal from this OSServer to slot on receiver. */
+    bool disconnect(const char* signal=0,
+                    const QObject* receiver=0,
+                    const char* slot=0) const;
 
     //@}
     /** @name Type Casting */

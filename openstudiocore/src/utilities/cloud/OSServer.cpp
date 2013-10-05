@@ -27,9 +27,12 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QHttpMultiPart>
 #include <QMutex>
+#include <QFile>
 
 #include <qjson/parser.h>
+#include <qjson/serializer.h>
 
 namespace openstudio{
   namespace detail{
@@ -39,16 +42,20 @@ namespace openstudio{
         m_networkReply(0), m_mutex(new QMutex()),
         m_lastAvailable(false),
         m_lastProjectUUIDs(), 
+        m_lastCreateProjectSuccess(false),
+        m_lastDeleteProjectSuccess(false),
         m_lastAnalysisUUIDs(),
         m_lastPostAnalysisJSONSuccess(false),
         m_lastPostDataPointJSONSuccess(false),
         m_lastUploadAnalysisFilesSuccess(false),
         m_lastStartSuccess(false),
+        m_lastIsAnalysisQueued(false),
         m_lastIsAnalysisRunning(false),
+        m_lastIsAnalysisComplete(false),
         m_lastStopSuccess(false),
         m_lastDataPointUUIDs(),
-        m_lastRunningDataPointUUIDs(),
         m_lastQueuedDataPointUUIDs(),
+        m_lastRunningDataPointUUIDs(),
         m_lastCompleteDataPointUUIDs(),
         m_lastDataPointJSON(),
         m_lastDownloadDataPointSuccess(false),
@@ -57,18 +64,36 @@ namespace openstudio{
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
+
+      if (m_url.scheme().isEmpty()){
+        //LOG(Debug, "Url before: " << toString(m_url.toString()));
+        //LOG(Debug, "Url valid: " << m_url.isValid());
+        //LOG(Debug, "Url relative: " << m_url.isRelative());
+        //m_url.setScheme("http"); // DLM: this was not adding //
+        m_url.setUrl("http://" + m_url.toString());
+        //LOG(Debug, "Url after: " << toString(m_url.toString()));
+        //LOG(Debug, "Url valid: " << m_url.isValid());
+        //LOG(Debug, "Url relative: " << m_url.isRelative());
+      }
     }
 
     OSServer_Impl::~OSServer_Impl()
     {
+      if (m_networkReply){
+        m_networkReply->blockSignals(true);
+        m_networkReply->deleteLater();
+        m_networkReply = 0;
+      };
     }
  
     bool OSServer_Impl::available(int msec)
     {
       if (requestAvailable()){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastAvailable();
+        }
       }
-      return lastAvailable();
+      return false;
     }
 
     bool OSServer_Impl::lastAvailable() const
@@ -79,9 +104,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::projectUUIDs(int msec)
     {
       if (requestProjectUUIDs()){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastProjectUUIDs();
+        }
       }
-      return lastProjectUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastProjectUUIDs() const
@@ -89,12 +116,44 @@ namespace openstudio{
       return m_lastProjectUUIDs;
     }
 
+    bool OSServer_Impl::createProject(const UUID& projectUUID, int msec) 
+    {
+      if (requestCreateProject(projectUUID)){
+        if (waitForFinished(msec)){
+          return lastCreateProjectSuccess();
+        }
+      }
+      return false;
+    }
+
+    bool OSServer_Impl::lastCreateProjectSuccess() const
+    {
+      return m_lastCreateProjectSuccess;
+    }
+
+    bool OSServer_Impl::deleteProject(const UUID& projectUUID, int msec) 
+    {
+      if (requestDeleteProject(projectUUID)){
+        if (waitForFinished(msec)){
+          return lastDeleteProjectSuccess();
+        }
+      }
+      return false;
+    }
+
+    bool OSServer_Impl::lastDeleteProjectSuccess() const
+    {
+      return m_lastDeleteProjectSuccess;
+    }
+
     std::vector<UUID> OSServer_Impl::analysisUUIDs(const UUID& projectUUID, int msec)
     {
       if (requestAnalysisUUIDs(projectUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastAnalysisUUIDs();
+        }
       }
-      return lastAnalysisUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastAnalysisUUIDs() const
@@ -105,9 +164,11 @@ namespace openstudio{
     bool OSServer_Impl::postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON, int msec)
     {
       if (startPostAnalysisJSON(projectUUID, analysisJSON)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastPostAnalysisJSONSuccess();
+        }
       }
-      return lastPostAnalysisJSONSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastPostAnalysisJSONSuccess() const
@@ -118,9 +179,11 @@ namespace openstudio{
     bool OSServer_Impl::postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON, int msec)
     {
       if (startPostDataPointJSON(analysisUUID, dataPointJSON)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastPostDataPointJSONSuccess();
+        }
       }
-      return lastPostDataPointJSONSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastPostDataPointJSONSuccess() const
@@ -131,9 +194,11 @@ namespace openstudio{
     bool OSServer_Impl::uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile, int msec)
     {
       if (startUploadAnalysisFiles(analysisUUID, analysisZipFile)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastUploadAnalysisFilesSuccess();
+        }
       }
-      return lastUploadAnalysisFilesSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastUploadAnalysisFilesSuccess() const
@@ -144,9 +209,11 @@ namespace openstudio{
     bool OSServer_Impl::start(const UUID& analysisUUID, int msec)
     {
       if (requestStart(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastStartSuccess();
+        }
       }
-      return lastStartSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastStartSuccess() const
@@ -154,12 +221,29 @@ namespace openstudio{
       return m_lastStartSuccess;
     }
 
+    bool OSServer_Impl::isAnalysisQueued(const UUID& analysisUUID, int msec)
+    {
+      if (requestIsAnalysisQueued(analysisUUID)){
+        if (waitForFinished(msec)){
+          return lastIsAnalysisQueued();
+        }
+      }
+      return false;
+    }
+
+    bool OSServer_Impl::lastIsAnalysisQueued() const
+    {
+      return m_lastIsAnalysisQueued;
+    }
+
     bool OSServer_Impl::isAnalysisRunning(const UUID& analysisUUID, int msec)
     {
       if (requestIsAnalysisRunning(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastIsAnalysisRunning();
+        }
       }
-      return lastIsAnalysisRunning();
+      return false;
     }
 
     bool OSServer_Impl::lastIsAnalysisRunning() const
@@ -167,12 +251,29 @@ namespace openstudio{
       return m_lastIsAnalysisRunning;
     }
 
+    bool OSServer_Impl::isAnalysisComplete(const UUID& analysisUUID, int msec)
+    {
+      if (requestIsAnalysisComplete(analysisUUID)){
+        if (waitForFinished(msec)){
+          return lastIsAnalysisComplete();
+        }
+      }
+      return false;
+    }
+
+    bool OSServer_Impl::lastIsAnalysisComplete() const
+    {
+      return m_lastIsAnalysisComplete;
+    }
+
     bool OSServer_Impl::stop(const UUID& analysisUUID, int msec)
     {
       if (requestStop(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastStopSuccess();
+        }
       }
-      return lastStopSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastStopSuccess() const
@@ -183,9 +284,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::dataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDataPointUUIDs();
+        }
       }
-      return lastDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastDataPointUUIDs() const
@@ -193,25 +296,14 @@ namespace openstudio{
       return m_lastDataPointUUIDs;
     }
 
-    std::vector<UUID> OSServer_Impl::runningDataPointUUIDs(const UUID& analysisUUID, int msec)
-    {
-      if (requestRunningDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
-      }
-      return lastRunningDataPointUUIDs();
-    }
-
-    std::vector<UUID> OSServer_Impl::lastRunningDataPointUUIDs() const
-    {
-      return m_lastRunningDataPointUUIDs;
-    }
-
     std::vector<UUID> OSServer_Impl::queuedDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestQueuedDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastQueuedDataPointUUIDs();
+        }
       }
-      return lastQueuedDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastQueuedDataPointUUIDs() const
@@ -219,12 +311,29 @@ namespace openstudio{
       return m_lastQueuedDataPointUUIDs;
     }
 
+    std::vector<UUID> OSServer_Impl::runningDataPointUUIDs(const UUID& analysisUUID, int msec)
+    {
+      if (requestRunningDataPointUUIDs(analysisUUID)){
+        if (waitForFinished(msec)){
+          return lastRunningDataPointUUIDs();
+        }
+      }
+      return std::vector<UUID>();
+    }
+
+    std::vector<UUID> OSServer_Impl::lastRunningDataPointUUIDs() const
+    {
+      return m_lastRunningDataPointUUIDs;
+    }
+
     std::vector<UUID> OSServer_Impl::completeDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestCompleteDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastCompleteDataPointUUIDs();
+        }
       }
-      return lastCompleteDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastCompleteDataPointUUIDs() const
@@ -232,12 +341,29 @@ namespace openstudio{
       return m_lastCompleteDataPointUUIDs;
     }
 
+    std::vector<UUID> OSServer_Impl::downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec)
+    {
+      if (requestDownloadReadyDataPointUUIDs(analysisUUID)){
+        if (waitForFinished(msec)){
+          return lastDownloadReadyDataPointUUIDs();
+        }
+      }
+      return std::vector<UUID>();
+    }
+
+    std::vector<UUID> OSServer_Impl::lastDownloadReadyDataPointUUIDs() const
+    {
+      return m_lastDownloadReadyDataPointUUIDs;
+    }
+
     std::string OSServer_Impl::dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec)
     {
       if (requestDataPointJSON(analysisUUID, dataPointUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDataPointJSON();
+        }
       }
-      return lastDataPointJSON();
+      return "";
     }
 
     std::string OSServer_Impl::lastDataPointJSON() const
@@ -248,9 +374,11 @@ namespace openstudio{
     bool OSServer_Impl::downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath, int msec)
     {
       if (startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDownloadDataPointSuccess();
+        }
       }
-      return lastDownloadDataPointSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastDownloadDataPointSuccess() const
@@ -283,6 +411,7 @@ namespace openstudio{
         ++current;
       }
 
+      QObject::disconnect(m_networkReply, 0, this, 0);
       m_networkReply->blockSignals(true);
       m_networkReply->deleteLater();
       m_networkReply = 0;
@@ -305,19 +434,20 @@ namespace openstudio{
 
     bool OSServer_Impl::requestAvailable()
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastAvailable = false;
 
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
       QUrl url(m_url);
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAvailable()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAvailable()));
       OS_ASSERT(test);
 
       return true;
@@ -325,19 +455,85 @@ namespace openstudio{
 
     bool OSServer_Impl::requestProjectUUIDs()
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastProjectUUIDs.clear();
 
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
       QUrl url(m_url.toString().append("/projects.json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processProjectUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processProjectUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
+    } 
+    
+    bool OSServer_Impl::requestCreateProject(const UUID& projectUUID)
+    {
+
+      clearErrorsAndWarnings();
+
+      m_lastCreateProjectSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(projectUUID));
+      QUrl url(m_url.toString().append("/projects.json"));
+  
+      QVariantMap map;
+      map["_id"] = id;
+      map["name"] = id;
+      map["uuid"] = id;
+      map["analyses"] = QVariantList();
+      
+      bool test;
+
+      QJson::Serializer serializer;
+      QByteArray json = serializer.serialize(map, &test);
+      if (test){
+
+        QByteArray postData; 
+        postData.append(json); 
+
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        m_networkReply = m_networkAccessManager->post(request, postData);
+
+        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCreateProject()));
+        OS_ASSERT(test);
+
+        return true;
+      }
+
+      return false;
+    }
+
+    bool OSServer_Impl::requestDeleteProject(const UUID& projectUUID)
+    {
+
+      clearErrorsAndWarnings();
+
+      m_lastDeleteProjectSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(projectUUID));
+      QUrl url(m_url.toString().append("/projects/").append(id));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->deleteResource(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDeleteProject()));
       OS_ASSERT(test);
 
       return true;
@@ -345,20 +541,21 @@ namespace openstudio{
 
     bool OSServer_Impl::requestAnalysisUUIDs(const UUID& projectUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastAnalysisUUIDs.clear();
 
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
       QString id = toQString(removeBraces(projectUUID));
-      QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
+      QUrl url(m_url.toString().append("/projects/").append(id).append(".json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAnalysisUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAnalysisUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -366,50 +563,292 @@ namespace openstudio{
 
     bool OSServer_Impl::startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON)
     {
-      return false;
+
+      clearErrorsAndWarnings();
+
+      m_lastPostAnalysisJSONSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(projectUUID));
+      QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
+
+      QByteArray postData; 
+      postData.append(toQString(analysisJSON)); 
+
+      QNetworkRequest request(url);
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+      m_networkReply = m_networkAccessManager->post(request, postData);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostAnalysisJSON()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::startPostDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON)
     {
-      return false;
+
+      clearErrorsAndWarnings();
+
+      m_lastPostDataPointJSONSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+
+      QByteArray postData; 
+      postData.append(toQString(dataPointJSON)); 
+
+      QNetworkRequest request(url);
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+      m_networkReply = m_networkAccessManager->post(request, postData);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostDataPointJSON()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::startUploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile)
     {
+
+      clearErrorsAndWarnings();
+
+      m_lastUploadAnalysisFilesSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      if (exists(analysisZipFile)){
+
+        QFile file(toQString(analysisZipFile));
+        if (file.open(QIODevice::ReadOnly)){
+
+          QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
+
+          QByteArray data(QString("--" + bound + "\r\n").toAscii());
+          data += "Content-Disposition: form-data; name=\"file\"; filename=\"seed_zip.zip\"\r\n";
+          data += "Content-Type: application/x-zip-compressed\r\n\r\n";
+          data.append(file.readAll());
+          data += "\r\n";
+          data += QString("--" + bound + "--\r\n.").toAscii();
+          data += "\r\n";
+          file.close();
+
+          QString id = toQString(removeBraces(analysisUUID));
+          QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
+
+          QNetworkRequest request(url);
+          request.setRawHeader(QString("Cache-Control").toAscii(),QString("no-cache").toAscii());
+          request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
+          request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
+         
+          m_networkReply = m_networkAccessManager->post(request, data);
+
+          bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+          OS_ASSERT(test);
+
+          return true;
+        }
+
+      }else{
+        logError("File does not exist");
+      }
+
       return false;
     }
 
     bool OSServer_Impl::requestStart(const UUID& analysisUUID)
     {
+
+      clearErrorsAndWarnings();
+
+      m_lastStartSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
+
+      QVariantMap map;
+      map["analysis_action"] = "start";
+      
+      bool test;
+      QJson::Serializer serializer;
+      QByteArray json = serializer.serialize(map, &test);
+      if (test){
+
+        QByteArray postData; 
+        postData.append(json); 
+
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        m_networkReply = m_networkAccessManager->post(request, postData);
+
+        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStart()));
+        OS_ASSERT(test);
+
+        return true;
+      }
+
       return false;
+    }
+
+    bool OSServer_Impl::requestIsAnalysisQueued(const UUID& analysisUUID)
+    {
+
+      clearErrorsAndWarnings();
+
+      m_lastIsAnalysisQueued = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisQueued()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestIsAnalysisRunning(const UUID& analysisUUID)
     {
-      return false;
+
+      clearErrorsAndWarnings();
+
+      m_lastIsAnalysisRunning = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisRunning()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
+    bool OSServer_Impl::requestIsAnalysisComplete(const UUID& analysisUUID)
+    {
+
+      clearErrorsAndWarnings();
+
+      m_lastIsAnalysisComplete = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisComplete()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestStop(const UUID& analysisUUID)
     {
+
+      clearErrorsAndWarnings();
+
+      m_lastStopSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
+
+      QVariantMap map;
+      map["analysis_action"] = "stop";
+      
+      bool test;
+      QJson::Serializer serializer;
+      QByteArray json = serializer.serialize(map, &test);
+      if (test){
+
+        QByteArray postData; 
+        postData.append(json); 
+
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        m_networkReply = m_networkAccessManager->post(request, postData);
+
+        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStop()));
+        OS_ASSERT(test);
+
+        return true;
+      }
+
       return false;
     }
 
     bool OSServer_Impl::requestDataPointUUIDs(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastDataPointUUIDs.clear();
 
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
       QString id = toQString(removeBraces(analysisUUID));
-      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
+    bool OSServer_Impl::requestQueuedDataPointUUIDs(const UUID& analysisUUID)
+    {
+      clearErrorsAndWarnings();
+
+      m_lastQueuedDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=queued"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processQueuedDataPointUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -417,38 +856,123 @@ namespace openstudio{
 
     bool OSServer_Impl::requestRunningDataPointUUIDs(const UUID& analysisUUID)
     {
-      return false;
-    }
 
-    bool OSServer_Impl::requestQueuedDataPointUUIDs(const UUID& analysisUUID)
-    {
-      return false;
+      clearErrorsAndWarnings();
+
+      m_lastRunningDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=started"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processRunningDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestCompleteDataPointUUIDs(const UUID& analysisUUID)
     {
-      return false;
+      clearErrorsAndWarnings();
+
+      m_lastCompleteDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=completed"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCompleteDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
+    bool OSServer_Impl::requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID)
+    {
+      clearErrorsAndWarnings();
+
+      m_lastDownloadReadyDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+   
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/download_status.json?downloads=completed"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDownloadReadyDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID)
     {
-      return false;
+      clearErrorsAndWarnings();
+
+      m_lastDataPointJSON = "";
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(dataPointUUID));
+      QUrl url(m_url.toString().append("/data_points/").append(id).append(".json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointJSON()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath)
     {
-      return false;
+      clearErrorsAndWarnings();
+
+      m_lastDownloadDataPointSuccess = false;
+
+      m_lastDownloadDataPointPath = downloadPath;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(dataPointUUID));
+      QUrl url(m_url.toString().append("/data_points/").append(id).append("/download"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDownloadDataPointComplete()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     void OSServer_Impl::processAvailable()
     {
       bool success = false;
 
+      logNetworkReply("processAvailable");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastAvailable = true;
         success = true;
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -463,10 +987,54 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processProjectUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastProjectUUIDs = processListOfUUID(m_networkReply->readAll(), success);
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processCreateProject()
+    {
+      bool success = false;
+
+      logNetworkReply("processCreateProject");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastCreateProjectSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processDeleteProject()
+    {
+      bool success = false;
+
+      logNetworkReply("processDeleteProject");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastDeleteProjectSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -481,10 +1049,296 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processAnalysisUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastAnalysisUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("analyses")){
+
+            QVariantList list = map["analyses"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastAnalysisUUIDs = processListOfUUID(json, success);
+            }
+
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processPostAnalysisJSON()
+    {
+      bool success = false;
+
+      logNetworkReply("processPostAnalysisJSON");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastPostAnalysisJSONSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processPostDataPointJSON()
+    {
+      bool success = false;
+
+      logNetworkReply("processPostDataPointJSON");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastPostDataPointJSONSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processUploadAnalysisFiles()
+    {
+      bool success = false;
+
+      logNetworkReply("processUploadAnalysisFiles");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastUploadAnalysisFilesSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processStart()
+    {
+      bool success = false;
+
+      logNetworkReply("processStart");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastStartSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processIsAnalysisQueued()
+    {
+      bool success = false;
+
+      logNetworkReply("processIsAnalysisQueued");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+          if (map.contains("analysis")){
+
+            QVariantMap analysisMap = map["analysis"].toMap();
+            if (analysisMap.contains("status")){
+
+              success = true;
+              QString status = analysisMap["status"].toString();
+
+              // possible status are 'queued', 'started', 'completed'
+              if (status == "queued"){
+                m_lastIsAnalysisQueued = true;
+              }else{
+                m_lastIsAnalysisQueued = false;
+              }
+            }
+
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processIsAnalysisRunning()
+    {
+      bool success = false;
+
+      logNetworkReply("processIsAnalysisRunning");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+          if (map.contains("analysis")){
+
+            QVariantMap analysisMap = map["analysis"].toMap();
+            if (analysisMap.contains("status")){
+
+              success = true;
+              QString status = analysisMap["status"].toString();
+
+              // possible status are 'queued', 'started', 'completed'
+              if (status == "started"){
+                m_lastIsAnalysisRunning = true;
+              }else{
+                m_lastIsAnalysisRunning = false;
+              }
+            }
+
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processIsAnalysisComplete()
+    {
+      bool success = false;
+
+      logNetworkReply("processIsAnalysisComplete");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+          if (map.contains("analysis")){
+
+            QVariantMap analysisMap = map["analysis"].toMap();
+            if (analysisMap.contains("status")){
+
+              success = true;
+              QString status = analysisMap["status"].toString();
+
+              // possible status are 'queued', 'started', 'completed'
+              if (status == "completed"){
+                m_lastIsAnalysisComplete = true;
+              }else{
+                m_lastIsAnalysisComplete = false;
+              }
+            }
+
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processStop()
+    {
+      bool success = false;
+
+      logNetworkReply("processStop");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastStopSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -499,10 +1353,37 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processDataPointUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -512,17 +1393,371 @@ namespace openstudio{
 
       emit requestProcessed(success);
     }
-    
+
+    void OSServer_Impl::processQueuedDataPointUUIDs()
+    {
+      bool success = false;
+
+      logNetworkReply("processQueuedDataPointUUIDs");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastQueuedDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processRunningDataPointUUIDs()
+    {
+      bool success = false;
+
+      logNetworkReply("processRunningDataPointUUIDs");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastRunningDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processCompleteDataPointUUIDs()
+    {
+      bool success = false;
+
+      logNetworkReply("processCompleteDataPointUUIDs");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastCompleteDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processDownloadReadyDataPointUUIDs()
+    {
+      bool success = false;
+
+      logNetworkReply("processDownloadReadyDataPointUUIDs");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastDownloadReadyDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processDataPointJSON()
+    {
+      bool success = false;
+
+      logNetworkReply("processDataPointJSON");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+        if (test){
+          QJson::Serializer serializer;
+          QByteArray json = serializer.serialize(variant, &test);
+          if (test){
+            success = true;
+            m_lastDataPointJSON = QString(json).toStdString();
+          }
+        }
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+     
+    void OSServer_Impl::processDownloadDataPointComplete()
+    {
+      bool success = false;
+
+      logNetworkReply("processDownloadDataPointComplete");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        
+        QFile file(toQString(m_lastDownloadDataPointPath));
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+          file.write(m_networkReply->readAll());
+          m_lastDownloadDataPointSuccess = true;
+          success = true;
+          file.close();
+        }
+        
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
     void OSServer_Impl::clearErrorsAndWarnings()
     {
       m_errors.clear();
       m_warnings.clear();
     }
 
+    void OSServer_Impl::logNetworkReply(const std::string& methodName) const
+    {
+      bool doLog = false;
+
+      if (doLog && m_networkReply){
+        LogLevel level = Warn;
+
+        LOG(level, methodName);
+
+        QNetworkRequest request = m_networkReply->request();
+
+        LOG(level, "Request Url");
+        LOG(level, toString(request.url().toString()));
+
+        LOG(level, "Request Header");
+        for(int i=0; i<request.rawHeaderList().size(); ++i){
+          QString str(request.rawHeaderList()[i].constData());
+          LOG(level, toString(str) << ": " << toString(request.rawHeader(request.rawHeaderList()[i] ).constData()));
+        }
+
+        LOG(level, "Reply Header");
+        for(int i=0; i<m_networkReply->rawHeaderList().size(); ++i){
+          QString str(m_networkReply->rawHeaderList()[i].constData());
+          LOG(level, toString(str) << ": " << toString(m_networkReply->rawHeader(m_networkReply->rawHeaderList()[i] ).constData()));
+        }
+
+        // DLM: do not call m_networkReply->readAll() here because this will clear the buffer and cannot be reset
+      }
+    }
+
     void OSServer_Impl::logError(const std::string& error) const
     {
       m_errors.push_back(error);
       LOG(Error, error);
+    }
+
+    void OSServer_Impl::logNetworkError(int error) const
+    {
+      std::stringstream ss; 
+      ss << "Network error '";
+      switch(error){
+        case QNetworkReply::NoError:
+          ss << "NoError";
+          break;
+        case QNetworkReply::ConnectionRefusedError:
+          ss << "ConnectionRefusedError";
+          break;
+        case QNetworkReply::RemoteHostClosedError:
+          ss << "RemoteHostClosedError";
+          break;
+        case QNetworkReply::HostNotFoundError:
+          ss << "HostNotFoundError";
+          break;
+        case QNetworkReply::TimeoutError:
+          ss << "TimeoutError";
+          break;
+        case QNetworkReply::OperationCanceledError:
+          ss << "OperationCanceledError";
+          break;
+        case QNetworkReply::SslHandshakeFailedError:
+          ss << "SslHandshakeFailedError";
+          break;
+        case QNetworkReply::TemporaryNetworkFailureError:
+          ss << "TemporaryNetworkFailureError";
+          break;
+        case QNetworkReply::ProxyConnectionRefusedError:
+          ss << "ProxyConnectionRefusedError";
+          break;
+        case QNetworkReply::ProxyConnectionClosedError:
+          ss << "ProxyConnectionClosedError";
+          break;
+        case QNetworkReply::ProxyNotFoundError:
+          ss << "ProxyNotFoundError";
+          break;
+        case QNetworkReply::ProxyTimeoutError:
+          ss << "ProxyTimeoutError";
+          break;
+        case QNetworkReply::ProxyAuthenticationRequiredError:
+          ss << "ProxyAuthenticationRequiredError";
+          break;
+        case QNetworkReply::ContentAccessDenied:
+          ss << "ContentAccessDenied";
+          break;
+        case QNetworkReply::ContentOperationNotPermittedError:
+          ss << "ContentOperationNotPermittedError";
+          break;
+        case QNetworkReply::ContentNotFoundError:
+          ss << "ContentNotFoundError";
+          break;
+        case QNetworkReply::AuthenticationRequiredError:
+          ss << "AuthenticationRequiredError";
+          break;
+        case QNetworkReply::ContentReSendError:
+          ss << "ContentReSendError";
+          break;
+        case QNetworkReply::ProtocolUnknownError:
+          ss << "ProtocolUnknownError";
+          break;
+        case QNetworkReply::ProtocolInvalidOperationError:
+          ss << "ProtocolInvalidOperationError";
+          break;
+        case QNetworkReply::UnknownNetworkError:
+          ss << "UnknownNetworkError";
+          break;
+        case QNetworkReply::UnknownProxyError:
+          ss << "UnknownProxyError";
+          break;
+        case QNetworkReply::UnknownContentError:
+          ss << "UnknownContentError";
+          break;
+        case QNetworkReply::ProtocolFailure:
+          ss << "ProtocolFailure";
+          break;
+        default:
+          ss << "Unknown";
+      }
+      ss<< "' occurred";
+
+      m_errors.push_back(ss.str());
+      LOG(Error, ss.str());
     }
 
     void OSServer_Impl::logWarning(const std::string& warning) const
@@ -596,6 +1831,26 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastProjectUUIDs();
   } 
 
+  bool OSServer::createProject(const UUID& projectUUID, int msec) 
+  {
+    return getImpl<detail::OSServer_Impl>()->createProject(projectUUID, msec);
+  }
+
+  bool OSServer::lastCreateProjectSuccess() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastCreateProjectSuccess();
+  }
+
+  bool OSServer::deleteProject(const UUID& projectUUID, int msec) 
+  {
+    return getImpl<detail::OSServer_Impl>()->deleteProject(projectUUID, msec);
+  }
+
+  bool OSServer::lastDeleteProjectSuccess() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastDeleteProjectSuccess();
+  }
+
   std::vector<UUID> OSServer::analysisUUIDs(const UUID& projectUUID, int msec)
   {
     return getImpl<detail::OSServer_Impl>()->analysisUUIDs(projectUUID, msec);
@@ -646,6 +1901,16 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastStartSuccess();
   }
 
+  bool OSServer::isAnalysisQueued(const UUID& analysisUUID, int msec)
+  {
+    return getImpl<detail::OSServer_Impl>()->isAnalysisQueued(analysisUUID, msec);
+  }
+
+  bool OSServer::lastIsAnalysisQueued() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastIsAnalysisQueued();
+  }
+
   bool OSServer::isAnalysisRunning(const UUID& analysisUUID, int msec)
   {
     return getImpl<detail::OSServer_Impl>()->isAnalysisRunning(analysisUUID, msec);
@@ -654,6 +1919,16 @@ namespace openstudio{
   bool OSServer::lastIsAnalysisRunning() const
   {
     return getImpl<detail::OSServer_Impl>()->lastIsAnalysisRunning();
+  }  
+  
+  bool OSServer::isAnalysisComplete(const UUID& analysisUUID, int msec)
+  {
+    return getImpl<detail::OSServer_Impl>()->isAnalysisComplete(analysisUUID, msec);
+  }
+
+  bool OSServer::lastIsAnalysisComplete() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastIsAnalysisComplete();
   }
 
   bool OSServer::stop(const UUID& analysisUUID, int msec)
@@ -676,16 +1951,6 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastDataPointUUIDs();
   }
 
-  std::vector<UUID> OSServer::runningDataPointUUIDs(const UUID& analysisUUID, int msec) 
-  {
-    return getImpl<detail::OSServer_Impl>()->runningDataPointUUIDs(analysisUUID, msec);
-  }
-
-  std::vector<UUID> OSServer::lastRunningDataPointUUIDs() const
-  {
-    return getImpl<detail::OSServer_Impl>()->lastRunningDataPointUUIDs();
-  }
-
   std::vector<UUID> OSServer::queuedDataPointUUIDs(const UUID& analysisUUID, int msec) 
   {
     return getImpl<detail::OSServer_Impl>()->queuedDataPointUUIDs(analysisUUID, msec);
@@ -696,6 +1961,16 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastQueuedDataPointUUIDs();
   }
 
+  std::vector<UUID> OSServer::runningDataPointUUIDs(const UUID& analysisUUID, int msec) 
+  {
+    return getImpl<detail::OSServer_Impl>()->runningDataPointUUIDs(analysisUUID, msec);
+  }
+
+  std::vector<UUID> OSServer::lastRunningDataPointUUIDs() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastRunningDataPointUUIDs();
+  }
+
   std::vector<UUID> OSServer::completeDataPointUUIDs(const UUID& analysisUUID, int msec)
   {
     return getImpl<detail::OSServer_Impl>()->completeDataPointUUIDs(analysisUUID, msec);
@@ -704,6 +1979,16 @@ namespace openstudio{
   std::vector<UUID> OSServer::lastCompleteDataPointUUIDs() const
   {
     return getImpl<detail::OSServer_Impl>()->lastCompleteDataPointUUIDs();
+  }
+
+  std::vector<UUID> OSServer::downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec)
+  {
+    return getImpl<detail::OSServer_Impl>()->downloadReadyDataPointUUIDs(analysisUUID, msec);
+  }
+
+  std::vector<UUID> OSServer::lastDownloadReadyDataPointUUIDs() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastDownloadReadyDataPointUUIDs();
   }
 
   std::string OSServer::dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec) 
@@ -751,6 +2036,16 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->requestProjectUUIDs();
   } 
 
+  bool OSServer::requestCreateProject(const UUID& projectUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestCreateProject(projectUUID);
+  }
+
+  bool OSServer::requestDeleteProject(const UUID& projectUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestDeleteProject(projectUUID);
+  }
+
   bool OSServer::requestAnalysisUUIDs(const UUID& projectUUID)
   {
     return getImpl<detail::OSServer_Impl>()->requestAnalysisUUIDs(projectUUID);
@@ -776,9 +2071,19 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->requestStart(analysisUUID);
   }
 
+  bool OSServer::requestIsAnalysisQueued(const UUID& analysisUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestIsAnalysisQueued(analysisUUID);
+  }
+
   bool OSServer::requestIsAnalysisRunning(const UUID& analysisUUID) 
   {
     return getImpl<detail::OSServer_Impl>()->requestIsAnalysisRunning(analysisUUID);
+  }
+
+  bool OSServer::requestIsAnalysisComplete(const UUID& analysisUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestIsAnalysisComplete(analysisUUID);
   }
 
   bool OSServer::requestStop(const UUID& analysisUUID) 
@@ -791,19 +2096,24 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->requestDataPointUUIDs(analysisUUID);
   }
 
-  bool OSServer::requestRunningDataPointUUIDs(const UUID& analysisUUID) 
-  {
-    return getImpl<detail::OSServer_Impl>()->requestRunningDataPointUUIDs(analysisUUID);
-  }
-
   bool OSServer::requestQueuedDataPointUUIDs(const UUID& analysisUUID) 
   {
     return getImpl<detail::OSServer_Impl>()->requestQueuedDataPointUUIDs(analysisUUID);
   }
 
+  bool OSServer::requestRunningDataPointUUIDs(const UUID& analysisUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestRunningDataPointUUIDs(analysisUUID);
+  }
+
   bool OSServer::requestCompleteDataPointUUIDs(const UUID& analysisUUID) 
   {
     return getImpl<detail::OSServer_Impl>()->requestCompleteDataPointUUIDs(analysisUUID);
+  }
+
+  bool OSServer::requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestDownloadReadyDataPointUUIDs(analysisUUID);
   }
 
   bool OSServer::requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID) 
@@ -814,6 +2124,21 @@ namespace openstudio{
   bool OSServer::startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath) 
   {
     return getImpl<detail::OSServer_Impl>()->startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath);
+  }
+
+  bool OSServer::connect(const char* signal,
+                         const QObject* qObject,
+                         const char* slot,
+                         Qt::ConnectionType type) const
+  {
+    return QObject::connect(getImpl<detail::OSServer_Impl>().get(), signal, qObject, slot, type);
+  }
+
+  bool OSServer::disconnect(const char* signal,
+                            const QObject* receiver,
+                            const char* slot) const
+  {
+    return QObject::disconnect(getImpl<detail::OSServer_Impl>().get(), signal, receiver, slot);
   }
 
 } // openstudio

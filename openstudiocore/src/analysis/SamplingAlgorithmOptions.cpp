@@ -146,7 +146,7 @@ namespace detail {
       return false;
 	}
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {

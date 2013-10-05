@@ -44,16 +44,18 @@
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 
 #include <utilities/data/Attribute.hpp>
-
 #include <utilities/data/Tag.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/Finder.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
 #include <boost/bind.hpp>
+
+using namespace openstudio::analysis;
 
 // DLM: I believe this will work cross-platform, I don't think ';' is allowed in a path on any system?
 const char pathSep = ';';
@@ -79,6 +81,7 @@ namespace detail {
       m_complete(dataPoint.isComplete()),
       m_failed(dataPoint.failed()),
       m_selected(dataPoint.selected()),
+      m_runType(dataPoint.runType()),
       m_directory(dataPoint.directory()),
       m_dakotaParametersFiles(dataPoint.dakotaParametersFiles())
   {
@@ -120,6 +123,10 @@ namespace detail {
     value = query.value(DataPointRecordColumns::selected);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_selected = value.toBool();
+
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_runType = DataPointRunType(value.toInt());
 
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
@@ -244,6 +251,10 @@ namespace detail {
 
   bool DataPointRecord_Impl::selected() const {
     return m_selected;
+  }
+
+  analysis::DataPointRunType DataPointRecord_Impl::runType() const {
+    return m_runType;
   }
 
   openstudio::path DataPointRecord_Impl::directory() const {
@@ -449,7 +460,9 @@ namespace detail {
     }
     FileReferenceRecordVector frrs = xmlOutputDataRecords();
     Q_FOREACH(const FileReferenceRecord& frr,frrs) {
-      xmlOutputData.push_back(frr.fileReference());
+      if (frr.name() != "fake.xml") {
+        xmlOutputData.push_back(frr.fileReference());
+      }
     }
     AttributeRecordVector ars = attributeRecords();
     Q_FOREACH(const AttributeRecord& ar,ars) {
@@ -482,6 +495,7 @@ namespace detail {
                                m_complete,
                                m_failed,
                                m_selected,
+                               m_runType,
                                variableValues,
                                responseValues(),
                                m_directory,
@@ -582,6 +596,7 @@ namespace detail {
     query.bindValue(DataPointRecordColumns::complete, m_complete);
     query.bindValue(DataPointRecordColumns::failed, m_failed);
     query.bindValue(DataPointRecordColumns::selected, m_selected);
+    query.bindValue(DataPointRecordColumns::runType, m_runType.value());
     query.bindValue(DataPointRecordColumns::directory, toQString(m_directory));
     if (m_osmInputDataRecordId) {
       query.bindValue(DataPointRecordColumns::inputDataRecordId, *m_osmInputDataRecordId);
@@ -650,6 +665,10 @@ namespace detail {
     value = query.value(DataPointRecordColumns::selected);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastSelected = value.toBool();
+
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastRunType = DataPointRunType(value.toInt());
 
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
@@ -729,6 +748,10 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_selected == value.toBool());
 
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_runType == DataPointRunType(value.toInt()));
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_directory == toPath(value.toString()));
@@ -785,6 +808,7 @@ namespace detail {
     m_lastComplete = m_complete;
     m_lastFailed = m_failed;
     m_lastSelected = m_selected;
+    m_lastRunType = m_runType;
     m_lastDirectory = m_directory;
     m_lastOsmInputDataRecordId = m_osmInputDataRecordId;
     m_lastIdfInputDataRecordId = m_idfInputDataRecordId;
@@ -802,6 +826,7 @@ namespace detail {
     m_complete = m_lastComplete;
     m_failed = m_lastFailed;
     m_selected = m_lastSelected;
+    m_runType = m_lastRunType;
     m_directory = m_lastDirectory;
     m_osmInputDataRecordId = m_lastOsmInputDataRecordId;
     m_idfInputDataRecordId = m_lastIdfInputDataRecordId;
@@ -1017,6 +1042,10 @@ bool DataPointRecord::selected() const {
   return getImpl<detail::DataPointRecord_Impl>()->selected();
 }
 
+analysis::DataPointRunType DataPointRecord::runType() const {
+  return getImpl<detail::DataPointRecord_Impl>()->runType();
+}
+
 openstudio::path DataPointRecord::directory() const {
   return getImpl<detail::DataPointRecord_Impl>()->directory();
 }
@@ -1193,11 +1222,12 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     getImpl<detail::DataPointRecord_Impl>()->clearSqlOutputDataRecordId();
   }
   FileReferenceVector xmlOutputData = dataPoint.xmlOutputData();
-  saveChildFileReferences(xmlOutputData,
-                          xmlOutputDataRecords(),
-                          copyOfThis,
-                          database,
-                          isNew);
+  saveChildXmlFileReferences(xmlOutputData,
+                             xmlOutputDataRecords(),
+                             dataPoint.outputAttributes(),
+                             copyOfThis,
+                             database,
+                             isNew);
 
   // Remove old response function values
   if (!isNew) {
@@ -1268,13 +1298,39 @@ boost::optional<FileReferenceRecord> DataPointRecord::saveChildFileReference(
   return result;
 }
 
-std::vector<FileReferenceRecord> DataPointRecord::saveChildFileReferences(
-    const std::vector<FileReference>& childFileReferences,
+std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
+    std::vector<FileReference> childFileReferences,
     std::vector<FileReferenceRecord> oldFileReferenceRecords,
+    std::vector<Attribute> outputAttributes,
     DataPointRecord& copyOfThis,
     ProjectDatabase& database,
     bool isNew)
 {
+  if (childFileReferences.empty() && !outputAttributes.empty()) {
+    // CloudSlim DataPoint. Make or re-use fake FileReference for attribute storage.
+    NameFinder<FileReferenceRecord> finder("fake.xml",true);
+    FileReferenceRecordVector::iterator it = std::find_if(
+        oldFileReferenceRecords.begin(),
+        oldFileReferenceRecords.end(),
+        finder);
+    if (it != oldFileReferenceRecords.end()) {
+      childFileReferences.push_back(FileReference(it->handle(),
+                                                  createUUID(),
+                                                  it->name(),
+                                                  it->displayName(),
+                                                  it->description(),
+                                                  it->path(),
+                                                  it->fileType(),
+                                                  it->timestampCreate(),
+                                                  it->timestampLast(),
+                                                  it->checksumCreate(),
+                                                  it->checksumLast()));
+    }
+    else {
+      childFileReferences.push_back(FileReference(toPath("fake.xml")));
+    }
+  }
+
   FileReferenceRecordVector result;
   Q_FOREACH(const FileReference& childFileReference, childFileReferences) {
     bool save(true);
@@ -1303,14 +1359,21 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildFileReferences(
     if (save || isNew) {
       result.push_back(FileReferenceRecord(childFileReference,copyOfThis));
       // save attributes
-      OptionalAttribute wrapperAttribute = Attribute::loadFromXml(childFileReference.path());
-      if (wrapperAttribute &&
-          (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
-      {
-        Q_FOREACH(const Attribute& attribute,wrapperAttribute->valueAsAttributeVector()) {
-          AttributeRecord attributeRecord(attribute,result.back());
-          Q_UNUSED(attributeRecord);
+      AttributeVector attsToSave;
+      if (childFileReference.name() == "fake.xml") {
+        attsToSave = outputAttributes;
+      }
+      else {
+        OptionalAttribute wrapperAttribute = Attribute::loadFromXml(childFileReference.path());
+        if (wrapperAttribute &&
+            (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
+        {
+          attsToSave = wrapperAttribute->valueAsAttributeVector();
         }
+      }
+      Q_FOREACH(const Attribute& attribute,attsToSave) {
+        AttributeRecord attributeRecord(attribute,result.back());
+        Q_UNUSED(attributeRecord);
       }
     }
   }

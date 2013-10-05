@@ -71,6 +71,36 @@ VersionString::VersionString(const std::string& version)
   }
 }
 
+VersionString::VersionString(int major,int minor)
+  : m_major(major),
+    m_minor(minor)
+{
+  std::stringstream ss;
+  ss << major << "." << minor;
+  m_str = ss.str();
+}
+
+VersionString::VersionString(int major,int minor,int patch)
+  : m_major(major),
+    m_minor(minor),
+    m_patch(patch)
+{
+  std::stringstream ss;
+  ss << major << "." << minor << "." << patch;
+  m_str = ss.str();
+}
+
+VersionString::VersionString(int major,int minor,int patch,int build)
+  : m_major(major),
+    m_minor(minor),
+    m_patch(patch),
+    m_build(build)
+{
+  std::stringstream ss;
+  ss << major << "." << minor << "." << patch << "." << build;
+  m_str = ss.str();
+}
+
 std::string VersionString::str() const {
   return m_str;
 }
@@ -188,6 +218,80 @@ bool VersionString::fidelityEqual(const VersionString& other) const {
   }
 
   return true;
+}
+
+bool VersionString::isNextVersion(const VersionString& nextVersionCandidate) const {
+  VersionString variantOnThis(str());
+  VersionString variantOnCandidate = nextVersionCandidate;
+
+  if (variantOnCandidate <= variantOnThis) {
+    return false;
+  }
+ 
+  // now know nextVersionCandidate > this
+
+  if (build() && fidelityEqual(nextVersionCandidate)) {
+    // true if versions except for build number are equal
+    variantOnThis = VersionString(major(),minor(),patch().get());
+    variantOnCandidate = VersionString(nextVersionCandidate.major(),
+                                       nextVersionCandidate.minor(),
+                                       nextVersionCandidate.patch().get());
+    if (variantOnCandidate == variantOnThis) {
+      return true;
+    }
+  }
+  else {
+    // strip out build numbers as needed, because that is not the level at which the 
+    // versions differ
+    if (build()) {
+      variantOnThis = VersionString(major(),minor(),patch().get());
+    }
+    if (nextVersionCandidate.build()) {
+      variantOnCandidate = VersionString(nextVersionCandidate.major(),
+                                         nextVersionCandidate.minor(),
+                                         nextVersionCandidate.patch().get());
+    }
+  }
+
+  // now have major.minor or major.minor.patch for both
+
+  if (variantOnThis.patch()) {
+    if (variantOnCandidate.patch()) {
+      VersionString thisIncremented(major(),minor(),patch().get() + 1);
+      if (variantOnCandidate == thisIncremented) {
+        return true;
+      }
+      // candidate has patch, but is not next patch version. to be next version,
+      // must have patch == 0
+      if (variantOnCandidate.patch().get() != 0) {
+        return false;
+      }
+    }
+  }
+
+  // now major.minor.patch v. major.minor or major.minor.patch v. major.minor.0
+  // strip out patch numbers
+
+  if (variantOnThis.patch()) {
+    variantOnThis = VersionString(variantOnThis.major(),variantOnThis.minor());
+  }
+  if (variantOnCandidate.patch()) {
+    variantOnCandidate = VersionString(variantOnCandidate.major(),variantOnCandidate.minor());
+  }
+
+  // minor increment
+  VersionString thisIncremented(variantOnThis.major(),variantOnThis.minor() + 1);
+  if (variantOnCandidate == thisIncremented) {
+    return true;
+  }
+
+  // major increment
+  thisIncremented = VersionString(variantOnThis.major() + 1,0);
+  if (variantOnCandidate == thisIncremented) {
+    return true;
+  }
+
+  return false;
 }
 
 std::ostream& operator<<(std::ostream& os,const VersionString& version) {

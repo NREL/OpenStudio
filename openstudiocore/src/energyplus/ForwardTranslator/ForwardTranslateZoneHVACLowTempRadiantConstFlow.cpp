@@ -87,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   boost::optional<std::string> thermalZoneName;
   if( boost::optional<ThermalZone> zone = modelObject.thermalZone() )
   {
-    if( s = zone->name() )
+    if( (s = zone->name()) )
     {
       thermalZoneName = s;
 
@@ -130,13 +130,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   m_idfObjects.push_back(_surfaceGroup);
 
  //field Hydronic Tubing Inside Diameter
- if( value = modelObject.hydronicTubingInsideDiameter() )
+ if( (value = modelObject.hydronicTubingInsideDiameter()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter,value.get());
   }
 
   //field Hydronic Tubing Length
- if( value = modelObject.hydronicTubingLength() )
+ if( (value = modelObject.hydronicTubingLength()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength,value.get());
   }
@@ -148,7 +148,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   }
 
   //field Rated Flow Rate
-  if( value = modelObject.ratedFlowRate() )
+  if( (value = modelObject.ratedFlowRate()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate,value.get());
   }
@@ -163,25 +163,25 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   }
 
   //field Rated Pump Head
-  if( value = modelObject.ratedPumpHead() )
+  if( (value = modelObject.ratedPumpHead()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead,value.get());
   }
 
   //field Rated Power Consumption
-  if( value = modelObject.ratedPowerConsumption() )
+  if( (value = modelObject.ratedPowerConsumption()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPowerConsumption,value.get());
   }
 
   //field Motor Efficiency
-  if( value = modelObject.motorEfficiency() )
+  if( (value = modelObject.motorEfficiency()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::MotorEfficiency,value.get());
   }
 
   //field Fraction of Motor Inefficiencies to Fluid Stream
-  if( value = modelObject.fractionofMotorInefficienciestoFluidStream() )
+  if( (value = modelObject.fractionofMotorInefficienciestoFluidStream()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FractionofMotorInefficienciestoFluidStream,value.get());
   }
@@ -319,7 +319,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlType,coilCool.condensationControlType());
 
     //field Condensation Control Dewpoint Offset
-    if( value = coilCool.condensationControlDewpointOffset() )
+    if( (value = coilCool.condensationControlDewpointOffset()) )
     {
       idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset,value.get());
     }

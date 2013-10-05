@@ -197,20 +197,20 @@ class WaterToAirInspectorView : public BaseInspectorView
 
   InspectorGadget * m_coilControllerInspectorGadget;
 
-  LoopChooserView * m_loopChooserView;
+  LoopChooserView * m_loopChooserView, * m_coolingLoopChooserView;
 
   bool m_displayIP;
 };
 
-class AirTerminalSingleDuctVAVReheatInspectorView : public BaseInspectorView
+class AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView : public BaseInspectorView
 {
   Q_OBJECT;
 
   public:
 
-  AirTerminalSingleDuctVAVReheatInspectorView(QWidget * parent = 0);
+  AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView(QWidget * parent = 0);
 
-  virtual ~AirTerminalSingleDuctVAVReheatInspectorView() {}
+  virtual ~AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView() {}
 
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
 
@@ -226,7 +226,63 @@ class AirTerminalSingleDuctVAVReheatInspectorView : public BaseInspectorView
 
   InspectorGadget * m_inspectorGadget;
 
+  LoopChooserView * m_coolingLoopChooserView;
+};
+
+class AirTerminalInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalInspectorView() {}
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  protected:
+
+  template <class T>
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+
+  //private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
   LoopChooserView * m_loopChooserView;
+};
+
+class AirTerminalSingleDuctConstantVolumeReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctConstantVolumeReheatInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctConstantVolumeReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+};
+
+class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctVAVReheatInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctVAVReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
 };
 
 class ZoneHVACPackagedTerminalAirConditionerInspectorView : public BaseInspectorView

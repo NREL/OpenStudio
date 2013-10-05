@@ -99,7 +99,7 @@ namespace detail {
       if (model)
       {
         bool change = filesChanged(m_files, *t_lastrun);
-        return filesChanged(m_files, *t_lastrun);
+        return change;
       } else {
         // if the model file we are using has not been established yet,
         // return outofdate

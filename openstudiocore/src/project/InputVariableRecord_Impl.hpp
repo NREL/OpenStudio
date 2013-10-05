@@ -33,7 +33,6 @@ namespace detail {
 
   /** InputVariableRecord_Impl is a VariableRecord_Impl that is the implementation class for InputVariableRecord.*/
   class PROJECT_API InputVariableRecord_Impl : public VariableRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

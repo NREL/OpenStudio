@@ -49,6 +49,8 @@
 #include <model/RunPeriod_Impl.hpp>
 #include <model/YearDescription.hpp>
 #include <model/YearDescription_Impl.hpp>
+#include <model/OutputControlReportingTolerances.hpp>
+#include <model/OutputControlReportingTolerances_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -74,6 +76,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
+#include <QFileInfo>
 
 namespace openstudio {
 namespace sdd {
@@ -627,8 +630,12 @@ namespace sdd {
       meter.setSpecificEndUse("NonReg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
-    }
 
+      model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
+      rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
+      rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
+    }
+    
     return result;
   }
 
@@ -713,7 +720,15 @@ namespace sdd {
       model::YearDescription yearDescription = model.getUniqueModelObject<model::YearDescription>();
       yearDescription.setCalendarYear(yearElement.text().toInt());
 
+      std::string runPeriodName = "Run Period";
+      QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
+      if (!annualWeatherFileElement.isNull()){
+        QFileInfo annualWeatherFile(annualWeatherFileElement.text());
+        runPeriodName = toString(annualWeatherFile.baseName());
+      }
+
       model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();
+      runPeriod.setName(runPeriodName);
       runPeriod.setBeginMonth(beginMonthElement.text().toInt());
       runPeriod.setBeginDayOfMonth(beginDayElement.text().toInt());
       runPeriod.setEndMonth(endMonthElement.text().toInt());

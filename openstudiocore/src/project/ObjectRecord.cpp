@@ -170,6 +170,10 @@ namespace detail {
     // default implementation does nothing.
   }
 
+  UUID ObjectRecord_Impl::lastUuidLast() const {
+    return m_lastUUIDLast;
+  }
+
   void ObjectRecord_Impl::bindValues(QSqlQuery& query) const
   {
     Record_Impl::bindValues(query);

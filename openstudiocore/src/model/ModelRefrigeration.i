@@ -33,24 +33,4 @@ SWIG_MODELOBJECT(RefrigerationSecondarySystem);
 SWIG_MODELOBJECT(RefrigerationSystem);
 SWIG_MODELOBJECT(RefrigerationWalkIn);
 
-#if defined SWIGCSHARP
-
-%inline {
-  namespace openstudio {
-    namespace model {
-      std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
-        return building.thermalZones();
-      }
-      boost::optional<openstudio::model::ThermalZone> getThermalZone(const openstudio::model::Space& space){
-        return space.thermalZone();
-      }
-      bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
-        return space.setThermalZone(thermalZone);
-      }
-    }
-  }
-}
-
-#endif
-
 #endif 

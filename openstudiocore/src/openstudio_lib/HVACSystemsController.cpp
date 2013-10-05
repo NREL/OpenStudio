@@ -156,7 +156,10 @@ HVACSystemsController::~HVACSystemsController()
 
 void HVACSystemsController::clearSceneSelection()
 {
-  m_hvacLayoutController->clearSceneSelection();
+  if( m_hvacLayoutController )
+  {
+    m_hvacLayoutController->clearSceneSelection();
+  }
 }
 
 Handle HVACSystemsController::currentHandle() const

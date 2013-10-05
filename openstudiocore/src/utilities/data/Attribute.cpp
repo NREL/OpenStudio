@@ -1558,7 +1558,13 @@ namespace detail {
     }
     else {
       // use QVariant directly
-      attributeData["value"] = attribute.valueAsQVariant();
+      QVariant val = attribute.valueAsQVariant();
+      if (std::string(val.typeName()) == std::string("std::string")) {
+        // in some cases a std::string gets shoved in
+        // convert it to QString
+        val = toQString(val.value<std::string>());
+      }
+      attributeData["value"] = val;
       if (attribute.units()) {
         attributeData["units"] = toQString(attribute.units().get());
       }

@@ -41,6 +41,8 @@ class Loop;
 
 class ZoneHVACComponent;
 
+class StraightComponent;
+
 namespace detail {
   class HVACComponent_Impl;
 };
@@ -101,6 +103,7 @@ class MODEL_API HVACComponent : public ParentObject
   /** Returns any ZoneHVACComponent that contains this HVACComponent.   
    */
   boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+  boost::optional<StraightComponent> containingStraightComponent() const;
 
   /** Adds this object to a new system node and returns a boolean indicating if the addition was successful.
    *  

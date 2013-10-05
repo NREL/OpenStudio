@@ -41,7 +41,7 @@ namespace runmanager {
 
 namespace analysis {
 
-class AnalysisSerializationOptions;
+struct AnalysisSerializationOptions;
 
 namespace detail {
 
@@ -130,6 +130,10 @@ namespace detail {
     std::vector<DataPoint> successfulDataPoints() const;
 
     std::vector<DataPoint> failedDataPoints() const;
+
+    /** Return all complete \link DataPoint DataPoints\endlink with runType() ==
+     *  DataPointRunType::CloudDetailed and an empty directory(). */
+    std::vector<DataPoint> dataPointsNeedingDetails() const;
 
     /** Get the DataPoints with matching variableValues. VariableValues may contain Null QVariants of
      *  the correct type, which means that any value at that position should be returned. */

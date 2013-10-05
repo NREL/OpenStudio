@@ -67,7 +67,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   boost::optional<std::string> airInletNodeName;
   if( boost::optional<Node> node = modelObject.inletNode() )
   {
-    if( s = node->name() )
+    if( (s = node->name()) )
     {
       airInletNodeName = s;
       idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::AirInletNodeName,s.get() );
@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   boost::optional<std::string> airOutletNodeName;
   if( boost::optional<Node> node = modelObject.outletNode() )
   {
-    if( s = node->name() )
+    if( (s = node->name()) )
     {
       airOutletNodeName = s;
       idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::AirOutletNodeName,s.get() );
@@ -169,7 +169,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   {
     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumSupplyAirFlowRate() )
+  else if( (value = modelObject.maximumSupplyAirFlowRate()) )
   {
     idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate,value.get());
   }
@@ -181,7 +181,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   }
 
   // MediumSpeedSupplyAirFlowRatio
-  if(! modelObject.isMediumSpeedSupplyAirFlowRatioDefaulted() )
+  if(! (modelObject.isMediumSpeedSupplyAirFlowRatioDefaulted()) )
   {
     idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MediumSpeedSupplyAirFlowRatio,modelObject.mediumSpeedSupplyAirFlowRatio() );
   }
@@ -191,7 +191,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   {
     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumOutdoorAirFlowRate() )
+  else if( (value = modelObject.maximumOutdoorAirFlowRate()) )
   {
     idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate,value.get());
   }
@@ -236,7 +236,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   {
     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumColdWaterFlowRate() )
+  else if( (value = modelObject.maximumColdWaterFlowRate()) )
   {
     idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate,value.get());
   }
@@ -258,7 +258,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   {
     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumHotWaterFlowRate() )
+  else if( (value = modelObject.maximumHotWaterFlowRate()) )
   {
     idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate,value.get());
   }

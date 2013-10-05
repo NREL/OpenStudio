@@ -40,8 +40,7 @@
 namespace openstudio{
 
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
-    const std::string& taxonomyTag, MeasureType measureType, MeasureFunction measureFunction,
-    bool requiresEnergyPlusResults, bool usesSketchUpAPI)
+    const std::string& taxonomyTag, MeasureType measureType, bool usesSketchUpAPI)
     : m_directory(boost::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
   {
@@ -83,6 +82,10 @@ namespace openstudio{
       measureTemplate = ":/templates/UtilityMeasure/measure.rb";
       testTemplate = ":/templates/UtilityMeasure/tests/UtilityMeasure_Test.rb";
       templateName = "UtilityMeasure";
+    }else if (measureType == MeasureType::ReportingMeasure){
+      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
+      testTemplate = ":/templates/ReportingMeasure/tests/ReportingMeasure_Test.rb";
+      templateName = "ReportingMeasure";
     }
 
     QString measureString;
@@ -149,8 +152,6 @@ namespace openstudio{
     m_bclXML.setName(name);
     m_bclXML.addTag(taxonomyTag);
     this->setMeasureType(measureType);
-    this->setMeasureFunction(measureFunction);
-    this->setRequiresEnergyPlusResults(requiresEnergyPlusResults);
     this->setUsesSketchUpAPI(usesSketchUpAPI);
     m_bclXML.saveAs(measureXMLPath);
   }
@@ -168,6 +169,13 @@ namespace openstudio{
 
     m_bclXML = *bclXML;
 
+    // ACS: This causes the version_id to change, disabling for now
+    // remove deprecated attributes
+    // m_bclXML.removeAttribute("Measure Function");
+    // m_bclXML.removeAttribute("MeasureFunction");
+    // m_bclXML.removeAttribute("Requires EnergyPlus Results");
+    // m_bclXML.removeAttribute("RequiresEnergyPlusResults");
+
     // check for required attributes, and update old attributes
     boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
     if (!measureType){
@@ -177,22 +185,7 @@ namespace openstudio{
         m_bclXML.removeAttribute("MeasureType");
       }
     }
-    boost::optional<Attribute> measureFunction = m_bclXML.getAttribute("Measure Function");
-    if (!measureFunction){
-      measureFunction = m_bclXML.getAttribute("MeasureFunction");
-      if (measureFunction){
-        m_bclXML.addAttribute(Attribute("Measure Function", measureFunction->valueAsString()));
-        m_bclXML.removeAttribute("MeasureFunction");
-      }
-    }
-    boost::optional<Attribute> requiresEnergyPlusResults = m_bclXML.getAttribute("Requires EnergyPlus Results");
-    if (!requiresEnergyPlusResults){
-      requiresEnergyPlusResults = m_bclXML.getAttribute("RequiresEnergyPlusResults");
-      if (requiresEnergyPlusResults){
-        m_bclXML.addAttribute(Attribute("Requires EnergyPlus Results", requiresEnergyPlusResults->valueAsBoolean()));
-        m_bclXML.removeAttribute("RequiresEnergyPlusResults");
-      }
-    }
+
     boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
     if (!usesSketchUpAPI){
       usesSketchUpAPI = m_bclXML.getAttribute("UsesSketchUpAPI");
@@ -202,15 +195,16 @@ namespace openstudio{
       }
     }
 
-    if (!measureType || !measureFunction || !requiresEnergyPlusResults || !usesSketchUpAPI){
+    if (!measureType || !usesSketchUpAPI){
       LOG_AND_THROW("'" << toString(dir) << "' is not a valid measure");
     }
 
     // these may throw later, test here now
-    MeasureType(measureType->valueAsString());
-    MeasureFunction(measureFunction->valueAsString());
-    requiresEnergyPlusResults->valueAsBoolean();
     usesSketchUpAPI->valueAsBoolean();
+
+    if (m_bclXML.versionId() != bclXML->versionId()){
+      LOG_AND_THROW("Measure version_id is no longer valid");
+    }
   }
 
   BCLMeasure::~BCLMeasure()
@@ -398,20 +392,6 @@ namespace openstudio{
     return MeasureType(measureType->valueAsString());
   }
 
-  MeasureFunction BCLMeasure::measureFunction() const
-  {
-    boost::optional<Attribute> measureFunction = m_bclXML.getAttribute("Measure Function");
-    OS_ASSERT(measureFunction);
-    return MeasureFunction(measureFunction->valueAsString());
-  }
-
-  bool BCLMeasure::requiresEnergyPlusResults() const
-  {
-    boost::optional<Attribute> requiresEnergyPlusResults = m_bclXML.getAttribute("Requires EnergyPlus Results");
-    OS_ASSERT(requiresEnergyPlusResults);
-    return requiresEnergyPlusResults->valueAsBoolean();
-  }
-
   bool BCLMeasure::usesSketchUpAPI() const
   {
     boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
@@ -453,6 +433,9 @@ namespace openstudio{
       result = FileReferenceType::IDF;
     }else if (measureType == MeasureType::UtilityMeasure){
       // no-op
+    }else if (measureType == MeasureType::ReportingMeasure){
+      // DLM: is this right?
+      // no-op
     }
     return result;
   }
@@ -461,24 +444,14 @@ namespace openstudio{
   {
     FileReferenceType result = FileReferenceType::Unknown;
     MeasureType measureType = this->measureType();
-    MeasureFunction measureFunction = this->measureFunction();
     if (measureType == MeasureType::ModelMeasure){
-      if (measureFunction == MeasureFunction::Measure){
-        result = FileReferenceType::OSM;
-      }else if (measureFunction == MeasureFunction::Report){
-        result = FileReferenceType::XML;
-      }else if (measureFunction == MeasureFunction::Other){
-        // no-op
-      }
+      result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::EnergyPlusMeasure){
-      if (measureFunction == MeasureFunction::Measure){
-        result = FileReferenceType::IDF;
-      }else if (measureFunction == MeasureFunction::Report){
-        result = FileReferenceType::XML;
-      }else if (measureFunction == MeasureFunction::Other){
-        // no-op
-      }
+      result = FileReferenceType::IDF;
     }else if (measureType == MeasureType::UtilityMeasure){
+      // no-op
+    }else if (measureType == MeasureType::ReportingMeasure){
+      // DLM: is this right?
       // no-op
     }
     return result;
@@ -523,18 +496,6 @@ namespace openstudio{
   void BCLMeasure::setMeasureType(const MeasureType& measureType)
   {
     Attribute attribute("Measure Type", measureType.valueName());
-    m_bclXML.addAttribute(attribute);
-  }
-
-  void BCLMeasure::setMeasureFunction(const MeasureFunction& measureFunction)
-  {
-    Attribute attribute("Measure Function", measureFunction.valueName());
-    m_bclXML.addAttribute(attribute);
-  }
-
-  void BCLMeasure::setRequiresEnergyPlusResults(bool requiresEnergyPlusResults)
-  {
-    Attribute attribute("Requires EnergyPlus Results", requiresEnergyPlusResults);
     m_bclXML.addAttribute(attribute);
   }
 

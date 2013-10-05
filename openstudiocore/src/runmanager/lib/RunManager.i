@@ -27,6 +27,7 @@
   #include <runmanager/lib/ConfigOptions.hpp>
   #include <runmanager/lib/ProcessCreator.hpp>
   #include <runmanager/lib/AdvancedStatus.hpp>
+  #include <runmanager/lib/JobState.hpp>
   #include <runmanager/lib/Workflow.hpp>
   #include <runmanager/lib/TreeStatus.hpp>
   #include <runmanager/lib/JobStatusWidget.hpp>
@@ -169,6 +170,7 @@
 %include <runmanager/lib/ToolInfo.hpp>
 %include <runmanager/lib/FileInfo.hpp>
 %include <runmanager/lib/AdvancedStatus.hpp>
+%include <runmanager/lib/JobState.hpp>
 %include <runmanager/lib/Job.hpp>
 %include <runmanager/lib/JobFactory.hpp>
 %include <runmanager/lib/RunManager.hpp>

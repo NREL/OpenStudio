@@ -82,14 +82,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
   {
     idfObject.setString(Pump_ConstantSpeedFields::RatedFlowRate,"Autosize");
   }
-  else if( value = modelObject.ratedFlowRate() )
+  else if( (value = modelObject.ratedFlowRate()) )
   {
     idfObject.setDouble(Pump_ConstantSpeedFields::RatedFlowRate,value.get());
   }
 
   // RatedPumpHead
 
-  if( value = modelObject.ratedPumpHead() )
+  if( (value = modelObject.ratedPumpHead()) )
   {
     idfObject.setDouble(Pump_ConstantSpeedFields::RatedPumpHead,value.get());
   }
@@ -100,35 +100,35 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
   {
     idfObject.setString(Pump_ConstantSpeedFields::RatedPowerConsumption,"Autosize");
   }
-  else if( value = modelObject.ratedPowerConsumption() )
+  else if( (value = modelObject.ratedPowerConsumption()) )
   {
     idfObject.setDouble(Pump_ConstantSpeedFields::RatedPowerConsumption,value.get());
   }
 
   // MotorEfficiency
 
-  if( value = modelObject.motorEfficiency() )
+  if( (value = modelObject.motorEfficiency()) )
   {
     idfObject.setDouble(Pump_ConstantSpeedFields::MotorEfficiency,value.get());
   }
 
   // FractionofMotorInefficienciestoFluidStream  
 
-  if( value = modelObject.fractionofMotorInefficienciestoFluidStream() )
+  if( (value = modelObject.fractionofMotorInefficienciestoFluidStream()) )
   {
     idfObject.setDouble(Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream,value.get());
   } 
 
   // PumpControlType
 
-  if( s = modelObject.pumpControlType() )
+  if( (s = modelObject.pumpControlType()) )
   {
     idfObject.setString(Pump_ConstantSpeedFields::PumpControlType,s.get());
   }
 
   // PumpFlowRateSchedule
 
-  if (schedule = modelObject.pumpFlowRateSchedule()) {
+  if ((schedule = modelObject.pumpFlowRateSchedule())) {
     idfObject.setString(Pump_ConstantSpeedFields::PumpFlowRateScheduleName,schedule->name().get());
   }
 
@@ -140,13 +140,13 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
 
   // ImpellerDiameter
 
-  if (value = modelObject.impellerDiameter()) {
+  if ((value = modelObject.impellerDiameter())) {
     idfObject.setDouble(Pump_ConstantSpeedFields::ImpellerDiameter,value.get());
   }
 
   // SkinLossRadiativeFraction
 
-  if (value = modelObject.skinLossRadiativeFraction()) {
+  if ((value = modelObject.skinLossRadiativeFraction())) {
     idfObject.setDouble(Pump_ConstantSpeedFields::SkinLossRadiativeFraction,value.get());
   }
 

@@ -31,11 +31,10 @@ namespace detail {
 } // detail
 
 
-/** RunPeriod derives from ParentObject and is an interface to the OpenStudio IDD object named "RunPeriod".
+/** RunPeriod derives from ParentObject and is an interface to the unique OpenStudio IDD object named "RunPeriod".
  *
  *  RunPeriod defines a period of time over which to run an EnergyPlus weather file simulation.  Some applications 
- *  require a full annual EnergyPlus simulation, in which case only a single RunPeriod object is needed.  However,
- *  other applications may desire to have multiple RunPeriod objects.
+ *  require a full annual EnergyPlus simulation, others do not.
  */
 class MODEL_API RunPeriod : public ParentObject {
  public:

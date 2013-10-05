@@ -44,7 +44,6 @@ class ProblemRecord;
 namespace detail {
 
   class PROJECT_API WorkflowRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
