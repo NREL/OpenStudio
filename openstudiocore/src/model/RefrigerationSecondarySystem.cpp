@@ -21,16 +21,16 @@
 #include <model/RefrigerationSecondarySystem_Impl.hpp>
 
 // TODO: Check the following class names against object getters and setters.
-#include <model/ModelObjectLists.hpp>
-#include <model/ModelObjectLists_Impl.hpp>
-#include <model/CubicCurves.hpp>
-#include <model/CubicCurves_Impl.hpp>
+#include <model/ModelObjectList.hpp>
+#include <model/ModelObjectList_Impl.hpp>
+#include <model/CurveCubic.hpp>
+#include <model/CurveCubic_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationWalkin.hpp>
-#include <model/RefrigerationWalkin_Impl.hpp>
+#include <model/RefrigerationWalkIn.hpp>
+#include <model/RefrigerationWalkIn_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_SecondarySystem_FieldEnums.hxx>
@@ -100,12 +100,12 @@ namespace detail {
     return RefrigerationSecondarySystem_Impl::casesOrWalkins<RefrigerationCase>();
   }
 
-  std::vector<RefrigerationWalkin> RefrigerationSecondarySystem_Impl::walkins() const {
-    return RefrigerationSecondarySystem_Impl::casesOrWalkins<RefrigerationWalkin>();
+  std::vector<RefrigerationWalkIn> RefrigerationSecondarySystem_Impl::walkins() const {
+    return RefrigerationSecondarySystem_Impl::casesOrWalkins<RefrigerationWalkIn>();
   }
 
-  boost::optional<ModelObjectLists> RefrigerationSecondarySystem_Impl::refrigeratedCaseAndWalkInList() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObjectLists>(OS_Refrigeration_SecondarySystemFields::RefrigeratedCaseAndWalkInListName);
+  boost::optional<ModelObjectList> RefrigerationSecondarySystem_Impl::refrigeratedCaseAndWalkInList() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_SecondarySystemFields::RefrigeratedCaseAndWalkInListName);
   }
 
   std::string RefrigerationSecondarySystem_Impl::circulatingFluidName() const {
@@ -184,8 +184,8 @@ namespace detail {
     return isEmpty(OS_Refrigeration_SecondarySystemFields::PumpDriveType);
   }
 
-  boost::optional<CubicCurves> RefrigerationSecondarySystem_Impl::variableSpeedPumpCubicCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CubicCurves>(OS_Refrigeration_SecondarySystemFields::VariableSpeedPumpCubicCurveName);
+  boost::optional<CurveCubic> RefrigerationSecondarySystem_Impl::variableSpeedPumpCubicCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Refrigeration_SecondarySystemFields::VariableSpeedPumpCubicCurveName);
   }
 
   double RefrigerationSecondarySystem_Impl::pumpMotorHeattoFluid() const {
@@ -287,22 +287,22 @@ namespace detail {
     removeAllCasesOrWalkins<RefrigerationCase>();
   }
 
-  bool RefrigerationSecondarySystem_Impl::addWalkin( const RefrigerationWalkin& refrigerationWalkin) {
-    return addCaseOrWalkin<RefrigerationWalkin>(refrigerationWalkin);
+  bool RefrigerationSecondarySystem_Impl::addWalkin( const RefrigerationWalkIn& refrigerationWalkin) {
+    return addCaseOrWalkin<RefrigerationWalkIn>(refrigerationWalkin);
   }
 
-  void RefrigerationSecondarySystem_Impl::removeWalkin( RefrigerationWalkin& refrigerationWalkin) {
-    removeCaseOrWalkin<RefrigerationWalkin>(refrigerationWalkin);
+  void RefrigerationSecondarySystem_Impl::removeWalkin( const RefrigerationWalkIn& refrigerationWalkin) {
+    removeCaseOrWalkin<RefrigerationWalkIn>(refrigerationWalkin);
   }
 
   void RefrigerationSecondarySystem_Impl::removeAllWalkins() {
-    removeAllCasesOrWalkins<RefrigerationWalkin>();
+    removeAllCasesOrWalkins<RefrigerationWalkIn>();
   }
 
-  bool RefrigerationSecondarySystem_Impl::setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectLists>& modelObjectLists) {
+  bool RefrigerationSecondarySystem_Impl::setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList) {
     bool result(false);
-    if (modelObjectLists) {
-      result = setPointer(OS_Refrigeration_SecondarySystemFields::RefrigeratedCaseAndWalkInListName, modelObjectLists.get().handle());
+    if (modelObjectList) {
+      result = setPointer(OS_Refrigeration_SecondarySystemFields::RefrigeratedCaseAndWalkInListName, modelObjectList.get().handle());
     }
     else {
       resetRefrigeratedCaseAndWalkInList();
@@ -480,10 +480,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool RefrigerationSecondarySystem_Impl::setVariableSpeedPumpCubicCurve(const boost::optional<CubicCurves>& cubicCurves) {
+  bool RefrigerationSecondarySystem_Impl::setVariableSpeedPumpCubicCurve(const boost::optional<CurveCubic>& curveCubic) {
     bool result(false);
-    if (cubicCurves) {
-      result = setPointer(OS_Refrigeration_SecondarySystemFields::VariableSpeedPumpCubicCurveName, cubicCurves.get().handle());
+    if (curveCubic) {
+      result = setPointer(OS_Refrigeration_SecondarySystemFields::VariableSpeedPumpCubicCurveName, curveCubic.get().handle());
     }
     else {
       resetVariableSpeedPumpCubicCurve();
@@ -616,11 +616,11 @@ std::vector<RefrigerationCase> RefrigerationSecondarySystem::cases() const {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->cases();
 }
 
-std::vector<RefrigerationWalkin> RefrigerationSecondarySystem::walkins() const {
+std::vector<RefrigerationWalkIn> RefrigerationSecondarySystem::walkins() const {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->walkins();
 }
 
-/*boost::optional<ModelObjectLists> RefrigerationSecondarySystem::refrigeratedCaseAndWalkInList() const {
+/*boost::optional<ModelObjectList> RefrigerationSecondarySystem::refrigeratedCaseAndWalkInList() const {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList();
 }*/
 
@@ -688,7 +688,7 @@ bool RefrigerationSecondarySystem::isPumpDriveTypeDefaulted() const {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->isPumpDriveTypeDefaulted();
 }
 
-boost::optional<CubicCurves> RefrigerationSecondarySystem::variableSpeedPumpCubicCurve() const {
+boost::optional<CurveCubic> RefrigerationSecondarySystem::variableSpeedPumpCubicCurve() const {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->variableSpeedPumpCubicCurve();
 }
 
@@ -752,11 +752,11 @@ void RefrigerationSecondarySystem::removeAllCases() {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeAllCases();
 }
 
-bool RefrigerationSecondarySystem::addWalkin(const RefrigerationWalkin& refrigerationWalkin) {
+bool RefrigerationSecondarySystem::addWalkin(const RefrigerationWalkIn& refrigerationWalkin) {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->addWalkin(refrigerationWalkin);
 }
 
-void RefrigerationSecondarySystem::removeWalkin(RefrigerationWalkin& refrigerationWalkin) {
+void RefrigerationSecondarySystem::removeWalkin(const RefrigerationWalkIn& refrigerationWalkin) {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeWalkin(refrigerationWalkin);
 }
 
@@ -764,8 +764,8 @@ void RefrigerationSecondarySystem::removeAllWalkins() {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeAllWalkins();
 }
 
-/*bool RefrigerationSecondarySystem::setRefrigeratedCaseAndWalkInList(const ModelObjectLists& modelObjectLists) {
-  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(modelObjectLists);
+/*bool RefrigerationSecondarySystem::setRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(modelObjectList);
 }*/
 
 void RefrigerationSecondarySystem::resetRefrigeratedCaseAndWalkInList() {
@@ -864,8 +864,8 @@ void RefrigerationSecondarySystem::resetPumpDriveType() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetPumpDriveType();
 }
 
-bool RefrigerationSecondarySystem::setVariableSpeedPumpCubicCurve(const CubicCurves& cubicCurves) {
-  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setVariableSpeedPumpCubicCurve(cubicCurves);
+bool RefrigerationSecondarySystem::setVariableSpeedPumpCubicCurve(const CurveCubic& curveCubic) {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setVariableSpeedPumpCubicCurve(curveCubic);
 }
 
 void RefrigerationSecondarySystem::resetVariableSpeedPumpCubicCurve() {

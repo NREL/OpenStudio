@@ -32,7 +32,7 @@ class ModelObjectList;
 //class RefrigerationAllTypesCondenser;
 class RefrigerationCase;
 class RefrigerationCompressor;
-class RefrigerationWalkin;
+class RefrigerationWalkIn;
 class RefrigerationSecondarySystem;
 //class RefrigerationCondenserCascade;
 //class RefrigerationSubcooler;
@@ -78,13 +78,13 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCase> cases() const;
 
-  bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
+  bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
-  void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
+  void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
   void removeAllWalkins();
 
-  std::vector<RefrigerationWalkin> walkins();
+  std::vector<RefrigerationWalkIn> walkins() const;
 
   bool addCompressor( const RefrigerationCompressor & compressor);
 

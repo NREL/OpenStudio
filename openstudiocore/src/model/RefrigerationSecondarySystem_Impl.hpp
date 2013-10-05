@@ -27,11 +27,11 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class ModelObjectLists;
-class CubicCurves;
+class ModelObjectList;
+class CurveCubic;
 class ThermalZone;
 class RefrigerationCase;
-class RefrigerationWalkin;
+class RefrigerationWalkIn;
 
 namespace detail {
 
@@ -70,13 +70,13 @@ namespace detail {
 
     std::vector<RefrigerationCase> cases() const;
 
-    std::vector<RefrigerationWalkin> walkins() const;
+    std::vector<RefrigerationWalkIn> walkins() const;
 
     template <class T>
     std::vector<T> casesOrWalkins() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectLists.
-    boost::optional<ModelObjectLists> refrigeratedCaseAndWalkInList() const;
+    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
+    boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
     std::string circulatingFluidName() const;
 
@@ -110,8 +110,8 @@ namespace detail {
 
     bool isPumpDriveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CubicCurves.
-    boost::optional<CubicCurves> variableSpeedPumpCubicCurve() const;
+    // TODO: Check return type. From object lists, some candidates are: CurveCubic.
+    boost::optional<CurveCubic> variableSpeedPumpCubicCurve() const;
 
     double pumpMotorHeattoFluid() const;
 
@@ -158,14 +158,14 @@ namespace detail {
 
     void removeAllCases();
 
-    bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
+    bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
-    void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
+    void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
     void removeAllWalkins();
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectLists.
-    bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectLists>& modelObjectLists);
+    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
+    bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetRefrigeratedCaseAndWalkInList();
 
@@ -215,8 +215,8 @@ namespace detail {
 
     void resetPumpDriveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CubicCurves.
-    bool setVariableSpeedPumpCubicCurve(const boost::optional<CubicCurves>& cubicCurves);
+    // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
+    bool setVariableSpeedPumpCubicCurve(const boost::optional<CurveCubic>& curveCubic);
 
     void resetVariableSpeedPumpCubicCurve();
 

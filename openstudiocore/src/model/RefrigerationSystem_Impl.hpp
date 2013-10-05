@@ -30,7 +30,7 @@ namespace model {
 class ModelObjectList;
 class RefrigerationCase;
 class RefrigerationCompressor;
-class RefrigerationWalkin;
+class RefrigerationWalkIn;
 class RefrigerationSecondarySystem;
 //class RefrigerationCondenserCascade;
 //class RefrigerationAllTypesCondenser;
@@ -78,7 +78,7 @@ namespace detail {
 
     std::vector<RefrigerationCase> cases() const;
 
-    std::vector<RefrigerationWalkin> walkins() const;
+    std::vector<RefrigerationWalkIn> walkins() const;
 
     std::vector<RefrigerationCompressor> compressors() const;
 
@@ -87,7 +87,7 @@ namespace detail {
     //std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
     template <class T>
-    std::vector<T> listTemplate(const boost::optional<ModelObjectList>& modelObjectList) const;
+    std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
 
     // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
@@ -147,13 +147,13 @@ namespace detail {
     //@{
 
     template <class T>
-    void removeAllTemplate( const boost::optional<ModelObjectList>& modelObjectList );
+    void removeAllTemplate( boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    void removeTemplate( const T & modelObject, const boost::optional<ModelObjectList>& modelObjectList );
+    void removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    bool addTemplate( const T & modelObject, const boost::optional<ModelObjectList>& modelObjectList );
+    bool addTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
 
     bool addCase( const RefrigerationCase & refrigerationCase);
 
@@ -161,9 +161,9 @@ namespace detail {
 
     void removeAllCases();
 
-    bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
+    bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
-    void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
+    void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
     void removeAllWalkins();
 
