@@ -134,7 +134,9 @@ class RefractionExtinctionGlazing;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationCondenserAirCooled;
+class RefrigerationSecondarySystem;
 class RefrigerationSystem;
+class RefrigerationWalkIn;
 class RoofVegetation;
 class RunPeriod;
 class RunPeriodControlDaylightSavingTime;
@@ -467,7 +469,11 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateRefrigerationCondenserAirCooled( model::RefrigerationCondenserAirCooled & modelObject );
 
+  boost::optional<IdfObject> translateRefrigerationSecondarySystem( model::RefrigerationSecondarySystem & modelObject );
+
   boost::optional<IdfObject> translateRefrigerationSystem( model::RefrigerationSystem & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationWalkIn( model::RefrigerationWalkIn & modelObject );
 
   boost::optional<IdfObject> translateRoofVegetation( model::RoofVegetation & modelObject );
 
