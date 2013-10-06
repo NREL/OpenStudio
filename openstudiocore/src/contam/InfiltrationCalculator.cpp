@@ -148,9 +148,9 @@ void InfiltrationCalculator::apply()
 }
 
 boost::optional<QVector<double> > InfiltrationCalculator::simulate(std::map <openstudio::Handle,int> spaceMap,
-                                                    openstudio::contam::ForwardTranslator &translator,
-                                                    std::vector<openstudio::model::Surface> extSurfaces,
-                                                    double windSpeed, double windDirection)
+                                                                   openstudio::contam::ForwardTranslator &translator,
+                                                                   std::vector<openstudio::model::Surface> extSurfaces,
+                                                                   double windSpeed, double windDirection)
 {
   QVector<double> results(spaceMap.size(),0.0);
   std::map<openstudio::Handle,int> surfaceMap = translator.surfaceMap();
