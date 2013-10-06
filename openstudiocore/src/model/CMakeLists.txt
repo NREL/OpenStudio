@@ -517,6 +517,9 @@ SET( ${target_name}_src
   RefrigerationWalkIn.hpp
   RefrigerationWalkIn_Impl.hpp
   RefrigerationWalkIn.cpp
+  RefrigerationWalkInZoneBoundary.hpp
+  RefrigerationWalkInZoneBoundary_Impl.hpp
+  RefrigerationWalkInZoneBoundary.cpp
   RenderingColor.hpp
   RenderingColor_Impl.hpp
   RenderingColor.cpp
@@ -998,6 +1001,7 @@ SET( ${target_name}_moc
   RefrigerationSecondarySystem_Impl.hpp
   RefrigerationSystem_Impl.hpp
   RefrigerationWalkIn_Impl.hpp
+  RefrigerationWalkInZoneBoundary_Impl.hpp
   RenderingColor_Impl.hpp
   ResourceObject_Impl.hpp
   RoofVegetation_Impl.hpp
@@ -1227,6 +1231,7 @@ SET( ${target_name}_test_src
   test/RefrigerationSecondarySystem_GTest.cpp
   test/RefrigerationSystem_GTest.cpp
   test/RefrigerationWalkIn_GTest.cpp
+  test/RefrigerationWalkInZoneBoundary_GTest.cpp
   test/RenderingColor_GTest.cpp
   test/ResourceObject_GTest.cpp
   test/RoofVegetation_GTest.cpp

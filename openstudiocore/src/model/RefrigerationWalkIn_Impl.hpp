@@ -28,6 +28,7 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
+class RefrigerationWalkInZoneBoundary;
 
 namespace detail {
 
@@ -61,6 +62,14 @@ namespace detail {
     virtual IddObjectType iddObjectType() const;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+
+    bool addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary);
+
+    void removeZoneBoundary(unsigned groupIndex);
+
+    void removeAllZoneBoundaries();
+
+    std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries();
 
     //@}
     /** @name Getters */

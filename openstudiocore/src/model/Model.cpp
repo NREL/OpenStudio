@@ -330,6 +330,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
     REGISTER_CONSTRUCTOR(RefrigerationSystem);
     REGISTER_CONSTRUCTOR(RefrigerationWalkIn);
+    REGISTER_CONSTRUCTOR(RefrigerationWalkInZoneBoundary);
     REGISTER_CONSTRUCTOR(RenderingColor);
     REGISTER_CONSTRUCTOR(RoofVegetation);
     REGISTER_CONSTRUCTOR(RunPeriod);
@@ -595,6 +596,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkIn);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationWalkInZoneBoundary);
     REGISTER_COPYCONSTRUCTORS(RenderingColor);
     REGISTER_COPYCONSTRUCTORS(RoofVegetation);
     REGISTER_COPYCONSTRUCTORS(RunPeriod);

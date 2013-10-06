@@ -27,8 +27,8 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
+class RefrigerationWalkInZoneBoundary;
 
 namespace detail {
 
@@ -53,6 +53,14 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   static std::vector<std::string> defrostTypeValues();
 
   static std::vector<std::string> defrostControlTypeValues();
+
+  bool addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary);
+
+  void removeZoneBoundary(unsigned groupIndex);
+
+  void removeAllZoneBoundaries();
+
+  std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries();
 
   /** @name Getters */
   //@{

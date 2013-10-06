@@ -19,12 +19,15 @@
 
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
+#include <model/RefrigerationWalkInZoneBoundary.hpp>
+#include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
+
+#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_WalkIn_FieldEnums.hxx>
@@ -102,6 +105,50 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("RefrigerationWalkIn","Restocking"));
     }
+    return result;
+  }
+
+  bool RefrigerationWalkIn_Impl::addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary)
+  {
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    bool temp = eg.setPointer(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary, refrigerationWalkInZoneBoundary.handle());
+    if( !temp ) {
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      return temp;
+    }
+    return temp;
+  }
+
+  void RefrigerationWalkIn_Impl::removeZoneBoundary(unsigned groupIndex)
+  {
+    unsigned numberofDataPairs = numExtensibleGroups();
+    if(groupIndex < numberofDataPairs) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+    }
+  }
+
+  void RefrigerationWalkIn_Impl::removeAllZoneBoundaries() 
+  {
+    getObject<ModelObject>().clearExtensibleGroups();
+  }
+
+  std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkIn_Impl::zoneBoundaries() 
+  {
+    std::vector<RefrigerationWalkInZoneBoundary> result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
+         it != groups.end();
+         it++ )
+    {
+      boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getObject<ModelObject>().getModelObjectTarget<RefrigerationWalkInZoneBoundary>(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary);
+
+      if(refrigerationWalkInZoneBoundary) {
+        result.push_back( refrigerationWalkInZoneBoundary.get() );
+      }
+    }
+
     return result;
   }
 
@@ -475,6 +522,22 @@ std::vector<std::string> RefrigerationWalkIn::defrostTypeValues() {
 std::vector<std::string> RefrigerationWalkIn::defrostControlTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Refrigeration_WalkInFields::DefrostControlType);
+}
+
+bool RefrigerationWalkIn::addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary){
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->addZoneBoundary(refrigerationWalkInZoneBoundary);
+}
+
+void RefrigerationWalkIn::removeZoneBoundary(unsigned groupIndex){
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->removeZoneBoundary(groupIndex);
+}
+
+void RefrigerationWalkIn::removeAllZoneBoundaries(){
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->removeAllZoneBoundaries();
+}
+
+std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkIn::zoneBoundaries(){
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaries();
 }
 
 boost::optional<Schedule> RefrigerationWalkIn::availabilitySchedule() const {

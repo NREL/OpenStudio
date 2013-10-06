@@ -6711,7 +6711,6 @@ OS:Refrigeration:WalkIn:ZoneBoundary,
         \reference RefrigerationWalkInZoneBoundaryNames
   A3,   \field Zone Name
         \note This must be a controlled zone and appear in a ZoneHVAC:EquipmentConnections object.
-        \begin-extensible
         \required-field
         \type object-list
         \object-list ThermalZoneNames
