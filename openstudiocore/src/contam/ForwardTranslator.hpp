@@ -30,6 +30,8 @@
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/StringStreamLogSink.hpp>
+#include <utilities/data/TimeSeries.hpp>
+#include <utilities/time/Date.hpp>
 
 namespace openstudio{
 class ProgressBar;
@@ -38,6 +40,25 @@ class Model;
 }
 
 namespace contam{
+
+class CvfFile
+{
+public:
+  CvfFile();
+  void addTimeSeries(std::string name, TimeSeries series);
+  bool write(openstudio::path filepath);
+  Date start() const {return m_start;}
+  void setStart(Date date){m_start=date;}
+  Date end() const {return m_end;}
+  void setEnd(Date date){m_end=date;}
+
+private:
+  std::vector<std::string> m_names;
+  std::vector<TimeSeries> m_series;
+
+  Date m_start;
+  Date m_end;
+};
 
 class CONTAM_API ForwardTranslator
 {

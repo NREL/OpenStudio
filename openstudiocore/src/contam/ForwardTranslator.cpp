@@ -56,6 +56,32 @@
 namespace openstudio {
 namespace contam {
 
+CvfFile::CvfFile()
+{
+  m_start = Date(MonthOfYear::Jan,1);
+  m_end = Date(MonthOfYear::Dec,31);
+}
+
+void CvfFile::addTimeSeries(std::string name, TimeSeries series)
+{
+  m_names.push_back(name);
+  m_series.push_back(series);
+}
+
+bool CvfFile::write(openstudio::path filepath)
+{
+  QFile file(toQString(filepath));
+  if(file.open(QFile::WriteOnly))
+  {
+    QTextStream textStream(&file);
+    textStream << "ContinuousValuesFile ContamW 2.1\n";
+    textStream << "CVF file from E+ results";
+    file.close();
+    return true;
+  }
+  return false;
+}
+
 ForwardTranslator::ForwardTranslator()
 {
   m_valid=false;
@@ -1279,13 +1305,29 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     if(sqlFile)
     {
       std::cout << "Simulation results attached, can't do that yet." << std::endl;
-      return false;
+      std::vector<std::string> available = sqlFile->availableTimeSeries();
+      BOOST_FOREACH(std::string series, available)
+      {
+        std::cout << '\t' << series <<std::endl;
+      }
       std::string envPeriod; 
       BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
       {
         envPeriod = t; // should only ever be one
         break;
       }
+      std::cout << envPeriod << std::endl;
+      bool setTime=false;
+      if(std::find(available.begin(), available.end(), "Zone Mean Air Temperature")!=available.end())
+      {
+        std::vector<TimeSeries> series = sqlFile->timeSeries(envPeriod,"Hourly","Zone Mean Air Temperature");
+        // Is there a better way to do this?
+      }
+      else
+      {
+        LOG(Warn, "Activate \"Zone Mean Air Temperature\" to set zone temperature controls.");
+      }
+      return false;
       // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
       // This should be moved to inside the contam translator
       BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
