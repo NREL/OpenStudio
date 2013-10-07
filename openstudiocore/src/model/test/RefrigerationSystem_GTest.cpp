@@ -27,8 +27,14 @@
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+//#include <model/RefrigerationCondenserCascade.hpp>
+//#include <model/RefrigerationCondenserCascade_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
+#include <model/RefrigerationWalkIn.hpp>
+#include <model/RefrigerationWalkIn_Impl.hpp>
+#include <model/RefrigerationSecondarySystem.hpp>
+#include <model/RefrigerationSecondarySystem_Impl.hpp>
 #include <model/ModelObjectList.hpp>
 #include <model/ModelObjectList_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -62,7 +68,7 @@ TEST_F(ModelFixture, RefrigerationSystem_Remove)
   EXPECT_EQ(1, refrigerationSystems.size());
 
   std::vector<ModelObjectList> refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
-  EXPECT_EQ(2, refrigerationModelObjectLists.size());
+  EXPECT_EQ(3, refrigerationModelObjectLists.size());
 
   testObject.remove();
 
@@ -276,6 +282,488 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
   EXPECT_TRUE(cases.empty());
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
+
+TEST_F(ModelFixture, RefrigerationSystem_Walkins)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact wls(model);
+  ScheduleCompact wds(model);
+  ScheduleCompact wddds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+
+  std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
+  EXPECT_TRUE(walkins.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+
+  testObject.addWalkin(walkin1);
+  walkins = testObject.walkins();
+  EXPECT_EQ(1, walkins.size());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_AddWalkIn)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact wls(model);
+  ScheduleCompact wds(model);
+  ScheduleCompact wddds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+
+  EXPECT_TRUE(testObject.addWalkin(walkin1));
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact wls(model);
+  ScheduleCompact wds(model);
+  ScheduleCompact wddds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+
+  testObject.addWalkin(walkin1);
+  testObject.addWalkin(walkin2);
+  testObject.removeWalkin(walkin1);
+
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  EXPECT_EQ(2, testRefrigerationWalkIns.size());
+
+  std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
+  EXPECT_EQ(1, walkins.size());
+  EXPECT_EQ(walkin2.handle(), walkins[0].handle());
+
+  testObject.removeWalkin(walkin2);
+  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  walkins = testObject.walkins();
+  EXPECT_EQ(2, testRefrigerationWalkIns.size());
+  EXPECT_TRUE(walkins.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllWalkIns)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact wls(model);
+  ScheduleCompact wds(model);
+  ScheduleCompact wddds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+
+  testObject.addWalkin(walkin1);
+  testObject.addWalkin(walkin2);
+  testObject.removeAllWalkins();
+
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  EXPECT_EQ(2, testRefrigerationWalkIns.size());
+
+  std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
+  EXPECT_TRUE(walkins.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkins)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  ScheduleCompact s2(model);
+  ScheduleCompact s3(model);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
+  ScheduleCompact wls(model);
+  ScheduleCompact wds(model);
+  ScheduleCompact wddds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+
+  std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
+  EXPECT_TRUE(walkins.empty());
+  std::vector<RefrigerationCase> cases = testObject.cases();
+  EXPECT_TRUE(cases.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+
+  testObject.addWalkin(walkin1);
+  walkins = testObject.walkins();
+  testObject.addCase(case1);
+  cases = testObject.cases();
+  EXPECT_EQ(1, walkins.size());
+  EXPECT_EQ(1, cases.size());
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  EXPECT_EQ(2, modelObjectList.modelObjects().size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCaseAndWalkIn)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact wls(model);
+  ScheduleCompact wds(model);
+  ScheduleCompact wddds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+  ScheduleCompact s1(model);
+  ScheduleCompact s2(model);
+  ScheduleCompact s3(model);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
+  RefrigerationCase case2 = RefrigerationCase(model, s1, s2, s3);
+
+  testObject.addWalkin(walkin1);
+  testObject.addWalkin(walkin2);
+  testObject.removeWalkin(walkin1);
+
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  EXPECT_EQ(2, testRefrigerationWalkIns.size());
+
+  std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
+  EXPECT_EQ(1, walkins.size());
+  EXPECT_EQ(walkin2.handle(), walkins[0].handle());
+
+  testObject.addCase(case1);
+  testObject.addCase(case2);
+  testObject.removeCase(case1);
+
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  EXPECT_EQ(2, testRefrigerationCases.size());
+
+  std::vector<RefrigerationCase> cases = testObject.cases();
+  EXPECT_EQ(1, cases.size());
+  EXPECT_EQ(case2.handle(), cases[0].handle());
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  EXPECT_EQ(2, modelObjectList.modelObjects().size());
+
+  testObject.removeWalkin(walkin2);
+  testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  walkins = testObject.walkins();
+  EXPECT_EQ(2, testRefrigerationWalkIns.size());
+  EXPECT_TRUE(walkins.empty());
+
+  testObject.removeCase(case2);
+  testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  cases = testObject.cases();
+  EXPECT_EQ(2, testRefrigerationCases.size());
+  EXPECT_TRUE(cases.empty());
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  EXPECT_EQ(0, modelObjectList.modelObjects().size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCasesAndWalkIns)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  ScheduleCompact s2(model);
+  ScheduleCompact s3(model);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
+  RefrigerationCase case2 = RefrigerationCase(model, s1, s2, s3);
+  ScheduleCompact wls(model);
+  ScheduleCompact wds(model);
+  ScheduleCompact wddds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+
+  testObject.addWalkin(walkin1);
+  testObject.addWalkin(walkin2);
+  testObject.addCase(case1);
+  testObject.addCase(case2);
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  EXPECT_EQ(4, modelObjectList.modelObjects().size());
+
+  testObject.removeAllCases();
+  testObject.removeAllWalkins();
+
+  std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
+  EXPECT_EQ(2, testRefrigerationWalkIns.size());
+  std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  EXPECT_EQ(2, testRefrigerationCases.size());
+
+  std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
+  EXPECT_TRUE(walkins.empty());
+  std::vector<RefrigerationCase> cases = testObject.cases();
+  EXPECT_TRUE(cases.empty());
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  EXPECT_EQ(0, modelObjectList.modelObjects().size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoads)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+
+  std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_TRUE(secondarySystemLoads.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+
+  testObject.addSecondarySystemLoad(secondarySystem1);
+  secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_EQ(1, secondarySystemLoads.size());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_AddSecondarySystemLoad)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+
+  EXPECT_TRUE(testObject.addSecondarySystemLoad(secondarySystem1));
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+  RefrigerationSecondarySystem secondarySystem2 = RefrigerationSecondarySystem(model);
+
+  testObject.addSecondarySystemLoad(secondarySystem1);
+  testObject.addSecondarySystemLoad(secondarySystem2);
+  testObject.removeSecondarySystemLoad(secondarySystem1);
+
+  std::vector<RefrigerationSecondarySystem> testRefrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
+  EXPECT_EQ(2, testRefrigerationSecondarySystems.size());
+
+  std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_EQ(1, secondarySystemLoads.size());
+  EXPECT_EQ(secondarySystem2.handle(), secondarySystemLoads[0].handle());
+
+  testObject.removeSecondarySystemLoad(secondarySystem2);
+  testRefrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
+  secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_EQ(2, testRefrigerationSecondarySystems.size());
+  EXPECT_TRUE(secondarySystemLoads.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+  RefrigerationSecondarySystem secondarySystem2 = RefrigerationSecondarySystem(model);
+
+  testObject.addSecondarySystemLoad(secondarySystem1);
+  testObject.addSecondarySystemLoad(secondarySystem2);
+  testObject.removeAllSecondarySystemLoads();
+
+  std::vector<RefrigerationSecondarySystem> testRefrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
+  EXPECT_EQ(2, testRefrigerationSecondarySystems.size());
+
+  std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_TRUE(secondarySystemLoads.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+}
+
+/*TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoads)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_TRUE(cascadeCondenserLoads.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+
+  testObject.addCascadeCondenserLoad(condenserCascade1);
+  cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_EQ(1, cascadeCondenserLoads.size());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_AddCascadeCondenserLoad)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+
+  EXPECT_TRUE(testObject.addCascadeCondenserLoad(condenserCascade1););
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCascadeCondenserLoad)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+  RefrigerationCondenserCascade condenserCascade2 = RefrigerationCondenserCascade(model);
+
+  testObject.addCascadeCondenserLoad(condenserCascade1);
+  testObject.addCascadeCondenserLoad(condenserCascade2);
+  testObject.removeCascadeCondenserLoad(condenserCascade1);
+
+  std::vector<RefrigerationCondenserCascade> testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
+  EXPECT_EQ(2, testCascadeCondenserLoads.size());
+
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_EQ(1, cascadeCondenserLoads.size());
+  EXPECT_EQ(condenserCascade2.handle(), cascadeCondenserLoads[0].handle());
+
+  testObject.removeCascadeCondenserLoad(condenserCascade2);
+  testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
+  cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_EQ(2, testCascadeCondenserLoads.size());
+  EXPECT_TRUE(cascadeCondenserLoads.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+  RefrigerationCondenserCascade condenserCascade2 = RefrigerationCondenserCascade(model);
+
+  testObject.addCascadeCondenserLoad(condenserCascade1);
+  testObject.addCascadeCondenserLoad(condenserCascade2);
+  testObject.removeAllCascadeCondenserLoads();
+
+  std::vector<RefrigerationCondenserCascade> testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
+  EXPECT_EQ(2, testCascadeCondenserLoads.size());
+
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_TRUE(cascadeCondenserLoads.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_TransferLoads)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_TRUE(cascadeCondenserLoads.empty());
+  std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_TRUE(secondarySystemLoads.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+
+  testObject.addCascadeCondenserLoad(condenserCascade1);
+  cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  testObject.addSecondarySystemLoad(secondarySystem1);
+  secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_EQ(1, cascadeCondenserLoads.size());
+  EXPECT_EQ(1, secondarySystemLoads.size());
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList().get();
+  EXPECT_EQ(2, modelObjectList.modelObjects().size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveTransferLoads)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+  RefrigerationCondenserCascade condenserCascade2 = RefrigerationCondenserCascade(model);
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+  RefrigerationSecondarySystem secondarySystem2 = RefrigerationSecondarySystem(model);
+
+  testObject.addSecondarySystemLoad(secondarySystem1);
+  testObject.addSecondarySystemLoad(secondarySystem2);
+  testObject.removeSecondarySystemLoad(secondarySystem1);
+
+  std::vector<RefrigerationSecondarySystem> testRefrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
+  EXPECT_EQ(2, testRefrigerationSecondarySystems.size());
+
+  std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_EQ(1, secondarySystemLoads.size());
+  EXPECT_EQ(secondarySystem2.handle(), secondarySystemLoads[0].handle());
+
+  testObject.addCascadeCondenserLoad(condenserCascade1);
+  testObject.addCascadeCondenserLoad(condenserCascade2);
+  testObject.removeCascadeCondenserLoad(condenserCascade1);
+
+  std::vector<RefrigerationCondenserCascade> testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
+  EXPECT_EQ(2, testCascadeCondenserLoads.size());
+
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_EQ(1, cascadeCondenserLoads.size());
+  EXPECT_EQ(condenserCascade2.handle(), cascadeCondenserLoads[0].handle());
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList().get();
+  EXPECT_EQ(2, modelObjectList.modelObjects().size());
+
+  testObject.removeSecondarySystemLoad(secondarySystem2);
+  testRefrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
+  secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_EQ(2, testRefrigerationSecondarySystems.size());
+  EXPECT_TRUE(secondarySystemLoads.empty());
+
+  testObject.removeCascadeCondenserLoad(condenserCascade2);
+  testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
+  cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_EQ(2, testCascadeCondenserLoads.size());
+  EXPECT_TRUE(cascadeCondenserLoads.empty());
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList().get();
+  EXPECT_EQ(0, modelObjectList.modelObjects().size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllTransferLoads)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+  RefrigerationCondenserCascade condenserCascade2 = RefrigerationCondenserCascade(model);
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+  RefrigerationSecondarySystem secondarySystem2 = RefrigerationSecondarySystem(model);
+
+  testObject.addCascadeCondenserLoad(condenserCascade1);
+  testObject.addCascadeCondenserLoad(condenserCascade2);
+  testObject.addSecondarySystemLoad(secondarySystem1);
+  testObject.addSecondarySystemLoad(secondarySystem2);
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList().get();
+  EXPECT_EQ(4, modelObjectList.modelObjects().size());
+
+  testObject.removeAllCascadeCondenserLoads();
+  testObject.removeAllSecondarySystemLoads();
+
+  std::vector<RefrigerationCondenserCascade> testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
+  EXPECT_EQ(2, testCascadeCondenserLoads.size());
+  std::vector<RefrigerationSecondarySystem> testSecondarySystemLoads = model.getModelObjects<RefrigerationSecondarySystem>();
+  EXPECT_EQ(2, testSecondarySystemLoads.size());
+
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
+  EXPECT_TRUE(cascadeCondenserLoads.empty());
+  std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
+  EXPECT_TRUE(secondarySystemLoads.empty());
+
+  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList().get();
+  EXPECT_EQ(0, modelObjectList.modelObjects().size());
+}*/
 
 TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSystemWorkingFluidType)
 {

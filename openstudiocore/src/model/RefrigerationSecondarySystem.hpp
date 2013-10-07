@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include <model/ParentObject.hpp>
 
 namespace openstudio {
 
@@ -40,8 +40,8 @@ namespace detail {
 
 } // detail
 
-/** RefrigerationSecondarySystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:SecondarySystem'. */
-class MODEL_API RefrigerationSecondarySystem : public ModelObject {
+/** RefrigerationSecondarySystem is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:SecondarySystem'. */
+class MODEL_API RefrigerationSecondarySystem : public ParentObject {
  public:
   /** @name Constructors and Destructors */
   //@{

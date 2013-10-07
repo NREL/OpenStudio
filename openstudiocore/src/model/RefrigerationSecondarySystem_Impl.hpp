@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONSECONDARYSYSTEM_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/ParentObject_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -35,8 +35,8 @@ class RefrigerationWalkIn;
 
 namespace detail {
 
-  /** RefrigerationSecondarySystem_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSecondarySystem.*/
-  class MODEL_API RefrigerationSecondarySystem_Impl : public ModelObject_Impl {
+  /** RefrigerationSecondarySystem_Impl is a ParentObject_Impl that is the implementation class for RefrigerationSecondarySystem.*/
+  class MODEL_API RefrigerationSecondarySystem_Impl : public ParentObject_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -63,6 +63,14 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
+
+    virtual ModelObject clone(Model model) const;
+
+    virtual std::vector<IdfObject> remove();
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
 
     //@}
     /** @name Getters */

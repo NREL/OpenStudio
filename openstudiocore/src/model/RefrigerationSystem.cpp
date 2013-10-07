@@ -618,6 +618,10 @@ RefrigerationSystem::RefrigerationSystem(const Model& model)
   caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
   ok = getImpl<detail::RefrigerationSystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
   OS_ASSERT(ok);
+  ModelObjectList transferLoadList = ModelObjectList(model);
+  transferLoadList.setName(this->name().get() + " Transfer Load List");
+  ok = getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationTransferLoadList(transferLoadList);
+  OS_ASSERT(ok);
   ModelObjectList compressorlist = ModelObjectList(model);
   compressorlist.setName(this->name().get() + " Compressor List");
   ok = getImpl<detail::RefrigerationSystem_Impl>()->setCompressorList(compressorlist);

@@ -20,7 +20,6 @@
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationSecondarySystem_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/ModelObjectList.hpp>
 #include <model/ModelObjectList_Impl.hpp>
 #include <model/CurveCubic.hpp>
@@ -31,6 +30,8 @@
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_SecondarySystem_FieldEnums.hxx>
@@ -47,7 +48,7 @@ namespace detail {
   RefrigerationSecondarySystem_Impl::RefrigerationSecondarySystem_Impl(const IdfObject& idfObject,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ParentObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == RefrigerationSecondarySystem::iddObjectType());
   }
@@ -55,7 +56,7 @@ namespace detail {
   RefrigerationSecondarySystem_Impl::RefrigerationSecondarySystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == RefrigerationSecondarySystem::iddObjectType());
   }
@@ -63,7 +64,7 @@ namespace detail {
   RefrigerationSecondarySystem_Impl::RefrigerationSecondarySystem_Impl(const RefrigerationSecondarySystem_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& RefrigerationSecondarySystem_Impl::outputVariableNames() const
@@ -76,6 +77,56 @@ namespace detail {
 
   IddObjectType RefrigerationSecondarySystem_Impl::iddObjectType() const {
     return RefrigerationSecondarySystem::iddObjectType();
+  }
+
+  std::vector<IdfObject> RefrigerationSecondarySystem_Impl::remove()
+  {
+    std::vector<IdfObject> result;
+
+    if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
+      std::vector<IdfObject> removedCasesAndWalkins = caseAndWalkinList->remove();
+      result.insert(result.end(), removedCasesAndWalkins.begin(), removedCasesAndWalkins.end());
+    }
+
+    std::vector<IdfObject> removedRefrigerationSecondarySystem = ParentObject_Impl::remove();
+    result.insert(result.end(), removedRefrigerationSecondarySystem.begin(), removedRefrigerationSecondarySystem.end());
+
+    return result;
+  }
+
+  ModelObject RefrigerationSecondarySystem_Impl::clone(Model model) const
+  {
+    RefrigerationSecondarySystem modelObjectClone = ParentObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
+
+    if (boost::optional<CurveCubic> variableSpeedPumpCubicCurve = this->variableSpeedPumpCubicCurve()) {
+      modelObjectClone.setVariableSpeedPumpCubicCurve(variableSpeedPumpCubicCurve.get().clone(model).cast<CurveCubic>());
+    }
+
+    if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
+      ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
+      modelObjectClone.getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
+    }
+
+    modelObjectClone.resetDistributionPipingZone();
+    modelObjectClone.resetReceiverSeparatorZone();
+
+    return modelObjectClone;
+  }
+
+  std::vector<IddObjectType> RefrigerationSecondarySystem_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Cubic);
+    return result;
+  }
+
+  std::vector<ModelObject> RefrigerationSecondarySystem_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if (boost::optional<CurveCubic> intermediate = variableSpeedPumpCubicCurve()) {
+      result.push_back(*intermediate);
+    }
+    return result;
   }
 
   template <class T>
@@ -584,18 +635,33 @@ namespace detail {
 } // detail
 
 RefrigerationSecondarySystem::RefrigerationSecondarySystem(const Model& model)
-  : ModelObject(RefrigerationSecondarySystem::iddObjectType(),model)
+  : ParentObject(RefrigerationSecondarySystem::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationSecondarySystem_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
-  // ok = setHandle();
+  ModelObjectList caseAndWalkinList = ModelObjectList(model);
+  caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
+  ok = getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
   OS_ASSERT(ok);
-  // ok = setCirculatingFluidName();
+  ok = setCirculatingFluidName("PropyleneGlycol");
   OS_ASSERT(ok);
-  // setEvaporatorEvaporatingTemperature();
-  // setEvaporatorApproachTemperatureDifference();
+  ok = setGlycolConcentration(30);
+  OS_ASSERT(ok);
+  ok = setEvaporatorCapacity(3.5E4);
+  OS_ASSERT(ok);
+  ok = setEvaporatorFlowRateforSecondaryFluid(0.0021);
+  OS_ASSERT(ok);
+  setEvaporatorEvaporatingTemperature(-12.6);
+  setEvaporatorApproachTemperatureDifference(2.7);
+  setEvaporatorRangeTemperatureDifference(4.0);
+  setNumberofPumpsinLoop(3);
+  ok = setTotalPumpFlowRate(0.0023);
+  OS_ASSERT(ok);
+  ok = setTotalPumpHead(2.09E5);
+  OS_ASSERT(ok);
+  ok = setPumpMotorHeattoFluid(1.0);
+  OS_ASSERT(ok);
 }
 
 IddObjectType RefrigerationSecondarySystem::iddObjectType() {
@@ -930,7 +996,7 @@ void RefrigerationSecondarySystem::resetEndUseSubcategory() {
 
 /// @cond
 RefrigerationSecondarySystem::RefrigerationSecondarySystem(boost::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
-  : ModelObject(impl)
+  : ParentObject(impl)
 {}
 /// @endcond
 
