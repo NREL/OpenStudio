@@ -95,8 +95,14 @@ namespace detail{
     // performs a cursory regex and returns true if it's valid
     bool validAccessKey(const std::string& accessKey) const;
 
+    // returns the result of the last validAccessKey validation of the current accessKey
+    bool validAccessKey() const;
+
     // performs a cursory regex and returns true if it's valid
     bool validSecretKey(const std::string& secretKey) const;
+
+    // returns the result of the last validSecretKey validation of the current secretKey
+    bool validSecretKey() const;
 
     // returns the saved default number of workers
     unsigned numWorkers() const;
@@ -498,6 +504,9 @@ namespace detail{
     double lastEstimatedCharges() const;
     unsigned lastTotalInstances() const;
 
+    bool userAgreementSigned() const;
+    bool authenticated() const;
+    
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
 

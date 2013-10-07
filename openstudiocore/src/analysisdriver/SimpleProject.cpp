@@ -22,6 +22,8 @@
 
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include <analysisdriver/AnalysisDriver_Impl.hpp>
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
@@ -98,9 +100,14 @@ namespace detail {
       m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+    OS_ASSERT(test);
+
     if (m_analysis) {
-      m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      test = m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      OS_ASSERT(test);
     }
+
     m_logFile.setLogLevel(options.logLevel());
     OS_ASSERT(runManager().paused());
     if (!options.pauseRunManagerQueue()) {
@@ -333,10 +340,26 @@ namespace detail {
     return result;
   }
 
-  boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const {
+  AnalysisStatus SimpleProject_Impl::status() const
+  {
+    if (m_cloudAnalysisDriver){
+      return m_cloudAnalysisDriver->status();
+    }
+    return analysisDriver().status();
+  }
+
+  boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const{
     if (!m_cloudAnalysisDriver) {
       if (boost::optional<CloudSession> session = cloudSession()) {
+        bool test = disconnect(m_analysisDriver.getImpl().get(), SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+        OS_ASSERT(test);
+
         m_cloudAnalysisDriver = CloudAnalysisDriver(*session,simpleProject());
+        
+        test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+        OS_ASSERT(test);
+
+        emit analysisStatusChanged(m_cloudAnalysisDriver->status());
       }
     }
     return m_cloudAnalysisDriver;
@@ -883,6 +906,11 @@ namespace detail {
 
   void SimpleProject_Impl::clearCloudAnalysisDriver() {
     m_cloudAnalysisDriver.reset();
+
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+    OS_ASSERT(test);
+
+    emit analysisStatusChanged(m_analysisDriver.status());
   }
 
   bool SimpleProject_Impl::setCloudSession(const CloudSession& session) {
@@ -1973,6 +2001,10 @@ bool SimpleProject::analysisIsLoaded() const {
 
 bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
+}
+
+AnalysisStatus SimpleProject::status() const {
+  return getImpl()->status();
 }
 
 boost::optional<CloudAnalysisDriver> SimpleProject::cloudAnalysisDriver() const {
