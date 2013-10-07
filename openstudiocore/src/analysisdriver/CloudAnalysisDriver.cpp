@@ -63,7 +63,9 @@ namespace detail {
       m_maxAnalysisNotRunningCount(0),
       m_dataPointsNotRunningCount(0),
       m_maxDataPointsNotRunningCount(0),
+      m_numJsonTries(0),
       m_onlyProcessingDownloadRequests(true),
+      m_numDetailsTries(0),
       m_waitForAlreadyRunningDataPoints(false)
   {}
 
@@ -85,8 +87,10 @@ namespace detail {
       result = numDataPointsInIteration();
     }
     else {
+      // HERE -- What to do about m_jsonFailures and m_detailsFailures?
       result = m_postQueue.size() +
                m_waitingQueue.size() +
+               m_runningQueue.size() +
                m_jsonQueue.size() +
                m_preDetailsQueue.size() +
                m_detailsQueue.size();
@@ -181,17 +185,8 @@ namespace detail {
 
     // try to start/restart run
     m_lastRunSuccess = false;
-    clearErrorsAndWarnings();
-    // make sure all the queues are empty. will repopulate.
-    m_iteration.clear();
-    m_postQueue.clear();
-    m_waitingQueue.clear();
-    m_jsonQueue.clear();
-    m_preDetailsQueue.clear();
-    m_detailsQueue.clear();
-    m_processingQueuesInitialized = false;    
-    // definitely under a run request now
     m_onlyProcessingDownloadRequests = false;
+    resetState();
 
     // see if trivially complete
     m_iteration = project().analysis().dataPointsToQueue();
@@ -300,20 +295,12 @@ namespace detail {
 
     bool found(false);
     if (m_onlyProcessingDownloadRequests && !isDownloading()) {
-      clearErrorsAndWarnings();
-      // new set of requests. call this an "iteration"
-      m_iteration.clear();
-      m_postQueue.clear();
-      m_waitingQueue.clear();
-      m_jsonQueue.clear();
-      m_preDetailsQueue.clear();
-      m_detailsQueue.clear();
-      m_processingQueuesInitialized = false;
+      resetState();
     }
     else {
       // see if already in process, in which case, the right thing should happen automatically
       found = inIteration(*actualDataPoint) &&
-              (!m_processingQueuesInitialized || inProcessingQueues(*actualDataPoint))
+              (!m_processingQueuesInitialized || inProcessingQueues(*actualDataPoint));
     }
   
     // if not, see if there are results on the server
@@ -788,6 +775,9 @@ namespace detail {
       if (isRunning) {
         LOG(Debug,"The analysis was started in " << m_analysisNotRunningCount
             << " tries. Now make sure some DataPoints start running.");
+
+        m_analysisNotRunningCount = 0;
+        m_maxAnalysisNotRunningCount = 1;
         
         bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(waitingForAnalysisToStart(bool)));
         OS_ASSERT(test);
@@ -808,12 +798,19 @@ namespace detail {
           success = false;
         }
         else {
-          // HERE -- Replace with QTimer
-          System::msleep(1000); // wait 1 second
-          success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
+          // wait one second
+          QTimer::singleShot(1000, this, SLOT(askAgainIfAnalysisRunning()));
         }
       }
     }
+
+    if (!success) {
+      registerRunRequestFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::askAgainIfAnalysisRunning() {
+    bool success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
 
     if (!success) {
       registerRunRequestFailure();
@@ -849,11 +846,19 @@ namespace detail {
           success = false;
         }
         else {
-          System::msleep(1000);
-          success = m_requestRun->requestRunningDataPointUUIDs(project().analysis().uuid());
+          // wait one second
+          QTimer::singleShot(1000, this, SLOT(askAgainForRunningDataPoints()));
         }
       }
     }
+
+    if (!success) {
+      registerRunRequestFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::askAgainForRunningDataPoints() {
+    bool success = m_requestRun->requestRunningDataPointUUIDs(project().analysis().uuid());
 
     if (!success) {
       registerRunRequestFailure();
@@ -871,13 +876,33 @@ namespace detail {
     if (success) {
       UUIDVector temp = m_monitorDataPoints->lastCompleteDataPointUUIDs();
       std::set<UUID> completeUUIDs(temp.begin(),temp.end());
-      LOG(Debug,"Received reply to request for complete data point uuids. There are " 
-          << completeUUIDs.size() << ".");
+      LOG(Debug,"There are " << completeUUIDs.size() << " complete DataPoints on the server.");
+      // complete points could be running or waiting
       DataPointVector::iterator it = m_waitingQueue.begin();
       while (it != m_waitingQueue.end()) {
         if (completeUUIDs.find(it->uuid()) != completeUUIDs.end()) {
-          m_jsonQueue.push_back(*it);
+          DataPoint completePoint = *it;
+          m_jsonQueue.push_back(completePoint);
           it = m_waitingQueue.erase(it);
+          OS_ASSERT(completePoint.topLevelJob());
+          completePoint.topLevelJob()->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::CopyingResultFiles));
+          // if go straight from waiting to complete, go ahead and show the data point as
+          // running rather than queued (or complete--which will happen once json downloaded and
+          // incorporated)
+          emit dataPointRunning(project().analysis().uuid(),completePoint.uuid());
+        }
+        else {
+          ++it;
+        }
+      }
+      it = m_runningQueue.begin();
+      while (it != m_runningQueue.end()) {
+        if (completeUUIDs.find(it->uuid()) != completeUUIDs.end()) {
+          DataPoint completePoint = *it;
+          m_jsonQueue.push_back(completePoint);
+          it = m_runningQueue.erase(it);
+          OS_ASSERT(completePoint.topLevelJob());
+          completePoint.topLevelJob()->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::CopyingResultFiles));
         }
         else {
           ++it;
@@ -889,39 +914,25 @@ namespace detail {
         startDownloadingJson();
       }
 
-      // HERE
-      if (m_checkDataPointsRunningInsteadOfAnalysis &&
-          m_lastGetRunningDataPointsSuccess &&
-          m_monitorDataPoints->lastRunningDataPointUUIDs().empty())
-      {
-        // no more data points running. stop monitoring. only get here if trying to stop running.
-        LOG(Debug,"No more data points are running. Stop monitoring.");
-        appendErrorsAndWarnings(*m_monitorDataPoints); // keep warnings
-        m_monitorDataPoints.reset();
-        checkForRunCompleteOrStopped();
-      }
-      else if (m_waitingQueue.empty()) {
+      if (m_waitingQueue.empty() && m_jsonQueue.empty()) {
+        // got what we wanted, move into downloading only phase
         LOG(Debug,"All DataPoints complete. Stop monitoring.");
         appendErrorsAndWarnings(*m_monitorDataPoints); // keep warnings
         m_monitorDataPoints.reset();
         checkForRunCompleteOrStopped();
       }
+      else if (isStopping() && m_lastStopSuccess &&
+               (!m_waitForAlreadyRunningDataPoints || m_runningQueue.empty()))
+      {
+        LOG(Debug,"Stop monitoring as part of stopping the analysis.");
+        appendErrorsAndWarnings(*m_monitorDataPoints); // keep warnings
+        m_monitorDataPoints.reset();
+        checkForRunCompleteOrStopped();
+      }
       else {
-        LOG(Info,"Waiting on " << m_waitingQueue.size() << " DataPoints.");
-        if (m_checkDataPointsRunningInsteadOfAnalysis) {
-          test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsStillRunning(bool)),Qt::QueuedConnection);
-          OS_ASSERT(test);
-
-          System::msleep(1000); // wait 1 second
-          success = m_monitorDataPoints->requestRunningDataPointUUIDs(project().analysis().uuid());
-        }
-        else {
-          test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)),Qt::QueuedConnection);
-          OS_ASSERT(test);
-
-          System::msleep(1000); // wait 1 second
-          success = m_monitorDataPoints->requestIsAnalysisRunning(project().analysis().uuid());
-        }
+        LOG(Info,"Waiting on " << m_waitingQueue.size() + m_runningQueue.size() << " DataPoints.");
+        // ask if analysis is running
+        QTimer::singleShot(1000,this,SLOT(askIfAnalysisIsRunning()));
       }
     }
 
@@ -930,7 +941,19 @@ namespace detail {
     }
   }
 
-  void CloudAnalysisDriver_Impl::analysisStillRunning(bool success) {
+  void CloudAnalysisDriver_Impl::askIfAnalysisIsRunning() {
+    bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)),Qt::QueuedConnection);
+    OS_ASSERT(test);
+
+    System::msleep(1000); // wait 1 second
+    bool success = m_monitorDataPoints->requestIsAnalysisRunning(project().analysis().uuid());
+
+    if (!success) {
+      registerMonitoringFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::analysisRunningReturned(bool success) {
     bool test = m_monitorDataPoints->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)));
     OS_ASSERT(test);
 
@@ -939,19 +962,30 @@ namespace detail {
     }
 
     if (success) {
-      success = m_monitorDataPoints->lastIsAnalysisRunning();
-      if (!success) {
-        logError("Analysis stopped running on the server unexpectedly.");
+      if (m_monitorDataPoints->lastIsAnalysisRunning()) {
+        m_analysisNotRunningCount = 0;
+      }
+      else {
+        ++m_analysisNotRunningCount;
+      }
+
+      if (m_analysisNotRunningCount > m_maxAnalysisNotRunningCount) {
+        if (isStopping() && m_lastStopSuccess && m_waitForAlreadyRunningDataPoints) {
+          LOG(Debug,"Was trying to wait for DataPoints to finish running as part of the stopping process, but have timed out. Stop monitoring.");
+          appendErrorsAndWarnings(*m_monitorDataPoints); // keep warnings
+          m_monitorDataPoints.reset();
+          checkForRunCompleteOrStopped();
+        }
+        else {
+          logError("Server reports that the analysis is complete, but we are still waiting on DataPoints.");
+          success = false;
+        }
       }
     }
 
     if (success) {
-      LOG(Debug,"The analysis is still running. Ask for complete data point uuids.");
-      test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
-      OS_ASSERT(test);
-
-      System::msleep(1000); // wait 1 second
-      success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
+      LOG(Debug,"The analysis is still running. Ask for running data point uuids.");
+      QTimer::singleShot(1000,this,SLOT(askForRunningDataPointUUIDs()));
     }
 
     if (!success) {
@@ -959,24 +993,75 @@ namespace detail {
     }
   }
 
-  void CloudAnalysisDriver_Impl::dataPointsStillRunning(bool success) {
-    bool test = m_monitorDataPoints->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsStillRunning(bool)));
+  void CloudAnalysisDriver_Impl::askForRunningDataPointUUIDs() {
+    bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(runningDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
+    OS_ASSERT(test);
+
+    bool success = m_monitorDataPoints->requestRunningDataPointUUIDs(project().analysis().uuid());
+
+    if (!success) {
+      registerMonitoringFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::runningDataPointUUIDsReturned(bool success) {
+    bool test = m_monitorDataPoints->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(runningDataPointUUIDsReturned(bool)));
     OS_ASSERT(test);
 
     if (!success) {
       logError("Run failed during monitoring. Request asking server for the UUIDs of any running data points failed.");
     }
 
+    UUIDVector temp;
     if (success) {
-      // keep monitoring - will use running data point uuids after check to see if got more results
-      m_lastGetRunningDataPointsSuccess = true;
+      temp = m_monitorDataPoints->lastRunningDataPointUUIDs();
+      LOG(Debug,"There are " << temp.size() << " DataPoints running on the server.");
+      if (temp.empty()) {
+        ++m_dataPointsNotRunningCount;
+      }
+      else {
+        m_dataPointsNotRunningCount = 0;
+      }
 
-      test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
-      OS_ASSERT(test);
-
-      System::msleep(1000); // wait 1 second
-      success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
+      if (m_dataPointsNotRunningCount > m_maxDataPointsNotRunningCount) {
+        logError("Server reported no DataPoints running " << m_dataPointsNotRunningCount
+                 << " times in a row. Assuming that server has stopped working as expected.");
+        success = false;
+      }
     }
+
+    if (success) {
+      // move DataPoints from waiting to running
+      std::set<UUID> runningUUIDs(temp.begin(),temp.end());
+      DataPointVector::iterator it = m_waitingQueue.begin();
+      while (it != m_waitingQueue.end()) {
+        if (runningUUIDs.find(it->uuid()) != runningUUIDs.end()) {
+          DataPoint nowRunning = *it;
+          m_runningQueue.push_back(nowRunning);
+          it = m_waitingQueue.erase(it);
+          OS_ASSERT(nowRunning.topLevelJob());
+          nowRunning.topLevelJob()->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Processing));
+          emit dataPointRunning(project().analysis().uuid(),nowRunning.uuid());
+        }
+        else {
+          ++it;
+        }
+      }
+
+      // ask for complete data points
+      QTimer::singleShot(1000,this,SLOT(askForCompleteDataPointUUIDs()));
+    }
+
+    if (!success) {
+      registerMonitoringFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::askForCompleteDataPointUUIDs() {
+    bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
+    OS_ASSERT(test);
+
+    bool success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
 
     if (!success) {
       registerMonitoringFailure();
@@ -1140,6 +1225,7 @@ namespace detail {
 
     if (success) {
       success = m_requestStop->lastStopSuccess();
+      m_lastStopSuccess = success;
     }
 
     if (!success) {
@@ -1148,6 +1234,9 @@ namespace detail {
 
     if (success) {
       // if nothing else going on, emit signal stating that analysis has stopped
+      if (m_waitForAlreadyRunningDataPoints) {
+        m_maxAnalysisNotRunningCount = 300; // wait up to 15 minutes for DataPoints to stop running
+      }
       checkForRunCompleteOrStopped();
       // otherwise, will keep spinning until all processes cease
     }
@@ -1157,9 +1246,27 @@ namespace detail {
     }
   }
 
-  void CloudAnalysisDriver_Impl::clearErrorsAndWarnings() {
+  void CloudAnalysisDriver_Impl::resetState() {
     m_errors.clear();
     m_warnings.clear();
+
+    m_iteration.clear();
+    m_postQueue.clear();
+    m_waitingQueue.clear();
+    m_runningQueue.clear();
+    m_jsonQueue.clear();
+    m_jsonFailures.clear();
+    m_preDetailsQueue.clear();
+    m_detailsQueue.clear();
+    m_detailsFailures.clear();
+
+    m_processingQueuesInitialized = false;
+    m_analysisNotRunningCount = 0;
+    m_maxAnalysisNotRunningCount = 0;
+    m_dataPointsNotRunningCount = 0;
+    m_maxDataPointsNotRunningCount = 0;
+    m_numJsonTries = 0;
+    m_numDetailsTries = 0;
   }
 
   void CloudAnalysisDriver_Impl::logError(const std::string& error) {
@@ -1192,16 +1299,13 @@ namespace detail {
       toQueue.setRunType(DataPointRunType::CloudSlim);
     }
     m_postQueue.pop_front();
+    m_waitingQueue.push_back(toQueue);
 
     // get json before we add the dummy job
     std::string toQueueJson = toQueue.toJSON(DataPointSerializationOptions(project().projectDir()));
     bool result = m_requestRun->startPostDataPointJSON(project().analysis().uuid(), toQueueJson);
 
-    // DLM: what to do if result is false?
-
-    if (result){
-
-      m_waitingQueue.push_back(toQueue);
+    if (result) {
 
       // here we are going to create a dummy job to attach to the datapoint for saving job state
       runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
@@ -1249,6 +1353,7 @@ namespace detail {
       emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
     }
 
+    // caller will register failure if !result
     return result;
   }
 
@@ -1260,10 +1365,10 @@ namespace detail {
     if (OptionalUrl url = session().serverUrl()) {
       m_monitorDataPoints = OSServer(*url);
 
-      bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
+      bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(runningDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
-      success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
+      success = m_monitorDataPoints->requestRunningDataPointUUIDs(project().analysis().uuid());
     }
     else {
       logError("Cannot start monitoring this run because the CloudSession has been terminated.");
@@ -1463,10 +1568,7 @@ namespace detail {
 
   void CloudAnalysisDriver_Impl::checkForRunCompleteOrStopped() {
     if (isStopping()) {
-      bool stopped = !isDownloading();
-      if (m_waitForAlreadyRunningDataPoints) {
-        stopped = stopped && !isRunning();
-      }
+      bool stopped = !isDownloading() && !isRunning();
       if (stopped) {
         appendErrorsAndWarnings(*m_requestStop);
         m_requestStop.reset();
@@ -1508,6 +1610,9 @@ namespace detail {
       return true;
     }
     if (std::find(m_waitingQueue.begin(),m_waitingQueue.end(),dataPoint) != m_waitingQueue.end()) {
+      return true;
+    }
+    if (std::find(m_runningQueue.begin(),m_runningQueue.end(),dataPoint) != m_runningQueue.end()) {
       return true;
     }
     if (std::find(m_jsonQueue.begin(),m_jsonQueue.end(),dataPoint) != m_jsonQueue.end()) {

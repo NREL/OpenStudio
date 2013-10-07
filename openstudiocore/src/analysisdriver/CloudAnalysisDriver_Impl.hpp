@@ -228,6 +228,8 @@ namespace detail {
      //     at least one DataPoint is running.
      void waitingForADataPointToStart(bool success);
 
+     void askAgainForRunningDataPoints();
+
      // 13. Start the monitoring process (if already running or just kicked off).
 
      // MONITORING =============================================================
@@ -235,14 +237,20 @@ namespace detail {
      // watch for complete data points
      void completeDataPointUUIDsReturned(bool success);
 
+     void askIfAnalysisIsRunning();
+
      // make sure analysis is still running
      // (try to avoid spinning when nothing is happening)
-     void analysisStillRunning(bool success);
+     void analysisRunningReturned(bool success);
+
+     void askForRunningDataPointUUIDs();
 
      // see if data points are still running
      // (mark DataPoints that are running, and also make sure something is happening. only allow
      // 5 successive instances of nothing running)
-     void dataPointsStillRunning(bool success);
+     void runningDataPointUUIDsReturned(bool success);
+
+     void askForCompleteDataPointUUIDs();
 
      // DOWNLOADING ============================================================
 
@@ -295,10 +303,13 @@ namespace detail {
     // watch for complete data points
     boost::optional<OSServer> m_monitorDataPoints;
     std::vector<analysis::DataPoint> m_waitingQueue;
+    std::vector<analysis::DataPoint> m_runningQueue;
 
     // download slim data points
     boost::optional<OSServer> m_requestJson;
     std::deque<analysis::DataPoint> m_jsonQueue;
+    unsigned m_numJsonTries;
+    std::vector<analysis::DataPoint> m_jsonFailures;
 
     // check to see if details can be downloaded
     boost::optional<OSServer> m_checkForResultsToDownload;
@@ -309,12 +320,15 @@ namespace detail {
     // download detailed results
     boost::optional<OSServer> m_requestDetails;
     std::deque<analysis::DataPoint> m_detailsQueue;
+    unsigned m_numDetailsTries;
+    std::vector<analysis::DataPoint> m_detailsFailures;
 
     // stop analysis
     boost::optional<OSServer> m_requestStop;
     bool m_waitForAlreadyRunningDataPoints;
 
-    void clearErrorsAndWarnings();
+    void resetState();
+
     void logError(const std::string& error);
     void logWarning(const std::string& warning);
     void appendErrorsAndWarnings(const OSServer& server);
