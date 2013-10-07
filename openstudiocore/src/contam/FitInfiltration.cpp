@@ -191,11 +191,10 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
 
 int main(int argc, char *argv[])
 {
-  /*
   // Some ugly hard coded paths
   // Windows
-  openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
-  openstudio::path simreadExePath = openstudio::toPath("C:\\Users\\jwd131\\Software\\CONTAM\\simread31.exe");
+  //openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
+  //openstudio::path simreadExePath = openstudio::toPath("C:\\Users\\jwd131\\Software\\CONTAM\\simread31.exe");
   // Linux
   //openstudio::path contamExePath = openstudio::toPath("/usr/local/bin/contamx-3.1-linux-release-static.exe");
   //openstudio::path simreadExePath = openstudio::toPath("/usr/local/bin/simreadx-linux-static");
@@ -250,23 +249,11 @@ int main(int argc, char *argv[])
     verbose=false;
   }
 
-  bool noOsm=false;
-  if(vm.count("no-osm"))
-  {
-    noOsm=true;
-  }
-
   if (!vm.count("input-path"))
   {
     std::cout << "No input path given." << std::endl << std::endl;
     usage(desc);
     return EXIT_FAILURE;
-  }
-
-  bool writeCoeffs=false;
-  if(vm.count("write-coeffs"))
-  {
-    writeCoeffs=true;
   }
 
   openstudio::path inputPath = openstudio::toPath(inputPathString);
@@ -278,6 +265,7 @@ int main(int argc, char *argv[])
     std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." << std::endl;
     return EXIT_FAILURE;
   }
+  /*
 
   openstudio::contam::ForwardTranslator translator;
 
@@ -414,20 +402,29 @@ int main(int argc, char *argv[])
     infObj.setSpace(*space);
   }
 
-  // Write out new OSM
-  // QString outstring = openstudio::toQString(inputPathString).replace(".osm",openstudio::toQString(leakageDescriptorString)+".osm");
-  if(!noOsm)
+  */
+
+  openstudio::contam::InfiltrationCalculator calc(*model);
+
+  if(vm.count("flow"))
   {
-    openstudio::path outPath = openstudio::toPath(outputPathString);
-      if(!model->save(outPath,true))
-      {
-        std::cout << "Failed to write OSM file." << std::endl;
-        return EXIT_FAILURE;
-      }
+    calc.setFlowAt75Pa(flow);
+  }
+  else
+  {
+    calc.setLeakageDescriptor(leakageDescriptorString);
   }
 
+  if(!calc.run())
+  {
+    std::cout << "Infiltration calculation failed, check for errors or warnings and try again." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::map<openstudio::Handle,openstudio::contam::DesignFlowRateCoeffs> coeffs = calc.coeffs();
+
   // Write out the coefficients if required
-  if(writeCoeffs)
+  if(vm.count("write-coeffs"))
   {
     QFile txtfile("coeffs.txt");
     if(!txtfile.open(QFile::WriteOnly))
@@ -437,28 +434,15 @@ int main(int argc, char *argv[])
     }
     else
     {
-      QTextStream coeffs(&txtfile);
-      BOOST_FOREACH(handleInt, spaceMap)
+      QTextStream output(&txtfile);
+      std::pair <openstudio::Handle,openstudio::contam::DesignFlowRateCoeffs> handleCoeff;
+      BOOST_FOREACH(handleCoeff, coeffs)
       {
-        boost::optional<openstudio::model::Space> space = model->getModelObject<openstudio::model::Space>(handleInt.first);
-        if(!space)
-        {
-          std::cout << "Failed to find space " << openstudio::toString(handleInt.first)<< std::endl;
-          return EXIT_FAILURE;
-        }
-        coeffs << openstudio::toString(space.get().handle()) << ' ' 
-          << density*Q10[handleInt.second] << ' '
-          << C[handleInt.second] << ' '
-          << D[handleInt.second] << '\n';
+        output << openstudio::toString(handleCoeff.first) << ' ' << handleCoeff.second.Idesign() << ' '
+               << handleCoeff.second.C() << ' ' << handleCoeff.second.D() << '\n';
       }
     }
   }
-
-  openstudio::contam::InfiltrationCalculator calc(*model);
-
-  calc.run();
-
-  std::map<openstudio::Handle,openstudio::contam::DesignFlowRateCoeffs> coeffs = calc.coeffs();
 
   std::pair <openstudio::Handle,openstudio::contam::DesignFlowRateCoeffs> handleCoeff;
   BOOST_FOREACH(handleCoeff, coeffs)
@@ -466,6 +450,18 @@ int main(int argc, char *argv[])
     std::cout << openstudio::toString(handleCoeff.first) << ' ' << handleCoeff.second.Idesign() << ' '
               << handleCoeff.second.C() << ' ' << handleCoeff.second.D() <<std::endl;
   }
-  */
+
+  // Write out new OSM
+  if(!vm.count("no-osm"))
+  {
+    calc.apply();
+    openstudio::path outPath = openstudio::toPath(outputPathString);
+    if(!model->save(outPath,true))
+    {
+      std::cout << "Failed to write OSM file." << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+
   return EXIT_SUCCESS;
 }

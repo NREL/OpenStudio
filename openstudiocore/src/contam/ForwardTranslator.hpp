@@ -61,7 +61,7 @@ private:
   Date m_end;
 };
 
-class CONTAM_API ForwardTranslator
+class CONTAM_API ForwardTranslator : public prj::Model
 {
 public:
   ForwardTranslator();
@@ -82,7 +82,7 @@ public:
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
     bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"), ProgressBar* progressBar=NULL);
 
-  bool valid() const {return m_valid && m_data.valid();}
+  bool ready() const {return m_ready && valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
@@ -91,7 +91,7 @@ public:
 
   // We may need more functions like this that modify the CONTAM model
   bool setSteadyWeather(double windSpeed, double windDirection);
-  int addAirflowElement(std::string name,double flow,double n=0.65,double deltaP=75.0);
+  int addNewAirflowElement(std::string name,double flow,double n=0.65,double deltaP=75.0);
 
   // Write control files
   bool writeCvfFile(openstudio::path filepath);
@@ -109,7 +109,7 @@ private:
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
-  prj::Model m_data;
+  // prj::Model m_data;
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
   std::map<std::string,int> m_afeMap;  // Map from descriptor ("exterior", "floor", etc.) to CONTAM airflow element index
@@ -122,7 +122,7 @@ private:
 
   CvfFile m_cvf;
 
-  bool m_valid;
+  bool m_ready;
 
   ProgressBar* m_progressBar;
 

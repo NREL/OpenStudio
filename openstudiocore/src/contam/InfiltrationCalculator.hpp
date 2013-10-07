@@ -86,14 +86,13 @@ private:
 class CONTAM_API InfiltrationCalculator
 {
 public:
-  InfiltrationCalculator(openstudio::model::Model model, std::string leakageDescriptor="Average", 
-    int ndirs=4, ProgressBar *progressBar=0);
+  InfiltrationCalculator(openstudio::model::Model model, ProgressBar *progressBar=0);
 
   int directions() const;
   void setDirections(int ndirs);
-  std::string leakageDescriptor() const;
+  boost::optional<std::string> leakageDescriptor() const;
   void setLeakageDescriptor(std::string leakageDescriptor);
-  double flowAt75Pa() const;
+  boost::optional<double> flowAt75Pa() const;
   void setFlowAt75Pa(double flow);
   std::map<Handle,DesignFlowRateCoeffs> coeffs() const;
 
@@ -106,7 +105,7 @@ public:
   std::vector<LogMessage> errors() const;
 
 private:
-  boost::optional<std::map<Handle,DesignFlowRateCoeffs> > windSpeed2Pt(std::string leakageDescriptor="Average");
+  boost::optional<std::map<Handle,DesignFlowRateCoeffs> > windSpeed2Pt();
   boost::optional<QVector<double> > simulate(std::map <openstudio::Handle,int> spaceMap,
                                              openstudio::contam::ForwardTranslator &translator,
                                              std::vector<openstudio::model::Surface> extSurfaces,
@@ -116,6 +115,7 @@ private:
   int m_ndirs;
   std::string m_leakageDescriptor;
   bool m_flowSpec;
+  double m_flow;
   std::map<Handle,DesignFlowRateCoeffs> m_coeffMap;
 
   // These probably don't belong here, but I'll put them here temporarily

@@ -21,16 +21,6 @@
 #include <contam/InfiltrationCalculator.hpp>
 #include <contam/SimTxt.hpp>
 
-//#include <contam/PrjData.hpp>
-//#include <contam/WindPressure.hpp>
-
-//#include <model/Model.hpp>
-//#include <model/Building.hpp>
-//#include <model/Building_Impl.hpp>
-//#include <model/BuildingStory.hpp>
-//#include <model/BuildingStory_Impl.hpp>
-//#include <model/ThermalZone.hpp>
-//#include <model/ThermalZone_Impl.hpp>
 #include <model/Space.hpp>
 #include <model/Space_Impl.hpp>
 #include <model/Surface.hpp>
@@ -39,11 +29,6 @@
 #include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
 #include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
 #include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-//#include <model/AirLoopHVAC.hpp>
-//#include <model/AirLoopHVAC_Impl.hpp>
-//#include <model/Node.hpp>
-//#include <model/Node_Impl.hpp>
-//#include <model/PortList.hpp>
 
 //#include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/Logger.hpp>
@@ -51,7 +36,6 @@
 #include <utilities/plot/ProgressBar.hpp>
 
 #include <boost/foreach.hpp>
-//#include <boost/math/constants/constants.hpp>
 
 //#include <QFile>
 //#include <QTextStream>
@@ -63,16 +47,15 @@
 namespace openstudio {
 namespace contam {
 
-InfiltrationCalculator::InfiltrationCalculator(openstudio::model::Model model,
-                                               std::string leakageDescriptor, int ndirs,
-                                               ProgressBar *progressBar) 
-  : m_model(model), m_leakageDescriptor(leakageDescriptor), m_progressBar(progressBar)
+InfiltrationCalculator::InfiltrationCalculator(openstudio::model::Model model, ProgressBar *progressBar) 
+  : m_model(model), m_progressBar(progressBar)
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.InfiltrationCalculator"));
   m_logSink.setThreadId(QThread::currentThread());
 
-  setDirections(ndirs);
+  m_leakageDescriptor = "Average",
+  m_ndirs = 4;;
   m_flowSpec=false;
 
   // Ugly hard code to programs
@@ -96,6 +79,41 @@ void InfiltrationCalculator::setDirections(int ndirs)
   m_ndirs=ndirs;
 }
 
+boost::optional<std::string> InfiltrationCalculator::leakageDescriptor() const
+{
+  if(m_flowSpec)
+  {
+    return false;
+  }
+  return boost::optional<std::string>(m_leakageDescriptor);
+}
+
+void InfiltrationCalculator::setLeakageDescriptor(std::string leakageDescriptor)
+{
+  QList<std::string> known;
+  known << "Average" << "Tight" << "Leaky";
+  if(known.contains(leakageDescriptor))
+  {
+    m_flowSpec = false;
+    m_leakageDescriptor = leakageDescriptor;
+  }
+}
+
+boost::optional<double> InfiltrationCalculator::flowAt75Pa() const
+{
+  if(!m_flowSpec)
+  {
+    return boost::optional<double>();
+  }
+  return boost::optional<double>(m_flow);
+}
+
+void InfiltrationCalculator::setFlowAt75Pa(double flow)
+{
+  m_flowSpec = true;
+  m_flow = flow;
+}
+
 std::map<Handle,DesignFlowRateCoeffs> InfiltrationCalculator::coeffs() const
 {
   return m_coeffMap;
@@ -103,7 +121,7 @@ std::map<Handle,DesignFlowRateCoeffs> InfiltrationCalculator::coeffs() const
 
 bool InfiltrationCalculator::run()
 {
-  boost::optional<std::map<Handle,DesignFlowRateCoeffs> > coeffs = windSpeed2Pt(m_leakageDescriptor);
+  boost::optional<std::map<Handle,DesignFlowRateCoeffs> > coeffs = windSpeed2Pt();
   if(!coeffs)
   {
     LOG(Error, "Infiltration calculation failed, check errors and warnings for more information.");
@@ -148,9 +166,9 @@ void InfiltrationCalculator::apply()
 }
 
 boost::optional<QVector<double> > InfiltrationCalculator::simulate(std::map <openstudio::Handle,int> spaceMap,
-                                                    openstudio::contam::ForwardTranslator &translator,
-                                                    std::vector<openstudio::model::Surface> extSurfaces,
-                                                    double windSpeed, double windDirection)
+                                                                   openstudio::contam::ForwardTranslator &translator,
+                                                                   std::vector<openstudio::model::Surface> extSurfaces,
+                                                                   double windSpeed, double windDirection)
 {
   QVector<double> results(spaceMap.size(),0.0);
   std::map<openstudio::Handle,int> surfaceMap = translator.surfaceMap();
@@ -222,11 +240,11 @@ boost::optional<QVector<double> > InfiltrationCalculator::simulate(std::map <ope
 
   // Process results
   std::vector<std::vector<double> > flow0 = lfr.F0();
-  //if(flow0.size() != data->paths.size())  // THIS NEEDS TO COME BACK!
-  //{
-  //  std::cout << "Mismatch between lfr data and model path count." << std::endl;
-  //  return QVector<double>();
-  //}
+  if(flow0.size() != translator.paths().size())
+  {
+    std::cout << "Mismatch between lfr data and model path count." << std::endl;
+    return QVector<double>();
+  }
   for(unsigned i=0;i<flow0.size();i++)
   {
     if(flow0[i].size() != 1)
@@ -269,12 +287,19 @@ boost::optional<QVector<double> > InfiltrationCalculator::simulate(std::map <ope
   return results;
 }
 
-boost::optional<std::map<Handle,DesignFlowRateCoeffs> > InfiltrationCalculator::windSpeed2Pt(std::string leakageDescriptor)
+boost::optional<std::map<Handle,DesignFlowRateCoeffs> > InfiltrationCalculator::windSpeed2Pt()
 {
   double density = 1.2041;
   openstudio::contam::ForwardTranslator translator;
 
-  translator.setAirtightnessLevel(leakageDescriptor);
+  if(m_flowSpec)
+  {
+    translator.setExteriorFlowRate(m_flow);
+  }
+  else
+  {
+    translator.setAirtightnessLevel(m_leakageDescriptor);
+  }
   
   if(!translator.translate(m_model,false))
   {
