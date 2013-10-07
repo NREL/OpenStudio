@@ -161,6 +161,8 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
         alternativesElem.appendChild(*measureElem);
       }
     }
+    // drop this DataPoint's Model and SqlFile from memory
+    datapoint.clearFileDataFromCache();
   }    
     
   //write out the xml file
