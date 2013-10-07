@@ -70,6 +70,7 @@ namespace project {
 namespace analysisdriver {
 
 class SimpleProjectOptions;
+class AnalysisStatus;
 
 namespace detail {
 
@@ -137,6 +138,8 @@ namespace detail {
 
     /** Returns true if the analysis() is being run by analysisDriver(). */
     bool isRunning() const;
+
+    AnalysisStatus status() const;
 
     /** If there is a CloudSession, returns a CloudAnalysisDriver for this project. */
     boost::optional<CloudAnalysisDriver> cloudAnalysisDriver() const;
@@ -304,6 +307,10 @@ namespace detail {
    public slots:
 
     void onSeedChanged() const;
+
+   signals:
+
+    void analysisStatusChanged(AnalysisStatus newStatus) const;
 
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.SimpleProject");

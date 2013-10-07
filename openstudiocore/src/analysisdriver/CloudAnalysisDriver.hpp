@@ -21,6 +21,7 @@
 #define ANALYSISDRIVER_CLOUDANALYSISDRIVER_HPP
 
 #include <analysisdriver/AnalysisDriverAPI.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -76,6 +77,8 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
 
   /** Returns the number of data points in this iteration that are no longer being processed. */
   unsigned numCompleteDataPoints() const;
+  
+  AnalysisStatus status() const;
 
   //@}
   /** @name Blocking Class Members */

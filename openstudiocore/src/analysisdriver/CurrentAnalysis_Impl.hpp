@@ -156,6 +156,10 @@ namespace detail {
      *  from the list of jobs to watch. */
     analysis::DataPoint removeCompletedDakotaDataPoint(const openstudio::UUID& completedJob);
 
+    // START!
+
+    void start(runmanager::RunManager& runManager);
+
     // STOP!
 
     void stop(runmanager::RunManager& runManager);
