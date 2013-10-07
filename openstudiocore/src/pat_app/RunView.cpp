@@ -95,7 +95,7 @@ RunView::RunView()
 RunStatusView::RunStatusView()
   : QWidget()
 {
-  setFixedHeight(80);
+  setFixedHeight(90);
   setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
 
