@@ -1346,9 +1346,9 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
             prj::CvfDat ctrl;
             ctrl.setName(controlName);
             ctrl.setValuename(valueName);
-            m_data.addControlNode(ctrl);
+            addControlNode(ctrl);
             // Connect to the zone
-            m_data.zones()[nr-1].setPc(ctrl.nr());
+            zones()[nr-1].setPc(ctrl.nr());
             //openstudio::Vector values = timeSeries->values();
           }
           else
