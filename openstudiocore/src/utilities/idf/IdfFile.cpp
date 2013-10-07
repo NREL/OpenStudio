@@ -29,6 +29,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/CommentRegex.hpp>
 #include <utilities/idd/Comments.hpp>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <utilities/plot/ProgressBar.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -119,7 +120,7 @@ std::vector<IdfObject> IdfFile::objects() const {
     IdfObjectVector::iterator oit = result.begin();
     for (unsigned i = 0; i < *it; ++i, ++oit);
     OS_ASSERT(oit->iddObject().isVersionObject() ||
-                 ((oit->iddObject().type() == IddObjectType::Catchall) &&
+                 ((oit->iddObject().type() == iddobjectname::Catchall) &&
                   (oit->numFields() > 0u) &&
                   (boost::regex_match(oit->getString(0).get(),iddRegex::versionObjectName()))));
     result.erase(oit);
@@ -170,7 +171,7 @@ void IdfFile::addObject(const IdfObject& object) {
   if (object.iddObject().isVersionObject()) {
     m_versionObjectIndices.insert(m_objects.size() - 1);
   }
-  else if ((object.iddObject().type() == IddObjectType::Catchall) &&
+  else if ((object.iddObject().type() == iddobjectname::Catchall) &&
            (object.numFields() > 0u) &&
            (boost::regex_match(object.getString(0).get(),iddRegex::versionObjectName()))) 
   {
@@ -191,7 +192,7 @@ void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
       // insert object immediately before it
       it = m_objects.insert(it,object);
       if (object.iddObject().isVersionObject() || 
-          ((object.iddObject().type() == IddObjectType::Catchall) &&
+          ((object.iddObject().type() == iddobjectname::Catchall) &&
            (object.numFields() > 0u) &&
            (boost::regex_match(object.getString(0).get(),iddRegex::versionObjectName())))) 
       {
@@ -210,7 +211,7 @@ bool IdfFile::removeObject(const IdfObject& object) {
   if (it != m_objects.end()) {
     unsigned index(it - m_objects.begin());
     if (it->iddObject().isVersionObject() || 
-        ((object.iddObject().type() == IddObjectType::Catchall) &&
+        ((object.iddObject().type() == iddobjectname::Catchall) &&
          (object.numFields() > 0u) &&
          (boost::regex_match(object.getString(0).get(),iddRegex::versionObjectName())))) 
     {
@@ -590,7 +591,7 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
           if (!versionOnly) {
 
             // make a comment only object to hold the comment
-            OptionalIddObject commentOnlyIddObject = m_iddFileAndFactoryWrapper.getObject(IddObjectType::CommentOnly);
+            OptionalIddObject commentOnlyIddObject = m_iddFileAndFactoryWrapper.getObject(iddobjectname::CommentOnly);
             if (!commentOnlyIddObject) {
               LOG(Error,"IddFile does not contain a CommentOnly object. Will not be able to save comment objects.");
               continue;
@@ -646,7 +647,7 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
         iddObject = IddObject();
         objectType = "Catchall";
       }
-      else { OS_ASSERT(iddObject->type() != IddObjectType::Catchall); }
+      else { OS_ASSERT(iddObject->type() != iddobjectname::Catchall); }
 
       // put the text for this object in a new string with a newline
       std::string text(comment + idfRegex::newLinestring() + line + idfRegex::newLinestring());

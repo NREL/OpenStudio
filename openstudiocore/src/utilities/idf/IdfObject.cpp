@@ -1429,7 +1429,7 @@ namespace detail {
       }
       else {
         if (!boost::iequals(objectType, m_iddObject.name())){
-          if (m_iddObject.type() != IddObjectType::Catchall) {
+          if (m_iddObject.type() != iddobjectname::Catchall) {
             LOG(Error, "IdfObject type '" << objectType << "', does not equal its IddObject name '" 
                 << m_iddObject.name() << "'. Reverting to default Catchall IddObject.");
           }

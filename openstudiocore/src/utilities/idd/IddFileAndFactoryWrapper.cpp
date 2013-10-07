@@ -25,6 +25,8 @@
 
 #include <boost/foreach.hpp>
 
+#include <utilities/idd/IddEnums.hxx>
+
 namespace openstudio {
 
 // CONSTRUCTORS
@@ -128,21 +130,21 @@ std::vector<IddObject> IddFileAndFactoryWrapper::getObjectsInGroup(const std::st
   return result;
 }
 
-std::vector<IddObject> IddFileAndFactoryWrapper::getObjects(const boost::regex& objectRegex) const {
-  IddObjectVector result;
-
-  if (m_iddFile) {
-    result = m_iddFile->getObjects(objectRegex);
-  }
-  else if (m_iddFileType) {
-    result = IddFactory::instance().getObjects(objectRegex,*m_iddFileType);
-  }
-  else {
-    LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
-  }
-
-  return result;
-}
+//std::vector<IddObject> IddFileAndFactoryWrapper::getObjects(const boost::regex& objectRegex) const {
+//  IddObjectVector result;
+//
+//  if (m_iddFile) {
+//    result = m_iddFile->getObjects(objectRegex);
+//  }
+//  else if (m_iddFileType) {
+//    result = IddFactory::instance().getObjects(objectRegex,*m_iddFileType);
+//  }
+//  else {
+//    LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
+//  }
+//
+//  return result;
+//}
 
 boost::optional<IddObject> IddFileAndFactoryWrapper::versionObject() const {
   OptionalIddObject result;
@@ -185,7 +187,7 @@ boost::optional<IddObject> IddFileAndFactoryWrapper::getObject(IddObjectType obj
 
   OptionalIddObject result;
 
-  if (objectType == IddObjectType::UserCustom) {
+  if (objectType == iddobjectname::UserCustom) {
     LOG(Info,"Asked to return IddObject of type IddObjectType::UserCustom. Since "
         << "UserCustom object types are generally not unique, returning false rather than "
         << "an IddObject. Please specify a different IddObjectType, or use "

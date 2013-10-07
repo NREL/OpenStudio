@@ -118,7 +118,7 @@ namespace detail {
   {
     OptionalIddObject result;
 
-    if (objectType == IddObjectType::UserCustom) {
+    if (objectType == iddobjectname::UserCustom) {
       LOG(Info,"Asked to return IddObject of type IddObjectType::UserCustom. Since "
           << "UserCustom object types are generally not unique, returning false rather than "
           << "an IddObject. Please specify a different IddObjectType, or use "
@@ -229,7 +229,7 @@ namespace detail {
     OptionalIddObject commentOnlyObject = IddObject::load(iddRegex::commentOnlyObjectName(), 
                                                           currentGroup, 
                                                           iddRegex::commentOnlyObjectText(), 
-                                                          IddObjectType::CommentOnly);
+                                                          iddobjectname::CommentOnly);
     OS_ASSERT(commentOnlyObject);
     m_objects.push_back(*commentOnlyObject);
 

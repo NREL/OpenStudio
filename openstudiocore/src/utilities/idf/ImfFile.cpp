@@ -186,7 +186,7 @@ bool ImfFile::m_load(std::istream& is) {
 
   // get CommentOnly IddObject
   OptionalIddObject commentOnlyIddObject;
-  commentOnlyIddObject = IddFactory::instance().getObject(IddObjectType::CommentOnly);
+  commentOnlyIddObject = IddFactory::instance().getObject(iddobjectname::CommentOnly);
   OS_ASSERT(commentOnlyIddObject);
 
   // Use a boost filter to make sure that no matter what line endings come in,
@@ -240,7 +240,7 @@ bool ImfFile::m_load(std::istream& is) {
 
       if (!comment.empty()){
         // make a comment only object to hold the comment
-        OptionalIddObject commentOnlyIddObject = IddFactory::instance().getObject(IddObjectType::CommentOnly);
+        OptionalIddObject commentOnlyIddObject = IddFactory::instance().getObject(iddobjectname::CommentOnly);
         OS_ASSERT(commentOnlyIddObject);
 
         OptionalIdfObject commentOnlyObject;

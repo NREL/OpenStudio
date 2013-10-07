@@ -358,7 +358,7 @@ namespace detail {
 
         // determine name, then set
         std::string newName;
-        if (iddObject().type() != IddObjectType::UserCustom) {
+        if (iddObject().type() != iddobjectname::UserCustom) {
           newName = workspace.nextName(iddObject().type(),true);
         }
         else {
