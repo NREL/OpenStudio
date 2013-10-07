@@ -37,6 +37,7 @@
 #include "../shared_gui_components/MonitorUseDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
+#include "PatConstants.hpp"
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Path.hpp>
@@ -223,9 +224,16 @@ class PatApp : public QApplication, public BaseApp
 
   void downloadUpdatedBCLMeasures();
 
+  // Consider removing this in favor of setAppState()
   void disableTabsDuringRun();
 
  private slots:
+
+  void setAppState(const CloudStatus & cloudStatus, const RunStatus & runStatus);
+
+  void onCloudStatusChanged(const CloudStatus & newStatus);
+
+  void onRunStatusChanged(const RunStatus & newRunStatus);
 
   void showVerticalTab(int id); 
 

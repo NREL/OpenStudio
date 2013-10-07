@@ -133,6 +133,10 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   m_cloudMonitor = QSharedPointer<CloudMonitor>(new CloudMonitor());
 
+  isConnected = connect(m_cloudMonitor.data(),SIGNAL(cloudStatusChanged(const CloudStatus &)),
+                        this,SLOT(onCloudStatusChanged(const CloudStatus &)));
+  OS_ASSERT(isConnected);
+
   mainWindow = new PatMainWindow();
 
   m_startupView = new StartupView();
@@ -1374,6 +1378,70 @@ CloudSettings PatApp::createTestSettings()
   vagrantSettings.setHaltOnStop(true);
 
   return vagrantSettings;
+}
+
+void PatApp::onCloudStatusChanged(const CloudStatus & newCloudStatus)
+{
+  // TODO get a real run status somehow
+
+  setAppState(newCloudStatus,RUNSTATUS_NONE);
+}
+
+void PatApp::onRunStatusChanged(const RunStatus & newRunStatus)
+{
+  CloudStatus status = m_cloudMonitor->status();
+
+  setAppState(status,newRunStatus);
+}
+
+void PatApp::setAppState(const CloudStatus & cloudStatus, const RunStatus & runStatus)
+{
+  switch (cloudStatus)
+  {
+    case CLOUD_STARTING:
+      switch (runStatus)
+      {
+        default:
+          break;
+      }
+      break;
+    case CLOUD_RUNNING:
+      switch (runStatus)
+      {
+        default:
+          break;
+      }
+      break;
+    case CLOUD_STOPPING:
+      switch (runStatus)
+      {
+        default:
+          break;
+      }
+      break;
+    case CLOUD_STOPPED:
+      switch (runStatus)
+      {
+        default:
+          break;
+      }
+    case CLOUD_ERROR:
+      switch (runStatus)
+      {
+        default:
+          break;
+      }
+      break;
+  }
+
+  if( m_runTabController )
+  {
+    RunView * runView = m_runTabController->runView; 
+  
+    OS_ASSERT(runView);
+    
+    runView->runStatusView->toggleCloudButton->setStatus(cloudStatus);
+  }
 }
 
 NewProjectDialog::NewProjectDialog(QWidget * parent)

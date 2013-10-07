@@ -419,15 +419,6 @@ void CloudMonitor::setStatus(CloudStatus status)
 
     emit cloudStatusChanged(status);
   }
-
-  if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
-  {
-    RunView * runView = runTabController->runView; 
-  
-    OS_ASSERT(runView);
-    
-    runView->runStatusView->toggleCloudButton->setStatus(status);
-  }
 }
 
 CloudStatus CloudMonitor::status() const
