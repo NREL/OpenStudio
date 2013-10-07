@@ -1410,10 +1410,9 @@ bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
     windSpeed = -windSpeed; // Maybe should return false in this case?
   }
   // Is a negative wind direction allowed? Will have to check
-  //m_data.rc.ssWeather.windspd = QString().sprintf("%g",windSpeed);
-  //m_data.rc.ssWeather.winddir = QString().sprintf("%g",windDirection);
-  //return true;
-  return false;
+  rc().ssWeather().setWindspd(QString().sprintf("%g",windSpeed).toStdString());
+  rc().ssWeather().setWinddir(QString().sprintf("%g",windDirection).toStdString());
+  return true;
 }
 
 static double laminarCoefficient(double Ct, double x)
