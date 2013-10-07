@@ -1113,6 +1113,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled :
+    {
+      model::RefrigerationCondenserEvaporativeCooled refrigerationCondenserEvaporativeCooled = modelObject.cast<RefrigerationCondenserEvaporativeCooled>();
+      retVal = translateRefrigerationCondenserEvaporativeCooled(refrigerationCondenserEvaporativeCooled);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_System :
     {
       model::RefrigerationSystem refrigerationSystem = modelObject.cast<RefrigerationSystem>();
@@ -1711,6 +1717,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Refrigeration_Case);
   result.push_back(IddObjectType::OS_Refrigeration_Compressor);
   result.push_back(IddObjectType::OS_Refrigeration_Condenser_AirCooled);
+  result.push_back(IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled);
   result.push_back(IddObjectType::OS_Refrigeration_System);
 
   // put these down here so they have a chance to be translated with their "parent"

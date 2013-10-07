@@ -165,6 +165,7 @@
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
+#include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationSystem.hpp>
 #include <model/RefrigerationWalkIn.hpp>
@@ -398,6 +399,7 @@
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+#include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
 #include <model/RefrigerationSecondarySystem_Impl.hpp>
 #include <model/RefrigerationSystem_Impl.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
@@ -490,3 +492,4 @@
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP
+
