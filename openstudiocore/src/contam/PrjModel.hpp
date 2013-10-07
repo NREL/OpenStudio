@@ -153,7 +153,7 @@ public:
         return ctrl;
     }
 
-    template <class T> void addControlNode(T element)
+    template <class T> void addControlNode(T element, bool sequence=true)
     {
         T *copy = new T;
         *copy = element;
@@ -161,6 +161,10 @@ public:
         if(pointer)
         {
             copy->setNr(m_controlNodes.size()+1);
+            if(sequence)
+            {
+              copy->setSeqnr(copy->nr());
+            }
             m_controlNodes.push_back(QSharedPointer<ControlNode>(pointer));
         }
     }

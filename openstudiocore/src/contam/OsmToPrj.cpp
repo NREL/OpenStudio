@@ -140,6 +140,7 @@ int main(int argc, char *argv[])
   }
 
   openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
+  openstudio::path cvfPath = inputPath.replace_extension(openstudio::toPath("cvf").string());
 
   openstudio::contam::ForwardTranslator translator;
   if(setLevel)

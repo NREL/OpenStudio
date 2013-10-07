@@ -76,6 +76,8 @@ bool CvfFile::write(openstudio::path filepath)
     QTextStream textStream(&file);
     textStream << "ContinuousValuesFile ContamW 2.1\n";
     textStream << "CVF file from E+ results";
+    textStream << month(m_start.monthOfYear()) << '/' << m_start.dayOfMonth() << ' '
+               <<  month(m_end.monthOfYear())  << '/' <<  m_end.dayOfMonth()  << '\n';
     file.close();
     return true;
   }
@@ -1304,7 +1306,6 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     boost::optional<openstudio::SqlFile> sqlFile = model.sqlFile();
     if(sqlFile)
     {
-      std::cout << "Simulation results attached, can't do that yet." << std::endl;
       std::vector<std::string> available = sqlFile->availableTimeSeries();
       BOOST_FOREACH(std::string series, available)
       {
@@ -1320,16 +1321,53 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
       bool setTime=false;
       if(std::find(available.begin(), available.end(), "Zone Mean Air Temperature")!=available.end())
       {
-        std::vector<TimeSeries> series = sqlFile->timeSeries(envPeriod,"Hourly","Zone Mean Air Temperature");
+        // Loop through and get a time series for each zone we can find
+        BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
+        {
+          boost::optional<std::string> name = thermalZone.name();
+          if(!name)
+          {
+            LOG(Warn,"Zone " << openstudio::toString(thermalZone.handle()) << " has no name and will have constant temperature");
+            continue;
+          }
+          std::string keyValue = name.get();
+          keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
+            "Zone Mean Air Temperature", keyValue);
+          if(timeSeries)
+          {
+            int nr =  m_zoneMap[thermalZone.handle()];
+            std::cout << "Found time series for zone " << name.get() 
+                      << ", CONTAM index " << nr << std::endl;
+            // Create a control node
+            std::string controlName = QString("ctrl_%1").arg(nr).toStdString();
+            std::string valueName = QString("temp_%1").arg(nr).toStdString();
+            m_cvf.addTimeSeries(valueName,*timeSeries);
+            prj::CvfDat ctrl;
+            ctrl.setName(controlName);
+            ctrl.setValuename(valueName);
+            m_data.addControlNode(ctrl);
+            // Connect to the zone
+            m_data.zones()[nr-1].setPc(ctrl.nr());
+            //openstudio::Vector values = timeSeries->values();
+          }
+          else
+          {
+            LOG(Warn,"Zone '" << name.get() << "' has no Zone Mean Air Temperature time series");
+          }
+
+        }
+
+        //std::vector<TimeSeries> series = sqlFile->timeSeries(envPeriod,"Hourly","Zone Mean Air Temperature");
         // Is there a better way to do this?
       }
       else
       {
         LOG(Warn, "Activate \"Zone Mean Air Temperature\" to set zone temperature controls.");
       }
-      return false;
       // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
       // This should be moved to inside the contam translator
+      /*
       BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
       {
         LOG(Warn, "Zone equipment not yet accounted for.");
@@ -1370,6 +1408,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
           }
         }
       }
+      */
     }
     else
     {
@@ -1520,6 +1559,15 @@ int ForwardTranslator::addAirflowElement(std::string name, double flow,double n,
   m_data.addAirflowElement(afe);
 
   return afe.nr();
+}
+
+bool ForwardTranslator::writeCvfFile(openstudio::path filepath)
+{
+  if(!m_cvf.isEmpty())
+  {
+    m_cvf.write(filepath);
+  }
+  return false;
 }
 
 std::vector<LogMessage> ForwardTranslator::warnings() const
