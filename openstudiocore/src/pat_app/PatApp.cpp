@@ -50,6 +50,7 @@
 #include <analysis/AnalysisObject.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
 #include <analysisdriver/CurrentAnalysis.hpp>
+#include <analysisdriver/SimpleProject_Impl.hpp>
 
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/RunManager.hpp>
@@ -1100,6 +1101,9 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // detach all signals from analysis
     analysis.disconnect();
+
+    // detach all signals from project
+    disconnect(m_project->getImpl().get(), 0, this, 0);
   }
 
   // set this project as current project
@@ -1133,6 +1137,10 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     OS_ASSERT(isConnected);
 
     isConnected = analysis.connect(SIGNAL(seedChanged()), this, SLOT(analysisSeedChanged()));
+    OS_ASSERT(isConnected);
+
+    isConnected = connect(m_project->getImpl().get(),SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)),
+                          this,SLOT(onAnalysisStatusChanged(analysisdriver::AnalysisStatus)));
     OS_ASSERT(isConnected);
 
     m_cloudMonitor->reconnectCloud();
@@ -1382,53 +1390,93 @@ CloudSettings PatApp::createTestSettings()
 
 void PatApp::onCloudStatusChanged(const CloudStatus & newCloudStatus)
 {
-  // TODO get a real run status somehow
+  analysisdriver::AnalysisStatus analysisStatus = m_project->status();
 
-  setAppState(newCloudStatus,RUNSTATUS_NONE);
+  setAppState(newCloudStatus, analysisStatus);
 }
 
-void PatApp::onRunStatusChanged(const RunStatus & newRunStatus)
+void PatApp::onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus)
 {
-  CloudStatus status = m_cloudMonitor->status();
+  CloudStatus cloudStatus = m_cloudMonitor->status();
 
-  setAppState(status,newRunStatus);
+  setAppState(cloudStatus, newAnalysisStatus);
 }
 
-void PatApp::setAppState(const CloudStatus & cloudStatus, const RunStatus & runStatus)
+void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::AnalysisStatus & analysisStatus)
 {
   switch (cloudStatus)
   {
     case CLOUD_STARTING:
-      switch (runStatus)
+      switch (analysisStatus.value())
       {
-        default:
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
           break;
       }
       break;
     case CLOUD_RUNNING:
-      switch (runStatus)
+      switch (analysisStatus.value())
       {
-        default:
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
           break;
       }
       break;
     case CLOUD_STOPPING:
-      switch (runStatus)
+      switch (analysisStatus.value())
       {
-        default:
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
           break;
       }
       break;
     case CLOUD_STOPPED:
-      switch (runStatus)
+      switch (analysisStatus.value())
       {
-        default:
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
           break;
       }
     case CLOUD_ERROR:
-      switch (runStatus)
+      switch (analysisStatus.value())
       {
-        default:
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
           break;
       }
       break;

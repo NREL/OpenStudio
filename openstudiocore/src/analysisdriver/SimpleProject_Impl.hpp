@@ -310,7 +310,7 @@ namespace detail {
 
    signals:
 
-    void analysisStatusChanged(AnalysisStatus newStatus) const;
+    void analysisStatusChanged(analysisdriver::AnalysisStatus newStatus) const;
 
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.SimpleProject");

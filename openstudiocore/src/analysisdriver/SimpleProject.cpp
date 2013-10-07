@@ -100,7 +100,7 @@ namespace detail {
       m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
-    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
     OS_ASSERT(test);
 
     if (m_analysis) {
@@ -351,12 +351,12 @@ namespace detail {
   boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const{
     if (!m_cloudAnalysisDriver) {
       if (boost::optional<CloudSession> session = cloudSession()) {
-        bool test = disconnect(m_analysisDriver.getImpl().get(), SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+        bool test = disconnect(m_analysisDriver.getImpl().get(), SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
         OS_ASSERT(test);
 
         m_cloudAnalysisDriver = CloudAnalysisDriver(*session,simpleProject());
         
-        test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+        test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
         OS_ASSERT(test);
 
         emit analysisStatusChanged(m_cloudAnalysisDriver->status());
@@ -907,7 +907,7 @@ namespace detail {
   void SimpleProject_Impl::clearCloudAnalysisDriver() {
     m_cloudAnalysisDriver.reset();
 
-    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
     OS_ASSERT(test);
 
     emit analysisStatusChanged(m_analysisDriver.status());

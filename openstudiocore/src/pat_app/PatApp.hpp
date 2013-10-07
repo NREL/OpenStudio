@@ -28,6 +28,7 @@
 #include <QWidget>
 
 #include <analysisdriver/SimpleProject.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <model/Model.hpp>
 
@@ -64,6 +65,10 @@ namespace osversion {
 
 namespace ruleset {
   class RubyUserScriptArgumentGetter;
+}
+
+namespace analysisdriver {
+  class AnalysisStatus;
 }
 
 namespace pat {
@@ -229,11 +234,11 @@ class PatApp : public QApplication, public BaseApp
 
  private slots:
 
-  void setAppState(const CloudStatus & cloudStatus, const RunStatus & runStatus);
+  void setAppState(const CloudStatus & cloudStatus, const analysisdriver::AnalysisStatus & analysisStatus);
 
   void onCloudStatusChanged(const CloudStatus & newStatus);
 
-  void onRunStatusChanged(const RunStatus & newRunStatus);
+  void onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus);
 
   void showVerticalTab(int id); 
 
