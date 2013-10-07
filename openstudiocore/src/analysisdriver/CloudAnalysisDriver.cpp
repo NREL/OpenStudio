@@ -58,6 +58,7 @@ namespace detail {
       m_lastRunSuccess(false),
       m_lastStopSuccess(false),
       m_lastDownloadDetailedResultsSuccess(false),
+      m_status(AnalysisStatus::Idle),
       m_processingQueuesInitialized(false),
       m_analysisNotRunningCount(0),
       m_maxAnalysisNotRunningCount(0),
@@ -96,6 +97,11 @@ namespace detail {
   unsigned CloudAnalysisDriver_Impl::numCompleteDataPoints() const {
     OS_ASSERT(numIncompleteDataPoints() <= numDataPointsInIteration());
     return (numDataPointsInIteration() - numIncompleteDataPoints());
+  }
+
+  AnalysisStatus CloudAnalysisDriver_Impl::status() const
+  {
+    return m_status;
   }
 
   bool CloudAnalysisDriver_Impl::run(int msec) {
@@ -212,6 +218,8 @@ namespace detail {
 
       m_requestRun = OSServer(*url);
 
+      setStatus(AnalysisStatus::Starting);
+
       // make sure the server is available
       LOG(Debug,"Checking that server is available.");
       bool test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(availableForRun(bool)),Qt::QueuedConnection);
@@ -250,6 +258,8 @@ namespace detail {
     if (OptionalUrl url = session().serverUrl()) {
 
       m_requestStop = OSServer(*url);
+
+      setStatus(AnalysisStatus::Stopping);
 
       // request analysis to stop
       bool test = m_requestStop->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStopped(bool)),Qt::QueuedConnection);
@@ -1113,9 +1123,17 @@ namespace detail {
     m_warnings.insert(m_warnings.end(),temp.begin(),temp.end());
   }
 
+  void CloudAnalysisDriver_Impl::setStatus(AnalysisStatus status) {
+    if (m_status != status){
+      m_status = status;
+      emit analysisStatusChanged(m_status);
+    }
+  }
+
   void CloudAnalysisDriver_Impl::registerRunRequestFailure() {
     appendErrorsAndWarnings(*m_requestRun);
     m_requestRun.reset();
+    setStatus(AnalysisStatus::Error);
     emit runRequestComplete(false);
   }
 
@@ -1200,6 +1218,7 @@ namespace detail {
     }
     else {
       logError("Cannot start monitoring this run because the CloudSession has been terminated.");
+      setStatus(AnalysisStatus::Error);
       emit runRequestComplete(false);
       return success;
     }
@@ -1225,6 +1244,8 @@ namespace detail {
     appendErrorsAndWarnings(*m_requestRun); // keep any warnings registered with this server
     m_requestRun.reset();
 
+    setStatus(AnalysisStatus::Running);
+
     return success;
   }
 
@@ -1232,6 +1253,7 @@ namespace detail {
     appendErrorsAndWarnings(*m_monitorDataPoints);
     m_monitorDataPoints.reset();
     OS_ASSERT(m_postQueue.empty());
+    setStatus(AnalysisStatus::Error);
     emit runRequestComplete(false);
   }
 
@@ -1389,12 +1411,14 @@ namespace detail {
   void CloudAnalysisDriver_Impl::registerStopRequestFailure() {
     appendErrorsAndWarnings(*m_requestStop);
     m_requestStop.reset();
+    setStatus(AnalysisStatus::Error);
     emit stopRequestComplete(false);
   }
 
   void CloudAnalysisDriver_Impl::registerDownloadDetailsRequestFailure() {
     appendErrorsAndWarnings(*m_checkForResultsToDownload);
     m_checkForResultsToDownload.reset();
+    //setStatus(AnalysisStatus::Error); // DLM: should we do this?
     emit detailedDownloadRequestsComplete(false);
   }
 
@@ -1405,6 +1429,7 @@ namespace detail {
         m_requestStop.reset();
         m_lastStopSuccess = true;
 
+        setStatus(AnalysisStatus::Idle);
         emit stopRequestComplete(true);
         emit analysisStopped(project().analysis().uuid());
       }
@@ -1415,6 +1440,7 @@ namespace detail {
               << " (total number of points in run).");
         }
         m_lastRunSuccess = true;
+        setStatus(AnalysisStatus::Idle);
         emit runRequestComplete(true);
         emit analysisComplete(project().analysis().uuid());
       }
@@ -1470,6 +1496,11 @@ unsigned CloudAnalysisDriver::numIncompleteDataPoints() const {
 
 unsigned CloudAnalysisDriver::numCompleteDataPoints() const {
   return getImpl<detail::CloudAnalysisDriver_Impl>()->numCompleteDataPoints();
+}
+
+AnalysisStatus CloudAnalysisDriver::status() const
+{
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->status();
 }
 
 bool CloudAnalysisDriver::run(int msec) {
