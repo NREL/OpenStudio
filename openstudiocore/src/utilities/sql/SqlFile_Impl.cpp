@@ -437,8 +437,8 @@ namespace openstudio{
 
         // use this code block to try to support EnergyPlus versions before they are released
         if (code != SQLITE_ROW){
-          LOG(Warn, "Trying unsupported EnergyPlus version 8.0");
-          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.0%'",-1,&sqlStmtPtr,NULL);
+          LOG(Warn, "Trying unsupported EnergyPlus version 8.1");
+          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.1%'",-1,&sqlStmtPtr,NULL);
           code = sqlite3_step(sqlStmtPtr);
           sqlite3_finalize(sqlStmtPtr);
         }
