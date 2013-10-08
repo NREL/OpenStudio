@@ -56,28 +56,81 @@
 namespace openstudio {
 namespace contam {
 
-CvfFile::CvfFile()
+CvFile::CvFile()
 {
   m_start = Date(MonthOfYear::Jan,1);
   m_end = Date(MonthOfYear::Dec,31);
 }
 
-void CvfFile::addTimeSeries(std::string name, TimeSeries series)
+void CvFile::addTimeSeries(std::string name, TimeSeries series)
 {
   m_names.push_back(name);
   m_series.push_back(series);
 }
 
-bool CvfFile::write(openstudio::path filepath)
+static std::string convertDateTime(const DateTime &datetime)
+{
+  return QString().sprintf("%02d/%02d\t%02d:%02d:%02d", month(datetime.date().monthOfYear()), datetime.date().dayOfMonth(),
+    datetime.time().hours(),datetime.time().minutes(),datetime.time().seconds()).toStdString();
+}
+
+bool CvFile::write(openstudio::path filepath)
 {
   QFile file(toQString(filepath));
   if(file.open(QFile::WriteOnly))
   {
     QTextStream textStream(&file);
     textStream << "ContinuousValuesFile ContamW 2.1\n";
-    textStream << "CVF file from E+ results";
-    textStream << month(m_start.monthOfYear()) << '/' << m_start.dayOfMonth() << ' '
+    textStream << "CVF file from E+ results\n";
+    textStream << month(m_start.monthOfYear()) << '/' << m_start.dayOfMonth() << '\t'
                <<  month(m_end.monthOfYear())  << '/' <<  m_end.dayOfMonth()  << '\n';
+    textStream << m_names.size() << '\n';
+    for(unsigned int i=0;i<m_names.size();i++)
+    {
+      textStream << m_names[i] << '\n';
+    }
+    Time delta(0,1,0,0); // Hard code hourly data for now
+    DateTime current(m_start);
+    DateTime last = current;
+    // Another hard code for 8760 hours, really not sure what to do with 1/1 00:00:00
+    textStream << convertDateTime(current);
+    for(unsigned int i=0;i<m_names.size();i++)
+    {
+      double value = m_series[i].value(current+delta); // This works now...
+      if(m_series[i].units() == "C")
+      {
+        value += 273.15;
+      }
+      textStream << '\t' << value;
+    }
+    textStream << '\n';
+    // And the big hardcoded loop
+    for(int j=0;j<8760;j++)
+    {
+      current += delta;
+      // Mess with the time a little bit to put 24:00:00 in for 00:00:00
+      if(current.time().hours() == 0 && current.time().minutes() == 0 && current.time().seconds() == 0)
+      {
+        textStream << QString().sprintf("%02d/%02d\t24:00:00",month(last.date().monthOfYear()),
+          last.date().dayOfMonth()).toStdString();
+      }
+      else
+      {
+        textStream << convertDateTime(current);
+      }
+      last = current;
+      // Write out the data. May need more conversion here in the future.
+      for(unsigned int i=0;i<m_names.size();i++)
+      {
+        double value = m_series[i].value(current);
+        if(m_series[i].units() == "C")
+        {
+          value += 273.15;
+        }
+        textStream << '\t' << value;
+      }
+      textStream << '\n';
+    }
     file.close();
     return true;
   }
@@ -1301,24 +1354,19 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
 
     // The rest of this isn't hooked into the progress bar yet, will need to do that at some point
 
-    // Try to use E+ results to set flow rates. The supply and return flow paths are in the path
+    // Try to use E+ results to set temperatures and flow rates. The supply and return flow paths are in the path
     // lookup table under the names thermalZone.name + supply|return (see above)
     boost::optional<openstudio::SqlFile> sqlFile = model.sqlFile();
     if(sqlFile)
     {
       std::vector<std::string> available = sqlFile->availableTimeSeries();
-      BOOST_FOREACH(std::string series, available)
-      {
-        std::cout << '\t' << series <<std::endl;
-      }
       std::string envPeriod; 
       BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
       {
         envPeriod = t; // should only ever be one
         break;
       }
-      std::cout << envPeriod << std::endl;
-      bool setTime=false;
+      // bool setTime=false;
       if(std::find(available.begin(), available.end(), "Zone Mean Air Temperature")!=available.end())
       {
         // Loop through and get a time series for each zone we can find
@@ -1337,8 +1385,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
           if(timeSeries)
           {
             int nr =  m_zoneMap[thermalZone.handle()];
-            std::cout << "Found time series for zone " << name.get() 
-                      << ", CONTAM index " << nr << std::endl;
+            // std::cout << "Found time series for zone " << name.get() << ", CONTAM index " << nr << std::endl;
             // Create a control node
             std::string controlName = QString("ctrl_%1").arg(nr).toStdString();
             std::string valueName = QString("temp_%1").arg(nr).toStdString();
@@ -1349,17 +1396,12 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
             addControlNode(ctrl);
             // Connect to the zone
             zones()[nr-1].setPc(ctrl.nr());
-            //openstudio::Vector values = timeSeries->values();
           }
           else
           {
             LOG(Warn,"Zone '" << name.get() << "' has no Zone Mean Air Temperature time series");
           }
-
         }
-
-        //std::vector<TimeSeries> series = sqlFile->timeSeries(envPeriod,"Hourly","Zone Mean Air Temperature");
-        // Is there a better way to do this?
       }
       else
       {
@@ -1409,6 +1451,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
         }
       }
       */
+      // The modification of the PRJ for transient simulation probably should be here
     }
     else
     {
@@ -1560,11 +1603,11 @@ int ForwardTranslator::addNewAirflowElement(std::string name, double flow,double
   return afe.nr();
 }
 
-bool ForwardTranslator::writeCvfFile(openstudio::path filepath)
+bool ForwardTranslator::writeCvFile(openstudio::path filepath)
 {
   if(!m_cvf.isEmpty())
   {
-    m_cvf.write(filepath);
+    return m_cvf.write(filepath);
   }
   return false;
 }

@@ -130,7 +130,8 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  // Try to find and connect a results file
+  // Try to find and connect a results file - this really should be done using the RunManager database,
+  // but I don't know how to do that and it can be done right at a later date by someone who knows how
   openstudio::path dir = inputPath.parent_path() / inputPath.stem();
   boost::optional<openstudio::path> sqlpath = findFile(dir,"eplusout.sql");
   if(sqlpath)
@@ -160,6 +161,19 @@ int main(int argc, char *argv[])
       std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
       return EXIT_FAILURE;
     }
+    // Write out a CVF if needed
+    //std::cout << translator.rc().CVFpath() << std::endl;
+    if(translator.writeCvFile(cvfPath))
+    {
+      // Need to set the CVF file in the PRJ, this path may need to be made relative. Not too sure
+      translator.rc().setCVFpath(openstudio::toString(cvfPath));
+      // Turn on transient simulation
+      translator.rc().setSim_af(1);
+      // This should be done somewhere else
+      translator.rc().setDate_1("Dec31");
+      translator.rc().setTime_1("24:00:00");
+      //std::cout << translator.rc().CVFpath() << std::endl;
+    }
     textStream << openstudio::toQString(translator.toString());
   }
   else
@@ -169,8 +183,8 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
   file.close();
-    // The details on what we should do with these maps are still unclear
-    // openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
-    // translator.writeMaps(mapPath);
+  // The details on what we should do with these maps are still unclear
+  // openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
+  // translator.writeMaps(mapPath);
   return EXIT_SUCCESS;
 }
