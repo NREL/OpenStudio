@@ -217,19 +217,30 @@ void CloudMonitor::startCloud()
 
 void CloudMonitor::onStartCloudWorkerComplete()
 {
-  setCurrentProjectSession(m_startCloudWorker->session());
+  if( ! m_startCloudWorker->validCredentials() )
+  {
+    QString error("Invalid cloud settings.  Verify settings from Cloud menu.");
+    
+    QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
 
-  setCurrentProjectSettings(m_startCloudWorker->settings());
+    setStatus(CLOUD_STOPPED);
+  }
+  else
+  {
+    setCurrentProjectSession(m_startCloudWorker->session());
 
-  m_startCloudThread->quit();
+    setCurrentProjectSettings(m_startCloudWorker->settings());
 
-  m_startCloudThread->wait();
+    m_startCloudThread->quit();
 
-  m_startCloudThread.clear();
+    m_startCloudThread->wait();
 
-  setStatus(CLOUD_RUNNING);
+    m_startCloudThread.clear();
 
-  m_worker->monitorCloudRunning();
+    setStatus(CLOUD_RUNNING);
+
+    m_worker->monitorCloudRunning();
+  }
 }
 
 void CloudMonitor::stopCloud()
@@ -510,45 +521,53 @@ void StartCloudWorker::startWorking()
 
   OS_ASSERT(provider);
 
-  // DLM: if user agreement is not signed or user credentials not validated we should refer people to the settings here
+  m_validCredentials = provider->validateCredentials();
 
-  if( provider->requestStartServer() )
+  if( m_validCredentials )
   {
-    provider->waitForServer();
-  }
-
-  // DLM: quit if server fails?
-  
-  if( provider->requestStartWorkers() )
-  {
-    provider->waitForWorkers();
-  }
-
-  // DLM: quit if workers fail?
-
-  boost::optional<Url> serverUrl = provider->session().serverUrl();
- 
-  if(serverUrl){
-
-    for(int i = 0; i < 15; i++)
+    if( provider->requestStartServer() )
     {
-      OSServer server(serverUrl.get());
+      provider->waitForServer();
+    }
 
-      if( server.available() )
+    // DLM: quit if server fails?
+    
+    if( provider->requestStartWorkers() )
+    {
+      provider->waitForWorkers();
+    }
+
+    // DLM: quit if workers fail?
+
+    boost::optional<Url> serverUrl = provider->session().serverUrl();
+ 
+    if(serverUrl){
+
+      for(int i = 0; i < 15; i++)
       {
-        break;
-      }
-      else
-      {
-        System::msleep(3000);
-      }
-    } 
+        OSServer server(serverUrl.get());
+
+        if( server.available() )
+        {
+          break;
+        }
+        else
+        {
+          System::msleep(3000);
+        }
+      } 
+    }
+
+    m_session = provider->session();
+    m_settings = provider->settings();
   }
-
-  m_session = provider->session();
-  m_settings = provider->settings();
 
   emit doneWorking();
+}
+
+bool StartCloudWorker::validCredentials() const
+{
+  return m_validCredentials;
 }
 
 StopCloudWorker::StopCloudWorker(CloudMonitor * monitor)

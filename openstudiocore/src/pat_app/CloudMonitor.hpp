@@ -187,6 +187,8 @@ class StartCloudWorker : public QObject
 
   boost::optional<CloudSession> session() const;
 
+  bool validCredentials() const;
+
   signals:
 
   void doneWorking();
@@ -204,6 +206,8 @@ class StartCloudWorker : public QObject
   boost::optional<CloudSettings> m_settings;
 
   boost::optional<CloudSession> m_session; 
+
+  bool m_validCredentials;
 };
 
 class StopCloudWorker : public QObject
