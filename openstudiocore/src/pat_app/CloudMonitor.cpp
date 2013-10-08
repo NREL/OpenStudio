@@ -182,15 +182,36 @@ void CloudMonitor::startCloud()
 {
   if( m_status == CLOUD_STOPPED )
   {
-    setStatus(CLOUD_STARTING);
-    
-    m_startCloudThread = QSharedPointer<QThread>(new QThread());
+    bool preCheckPassed = true;
 
-    m_startCloudWorker->moveToThread(m_startCloudThread.data());
+    CloudSettings settings = PatApp::instance()->cloudSettings();
 
-    m_startCloudThread->start();
+    if( boost::optional<AWSSettings> awsSettings = settings.optionalCast<AWSSettings>() )
+    {
+      if( ! awsSettings->validAccessKey() || 
+          ! awsSettings->validSecretKey() || 
+          ! awsSettings->userAgreementSigned() )
+      {
+        QString error("Missing or invalid cloud settings.  Verify settings from Cloud menu.");
+        
+        QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
 
-    m_startCloudWorker->startWorking();
+        preCheckPassed = false;
+      }
+    }
+
+    if( preCheckPassed )
+    {
+      setStatus(CLOUD_STARTING);
+      
+      m_startCloudThread = QSharedPointer<QThread>(new QThread());
+
+      m_startCloudWorker->moveToThread(m_startCloudThread.data());
+
+      m_startCloudThread->start();
+
+      m_startCloudWorker->startWorking();
+    }
   }
 }
 
@@ -479,10 +500,53 @@ boost::optional<CloudSession> StartCloudWorker::session() const
 
 void StartCloudWorker::startWorking()
 {
-  CloudProvider provider = detail::startCloud();
+  //CloudProvider provider = detail::startCloud();
 
-  m_session = provider.session();
-  m_settings = provider.settings();
+  boost::optional<CloudProvider> provider;
+
+  CloudSettings settings = PatApp::instance()->cloudSettings();
+
+  provider = CloudMonitor::newCloudProvider(settings);
+
+  OS_ASSERT(provider);
+
+  // DLM: if user agreement is not signed or user credentials not validated we should refer people to the settings here
+
+  if( provider->requestStartServer() )
+  {
+    provider->waitForServer();
+  }
+
+  // DLM: quit if server fails?
+  
+  if( provider->requestStartWorkers() )
+  {
+    provider->waitForWorkers();
+  }
+
+  // DLM: quit if workers fail?
+
+  boost::optional<Url> serverUrl = provider->session().serverUrl();
+ 
+  if(serverUrl){
+
+    for(int i = 0; i < 15; i++)
+    {
+      OSServer server(serverUrl.get());
+
+      if( server.available() )
+      {
+        break;
+      }
+      else
+      {
+        System::msleep(3000);
+      }
+    } 
+  }
+
+  m_session = provider->session();
+  m_settings = provider->settings();
 
   emit doneWorking();
 }
