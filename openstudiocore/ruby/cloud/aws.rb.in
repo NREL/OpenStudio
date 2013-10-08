@@ -534,12 +534,13 @@ begin
       error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
   end
     #puts \"Status: #{resp.http_response.status}\"
+rescue SystemExit => e
 rescue Exception => e
   if e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')
   elsif defined? e.http_response
     error(e.http_response.status, e.code)
-  elsif e != 'exit'
+  else
     error(-1, "#{e}: #{e.backtrace}")
   end
 
