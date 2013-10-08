@@ -441,6 +441,26 @@ boost::optional<Unit> ScheduleTypeLimits::units(std::string unitType, bool retur
       }
       break;
     }
+  case 'w' :
+    {
+      if (unitType == "watts") {
+        if (returnIP) {
+          result = createBTUPower();
+        }
+        else {
+          result = createWhPower();
+        }
+      }
+      if (unitType == "wattspermeter") {
+        if (returnIP) {
+          result = BTUUnit(BTUExpnt(1,-1,-1));
+        }
+        else {
+          result = WhUnit(WhExpnt(1,0,-1));
+        }
+      }
+      break;
+    }
   }
 
   return result;
