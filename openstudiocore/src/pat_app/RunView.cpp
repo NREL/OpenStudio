@@ -323,7 +323,17 @@ void RunStatusView::on_clearSelectionDataPoints(bool checked)
 
 void RunStatusView::on_selectAllDownloads(bool checked)
 {
-  // TODO
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if (project){
+    std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
+    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+      if(checked){
+        dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
+      } else {
+        dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
+      }
+    }
+  }
 }
 
 void RunStatusView::on_selectAllClears(bool checked)
@@ -674,6 +684,43 @@ void DataPointRunHeaderView::update()
   }
   m_clear->setStyleSheet(style);
   m_clear->setEnabled(hasDataToClear);
+
+  ///// Download button
+
+  // If dataPoint not selected, clear download select
+  if(!this->isChecked()){
+    m_download->setChecked(false);
+  }
+
+  // Determine if datapoint has detailed data
+  if(this->m_dataPoint.complete() && !this->m_dataPoint.directory().empty()){
+    m_download->setEnabled(false);
+    m_download->setChecked(false);
+    style = "QPushButton {"
+                          "background-image:url(':/images/results_downloaded.png');"
+                          "  border:none;"
+                          "}";
+  } else if(m_dataPoint.runType() == analysis::DataPointRunType::CloudDetailed){
+    m_download->setEnabled(true);
+    m_download->setChecked(true);
+    style = "QPushButton {"
+                          "background-image:url(':/images/results_yes_download.png');"
+                          "  border:none;"
+                          "}";
+  // Note: there are more remaining types just analysis::DataPointRunType::CloudSlim
+  } else {
+    m_download->setEnabled(true);
+    m_download->setChecked(false);
+    style = "QPushButton {"
+                          "background-image:url(':/images/results_no_download.png');"
+                          "  border:none;"
+                          "}";
+  }
+  // TODO case where no image shown
+  // m_download->setChecked(false);
+  // m_download->setEnabled(false);
+  // style = "";
+  m_download->setStyleSheet(style);
 
 }
 
