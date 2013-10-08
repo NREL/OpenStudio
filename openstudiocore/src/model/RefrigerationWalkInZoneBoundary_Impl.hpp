@@ -62,6 +62,8 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual ModelObject clone(Model model) const;
+
     //@}
     /** @name Getters */
     //@{

@@ -96,7 +96,7 @@ namespace detail {
 
   ModelObject RefrigerationSecondarySystem_Impl::clone(Model model) const
   {
-    RefrigerationSecondarySystem modelObjectClone = ParentObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
+    RefrigerationSecondarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
 
     if (boost::optional<CurveCubic> variableSpeedPumpCubicCurve = this->variableSpeedPumpCubicCurve()) {
       modelObjectClone.setVariableSpeedPumpCubicCurve(variableSpeedPumpCubicCurve.get().clone(model).cast<CurveCubic>());

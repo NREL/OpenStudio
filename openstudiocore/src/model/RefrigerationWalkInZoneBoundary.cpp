@@ -26,6 +26,8 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_WalkIn_ZoneBoundary_FieldEnums.hxx>
@@ -88,6 +90,15 @@ namespace detail {
       result.push_back(ScheduleTypeKey("RefrigerationWalkInZoneBoundary","Stocking Door Opening  Facing Zone"));
     }
     return result;
+  }
+
+  ModelObject RefrigerationWalkInZoneBoundary_Impl::clone(Model model) const
+  {
+    RefrigerationWalkInZoneBoundary modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkInZoneBoundary>();
+
+    modelObjectClone.resetThermalZone();
+
+    return modelObjectClone;
   }
 
   boost::optional<ThermalZone> RefrigerationWalkInZoneBoundary_Impl::thermalZone() const {
@@ -317,11 +328,16 @@ RefrigerationWalkInZoneBoundary::RefrigerationWalkInZoneBoundary(const Model& mo
   OS_ASSERT(getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>());
 
   bool ok = true;
-  // ok = setHandle();
+// Maybe pass in a thermalZone?
+  //ok = setThermalZone(thermalZone);
+  //OS_ASSERT(ok);
+  ok = setTotalInsulatedSurfaceAreaFacingZone(43.4);
   OS_ASSERT(ok);
-  // ok = setZone();
+  ok = setInsulatedSurfaceUValueFacingZone(.235);
   OS_ASSERT(ok);
-  // ok = setTotalInsulatedSurfaceAreaFacingZone();
+  setAreaofStockingDoorsFacingZone(2.0);
+  setHeightofStockingDoorsFacingZone(2.0);
+  ok = setStockingDoorOpeningProtectionTypeFacingZone("StripCurtain");
   OS_ASSERT(ok);
 }
 

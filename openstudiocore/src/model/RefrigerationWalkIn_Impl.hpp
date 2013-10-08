@@ -63,13 +63,17 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual ModelObject clone(Model model) const;
+
+    virtual std::vector<IdfObject> remove();
+
     bool addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary);
 
     void removeZoneBoundary(unsigned groupIndex);
 
     void removeAllZoneBoundaries();
 
-    std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries();
+    std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const;
 
     //@}
     /** @name Getters */

@@ -42,7 +42,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationWalkIn(const Model& model);
+  explicit RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule, Schedule& walkinDefrostDripDownSchedule);
 
   virtual ~RefrigerationWalkIn() {}
 
@@ -60,7 +60,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   void removeAllZoneBoundaries();
 
-  std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries();
+  std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const;
 
   /** @name Getters */
   //@{

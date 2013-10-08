@@ -44,7 +44,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationCase(const Model& model, Schedule& caseLightingSchedule, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule);
+  explicit RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule);
 
   virtual ~RefrigerationCase() {}
 

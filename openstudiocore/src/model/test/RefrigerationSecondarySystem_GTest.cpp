@@ -53,6 +53,32 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_DefaultConstructor)
     ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture, RefrigerationSecondarySystem_CirculatingFluidName)
+{
+  Model model;
+  RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
+
+  EXPECT_EQ("PropyleneGlycol", testObject.circulatingFluidName());
+  EXPECT_TRUE(testObject.setCirculatingFluidName("EthyleneGlycol"));
+  EXPECT_TRUE(testObject.setCirculatingFluidName("R410a"));
+  EXPECT_TRUE(testObject.setCirculatingFluidName("R22"));
+  EXPECT_FALSE(testObject.setCirculatingFluidName("Not Valid"));
+}
+
+TEST_F(ModelFixture, RefrigerationSecondarySystem_GlycolConcentration)
+{
+  Model model;
+  RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
+
+  EXPECT_EQ(30, testObject.glycolConcentration().get());
+  EXPECT_TRUE(testObject.setGlycolConcentration(0));
+  EXPECT_EQ(0, testObject.glycolConcentration().get());
+  EXPECT_TRUE(testObject.setGlycolConcentration(100));
+  EXPECT_EQ(100, testObject.glycolConcentration().get());
+  EXPECT_FALSE(testObject.setGlycolConcentration(-1));
+  EXPECT_FALSE(testObject.setGlycolConcentration(101));
+}
+
 TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove)
 {
   Model model;
@@ -94,6 +120,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData)
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
   RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+
   EXPECT_EQ("PropyleneGlycol", testObjectClone.circulatingFluidName());
   EXPECT_EQ(30, testObjectClone.glycolConcentration().get());
   EXPECT_DOUBLE_EQ(35000.0 ,testObjectClone.evaporatorCapacity().get());
@@ -135,6 +162,12 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData)
   testObject.setPumpMotorHeattoFluid(0.5);
 
   RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+
+  std::vector<CurveCubic> refrigerationSecondarySystemCurves = model.getModelObjects<CurveCubic>();
+  for(std::vector<CurveCubic>::iterator it = refrigerationSecondarySystemCurves.begin(); it != refrigerationSecondarySystemCurves.end(); ++it) {
+  	EXPECT_TRUE(it->parent());
+  }
+
   EXPECT_EQ("R410a", testObjectClone.circulatingFluidName());
   EXPECT_EQ(0, testObjectClone.glycolConcentration().get());
   EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.evaporatorCapacity().get());
@@ -147,6 +180,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.totalPumpHead().get());
   EXPECT_DOUBLE_EQ(0.5 ,testObjectClone.pumpMotorHeattoFluid());
   EXPECT_TRUE(testObjectClone.variableSpeedPumpCubicCurve());
+  EXPECT_NE(testObject.variableSpeedPumpCubicCurve().get().handle(), testObjectClone.variableSpeedPumpCubicCurve().get().handle());
   EXPECT_FALSE(testObjectClone.distributionPipingZone());
   EXPECT_FALSE(testObjectClone.receiverSeparatorZone());
 }
@@ -184,8 +218,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Cases)
 
   ScheduleCompact s1(model);
   ScheduleCompact s2(model);
-  ScheduleCompact s3(model);
-  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
 
   std::vector<RefrigerationCase> cases = testObject.cases();
   EXPECT_TRUE(cases.empty());
@@ -204,8 +237,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_AddCase)
 
   ScheduleCompact s1(model);
   ScheduleCompact s2(model);
-  ScheduleCompact s3(model);
-  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
 
   EXPECT_TRUE(testObject.addCase(case1));
 }
@@ -217,9 +249,8 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCase)
 
   ScheduleCompact s1(model);
   ScheduleCompact s2(model);
-  ScheduleCompact s3(model);
-  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
-  RefrigerationCase case2 = RefrigerationCase(model, s1, s2, s3);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
+  RefrigerationCase case2 = RefrigerationCase(model, s1, s2);
 
   testObject.addCase(case1);
   testObject.addCase(case2);
@@ -247,9 +278,8 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCases)
   
   ScheduleCompact s1(model);
   ScheduleCompact s2(model);
-  ScheduleCompact s3(model);
-  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
-  RefrigerationCase case2 = RefrigerationCase(model, s1, s2, s3);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
+  RefrigerationCase case2 = RefrigerationCase(model, s1, s2);
 
   testObject.addCase(case1);
   testObject.addCase(case2);
@@ -268,10 +298,9 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Walkins)
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  ScheduleCompact wls(model);
   ScheduleCompact wds(model);
   ScheduleCompact wddds(model);
-  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds, wddds);
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
   EXPECT_TRUE(walkins.empty());
@@ -288,10 +317,9 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_AddWalkIn)
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  ScheduleCompact wls(model);
   ScheduleCompact wds(model);
   ScheduleCompact wddds(model);
-  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds, wddds);
 
   EXPECT_TRUE(testObject.addWalkin(walkin1));
 }
@@ -301,11 +329,10 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveWalkIn)
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  ScheduleCompact wls(model);
   ScheduleCompact wds(model);
   ScheduleCompact wddds(model);
-  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
-  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wds, wddds);
 
   testObject.addWalkin(walkin1);
   testObject.addWalkin(walkin2);
@@ -331,11 +358,10 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllWalkIns)
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  ScheduleCompact wls(model);
   ScheduleCompact wds(model);
   ScheduleCompact wddds(model);
-  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
-  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wds, wddds);
 
   testObject.addWalkin(walkin1);
   testObject.addWalkin(walkin2);
@@ -356,12 +382,10 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CasesAndWalkins)
 
   ScheduleCompact s1(model);
   ScheduleCompact s2(model);
-  ScheduleCompact s3(model);
-  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
-  ScheduleCompact wls(model);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
   ScheduleCompact wds(model);
   ScheduleCompact wddds(model);
-  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds, wddds);
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
   EXPECT_TRUE(walkins.empty());
@@ -385,16 +409,14 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn)
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  ScheduleCompact wls(model);
   ScheduleCompact wds(model);
   ScheduleCompact wddds(model);
-  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
-  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wds, wddds);
   ScheduleCompact s1(model);
   ScheduleCompact s2(model);
-  ScheduleCompact s3(model);
-  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
-  RefrigerationCase case2 = RefrigerationCase(model, s1, s2, s3);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
+  RefrigerationCase case2 = RefrigerationCase(model, s1, s2);
 
   testObject.addWalkin(walkin1);
   testObject.addWalkin(walkin2);
@@ -446,14 +468,12 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCasesAndWalkIns)
 
   ScheduleCompact s1(model);
   ScheduleCompact s2(model);
-  ScheduleCompact s3(model);
-  RefrigerationCase case1 = RefrigerationCase(model, s1, s2, s3);
-  RefrigerationCase case2 = RefrigerationCase(model, s1, s2, s3);
-  ScheduleCompact wls(model);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
+  RefrigerationCase case2 = RefrigerationCase(model, s1, s2);
   ScheduleCompact wds(model);
   ScheduleCompact wddds(model);
-  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wls, wds, wddds);
-  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wls, wds, wddds);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wds, wddds);
 
   testObject.addWalkin(walkin1);
   testObject.addWalkin(walkin2);

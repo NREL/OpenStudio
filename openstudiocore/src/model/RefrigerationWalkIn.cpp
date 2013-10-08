@@ -26,8 +26,11 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include <utilities/idf/WorkspaceObject.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_WalkIn_FieldEnums.hxx>
@@ -108,6 +111,43 @@ namespace detail {
     return result;
   }
 
+  std::vector<IdfObject> RefrigerationWalkIn_Impl::remove()
+  {
+    std::vector<IdfObject> result;
+
+    std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
+    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
+         it != zoneBoundaries.end();
+         it++ )
+    {
+      std::vector<IdfObject> removedZoneBoundaries = it->remove();
+      result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
+    }      
+
+    std::vector<IdfObject> removedRRefrigerationWalkIn = ModelObject_Impl::remove();
+    result.insert(result.end(), removedRRefrigerationWalkIn.begin(), removedRRefrigerationWalkIn.end());
+
+    return result;
+  }
+
+  ModelObject RefrigerationWalkIn_Impl::clone(Model model) const
+  {
+    RefrigerationWalkIn modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkIn>();
+
+    modelObjectClone.removeAllZoneBoundaries();
+
+    std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
+    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
+         it != zoneBoundaries.end();
+         it++ )
+    {
+      RefrigerationWalkInZoneBoundary zoneBoundaryClone = it->clone(model).cast<RefrigerationWalkInZoneBoundary>();
+      modelObjectClone.addZoneBoundary(zoneBoundaryClone);
+    }
+
+    return modelObjectClone;
+  }
+
   bool RefrigerationWalkIn_Impl::addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary)
   {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
@@ -132,7 +172,7 @@ namespace detail {
     getObject<ModelObject>().clearExtensibleGroups();
   }
 
-  std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkIn_Impl::zoneBoundaries() 
+  std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkIn_Impl::zoneBoundaries() const
   {
     std::vector<RefrigerationWalkInZoneBoundary> result;
 
@@ -142,11 +182,12 @@ namespace detail {
          it != groups.end();
          it++ )
     {
-      boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getObject<ModelObject>().getModelObjectTarget<RefrigerationWalkInZoneBoundary>(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary);
-
-      if(refrigerationWalkInZoneBoundary) {
-        result.push_back( refrigerationWalkInZoneBoundary.get() );
-      }
+      //if( boost::optional<WorkspaceObject> workspaceExtensibleObject = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) ) {
+      //  if( boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = workspaceExtensibleObject->optionalCast<RefrigerationWalkInZoneBoundary>() ) {
+          if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary)->optionalCast<RefrigerationWalkInZoneBoundary>()) {
+          result.push_back( refrigerationWalkInZoneBoundary.get() );
+        }
+      //}
     }
 
     return result;
@@ -487,26 +528,39 @@ namespace detail {
 
 } // detail
 
-RefrigerationWalkIn::RefrigerationWalkIn(const Model& model)
+RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule, Schedule& walkinDefrostDripDownSchedule)
   : ModelObject(RefrigerationWalkIn::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationWalkIn_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Refrigeration_WalkInFields::DefrostScheduleName
   bool ok = true;
-  // ok = setHandle();
+  setRatedCoilCoolingCapacity(4690.0);
+  ok = setOperatingTemperature(-2.22);
   OS_ASSERT(ok);
-  // setRatedCoilCoolingCapacity();
-  // ok = setOperatingTemperature();
+  ok = setRatedCoolingSourceTemperature(-6.67);
   OS_ASSERT(ok);
-  // ok = setRatedCoolingSourceTemperature();
+  setRatedTotalHeatingPower(0.0);
+  ok = setRatedCoolingCoilFanPower(735.0);
   OS_ASSERT(ok);
-  // setRatedTotalHeatingPower();
-  // setRatedTotalLightingPower();
-  // ok = setDefrostSchedule();
+  ok = setRatedCirculationFanPower(0.0);
   OS_ASSERT(ok);
-  // ok = setInsulatedFloorSurfaceArea();
+  setRatedTotalLightingPower(120.0);
+  ok = setDefrostType("Electric");
+  OS_ASSERT(ok);
+  ok = setDefrostControlType("TimeSchedule");
+  OS_ASSERT(ok);
+  ok = setDefrostSchedule(walkinDefrostSchedule);
+  OS_ASSERT(ok);
+  ok = setDefrostDripDownSchedule(walkinDefrostDripDownSchedule);
+  OS_ASSERT(ok);
+  ok = setDefrostPower(5512.0);
+  OS_ASSERT(ok);
+  ok = setInsulatedFloorSurfaceArea(13.0);
+  OS_ASSERT(ok);
+  ok = setInsulatedFloorUValue(0.207);
+  OS_ASSERT(ok);
+  RefrigerationWalkInZoneBoundary zoneBoundary = RefrigerationWalkInZoneBoundary(model);
+  ok = addZoneBoundary(zoneBoundary);
   OS_ASSERT(ok);
 }
 
@@ -536,7 +590,7 @@ void RefrigerationWalkIn::removeAllZoneBoundaries(){
   return getImpl<detail::RefrigerationWalkIn_Impl>()->removeAllZoneBoundaries();
 }
 
-std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkIn::zoneBoundaries(){
+std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkIn::zoneBoundaries() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaries();
 }
 
