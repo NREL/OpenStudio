@@ -837,7 +837,7 @@ bool CloudMonitorWorker::checkAuthenticated() const
 
   CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
 
-  // TODO Figure out if authenticated.
+  authenticated = newProvider.validateCredentials();
 
   return authenticated;
 }
