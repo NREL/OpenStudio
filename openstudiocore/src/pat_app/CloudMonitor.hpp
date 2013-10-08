@@ -74,6 +74,12 @@ class CloudMonitor : public QObject
   // Set the session in the App's current project
   static void setCurrentProjectSession(const boost::optional<CloudSession> & session);
 
+  // Return the settings stored in the App's current project
+  static boost::optional<CloudSettings> currentProjectSettings();
+
+  // Set the settings in the App's current project
+  static void setCurrentProjectSettings(const boost::optional<CloudSettings> & settings);
+
   signals:
 
   // This will be removed.  Use ::status() to get information about the cloud.

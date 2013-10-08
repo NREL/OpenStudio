@@ -54,7 +54,7 @@ void stopCloud()
   boost::optional<CloudProvider> provider;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
 
   // If there is already a session, try to connect to that
   if( session && settings ) 
@@ -72,7 +72,7 @@ CloudProvider startCloud()
 {
   boost::optional<CloudProvider> provider;
 
-  CloudSettings settings = PatApp::instance()->createTestSettings();
+  CloudSettings settings = PatApp::instance()->cloudSettings();
 
   provider = CloudMonitor::newCloudProvider(settings);
 
@@ -194,9 +194,9 @@ void CloudMonitor::startCloud()
 
 void CloudMonitor::onStartCloudWorkerComplete()
 {
-  CloudMonitor::setCurrentProjectSession(m_startCloudWorker->session());
+  setCurrentProjectSession(m_startCloudWorker->session());
 
-  PatApp::instance()->setCurrentProjectSettings(m_startCloudWorker->settings());
+  setCurrentProjectSettings(m_startCloudWorker->settings());
 
   m_startCloudThread->quit();
 
@@ -227,8 +227,8 @@ void CloudMonitor::stopCloud()
 
 void CloudMonitor::onStopCloudWorkerComplete()
 {
-  CloudMonitor::setCurrentProjectSession(boost::none);
-  PatApp::instance()->setCurrentProjectSettings(boost::none);
+  setCurrentProjectSession(boost::none);
+  setCurrentProjectSettings(boost::none);
 
   m_stopCloudThread->quit();
 
@@ -241,7 +241,7 @@ void CloudMonitor::onStopCloudWorkerComplete()
 
 void CloudMonitor::reconnectCloud()
 {
-  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
+  boost::optional<CloudSettings> settings = currentProjectSettings();
 
   boost::optional<CloudSession> session = currentProjectSession();
 
@@ -335,8 +335,8 @@ void CloudMonitor::onRecoverCloudWorkerComplete()
 
   m_recoverCloudThread.clear();
 
-  PatApp::instance()->setCurrentProjectSettings(boost::none);
-  CloudMonitor::setCurrentProjectSession(boost::none);
+  setCurrentProjectSettings(boost::none);
+  setCurrentProjectSession(boost::none);
 
   setStatus(CLOUD_STOPPED);
 }
@@ -364,6 +364,35 @@ void CloudMonitor::setCurrentProjectSession(const boost::optional<CloudSession> 
     else
     {
       project->setCloudSession(session.get());
+    }
+
+    project->save();
+  }
+}
+
+boost::optional<CloudSettings> CloudMonitor::currentProjectSettings()
+{
+  boost::optional<CloudSettings> settings;
+
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    settings = project->cloudSettings();
+  }
+
+  return settings;
+}
+
+void CloudMonitor::setCurrentProjectSettings(const boost::optional<CloudSettings> & settings)
+{
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    if( ! settings )
+    {
+      project->clearCloudSettings();
+    }
+    else
+    {
+      project->setCloudSettings(settings.get());
     }
 
     project->save();
@@ -491,7 +520,7 @@ void ReconnectCloudWorker::startWorking()
   boost::optional<CloudProvider> provider;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
-  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
 
   // If there is already a session, try to connect to that
   if( session && settings ) 
@@ -612,7 +641,7 @@ bool CloudMonitorWorker::checkCloudRunning() const
   bool cloudRunning = true;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
 
   // TODO Consider emitting and display an error dialog in CloudMonitor
   OS_ASSERT(session);    
@@ -652,7 +681,7 @@ bool CloudMonitorWorker::checkAuthenticated() const
   bool authenticated = true;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
 
   OS_ASSERT(session);    
   OS_ASSERT(settings);

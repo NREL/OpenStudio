@@ -4,6 +4,8 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # source files
 SET( ${target_name}_SRC
+  CloudDialog.cpp
+  CloudDialog.hpp
   CloudMonitor.cpp
   CloudMonitor.hpp
   DesignAlternativesTabController.cpp
@@ -55,8 +57,6 @@ SET( ${target_name}_SRC
   ../shared_gui_components/BusyWidget.hpp
   ../shared_gui_components/Buttons.cpp
   ../shared_gui_components/Buttons.hpp
-  ../shared_gui_components/CloudDialog.cpp
-  ../shared_gui_components/CloudDialog.hpp
   ../shared_gui_components/CollapsibleComponent.cpp
   ../shared_gui_components/CollapsibleComponent.hpp
   ../shared_gui_components/CollapsibleComponentHeader.cpp
@@ -131,6 +131,7 @@ SET( ${target_name}_SRC
 
 # moc files
 SET( ${target_name}_moc
+  CloudDialog.hpp
   CloudMonitor.hpp
   DesignAlternativesTabController.hpp
   DesignAlternativesView.hpp
@@ -154,7 +155,6 @@ SET( ${target_name}_moc
   ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
   ../shared_gui_components/BusyWidget.hpp
   ../shared_gui_components/Buttons.hpp
-  ../shared_gui_components/CloudDialog.hpp
   ../shared_gui_components/CollapsibleComponent.hpp
   ../shared_gui_components/CollapsibleComponentHeader.hpp
   ../shared_gui_components/CollapsibleComponentList.hpp
