@@ -217,11 +217,33 @@ void CloudMonitor::startCloud()
 
 void CloudMonitor::onStartCloudWorkerComplete()
 {
-  if( ! m_startCloudWorker->validCredentials() )
+  if( ! m_startCloudWorker->internetAvailable() )
   {
-    QString error("Invalid cloud settings.  Verify settings from Cloud menu.");
+    setStatus(CLOUD_ERROR);
     
+    QString error("Unable to connect to internet.  Please verify your network settings and try again.");
+
+    QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Error", error);
+
+    setStatus(CLOUD_STOPPED);
+  }
+  else if( ! m_startCloudWorker->validCredentials() )
+  {
+    setStatus(CLOUD_ERROR);
+    
+    QString error("Invalid cloud settings.  Verify settings from Cloud menu.");
+
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
+
+    setStatus(CLOUD_STOPPED);
+  }
+  else if( m_startCloudWorker->error() )
+  {
+    setStatus(CLOUD_ERROR);
+
+    QString error("Unknown error starting cloud.");
+    
+    QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Error", error);
 
     setStatus(CLOUD_STOPPED);
   }
@@ -511,7 +533,7 @@ boost::optional<CloudSession> StartCloudWorker::session() const
 
 void StartCloudWorker::startWorking()
 {
-  //CloudProvider provider = detail::startCloud();
+  m_error = false;
 
   boost::optional<CloudProvider> provider;
 
@@ -521,23 +543,43 @@ void StartCloudWorker::startWorking()
 
   OS_ASSERT(provider);
 
+  m_internetAvailable = provider->internetAvailable();
+
+  if( ! m_internetAvailable )
+  {
+    m_error = true;
+  }
+
   m_validCredentials = provider->validateCredentials();
 
-  if( m_validCredentials )
+  if( ! m_validCredentials )
   {
+    m_error = true;
+  }
+
+  if( ! m_error )
+  {
+    m_error = true;
+
     if( provider->requestStartServer() )
     {
-      provider->waitForServer();
+      m_error = ! provider->waitForServer();
     }
+  }
 
-    // DLM: quit if server fails?
-    
+  if( ! m_error )
+  {
+    m_error = true;
+
     if( provider->requestStartWorkers() )
     {
-      provider->waitForWorkers();
+      m_error = ! provider->waitForWorkers();
     }
+  }
 
-    // DLM: quit if workers fail?
+  if( ! m_error )
+  {
+    m_error = true;
 
     boost::optional<Url> serverUrl = provider->session().serverUrl();
  
@@ -549,6 +591,8 @@ void StartCloudWorker::startWorking()
 
         if( server.available() )
         {
+          m_error = false;
+
           break;
         }
         else
@@ -557,17 +601,37 @@ void StartCloudWorker::startWorking()
         }
       } 
     }
+  }
 
+  if( ! m_error )
+  {
     m_session = provider->session();
     m_settings = provider->settings();
+  }
+  else
+  {
+    if( provider->requestTerminate() )
+    {
+      provider->waitForTerminated();
+    }
   }
 
   emit doneWorking();
 }
 
+bool StartCloudWorker::internetAvailable() const
+{
+  return m_internetAvailable;
+}
+
 bool StartCloudWorker::validCredentials() const
 {
   return m_validCredentials;
+}
+
+bool StartCloudWorker::error() const
+{
+  return m_error;
 }
 
 StopCloudWorker::StopCloudWorker(CloudMonitor * monitor)

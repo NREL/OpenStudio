@@ -187,7 +187,11 @@ class StartCloudWorker : public QObject
 
   boost::optional<CloudSession> session() const;
 
+  bool internetAvailable() const;
+
   bool validCredentials() const;
+
+  bool error() const;
 
   signals:
 
@@ -207,7 +211,11 @@ class StartCloudWorker : public QObject
 
   boost::optional<CloudSession> m_session; 
 
+  bool m_internetAvailable;
+
   bool m_validCredentials;
+
+  bool m_error;
 };
 
 class StopCloudWorker : public QObject
