@@ -65,6 +65,7 @@ namespace detail {
       m_maxDataPointsNotRunningCount(0),
       m_numJsonTries(0),
       m_onlyProcessingDownloadRequests(true),
+      m_noNewReadyDataPointsCount(0),
       m_numDetailsTries(0),
       m_waitForAlreadyRunningDataPoints(false)
   {}
@@ -87,7 +88,6 @@ namespace detail {
       result = numDataPointsInIteration();
     }
     else {
-      // HERE -- What to do about m_jsonFailures and m_detailsFailures?
       result = m_postQueue.size() +
                m_waitingQueue.size() +
                m_runningQueue.size() +
@@ -102,6 +102,14 @@ namespace detail {
   unsigned CloudAnalysisDriver_Impl::numCompleteDataPoints() const {
     OS_ASSERT(numIncompleteDataPoints() <= numDataPointsInIteration());
     return (numDataPointsInIteration() - numIncompleteDataPoints());
+  }
+
+  std::vector<analysis::DataPoint> CloudAnalysisDriver_Impl::failedJsonDownloads() const {
+    return m_jsonFailures;
+  }
+
+  std::vector<analysis::DataPoint> CloudAnalysisDriver_Impl::failedDetailedDownloads() const {
+    return m_detailsFailures;
   }
 
   bool CloudAnalysisDriver_Impl::run(int msec) {
@@ -311,6 +319,13 @@ namespace detail {
       m_preDetailsQueue.push_back(*actualDataPoint);
       if (!inIteration(*actualDataPoint)) {
         m_iteration.push_back(*actualDataPoint);
+      }
+      else {
+        // if failed before, trying again now, so un-register the failure
+        DataPointVector::iterator it = std::find(m_detailsFailures.begin(),m_detailsFailures.end(),actualDataPoint);
+        if (it != m_detailsFailures.end()) {
+          m_detailsFailures.erase(it);
+        }
       }
 
       if (!m_checkForResultsToDownload) {
@@ -1024,8 +1039,11 @@ namespace detail {
       }
 
       if (m_dataPointsNotRunningCount > m_maxDataPointsNotRunningCount) {
-        logError("Server reported no DataPoints running " << m_dataPointsNotRunningCount
-                 << " times in a row. Assuming that server has stopped working as expected.");
+        std::stringstream ss;
+        ss << "Server reported no DataPoints running " << m_dataPointsNotRunningCount
+           << " times in a row. Assuming that server has stopped working as expected.";
+        logError(ss.str());
+        ss.str("");
         success = false;
       }
     }
@@ -1071,9 +1089,18 @@ namespace detail {
   void CloudAnalysisDriver_Impl::jsonDownloadComplete(bool success) {
 
     if (!success) {
-      logError("Unable to retrieve high level results for DataPoint '" +
-               m_jsonQueue.front().name() + "', " + removeBraces(m_jsonQueue.front().uuid()) +
-               " from server.");
+      ++m_numJsonTries;
+      if (m_numJsonTries >= 3) {
+        logError("Unable to retrieve high level results for DataPoint '" +
+                 m_jsonQueue.front().name() + "', " + removeBraces(m_jsonQueue.front().uuid()) +
+                 " from server.");
+        m_jsonFailures.push_back(m_jsonQueue.front());
+        m_jsonQueue.pop_front();
+      }
+      else {
+        QTimer::singleShot(1000,this,SLOT(requestJsonRetry()));
+        return;
+      }
     }
 
     if (success) {
@@ -1108,14 +1135,23 @@ namespace detail {
         OS_ASSERT(test);
         appendErrorsAndWarnings(*m_requestJson);
         m_requestJson.reset();
-        emit jsonDownloadRequestsComplete(true);
         checkForRunCompleteOrStopped();
       }
       else {
         LOG(Info,"Have " << m_jsonQueue.size() << " DataPoints' slim results to download.");
+        m_numJsonTries = 0;
         success = requestNextJsonDownload();
       }
     }
+
+    if (!success) {
+      registerDownloadingJsonFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::requestJsonRetry() {
+    LOG(Info,"Have " << m_jsonQueue.size() << " DataPoints' slim results to download (retrying a point).");
+    bool success = requestNextJsonDownload();
 
     if (!success) {
       registerDownloadingJsonFailure();
@@ -1132,6 +1168,7 @@ namespace detail {
       std::set<UUID> readyUUIDs(temp.begin(),temp.end());
       LOG(Debug,"Received reply to request for data points ready for download. There are "
           << readyUUIDs.size() << ".");
+      unsigned initialSize = m_preDetailsQueue.size();
       DataPointVector::iterator it = m_preDetailsQueue.begin();
       while (it != m_preDetailsQueue.end()) {
         if (readyUUIDs.find(it->uuid()) != readyUUIDs.end()) {
@@ -1141,6 +1178,13 @@ namespace detail {
         else {
           ++it;
         }
+      }
+
+      if (m_preDetailsQueue.size() < initialSize) {
+        m_noNewReadyDataPointsCount = 0;
+      }
+      else {
+        ++m_noNewReadyDataPointsCount;
       }
 
       if (!m_detailsQueue.empty() && !m_requestDetails) {
@@ -1157,11 +1201,14 @@ namespace detail {
         checkForRunCompleteOrStopped();
       }
       else {
-        // HERE -- Make sure it is reasonable to ask for this data point's details at all!
-        // Ask for the complete DataPoint UUIDs and remove points from this queue that aren't there.
         LOG(Info,"Waiting on detailed results for " << m_preDetailsQueue.size() << " DataPoints.");
-        System::msleep(1000); // wait 1 second
-        success = success && m_checkForResultsToDownload->requestDownloadReadyDataPointUUIDs(project().analysis().uuid());
+        if (m_noNewReadyDataPointsCount > 60) {
+          logError("No points became ready for download within 60 tries.");
+          success = false;
+        }
+        else {
+          QTimer::singleShot(1000,this,SLOT(askForReadyForDownloadDataPointUUIDs()));
+        }
       }
     }
 
@@ -1170,15 +1217,30 @@ namespace detail {
     }
   }
 
+  void CloudAnalysisDriver_Impl::askForReadyForDownloadDataPointUUIDs() {
+    bool success = m_checkForResultsToDownload->requestDownloadReadyDataPointUUIDs(project().analysis().uuid());
+    if (!success) {
+      registerDownloadingDetailsFailure();
+    }
+  }
+
   void CloudAnalysisDriver_Impl::detailsDownloadComplete(bool success) {
 
-    if (success) {
-      success = m_requestDetails->lastDownloadDataPointSuccess();
-    }
+    success = success && m_requestDetails->lastDownloadDataPointSuccess();
 
     if (!success) {
-      logError("Unable to download DataPoint '" + m_detailsQueue.front().name() + "', " +
-               removeBraces(m_detailsQueue.front().uuid()) + " from server.");
+      ++m_numDetailsTries;
+      if (m_numDetailsTries >= 3) {
+        logError("Unable to retrieve detailed results for DataPoint '" +
+                 m_detailsQueue.front().name() + "', " + removeBraces(m_detailsQueue.front().uuid()) +
+                 " from server.");
+        m_detailsFailures.push_back(m_detailsQueue.front());
+        m_detailsQueue.pop_front();
+      }
+      else {
+        QTimer::singleShot(1000,this,SLOT(requestDetailsRetry()));
+        return;
+      }
     }
 
     if (success) {
@@ -1214,6 +1276,13 @@ namespace detail {
       }
     }
 
+    if (!success) {
+      registerDownloadingDetailsFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::requestDetailsRetry() {
+    bool success = requestNextDetailsDownload();
     if (!success) {
       registerDownloadingDetailsFailure();
     }
@@ -1266,6 +1335,7 @@ namespace detail {
     m_dataPointsNotRunningCount = 0;
     m_maxDataPointsNotRunningCount = 0;
     m_numJsonTries = 0;
+    m_noNewReadyDataPointsCount = 0;
     m_numDetailsTries = 0;
   }
 
@@ -1423,7 +1493,6 @@ namespace detail {
     }
     else {
       logError("Cannot start download of DataPoint because the CloudSession has been terminated.");
-      emit jsonDownloadRequestsComplete(false);
       return success;
     }
 
@@ -1443,7 +1512,6 @@ namespace detail {
   void CloudAnalysisDriver_Impl::registerDownloadingJsonFailure() {
     appendErrorsAndWarnings(*m_requestJson);
     m_requestJson.reset();
-    emit jsonDownloadRequestsComplete(false);
   }
 
   bool CloudAnalysisDriver_Impl::startDownloadingDetails() {
@@ -1653,6 +1721,14 @@ unsigned CloudAnalysisDriver::numIncompleteDataPoints() const {
 
 unsigned CloudAnalysisDriver::numCompleteDataPoints() const {
   return getImpl<detail::CloudAnalysisDriver_Impl>()->numCompleteDataPoints();
+}
+
+std::vector<analysis::DataPoint> CloudAnalysisDriver::failedJsonDownloads() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->failedJsonDownloads();
+}
+
+std::vector<analysis::DataPoint> CloudAnalysisDriver::failedDetailedDownloads() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->failedDetailedDownloads();
 }
 
 bool CloudAnalysisDriver::run(int msec) {

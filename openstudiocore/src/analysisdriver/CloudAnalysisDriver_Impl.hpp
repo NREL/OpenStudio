@@ -71,6 +71,14 @@ namespace detail {
     /** Returns the number of data points in this iteration that are no longer being processed. */
     unsigned numCompleteDataPoints() const;
 
+    /** Returns the DataPoints whose json files failed to download. Note that these are counted
+     *  as 'complete' by CloudAnalysisDriver, but not by Analysis. */
+    std::vector<analysis::DataPoint> failedJsonDownloads() const;
+
+    /** Returns the DataPoints whose details failed to download. Note that these are counted as
+     *  'complete' by CloudAnalysisDriver and by Analysis, but their .directory() is .empty(). */
+    std::vector<analysis::DataPoint> failedDetailedDownloads() const;
+
     //@}
     /** @name Blocking Class Members */
     //@{
@@ -257,11 +265,17 @@ namespace detail {
      // slim results received
      void jsonDownloadComplete(bool success);
 
+     void requestJsonRetry();
+
      // pause between slim and detailed results
      void readyForDownloadDataPointUUIDsReturned(bool success);
 
+     void askForReadyForDownloadDataPointUUIDs();
+
      // detailed results received
      void detailsDownloadComplete(bool success);
+
+     void requestDetailsRetry();
 
      // STOPPING ===============================================================
 
@@ -316,6 +330,7 @@ namespace detail {
     std::vector<analysis::DataPoint> m_preDetailsQueue;
     bool m_onlyProcessingDownloadRequests; // to distinguish between main request being
                                            // run or download of details
+    unsigned m_noNewReadyDataPointsCount;
 
     // download detailed results
     boost::optional<OSServer> m_requestDetails;

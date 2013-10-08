@@ -77,6 +77,14 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   /** Returns the number of data points in this iteration that are no longer being processed. */
   unsigned numCompleteDataPoints() const;
 
+  /** Returns the DataPoints whose json files failed to download. Note that these are counted
+   *  as 'complete' by CloudAnalysisDriver, but not by Analysis. */
+  std::vector<analysis::DataPoint> failedJsonDownloads() const;
+
+  /** Returns the DataPoints whose details failed to download. Note that these are counted as
+   *  'complete' by CloudAnalysisDriver and by Analysis, but their .directory() is .empty(). */
+  std::vector<analysis::DataPoint> failedDetailedDownloads() const;
+
   //@}
   /** @name Blocking Class Members */
   //@{
