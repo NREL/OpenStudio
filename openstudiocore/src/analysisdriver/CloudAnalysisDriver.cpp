@@ -967,7 +967,7 @@ namespace detail {
   }
 
   void CloudAnalysisDriver_Impl::askIfAnalysisIsRunning() {
-    bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)),Qt::QueuedConnection);
+    bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningReturned(bool)),Qt::QueuedConnection);
     OS_ASSERT(test);
 
     System::msleep(1000); // wait 1 second
