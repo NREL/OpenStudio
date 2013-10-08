@@ -2085,7 +2085,7 @@ namespace openstudio{
   std::vector<std::string> AWSProvider::serverInstanceTypes() {
     static std::vector<std::string> serverInstanceTypes;
     if (!serverInstanceTypes.size()) {
-      serverInstanceTypes.push_back("t1.micro");
+      //serverInstanceTypes.push_back("t1.micro"); // DLM: insufficient memory for testing
       serverInstanceTypes.push_back("m1.large");
       serverInstanceTypes.push_back("m1.xlarge");
       serverInstanceTypes.push_back("m2.xlarge");

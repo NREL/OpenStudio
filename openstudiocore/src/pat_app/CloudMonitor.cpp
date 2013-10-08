@@ -78,6 +78,8 @@ CloudProvider startCloud()
 
   OS_ASSERT(provider);
 
+  // DLM: if user agreement is not signed or user credentials not validated we should refer people to the settings here
+
   if( provider->requestStartServer() )
   {
     provider->waitForServer();
