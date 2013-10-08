@@ -495,7 +495,10 @@ void StartCloudWorker::startWorking()
 
   OS_ASSERT(provider);
 
-  m_internetAvailable = provider->internetAvailable();
+  VagrantProvider vagrantProvider;
+
+  // AWS provider does not seem to be providing accurate information
+  m_internetAvailable = vagrantProvider.internetAvailable();
 
   if( ! m_internetAvailable )
   {
