@@ -113,7 +113,6 @@ RunStatusView::RunStatusView()
   QHBoxLayout * buttonHLayout = new QHBoxLayout(); 
   buttonHLayout->setContentsMargins(5,5,5,5);
   buttonHLayout->setSpacing(0);
-  buttonHLayout->addStretch();
   mainVLayout->addLayout(buttonHLayout);
 
   // Run / Play button area
@@ -176,6 +175,20 @@ RunStatusView::RunStatusView()
 
   QSpacerItem * horizontalSpacer = 0;
 
+  m_selectAllDataPoints = new QPushButton("Select All",this);
+  isConnected = connect(m_selectAllDataPoints, SIGNAL(clicked(bool)),
+                        this, SLOT(on_selectAllDataPoints(bool)));
+  OS_ASSERT(isConnected);
+  buttonHLayout->addWidget(m_selectAllDataPoints);
+
+  m_clearSelectionDataPoints = new QPushButton("Clear Selection",this);
+  isConnected = connect(m_clearSelectionDataPoints, SIGNAL(clicked(bool)),
+                        this, SLOT(on_clearSelectionDataPoints(bool)));
+  OS_ASSERT(isConnected);
+  buttonHLayout->addWidget(m_clearSelectionDataPoints);
+
+  buttonHLayout->addStretch();
+
   m_selectAllDownloads = new QPushButton(this);
   m_selectAllDownloads->setFlat(true);
   m_selectAllDownloads->setFixedSize(QSize(18,18));
@@ -194,7 +207,7 @@ RunStatusView::RunStatusView()
   buttonHLayout->addWidget(label);
 
   horizontalSpacer = new QSpacerItem(14, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  buttonHLayout->addSpacerItem(horizontalSpacer); 
+  buttonHLayout->addSpacerItem(horizontalSpacer);
   
   m_selectAllClears = new QPushButton(this);
   m_selectAllClears->setFlat(true);
@@ -214,7 +227,6 @@ RunStatusView::RunStatusView()
 
   horizontalSpacer = new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
   buttonHLayout->addSpacerItem(horizontalSpacer); 
-
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
@@ -284,6 +296,28 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   }else{
     m_percentFailed->setText("");
     m_percentComplete->setText("");
+  }
+}
+
+void RunStatusView::on_selectAllDataPoints(bool checked)
+{
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if (project){
+    std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
+    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+      dataPoint.setSelected(true);
+    }
+  }
+}
+
+void RunStatusView::on_clearSelectionDataPoints(bool checked)
+{
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if (project){
+    std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
+    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+      dataPoint.setSelected(false);
+    }
   }
 }
 
@@ -437,8 +471,6 @@ void ToggleCloudButton::setStatus(CloudStatus status)
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
   : OSHeader(new HeaderToggleButton()),
-  m_clearBtnState(DataPointRunHeaderView::CAN_CLEAR),
-  m_downloadBtnState(DataPointRunHeaderView::CAN_DOWNLOAD),
   m_dataPoint(dataPoint),
   m_name(0),
   m_lastRunTime(0),
@@ -450,6 +482,11 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_clear(0)
 {
   setFixedHeight(30);
+
+  bool isConnected = false;
+
+  isConnected = m_dataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
@@ -490,8 +527,6 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_download->setFixedSize(QSize(18,18));
   mainHLayout->addWidget(m_download);
 
-  bool isConnected = false;
-
   isConnected = connect(m_download,SIGNAL(clicked(bool)),
                         this,SLOT(on_downloadClicked(bool)));
   OS_ASSERT(isConnected);
@@ -523,8 +558,6 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
 
 void DataPointRunHeaderView::update()
 {
-  this->setDisabled(m_dataPoint.complete());
-
   boost::optional<openstudio::runmanager::Job> topLevelJob = m_dataPoint.topLevelJob();
 
   boost::optional<openstudio::DateTime> lastRunTime;
@@ -589,138 +622,55 @@ void DataPointRunHeaderView::update()
   m_status->setText(status);
   m_status->setStyleSheet(statusStyle);
 
-  // set if the header is checked
+  QString style;
+
+  ///// DataPointRunHeaderView
+
+  // Disable header if dataPoint has data
+  // (is this really the correct conditional???)
+  if(this->m_dataPoint.complete()){
+    // TODO has data
+  }
+
   this->blockSignals(true);
   this->setChecked(m_dataPoint.selected());
   this->blockSignals(false);
 
-  QString style;
   if(this->isChecked()){
-    style.append("openstudio--pat--DataPointRunHeaderView  { ");
-    style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
-    style.append("stop: 0 #ffd573, stop: 0.5 #ffeec7, stop: 1.0 #ffd573); ");
-    style.append("border: 1px solid #8C8C8C; ");
-    style.append("} ");
+    style = "openstudio--pat--DataPointRunHeaderView  { "
+            "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
+            "stop: 0 #ffd573, stop: 0.5 #ffeec7, stop: 1.0 #ffd573); "
+            "border: 1px solid #8C8C8C; "
+            "} ";
   }
   else{
-    style.append("openstudio--pat--DataPointRunHeaderView  { ");
-    style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
-    style.append("stop: 0 #cccccc, stop: 0.5 #f2f2f2, stop: 1.0 #cccccc); ");
-    style.append("border: 1px solid #8C8C8C; ");
-    style.append("} ");
+    style = "openstudio--pat--DataPointRunHeaderView  { "
+            "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
+            "stop: 0 #cccccc, stop: 0.5 #f2f2f2, stop: 1.0 #cccccc); "
+            "border: 1px solid #8C8C8C; "
+            "} ";
   }
   setStyleSheet(style);
 
-  setClearState(!m_dataPoint.directory().empty());
-}
 
-void DataPointRunHeaderView::setDownloadEnabled(const bool enabled)
-{
-  m_download->setEnabled(enabled);
-  
-  QString style;
-  if(enabled){
-    if(m_download->isChecked()){
-      m_downloadBtnState = CAN_DOWNLOAD;
-      style.append("QPushButton {"
-                                 "background-image:url(':/images/results_yes_download.png');"
-                                 "  border:none;"
-                                 "}");
-    } else {
-      m_downloadBtnState = CANT_DOWNLOAD;
-      style.append("QPushButton {"
-                                 "background-image:url(':/images/results_no_download.png');"
-                                 "  border:none;"
-                                 "}");
-    }
-  } else {
-    m_download->blockSignals(true);
-    m_download->setChecked(false);
-    m_download->blockSignals(false);
-    // Determine if datapoint has detailed data
-    if(this->m_dataPoint.complete() && !this->m_dataPoint.directory().empty()){
-      m_download->setEnabled(enabled);
-      m_downloadBtnState = DOWNLOADED;
-      style.append("QPushButton {"
-                                 "background-image:url(':/images/results_downloaded.png');"
-                                 "  border:none;"
-                                 "}");
-    } else {
-      m_downloadBtnState = CANT_DOWNLOAD;
-      style.append("QPushButton {"
-                                 "background-image:url(':/images/results_no_download.png');"
-                                 "  border:none;"
-                                 "}");
-    }
-  }
-  m_download->setStyleSheet(style);
-}
-
-void DataPointRunHeaderView::setClearState(bool hasDataToClear)
-{
-  QString style;
-  if(hasDataToClear){
-    m_clearBtnState = CAN_CLEAR;
-    style.append("QPushButton {"
-                               "background-image:url(':/images/clear_results_enabled.png');"
-                               "  border:none;"
-                               "}");
-  } else {
-    m_clearBtnState = CANT_CLEAR;
-    style.append("QPushButton {"
-                               "background-image:url(':/images/clear_results_disabled.png');"
-                               "  border:none;"
-                               "}");
-  }
-  m_clear->setStyleSheet(style);
-  m_clear->setEnabled(hasDataToClear);
 }
 
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
-  m_dataPoint.setSelected(checked);
-  bool hasDataToClear = !m_dataPoint.directory().empty();
-  setClearState(hasDataToClear);
-
-  m_download->blockSignals(true);
-  m_download->setChecked(false);
-  m_download->blockSignals(false);
-  this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
-  QString style;
   if(checked){
-    m_downloadBtnState = CANT_DOWNLOAD;
-    style.append("QPushButton {"
-                               "background-image:url(':/images/results_no_download.png');"
-                               "  border:none;"
-                               "}");
-    m_download->setEnabled(true);
+    m_dataPoint.setSelected(true);
   } else {
-    m_downloadBtnState = NOT_VISIBLE;
-    style = "";
-    m_download->setEnabled(false);
+    m_dataPoint.setSelected(false);
   }
-  m_download->setStyleSheet(style);
 }
 
 void DataPointRunHeaderView::on_downloadClicked(bool checked)
 {
-  QString style;
   if(checked){
-    this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
-    m_downloadBtnState = CAN_DOWNLOAD;
-    style.append("QPushButton {"
-                               "background-image:url(':/images/results_yes_download.png');"
-                               "  border:none;"
-                               "}");
+    m_dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
   } else {
-    this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
-    m_downloadBtnState = CANT_DOWNLOAD;
-    style.append("QPushButton {"
-                               "background-image:url(':/images/results_no_download.png');"
-                               "  border:none;"
-                               "}");
+    m_dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
   }
-  m_download->setStyleSheet(style);
 }
 
 void DataPointRunHeaderView::on_clearClicked(bool checked)
@@ -1047,4 +997,5 @@ void PatProgressBar::setValue(int value)
 }
 
 }
+
 } // openstudio

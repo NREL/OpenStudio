@@ -120,6 +120,10 @@ class RunStatusView : public QWidget
 
  private slots:
 
+  void on_selectAllDataPoints(bool checked);
+
+  void on_clearSelectionDataPoints(bool checked);
+
   void on_selectAllDownloads(bool checked);
 
   void on_selectAllClears(bool checked);
@@ -134,6 +138,8 @@ class RunStatusView : public QWidget
   QLabel* m_percentFailed;
   QPushButton * m_selectAllClears;
   QPushButton * m_selectAllDownloads;
+  QPushButton * m_selectAllDataPoints;
+  QPushButton * m_clearSelectionDataPoints;
   QLabel * m_cloudTime;
   QLabel * m_cloudInstances;
 };
@@ -148,22 +154,6 @@ class DataPointRunHeaderView : public OSHeader
 
   virtual ~DataPointRunHeaderView() {}
 
-  enum ClearBtnState{
-    CAN_CLEAR,
-    CANT_CLEAR
-  };
-
-  enum DownloadBtnState{
-    CAN_DOWNLOAD,
-    CANT_DOWNLOAD,
-    DOWNLOADED,
-    NOT_VISIBLE
-  };
-
-  ClearBtnState m_clearBtnState;
-
-  DownloadBtnState m_downloadBtnState;
-
  public slots:
 
   void update();
@@ -177,10 +167,6 @@ class DataPointRunHeaderView : public OSHeader
   void on_clearClicked(bool checked);
 
  private:
-
-  void setDownloadEnabled(const bool enabled);
-
-  void setClearState(bool hasDataToClear);
 
   openstudio::analysis::DataPoint m_dataPoint;
 
@@ -326,7 +312,6 @@ class PatProgressBar : public QProgressBar
 
   void setValue(int value);
 };
-
 
 }
 
