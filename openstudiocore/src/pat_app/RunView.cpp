@@ -213,9 +213,9 @@ RunStatusView::RunStatusView()
   m_selectAllClears->setFlat(true);
   m_selectAllClears->setFixedSize(QSize(18,18));
   style.append("QPushButton {"
-                              "background-image:url(':/images/clear_results_enabled.png');"
-                              "  border:none;"
-                              "}");
+                             "background-image:url(':/images/clear_results_enabled.png');"
+                             "  border:none;"
+                             "}");
   m_selectAllClears->setStyleSheet(style);
   isConnected = connect(m_selectAllClears, SIGNAL(clicked(bool)),
                         this, SLOT(on_selectAllClears(bool)));
@@ -328,7 +328,13 @@ void RunStatusView::on_selectAllDownloads(bool checked)
 
 void RunStatusView::on_selectAllClears(bool checked)
 {
-  // TODO
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if (project){
+    std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
+    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+      dataPoint.clearResults();
+    }
+  }
 }
 
 void RunStatusView::updateCloudData()
@@ -652,6 +658,22 @@ void DataPointRunHeaderView::update()
   }
   setStyleSheet(style);
 
+  ///// Clear button
+
+  bool hasDataToClear = !m_dataPoint.directory().empty();
+  if(hasDataToClear){
+    style = "QPushButton {"
+                          "background-image:url(':/images/clear_results_enabled.png');"
+                          "  border:none;"
+                          "}";
+  } else {
+    style = "QPushButton {"
+                          "background-image:url(':/images/clear_results_disabled.png');"
+                          "  border:none;"
+                          "}";
+  }
+  m_clear->setStyleSheet(style);
+  m_clear->setEnabled(hasDataToClear);
 
 }
 
