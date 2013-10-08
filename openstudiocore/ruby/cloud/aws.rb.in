@@ -91,11 +91,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-e9491880'
+@server_image_id = 'ami-cbbdeca2'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-3549185c'
+  @worker_image_id = 'ami-0dbdec64'
 else
-  @worker_image_id = 'ami-574a1b3e'
+  @worker_image_id = 'ami-23bdec4a'
 end
 
 def create_struct(instance, procs)
