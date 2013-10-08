@@ -1306,92 +1306,6 @@ QSharedPointer<CloudMonitor> PatApp::cloudMonitor() const
 {
   return m_cloudMonitor;
 }
-/*
-boost::optional<CloudSettings> PatApp::currentProjectSettings()
-{
-  boost::optional<CloudSettings> settings;
-
-  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
-  {
-    settings = project->cloudSettings();
-  }
-
-  return settings;
-}
-
-void PatApp::setCurrentProjectSettings(const boost::optional<CloudSettings> & settings)
-{
-  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
-  {
-    if( ! settings )
-    {
-      project->clearCloudSettings();
-    }
-    else
-    {
-      project->setCloudSettings(settings.get());
-    }
-
-    project->save();
-  }
-}
-
-
-CloudSettings PatApp::createTestSettings()
-{
-  bool aws = true;
-
-  if (aws){
-    std::string accessKey;
-    std::string secretKey;
-
-    QFile file(QDir::homePath() + "/.aws_secrets");
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      char buf[1024];
-      while (file.readLine(buf, sizeof(buf)) != -1){
-        QRegExp rx("access_key_id:\\s(.*)");
-        if (rx.exactMatch(buf)){
-          accessKey = rx.capturedTexts()[1].trimmed().toStdString();
-        }
-
-        rx = QRegExp("secret_access_key:\\s(.*)");
-        if (rx.exactMatch(buf)){
-         secretKey = rx.capturedTexts()[1].trimmed().toStdString();
-        }
-      }
-    }
-
-    AWSSettings awsSettings;
-    if (awsSettings.setAccessKey(accessKey)){
-      if (awsSettings.setSecretKey(secretKey)){
-        awsSettings.signUserAgreement(true);
-        awsSettings.setRegion("us-east-1");
-        //awsSettings.setServerInstanceType("t1.micro"); // DLM: insufficient memory for testing
-        awsSettings.setServerInstanceType("m1.large");
-        
-        awsSettings.setWorkerInstanceType("t1.micro");
-        return awsSettings;
-      }
-    }
-  }
-
-  // create the vagrant provider
-  path serverPath = vagrantServerPath();
-  Url serverUrl("http://localhost:8080");
-  path workerPath = vagrantWorkerPath();
-  Url workerUrl("http://localhost:8081");
-
-  VagrantSettings vagrantSettings;
-  vagrantSettings.setServerUrl(serverUrl);
-  vagrantSettings.setWorkerUrl(workerUrl);
-  vagrantSettings.setServerPath(serverPath);
-  vagrantSettings.setWorkerPath(workerPath);
-  vagrantSettings.signUserAgreement(true);
-  vagrantSettings.setHaltOnStop(true);
-
-  return vagrantSettings;
-}
-*/
 
 void PatApp::onCloudStatusChanged(const CloudStatus & newCloudStatus)
 {
@@ -1500,7 +1414,7 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
 CloudSettings PatApp::cloudSettings()
 {
   // AWSSettings and VagrantSettings persist to different QSettings
-  // so it is ambiquous which to load.  This is a shortcut.
+  // so it is ambiguous which to load.  This is a shortcut.
   // If more cloud providers are introduced something better needs to be done.
 
   if( showVagrant() )

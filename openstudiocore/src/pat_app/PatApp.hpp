@@ -155,9 +155,6 @@ class PatApp : public QApplication, public BaseApp
 
   virtual void updateSelectedMeasureState();
 
-  //// Temporary settings for development
-  //static CloudSettings createTestSettings();
-
   // The settings associated with the current user
   // independent of a particular project.
   // These settings will be used for new cloud instances
