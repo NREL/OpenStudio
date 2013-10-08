@@ -195,23 +195,23 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 	m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Electric Lighting"){
-    m_taxonomySecondLevelComboBox->addItem("Controls");
+    m_taxonomySecondLevelComboBox->addItem("Electric Lighting Controls");
     m_taxonomySecondLevelComboBox->addItem("Lighting Equipment");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Equipment"){
-    m_taxonomySecondLevelComboBox->addItem("Controls");
+    m_taxonomySecondLevelComboBox->addItem("Equipment Controls");
     m_taxonomySecondLevelComboBox->addItem("Electric Equipment");
     m_taxonomySecondLevelComboBox->addItem("Gas Equipment");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "People"){
     m_taxonomySecondLevelComboBox->addItem("Characteristics");
-    m_taxonomySecondLevelComboBox->addItem("Schedules");
+    m_taxonomySecondLevelComboBox->addItem("People Schedules");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "HVAC"){
-    m_taxonomySecondLevelComboBox->addItem("Controls");
+    m_taxonomySecondLevelComboBox->addItem("HVAC Controls");
     m_taxonomySecondLevelComboBox->addItem("Heating");
     m_taxonomySecondLevelComboBox->addItem("Cooling");
     m_taxonomySecondLevelComboBox->addItem("Heat Rejection");
@@ -232,7 +232,7 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Whole Building"){
-    m_taxonomySecondLevelComboBox->addItem("Schedules");
+    m_taxonomySecondLevelComboBox->addItem("Whole Building Schedules");
     m_taxonomySecondLevelComboBox->addItem("Space Types");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);

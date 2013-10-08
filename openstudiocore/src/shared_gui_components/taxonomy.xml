@@ -91,7 +91,7 @@
     <term>
       <tid>965</tid>
       <vid>4</vid>
-      <name>Controls</name>
+      <name>Electric Lighting Controls</name>
       <description/>
       <format/>
       <weight>0</weight>
@@ -124,7 +124,7 @@
 		<term>
 			<tid>967</tid>
 			<vid>4</vid>
-			<name>Controls</name>
+			<name>Equipment Controls</name>
 			<description/>
 			<format/>
 			<weight>0</weight>
@@ -168,7 +168,7 @@
     <term>
       <tid>1135</tid>
       <vid>4</vid>
-      <name>Schedules</name>
+      <name>People Schedules</name>
       <description/>
       <format>filtered_html</format>
       <weight>0</weight>
@@ -201,7 +201,7 @@
     <term>
       <tid>969</tid>
       <vid>4</vid>
-      <name>Controls</name>
+      <name>HVAC Controls</name>
       <description/>
       <format/>
       <weight>5</weight>
@@ -377,7 +377,7 @@
     <term>
       <tid>1137</tid>
       <vid>4</vid>
-      <name>Schedules</name>
+      <name>Whole Building Schedules</name>
       <description/>
       <format>filtered_html</format>
       <weight>0</weight>
