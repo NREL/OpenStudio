@@ -54,13 +54,13 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_Remove)
   Model model;
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
-  std::vector<RefrigerationCondenserEvaporativeCooled> refrigerationCondenserEvaporativeCooleds = model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
-  EXPECT_EQ(1, refrigerationCondenserEvaporativeCooleds.size());
+  std::vector<RefrigerationCondenserEvaporativeCooled> refrigerationEvaporativeCooledCondensers = model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
+  EXPECT_EQ(1, refrigerationEvaporativeCooledCondensers.size());
 
   testObject.remove();
 
-  refrigerationCondenserEvaporativeCooleds = model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
-  EXPECT_EQ(0, refrigerationCondenserEvaporativeCooleds.size());
+  refrigerationEvaporativeCooledCondensers = model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
+  EXPECT_EQ(0, refrigerationEvaporativeCooledCondensers.size());
 }
 
 //Test the methods that set and get the fields
@@ -86,35 +86,33 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_set_get)
   evapcond.setBasinHeaterCapacity(999.0);
   evapcond.setBasinHeaterSetpointTemperature(999.0);
   evapcond.setRatedWaterPumpPower(999.0);
-  evapcond.setEvaporativeWaterSupplyTankName("");
   //  evapcond.setEvaporativeCondenserAvailabilitySchedule("AvailSched");
   evapcond.setEndUseSubcategory("EndUseCat");
   evapcond.setCondenserRefrigerantOperatingChargeInventory(999.0);
   evapcond.setCondensateReceiverRefrigerantInventory(999.0);
   evapcond.setCondensatePipingRefrigerantInventory(999.0);
 
-  EXPECT_EQ(evapcond.ratedEffectiveTotalHeatRejectionRate(),999.0);
-  EXPECT_EQ(evapcond.ratedSubcoolingTemperatureDifference(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.ratedEffectiveTotalHeatRejectionRate(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.ratedSubcoolingTemperatureDifference(),999.0);
   EXPECT_EQ(evapcond.fanSpeedControlType(),"VariableSpeed");
-  EXPECT_EQ(evapcond.ratedFanPower(),999.0);
-  EXPECT_EQ(evapcond.minimumFanAirFlowRatio(),0.999);
-  EXPECT_EQ(evapcond.approachTemperatureConstantTerm(),9.0);
-  EXPECT_EQ(evapcond.approachTemperatureCoefficient2(),9.0);
-  EXPECT_EQ(evapcond.approachTemperatureCoefficient3(),9.0);
-  EXPECT_EQ(evapcond.approachTemperatureCoefficient4(),9.0);
-  EXPECT_EQ(evapcond.minimumCapacityFactor(),0.9);
-  EXPECT_EQ(evapcond.maximumCapacityFactor(),9.0);
+  EXPECT_DOUBLE_EQ(evapcond.ratedFanPower(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.minimumFanAirFlowRatio(),0.999);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureConstantTerm(),9.0);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient2(),9.0);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient3(),9.0);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient4(),9.0);
+  EXPECT_DOUBLE_EQ(evapcond.minimumCapacityFactor(),0.9);
+  EXPECT_DOUBLE_EQ(evapcond.maximumCapacityFactor(),9.0);
 //  EXPECT_EQ(evapcond.airInletNode(),"AirInNode");
-  EXPECT_EQ(evapcond.ratedAirFlowRate(),999.0);
-  EXPECT_EQ(evapcond.basinHeaterCapacity(),999.0);
-  EXPECT_EQ(evapcond.basinHeaterSetpointTemperature(),999.0);
-  EXPECT_EQ(evapcond.ratedWaterPumpPower(),999.0);
-  EXPECT_EQ(evapcond.evaporativeWaterSupplyTankName(),"");
+  EXPECT_DOUBLE_EQ(evapcond.ratedAirFlowRate().get(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.basinHeaterCapacity(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.basinHeaterSetpointTemperature(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.ratedWaterPumpPower().get(),999.0);
 //  EXPECT_EQ(evapcond.evaporativeCondenserAvailabilitySchedule(),"AvailSched");
   EXPECT_EQ(evapcond.endUseSubcategory(),"EndUseCat");
-  EXPECT_EQ(evapcond.condenserRefrigerantOperatingChargeInventory(),999.0);
-  EXPECT_EQ(evapcond.condensateReceiverRefrigerantInventory(),999.0);
-  EXPECT_EQ(evapcond.condensatePipingRefrigerantInventory(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.condenserRefrigerantOperatingChargeInventory(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.condensateReceiverRefrigerantInventory(),999.0);
+  EXPECT_DOUBLE_EQ(evapcond.condensatePipingRefrigerantInventory(),999.0);
 }
 
 //Test RatedEffectiveTotalHeatRejectionRate
@@ -126,8 +124,10 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_RatedEffectiveTotalH
 
 //     \minimum 0.0
 
+  EXPECT_DOUBLE_EQ(evapcond.ratedEffectiveTotalHeatRejectionRate(), 43100.0);
+
   EXPECT_TRUE(evapcond.setRatedEffectiveTotalHeatRejectionRate(10));     // valid value
-  EXPECT_EQ(evapcond.ratedEffectiveTotalHeatRejectionRate(), 10);
+  EXPECT_DOUBLE_EQ(evapcond.ratedEffectiveTotalHeatRejectionRate(), 10);
 
   EXPECT_FALSE(evapcond.setRatedEffectiveTotalHeatRejectionRate(-10));     // invalid value
 }
@@ -145,7 +145,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_RatedSubcoolingTempe
   EXPECT_DOUBLE_EQ(evapcond.ratedSubcoolingTemperatureDifference(), 0.0);     // IDD default value
 
   EXPECT_TRUE(evapcond.setRatedSubcoolingTemperatureDifference(10));     // valid value
-  EXPECT_EQ(evapcond.ratedSubcoolingTemperatureDifference(), 10);
+  EXPECT_DOUBLE_EQ(evapcond.ratedSubcoolingTemperatureDifference(), 10);
 
   EXPECT_FALSE(evapcond.setRatedSubcoolingTemperatureDifference(-10));     // invalid value
 
@@ -167,7 +167,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_FanSpeedControlType)
 //     \key TwoSpeed
 //     \default Fixed
 
-  EXPECT_EQ(evapcond.fanSpeedControlType(), "Fixed");     // IDD default value
+  EXPECT_EQ(evapcond.fanSpeedControlType(), "VariableSpeed");     // IDD default value
 
   EXPECT_TRUE(evapcond.setFanSpeedControlType("Fixed"));     // valid value
   EXPECT_EQ(evapcond.fanSpeedControlType(), "Fixed");
@@ -194,8 +194,10 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_RatedFanPower)
 
 //     \minimum 0.0
 
+  EXPECT_DOUBLE_EQ(evapcond.ratedFanPower(), 373.0);
+
   EXPECT_TRUE(evapcond.setRatedFanPower(10));     // valid value
-  EXPECT_EQ(evapcond.ratedFanPower(), 10);
+  EXPECT_DOUBLE_EQ(evapcond.ratedFanPower(), 10);
 
   EXPECT_FALSE(evapcond.setRatedFanPower(-10));     // invalid value
 }
@@ -213,7 +215,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_MinimumFanAirFlowRat
   EXPECT_DOUBLE_EQ(evapcond.minimumFanAirFlowRatio(), 0.2);     // IDD default value
 
   EXPECT_TRUE(evapcond.setMinimumFanAirFlowRatio(0.5));     // valid value
-  EXPECT_EQ(evapcond.minimumFanAirFlowRatio(), 0.5);
+  EXPECT_DOUBLE_EQ(evapcond.minimumFanAirFlowRatio(), 0.5);
 
   EXPECT_FALSE(evapcond.setMinimumFanAirFlowRatio(-0.1));     // invalid value
 
@@ -236,7 +238,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_ApproachTemperatureC
   EXPECT_DOUBLE_EQ(evapcond.approachTemperatureConstantTerm(), 6.63);     // IDD default value
 
   EXPECT_TRUE(evapcond.setApproachTemperatureConstantTerm(10));     // valid value
-  EXPECT_EQ(evapcond.approachTemperatureConstantTerm(), 10);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureConstantTerm(), 10);
 
   EXPECT_FALSE(evapcond.setApproachTemperatureConstantTerm(-10));     // invalid value
   EXPECT_FALSE(evapcond.setApproachTemperatureConstantTerm(30));     // invalid value
@@ -262,7 +264,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_ApproachTemperatureC
   EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient2(), 0.468);     // IDD default value
 
   EXPECT_TRUE(evapcond.setApproachTemperatureCoefficient2(10));     // valid value
-  EXPECT_EQ(evapcond.approachTemperatureCoefficient2(), 10);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient2(), 10);
 
   EXPECT_FALSE(evapcond.setApproachTemperatureCoefficient2(-10));     // invalid value
   EXPECT_FALSE(evapcond.setApproachTemperatureCoefficient2(30));     // invalid value
@@ -288,7 +290,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_ApproachTemperatureC
   EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient3(), 17.93);     // IDD default value
 
   EXPECT_TRUE(evapcond.setApproachTemperatureCoefficient3(10));     // valid value
-  EXPECT_EQ(evapcond.approachTemperatureCoefficient3(), 10);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient3(), 10);
 
   EXPECT_FALSE(evapcond.setApproachTemperatureCoefficient3(-10));     // invalid value
   EXPECT_FALSE(evapcond.setApproachTemperatureCoefficient3(40));     // invalid value
@@ -314,7 +316,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_ApproachTemperatureC
   EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient4(), -0.322);     // IDD default value
 
   EXPECT_TRUE(evapcond.setApproachTemperatureCoefficient4(10));     // valid value
-  EXPECT_EQ(evapcond.approachTemperatureCoefficient4(), 10);
+  EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient4(), 10);
 
   EXPECT_FALSE(evapcond.setApproachTemperatureCoefficient4(-30));     // invalid value
   EXPECT_FALSE(evapcond.setApproachTemperatureCoefficient4(30));     // invalid value
@@ -336,7 +338,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_MinimumCapacityFacto
 
 //     \default 0.5
 
-  EXPECT_DOUBLE_EQ(evapcond.minimumCapacityFactor(), 0.5);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.minimumCapacityFactor(), 0.6);     // IDD default value
 
   evapcond.setMinimumCapacityFactor(2.0);
   evapcond.resetMinimumCapacityFactor();
@@ -352,7 +354,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_MaximumCapacityFacto
 
 //     \default 5.0
 
-  EXPECT_DOUBLE_EQ(evapcond.maximumCapacityFactor(), 5.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.maximumCapacityFactor(), 4.8);     // IDD default value
 
   evapcond.setMaximumCapacityFactor(2.0);
   evapcond.resetMaximumCapacityFactor();
@@ -369,10 +371,10 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_BasinHeaterCapacity)
 //     \minimum 0.0
 //     \default 200.0
 
-  EXPECT_DOUBLE_EQ(evapcond.basinHeaterCapacity(), 200);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.basinHeaterCapacity(), 66.7);     // IDD default value
 
   EXPECT_TRUE(evapcond.setBasinHeaterCapacity(999));     // valid value
-  EXPECT_EQ(evapcond.basinHeaterCapacity(), 999);
+  EXPECT_DOUBLE_EQ(evapcond.basinHeaterCapacity(), 999);
 
   EXPECT_FALSE(evapcond.setBasinHeaterCapacity(-0.1));     // invalid value
 
@@ -394,7 +396,7 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_BasinHeaterSetpointT
   EXPECT_DOUBLE_EQ(evapcond.basinHeaterSetpointTemperature(), 2.0);     // IDD default value
 
   EXPECT_TRUE(evapcond.setBasinHeaterSetpointTemperature(999));     // valid value
-  EXPECT_EQ(evapcond.basinHeaterSetpointTemperature(), 999);
+  EXPECT_DOUBLE_EQ(evapcond.basinHeaterSetpointTemperature(), 999);
 
   EXPECT_FALSE(evapcond.setBasinHeaterSetpointTemperature(1.0));     // invalid value
 
@@ -412,22 +414,14 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_RatedWaterPumpPower)
 
 //     \default 1000.0
 
-  EXPECT_EQ(evapcond.ratedWaterPumpPower(), 1000.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.ratedWaterPumpPower().get(), 250.0);     // IDD default value
 
   evapcond.setRatedWaterPumpPower(99);
+  EXPECT_DOUBLE_EQ(evapcond.ratedWaterPumpPower().get(), 99.0);
+  evapcond.autocalculateRatedWaterPumpPower();
+  EXPECT_TRUE(evapcond.isRatedWaterPumpPowerAutocalculated());
   evapcond.resetRatedWaterPumpPower();
-  EXPECT_EQ(evapcond.ratedWaterPumpPower(), 1000.0);     // IDD default value
-}
-
-//Test EvaporativeWaterSupplyTankName
-TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_EvaporativeWaterSupplyTankName)
-{
-  Model model;
-
-  RefrigerationCondenserEvaporativeCooled evapcond(model);
-
-  evapcond.setEvaporativeWaterSupplyTankName("");
-  EXPECT_EQ(evapcond.evaporativeWaterSupplyTankName(), "");
+  EXPECT_DOUBLE_EQ(evapcond.ratedWaterPumpPower().get(), 1000.0);     // IDD default value
 }
 
 //Test EndUseSubcategory
@@ -455,11 +449,11 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_CondenserRefrigerant
 
 //     \default 0.0
 
-  EXPECT_EQ(evapcond.condenserRefrigerantOperatingChargeInventory(), 0.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.condenserRefrigerantOperatingChargeInventory(), 0.0);     // IDD default value
 
   evapcond.setCondenserRefrigerantOperatingChargeInventory(999);
   evapcond.resetCondenserRefrigerantOperatingChargeInventory();
-  EXPECT_EQ(evapcond.condenserRefrigerantOperatingChargeInventory(), 0.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.condenserRefrigerantOperatingChargeInventory(), 0.0);     // IDD default value
 }
 
 //Test CondensateReceiverRefrigerantInventory
@@ -471,11 +465,11 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_CondensateReceiverRe
 
 //     \default 0.0
 
-  EXPECT_EQ(evapcond.condensateReceiverRefrigerantInventory(), 0.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.condensateReceiverRefrigerantInventory(), 0.0);     // IDD default value
 
   evapcond.setCondensateReceiverRefrigerantInventory(999);
   evapcond.resetCondensateReceiverRefrigerantInventory();
-  EXPECT_EQ(evapcond.condensateReceiverRefrigerantInventory(), 0.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.condensateReceiverRefrigerantInventory(), 0.0);     // IDD default value
 }
 
 //Test CondensatePipingRefrigerantInventory
@@ -487,11 +481,11 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_CondensatePipingRefr
 
 //     \default 0.0
 
-  EXPECT_EQ(evapcond.condensatePipingRefrigerantInventory(), 0.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.condensatePipingRefrigerantInventory(), 0.0);     // IDD default value
 
   evapcond.setCondensatePipingRefrigerantInventory(999);
   evapcond.resetCondensatePipingRefrigerantInventory();
-  EXPECT_EQ(evapcond.condensatePipingRefrigerantInventory(), 0.0);     // IDD default value
+  EXPECT_DOUBLE_EQ(evapcond.condensatePipingRefrigerantInventory(), 0.0);     // IDD default value
 }
 
 //Test clone of Evaporative Cooled Condenser with default data
@@ -503,19 +497,100 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithDe
   RefrigerationCondenserEvaporativeCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
   EXPECT_DOUBLE_EQ(testObjectClone.ratedSubcoolingTemperatureDifference(),0.0);
-  EXPECT_EQ(testObjectClone.fanSpeedControlType(),"Fixed");
+  EXPECT_DOUBLE_EQ(testObjectClone.ratedEffectiveTotalHeatRejectionRate(),43100.0);
+  EXPECT_EQ(testObjectClone.fanSpeedControlType(),"VariableSpeed");
   EXPECT_DOUBLE_EQ(testObjectClone.minimumFanAirFlowRatio(),0.2);
   EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureConstantTerm(),6.63);
   EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureCoefficient2(),0.468);
   EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureCoefficient3(),17.93);
   EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureCoefficient4(),-0.322);
-  EXPECT_DOUBLE_EQ(testObjectClone.minimumCapacityFactor(),0.5);
-  EXPECT_DOUBLE_EQ(testObjectClone.maximumCapacityFactor(),5.0);
-  EXPECT_DOUBLE_EQ(testObjectClone.basinHeaterCapacity(),200.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.minimumCapacityFactor(),0.6);
+  EXPECT_DOUBLE_EQ(testObjectClone.maximumCapacityFactor(),4.8);
+  EXPECT_DOUBLE_EQ(testObjectClone.basinHeaterCapacity(),66.7);
   EXPECT_DOUBLE_EQ(testObjectClone.basinHeaterSetpointTemperature(),2.0);
-  EXPECT_EQ(testObjectClone.ratedWaterPumpPower(),1000.0);
-  EXPECT_EQ(testObjectClone.endUseSubcategory(),"General");
-  EXPECT_DOUBLE_EQ(testObjectClone.condenserRefrigerantOperatingChargeInventory(),0.0);
-  EXPECT_DOUBLE_EQ(testObjectClone.condensateReceiverRefrigerantInventory(),0.0);
-  EXPECT_DOUBLE_EQ(testObjectClone.condensatePipingRefrigerantInventory(),0.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.ratedWaterPumpPower().get(),250.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.ratedAirFlowRate().get(),1.37);
+}
+
+TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCustomData)
+{
+  Model model;
+  ThermalZone thermalZone(model);
+  Schedule evaporativeCondenserSchedule = model.alwaysOnDiscreteSchedule();
+  RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
+
+  testObject.setRatedEffectiveTotalHeatRejectionRate(999.0);
+  testObject.setRatedSubcoolingTemperatureDifference(999.0);
+  testObject.setFanSpeedControlType("Fixed");
+  testObject.setRatedFanPower(999.0);
+  testObject.setMinimumFanAirFlowRatio(0.999);
+  testObject.setApproachTemperatureConstantTerm(9.0);
+  testObject.setApproachTemperatureCoefficient2(9.0);
+  testObject.setApproachTemperatureCoefficient3(9.0);
+  testObject.setApproachTemperatureCoefficient4(9.0);
+  testObject.setMinimumCapacityFactor(0.9);
+  testObject.setMaximumCapacityFactor(9.0);
+  testObject.setAirInletNode(thermalZone);
+  testObject.autocalculateRatedAirFlowRate();
+  testObject.setBasinHeaterCapacity(999.0);
+  testObject.setBasinHeaterSetpointTemperature(999.0);
+  testObject.autocalculateRatedWaterPumpPower();
+  testObject.setEvaporativeCondenserAvailabilitySchedule(evaporativeCondenserSchedule);
+  testObject.setEndUseSubcategory("EndUseCat");
+  testObject.setCondenserRefrigerantOperatingChargeInventory(999.0);
+  testObject.setCondensateReceiverRefrigerantInventory(999.0);
+  testObject.setCondensatePipingRefrigerantInventory(999.0);
+
+  RefrigerationCondenserEvaporativeCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
+
+  EXPECT_DOUBLE_EQ(testObjectClone.ratedEffectiveTotalHeatRejectionRate(),999.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.ratedSubcoolingTemperatureDifference(),999.0);
+  EXPECT_EQ(testObjectClone.fanSpeedControlType(),"Fixed");
+  EXPECT_DOUBLE_EQ(testObjectClone.ratedFanPower(),999.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.minimumFanAirFlowRatio(),0.999);
+  EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureConstantTerm(),9.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureCoefficient2(),9.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureCoefficient3(),9.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.approachTemperatureCoefficient4(),9.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.minimumCapacityFactor(),0.9);
+  EXPECT_DOUBLE_EQ(testObjectClone.maximumCapacityFactor(),9.0);
+  EXPECT_TRUE(testObjectClone.isRatedAirFlowRateAutocalculated());
+  EXPECT_DOUBLE_EQ(testObjectClone.basinHeaterCapacity(),999.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.basinHeaterSetpointTemperature(),999.0);
+  EXPECT_TRUE(testObjectClone.isRatedWaterPumpPowerAutocalculated());
+  EXPECT_EQ(testObjectClone.endUseSubcategory(),"EndUseCat");
+  EXPECT_DOUBLE_EQ(testObjectClone.condenserRefrigerantOperatingChargeInventory(),999.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.condensateReceiverRefrigerantInventory(),999.0);
+  EXPECT_DOUBLE_EQ(testObjectClone.condensatePipingRefrigerantInventory(),999.0);
+
+  EXPECT_FALSE(testObjectClone.airInletNode());
+  EXPECT_EQ(testObject.evaporativeCondenserAvailabilitySchedule().get().handle(), testObjectClone.evaporativeCondenserAvailabilitySchedule().get().handle());
+  EXPECT_EQ(evaporativeCondenserSchedule.handle(), testObjectClone.evaporativeCondenserAvailabilitySchedule().get().handle());
+}
+
+TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneTwoModelsWithDefaultData)
+{
+  Model model;
+  RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
+  RefrigerationCondenserEvaporativeCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
+
+  Model model2;
+  RefrigerationCondenserEvaporativeCooled testObjectClone2 = testObject.clone(model2).cast<RefrigerationCondenserEvaporativeCooled>();
+
+  EXPECT_DOUBLE_EQ(testObjectClone2.ratedSubcoolingTemperatureDifference(),0.0);
+  EXPECT_DOUBLE_EQ(testObjectClone2.ratedEffectiveTotalHeatRejectionRate(),43100.0);
+  EXPECT_EQ(testObjectClone2.fanSpeedControlType(),"VariableSpeed");
+  EXPECT_DOUBLE_EQ(testObjectClone2.minimumFanAirFlowRatio(),0.2);
+  EXPECT_DOUBLE_EQ(testObjectClone2.approachTemperatureConstantTerm(),6.63);
+  EXPECT_DOUBLE_EQ(testObjectClone2.approachTemperatureCoefficient2(),0.468);
+  EXPECT_DOUBLE_EQ(testObjectClone2.approachTemperatureCoefficient3(),17.93);
+  EXPECT_DOUBLE_EQ(testObjectClone2.approachTemperatureCoefficient4(),-0.322);
+  EXPECT_DOUBLE_EQ(testObjectClone2.minimumCapacityFactor(),0.6);
+  EXPECT_DOUBLE_EQ(testObjectClone2.maximumCapacityFactor(),4.8);
+  EXPECT_DOUBLE_EQ(testObjectClone2.basinHeaterCapacity(),66.7);
+  EXPECT_DOUBLE_EQ(testObjectClone2.basinHeaterSetpointTemperature(),2.0);
+  EXPECT_DOUBLE_EQ(testObjectClone2.ratedWaterPumpPower().get(),250.0);
+  EXPECT_DOUBLE_EQ(testObjectClone2.ratedAirFlowRate().get(),1.37);
+  EXPECT_NE(testObjectClone2, testObjectClone);
+  EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }

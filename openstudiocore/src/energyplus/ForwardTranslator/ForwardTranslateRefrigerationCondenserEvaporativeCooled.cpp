@@ -128,6 +128,10 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserEva
   if (d) {
     object.setDouble(Refrigeration_Condenser_EvaporativeCooledFields::RatedAirFlowRate,d.get());
   }
+  else if ( modelObject.isRatedAirFlowRateAutocalculated() )
+  {
+    object.setString(Refrigeration_Condenser_EvaporativeCooledFields::RatedAirFlowRate,"Autocalculate");
+  }
 
 //Basin Heater Capacity
   d = modelObject.basinHeaterCapacity();
@@ -145,6 +149,10 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserEva
   d = modelObject.ratedWaterPumpPower();
   if (d) {
     object.setDouble(Refrigeration_Condenser_EvaporativeCooledFields::RatedWaterPumpPower,d.get());
+  }
+  else if ( modelObject.isRatedWaterPumpPowerAutocalculated() )
+  {
+    object.setString(Refrigeration_Condenser_EvaporativeCooledFields::RatedWaterPumpPower,"Autocalculate");
   }
 
 //Evaporative Water Supply Tank Name

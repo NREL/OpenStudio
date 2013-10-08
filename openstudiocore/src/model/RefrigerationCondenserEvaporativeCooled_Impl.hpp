@@ -135,9 +135,7 @@ namespace detail {
     bool isRatedWaterPumpPowerAutocalculated() const;
 
     // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-//    boost::optional<WaterStorageTank> evaporativeWaterSupplyTank() const;
-//*****  Replace WaterStorageTank (above) with this (below)  *****
-    std::string evaporativeWaterSupplyTankName() const;
+    //boost::optional<WaterStorageTank> evaporativeWaterSupplyTank() const;
 
     // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule() const;
@@ -228,11 +226,9 @@ namespace detail {
     void autocalculateRatedWaterPumpPower();
 
     // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-//    bool setEvaporativeWaterSupplyTank(const boost::optional<WaterStorageTank>& waterStorageTank);
+    //bool setEvaporativeWaterSupplyTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
-//    void resetEvaporativeWaterSupplyTank();
-//*****  Replace WaterStorageTank (above) with this (below)  *****
-    void setEvaporativeWaterSupplyTankName(std::string evaporativeWaterSupplyTankName);
+    //void resetEvaporativeWaterSupplyTank();
 
     // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule);

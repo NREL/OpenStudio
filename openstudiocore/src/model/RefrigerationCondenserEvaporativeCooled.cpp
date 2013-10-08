@@ -261,15 +261,9 @@ namespace detail {
     return result;
   }
 
-//  boost::optional<WaterStorageTank> RefrigerationCondenserEvaporativeCooled_Impl::evaporativeWaterSupplyTank() const {
-//    return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName);
-//  }
-//*****  Replace WaterStorageTank (above) with this (below)  *****
-  std::string RefrigerationCondenserEvaporativeCooled_Impl::evaporativeWaterSupplyTankName() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+  /*boost::optional<WaterStorageTank> RefrigerationCondenserEvaporativeCooled_Impl::evaporativeWaterSupplyTank() const {
+    return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName);
+  }*/
 
   boost::optional<Schedule> RefrigerationCondenserEvaporativeCooled_Impl::evaporativeCondenserAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeCondenserAvailabilityScheduleName);
@@ -496,27 +490,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-//  bool RefrigerationCondenserEvaporativeCooled_Impl::setEvaporativeWaterSupplyTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
-//    bool result(false);
-//    if (waterStorageTank) {
-//      result = setPointer(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName, waterStorageTank.get().handle());
-//    }
-//    else {
-//      resetEvaporativeWaterSupplyTank();
-//      result = true;
-//    }
-//    return result;
-//  }
-
-//  void RefrigerationCondenserEvaporativeCooled_Impl::resetEvaporativeWaterSupplyTank() {
-//    bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName, "");
-//    OS_ASSERT(result);
-//  }
-//*****  Replace WaterStorageTank (above) with this (below)  *****
-  void RefrigerationCondenserEvaporativeCooled_Impl::setEvaporativeWaterSupplyTankName(std::string evaporativeWaterSupplyTankName) {
-    bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName, evaporativeWaterSupplyTankName);
-    OS_ASSERT(result);
+  /*bool RefrigerationCondenserEvaporativeCooled_Impl::setEvaporativeWaterSupplyTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
+    bool result(false);
+    if (waterStorageTank) {
+      result = setPointer(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName, waterStorageTank.get().handle());
+    }
+    else {
+      resetEvaporativeWaterSupplyTank();
+      result = true;
+    }
+    return result;
   }
+
+  void RefrigerationCondenserEvaporativeCooled_Impl::resetEvaporativeWaterSupplyTank() {
+    bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeWaterSupplyTankName, "");
+    OS_ASSERT(result);
+  }*/
 
   bool RefrigerationCondenserEvaporativeCooled_Impl::setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeCondenserAvailabilityScheduleName,
@@ -578,14 +567,33 @@ RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled
 {
   OS_ASSERT(getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
-  // ok = setHandle();
+  ok = setRatedEffectiveTotalHeatRejectionRate(43100.0);
   OS_ASSERT(ok);
-  // ok = setRatedEffectiveTotalHeatRejectionRate();
+  ok = setRatedSubcoolingTemperatureDifference(0.0);
   OS_ASSERT(ok);
-  // ok = setRatedFanPower();
+  ok = setFanSpeedControlType("VariableSpeed");
   OS_ASSERT(ok);
+  ok = setRatedFanPower(373.0);
+  OS_ASSERT(ok);
+  ok = setMinimumFanAirFlowRatio(0.2);
+  OS_ASSERT(ok);
+  ok = setApproachTemperatureConstantTerm(6.63);
+  OS_ASSERT(ok);
+  ok = setApproachTemperatureCoefficient2(0.468);
+  OS_ASSERT(ok);
+  ok = setApproachTemperatureCoefficient3(17.93);
+  OS_ASSERT(ok);
+  ok = setApproachTemperatureCoefficient4(-0.322);
+  OS_ASSERT(ok);
+  setMinimumCapacityFactor(0.6);
+  setMaximumCapacityFactor(4.8);
+  setRatedAirFlowRate(1.37);
+  ok = setBasinHeaterCapacity(66.7);
+  OS_ASSERT(ok);
+  ok = setBasinHeaterSetpointTemperature(2.0);
+  OS_ASSERT(ok);
+  setRatedWaterPumpPower(250.0);
 }
 
 IddObjectType RefrigerationCondenserEvaporativeCooled::iddObjectType() {
@@ -721,13 +729,9 @@ bool RefrigerationCondenserEvaporativeCooled::isRatedWaterPumpPowerAutocalculate
   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->isRatedWaterPumpPowerAutocalculated();
 }
 
-//boost::optional<WaterStorageTank> RefrigerationCondenserEvaporativeCooled::evaporativeWaterSupplyTank() const {
-//  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->evaporativeWaterSupplyTank();
-//}
-//*****  Replace WaterStorageTank (above) with this (below)  *****
-std::string RefrigerationCondenserEvaporativeCooled::evaporativeWaterSupplyTankName() const {
-  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->evaporativeWaterSupplyTankName();
-}
+/*boost::optional<WaterStorageTank> RefrigerationCondenserEvaporativeCooled::evaporativeWaterSupplyTank() const {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->evaporativeWaterSupplyTank();
+}*/
 
 boost::optional<Schedule> RefrigerationCondenserEvaporativeCooled::evaporativeCondenserAvailabilitySchedule() const {
   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->evaporativeCondenserAvailabilitySchedule();
@@ -893,17 +897,13 @@ void RefrigerationCondenserEvaporativeCooled::autocalculateRatedWaterPumpPower()
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->autocalculateRatedWaterPumpPower();
 }
 
-//bool RefrigerationCondenserEvaporativeCooled::setEvaporativeWaterSupplyTank(const WaterStorageTank& waterStorageTank) {
-//  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEvaporativeWaterSupplyTank(waterStorageTank);
-//}
-
-//void RefrigerationCondenserEvaporativeCooled::resetEvaporativeWaterSupplyTank() {
-//  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetEvaporativeWaterSupplyTank();
-//}
-//*****  Replace WaterStorageTank (above) with this (below)  *****
-void RefrigerationCondenserEvaporativeCooled::setEvaporativeWaterSupplyTankName(std::string evaporativeWaterSupplyTankName) {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEvaporativeWaterSupplyTankName(evaporativeWaterSupplyTankName);
+/*bool RefrigerationCondenserEvaporativeCooled::setEvaporativeWaterSupplyTank(const WaterStorageTank& waterStorageTank) {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEvaporativeWaterSupplyTank(waterStorageTank);
 }
+
+void RefrigerationCondenserEvaporativeCooled::resetEvaporativeWaterSupplyTank() {
+  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetEvaporativeWaterSupplyTank();
+}*/
 
 bool RefrigerationCondenserEvaporativeCooled::setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEvaporativeCondenserAvailabilitySchedule(schedule);
