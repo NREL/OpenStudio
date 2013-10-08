@@ -133,6 +133,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.0.4"));
   m_startVersions.push_back(VersionString("1.0.5"));
   m_startVersions.push_back(VersionString("1.0.6"));
+  m_startVersions.push_back(VersionString("1.0.7"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 

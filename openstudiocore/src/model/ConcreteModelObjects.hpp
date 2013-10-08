@@ -145,6 +145,7 @@
 #include <model/LuminaireDefinition.hpp>
 #include <model/MasslessOpaqueMaterial.hpp>
 #include <model/Meter.hpp>
+#include <model/ModelObjectList.hpp>
 #include <model/Node.hpp>
 #include <model/PortList.hpp>
 #include <model/OtherEquipment.hpp>
@@ -161,6 +162,10 @@
 #include <model/PumpVariableSpeed.hpp>
 #include <model/RadianceParameters.hpp>
 #include <model/RefractionExtinctionGlazing.hpp>
+#include <model/RefrigerationCase.hpp>
+#include <model/RefrigerationCompressor.hpp>
+#include <model/RefrigerationCondenserAirCooled.hpp>
+#include <model/RefrigerationSystem.hpp>
 #include <model/RenderingColor.hpp>
 #include <model/RoofVegetation.hpp>
 #include <model/RunPeriod.hpp>
@@ -371,6 +376,7 @@
 #include <model/LuminaireDefinition_Impl.hpp>
 #include <model/MasslessOpaqueMaterial_Impl.hpp>
 #include <model/Meter_Impl.hpp>
+#include <model/ModelObjectList_Impl.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/PortList_Impl.hpp>
 #include <model/OtherEquipment_Impl.hpp>
@@ -387,6 +393,10 @@
 #include <model/PumpVariableSpeed_Impl.hpp>
 #include <model/RadianceParameters_Impl.hpp>
 #include <model/RefractionExtinctionGlazing_Impl.hpp>
+#include <model/RefrigerationCase_Impl.hpp>
+#include <model/RefrigerationCompressor_Impl.hpp>
+#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+#include <model/RefrigerationSystem_Impl.hpp>
 #include <model/RenderingColor_Impl.hpp>
 #include <model/RoofVegetation_Impl.hpp>
 #include <model/RunPeriod_Impl.hpp>

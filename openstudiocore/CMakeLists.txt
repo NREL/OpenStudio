@@ -748,7 +748,7 @@ ELSEIF(UNIX)
   SET(AWS_RUBY_DESTINATION "lib/openstudio")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-i686.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM 3f6459c40073158a85393dcf98b584a5)
+  SET(AWS_RUBY_CHECKSUM be333fe95ef13d4c5f3f449dd9b7c534)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ENDIF()
 

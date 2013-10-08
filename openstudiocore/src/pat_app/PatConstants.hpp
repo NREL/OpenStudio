@@ -26,8 +26,6 @@ namespace pat {
 
 enum CloudStatus { CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR };
 
-enum RunStatus { RUNSTATUS_NONE };
-
 } // pat
 
 } // openstudio

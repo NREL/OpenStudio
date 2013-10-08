@@ -17,6 +17,8 @@
 %import <model/Model.i>
 %import <runmanager/lib/RunManager.i>
 %import <osversion/OSVersion.i>
+%import <analysisdriver/AnalysisDriver.i>
+
 %import(module="openstudiomodel") <model/Model.hpp>
 %import(module="openstudiomodel") <model/ModelObject.hpp>
 %import(module="openstudiomodel") <model/Component.hpp>
@@ -25,6 +27,9 @@
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
   #include <model/Component.hpp>
+  #include <analysis/Measure.hpp>
+  #include <analysis/NullMeasure.hpp>
+  #include <analysis/RubyMeasure.hpp>
   #include <runmanager/lib/RunManager.hpp>
   #include <openstudio_lib/FileOperations.hpp>
   #include <openstudio_lib/OSDocument.hpp>

@@ -21,6 +21,7 @@
 #define ANALYSISDRIVER_CLOUDANALYSISDRIVER_IMPL_HPP
 
 #include <analysisdriver/AnalysisDriverAPI.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <analysisdriver/SimpleProject.hpp>
 
@@ -70,6 +71,8 @@ namespace detail {
 
     /** Returns the number of data points in this iteration that are no longer being processed. */
     unsigned numCompleteDataPoints() const;
+    
+    AnalysisStatus status() const;
 
     //@}
     /** @name Blocking Class Members */
@@ -177,6 +180,8 @@ namespace detail {
     void analysisComplete(const openstudio::UUID& analysis);
 
     void analysisStopped(const openstudio::UUID& analysis);
+    
+    void analysisStatusChanged(analysisdriver::AnalysisStatus newStatus);
 
     //@}
    protected slots:
@@ -265,6 +270,7 @@ namespace detail {
     bool m_lastRunSuccess;
     bool m_lastStopSuccess;
     bool m_lastDownloadDetailedResultsSuccess;
+    AnalysisStatus m_status;
 
     std::vector<std::string> m_errors;
     std::vector<std::string> m_warnings;
@@ -303,6 +309,7 @@ namespace detail {
     void logError(const std::string& error);
     void logWarning(const std::string& warning);
     void appendErrorsAndWarnings(const OSServer& server);
+    void setStatus(AnalysisStatus status);
 
     void registerRunRequestFailure();
     bool postNextDataPoint();
