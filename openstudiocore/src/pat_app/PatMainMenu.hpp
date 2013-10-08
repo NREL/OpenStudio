@@ -105,10 +105,6 @@ class PatMainMenu : public QMenuBar
   QAction * m_helpAction;
   QAction * m_aboutAction;
 
-  private slots:
-
-  void on_internetAvailable(bool isAvailable);
-
 };
 
 }

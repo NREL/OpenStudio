@@ -238,10 +238,10 @@ boost::optional<CloudProviderWidget *> CloudDialog::getCurrentCloudProviderWidge
 {
   boost::optional<CloudProviderWidget *> cloudProviderWidget;
 
-  if(m_cloudResourceComboBox->currentIndex() == m_vagrantProviderIdx){
-    cloudProviderWidget = m_vagrantProviderWidget;
-  } else if(m_cloudResourceComboBox->currentIndex() == m_amazonProviderIdx){
+  if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
     cloudProviderWidget = m_amazonProviderWidget;
+  } else if( m_cloudResourceComboBox->currentText() == VAGRANT_PROVIDER){
+    cloudProviderWidget = m_vagrantProviderWidget;
   }
 
   return cloudProviderWidget;
@@ -856,6 +856,7 @@ void  AmazonProviderWidget::loadData()
 {
   AWSProvider awsProvider;
   AWSSettings awsSettings;
+  awsSettings.loadSettings(true);
 
   m_accessKeyLineEdit->setText(awsSettings.accessKey().c_str());
 
@@ -940,6 +941,8 @@ void  AmazonProviderWidget::saveData()
 
   unsigned wait = m_waitLineEdit->text().toUInt();
   awsSettings.setTerminationDelay(wait);
+
+  awsSettings.saveToSettings(true);
 }
 
 //***** SLOTS *****

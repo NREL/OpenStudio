@@ -34,11 +34,11 @@
 
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
-#include "../shared_gui_components/CloudDialog.hpp"
 #include "../shared_gui_components/MonitorUseDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 #include "PatConstants.hpp"
+#include "CloudDialog.hpp"
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Path.hpp>
@@ -155,14 +155,13 @@ class PatApp : public QApplication, public BaseApp
 
   virtual void updateSelectedMeasureState();
 
-  // Return the settings stored in the App's current project
-  static boost::optional<CloudSettings> currentProjectSettings();
+  //// Temporary settings for development
+  //static CloudSettings createTestSettings();
 
-  // Set the settings in the App's current project
-  static void setCurrentProjectSettings(const boost::optional<CloudSettings> & settings);
-
-  // Temporary settings for development
-  static CloudSettings createTestSettings();
+  // The settings associated with the current user
+  // independent of a particular project.
+  // These settings will be used for new cloud instances
+  static CloudSettings cloudSettings();
 
   enum VerticalTabID
   {

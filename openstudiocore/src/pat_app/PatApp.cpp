@@ -1306,7 +1306,7 @@ QSharedPointer<CloudMonitor> PatApp::cloudMonitor() const
 {
   return m_cloudMonitor;
 }
-
+/*
 boost::optional<CloudSettings> PatApp::currentProjectSettings()
 {
   boost::optional<CloudSettings> settings;
@@ -1335,6 +1335,7 @@ void PatApp::setCurrentProjectSettings(const boost::optional<CloudSettings> & se
     project->save();
   }
 }
+
 
 CloudSettings PatApp::createTestSettings()
 {
@@ -1390,6 +1391,7 @@ CloudSettings PatApp::createTestSettings()
 
   return vagrantSettings;
 }
+*/
 
 void PatApp::onCloudStatusChanged(const CloudStatus & newCloudStatus)
 {
@@ -1492,6 +1494,30 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
     OS_ASSERT(runView);
     
     runView->runStatusView->toggleCloudButton->setStatus(cloudStatus);
+  }
+}
+
+CloudSettings PatApp::cloudSettings()
+{
+  // AWSSettings and VagrantSettings persist to different QSettings
+  // so it is ambiquous which to load.  This is a shortcut.
+  // If more cloud providers are introduced something better needs to be done.
+
+  if( showVagrant() )
+  {
+    VagrantSettings settings;
+
+    settings.loadSettings(true);
+
+    return settings;
+  }
+  else
+  {
+    AWSSettings settings;
+
+    settings.loadSettings(true);
+
+    return settings;
   }
 }
 

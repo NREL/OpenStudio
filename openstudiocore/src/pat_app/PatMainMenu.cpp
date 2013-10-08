@@ -126,7 +126,7 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_cloudMenu = new QMenu(tr("&Cloud"),this);
   addMenu(m_cloudMenu);
 
-  m_openCloudDlgAction = new QAction(tr("Settings"),this);
+  m_openCloudDlgAction = new QAction(tr("Cloud Settings"),this);
 
   isConnected = connect(m_openCloudDlgAction, SIGNAL(triggered()),this,SIGNAL(openCloudDlgClicked()));
   OS_ASSERT(isConnected);
@@ -134,11 +134,6 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_cloudMenu->addAction(m_openCloudDlgAction);
 
   m_openMonitorUseDlgAction = new QAction(tr("Monitor Use"),this);
-  m_openMonitorUseDlgAction->setEnabled(false);
-
-  isConnected = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(internetAvailable(bool)),
-                        this,SLOT(on_internetAvailable(bool)));
-  OS_ASSERT(isConnected);
 
   isConnected = connect(m_openMonitorUseDlgAction, SIGNAL(triggered()),this,SIGNAL(openMonitorUseDlgClicked()));
   OS_ASSERT(isConnected);
@@ -183,13 +178,6 @@ void PatMainMenu::configure(bool haveCurrentProject)
     m_exportXmlAction->setEnabled(false);
 
   }
-}
-
-/**************************** SLOTS ****************************/
-
-void PatMainMenu::on_internetAvailable(bool isAvailable)
-{
-  m_openMonitorUseDlgAction->setEnabled(isAvailable);
 }
 
 }
