@@ -33,6 +33,7 @@ namespace project {
 class AnalysisRecord;
 class FileReferenceRecord;
 class DataPointValueRecord;
+class MeasureRecord;
 
 namespace detail {
 
@@ -106,6 +107,14 @@ namespace detail {
 
     openstudio::path directory() const;
 
+    std::vector<QVariant> variableValues() const;
+
+    /** Returns the measures associated with this DataPoint via MeasureGroup selection. Returns them
+     *  in ProblemRecord::inputVariableRecords order. */
+    std::vector<MeasureRecord> measureRecords() const;
+
+    /** Returns the continuous variable values associated with this DataPoint. Returns them in 
+     *  ProblemRecord::inputVariableRecords order. */
     std::vector<DataPointValueRecord> continuousVariableValueRecords() const;
 
     std::vector<DataPointValueRecord> responseValueRecords() const;

@@ -82,6 +82,8 @@ namespace detail {
     /** Returns the FunctionRecord to which this value corresponds. */
     boost::optional<FunctionRecord> functionRecord() const;
 
+    boost::optional<int> continuousVariableRecordId() const;
+
     /** Returns the ContinuousVariableRecord to which this value corresponds. */
     boost::optional<ContinuousVariableRecord> continuousVariableRecord() const;
 

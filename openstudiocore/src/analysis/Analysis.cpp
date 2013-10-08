@@ -191,8 +191,12 @@ namespace detail {
     }
     BOOST_FOREACH(DataPoint& dataPoint,m_dataPoints) {
       if (!dataPoint.hasProblem()) {
-        OS_ASSERT(dataPoint.problemUUID() == m_problem.uuid());
-        dataPoint.setProblem(m_problem);
+        if (dataPoint.problemUUID() == m_problem.uuid()) {
+          dataPoint.setProblem(m_problem);
+        }
+        else {
+          OS_ASSERT(m_dataPointsAreInvalid);
+        }
       }
       connectChild(dataPoint,false);
     }
