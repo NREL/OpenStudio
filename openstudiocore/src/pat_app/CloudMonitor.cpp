@@ -68,54 +68,6 @@ void stopCloud()
   }
 }
 
-CloudProvider startCloud()
-{
-  boost::optional<CloudProvider> provider;
-
-  CloudSettings settings = PatApp::instance()->cloudSettings();
-
-  provider = CloudMonitor::newCloudProvider(settings);
-
-  OS_ASSERT(provider);
-
-  // DLM: if user agreement is not signed or user credentials not validated we should refer people to the settings here
-
-  if( provider->requestStartServer() )
-  {
-    provider->waitForServer();
-  }
-
-  // DLM: quit if server fails?
-  
-  if( provider->requestStartWorkers() )
-  {
-    provider->waitForWorkers();
-  }
-
-  // DLM: quit if workers fail?
-
-  boost::optional<Url> serverUrl = provider->session().serverUrl();
- 
-  if(serverUrl){
-
-    for(int i = 0; i < 15; i++)
-    {
-      OSServer server(serverUrl.get());
-
-      if( server.available() )
-      {
-        break;
-      }
-      else
-      {
-        System::msleep(3000);
-      }
-    } 
-  }
-
-  return provider.get();
-}
-
 } // namespace detail
 
 CloudMonitor::CloudMonitor()
