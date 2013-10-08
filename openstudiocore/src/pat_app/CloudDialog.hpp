@@ -56,7 +56,16 @@ protected slots:
 
   virtual void on_okButton(bool checked);
 
+protected:
+
+  QCheckBox * m_iAcceptCheckBox; 
+
 private:
+
+  friend class AmazonProviderWidget;
+  friend class BlankProviderWidget;
+  friend class CloudProviderWidget;
+  friend class VagrantProviderWidget;
 
   void createWidgets();
 
@@ -65,8 +74,6 @@ private:
   void loadData();
 
   void saveData();
-
-  QCheckBox * m_iAcceptCheckBox; 
     
   QComboBox * m_cloudResourceComboBox;
 
@@ -116,7 +123,7 @@ class CloudProviderWidget : public QWidget
 
 public:
 
-  CloudProviderWidget(QWidget * parent = 0);
+  CloudProviderWidget(CloudDialog * cloudDialog);
 
   virtual ~CloudProviderWidget();
 
@@ -150,6 +157,8 @@ protected:
 
   QLineEdit * m_waitLineEdit;
 
+  CloudDialog * m_cloudDialog;
+
 protected slots:
     
   void waitClicked(bool checked);
@@ -163,7 +172,7 @@ class BlankProviderWidget : public CloudProviderWidget
 
 public:
 
-  BlankProviderWidget(QWidget * parent = 0);
+  BlankProviderWidget(CloudDialog * cloudDialog);
 
   virtual ~BlankProviderWidget();
 
@@ -185,7 +194,7 @@ class VagrantProviderWidget : public CloudProviderWidget
 
 public:
 
-  VagrantProviderWidget(QWidget * parent = 0);
+  VagrantProviderWidget(CloudDialog * cloudDialog);
 
   virtual ~VagrantProviderWidget();
 
@@ -233,7 +242,7 @@ class AmazonProviderWidget : public CloudProviderWidget
 
 public:
 
-  AmazonProviderWidget(QWidget * parent = 0);
+  AmazonProviderWidget(CloudDialog * cloudDialog);
 
   virtual ~AmazonProviderWidget();
     

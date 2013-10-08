@@ -232,6 +232,9 @@ void CloudDialog::createWidgets()
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
   #endif
 
+  m_amazonProviderWidget->loadData();
+  m_blankProviderWidget->loadData();
+  m_vagrantProviderWidget->loadData();
 }
 
 boost::optional<CloudProviderWidget *> CloudDialog::getCurrentCloudProviderWidget()
@@ -354,8 +357,8 @@ void CloudDialog::cloudResourceChanged(const QString & text)
 //****************************************************************************************************
 
 
-CloudProviderWidget::CloudProviderWidget(QWidget * parent)
-  : QWidget(parent),
+CloudProviderWidget::CloudProviderWidget(CloudDialog * cloudDialog)
+  : QWidget(cloudDialog),
   m_waitCheckBox(0),
   m_waitLineEdit(0),
   m_loginWidget(0),
@@ -364,7 +367,8 @@ CloudProviderWidget::CloudProviderWidget(QWidget * parent)
   m_leftLoginLayout(0),
   //m_rightLoginLayout(0),
   m_leftSettingsLayout(0),
-  m_rightSettingsLayout(0)
+  m_rightSettingsLayout(0),
+  m_cloudDialog(cloudDialog)
 {
   createWidgets();
 }
@@ -461,8 +465,8 @@ void CloudProviderWidget::waitClicked(bool checked)
 //****************************************************************************************************
 
 
-BlankProviderWidget::BlankProviderWidget(QWidget * parent)
-  : CloudProviderWidget(parent)
+BlankProviderWidget::BlankProviderWidget(CloudDialog * cloudDialog)
+  : CloudProviderWidget(cloudDialog)
 {
 }
 
@@ -490,8 +494,8 @@ void BlankProviderWidget::createSettingsWidget()
 //****************************************************************************************************
 
 
-VagrantProviderWidget::VagrantProviderWidget(QWidget * parent)
-  : CloudProviderWidget(parent),
+VagrantProviderWidget::VagrantProviderWidget(CloudDialog * cloudDialog)
+  : CloudProviderWidget(cloudDialog),
   m_runOnStartUpCheckBox(0),
   m_serverUsernameLineEdit(0),
   m_serverPasswordLineEdit(0),
@@ -504,7 +508,7 @@ VagrantProviderWidget::VagrantProviderWidget(QWidget * parent)
 {
   createLoginWidget();
   createSettingsWidget();
-  loadData();
+  //loadData();
 }
 
 VagrantProviderWidget::~VagrantProviderWidget()
@@ -547,7 +551,6 @@ void VagrantProviderWidget::createSettingsWidget()
   QHBoxLayout * hLayout = 0;
   QLabel * label = 0;
   QPushButton * pushButton = 0;
-  QWidget * widget = 0;
   bool isConnected = false;
 
   // LEFT SETTINGS PAGE
@@ -734,8 +737,8 @@ void VagrantProviderWidget::workerDirButtonClicked(bool checked)
 //****************************************************************************************************
 
 
-AmazonProviderWidget::AmazonProviderWidget(QWidget * parent)
-  : CloudProviderWidget(parent),
+AmazonProviderWidget::AmazonProviderWidget(CloudDialog * cloudDialog)
+  : CloudProviderWidget(cloudDialog),
   m_regionComboBox(0),
   m_serverInstanceTypeComboBox(0),
   m_workerInstanceTypeComboBox(0),
@@ -745,7 +748,7 @@ AmazonProviderWidget::AmazonProviderWidget(QWidget * parent)
 {
   createLoginWidget();
   createSettingsWidget();
-  loadData();
+  //loadData();
 }
 
 AmazonProviderWidget::~AmazonProviderWidget()
@@ -791,7 +794,6 @@ void AmazonProviderWidget::createLoginWidget()
 void AmazonProviderWidget::createSettingsWidget()
 {
   QLabel * label = 0;
-  QWidget * widget = 0;
 
   // LEFT SETTINGS PAGE
 
@@ -862,6 +864,8 @@ void  AmazonProviderWidget::loadData()
 
   m_secretKeyLineEdit->setText(awsSettings.secretKey().c_str());
 
+  m_cloudDialog->m_iAcceptCheckBox->setChecked(awsSettings.userAgreementSigned());
+
   int index = -1;
 
   for(int idx = 0; idx < m_regionComboBox->count(); idx++){
@@ -925,6 +929,8 @@ void  AmazonProviderWidget::saveData()
 
   bool validSecretKey = awsSettings.setSecretKey(m_secretKeyLineEdit->text().toStdString());
   OS_ASSERT(validSecretKey);
+
+  awsSettings.signUserAgreement(m_cloudDialog->m_iAcceptCheckBox->isChecked());
 
   awsSettings.setRegion(m_regionComboBox->currentText().toStdString());
 
