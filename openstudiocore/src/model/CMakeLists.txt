@@ -508,6 +508,9 @@ SET( ${target_name}_src
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
+  RefrigerationCondenserEvaporativeCooled.hpp
+  RefrigerationCondenserEvaporativeCooled_Impl.hpp
+  RefrigerationCondenserEvaporativeCooled.cpp
   RefrigerationSecondarySystem.hpp
   RefrigerationSecondarySystem_Impl.hpp
   RefrigerationSecondarySystem.cpp
@@ -998,6 +1001,7 @@ SET( ${target_name}_moc
   RefrigerationCase_Impl.hpp
   RefrigerationCompressor_Impl.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
+  RefrigerationCondenserEvaporativeCooled_Impl.hpp
   RefrigerationSecondarySystem_Impl.hpp
   RefrigerationSystem_Impl.hpp
   RefrigerationWalkIn_Impl.hpp
@@ -1228,6 +1232,7 @@ SET( ${target_name}_test_src
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
+  test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
   test/RefrigerationSecondarySystem_GTest.cpp
   test/RefrigerationSystem_GTest.cpp
   test/RefrigerationWalkIn_GTest.cpp
@@ -1322,4 +1327,5 @@ MAKE_SWIG_TARGET( OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHV
 MAKE_SWIG_TARGET( OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
 
 MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration )
+
 

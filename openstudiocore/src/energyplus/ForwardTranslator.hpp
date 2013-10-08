@@ -134,6 +134,7 @@ class RefractionExtinctionGlazing;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationCondenserAirCooled;
+class RefrigerationCondenserEvaporativeCooled;
 class RefrigerationSecondarySystem;
 class RefrigerationSystem;
 class RefrigerationWalkIn;
@@ -463,6 +464,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateRefractionExtinctionGlazing( model::RefractionExtinctionGlazing & modelObject );
 
+<<<<<<< HEAD
   boost::optional<IdfObject> translateRefrigerationCase( model::RefrigerationCase & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationCompressor( model::RefrigerationCompressor & modelObject );
@@ -475,6 +477,18 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateRefrigerationWalkIn( model::RefrigerationWalkIn & modelObject );
 
+=======
+  boost::optional<IdfObject> translateRefrigerationCase( model::RefrigerationCase & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCompressor( model::RefrigerationCompressor & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCondenserAirCooled( model::RefrigerationCondenserAirCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCondenserEvaporativeCooled( model::RefrigerationCondenserEvaporativeCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationSystem( model::RefrigerationSystem & modelObject );
+
+>>>>>>> 83e00507535b73404b8df6ff31ac8c466ce7e157
   boost::optional<IdfObject> translateRoofVegetation( model::RoofVegetation & modelObject );
 
   boost::optional<IdfObject> translateRunPeriod( model::RunPeriod & modelObject );

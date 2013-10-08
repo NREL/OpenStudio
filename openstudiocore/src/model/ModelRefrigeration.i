@@ -22,6 +22,7 @@
 MODELOBJECT_TEMPLATES(RefrigerationCase);
 MODELOBJECT_TEMPLATES(RefrigerationCompressor);
 MODELOBJECT_TEMPLATES(RefrigerationCondenserAirCooled);
+MODELOBJECT_TEMPLATES(RefrigerationCondenserEvaporativeCooled);
 MODELOBJECT_TEMPLATES(RefrigerationSecondarySystem);
 MODELOBJECT_TEMPLATES(RefrigerationSystem);
 MODELOBJECT_TEMPLATES(RefrigerationWalkIn);
@@ -30,6 +31,7 @@ MODELOBJECT_TEMPLATES(RefrigerationWalkInZoneBoundary);
 SWIG_MODELOBJECT(RefrigerationCase);
 SWIG_MODELOBJECT(RefrigerationCompressor);
 SWIG_MODELOBJECT(RefrigerationCondenserAirCooled);
+SWIG_MODELOBJECT(RefrigerationCondenserEvaporativeCooled);
 SWIG_MODELOBJECT(RefrigerationSecondarySystem);
 SWIG_MODELOBJECT(RefrigerationSystem);
 SWIG_MODELOBJECT(RefrigerationWalkIn);
