@@ -28,6 +28,8 @@ class QPushButton;
 
 namespace openstudio{
 
+namespace pat{
+
 class MonitorUseDialog : public OSDialog
 {
   Q_OBJECT
@@ -54,6 +56,8 @@ private slots:
   void on_cloudStatus(bool checked);
 
 };
+
+} // pat
 
 } // openstudio
 
