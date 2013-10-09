@@ -1404,6 +1404,7 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
           mainWindow->verticalTabWidget->enableTabs(true);
           break;
       }
+      break;
     case CLOUD_ERROR:
       switch (analysisStatus.value())
       {
@@ -1423,6 +1424,7 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
       mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
       mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
       mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
+      break;
   }
 
   if( m_runTabController )
