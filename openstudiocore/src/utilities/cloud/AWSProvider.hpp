@@ -305,6 +305,12 @@ namespace detail {
     // returns the recommended default worker instance type
     static std::string defaultWorkerInstanceType();
 
+    // returns true if the cloud server successfully requests the estimated charges
+    bool requestEstimatedCharges();
+
+    // returns true if the cloud server successfully requests the total number of instances
+    bool requestTotalInstances();
+
     // returns the EC2 estimated charges from CloudWatch in USD
     double estimatedCharges(int msec=30000);
 

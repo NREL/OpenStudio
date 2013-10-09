@@ -279,6 +279,10 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
   {
     setStatus(CLOUD_RUNNING);
   }
+  else
+  {
+    setStatus(CLOUD_STOPPED);
+  }
 
   // TODO Handle other states
 }
@@ -629,15 +633,13 @@ void ReconnectCloudWorker::startWorking()
 {
   m_status = CLOUD_STOPPED;
 
-  boost::optional<CloudProvider> provider;
-
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
   boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
 
   // If there is already a session, try to connect to that
   if( session && settings ) 
   {
-    provider = CloudMonitor::newCloudProvider(settings.get(),session);
+    boost::optional<CloudProvider> provider = CloudMonitor::newCloudProvider(settings.get(),session);
 
     OS_ASSERT(provider);
 

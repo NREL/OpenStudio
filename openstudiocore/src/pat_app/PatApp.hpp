@@ -232,6 +232,9 @@ class PatApp : public QApplication, public BaseApp
 
   void setAppState(const CloudStatus & cloudStatus, const analysisdriver::AnalysisStatus & analysisStatus);
 
+  // Calls setAppState with current cloud and analysis status
+  void updateAppState();
+
   void onCloudStatusChanged(const CloudStatus & newStatus);
 
   void onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus);
