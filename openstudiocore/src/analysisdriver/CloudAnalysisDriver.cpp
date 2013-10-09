@@ -979,7 +979,7 @@ namespace detail {
   }
 
   void CloudAnalysisDriver_Impl::analysisRunningReturned(bool success) {
-    bool test = m_monitorDataPoints->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)));
+    bool test = m_monitorDataPoints->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningReturned(bool)));
     OS_ASSERT(test);
 
     if (!success) {
