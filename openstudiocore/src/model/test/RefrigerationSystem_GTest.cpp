@@ -98,12 +98,18 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
 {
   Model model;
   ThermalZone thermalZone(model);
+  ScheduleCompact s1(model);
+  ScheduleCompact s2(model);
+  RefrigerationCase case1 = RefrigerationCase(model, s1, s2);
+
   RefrigerationSystem testObject = RefrigerationSystem(model);
   testObject.setMinimumCondensingTemperature(999.0);
   testObject.setRefrigerationSystemWorkingFluidType("R410a");
   testObject.setSuctionTemperatureControlType("FloatSuctionTemperature");
   testObject.setSumUASuctionPiping(999.0);
   testObject.setSuctionPipingZone(thermalZone);
+  testObject.addCase(case1);
+  std::vector<RefrigerationCase> _cases = testObject.cases();
 
   RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.minimumCondensingTemperature());
@@ -112,6 +118,9 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   EXPECT_EQ("R410a", testObjectClone.refrigerationSystemWorkingFluidType());
   EXPECT_EQ("FloatSuctionTemperature", testObjectClone.suctionTemperatureControlType());
   EXPECT_FALSE(testObjectClone.suctionPipingZone());
+  std::vector<RefrigerationCase> casesClone = testObjectClone.cases();
+  EXPECT_EQ(1, casesClone.size());
+  EXPECT_NE(casesClone[0].handle(), _cases[0].handle());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelsWithDefaultData)

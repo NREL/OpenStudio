@@ -1212,6 +1212,7 @@ SET( ${target_name}_test_src
   test/ModelFixture.cpp
   test/ModelFixture.hpp
   test/ModelObject_GTest.cpp
+  test/ModelObjectList_GTest.cpp
   test/ModelPartitionMaterial_GTest.cpp
   test/Model_GTest.cpp
   test/Node_GTest.cpp
