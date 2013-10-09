@@ -267,8 +267,21 @@ void ResultsTabController::disableDownloadResultsButton()
 
 void ResultsTabController::enableViewFileButton()
 {
-  if( resultsView ) {
-    if (!m_baselineDataPointResultListController->selectionController()->selectedItems().empty()){
+  if(resultsView){
+    bool hasDetailedResults = false;
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+        // Determine if datapoint has detailed data
+        if(dataPoint.complete() && !dataPoint.directory().empty()){
+          hasDetailedResults = true;
+        }
+      }
+    }
+
+    if(hasDetailedResults){
       resultsView->enableViewFileButton(true);
     } else {
       resultsView->enableViewFileButton(false);
