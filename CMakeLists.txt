@@ -304,7 +304,7 @@ ENDIF()
 IF(BUILD_SWIG)
   IF (UNIX)
     IF (BUILD_V8_BINDINGS)
-      MESSAGE("Building SWIG for V8, the latest source will be cloned from git://github.com/lefticus/swig-v8.git. Autoconf tools are required")
+      MESSAGE("Building SWIG for V8, the latest source will be cloned from git://github.com/oliver----/swig-v8.git. Autoconf tools are required")
 
       FIND_PROGRAM(autoconf "autoconf")
 
