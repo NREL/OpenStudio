@@ -279,10 +279,6 @@ ResultsView::ResultsView()
     this, SIGNAL(downloadResultsButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(m_downloadResultsButton, SIGNAL(clicked(bool)),
-    this, SLOT(on_downloadResultsButtonClicked(bool)));
-  OS_ASSERT(isConnected);
-
   m_viewFileButton = new QPushButton();
   m_viewFileButton->setFlat(true);
   m_viewFileButton->setFixedSize(195,29);
@@ -292,10 +288,6 @@ ResultsView::ResultsView()
   isConnected = connect(m_viewFileButton, SIGNAL(clicked(bool)),
     this, SIGNAL(openButtonClicked(bool)));
   OS_ASSERT(isConnected); 
-
-  isConnected = connect(m_viewFileButton, SIGNAL(clicked(bool)),
-    this, SLOT(on_openButtonClicked(bool)));
-  OS_ASSERT(isConnected);
 
   m_openDirButton = new OpenDirectoryButton(this);
   m_openDirButton->setToolTip("Open the directory for the selected file.");
@@ -409,14 +401,6 @@ void ResultsView::selectCalibrationMethod(const QString& value)
   m_calibrationMethodLabel->setText(text);
 
   emit calibrationThresholdsChanged(m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
-}
-
-void ResultsView::on_downloadResultsButtonClicked(bool checked)
-{
-}
-
-void ResultsView::on_openButtonClicked(bool checked)
-{
 }
 
 ResultsHeader::ResultsHeader(bool isBaseline)

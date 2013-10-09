@@ -103,12 +103,6 @@ class ResultsView : public PatMainTabView
     double m_calibrationMaxCVRMSE;
 
     OpenDirectoryButton* m_openDirButton;
-
-  private slots:
-
-    void on_downloadResultsButtonClicked(bool checked);
-
-    void on_openButtonClicked(bool checked);
 };
 
 class ResultsHeader : public QWidget
