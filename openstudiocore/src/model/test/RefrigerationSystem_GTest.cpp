@@ -27,6 +27,8 @@
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+#include <model/RefrigerationCondenserEvaporativeCooled.hpp>
+#include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
 //#include <model/RefrigerationCondenserCascade.hpp>
 //#include <model/RefrigerationCondenserCascade_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
@@ -760,4 +762,29 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSystemWorkingFluidType)
   EXPECT_TRUE(testObject.setRefrigerationSystemWorkingFluidType("R410a"));
   EXPECT_TRUE(testObject.setRefrigerationSystemWorkingFluidType("R22"));
   EXPECT_FALSE(testObject.setRefrigerationSystemWorkingFluidType("Not Valid"));
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  RefrigerationCondenserAirCooled condenserAirCooled = RefrigerationCondenserAirCooled(model);
+  RefrigerationCondenserEvaporativeCooled condenserEvaporativeCooled = RefrigerationCondenserEvaporativeCooled(model);
+  //RefrigerationCondenserCascade condenserCascade = RefrigerationCondenserCascade(model);
+
+  EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserAirCooled));
+  EXPECT_EQ(testObject.refrigerationCondenser(), condenserAirCooled);
+  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserAirCooled.handle());
+
+  EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserEvaporativeCooled));
+  EXPECT_EQ(testObject.refrigerationCondenser(), condenserEvaporativeCooled);
+  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserEvaporativeCooled.handle());
+
+  //EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserCascade));
+  //EXPECT_EQ(testObject.refrigerationCondenser(), condenserCascade)
+  //EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserCascade.handle())
+
+  RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
+  EXPECT_FALSE(testObject.setRefrigerationCondenser(testCompressor));
 }
