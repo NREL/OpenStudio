@@ -23,6 +23,8 @@ SET( ${target_name}_SRC
   MeasuresTabController.hpp
   MeasuresView.cpp
   MeasuresView.hpp
+  MonitorUseDialog.cpp
+  MonitorUseDialog.hpp
   PatAPI.hpp
   PatApp.cpp
   PatApp.hpp
@@ -83,8 +85,6 @@ SET( ${target_name}_SRC
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
   ../shared_gui_components/MeasureManager.hpp
-  ../shared_gui_components/MonitorUseDialog.cpp
-  ../shared_gui_components/MonitorUseDialog.hpp
   ../shared_gui_components/OSCheckBox.cpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.cpp
@@ -139,6 +139,7 @@ SET( ${target_name}_moc
   MainRightColumnController.hpp
   MeasuresTabController.hpp
   MeasuresView.hpp
+  MonitorUseDialog.hpp
   PatApp.hpp
   PatMainMenu.hpp
   PatMainTabView.hpp
@@ -168,7 +169,6 @@ SET( ${target_name}_moc
   ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.hpp
-  ../shared_gui_components/MonitorUseDialog.hpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSComboBox.hpp

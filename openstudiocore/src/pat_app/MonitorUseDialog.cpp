@@ -19,6 +19,8 @@
 
 #include "MonitorUseDialog.hpp"
 
+#include "CloudMonitor.hpp"
+
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/core/Assert.hpp>
@@ -41,11 +43,13 @@
 
 namespace openstudio {
 
+namespace pat {
+
 MonitorUseDialog::MonitorUseDialog(QWidget* parent)
   : OSDialog(false, parent)
 {
   this->setWindowTitle("Monitor Use");
-  this->setSizeHint(QSize(350,300));
+  this->setFixedSize(QSize(350,300));
   this->cancelButton()->hide();
   createWidgets();
   updateData();
@@ -175,7 +179,7 @@ void MonitorUseDialog::createWidgets()
   #ifdef Q_WS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
-    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::WindowCloseButtonHint);
   #endif
 }
 
@@ -185,28 +189,40 @@ void  MonitorUseDialog::updateData()
 {
   AWSProvider awsProvider;
 
-  boost::optional<AWSSession> awsSession = awsProvider.session().optionalCast<AWSSession>();
-
-  OS_ASSERT(awsSession);
-
   QString temp;
 
   temp = temp.setNum(awsProvider.estimatedCharges(), 'f', 2);
   temp.prepend('$');
   m_billingCharge->setText(temp);
 
-  temp = temp.setNum(awsSession->totalSessionUptime());
+  m_totalNumInstances->setText(temp.setNum(awsProvider.totalInstances()));
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+  if (session) {
+    boost::optional<AWSSession> awsSession = session->optionalCast<AWSSession>();
+    if (awsSession) {
+      temp = temp.setNum(awsSession->totalSessionUptime());
+      temp += MINUTES; 
+      m_timeRunning->setText(temp);
+
+      m_numInstances->setText(temp.setNum(awsSession->totalSessionInstances()));
+
+      return;
+    }
+  }
+
+  temp = temp.setNum(0);
   temp += MINUTES; 
   m_timeRunning->setText(temp);
 
-  m_numInstances->setText(temp.setNum(awsSession->totalSessionInstances()));
-
-  m_totalNumInstances->setText(temp.setNum(awsProvider.totalInstances()));
+  m_numInstances->setText("0");
 }
 
 void  MonitorUseDialog::on_cloudStatus(bool checked)
 {
   QDesktopServices::openUrl(QUrl("http://aws.amazon.com/console"));
 }
+
+} // pat
 
 } // openstudio

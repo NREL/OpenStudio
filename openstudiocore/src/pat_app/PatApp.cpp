@@ -1145,20 +1145,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     m_cloudMonitor->reconnectCloud();
 
-    // DLM: where should this logic live?
-    // DLM: tabs 3 and 4 were not getting enabled once we did have data points, if we want to do this
-    // we need to enable those somewhere
-    //if (analysis.dataPoints().empty()){
-    //  mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
-    //  mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
-    //  mainWindow->verticalTabWidget->enableTab(false,PatApp::RUN);
-    //  mainWindow->verticalTabWidget->enableTab(false,PatApp::RESULTS);
-    //}else{
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-    //}
+    mainWindow->verticalTabWidget->enableTabs(true);
 
     // enable main menu functionality
     mainWindow->mainMenu->configure(true);
@@ -1168,10 +1155,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
   }else{
 
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::RUN);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
+    mainWindow->verticalTabWidget->enableTabs(false);
 
     // disable main menu functionality
      mainWindow->mainMenu->configure(false);
@@ -1274,16 +1258,16 @@ void PatApp::downloadUpdatedBCLMeasures()
 
 void PatApp::disableTabsDuringRun()
 {
-  bool isRunning = project()->isRunning();
+  //bool isRunning = project()->isRunning();
 
-  // user cannot navigate to tabs 1 or 2 if we are running
-  if(isRunning){
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
-  }else{
-    mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
-    mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
-  }
+  //// user cannot navigate to tabs 1 or 2 if we are running
+  //if(isRunning){
+  //  mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+  //  mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+  //}else{
+  //  mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
+  //  mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
+  //}
 }
 
 void PatApp::updateSelectedMeasureState()
@@ -1339,19 +1323,37 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
         case analysisdriver::AnalysisStatus::Error:
           break;
       }
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
       break;
     case CLOUD_RUNNING:
       switch (analysisStatus.value())
       {
         case analysisdriver::AnalysisStatus::Idle:
+          mainWindow->verticalTabWidget->enableTabs(true);
           break;
         case analysisdriver::AnalysisStatus::Starting:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
           break;
         case analysisdriver::AnalysisStatus::Running:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
           break;
         case analysisdriver::AnalysisStatus::Stopping:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
           break;
         case analysisdriver::AnalysisStatus::Error:
+          mainWindow->verticalTabWidget->enableTabs(true);
           break;
       }
       break;
@@ -1369,21 +1371,40 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
         case analysisdriver::AnalysisStatus::Error:
           break;
       }
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
       break;
     case CLOUD_STOPPED:
       switch (analysisStatus.value())
       {
         case analysisdriver::AnalysisStatus::Idle:
+          mainWindow->verticalTabWidget->enableTabs(true);
           break;
         case analysisdriver::AnalysisStatus::Starting:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
           break;
         case analysisdriver::AnalysisStatus::Running:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
           break;
         case analysisdriver::AnalysisStatus::Stopping:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
           break;
         case analysisdriver::AnalysisStatus::Error:
+          mainWindow->verticalTabWidget->enableTabs(true);
           break;
       }
+      break;
     case CLOUD_ERROR:
       switch (analysisStatus.value())
       {
@@ -1398,6 +1419,11 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
         case analysisdriver::AnalysisStatus::Error:
           break;
       }
+      mainWindow->verticalTabWidget->selectTab(PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
       break;
   }
 

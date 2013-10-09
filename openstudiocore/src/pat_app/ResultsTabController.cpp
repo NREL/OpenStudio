@@ -291,17 +291,15 @@ void ResultsTabController::enableViewFileButton()
       if (dataPointResultListItem){
         analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
 
-        // Determine if datapoint has already has detailed data
-        bool hasDetailedResults = !dataPoint.directory().empty();
-
-        if(hasDetailedResults){
+        // Determine if datapoint has detailed data
+        if(dataPoint.complete() && !dataPoint.directory().empty()){
           enabled = true;
         }
       }
     }
+
     resultsView->enableViewFileButton(enabled);
   }
-
 }
 
 void ResultsTabController::disableViewFileButton()
