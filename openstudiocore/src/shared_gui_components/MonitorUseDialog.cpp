@@ -191,9 +191,9 @@ void  MonitorUseDialog::updateData()
 
   QString temp;
 
-  temp = temp.setNum(awsProvider.estimatedCharges());
+  temp = temp.setNum(awsProvider.estimatedCharges(), 'f', 2);
   temp.prepend('$');
-  m_billingCharge->setText(temp.setNum(awsProvider.estimatedCharges()));
+  m_billingCharge->setText(temp);
 
   temp = temp.setNum(awsSession->totalSessionUptime());
   temp += MINUTES; 

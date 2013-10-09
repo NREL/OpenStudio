@@ -335,6 +335,13 @@
     <file alias="shared_gui_components/images/arrow_up_over.png">../shared_gui_components/images/arrow_up_over.png</file>
     <file alias="shared_gui_components/images/arrow_up_press.png">../shared_gui_components/images/arrow_up_press.png</file>
     <file alias="shared_gui_components/images/clear_cloud_session.png">../shared_gui_components/images/clear_cloud_session.png</file>
+    <file alias="shared_gui_components/images/cloud_arrow.png">../shared_gui_components/images/cloud_arrow.png</file>
+    <file alias="shared_gui_components/images/cloud_arrow_magenta.png">../shared_gui_components/images/cloud_arrow_magenta.png</file>
+    <file alias="shared_gui_components/images/cloud_lost_connection.png">../shared_gui_components/images/cloud_lost_connection.png</file>
+    <file alias="shared_gui_components/images/cloud_off.png">../shared_gui_components/images/cloud_off.png</file>
+    <file alias="shared_gui_components/images/cloud_on.png">../shared_gui_components/images/cloud_on.png</file>
+    <file alias="shared_gui_components/images/cloud_starting.png">../shared_gui_components/images/cloud_starting.png</file>
+    <file alias="shared_gui_components/images/cloud_stopping.png">../shared_gui_components/images/cloud_stopping.png</file>
     <file alias="shared_gui_components/images/delete_softer.png">../shared_gui_components/images/delete_softer.png</file>
     <file alias="shared_gui_components/images/delete_softer_over.png">../shared_gui_components/images/delete_softer_over.png</file>
     <file alias="shared_gui_components/images/delete_softer_press.png">../shared_gui_components/images/delete_softer_press.png</file>

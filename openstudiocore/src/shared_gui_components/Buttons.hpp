@@ -22,6 +22,14 @@
 
 #include <QPushButton>
 
+#include <boost/smart_ptr.hpp>
+
+class QPaintEvent;
+
+class QPixmap;
+
+class QTimer;
+
 namespace openstudio {
 
 class GrayButton : public QPushButton
@@ -163,6 +171,93 @@ class PlayButton : public QPushButton
 
   PlayButton(QWidget * parent = 0);
   virtual ~PlayButton() {}
+};
+
+class CloudLostConnectionButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudLostConnectionButton(QWidget * parent = 0);
+  virtual ~CloudLostConnectionButton() {}
+};
+
+class CloudOffButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudOffButton(QWidget * parent = 0);
+  virtual ~CloudOffButton() {}
+};
+
+class CloudOnButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudOnButton(QWidget * parent = 0);
+  virtual ~CloudOnButton() {}
+};
+
+class CloudStartingButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudStartingButton(QWidget * parent = 0);
+  virtual ~CloudStartingButton() {}
+
+  public slots:
+
+  void rotate();
+
+  protected:
+
+  void paintEvent ( QPaintEvent * event );
+
+  private:
+
+  QPixmap * m_background;
+
+  QPixmap * m_arrow;
+
+  float m_rotation;
+
+  QTimer * m_timer;
+};
+
+class CloudStoppingButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudStoppingButton(QWidget * parent = 0);
+  virtual ~CloudStoppingButton() {}
+
+  public slots:
+
+  void rotate();
+
+  protected:
+
+  void paintEvent ( QPaintEvent * event );
+
+  private:
+
+  QPixmap * m_background;
+
+  QPixmap * m_arrow;
+
+  float m_rotation;
+
+  QTimer * m_timer;
+
 };
 
 

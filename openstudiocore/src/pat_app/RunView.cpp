@@ -93,9 +93,10 @@ RunView::RunView()
 }
 
 RunStatusView::RunStatusView()
-  : QWidget()
+  : QWidget(),
+    m_status(CLOUD_STOPPED)
 {
-  setFixedHeight(90);
+  setFixedHeight(96);
   setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
 
@@ -128,7 +129,7 @@ RunStatusView::RunStatusView()
 
   // Progress bar area
   m_progressBar = new PatProgressBar();
-  m_progressBar->setFixedWidth(600);
+  m_progressBar->setFixedWidth(516);
   m_progressBar->setTextVisible(false);
  
   mainHLayout->addWidget(m_progressBar);
@@ -149,9 +150,29 @@ RunStatusView::RunStatusView()
   mainHLayout->addStretch();
 
   // Start Cloud
+  
+  cloudOnButton = new CloudOnButton();
+  mainHLayout->addWidget(cloudOnButton);
+  
+  cloudStartingButton = new CloudStartingButton();
+  mainHLayout->addWidget(cloudStartingButton);
+  cloudStartingButton->setEnabled(false);
+  cloudStartingButton->hide();
 
-  toggleCloudButton = new ToggleCloudButton();
-  mainHLayout->addWidget(toggleCloudButton);
+  cloudOffButton = new CloudOffButton();
+  mainHLayout->addWidget(cloudOffButton);
+  cloudOffButton->hide();
+
+  cloudStoppingButton = new CloudStoppingButton();
+  mainHLayout->addWidget(cloudStoppingButton);
+  cloudStoppingButton->setEnabled(false);
+  cloudStoppingButton->hide();
+
+  cloudLostConnectionButton = new CloudLostConnectionButton();
+  mainHLayout->addWidget(cloudLostConnectionButton);
+  cloudLostConnectionButton->setEnabled(false);
+  cloudLostConnectionButton->hide();
+
 
   // Cloud Status
   m_cloudTime = new QLabel(this);
@@ -166,6 +187,7 @@ RunStatusView::RunStatusView()
   isConnected = connect(timer, SIGNAL(timeout()),
                         this, SLOT(updateCloudData()));
   OS_ASSERT(isConnected);
+  updateCloudData();
 
   mainHLayout->addStretch();
 
@@ -194,9 +216,9 @@ RunStatusView::RunStatusView()
   m_selectAllDownloads->setFixedSize(QSize(18,18));
   QString style;
   style.append("QPushButton {"
-                              "background-image:url(':/images/results_yes_download.png');"
-                              "  border:none;"
-                              "}"); 
+               "  background-image:url(':/images/results_yes_download.png');"
+               "  border:none;"
+               "}");
   m_selectAllDownloads->setStyleSheet(style);
   isConnected = connect(m_selectAllDownloads, SIGNAL(clicked(bool)),
                         this, SLOT(on_selectAllDownloads(bool)));
@@ -368,122 +390,37 @@ void RunStatusView::updateCloudData()
   m_cloudInstances->setText(temp);
 }
 
-ToggleCloudButton::ToggleCloudButton()
-  : GrayButton(),
-    m_status(CLOUD_STOPPED)
-{
-  m_turnOnText  = "Turn On Cloud";
-  m_turnOffText = "Turn Off Cloud";
-
-  QFontMetrics fm(font());
-  int onWidth = fm.width(m_turnOnText);
-  int offWidth = fm.width(m_turnOffText);
-
-  if( onWidth > offWidth )
-  {
-    setFixedWidth(onWidth + 20);
-  }
-  else
-  {
-    setFixedWidth(offWidth + 20);
-  }
-
-  updateText();
-}
-
-void ToggleCloudButton::updateText()
-{
-  if( m_status == CLOUD_STOPPED )
-  {
-    setText(m_turnOnText);
-
-    setEnabled(true);
-  }
-  else if( m_status == CLOUD_STARTING )
-  {
-    setText("Starting");
-
-    setEnabled(false);
-  }
-  else if( m_status == CLOUD_RUNNING )
-  {
-    setText(m_turnOffText);
-
-    setEnabled(true);
-  }
-  else if( m_status == CLOUD_STOPPING )
-  {
-    setText("Stopping");
-
-    setEnabled(false);
-  }
-  else if( m_status == CLOUD_ERROR )
-  {
-    setText("Error");
-
-    setEnabled(false);
-  }
-}
-
-void ToggleCloudButton::setStatus(CloudStatus status)
+void RunStatusView::setCloudStatus(CloudStatus status)
 {
   m_status = status;
 
-  updateText();
-}
+  cloudOnButton->hide();
+  cloudStartingButton->hide();
+  cloudOffButton->hide();
+  cloudStoppingButton->hide();
+  cloudLostConnectionButton->hide();
 
-//bool ToggleCloudButton::isStarting() const
-//{
-//  return m_starting;
-//}
-//
-//void ToggleCloudButton::setStarting(bool isStarting)
-//{
-//  m_starting = isStarting;
-//
-//  updateText();
-//}
-//
-//bool ToggleCloudButton::isStopping() const
-//{
-//  return m_stopping;
-//}
-//
-//void ToggleCloudButton::setStopping(bool isStopping)
-//{
-//  m_stopping = isStopping;
-//
-//  updateText();
-//}
-//
-//void ToggleCloudButton::nextCheckState()
-//{
-//  //if( ! isChecked() && ! m_starting && ! m_stopping ) // Not Running
-//  //{
-//  //  m_starting = true; 
-//  //  setChecked(true);
-//  //}
-//  //else if( m_starting )
-//  //{
-//  //  m_starting = false;
-//  //  m_stopping = false;
-//  //  setChecked(true); 
-//  //}
-//  //else if( isChecked() ) // Running
-//  //{
-//  //  m_starting = false;
-//  //  m_stopping = true;
-//  //  setChecked(false);  
-//  //}
-//  //else if( m_stopping )
-//  //{
-//  //  m_stopping = false;
-//  //  m_starting = false;
-//  //  setChecked(false);
-//  //}
-//
-//  updateText();
-//}
+  if( m_status == CLOUD_STOPPED )
+  {
+    cloudOnButton->show();
+  }
+  else if( m_status == CLOUD_STARTING )
+  {
+    cloudStartingButton->show();
+  }
+  else if( m_status == CLOUD_RUNNING )
+  {
+    cloudOffButton->show();
+  }
+  else if( m_status == CLOUD_STOPPING )
+  {
+    cloudStoppingButton->show();
+  }
+  else if( m_status == CLOUD_ERROR )
+  {
+    cloudLostConnectionButton->show();
+  }
+}
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
   : OSHeader(new HeaderToggleButton()),

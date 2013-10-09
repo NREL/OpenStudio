@@ -73,28 +73,6 @@ class RunView : public PatMainTabView
     OSListView * dataPointRunListView;
 };
 
-class ToggleCloudButton : public GrayButton
-{
-  Q_OBJECT
-
- public:
-
-  ToggleCloudButton();
-
-  void setStatus(CloudStatus status);
-
- protected:
-
-  void updateText();
-
- private:
-
-  CloudStatus m_status;
-
-  QString m_turnOnText;
-
-  QString m_turnOffText;
-};
 
 class RunStatusView : public QWidget
 {
@@ -110,7 +88,17 @@ class RunStatusView : public QWidget
 
    void setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration, bool isRunning);
 
-   ToggleCloudButton * toggleCloudButton;
+   void setCloudStatus(CloudStatus status);
+
+   CloudOnButton * cloudOnButton;
+
+   CloudStartingButton * cloudStartingButton;
+
+   CloudOffButton * cloudOffButton;
+
+   CloudStoppingButton * cloudStoppingButton;
+
+   CloudLostConnectionButton * cloudLostConnectionButton;
 
    void paintEvent(QPaintEvent * e);
 
@@ -136,6 +124,7 @@ class RunStatusView : public QWidget
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
+  CloudStatus m_status;
   QPushButton * m_selectAllClears;
   QPushButton * m_selectAllDownloads;
   QPushButton * m_selectAllDataPoints;

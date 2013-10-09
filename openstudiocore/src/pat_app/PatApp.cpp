@@ -1407,7 +1407,7 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
   
     OS_ASSERT(runView);
     
-    runView->runStatusView->toggleCloudButton->setStatus(cloudStatus);
+    runView->runStatusView->setCloudStatus(cloudStatus);
   }
 }
 

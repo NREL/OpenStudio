@@ -59,7 +59,11 @@ RunTabController::RunTabController()
   bingo = connect(runView->runStatusView, SIGNAL(playButtonClicked(bool)), this, SLOT(onPlayButtonClicked(bool)));
   OS_ASSERT(bingo);
 
-  bingo = connect(runView->runStatusView->toggleCloudButton,SIGNAL(clicked()),
+  bingo = connect(runView->runStatusView->cloudOnButton,SIGNAL(clicked()),
+                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
+  OS_ASSERT(bingo);
+
+  bingo = connect(runView->runStatusView->cloudOffButton,SIGNAL(clicked()),
                   PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
   OS_ASSERT(bingo);
 
@@ -395,7 +399,7 @@ void RunTabController::reqestRefresh()
 void RunTabController::refresh()
 {
   m_refreshScheduled = false;
-  runView->runStatusView->toggleCloudButton->setStatus(PatApp::instance()->cloudMonitor()->status());
+  runView->runStatusView->setCloudStatus(PatApp::instance()->cloudMonitor()->status());
   QTimer::singleShot(0, runView->dataPointRunListView, SLOT(refreshAllViews()));
 }
 

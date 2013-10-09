@@ -19,6 +19,10 @@
 
 #include "Buttons.hpp"
 #include <QString>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QPixmap>
+#include <QTimer>
 
 namespace openstudio {
 
@@ -319,6 +323,163 @@ PlayButton::PlayButton(QWidget * parent)
                "}");
 
   setStyleSheet(style);
+}
+
+CloudLostConnectionButton::CloudLostConnectionButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/cloud_lost_connection.png');"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+
+}
+CloudOffButton::CloudOffButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/cloud_off.png');"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+}
+
+CloudOnButton::CloudOnButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/cloud_on.png');"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+}
+
+CloudStartingButton::CloudStartingButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+
+  m_background = new QPixmap(":/shared_gui_components/images/cloud_starting.png");
+  m_arrow = new QPixmap(":/shared_gui_components/images/cloud_arrow.png");
+
+  m_rotation = 0.0;
+
+  m_timer = new QTimer(this);
+  connect(m_timer,SIGNAL(timeout()),this,SLOT(rotate()));
+  m_timer->start(50);
+}
+
+void CloudStartingButton::rotate()
+{
+  m_rotation += 10.0;
+
+  update();
+}
+
+void CloudStartingButton::paintEvent ( QPaintEvent * event )
+{
+  QPainter painter(this);
+
+  double transX = m_arrow->width()/2.0;
+  double transY = m_arrow->height()/2.0;
+
+  QTransform t;
+  t.translate(transX, transY);
+  t.rotate(m_rotation);
+  t.translate(-transX, -transY);
+
+  QPixmap rotatedArrow = QPixmap(m_arrow->transformed(t, Qt::SmoothTransformation));
+
+  double transX2 = rotatedArrow.width()/2.0;
+  double transY2 = rotatedArrow.height()/2.0;
+
+  painter.drawPixmap(0, 0, *m_background);
+  painter.drawPixmap(12+transX-transX2, 5+transY-transY2, rotatedArrow);
+}
+
+CloudStoppingButton::CloudStoppingButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+
+  m_background = new QPixmap(":/shared_gui_components/images/cloud_stopping.png");
+  m_arrow = new QPixmap(":/shared_gui_components/images/cloud_arrow_magenta.png");
+
+  m_rotation = 0.0;
+
+  m_timer = new QTimer(this);
+  connect(m_timer,SIGNAL(timeout()),this,SLOT(rotate()));
+  m_timer->start(50);
+}
+
+void CloudStoppingButton::rotate()
+{
+  m_rotation += 10.0;
+
+  update();
+}
+
+void CloudStoppingButton::paintEvent ( QPaintEvent * event )
+{
+  QPainter painter(this);
+
+  double transX = m_arrow->width()/2.0;
+  double transY = m_arrow->height()/2.0;
+
+  QTransform t;
+  t.translate(transX, transY);
+  t.rotate(m_rotation);
+  t.translate(-transX, -transY);
+
+  QPixmap rotatedArrow = QPixmap(m_arrow->transformed(t, Qt::SmoothTransformation));
+
+  double transX2 = rotatedArrow.width()/2.0;
+  double transY2 = rotatedArrow.height()/2.0;
+
+  painter.drawPixmap(0, 0, *m_background);
+  painter.drawPixmap(12+transX-transX2, 5+transY-transY2, rotatedArrow);
 }
 
 
