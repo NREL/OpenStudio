@@ -120,6 +120,8 @@ class RunStatusView : public QWidget
 
   void updateCloudData();
 
+  void onCloudUpdate(const CloudStatus & newStatus);
+
  private:
 
   PatProgressBar* m_progressBar;
@@ -132,6 +134,7 @@ class RunStatusView : public QWidget
   QPushButton * m_clearSelectionDataPoints;
   QLabel * m_cloudTime;
   QLabel * m_cloudInstances;
+  QTimer * m_timer;
 };
 
 class DataPointRunHeaderView : public OSHeader

@@ -301,6 +301,20 @@ void CloudDialog::on_cancelButton(bool checked)
 
 void CloudDialog::on_okButton(bool checked)
 {
+  AWSSettings awsSettings;
+  bool validAccessKey = awsSettings.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
+  if(!validAccessKey){
+    QString error("You have entered an invalid Access Key");
+    QMessageBox::critical(this, "Login Failed", error);
+    return;
+  }
+  bool validSecretKey = awsSettings.setSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
+  if(!validSecretKey){
+    QString error("You have entered an invalid Secret Key");
+    QMessageBox::critical(this, "Login Failed", error);
+    return;
+  }
+
   // Save data
   boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
   if(cloudProviderWidget.is_initialized()){
