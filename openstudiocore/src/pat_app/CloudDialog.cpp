@@ -111,7 +111,7 @@ void CloudDialog::createWidgets()
   m_cloudResourceComboBox = new QComboBox();
   m_leftLoginLayout->addWidget(m_cloudResourceComboBox,0,Qt::AlignTop | Qt::AlignLeft);
  
-  m_cloudResourceComboBox->addItem(NO_PROVIDER);
+  //m_cloudResourceComboBox->addItem(NO_PROVIDER);
   if(showVagrant()) m_cloudResourceComboBox->addItem(VAGRANT_PROVIDER);
   m_cloudResourceComboBox->addItem(AMAZON_PROVIDER);
 
