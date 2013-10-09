@@ -256,20 +256,12 @@ boost::optional<CloudProviderWidget *> CloudDialog::getCurrentCloudProviderWidge
 
 void  CloudDialog::loadData()
 {
-  bool checked = false;
-  
-  m_iAcceptCheckBox->setChecked(checked);
-
   CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
   cloudProviderWidget->loadData();
 }
 
 void  CloudDialog::saveData()
 {
-  bool checked = false;
-  
-  checked = m_iAcceptCheckBox->isChecked();
-
   CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
   cloudProviderWidget->saveData();
 }
@@ -655,6 +647,8 @@ void  VagrantProviderWidget::loadData()
   QUrl url;
   QString temp;  
 
+  m_cloudDialog->m_iAcceptCheckBox->setChecked(vagrantSettings.userAgreementSigned()); 
+
   bool isChecked = true;
   m_runOnStartUpCheckBox->setChecked(isChecked);
 
@@ -679,6 +673,8 @@ void  VagrantProviderWidget::loadData()
 void  VagrantProviderWidget::saveData()
 {
   VagrantSettings vagrantSettings;
+
+  vagrantSettings.signUserAgreement(m_cloudDialog->m_iAcceptCheckBox->isChecked()); 
 
   bool isChecked = true;
   isChecked = m_runOnStartUpCheckBox->isChecked();
@@ -862,7 +858,7 @@ void  AmazonProviderWidget::loadData()
 
   m_secretKeyLineEdit->setText(awsSettings.secretKey().c_str());
 
-  m_cloudDialog->m_iAcceptCheckBox->setChecked(awsSettings.userAgreementSigned());
+  m_cloudDialog->m_iAcceptCheckBox->setChecked(awsSettings.userAgreementSigned()); 
 
   int index = -1;
 
@@ -928,7 +924,7 @@ void  AmazonProviderWidget::saveData()
   bool validSecretKey = awsSettings.setSecretKey(m_secretKeyLineEdit->text().toStdString());
   OS_ASSERT(validSecretKey);
 
-  awsSettings.signUserAgreement(m_cloudDialog->m_iAcceptCheckBox->isChecked());
+  awsSettings.signUserAgreement(m_cloudDialog->m_iAcceptCheckBox->isChecked()); 
 
   awsSettings.setRegion(m_regionComboBox->currentText().toStdString());
 
