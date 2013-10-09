@@ -221,9 +221,10 @@ void CloudDialog::createWidgets()
   m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
 
   // BUTTONS
-
-  this->okButton()->setText("Continue");
-  this->okButton()->setEnabled(false);
+  this->okButton()->setText("Save");
+  this->backButton()->setText("Continue");
+  this->backButton()->setEnabled(false);
+  this->backButton()->show();
 
   // OS SETTINGS
 
@@ -279,24 +280,10 @@ void CloudDialog::on_backButton(bool checked)
 {
   if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
     m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
-    this->backButton()->hide();
-    this->okButton()->setText("Continue");
-  }
-}
-
-void CloudDialog::on_cancelButton(bool checked)
-{
-  OSDialog::on_cancelButton(checked);
-}
-
-void CloudDialog::on_okButton(bool checked)
-{
-  if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
-    if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
+    this->backButton()->setText("Continue");
+  } else if(m_pageStackedWidget->currentIndex() == m_loginPageIdx) {
+      if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
       AWSSettings awsSettings;
-      // Note: these can be used in realtime (i.e. per keystroke)
-      //bool validAccessKey = awsSettings.validAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
-      //bool validSecretKey = awsSettings.validSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
       bool validAccessKey = awsSettings.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
       if(!validAccessKey){
         QString error("You have entered an invalid Access Key");
@@ -309,43 +296,50 @@ void CloudDialog::on_okButton(bool checked)
         QMessageBox::critical(this, "Login Failed", error);
         return;
       }
+      m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
+      this->backButton()->setText("Back");
     }
-    m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
-    this->backButton()->show();
-    this->okButton()->setText("Save");
-  } else if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
-    // Save data
-    boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
-    if(cloudProviderWidget.is_initialized()){
-      cloudProviderWidget.get()->saveData();
-    }
-    done(QDialog::Accepted);
   }
+}
+
+void CloudDialog::on_cancelButton(bool checked)
+{
+  OSDialog::on_cancelButton(checked);
+}
+
+void CloudDialog::on_okButton(bool checked)
+{
+  // Save data
+  boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
+  if(cloudProviderWidget.is_initialized()){
+    cloudProviderWidget.get()->saveData();
+  }
+  done(QDialog::Accepted);
 }
 
 void CloudDialog::iAcceptClicked(bool checked)
 {
-  this->okButton()->setEnabled(checked);
+  this->backButton()->setEnabled(checked);
 }
 
 void CloudDialog::cloudResourceChanged(const QString & text)
 {
   if(text == NO_PROVIDER){
-    this->okButton()->setEnabled(false);
+    this->backButton()->setEnabled(false);
     m_legalAgreement->hide();
     m_iAcceptCheckBox->hide();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_blankProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
   } else if(text == VAGRANT_PROVIDER) {
-    this->okButton()->setEnabled(m_iAcceptCheckBox->isChecked());
+    this->backButton()->setEnabled(m_iAcceptCheckBox->isChecked());
     m_legalAgreement->show();
     m_iAcceptCheckBox->show();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
   } else if(text == AMAZON_PROVIDER) {
-    this->okButton()->setEnabled(m_iAcceptCheckBox->isChecked());
+    this->backButton()->setEnabled(m_iAcceptCheckBox->isChecked());
     m_legalAgreement->show();
     m_iAcceptCheckBox->show();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
