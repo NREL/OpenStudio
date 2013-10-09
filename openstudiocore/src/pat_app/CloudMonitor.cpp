@@ -287,9 +287,17 @@ void CloudMonitor::onCloudConnectionError()
 {
   setStatus(CLOUD_ERROR);
 
-  openLostCloudConnectionDlg(m_worker.data()->internetAvailable(),m_worker.data()->authenticated(),m_worker.data()->cloudRunning());
+  //openLostCloudConnectionDlg(m_worker->internetAvailable(),
+  //                           m_worker->authenticated(),
+  //                           m_worker->cloudRunning());
 
-  bool clearSession = lostCloudConnectionDlgClearSession();
+  LostCloudConnectionDialog dialog(m_worker->internetAvailable(),
+                                   m_worker->authenticated(),
+                                   m_worker->cloudRunning());
+
+  dialog.exec();
+
+  // lostCloudConnectionDlgClearSession();
 
   recoverCloud();
 }
@@ -719,25 +727,9 @@ void CloudMonitorWorker::monitorCloudRunning()
 
 bool CloudMonitorWorker::checkInternetAvailable() const
 {
-  bool result = true;
-
-  static bool internetAvailableCurrently = false;
-  static bool internetAvailableLastTime = false;
-  static bool internetAvailableTimeBeforeLast = false;
-
-  internetAvailableTimeBeforeLast = internetAvailableLastTime;
-  internetAvailableLastTime = internetAvailableCurrently;
-
   VagrantProvider cloudProvider;
-  internetAvailableCurrently = cloudProvider.internetAvailable();
 
-  if(internetAvailableCurrently && internetAvailableLastTime && internetAvailableTimeBeforeLast){
-    result = true;
-  } else if(!internetAvailableCurrently && !internetAvailableLastTime && !internetAvailableTimeBeforeLast){
-    result = false;
-  }
-
-  return result;
+  return cloudProvider.internetAvailable();
 }
 
 bool CloudMonitorWorker::checkCloudRunning() const
