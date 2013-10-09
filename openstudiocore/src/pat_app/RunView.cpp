@@ -121,11 +121,7 @@ RunStatusView::RunStatusView()
   playButton = new PlayButton(this);
   playButton->setFixedWidth(120);
   playButton->setText("Run");
-  playButton->setCheckable(true);
-  playButton->setChecked(false);
   mainHLayout->addWidget(playButton);
-  bool isConnected = connect(playButton, SIGNAL(clicked(bool)), this, SIGNAL(playButtonClicked(bool)));
-  OS_ASSERT(isConnected);
 
   // Progress bar area
   m_progressBar = new PatProgressBar();
@@ -183,7 +179,7 @@ RunStatusView::RunStatusView()
   vLayout->addWidget(m_cloudInstances);
   mainHLayout->addLayout(vLayout);
   m_timer = new QTimer(this);
-  isConnected = connect(m_timer, SIGNAL(timeout()),
+  bool isConnected = connect(m_timer, SIGNAL(timeout()),
                         this, SLOT(updateCloudData()));
   OS_ASSERT(isConnected);
 

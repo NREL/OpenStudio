@@ -33,6 +33,8 @@
 #include <analysisdriver/AnalysisRunOptions.hpp>
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/CloudAnalysisDriver.hpp>
+#include <analysisdriver/SimpleProject_Impl.hpp>
+#include <analysisdriver/SimpleProject.hpp>
 
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Job.hpp>
@@ -40,6 +42,8 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Path.hpp>
+
+#include "../shared_gui_components/Buttons.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -56,7 +60,7 @@ RunTabController::RunTabController()
   runView = new RunView();
 
   bool bingo;
-  bingo = connect(runView->runStatusView, SIGNAL(playButtonClicked(bool)), this, SLOT(onPlayButtonClicked(bool)));
+  bingo = connect(runView->runStatusView->playButton, SIGNAL(clicked()), this, SLOT(onPlayButtonClicked()));
   OS_ASSERT(bingo);
 
   bingo = connect(runView->runStatusView->cloudOnButton,SIGNAL(clicked()),
@@ -69,6 +73,10 @@ RunTabController::RunTabController()
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
+    bool bingo = connect(project->getImpl().get(),SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)),
+                          this,SLOT(onAnalysisStatusChanged(analysisdriver::AnalysisStatus)));
+    OS_ASSERT(bingo);
+
     // ensure that baseline exists
     analysis::DataPoint baselineDataPoint = project->baselineDataPoint();
 
@@ -117,7 +125,7 @@ RunTabController::~RunTabController()
   if( runView ) { delete runView; }
 }
 
-void RunTabController::onPlayButtonClicked(bool clicked)
+void RunTabController::onPlayButtonClicked()
 {
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   OS_ASSERT(project);
@@ -128,7 +136,9 @@ void RunTabController::onPlayButtonClicked(bool clicked)
   boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
   analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
 
-  if (clicked){
+  analysisdriver::AnalysisStatus analysisStatus = project->status();
+
+  if (analysisStatus == analysisdriver::AnalysisStatus::Idle){
 
     // Make sure everything is in a kosher state for starting the simulation
 
@@ -209,12 +219,6 @@ void RunTabController::onPlayButtonClicked(bool clicked)
     }
 
     if (currentAnalyses.empty()){
-
-      // disable the app until we have started the first batch of jobs
-      // make sure every path out of this function re-enables the app
-      PatApp::instance()->mainWindow->setEnabled(false);
-      PatApp::instance()->processEvents();
-
       // check if we are already done
       int numCompletedJobs = (int)analysis.completeDataPoints().size();
       int totalNumJobs = (int)analysis.completeDataPoints().size() + (int)analysis.dataPointsToQueue().size();
@@ -238,9 +242,6 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         reqestRefresh();
         PatApp::instance()->processEvents();
       }
-
-      // DLM: todo add a progress bar here as queueing all the points can take a while
-
       if (cloudAnalysisDriver){
 
         // refresh this tab when data points are queued
@@ -250,38 +251,6 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         // connect currentAnalysis to update progress on this
         bool isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
-
-
-        //DLM: brainstorming signals:
-
-        // tell cloudMonitor that we are starting to run a new analysis, resets counters etc
-        // cloudMonitor.newRunStarting();
-
-        // cloud monitor may attempt to rerun if we fail to start
-        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(runRequestComplete(bool)), cloudMonitor, SLOT(onRunRequestComplete()));
-        //OS_ASSERT(isConnected);
-
-        // cloud monitor will prompt us to shut down the cloud if we request that it stop
-        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(stopRequestComplete(bool)), cloudMonitor, SLOT(onStopRequestComplete()));
-        //OS_ASSERT(isConnected);
-        
-        // cloud monitor will attempt to download again or cancel download, can call redownload or removedownload
-        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(jsonDownloadRequestComplete(bool, uuid)), cloudMonitor, SLOT(onJSONDownloadRequestComplete(bool, uuid)));
-        //OS_ASSERT(isConnected);
-
-        // cloud monitor will attempt to download again or cancel download, can call redownload or removedownload
-        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(detailedDownloadRequestComplete(bool, uuid)), cloudMonitor, SLOT(onDetailedDownloadRequestComplete(bool, uuid)));
-        //OS_ASSERT(isConnected);
-
-        // tell cloud monitor when we are done
-        //bool isConnected = this->connect(SIGNAL(runComplete()), cloudMonitor, SLOT(onRunComplete()));
-        //OS_ASSERT(isConnected);
-
-
-        // connect currentAnalysis to update progress in PatApp
-        // DLM: this re-enables tabs if analysis completes when we are not on this tab
-        //isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-        //OS_ASSERT(isConnected);
 
         // start the run
         cloudAnalysisDriver->requestRun();
@@ -297,29 +266,13 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         // connect currentAnalysis to update progress on this
         bool isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
-
-        // connect currentAnalysis to update progress in PatApp
-        // DLM: this re-enables tabs if analysis completes when we are not on this tab
-        //isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-        //OS_ASSERT(isConnected);
       }
-
-      // enable the app
-      PatApp::instance()->mainWindow->setEnabled(true);
-      PatApp::instance()->mainWindow->setFocus();
-
     }else{
 
       // just unpause the queue
       analysisDriver.unpauseQueue();
     }
-
-  }else{
-
-    // disable the app
-    PatApp::instance()->mainWindow->setEnabled(false);
-    PatApp::instance()->processEvents();
-
+  }else if(analysisStatus == analysisdriver::AnalysisStatus::Running){
     if (cloudAnalysisDriver){
 
       // DLM: it is a big deal to quit the cloud, should we prompt the user?
@@ -327,10 +280,6 @@ void RunTabController::onPlayButtonClicked(bool clicked)
       if (test == QMessageBox::Yes) {
         // request stop
         cloudAnalysisDriver->requestStop(false);
-
-        /// DLM: shut down cloud now?
-        //  DLM: no, cloud monitor will shut down cloud if needed in response to stopRequestComplete
-        //QTimer::singleShot(0, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
       }
 
     }else{
@@ -338,12 +287,6 @@ void RunTabController::onPlayButtonClicked(bool clicked)
       project->runManager().setPaused(true);
       project->stop();
     }
-
-    // DLM: disconnect currentAnalysis from this or will currentAnalysis be destroyed?
-
-    // enable the app
-    PatApp::instance()->mainWindow->setEnabled(true);
-    PatApp::instance()->mainWindow->setFocus();
   }
 
   // important to call, this controls tab 1 and 2 access
@@ -401,6 +344,30 @@ void RunTabController::refresh()
   m_refreshScheduled = false;
   runView->runStatusView->setCloudStatus(PatApp::instance()->cloudMonitor()->status());
   QTimer::singleShot(0, runView->dataPointRunListView, SLOT(refreshAllViews()));
+}
+
+void RunTabController::onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus)
+{
+  PlayButton * playButton = runView->runStatusView->playButton;
+
+  switch (newAnalysisStatus.value())
+  {
+    case analysisdriver::AnalysisStatus::Idle:
+      playButton->setStatus(PlayButton::IDLE);
+      break;
+    case analysisdriver::AnalysisStatus::Starting:
+      playButton->setStatus(PlayButton::STARTING);
+      break;
+    case analysisdriver::AnalysisStatus::Running:
+      playButton->setStatus(PlayButton::RUNNING);
+      break;
+    case analysisdriver::AnalysisStatus::Stopping:
+      playButton->setStatus(PlayButton::STOPPING);
+      break;
+    case analysisdriver::AnalysisStatus::Error:
+      playButton->setStatus(PlayButton::ERROR);
+      break;
+  }
 }
 
 DataPointRunListController::DataPointRunListController(const openstudio::analysis::Analysis& analysis)

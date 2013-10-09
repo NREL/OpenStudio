@@ -274,57 +274,6 @@ CreateFromFileButton::CreateFromFileButton()
   setText("Create From External File");
 }
 
-PlayButton::PlayButton(QWidget * parent)
-  : QPushButton(parent)
-{
-  setFlat(true);
-
-  QString style;
-
-  style.append("QPushButton {"
-               "  background-color:transparent;"
-               "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
-               "  background-position:right;"
-               "  background-repeat:none;"
-               "  border:none;"
-               "  font:bold 13px;"
-               "  height:35px;"
-               "  text-align:left;"
-               "}");
-  style.append("QPushButton:hover {"
-               "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
-               "}");
-  style.append("QPushButton:pressed {"
-               "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
-               "}");
-
-  // pause button
-  /*
-  style.append("QPushButton:checked {"
-               "  background-image:url(':/shared_gui_components/images/pause_regular.png');"
-               "}");
-  style.append("QPushButton:checked:hover {"
-               "  background-image:url(':/shared_gui_components/images/pause_over.png');"
-               "}");
-  style.append("QPushButton:checked:pressed {"
-               "  background-image:url(':/shared_gui_components/images/pause_press.png');"
-               "}");
-  */
-
-  // stop button
-  style.append("QPushButton:checked {"
-               "  background-image:url(':/shared_gui_components/images/run_cancel.png');"
-               "}");
-  style.append("QPushButton:checked:hover {"
-               "  background-image:url(':/shared_gui_components/images/run_cancel_over.png');"
-               "}");
-  style.append("QPushButton:checked:pressed {"
-               "  background-image:url(':/shared_gui_components/images/run_cancel_press.png');"
-               "}");
-
-  setStyleSheet(style);
-}
-
 CloudLostConnectionButton::CloudLostConnectionButton(QWidget * parent)
   : QPushButton(parent)
 {
@@ -480,6 +429,135 @@ void CloudStoppingButton::paintEvent ( QPaintEvent * event )
 
   painter.drawPixmap(0, 0, *m_background);
   painter.drawPixmap(12+transX-transX2, 5+transY-transY2, rotatedArrow);
+}
+
+PlayButton::PlayButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setStatus(IDLE);
+}
+
+PlayButton::Status PlayButton::status() const
+{
+  return m_status;
+}
+
+void PlayButton::setStatus(const Status & status)
+{
+  QString style;
+
+  switch (status)
+  {
+    case IDLE:
+
+      style.append("QPushButton {"
+                   "  background-color:transparent;"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
+                   "  background-position:right;"
+                   "  background-repeat:none;"
+                   "  border:none;"
+                   "  font:bold 13px;"
+                   "  height:35px;"
+                   "  text-align:left;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
+                   "}");
+      setStyleSheet(style);
+      setEnabled(true);
+      break;
+    case STARTING:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel.png');"
+                   "  background-position:right;"
+                   "  background-repeat:none;"
+                   "  border:none;"
+                   "  font:bold 13px;"
+                   "  height:35px;"
+                   "  text-align:left;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel_press.png');"
+                   "}");
+
+      setStyleSheet(style);
+      setEnabled(false);
+      break;
+    case RUNNING:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel.png');"
+                   "  background-position:right;"
+                   "  background-repeat:none;"
+                   "  border:none;"
+                   "  font:bold 13px;"
+                   "  height:35px;"
+                   "  text-align:left;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel_press.png');"
+                   "}");
+
+      setStyleSheet(style);
+      setEnabled(true);
+      break;
+    case STOPPING:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-color:transparent;"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
+                   "  background-position:right;"
+                   "  background-repeat:none;"
+                   "  border:none;"
+                   "  font:bold 13px;"
+                   "  height:35px;"
+                   "  text-align:left;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
+                   "}");
+      setStyleSheet(style);
+      setEnabled(false);
+      break;
+    case ERROR:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-color:transparent;"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
+                   "  background-position:right;"
+                   "  background-repeat:none;"
+                   "  border:none;"
+                   "  font:bold 13px;"
+                   "  height:35px;"
+                   "  text-align:left;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
+                   "}");
+      setStyleSheet(style);
+      setEnabled(false);
+      break;
+  }
+
+  m_status = status;
 }
 
 

@@ -1353,39 +1353,33 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
       mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
       mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
       mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
-      setPlayButtonEnabled(false);
       break;
     case CLOUD_RUNNING:
       switch (analysisStatus.value())
       {
         case analysisdriver::AnalysisStatus::Idle:
           mainWindow->verticalTabWidget->enableTabs(true);
-          setPlayButtonEnabled(true);
           break;
         case analysisdriver::AnalysisStatus::Starting:
           mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
           mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-          setPlayButtonEnabled(false);
           break;
         case analysisdriver::AnalysisStatus::Running:
           mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
           mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-          setPlayButtonEnabled(true);
           break;
         case analysisdriver::AnalysisStatus::Stopping:
           mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
           mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-          setPlayButtonEnabled(false);
           break;
         case analysisdriver::AnalysisStatus::Error:
           mainWindow->verticalTabWidget->enableTabs(true);
-          setPlayButtonEnabled(true);
           break;
       }
       break;
@@ -1407,39 +1401,33 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
       mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
       mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
       mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
-      setPlayButtonEnabled(false);
       break;
     case CLOUD_STOPPED:
       switch (analysisStatus.value())
       {
         case analysisdriver::AnalysisStatus::Idle:
           mainWindow->verticalTabWidget->enableTabs(true);
-          setPlayButtonEnabled(true);
           break;
         case analysisdriver::AnalysisStatus::Starting:
           mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
           mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-          setPlayButtonEnabled(false);
           break;
         case analysisdriver::AnalysisStatus::Running:
           mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
           mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-          setPlayButtonEnabled(true);
           break;
         case analysisdriver::AnalysisStatus::Stopping:
           mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
           mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
           mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-          setPlayButtonEnabled(false);
           break;
         case analysisdriver::AnalysisStatus::Error:
           mainWindow->verticalTabWidget->enableTabs(true);
-          setPlayButtonEnabled(true);
           break;
       }
       break;
@@ -1462,24 +1450,14 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
       mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
       mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
       mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
-      setPlayButtonEnabled(false);
       break;
   }
 
   setCloudButtonStatus(cloudStatus);
 }
 
-void PatApp::setPlayButtonEnabled(bool enabled)
+void PatApp::setCloudButtonStatus(const CloudStatus & cloudStatus)
 {
-  if( m_runTabController )
-  {
-    m_runTabController->runView->runStatusView->playButton->setEnabled(enabled);
-  }
-}
-
-void PatApp::setCloudButtonStatus(const CloudStatus cloudStatus)
-{
-
   if( m_runTabController )
   {
     m_runTabController->runView->runStatusView->setCloudStatus(cloudStatus);

@@ -163,16 +163,6 @@ class CreateFromFileButton : public GrayButton
   virtual ~CreateFromFileButton() {}
 };
 
-class PlayButton : public QPushButton
-{
-  Q_OBJECT
-
-  public:
-
-  PlayButton(QWidget * parent = 0);
-  virtual ~PlayButton() {}
-};
-
 class CloudLostConnectionButton : public QPushButton
 {
   Q_OBJECT
@@ -260,6 +250,24 @@ class CloudStoppingButton : public QPushButton
 
 };
 
+class PlayButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  enum Status { IDLE, STARTING, RUNNING, STOPPING, ERROR };
+
+  PlayButton(QWidget * parent = 0);
+  virtual ~PlayButton() {}
+
+  Status status() const;
+  void setStatus(const Status & status);
+
+  private:
+
+  Status m_status;
+};
 
 } // openstudio
 

@@ -27,6 +27,7 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/Measure.hpp>
 #include <analysis/Problem.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <runmanager/lib/Job.hpp>
 
@@ -59,9 +60,11 @@ class RunTabController : public QObject
 
   public slots:
 
-    void onPlayButtonClicked(bool clicked);
+    void onPlayButtonClicked();
 
     void onIterationProgress();
+
+    void onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus);
 
     void reqestRefresh();
 

@@ -69,6 +69,7 @@ namespace project {
 
 namespace pat {
   class PatApp;
+  class RunTabController;
 }
 
 namespace analysisdriver {
@@ -362,6 +363,7 @@ class ANALYSISDRIVER_API SimpleProject {
   typedef detail::SimpleProject_Impl ImplType;
   friend class detail::SimpleProject_Impl;
   friend class openstudio::pat::PatApp;
+  friend class openstudio::pat::RunTabController;
 
   explicit SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl);
 

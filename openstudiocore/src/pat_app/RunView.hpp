@@ -48,8 +48,6 @@ namespace analysis {
   class DataPoint;
 }
 
-class PlayButton;
-
 namespace pat {
 
 class PatProgressBar;
@@ -103,10 +101,6 @@ class RunStatusView : public QWidget
    CloudLostConnectionButton * cloudLostConnectionButton;
 
    void paintEvent(QPaintEvent * e);
-
- signals:
-
-   void playButtonClicked(bool);
 
  private slots:
 
