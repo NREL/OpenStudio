@@ -125,7 +125,7 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option;
-    if (option = getOption("numSteps")) {
+    if ((option = getOption("numSteps"))) {
       option->setValue(value);
     }
     else {

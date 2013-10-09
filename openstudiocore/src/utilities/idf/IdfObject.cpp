@@ -38,6 +38,7 @@
 #include <utilities/math/FloatCompare.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Url.hpp>
 #include <utilities/core/UUID.hpp>
 
 #include <utilities/units/Quantity.hpp>
@@ -1109,8 +1110,8 @@ namespace detail {
 
       // urls
       if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
-        OptionalURL oMyUrlValue = getURL(i);
-        OptionalURL oOtherUrlValue = other.getURL(i);
+        OptionalUrl oMyUrlValue = getURL(i);
+        OptionalUrl oOtherUrlValue = other.getURL(i);
         if (oMyUrlValue || oOtherUrlValue) { 
           if (!(oMyUrlValue && oOtherUrlValue)) { return false; }
           if (oMyUrlValue.get() != oOtherUrlValue.get()) { return false; }

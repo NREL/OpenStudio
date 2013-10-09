@@ -23,6 +23,9 @@
 #include <model/ComponentWatcher.hpp>
 #include <model/Building.hpp>
 #include <model/LifeCycleCostParameters.hpp>
+#include <model/RunPeriod.hpp>
+#include <model/YearDescription.hpp>
+#include <model/WeatherFile.hpp>
 
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idf/Workspace_Impl.hpp>
@@ -122,6 +125,18 @@ namespace detail {
     /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
+    
+    /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriod>(). */
+    boost::optional<RunPeriod> runPeriod() const;
+
+    /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
+    boost::optional<YearDescription> yearDescription() const;
+
+    /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
+    boost::optional<WeatherFile> weatherFile() const;
 
     Schedule alwaysOnDiscreteSchedule() const;
 
@@ -210,11 +225,17 @@ namespace detail {
 
     mutable boost::optional<Building> m_cachedBuilding;
     mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
+    mutable boost::optional<RunPeriod> m_cachedRunPeriod;
+    mutable boost::optional<YearDescription> m_cachedYearDescription;
+    mutable boost::optional<WeatherFile> m_cachedWeatherFile;
 
   private slots:
 
     void clearCachedBuilding();
     void clearCachedLifeCycleCostParameters();
+    void clearCachedRunPeriod();
+    void clearCachedYearDescription();
+    void clearCachedWeatherFile();
 
   };
 

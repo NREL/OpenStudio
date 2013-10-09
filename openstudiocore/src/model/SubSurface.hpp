@@ -28,6 +28,7 @@ namespace model {
 
 class Surface;
 class ShadingSurface;
+class ShadingControl;
 
 namespace detail {
 
@@ -59,15 +60,13 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   std::string subSurfaceType() const;
 
-  // TODO: Handle Non-Extensible IddField Outside Boundary Condition Object.
-
   boost::optional<double> viewFactortoGround() const;
 
   bool isViewFactortoGroundDefaulted() const;
 
   bool isViewFactortoGroundAutocalculated() const;
 
-  // TODO: Handle Non-Extensible IddField Shading Control Name.
+  boost::optional<ShadingControl> shadingControl() const;
 
   // TODO: Handle Non-Extensible IddField Frame and Divider Name.
 
@@ -87,8 +86,6 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   bool setSubSurfaceType(std::string subSurfaceType);
 
-  // TODO: Handle Non-Extensible IddField Outside Boundary Condition Object.
-
   bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
 
   bool setViewFactortoGround(double viewFactortoGround);
@@ -97,7 +94,9 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void autocalculateViewFactortoGround();
 
-  // TODO: Handle Non-Extensible IddField Shading Control Name.
+  bool setShadingControl(const ShadingControl& shadingControl);
+
+  void resetShadingControl();
 
   // TODO: Handle Non-Extensible IddField Frame and Divider Name.
 

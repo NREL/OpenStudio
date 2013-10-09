@@ -31,9 +31,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <QFile>
-#include <QTextStream>
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -127,15 +124,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
 
     static boost::optional<IdfFile> usePriceEscalationFile;
     if (!usePriceEscalationFile){
-     QFile file(":/Resources/LCCusePriceEscalationDataSet2011.idf");
-     bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-     OS_ASSERT(opened);
-
-     QTextStream in(&file);
-     std::stringstream ss;
-     ss << in.readAll().toStdString();
-
-     usePriceEscalationFile = IdfFile::load(ss, IddFileType::EnergyPlus);
+     usePriceEscalationFile = findIdfFile(":/Resources/LCCusePriceEscalationDataSet2011.idf");
     }
     OS_ASSERT(usePriceEscalationFile);
 

@@ -34,7 +34,7 @@
 
 namespace openstudio {
 
-class Scale;
+struct Scale;
 
 namespace detail {
 

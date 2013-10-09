@@ -27,6 +27,8 @@
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/bcl/LocalBCL.hpp>

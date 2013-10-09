@@ -30,10 +30,13 @@ namespace openstudio {
 typedef boost::function<bool ()> BoolGetter;
 typedef boost::function<double ()> DoubleGetter;
 typedef boost::function<int ()> IntGetter;
+typedef boost::function<std::string ()> StringGetter;
+typedef boost::function<unsigned ()> UnsignedGetter;
+
 typedef boost::function<boost::optional<double> ()> OptionalDoubleGetter;
 typedef boost::function<boost::optional<int> ()> OptionalIntGetter;
 typedef boost::function<boost::optional<std::string> ()> OptionalStringGetter;
-typedef boost::function<std::string ()> StringGetter;
+typedef boost::function<boost::optional<unsigned> ()> OptionalUnsignedGetter;
 
 typedef boost::function<std::vector<std::string> ()> ChoicesGetter;
 
@@ -41,6 +44,7 @@ typedef boost::function<void (bool)> BoolSetter;
 typedef boost::function<bool (double)> DoubleSetter;
 typedef boost::function<bool (int)> IntSetter;
 typedef boost::function<bool (std::string)> StringSetter;
+typedef boost::function<bool (unsigned)> UnsignedSetter;
 
 typedef boost::function<void ()> NoFailAction;
 typedef boost::function<bool ()> BasicQuery;

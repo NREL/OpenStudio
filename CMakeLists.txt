@@ -3,8 +3,8 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
-SET(CMAKE_VERSION_MINOR 0)
-SET(CMAKE_VERSION_PATCH 4)
+SET(CMAKE_VERSION_MINOR 1)
+SET(CMAKE_VERSION_PATCH 0)
 
 SET(SUBVERSION_REVISION "Unknown")
 SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # svn revision
@@ -51,6 +51,16 @@ OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
 # Build SimXML
 OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 
+# Package Radiance and EnergyPlus for convenience 
+OPTION( PACKAGE_RADIANCE_AND_ENERGYPLUS "Package Radiance and EnergyPlus" OFF )
+MARK_AS_ADVANCED(FORCE PACKAGE_RADIANCE_AND_ENERGYPLUS)
+
+IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
+  MESSAGE(WARNING "Packaging of Radiance and EnergyPlus is intended for internal use and deployment only")
+  SET(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+  SET(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+ENDIF()
+
 # Build Ruby gem
 OPTION( BUILD_RUBY_GEM "Build Ruby Gem" OFF )
 
@@ -94,7 +104,8 @@ ENDIF()
 # Require that DAKOTA_FOUND
 #
 # Some code (certain analysisdriver tests) are conditionally compiled depending on 
-# the value of this variable.
+# whether Dakota is found on the system. If this variable is set to true, CMake will give a configure
+# error in the case that Dakota is not found.
 #
 # Dakota is an optional third party algorithm library that we use through its command line
 # interface.
@@ -639,6 +650,9 @@ ExternalProject_Add( OpenStudioCore
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
     -DBoostLog_DIR:STRING=${BoostLog_DIR}
     -DQJSON_DIR:STRING=${QJSON_DIR}
+    -DPACKAGE_RADIANCE_AND_ENERGYPLUS:BOOL=${PACKAGE_RADIANCE_AND_ENERGYPLUS}
+    -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
+    -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     INSTALL_COMMAND ""
 )
 

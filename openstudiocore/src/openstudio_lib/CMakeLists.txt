@@ -304,6 +304,16 @@ SET( ${target_name}_SRC
   ThermalZonesTabView.hpp
   ThermalZonesView.cpp
   ThermalZonesView.hpp
+  UtilityBillFuelTypeItem.cpp
+  UtilityBillFuelTypeItem.hpp
+  UtilityBillFuelTypeListView.cpp
+  UtilityBillFuelTypeListView.hpp
+  UtilityBillAllFuelTypesListView.cpp
+  UtilityBillAllFuelTypesListView.hpp
+  UtilityBillsController.cpp
+  UtilityBillsController.hpp
+  UtilityBillsView.cpp
+  UtilityBillsView.hpp
   VariablesTabController.cpp
   VariablesTabController.hpp
   VariablesTabView.cpp
@@ -397,6 +407,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/OSQuantityEdit.hpp
   ../shared_gui_components/OSSwitch.cpp
   ../shared_gui_components/OSSwitch.hpp
+  ../shared_gui_components/OSUnsignedEdit.cpp
+  ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.cpp
   ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.cpp
@@ -565,6 +577,11 @@ SET( ${target_name}_moc
   ThermalZonesTabController.hpp
   ThermalZonesTabView.hpp
   ThermalZonesView.hpp
+  UtilityBillFuelTypeItem.hpp
+  UtilityBillFuelTypeListView.hpp
+  UtilityBillAllFuelTypesListView.hpp
+  UtilityBillsController.hpp
+  UtilityBillsView.hpp
   VariablesTabController.hpp
   VariablesTabView.hpp
   VerticalTabWidget.hpp
@@ -611,6 +628,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.hpp
   ../shared_gui_components/OSSwitch.hpp
+  ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/TIDItemModel.hpp

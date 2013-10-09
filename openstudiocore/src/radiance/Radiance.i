@@ -16,6 +16,7 @@
 
 %{
   #include <radiance/ForwardTranslator.hpp>
+  #include <radiance/Utils.hpp>
   using namespace openstudio::radiance;
   using namespace openstudio;
 %}
@@ -25,5 +26,6 @@
 // #endif
 
 %include <radiance/ForwardTranslator.hpp>
+%include <radiance/Utils.hpp>
 
 #endif //RADIANCE_RADIANCE_I 

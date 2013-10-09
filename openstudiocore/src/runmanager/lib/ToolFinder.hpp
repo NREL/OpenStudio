@@ -79,7 +79,7 @@ namespace runmanager {
       std::vector<openstudio::path> findExecutables(const std::vector<openstudio::path> &t_searchPaths, const std::vector<std::string> &t_names, bool t_showProgressDialog) const;
 
       // Returns true if any part of the path matches the given regular expression
-      bool subPathMatch(const openstudio::path &t_path, const boost::regex &t_regex) const;
+      static bool subPathMatch(const openstudio::path &t_path, const boost::regex &t_regex);
 
       static void mergeTool(std::vector<std::pair<ToolVersion, ToolLocationInfo> > &t_tools,
           const std::pair<ToolVersion, ToolLocationInfo> &t_tool);

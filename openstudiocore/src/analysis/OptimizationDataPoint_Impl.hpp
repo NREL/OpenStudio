@@ -53,6 +53,7 @@ namespace detail {
                                bool complete,
                                bool failed,
                                bool selected,
+                               DataPointRunType runType,
                                const std::vector<QVariant>& variableValues,
                                const std::vector<double>& responseValues,
                                const std::vector<double>& objectiveValues,
@@ -77,6 +78,7 @@ namespace detail {
                                bool complete,
                                bool failed,
                                bool selected,
+                               DataPointRunType runType,
                                const std::vector<QVariant>& variableValues,
                                const std::vector<double>& responseValues,
                                const std::vector<double>& objectiveValues,
@@ -110,6 +112,14 @@ namespace detail {
     //@{
 
     virtual void clearResults();
+
+    //@}
+    /** @name Actions */
+    //@{
+
+    /** Update high level results from json. */
+    virtual bool updateFromJSON(const AnalysisJSONLoadResult& loadResult, 
+                                boost::optional<runmanager::RunManager>& runManager);
 
     //@}
     /** @name Protected in or Absent from Public Class */

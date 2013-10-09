@@ -37,7 +37,6 @@ namespace detail {
 
   /** OSArgumentRecord_Impl is a ObjectRecord_Impl that is the implementation class for OSArgumentRecord.*/
   class PROJECT_API OSArgumentRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

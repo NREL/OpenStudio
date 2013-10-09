@@ -224,6 +224,18 @@ SET(osversion_resources_src
   osversion/1_0_3/OpenStudio.idd
   osversion/1_0_3/example.osm
   osversion/1_0_3/example.osc
+  osversion/1_0_4/OpenStudio.idd
+  osversion/1_0_4/example.osm
+  osversion/1_0_4/example.osc
+  osversion/1_0_5/OpenStudio.idd
+  osversion/1_0_5/example.osm
+  osversion/1_0_5/example.osc
+  osversion/1_0_6/OpenStudio.idd
+  osversion/1_0_6/example.osm
+  osversion/1_0_6/example.osc
+  osversion/1_0_7/OpenStudio.idd
+  osversion/1_0_7/example.osm
+  osversion/1_0_7/example.osc
   osversion/unknown.osc
 )
 
@@ -319,6 +331,10 @@ SET(project_resources_src
   project/version/project_1_0_2.db
   project/version/project_1_0_3.osp
   project/version/project_1_0_3.db  
+  project/version/project_1_0_4.osp
+  project/version/project_1_0_4.db  
+  project/version/project_1_0_6.osp
+  project/version/project_1_0_6.db  
 )
 
 # update the resources
@@ -584,6 +600,8 @@ SET(ENERGYPLUS_OUTPUTS "")
 SET(analysis_resources_src
   analysis/version/analysis_1-0-3.json
   analysis/version/data_point_1-0-3.json
+  analysis/version/analysis_1-0-4.json
+  analysis/version/data_point_1-0-4.json
 )
 
 # update the resources

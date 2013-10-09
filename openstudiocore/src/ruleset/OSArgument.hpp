@@ -408,7 +408,7 @@ class RULESET_API OSArgument {
   // some constructors
 
   friend class std::map<std::string, OSArgument>;
-  friend class std::pair<std::string, OSArgument>;
+  friend struct std::pair<std::string, OSArgument>;
 
 #if _MSC_VER >= 1600
   friend class std::pair<const std::string, OSArgument>;

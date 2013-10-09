@@ -76,7 +76,7 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {
@@ -92,7 +92,7 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option;
-    if (option = getOption("samples")) {
+    if ((option = getOption("samples"))) {
       option->setValue(value);
     }
     else {
@@ -108,7 +108,7 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option;
-    if (option = getOption("partitions")) {
+    if ((option = getOption("partitions"))) {
       option->setValue(value);
     }
     else {

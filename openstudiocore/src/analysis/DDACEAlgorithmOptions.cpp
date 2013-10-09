@@ -80,7 +80,7 @@ namespace detail {
 
   void DDACEAlgorithmOptions_Impl::setSeed(int value){
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {
@@ -95,7 +95,7 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option;
-    if (option = getOption("samples")) {
+    if ((option = getOption("samples"))) {
       option->setValue(value);
     }
     else {
@@ -107,7 +107,7 @@ namespace detail {
 
   bool DDACEAlgorithmOptions_Impl::setSymbols(int value) {
     OptionalAttribute option;
-    if (option = getOption("symbols")) {
+    if ((option = getOption("symbols"))) {
       option->setValue(value);
     }
     else {

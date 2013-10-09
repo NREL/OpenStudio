@@ -26,15 +26,36 @@ SET( ${target_name}_src
   AttributeRecord.hpp
   AttributeRecord_Impl.hpp
   AttributeRecord.cpp
+  AWSSessionRecord.hpp
+  AWSSessionRecord_Impl.hpp
+  AWSSessionRecord.cpp
+  AWSSettingsRecord.hpp
+  AWSSettingsRecord_Impl.hpp
+  AWSSettingsRecord.cpp
+  CloudSessionRecord.hpp
+  CloudSessionRecord_Impl.hpp
+  CloudSessionRecord.cpp
+  CloudSettingsRecord.hpp
+  CloudSettingsRecord_Impl.hpp
+  CloudSettingsRecord.cpp
   FileReferenceRecord.hpp
   FileReferenceRecord_Impl.hpp
   FileReferenceRecord.cpp
   TagRecord.hpp
   TagRecord_Impl.hpp
   TagRecord.cpp
+  UrlRecord.hpp
+  UrlRecord_Impl.hpp
+  UrlRecord.cpp
   URLSearchPathRecord.hpp
   URLSearchPathRecord_Impl.hpp
   URLSearchPathRecord.cpp
+  VagrantSessionRecord.hpp
+  VagrantSessionRecord_Impl.hpp
+  VagrantSessionRecord.cpp
+  VagrantSettingsRecord.hpp
+  VagrantSettingsRecord_Impl.hpp
+  VagrantSettingsRecord.cpp
 
   # runmanager
 
@@ -143,59 +164,8 @@ SET( ${target_name}_src
 )
 
 SET( ${target_name}_moc
-  JoinRecord_Impl.hpp
-  ObjectRecord_Impl.hpp
   ProjectDatabase_Impl.hpp
-  ProjectDatabaseRecord_Impl.hpp
   Record_Impl.hpp
-
-  # utilities
-
-  AttributeRecord_Impl.hpp
-  FileReferenceRecord_Impl.hpp
-  TagRecord_Impl.hpp
-  URLSearchPathRecord_Impl.hpp
-
-  # runmanager
-
-  WorkflowRecord_Impl.hpp
-
-  # ruleset
-
-  OSArgumentRecord_Impl.hpp
-
-  # analysis
-
-  AlgorithmRecord_Impl.hpp
-  AnalysisRecord_Impl.hpp
-  ContinuousVariableRecord_Impl.hpp
-  DakotaAlgorithmRecord_Impl.hpp
-  DataPointRecord_Impl.hpp
-  DataPointValueRecord_Impl.hpp
-  DataPoint_Measure_JoinRecord_Impl.hpp
-  DDACEAlgorithmRecord_Impl.hpp
-  DesignOfExperimentsRecord_Impl.hpp
-  DiscreteVariableRecord_Impl.hpp
-  FSUDaceAlgorithmRecord_Impl.hpp
-  FunctionRecord_Impl.hpp
-  InputVariableRecord_Impl.hpp
-  LinearFunctionRecord_Impl.hpp
-  MeasureGroupRecord_Impl.hpp
-  MeasureRecord_Impl.hpp
-  NullMeasureRecord_Impl.hpp
-  OpenStudioAlgorithmRecord_Impl.hpp
-  OptimizationDataPointRecord_Impl.hpp
-  OptimizationProblemRecord_Impl.hpp
-  OutputAttributeVariableRecord_Impl.hpp
-  OutputVariableRecord_Impl.hpp
-  ParameterStudyAlgorithmRecord_Impl.hpp
-  ProblemRecord_Impl.hpp
-  PSUADEDaceAlgorithmRecord_Impl.hpp
-  RubyContinuousVariableRecord_Impl.hpp
-  RubyMeasureRecord_Impl.hpp
-  SamplingAlgorithmRecord_Impl.hpp
-  SequentialSearchRecord_Impl.hpp
-  VariableRecord_Impl.hpp
 )
 
 qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
@@ -225,6 +195,8 @@ SET( ${target_name}_test_src
   Test/AlgorithmRecord_GTest.cpp
   Test/AnalysisRecord_GTest.cpp
   Test/AttributeRecord_GTest.cpp
+  Test/CloudSessionRecord_GTest.cpp
+  Test/CloudSettingsRecord_GTest.cpp
   Test/DataPointRecord_GTest.cpp
   Test/MeasureGroupRecord_GTest.cpp
   Test/FileReferenceRecord_GTest.cpp
@@ -255,3 +227,4 @@ IF( BUILD_TESTING )
       openstudio_runmanager_resources
       openstudio_project_resources)
 ENDIF()
+

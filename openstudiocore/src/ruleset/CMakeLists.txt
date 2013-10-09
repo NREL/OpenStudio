@@ -19,11 +19,14 @@ SET( ${target_name}_src
   ModelUserScript.cpp
   WorkspaceUserScript.hpp
   WorkspaceUserScript.cpp
+  ReportingUserScript.hpp
+  ReportingUserScript.cpp
   TranslationUserScript.hpp
   TranslationUserScript.cpp
   UtilityUserScript.hpp
   UtilityUserScript.cpp
   RubyUserScriptArgumentGetter.hpp
+  RubyUserScriptArgumentGetter_Impl.hpp
   RubyUserScriptArgumentGetter.cpp
 )
 

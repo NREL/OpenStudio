@@ -174,6 +174,10 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   std::vector<DataPoint> failedDataPoints() const;
 
+  /** Return all complete \link DataPoint DataPoints\endlink with runType() ==
+   *  DataPointRunType::CloudDetailed and an empty directory(). */
+  std::vector<DataPoint> dataPointsNeedingDetails() const;
+
   /** Get the DataPoints with matching variableValues. VariableValues may contain Null QVariants of
    *  the correct type, which means that any value at that position should be returned. */
   std::vector<DataPoint> getDataPoints(const std::vector<QVariant>& variableValues) const;
@@ -297,6 +301,15 @@ class ANALYSIS_API Analysis : public AnalysisObject {
   std::ostream& toJSON(std::ostream& os,const AnalysisSerializationOptions& options) const;
 
   std::string toJSON(const AnalysisSerializationOptions& options) const;
+
+  static boost::optional<Analysis> loadJSON(const openstudio::path& p,
+                                            const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<Analysis> loadJSON(std::istream& json,
+                                            const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<Analysis> loadJSON(const std::string& json,
+                                            const openstudio::path& newProjectDir=openstudio::path());
 
   //@}
  protected:

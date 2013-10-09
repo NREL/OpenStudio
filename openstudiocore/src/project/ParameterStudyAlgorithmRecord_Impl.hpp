@@ -36,7 +36,6 @@ namespace detail {
   /** ParameterStudyAlgorithmRecord_Impl is a DakotaAlgorithmRecord_Impl that is the implementation
    *  class for ParameterStudyAlgorithmRecord.*/
   class PROJECT_API ParameterStudyAlgorithmRecord_Impl : public DakotaAlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

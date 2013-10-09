@@ -37,10 +37,7 @@ namespace openstudio {
 namespace project {
 namespace detail {
 
-  class PROJECT_API JoinRecord_Impl : public Record_Impl
-  {
-
-    Q_OBJECT;
+  class PROJECT_API JoinRecord_Impl : public Record_Impl {
 
     public:
 

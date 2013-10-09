@@ -59,6 +59,10 @@ namespace sdd {
         QDomElement materialElement = materialElements.at(i).toElement();
         std::string materialName = escapeName(materialElement.text());
         boost::optional<model::Material> material = model.getModelObjectByName<model::Material>(materialName);
+        if( ! material )
+        {
+          LOG(Error,"Construction: " << construction.name().get() << " references material: " << materialName << " that is not defined.");
+        }
         OS_ASSERT(material); // what type of error handling do we want?
         materials.push_back(*material);
       }
