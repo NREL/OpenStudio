@@ -169,15 +169,29 @@ void PatMainWindow::setMainRightColumnView(QWidget * widget)
 
 void PatMainWindow::closeEvent(QCloseEvent *event)
 {
-  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
-  CloudMonitorWorker worker(cloudMonitor.data());
+  CloudStatus status = PatApp::instance()->cloudMonitor()->status();
 
-  if(worker.cloudRunning()){
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(this, 
+      "Cannot Exit PAT", 
+      "PAT cannot be closed while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    return;
+  } else if (status == CLOUD_RUNNING) {
     int result = QMessageBox::warning(this, 
-                  "Close PAT?", 
-                  "The cloud is running and charges are accruing.  Are you sure you want to close PAT?", 
-                  QMessageBox::Ok, 
-                  QMessageBox::Cancel);
+                   "Close PAT?", 
+                   "The cloud is currently running and charges are accruing.  Are you sure you want to exit PAT?", 
+                   QMessageBox::Ok, 
+                   QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) return;
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(this, 
+                   "Close PAT?", 
+                   "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to exit PAT?", 
+                   QMessageBox::Ok, 
+                   QMessageBox::Cancel);
 
     if(result == QMessageBox::Cancel) return;
   }
