@@ -780,7 +780,8 @@ namespace detail {
       success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
 
       m_analysisNotRunningCount = 0;
-      m_maxAnalysisNotRunningCount = 20 + 2 * m_waitingQueue.size();
+      // DLM: let's be really conservative to start with
+      m_maxAnalysisNotRunningCount = 300 + 2 * m_waitingQueue.size();
     }
 
     if (!success) {
@@ -813,7 +814,8 @@ namespace detail {
         success = m_requestRun->requestRunningDataPointUUIDs(project().analysis().uuid());
 
         m_dataPointsNotRunningCount = 0;
-        m_maxDataPointsNotRunningCount = 30;
+        // DLM: let's be really conservative here
+        m_maxDataPointsNotRunningCount = 300 + 2 * m_waitingQueue.size();
       }
       else {
         if (m_analysisNotRunningCount >= m_maxAnalysisNotRunningCount) {
@@ -824,6 +826,7 @@ namespace detail {
         }
         else {
           // wait one second
+          LOG(Info, "Checking for running analysis, " << m_analysisNotRunningCount << "/" << m_maxAnalysisNotRunningCount << " tries.");
           QTimer::singleShot(1000, this, SLOT(askAgainIfAnalysisRunning()));
         }
       }
@@ -859,7 +862,8 @@ namespace detail {
         OS_ASSERT(test);
 
         m_dataPointsNotRunningCount = 0;
-        m_maxDataPointsNotRunningCount = 5;
+        // DLM: let's be really conservative here
+        m_maxDataPointsNotRunningCount = 300;
 
         startMonitoring();
       }
@@ -872,6 +876,7 @@ namespace detail {
         }
         else {
           // wait one second
+          LOG(Info, "Checking for running data points, " << m_dataPointsNotRunningCount << "/" << m_maxDataPointsNotRunningCount << " tries.");
           QTimer::singleShot(1000, this, SLOT(askAgainForRunningDataPoints()));
         }
       }
@@ -939,7 +944,7 @@ namespace detail {
         startDownloadingJson();
       }
 
-      if (m_waitingQueue.empty() && m_jsonQueue.empty()) {
+      if (m_waitingQueue.empty() && m_runningQueue.empty() && m_jsonQueue.empty()) {
         // got what we wanted, move into downloading only phase
         LOG(Debug,"All DataPoints complete. Stop monitoring.");
         appendErrorsAndWarnings(*m_monitorDataPoints); // keep warnings
@@ -1314,6 +1319,7 @@ namespace detail {
     if (success) {
       // if nothing else going on, emit signal stating that analysis has stopped
       if (m_waitForAlreadyRunningDataPoints) {
+        // DLM: are these 1 second checks?  this is only 5 minutes.  Should we wait longer here?
         m_maxAnalysisNotRunningCount = 300; // wait up to 15 minutes for DataPoints to stop running
       }
       checkForRunCompleteOrStopped();

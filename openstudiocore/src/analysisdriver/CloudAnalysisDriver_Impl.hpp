@@ -231,13 +231,13 @@ namespace detail {
      // 10. If not, kick it off.
      void analysisStarted(bool success);
 
-     // 11. Wait up to 20 + 2 per data point tries (w/ 1s of sleep) for the server to
+     // 11. Wait for the server to
      //     report that the analysis is running.
      void waitingForAnalysisToStart(bool success);
 
      void askAgainIfAnalysisRunning();
 
-     // 12. Wait up to 30 tries (w/ 1s of sleep in between) for the server to report that
+     // 12. Wait for the server to report that
      //     at least one DataPoint is running.
      void waitingForADataPointToStart(bool success);
 
@@ -259,8 +259,7 @@ namespace detail {
      void askForRunningDataPointUUIDs();
 
      // see if data points are still running
-     // (mark DataPoints that are running, and also make sure something is happening. only allow
-     // 5 successive instances of nothing running)
+     // (mark DataPoints that are running, and also make sure something is happening.)
      void runningDataPointUUIDsReturned(bool success);
 
      void askForCompleteDataPointUUIDs();
