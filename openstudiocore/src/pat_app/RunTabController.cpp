@@ -280,8 +280,8 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
         // connect currentAnalysis to update progress in PatApp
         // DLM: this re-enables tabs if analysis completes when we are not on this tab
-        isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-        OS_ASSERT(isConnected);
+        //isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
+        //OS_ASSERT(isConnected);
 
         // start the run
         cloudAnalysisDriver->requestRun();
@@ -300,8 +300,8 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
         // connect currentAnalysis to update progress in PatApp
         // DLM: this re-enables tabs if analysis completes when we are not on this tab
-        isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-        OS_ASSERT(isConnected);
+        //isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
+        //OS_ASSERT(isConnected);
       }
 
       // enable the app
@@ -385,7 +385,7 @@ void RunTabController::onIterationProgress()
   runView->runStatusView->setProgress(numCompletedJobs, numFailedJobs, totalNumJobs, isRunning);
 
   // this will enable or disable tabs as needed
-  PatApp::instance()->disableTabsDuringRun();
+  //PatApp::instance()->disableTabsDuringRun();
 }
 
 void RunTabController::reqestRefresh()
