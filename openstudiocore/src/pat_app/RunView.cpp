@@ -117,14 +117,17 @@ RunStatusView::RunStatusView()
   mainVLayout->addLayout(buttonHLayout);
 
   // Run / Play button area
+  m_playLabel = new QLabel(this);
+  m_playLabel->setObjectName("H2");
+  mainHLayout->addWidget(m_playLabel);
 
-  playButton = new PlayButton(this);
-  playButton->setFixedWidth(120);
-  playButton->setText("Run");
-  playButton->setCheckable(true);
-  playButton->setChecked(false);
-  mainHLayout->addWidget(playButton);
-  bool isConnected = connect(playButton, SIGNAL(clicked(bool)), this, SIGNAL(playButtonClicked(bool)));
+  m_playButton = new PlayButton(this);
+  m_playButton->setFixedSize(35,35);
+  m_playButton->setCheckable(true);
+  m_playButton->setChecked(false);
+  mainHLayout->addWidget(m_playButton);
+  bool isConnected = connect(m_playButton, SIGNAL(clicked(bool)),
+                             this, SIGNAL(playButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
   // Progress bar area
@@ -279,15 +282,19 @@ void RunStatusView::onCloudUpdate(const CloudStatus & newStatus)
 {
   // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
   if(newStatus == CLOUD_RUNNING){
+    m_runText = "Run on Cloud";
     m_cloudTime->show();
     m_cloudInstances->show();
     m_timer->start(30000);
     updateCloudData();
   } else {
+    m_runText = "Run Locally";
+    m_playLabel->setText(m_runText);
     m_cloudTime->hide();
     m_cloudInstances->hide();
     m_timer->stop();
   }
+  m_playLabel->setText(m_runText);
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
@@ -301,9 +308,9 @@ void RunStatusView::paintEvent(QPaintEvent * e)
 void RunStatusView::setRunning(bool isRunning)
 {
   if (isRunning){
-    playButton->setChecked(true);
+    m_playButton->setChecked(true);
   }else{
-    playButton->setChecked(false);
+    m_playButton->setChecked(false);
   }
 }
 
@@ -318,25 +325,26 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   //bool showPercentComplete = false;
   if (isRunning){
     // running
-    //playButton->setText("Pause");
-    playButton->setText("Stop");
-    playButton->setChecked(true);
+    //m_playLabel->setText("Pause");
+    m_playLabel->setText("Stop");
+    m_playButton->setChecked(true);
   }else{
     if (numCompletedJobs == 0){
       QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
-      CloudMonitorWorker worker(cloudMonitor.data());
-      if(worker.internetAvailable() && worker.authenticated() && worker.cloudRunning()){
-        playButton->setText("Run on Cloud");
+      CloudStatus status = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
+      if(status == CLOUD_RUNNING){
+        m_runText = "Run on Cloud";
       } else {
-        playButton->setText("Run Locally");
+        m_runText = "Run Locally";
       }
-      playButton->setChecked(false);
+      m_playLabel->setText(m_runText);
+      m_playButton->setChecked(false);
     }else if (numCompletedJobs == numJobsInIteration){
-      playButton->setText("Complete");
-      playButton->setChecked(false); // third style to show complete?
+      m_playLabel->setText("Complete");
+      m_playButton->setChecked(false); // third style to show complete?
     }else {
-      playButton->setText("Resume");
-      playButton->setChecked(false);
+      m_playLabel->setText("Resume");
+      m_playButton->setChecked(false);
     }
   }
 

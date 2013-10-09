@@ -1473,7 +1473,7 @@ void PatApp::setPlayButtonEnabled(bool enabled)
 {
   if( m_runTabController )
   {
-    m_runTabController->runView->runStatusView->playButton->setEnabled(enabled);
+    m_runTabController->runView->runStatusView->m_playButton->setEnabled(enabled);
   }
 }
 

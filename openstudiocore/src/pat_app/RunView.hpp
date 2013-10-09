@@ -90,7 +90,11 @@ class RunStatusView : public QWidget
 
    void setCloudStatus(CloudStatus status);
 
-   PlayButton * playButton;
+   PlayButton * m_playButton;
+
+   QLabel * m_playLabel;
+
+   QString m_runText;
 
    CloudOnButton * cloudOnButton;
 
