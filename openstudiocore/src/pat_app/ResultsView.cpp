@@ -272,7 +272,7 @@ ResultsView::ResultsView()
   m_downloadResultsButton = new QPushButton();
   m_downloadResultsButton->setFlat(true);
   m_downloadResultsButton->setFixedSize(195,29);
-  enableDownloadResultsButton(true); // TODO this needs to take a signal regarding if working online
+  enableDownloadResultsButton(false);
   hLayout->addWidget(m_downloadResultsButton);
 
   isConnected = connect(m_downloadResultsButton, SIGNAL(clicked(bool)),

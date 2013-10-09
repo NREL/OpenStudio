@@ -18,24 +18,28 @@
 **********************************************************************/
 
 #include <pat_app/ResultsTabController.hpp>
-#include <pat_app/ResultsView.hpp>
+
 #include <pat_app/PatApp.hpp>
+#include <pat_app/ResultsView.hpp>
 
 #include <analysis/DataPoint.hpp>
 
+#include <analysisdriver/CloudAnalysisDriver.hpp>
+#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+
 #include <model/UtilityBill.hpp>
 
-#include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/FileInfo.hpp>
+#include <runmanager/lib/Job.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 
 #include <QDesktopServices>
+#include <QDir>
 #include <QMessageBox>
 #include <QRegExp>
-#include <QDir>
 
 namespace openstudio {
 
@@ -76,6 +80,9 @@ ResultsTabController::ResultsTabController()
     bool bingo = false;
 
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    OS_ASSERT(bingo);
+
+    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
     OS_ASSERT(bingo);
 
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
@@ -173,6 +180,7 @@ void ResultsTabController::onOpenButtonClicked()
           // disable the button for now to prevent tons of instances being opened
           // will get re-enabled when clicking another data point
           resultsView->enableViewFileButton(false);
+          // TODO disableDownloadResultsButton() ???
         }else{
           QMessageBox::critical(resultsView, "Unable to Launch OpenStudio", "OpenStudio was not found in the expected location:\n" + toQString(openstudioApp));
         }
@@ -206,7 +214,54 @@ void ResultsTabController::openDirectory()
 
 void ResultsTabController::downloadResults()
 {
-  // TODO great things
+  std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+  if (!selectedItems.empty()){
+    DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+    if (dataPointResultListItem){
+      analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+      dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
+  
+      boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+      if(project){
+        analysis::Analysis analysis = project->analysis();
+        boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+        if(cloudAnalysisDriver){
+          bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+        }
+      }
+    }
+  }
+}
+
+void ResultsTabController::enableDownloadResultsButton()
+{
+  bool interenetConnected = false; // TODO
+  bool cloudAvailable = false; // TODO
+  if(resultsView && interenetConnected && cloudAvailable){
+    bool downloadDetailedResults = false;
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+        // Determine if datapoint has detailed data
+        if(dataPoint.complete() && dataPoint.directory().empty()){
+          downloadDetailedResults = true;
+        }
+      }
+    }
+
+    if(downloadDetailedResults){
+      resultsView->enableDownloadResultsButton(true);
+    } else {
+      resultsView->enableDownloadResultsButton(false);
+    }
+  }
+}
+
+void ResultsTabController::disableDownloadResultsButton()
+{
+  if( resultsView ) { resultsView->enableDownloadResultsButton(false); }
 }
 
 void ResultsTabController::enableViewFileButton()
@@ -452,8 +507,6 @@ std::vector<openstudio::analysis::DataPoint> DataPointCalibrationListController:
 
   return result;
 }
-
-
 
 }
 
