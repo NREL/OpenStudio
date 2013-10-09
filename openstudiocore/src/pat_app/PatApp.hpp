@@ -264,6 +264,10 @@ class PatApp : public QApplication, public BaseApp
 
   void attachProject(boost::optional<analysisdriver::SimpleProject> project);
 
+  void setPlayButtonEnabled(bool enabled);
+
+  void setCloudButtonStatus(const CloudStatus cloudStatus);
+
   QPointer<StartupView> m_startupView;
   QPointer<BuildingComponentDialog> m_onlineBclDialog;
   QPointer<CloudDialog> m_cloudDialog;

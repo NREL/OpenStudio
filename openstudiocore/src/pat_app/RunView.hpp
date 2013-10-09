@@ -90,6 +90,8 @@ class RunStatusView : public QWidget
 
    void setCloudStatus(CloudStatus status);
 
+   PlayButton * playButton;
+
    CloudOnButton * cloudOnButton;
 
    CloudStartingButton * cloudStartingButton;
@@ -118,9 +120,10 @@ class RunStatusView : public QWidget
 
   void updateCloudData();
 
+  void onCloudUpdate(const CloudStatus & newStatus);
+
  private:
 
-  PlayButton* m_playButton;
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
@@ -131,6 +134,7 @@ class RunStatusView : public QWidget
   QPushButton * m_clearSelectionDataPoints;
   QLabel * m_cloudTime;
   QLabel * m_cloudInstances;
+  QTimer * m_timer;
 };
 
 class DataPointRunHeaderView : public OSHeader
