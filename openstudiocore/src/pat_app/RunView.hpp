@@ -90,6 +90,8 @@ class RunStatusView : public QWidget
 
    void setCloudStatus(CloudStatus status);
 
+   PlayButton * playButton;
+
    CloudOnButton * cloudOnButton;
 
    CloudStartingButton * cloudStartingButton;
@@ -120,7 +122,6 @@ class RunStatusView : public QWidget
 
  private:
 
-  PlayButton* m_playButton;
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;

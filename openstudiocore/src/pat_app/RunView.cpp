@@ -118,13 +118,13 @@ RunStatusView::RunStatusView()
 
   // Run / Play button area
 
-  m_playButton = new PlayButton(this);
-  m_playButton->setFixedWidth(120);
-  m_playButton->setText("Run");
-  m_playButton->setCheckable(true);
-  m_playButton->setChecked(false);
-  mainHLayout->addWidget(m_playButton);
-  bool isConnected = connect(m_playButton, SIGNAL(clicked(bool)), this, SIGNAL(playButtonClicked(bool)));
+  playButton = new PlayButton(this);
+  playButton->setFixedWidth(120);
+  playButton->setText("Run");
+  playButton->setCheckable(true);
+  playButton->setChecked(false);
+  mainHLayout->addWidget(playButton);
+  bool isConnected = connect(playButton, SIGNAL(clicked(bool)), this, SIGNAL(playButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
   // Progress bar area
@@ -280,9 +280,9 @@ void RunStatusView::paintEvent(QPaintEvent * e)
 void RunStatusView::setRunning(bool isRunning)
 {
   if (isRunning){
-    m_playButton->setChecked(true);
+    playButton->setChecked(true);
   }else{
-    m_playButton->setChecked(false);
+    playButton->setChecked(false);
   }
 }
 
@@ -297,25 +297,25 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   //bool showPercentComplete = false;
   if (isRunning){
     // running
-    //m_playButton->setText("Pause");
-    m_playButton->setText("Stop");
-    m_playButton->setChecked(true);
+    //playButton->setText("Pause");
+    playButton->setText("Stop");
+    playButton->setChecked(true);
   }else{
     if (numCompletedJobs == 0){
       QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
       CloudMonitorWorker worker(cloudMonitor.data());
       if(worker.internetAvailable() && worker.authenticated() && worker.cloudRunning()){
-        m_playButton->setText("Run on Cloud");
+        playButton->setText("Run on Cloud");
       } else {
-        m_playButton->setText("Run Locally");
+        playButton->setText("Run Locally");
       }
-      m_playButton->setChecked(false);
+      playButton->setChecked(false);
     }else if (numCompletedJobs == numJobsInIteration){
-      m_playButton->setText("Complete");
-      m_playButton->setChecked(false); // third style to show complete?
+      playButton->setText("Complete");
+      playButton->setChecked(false); // third style to show complete?
     }else {
-      m_playButton->setText("Resume");
-      m_playButton->setChecked(false);
+      playButton->setText("Resume");
+      playButton->setChecked(false);
     }
   }
 
