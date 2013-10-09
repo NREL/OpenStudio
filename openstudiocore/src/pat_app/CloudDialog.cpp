@@ -46,6 +46,7 @@
 #define VAGRANT_PROVIDER "Vagrant"
 #define AMAZON_PROVIDER "Amazon EC2"
 #define EDIT_WIDTH 150
+#define KEY_WIDTH 260
 #define ADDRESS_WIDTH 110
 #define PORT_WIDTH 30
 #define TEXT_WIDTH 350
@@ -235,6 +236,8 @@ void CloudDialog::createWidgets()
   m_amazonProviderWidget->loadData();
   m_blankProviderWidget->loadData();
   m_vagrantProviderWidget->loadData();
+
+  cloudResourceChanged(m_cloudResourceComboBox->currentText());
 }
 
 boost::optional<CloudProviderWidget *> CloudDialog::getCurrentCloudProviderWidget()
@@ -312,10 +315,11 @@ void CloudDialog::on_okButton(bool checked)
     this->okButton()->setText("Save");
   } else if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
     // Save data
-     boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
-     if(cloudProviderWidget.is_initialized()){
-       cloudProviderWidget.get()->saveData();
-     }
+    boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
+    if(cloudProviderWidget.is_initialized()){
+      cloudProviderWidget.get()->saveData();
+    }
+    done(QDialog::Accepted);
   }
 }
 
@@ -772,7 +776,7 @@ void AmazonProviderWidget::createLoginWidget()
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_accessKeyLineEdit = new QLineEdit();
-  m_accessKeyLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_accessKeyLineEdit->setFixedWidth(KEY_WIDTH);
   m_leftLoginLayout->addWidget(m_accessKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
@@ -781,7 +785,7 @@ void AmazonProviderWidget::createLoginWidget()
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_secretKeyLineEdit = new QLineEdit();
-  m_secretKeyLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_secretKeyLineEdit->setFixedWidth(KEY_WIDTH);
   m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_leftLoginLayout->addStretch();
