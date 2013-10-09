@@ -24,6 +24,7 @@
 #include <QStringList>
 #include <QVector>
 #include <QSharedPointer>
+#include <utilities/core/Logger.hpp>
 
 #include "PrjDefines.hpp"
 
@@ -76,6 +77,8 @@ private:
     int m_lineNumber;
     bool allocated;
     QStringList entries;
+
+    REGISTER_LOGGER("openstudio.contam.prj.Reader");
 };
 
 template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING name)

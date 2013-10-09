@@ -23,6 +23,8 @@
 #include "PrjReader.hpp"
 #include "PrjPublic.hpp"
 
+#include <utilities/core/Path.hpp>
+
 #include "ContamAPI.hpp"
 
 namespace openstudio {
@@ -33,8 +35,10 @@ class CONTAM_API Model
 {
 public:
     Model(){m_valid=false;}
+    explicit Model(openstudio::path path);
     explicit Model(STRING filename);
     explicit Model(Reader &input);
+    bool read(openstudio::path path);
     bool read(STRING filename);
     bool read(Reader &input);
     STRING toString();
@@ -215,12 +219,19 @@ public:
 private:
     void rebuildContaminants();
     void readZoneIc(Reader &input);
+
     STRING writeZoneIc(int start=0);
     template <class T> STRING writeSectionVector(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
-    template <class T, template <class T> class U> STRING writeSectionVector(U<QSharedPointer<T> > vector,
-                                                                             STRING label=STRING_INIT,
-                                                                             int start=0);
-template <class T> STRING writeArray(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
+    // SWIG doesn't like this for some reason
+    //template <class T, template <class T> class U> STRING writeSectionVector(U<QSharedPointer<T> > vector,
+    //                                                                         STRING label=STRING_INIT,
+    //                                                                         int start=0);
+    template <class T> STRING writeSectionVector(QVector<QSharedPointer<T> > vector,
+                                                 STRING label=STRING_INIT,
+                                                 int start=0);
+    
+
+    template <class T> STRING writeArray(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
 
     bool m_valid;
 
@@ -260,8 +271,31 @@ template <class T> STRING Model::writeSectionVector(VECTOR_TYPE<T> vector, STRIN
     return string;
 }
 
+/*
 template <class T, template <class T> class U> STRING Model::writeSectionVector(U<QSharedPointer<T> > vector,
                                                                                 STRING label, int start)
+{
+    STRING string;
+    int number = vector.size()-start;
+    if(IS_NULL(label))
+    {
+        string += TO_STRING(number) + '\n';
+    }
+    else
+    {
+        string += TO_STRING(number) + " ! " + label + '\n';
+    }
+    for(int i=start;i<vector.size();i++)
+    {
+        string += vector[i]->write();
+    }
+    string += "-999\n";
+    return string;
+}
+*/
+
+template <class T> STRING Model::writeSectionVector(QVector<QSharedPointer<T> > vector,
+                                                    STRING label, int start)
 {
     STRING string;
     int number = vector.size()-start;

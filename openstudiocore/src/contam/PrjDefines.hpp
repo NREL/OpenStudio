@@ -20,12 +20,6 @@
 #ifndef PRJDEFINES_H
 #define PRJDEFINES_H
 
-#include <iostream>
-
-//#define DEBUG
-
-#define ERROR(mesg) std::cout << (mesg) << std::endl; exit(EXIT_FAILURE)
-
 #define STD_STRING
 #define STD_VECTOR
 #define STD_MAP

@@ -53,7 +53,7 @@ float Reader::readFloat(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
     return value;
 }
@@ -70,7 +70,7 @@ double Reader::readDouble(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
     return value;
 }
@@ -91,7 +91,7 @@ QString Reader::readQString(DECFILELINE)
 #ifndef NOFILELINE
                 mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-                ERROR(mesg.toStdString());
+                LOG(Fatal,mesg.toStdString());
             }
             m_lineNumber++;
             while(input[0]=='!')
@@ -106,7 +106,7 @@ QString Reader::readQString(DECFILELINE)
 #ifndef NOFILELINE
                     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-                    ERROR(mesg.toStdString());
+                    LOG(Fatal,mesg.toStdString());
                 }
                 m_lineNumber++;
             }
@@ -152,7 +152,7 @@ int Reader::readInt(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
     return value;
 }
@@ -168,7 +168,7 @@ unsigned int Reader::readUInt(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
     return value;
 }
@@ -199,7 +199,7 @@ QString Reader::readLineQString(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
     m_lineNumber++;
     while(input[0]=='!')
@@ -214,7 +214,7 @@ QString Reader::readLineQString(DECFILELINE)
 #ifndef NOFILELINE
             mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-            ERROR(mesg.toStdString());
+            LOG(Fatal,mesg.toStdString());
         }
         m_lineNumber++;
     }
@@ -230,7 +230,7 @@ void Reader::read999(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
 }
 
@@ -248,7 +248,7 @@ void Reader::read999(STRING mesg DECCFILELINE)
 #ifndef NOFILELINE
         qmesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(qmesg.toStdString());
+        LOG(Fatal,qmesg.toStdString());
     }
 }
 
@@ -261,7 +261,7 @@ void Reader::readEnd(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
 }
 
@@ -282,7 +282,7 @@ STRING Reader::readSection(DECFILELINE)
 #ifndef NOFILELINE
             mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-            ERROR(mesg.toStdString());
+            LOG(Fatal,mesg.toStdString());
         }
         m_lineNumber++;
         section += input + '\n';
@@ -384,7 +384,7 @@ template <> QString Reader::readNumber<QString>(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
     return string;
 }
@@ -400,7 +400,7 @@ template <> std::string Reader::readNumber<std::string>(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG(Fatal,mesg.toStdString());
     }
     return string.toStdString();
 }

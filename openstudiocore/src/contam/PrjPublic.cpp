@@ -3201,7 +3201,7 @@ ControlNode* ControlNode::readElement(Reader &input)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
 #endif
-        ERROR(mesg);
+        LOG_FREE(Fatal,"openstudio.contam.prj.Reader",mesg);
     }
     return out;
 }
@@ -5454,7 +5454,7 @@ AirflowElement* AirflowElement::readElement(Reader &input)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
 #endif
-        ERROR(mesg);
+        LOG_FREE(Fatal,"openstudio.contam.prj.Reader",mesg);
     }
     return out;
 }

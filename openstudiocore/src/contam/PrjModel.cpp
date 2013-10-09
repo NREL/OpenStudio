@@ -24,6 +24,11 @@ namespace openstudio {
 namespace contam {
 namespace prj {
 
+Model::Model(openstudio::path path)
+{
+    read(path);
+}
+
 Model::Model(STRING filename)
 {
     read(filename);
@@ -32,6 +37,11 @@ Model::Model(STRING filename)
 Model::Model(Reader &input)
 {
     read(input);
+}
+
+bool Model::read(openstudio::path path)
+{
+  return read(openstudio::toString(path));
 }
 
 bool Model::read(STRING filename)
@@ -219,7 +229,7 @@ void Model::readZoneIc(Reader &input)
 #ifndef NOFILELINE
             mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
 #endif
-            ERROR(mesg.toStdString());
+            LOG_FREE(Fatal,"openstudio.contam.prj.Reader",mesg.toStdString());
         }
         for(unsigned int i=0;i<m_zones.size();i++)
         {
@@ -231,7 +241,7 @@ void Model::readZoneIc(Reader &input)
 #ifndef NOFILELINE
                 mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
 #endif
-                ERROR(mesg.toStdString());
+                LOG_FREE(Fatal,"openstudio.contam.prj.Reader",mesg.toStdString());
             }
             VECTOR_TYPE<RX> ic;
             for(unsigned int j=0;j<nctm;j++)
