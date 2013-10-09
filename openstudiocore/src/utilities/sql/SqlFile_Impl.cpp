@@ -879,7 +879,18 @@ namespace openstudio{
                               TableName='General' AND \
                               RowName='Hours Simulated' AND \
                               Units='hrs'";
-      return execAndReturnFirstDouble(s);
+      boost::optional<double> ret = execAndReturnFirstDouble(s);
+
+      if (ret) return ret;
+
+      // Otherwise, let's try to calculate it:
+      return execAndReturnFirstDouble(
+        "select "
+        "    (select max(t.hour + ((t.simulationdays-1) * 24)) as mintime from time t join reportmeterdata r on (t.timeindex=r.timeindex))"
+        "  - (select min(t.hour + ((t.simulationdays-1) * 24)) as mintime from time t join reportmeterdata r on (t.timeindex=r.timeindex))"
+        "  + 1;"
+       );
+
     }
 
     boost::optional<double> SqlFile_Impl::netSiteEnergy() const
