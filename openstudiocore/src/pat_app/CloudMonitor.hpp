@@ -100,6 +100,8 @@ class CloudMonitor : public QObject
 
   // Restablish connection to current project session.
   // Use this when you open a new project that has a running session.
+  // This only supports clouds that are stopped or running.
+  // Behavior is undefined for clouds that are starting or stopping.
   void reconnectCloud();
   
   private slots:

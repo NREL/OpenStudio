@@ -279,6 +279,10 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
   {
     setStatus(CLOUD_RUNNING);
   }
+  else
+  {
+    setStatus(CLOUD_STOPPED);
+  }
 
   // TODO Handle other states
 }

@@ -774,6 +774,8 @@ void PatApp::showVerticalTab(int verticalId)
 
   mainWindow->setEnabled(true);
   mainWindow->setFocus();
+
+  updateAppState();
 }
 
 void PatApp::showStartupView()
@@ -1293,9 +1295,16 @@ QSharedPointer<CloudMonitor> PatApp::cloudMonitor() const
 
 void PatApp::onCloudStatusChanged(const CloudStatus & newCloudStatus)
 {
-  analysisdriver::AnalysisStatus analysisStatus = m_project->status();
+  if( m_project )
+  {
+    analysisdriver::AnalysisStatus analysisStatus = m_project->status();
 
-  setAppState(newCloudStatus, analysisStatus);
+    setAppState(newCloudStatus, analysisStatus);
+  }
+  else
+  {
+    setAppState(newCloudStatus,analysisdriver::AnalysisStatus::Idle);
+  }
 }
 
 void PatApp::onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus)
@@ -1303,6 +1312,22 @@ void PatApp::onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisS
   CloudStatus cloudStatus = m_cloudMonitor->status();
 
   setAppState(cloudStatus, newAnalysisStatus);
+}
+
+void PatApp::updateAppState()
+{
+  CloudStatus cloudStatus = m_cloudMonitor->status();
+
+  if( m_project )
+  {
+    analysisdriver::AnalysisStatus analysisStatus = m_project->status();
+
+    setAppState(cloudStatus, analysisStatus);
+  }
+  else
+  {
+    setAppState(cloudStatus,analysisdriver::AnalysisStatus::Idle);
+  }
 }
 
 // Control tabs, play button, cloud button, download button, ... add to list as required
