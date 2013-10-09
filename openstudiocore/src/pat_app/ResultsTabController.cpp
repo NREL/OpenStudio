@@ -181,7 +181,6 @@ void ResultsTabController::onOpenButtonClicked()
           // disable the button for now to prevent tons of instances being opened
           // will get re-enabled when clicking another data point
           resultsView->enableViewFileButton(false);
-          // TODO disableDownloadResultsButton() ???
         }else{
           QMessageBox::critical(resultsView, "Unable to Launch OpenStudio", "OpenStudio was not found in the expected location:\n" + toQString(openstudioApp));
         }
@@ -234,7 +233,7 @@ void ResultsTabController::downloadResults()
 
           if( resultsView ){
             // prevent people from clicking this over and over again? should there be another state?
-            //resultsView->enableDownloadResultsButton(false);
+            resultsView->enableDownloadResultsButton(false);
           }
         }
       }
@@ -274,11 +273,6 @@ void ResultsTabController::enableDownloadResultsButton()
   }
 }
 
-void ResultsTabController::disableDownloadResultsButton()
-{
-  if( resultsView ) { resultsView->enableDownloadResultsButton(false); }
-}
-
 void ResultsTabController::enableViewFileButton()
 {
   if( resultsView ) {
@@ -300,11 +294,6 @@ void ResultsTabController::enableViewFileButton()
 
     resultsView->enableViewFileButton(enabled);
   }
-}
-
-void ResultsTabController::disableViewFileButton()
-{
-  if( resultsView ) { resultsView->enableViewFileButton(false); }
 }
 
 void ResultsTabController::enableOpenDirectoryButton()
@@ -329,11 +318,6 @@ void ResultsTabController::enableOpenDirectoryButton()
     }
     resultsView->enableOpenDirectoryButton(enabled);
   }
-}
-
-void ResultsTabController::disableOpenDirectoryButton()
-{
-  if( resultsView ) { resultsView->enableOpenDirectoryButton(false); }
 }
 
 DataPointResultListItem::DataPointResultListItem(const openstudio::analysis::DataPoint& dataPoint,
