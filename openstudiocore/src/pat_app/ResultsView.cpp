@@ -272,7 +272,7 @@ ResultsView::ResultsView()
   m_downloadResultsButton = new QPushButton();
   m_downloadResultsButton->setFlat(true);
   m_downloadResultsButton->setFixedSize(195,29);
-  enableDownloadResultsButton(false);
+  enableDownloadResultsButton(false, true);
   hLayout->addWidget(m_downloadResultsButton);
 
   isConnected = connect(m_downloadResultsButton, SIGNAL(clicked(bool)),
@@ -359,17 +359,24 @@ void ResultsView::enableViewFileButton(bool enable)
   m_viewFileButton->setEnabled(enable);
 }
 
-void ResultsView::enableDownloadResultsButton(bool enable)
+void ResultsView::enableDownloadResultsButton(bool enable, bool sameSession)
 {
   QString style;
-  if(enable){
+  if (sameSession){
+    if(enable){
+      style = ("QPushButton {"
+                             "background-image:url(':/images/download_detailed_results_button.png');"
+                             "  border:none;"
+                             "}");
+    } else {
+      style = ("QPushButton {"
+                             "background-image:url(':/images/download_detailed_results_disabled.png');"
+                             "  border:none;"
+                             "}");
+    }
+  }else{
     style = ("QPushButton {"
-                           "background-image:url(':/images/download_detailed_results_button.png');"
-                           "  border:none;"
-                           "}");
-  } else {
-    style = ("QPushButton {"
-                           "background-image:url(':/images/download_detailed_results_disabled.png');"
+                           "background-image:url(':/images/download_detailed_results_na_button.png');"
                            "  border:none;"
                            "}");
   }

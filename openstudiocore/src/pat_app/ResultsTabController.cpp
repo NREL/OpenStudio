@@ -214,26 +214,34 @@ void ResultsTabController::openDirectory()
 
 void ResultsTabController::downloadResults()
 {
-  std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
-  if (!selectedItems.empty()){
-    DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
-    if (dataPointResultListItem){
-      analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
-      
-      boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-      if(project){
-        boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
-        if(cloudAnalysisDriver){
-          bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+  if( resultsView ){
 
-          if (!success){
-            // could not request this datapoint's results right now, set this for later?
-            dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
-          }
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+        
+        boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+        if(project){
+          boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+          if(cloudAnalysisDriver){
 
-          if( resultsView ){
+            bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
+            if (sameSession){
+
+              bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+              if (!success){
+                // could not request this datapoint's results right now, set this for later?
+                dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
+              }
+
+            }else{
+              QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");
+            }
+
             // prevent people from clicking this over and over again? should there be another state?
-            resultsView->enableDownloadResultsButton(false);
+            resultsView->enableDownloadResultsButton(false, sameSession);
           }
         }
       }
@@ -246,30 +254,40 @@ void ResultsTabController::enableDownloadResultsButton()
   if( resultsView ){
 
     bool enabled = false;
+    bool sameSession = true; // default to true for nothing selected case
 
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
     QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
     CloudStatus status = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
-    if(resultsView && status == CLOUD_RUNNING){
+    if(project && (status == CLOUD_RUNNING)){
+
       std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
       if (!selectedItems.empty()){
+
         DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
         if (dataPointResultListItem){
+
           analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
 
-          // TODO: check if data point is running or has run in the current cloud session
-          bool sameSession = true; // for now assume this is true
+          // check if data point is running or has run in the current cloud session
+          boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+          if (cloudAnalysisDriver){
+            sameSession = cloudAnalysisDriver->inSession(dataPoint);
+          }
 
           // Determine if datapoint has already has detailed data
           bool hasDetailedResults = !dataPoint.directory().empty();
-
-          if(sameSession && !hasDetailedResults){
+          if(!hasDetailedResults){
             enabled = true;
+          }else{
+            enabled = false;
+            sameSession = true; // already have results, doesn't matter
           }
         }
       }
     }
 
-    resultsView->enableDownloadResultsButton(enabled);
+    resultsView->enableDownloadResultsButton(enabled, sameSession);
   }
 }
 
