@@ -231,18 +231,13 @@ RunStatusView::RunStatusView()
   m_selectAllDownloads = new QPushButton(this);
   m_selectAllDownloads->setFlat(true);
   m_selectAllDownloads->setFixedSize(QSize(18,18));
-  style = "QPushButton {"
-          "  background-image:url(':/images/results_yes_download.png');"
-          "  border:none;"
-          "}";
-  m_selectAllDownloads->setStyleSheet(style);
   isConnected = connect(m_selectAllDownloads, SIGNAL(clicked(bool)),
                         this, SLOT(on_selectAllDownloads(bool)));
   OS_ASSERT(isConnected);
   buttonHLayout->addWidget(m_selectAllDownloads);
 
-  label = new QLabel("All");
-  buttonHLayout->addWidget(label);
+  m_selectAllDownloadsLabel = new QLabel();
+  buttonHLayout->addWidget(m_selectAllDownloadsLabel);
 
   horizontalSpacer = new QSpacerItem(14, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
   buttonHLayout->addSpacerItem(horizontalSpacer);
@@ -282,11 +277,28 @@ void RunStatusView::onCloudUpdate(const CloudStatus & newStatus)
     m_cloudTime->show();
     m_cloudInstances->show();
     m_timer->start(30000);
+
+    QString style;
+    style = "QPushButton {"
+            "  background-image:url(':/images/results_yes_download.png');"
+            "  border:none;"
+            "}";
+    m_selectAllDownloads->setStyleSheet(style);
+    m_selectAllDownloadsLabel->setText("All");
+
     updateCloudData();
   } else {
     m_cloudTime->hide();
     m_cloudInstances->hide();
     m_timer->stop();
+
+    QString style;
+    style = "QPushButton {"
+            "  background-image:url(':/images/results_space_download.png');"
+            "  border:none;"
+            "}";
+    m_selectAllDownloads->setStyleSheet(style);
+    m_selectAllDownloadsLabel->setText("   ");
   }
 }
 
@@ -364,9 +376,23 @@ void RunStatusView::on_selectAllDataPoints(bool checked)
 {
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
+
+    // Can only select points if project is idle
+    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+
+    if (!isProjectIdle){
+      return;
+    }
+
     std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
     Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
-      dataPoint.setSelected(true);
+
+      // Ignore signal if dataPoint has data
+      bool isComplete = dataPoint.complete();
+
+      if (!isComplete){
+        dataPoint.setSelected(true);
+      }
     }
   }
 }
@@ -375,9 +401,23 @@ void RunStatusView::on_clearSelectionDataPoints(bool checked)
 {
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
+
+    // Can only select points if project is idle
+    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+
+    if (!isProjectIdle){
+      return;
+    }
+
     std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
     Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
-      dataPoint.setSelected(false);
+
+      // Ignore signal if dataPoint has data
+      bool isComplete = dataPoint.complete();
+
+      if (!isComplete){
+        dataPoint.setSelected(false);
+      }
     }
   }
 }
@@ -401,9 +441,15 @@ void RunStatusView::on_selectAllClears(bool checked)
 {
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
-    std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
-    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
-      dataPoint.clearResults();
+
+    // Can only clear points if project is idle
+    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+  
+    if (isProjectIdle){
+      std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
+      Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+        dataPoint.clearResults();
+      }
     }
   }
 }
@@ -482,6 +528,10 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   setFixedHeight(30);
 
   bool isConnected = false;
+
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  isConnected = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus&)), this, SLOT(update()));
+  OS_ASSERT(isConnected);
 
   isConnected = m_dataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
   OS_ASSERT(isConnected);
@@ -628,14 +678,19 @@ void DataPointRunHeaderView::update()
   this->setChecked(m_dataPoint.selected());
   this->blockSignals(false);
 
-  if(this->isChecked()){
+  if (m_dataPoint.complete()){
+    style = "openstudio--pat--DataPointRunHeaderView  { "
+            "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
+            "stop: 0 #808080, stop: 0.5 #b3b3b3, stop: 1.0 #cccccc); "
+            "border: 1px solid #8C8C8C; "
+            "} ";
+  }else if(this->isChecked()){
     style = "openstudio--pat--DataPointRunHeaderView  { "
             "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
             "stop: 0 #ffd573, stop: 0.5 #ffeec7, stop: 1.0 #ffd573); "
             "border: 1px solid #8C8C8C; "
             "} ";
-  }
-  else{
+  }else{
     style = "openstudio--pat--DataPointRunHeaderView  { "
             "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
             "stop: 0 #cccccc, stop: 0.5 #f2f2f2, stop: 1.0 #cccccc); "
@@ -646,7 +701,7 @@ void DataPointRunHeaderView::update()
 
   ///// Clear button
 
-  bool hasDataToClear = !m_dataPoint.directory().empty();
+  bool hasDataToClear = (m_dataPoint.complete());
   if(hasDataToClear){
     style = "QPushButton {"
                           "background-image:url(':/images/clear_results_enabled.png');"
@@ -663,47 +718,77 @@ void DataPointRunHeaderView::update()
 
   ///// Download button
 
-  // If dataPoint not selected, clear download select
-  if(!this->isChecked()){
-    m_download->setChecked(false);
-  }
-
-  // Determine if datapoint has detailed data
-  if(this->m_dataPoint.complete() && !this->m_dataPoint.directory().empty()){
+  bool isCloudRunning = (PatApp::instance()->cloudMonitor()->status() == CLOUD_RUNNING);
+  if (!isCloudRunning){
     m_download->setEnabled(false);
     m_download->setChecked(false);
     style = "QPushButton {"
-                          "background-image:url(':/images/results_downloaded.png');"
-                          "  border:none;"
-                          "}";
-  } else if(m_dataPoint.runType() == analysis::DataPointRunType::CloudDetailed){
-    m_download->setEnabled(true);
-    m_download->setChecked(true);
-    style = "QPushButton {"
-                          "background-image:url(':/images/results_yes_download.png');"
-                          "  border:none;"
-                          "}";
-  // Note: there are more remaining types just analysis::DataPointRunType::CloudSlim
-  } else {
-    m_download->setEnabled(true);
-    m_download->setChecked(false);
-    style = "QPushButton {"
-                          "background-image:url(':/images/results_no_download.png');"
-                          "  border:none;"
-                          "}";
-  }
-  // TODO case where no image shown
-  // m_download->setChecked(false);
-  // m_download->setEnabled(false);
-  // style = "";
-  m_download->setStyleSheet(style);
+                                "background-image:url(':/images/results_space_download.png');"
+                                "  border:none;"
+                                "}";
+    m_download->setStyleSheet(style);
 
+  }else{
+
+    // Determine if datapoint already has detailed data
+    if(this->m_dataPoint.complete() && !this->m_dataPoint.directory().empty()){
+      m_download->setEnabled(false);
+      m_download->setChecked(false);
+      style = "QPushButton {"
+                            "background-image:url(':/images/results_downloaded.png');"
+                            "  border:none;"
+                            "}";
+
+    // If dataPoint not selected can't request download
+    } else if(!m_dataPoint.selected()){
+      m_download->setEnabled(false);
+      m_download->setChecked(false);
+      style = "QPushButton {"
+                            "background-image:url(':/images/results_space_download.png');"
+                            "  border:none;"
+                            "}";
+
+    // If dataPoint is not complete and is selected
+    } else {
+      
+      // can't request to download on completion if already complete
+      if (this->m_dataPoint.complete()){
+        m_download->setEnabled(false);
+      }else{
+        m_download->setEnabled(true);
+      }
+
+      if(m_dataPoint.runType() == analysis::DataPointRunType::CloudDetailed){
+        m_download->setChecked(true);
+        style = "QPushButton {"
+                              "background-image:url(':/images/results_yes_download.png');"
+                              "  border:none;"
+                              "}";
+      // Note: there are more remaining types just analysis::DataPointRunType::CloudSlim
+      } else {
+        m_download->setChecked(false);
+        style = "QPushButton {"
+                              "background-image:url(':/images/results_no_download.png');"
+                              "  border:none;"
+                              "}";
+      }
+    }
+    m_download->setStyleSheet(style);
+  }
+  
 }
 
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
+  // Can only select points if project is idle
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  OS_ASSERT(project);
+  bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+
   // Ignore signal if dataPoint has data
-  if(this->m_dataPoint.complete()){
+  bool isComplete = this->m_dataPoint.complete();
+  
+  if(!isProjectIdle || isComplete){
     this->blockSignals(true);
     this->setChecked(!checked);
     this->blockSignals(false);
@@ -728,7 +813,14 @@ void DataPointRunHeaderView::on_downloadClicked(bool checked)
 
 void DataPointRunHeaderView::on_clearClicked(bool checked)
 {
-  this->m_dataPoint.clearResults();
+  // Can only clear points if project is idle
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  OS_ASSERT(project);
+  bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+
+  if (isProjectIdle){
+    this->m_dataPoint.clearResults();
+  }
 }
 
 DataPointRunContentView::DataPointRunContentView()

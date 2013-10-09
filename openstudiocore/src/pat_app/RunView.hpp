@@ -130,6 +130,7 @@ class RunStatusView : public QWidget
   CloudStatus m_status;
   QPushButton * m_selectAllClears;
   QPushButton * m_selectAllDownloads;
+  QLabel * m_selectAllDownloadsLabel;
   QPushButton * m_selectAllDataPoints;
   QPushButton * m_clearSelectionDataPoints;
   QLabel * m_cloudTime;
