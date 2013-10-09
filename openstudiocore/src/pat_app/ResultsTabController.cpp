@@ -19,6 +19,7 @@
 
 #include <pat_app/ResultsTabController.hpp>
 
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/PatApp.hpp>
 #include <pat_app/ResultsView.hpp>
 
@@ -235,9 +236,9 @@ void ResultsTabController::downloadResults()
 
 void ResultsTabController::enableDownloadResultsButton()
 {
-  bool interenetConnected = false; // TODO
-  bool cloudAvailable = false; // TODO
-  if(resultsView && interenetConnected && cloudAvailable){
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  CloudStatus status = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
+  if(resultsView && status == CLOUD_RUNNING){
     bool downloadDetailedResults = false;
     std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
     if (!selectedItems.empty()){
