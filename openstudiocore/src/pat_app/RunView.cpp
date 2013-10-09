@@ -182,12 +182,10 @@ RunStatusView::RunStatusView()
   vLayout->addWidget(m_cloudTime);
   vLayout->addWidget(m_cloudInstances);
   mainHLayout->addLayout(vLayout);
-  QTimer * timer = new QTimer(this);
-  timer->start(30000);
-  isConnected = connect(timer, SIGNAL(timeout()),
+  m_timer = new QTimer(this);
+  isConnected = connect(m_timer, SIGNAL(timeout()),
                         this, SLOT(updateCloudData()));
   OS_ASSERT(isConnected);
-  updateCloudData();
 
   mainHLayout->addStretch();
 
@@ -267,6 +265,29 @@ RunStatusView::RunStatusView()
 
   horizontalSpacer = new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
   buttonHLayout->addSpacerItem(horizontalSpacer); 
+
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+
+  isConnected = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus &)),
+                        this, SLOT(onCloudUpdate(const CloudStatus &)));
+  OS_ASSERT(isConnected);
+
+  onCloudUpdate(PatApp::instance()->cloudMonitor()->status());
+}
+
+void RunStatusView::onCloudUpdate(const CloudStatus & newStatus)
+{
+  // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
+  if(newStatus == CLOUD_RUNNING){
+    m_cloudTime->show();
+    m_cloudInstances->show();
+    m_timer->start(30000);
+    updateCloudData();
+  } else {
+    m_cloudTime->hide();
+    m_cloudInstances->hide();
+    m_timer->stop();
+  }
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
