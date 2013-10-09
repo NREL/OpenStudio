@@ -9,6 +9,7 @@
     <file>images/add_multiple_design_alts_icon_disabled.png</file>
     <file>images/add_multiple_design_alts_icon_press.png</file>
     <file>images/add_script_icon_off.png</file>
+    <file>images/clear_all_button.png</file>
     <file>images/clear_results_disabled.png</file>
     <file>images/clear_results_enabled.png</file>
     <file>images/cloud_alert_icon.png</file>
@@ -44,6 +45,7 @@
     <file>images/results_no_download.png</file>
     <file>images/results_yes_download.png</file>
     <file>images/run_big.png</file>
+    <file>images/select_all_button.png</file>
     <file>images/tab_design_alts_disabled.png</file>
     <file>images/tab_design_alts_done.png</file>
     <file>images/tab_design_alts_off.png</file>
