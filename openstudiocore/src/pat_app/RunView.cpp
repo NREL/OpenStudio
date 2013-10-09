@@ -197,13 +197,32 @@ RunStatusView::RunStatusView()
 
   QSpacerItem * horizontalSpacer = 0;
 
-  m_selectAllDataPoints = new QPushButton("Select All",this);
+  QString style;
+
+  m_selectAllDataPoints = new QPushButton(this);
+  m_selectAllDataPoints->setFlat(true);
+  m_selectAllDataPoints->setFixedSize(QSize(87,16));
+  style = "QPushButton {"
+          "  background-image:url(':/images/select_all_button.png');"
+          "  border:none;"
+          "}";
+  m_selectAllDataPoints->setStyleSheet(style);
   isConnected = connect(m_selectAllDataPoints, SIGNAL(clicked(bool)),
                         this, SLOT(on_selectAllDataPoints(bool)));
   OS_ASSERT(isConnected);
   buttonHLayout->addWidget(m_selectAllDataPoints);
 
-  m_clearSelectionDataPoints = new QPushButton("Clear Selection",this);
+  horizontalSpacer = new QSpacerItem(5, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  buttonHLayout->addSpacerItem(horizontalSpacer);
+
+  m_clearSelectionDataPoints = new QPushButton(this);
+  m_clearSelectionDataPoints->setFlat(true);
+  m_clearSelectionDataPoints->setFixedSize(QSize(87,16));
+  style = "QPushButton {"
+          "  background-image:url(':/images/clear_all_button.png');"
+          "  border:none;"
+          "}";
+  m_clearSelectionDataPoints->setStyleSheet(style);
   isConnected = connect(m_clearSelectionDataPoints, SIGNAL(clicked(bool)),
                         this, SLOT(on_clearSelectionDataPoints(bool)));
   OS_ASSERT(isConnected);
@@ -214,11 +233,10 @@ RunStatusView::RunStatusView()
   m_selectAllDownloads = new QPushButton(this);
   m_selectAllDownloads->setFlat(true);
   m_selectAllDownloads->setFixedSize(QSize(18,18));
-  QString style;
-  style.append("QPushButton {"
-               "  background-image:url(':/images/results_yes_download.png');"
-               "  border:none;"
-               "}");
+  style = "QPushButton {"
+          "  background-image:url(':/images/results_yes_download.png');"
+          "  border:none;"
+          "}";
   m_selectAllDownloads->setStyleSheet(style);
   isConnected = connect(m_selectAllDownloads, SIGNAL(clicked(bool)),
                         this, SLOT(on_selectAllDownloads(bool)));
@@ -234,10 +252,10 @@ RunStatusView::RunStatusView()
   m_selectAllClears = new QPushButton(this);
   m_selectAllClears->setFlat(true);
   m_selectAllClears->setFixedSize(QSize(18,18));
-  style.append("QPushButton {"
-                             "background-image:url(':/images/clear_results_enabled.png');"
-                             "  border:none;"
-                             "}");
+  style = "QPushButton {"
+                        "background-image:url(':/images/clear_results_enabled.png');"
+                        "  border:none;"
+                        "}";
   m_selectAllClears->setStyleSheet(style);
   isConnected = connect(m_selectAllClears, SIGNAL(clicked(bool)),
                         this, SLOT(on_selectAllClears(bool)));
@@ -579,12 +597,6 @@ void DataPointRunHeaderView::update()
 
   ///// DataPointRunHeaderView
 
-  // Disable header if dataPoint has data
-  // (is this really the correct conditional???)
-  if(this->m_dataPoint.complete()){
-    // TODO has data
-  }
-
   this->blockSignals(true);
   this->setChecked(m_dataPoint.selected());
   this->blockSignals(false);
@@ -663,6 +675,14 @@ void DataPointRunHeaderView::update()
 
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
+  // Ignore signal if dataPoint has data
+  if(this->m_dataPoint.complete()){
+    this->blockSignals(true);
+    this->setChecked(!checked);
+    this->blockSignals(false);
+    return;
+  }
+
   if(checked){
     m_dataPoint.setSelected(true);
   } else {
