@@ -34,11 +34,11 @@
 
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
-#include "../shared_gui_components/MonitorUseDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 #include "PatConstants.hpp"
 #include "CloudDialog.hpp"
+#include "MonitorUseDialog.hpp"
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Path.hpp>

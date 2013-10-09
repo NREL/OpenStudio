@@ -389,23 +389,29 @@ void RunStatusView::on_selectAllClears(bool checked)
 
 void RunStatusView::updateCloudData()
 {
-  AWSProvider awsProvider;
-  boost::optional<AWSSession> awsSession = awsProvider.session().optionalCast<AWSSession>();
-  OS_ASSERT(awsSession);
-
   QString temp;
 
-  temp = temp.setNum(awsSession->totalSessionUptime());
-  temp.prepend("<b>");
-  temp.prepend("Time: ");
-  temp += " minutes </b>"; 
-  m_cloudTime->setText(temp);
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+  if (session) {
+    boost::optional<AWSSession> awsSession = session->optionalCast<AWSSession>();
+    if (awsSession) {
+      temp = temp.setNum(awsSession->totalSessionUptime());
+      temp.prepend("Time: <b>");
+      temp += " minutes</b>"; 
+      m_cloudTime->setText(temp);
 
-  temp = temp.setNum(awsSession->totalSessionInstances());
-  temp.prepend("<b>");
-  temp.prepend("Instances: ");
-  temp += "</b>";
-  m_cloudInstances->setText(temp);
+      temp = temp.setNum(awsSession->totalSessionInstances());
+      temp.prepend("Instances: <b>");
+      temp += "</b>";
+      m_cloudInstances->setText(temp);
+
+      return;
+    }
+  }
+
+  m_cloudTime->setText("Time: <b>0 minutes</b>");
+
+  m_cloudInstances->setText("Instances: <b>0</b>");
 }
 
 void RunStatusView::setCloudStatus(CloudStatus status)
