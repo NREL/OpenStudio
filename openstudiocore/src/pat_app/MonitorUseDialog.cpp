@@ -26,6 +26,7 @@
 #include <QBoxLayout>
 #include <QDesktopServices>
 #include <QLabel>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTimer>
 #include <QUrl>
@@ -166,13 +167,7 @@ void MonitorUseDialog::createWidgets()
   layout->addStretch();
 
   /////
-
-  bool success = false;
-  success = m_awsProvider.requestEstimatedCharges();
-  OS_ASSERT(success);
-  success = m_awsProvider.requestTotalInstances();
-  OS_ASSERT(success);
-  
+ 
   isConnected = connect(m_awsProvider.getImpl<detail::CloudProvider_Impl>().get(), SIGNAL(estimatedChargesAvailable()),
                         this, SLOT(on_estimatedChargesAvailable()));
   OS_ASSERT(isConnected);
@@ -182,6 +177,7 @@ void MonitorUseDialog::createWidgets()
   OS_ASSERT(isConnected);
 
   m_timer = new QTimer(this);
+  m_timer->start(30000);
   isConnected = connect(m_timer, SIGNAL(timeout()),
                         this, SLOT(updateData()));
   OS_ASSERT(isConnected);
@@ -195,17 +191,42 @@ void MonitorUseDialog::createWidgets()
   #endif
 }
 
+void  MonitorUseDialog::displayErrors()
+{
+  m_timer->stop();
+  QString errorsAndWarnings("Errors and warnings returned from Amazon EC2:");
+  std::vector<std::string> errors = m_awsProvider.errors();
+  Q_FOREACH(std::string error, errors){
+    errorsAndWarnings += error.c_str();
+    errorsAndWarnings += '\n';
+  }
+  std::vector<std::string> warnings = m_awsProvider.warnings();
+  Q_FOREACH(std::string warning, warnings){
+    errorsAndWarnings += warning.c_str();
+    errorsAndWarnings += '\n';
+  }
+  QMessageBox::critical(this, "Amazon EC2 Errors and Warnings", errorsAndWarnings);
+}
+
 //// SLOTS
 
 void  MonitorUseDialog::updateData()
 {
   QString temp;
 
-  temp = temp.setNum(m_awsProvider.estimatedCharges(), 'f', 2);
-  temp.prepend('$');
-  m_billingCharge->setText(temp);
-
-  m_totalNumInstances->setText(temp.setNum(m_awsProvider.totalInstances()));
+  bool success = false;
+  success = m_awsProvider.requestEstimatedCharges();
+  if(!success){
+    displayErrors();
+    done(QDialog::Accepted);
+    return;
+  }
+  success = m_awsProvider.requestTotalInstances();
+  if(!success){
+    displayErrors();
+    done(QDialog::Accepted);
+    return;
+  }
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
   if (session) {
@@ -235,20 +256,18 @@ void  MonitorUseDialog::on_cloudStatus(bool checked)
 
 void  MonitorUseDialog::on_estimatedChargesAvailable()
 {
-  m_estimatedChargesAvailable = true;
-  if(m_estimatedChargesAvailable && m_totalInstancesAvailable){
-    m_timer->start(30000);
-    updateData();
-  }
+  QString temp;
+
+  temp = temp.setNum(m_awsProvider.lastEstimatedCharges(), 'f', 2);
+  temp.prepend('$');
+  m_billingCharge->setText(temp);
 }
 
 void  MonitorUseDialog::on_totalInstancesAvailable()
 {
-  m_totalInstancesAvailable = true;
-  if(m_estimatedChargesAvailable && m_totalInstancesAvailable){
-    m_timer->start(30000);
-    updateData();
-  }
+  QString temp;
+
+  m_totalNumInstances->setText(temp.setNum(m_awsProvider.lastTotalInstances()));
 }
 
 } // pat
