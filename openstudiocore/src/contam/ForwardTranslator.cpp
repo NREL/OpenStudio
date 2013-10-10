@@ -63,7 +63,7 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
   m_progressBar = 0;
-  read(":/templates/template.prj");
+  read(STRING(":/templates/template.prj"));
   if(valid())
   {
     // The template is a legal PRJ file, so it has one level. Not for long.
@@ -79,7 +79,7 @@ ForwardTranslator::ForwardTranslator(std::string leakageDescriptor)
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
   m_progressBar = 0;
-  read(":/templates/template.prj");
+  read(STRING(":/templates/template.prj"));
   if(valid())
   {
     // The template is a legal PRJ file, so it has one level. Not for long.
@@ -95,7 +95,7 @@ ForwardTranslator::ForwardTranslator(double flow,double n,double deltaP)
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
   m_progressBar = 0;
-  read(":/templates/template.prj");
+  read(STRING(":/templates/template.prj"));
   if(valid())
   {
     // The template is a legal PRJ file, so it has one level. Not for long.
