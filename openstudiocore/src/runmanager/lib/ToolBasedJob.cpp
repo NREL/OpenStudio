@@ -656,9 +656,6 @@ namespace detail {
 
     m_error_info = ErrorInfo(); // Reset error tracking for this run
 
-    // reset the output collected so far, in case this is the second run
-    m_output.clear();
-
     // reset parameters and files
     m_required_files.clear();
     resetFiles(m_trackedFiles);
@@ -885,10 +882,19 @@ namespace detail {
     return f;
   }
 
-  std::string ToolBasedJob::getOutput() const
-  {
-    QReadLocker l(&m_mutex);
-    return m_output;
+  std::string ToolBasedJob::getOutput() const {
+    std::string result;
+    QWriteLocker l(&m_mutex);
+    std::ifstream ifs(toString(outdir() / toPath("stdout")).c_str(), std::ios_base::in | std::ios::binary);
+    if (ifs) {
+      ifs.seekg(0,std::ios::end);
+      result.resize(ifs.tellg());
+      ifs.seekg(0,std::ios::beg);
+      ifs.read(&result[0],result.size());
+      ifs.close();
+    }
+    l.unlock();
+    return result;
   }
 
   void ToolBasedJob::processError(QProcess::ProcessError t_e, const std::string &t_desc)
@@ -988,18 +994,18 @@ namespace detail {
 
   void ToolBasedJob::processStandardErrDataAdded(const std::string &data)
   {
+    QWriteLocker l(&m_mutex);
     std::ofstream ofs(toString(outdir() / toPath("stderr")).c_str(), std::ios_base::out | std::ios_base::app);
     ofs << data;
+    l.unlock();
   }
 
-  void ToolBasedJob::processStandardOutDataAdded(const std::string &data)
-  {
+  void ToolBasedJob::processStandardOutDataAdded(const std::string &data) {
     LOG(Trace, "stdout: " << boost::trim_copy(data));
-    std::ofstream ofs(toString(outdir() / toPath("stdout")).c_str(), std::ios_base::out | std::ios_base::app);
-    ofs << data;
 
     QWriteLocker l(&m_mutex);
-    m_output += data;
+    std::ofstream ofs(toString(outdir() / toPath("stdout")).c_str(), std::ios_base::out | std::ios_base::app);
+    ofs << data;
     l.unlock();
 
     emitOutputDataAdded(data);

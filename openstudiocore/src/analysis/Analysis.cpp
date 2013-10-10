@@ -190,6 +190,14 @@ namespace detail {
       connectChild(*m_algorithm,false);
     }
     BOOST_FOREACH(DataPoint& dataPoint,m_dataPoints) {
+      if (!dataPoint.hasProblem()) {
+        if (dataPoint.problemUUID() == m_problem.uuid()) {
+          dataPoint.setProblem(m_problem);
+        }
+        else {
+          OS_ASSERT(m_dataPointsAreInvalid);
+        }
+      }
       connectChild(dataPoint,false);
     }
   }
