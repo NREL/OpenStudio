@@ -742,20 +742,8 @@ void CloudMonitorWorker::monitorCloudRunning()
     if( ! m_cloudServiceRunning )
     {
       m_cloudRunning = checkCloudRunning();
-    }
-
-    if( ! m_cloudRunning )
-    {
       m_authenticated = checkAuthenticated();
-    }
-
-    if( ! m_authenticated )
-    {
       m_internetAvailable = checkInternetAvailable();
-    }
-
-    if( ! m_cloudServiceRunning )
-    {
       m_count++;
     }
 
