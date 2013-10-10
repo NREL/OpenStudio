@@ -868,6 +868,8 @@ void AmazonProviderWidget::createSettingsWidget()
   m_numberOfWorkerInstancesLineEdit = new QLineEdit();
   m_numberOfWorkerInstancesLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftSettingsLayout->addWidget(m_numberOfWorkerInstancesLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+  QValidator *numberOfWorkerInstancesValidator = new QIntValidator(1, 19, this);
+  m_numberOfWorkerInstancesLineEdit->setValidator(numberOfWorkerInstancesValidator);
 
   m_leftSettingsLayout->addStretch();
 
