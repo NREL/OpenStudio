@@ -272,15 +272,11 @@ ResultsView::ResultsView()
   m_downloadResultsButton = new QPushButton();
   m_downloadResultsButton->setFlat(true);
   m_downloadResultsButton->setFixedSize(195,29);
-  enableDownloadResultsButton(false);
+  enableDownloadResultsButton(false, true);
   hLayout->addWidget(m_downloadResultsButton);
 
   isConnected = connect(m_downloadResultsButton, SIGNAL(clicked(bool)),
     this, SIGNAL(downloadResultsButtonClicked(bool)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_downloadResultsButton, SIGNAL(clicked(bool)),
-    this, SLOT(on_downloadResultsButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
   m_viewFileButton = new QPushButton();
@@ -292,10 +288,6 @@ ResultsView::ResultsView()
   isConnected = connect(m_viewFileButton, SIGNAL(clicked(bool)),
     this, SIGNAL(openButtonClicked(bool)));
   OS_ASSERT(isConnected); 
-
-  isConnected = connect(m_viewFileButton, SIGNAL(clicked(bool)),
-    this, SLOT(on_openButtonClicked(bool)));
-  OS_ASSERT(isConnected);
 
   m_openDirButton = new OpenDirectoryButton(this);
   m_openDirButton->setToolTip("Open the directory for the selected file.");
@@ -367,17 +359,24 @@ void ResultsView::enableViewFileButton(bool enable)
   m_viewFileButton->setEnabled(enable);
 }
 
-void ResultsView::enableDownloadResultsButton(bool enable)
+void ResultsView::enableDownloadResultsButton(bool enable, bool sameSession)
 {
   QString style;
-  if(enable){
+  if (sameSession){
+    if(enable){
+      style = ("QPushButton {"
+                             "background-image:url(':/images/download_detailed_results_button.png');"
+                             "  border:none;"
+                             "}");
+    } else {
+      style = ("QPushButton {"
+                             "background-image:url(':/images/download_detailed_results_disabled.png');"
+                             "  border:none;"
+                             "}");
+    }
+  }else{
     style = ("QPushButton {"
-                           "background-image:url(':/images/download_detailed_results_button.png');"
-                           "  border:none;"
-                           "}");
-  } else {
-    style = ("QPushButton {"
-                           "background-image:url(':/images/download_detailed_results_disabled.png');"
+                           "background-image:url(':/images/download_detailed_results_na_button.png');"
                            "  border:none;"
                            "}");
   }
@@ -409,14 +408,6 @@ void ResultsView::selectCalibrationMethod(const QString& value)
   m_calibrationMethodLabel->setText(text);
 
   emit calibrationThresholdsChanged(m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
-}
-
-void ResultsView::on_downloadResultsButtonClicked(bool checked)
-{
-}
-
-void ResultsView::on_openButtonClicked(bool checked)
-{
 }
 
 ResultsHeader::ResultsHeader(bool isBaseline)

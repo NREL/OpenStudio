@@ -183,7 +183,7 @@ void CloudMonitor::onStartCloudWorkerComplete()
   {
     setStatus(CLOUD_ERROR);
     
-    QString error("Invalid cloud settings.  Verify settings from Cloud menu.");
+    QString error("Invalid cloud credentials.  Verify account settings from Cloud menu.");
 
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
 
@@ -379,10 +379,12 @@ void CloudMonitor::setCurrentProjectSession(const boost::optional<CloudSession> 
   {
     if( ! session )
     {
+      project->clearCloudAnalysisDriver();
       project->clearCloudSession();
     }
     else
     {
+      project->clearCloudAnalysisDriver();
       project->setCloudSession(session.get());
     }
 

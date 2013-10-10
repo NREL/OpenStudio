@@ -81,7 +81,7 @@ class ResultsView : public PatMainTabView
 
     void enableOpenDirectoryButton(bool enable);
 
-    void enableDownloadResultsButton(bool enable);
+    void enableDownloadResultsButton(bool enable, bool sameSession);
 
     void selectCalibrationMethod(const QString &);
 
@@ -103,12 +103,6 @@ class ResultsView : public PatMainTabView
     double m_calibrationMaxCVRMSE;
 
     OpenDirectoryButton* m_openDirButton;
-
-  private slots:
-
-    void on_downloadResultsButtonClicked(bool checked);
-
-    void on_openButtonClicked(bool checked);
 };
 
 class ResultsHeader : public QWidget

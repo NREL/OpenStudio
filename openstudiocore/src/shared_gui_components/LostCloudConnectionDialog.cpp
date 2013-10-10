@@ -78,7 +78,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
   label = new QLabel;
   label->setWordWrap(true);
   label->setFixedSize(QSize(LABEL_WIDTH,36));
-  label->setText("The project was running in the cloud when the connection was lost.  The cloud may still be running and accruing charges.");
+  label->setText("The connection to the cloud was interrupted.  The cloud may still be running and accruing charges.");
   mainLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;

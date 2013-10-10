@@ -63,15 +63,9 @@ class ResultsTabController : public QObject
 
     void enableDownloadResultsButton();
 
-    void disableDownloadResultsButton();
-
     void enableViewFileButton();
 
-    void disableViewFileButton();
-
     void enableOpenDirectoryButton();
-
-    void disableOpenDirectoryButton();
 
   private:
 
