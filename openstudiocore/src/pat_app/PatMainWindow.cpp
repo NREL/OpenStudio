@@ -177,6 +177,7 @@ void PatMainWindow::closeEvent(QCloseEvent *event)
       "PAT cannot be closed while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
       QMessageBox::Ok);
 
+    event->ignore();
     return;
   } else if (status == CLOUD_RUNNING) {
     int result = QMessageBox::warning(this, 
@@ -185,7 +186,10 @@ void PatMainWindow::closeEvent(QCloseEvent *event)
                    QMessageBox::Ok, 
                    QMessageBox::Cancel);
 
-    if(result == QMessageBox::Cancel) return;
+    if(result == QMessageBox::Cancel) {
+      event->ignore();
+      return;
+    }
   } else if (status == CLOUD_ERROR) {
     int result = QMessageBox::warning(this, 
                    "Close PAT?", 
@@ -193,10 +197,13 @@ void PatMainWindow::closeEvent(QCloseEvent *event)
                    QMessageBox::Ok, 
                    QMessageBox::Cancel);
 
-    if(result == QMessageBox::Cancel) return;
+    if(result == QMessageBox::Cancel) {
+      event->ignore();
+      return;
+    }
   }
 
-  qobject_cast<PatApp *>(QApplication::instance())->quit();
+  qobject_cast<PatApp *>(QApplication::instance())->quit(true);
   writeSettings();
 
   QMainWindow::closeEvent(event);

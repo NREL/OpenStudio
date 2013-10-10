@@ -22,6 +22,9 @@
 
 #include <shared_gui_components/OSDialog.hpp>
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
+
 class QLabel;
 class QLineEdit;
 class QPushButton;
@@ -44,16 +47,24 @@ private:
 
   void createWidgets();
 
+  bool m_totalInstancesAvailable;
+  bool m_estimatedChargesAvailable;
+
   QLabel * m_billingCharge;
   QLabel * m_timeRunning;
   QLabel * m_numInstances;
   QLabel * m_totalNumInstances;
   QPushButton * m_cloudStatus;
+  QTimer * m_timer;
+
+  AWSProvider m_awsProvider;
 
 private slots:
 
   void updateData();
   void on_cloudStatus(bool checked);
+  void on_estimatedChargesAvailable();
+  void on_totalInstancesAvailable();
 
 };
 

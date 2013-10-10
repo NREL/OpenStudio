@@ -220,6 +220,16 @@ void CloudMonitor::onStartCloudWorkerComplete()
 
     setStatus(CLOUD_STOPPED);
   }
+  else if( ! m_startCloudWorker->resourcesAvailableToStart() )
+  {
+    setStatus(CLOUD_ERROR);
+    
+    QString error("Insufficient cloud resources.  Reduce the number of workers requested or allow current cloud resources to complete.");
+
+    QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
+
+    setStatus(CLOUD_STOPPED);
+  }
   else if( m_startCloudWorker->error() )
   {
     setStatus(CLOUD_ERROR);
@@ -490,7 +500,11 @@ CloudStatus CloudMonitor::status() const
 
 StartCloudWorker::StartCloudWorker(CloudMonitor * monitor)
   : QObject(),
-    m_monitor(monitor)
+    m_monitor(monitor),
+    m_internetAvailable(false),
+    m_validCredentials(false),
+    m_resourcesAvailableToStart(false)
+
 {
 }
 
@@ -511,6 +525,9 @@ boost::optional<CloudSession> StartCloudWorker::session() const
 void StartCloudWorker::startWorking()
 {
   m_error = false;
+  m_internetAvailable = false;
+  m_validCredentials = false;
+  m_resourcesAvailableToStart = false;
 
   boost::optional<CloudProvider> provider;
 
@@ -533,6 +550,13 @@ void StartCloudWorker::startWorking()
   m_validCredentials = provider->validateCredentials();
 
   if( ! m_validCredentials )
+  {
+    m_error = true;
+  }
+
+  m_resourcesAvailableToStart = provider->resourcesAvailableToStart();
+
+  if( ! m_resourcesAvailableToStart )
   {
     m_error = true;
   }
@@ -607,6 +631,11 @@ bool StartCloudWorker::internetAvailable() const
 bool StartCloudWorker::validCredentials() const
 {
   return m_validCredentials;
+}
+
+bool StartCloudWorker::resourcesAvailableToStart() const
+{
+  return m_resourcesAvailableToStart;
 }
 
 bool StartCloudWorker::error() const

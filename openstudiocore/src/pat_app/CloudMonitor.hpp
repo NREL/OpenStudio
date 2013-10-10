@@ -181,6 +181,8 @@ class StartCloudWorker : public QObject
 
   bool validCredentials() const;
 
+  bool resourcesAvailableToStart() const;
+
   bool error() const;
 
   signals:
@@ -204,6 +206,8 @@ class StartCloudWorker : public QObject
   bool m_internetAvailable;
 
   bool m_validCredentials;
+
+  bool m_resourcesAvailableToStart;
 
   bool m_error;
 };
