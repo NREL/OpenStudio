@@ -47,6 +47,7 @@ SET( ${target_name}_SRC
   RunView.hpp
   StartupView.cpp
   StartupView.hpp
+  "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx"
 
   # shared objects
   ../shared_gui_components/BCLMeasureDialog.cpp
