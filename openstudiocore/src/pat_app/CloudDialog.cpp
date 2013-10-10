@@ -19,7 +19,7 @@
 
 #include "CloudDialog.hpp"
 
-#include <openstudio_lib/VagrantConfiguration.hxx>
+#include <pat_app/VagrantConfiguration.hxx>
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
@@ -52,6 +52,8 @@
 #define PORT_WIDTH 30
 #define TEXT_WIDTH 350
 #define TEXT_HEIGHT 400
+
+using namespace openstudio::pat;
 
 namespace openstudio {
 
