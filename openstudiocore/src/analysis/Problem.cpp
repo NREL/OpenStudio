@@ -895,7 +895,7 @@ namespace detail {
         // see if should clear
         bool clearCompound = false;
         if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
-          if (rcv->measure() == compoundRubyMeasure.get()) {
+          if (!(rcv->measure() == compoundRubyMeasure.get())) {
             clearCompound = true;
           }
         }
@@ -1925,6 +1925,9 @@ namespace detail {
   bool Problem_Impl::checkWorkflow(const std::vector<WorkflowStep>& workflow) const {
     OptionalFileReferenceType currentType; // main-line energy model format
     std::set<FileReferenceType> allTypes;  // all types seen so far
+
+    // DLM: add the unknown type here, note this is treating unknown more like none
+    allTypes.insert(FileReferenceType::Unknown);
 
     if (OptionalAnalysisObject parent = this->parent()) {
       currentType = parent->cast<Analysis>().seed().fileType();

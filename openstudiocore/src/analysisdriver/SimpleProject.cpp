@@ -22,6 +22,8 @@
 
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include <analysisdriver/AnalysisDriver_Impl.hpp>
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
@@ -98,9 +100,14 @@ namespace detail {
       m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+    OS_ASSERT(test);
+
     if (m_analysis) {
-      m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      test = m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      OS_ASSERT(test);
     }
+
     m_logFile.setLogLevel(options.logLevel());
     OS_ASSERT(runManager().paused());
     if (!options.pauseRunManagerQueue()) {
@@ -115,6 +122,10 @@ namespace detail {
     if (!m_zipFileForCloud.empty()) {
       boost::filesystem::remove(m_zipFileForCloud);
     }
+  }
+
+  SimpleProject SimpleProject_Impl::simpleProject() const {
+    return SimpleProject(boost::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
   }
 
   openstudio::path SimpleProject_Impl::projectDir() const {
@@ -319,6 +330,31 @@ namespace detail {
     return analysisDriver().isRunning();
   }
 
+  AnalysisStatus SimpleProject_Impl::status() const
+  {
+    if (m_cloudAnalysisDriver){
+      return m_cloudAnalysisDriver->status();
+    }
+    return analysisDriver().status();
+  }
+
+  boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const{
+    if (!m_cloudAnalysisDriver) {
+      if (boost::optional<CloudSession> session = cloudSession()) {
+        bool test = disconnect(m_analysisDriver.getImpl().get(), SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+        OS_ASSERT(test);
+
+        m_cloudAnalysisDriver = CloudAnalysisDriver(*session,simpleProject());
+        
+        test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+        OS_ASSERT(test);
+
+        emit analysisStatusChanged(m_cloudAnalysisDriver->status());
+      }
+    }
+    return m_cloudAnalysisDriver;
+  }
+
   boost::optional<CloudSession> SimpleProject_Impl::cloudSession() const {
     if (!m_cloudSession && !m_cloudSessionSettingsDirty) {
       // check database
@@ -398,7 +434,7 @@ namespace detail {
     }
 
     // check workflow
-    bool inputVariableOk = true;
+    bool inputVariableOk = true; // model measures ok
     boost::optional<JobType> nextWorkItemType = JobType(JobType::ModelToIdf);
     BOOST_FOREACH(const WorkflowStep& step,problem.workflow()) {
       if (!inputVariableOk && step.isInputVariable()) {
@@ -417,7 +453,7 @@ namespace detail {
             break;
           case JobType::ExpandObjects :
             nextWorkItemType = JobType(JobType::EnergyPlusPreProcess);
-            inputVariableOk = true;
+            inputVariableOk = true; // energyplus measures ok
             break;
           case JobType::EnergyPlusPreProcess :
             nextWorkItemType = JobType(JobType::EnergyPlus);
@@ -425,9 +461,11 @@ namespace detail {
             break;
           case JobType::EnergyPlus :
             nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
+            inputVariableOk = true; // reporting measures ok
             break;
           case JobType::OpenStudioPostProcess :
             nextWorkItemType.reset();
+            inputVariableOk = false;
             break;
           default :
             OS_ASSERT(false);
@@ -856,24 +894,49 @@ namespace detail {
     return result;
   }
 
-  void SimpleProject_Impl::setCloudSession(const CloudSession& session) {
-    m_cloudSession = session;
-    m_cloudSessionSettingsDirty = true;
+  void SimpleProject_Impl::clearCloudAnalysisDriver() {
+    m_cloudAnalysisDriver.reset();
+
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(AnalysisStatus)), this, SIGNAL(analysisStatusChanged(AnalysisStatus)));
+    OS_ASSERT(test);
+
+    emit analysisStatusChanged(m_analysisDriver.status());
   }
 
-  void SimpleProject_Impl::clearCloudSession() {
-    m_cloudSession.reset();
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::setCloudSession(const CloudSession& session) {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSession = session;
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
-  void SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
-    m_cloudSettings = settings;
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::clearCloudSession() {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSession.reset();
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
-  void SimpleProject_Impl::clearCloudSettings() {
-    m_cloudSettings.reset();
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSettings = settings;
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
+  }
+
+  bool SimpleProject_Impl::clearCloudSettings() {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSettings.reset();
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
   openstudio::path SimpleProject_Impl::zipFileForCloud() const {
@@ -1286,6 +1349,7 @@ namespace detail {
   void SimpleProject_Impl::onSeedChanged() const {
     m_seedModel.reset();
     m_seedIdf.reset();
+    m_measureArguments.clear(); // need to re-load arguments
   }
 
   openstudio::path SimpleProject_Impl::alternateModelsDir() const {
@@ -1491,7 +1555,7 @@ namespace detail {
   std::vector<BCLMeasure> SimpleProject_Impl::importSeedModelMeasures(ProgressBar* progressBar) {
     BCLMeasureVector result;
     openstudio::path projectPath = seedDir() / toPath(seed().path().stem());
-    if (boost::filesystem::exists(projectPath)) {
+    if (boost::filesystem::exists(projectPath / toPath("project.osp"))) {
 
       // open seed model project
       SimpleProjectOptions options;
@@ -1504,55 +1568,59 @@ namespace detail {
         // ETH: Fixed measures would be more distinct if they were WorkItems, not
         // MeasureGroups.
 
-        int fixedMeasureInsertIndex(0);
+        // where to insert model measures from new seed
+        int modelMeasureInsertIndex(0); 
         if (OptionalMeasureGroup altModelVar = getAlternativeModelVariable()) {
           if (OptionalInt altModelVarIndex = problem.getVariableIndexByUUID(altModelVar->uuid())) {
-            fixedMeasureInsertIndex = *altModelVarIndex + 1;
+            modelMeasureInsertIndex = *altModelVarIndex + 1; // after alternative model variable
           }
         }
 
-        bool previousMeasureWasModelMeasure(true);
+        // where to insert energyplus measures from new seed
+        int energyplusMeasureInsertIndex = modelMeasureInsertIndex + 1;
+        if (OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::ExpandObjects)){
+          // first choice placement is after ExpandObjects job
+          energyplusMeasureInsertIndex = *oIndex + 1;
+        }else if (OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::ModelToIdf)){
+          // second is after ModelToIdf job
+          energyplusMeasureInsertIndex = *oIndex + 1;
+        }else{
+          LOG(Info,"Could not locate appropriate place in workflow for EnergyPlus Measures.");
+          return result;
+        }
+
+        // where to insert reporting measures from new seed
+        int reportingMeasureInsertIndex = energyplusMeasureInsertIndex + 1;
+        if (OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlus)){
+          // first choice placement is after EnergyPlus job
+          reportingMeasureInsertIndex = *oIndex + 1;
+        }else{
+          LOG(Info,"Could not locate appropriate place in workflow for Reporting Measures.");
+          return result;
+        }
+
+        // loop through seed model workflow
         BOOST_FOREACH(const WorkflowStep& seedModelStep,sp->analysis().problem().workflow()) {
+
           if (isPATFixedMeasure(seedModelStep)) {
+            // seedModelStep needs to be imported as a fixed measure
 
+            // fixedMeasure as it lives with the osm
             RubyMeasure fixedMeasure = seedModelStep.inputVariable().cast<MeasureGroup>().measures(false)[0].cast<RubyMeasure>();
-
-            // change insert index if this is first EnergyPlus measure
-            if ((fixedMeasure.inputFileType() == FileReferenceType(FileReferenceType::IDF)) &&
-                (previousMeasureWasModelMeasure))
-            {
-              // first choice placement is after ExpandObjects job
-              OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::ExpandObjects);
-              // second is after ModelToIdf job
-              if (!oIndex) {
-                oIndex = problem.getWorkflowStepIndexByJobType(JobType::ModelToIdf);
-              }
-              // third is to try to put ModelToIdf job at the end, then EnergyPlus measures
-              if (!oIndex) {
-                if (problem.push(WorkItem(JobType::ModelToIdf))) {
-                  oIndex = problem.numWorkflowSteps() - 1;
-                }
-              }
-              if (oIndex) {
-                fixedMeasureInsertIndex = *oIndex + 1;
-              }
-              else {
-                LOG(Info,"Could not insert EnergyPlus measures from new seed model, "
-                    << "because could not locate appropriate place in workflow to put them.");
-                return result;
-              }
-            }
 
             // see if measure is already in project
             OptionalBCLMeasure seedMeasure = fixedMeasure.measure();
             if (seedMeasure) {
+
               OptionalBCLMeasure projectMeasure = getMeasureByUUID(seedMeasure->uuid());
               if (projectMeasure && (*projectMeasure != *seedMeasure)) {
-                result.push_back(*seedMeasure);
+                // result only
+                result.push_back(*seedMeasure); 
               }
               if (!projectMeasure) {
                 projectMeasure = insertMeasure(*seedMeasure);
               }
+
               OS_ASSERT(projectMeasure);
               // add new variable with that measure, same arguments as seed model
               RubyMeasure newMeasure(*projectMeasure);
@@ -1561,8 +1629,21 @@ namespace detail {
               newMeasure.setDescription(fixedMeasure.description());
               newMeasure.setArguments(fixedMeasure.arguments());
               MeasureGroup newDVar(projectMeasure->name(),MeasureVector(1u,newMeasure));
-              problem.insert(fixedMeasureInsertIndex,newDVar);
-              ++fixedMeasureInsertIndex;
+
+              // change insert index if this is first EnergyPlus measure
+              if (seedMeasure->measureType() == MeasureType::ModelMeasure){
+                problem.insert(modelMeasureInsertIndex,newDVar);
+                ++modelMeasureInsertIndex;
+                ++energyplusMeasureInsertIndex;
+                ++reportingMeasureInsertIndex;
+              }else if (seedMeasure->measureType() == MeasureType::EnergyPlusMeasure){
+                problem.insert(energyplusMeasureInsertIndex,newDVar);
+                ++energyplusMeasureInsertIndex;
+                ++reportingMeasureInsertIndex;
+              }else if (seedMeasure->measureType() == MeasureType::ReportingMeasure){
+                problem.insert(reportingMeasureInsertIndex,newDVar);
+                ++reportingMeasureInsertIndex;
+              }
             }
           }
         }
@@ -1792,7 +1873,11 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
   OptionalSimpleProject result;
 
   if (!boost::filesystem::exists(projectDir)) {
-    bool ok = boost::filesystem::create_directories(projectDir);
+    bool ok = false;
+    try {
+      ok = boost::filesystem::create_directories(projectDir);
+    }
+    catch (...) {}
     if (!ok) {
       LOG(Error,"Cannot create a SimpleProject at " << toString(projectDir) << ", because "
           << "the directory cannot be created.");
@@ -1908,6 +1993,14 @@ bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
 }
 
+AnalysisStatus SimpleProject::status() const {
+  return getImpl()->status();
+}
+
+boost::optional<CloudAnalysisDriver> SimpleProject::cloudAnalysisDriver() const {
+  return getImpl()->cloudAnalysisDriver();
+}
+
 boost::optional<CloudSession> SimpleProject::cloudSession() const {
   return getImpl()->cloudSession();
 }
@@ -1967,19 +2060,23 @@ bool SimpleProject::removeAllDataPoints() {
   return getImpl()->removeAllDataPoints();
 }
 
-void SimpleProject::setCloudSession(const CloudSession& session) {
+void SimpleProject::clearCloudAnalysisDriver() {
+  getImpl()->clearCloudAnalysisDriver();
+}
+
+bool SimpleProject::setCloudSession(const CloudSession& session) {
   return getImpl()->setCloudSession(session);
 }
 
-void SimpleProject::clearCloudSession() {
+bool SimpleProject::clearCloudSession() {
   return getImpl()->clearCloudSession();
 }
 
-void SimpleProject::setCloudSettings(const CloudSettings& settings) {
+bool SimpleProject::setCloudSettings(const CloudSettings& settings) {
   return getImpl()->setCloudSettings(settings);
 }
 
-void SimpleProject::clearCloudSettings() {
+bool SimpleProject::clearCloudSettings() {
   return getImpl()->clearCloudSettings();
 }
 
@@ -2171,16 +2268,15 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
     runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
   }
 
-  // ETH@20130306 - Is this the best option?
-  // DLM: for now we will let run manager manage the number of jobs running at a time
-  //      even though this does result in long time to queue initially
-  // DLM: i did confirm that the data points in the run list update correctly if this is set
-  //runOptions.setQueueSize(configOpts.getMaxLocalJobs());
+  // limits the AnalysisDriver queue to 24. this way, not all data points are made and queued 
+  // in the RunManager at the same time.
+  runOptions.setQueueSize(24);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
   // however there seem to be intermittant failures when this is done (bug 1077)
   // for now keep this setting, should also be a user option for debugging
-  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::none);
+  // ETH: changing back to standard, i think the bugs have been squashed
+  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::standard);
 
   return runOptions;
 }

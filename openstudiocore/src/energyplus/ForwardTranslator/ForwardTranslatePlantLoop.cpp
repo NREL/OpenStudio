@@ -40,6 +40,10 @@
 #include <model/WaterToWaterComponent_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/CoilCoolingCooledBeam.hpp>
+#include <model/CoilCoolingCooledBeam_Impl.hpp>
+#include <model/StraightComponent.hpp>
+#include <model/StraightComponent_Impl.hpp>
 #include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
 #include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
@@ -51,7 +55,6 @@
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
-
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -67,6 +70,8 @@
 #include <utilities/idd/PlantEquipmentOperation_CoolingLoad_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
+#include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 
 #include <utilities/core/Assert.hpp>
 
@@ -125,7 +130,21 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
-
+        //special case for AirTerminalSingleDuctConstantVolumeChilledBeam
+        if (boost::optional<CoilCoolingCooledBeam> coilCB = it->optionalCast<CoilCoolingCooledBeam>() )
+        {
+          if (boost::optional<StraightComponent> airTerm = coilCB->containingStraightComponent())
+          {  
+            boost::optional<IdfObject> idfAirDistUnit = this->translateAndMapModelObject(*airTerm);
+            //translate and map containingStraightComponent
+            if (idfAirDistUnit)
+            {
+              //Get the name and idd type of the air terminal inside the air distribution unit
+              objectName = idfAirDistUnit->getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName).get();
+              iddType = idfAirDistUnit->getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType).get();
+            }
+          }
+        }
         //special case for ZoneHVAC:LowTemperatureRadiant:ConstantFlow and ZoneHVAC:LowTemperatureRadiant:VariableFlow.  In E+, this object appears on both the 
         //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
         //ZoneHVACBaseboardConvectiveWater and CoilHeatingWaterBaseboard.  The ZoneHVAC goes onto the zone and
@@ -144,7 +163,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
-       if (boost::optional<CoilCoolingLowTempRadiantConstFlow> coilCLRC = it->optionalCast<CoilCoolingLowTempRadiantConstFlow>() )
+        if (boost::optional<CoilCoolingLowTempRadiantConstFlow> coilCLRC = it->optionalCast<CoilCoolingLowTempRadiantConstFlow>() )
         {
           if (boost::optional<ZoneHVACComponent> znLowTempRadConst = coilCLRC->containingZoneHVACComponent())
           {
@@ -157,8 +176,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
-				
-				if (boost::optional<CoilHeatingLowTempRadiantVarFlow> coilHLRC = it->optionalCast<CoilHeatingLowTempRadiantVarFlow>() )
+        if (boost::optional<CoilHeatingLowTempRadiantVarFlow> coilHLRC = it->optionalCast<CoilHeatingLowTempRadiantVarFlow>() )
         {
           if (boost::optional<ZoneHVACComponent> znLowTempRadVar = coilHLRC->containingZoneHVACComponent())
           {
@@ -171,7 +189,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
-       if (boost::optional<CoilCoolingLowTempRadiantVarFlow> coilCLRC = it->optionalCast<CoilCoolingLowTempRadiantVarFlow>() )
+        if (boost::optional<CoilCoolingLowTempRadiantVarFlow> coilCLRC = it->optionalCast<CoilCoolingLowTempRadiantVarFlow>() )
         {
           if (boost::optional<ZoneHVACComponent> znLowTempRadVar = coilCLRC->containingZoneHVACComponent())
           {

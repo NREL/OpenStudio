@@ -90,7 +90,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 	}
 	
 	// Field A3 Cooled Beam Type
-	if(s = modelObject.cooledBeamType())
+	if((s = modelObject.cooledBeamType()))
 	{
 		idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CooledBeamType,s.get());
 	}
@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 	temp = modelObject.inletModelObject();
 	if(temp)
 	{
-		if(s = temp->name())
+		if((s = temp->name()))
 		{
 			idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName,s.get());
 		}		
@@ -109,7 +109,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 	temp = modelObject.outletModelObject();
 	if(temp)
 	{
-		if(s = temp->name())
+		if((s = temp->name()))
 		{
 			idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName,s.get());
 		}		
@@ -123,7 +123,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		temp = coilCoolingCooledBeam.inletModelObject();
 		if(temp)
 		{
-			if(s = temp->name())
+			if((s = temp->name()))
 			{
 				idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ChilledWaterInletNodeName,s.get());
 			}		
@@ -133,7 +133,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		temp = coilCoolingCooledBeam.outletModelObject();
 		if(temp)
 		{
-			if(s = temp->name())
+			if((s = temp->name()))
 			{
 				idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ChilledWaterOutletNodeName,s.get());
 			}		
@@ -144,7 +144,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirVolumetricFlowRate,"autosize");
 		}
-		else if(value = modelObject.supplyAirVolumetricFlowRate())
+		else if((value = modelObject.supplyAirVolumetricFlowRate()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirVolumetricFlowRate,value.get());
 		}
@@ -154,7 +154,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::MaximumTotalChilledWaterVolumetricFlowRate,"autosize");
 		}
-		else if(value = modelObject.maximumTotalChilledWaterVolumetricFlowRate())
+		else if((value = modelObject.maximumTotalChilledWaterVolumetricFlowRate()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::MaximumTotalChilledWaterVolumetricFlowRate,value.get());
 		}
@@ -164,7 +164,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::NumberofBeams,"autosize");
 		}
-		else if(number = modelObject.numberofBeams())
+		else if((number = modelObject.numberofBeams()))
 		{
 			idfObject.setInt(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::NumberofBeams,number.get());
 		}
@@ -174,7 +174,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::BeamLength,"autosize");
 		}
-		else if(value = modelObject.beamLength())
+		else if((value = modelObject.beamLength()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::BeamLength,value.get());
 		}
@@ -184,7 +184,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignInletWaterTemperature,15.0);
 		}
-		else if(value = modelObject.designInletWaterTemperature())
+		else if((value = modelObject.designInletWaterTemperature()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignInletWaterTemperature,value.get());
 		}
@@ -194,7 +194,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignOutletWaterTemperature,17.0);
 		}
-		else if(value = modelObject.designOutletWaterTemperature())
+		else if((value = modelObject.designOutletWaterTemperature()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignOutletWaterTemperature,value.get());
 		}				
@@ -204,7 +204,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoilSurfaceAreaperCoilLength,5.422);
 		}	
-		else if(value = coilCoolingCooledBeam.coilSurfaceAreaperCoilLength())
+		else if((value = coilCoolingCooledBeam.coilSurfaceAreaperCoilLength()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoilSurfaceAreaperCoilLength,value.get());
 		}
@@ -214,7 +214,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametera,15.3);
 		}		
-		else if(value = coilCoolingCooledBeam.modelParametera())
+		else if((value = coilCoolingCooledBeam.modelParametera()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametera,value.get());
 		}
@@ -224,7 +224,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern1,0);
 		}	
-		else if(value = coilCoolingCooledBeam.modelParametern1())
+		else if((value = coilCoolingCooledBeam.modelParametern1()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern1,value.get());
 		}
@@ -234,7 +234,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern2,0.84);
 		}	
-		else if(value = coilCoolingCooledBeam.modelParametern2())
+		else if((value = coilCoolingCooledBeam.modelParametern2()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern2,value.get());
 		}
@@ -244,7 +244,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern3,0.12);
 		}	
-		else if(value = coilCoolingCooledBeam.modelParametern3())
+		else if((value = coilCoolingCooledBeam.modelParametern3()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern3,value.get());
 		}
@@ -254,7 +254,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametera0,0.171);
 		}	
-		else if(value = coilCoolingCooledBeam.modelParametera0())
+		else if((value = coilCoolingCooledBeam.modelParametera0()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametera0,value.get());
 		}
@@ -264,7 +264,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParameterK1,0.0057);
 		}	
-		else if(value = coilCoolingCooledBeam.modelParameterK1())
+		else if((value = coilCoolingCooledBeam.modelParameterK1()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParameterK1,value.get());
 		}
@@ -274,7 +274,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern,0.4);
 		}	
-		else if(value = coilCoolingCooledBeam.modelParametern())
+		else if((value = coilCoolingCooledBeam.modelParametern()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::ModelParametern,value.get());
 		}
@@ -284,7 +284,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::LeavingPipeInsideDiameter,0.0145);
 		}	
-		else if(value = coilCoolingCooledBeam.leavingPipeInsideDiameter())
+		else if((value = coilCoolingCooledBeam.leavingPipeInsideDiameter()))
 		{
 			idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::LeavingPipeInsideDiameter,value.get());
 		}
@@ -301,7 +301,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 		idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoefficientofInductionKin,"autocalculate");
 	}
 		
-	if(value = modelObject.coefficientofInductionKin())
+	if((value = modelObject.coefficientofInductionKin()))
 	{
 		idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoefficientofInductionKin,value.get());
 	}

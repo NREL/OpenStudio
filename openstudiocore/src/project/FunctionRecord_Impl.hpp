@@ -32,7 +32,6 @@ namespace detail {
 
   /** FunctionRecord_Impl is a ObjectRecord_Impl that is the implementation class for FunctionRecord.*/
   class PROJECT_API FunctionRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

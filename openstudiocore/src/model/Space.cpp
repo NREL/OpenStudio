@@ -2050,6 +2050,7 @@ namespace detail {
 
   void Space_Impl::matchSurfaces(Space& other)
   {
+    double tol = 0.01;
 
     if (this->handle() == other.handle()){
       return;
@@ -2084,7 +2085,7 @@ namespace detail {
 
         std::reverse(otherVertices.begin(), otherVertices.end());
 
-        if (circularEqual(vertices, otherVertices, 0.001)){
+        if (circularEqual(vertices, otherVertices, tol)){
 
           // TODO: check constructions?
           surface.setAdjacentSurface(otherSurface);
@@ -2100,7 +2101,7 @@ namespace detail {
               otherVertices = transformation*otherSubSurface.vertices();
               std::reverse(otherVertices.begin(), otherVertices.end());
 
-              if (circularEqual(vertices, otherVertices, 0.001)){
+              if (circularEqual(vertices, otherVertices, tol)){
 
                 // TODO: check constructions?
                 subSurface.setAdjacentSubSurface(otherSubSurface);
@@ -2456,22 +2457,6 @@ namespace detail {
     OS_ASSERT(count == 1);
   }
 
-  // helper function to get a boost polygon point from a Point3d
-  boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
-  {
-    // simple method
-    //return boost::make_tuple(point3d.x(), point3d.y());
-
-    // detailed method, try to combine points within tolerance
-    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
-      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
-        return boost::make_tuple(otherPoint.x(), otherPoint.y());
-      }
-    }
-    allPoints.push_back(point3d);
-    return boost::make_tuple(point3d.x(), point3d.y());
-  }
-
   std::vector<Point3d> Space_Impl::floorPrint() const
   {
     double tol = 0.01; // 1 cm tolerance
@@ -2612,6 +2597,23 @@ namespace detail {
     result = removeColinear(result);
 
     return result;
+  }
+
+  
+  // helper function to get a boost polygon point from a Point3d
+  boost::tuple<double, double> Space_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const
+  {
+    // simple method
+    //return boost::make_tuple(point3d.x(), point3d.y());
+
+    // detailed method, try to combine points within tolerance
+    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
+        return boost::make_tuple(otherPoint.x(), otherPoint.y());
+      }
+    }
+    allPoints.push_back(point3d);
+    return boost::make_tuple(point3d.x(), point3d.y());
   }
 
 } // detail

@@ -27,6 +27,7 @@
   #include <runmanager/lib/ConfigOptions.hpp>
   #include <runmanager/lib/ProcessCreator.hpp>
   #include <runmanager/lib/AdvancedStatus.hpp>
+  #include <runmanager/lib/JobState.hpp>
   #include <runmanager/lib/Workflow.hpp>
   #include <runmanager/lib/TreeStatus.hpp>
   #include <runmanager/lib/JobStatusWidget.hpp>
@@ -142,6 +143,9 @@
 %template(EnergyPlusVersionPathVector) std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::path> >;
 %template(OptionalJob) boost::optional<openstudio::runmanager::Job>;
 %template(OptionalJobErrors) boost::optional<openstudio::runmanager::JobErrors>;
+%template(OptionalWorkItem) boost::optional<openstudio::runmanager::WorkItem>;
+%template(OptionalRunManager) boost::optional<openstudio::runmanager::RunManager>;
+%template(OptionalTools) boost::optional<openstudio::runmanager::Tools>;
 
 %template(ErrorTypeStringPair) std::pair<openstudio::runmanager::ErrorType, std::string>;
 
@@ -169,6 +173,7 @@
 %include <runmanager/lib/ToolInfo.hpp>
 %include <runmanager/lib/FileInfo.hpp>
 %include <runmanager/lib/AdvancedStatus.hpp>
+%include <runmanager/lib/JobState.hpp>
 %include <runmanager/lib/Job.hpp>
 %include <runmanager/lib/JobFactory.hpp>
 %include <runmanager/lib/RunManager.hpp>

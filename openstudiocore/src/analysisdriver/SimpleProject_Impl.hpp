@@ -22,6 +22,7 @@
 
 #include <analysisdriver/AnalysisDriverAPI.hpp>
 #include <analysisdriver/AnalysisDriver.hpp>
+#include <analysisdriver/CloudAnalysisDriver.hpp>
 
 #include <analysis/Analysis.hpp>
 
@@ -40,6 +41,7 @@
 #include <utilities/core/FileLogSink.hpp>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -68,11 +70,12 @@ namespace project {
 namespace analysisdriver {
 
 class SimpleProjectOptions;
+class AnalysisStatus;
 
 namespace detail {
 
   /** SimpleProject_Impl is the implementation class for SimpleProject. */
-  class ANALYSISDRIVER_API SimpleProject_Impl : public QObject {
+  class ANALYSISDRIVER_API SimpleProject_Impl : public QObject, public boost::enable_shared_from_this<SimpleProject_Impl> {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -85,6 +88,8 @@ namespace detail {
                        const SimpleProjectOptions& options);
 
     virtual ~SimpleProject_Impl();
+
+    SimpleProject simpleProject() const;
 
     //@}
     /** @name Getters and Queries */
@@ -133,6 +138,11 @@ namespace detail {
 
     /** Returns true if the analysis() is being run by analysisDriver(). */
     bool isRunning() const;
+
+    AnalysisStatus status() const;
+
+    /** If there is a CloudSession, returns a CloudAnalysisDriver for this project. */
+    boost::optional<CloudAnalysisDriver> cloudAnalysisDriver() const;
 
     boost::optional<CloudSession> cloudSession() const;
 
@@ -238,17 +248,25 @@ namespace detail {
      *  if operation is incomplete (if not all files can be removed from the file system). */
     bool removeAllDataPoints();
 
-    /** Sets this project's CloudSession to session, which ensures that it will be stored in 
-     *  projectDatabase() upon save(). */
-    void setCloudSession(const CloudSession& session);
+    /** Clears cloudAnalysisDriver(). Trusts user to know when they are done with the object (does
+     *  not check isRunning() or isDownloading()). */
+    void clearCloudAnalysisDriver();
 
-    void clearCloudSession();
+    /** Sets this project's CloudSession to session, which ensures that it will be stored in 
+     *  projectDatabase() upon save(). This method does nothing and returns false if there is a 
+     *  cloudAnalysisDriver(). */
+    bool setCloudSession(const CloudSession& session);
+
+    /** This method does nothing and returns false if there is a cloudAnalysisDriver(). */
+    bool clearCloudSession();
 
     /** Sets this project's CloudSettings to settings, which ensures that it will be stored in 
-     *  projectDatabase() upon save(). */
-    void setCloudSettings(const CloudSettings& settings);
+     *  projectDatabase() upon save(). This method does nothing and returns false if there is a 
+     *  cloudAnalysisDriver(). */
+    bool setCloudSettings(const CloudSettings& settings);
 
-    void clearCloudSettings();
+    /** This method does nothing and returns false if there is a cloudAnalysisDriver(). */
+    bool clearCloudSettings();
 
     /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
      *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
@@ -290,12 +308,17 @@ namespace detail {
 
     void onSeedChanged() const;
 
+   signals:
+
+    void analysisStatusChanged(AnalysisStatus newStatus) const;
+
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.SimpleProject");
 
     openstudio::path m_projectDir;
     analysisdriver::AnalysisDriver m_analysisDriver;
     mutable boost::optional<analysis::Analysis> m_analysis; // mutable for lazy load on open
+    mutable boost::optional<CloudAnalysisDriver> m_cloudAnalysisDriver; // mutable for lazy load
     mutable boost::optional<CloudSession> m_cloudSession;   // mutable for lazy load on open
     mutable boost::optional<CloudSettings> m_cloudSettings; // mutable for lazy load on open
     mutable bool m_cloudSessionSettingsDirty; // don't lazy load if user has explicitly set

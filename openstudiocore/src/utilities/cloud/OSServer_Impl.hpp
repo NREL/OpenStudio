@@ -94,20 +94,26 @@ namespace detail{
     bool isAnalysisRunning(const UUID& analysisUUID, int msec);
     bool lastIsAnalysisRunning() const;
 
+    bool isAnalysisComplete(const UUID& analysisUUID, int msec);
+    bool lastIsAnalysisComplete() const;
+
     bool stop(const UUID& analysisUUID, int msec);
     bool lastStopSuccess() const;
 
     std::vector<UUID> dataPointUUIDs(const UUID& analysisUUID, int msec);
     std::vector<UUID> lastDataPointUUIDs() const;
 
-    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec);
-    std::vector<UUID> lastRunningDataPointUUIDs() const;
-
     std::vector<UUID> queuedDataPointUUIDs(const UUID& analysisUUID, int msec);
     std::vector<UUID> lastQueuedDataPointUUIDs() const;
 
+    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastRunningDataPointUUIDs() const;
+
     std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec);
     std::vector<UUID> lastCompleteDataPointUUIDs() const;
+
+    std::vector<UUID> downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastDownloadReadyDataPointUUIDs() const;
 
     std::string dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec);
     std::string lastDataPointJSON() const;
@@ -147,6 +153,8 @@ namespace detail{
 
     bool requestIsAnalysisRunning(const UUID& analysisUUID);
 
+    bool requestIsAnalysisComplete(const UUID& analysisUUID);
+
     bool requestStop(const UUID& analysisUUID);
 
     bool requestDataPointUUIDs(const UUID& analysisUUID);
@@ -156,6 +164,8 @@ namespace detail{
     bool requestQueuedDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestCompleteDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
 
@@ -205,6 +215,8 @@ namespace detail{
 
     void processIsAnalysisRunning();
 
+    void processIsAnalysisComplete();
+
     void processStop();
 
     void processDataPointUUIDs();
@@ -215,7 +227,11 @@ namespace detail{
 
     void processCompleteDataPointUUIDs();
 
+    void processDownloadReadyDataPointUUIDs();
+
     void processDataPointJSON();
+
+    void processDownloadDataPointComplete();
 
   private:
 
@@ -235,17 +251,22 @@ namespace detail{
     bool m_lastStartSuccess;
     bool m_lastIsAnalysisQueued;
     bool m_lastIsAnalysisRunning;
+    bool m_lastIsAnalysisComplete;
     bool m_lastStopSuccess;
     std::vector<UUID> m_lastDataPointUUIDs;
-    std::vector<UUID> m_lastRunningDataPointUUIDs;
     std::vector<UUID> m_lastQueuedDataPointUUIDs;
+    std::vector<UUID> m_lastRunningDataPointUUIDs;
     std::vector<UUID> m_lastCompleteDataPointUUIDs;
+    std::vector<UUID> m_lastDownloadReadyDataPointUUIDs;
     std::string m_lastDataPointJSON;
     bool m_lastDownloadDataPointSuccess;
+    path m_lastDownloadDataPointPath;
+
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
 
     void clearErrorsAndWarnings();
+    void logNetworkReply(const std::string& methodName) const;
     void logError(const std::string& error) const;
     void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;

@@ -190,6 +190,14 @@ namespace detail {
       connectChild(*m_algorithm,false);
     }
     BOOST_FOREACH(DataPoint& dataPoint,m_dataPoints) {
+      if (!dataPoint.hasProblem()) {
+        if (dataPoint.problemUUID() == m_problem.uuid()) {
+          dataPoint.setProblem(m_problem);
+        }
+        else {
+          OS_ASSERT(m_dataPointsAreInvalid);
+        }
+      }
       connectChild(dataPoint,false);
     }
   }
@@ -703,8 +711,13 @@ namespace detail {
   void Analysis_Impl::updateInputPathData(const openstudio::path& originalBase,
                                           const openstudio::path& newBase)
   {
+    LOG(Debug,"Updating paths that were relative to '" << toString(originalBase) << 
+        "' to be relative to '" << toString(newBase) << "' now.");
+
     // seed
     openstudio::path temp = relocatePath(seed().path(),originalBase,newBase);
+    LOG(Debug,"Seed was at '" << toString(seed().path()) << "', relocatePath determined that it "
+      << "should now be at '" << toString(temp) << "'.");
     if (!temp.empty()) {
       m_seed.setPath(temp);
     }
@@ -1130,6 +1143,48 @@ std::ostream& Analysis::toJSON(std::ostream& os,
 
 std::string Analysis::toJSON(const AnalysisSerializationOptions& options) const {
   return getImpl<detail::Analysis_Impl>()->toJSON(options);
+}
+
+boost::optional<Analysis> Analysis::loadJSON(const openstudio::path& p,
+                                             const openstudio::path& newProjectDir)
+{
+  OptionalAnalysis result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(p);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<Analysis>()) {
+    result = loadResult.analysisObject->cast<Analysis>();
+    if (!newProjectDir.empty()) {
+      result->updateInputPathData(loadResult.projectDir,newProjectDir);
+    }
+  }
+  return result;
+}
+
+boost::optional<Analysis> Analysis::loadJSON(std::istream& json,
+                                             const openstudio::path& newProjectDir)
+{
+  OptionalAnalysis result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<Analysis>()) {
+    result = loadResult.analysisObject->cast<Analysis>();
+    if (!newProjectDir.empty()) {
+      result->updateInputPathData(loadResult.projectDir,newProjectDir);
+    }
+  }
+  return result;
+}
+
+boost::optional<Analysis> Analysis::loadJSON(const std::string& json,
+                                             const openstudio::path& newProjectDir)
+{
+  OptionalAnalysis result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<Analysis>()) {
+    result = loadResult.analysisObject->cast<Analysis>();
+    if (!newProjectDir.empty()) {
+      result->updateInputPathData(loadResult.projectDir,newProjectDir);
+    }
+  }
+  return result;
 }
 
 /// @cond

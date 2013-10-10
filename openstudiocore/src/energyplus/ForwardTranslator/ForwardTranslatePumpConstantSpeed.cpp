@@ -114,7 +114,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
 
   // FractionofMotorInefficienciestoFluidStream  
 
-  if( value = modelObject.fractionofMotorInefficienciestoFluidStream() )
+  if( (value = modelObject.fractionofMotorInefficienciestoFluidStream()) )
   {
     idfObject.setDouble(Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream,value.get());
   } 

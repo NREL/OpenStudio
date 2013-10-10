@@ -61,8 +61,8 @@ namespace detail {
       m_outputFileType(bclMeasure.outputFileType()),
       m_isUserScript(false)
   {
-    OS_ASSERT((m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
-    OS_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF));
+    OS_ASSERT((m_inputFileType == FileReferenceType::Unknown) || (m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
+    OS_ASSERT((m_outputFileType == FileReferenceType::Unknown) || (m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF)  || (m_outputFileType == FileReferenceType::XML));
   }
 
   RubyMeasure_Impl::RubyMeasure_Impl(const openstudio::path& perturbationScript,
@@ -77,13 +77,14 @@ namespace detail {
       m_isUserScript(isUserScript)
   {
     OS_ASSERT(m_perturbationScript->fileType() == FileReferenceType::RB);
-    OS_ASSERT((inputFileType == FileReferenceType::OSM) || 
-                 (inputFileType == FileReferenceType::IDF) ||
-                 (inputFileType == FileReferenceType::Unknown)); // Unknown is for (hopefully temporary) dummy measures
-                                                                 // constructed in RubyContinuousVariable_Impl::fromVariant.
-    OS_ASSERT((outputFileType == FileReferenceType::OSM) || 
-                 (outputFileType == FileReferenceType::IDF) ||
-                 (outputFileType == FileReferenceType::Unknown));
+    OS_ASSERT((inputFileType == FileReferenceType::Unknown) ||
+              (inputFileType == FileReferenceType::OSM) || 
+              (inputFileType == FileReferenceType::IDF)); 
+                                                                 
+    OS_ASSERT((outputFileType == FileReferenceType::Unknown) ||
+              (outputFileType == FileReferenceType::OSM) || 
+              (outputFileType == FileReferenceType::IDF) ||
+              (outputFileType == FileReferenceType::XML));
   }
 
   RubyMeasure_Impl::RubyMeasure_Impl(
@@ -306,7 +307,7 @@ namespace detail {
   }
 
   bool RubyMeasure_Impl::updateMeasure(const BCLMeasure& newVersion,
-                                            std::vector<ruleset::OSArgument> newArguments)
+                                       std::vector<ruleset::OSArgument> newArguments)
   {
     if (!usesBCLMeasure() || (newVersion.uuid() != m_bclMeasureUUID.get())) {
       return false;

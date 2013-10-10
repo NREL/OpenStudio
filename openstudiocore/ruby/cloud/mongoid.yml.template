@@ -1,0 +1,19 @@
+development:
+  sessions:
+    default:
+      database: os_dev
+      hosts:
+        - SERVER_IP:27017
+      options:
+        allow_dynamic_fields: true 
+        raise_not_found_error: false
+production:
+  sessions:
+    default:
+      database: os_prod
+      hosts:
+        - SERVER_IP:27017
+      options:
+        allow_dynamic_fields: true 
+        raise_not_found_error: false
+                

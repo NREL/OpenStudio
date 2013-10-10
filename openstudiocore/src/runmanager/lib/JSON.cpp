@@ -7,6 +7,7 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <qjson/parser.h>
 
@@ -21,7 +22,7 @@ namespace detail {
       map["files"] = toVariant(t_jobTree.rawInputFiles());
     }
 
-    std::vector<JobParam> params = cleanupParams(t_jobTree.params()).params();
+    std::vector<JobParam> params = cleanupParams(t_jobTree.params(), t_jobTree.getBasePath()).params();
     if (!params.empty())
     {
       map["params"] = toVariant(params);
@@ -37,12 +38,19 @@ namespace detail {
       map["last_run"] = QVariant(toQString(t_jobTree.lastRun()->toISO8601()));
     }
 
-    if (!t_jobTree.outputFiles().empty()) {
-      map["output_files"] = toVariant(t_jobTree.outputFiles());
+    Files outputFiles = t_jobTree.relativeOutputFiles();
+    if (!outputFiles.files().empty()) {
+      map["output_files"] = toVariant(outputFiles.files());
     }
 
     map["errors"] = toVariant(t_jobTree.errors());
     map["status"] = toVariant(t_jobTree.status());
+
+    if (t_jobTree.allParams().has("flatoutdir"))
+    {
+      openstudio::path outdir = openstudio::toPath(t_jobTree.outdir().filename());
+      map["outdir"] = toQString(outdir);
+    }
 
     if (!t_jobTree.children().empty()) {
       map["children"] = toVariant(t_jobTree.children());
@@ -118,7 +126,8 @@ namespace detail {
           lastRun,
           toJobErrors(map["errors"], t_version),
           map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],t_version)) : Files(),
-          map.contains("status") ? toAdvancedStatus(map["status"], t_version) : AdvancedStatus()
+          map.contains("status") ? toAdvancedStatus(map["status"], t_version) : AdvancedStatus(),
+          map.contains("outdir") ? openstudio::toPath(map["outdir"].toString()) : openstudio::path()
           )
         );
 
@@ -152,11 +161,28 @@ namespace detail {
     return toJob(jobData,version,t_externallyManaged);
   }
 
-  JobParams JSON::cleanupParams(JobParams t_params)
+  JobParams JSON::cleanupParams(JobParams t_params, const openstudio::path &t_basedir)
   {
     if (t_params.has("jobExternallyManaged"))
     {
       t_params.remove("jobExternallyManaged");
+    }
+
+    if (t_params.has("outdir"))
+    {
+      try {
+        /*
+        openstudio::path p = openstudio::toPath(t_params.get("outdir").children.at(0).value);
+        std::cout << "outdir: " << openstudio::toString(p) << std::endl;
+        std::cout << "basedir: " << openstudio::toString(t_basedir) << std::endl;
+
+        p = openstudio::relativePath(p, t_basedir);
+        std::cout << "relativedir: " << openstudio::toString(p) << std::endl;
+        */
+        t_params.remove("outdir");
+        //t_params.append("outdir", openstudio::toString(p));
+      } catch (...) {
+      }
     }
 
     return t_params;
@@ -169,7 +195,7 @@ namespace detail {
     if (!t_workItem.tools.tools().empty()) {
       map["tools"] = toVariant(t_workItem.tools.tools());
     }
-    std::vector<JobParam> params = cleanupParams(t_workItem.params).params();
+    std::vector<JobParam> params = cleanupParams(t_workItem.params, openstudio::path()).params();
     if (!params.empty())
     {
       map["params"] = toVariant(params);
@@ -217,6 +243,67 @@ namespace detail {
 
     QVariant workItemData = variant.toMap()["work_item"];
     return toWorkItem(workItemData,version);
+  }
+
+  // VectorOfWorkItems
+
+  QVariant JSON::toVariant(const std::vector<WorkItem> &t_workItems) {
+    QVariantList qvl;
+
+    int index(0);
+    for (std::vector<WorkItem>::const_iterator itr = t_workItems.begin();
+         itr != t_workItems.end();
+         ++itr)
+    {
+      QVariantMap qvm = toVariant(*itr).toMap();
+      qvm["work_item_index"] = QVariant(index);
+      qvl.push_back(qvm);
+      ++index;
+    }
+
+    return QVariant(qvl);
+  }
+
+  bool JSON::saveJSON(const std::vector<WorkItem> &t_workItems,
+                      const openstudio::path &t_p,
+                      bool t_overwrite)
+  {
+    QVariantMap result;
+    result["metadata"] = jsonMetadata();
+    result["work_items"] = toVariant(t_workItems);
+    return openstudio::saveJSON(QVariant(result),t_p,t_overwrite);
+  }
+
+  std::string JSON::toJSON(const std::vector<WorkItem> &t_workItems) {
+    QVariantMap result;
+    result["metadata"] = jsonMetadata();
+    result["work_items"] = toVariant(t_workItems);
+    return openstudio::toJSON(QVariant(result));
+  }
+
+  std::vector<WorkItem> JSON::toVectorOfWorkItem(const QVariant &t_variant,
+                                                 const VersionString& version)
+  {
+    return deserializeOrderedVector<WorkItem>(
+               t_variant.toList(),
+               "work_item_index",
+               boost::function<WorkItem (const QVariant&)>(boost::bind(JSON::toWorkItem,_1,version)));
+  }
+
+  std::vector<WorkItem> JSON::toVectorOfWorkItem(const openstudio::path &t_pathToJson) {
+    QVariant variant = loadJSON(t_pathToJson);
+    VersionString version = extractOpenStudioVersion(variant);
+
+    QVariant workItemsData = variant.toMap()["work_items"];
+    return toVectorOfWorkItem(workItemsData,version);
+  }
+
+  std::vector<WorkItem> JSON::toVectorOfWorkItem(const std::string &t_json) {
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
+
+    QVariant workItemsData = variant.toMap()["work_items"];
+    return toVectorOfWorkItem(workItemsData,version);
   }
 
   // JobType
@@ -446,9 +533,11 @@ namespace detail {
     QVariantMap qvm;
 
     qvm["name"] = toQString(t_tool.name);
+    qvm["version"] = toQString(t_tool.version.toString());
     qvm["local_bin_path"] = toQString(t_tool.localBinPath);
     qvm["remote_archive"] = toQString(t_tool.remoteArchive);
     qvm["remote_exe"] = toQString(t_tool.remoteExe);
+    qvm["version"] = toQString(t_tool.version.toString());
     qvm["out_file_filter"] = toQString(boost::lexical_cast<std::string>(t_tool.outFileFilter));
 
     return QVariant(qvm);
@@ -457,13 +546,15 @@ namespace detail {
   ToolInfo JSON::toToolInfo(const QVariant &t_variant, const VersionString& t_version) {
     QVariantMap qvm = t_variant.toMap();
 
-    if (qvm.empty() || !qvm.contains("name") || !qvm.contains("version")) {
+    // should check for "version", but there was a bug in which toVariant(ToolInfo) was not 
+    // serializing the version. try to limp along by filling in a blank ToolVersion.
+    if (qvm.empty() || !qvm.contains("name") || (!qvm.contains("version") && (t_version > VersionString("1.0.5")))) {
       throw std::runtime_error("Unable to find ToolInfo object at expected location");
     }
 
     return ToolInfo(
         toString(qvm["name"].toString()),
-        ToolVersion::fromString(toString(qvm["version"].toString())),
+        qvm.contains("version") ? ToolVersion::fromString(toString(qvm["version"].toString())) : ToolVersion(),
         toPath(qvm["local_bin_path"].toString()),
         toPath(qvm["remote_archive"].toString()),
         toPath(qvm["remote_exe"].toString()),

@@ -29,6 +29,7 @@
   #include <ruleset/WorkspaceUserScript.hpp>
   #include <ruleset/TranslationUserScript.hpp>
   #include <ruleset/UtilityUserScript.hpp>
+  #include <ruleset/ReportingUserScript.hpp>
   #include <ruleset/RubyUserScriptArgumentGetter.hpp>
 
   #include <model/Component.hpp>
@@ -58,6 +59,7 @@
 %feature("director") WorkspaceUserScript;
 %feature("director") TranslatorUserScript;
 %feature("director") UtilityUserScript;
+%feature("director") ReportingUserScript;
 %feature("director") OSRunner;
 
 %include <ruleset/OSArgument.hpp>
@@ -68,6 +70,7 @@
 %include <ruleset/WorkspaceUserScript.hpp>
 %include <ruleset/TranslationUserScript.hpp>
 %include <ruleset/UtilityUserScript.hpp>
+%include <ruleset/ReportingUserScript.hpp>
 
 %extend openstudio::ruleset::OSArgument {
   std::string __str__() {

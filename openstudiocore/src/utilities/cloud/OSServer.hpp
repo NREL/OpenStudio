@@ -87,20 +87,26 @@ namespace openstudio{
     bool isAnalysisRunning(const UUID& analysisUUID, int msec=30000);
     bool lastIsAnalysisRunning() const;
 
+    bool isAnalysisComplete(const UUID& analysisUUID, int msec=30000);
+    bool lastIsAnalysisComplete() const;
+
     bool stop(const UUID& analysisUUID, int msec=30000);
     bool lastStopSuccess() const;
 
     std::vector<UUID> dataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastDataPointUUIDs() const;
 
-    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
-    std::vector<UUID> lastRunningDataPointUUIDs() const;
-
     std::vector<UUID> queuedDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastQueuedDataPointUUIDs() const;
 
+    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastRunningDataPointUUIDs() const;
+
     std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastCompleteDataPointUUIDs() const;
+
+    std::vector<UUID> downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastDownloadReadyDataPointUUIDs() const;
 
     std::string dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec=30000);
     std::string lastDataPointJSON() const;
@@ -140,6 +146,8 @@ namespace openstudio{
 
     bool requestIsAnalysisRunning(const UUID& analysisUUID);
 
+    bool requestIsAnalysisComplete(const UUID& analysisUUID);
+
     bool requestStop(const UUID& analysisUUID);
 
     bool requestDataPointUUIDs(const UUID& analysisUUID);
@@ -149,6 +157,8 @@ namespace openstudio{
     bool requestQueuedDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestCompleteDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
 

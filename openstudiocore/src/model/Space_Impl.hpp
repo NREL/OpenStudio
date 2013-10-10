@@ -25,6 +25,9 @@
 
 #include <utilities/units/Quantity.hpp>
 
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/adapted/boost_tuple.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -538,6 +541,10 @@ namespace detail {
 
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
+
+    // helper function to get a boost polygon point from a Point3d
+    boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const;
+
   };
 
 } // detail

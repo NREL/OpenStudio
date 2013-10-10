@@ -22,6 +22,8 @@
 
 #include <utilities/data/Attribute.hpp>
 
+#include <utilities/core/Json.hpp>
+
 #include <boost/regex.hpp>
 
 #include <limits>
@@ -362,4 +364,11 @@ TEST_F(DataFixture, Attribute_NumberFormatting) {
 
   str = QString::number(value,'G',std::numeric_limits<double>::digits10);
   EXPECT_EQ("3.14159E52",boost::regex_replace(toString(str),boost::regex("\\+"),""));
+}
+
+TEST_F(DataFixture, Attribute_JsonSerialization) {
+  // right now, just test string because know that fails
+  Attribute attribute("EnergyPlusVersion","EnergyPlus-Windows-64 8.0.0.008, YMD=2013.10.02 16:22");
+  QVariant variant = detail::toVariant(attribute);
+  EXPECT_NO_THROW(toJSON(variant));
 }

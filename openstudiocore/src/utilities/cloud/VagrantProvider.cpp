@@ -22,26 +22,41 @@
 
 #include <utilities/core/Application.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/System.hpp>
 
 #include <QSettings>
 #include <QProcess>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QMutex>
+#include <QFile>
+#include <QDir>
+
+#include <boost/bind.hpp>
 
 namespace openstudio{
   namespace detail{
         
     VagrantSettings_Impl::VagrantSettings_Impl()
-      : CloudSettings_Impl()
+      : CloudSettings_Impl(),
+        m_haltOnStop(true),
+        m_terminationDelayEnabled(false),
+        m_terminationDelay(0)
     {
       this->loadSettings(true);
     }
 
     VagrantSettings_Impl::VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                                                const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                                               bool haltOnStop, const std::string& username, const std::string& password)
+                                               bool haltOnStop, const std::string& username, const std::string& password,
+                                               bool terminationDelayEnabled, unsigned terminationDelay)
       : CloudSettings_Impl(), m_userAgreementSigned(false),
         m_serverPath(serverPath), m_serverUrl(serverUrl), 
         m_workerPath(workerPath), m_workerUrl(workerUrl), m_haltOnStop(haltOnStop),
-        m_username(username), m_password(password)
+        m_username(username), m_password(password),
+        m_terminationDelayEnabled(terminationDelayEnabled),
+        m_terminationDelay(terminationDelay)
     {
       QSettings settings("OpenStudio", toQString(cloudProviderType()));
       if (settings.value("userAgreementSigned").toString() == "Yes"){
@@ -57,7 +72,9 @@ namespace openstudio{
                                                const openstudio::path& workerPath,
                                                const openstudio::Url& workerUrl,
                                                bool haltOnStop,
-                                               const std::string& username)
+                                               const std::string& username,
+                                               bool terminationDelayEnabled, 
+                                               unsigned terminationDelay)
       : CloudSettings_Impl(uuid,versionUUID),
         m_userAgreementSigned(userAgreementSigned),
         m_serverPath(serverPath),
@@ -65,7 +82,9 @@ namespace openstudio{
         m_workerPath(workerPath),
         m_workerUrl(workerUrl),
         m_haltOnStop(haltOnStop),
-        m_username(username)
+        m_username(username),
+        m_terminationDelayEnabled(terminationDelayEnabled),
+        m_terminationDelay(terminationDelay)
     {}
 
     VagrantSettings_Impl::~VagrantSettings_Impl()
@@ -79,7 +98,7 @@ namespace openstudio{
 
     std::string VagrantSettings_Impl::userAgreementText() const
     {
-      return "Do you agree?";
+      return "OpenStudio is provided by the National Renewable Energy Laboratory (\"NREL\"), which is operated by Alliance for Sustainable Energy, LLC, (\"Alliance\") for the U.S. Department of Energy (\"DOE\").  NREL, Alliance and DOE are not responsible for any charges incurred as a result of using OpenStudio in connection with web services, cloud services or any other third party computing services.  You are solely responsible for establishing, maintaining, terminating and paying for any third party computing services and are solely responsible for complying with any terms and conditions required by third party service providers.  Terminating OpenStudio may not terminate third party computing services used in connection with OpenStudio, and you are solely responsible for verifying that computing services and associated charges are terminated.\n\nTHE SOFTWARE IS PROVIDED BY DOE/NREL/ALLIANCE \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY DISCLAIMED.  IN NO EVENT SHALL DOE/NREL/ALLIANCE BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER, INCLUDING BUT NOT LIMITED TO CLAIMS ASSOCIATED WITH THE LOSS OF DATA OR PROFITS, WHICH MAY RESULT FROM ANY ACTION IN CONTRACT, NEGLIGENCE OR OTHER TORTIOUS CLAIM THAT ARISES OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE SOFTWARE. YOU AGREE TO INDEMNIFY DOE/NREL/ALLIANCE, AND ITS AFFILIATES, OFFICERS, AGENTS, AND EMPLOYEES AGAINST ANY CLAIM OR DEMAND, INCLUDING REASONABLE ATTORNEYS' FEES, RELATED TO YOUR USE, RELIANCE, OR ADOPTION OF THE SOFTWARE FOR ANY PURPOSE WHATSOEVER.";
     }
 
     bool VagrantSettings_Impl::userAgreementSigned() const
@@ -135,9 +154,27 @@ namespace openstudio{
         m_username = settings.value("username").toString().toStdString();
       }
 
-      // TODO: read password from a file in ~/.ssh
       if (overwriteExisting || m_password.empty()){
-        m_password = settings.value("password").toString().toStdString();
+        QFile file(QDir::homePath() + "/.ssh/vagrant");
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+          m_password = QString(file.readAll()).toStdString();
+        }
+      }
+
+      // only set this if overwriteExisting is true
+      if (overwriteExisting){
+        if (settings.value("terminationDelayEnabled").toString() == "Yes"){
+          m_terminationDelayEnabled = true;
+        }else{
+          m_terminationDelayEnabled = false;
+        }
+      }
+
+      // only set this if overwriteExisting is true
+      if (overwriteExisting){
+        if (!settings.value("terminationDelay").isNull()){
+          m_terminationDelay = settings.value("terminationDelay").toUInt();
+        }
       }
 
       onChange();
@@ -189,11 +226,28 @@ namespace openstudio{
         settings.setValue("username", toQString(m_username));
       }
 
-      // TODO: write password to a file in ~/.ssh
-      if (overwriteExisting || settings.value("password").isNull()){
-        settings.setValue("password", toQString(m_password));
+      QFile file(QDir::homePath() + "/.ssh/vagrant");
+      if (overwriteExisting || !file.exists()){
+        if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
+          if (file.open(QIODevice::WriteOnly)) {
+            file.write(m_password.c_str());
+            file.close();
+          }
+        }
+      }
+      
+      if (overwriteExisting || settings.value("terminationDelayEnabled").isNull()){
+        if (m_terminationDelayEnabled){
+          settings.setValue("terminationDelayEnabled", "Yes");
+        }else{
+          settings.setValue("terminationDelayEnabled", "No");
+        }
       }
 
+      if (overwriteExisting || settings.value("terminationDelay").isNull()){
+        settings.setValue("terminationDelay", QString::number(m_terminationDelay));
+      }
+      
       return true;
     }
 
@@ -274,6 +328,27 @@ namespace openstudio{
       // not stored in OSP, so no onChange()
     }
 
+    bool VagrantSettings_Impl::terminationDelayEnabled()
+    {
+      return m_terminationDelayEnabled;
+    }
+
+    void VagrantSettings_Impl::setTerminationDelayEnabled(bool enabled)
+    {
+      m_terminationDelayEnabled = enabled;
+      onChange();
+    }
+
+    unsigned VagrantSettings_Impl::terminationDelay()
+    {
+      return m_terminationDelay;
+    }
+
+    void VagrantSettings_Impl::setTerminationDelay(const unsigned delay)
+    {
+      m_terminationDelay = delay;
+      onChange();
+    }
 
     VagrantSession_Impl::VagrantSession_Impl(const std::string& sessionId, 
                                              const boost::optional<Url>& serverUrl, 
@@ -302,13 +377,28 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_vagrantSettings(),
         m_vagrantSession(toString(createUUID()), boost::none, std::vector<Url>()),
-        m_startServerProcess(NULL),
-        m_startWorkerProcess(NULL),
+        m_networkAccessManager(new QNetworkAccessManager()),
+        m_networkReply(0),
+        m_checkServiceProcess(0),
+        m_startServerProcess(0),
+        m_startWorkerProcess(0),
+        m_checkServerRunningProcess(0),
+        m_checkWorkerRunningProcess(0),
+        m_stopServerProcess(0),
+        m_stopWorkerProcess(0),
+        m_checkTerminatedProcess(0),
+        m_lastInternetAvailable(false),
+        m_lastServiceAvailable(false),
+        m_lastValidateCredentials(false),
+        m_lastResourcesAvailableToStart(false),
         m_serverStarted(false),
         m_workerStarted(false),
+        m_lastServerRunning(false),
+        m_lastWorkerRunning(false),
         m_serverStopped(false),
         m_workerStopped(false),
-        m_terminated(false)
+        m_terminateStarted(false),
+        m_lastTerminateCompleted(false)
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
@@ -323,47 +413,9 @@ namespace openstudio{
       return VagrantProvider_Impl::cloudProviderType();
     }
 
-    bool VagrantProvider_Impl::internetAvailable() const
+    unsigned VagrantProvider_Impl::numWorkers() const
     {
-      clearErrorsAndWarnings();
-      return true;
-    }
-
-    bool VagrantProvider_Impl::serviceAvailable() const
-    {
-      clearErrorsAndWarnings();
-
-      QProcess* vagrantProcess = new QProcess();
-
-      QStringList args;
-      addProcessArguments(args);
-      args << "-v";
-
-      vagrantProcess->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
-      vagrantProcess->start(processName(), args);
-
-      if (!vagrantProcess->waitForStarted()){
-        vagrantProcess->deleteLater();
-        return false;
-      }
-
-      vagrantProcess->waitForFinished();
-
-      int result = vagrantProcess->exitCode();
-
-      vagrantProcess->deleteLater();
-
-      if (result == 0){
-        return true;
-      }
-
-      return false;
-    }
-
-    bool VagrantProvider_Impl::validateCredentials() const
-    {
-      clearErrorsAndWarnings();
-      return true;
+      return 1;
     }
 
     CloudSettings VagrantProvider_Impl::settings() const
@@ -373,20 +425,26 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::setSettings(const CloudSettings& settings)
     {
+      clearErrorsAndWarnings();
+
       boost::optional<VagrantSettings> vagrantSettings = settings.optionalCast<VagrantSettings>();
       if (!vagrantSettings){
+        // wrong type of settings
         return false;
       }
-      if (m_serverStarted){
+      if (m_serverStarted || m_startServerProcess){
+        // can't change settings once server has been started or is starting
         return false;
       }
-      if (m_workerStarted){
+      if (m_workerStarted || m_startWorkerProcess){
+        // can't change settings once worker has been started or is starting
         return false;
       }
-      if (m_terminated){
+      if (m_terminateStarted){
+        // can't change settings once terminate is called
         return false;
       }
-      
+
       m_vagrantSettings = *vagrantSettings;
 
       return true;
@@ -397,212 +455,95 @@ namespace openstudio{
       return m_vagrantSession;
     }
 
-    bool VagrantProvider_Impl::reconnect(const CloudSession& session)
+    bool VagrantProvider_Impl::setSession(const CloudSession& session)
     {
+      clearErrorsAndWarnings();
+
       boost::optional<VagrantSession> vagrantSession = session.optionalCast<VagrantSession>();
       if (!vagrantSession){
+        // wrong type of session
         return false;
       }
-      if (m_serverStarted){
+      if (!vagrantSession->serverUrl()){
+        // session to set should be a non-empty one
         return false;
       }
-      if (m_workerStarted){
+      if (vagrantSession->workerUrls().size() != 1){
+        // session to set should be a non-empty one
         return false;
       }
-      if (m_terminated){
+      if (m_serverStarted || m_startServerProcess){
+        // can't change session once server has been started or is starting
         return false;
       }
-
-      clearErrorsAndWarnings();
-      
-      boost::optional<Url> serverUrl = session.serverUrl();
-      if (serverUrl){
-        OSServer server(*serverUrl);
-        if (server.available()){
-          m_vagrantSession = *vagrantSession;
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    /// returns the ip address of the cloud server if it is started and running
-    boost::optional<Url> VagrantProvider_Impl::serverUrl() const
-    {
-      if (m_terminated){
-        return boost::none;
-      }
-      return m_vagrantSession.serverUrl();
-    }
-
-    /// returns true if the cloud server successfully begins to start the server node
-    /// returns false if terminated
-    /// non-blocking call, clears errors and warnings
-    bool VagrantProvider_Impl::startServer()
-    {
-      if (!m_vagrantSettings.userAgreementSigned()){
+      if (m_workerStarted || m_startWorkerProcess){
+        // can't change session once worker has been started or is starting
         return false;
       }
-      if (m_serverStarted){
-        return false;
-      }
-      if (m_terminated){
-        return false;
-      }
-      if (m_startServerProcess){
+      if (m_terminateStarted){
+        // can't change session once terminate has been called
         return false;
       }
 
-      clearErrorsAndWarnings();
+      m_vagrantSession = *vagrantSession;
 
-      m_startServerProcess = new QProcess();
-      bool test = connect(m_startServerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
+      // assumes that the other session is already started
+      m_serverStarted = true;
+      m_workerStarted = true;
 
-      QStringList args;
-      addProcessArguments(args);
-      args << "up";
-
-      m_startServerProcess->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
-      m_startServerProcess->start(processName(), args);
-
-      if (!m_startServerProcess->waitForStarted()){
-        m_startServerProcess->deleteLater();
-        m_startServerProcess = 0;
-        return false;
-      }
-
-      emit serverStarting();
+      // should we emit a signal here?
 
       return true;
     }
 
-    /// returns the ip address of all cloud workers that are started and running
-    std::vector<Url> VagrantProvider_Impl::workerUrls() const
+    bool VagrantProvider_Impl::lastInternetAvailable() const
     {
-      if (m_terminated){
-        return std::vector<Url>();
-      }
-      return m_vagrantSession.workerUrls();
+      return m_lastInternetAvailable;
     }
 
-    unsigned VagrantProvider_Impl::numWorkers() const
+    bool VagrantProvider_Impl::lastServiceAvailable() const
     {
-      return 1;
+      return m_lastServiceAvailable;
     }
 
-    bool VagrantProvider_Impl::startWorkers()
+    bool VagrantProvider_Impl::lastValidateCredentials() const
     {
-      if (!m_vagrantSettings.userAgreementSigned()){
-        return false;
-      }
-      if (m_workerStarted){
-        return false;
-      }
-      if (m_terminated){
-        return false;
-      }
-      if (m_startWorkerProcess){
-        return false;
-      }
-
-      clearErrorsAndWarnings();
-
-      m_startWorkerProcess = new QProcess();
-      bool test = connect(m_startWorkerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                          this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
-      OS_ASSERT(test);
-
-      QStringList args;
-      addProcessArguments(args);
-      args << "up";
-
-      m_startWorkerProcess->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
-      m_startWorkerProcess->start(processName(), args);
-
-      if (!m_startWorkerProcess->waitForStarted()){
-        m_startWorkerProcess->deleteLater();
-        m_startWorkerProcess = 0;
-        return false;
-      }
-
-      emit workerStarting();
-
-      return true;
+      return m_lastValidateCredentials;
     }
 
-    bool VagrantProvider_Impl::running() const
+    bool VagrantProvider_Impl::lastResourcesAvailableToStart() const
     {
-      return ((m_serverStarted || m_workerStarted) && !m_terminated);
+      return m_lastResourcesAvailableToStart;
     }
 
-    /// returns true if the cloud server successfully begins to stop all nodes
-    /// returns false if not running
-    /// non-blocking call, clears errors and warnings
-    bool VagrantProvider_Impl::terminate()
+    bool VagrantProvider_Impl::serverStarted() const
     {
-      if (!this->running()){
-        return false;
-      }
-
-      m_terminated = true;
-
-      clearErrorsAndWarnings();
-
-      emit terminating();
-
-      if (m_vagrantSettings.haltOnStop()){
-
-        QStringList args;
-        addProcessArguments(args);
-        args << "halt";
-
-        m_stopServerProcess = new QProcess();
-        m_stopServerProcess->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
-        bool test = connect(m_stopServerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                            this, SLOT(onServerStopped(int, QProcess::ExitStatus)));
-        OS_ASSERT(test);
-
-        m_stopWorkerProcess = new QProcess();
-        m_stopWorkerProcess->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
-        test = connect(m_stopWorkerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                       this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
-        OS_ASSERT(test);
-
-        m_stopServerProcess->start(processName(), args);
-        m_stopWorkerProcess->start(processName(), args);
-
-        if (!m_stopServerProcess->waitForStarted()){
-          m_stopServerProcess->deleteLater();
-          m_stopServerProcess = 0;
-          m_serverStopped = true;
-          logError("Stop server process failed to start");
-        }
-
-        if (!m_stopWorkerProcess->waitForStarted()){
-          m_stopWorkerProcess->deleteLater();
-          m_stopWorkerProcess = 0;
-          m_workerStopped = true;
-          logError("Stop worker process failed to start");
-        }
-
-      }else{
-        m_serverStopped = true;
-        m_workerStopped = true;
-      }
-
-      if (this->is_terminateComplete()){
-        emit terminateComplete();
-      }
-
-      return true;
+      return m_serverStarted;
     }
 
-    bool VagrantProvider_Impl::terminated() const
+    bool VagrantProvider_Impl::workersStarted() const
     {
-      return m_terminated;
+      return m_workerStarted;
+    }
+
+    bool VagrantProvider_Impl::lastServerRunning() const
+    {
+      return m_lastServerRunning;
+    }
+
+    bool VagrantProvider_Impl::lastWorkersRunning() const
+    {
+      return m_lastWorkerRunning;
+    }
+
+    bool VagrantProvider_Impl::terminateStarted() const
+    {
+      return m_terminateStarted;
+    }
+
+    bool VagrantProvider_Impl::lastTerminateCompleted() const
+    {
+      return m_lastTerminateCompleted;
     }
 
     std::vector<std::string> VagrantProvider_Impl::errors() const
@@ -615,85 +556,597 @@ namespace openstudio{
       return m_warnings;
     }
 
+    bool VagrantProvider_Impl::internetAvailable(int msec)
+    {
+      if (requestInternetAvailable()){
+        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestInternetAvailableRequestFinished, this))){
+          return lastInternetAvailable();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::serviceAvailable(int msec)
+    {
+      if (requestServiceAvailable()){
+        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServiceAvailableFinished, this))){
+          return lastServiceAvailable();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::validateCredentials(int msec)
+    {
+      if (requestValidateCredentials()){
+        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestValidateCredentialsFinished, this))){
+          return lastValidateCredentials();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::resourcesAvailableToStart(int msec)
+    {
+      if (requestResourcesAvailableToStart()){
+        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestResourcesAvailableToStartFinished, this))){
+          return lastResourcesAvailableToStart();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::waitForServer(int msec)
+    {
+      return waitForFinished(msec, boost::bind(&VagrantProvider_Impl::serverStarted, this));
+    }
+
+    bool VagrantProvider_Impl::waitForWorkers(int msec) 
+    {
+      return waitForFinished(msec, boost::bind(&VagrantProvider_Impl::workersStarted, this));
+    }
+
+    bool VagrantProvider_Impl::serverRunning(int msec)
+    {
+      if (requestServerRunning()){
+        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServerRunningFinished, this))){
+          return lastServerRunning();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::workersRunning(int msec)
+    {
+      if (requestWorkersRunning()){
+        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestWorkersRunningFinished, this))){
+          return lastWorkersRunning();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::waitForTerminated(int msec)
+    {
+      return waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateFinished, this));
+    }
+
+    bool VagrantProvider_Impl::terminateCompleted(int msec)
+    {
+      if (requestTerminateCompleted()){
+        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateCompletedFinished, this))){
+          return lastTerminateCompleted();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::requestInternetAvailable()
+    {
+      if (m_networkReply){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastInternetAvailable = false;
+
+      QUrl url("http://openstudio.nrel.gov"); // todo: url?
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processInternetAvailable()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
+    QProcess *VagrantProvider_Impl::makeCheckServiceProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckServiceComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+      QStringList args;
+      addProcessArguments(args);
+      args << "-v";
+
+      p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      p->start(processName(), args);
+
+      return p;
+    }
+
+    bool VagrantProvider_Impl::requestServiceAvailable()
+    {
+      if (m_checkServiceProcess){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastServiceAvailable = false;
+
+      m_checkServiceProcess = makeCheckServiceProcess();
+
+      return true;
+    }
+
+    bool VagrantProvider_Impl::requestValidateCredentials() 
+    {
+      // DLM: this would be a non-blocking network call, taking shortcut here
+      // could use a QTimer to simulate if we really want to
+
+      clearErrorsAndWarnings();
+
+      m_lastValidateCredentials = false;
+
+      if ((m_vagrantSettings.username() == "vagrant") &&
+          (m_vagrantSettings.password() == "vagrant")){
+        m_lastValidateCredentials = true;
+      }
+
+      return true;
+    }
+
+    bool VagrantProvider_Impl::requestResourcesAvailableToStart() 
+    {
+      // DLM: this would be a non-blocking network call, taking shortcut here
+      // could use a QTimer to simulate if we really want to
+
+      clearErrorsAndWarnings();
+
+      m_lastResourcesAvailableToStart = true;
+
+      return true;
+    }
+
+    QProcess *VagrantProvider_Impl::makeStartServerProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "up";
+
+      p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      p->start(processName(), args);
+
+      return p;
+    }
+
+    bool VagrantProvider_Impl::requestStartServer()
+    {
+      if (!m_vagrantSettings.userAgreementSigned()){
+        // haven't signed agreement
+        return false;
+      }
+      if (m_serverStarted || m_startServerProcess){
+        // already started or starting
+        return false;
+      }
+      if (m_terminateStarted){
+        // already terminated or terminating
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_startServerProcess = makeStartServerProcess();
+      emit CloudProvider_Impl::serverStarting();
+
+      return true;
+    }
+
+    QProcess *VagrantProvider_Impl::makeStartWorkerProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "up";
+
+      p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
+      p->start(processName(), args);
+
+      return p;
+    }
+
+    bool VagrantProvider_Impl::requestStartWorkers()
+    {
+      if (!m_vagrantSettings.userAgreementSigned()){
+        // haven't signed agreement
+        return false;
+      }
+      if (m_workerStarted || m_startWorkerProcess){
+        // already started or starting
+        return false;
+      }
+      if (m_terminateStarted){
+        // already terminated or terminating
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_startWorkerProcess = makeStartWorkerProcess();
+      emit CloudProvider_Impl::workerStarting();
+
+      return true;
+    }
+
+    QProcess *VagrantProvider_Impl::makeCheckServerRunningProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "status";
+      args << "default";
+
+      p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      p->start(processName(), args);
+
+      return p;
+    }
+
+    bool VagrantProvider_Impl::requestServerRunning() 
+    {
+      if (m_checkServerRunningProcess){
+        // already checking
+        return false;
+      }
+      if (!m_vagrantSession.serverUrl()){
+        // need this to check in real life
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastServerRunning = false;
+
+      m_checkServerRunningProcess = makeCheckServerRunningProcess();
+      return true;
+    }
+
+    QProcess *VagrantProvider_Impl::makeCheckWorkerRunningProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "status";
+      args << "default";
+
+      p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
+      p->start(processName(), args);
+      return p;
+    }
+
+    bool VagrantProvider_Impl::requestWorkersRunning() 
+    {
+      if (m_checkWorkerRunningProcess){
+        // already checking
+        return false;
+      }
+      if (m_vagrantSession.workerUrls().empty()){
+        // need this to check in real life
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastWorkerRunning = false;
+
+      m_checkWorkerRunningProcess = makeCheckWorkerRunningProcess();
+
+      return true;
+    }
+
+    QProcess *VagrantProvider_Impl::makeStopServerProcess() const
+    {
+      QProcess *p = new QProcess();
+      p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+          this, SLOT(onServerStopped(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "halt";
+      p->start(processName(), args);
+      return p;
+    }
+
+    QProcess *VagrantProvider_Impl::makeStopWorkerProcess() const
+    {
+      QProcess *p = new QProcess();
+      p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+          this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "halt";
+      p->start(processName(), args);
+      return p;
+    }
+
+    bool VagrantProvider_Impl::requestTerminate()
+    {
+      if (!(m_serverStarted || m_workerStarted)){
+        // haven't started, nothing to terminate
+        return false;
+      }
+      if (m_terminateStarted || m_stopServerProcess || m_stopWorkerProcess){
+        // already terminating
+        return false;
+      }
+
+      m_terminateStarted = true;
+
+      clearErrorsAndWarnings();
+
+      emit CloudProvider_Impl::terminating();
+
+      if (m_vagrantSettings.haltOnStop()){
+
+        m_stopServerProcess = makeStopServerProcess();
+
+      }else{
+      
+        m_serverStopped = true;
+        m_workerStopped = true;
+        
+        emit CloudProvider_Impl::terminated();
+      }
+
+      return true;
+    }
+
+    QProcess *VagrantProvider_Impl::makeCheckTerminateProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckTerminatedComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "status";
+      args << "default";
+
+      p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      p->start(processName(), args);
+      return p;
+    }
+
+    bool VagrantProvider_Impl::requestTerminateCompleted() 
+    {
+      if (m_checkTerminatedProcess){
+        // already checking
+        return false;
+      }
+
+      // DLM: this should really check both server and worker, taking a shortcut here
+
+      clearErrorsAndWarnings();
+
+      m_lastTerminateCompleted = false;
+
+      m_checkTerminatedProcess = makeCheckTerminateProcess();
+
+      return true;
+    }
+
     std::string VagrantProvider_Impl::cloudProviderType()
     {
       return "VagrantProvider";
     }
 
-    bool VagrantProvider_Impl::is_terminateComplete() const
+    void VagrantProvider_Impl::processInternetAvailable()
     {
-       return (m_serverStopped && m_workerStopped);
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastInternetAvailable = true;
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+    }
+
+
+    ProcessResults VagrantProvider_Impl::handleProcessCompleted(QProcess * t_qp)
+    {
+      OS_ASSERT(t_qp);
+
+      ProcessResults pr(t_qp->exitCode(), t_qp->exitStatus(), t_qp->readAllStandardOutput(),
+          t_qp->readAllStandardError());
+
+      t_qp->deleteLater();
+
+      return pr;
+    }
+
+    bool VagrantProvider_Impl::parseServiceAvailableResults(const ProcessResults &t_results)
+    {
+      return t_results.exitCode == 0;
+    }
+
+    void VagrantProvider_Impl::onCheckServiceComplete(int, QProcess::ExitStatus)
+    {
+      m_lastServiceAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkServiceProcess));
+      m_checkServiceProcess = 0;
+    }
+
+    bool VagrantProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
+    {
+      m_vagrantSession.setServerUrl(m_vagrantSettings.serverUrl());
+      return true;
     }
 
     void VagrantProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
-      OS_ASSERT(m_startServerProcess);
-
-      QString output = m_startServerProcess->readAllStandardOutput();
-      QString errors = m_startServerProcess->readAllStandardError();
-      
-      m_vagrantSession.setServerUrl(m_vagrantSettings.serverUrl());
-
-      m_serverStarted = true;
-
-      emit serverStarted(m_vagrantSettings.serverUrl());
-
-      m_startServerProcess->deleteLater();
+      m_serverStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
       m_startServerProcess = 0;
+
+      if (m_serverStarted)
+      {
+        emit CloudProvider_Impl::serverStarted(m_vagrantSettings.serverUrl());
+      }
+    }
+
+    bool VagrantProvider_Impl::parseWorkerStartedResults(const ProcessResults &t_results)
+    {
+      m_vagrantSession.clearWorkerUrls();
+      m_vagrantSession.addWorkerUrl(m_vagrantSettings.workerUrl());
+      return true;
     }
 
     void VagrantProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
-      OS_ASSERT(m_startWorkerProcess);
-
-      QString output = m_startWorkerProcess->readAllStandardOutput();
-      QString errors = m_startWorkerProcess->readAllStandardError();
-      
-      m_vagrantSession.clearWorkerUrls();
-      m_vagrantSession.addWorkerUrl(m_vagrantSettings.workerUrl());
-
-      m_workerStarted = true;
-
-      emit workerStarted(m_vagrantSettings.workerUrl());
-
-      emit allWorkersStarted();
-
-      m_startWorkerProcess->deleteLater();
+      m_workerStarted = parseWorkerStartedResults(handleProcessCompleted(m_startWorkerProcess));
       m_startWorkerProcess = 0;
+
+      if (m_workerStarted)
+      {
+        emit CloudProvider_Impl::workerStarted(m_vagrantSettings.workerUrl());
+        emit CloudProvider_Impl::allWorkersStarted();
+      }
+    }
+
+    bool VagrantProvider_Impl::parseCheckServerRunningResults(const ProcessResults &t_results)
+    {
+      // if running this is expected
+      //default                   running (virtualbox)
+      return t_results.output.contains("running (virtualbox)");
+    }
+
+    void VagrantProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
+    {
+      bool running = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
+      m_checkServerRunningProcess = 0;
+
+      if (m_vagrantSettings.haltOnStop()){
+        if (running) {
+          m_lastServerRunning = true;
+        }
+      }else{
+        // depend on local state variable in this case
+        m_lastServerRunning = !m_serverStopped;
+      }
+    }
+
+    bool VagrantProvider_Impl::parseCheckWorkerRunningResults(const ProcessResults &t_results)
+    {
+      // if running this is expected
+      //default                   running (virtualbox)
+      return t_results.output.contains("running (virtualbox)");
+    }
+
+    void VagrantProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
+    {
+      bool running = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
+      m_checkWorkerRunningProcess = 0;
+
+      if (m_vagrantSettings.haltOnStop()){
+        if (running){
+          m_lastWorkerRunning = true;
+        }
+      }else{
+        // depend on local state variable in this case
+        m_lastWorkerRunning = !m_workerStopped;
+      }
+    }
+
+    bool VagrantProvider_Impl::parseServerStoppedResults(const ProcessResults &t_results)
+    {
+      return true;
     }
 
     void VagrantProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
     {
-      OS_ASSERT(m_stopServerProcess);
+      m_serverStopped = parseServerStoppedResults(handleProcessCompleted(m_stopServerProcess));
+      m_stopServerProcess = 0;
+      
+      m_stopWorkerProcess = makeStopWorkerProcess();
+    }
 
-      QString output = m_stopServerProcess->readAllStandardOutput();
-      QString errors = m_stopServerProcess->readAllStandardError();
-
-      m_serverStopped = true;
-
-      if (this->is_terminateComplete()){
-        emit terminateComplete();
-      }
-
-      m_startServerProcess->deleteLater();
-      m_startServerProcess = 0;
+    bool VagrantProvider_Impl::parseWorkerStoppedResults(const ProcessResults &t_results)
+    {
+      return true;
     }
 
     void VagrantProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
     {
-      OS_ASSERT(m_stopWorkerProcess);
+      m_workerStopped = parseWorkerStoppedResults(handleProcessCompleted(m_stopWorkerProcess));
+      m_stopWorkerProcess = 0;
 
-      QString output = m_stopWorkerProcess->readAllStandardOutput();
-      QString errors = m_stopWorkerProcess->readAllStandardError();
+      if (m_serverStopped && m_workerStopped){
+        emit CloudProvider_Impl::terminated();
+      }
+    }
 
-      m_workerStopped = true;
+    bool VagrantProvider_Impl::parseCheckTerminatedResults(const ProcessResults &t_results)
+    {
+      // if halt on stop this is expected:
+      // default                   poweroff (virtualbox)
+      return t_results.output.contains("poweroff (virtualbox)");
+    }
 
-      if (this->is_terminateComplete()){
-        emit terminateComplete();
+    void VagrantProvider_Impl::onCheckTerminatedComplete(int, QProcess::ExitStatus)
+    {
+      // note, it's important that this functon is always called, to clean up the QProcess object
+      bool terminated = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
+      m_checkTerminatedProcess = 0;
+
+      if (m_vagrantSettings.haltOnStop()){
+        if (terminated) {
+          // depend on local state variable for the worker status
+          if (m_workerStopped){
+            m_lastTerminateCompleted = true;
+          }
+        }
+      }else{
+        // depend on local state variable in this case
+        m_lastTerminateCompleted = m_terminateStarted;
       }
 
-      m_stopWorkerProcess->deleteLater();
-      m_stopWorkerProcess = 0;
     }
 
     void VagrantProvider_Impl::clearErrorsAndWarnings() const
@@ -736,6 +1189,71 @@ namespace openstudio{
       return;
     }
 
+    bool VagrantProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f)
+    {
+      int msecPerLoop = 20;
+      int numTries = msec / msecPerLoop;
+      int current = 0;
+      while (true)
+      {
+        if (f()){
+          return true;
+        }
+
+        // this calls process events
+        System::msleep(msecPerLoop);
+
+        if (current > numTries){
+          m_errors.push_back("Wait for finished timed out");
+          break;
+        }
+
+        ++current;
+      }
+
+      return false;
+    }
+
+    bool VagrantProvider_Impl::requestInternetAvailableRequestFinished() const
+    {
+      return (m_networkReply == 0);
+    }
+
+    bool VagrantProvider_Impl::requestServiceAvailableFinished() const
+    {
+      return (m_checkServiceProcess == 0);
+    }
+
+    bool VagrantProvider_Impl::requestValidateCredentialsFinished() const
+    {
+      return true;
+    }
+
+    bool VagrantProvider_Impl::requestResourcesAvailableToStartFinished() const
+    {
+      return true;
+    }
+
+    bool VagrantProvider_Impl::requestServerRunningFinished() const
+    {
+      return (m_checkServerRunningProcess == 0);
+    }
+
+    bool VagrantProvider_Impl::requestWorkersRunningFinished() const
+    {
+      return (m_checkWorkerRunningProcess == 0);
+    }
+
+    bool VagrantProvider_Impl::requestTerminateFinished() const
+    {
+      return (m_serverStopped && m_workerStopped);
+    }
+
+    bool VagrantProvider_Impl::requestTerminateCompletedFinished() const
+    {
+      return (m_checkTerminatedProcess == 0);
+    }
+
   }// detail
 
   VagrantSettings::VagrantSettings()
@@ -752,7 +1270,9 @@ namespace openstudio{
                                    const openstudio::path& workerPath,
                                    const openstudio::Url& workerUrl,
                                    bool haltOnStop,
-                                   const std::string& username)
+                                   const std::string& username, 
+                                   bool terminationDelayEnabled, 
+                                   unsigned terminationDelay)
     : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(
                         new detail::VagrantSettings_Impl(uuid,
                                                          versionUUID,
@@ -762,7 +1282,9 @@ namespace openstudio{
                                                          workerPath,
                                                          workerUrl,
                                                          haltOnStop,
-                                                         username)))
+                                                         username, 
+                                                         terminationDelayEnabled, 
+                                                         terminationDelay)))
   {
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
@@ -847,6 +1369,26 @@ namespace openstudio{
     getImpl<detail::VagrantSettings_Impl>()->setPassword(password);
   }
 
+  bool VagrantSettings::terminationDelayEnabled()
+  {
+    return getImpl<detail::VagrantSettings_Impl>()->terminationDelayEnabled();
+  }
+
+  void VagrantSettings::setTerminationDelayEnabled(bool enabled)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setTerminationDelayEnabled(enabled);
+  }
+
+  unsigned VagrantSettings::terminationDelay()
+  {
+    return getImpl<detail::VagrantSettings_Impl>()->terminationDelay();
+  }
+
+  void VagrantSettings::setTerminationDelay(const unsigned delay)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setTerminationDelay(delay);
+  }
+
   VagrantSession::VagrantSession(const std::string& sessionId, 
                                  const boost::optional<Url>& serverUrl, 
                                  const std::vector<Url>& workerUrls)
@@ -897,11 +1439,6 @@ namespace openstudio{
 
   VagrantProvider::~VagrantProvider()
   {
-  }
-
-  bool VagrantProvider::terminateComplete() const
-  {
-     return getImpl<detail::VagrantProvider_Impl>()->is_terminateComplete();
   }
 
 

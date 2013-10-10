@@ -191,7 +191,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
   {
     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumOutdoorAirFlowRate() )
+  else if( (value = modelObject.maximumOutdoorAirFlowRate()) )
   {
     idfObject.setDouble(ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate,value.get());
   }

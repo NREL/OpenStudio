@@ -142,6 +142,11 @@ namespace openstudio{
     {
     }
 
+    bool CloudProvider_Impl::lastRunning() const
+    {
+      return (this->lastServerRunning() && this->lastWorkersRunning());
+    }
+
   } // detail
 
   CloudSettings::CloudSettings(const boost::shared_ptr<detail::CloudSettings_Impl>& impl)
@@ -266,19 +271,9 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->type();
   }
 
-  bool CloudProvider::internetAvailable() const
+  unsigned CloudProvider::numWorkers() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->internetAvailable();
-  }
-
-  bool CloudProvider::serviceAvailable() const
-  {
-    return getImpl<detail::CloudProvider_Impl>()->serviceAvailable();
-  }
-
-  bool CloudProvider::validateCredentials() const
-  {
-    return getImpl<detail::CloudProvider_Impl>()->validateCredentials();
+    return getImpl<detail::CloudProvider_Impl>()->numWorkers();
   }
 
   CloudSettings CloudProvider::settings() const
@@ -296,49 +291,64 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->session();
   }
 
-  bool CloudProvider::reconnect(const CloudSession& session)
+  bool CloudProvider::setSession(const CloudSession& session)
   {
-    return getImpl<detail::CloudProvider_Impl>()->reconnect(session);
+    return getImpl<detail::CloudProvider_Impl>()->setSession(session);
   }
 
-  boost::optional<Url> CloudProvider::serverUrl() const
+  bool CloudProvider::lastInternetAvailable() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->serverUrl();
+    return getImpl<detail::CloudProvider_Impl>()->lastInternetAvailable();
   }
 
-  bool CloudProvider::startServer()
+  bool CloudProvider::lastServiceAvailable() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->startServer();
+    return getImpl<detail::CloudProvider_Impl>()->lastServiceAvailable();
   }
 
-  std::vector<Url> CloudProvider::workerUrls() const
+  bool CloudProvider::lastValidateCredentials() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->workerUrls();
+    return getImpl<detail::CloudProvider_Impl>()->lastValidateCredentials();
   }
 
-  unsigned CloudProvider::numWorkers() const
+  bool CloudProvider::lastResourcesAvailableToStart() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->numWorkers();
+    return getImpl<detail::CloudProvider_Impl>()->lastResourcesAvailableToStart();
   }
 
-  bool CloudProvider::startWorkers()
+  bool CloudProvider::serverStarted() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->startWorkers();
+    return getImpl<detail::CloudProvider_Impl>()->serverStarted();
   }
 
-  bool CloudProvider::running() const
+  bool CloudProvider::workersStarted() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->running();
+    return getImpl<detail::CloudProvider_Impl>()->workersStarted();
   }
 
-  bool CloudProvider::terminate()
+  bool CloudProvider::lastServerRunning() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->terminate();
+    return getImpl<detail::CloudProvider_Impl>()->lastServerRunning();
   }
 
-  bool CloudProvider::terminated() const
+  bool CloudProvider::lastWorkersRunning() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->terminated();
+    return getImpl<detail::CloudProvider_Impl>()->lastWorkersRunning();
+  }
+
+  bool CloudProvider::lastRunning() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->lastRunning();
+  }
+
+  bool CloudProvider::terminateStarted() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->terminateStarted();
+  }
+
+  bool CloudProvider::lastTerminateCompleted() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->lastTerminateCompleted();
   }
 
   std::vector<std::string> CloudProvider::errors() const
@@ -349,6 +359,106 @@ namespace openstudio{
   std::vector<std::string> CloudProvider::warnings() const
   {
     return getImpl<detail::CloudProvider_Impl>()->warnings();
+  }
+
+  bool CloudProvider::internetAvailable(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->internetAvailable(msec);
+  }
+
+  bool CloudProvider::serviceAvailable(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->serviceAvailable(msec);
+  }
+
+  bool CloudProvider::validateCredentials(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->validateCredentials(msec);
+  }
+
+  bool CloudProvider::resourcesAvailableToStart(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->resourcesAvailableToStart(msec);
+  }
+
+  bool CloudProvider::waitForServer(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->waitForServer(msec);
+  }
+
+  bool CloudProvider::waitForWorkers(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->waitForWorkers(msec);
+  }
+
+  bool CloudProvider::serverRunning(int msec)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->serverRunning(msec);
+  }
+
+  bool CloudProvider::workersRunning(int msec)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->workersRunning(msec);
+  }
+
+  bool CloudProvider::waitForTerminated(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->waitForTerminated(msec);
+  }
+
+  bool CloudProvider::terminateCompleted(int msec)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->terminateCompleted(msec);
+  }
+
+  bool CloudProvider::requestInternetAvailable() 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestInternetAvailable();
+  }
+
+  bool CloudProvider::requestServiceAvailable() 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestServiceAvailable();
+  }
+
+  bool CloudProvider::requestValidateCredentials() 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestValidateCredentials();
+  }
+
+  bool CloudProvider::requestResourcesAvailableToStart() 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestResourcesAvailableToStart();
+  }
+
+  bool CloudProvider::requestStartServer()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestStartServer();
+  }
+
+  bool CloudProvider::requestStartWorkers()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestStartWorkers();
+  }
+
+  bool CloudProvider::requestServerRunning()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestServerRunning();
+  }
+
+  bool CloudProvider::requestWorkersRunning()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestWorkersRunning();
+  }
+
+  bool CloudProvider::requestTerminate()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestTerminate();
+  }
+
+  bool CloudProvider::requestTerminateCompleted()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestTerminateCompleted();
   }
 
 } // openstudio

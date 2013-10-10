@@ -70,25 +70,34 @@ namespace runmanager {
 
   ToolVersion ToolFinder::parseToolVersion(const openstudio::path &t_path)
   {
-    std::string pathstr = toString(t_path);
+    QSharedPointer<ToolVersion> toolver;
 
-    LOG(Debug, "Parsing tool version number from string: " << pathstr);
-
-    boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
-
-    boost::smatch results;
-    if (boost::regex_match(pathstr, results, reg))
+    for (openstudio::path::iterator itr = t_path.begin();
+         itr != t_path.end();
+         ++itr)
     {
-      int major = atoi(results[1].str().c_str());
-      int minor = atoi(results[2].str().c_str());
-      std::string build_str = results[3].str();
-      if (!build_str.empty()) {
-        int build = atoi(build_str.c_str());
-        return ToolVersion(major,minor,build);
-      }
+      std::string pathstr = openstudio::toString(*itr);
+      LOG(Debug, "Parsing tool version number from string: " << pathstr);
 
-      return ToolVersion(major,minor);      
-    } else {
+      boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
+
+      boost::smatch results;
+      if (boost::regex_match(pathstr, results, reg))
+      {
+        int major = atoi(results[1].str().c_str());
+        int minor = atoi(results[2].str().c_str());
+        std::string build_str = results[3].str();
+        if (!build_str.empty()) {
+          int build = atoi(build_str.c_str());
+          toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor,build));
+        } else {
+          toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor));
+        }
+      } 
+    }
+
+    if (!toolver) 
+    {
       openstudio::path iddpath = t_path.parent_path() / openstudio::toPath("Energy+.idd");
 
       if (safeExists(iddpath))
@@ -109,13 +118,14 @@ namespace runmanager {
             int minor = atoi(results[2].str().c_str());
             int build = atoi(results[3].str().c_str());
 
-            return ToolVersion(major,minor,build);
+            toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor, build));
           }
         }
       }
     }
 
-    return ToolVersion();
+    // return last version parsed.
+    return toolver?*toolver:ToolVersion();
   }
 
 
@@ -141,6 +151,8 @@ namespace runmanager {
     } else  {
       runbase = openstudio::getApplicationRunDirectory().parent_path();
     }
+#else 
+    runbase = openstudio::getSharedResourcesPath();
 #endif
 
     struct ComparePaths
@@ -153,6 +165,8 @@ namespace runmanager {
         bool path2_in_rundir = !t_runbase.empty() && !openstudio::relativePath(t_path2, t_runbase).empty();
         bool path2_is_shorter = std::distance(t_path1.begin(), t_path1.end())
                     > std::distance(t_path2.begin(), t_path2.end());
+        bool path1_is_aws = subPathMatch(t_path1, boost::regex(".*-aws-.*", boost::regex::perl));
+        bool path2_is_aws = subPathMatch(t_path2, boost::regex(".*-aws-.*", boost::regex::perl));
 
 
         // return the shortest path that exists. Unless one of the two exists in the run dir,
@@ -165,7 +179,11 @@ namespace runmanager {
             || (!t_path2.empty() 
                 && !t_path1.empty() 
                 && !path1_exists 
-                && path2_exists)) 
+                && path2_exists)
+            || (!t_path2.empty()
+                && path1_is_aws
+                && !path2_is_aws)
+                )
         {
           return t_path2;
         } else {
@@ -307,7 +325,7 @@ namespace runmanager {
     std::deque<std::pair<int, openstudio::path> > pathsToSearch;
     pathsToSearch.push_front(std::make_pair(0, t_path));
 
-    int max_depth = 2;
+    int max_depth = 3;
     QFileInfo basefi(openstudio::toQString(t_path));
 
     if (!basefi.exists() || !basefi.isDir())
@@ -353,6 +371,9 @@ namespace runmanager {
             || subPathMatch(curPath, boost::regex("lib.*", boost::regex::perl))
             || subPathMatch(curPath, boost::regex("share", boost::regex::perl))
             || openstudio::toPath("C:/Windows") == curPath
+            || (subPathMatch(curPath, boost::regex("share", boost::regex::perl)) && !subPathMatch(curPath, boost::regex("openstudio", boost::regex::perl)))
+            || openstudio::toPath("C:/Windows") == curPath
+            || openstudio::toPath("C:/DAYSIM") == curPath
             || openstudio::toPath("C:/$Recycle.Bin") == curPath
             || subPathMatch(curPath, boost::regex("\\..*", boost::regex::perl))
             || subPathMatch(curPath, boost::regex("Temp.*", boost::regex::perl|boost::regex::icase)))
@@ -403,7 +424,7 @@ namespace runmanager {
     return results;
   }
 
-  bool ToolFinder::subPathMatch(const openstudio::path &t_path, const boost::regex &t_regex) const
+  bool ToolFinder::subPathMatch(const openstudio::path &t_path, const boost::regex &t_regex)
   {
     for (openstudio::path::const_iterator itr = t_path.begin();
          itr != t_path.end();
@@ -483,6 +504,7 @@ namespace runmanager {
          itr != t_searchPaths.end();
          ++itr)
     {
+      LOG(Info, "Scanning top level directory: " << openstudio::toString(*itr) << " for tools");
       std::vector<openstudio::path> found = findExecutables(*itr, t_names, dlg, searchedPaths);
       files.insert(found.begin(), found.end());
     }

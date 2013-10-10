@@ -45,7 +45,6 @@ namespace detail {
 
   /** AttributeRecord_Impl is a ObjectRecord_Impl that is the implementation class for AttributeRecord.*/
   class PROJECT_API AttributeRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

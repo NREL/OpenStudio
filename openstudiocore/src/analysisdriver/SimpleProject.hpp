@@ -69,6 +69,8 @@ namespace project {
 
 namespace analysisdriver {
 
+class CloudAnalysisDriver;
+
 namespace detail {
   class SimpleProject_Impl;
 }
@@ -186,6 +188,11 @@ class ANALYSISDRIVER_API SimpleProject {
   /** Returns true if the analysis() is being run by analysisDriver(). */
   bool isRunning() const;
 
+  AnalysisStatus status() const;
+
+  /** If there is a CloudSession, returns a CloudAnalysisDriver for this project. */
+  boost::optional<CloudAnalysisDriver> cloudAnalysisDriver() const;
+
   boost::optional<CloudSession> cloudSession() const;
 
   boost::optional<CloudSettings> cloudSettings() const;
@@ -220,15 +227,16 @@ class ANALYSISDRIVER_API SimpleProject {
    *  into the project and placed in the analysis().problem().workflow(). OpenStudio 
    *  measures are placed after the alternative model variable, if it exists. Otherwise,
    *  they are placed at the top of the workflow. EnergyPlus measures are placed after the
-   *  ExpandObjects job, if it exists. Otherwise, they are placed after ModelToIdf.
+   *  ExpandObjects job, if it exists. Otherwise, they are placed after ModelToIdf. Reporting
+   *  measures are placed after EnergyPlus.
    *
    *  In importing measures, if there are no duplicates between this project and the new 
    *  seed model, then the new measure and its arguments are simply copied over and used
    *  as-is. (This assumes that the seed model is internally consistent.) If there are 
    *  duplicates, we initially set up the imported measure to use the project's copy of 
-   *  the measure but the seed model's arguments. The new measure path is then passed out
-   *  so the user application can, if desired, update the measure to the version used by
-   *  the seed.
+   *  the measure but the seed model's arguments. Measures for which this occured are
+   *  then passed out as result.second so the user application can, if desired, 
+   *  update the project measure to the version used by the seed.
    *
    *  At this time, we do not attempt to delete any measures brought in with earlier seed
    *  models. The user is responsible for deleting any such measures that are no longer
@@ -287,17 +295,25 @@ class ANALYSISDRIVER_API SimpleProject {
    *  if operation is incomplete (if not all files can be removed from the file system). */
   bool removeAllDataPoints();
 
-  /** Sets this project's CloudSession to session, which ensures that it will be stored in 
-   *  projectDatabase() upon save(). */
-  void setCloudSession(const CloudSession& session);
+  /** Clears cloudAnalysisDriver(). Trusts user to know when they are done with the object (does
+   *  not check isRunning() or isDownloading()). */
+  void clearCloudAnalysisDriver();
 
-  void clearCloudSession();
+  /** Sets this project's CloudSession to session, which ensures that it will be stored in 
+   *  projectDatabase() upon save(). This method does nothing and returns false if there is a 
+   *  cloudAnalysisDriver(). */
+  bool setCloudSession(const CloudSession& session);
+
+  /** This method does nothing and returns false if there is a cloudAnalysisDriver(). */
+  bool clearCloudSession();
 
   /** Sets this project's CloudSettings to settings, which ensures that it will be stored in 
-   *  projectDatabase() upon save(). */
-  void setCloudSettings(const CloudSettings& settings);
+   *  projectDatabase() upon save(). This method does nothing and returns false if there is a 
+   *  cloudAnalysisDriver(). */
+  bool setCloudSettings(const CloudSettings& settings);
 
-  void clearCloudSettings();
+  /** This method does nothing and returns false if there is a cloudAnalysisDriver(). */
+  bool clearCloudSettings();
 
   /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
    *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
@@ -340,6 +356,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /// @cond
   typedef detail::SimpleProject_Impl ImplType;
+  friend class detail::SimpleProject_Impl;
 
   explicit SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl);
 

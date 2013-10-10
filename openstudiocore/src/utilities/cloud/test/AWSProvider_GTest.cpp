@@ -29,6 +29,47 @@ using namespace openstudio;
 
 TEST(AWSProvider, AWSProviderTest)
 {
+  AWSProvider::serverInstanceTypes();
   AWSProvider awsProvider;
-  cout << awsProvider.serviceAvailable() << endl;
+
+  //awsProvider.serverInstanceTypes();
+
+  //awsProvider.internetAvailable();
+
+  //awsProvider.serviceAvailable();
+
+  //awsProvider.validateCredentials();
+
+  //awsProvider.resourcesAvailableToStart();
+
+ /* awsProvider.setServerInstanceType("t1.micro");
+  awsProvider.requestStartServer();
+  awsProvider.waitForServer();
+
+  //awsProvider.serverRunning();
+
+  awsProvider.setWorkerInstanceType("t1.micro");
+  awsProvider.requestStartWorkers();
+  awsProvider.waitForWorkers();
+  
+  if (awsProvider.warnings().size()) {
+    cout << "WARNINGS:" << endl;
+    Q_FOREACH(std::string warning, awsProvider.warnings()) {
+      cout << "  " << warning << cout;
+    }
+  }
+  
+  if (awsProvider.errors().size()) {
+    cout << "ERRORS:" << endl;
+    Q_FOREACH(std::string error, awsProvider.errors()) {
+      cout << "  " << error << cout;
+    }
+  }
+
+  awsProvider.workersRunning();
+*/
+  boost::optional<AWSSession> awsSession = awsProvider.session().optionalCast<AWSSession>();
+  awsSession->totalSessionUptime();
+
+  awsSession->totalSessionInstances();
 }

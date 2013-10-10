@@ -41,15 +41,19 @@ class PATMeasures_Test < Test::Unit::TestCase
     assert((not File.exists?(test_dir)))
     
     measure_type = "ModelMeasure"
-    OpenStudio::BCLMeasure.new(measure_type, measure_type, OpenStudio::Path.new(test_dir + measure_type), "", measure_type.to_MeasureType, "Measure".to_MeasureFunction, false, false)
+    OpenStudio::BCLMeasure.new(measure_type, measure_type, OpenStudio::Path.new(test_dir + measure_type), "", measure_type.to_MeasureType, false)
     assert(File.exists?(test_dir + measure_type))
     
     measure_type = "EnergyPlusMeasure"
-    OpenStudio::BCLMeasure.new(measure_type, measure_type, OpenStudio::Path.new(test_dir + measure_type), "", measure_type.to_MeasureType, "Measure".to_MeasureFunction, false, false)
+    OpenStudio::BCLMeasure.new(measure_type, measure_type, OpenStudio::Path.new(test_dir + measure_type), "", measure_type.to_MeasureType, false)
     assert(File.exists?(test_dir + measure_type))
     
     measure_type = "UtilityMeasure"
-    OpenStudio::BCLMeasure.new(measure_type, measure_type, OpenStudio::Path.new(test_dir + measure_type), "", measure_type.to_MeasureType, "Measure".to_MeasureFunction, false, false)
+    OpenStudio::BCLMeasure.new(measure_type, measure_type, OpenStudio::Path.new(test_dir + measure_type), "", measure_type.to_MeasureType, false)
+    assert(File.exists?(test_dir + measure_type))
+    
+    measure_type = "ReportingMeasure"
+    OpenStudio::BCLMeasure.new(measure_type, measure_type, OpenStudio::Path.new(test_dir + measure_type), "", measure_type.to_MeasureType, false)
     assert(File.exists?(test_dir + measure_type))
     
     puts "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{test_dir}'"

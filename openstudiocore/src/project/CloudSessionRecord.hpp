@@ -44,10 +44,12 @@ namespace detail {
  *  \code
 OPENSTUDIO_ENUM(CloudSessionRecordType,
     ((VagrantSessionRecord))
+    ((AWSSessionRecord))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(CloudSessionRecordType,
     ((VagrantSessionRecord))
+    ((AWSSessionRecord))
 );
 
 /** \class CloudSessionRecordColumns
@@ -66,6 +68,13 @@ OPENSTUDIO_ENUM(CloudSessionRecordColumns,
   ((cloudSessionRecordType)(INTEGER)(8))
   ((sessionId)(TEXT)(9))
   ((serverUrlRecordId)(TEXT)(10))
+  ((numServerProcessors)(INTEGER)(11))
+  ((numWorkerProcessors)(INTEGER)(12))
+  ((privateKey)(TEXT)(13))
+  ((timestamp)(TEXT)(14))
+  ((region)(TEXT)(15))
+  ((serverInstanceType)(TEXT)(16))
+  ((workerInstanceType)(TEXT)(17))
 );
 
 /** CloudSessionRecord is a ObjectRecord. */
