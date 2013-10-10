@@ -170,7 +170,7 @@ RunStatusView::RunStatusView()
 
   cloudLostConnectionButton = new CloudLostConnectionButton();
   mainHLayout->addWidget(cloudLostConnectionButton);
-  cloudLostConnectionButton->setEnabled(false);
+  cloudLostConnectionButton->setEnabled(true);
   cloudLostConnectionButton->hide();
 
 

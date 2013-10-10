@@ -71,6 +71,10 @@ RunTabController::RunTabController()
                   PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
   OS_ASSERT(bingo);
 
+  bingo = connect(runView->runStatusView->cloudLostConnectionButton,SIGNAL(clicked()),
+                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
+  OS_ASSERT(bingo);
+
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
     bool bingo = connect(project->getImpl().get(),SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)),
