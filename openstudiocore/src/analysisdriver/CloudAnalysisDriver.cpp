@@ -111,6 +111,16 @@ namespace detail {
     return (numDataPointsInIteration() - numIncompleteDataPoints());
   }
 
+  unsigned CloudAnalysisDriver_Impl::numFailedDataPoints() const {
+    unsigned result=0;
+    BOOST_FOREACH(const DataPoint& dataPoint,m_iteration) {
+      if (dataPoint.complete() && dataPoint.failed()) {
+        ++result;
+      }
+    }
+    return result;
+  }
+
   std::vector<analysis::DataPoint> CloudAnalysisDriver_Impl::failedJsonDownloads() const {
     return m_jsonFailures;
   }
@@ -1778,6 +1788,10 @@ unsigned CloudAnalysisDriver::numIncompleteDataPoints() const {
 
 unsigned CloudAnalysisDriver::numCompleteDataPoints() const {
   return getImpl<detail::CloudAnalysisDriver_Impl>()->numCompleteDataPoints();
+}
+
+unsigned CloudAnalysisDriver::numFailedDataPoints() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->numFailedDataPoints();
 }
 
 std::vector<analysis::DataPoint> CloudAnalysisDriver::failedJsonDownloads() const {

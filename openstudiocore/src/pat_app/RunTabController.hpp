@@ -22,6 +22,7 @@
 
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
+#include "PatConstants.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
@@ -63,8 +64,6 @@ class RunTabController : public QObject
     void onPlayButtonClicked();
 
     void onIterationProgress();
-
-    void onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus);
 
     void reqestRefresh();
 

@@ -30,6 +30,8 @@
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 
+#include <analysisdriver/AnalysisDriverEnums.hpp>
+
 #include <boost/optional.hpp>
 
 #include <QProgressBar>
@@ -82,11 +84,7 @@ class RunStatusView : public QWidget
 
    virtual ~RunStatusView() {}
 
-   void setRunning(bool isRunning);
-
-   void setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration, bool isRunning);
-
-   void setCloudStatus(CloudStatus status);
+   void setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration);
 
    PlayButton * playButton;
 
@@ -106,6 +104,10 @@ class RunStatusView : public QWidget
 
    void paintEvent(QPaintEvent * e);
 
+ public slots:
+   
+  void setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus);
+
  private slots:
 
   void on_selectAllDataPoints(bool checked);
@@ -118,14 +120,13 @@ class RunStatusView : public QWidget
 
   void updateCloudData();
 
-  void onCloudUpdate(const CloudStatus & newStatus);
-
  private:
+
+  friend class RunTabController;
 
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
-  CloudStatus m_status;
   QPushButton * m_selectAllClears;
   QPushButton * m_selectAllDownloads;
   QLabel * m_selectAllDownloadsLabel;

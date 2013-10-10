@@ -374,6 +374,8 @@
     <file alias="shared_gui_components/images/run_simulation_over.png">../shared_gui_components/images/run_simulation_over.png</file>
     <file alias="shared_gui_components/images/run_simulation_press.png">../shared_gui_components/images/run_simulation_press.png</file>
     <file alias="shared_gui_components/images/searchbox_magnifyingglass.png">../shared_gui_components/images/searchbox_magnifyingglass.png</file>
+    <file alias="shared_gui_components/images/starting_simulation_button.png">../shared_gui_components/images/starting_simulation_button.png</file>
+    <file alias="shared_gui_components/images/stopping_simulation_button.png">../shared_gui_components/images/stopping_simulation_button.png</file>
     <file alias="shared_gui_components/images/toggle_arrow.png">../shared_gui_components/images/toggle_arrow.png</file>
     <file alias="shared_gui_components/images/toggle_arrow_closed.png">../shared_gui_components/images/toggle_arrow_closed.png</file>
     <file alias="shared_gui_components/images/warning_icon.png">../shared_gui_components/images/warning_icon.png</file>

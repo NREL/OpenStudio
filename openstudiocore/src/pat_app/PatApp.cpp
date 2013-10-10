@@ -1483,14 +1483,9 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
       break;
   }
 
-  setCloudButtonStatus(cloudStatus);
-}
-
-void PatApp::setCloudButtonStatus(const CloudStatus & cloudStatus)
-{
   if( m_runTabController )
   {
-    m_runTabController->runView->runStatusView->setCloudStatus(cloudStatus);
+    m_runTabController->runView->runStatusView->setStatus(cloudStatus, analysisStatus);
   }
 }
 
