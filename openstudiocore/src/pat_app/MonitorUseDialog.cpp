@@ -21,8 +21,6 @@
 
 #include "CloudMonitor.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
@@ -168,8 +166,14 @@ void MonitorUseDialog::createWidgets()
 
   /////
 
+  bool success = false;
+  success = m_awsProvider.requestEstimatedCharges();
+  OS_ASSERT(success);
+  success = m_awsProvider.requestTotalInstances();
+  OS_ASSERT(success);
+
   QTimer * timer = new QTimer(this);
-  timer->start(10000);
+  timer->start(5000);
   isConnected = connect(timer, SIGNAL(timeout()),
                         this, SLOT(updateData()));
   OS_ASSERT(isConnected);
@@ -187,15 +191,13 @@ void MonitorUseDialog::createWidgets()
 
 void  MonitorUseDialog::updateData()
 {
-  AWSProvider awsProvider;
-
   QString temp;
 
-  temp = temp.setNum(awsProvider.estimatedCharges(), 'f', 2);
+  temp = temp.setNum(m_awsProvider.estimatedCharges(100), 'f', 2);
   temp.prepend('$');
   m_billingCharge->setText(temp);
 
-  m_totalNumInstances->setText(temp.setNum(awsProvider.totalInstances()));
+  m_totalNumInstances->setText(temp.setNum(m_awsProvider.totalInstances(100)));
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
   if (session) {

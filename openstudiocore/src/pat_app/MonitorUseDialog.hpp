@@ -22,6 +22,9 @@
 
 #include <shared_gui_components/OSDialog.hpp>
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
+
 class QLabel;
 class QLineEdit;
 class QPushButton;
@@ -49,6 +52,8 @@ private:
   QLabel * m_numInstances;
   QLabel * m_totalNumInstances;
   QPushButton * m_cloudStatus;
+
+  AWSProvider m_awsProvider;
 
 private slots:
 
