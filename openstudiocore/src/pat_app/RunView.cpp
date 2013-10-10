@@ -93,8 +93,7 @@ RunView::RunView()
 }
 
 RunStatusView::RunStatusView()
-  : QWidget(),
-    m_status(CLOUD_STOPPED)
+  : QWidget()
 {
   setFixedHeight(96);
   setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
@@ -262,23 +261,106 @@ RunStatusView::RunStatusView()
   buttonHLayout->addSpacerItem(horizontalSpacer); 
 
   QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  CloudStatus cloudStatus = PatApp::instance()->cloudMonitor()->status();
 
-  isConnected = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus &)),
-                        this, SLOT(onCloudUpdate(const CloudStatus &)));
-  OS_ASSERT(isConnected);
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  OS_ASSERT(project);
+  analysisdriver::AnalysisStatus analysisStatus = project->status();
 
-  onCloudUpdate(PatApp::instance()->cloudMonitor()->status());
+  setStatus(cloudStatus, analysisStatus);
 }
 
-void RunStatusView::onCloudUpdate(const CloudStatus & newStatus)
+void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus)
 {
+  // update run text
+  switch (analysisStatus.value())
+  {
+    case analysisdriver::AnalysisStatus::Idle:
+      if(cloudStatus == CLOUD_RUNNING){
+        m_runText = "Run on Cloud";
+      }else if(cloudStatus == CLOUD_STOPPED){
+        m_runText = "Run Locally";
+      }else{
+        // no change
+      }
+      break;
+    case analysisdriver::AnalysisStatus::Starting:
+      if(cloudStatus == CLOUD_RUNNING){
+        m_runText = "Run on Cloud";
+      }else if(cloudStatus == CLOUD_STOPPED){
+        m_runText = "Run Locally";
+      }else{
+        // no change
+      }
+      break;
+    case analysisdriver::AnalysisStatus::Running:
+      if(cloudStatus == CLOUD_RUNNING){
+        m_runText = "Running on Cloud";
+      }else if(cloudStatus == CLOUD_STOPPED){
+        m_runText = "Running Locally";
+      }else{
+        // no change
+      }
+      break;
+    case analysisdriver::AnalysisStatus::Stopping:
+      if(cloudStatus == CLOUD_RUNNING){
+        m_runText = "Running on Cloud";
+      }else if(cloudStatus == CLOUD_STOPPED){
+        m_runText = "Running Locally";
+      }else{
+        // no change
+      }
+      break;
+    case analysisdriver::AnalysisStatus::Error:
+      if(cloudStatus == CLOUD_RUNNING){
+        m_runText = "Run Error";
+      }else if(cloudStatus == CLOUD_STOPPED){
+        m_runText = "Run Error";
+      }else{
+        // no change
+      }
+      break;
+  }
+  m_playLabel->setText(m_runText);
+
+  // update play button
+  switch (analysisStatus.value())
+  {
+    case analysisdriver::AnalysisStatus::Idle:
+      playButton->setStatus(PlayButton::IDLE);
+      break;
+    case analysisdriver::AnalysisStatus::Starting:
+      playButton->setStatus(PlayButton::STARTING);
+      break;
+    case analysisdriver::AnalysisStatus::Running:
+      playButton->setStatus(PlayButton::RUNNING);
+      break;
+    case analysisdriver::AnalysisStatus::Stopping:
+      playButton->setStatus(PlayButton::STOPPING);
+      break;
+    case analysisdriver::AnalysisStatus::Error:
+      playButton->setStatus(PlayButton::ERROR);
+      break;
+  }
+
+  // update progress bar
+  m_progressBar->setStatus(cloudStatus, analysisStatus);
+
+  // update cloud time and instances 
   // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
-  if(newStatus == CLOUD_RUNNING){
-    m_runText = "Run on Cloud";
+  if(cloudStatus == CLOUD_RUNNING){
     m_cloudTime->show();
     m_cloudInstances->show();
     m_timer->start(30000);
-
+  } else {
+    m_cloudTime->hide();
+    m_cloudInstances->hide();
+    m_timer->stop();
+  }
+  updateCloudData();
+  
+  // update download button
+  if(cloudStatus == CLOUD_RUNNING){
     QString style;
     style = "QPushButton {"
             "  background-image:url(':/images/results_yes_download.png');"
@@ -286,15 +368,7 @@ void RunStatusView::onCloudUpdate(const CloudStatus & newStatus)
             "}";
     m_selectAllDownloads->setStyleSheet(style);
     m_selectAllDownloadsLabel->setText("All");
-
-    updateCloudData();
   } else {
-    m_runText = "Run Locally";
-    m_playLabel->setText(m_runText);
-    m_cloudTime->hide();
-    m_cloudInstances->hide();
-    m_timer->stop();
-
     QString style;
     style = "QPushButton {"
             "  background-image:url(':/images/results_space_download.png');"
@@ -303,7 +377,24 @@ void RunStatusView::onCloudUpdate(const CloudStatus & newStatus)
     m_selectAllDownloads->setStyleSheet(style);
     m_selectAllDownloadsLabel->setText("   ");
   }
-  m_playLabel->setText(m_runText);
+
+  // update cloud button
+  cloudOnButton->hide();
+  cloudStartingButton->hide();
+  cloudOffButton->hide();
+  cloudStoppingButton->hide();
+  cloudLostConnectionButton->hide();
+  if( cloudStatus == CLOUD_STOPPED ){
+    cloudOnButton->show();
+  }else if( cloudStatus == CLOUD_STARTING ){
+    cloudStartingButton->show();
+  }else if( cloudStatus == CLOUD_RUNNING ){
+    cloudOffButton->show();
+  }else if( cloudStatus == CLOUD_STOPPING ){
+    cloudStoppingButton->show();
+  }else if( cloudStatus == CLOUD_ERROR ){
+    cloudLostConnectionButton->show();
+  }
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
@@ -314,49 +405,8 @@ void RunStatusView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void RunStatusView::setRunning(bool isRunning)
+void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration)
 {
-  if (isRunning){
-    playButton->setChecked(true);
-  }else{
-    playButton->setChecked(false);
-  }
-}
-
-void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration, bool isRunning)
-{
-  // there are four states:
-  // not started - not running, numCompletedJobs = 0
-  // restarted - not running, numCompletedJobs > 0
-  // running - running
-  // complete - not running, numCompletedJobs = numJobsInIteration
-
-  //bool showPercentComplete = false;
-  if (isRunning){
-    // running
-    //m_playLabel->setText("Pause");
-    m_playLabel->setText("Stop");
-    playButton->setChecked(true);
-  }else{
-    if (numCompletedJobs == 0){
-      QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
-      CloudStatus status = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
-      if(status == CLOUD_RUNNING){
-        m_runText = "Run on Cloud";
-      } else {
-        m_runText = "Run Locally";
-      }
-      m_playLabel->setText(m_runText);
-      playButton->setChecked(false);
-    }else if (numCompletedJobs == numJobsInIteration){
-      m_playLabel->setText("Complete");
-      playButton->setChecked(false); // third style to show complete?
-    }else {
-      m_playLabel->setText("Resume");
-      playButton->setChecked(false);
-    }
-  }
-
   m_progressBar->setRange(0, std::max(numJobsInIteration, 1));
   m_progressBar->setValue(numCompletedJobs);
 
@@ -484,38 +534,6 @@ void RunStatusView::updateCloudData()
   m_cloudTime->setText("Time: <b>0 minutes</b>");
 
   m_cloudInstances->setText("Instances: <b>0</b>");
-}
-
-void RunStatusView::setCloudStatus(CloudStatus status)
-{
-  m_status = status;
-
-  cloudOnButton->hide();
-  cloudStartingButton->hide();
-  cloudOffButton->hide();
-  cloudStoppingButton->hide();
-  cloudLostConnectionButton->hide();
-
-  if( m_status == CLOUD_STOPPED )
-  {
-    cloudOnButton->show();
-  }
-  else if( m_status == CLOUD_STARTING )
-  {
-    cloudStartingButton->show();
-  }
-  else if( m_status == CLOUD_RUNNING )
-  {
-    cloudOffButton->show();
-  }
-  else if( m_status == CLOUD_STOPPING )
-  {
-    cloudStoppingButton->show();
-  }
-  else if( m_status == CLOUD_ERROR )
-  {
-    cloudLostConnectionButton->show();
-  }
 }
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
@@ -1144,6 +1162,16 @@ void PatProgressBar::setValue(int value)
   }
 
   setStyleSheet(style);
+}
+
+void PatProgressBar::setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus)
+{
+  if (analysisStatus == analysisdriver::AnalysisStatus::Running){
+    // will be driven by iterationProgress
+  }else{
+    setRange(0,1);
+    setValue(0);
+  }
 }
 
 }

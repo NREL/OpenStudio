@@ -1460,7 +1460,7 @@ void PatApp::setCloudButtonStatus(const CloudStatus & cloudStatus)
 {
   if( m_runTabController )
   {
-    m_runTabController->runView->runStatusView->setCloudStatus(cloudStatus);
+    m_runTabController->onCloudUpdate(cloudStatus);
   }
 }
 

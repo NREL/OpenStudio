@@ -71,6 +71,12 @@ RunTabController::RunTabController()
                   PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
   OS_ASSERT(bingo);
 
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+
+  bingo = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus &)),
+                  this, SLOT(onCloudUpdate(const CloudStatus &)));
+  OS_ASSERT(bingo);
+
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
     bool bingo = connect(project->getImpl().get(),SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)),
@@ -229,7 +235,7 @@ void RunTabController::onPlayButtonClicked()
         if (test == QMessageBox::Yes){
           
           // clear the progress bar
-          runView->runStatusView->setProgress(0, 0, totalNumJobs, true);
+          runView->runStatusView->setProgress(0, 0, totalNumJobs);
 
           // remove all results
           bool completeRemoval = project->clearAllResults();
@@ -304,7 +310,6 @@ void RunTabController::onIterationProgress()
   analysis::Analysis analysis = project->analysis();
 
   boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
-  analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
 
   int numCompletedJobs = (int)analysis.completeDataPoints().size();
   int totalNumJobs = (int)analysis.completeDataPoints().size() + (int)analysis.dataPointsToQueue().size();
@@ -312,23 +317,13 @@ void RunTabController::onIterationProgress()
 
   if (numCompletedJobs == totalNumJobs){
     if (cloudAnalysisDriver){
-      // DLM: start timer to shut down cloud?
-      // DLM: no cloud monitor will start timer to shut down cloud in response to runComplete
-      //int timeout = 0; // TODO: get from settings
-      //QTimer::singleShot(timeout, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
-
-      //emit runComplete();
+      // no-op
     }else{
       runManager.setPaused(true);
     }
   }
 
-  bool isRunning = project->isRunning();
-
-  runView->runStatusView->setProgress(numCompletedJobs, numFailedJobs, totalNumJobs, isRunning);
-
-  // this will enable or disable tabs as needed
-  //PatApp::instance()->disableTabsDuringRun();
+  runView->runStatusView->setProgress(numCompletedJobs, numFailedJobs, totalNumJobs);
 }
 
 void RunTabController::reqestRefresh()
@@ -342,47 +337,33 @@ void RunTabController::reqestRefresh()
 void RunTabController::refresh()
 {
   m_refreshScheduled = false;
-  runView->runStatusView->setCloudStatus(PatApp::instance()->cloudMonitor()->status());
+
+  CloudStatus cloudStatus = PatApp::instance()->cloudMonitor()->status();
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-  if (project)
-  {
-    boost::optional<analysisdriver::AnalysisDriver> analysisDriver = project->analysisDriver();
-    if( analysisDriver )
-    {
-      onAnalysisStatusChanged(analysisDriver->status());
-    }
-    if( boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver() )
-    {
-      onAnalysisStatusChanged(cloudAnalysisDriver->status());
-    }
-  }
+  OS_ASSERT(project);
+  analysisdriver::AnalysisStatus analysisStatus = project->status();
+
+  runView->runStatusView->setStatus(cloudStatus, analysisStatus);
 
   QTimer::singleShot(0, runView->dataPointRunListView, SLOT(refreshAllViews()));
 }
 
 void RunTabController::onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus)
 {
-  PlayButton * playButton = runView->runStatusView->playButton;
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  CloudStatus cloudStatus = PatApp::instance()->cloudMonitor()->status();
 
-  switch (newAnalysisStatus.value())
-  {
-    case analysisdriver::AnalysisStatus::Idle:
-      playButton->setStatus(PlayButton::IDLE);
-      break;
-    case analysisdriver::AnalysisStatus::Starting:
-      playButton->setStatus(PlayButton::STARTING);
-      break;
-    case analysisdriver::AnalysisStatus::Running:
-      playButton->setStatus(PlayButton::RUNNING);
-      break;
-    case analysisdriver::AnalysisStatus::Stopping:
-      playButton->setStatus(PlayButton::STOPPING);
-      break;
-    case analysisdriver::AnalysisStatus::Error:
-      playButton->setStatus(PlayButton::ERROR);
-      break;
-  }
+  runView->runStatusView->setStatus(cloudStatus, newAnalysisStatus);
+}
+
+void RunTabController::onCloudUpdate(const CloudStatus & newStatus)
+{  
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  OS_ASSERT(project);
+  analysisdriver::AnalysisStatus analysisStatus = project->status();
+
+  runView->runStatusView->setStatus(newStatus, analysisStatus);
 }
 
 DataPointRunListController::DataPointRunListController(const openstudio::analysis::Analysis& analysis)
