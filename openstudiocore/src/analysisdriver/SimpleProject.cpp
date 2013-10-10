@@ -2278,13 +2278,9 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
     runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
   }
 
-  // ETH@20130306 - Is this the best option?
-  // DLM: for now we will let run manager manage the number of jobs running at a time
-  //      even though this does result in long time to queue initially
-  // DLM: i did confirm that the data points in the run list update correctly if this is set
-  // ETH: hoping uncommenting this and setting it to 50 eases the problems David saw with
-  // running 100's of points on his local machine
-  runOptions.setQueueSize(50);
+  // limits the AnalysisDriver queue to 24. this way, not all data points are made and queued 
+  // in the RunManager at the same time.
+  runOptions.setQueueSize(24);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
   // however there seem to be intermittant failures when this is done (bug 1077)
