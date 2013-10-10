@@ -27,6 +27,7 @@
 #include <QDesktopServices>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPixmap>
 #include <QPushButton>
 #include <QTimer>
 #include <QUrl>
@@ -84,6 +85,12 @@ void MonitorUseDialog::createWidgets()
   m_billingCharge = new QLabel;
   m_billingCharge->setObjectName("H2");
   hlayout->addWidget(m_billingCharge,0,Qt::AlignTop | Qt::AlignLeft);
+
+  QLabel *infoIcon = new QLabel();
+  QPixmap infoIconPixmap = QPixmap(":/shared_gui_components/images/warning_icon.png").scaled(QSize(16,16), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+  infoIcon->setPixmap(infoIconPixmap);
+  infoIcon->setToolTip("Amazon billing data is delayed and will not reflect instantaneous charges");
+  hlayout->addWidget(infoIcon);
 
   hlayout->addStretch();
 
@@ -176,6 +183,7 @@ void MonitorUseDialog::createWidgets()
                         this, SLOT(on_totalInstancesAvailable()));
   OS_ASSERT(isConnected);
 
+  updateData();
   m_timer = new QTimer(this);
   m_timer->start(30000);
   isConnected = connect(m_timer, SIGNAL(timeout()),
@@ -191,7 +199,7 @@ void MonitorUseDialog::createWidgets()
   #endif
 }
 
-void  MonitorUseDialog::displayErrors()
+void MonitorUseDialog::displayErrors()
 {
   m_timer->stop();
   QString errorsAndWarnings("Errors and warnings returned from Amazon EC2:");
