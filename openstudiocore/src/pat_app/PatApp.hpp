@@ -189,7 +189,7 @@ class PatApp : public QApplication, public BaseApp
 
   void saveAs();
 
-  void quit();
+  void quit(bool fromCloseEvent = false);
 
   void open();
 

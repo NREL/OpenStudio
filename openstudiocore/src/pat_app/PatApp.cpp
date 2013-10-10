@@ -298,8 +298,38 @@ QSharedPointer<EditController> PatApp::editController()
 }
 
 
-void PatApp::quit()
+void PatApp::quit(bool fromCloseEvent)
 {
+  if (!fromCloseEvent) {
+    // This duplicates the PatMainWindow closeEvent.  This is only used when File->Exit is called which bypasses that closeEvent
+    CloudStatus status = cloudMonitor()->status();
+
+    if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+      QMessageBox::warning(mainWindow, 
+        "Cannot Exit PAT", 
+        "PAT cannot be closed while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+
+      return;
+    } else if (status == CLOUD_RUNNING) {
+      int result = QMessageBox::warning(mainWindow, 
+                     "Close PAT?", 
+                     "The cloud is currently running and charges are accruing.  Are you sure you want to exit PAT?", 
+                     QMessageBox::Ok, 
+                     QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    } else if (status == CLOUD_ERROR) {
+      int result = QMessageBox::warning(mainWindow, 
+                     "Close PAT?", 
+                     "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to exit PAT?", 
+                     QMessageBox::Ok, 
+                     QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    }
+  }
+
   // no more clicking around we are quitting
   mainWindow->setEnabled(false);
   this->processEvents();
