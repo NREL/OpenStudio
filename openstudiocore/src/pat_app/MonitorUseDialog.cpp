@@ -30,9 +30,9 @@
 #include <QTimer>
 #include <QUrl>
 
-#define BILLING_CHARGE "Current Charges: "
+#define BILLING_CHARGE "Estimated EC2 Charges: "
 #define MINUTES " minutes"
-#define TIME_RUNNING "Total Time Running: "
+#define TIME_RUNNING "Project Run Time: "
 #define NUM_INSTANCES "Instances Running on Current Project: "
 #define TOTAL_NUM_INSTANCES "Total Instances Running: " 
 #define WARNING "Stopping the cloud will terminate all instances.  Any detailed results not selected for download will be lost."

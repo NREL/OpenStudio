@@ -429,6 +429,10 @@ namespace detail{
 
     bool requestTotalInstances();
 
+    double lastEstimatedCharges() const;
+
+    unsigned lastTotalInstances() const;
+
     //@}
 
   signals:
@@ -510,9 +514,6 @@ namespace detail{
     bool parseCheckTerminatedResults(const ProcessResults &);
     double parseCheckEstimatedChargesResults(const ProcessResults &);
     unsigned parseCheckTotalInstancesResults(const ProcessResults &);
-
-    double lastEstimatedCharges() const;
-    unsigned lastTotalInstances() const;
 
     bool userAgreementSigned() const;
     bool authenticated() const;
