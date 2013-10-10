@@ -82,7 +82,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDistrictHeating( District
 
   ///////////////////////////////////////////////////////////////////////////
   //Nominal Capacity ///////////////////////////////////////////////////
-  if( value = modelObject.nominalCapacity() )
+  if( (value = modelObject.nominalCapacity()) )
   {
    idfObject.setDouble(DistrictHeatingFields::NominalCapacity,value.get());
   }

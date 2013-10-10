@@ -20,15 +20,21 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
+ #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
+ #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
+
 #include <model/AirGap.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
+#include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
 #include <model/AirWallMaterial.hpp>
 #include <model/AvailabilityManagerAssignmentList.hpp>
 #include <model/AvailabilityManagerNightCycle.hpp>
@@ -42,6 +48,7 @@
 #include <model/CFactorUndergroundWallConstruction.hpp>
 #include <model/ClimateZones.hpp>
 #include <model/ChillerElectricEIR.hpp>
+#include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
@@ -114,6 +121,7 @@
 #include <model/GasMixture.hpp>
 #include <model/GenericModelObject.hpp>
 #include <model/GlareSensor.hpp>
+#include <model/GroundHeatExchangerVertical.hpp>
 #include <model/HeatBalanceAlgorithm.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
 #include <model/HotWaterEquipment.hpp>
@@ -137,6 +145,7 @@
 #include <model/LuminaireDefinition.hpp>
 #include <model/MasslessOpaqueMaterial.hpp>
 #include <model/Meter.hpp>
+#include <model/ModelObjectList.hpp>
 #include <model/Node.hpp>
 #include <model/PortList.hpp>
 #include <model/OtherEquipment.hpp>
@@ -153,6 +162,10 @@
 #include <model/PumpVariableSpeed.hpp>
 #include <model/RadianceParameters.hpp>
 #include <model/RefractionExtinctionGlazing.hpp>
+#include <model/RefrigerationCase.hpp>
+#include <model/RefrigerationCompressor.hpp>
+#include <model/RefrigerationCondenserAirCooled.hpp>
+#include <model/RefrigerationSystem.hpp>
 #include <model/RenderingColor.hpp>
 #include <model/RoofVegetation.hpp>
 #include <model/RunPeriod.hpp>
@@ -176,6 +189,7 @@
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/Shade.hpp>
+#include <model/ShadingControl.hpp>
 #include <model/ShadingSurface.hpp>
 #include <model/ShadingSurfaceGroup.hpp>
 #include <model/ShadowCalculation.hpp>
@@ -205,6 +219,7 @@
 #include <model/ThermochromicGlazing.hpp>
 #include <model/TimeDependentValuation.hpp>
 #include <model/Timestep.hpp>
+#include <model/UtilityBill.hpp>
 #include <model/UtilityCost_Charge_Block.hpp>
 #include <model/UtilityCost_Charge_Simple.hpp>
 #include <model/UtilityCost_Computation.hpp>
@@ -245,9 +260,12 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
+#include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
 #include <model/AirWallMaterial_Impl.hpp>
 #include <model/AvailabilityManagerAssignmentList_Impl.hpp>
 #include <model/AvailabilityManagerNightCycle_Impl.hpp>
@@ -261,6 +279,7 @@
 #include <model/CFactorUndergroundWallConstruction_Impl.hpp>
 #include <model/ChillerElectricEIR_Impl.hpp>
 #include <model/ClimateZones_Impl.hpp>
+#include <model/CoilCoolingCooledBeam_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
@@ -333,6 +352,7 @@
 #include <model/GasMixture_Impl.hpp>
 #include <model/GenericModelObject_Impl.hpp>
 #include <model/GlareSensor_Impl.hpp>
+#include <model/GroundHeatExchangerVertical_Impl.hpp>
 #include <model/HeatBalanceAlgorithm_Impl.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
 #include <model/HotWaterEquipment_Impl.hpp>
@@ -356,6 +376,7 @@
 #include <model/LuminaireDefinition_Impl.hpp>
 #include <model/MasslessOpaqueMaterial_Impl.hpp>
 #include <model/Meter_Impl.hpp>
+#include <model/ModelObjectList_Impl.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/PortList_Impl.hpp>
 #include <model/OtherEquipment_Impl.hpp>
@@ -372,6 +393,10 @@
 #include <model/PumpVariableSpeed_Impl.hpp>
 #include <model/RadianceParameters_Impl.hpp>
 #include <model/RefractionExtinctionGlazing_Impl.hpp>
+#include <model/RefrigerationCase_Impl.hpp>
+#include <model/RefrigerationCompressor_Impl.hpp>
+#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+#include <model/RefrigerationSystem_Impl.hpp>
 #include <model/RenderingColor_Impl.hpp>
 #include <model/RoofVegetation_Impl.hpp>
 #include <model/RunPeriod_Impl.hpp>
@@ -396,6 +421,7 @@
 #include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
 #include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/Shade_Impl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>
 #include <model/ShadowCalculation_Impl.hpp>
@@ -425,6 +451,7 @@
 #include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
 #include <model/TimeDependentValuation_Impl.hpp>
 #include <model/Timestep_Impl.hpp>
+#include <model/UtilityBill_Impl.hpp>
 #include <model/UtilityCost_Charge_Block_Impl.hpp>
 #include <model/UtilityCost_Charge_Simple_Impl.hpp>
 #include <model/UtilityCost_Computation_Impl.hpp>

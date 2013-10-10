@@ -835,6 +835,8 @@ namespace detail {
 
   bool Surface_Impl::intersect(Surface& otherSurface)
   {
+    double tol = 0.01; // 1 cm tolerance
+
     boost::optional<Space> space = this->space();
     boost::optional<Space> otherSpace = otherSurface.space();
     if (!space || !otherSpace || space->handle() == otherSpace->handle()){
@@ -892,9 +894,12 @@ namespace detail {
     //std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
 
     // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
     BoostRing facePolygon;
     BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
-      boost::geometry::append(facePolygon, boost::make_tuple(faceVertex.x(), faceVertex.y()));
+
+      // use helper method which combines close points
+      boost::geometry::append(facePolygon, point3dToTuple(faceVertex, allPoints, tol));
 
       // should all have zero z coordinate now
       double z = faceVertex.z();
@@ -902,12 +907,14 @@ namespace detail {
         LOG(Warn, "Not all points on common plane in intersection");
       }
     }
-    boost::geometry::append(facePolygon, boost::make_tuple(faceVertices[0].x(), faceVertices[0].y()));
+    // close polygon, use helper method which combines close points
+    boost::geometry::append(facePolygon, point3dToTuple(faceVertices[0], allPoints, tol));
 
     // convert vertices to boost rings
     BoostRing otherFacePolygon;
     BOOST_FOREACH(const Point3d& otherFaceVertex, otherFaceVertices){
-      boost::geometry::append(otherFacePolygon, boost::make_tuple(otherFaceVertex.x(), otherFaceVertex.y()));
+      // use helper method which combines close points
+      boost::geometry::append(otherFacePolygon, point3dToTuple(otherFaceVertex, allPoints, tol));
 
       // should all have zero z coordinate now
       double z = otherFaceVertex.z();
@@ -915,7 +922,8 @@ namespace detail {
         LOG(Warn, "Not all points on common plane in intersection");
       }
     }
-    boost::geometry::append(otherFacePolygon, boost::make_tuple(otherFaceVertices[0].x(), otherFaceVertices[0].y()));
+    // close polygon, use helper method which combines close points
+    boost::geometry::append(otherFacePolygon, point3dToTuple(otherFaceVertices[0], allPoints, tol));
     
     // do we need to check if either polygon overlaps itself?
 
@@ -942,7 +950,7 @@ namespace detail {
 
     // if both differences are empty then these were the same polygon
     if (faceDifferenceResult.empty() && otherFaceDifferenceResult.empty()){
-      return false;
+      return true;
     }
 
     // goes from building coordinates to local system 
@@ -1439,6 +1447,22 @@ namespace detail {
     window.setSurface(thisSurface);
 
     return window;
+  }
+
+  // helper function to get a boost polygon point from a Point3d
+  boost::tuple<double, double> Surface_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const
+  {
+    // simple method
+    //return boost::make_tuple(point3d.x(), point3d.y());
+
+    // detailed method, try to combine points within tolerance
+    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
+        return boost::make_tuple(otherPoint.x(), otherPoint.y());
+      }
+    }
+    allPoints.push_back(point3d);
+    return boost::make_tuple(point3d.x(), point3d.y());
   }
 
 } // detail

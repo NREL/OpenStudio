@@ -49,7 +49,6 @@ namespace detail {
   class ProjectDatabase_Impl;
 
   class PROJECT_API ObjectRecord_Impl : public Record_Impl {
-    Q_OBJECT;
    public:
 
     /// constructor with no database
@@ -107,6 +106,10 @@ namespace detail {
     /** Update any path data stored under originalBase to newBase. */
     virtual void updatePathData(const openstudio::path& originalBase,
                                 const openstudio::path& newBase);
+
+    /** Impl-only method. Can be used during construction to determine if related 
+     *  records should be refreshed. */
+    UUID lastUuidLast() const;
 
    protected:
 

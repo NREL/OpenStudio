@@ -28,13 +28,11 @@
 
 #include <QObject>
 
-// DLM: temporary
-#include <boost/bimap.hpp>
-
 #include <string>
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QMutex;
 
 namespace openstudio{
 namespace detail{
@@ -60,96 +58,219 @@ namespace detail{
     virtual ~OSServer_Impl();
 
     //@}
-    /** @name Class members */
+    /** @name Blocking class members */
     //@{
 
-    /// Returns true if the server can be reached
-    /// blocking call, clears errors and warnings
-    bool available() const;
+    bool available(int msec);
+    bool lastAvailable() const;
 
-    /// Get a list of all project UUIDs
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> projectUUIDs() const; 
+    std::vector<UUID> projectUUIDs(int msec); 
+    std::vector<UUID> lastProjectUUIDs() const; 
 
-    /// Get a list of all analysis UUIDs
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> analysisUUIDs() const; 
+    bool createProject(const UUID& projectUUID, int msec); 
+    bool lastCreateProjectSuccess() const; 
 
-    /// Send an analysis server view JSON file for analsysis, adds the analyis to project
-    /// projectUUID can be an existing project or a new one
-    /// analysisJSON includes analysis UUID 
-    /// blocking call, clears errors and warnings
-    bool postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON) const;
+    bool deleteProject(const UUID& projectUUID, int msec); 
+    bool lastDeleteProjectSuccess() const; 
 
-    /// Send a datapoint server view JSON file for analysis, adds the dataPoint to analysis
-    /// analysisUUID must be an existing analysis
-    /// dataPointJSON includes data point UUID 
-    /// blocking call, clears errors and warnings
-    bool postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON) const;
+    std::vector<UUID> analysisUUIDs(const UUID& projectUUID, int msec); 
+    std::vector<UUID> lastAnalysisUUIDs() const; 
 
-    /// Upload a zip file of all the files needed for analysis
-    /// blocking call, clears errors and warnings
-    // DLM: is the structure of this defined somewhere? 
-    bool uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile);
+    bool postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON, int msec);
+    bool lastPostAnalysisJSONSuccess() const;
 
-    /// Send the server a request to start the analysis
-    /// blocking call, clears errors and warnings
-    bool start(const UUID& analysisUUID) const;
+    bool postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON, int msec);
+    bool lastPostDataPointJSONSuccess() const;
 
-    /// Returns true if the analysis is running
-    /// blocking call, clears errors and warnings
-    bool isAnalysisRunning(const UUID& analysisUUID) const;
+    bool uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile, int msec);
+    bool lastUploadAnalysisFilesSuccess() const;
 
-    /// Send the server a request to stop the analysis
-    /// blocking call, clears errors and warnings
-    bool stop(const UUID& analysisUUID) const;
+    bool start(const UUID& analysisUUID, int msec);
+    bool lastStartSuccess() const;
+    
+    bool isAnalysisQueued(const UUID& analysisUUID, int msec);
+    bool lastIsAnalysisQueued() const;
 
-    /// Get a list of all dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> dataPointsJSON(const UUID& analysisUUID) const;
+    bool isAnalysisRunning(const UUID& analysisUUID, int msec);
+    bool lastIsAnalysisRunning() const;
 
-    /// Get a list of all running dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> runningDataPointsJSON(const UUID& analysisUUID) const;
+    bool isAnalysisComplete(const UUID& analysisUUID, int msec);
+    bool lastIsAnalysisComplete() const;
 
-    /// Get a list of all queued dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> queuedDataPointsJSON(const UUID& analysisUUID) const;
+    bool stop(const UUID& analysisUUID, int msec);
+    bool lastStopSuccess() const;
 
-    /// Get a list of all complete dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings 
-    std::vector<UUID> completeDataPointsJSON(const UUID& analysisUUID) const;
+    std::vector<UUID> dataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastDataPointUUIDs() const;
 
-    /// Get a full deserializable JSON of dataPoint
-    /// blocking call, clears errors and warnings 
-    std::string getDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID) const;
+    std::vector<UUID> queuedDataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastQueuedDataPointUUIDs() const;
 
-    /// Get a detailed results for dataPoint, will be a zip file of the dataPoint directory
-    /// blocking call, clears errors and warnings 
-    bool downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath) const;
+    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastRunningDataPointUUIDs() const;
 
-    /// returns errors generated by the last operation
+    std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastCompleteDataPointUUIDs() const;
+
+    std::vector<UUID> downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastDownloadReadyDataPointUUIDs() const;
+
+    std::string dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec);
+    std::string lastDataPointJSON() const;
+
+    bool downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath, int msec);
+    bool lastDownloadDataPointSuccess() const;
+
+    bool waitForFinished(int msec);
+
     std::vector<std::string> errors() const;
     
-    /// returns warnings generated by the last operation
     std::vector<std::string> warnings() const;
 
     //@}
+    /** @name Non-blocking class members */
+    //@{
+
+    bool requestAvailable();
+
+    bool requestProjectUUIDs(); 
+
+    bool requestCreateProject(const UUID& projectUUID); 
+
+    bool requestDeleteProject(const UUID& projectUUID); 
+
+    bool requestAnalysisUUIDs(const UUID& projectUUID); 
+
+    bool startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON);
+
+    bool startPostDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON);
+
+    bool startUploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile);
+
+    bool requestStart(const UUID& analysisUUID);
+
+    bool requestIsAnalysisQueued(const UUID& analysisUUID);
+
+    bool requestIsAnalysisRunning(const UUID& analysisUUID);
+
+    bool requestIsAnalysisComplete(const UUID& analysisUUID);
+
+    bool requestStop(const UUID& analysisUUID);
+
+    bool requestDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestRunningDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestQueuedDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestCompleteDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
+
+    bool startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath);
+
+    //@}
+    /** @name Signals, Slots, Threads */
+    //@{
+
+    /** Connect signal from this OSServer to slot on qObject. */
+//    bool connect(const std::string& signal,
+//                 const QObject* qObject,
+//                 const std::string& slot,
+//                 Qt::ConnectionType type = Qt::AutoConnection) const;
+
+    /** Disconnect signal from this OSServer to slot on receiver. */
+//    bool disconnect(const char* signal=0,
+//                    const QObject* receiver=0,
+//                    const char* slot=0) const;
+
+    //@}
+  signals:
+
+    void requestProcessed(bool success);
+
+  protected slots:
+
+    void processAvailable();
+
+    void processProjectUUIDs(); 
+
+    void processCreateProject();
+
+    void processDeleteProject(); 
+
+    void processAnalysisUUIDs(); 
+
+    void processPostAnalysisJSON();
+
+    void processPostDataPointJSON();
+
+    void processUploadAnalysisFiles();
+
+    void processStart();
+
+    void processIsAnalysisQueued();
+
+    void processIsAnalysisRunning();
+
+    void processIsAnalysisComplete();
+
+    void processStop();
+
+    void processDataPointUUIDs();
+
+    void processRunningDataPointUUIDs();
+
+    void processQueuedDataPointUUIDs();
+
+    void processCompleteDataPointUUIDs();
+
+    void processDownloadReadyDataPointUUIDs();
+
+    void processDataPointJSON();
+
+    void processDownloadDataPointComplete();
 
   private:
 
     Url m_url;
     boost::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
+    QNetworkReply* m_networkReply;
+    boost::shared_ptr<QMutex> m_mutex;
+
+    bool m_lastAvailable;
+    std::vector<UUID> m_lastProjectUUIDs; 
+    bool m_lastCreateProjectSuccess;
+    bool m_lastDeleteProjectSuccess;
+    std::vector<UUID> m_lastAnalysisUUIDs;
+    bool m_lastPostAnalysisJSONSuccess;
+    bool m_lastPostDataPointJSONSuccess;
+    bool m_lastUploadAnalysisFilesSuccess;
+    bool m_lastStartSuccess;
+    bool m_lastIsAnalysisQueued;
+    bool m_lastIsAnalysisRunning;
+    bool m_lastIsAnalysisComplete;
+    bool m_lastStopSuccess;
+    std::vector<UUID> m_lastDataPointUUIDs;
+    std::vector<UUID> m_lastQueuedDataPointUUIDs;
+    std::vector<UUID> m_lastRunningDataPointUUIDs;
+    std::vector<UUID> m_lastCompleteDataPointUUIDs;
+    std::vector<UUID> m_lastDownloadReadyDataPointUUIDs;
+    std::string m_lastDataPointJSON;
+    bool m_lastDownloadDataPointSuccess;
+    path m_lastDownloadDataPointPath;
+
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
 
-    bool block(QNetworkReply* reply, int timeout=3000) const;
-    void clearErrorsAndWarnings() const;
+    void clearErrorsAndWarnings();
+    void logNetworkReply(const std::string& methodName) const;
     void logError(const std::string& error) const;
+    void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;
-
-    // DLM: temporary
-    mutable boost::bimap<UUID,QString> m_uuidToIdMap;
+    std::vector<UUID> processListOfUUID(const QByteArray& bytes, bool& success) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");

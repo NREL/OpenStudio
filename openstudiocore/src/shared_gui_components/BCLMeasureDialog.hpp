@@ -54,6 +54,8 @@ class BCLMeasureDialog : public OSDialog
 
     void nameChanged(const QString& newName);
 
+    void measureTypeChanged(const QString& newName);
+
     void firstLevelTaxonomyChanged(const QString& newName);
 
   private:
@@ -65,10 +67,8 @@ class BCLMeasureDialog : public OSDialog
     QTextEdit* m_descriptionTextEdit;
     QTextEdit* m_modelerDescriptionTextEdit;
     QComboBox* m_measureTypeComboBox;
-    QComboBox* m_measureFunctionComboBox;
     QComboBox* m_taxonomyFirstLevelComboBox;
     QComboBox* m_taxonomySecondLevelComboBox;
-    QRadioButton* m_requiresEnergyPlusResults;
     QRadioButton* m_usesSketchUpAPI;
 
     boost::optional<BCLMeasure> m_bclMeasureToCopy;

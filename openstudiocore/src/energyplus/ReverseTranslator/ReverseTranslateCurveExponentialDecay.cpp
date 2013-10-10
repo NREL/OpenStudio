@@ -37,35 +37,35 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveExponentialDecay(
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_ExponentialDecayFields::Coefficient1C1)) {
+  if ((d = workspaceObject.getDouble(Curve_ExponentialDecayFields::Coefficient1C1))) {
     curve.setCoefficient1C1(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_ExponentialDecayFields::Coefficient2C2)) {
+  if ((d = workspaceObject.getDouble(Curve_ExponentialDecayFields::Coefficient2C2))) {
     curve.setCoefficient2C2(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_ExponentialDecayFields::Coefficient3C3)) {
+  if ((d = workspaceObject.getDouble(Curve_ExponentialDecayFields::Coefficient3C3))) {
     curve.setCoefficient3C3(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MinimumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MinimumValueofx))) {
     curve.setMinimumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MaximumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MaximumValueofx))) {
     curve.setMaximumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MinimumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MinimumCurveOutput))) {
     curve.setMinimumCurveOutput(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MaximumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_ExponentialDecayFields::MaximumCurveOutput))) {
     curve.setMaximumCurveOutput(*d);
   }
-  if (s = workspaceObject.getString(Curve_ExponentialDecayFields::InputUnitTypeforx,false,true)) {
+  if ((s = workspaceObject.getString(Curve_ExponentialDecayFields::InputUnitTypeforx,false,true))) {
     curve.setInputUnitTypeforx(*s);
   }
-  if (s = workspaceObject.getString(Curve_ExponentialDecayFields::OutputUnitType,false,true)) {
+  if ((s = workspaceObject.getString(Curve_ExponentialDecayFields::OutputUnitType,false,true))) {
     curve.setOutputUnitType(*s);
   }
 

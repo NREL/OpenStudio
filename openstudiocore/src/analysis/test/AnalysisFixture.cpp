@@ -241,7 +241,9 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
+
           ); // OpenStudioPostProcess
 
     Job jobLast = job;
@@ -279,7 +281,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // EnergyPlus
     job.addChild(jobLast);
 
@@ -311,7 +314,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // EnergyPlusPreProcess
     job.addChild(jobLast);
 
@@ -345,7 +349,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // ModelToIdf
     job.addChild(jobLast);
 
@@ -370,7 +375,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // Variables 2 & 3
     job.addChild(jobLast);
 
@@ -397,7 +403,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // Variable 1
     job.addChild(jobLast);
 
@@ -410,6 +417,7 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
                         true,
                         false,
                         true,
+                        DataPointRunType::Local,
                         values,
                         responseValues,
                         toPath("myProject/fakeDataPoint/"),

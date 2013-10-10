@@ -1,6 +1,7 @@
 SET( target_name openstudio_model )
 
 SET( ${target_name}_src 
+ 
   mainpage.hpp 
   ModelAPI.hpp
   Model.hpp
@@ -26,6 +27,9 @@ SET( ${target_name}_src
   Relationship.cpp
   ScheduleTypeRegistry.hpp
   ScheduleTypeRegistry.cpp
+  ModelObjectList.hpp
+  ModelObjectList_Impl.hpp
+  ModelObjectList.cpp
   
   ConcreteModelObjects.hpp
   AirGap.hpp
@@ -46,12 +50,21 @@ SET( ${target_name}_src
   AirLoopHVACZoneSplitter.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirLoopHVACZoneSplitter.cpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam.cpp
+  AirTerminalSingleDuctConstantVolumeReheat.hpp
+  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeReheat.cpp
   AirTerminalSingleDuctParallelPIUReheat.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat.cpp
   AirTerminalSingleDuctUncontrolled.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctUncontrolled.cpp
+  AirTerminalSingleDuctVAVNoReheat.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat.cpp
   AirTerminalSingleDuctVAVReheat.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat.cpp
@@ -97,6 +110,9 @@ SET( ${target_name}_src
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
+  CoilCoolingCooledBeam.hpp
+  CoilCoolingCooledBeam_Impl.hpp
+  CoilCoolingCooledBeam.cpp
   CoilCoolingDXSingleSpeed.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXSingleSpeed.cpp
@@ -280,6 +296,9 @@ SET( ${target_name}_src
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
+  EvaporativeFluidCoolerSingleSpeed.hpp
+  EvaporativeFluidCoolerSingleSpeed_Impl.hpp
+  EvaporativeFluidCoolerSingleSpeed.cpp
   ExteriorLights.hpp
   ExteriorLights_Impl.hpp
   ExteriorLights.cpp
@@ -325,6 +344,9 @@ SET( ${target_name}_src
   Glazing.hpp
   Glazing_Impl.hpp
   Glazing.cpp
+  GroundHeatExchangerVertical.hpp
+  GroundHeatExchangerVertical_Impl.hpp
+  GroundHeatExchangerVertical.cpp
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
@@ -477,6 +499,18 @@ SET( ${target_name}_src
   RefractionExtinctionGlazing.hpp
   RefractionExtinctionGlazing_Impl.hpp
   RefractionExtinctionGlazing.cpp
+  RefrigerationCase.hpp
+  RefrigerationCase_Impl.hpp
+  RefrigerationCase.cpp
+  RefrigerationCompressor.hpp
+  RefrigerationCompressor_Impl.hpp
+  RefrigerationCompressor.cpp
+  RefrigerationCondenserAirCooled.hpp
+  RefrigerationCondenserAirCooled_Impl.hpp
+  RefrigerationCondenserAirCooled.cpp
+  RefrigerationSystem.hpp
+  RefrigerationSystem_Impl.hpp
+  RefrigerationSystem.cpp
   RenderingColor.hpp
   RenderingColor_Impl.hpp
   RenderingColor.cpp
@@ -558,6 +592,9 @@ SET( ${target_name}_src
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
+  ShadingControl.hpp
+  ShadingControl_Impl.hpp
+  ShadingControl.cpp 
   ShadingMaterial.hpp
   ShadingMaterial_Impl.hpp
   ShadingMaterial.cpp
@@ -672,6 +709,9 @@ SET( ${target_name}_src
   Version.hpp
   Version_Impl.hpp
   Version.cpp
+  UtilityBill.hpp
+  UtilityBill_Impl.hpp
+  UtilityBill.cpp
   UtilityCost_Charge_Block.hpp
   UtilityCost_Charge_Block_Impl.hpp
   UtilityCost_Charge_Block.cpp
@@ -792,6 +832,7 @@ SET( ${target_name}_moc
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
   GenericModelObject_Impl.hpp
+  ModelObjectList_Impl.hpp
   
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
@@ -799,8 +840,11 @@ SET( ${target_name}_moc
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AirToAirComponent_Impl.hpp
   AirWallMaterial_Impl.hpp
@@ -816,6 +860,7 @@ SET( ${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   ClimateZones_Impl.hpp
+  CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
 	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
@@ -874,6 +919,7 @@ SET( ${target_name}_moc
   ElectricEquipment_Impl.hpp
   ElectricEquipmentDefinition_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
+  EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   ExteriorLights_Impl.hpp
   ExteriorLightsDefinition_Impl.hpp
   Facility_Impl.hpp
@@ -889,6 +935,7 @@ SET( ${target_name}_moc
   GasMixture_Impl.hpp
   GlareSensor_Impl.hpp
   Glazing_Impl.hpp
+  GroundHeatExchangerVertical_Impl.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HotWaterEquipment_Impl.hpp
@@ -939,6 +986,10 @@ SET( ${target_name}_moc
   PumpVariableSpeed_Impl.hpp
   RadianceParameters_Impl.hpp
   RefractionExtinctionGlazing_Impl.hpp
+  RefrigerationCase_Impl.hpp
+  RefrigerationCompressor_Impl.hpp
+  RefrigerationCondenserAirCooled_Impl.hpp
+  RefrigerationSystem_Impl.hpp
   RenderingColor_Impl.hpp
   ResourceObject_Impl.hpp
   RoofVegetation_Impl.hpp
@@ -966,6 +1017,7 @@ SET( ${target_name}_moc
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerWarmest_Impl.hpp
   Shade_Impl.hpp
+  ShadingControl_Impl.hpp
   ShadingMaterial_Impl.hpp
   ShadingSurface_Impl.hpp
   ShadingSurfaceGroup_Impl.hpp
@@ -1004,6 +1056,7 @@ SET( ${target_name}_moc
   TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
   Version_Impl.hpp
+  UtilityBill_Impl.hpp
   UtilityCost_Charge_Block_Impl.hpp
   UtilityCost_Charge_Simple_Impl.hpp
   UtilityCost_Computation_Impl.hpp
@@ -1068,7 +1121,10 @@ SET( ${target_name}_test_src
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
@@ -1079,6 +1135,7 @@ SET( ${target_name}_test_src
   test/Building_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
+  test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
@@ -1112,6 +1169,7 @@ SET( ${target_name}_test_src
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanOnOff_GTest.cpp
@@ -1120,6 +1178,7 @@ SET( ${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GlareSensor_GTest.cpp
+  test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/IlluminanceMap_GTest.cpp
@@ -1154,6 +1213,10 @@ SET( ${target_name}_test_src
   test/PumpVariableSpeed_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
+  test/RefrigerationCase_GTest.cpp
+  test/RefrigerationCompressor_GTest.cpp
+  test/RefrigerationCondenserAirCooled_GTest.cpp
+  test/RefrigerationSystem_GTest.cpp
   test/RenderingColor_GTest.cpp
   test/ResourceObject_GTest.cpp
   test/RoofVegetation_GTest.cpp
@@ -1172,6 +1235,7 @@ SET( ${target_name}_test_src
   test/Schedule_GTest.cpp
   test/Screen_GTest.cpp
   test/Shade_GTest.cpp
+  test/ShadingControl_GTest.cpp
   test/ShadingSurfaceGroup_GTest.cpp
   test/ShadingSurface_GTest.cpp
   test/SimpleGlazing_GTest.cpp
@@ -1191,6 +1255,7 @@ SET( ${target_name}_test_src
   test/Surface_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/TimeDependentValuation_GTest.cpp
+  test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
@@ -1239,5 +1304,7 @@ MAKE_SWIG_TARGET( OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/Mod
 
 MAKE_SWIG_TARGET( OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelGeometry )
 
-MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
+MAKE_SWIG_TARGET( OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
+
+MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration )
 

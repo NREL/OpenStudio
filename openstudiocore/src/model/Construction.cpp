@@ -27,6 +27,8 @@
 #include <model/FenestrationMaterial.hpp>
 #include <model/ModelPartitionMaterial.hpp>
 #include <model/ModelExtensibleGroup.hpp>
+#include <model/ShadingMaterial.hpp>
+#include <model/ShadingMaterial_Impl.hpp>
 
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 

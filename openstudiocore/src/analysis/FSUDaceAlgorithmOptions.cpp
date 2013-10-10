@@ -221,7 +221,7 @@ namespace detail {
       return false;
 	}
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {
@@ -237,7 +237,7 @@ namespace detail {
 	return false;
 	  }
     OptionalAttribute option;
-    if (option = getOption("numTrials")) {
+    if ((option = getOption("numTrials"))) {
       option->setValue(value);
     }
     else {

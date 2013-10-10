@@ -37,41 +37,41 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveDoubleExponentialD
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient1C1)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient1C1))) {
     curve.setCoefficient1C1(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient2C2)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient2C2))) {
     curve.setCoefficient2C2(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C3)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C3))) {
     curve.setCoefficient3C3(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C4)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C4))) {
     curve.setCoefficient3C4(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C5)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C5))) {
     curve.setCoefficient3C5(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumValueofx))) {
     curve.setMinimumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumValueofx))) {
     curve.setMaximumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumCurveOutput))) {
     curve.setMinimumCurveOutput(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumCurveOutput))) {
     curve.setMaximumCurveOutput(*d);
   }
-  if (s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::InputUnitTypeforx,false,true)) {
+  if ((s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::InputUnitTypeforx,false,true))) {
     curve.setInputUnitTypeforx(*s);
   }
-  if (s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::OutputUnitType,false,true)) {
+  if ((s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::OutputUnitType,false,true))) {
     curve.setOutputUnitType(*s);
   }
 

@@ -20,21 +20,29 @@
 #ifndef OPENSTUDIO_RESULTSTABVIEW_H
 #define OPENSTUDIO_RESULTSTABVIEW_H
 
-#include <model/Model.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <boost/smart_ptr.hpp>
 #include <openstudio_lib/MainTabView.hpp>
-#include <QComboBox>
-#include <QWidget>
-#include <QPushButton>
+
+#include <model/Model.hpp>
+#include <model/UtilityBill.hpp>
+
+#include <utilities/idf/WorkspaceObject_Impl.hpp>
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/units/Unit.hpp>
+
+#include <boost/smart_ptr.hpp>
+
 #include <vtkCharts/BarChart.h>
 
-class QPushButton;
-class QTableWidget;
-class QStackedWidget;
+#include <QComboBox>
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QWidget>
+
 class QGridLayout;
+class QPushButton;
+class QStackedWidget;
+class QTableWidget;
+class QVBoxLayout;
 
 namespace vtkCharts {
   class BarChart;
@@ -42,6 +50,7 @@ namespace vtkCharts {
 
 namespace openstudio {
 
+  // standard results
   class ConsumptionData
   {
     public:
@@ -128,6 +137,106 @@ namespace openstudio {
       QLabel* m_label;
   };
 
+  // utility bill results
+
+  class UtilityBillComparisonView : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      UtilityBillComparisonView(const openstudio::model::Model& model, QWidget *t_parent=0);
+      virtual ~UtilityBillComparisonView() {}
+
+    public slots:
+      void buildGridLayout();
+
+    private slots:
+    
+      void selectCalibrationMethod(const QString &);
+      void onObjectAdded(const WorkspaceObject& workspaceObject);
+      void onObjectRemoved(const WorkspaceObject& workspaceObject);
+          
+    private:
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonChart");
+
+      openstudio::model::Model m_model;
+      QLabel* m_calibrationMethodLabel;
+      double m_calibrationMaxCVRMSE;
+      double m_calibrationMaxNMBE;
+      QGridLayout* m_gridLayout;
+  };
+
+  class UtilityBillComparisonChart : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
+                                 double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent=0);
+      virtual ~UtilityBillComparisonChart() {}
+      openstudio::model::UtilityBill utilityBill() const;
+
+    private slots:
+    
+      void onUtilityBillChanged();
+      void plotConsumption();
+      void plotDemand();
+
+    private:
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonChart");
+      openstudio::model::UtilityBill m_utilityBill;
+      bool m_isDemandChart;
+      double m_calibrationMaxCVRMSE;
+      double m_calibrationMaxNMBE;
+
+      boost::shared_ptr<vtkCharts::BarChart> m_chart;
+      QLabel* m_label;
+  };
+
+  class UtilityBillComparisonLegend : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      UtilityBillComparisonLegend(const openstudio::FuelType& fuelType, QWidget *t_parent = 0);
+      virtual ~UtilityBillComparisonLegend() {}
+      static std::vector<vtkCharts::Color3ub> getColors(const openstudio::FuelType& fuelType);
+
+    private:
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonLegend");
+
+      openstudio::FuelType m_fuelType;
+   };
+
+  class UtilityBillComparisonTable : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
+                                 double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent = 0);
+      virtual ~UtilityBillComparisonTable() {}
+      openstudio::model::UtilityBill utilityBill() const;
+
+    private slots:
+    
+      void onUtilityBillChanged();
+      void setRowHighlights();
+
+    private:
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonTable");
+      openstudio::model::UtilityBill m_utilityBill;
+      bool m_isDemandChart;
+      double m_calibrationMaxCVRMSE;
+      double m_calibrationMaxNMBE;
+
+      QGridLayout *m_grid;
+      QLabel* m_total;
+      QLabel* m_label;
+  };
+
+  // main widget
+
   class ResultsView : public QWidget
   {
     Q_OBJECT;
@@ -143,6 +252,10 @@ namespace openstudio {
 
     private slots:
       void openResultsViewerClicked();
+      void selectView(int index);
+      void onObjectAdded(const WorkspaceObject& workspaceObject);
+      void onObjectRemoved(const WorkspaceObject& workspaceObject);
+      void updateReportButtons();
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
@@ -150,6 +263,8 @@ namespace openstudio {
 
       openstudio::model::Model m_model;
       bool m_isIP;
+
+      // standard results
       ResultsConsumptionChart *m_electricConsumptionChart;
       ResultsConsumptionChart *m_gasConsumptionChart;
       ResultsConsumptionLegend *m_consumptionLegend;
@@ -157,8 +272,16 @@ namespace openstudio {
       ResultsConsumptionTable *m_gasConsumptionTable;
       ResultsConsumptionTable *m_districtHeatingConsumptionTable;
       ResultsConsumptionTable *m_districtCoolingConsumptionTable;
-      QPushButton *m_openResultsViewerBtn;
 
+      // utility bill results
+      UtilityBillComparisonView* m_utilityBillComparisonView;
+
+      QStackedWidget * m_stackedWidget;
+      QLabel * m_reportLabel;
+      QPushButton * m_standardResultsBtn;
+      QPushButton * m_calibrationResultsBtn;
+      QPushButton * m_openResultsViewerBtn;
+      
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
   };

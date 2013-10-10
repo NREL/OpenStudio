@@ -190,10 +190,11 @@ VariableHeaderView::VariableHeaderView(bool t_fixed)
 }
 
 
-VariableGroupItemView::VariableGroupItemView(bool t_fixedMeasuresOnly)
+VariableGroupItemView::VariableGroupItemView(bool t_fixedMeasuresOnly, MeasureType measureType)
   : OSCollapsibleView(0)
 {
   variableGroupHeader = new LightGradientHeader();
+  variableGroupHeader->setMeasureType(measureType);
   setHeader(variableGroupHeader);
 
   variableGroupContentView = new VariableGroupContentView(t_fixedMeasuresOnly);

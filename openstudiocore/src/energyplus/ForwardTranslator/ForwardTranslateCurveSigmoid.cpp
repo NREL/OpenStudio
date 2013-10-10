@@ -42,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveSigmoid(
   OptionalString s;
   OptionalDouble d;
 
-  if (s = modelObject.name()) {
+  if ((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
@@ -53,10 +53,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveSigmoid(
   idfObject.setDouble(Curve_SigmoidFields::Coefficient5C5,modelObject.coefficient5C5());
   idfObject.setDouble(Curve_SigmoidFields::MinimumValueofx,modelObject.minimumValueofx());
   idfObject.setDouble(Curve_SigmoidFields::MaximumValueofx,modelObject.maximumValueofx());
-  if (d = modelObject.minimumCurveOutput()) {
+  if ((d = modelObject.minimumCurveOutput())) {
     idfObject.setDouble(Curve_SigmoidFields::MinimumCurveOutput,*d);
   }
-  if (d = modelObject.maximumCurveOutput()) {
+  if ((d = modelObject.maximumCurveOutput()) ) {
     idfObject.setDouble(Curve_SigmoidFields::MaximumCurveOutput,*d);
   }
   if (!modelObject.isInputUnitTypeforxDefaulted()) {

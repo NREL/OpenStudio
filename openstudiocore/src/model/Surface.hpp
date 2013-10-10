@@ -146,9 +146,8 @@ class MODEL_API Surface : public PlanarSurface {
    *  Returns false if either surface has child windows.
    *  Returns false if either surface has an adjacent surface.
    *  Returns false if surfaces are not on the same plane with opposing outward normals.
-   *  If the surfaces are the same, sets adjacency and returns false as no new geometry is created.
-   *  If an intersection occurs the newly intersected surfaces are matched together.
-   *  Returns true if an intersection occurred. */
+   *  If the surfaces are the same, returns true but no new geometry is created.
+   *  Returns true if an intersection occurred. Does not set surface adjacency. */
   bool intersect(Surface& otherSurface);
 
   /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.  

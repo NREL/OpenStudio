@@ -341,6 +341,14 @@ namespace detail {
         m_db.commit();
       }
 
+      void deleteJobTree(const openstudio::runmanager::Job &t_job)
+      {
+        QMutexLocker l(&m_mutex);
+        m_db.begin();
+        deleteJobRecursiveInternal(t_job);
+        m_db.commit();
+      }
+
       void deleteJobRecursiveInternal(const openstudio::runmanager::Job &t_job)
       {
         std::vector<openstudio::runmanager::Job> children = t_job.children();
@@ -601,7 +609,7 @@ namespace detail {
       void persistJobStatus(const openstudio::UUID &t_uuid, const JobErrors &t_errors, const boost::optional<openstudio::DateTime> &t_lastRun,
           const Files &t_files)
       {
-        LOG(Debug, "Persisting job status for " << openstudio::toString(t_uuid));
+        LOG(Debug, "(" << openstudio::toString(m_dbPath) << ") Persisting job status for " << openstudio::toString(t_uuid));
         m_db.begin();
         deleteJobStatus(t_uuid);
         deleteJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>(t_uuid);
@@ -749,7 +757,7 @@ namespace detail {
                   std::vector<URLSearchPath>(),
                   true,
                   uuid,
-                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle))
+                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle), openstudio::path())
                   );
 
               loadedjobs.push_back(std::make_pair(*itr, j));
@@ -1688,6 +1696,7 @@ namespace detail {
           }
         }
       }
+
       m_workflowkeys.insert(key);
     }
 
@@ -1739,6 +1748,11 @@ namespace detail {
     }
 
     lock.unlock();
+
+    if (job.externallyManaged())
+    {
+      job.sendSignals();
+    }
 
     std::vector<openstudio::runmanager::Job> children = job.children();
 
@@ -2357,6 +2371,53 @@ namespace detail {
     }
   }
 
+  void RunManager_Impl::updateJob(const Job &t_job)
+  {
+    try {
+      Job j = getJob(t_job.uuid());
+      m_dbholder->deleteJobTree(t_job);
+      j.updateJob(t_job, false);
+      m_dbholder->persistJobTree(t_job);
+    } catch (const std::out_of_range &) {
+      // job didn't exist
+      enqueue(t_job, true, m_dbfile.parent_path());
+    }
+
+    openstudio::Application::instance().processEvents();
+  }
+
+  /// update job tree, and be willing to change the UUID in the process
+  void RunManager_Impl::updateJob(const openstudio::UUID &t_uuid, const Job &t_job)
+  {
+
+    try {
+      Job j = getJob(t_uuid);
+      m_dbholder->deleteJobTree(t_job);
+      j.updateJob(t_job, true); // update the old one to have the features of the new one
+      m_dbholder->persistJobTree(t_job);
+    } catch (const std::out_of_range &) {
+      // uuid didn't exist, we want to throw this back out
+      throw;
+    }
+  }
+
+
+  void RunManager_Impl::updateJob(const Job &t_job, const openstudio::path &t_path)
+  {
+    try {
+      Job j = getJob(t_job.uuid());
+      m_dbholder->deleteJobTree(t_job);
+      j.updateJob(t_job, false);
+      m_dbholder->persistJobTree(t_job);
+      j.setBasePathRecursive(t_path);
+    } catch (const std::out_of_range &) {
+      // job didn't exist
+      enqueue(t_job, true, t_path);
+    }
+
+    openstudio::Application::instance().processEvents(1);
+  }
+
   void RunManager_Impl::updateJobs(const std::vector<Job> &t_jobTrees)
   {
     LOG(Info, "Updating jobs: " << t_jobTrees.size());
@@ -2364,13 +2425,7 @@ namespace detail {
          itr != t_jobTrees.end();
          ++itr)
     {
-      try {
-        Job j = getJob(itr->uuid());
-        j.updateJob(*itr);
-      } catch (const std::out_of_range &) {
-        // job didn't exist
-        enqueue(*itr, true, m_dbfile.parent_path());
-      }
+      updateJob(*itr);
     }
   }
 
