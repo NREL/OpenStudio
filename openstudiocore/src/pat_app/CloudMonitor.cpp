@@ -35,6 +35,8 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/System.hpp>
 
+#include "../shared_gui_components/LostCloudConnectionDialog.hpp"
+
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
@@ -66,6 +68,31 @@ void stopCloud()
   {
     provider->waitForTerminated();
   }
+}
+
+// Return true if the current project session is running
+// ie all workers and server reporting running.
+bool reconnectToCloudSession()
+{
+  bool result = false;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+
+  // If there is already a session, try to connect to that
+  if( session && settings ) 
+  {
+    boost::optional<CloudProvider> provider = CloudMonitor::newCloudProvider(settings.get(),session);
+
+    OS_ASSERT(provider);
+
+    if( provider->serverRunning() && provider->workersRunning() )
+    {
+      result = true;
+    }
+  }
+
+  return result;
 }
 
 } // namespace detail
@@ -127,6 +154,10 @@ void CloudMonitor::toggleCloud()
   else if( m_status == CLOUD_RUNNING )
   {
     stopCloud();
+  }
+  else if( m_status == CLOUD_ERROR )
+  {
+    recoverCloud();
   }
 }
 
@@ -222,14 +253,13 @@ void CloudMonitor::onStartCloudWorkerComplete()
     m_startCloudThread.clear();
 
     setStatus(CLOUD_RUNNING);
-
-    m_worker->monitorCloudRunning();
   }
 }
 
 void CloudMonitor::stopCloud()
 {
-  if( m_status == CLOUD_RUNNING )
+  if( m_status == CLOUD_RUNNING ||
+      m_status == CLOUD_ERROR )
   {
     setStatus(CLOUD_STOPPING);
 
@@ -301,53 +331,22 @@ void CloudMonitor::onCloudConnectionError()
 {
   setStatus(CLOUD_ERROR);
 
-  //openLostCloudConnectionDlg(m_worker->internetAvailable(),
-  //                           m_worker->authenticated(),
-  //                           m_worker->cloudRunning());
-
   LostCloudConnectionDialog dialog(m_worker->internetAvailable(),
                                    m_worker->authenticated(),
                                    m_worker->cloudRunning());
 
   dialog.exec();
 
-  // lostCloudConnectionDlgClearSession();
-
-  recoverCloud();
-}
-
-void CloudMonitor::openLostCloudConnectionDlg(bool internetAvailable,
-    bool authenticated,
-    bool cloudRunning)
-{
-  if(!m_lostCloudConnectiopnDialog){
-    m_lostCloudConnectiopnDialog = new LostCloudConnectionDialog(internetAvailable,authenticated,cloudRunning);
-
-    bool isConnected = connect(m_lostCloudConnectiopnDialog, SIGNAL(rejected()),
-                               this, SLOT(on_closeLostCloudConnectionDlg()));
-    OS_ASSERT(isConnected);
-  }
-  if(m_lostCloudConnectiopnDialog && !m_lostCloudConnectiopnDialog->isVisible()){
-    m_lostCloudConnectiopnDialog->show();
-  }
-}
-
-void CloudMonitor::on_closeLostCloudConnectionDlg()
-{
-// TODO m_lostCloudConnectiopnDialog
-}
-
-bool CloudMonitor::lostCloudConnectionDlgClearSession()
-{
-  if(m_lostCloudConnectiopnDialog){
-    return m_lostCloudConnectiopnDialog->clearCloudSession();
-  } else {
-    return false;
+  if( dialog.clearCloudSession() )
+  {
+    stopCloud();
   }
 }
 
 void CloudMonitor::recoverCloud()
 {
+  setStatus(CLOUD_STARTING);
+
   m_recoverCloudThread = QSharedPointer<QThread>(new QThread());
 
   m_recoverCloudWorker->moveToThread(m_recoverCloudThread.data());
@@ -365,10 +364,17 @@ void CloudMonitor::onRecoverCloudWorkerComplete()
 
   m_recoverCloudThread.clear();
 
-  setCurrentProjectSettings(boost::none);
-  setCurrentProjectSession(boost::none);
+  if( m_recoverCloudWorker->status() == CLOUD_RUNNING )
+  {
+    setStatus(CLOUD_RUNNING);
+  }
+  else
+  {
+    setCurrentProjectSettings(boost::none);
+    setCurrentProjectSession(boost::none);
 
-  setStatus(CLOUD_STOPPED);
+    setStatus(CLOUD_STOPPED);
+  }
 }
 
 boost::optional<CloudSession> CloudMonitor::currentProjectSession()
@@ -477,6 +483,11 @@ void CloudMonitor::setStatus(CloudStatus status)
   if( status != m_status )
   {
     m_status = status;
+
+    if( m_status == CLOUD_RUNNING )
+    {
+      m_worker->monitorCloudRunning();
+    }
 
     emit cloudStatusChanged(status);
   }
@@ -664,20 +675,9 @@ void ReconnectCloudWorker::startWorking()
 {
   m_status = CLOUD_STOPPED;
 
-  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
-
-  // If there is already a session, try to connect to that
-  if( session && settings ) 
+  if( detail::reconnectToCloudSession() )
   {
-    boost::optional<CloudProvider> provider = CloudMonitor::newCloudProvider(settings.get(),session);
-
-    OS_ASSERT(provider);
-
-    if( provider->serverRunning() && provider->workersRunning() )
-    {
-      m_status = CLOUD_RUNNING;
-    }
+    m_status = CLOUD_RUNNING;
   }
 
   emit doneWorking();
@@ -698,12 +698,26 @@ RecoverCloudWorker::~RecoverCloudWorker()
 {
 }
 
+CloudStatus RecoverCloudWorker::status() const
+{
+  return m_status;
+}
+
 void RecoverCloudWorker::startWorking()
 {
-  // TODO try to reconnect
-  
-  // If we cant reconnect then stop cloud as cleanly as possible
-  detail::stopCloud();
+  m_status = CLOUD_ERROR;  
+
+  if( detail::reconnectToCloudSession() )
+  {
+    m_status = CLOUD_RUNNING;
+  }
+
+  if( m_status == CLOUD_ERROR )
+  {
+    detail::stopCloud();
+
+    m_status = CLOUD_STOPPED;
+  }
 
   emit doneWorking();
 }
@@ -728,20 +742,8 @@ void CloudMonitorWorker::monitorCloudRunning()
     if( ! m_cloudServiceRunning )
     {
       m_cloudRunning = checkCloudRunning();
-    }
-
-    if( ! m_cloudRunning )
-    {
       m_authenticated = checkAuthenticated();
-    }
-
-    if( ! m_authenticated )
-    {
       m_internetAvailable = checkInternetAvailable();
-    }
-
-    if( ! m_cloudServiceRunning )
-    {
       m_count++;
     }
 
@@ -753,7 +755,7 @@ void CloudMonitorWorker::monitorCloudRunning()
     }
     else
     {
-      QTimer::singleShot(5000,this,SLOT(monitorCloudRunning()));
+      QTimer::singleShot(2000,this,SLOT(monitorCloudRunning()));
     }
   }
 }

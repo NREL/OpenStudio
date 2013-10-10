@@ -317,6 +317,12 @@ namespace detail {
     // returns the total number of instances running on EC2 in the current region
     unsigned totalInstances(int msec=30000);
 
+    // returns the last value of the estimated charges check
+    double lastEstimatedCharges() const;
+
+    // returns the last value of the total instances check
+    unsigned lastTotalInstances() const;
+
 
     //@}
   protected:

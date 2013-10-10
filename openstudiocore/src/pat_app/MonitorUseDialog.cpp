@@ -30,9 +30,9 @@
 #include <QTimer>
 #include <QUrl>
 
-#define BILLING_CHARGE "Current Charges: "
+#define BILLING_CHARGE "Estimated EC2 Charges: "
 #define MINUTES " minutes"
-#define TIME_RUNNING "Total Time Running: "
+#define TIME_RUNNING "Project Run Time: "
 #define NUM_INSTANCES "Instances Running on Current Project: "
 #define TOTAL_NUM_INSTANCES "Total Instances Running: " 
 #define WARNING "Stopping the cloud will terminate all instances.  Any detailed results not selected for download will be lost."
@@ -44,13 +44,14 @@ namespace openstudio {
 namespace pat {
 
 MonitorUseDialog::MonitorUseDialog(QWidget* parent)
-  : OSDialog(false, parent)
+  : OSDialog(false, parent),
+  m_totalInstancesAvailable(false),
+  m_estimatedChargesAvailable(false)
 {
   this->setWindowTitle("Monitor Use");
   this->setFixedSize(QSize(350,300));
   this->cancelButton()->hide();
   createWidgets();
-  updateData();
 }
 
 MonitorUseDialog::~MonitorUseDialog()
@@ -171,10 +172,17 @@ void MonitorUseDialog::createWidgets()
   OS_ASSERT(success);
   success = m_awsProvider.requestTotalInstances();
   OS_ASSERT(success);
+  
+  isConnected = connect(m_awsProvider.getImpl<detail::CloudProvider_Impl>().get(), SIGNAL(estimatedChargesAvailable()),
+                        this, SLOT(on_estimatedChargesAvailable()));
+  OS_ASSERT(isConnected);
 
-  QTimer * timer = new QTimer(this);
-  timer->start(5000);
-  isConnected = connect(timer, SIGNAL(timeout()),
+  isConnected = connect(m_awsProvider.getImpl<detail::CloudProvider_Impl>().get(), SIGNAL(totalInstancesAvailable()),
+                        this, SLOT(on_totalInstancesAvailable()));
+  OS_ASSERT(isConnected);
+
+  m_timer = new QTimer(this);
+  isConnected = connect(m_timer, SIGNAL(timeout()),
                         this, SLOT(updateData()));
   OS_ASSERT(isConnected);
 
@@ -193,11 +201,11 @@ void  MonitorUseDialog::updateData()
 {
   QString temp;
 
-  temp = temp.setNum(m_awsProvider.estimatedCharges(100), 'f', 2);
+  temp = temp.setNum(m_awsProvider.estimatedCharges(), 'f', 2);
   temp.prepend('$');
   m_billingCharge->setText(temp);
 
-  m_totalNumInstances->setText(temp.setNum(m_awsProvider.totalInstances(100)));
+  m_totalNumInstances->setText(temp.setNum(m_awsProvider.totalInstances()));
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
   if (session) {
@@ -223,6 +231,24 @@ void  MonitorUseDialog::updateData()
 void  MonitorUseDialog::on_cloudStatus(bool checked)
 {
   QDesktopServices::openUrl(QUrl("http://aws.amazon.com/console"));
+}
+
+void  MonitorUseDialog::on_estimatedChargesAvailable()
+{
+  m_estimatedChargesAvailable = true;
+  if(m_estimatedChargesAvailable && m_totalInstancesAvailable){
+    m_timer->start(30000);
+    updateData();
+  }
+}
+
+void  MonitorUseDialog::on_totalInstancesAvailable()
+{
+  m_totalInstancesAvailable = true;
+  if(m_estimatedChargesAvailable && m_totalInstancesAvailable){
+    m_timer->start(30000);
+    updateData();
+  }
 }
 
 } // pat

@@ -2139,5 +2139,13 @@ namespace openstudio{
     return getImpl<detail::AWSProvider_Impl>()->totalInstances(msec);
   }
 
+  double AWSProvider::lastEstimatedCharges() const {
+    return getImpl<detail::AWSProvider_Impl>()->lastEstimatedCharges();
+  }
+
+  unsigned AWSProvider::lastTotalInstances() const {
+    return getImpl<detail::AWSProvider_Impl>()->lastEstimatedCharges();
+  }
+
 
 } // openstudio

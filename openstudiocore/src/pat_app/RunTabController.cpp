@@ -71,7 +71,9 @@ RunTabController::RunTabController()
                   PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
   OS_ASSERT(bingo);
 
-  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  bingo = connect(runView->runStatusView->cloudLostConnectionButton,SIGNAL(clicked()),
+                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
+  OS_ASSERT(bingo);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
