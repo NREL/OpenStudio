@@ -121,8 +121,7 @@ RunTabController::RunTabController()
 
     refresh();
 
-    if ((project->status() == analysisdriver::AnalysisStatus::Running) ||
-        (project->status() == analysisdriver::AnalysisStatus::Idle)){
+    if ((project->status() == analysisdriver::AnalysisStatus::Running)){
       onIterationProgress();
     }
   }
@@ -235,6 +234,9 @@ void RunTabController::onPlayButtonClicked()
             QMessageBox::critical( runView, "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files.") );
           }
           project->save();
+        }else{
+          // nothing to do
+          return;
         }
 
         reqestRefresh();
@@ -301,20 +303,30 @@ void RunTabController::onIterationProgress()
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   OS_ASSERT(project);
 
-  runmanager::RunManager runManager = project->runManager();
-  analysis::Analysis analysis = project->analysis();
+  int numCompletedJobs = 0;
+  int totalNumJobs = 0;
+  int numFailedJobs = 0;
 
   boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+  if (cloudAnalysisDriver){
 
-  int numCompletedJobs = (int)analysis.completeDataPoints().size();
-  int totalNumJobs = (int)analysis.completeDataPoints().size() + (int)analysis.dataPointsToQueue().size();
-  int numFailedJobs = (int)analysis.failedDataPoints().size();
+    numCompletedJobs = cloudAnalysisDriver->numCompleteDataPoints();
+    totalNumJobs = cloudAnalysisDriver->numDataPointsInIteration();
+    numFailedJobs = cloudAnalysisDriver->numFailedDataPoints();
+  
+  }else{
+    analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
+    std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
+    if (!currentAnalyses.empty()){
 
-  if (numCompletedJobs == totalNumJobs){
-    if (cloudAnalysisDriver){
-      // no-op
-    }else{
-      runManager.setPaused(true);
+      numCompletedJobs = currentAnalyses[0].numCompletedJobsInOSIteration();
+      totalNumJobs = currentAnalyses[0].totalNumJobsInOSIteration();
+      numFailedJobs = currentAnalyses[0].numFailedJobsInOSIteration();
+
+      if (numCompletedJobs == totalNumJobs){
+        // kind of a hack to do this here instead of analysis driver
+        project->runManager().setPaused(true);
+      }
     }
   }
 

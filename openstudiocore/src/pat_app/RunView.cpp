@@ -327,6 +327,8 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
     if (analysisStatus == analysisdriver::AnalysisStatus::Running){
       playButton->setEnabled(false);
     }
+  }else if(cloudStatus == CLOUD_STOPPED){
+    // no-op
   }else{
     playButton->setEnabled(false);
   }
@@ -335,8 +337,6 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
 
   // update progress bar
   if (analysisStatus == analysisdriver::AnalysisStatus::Running){
-    // m_progressBar will be driven by onIterationProgress in RunTabController
-  }else if (analysisStatus == analysisdriver::AnalysisStatus::Idle){
     // m_progressBar will be driven by onIterationProgress in RunTabController
   }else{
     m_percentFailed->setText("");

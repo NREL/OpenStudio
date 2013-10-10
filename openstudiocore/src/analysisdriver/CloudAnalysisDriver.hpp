@@ -79,6 +79,9 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
 
   /** Returns the number of data points in this iteration that are no longer being processed. */
   unsigned numCompleteDataPoints() const;
+
+  /** Returns the number of complete data points that are marked as .failed(). */
+  unsigned numFailedDataPoints() const;
   
   /** Returns the DataPoints whose json files failed to download. Note that these are counted
    *  as 'complete' by CloudAnalysisDriver, but not by Analysis. */
