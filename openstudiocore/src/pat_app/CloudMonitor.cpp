@@ -95,6 +95,73 @@ bool reconnectToCloudSession()
   return result;
 }
 
+// Return true if there is an internet connection
+bool checkInternetAvailable() 
+{
+  VagrantProvider cloudProvider;
+
+  return cloudProvider.internetAvailable();
+}
+
+// Return true if we can authenticate to cloud service
+bool checkAuthenticated() 
+{
+  bool authenticated = true;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+
+  OS_ASSERT(session);    
+  OS_ASSERT(settings);
+
+  CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
+
+  authenticated = newProvider.validateCredentials();
+
+  return authenticated;
+}
+
+// Return true if AWS servers and workers are running
+bool checkCloudRunning() 
+{
+  bool cloudRunning = true;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+
+  OS_ASSERT(session);    
+  OS_ASSERT(settings);
+
+  CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
+
+  bool serverRunning = newProvider.serverRunning(); 
+  bool workersRunning = newProvider.workersRunning();
+
+  if( (! serverRunning) || (! workersRunning) )
+  {
+    cloudRunning = false;
+  }
+  
+  return cloudRunning;
+}
+
+// Return true if OSServer is running
+bool checkCloudServiceRunning() 
+{
+  bool cloudServiceRunning = false;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+
+  OS_ASSERT(session);    
+  if( boost::optional<Url> serverUrl = session->serverUrl() )
+  {
+    OSServer server(serverUrl.get());
+    cloudServiceRunning = server.available();
+  }
+  
+  return cloudServiceRunning;
+}
+
 } // namespace detail
 
 CloudMonitor::CloudMonitor()
@@ -364,16 +431,24 @@ void CloudMonitor::onRecoverCloudWorkerComplete()
 
   m_recoverCloudThread.clear();
 
-  if( m_recoverCloudWorker->status() == CLOUD_RUNNING )
+  if( m_recoverCloudWorker->cloudServiceRunning() )
   {
     setStatus(CLOUD_RUNNING);
   }
   else
   {
-    setCurrentProjectSettings(boost::none);
-    setCurrentProjectSession(boost::none);
+    setStatus(CLOUD_ERROR);
 
-    setStatus(CLOUD_STOPPED);
+    LostCloudConnectionDialog dialog(m_recoverCloudWorker->internetAvailable(),
+                                     m_recoverCloudWorker->authenticated(),
+                                     m_recoverCloudWorker->cloudRunning());
+
+    dialog.exec();
+
+    if( dialog.clearCloudSession() )
+    {
+      stopCloud();
+    }
   }
 }
 
@@ -698,28 +773,38 @@ RecoverCloudWorker::~RecoverCloudWorker()
 {
 }
 
-CloudStatus RecoverCloudWorker::status() const
-{
-  return m_status;
-}
-
 void RecoverCloudWorker::startWorking()
 {
-  m_status = CLOUD_ERROR;  
+  m_cloudServiceRunning = detail::checkCloudServiceRunning();
 
-  if( detail::reconnectToCloudSession() )
+  if( ! m_cloudServiceRunning )
   {
-    m_status = CLOUD_RUNNING;
-  }
-
-  if( m_status == CLOUD_ERROR )
-  {
-    detail::stopCloud();
-
-    m_status = CLOUD_STOPPED;
+    m_cloudRunning = detail::checkCloudRunning();
+    m_authenticated = detail::checkAuthenticated();
+    m_internetAvailable = detail::checkInternetAvailable();
   }
 
   emit doneWorking();
+}
+
+bool RecoverCloudWorker::internetAvailable() const
+{
+  return m_internetAvailable;
+}
+
+bool RecoverCloudWorker::cloudRunning() const
+{
+  return m_cloudRunning;
+}
+
+bool RecoverCloudWorker::cloudServiceRunning() const
+{
+  return m_cloudServiceRunning;
+}
+
+bool RecoverCloudWorker::authenticated() const
+{
+  return m_authenticated;
 }
 
 CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
@@ -737,13 +822,13 @@ void CloudMonitorWorker::monitorCloudRunning()
 {
   if( m_monitor->status() == CLOUD_RUNNING )
   {
-    m_cloudServiceRunning = checkCloudServiceRunning();
+    m_cloudServiceRunning = detail::checkCloudServiceRunning();
 
     if( ! m_cloudServiceRunning )
     {
-      m_cloudRunning = checkCloudRunning();
-      m_authenticated = checkAuthenticated();
-      m_internetAvailable = checkInternetAvailable();
+      m_cloudRunning = detail::checkCloudRunning();
+      m_authenticated = detail::checkAuthenticated();
+      m_internetAvailable = detail::checkInternetAvailable();
       m_count++;
     }
 
@@ -758,70 +843,6 @@ void CloudMonitorWorker::monitorCloudRunning()
       QTimer::singleShot(2000,this,SLOT(monitorCloudRunning()));
     }
   }
-}
-
-bool CloudMonitorWorker::checkInternetAvailable() const
-{
-  VagrantProvider cloudProvider;
-
-  return cloudProvider.internetAvailable();
-}
-
-bool CloudMonitorWorker::checkCloudRunning() const
-{
-  bool cloudRunning = true;
-
-  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
-
-  // TODO Consider emitting and display an error dialog in CloudMonitor
-  OS_ASSERT(session);    
-  OS_ASSERT(settings);
-
-  CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
-
-  bool serverRunning = newProvider.serverRunning(); 
-  bool workersRunning = newProvider.workersRunning();
-
-  if( (! serverRunning) || (! workersRunning) )
-  {
-    cloudRunning = false;
-  }
-  
-  return cloudRunning;
-}
-
-bool CloudMonitorWorker::checkCloudServiceRunning() const
-{
-  bool cloudServiceRunning = false;
-
-  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-
-  OS_ASSERT(session);    
-  if( boost::optional<Url> serverUrl = session->serverUrl() )
-  {
-    OSServer server(serverUrl.get());
-    cloudServiceRunning = server.available();
-  }
-  
-  return cloudServiceRunning;
-}
-
-bool CloudMonitorWorker::checkAuthenticated() const
-{
-  bool authenticated = true;
-
-  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
-
-  OS_ASSERT(session);    
-  OS_ASSERT(settings);
-
-  CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
-
-  authenticated = newProvider.validateCredentials();
-
-  return authenticated;
 }
 
 bool CloudMonitorWorker::internetAvailable() const

@@ -32,6 +32,16 @@ class QTimer;
 
 namespace openstudio {
 
+class OrangeButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  OrangeButton(QWidget * parent = 0);
+  virtual ~OrangeButton() {}
+};
+
 class GrayButton : public QPushButton
 {
   Q_OBJECT

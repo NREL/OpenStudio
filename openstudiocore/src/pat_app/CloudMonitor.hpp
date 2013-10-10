@@ -278,7 +278,13 @@ class RecoverCloudWorker : public QObject
 
   virtual ~RecoverCloudWorker();
 
-  CloudStatus status() const;
+  bool internetAvailable() const;
+
+  bool authenticated() const;
+
+  bool cloudRunning() const;
+
+  bool cloudServiceRunning() const;
 
   signals:
 
@@ -294,7 +300,13 @@ class RecoverCloudWorker : public QObject
 
   QPointer<CloudMonitor> m_monitor;
 
-  CloudStatus m_status;
+  bool m_internetAvailable;
+
+  bool m_authenticated;
+
+  bool m_cloudRunning;
+
+  bool m_cloudServiceRunning;
 };
 
 // This class is assigned to its own thread,
@@ -328,16 +340,6 @@ class CloudMonitorWorker : public QObject
   private:
 
   Q_DISABLE_COPY(CloudMonitorWorker);
-
-  bool checkInternetAvailable() const;
-
-  bool checkAuthenticated() const;
-
-  // Check that server and worker(s) are running
-  bool checkCloudRunning() const;
-
-  // Check that the openstudio service is running on the server
-  bool checkCloudServiceRunning() const;
 
   QPointer<CloudMonitor> m_monitor;  
 

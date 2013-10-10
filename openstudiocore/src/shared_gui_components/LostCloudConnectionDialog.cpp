@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "LostCloudConnectionDialog.hpp"
+#include "../shared_gui_components/Buttons.hpp"
 
 #include <utilities/core/Assert.hpp>
 
@@ -44,7 +45,8 @@ LostCloudConnectionDialog::LostCloudConnectionDialog(bool internetAvailable,
 {
   this->setModal(true);
   this->setWindowTitle("Lost Cloud Connection");
-  this->setSizeHint(QSize(500,300));
+  setFixedWidth(650);
+  //this->setSizeHint(QSize(500,300));
   createWidgets(internetAvailable,authenticated,cloudRunning);
 }
 
@@ -67,6 +69,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
   ///// BUTTONS
 
   this->cancelButton()->hide();
+  this->okButton()->hide();
 
   QLabel * label = 0;
   
@@ -106,7 +109,6 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
     vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
     mainLayout->addStretch();
-    return;
   }
 
   // 2 Determine if the cloud login is accepted
@@ -116,9 +118,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
     label->setText("<FONT COLOR = GREEN>2. <FONT COLOR = BLACK>" + tr("Cloud Log-in: ") + "<b> <FONT COLOR = GREEN>" + tr("accepted") + "</b>");
   } else {
     label->setText("<FONT COLOR = RED>2. <FONT COLOR = BLACK>" + tr("Cloud Log-in: ") + "<b> <FONT COLOR = RED>" + tr("denied") + "</b>");
-    createCloudConnectionWidgets(vLayout);
     mainLayout->addStretch();
-    return;
   }
 
   // 3 Determine if there is a cloud connection
@@ -137,7 +137,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
     label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
     label->setText("<FONT COLOR = RED>3. <FONT COLOR = BLACK>" + tr("Cloud Connection: ") + "<b> <FONT COLOR = RED>" + tr("unable to reconnect. ") + "</b>" + "<FONT COLOR = BLACK>" + tr("Remember that cloud charges may currently be accruing."));
     createCloudConnectionWidgets(vLayout);
-    mainLayout->addStretch();
+    //mainLayout->addStretch();
   }
 }
 
@@ -223,29 +223,27 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   horizontalSpacer = new QSpacerItem(INDENT, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
   hLayout->addSpacerItem(horizontalSpacer); 
 
-  button = new QPushButton(this);
-  style = "QPushButton {"
-                        "  background-image:url(':/shared_gui_components/images/launch_aws.png');"
-                        "  border:none;"
-                        "}";
-  button->setStyleSheet(style);
-  button->setFixedSize(166,30);
+  button = new OrangeButton(this);
+  button->setText("Launch AWS Console");
   button->setCheckable(false);
   isConnected = connect(button, SIGNAL(clicked(bool)),
     this, SLOT(on_launchAWSConsole(bool)));
   OS_ASSERT(isConnected);
   hLayout->addWidget(button,0,Qt::AlignTop | Qt::AlignLeft);
 
-  button = new QPushButton(this);
-  style = "QPushButton {"
-                        "  background-image:url(':/shared_gui_components/images/clear_cloud_session.png');"
-                        "  border:none;"
-                        "}";
-  button->setStyleSheet(style);
-  button->setFixedSize(166,30);
+  button = new OrangeButton(this);
+  button->setText("Stop Cloud");
   button->setCheckable(false);
   isConnected = connect(button, SIGNAL(clicked(bool)),
     this, SLOT(on_clearCloudSession(bool)));
+  OS_ASSERT(isConnected);
+  hLayout->addWidget(button,0,Qt::AlignTop | Qt::AlignLeft);
+
+  button = new OrangeButton(this);
+  button->setText("Try Again Later");
+  button->setCheckable(false);
+  isConnected = connect(button, SIGNAL(clicked(bool)),
+    this, SLOT(accept()));
   OS_ASSERT(isConnected);
   hLayout->addWidget(button,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -267,6 +265,8 @@ void LostCloudConnectionDialog::on_launchAWSConsole(bool checked)
 void LostCloudConnectionDialog::on_clearCloudSession(bool checked)
 {
   m_clearCloudSession = true;
+
+  accept();
 }
 
 } // openstudio

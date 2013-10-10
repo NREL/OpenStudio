@@ -26,6 +26,28 @@
 
 namespace openstudio {
 
+OrangeButton::OrangeButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  QString style;
+  style.append("QPushButton { ");
+  style.append("border-radius: 4px; ");
+  style.append("border: 1px solid #949393; ");
+  style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
+  style.append("                             stop: 0 #FDBC3B, "); 
+  style.append("                             stop: 1 #F47920 ); ");
+  style.append("height: 22px; ");
+  style.append("font-size: 12px; ");
+  style.append("margin: 0; ");
+  style.append("padding-left: 10px; ");
+  style.append("padding-right: 10px; ");
+  style.append("} ");
+
+  setStyleSheet(style);
+}
+
 GrayButton::GrayButton(QWidget * parent)
   : QPushButton()
 {
