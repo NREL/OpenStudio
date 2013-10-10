@@ -51,6 +51,7 @@
 #include <QTextEdit>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QMessageBox>
 
 #include <fstream>
 
@@ -498,11 +499,14 @@ void RunStatusView::on_selectAllClears(bool checked)
 
     // Can only clear points if project is idle
     bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
-  
+
     if (isProjectIdle){
-      std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
-      Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
-        dataPoint.clearResults();
+      QMessageBox::StandardButton test = QMessageBox::question(this, "Clear Results", "Do you want to clear all results?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (test == QMessageBox::Yes){
+        std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
+        Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+          dataPoint.clearResults();
+        }
       }
     }
   }
