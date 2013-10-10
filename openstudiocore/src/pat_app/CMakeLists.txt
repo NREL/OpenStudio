@@ -21,7 +21,9 @@ SET( ${target_name}_SRC
   ../shared_gui_components/EditView.cpp
   ../shared_gui_components/EditView.hpp
   ExportXML.cpp
-  ExportXML.hpp  
+  ExportXML.hpp
+  ExportXMLDialog.cpp
+  ExportXMLDialog.hpp
   ../shared_gui_components/HeaderViews.cpp
   ../shared_gui_components/HeaderViews.hpp
   HorizontalTabWidget.cpp
@@ -135,6 +137,7 @@ SET( ${target_name}_moc
   DesignAlternativesView.hpp
   ../shared_gui_components/EditController.hpp
   ../shared_gui_components/EditView.hpp
+  ExportXMLDialog.hpp
   ../shared_gui_components/HeaderViews.hpp
   HorizontalTabWidget.hpp
   ../shared_gui_components/LocalLibraryController.hpp

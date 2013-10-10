@@ -821,46 +821,46 @@ void PatApp::exportXml()
   openstudio::analysis::exportxml::ExportXML newXMLdoc;
   newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath));
 
-  //make qaqc.xml inside the project directory
-  openstudio::path rubyIncludePath = getOpenStudioRubyIncludePath();
-  openstudio::path rubyScriptsPath = getOpenStudioRubyScriptsPath();
-  openstudio::path qaqcPath = rubyScriptsPath / toPath("openstudio/qaqc/CreateQAQCXML.rb");
+  ////make qaqc.xml inside the project directory
+  //openstudio::path rubyIncludePath = getOpenStudioRubyIncludePath();
+  //openstudio::path rubyScriptsPath = getOpenStudioRubyScriptsPath();
+  //openstudio::path qaqcPath = rubyScriptsPath / toPath("openstudio/qaqc/CreateQAQCXML.rb");
   openstudio::path qaqcXmlPath = projectPath / toPath("qaqc.xml");
 
-  // create a run manager to call ruby script to generate qaqc xml
-  runmanager::RunManager rm;
-  runmanager::ConfigOptions configOpts(true);
-  rm.setConfigOptions(configOpts);
-  rm.setPaused(true);
+  //// create a run manager to call ruby script to generate qaqc xml
+  //runmanager::RunManager rm;
+  //runmanager::ConfigOptions configOpts(true);
+  //rm.setConfigOptions(configOpts);
+  //rm.setPaused(true);
 
-  // set up ruby job
+  //// set up ruby job
   openstudio::path outdir = projectPath / toPath("QAQC");
-  try {
-    boost::filesystem::remove_all(outdir);
-  }catch(std::exception&){
-  }
-  boost::filesystem::create_directories(outdir);
+  //try {
+  //  boost::filesystem::remove_all(outdir);
+  //}catch(std::exception&){
+  //}
+  //boost::filesystem::create_directories(outdir);
 
-  runmanager::RubyJobBuilder rubyJob;
-  rubyJob.setScriptFile(qaqcPath);
-  rubyJob.addScriptArgument(toString(projectPath) + "/");
-  rubyJob.addScriptArgument(toString(projectPath) + "/");
+  //runmanager::RubyJobBuilder rubyJob;
+  //rubyJob.setScriptFile(qaqcPath);
+  //rubyJob.addScriptArgument(toString(projectPath) + "/");
+  //rubyJob.addScriptArgument(toString(projectPath) + "/");
 
-  runmanager::Workflow wf;
-  rubyJob.setIncludeDir(rubyIncludePath);
-  rubyJob.addToWorkflow(wf);
-  runmanager::Tools tools = rm.getConfigOptions().getTools();
-  wf.add(tools);
+  //runmanager::Workflow wf;
+  //rubyJob.setIncludeDir(rubyIncludePath);
+  //rubyJob.addToWorkflow(wf);
+  //runmanager::Tools tools = rm.getConfigOptions().getTools();
+  //wf.add(tools);
 
-  // run ruby job
-  runmanager::Job j = wf.create(outdir);
-  rm.enqueue(j,true);
-  rm.setPaused(false);
+  //// run ruby job
+  //runmanager::Job j = wf.create(outdir);
+  //rm.enqueue(j,true);
+  //rm.setPaused(false);
 
   // this may or may not be what you want.
   // should the UI be usable or not while this is running?
   // it can be handled via signal too.
-  rm.waitForFinished();
+  //rm.waitForFinished();
 
   // make zip file
   try{
