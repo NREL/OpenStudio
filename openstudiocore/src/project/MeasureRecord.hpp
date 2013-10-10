@@ -118,6 +118,8 @@ class PROJECT_API MeasureRecord : public ObjectRecord {
   /** @name Getters */
   //@{
 
+  boost::optional<int> variableRecordId() const;
+
   /** Get the parent MeasureGroupRecord. */
   boost::optional<MeasureGroupRecord> measureGroupRecord() const;
 
@@ -161,6 +163,13 @@ typedef std::vector<MeasureRecord> MeasureRecordVector;
 /** Sorts MeasureRecords by measureVectorIndex. */
 struct PROJECT_API MeasureRecordMeasureVectorIndexLess {
   bool operator()(const MeasureRecord& left, const MeasureRecord& right) const;
+};
+
+inline PROJECT_API bool variableRecordIdEquals(const MeasureRecord& record, int id){
+  if (boost::optional<int> val = record.variableRecordId()) {
+    return (*val == id);
+  }
+  return false;
 };
 
 } // project
