@@ -104,6 +104,10 @@ class RunStatusView : public QWidget
 
    void paintEvent(QPaintEvent * e);
 
+ public slots:
+   
+  void setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus);
+
  private slots:
 
   void on_selectAllDataPoints(bool checked);
@@ -115,8 +119,6 @@ class RunStatusView : public QWidget
   void on_selectAllClears(bool checked);
 
   void updateCloudData();
-
-  void setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus);
 
  private:
 
@@ -302,8 +304,6 @@ class PatProgressBar : public QProgressBar
   public slots:
 
   void setValue(int value);
-
-  void setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus);
 };
 
 }

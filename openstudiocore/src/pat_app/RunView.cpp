@@ -123,7 +123,6 @@ RunStatusView::RunStatusView()
 
   playButton = new PlayButton(this);
   playButton->setFixedWidth(120);
-  playButton->setText("Run");
   mainHLayout->addWidget(playButton);
 
   // Progress bar area
@@ -276,49 +275,30 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
   switch (analysisStatus.value())
   {
     case analysisdriver::AnalysisStatus::Idle:
-      if(cloudStatus == CLOUD_RUNNING){
-        m_runText = "Run on Cloud";
-      }else if(cloudStatus == CLOUD_STOPPED){
+      if(cloudStatus == CLOUD_STOPPED){
         m_runText = "Run Locally";
       }else{
-        // no change
+        m_runText = "Run on Cloud";
       }
       break;
     case analysisdriver::AnalysisStatus::Starting:
-      if(cloudStatus == CLOUD_RUNNING){
-        m_runText = "Run on Cloud";
-      }else if(cloudStatus == CLOUD_STOPPED){
-        m_runText = "Run Locally";
-      }else{
-        // no change
-      }
+      m_runText = "Starting";
       break;
     case analysisdriver::AnalysisStatus::Running:
-      if(cloudStatus == CLOUD_RUNNING){
-        m_runText = "Running on Cloud";
-      }else if(cloudStatus == CLOUD_STOPPED){
+      if(cloudStatus == CLOUD_STOPPED){
         m_runText = "Running Locally";
+      }else if(cloudStatus == CLOUD_RUNNING){
+        m_runText = "Running on Cloud";
       }else{
-        // no change
+        // should not be possible, what to do here?
+        m_runText = "";
       }
       break;
     case analysisdriver::AnalysisStatus::Stopping:
-      if(cloudStatus == CLOUD_RUNNING){
-        m_runText = "Running on Cloud";
-      }else if(cloudStatus == CLOUD_STOPPED){
-        m_runText = "Running Locally";
-      }else{
-        // no change
-      }
+      m_runText = "Stopping";
       break;
     case analysisdriver::AnalysisStatus::Error:
-      if(cloudStatus == CLOUD_RUNNING){
-        m_runText = "Run Error";
-      }else if(cloudStatus == CLOUD_STOPPED){
-        m_runText = "Run Error";
-      }else{
-        // no change
-      }
+      m_runText = "Run Error";
       break;
   }
   m_playLabel->setText(m_runText);
@@ -342,9 +322,28 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
       playButton->setStatus(PlayButton::ERROR);
       break;
   }
+  // override playButton::setStatus for cloud status
+  if(cloudStatus == CLOUD_RUNNING){
+    if (analysisStatus == analysisdriver::AnalysisStatus::Running){
+      playButton->setEnabled(false);
+    }
+  }else{
+    playButton->setEnabled(false);
+  }
+
+
 
   // update progress bar
-  m_progressBar->setStatus(cloudStatus, analysisStatus);
+  if (analysisStatus == analysisdriver::AnalysisStatus::Running){
+    // m_progressBar will be driven by onIterationProgress in RunTabController
+  }else if (analysisStatus == analysisdriver::AnalysisStatus::Idle){
+    // m_progressBar will be driven by onIterationProgress in RunTabController
+  }else{
+    m_percentFailed->setText("");
+    m_percentComplete->setText("");
+    m_progressBar->setRange(0,1);
+    m_progressBar->setValue(0);
+  }
 
   // update cloud time and instances 
   // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
@@ -415,11 +414,11 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
     double percentComplete = 100.0 * numCompletedJobs / (double)numJobsInIteration;
 
     if (numFailedJobs > 0){
-      m_percentFailed->setHidden(false);
+      m_percentFailed->setText(QString::number(percentFailed, 'f', 0) + QString("% Failed"));
     }else{
-      m_percentFailed->setHidden(true);
+      m_percentFailed->setText("");
     }
-    m_percentFailed->setText(QString::number(percentFailed, 'f', 0) + QString("% Failed"));
+
     m_percentComplete->setText(QString::number(percentComplete, 'f', 0) + QString("% Complete"));
   }else{
     m_percentFailed->setText("");
@@ -1162,16 +1161,6 @@ void PatProgressBar::setValue(int value)
   }
 
   setStyleSheet(style);
-}
-
-void PatProgressBar::setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus)
-{
-  if (analysisStatus == analysisdriver::AnalysisStatus::Running){
-    // will be driven by iterationProgress
-  }else{
-    setRange(0,1);
-    setValue(0);
-  }
 }
 
 }

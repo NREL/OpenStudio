@@ -65,10 +65,6 @@ class RunTabController : public QObject
 
     void onIterationProgress();
 
-    void onCloudUpdate(const CloudStatus & newStatus);
-
-    void onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus);
-
     void reqestRefresh();
 
     void refresh();

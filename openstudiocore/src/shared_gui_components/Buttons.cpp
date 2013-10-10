@@ -474,19 +474,13 @@ void PlayButton::setStatus(const Status & status)
     case STARTING:
       style.clear();
       style.append("QPushButton {"
-                   "  background-image:url(':/shared_gui_components/images/run_cancel.png');"
+                   "  background-image:url(':/shared_gui_components/images/starting_simulation_button.png');"
                    "  background-position:right;"
                    "  background-repeat:none;"
                    "  border:none;"
                    "  font:bold 13px;"
                    "  height:35px;"
                    "  text-align:left;"
-                   "}");
-      style.append("QPushButton:hover {"
-                   "  background-image:url(':/shared_gui_components/images/run_cancel_over.png');"
-                   "}");
-      style.append("QPushButton:pressed {"
-                   "  background-image:url(':/shared_gui_components/images/run_cancel_press.png');"
                    "}");
 
       setStyleSheet(style);
@@ -517,7 +511,7 @@ void PlayButton::setStatus(const Status & status)
       style.clear();
       style.append("QPushButton {"
                    "  background-color:transparent;"
-                   "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
+                   "  background-image:url(':/shared_gui_components/images/stopping_simulation_button.png');"
                    "  background-position:right;"
                    "  background-repeat:none;"
                    "  border:none;"
@@ -525,12 +519,7 @@ void PlayButton::setStatus(const Status & status)
                    "  height:35px;"
                    "  text-align:left;"
                    "}");
-      style.append("QPushButton:hover {"
-                   "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
-                   "}");
-      style.append("QPushButton:pressed {"
-                   "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
-                   "}");
+
       setStyleSheet(style);
       setEnabled(false);
       break;
@@ -553,7 +542,7 @@ void PlayButton::setStatus(const Status & status)
                    "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
                    "}");
       setStyleSheet(style);
-      setEnabled(false);
+      setEnabled(true);
       break;
   }
 

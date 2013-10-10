@@ -73,15 +73,8 @@ RunTabController::RunTabController()
 
   QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
 
-  bingo = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus &)),
-                  this, SLOT(onCloudUpdate(const CloudStatus &)));
-  OS_ASSERT(bingo);
-
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
-    bool bingo = connect(project->getImpl().get(),SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)),
-                          this,SLOT(onAnalysisStatusChanged(analysisdriver::AnalysisStatus)));
-    OS_ASSERT(bingo);
 
     // ensure that baseline exists
     analysis::DataPoint baselineDataPoint = project->baselineDataPoint();
@@ -96,25 +89,27 @@ RunTabController::RunTabController()
       bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
       OS_ASSERT(bingo);
 
+      // connect cloudAnalysisDriver to update progress on this
+      bool isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
+      OS_ASSERT(isConnected);
+
       // currentAnalyses is empty for cloudAnalysisDriver
     }else{
       bool bingo = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
       OS_ASSERT(bingo);
 
-     currentAnalyses = analysisDriver.currentAnalyses();
-    }
+      currentAnalyses = analysisDriver.currentAnalyses();
+      if (!currentAnalyses.empty()){
+        // connect currentAnalysis to update progress on this
+        bingo = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
+        OS_ASSERT(bingo);
 
-    if (!currentAnalyses.empty()){
-      // connect currentAnalysis to update progress on this
-      bingo = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
-      OS_ASSERT(bingo);
-
-      // connect currentAnalysis to update progress in PatApp
-      // DLM: PatApp is already connected to this signal
-      //bingo = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-      //OS_ASSERT(bingo);
+        // connect currentAnalysis to update progress in PatApp
+        // DLM: PatApp is already connected to this signal
+        //bingo = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
+        //OS_ASSERT(bingo);
+      }
     }
-    onIterationProgress();
 
     m_dataPointRunListController = QSharedPointer<DataPointRunListController>(new DataPointRunListController(analysis));
     m_dataPointRunItemDelegate = QSharedPointer<DataPointRunItemDelegate>(new DataPointRunItemDelegate());
@@ -123,6 +118,11 @@ RunTabController::RunTabController()
     runView->dataPointRunListView->setDelegate(m_dataPointRunItemDelegate);
 
     refresh();
+
+    if ((project->status() == analysisdriver::AnalysisStatus::Running) ||
+        (project->status() == analysisdriver::AnalysisStatus::Idle)){
+      onIterationProgress();
+    }
   }
 }
 
@@ -153,9 +153,6 @@ void RunTabController::onPlayButtonClicked()
     if (!seedModel){
       // todo: check message
       QMessageBox::warning(runView, "No Baseline Model", "Cannot run analysis until a baseline model has been set on the first tab.");
-      
-      // important to call, this controls tab 1 and 2 access
-      onIterationProgress();
       return;
     }
 
@@ -189,9 +186,7 @@ void RunTabController::onPlayButtonClicked()
         project->save();
 
       } else {
-             
-        // important to call, this controls tab 1 and 2 access
-        onIterationProgress();
+        // no update, quit
         return;
       }
     }
@@ -210,8 +205,6 @@ void RunTabController::onPlayButtonClicked()
             "EnergyPlus could not be located, simulation aborted.",
             QMessageBox::Ok);
 
-        // important to call, this controls tab 1 and 2 access
-        onIterationProgress();
         return;
       }
     }
@@ -233,9 +226,6 @@ void RunTabController::onPlayButtonClicked()
         // does the user want to clear results?
         QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", "The simulations are already complete, do you want to clear all results?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (test == QMessageBox::Yes){
-          
-          // clear the progress bar
-          runView->runStatusView->setProgress(0, 0, totalNumJobs);
 
           // remove all results
           bool completeRemoval = project->clearAllResults();
@@ -248,13 +238,14 @@ void RunTabController::onPlayButtonClicked()
         reqestRefresh();
         PatApp::instance()->processEvents();
       }
+
       if (cloudAnalysisDriver){
 
         // refresh this tab when data points are queued
         bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
         OS_ASSERT(bingo);
 
-        // connect currentAnalysis to update progress on this
+        // connect cloudAnalysisDriver to update progress on this
         bool isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
 
@@ -273,11 +264,16 @@ void RunTabController::onPlayButtonClicked()
         bool isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
       }
+
+      // update progress
+      onIterationProgress();
+
     }else{
 
       // just unpause the queue
       analysisDriver.unpauseQueue();
     }
+
   }else if(analysisStatus == analysisdriver::AnalysisStatus::Running){
     if (cloudAnalysisDriver){
 
@@ -294,9 +290,6 @@ void RunTabController::onPlayButtonClicked()
       project->stop();
     }
   }
-
-  // important to call, this controls tab 1 and 2 access
-  onIterationProgress();
 }
 
 void RunTabController::onIterationProgress()
@@ -347,23 +340,6 @@ void RunTabController::refresh()
   runView->runStatusView->setStatus(cloudStatus, analysisStatus);
 
   QTimer::singleShot(0, runView->dataPointRunListView, SLOT(refreshAllViews()));
-}
-
-void RunTabController::onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus)
-{
-  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
-  CloudStatus cloudStatus = PatApp::instance()->cloudMonitor()->status();
-
-  runView->runStatusView->setStatus(cloudStatus, newAnalysisStatus);
-}
-
-void RunTabController::onCloudUpdate(const CloudStatus & newStatus)
-{  
-  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-  OS_ASSERT(project);
-  analysisdriver::AnalysisStatus analysisStatus = project->status();
-
-  runView->runStatusView->setStatus(newStatus, analysisStatus);
 }
 
 DataPointRunListController::DataPointRunListController(const openstudio::analysis::Analysis& analysis)

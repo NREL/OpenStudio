@@ -742,12 +742,18 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForServer(int msec)
     {
-      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this));
+      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
+        return m_serverStarted;
+      }
+      return false;
     }
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
     {
-      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this));
+      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
+        return m_workerStarted;
+      }
+      return false;
     }
 
     bool AWSProvider_Impl::serverRunning(int msec)

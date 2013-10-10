@@ -566,7 +566,7 @@ void StartCloudWorker::startWorking()
 
     if( provider->requestStartWorkers() )
     {
-      m_error = ! provider->waitForWorkers();
+      m_error = ! provider->waitForWorkers(600000);
     }
   }
 
