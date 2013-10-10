@@ -58,6 +58,8 @@ protected slots:
 
 protected:
 
+  void closeEvent(QCloseEvent * event);
+
   QCheckBox * m_iAcceptCheckBox; 
 
 private:

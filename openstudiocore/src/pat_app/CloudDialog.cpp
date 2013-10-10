@@ -33,6 +33,7 @@
 
 #include <QBoxLayout>
 #include <QCheckBox>
+#include <QCloseEvent>
 #include <QComboBox>
 #include <QFileDialog>
 #include <QLabel>
@@ -71,6 +72,7 @@ CloudDialog::CloudDialog(QWidget* parent)
   m_legalAgreement(0)
 {
   this->setWindowTitle("Cloud Settings");
+  this->setFixedSize(QSize(800,541));
   createWidgets();
 }
 
@@ -231,12 +233,8 @@ void CloudDialog::createWidgets()
   #ifdef Q_WS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
-    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::WindowCloseButtonHint);
   #endif
-
-  m_amazonProviderWidget->loadData();
-  m_blankProviderWidget->loadData();
-  m_vagrantProviderWidget->loadData();
 
   cloudResourceChanged(m_cloudResourceComboBox->currentText());
 }
@@ -254,13 +252,13 @@ boost::optional<CloudProviderWidget *> CloudDialog::getCurrentCloudProviderWidge
   return cloudProviderWidget;
 }
 
-void  CloudDialog::loadData()
+void CloudDialog::loadData()
 {
   CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
   cloudProviderWidget->loadData();
 }
 
-void  CloudDialog::saveData()
+void CloudDialog::saveData()
 {
   CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
   cloudProviderWidget->saveData();
@@ -276,16 +274,23 @@ void CloudDialog::on_backButton(bool checked)
   } else if(m_pageStackedWidget->currentIndex() == m_loginPageIdx) {
       if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
       AWSSettings awsSettings;
-      bool validAccessKey = awsSettings.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
-      if(!validAccessKey){
-        QString error("You have entered an invalid Access Key");
-        QMessageBox::critical(this, "Login Failed", error);
+      std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
+      std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
+      if (accessKey.empty() || secretKey.empty()) {
+        QString error("The Access Key and Secret Key cannot be empty");
+        QMessageBox::critical(this, "Authentication Failed", error);
         return;
       }
-      bool validSecretKey = awsSettings.setSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
+      bool validAccessKey = awsSettings.validAccessKey(accessKey);
+      if(!validAccessKey){
+        QString error("You have entered an invalid Access Key");
+        QMessageBox::critical(this, "Authentication Failed", error);
+        return;
+      }
+      bool validSecretKey = awsSettings.validSecretKey(secretKey);
       if(!validSecretKey){
         QString error("You have entered an invalid Secret Key");
-        QMessageBox::critical(this, "Login Failed", error);
+        QMessageBox::critical(this, "Authentication Failed", error);
         return;
       }
       m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
@@ -297,21 +302,29 @@ void CloudDialog::on_backButton(bool checked)
 void CloudDialog::on_cancelButton(bool checked)
 {
   OSDialog::on_cancelButton(checked);
+  cloudResourceChanged(m_cloudResourceComboBox->currentText());
 }
 
 void CloudDialog::on_okButton(bool checked)
 {
   AWSSettings awsSettings;
-  bool validAccessKey = awsSettings.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
-  if(!validAccessKey){
-    QString error("You have entered an invalid Access Key");
-    QMessageBox::critical(this, "Login Failed", error);
+  std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
+  std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
+  if (accessKey.empty() || secretKey.empty()) {
+    QString error("The Access Key and Secret Key cannot be empty");
+    QMessageBox::critical(this, "Authentication Failed", error);
     return;
   }
-  bool validSecretKey = awsSettings.setSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
+  bool validAccessKey = awsSettings.validAccessKey(accessKey);
+  if(!validAccessKey){
+    QString error("You have entered an invalid Access Key");
+    QMessageBox::critical(this, "Authentication Failed", error);
+    return;
+  }
+  bool validSecretKey = awsSettings.validSecretKey(secretKey);
   if(!validSecretKey){
     QString error("You have entered an invalid Secret Key");
-    QMessageBox::critical(this, "Login Failed", error);
+    QMessageBox::critical(this, "Authentication Failed", error);
     return;
   }
 
@@ -321,6 +334,13 @@ void CloudDialog::on_okButton(bool checked)
     cloudProviderWidget.get()->saveData();
   }
   done(QDialog::Accepted);
+  cloudResourceChanged(m_cloudResourceComboBox->currentText());
+}
+
+void CloudDialog::closeEvent(QCloseEvent *e)
+{
+  cloudResourceChanged(m_cloudResourceComboBox->currentText());
+  e->accept();
 }
 
 void CloudDialog::iAcceptClicked(bool checked)
@@ -331,6 +351,7 @@ void CloudDialog::iAcceptClicked(bool checked)
 void CloudDialog::cloudResourceChanged(const QString & text)
 {
   if(text == NO_PROVIDER){
+    m_blankProviderWidget->loadData();
     this->backButton()->setEnabled(false);
     m_legalAgreement->hide();
     m_iAcceptCheckBox->hide();
@@ -338,6 +359,7 @@ void CloudDialog::cloudResourceChanged(const QString & text)
     this->m_loginStackedWidget->setCurrentIndex(m_blankProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
   } else if(text == VAGRANT_PROVIDER) {
+    m_vagrantProviderWidget->loadData();
     this->backButton()->setEnabled(m_iAcceptCheckBox->isChecked());
     m_legalAgreement->show();
     m_iAcceptCheckBox->show();
@@ -345,6 +367,7 @@ void CloudDialog::cloudResourceChanged(const QString & text)
     this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
   } else if(text == AMAZON_PROVIDER) {
+    m_amazonProviderWidget->loadData();
     this->backButton()->setEnabled(m_iAcceptCheckBox->isChecked());
     m_legalAgreement->show();
     m_iAcceptCheckBox->show();
@@ -355,6 +378,7 @@ void CloudDialog::cloudResourceChanged(const QString & text)
     // should never get here
     OS_ASSERT(false);
   }
+  this->backButton()->setText("Continue");
 }
 
 
@@ -429,7 +453,7 @@ void CloudProviderWidget::createWidgets()
     this, SLOT(waitClicked(bool)));
   OS_ASSERT(isConnected);
 
-  label = new QLabel("After simulations complete and selected detailed results are downloaded, wait the number of minutes below and automatically terminate cloud session.  Parametric Analysis Tool must be on to stop cloud session.");
+  label = new QLabel("After simulations complete and selected detailed results are downloaded, wait the number of minutes below and automatically terminate cloud session.  ParametricAnalysisTool must be running to stop cloud session.");
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
@@ -444,6 +468,8 @@ void CloudProviderWidget::createWidgets()
   m_waitLineEdit = new QLineEdit();
   m_waitLineEdit->setFixedWidth(EDIT_WIDTH);
   hLayout->addWidget(m_waitLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+  QValidator *waitLineEditValidator = new QIntValidator(0, 10080, this);
+  m_waitLineEdit->setValidator(waitLineEditValidator);
 
   label = new QLabel;
   label->setText("minutes");
@@ -512,7 +538,6 @@ VagrantProviderWidget::VagrantProviderWidget(CloudDialog * cloudDialog)
 {
   createLoginWidget();
   createSettingsWidget();
-  //loadData();
 }
 
 VagrantProviderWidget::~VagrantProviderWidget()
@@ -655,7 +680,7 @@ void VagrantProviderWidget::createSettingsWidget()
   m_rightSettingsLayout->addStretch();
 }
 
-void  VagrantProviderWidget::loadData()
+void VagrantProviderWidget::loadData()
 {
   VagrantSettings vagrantSettings;
   QUrl url;
@@ -684,7 +709,7 @@ void  VagrantProviderWidget::loadData()
   m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
 }
 
-void  VagrantProviderWidget::saveData()
+void VagrantProviderWidget::saveData()
 {
   VagrantSettings vagrantSettings;
 
@@ -756,7 +781,6 @@ AmazonProviderWidget::AmazonProviderWidget(CloudDialog * cloudDialog)
 {
   createLoginWidget();
   createSettingsWidget();
-  //loadData();
 }
 
 AmazonProviderWidget::~AmazonProviderWidget()
@@ -862,11 +886,9 @@ void AmazonProviderWidget::createSettingsWidget()
   m_rightSettingsLayout->addStretch();
 }
 
-void  AmazonProviderWidget::loadData()
+void AmazonProviderWidget::loadData()
 {
-  AWSProvider awsProvider;
   AWSSettings awsSettings;
-  awsSettings.loadSettings(true);
 
   m_accessKeyLineEdit->setText(awsSettings.accessKey().c_str());
 
@@ -874,49 +896,40 @@ void  AmazonProviderWidget::loadData()
 
   m_cloudDialog->m_iAcceptCheckBox->setChecked(awsSettings.userAgreementSigned()); 
 
-  int index = -1;
-
-  for(int idx = 0; idx < m_regionComboBox->count(); idx++){
-    m_regionComboBox->removeItem(idx);
+  if (!m_regionComboBox->count()) {
+    Q_FOREACH(const std::string & region, AWSProvider::availableRegions()){
+      m_regionComboBox->addItem(region.c_str());
+    }
   }
 
-  std::vector<std::string> availableRegions = awsProvider.availableRegions();
-  Q_FOREACH(const std::string & region, availableRegions){
-    m_regionComboBox->addItem(region.c_str());
+  int index = m_regionComboBox->findText(awsSettings.region().c_str());
+  if(index == -1){
+    index = m_regionComboBox->findText(AWSProvider::defaultRegion().c_str());
   }
-
-  index = m_regionComboBox->findText(awsSettings.region().c_str());
-  if(index == -1) index = 0;
   m_regionComboBox->setCurrentIndex(index);
 
 
-  for(int idx = 0; idx < m_serverInstanceTypeComboBox->count(); idx++){
-    m_serverInstanceTypeComboBox->removeItem(idx);
-  }
-
-  std::vector<std::string> serverInstanceTypes = awsProvider.serverInstanceTypes();
-  Q_FOREACH(const std::string & serverInstanceType, serverInstanceTypes){
-    m_serverInstanceTypeComboBox->addItem(serverInstanceType.c_str());
+  if (!m_serverInstanceTypeComboBox->count()) {
+    Q_FOREACH(const std::string & serverInstanceType, AWSProvider::serverInstanceTypes()){
+      m_serverInstanceTypeComboBox->addItem(serverInstanceType.c_str());
+    }
   }
 
   index = m_serverInstanceTypeComboBox->findText(awsSettings.serverInstanceType().c_str());
   if(index == -1){
-    index = m_serverInstanceTypeComboBox->findText(awsProvider.defaultServerInstanceType().c_str());
+    index = m_serverInstanceTypeComboBox->findText(AWSProvider::defaultServerInstanceType().c_str());
   }
   m_serverInstanceTypeComboBox->setCurrentIndex(index);
 
-  for(int idx = 0; idx < m_workerInstanceTypeComboBox->count(); idx++){
-    m_workerInstanceTypeComboBox->removeItem(idx);
-  }
-
-  std::vector<std::string> workerInstanceTypes = awsProvider.workerInstanceTypes();
-  Q_FOREACH(const std::string & workerInstanceType, workerInstanceTypes){
-    m_workerInstanceTypeComboBox->addItem(workerInstanceType.c_str());
+  if (!m_workerInstanceTypeComboBox->count()) {
+    Q_FOREACH(const std::string & workerInstanceType, AWSProvider::workerInstanceTypes()){
+      m_workerInstanceTypeComboBox->addItem(workerInstanceType.c_str());
+    }
   }
 
   index = m_workerInstanceTypeComboBox->findText(awsSettings.workerInstanceType().c_str());
   if(index == -1){
-    index = m_workerInstanceTypeComboBox->findText(awsProvider.defaultWorkerInstanceType().c_str());
+    index = m_workerInstanceTypeComboBox->findText(AWSProvider::defaultWorkerInstanceType().c_str());
   }
   m_workerInstanceTypeComboBox->setCurrentIndex(index);
 
@@ -928,7 +941,7 @@ void  AmazonProviderWidget::loadData()
   m_waitLineEdit->setText(temp.setNum(awsSettings.terminationDelay()));
 }
 
-void  AmazonProviderWidget::saveData()
+void AmazonProviderWidget::saveData()
 {
   AWSSettings awsSettings;
 
