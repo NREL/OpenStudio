@@ -425,7 +425,20 @@ namespace detail{
     // returns the total number of instances running on EC2 in the current region
     unsigned totalInstances(int msec);
 
+    bool requestEstimatedCharges();
+
+    bool requestTotalInstances();
+
     //@}
+
+  signals:
+    
+    /// emitted when the estimated charges request completes
+    void estimatedChargesAvailable();
+
+    /// emitted when the total instances request completes
+    void totalInstancesAvailable();
+
 
   private slots:
 
@@ -457,9 +470,6 @@ namespace detail{
 
   private:
     
-    bool requestEstimatedCharges();
-    bool requestTotalInstances();
-
     bool waitForFinished(int msec, const boost::function<bool ()>& f);
     bool requestInternetAvailableFinished() const;
     bool requestServiceAvailableFinished() const;

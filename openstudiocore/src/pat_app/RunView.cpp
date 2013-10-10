@@ -118,6 +118,10 @@ RunStatusView::RunStatusView()
 
   // Run / Play button area
 
+  m_playLabel = new QLabel(this);
+  m_playLabel->setObjectName("H2");
+  mainHLayout->addWidget(m_playLabel);
+
   playButton = new PlayButton(this);
   playButton->setFixedWidth(120);
   playButton->setText("Run");
@@ -275,15 +279,19 @@ void RunStatusView::onCloudUpdate(const CloudStatus & newStatus)
 {
   // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
   if(newStatus == CLOUD_RUNNING){
+    m_runText = "Run on Cloud";
     m_cloudTime->show();
     m_cloudInstances->show();
     m_timer->start(30000);
     updateCloudData();
   } else {
+    m_runText = "Run Locally";
+    m_playLabel->setText(m_runText);
     m_cloudTime->hide();
     m_cloudInstances->hide();
     m_timer->stop();
   }
+  m_playLabel->setText(m_runText);
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
@@ -314,24 +322,25 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   //bool showPercentComplete = false;
   if (isRunning){
     // running
-    //playButton->setText("Pause");
-    playButton->setText("Stop");
+    //m_playLabel->setText("Pause");
+    m_playLabel->setText("Stop");
     playButton->setChecked(true);
   }else{
     if (numCompletedJobs == 0){
       QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
-      CloudMonitorWorker worker(cloudMonitor.data());
-      if(worker.internetAvailable() && worker.authenticated() && worker.cloudRunning()){
-        playButton->setText("Run on Cloud");
+      CloudStatus status = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
+      if(status == CLOUD_RUNNING){
+        m_runText = "Run on Cloud";
       } else {
-        playButton->setText("Run Locally");
+        m_runText = "Run Locally";
       }
+      m_playLabel->setText(m_runText);
       playButton->setChecked(false);
     }else if (numCompletedJobs == numJobsInIteration){
-      playButton->setText("Complete");
+      m_playLabel->setText("Complete");
       playButton->setChecked(false); // third style to show complete?
     }else {
-      playButton->setText("Resume");
+      m_playLabel->setText("Resume");
       playButton->setChecked(false);
     }
   }

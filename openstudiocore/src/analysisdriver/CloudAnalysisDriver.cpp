@@ -36,6 +36,7 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/System.hpp>
+#include <utilities/data/Tag.hpp>
 #include <utilities/idf/URLSearchPath.hpp>
 
 #include <boost/foreach.hpp>
@@ -79,6 +80,11 @@ namespace detail {
     return m_project;
   }
 
+  AnalysisStatus CloudAnalysisDriver_Impl::status() const
+  {
+    return m_status;
+  }
+
   unsigned CloudAnalysisDriver_Impl::numDataPointsInIteration() const {
     return m_iteration.size();
   }
@@ -113,9 +119,8 @@ namespace detail {
     return m_detailsFailures;
   }
 
-  AnalysisStatus CloudAnalysisDriver_Impl::status() const
-  {
-    return m_status;
+  bool CloudAnalysisDriver_Impl::inSession(const DataPoint &dataPoint) const {
+    return dataPoint.isTag(sessionTag());
   }
 
   bool CloudAnalysisDriver_Impl::run(int msec) {
@@ -215,6 +220,8 @@ namespace detail {
       if (dataPoint.runType() == DataPointRunType::Local) {
         dataPoint.setRunType(DataPointRunType::CloudSlim);
       }
+      clearSessionTags(dataPoint);
+      dataPoint.addTag(sessionTag());
     }
 
     if (OptionalUrl url = session().serverUrl()) {
@@ -283,7 +290,7 @@ namespace detail {
 
     OptionalDataPoint actualDataPoint = project().analysis().getDataPointByUUID(dataPoint.uuid());
     // data point must exist and must not have details yet
-    if (!actualDataPoint || !actualDataPoint->directory().empty()) {
+    if (!actualDataPoint || !actualDataPoint->directory().empty() || !inSession(*actualDataPoint)) {
       return false;
     }
 
@@ -1726,6 +1733,20 @@ namespace detail {
     return false;
   }
 
+  std::string CloudAnalysisDriver_Impl::sessionTag() const {
+    return std::string("CloudSession_") + session().sessionId();
+  }
+
+  void CloudAnalysisDriver_Impl::clearSessionTags(DataPoint& dataPoint) const {
+    TagVector tags = dataPoint.tags();
+    boost::regex re("CloudSession_.*");
+    BOOST_FOREACH(const Tag& tag,tags) {
+      if (boost::regex_match(tag.name(),re)) {
+        dataPoint.deleteTag(tag.name());
+      }
+    }
+  }
+
 } // detail
 
 CloudAnalysisDriver::CloudAnalysisDriver(const CloudSession& session,
@@ -1740,6 +1761,11 @@ CloudSession CloudAnalysisDriver::session() const {
 
 SimpleProject CloudAnalysisDriver::project() const {
   return getImpl<detail::CloudAnalysisDriver_Impl>()->project();
+}
+
+AnalysisStatus CloudAnalysisDriver::status() const
+{
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->status();
 }
 
 unsigned CloudAnalysisDriver::numDataPointsInIteration() const {
@@ -1762,9 +1788,8 @@ std::vector<analysis::DataPoint> CloudAnalysisDriver::failedDetailedDownloads() 
   return getImpl<detail::CloudAnalysisDriver_Impl>()->failedDetailedDownloads();
 }
 
-AnalysisStatus CloudAnalysisDriver::status() const
-{
-  return getImpl<detail::CloudAnalysisDriver_Impl>()->status();
+bool CloudAnalysisDriver::inSession(const DataPoint& dataPoint) const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->inSession(dataPoint);
 }
 
 bool CloudAnalysisDriver::run(int msec) {

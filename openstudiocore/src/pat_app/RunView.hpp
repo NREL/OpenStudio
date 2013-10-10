@@ -90,6 +90,10 @@ class RunStatusView : public QWidget
 
    PlayButton * playButton;
 
+   QLabel * m_playLabel;
+
+   QString m_runText;
+
    CloudOnButton * cloudOnButton;
 
    CloudStartingButton * cloudStartingButton;

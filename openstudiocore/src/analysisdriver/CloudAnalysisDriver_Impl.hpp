@@ -38,6 +38,9 @@
 #include <deque>
 
 namespace openstudio {
+
+class Tag;
+
 namespace analysisdriver {
 
 namespace detail {
@@ -62,6 +65,8 @@ namespace detail {
 
     SimpleProject project() const;
 
+    AnalysisStatus status() const;
+
     /** Returns the number of data points the CloudAnalysisDriver has been asked to process
      *  since the last time all the queues were cleared. */
     unsigned numDataPointsInIteration() const;
@@ -72,8 +77,6 @@ namespace detail {
     /** Returns the number of data points in this iteration that are no longer being processed. */
     unsigned numCompleteDataPoints() const;
     
-    AnalysisStatus status() const;
-
     /** Returns the DataPoints whose json files failed to download. Note that these are counted
      *  as 'complete' by CloudAnalysisDriver, but not by Analysis. */
     std::vector<analysis::DataPoint> failedJsonDownloads() const;
@@ -81,6 +84,10 @@ namespace detail {
     /** Returns the DataPoints whose details failed to download. Note that these are counted as
      *  'complete' by CloudAnalysisDriver and by Analysis, but their .directory() is .empty(). */
     std::vector<analysis::DataPoint> failedDetailedDownloads() const;
+
+    /** Returns true if dataPoint is associated with session(), that is, if its last run request
+     *  was with session() (not local, and not another CloudSession). */
+    bool inSession(const analysis::DataPoint& dataPoint) const;
 
     //@}
     /** @name Blocking Class Members */
@@ -374,8 +381,11 @@ namespace detail {
     void checkForRunCompleteOrStopped();
 
     bool inIteration(const analysis::DataPoint& dataPoint) const;
-
     bool inProcessingQueues(const analysis::DataPoint& dataPoint) const;
+
+    std::string sessionTag() const;
+    void clearSessionTags(analysis::DataPoint& dataPoint) const;
+
   };
 
 } // detail

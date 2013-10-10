@@ -228,6 +228,7 @@ void ResultsTabController::downloadResults()
         boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
         if(cloudAnalysisDriver){
           bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+          Q_UNUSED(success);
         }
       }
     }

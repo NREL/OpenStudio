@@ -343,6 +343,21 @@ void RunTabController::refresh()
 {
   m_refreshScheduled = false;
   runView->runStatusView->setCloudStatus(PatApp::instance()->cloudMonitor()->status());
+
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if (project)
+  {
+    boost::optional<analysisdriver::AnalysisDriver> analysisDriver = project->analysisDriver();
+    if( analysisDriver )
+    {
+      onAnalysisStatusChanged(analysisDriver->status());
+    }
+    if( boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver() )
+    {
+      onAnalysisStatusChanged(cloudAnalysisDriver->status());
+    }
+  }
+
   QTimer::singleShot(0, runView->dataPointRunListView, SLOT(refreshAllViews()));
 }
 

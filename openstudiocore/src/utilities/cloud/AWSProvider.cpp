@@ -1670,7 +1670,7 @@ namespace openstudio{
         logError("Error parsing checkEstimatedCharges JSON: " + toString(parser.errorString()));
       }
       
-      return false;
+      return 0.0;
     }
 
     unsigned AWSProvider_Impl::parseCheckTotalInstancesResults(const ProcessResults &t_results)
@@ -1688,7 +1688,7 @@ namespace openstudio{
         logError("Error parsing checkTotalInstances JSON: " + toString(parser.errorString()));
       }
       
-      return false;
+      return 0;
     }
 
     void AWSProvider_Impl::onCheckInternetComplete(int, QProcess::ExitStatus)
@@ -1775,12 +1775,14 @@ namespace openstudio{
     void AWSProvider_Impl::onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)
     {
       m_lastEstimatedCharges = parseCheckEstimatedChargesResults(handleProcessCompleted(m_checkEstimatedChargesProcess));
+      emit estimatedChargesAvailable();
       m_checkEstimatedChargesProcess = 0;
     }
 
     void AWSProvider_Impl::onCheckTotalInstancesComplete(int, QProcess::ExitStatus)
     {
       m_lastTotalInstances = parseCheckTotalInstancesResults(handleProcessCompleted(m_checkTotalInstancesProcess));
+      emit totalInstancesAvailable();
       m_checkTotalInstancesProcess = 0;
     }
 
@@ -2113,6 +2115,14 @@ namespace openstudio{
 
   std::string AWSProvider::defaultWorkerInstanceType() {
     return "c1.xlarge";
+  }
+
+  bool AWSProvider::requestEstimatedCharges() {
+    return getImpl<detail::AWSProvider_Impl>()->requestEstimatedCharges();
+  }
+
+  bool AWSProvider::requestTotalInstances() {
+    return getImpl<detail::AWSProvider_Impl>()->requestTotalInstances();
   }
 
   double AWSProvider::estimatedCharges(int msec) {
