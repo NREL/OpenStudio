@@ -436,52 +436,52 @@ void CloudProviderWidget::createWidgets()
   m_rightSettingsLayout = new QVBoxLayout(this);
   m_rightSettingsWidget->setLayout(m_rightSettingsLayout);  
 
+  //label = new QLabel;
+  //label->setObjectName("H2");
+  //label->setText("Cloud Session Default Setting");
+  //m_rightSettingsLayout->addWidget(label);
+
+  //hLayout = new QHBoxLayout;
+  //hLayout->setContentsMargins(QMargins(0,0,0,0));
+  //hLayout->setSpacing(5);
+  //m_rightSettingsLayout->addLayout(hLayout);
+
+  //m_waitCheckBox = new QCheckBox();
+  //hLayout->addWidget(m_waitCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  //isConnected = connect(m_waitCheckBox, SIGNAL(clicked(bool)),
+  //  this, SLOT(waitClicked(bool)));
+  //OS_ASSERT(isConnected);
+
+  //label = new QLabel("After simulations complete and selected detailed results are downloaded, wait the number of minutes below and automatically terminate cloud session.  ParametricAnalysisTool must be running to stop cloud session.");
+  //label->setFixedWidth(TEXT_WIDTH);
+  //label->setWordWrap(true);
+  //hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  //hLayout->addStretch();
+
+  //hLayout = new QHBoxLayout;
+  //hLayout->setContentsMargins(QMargins(0,0,0,0));
+  //hLayout->setSpacing(5);
+  //m_rightSettingsLayout->addLayout(hLayout);
+
+  //m_waitLineEdit = new QLineEdit();
+  //m_waitLineEdit->setFixedWidth(EDIT_WIDTH);
+  //hLayout->addWidget(m_waitLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+  //QValidator *waitLineEditValidator = new QIntValidator(0, 10080, this);
+  //m_waitLineEdit->setValidator(waitLineEditValidator);
+
+  //label = new QLabel;
+  //label->setText("minutes");
+  //hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  //hLayout->addStretch();
+
   label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("Cloud Session Default Setting");
-  m_rightSettingsLayout->addWidget(label);
-
-  hLayout = new QHBoxLayout;
-  hLayout->setContentsMargins(QMargins(0,0,0,0));
-  hLayout->setSpacing(5);
-  m_rightSettingsLayout->addLayout(hLayout);
-
-  m_waitCheckBox = new QCheckBox();
-  hLayout->addWidget(m_waitCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
-
-  isConnected = connect(m_waitCheckBox, SIGNAL(clicked(bool)),
-    this, SLOT(waitClicked(bool)));
-  OS_ASSERT(isConnected);
-
-  label = new QLabel("After simulations complete and selected detailed results are downloaded, wait the number of minutes below and automatically terminate cloud session.  ParametricAnalysisTool must be running to stop cloud session.");
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
-  hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-
-  hLayout->addStretch();
-
-  hLayout = new QHBoxLayout;
-  hLayout->setContentsMargins(QMargins(0,0,0,0));
-  hLayout->setSpacing(5);
-  m_rightSettingsLayout->addLayout(hLayout);
-
-  m_waitLineEdit = new QLineEdit();
-  m_waitLineEdit->setFixedWidth(EDIT_WIDTH);
-  hLayout->addWidget(m_waitLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
-  QValidator *waitLineEditValidator = new QIntValidator(0, 10080, this);
-  m_waitLineEdit->setValidator(waitLineEditValidator);
-
-  label = new QLabel;
-  label->setText("minutes");
-  hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-
-  hLayout->addStretch();
-
-  label = new QLabel;
-  label->setFixedWidth(TEXT_WIDTH);
-  label->setWordWrap(true);
   label->setObjectName("H2");
-  label->setText("Stopping the cloud will terminate all instances.  Any detailed results not selected for download will lost.");
+  label->setText("Results for simulation run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances and any results not downloaded will be lost.");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 }
 
@@ -936,9 +936,9 @@ void AmazonProviderWidget::loadData()
   QString temp;
   m_numberOfWorkerInstancesLineEdit->setText(temp.setNum(awsSettings.numWorkers()));
 
-  m_waitCheckBox->setChecked(awsSettings.terminationDelayEnabled());
+  //m_waitCheckBox->setChecked(awsSettings.terminationDelayEnabled());
 
-  m_waitLineEdit->setText(temp.setNum(awsSettings.terminationDelay()));
+  //m_waitLineEdit->setText(temp.setNum(awsSettings.terminationDelay()));
 }
 
 void AmazonProviderWidget::saveData()
@@ -964,10 +964,10 @@ void AmazonProviderWidget::saveData()
   unsigned numWorkers = m_numberOfWorkerInstancesLineEdit->text().toUInt();
   awsSettings.setNumWorkers(numWorkers);
  
-  awsSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
+  //awsSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
 
-  unsigned wait = m_waitLineEdit->text().toUInt();
-  awsSettings.setTerminationDelay(wait);
+  //unsigned wait = m_waitLineEdit->text().toUInt();
+  //awsSettings.setTerminationDelay(wait);
 
   awsSettings.saveToSettings(true);
 }
