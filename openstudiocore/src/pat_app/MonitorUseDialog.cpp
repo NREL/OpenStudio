@@ -34,6 +34,7 @@
 #include <QUrl>
 
 #define BILLING_CHARGE "Estimated EC2 Charges: "
+#define BILLING_MESSAGE "Amazon billing data is delayed and will not reflect instantaneous charges"
 #define MINUTES " minutes"
 #define TIME_RUNNING "Project Run Time: "
 #define NUM_INSTANCES "Instances Running on Current Project: "
@@ -87,11 +88,17 @@ void MonitorUseDialog::createWidgets()
   m_billingCharge->setObjectName("H2");
   hlayout->addWidget(m_billingCharge,0,Qt::AlignTop | Qt::AlignLeft);
 
-  QLabel *infoIcon = new QLabel();
   QPixmap infoIconPixmap = QPixmap(":/shared_gui_components/images/warning_icon.png").scaled(QSize(16,16), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  infoIcon->setPixmap(infoIconPixmap);
-  infoIcon->setToolTip("Amazon billing data is delayed and will not reflect instantaneous charges");
-  hlayout->addWidget(infoIcon);
+  m_billingInfoButton = new QPushButton(infoIconPixmap, QString(), this);
+  QString style = "QPushButton {"
+                  "  border:none;"
+                  "}";
+  m_billingInfoButton->setStyleSheet(style);
+  m_billingInfoButton->setToolTip(BILLING_MESSAGE);
+  bool isConnected = connect(m_billingInfoButton, SIGNAL(clicked(bool)),
+                             this, SLOT(displayBillingMessage(bool)));
+  OS_ASSERT(isConnected);
+  hlayout->addWidget(m_billingInfoButton);
 
   hlayout->addStretch();
 
@@ -150,14 +157,13 @@ void MonitorUseDialog::createWidgets()
 
   m_cloudStatus = new QPushButton;
   m_cloudStatus->setFixedSize(QSize(192,47));
-  QString style;
-  style.append("QPushButton {"
-               "  background-image:url(':/shared_gui_components/images/manage_all_button.png');"
-               "  border:none;"
-               "}");
+  style = "QPushButton {"
+          "  background-image:url(':/shared_gui_components/images/manage_all_button.png');"
+          "  border:none;"
+          "}";
   m_cloudStatus->setStyleSheet(style);
   layout->addWidget(m_cloudStatus,0,Qt::AlignTop | Qt::AlignLeft);
-  bool isConnected = connect(m_cloudStatus, SIGNAL(clicked(bool)),
+  isConnected = connect(m_cloudStatus, SIGNAL(clicked(bool)),
                              this, SLOT(on_cloudStatus(bool)));
   OS_ASSERT(isConnected);
 
@@ -217,9 +223,9 @@ void MonitorUseDialog::displayErrors()
   m_timer->stop();
   QString msg;
   std::vector<std::string> errors = m_awsProvider.errors();
-  Q_FOREACH(std::string error, errors){
-    msg += error.c_str();
-    msg += '\n';
+  if (errors.size()) {
+    msg += errors[0].c_str();
+    msg += ".  Verify settings from Cloud menu.";
   }
   if (msg.size()) QMessageBox::warning(this, "Monitor Use: AWS Error", msg);
 }
@@ -263,12 +269,17 @@ void  MonitorUseDialog::updateData()
   m_numInstances->setText("0");
 }
 
-void  MonitorUseDialog::on_cloudStatus(bool checked)
+void MonitorUseDialog::displayBillingMessage(bool checked)
+{
+  QMessageBox::information(this, "Amazon Billing Data Delay", BILLING_MESSAGE);
+}
+
+void MonitorUseDialog::on_cloudStatus(bool checked)
 {
   QDesktopServices::openUrl(QUrl("http://aws.amazon.com/console"));
 }
 
-void  MonitorUseDialog::on_estimatedChargesAvailable()
+void MonitorUseDialog::on_estimatedChargesAvailable()
 {
   if (m_timer->isActive()) {
     if(m_awsProvider.errors().size()){
@@ -287,7 +298,7 @@ void  MonitorUseDialog::on_estimatedChargesAvailable()
   }
 }
 
-void  MonitorUseDialog::on_totalInstancesAvailable()
+void MonitorUseDialog::on_totalInstancesAvailable()
 {
   if (m_timer->isActive()) {
     if(m_awsProvider.errors().size()){

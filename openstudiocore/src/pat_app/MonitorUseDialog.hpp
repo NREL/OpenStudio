@@ -59,6 +59,7 @@ private:
   QLabel * m_timeRunning;
   QLabel * m_numInstances;
   QLabel * m_totalNumInstances;
+  QPushButton * m_billingInfoButton;
   QPushButton * m_cloudStatus;
   QTimer * m_timer;
 
@@ -67,6 +68,7 @@ private:
 private slots:
 
   void updateData();
+  void displayBillingMessage(bool checked);
   void on_cloudStatus(bool checked);
   void on_estimatedChargesAvailable();
   void on_totalInstancesAvailable();
