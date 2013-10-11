@@ -1614,17 +1614,31 @@ namespace detail {
     }
   }
 
-  bool RunManager_Impl::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &t_basePath)
+  bool RunManager_Impl::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &basePath)
   {
-    if (enqueueImpl(job, force, t_basePath))
+    boost::optional<openstudio::runmanager::Job> result = enqueueImpl(job,force,basePath);
+    if (!result)
     {
       m_dbholder->persistJobTree(job);
 
       processQueue();
       return true;
-    } else {
-      return false;
     }
+
+    return false;
+  }
+
+  boost::optional<openstudio::runmanager::Job> RunManager_Impl::enqueueOrReturnExisting(
+      const openstudio::runmanager::Job &job,
+      bool force,
+      const openstudio::path &path)
+  {
+    boost::optional<Job> result = enqueueImpl(job,force,path);
+    if (!result) {
+      m_dbholder->persistJobTree(job);
+      processQueue();
+    }
+    return result;
   }
 
   bool RunManager_Impl::enqueue(const std::vector<openstudio::runmanager::Job> &t_jobs, bool force, const openstudio::path &t_basePath)
@@ -1648,8 +1662,10 @@ namespace detail {
   }
 
 
-  bool RunManager_Impl::enqueueImpl(openstudio::runmanager::Job job, bool force, const openstudio::path &t_basePath)
+  boost::optional<openstudio::runmanager::Job> RunManager_Impl::enqueueImpl(openstudio::runmanager::Job job, bool force, const openstudio::path &t_basePath)
   {
+    boost::optional<Job> result;
+
     UUID uuid = job.uuid();
     LOG(Info, "Enqueing Job: " << toString(uuid) << " " << job.description());
 
@@ -1689,7 +1705,8 @@ namespace detail {
                 LOG(Info, "An existing job with the workflowkey of " << key << " exists in the queue, not adding new job, restarting existing job");
                 itr->setTreeRunnable(false);
                 itr->setRunnable(force);
-                return false;
+                result = *itr;
+                return result;
               }
 
             }
@@ -1770,7 +1787,7 @@ namespace detail {
       enqueueImpl(*finishedjob, force, t_basePath);
     }
 
-    return true;
+    return result;
   }
 
   void RunManager_Impl::jobFinished(const openstudio::UUID &t_uuid, const openstudio::runmanager::JobErrors &t_errors, 
