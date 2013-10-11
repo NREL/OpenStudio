@@ -152,8 +152,7 @@ bool checkCloudServiceRunning()
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
 
-  OS_ASSERT(session);    
-  if( boost::optional<Url> serverUrl = session->serverUrl() )
+  if( session && boost::optional<Url> serverUrl = session->serverUrl() )
   {
     OSServer server(serverUrl.get());
     cloudServiceRunning = server.available();
