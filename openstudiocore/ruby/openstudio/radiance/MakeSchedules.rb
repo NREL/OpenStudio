@@ -202,7 +202,7 @@ model.getThermalZones.each do |thermalZone|
   radSqlFile = OpenStudio::SqlFile.new(radSqlPath)
 
   if options.verbose == true
-    puts "Loading radiances sql file from " + sqlPath.to_s
+    puts "Loading radiances sql file from " + radSqlPath.to_s
   end
 
   if options.setpointInput == true
