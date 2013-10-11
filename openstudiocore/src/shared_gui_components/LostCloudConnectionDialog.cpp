@@ -46,7 +46,6 @@ LostCloudConnectionDialog::LostCloudConnectionDialog(bool internetAvailable,
   this->setModal(true);
   this->setWindowTitle("Lost Cloud Connection");
   setFixedWidth(650);
-  //this->setSizeHint(QSize(500,300));
   createWidgets(internetAvailable,authenticated,cloudRunning);
 }
 
@@ -70,74 +69,57 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 
   this->cancelButton()->hide();
   this->okButton()->hide();
+  this->backButton()->hide();
 
   QLabel * label = 0;
   
-  QVBoxLayout * mainLayout = new QVBoxLayout;
-  mainLayout->setContentsMargins(QMargins(0,0,0,0));
-  mainLayout->setSpacing(5);
-  this->upperLayout()->addLayout(mainLayout);
+  QVBoxLayout * mainLayout = this->upperLayout();
+  mainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH,36));
-  label->setText("The connection to the cloud was interrupted.  The cloud may still be running and accruing charges.");
-  mainLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  label->setText("The cloud connection was interrupted.  The cloud may still be running and accruing charges.");
+  mainLayout->addWidget(label);
 
   label = new QLabel;
-  label->setText("<b>" + (tr("Steps to reconnect to the cloud:")) + "</b>");
-  mainLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  label->setText("<b>" + (tr("Requirements for cloud:")) + "</b>");
+  mainLayout->addWidget(label);
 
   QVBoxLayout * vLayout = new QVBoxLayout;
-  vLayout->setContentsMargins(QMargins(INDENT,0,0,0));
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
   vLayout->setSpacing(5);
+  vLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   mainLayout->addLayout(vLayout);
 
   // 1 Determine if there is an internet connection
   label = new QLabel;
-  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  vLayout->addWidget(label);
 
   if(internetAvailable){
     label->setText("<FONT COLOR = GREEN>1. <FONT COLOR = BLACK>" + tr("Internet Connection: ") + "<b> <FONT COLOR = GREEN>" + tr("yes") + "</b>");
   } else {
     label->setText("<FONT COLOR = RED>1. <FONT COLOR = BLACK>" + tr("Internet Connection: ") + "<b> <FONT COLOR = RED>" + tr("no") + "</b>");
-
-    label = new QLabel;
-    label->setWordWrap(true);
-    label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
-    label->setText("Connect your computer to the internet.  Once you have connected to the internet, click the Run Simulations tab\'s button labeled <b>" + tr("\"Try to Reconnect Cloud\"") + "</b>" + ". Remember that cloud charges may currently be accruing.");
-    vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-
-    mainLayout->addStretch();
   }
 
   // 2 Determine if the cloud login is accepted
   label = new QLabel;
-  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  vLayout->addWidget(label);
   if(authenticated){
     label->setText("<FONT COLOR = GREEN>2. <FONT COLOR = BLACK>" + tr("Cloud Log-in: ") + "<b> <FONT COLOR = GREEN>" + tr("accepted") + "</b>");
   } else {
     label->setText("<FONT COLOR = RED>2. <FONT COLOR = BLACK>" + tr("Cloud Log-in: ") + "<b> <FONT COLOR = RED>" + tr("denied") + "</b>");
-    mainLayout->addStretch();
   }
 
   // 3 Determine if there is a cloud connection
   label = new QLabel;
-  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  vLayout->addWidget(label);
   if(cloudRunning){
     label->setText("<FONT COLOR = GREEN>3. <FONT COLOR = BLACK>" + tr("Cloud Connection: ") + "<b> <FONT COLOR = GREEN>" + tr("reconnected") + "</b>");
 
-    label = new QLabel;
-    label->setText("Congratulations, you are connected to the cloud.");
-    vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-
-    mainLayout->addStretch();
   } else {
     label->setWordWrap(true);
-    label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
     label->setText("<FONT COLOR = RED>3. <FONT COLOR = BLACK>" + tr("Cloud Connection: ") + "<b> <FONT COLOR = RED>" + tr("unable to reconnect. ") + "</b>" + "<FONT COLOR = BLACK>" + tr("Remember that cloud charges may currently be accruing."));
     createCloudConnectionWidgets(vLayout);
-    //mainLayout->addStretch();
   }
 }
 
@@ -156,14 +138,8 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   QLabel * label = 0;
         
   label = new QLabel;
-  label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
-  label->setText("Connect your computer to the internet.  Once you have connected to the internet, click the Run Simulations tab\'s button labeled <b>" + tr("\"Try to Reconnect Cloud\"") + "</b>" + ". Remember that cloud charges may currently be accruing.");
-  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-    
-  label = new QLabel;
-  label->setText("<b>" + tr("Options:") + "</b>");
-  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  label->setText("<b>" + tr("Options to correct the problem:") + "</b>");
+  vLayout->addWidget(label);
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
@@ -175,13 +151,12 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,36));
-  label->setText("<b>" + tr("Try again now. ") + "</b>" + tr("Close this dialog and click the Run Simulations tab\'s button labeled \"Try to Reconnect Cloud\"."));
-  hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  label->setText("<b>" + tr("Try Again Later. ") + "</b>" + tr("Verify your computer's internet connection then click \"Lost Cloud Connection\" to recover the lost cloud session."));
+  hLayout->addWidget(label);
 
   label = new QLabel;
   label->setText("<b>" + tr("Or") + "</b>");
-  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  vLayout->addWidget(label);
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
@@ -193,13 +168,12 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,36));
-  label->setText("<b>" + tr("Quit the ParametricAnalysisTool and try again later. ") + "</b>" + tr("Close this dialog and quit the application."));
-  hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  label->setText("<b>" + tr("Stop Cloud. ") + "</b>" + tr("Disconnect from cloud.  This option will make the failed cloud session unavaible to Pat.  Any data that has not been downloaded to Pat will be lost.  Use the AWS Console to verify that the Amazon service have been completely shutdown."));
+  hLayout->addWidget(label);
 
   label = new QLabel;
   label->setText("<b>" + tr("Or") + "</b>");
-  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  vLayout->addWidget(label);
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
@@ -211,17 +185,18 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
-  label->setText("<b>" + tr("Stop the cloud and clear the session. ") + "</b>" + tr("Use the AWS Console to cancel the cloud session and stop charges, and clear this session in the ParametricAnalysisTool.  This will stop the cloud charges, but will also result in the loss of all session results."));
-  hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  label->setText("<b>" + tr("Launch AWS Console. ") + "</b>" + tr("Use the AWS Console to diagnose Amazon services.  You may still attempt to recover the lost cloud session."));
+  hLayout->addWidget(label,0);
+
+  vLayout->addStretch();
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
   hLayout->setSpacing(5);
   vLayout->addLayout(hLayout);
 
-  horizontalSpacer = new QSpacerItem(INDENT, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
-  hLayout->addSpacerItem(horizontalSpacer); 
+  //horizontalSpacer = new QSpacerItem(INDENT, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  //hLayout->addSpacerItem(horizontalSpacer); 
 
   button = new OrangeButton(this);
   button->setText("Launch AWS Console");
@@ -229,7 +204,8 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   isConnected = connect(button, SIGNAL(clicked(bool)),
     this, SLOT(on_launchAWSConsole(bool)));
   OS_ASSERT(isConnected);
-  hLayout->addWidget(button,0,Qt::AlignTop | Qt::AlignLeft);
+  hLayout->addWidget(button);
+  hLayout->addStretch();
 
   button = new OrangeButton(this);
   button->setText("Stop Cloud");
@@ -237,7 +213,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   isConnected = connect(button, SIGNAL(clicked(bool)),
     this, SLOT(on_clearCloudSession(bool)));
   OS_ASSERT(isConnected);
-  hLayout->addWidget(button,0,Qt::AlignTop | Qt::AlignLeft);
+  hLayout->addWidget(button);
 
   button = new OrangeButton(this);
   button->setText("Try Again Later");
@@ -245,9 +221,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
   isConnected = connect(button, SIGNAL(clicked(bool)),
     this, SLOT(accept()));
   OS_ASSERT(isConnected);
-  hLayout->addWidget(button,0,Qt::AlignTop | Qt::AlignLeft);
-
-  hLayout->addStretch();
+  hLayout->addWidget(button);
 }
 
 //***** SLOTS *****

@@ -1516,7 +1516,7 @@ CloudSettings PatApp::cloudSettings()
 NewProjectDialog::NewProjectDialog(QWidget * parent)
   : OSDialog(parent)
 {
-  setSizeHint(QSize(440,240));
+  //setSizeHint(QSize(440,240));
 
   okButton()->setText("Continue");
 
