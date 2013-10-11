@@ -24,6 +24,8 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <pat_app/ExportXMLDialog.hpp>
+#include <pat_app/PatApp.hpp>
+#include <pat_app/PatMainWindow.hpp>
 
 #include <analysisdriver/SimpleProject.hpp>
 
@@ -55,6 +57,8 @@
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
+
+#include <QMessageBox>
 
 namespace openstudio {
 namespace analysis {
@@ -98,32 +102,30 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
     return false;
   }
 
-  //TODO kill the ExportXMLDialog from memory?
-
   //start the xml file
   QDomDocument doc;
   doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
     
-  //project models (first element)
-  QDomElement projectModelsElem = doc.createElement("project_models");
-  doc.appendChild(projectModelsElem);
-  projectModelsElem.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");    
-      
+  //analysis (first element)
+  QDomElement analysisElem = doc.createElement("analysis");
+  doc.appendChild(analysisElem);
+  analysisElem.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");    
+
+  //simulation_software
+  QDomElement softwareElem = doc.createElement("simulation_software");
+  analysisElem.appendChild(softwareElem);
+  QString softwareName = toQString("OpenStudio");
+  softwareElem.appendChild(doc.createTextNode(softwareName));
+
   //get the problem from the project
   Problem problem = analysis.problem();
 
   //get the input variables from the problem
   std::vector<InputVariable> variables = problem.variables();
 
-  //analysis groups
-  QDomElement analysisGroupsElem = doc.createElement("analysis_groups");
-  projectModelsElem.appendChild(analysisGroupsElem);
-  
-  //analysis (for this use case there will only be one analysis)
-  QDomElement analysisElem = doc.createElement("analysis");
-  analysisGroupsElem.appendChild(analysisElem);
-      
   //alternatives
+  int numErrors = 0;
+  QString errors;
   QDomElement alternativesElem = doc.createElement("alternatives");
   analysisElem.appendChild(alternativesElem);
   Q_FOREACH(const DataPoint& datapoint, dataPoints) {
@@ -133,8 +135,16 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
       if ( boost::optional<QDomElement> alternativeElem = exportAlternative(doc, *reportAttr, datapoint, jobs, edaBaselineName, proposedBaselineName, certificationBaselineName) ) {
         alternativesElem.appendChild(*alternativeElem);
       }
+    }else{
+      numErrors += 1;
+      errors += toQString(datapoint.name());
     }
   }    
+
+  //warn the user if summary results were missing
+  if ( numErrors > 0 ) {
+    QMessageBox::warning(pat::PatApp::instance()->mainWindow, "Export XML Report - Warnings", errors + QString(" will be skipped; summary results not available.  Make sure you've run the reporting measure 'Xcel EDA Reporting and QAQC'"));
+  }
 
   QFile file(xmlFilePath);
   if (file.open(QFile::WriteOnly)){
@@ -197,112 +207,87 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
   //building
   QDomElement buildingElem = doc.createElement("building");
   characteristicsElem.appendChild(buildingElem);
-
-  //TODO building_type
-  QDomElement buildingTypeElem = doc.createElement("building_type");
-  buildingElem.appendChild(buildingTypeElem);
-  QString buildingType = "TODO The building type goes here";
-  buildingTypeElem.appendChild(doc.createTextNode(buildingType));
   
-  //floor_area
-  QDomElement floorAreaElem = doc.createElement("floor_area");
-  buildingElem.appendChild(floorAreaElem);
-  if ( boost::optional<Attribute> condArea = alternativeAttr.findChildByName("floor_area") ) {
-    QString floorArea = QString::number(condArea->valueAsDouble());
-    floorAreaElem.appendChild(doc.createTextNode(floorArea));
-  }
-  else {
-    QString floorArea = "Building has no conditioned floor area";
-    floorAreaElem.appendChild(doc.createTextNode(floorArea));
-  }  
+  //information stored under "results"
+  if ( boost::optional<Attribute> oresultsAttr = alternativeAttr.findChildByName("results") ) {
+    Attribute resultsAttr = *oresultsAttr;
 
-  //results
-  QDomElement resultsElem = doc.createElement("results");
-  alternative.appendChild(resultsElem);
+    //floor_area
+    QDomElement floorAreaElem = doc.createElement("floor_area");
+    buildingElem.appendChild(floorAreaElem);
+    if ( boost::optional<Attribute> condArea = resultsAttr.findChildByName("floor_area") ) {
+      QString floorArea = QString::number(condArea->valueAsDouble());
+      floorAreaElem.appendChild(doc.createTextNode(floorArea));
+    }
+    else {
+      QString floorArea = "Building has no conditioned floor area";
+      floorAreaElem.appendChild(doc.createTextNode(floorArea));
+    }  
 
-  //cash flows
-  QDomElement cashFlowsElem = doc.createElement("cash_flows");
-  resultsElem.appendChild(cashFlowsElem);
-  if ( boost::optional<Attribute> cashFlowsAttr = alternativeAttr.findChildByName("cash_flows") ) {
-    Q_FOREACH( const Attribute & cashFlowAttr, cashFlowsAttr->valueAsAttributeVector()) {
-      if ( boost::optional<QDomElement> cashFlowElem = exportCashFlow(doc, cashFlowAttr) ){
-        resultsElem.appendChild(*cashFlowElem);
+    //number of measures in a design alt. differentiates whether it is called a measure
+    //or a design alternative in Xcel EDA
+    double numMeasures = 0.0;
+
+    //measures
+    QDomElement measuresElem = doc.createElement("measures");
+    alternative.appendChild(measuresElem);
+    Q_FOREACH(const WorkflowStepJob& job, jobs) {
+      //record the details of the measure in the xml.
+      if (boost::optional<QDomElement> measureElem = exportMeasure(doc, job)){
+        measuresElem.appendChild(*measureElem);
+        numMeasures += 1;
+      }
+    }
+    
+    //alternative_type
+    QDomElement altTypeElem = doc.createElement("alternative_type");
+    alternative.appendChild(altTypeElem);
+    if ( numMeasures > 1 ) {
+      QString altType = "design_alternative";
+      altTypeElem.appendChild(doc.createTextNode(altType));
+    }
+    else {
+      QString altType = "single_measure";
+      altTypeElem.appendChild(doc.createTextNode(altType));
+    }
+
+    //results
+    QDomElement resultsElem = doc.createElement("results");
+    alternative.appendChild(resultsElem);
+
+    //cash flows
+    QDomElement cashFlowsElem = doc.createElement("cash_flows");
+    resultsElem.appendChild(cashFlowsElem);
+    if ( boost::optional<Attribute> cashFlowsAttr = resultsAttr.findChildByName("cash_flows") ) {
+      Q_FOREACH( const Attribute & cashFlowAttr, cashFlowsAttr->valueAsAttributeVector()) {
+        if ( boost::optional<QDomElement> cashFlowElem = exportCashFlow(doc, cashFlowAttr) ){
+          cashFlowsElem.appendChild(*cashFlowElem);
+        }       
+      }
+    }
+
+    //annual
+    if ( boost::optional<Attribute> annualAttr = resultsAttr.findChildByName("annual") ) {
+      if ( boost::optional<QDomElement> annualElem = exportAnnual(doc, *annualAttr) ){
+        resultsElem.appendChild(*annualElem);
       }       
     }
-  }
-
-  //annual
-  if ( boost::optional<Attribute> annualAttr = alternativeAttr.findChildByName("annual") ) {
-    if ( boost::optional<QDomElement> annualElem = exportAnnual(doc, *annualAttr) ){
-      resultsElem.appendChild(*annualElem);
-    }       
-  }
       
-  //monthly
-  if ( boost::optional<Attribute> monthlyAttr = alternativeAttr.findChildByName("monthly") ) {
-    if ( boost::optional<QDomElement> monthlyElem = exportMonthly(doc, *monthlyAttr) ){
-      resultsElem.appendChild(*monthlyElem);
-    }       
-  }
-      
-  //number of measures in a design alt. differentiates whether it is called a measure
-  //or a design alternative in Xcel EDA
-  double numMeasures = 0.0;
-
-  //measures
-  QDomElement measuresElem = doc.createElement("measures");
-  alternative.appendChild(measuresElem);
-  Q_FOREACH(const WorkflowStepJob& job, jobs) {
-    //record the details of the measure in the xml.
-    if (boost::optional<QDomElement> measureElem = exportMeasure(doc, job)){
-      measuresElem.appendChild(*measureElem);
-      numMeasures += 1;
+    //monthly
+    if ( boost::optional<Attribute> monthlyAttr = resultsAttr.findChildByName("monthly") ) {
+      if ( boost::optional<QDomElement> monthlyElem = exportMonthly(doc, *monthlyAttr) ){
+        resultsElem.appendChild(*monthlyElem);
+      }       
     }
-  }
 
-  
+    //checks
+    if ( boost::optional<Attribute> checksAttr = alternativeAttr.findChildByName("checks") ) {
+      if ( boost::optional<QDomElement> checksElem = exportChecks(doc, *checksAttr) ){
+        alternative.appendChild(*checksElem);
+      }       
+    }
 
-  ////loop through all measures in the project
-  //Q_FOREACH( const InputVariable & variable, variables) {
-  //  if ( boost::optional<MeasureGroup> discVar = variable.optionalCast<MeasureGroup>() ) {
-  //    //get the measure from the variable
-  //    std::vector<Measure> measures = discVar->measures(false);
-  //    BOOST_FOREACH( Measure & measure, measures) {
-  //      if ( boost::optional<RubyMeasure> rubyMeasure = measure.optionalCast<RubyMeasure>() ) {
-  //        if ( boost::optional<BCLMeasure> bclMeasure = rubyMeasure->measure() ) {
-  //          //skip if measure def has already been added to file
-  //          if (std::find(measDefUids.begin(), measDefUids.end(), bclMeasure->uid()) != measDefUids.end()) {
-  //            continue;
-  //          }
-  //          //skip is it is a fixed measure (present in all design alternatives)
-  //          if (discVar->measures(false).size() == 1) {
-  //            continue;
-  //          }
-  //          //now, add the uuid to the vector so it won't get recorded again
-  //          measDefUids.push_back(bclMeasure->uid());
-  //          //add measure def
-  //          if ( boost::optional<QDomElement> measureElem = exportMeasure(doc, *bclMeasure) ) {
-  //            measuresElem.appendChild(*measureElem);
-  //          }
-  //        }
-  //      }
-  //    }
-  //  }
-  //}  
-  
-    
-  //alternative_type
-  QDomElement altTypeElem = doc.createElement("alternative_type");
-  alternative.appendChild(altTypeElem);
-  if ( numMeasures > 1 ) {
-    QString altType = "design_alternative";
-    altTypeElem.appendChild(doc.createTextNode(altType));
   }
-  else {
-    QString altType = "single_measure";
-    altTypeElem.appendChild(doc.createTextNode(altType));
-  }
-  
 
   return alternative;
 }
@@ -329,9 +314,16 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
       }
     }
 
-    //TODO skip reporting measures
-
-
+    //skip reporting measures
+    if (boost::optional<analysis::Measure> measure = wfJob.measure) {
+      if ( boost::optional<RubyMeasure> rubyMeasure = measure->optionalCast<RubyMeasure>() ) {
+        if ( boost::optional<BCLMeasure> bclMeasure = rubyMeasure->measure() ) {
+          if (bclMeasure->measureType() == MeasureType::ReportingMeasure ) {
+            return boost::none;
+          }
+        }
+      }
+    }
 
     //skip post-process, pre-process, and energyplus jobs
     if ( step.isInputVariable()){
@@ -346,13 +338,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
     
       //start the measure
       QDomElement measureElem = doc.createElement("measure");   
-
-      //uri
-      QDomElement uriElem = doc.createElement("uri");
-      measureElem.appendChild(uriElem);
-      QString uri = "TODO uri goes here";
-      uriElem.appendChild(doc.createTextNode(uri));        
-        
+           
       if ( boost::optional<Measure> measure = wfJob.measure ) {
           
         //name
@@ -440,8 +426,8 @@ boost::optional<QDomElement> ExportXML::exportCashFlow(QDomDocument& doc,
         cashFlowElem.appendChild(cashFlowTypeElem);
         cashFlowTypeElem.appendChild(doc.createTextNode(toQString(cashFlowValAttr.valueAsString())));
       }
-      if ( cashFlowValAttr.name() == "year_value" ) {
-        QDomElement yearValueElem = doc.createElement("year_value");
+      if ( cashFlowValAttr.name() == "year" ) {
+        QDomElement yearValueElem = doc.createElement("year");
         valuesElem.appendChild(yearValueElem); 
         QString annCashVal = QString::number(cashFlowValAttr.valueAsDouble() );
         yearValueElem.appendChild(doc.createTextNode(annCashVal)); 
@@ -459,33 +445,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
 
   //start the annual results
   QDomElement annualElem = doc.createElement("annual");
-  
-  //setup a map between end use names in C++ and for the xml file
-  std::map<EndUseCategoryType, QString> xmlEndUses;
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::Heating,"heating"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::Cooling,"cooling"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::InteriorLights,"lighting_interior"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::ExteriorLights,"lighting_exterior"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::InteriorEquipment,"equipment_interior"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::ExteriorEquipment,"equipment_exterior"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::Fans,"fans"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::Pumps,"pumps"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::HeatRejection,"heat_rejection"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::Humidifier,"humidification"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::HeatRecovery,"heat_recovery"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::WaterSystems,"water_systems"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::Refrigeration,"refrigeration"));
-  xmlEndUses.insert(std::make_pair(EndUseCategoryType::Generators,"generators"));
-
-  //setup a map between fuel types in EndUseFuelTypes and FuelTypes
-  std::map<EndUseFuelType, QString> fuelMap;  
-  fuelMap.insert(std::make_pair(EndUseFuelType::Electricity,"electricity"));
-  fuelMap.insert(std::make_pair(EndUseFuelType::Gas,"gas"));
-  fuelMap.insert(std::make_pair(EndUseFuelType::AdditionalFuel,"other_fuel"));
-  fuelMap.insert(std::make_pair(EndUseFuelType::DistrictCooling,"district_cooling"));
-  fuelMap.insert(std::make_pair(EndUseFuelType::DistrictHeating,"district_heating"));
-  fuelMap.insert(std::make_pair(EndUseFuelType::Water,"water"));
-  
+    
   //consumption
   if ( boost::optional<Attribute> consumptionAttr = annualAttr.findChildByName("consumption") ) {
 
@@ -574,21 +534,35 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
   //utility_cost
   if ( boost::optional<Attribute> utilityCostAttr = annualAttr.findChildByName("utility_cost") ) {
 
-    QDomElement utilityCostElem = doc.createElement("consumption");
+    QDomElement utilityCostElem = doc.createElement("utility_cost");
     annualElem.appendChild(utilityCostElem);
 
     Q_FOREACH( const Attribute & utilityCostAttrVal, utilityCostAttr->valueAsAttributeVector()) {
 
-      //gas
-      if ( utilityCostAttrVal.name() == "gas" ) {
-        QDomElement fuelTypeElem = doc.createElement("gas");
+      //electricity
+      if ( utilityCostAttrVal.name() == "electricity" ) {
+        QDomElement fuelTypeElem = doc.createElement("electricity");
         utilityCostElem.appendChild(fuelTypeElem);
         fuelTypeElem.appendChild(doc.createTextNode(QString::number(utilityCostAttrVal.valueAsDouble())));
       }
 
-      //electricity
-      if ( utilityCostAttrVal.name() == "electricity" ) {
-        QDomElement fuelTypeElem = doc.createElement("electricity");
+      //electricity_consumption_charge
+      if ( utilityCostAttrVal.name() == "electricity_consumption_charge" ) {
+        QDomElement fuelTypeElem = doc.createElement("electricity_consumption_charge");
+        utilityCostElem.appendChild(fuelTypeElem);
+        fuelTypeElem.appendChild(doc.createTextNode(QString::number(utilityCostAttrVal.valueAsDouble())));
+      }
+
+      //electricity_demand_charge
+      if ( utilityCostAttrVal.name() == "electricity_demand_charge" ) {
+        QDomElement fuelTypeElem = doc.createElement("electricity_demand_charge");
+        utilityCostElem.appendChild(fuelTypeElem);
+        fuelTypeElem.appendChild(doc.createTextNode(QString::number(utilityCostAttrVal.valueAsDouble())));
+      }
+
+      //gas
+      if ( utilityCostAttrVal.name() == "gas" ) {
+        QDomElement fuelTypeElem = doc.createElement("gas");
         utilityCostElem.appendChild(fuelTypeElem);
         fuelTypeElem.appendChild(doc.createTextNode(QString::number(utilityCostAttrVal.valueAsDouble())));
       }
@@ -621,9 +595,9 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
         fuelTypeElem.appendChild(doc.createTextNode(QString::number(utilityCostAttrVal.valueAsDouble())));
       }
 
-      //total_cost
-      if ( utilityCostAttrVal.name() == "total_cost" ) {
-        QDomElement fuelTypeElem = doc.createElement("total_cost");
+      //total
+      if ( utilityCostAttrVal.name() == "total" ) {
+        QDomElement fuelTypeElem = doc.createElement("total");
         utilityCostElem.appendChild(fuelTypeElem);
         fuelTypeElem.appendChild(doc.createTextNode(QString::number(utilityCostAttrVal.valueAsDouble())));
       }
@@ -656,10 +630,12 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
   
   //consumption
   if ( boost::optional<Attribute> consumptionAttr = monthlyAttr.findChildByName("consumption") ) {
+    QDomElement consumptionElem = doc.createElement("consumption");
+    monthlyElem.appendChild(consumptionElem);
     //loop through all end uses
-    Q_FOREACH( const Attribute & endUseAttr, consumptionAttr.valueAsAttributeVector()) {
+    Q_FOREACH( const Attribute & endUseAttr, consumptionAttr->valueAsAttributeVector()) {
       QDomElement endUseElem = doc.createElement(toQString(endUseAttr.name()));
-      monthlyElem.appendChild(endUseElem);
+      consumptionElem.appendChild(endUseElem);
       //loop through all fuel types in this end use
       Q_FOREACH( const Attribute & fuelTypeAttr, endUseAttr.valueAsAttributeVector()) {
         QDomElement fuelTypeElem = doc.createElement(toQString(fuelTypeAttr.name()));          
@@ -672,13 +648,16 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
         }  
       }
     }
+  }
 
-  //consumption
-  if ( boost::optional<Attribute> consumptionAttr = monthlyAttr.findChildByName("consumption") ) {
+  //demand
+  if ( boost::optional<Attribute> demandAttr = monthlyAttr.findChildByName("demand") ) {
+    QDomElement demandElem = doc.createElement("demand");
+    monthlyElem.appendChild(demandElem);
     //loop through all end uses
-    Q_FOREACH( const Attribute & endUseAttr, consumptionAttr.valueAsAttributeVector()) {
+    Q_FOREACH( const Attribute & endUseAttr, demandAttr->valueAsAttributeVector()) {
       QDomElement endUseElem = doc.createElement(toQString(endUseAttr.name()));
-      monthlyElem.appendChild(endUseElem);
+      demandElem.appendChild(endUseElem);
       //loop through all fuel types in this end use
       Q_FOREACH( const Attribute & fuelTypeAttr, endUseAttr.valueAsAttributeVector()) {
         QDomElement fuelTypeElem = doc.createElement(toQString(fuelTypeAttr.name()));          
@@ -691,10 +670,44 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
         }  
       }
     }
- 
-    return monthlyElem;
-  } 
+  }
 
+  return monthlyElem;
+} 
+
+boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
+                                                      const Attribute& checksAttr)
+  {
+      
+  //checks
+  QDomElement checksElem = doc.createElement("checks");
+  Q_FOREACH( const Attribute & checkAttr, checksAttr.valueAsAttributeVector()) {
+    Q_FOREACH( const Attribute & checkValAttr, checksAttr.valueAsAttributeVector()) {
+      if ( checkValAttr.name() == "name" ) {
+        QDomElement elem = doc.createElement("name");
+        checksElem.appendChild(elem);
+        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString())));
+      }
+      if ( checkValAttr.name() == "description" ) {
+        QDomElement elem = doc.createElement("description");
+        checksElem.appendChild(elem); 
+        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
+      }
+      if ( checkValAttr.name() == "category" ) {
+        QDomElement elem = doc.createElement("category");
+        checksElem.appendChild(elem); 
+        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
+      }
+      if ( checkValAttr.name() == "flag" ) {
+        QDomElement elem = doc.createElement("flag");
+        checksElem.appendChild(elem); 
+        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
+      }
+    }
+  }
+
+  return checksElem;
+} 
 
 
 } // exportxml

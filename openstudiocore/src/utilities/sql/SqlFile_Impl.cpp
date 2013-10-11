@@ -1694,7 +1694,7 @@ namespace openstudio{
 
     OptionalDouble SqlFile_Impl::waterTotalEndUses() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Total End Uses') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::hoursHeatingSetpointNotMet() const

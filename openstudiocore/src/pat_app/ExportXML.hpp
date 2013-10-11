@@ -79,6 +79,9 @@ namespace exportxml {
     boost::optional<QDomElement> exportMonthly(QDomDocument& doc,
                                                 const Attribute& monthlyAttr);
 
+    boost::optional<QDomElement> exportChecks(QDomDocument& doc,
+                                              const Attribute& checksAttr);
+
   };
 
 } // exportxml
