@@ -96,8 +96,6 @@ RunView::RunView()
 RunStatusView::RunStatusView()
   : QWidget()
 {
-  setFixedHeight(96);
-  setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
 
   QVBoxLayout * mainVLayout = new QVBoxLayout(); 
@@ -108,7 +106,6 @@ RunStatusView::RunStatusView()
   QHBoxLayout * mainHLayout = new QHBoxLayout(); 
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
-  mainHLayout->addStretch();
   mainVLayout->addLayout(mainHLayout);
 
   QHBoxLayout * buttonHLayout = new QHBoxLayout(); 
@@ -119,21 +116,24 @@ RunStatusView::RunStatusView()
   // Run / Play button area
 
   m_playLabel = new QLabel(this);
+  m_playLabel->setMinimumWidth(120);
   m_playLabel->setObjectName("H2");
+  m_playLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   mainHLayout->addWidget(m_playLabel);
 
   playButton = new PlayButton(this);
-  playButton->setFixedWidth(120);
   mainHLayout->addWidget(playButton);
 
   // Progress bar area
   m_progressBar = new PatProgressBar();
-  m_progressBar->setFixedWidth(516);
+  m_progressBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   m_progressBar->setTextVisible(false);
  
   mainHLayout->addWidget(m_progressBar);
 
   // percent complete/failed
+  QWidget *percentContainer = new QWidget();
+  percentContainer->setMinimumWidth(105);
   m_percentComplete = new QLabel();
   m_percentComplete->setStyleSheet("QLabel {font-size: 13px; font: bold; color: green;}");
   m_percentFailed = new QLabel();
@@ -144,9 +144,8 @@ RunStatusView::RunStatusView()
   percentCompleteLayout->addWidget(m_percentComplete);
   percentCompleteLayout->addWidget(m_percentFailed);
 
-  mainHLayout->addLayout(percentCompleteLayout);
-
-  mainHLayout->addStretch();
+  percentContainer->setLayout(percentCompleteLayout);
+  mainHLayout->addWidget(percentContainer);
 
   // Start Cloud
   
@@ -174,19 +173,20 @@ RunStatusView::RunStatusView()
 
 
   // Cloud Status
+  QWidget *statusContainer = new QWidget();
+  statusContainer->setMinimumWidth(105);
   m_cloudTime = new QLabel(this);
   m_cloudInstances = new QLabel(this);
   QVBoxLayout * vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->addWidget(m_cloudTime);
   vLayout->addWidget(m_cloudInstances);
-  mainHLayout->addLayout(vLayout);
+  statusContainer->setLayout(vLayout);
   m_timer = new QTimer(this);
   bool isConnected = connect(m_timer, SIGNAL(timeout()),
                         this, SLOT(updateCloudData()));
   OS_ASSERT(isConnected);
-
-  mainHLayout->addStretch();
+  mainHLayout->addWidget(statusContainer);
 
   // "Select All" Button Layout
 

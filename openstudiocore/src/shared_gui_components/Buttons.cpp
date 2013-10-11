@@ -457,6 +457,7 @@ PlayButton::PlayButton(QWidget * parent)
   : QPushButton(parent)
 {
   setFlat(true);
+  setFixedSize(35,35);
 
   setStatus(IDLE);
 }
@@ -474,14 +475,8 @@ void PlayButton::setStatus(const Status & status)
   {
     case IDLE:
       style.append("QPushButton {"
-                   "  background-color:transparent;"
                    "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
-                   "  background-position:right;"
-                   "  background-repeat:none;"
                    "  border:none;"
-                   "  font:bold 13px;"
-                   "  height:35px;"
-                   "  text-align:left;"
                    "}");
       style.append("QPushButton:hover {"
                    "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
@@ -494,14 +489,8 @@ void PlayButton::setStatus(const Status & status)
       break;
     case IDLEDISABLED:
       style.append("QPushButton {"
-                   "  background-color:transparent;"
                    "  background-image:url(':/shared_gui_components/images/run_simulation_button_disabled.png');"
-                   "  background-position:right;"
-                   "  background-repeat:none;"
                    "  border:none;"
-                   "  font:bold 13px;"
-                   "  height:35px;"
-                   "  text-align:left;"
                    "}");
       setStyleSheet(style);
       setEnabled(false);
@@ -510,12 +499,7 @@ void PlayButton::setStatus(const Status & status)
       style.clear();
       style.append("QPushButton {"
                    "  background-image:url(':/shared_gui_components/images/starting_simulation_button.png');"
-                   "  background-position:right;"
-                   "  background-repeat:none;"
                    "  border:none;"
-                   "  font:bold 13px;"
-                   "  height:35px;"
-                   "  text-align:left;"
                    "}");
 
       setStyleSheet(style);
@@ -525,12 +509,7 @@ void PlayButton::setStatus(const Status & status)
       style.clear();
       style.append("QPushButton {"
                    "  background-image:url(':/shared_gui_components/images/run_cancel.png');"
-                   "  background-position:right;"
-                   "  background-repeat:none;"
                    "  border:none;"
-                   "  font:bold 13px;"
-                   "  height:35px;"
-                   "  text-align:left;"
                    "}");
       style.append("QPushButton:hover {"
                    "  background-image:url(':/shared_gui_components/images/run_cancel_over.png');"
@@ -545,14 +524,8 @@ void PlayButton::setStatus(const Status & status)
     case STOPPING:
       style.clear();
       style.append("QPushButton {"
-                   "  background-color:transparent;"
                    "  background-image:url(':/shared_gui_components/images/stopping_simulation_button.png');"
-                   "  background-position:right;"
-                   "  background-repeat:none;"
                    "  border:none;"
-                   "  font:bold 13px;"
-                   "  height:35px;"
-                   "  text-align:left;"
                    "}");
 
       setStyleSheet(style);
@@ -561,14 +534,8 @@ void PlayButton::setStatus(const Status & status)
     case ERROR:
       style.clear();
       style.append("QPushButton {"
-                   "  background-color:transparent;"
                    "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
-                   "  background-position:right;"
-                   "  background-repeat:none;"
                    "  border:none;"
-                   "  font:bold 13px;"
-                   "  height:35px;"
-                   "  text-align:left;"
                    "}");
       style.append("QPushButton:hover {"
                    "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
