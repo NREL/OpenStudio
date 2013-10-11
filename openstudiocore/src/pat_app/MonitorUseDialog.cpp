@@ -29,6 +29,7 @@
 #include <QMessageBox>
 #include <QPixmap>
 #include <QPushButton>
+#include <QShowEvent>
 #include <QTimer>
 #include <QUrl>
 
@@ -78,11 +79,11 @@ void MonitorUseDialog::createWidgets()
   hlayout->setSpacing(5);
   layout->addLayout(hlayout);
 
-  label = new QLabel;
+  label = new QLabel();
   label->setText(BILLING_CHARGE);
   hlayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_billingCharge = new QLabel;
+  m_billingCharge = new QLabel("N/A");
   m_billingCharge->setObjectName("H2");
   hlayout->addWidget(m_billingCharge,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -101,11 +102,11 @@ void MonitorUseDialog::createWidgets()
   hlayout->setSpacing(5);
   layout->addLayout(hlayout);
   
-  label = new QLabel;
+  label = new QLabel();
   label->setText(TIME_RUNNING);
   hlayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
   
-  m_timeRunning = new QLabel;
+  m_timeRunning = new QLabel("N/A");
   m_timeRunning->setObjectName("H2");
   hlayout->addWidget(m_timeRunning,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -118,12 +119,11 @@ void MonitorUseDialog::createWidgets()
   hlayout->setSpacing(5);
   layout->addLayout(hlayout);
   
-  label = new QLabel;
+  label = new QLabel();
   label->setText(NUM_INSTANCES);
   hlayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  label = new QLabel;
 
-  m_numInstances = new QLabel;
+  m_numInstances = new QLabel("N/A");
   m_numInstances->setObjectName("H2");
   hlayout->addWidget(m_numInstances,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -136,10 +136,11 @@ void MonitorUseDialog::createWidgets()
   hlayout->setSpacing(5);
   layout->addLayout(hlayout);
   
+  label = new QLabel();
   label->setText(TOTAL_NUM_INSTANCES);
   hlayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_totalNumInstances = new QLabel;
+  m_totalNumInstances = new QLabel("N/A");
   m_totalNumInstances->setObjectName("H2");
   hlayout->addWidget(m_totalNumInstances,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -162,7 +163,7 @@ void MonitorUseDialog::createWidgets()
 
   /////
 
-  label = new QLabel;
+  label = new QLabel();
   label->setObjectName("H2");
   label->setWordWrap(true);
   label->setFixedWidth(TEXT_WIDTH);
@@ -183,9 +184,7 @@ void MonitorUseDialog::createWidgets()
                         this, SLOT(on_totalInstancesAvailable()));
   OS_ASSERT(isConnected);
 
-  updateData();
   m_timer = new QTimer(this);
-  m_timer->start(30000);
   isConnected = connect(m_timer, SIGNAL(timeout()),
                         this, SLOT(updateData()));
   OS_ASSERT(isConnected);
@@ -199,42 +198,49 @@ void MonitorUseDialog::createWidgets()
   #endif
 }
 
+void MonitorUseDialog::showEvent(QShowEvent *event) {
+  if (!event->spontaneous() && !testAttribute(Qt::WA_Moved)) {
+    Qt::WindowStates state = windowState();
+    adjustPosition(parentWidget());
+    setAttribute(Qt::WA_Moved, false); // not really an explicit position
+    if (state != windowState()) setWindowState(state);
+  }
+
+  if (!m_timer->isActive()) {
+    m_timer->start(30000);
+    updateData();
+  }
+}
+
 void MonitorUseDialog::displayErrors()
 {
   m_timer->stop();
-  QString errorsAndWarnings("Errors and warnings returned from Amazon EC2:");
+  QString msg;
   std::vector<std::string> errors = m_awsProvider.errors();
   Q_FOREACH(std::string error, errors){
-    errorsAndWarnings += error.c_str();
-    errorsAndWarnings += '\n';
+    msg += error.c_str();
+    msg += '\n';
   }
-  std::vector<std::string> warnings = m_awsProvider.warnings();
-  Q_FOREACH(std::string warning, warnings){
-    errorsAndWarnings += warning.c_str();
-    errorsAndWarnings += '\n';
-  }
-  QMessageBox::critical(this, "Amazon EC2 Errors and Warnings", errorsAndWarnings);
+  if (msg.size()) QMessageBox::warning(this, "Monitor Use: AWS Error", msg);
 }
 
 //// SLOTS
 
 void  MonitorUseDialog::updateData()
 {
+  // Should this use currentProjectSettings at all?
+  if (CloudMonitor::currentProjectSettings()) {
+    bool bingo = m_awsProvider.setSettings(*CloudMonitor::currentProjectSettings());
+    OS_ASSERT(bingo);
+  } else {
+    bool bingo = m_awsProvider.setSettings(AWSSettings());
+    OS_ASSERT(bingo);
+  }
+
   QString temp;
 
-  bool success = false;
-  success = m_awsProvider.requestEstimatedCharges();
-  if(!success){
-    displayErrors();
-    done(QDialog::Accepted);
-    return;
-  }
-  success = m_awsProvider.requestTotalInstances();
-  if(!success){
-    displayErrors();
-    done(QDialog::Accepted);
-    return;
-  }
+  m_awsProvider.requestEstimatedCharges();
+  m_awsProvider.requestTotalInstances();
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
   if (session) {
@@ -264,18 +270,38 @@ void  MonitorUseDialog::on_cloudStatus(bool checked)
 
 void  MonitorUseDialog::on_estimatedChargesAvailable()
 {
-  QString temp;
+  if (m_timer->isActive()) {
+    if(m_awsProvider.errors().size()){
+      displayErrors();
+      m_billingCharge->setText("N/A");
+      return;
+    }
 
-  temp = temp.setNum(m_awsProvider.lastEstimatedCharges(), 'f', 2);
-  temp.prepend('$');
-  m_billingCharge->setText(temp);
+    QString temp;
+
+    temp = temp.setNum(m_awsProvider.lastEstimatedCharges(), 'f', 2);
+    temp.prepend('$');
+    m_billingCharge->setText(temp);
+  } else {
+    m_billingCharge->setText("N/A");
+  }
 }
 
 void  MonitorUseDialog::on_totalInstancesAvailable()
 {
-  QString temp;
+  if (m_timer->isActive()) {
+    if(m_awsProvider.errors().size()){
+      displayErrors();
+      m_totalNumInstances->setText("N/A");
+      return;
+    }
 
-  m_totalNumInstances->setText(temp.setNum(m_awsProvider.lastTotalInstances()));
+    QString temp;
+
+    m_totalNumInstances->setText(temp.setNum(m_awsProvider.lastTotalInstances()));
+  } else {
+    m_totalNumInstances->setText("N/A");
+  }
 }
 
 } // pat

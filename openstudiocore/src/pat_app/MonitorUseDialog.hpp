@@ -43,6 +43,10 @@ public:
 
   virtual ~MonitorUseDialog();
 
+protected:
+
+  void showEvent(QShowEvent * event);
+
 private:
 
   void createWidgets();

@@ -90,6 +90,9 @@ namespace detail {
     // returns the result of the last validSecretKey validation of the current secretKey
     bool validSecretKey() const;
 
+    // resets the AWS access key and deletes the secret key file
+    void clearKeys();
+
     // returns the saved default number of workers
     unsigned numWorkers() const;
 

@@ -216,11 +216,8 @@ namespace openstudio{
     bool AWSSettings_Impl::setAccessKey(const std::string& accessKey) {
       std::string key = toQString(accessKey).trimmed().toStdString();
       if (validAccessKey(key)) {
-        if (m_accessKey != key) {
-          m_accessKey = key;
-          m_validAccessKey = true;
-          onChange();
-        }
+        m_accessKey = key;
+        m_validAccessKey = true;
         return true;
       }
       return false;
@@ -233,11 +230,8 @@ namespace openstudio{
     bool AWSSettings_Impl::setSecretKey(const std::string& secretKey) {
       std::string key = toQString(secretKey).trimmed().toStdString();
       if (validSecretKey(key)) {
-        if (m_secretKey != key) {
-          m_secretKey = key;
-          m_validSecretKey = true;
-          onChange();
-        }
+        m_secretKey = key;
+        m_validSecretKey = true;
         return true;
       }
       return false;
@@ -257,6 +251,11 @@ namespace openstudio{
 
     bool AWSSettings_Impl::validSecretKey() const {
       return m_validSecretKey;
+    }
+
+    void AWSSettings_Impl::clearKeys() {
+      m_accessKey.clear();
+      m_secretKey.clear();
     }
 
     unsigned AWSSettings_Impl::numWorkers() const {
@@ -801,7 +800,7 @@ namespace openstudio{
           return lastEstimatedCharges();
         }
       }
-      return 0;
+      return 0.0;
     }
 
     unsigned AWSProvider_Impl::totalInstances(int msec)
@@ -855,7 +854,13 @@ namespace openstudio{
 
       clearErrorsAndWarnings();
 
-      if (!m_awsSettings.validAccessKey()) {
+      if (m_awsSettings.accessKey().empty()) {
+        logError("The Access Key cannot be empty");
+        return false;
+      } else if (m_awsSettings.secretKey().empty()) {
+        logError("The Secret Key cannot be empty");
+        return false;
+      } else if (!m_awsSettings.validAccessKey()) {
         logError("Invalid Access Key");
         return false;
       } else if (!m_awsSettings.validSecretKey()) {
@@ -1050,8 +1055,6 @@ namespace openstudio{
 
       clearErrorsAndWarnings();
 
-      if (!userAgreementSigned()) return false;
-
       if (!authenticated()) return false;
 
       m_lastEstimatedCharges = 0;
@@ -1069,8 +1072,6 @@ namespace openstudio{
       }
 
       clearErrorsAndWarnings();
-
-      if (!userAgreementSigned()) return false;
 
       if (!authenticated()) return false;
 
@@ -1493,9 +1494,9 @@ namespace openstudio{
 
         int code = map["error"].toMap()["code"].toInt();
         if (code == 401) {
-          logWarning("Invalid Access Key");
+          logError("Invalid Access Key");
         } else if (code == 403) {
-          logWarning("Invalid Secret Key");
+          logError("Invalid Secret Key");
         }
       } else {
         logError("Error parsing validateCredentials JSON: " + toString(parser.errorString()));
@@ -1723,7 +1724,14 @@ namespace openstudio{
         if (!map.keys().contains("error")) {
           return map["estimated_charges"].toDouble();
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          QString message = map["error"].toMap()["message"].toString();
+          if (message == "InvalidClientTokenId") {
+            logError("Invalid Access Key");
+          } else if (message == "SignatureDoesNotMatch") {
+            logError("Invalid Secret Key");
+          } else {
+            logError(message.toStdString());
+          }
         } 
       } else {
         logError("Error parsing checkEstimatedCharges JSON: " + toString(parser.errorString()));
@@ -1746,7 +1754,14 @@ namespace openstudio{
         if (!map.keys().contains("error")) {
           return map["total_instances"].toUInt();
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          int code = map["error"].toMap()["code"].toInt();
+          if (code == 401) {
+            logError("Invalid Access Key");
+          } else if (code == 403) {
+            logError("Invalid Secret Key");
+          } else {
+            logError(map["error"].toMap()["message"].toString().toStdString());
+          }
         } 
       } else {
         logError("Error parsing checkTotalInstances JSON: " + toString(parser.errorString()));
@@ -1939,6 +1954,10 @@ namespace openstudio{
 
   bool AWSSettings::validSecretKey() const {
     return getImpl<detail::AWSSettings_Impl>()->validSecretKey();
+  }
+
+  void AWSSettings::clearKeys() {
+    getImpl<detail::AWSSettings_Impl>()->clearKeys();
   }
 
   unsigned AWSSettings::numWorkers() const {
