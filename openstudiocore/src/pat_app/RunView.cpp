@@ -513,9 +513,11 @@ void RunStatusView::on_selectAllClears(bool checked)
     if (isProjectIdle){
       QMessageBox::StandardButton test = QMessageBox::question(this, "Clear Results", "Do you want to clear all results?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
       if (test == QMessageBox::Yes){
-        std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
-        Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
-          dataPoint.clearResults();
+        analysis::Analysis analysis = project->analysis();
+        analysisdriver::AnalysisDriver driver = project->analysisDriver();
+        std::vector<analysis::DataPoint> dataPoints = analysis.dataPoints();
+        Q_FOREACH(analysis::DataPoint dataPoint, dataPoints) {
+          analysisdriver::clearResults(analysis,dataPoint,driver);
         }
       }
     }
@@ -855,7 +857,9 @@ void DataPointRunHeaderView::on_clearClicked(bool checked)
   bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
 
   if (isProjectIdle){
-    this->m_dataPoint.clearResults();
+    analysis::Analysis analysis = project->analysis();
+    analysisdriver::AnalysisDriver driver = project->analysisDriver();
+    analysisdriver::clearResults(analysis,m_dataPoint,driver);
   }
 }
 
