@@ -180,16 +180,38 @@ void PatMainWindow::closeEvent(QCloseEvent *event)
     event->ignore();
     return;
   } else if (status == CLOUD_RUNNING) {
-    int result = QMessageBox::warning(this, 
-                   "Close PAT?", 
-                   "The cloud is currently running and charges are accruing.  Are you sure you want to exit PAT?", 
-                   QMessageBox::Ok, 
-                   QMessageBox::Cancel);
 
-    if(result == QMessageBox::Cancel) {
+    // if project is running we can quit, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't quit
+    // if project is stopping we can quit, 90% sure we should turn cloud off
+    // if project is error we can quit, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(this, 
+        "Cannot Exit PAT", 
+        "PAT cannot be closed while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+
       event->ignore();
       return;
+    }else{
+      int result = QMessageBox::warning(this, 
+                     "Close PAT?", 
+                     "The cloud is currently running and charges are accruing.  Are you sure you want to exit PAT?", 
+                     QMessageBox::Ok, 
+                     QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) {
+        event->ignore();
+        return;
+      }
     }
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // DLM: check if running locally?
+
   } else if (status == CLOUD_ERROR) {
     int result = QMessageBox::warning(this, 
                    "Close PAT?", 
