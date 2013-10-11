@@ -22,6 +22,7 @@
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPushButton>
@@ -129,6 +130,36 @@ QPushButton * OSDialog::okButton()
 {
   return m_okButton;
 }
+
+void OSDialog::mousePressEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::LeftButton) 
+  {
+    if( event->y() < 50 )
+    {
+        dragPosition = event->globalPos() - frameGeometry().topLeft();
+        event->accept();
+        _move = true;
+    }
+    else
+    {
+      _move = false;
+    }
+  }
+}
+
+void OSDialog::mouseMoveEvent(QMouseEvent *event)
+{
+  if(event->buttons() & Qt::LeftButton) 
+  {
+    if( _move )
+    {
+      move(event->globalPos() - dragPosition);
+      event->accept();
+    }
+  }
+}
+
 
 void OSDialog::resizeEvent(QResizeEvent * event)
 {

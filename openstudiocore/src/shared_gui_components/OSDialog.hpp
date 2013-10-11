@@ -22,13 +22,15 @@
 
 #include <QDialog>
 
-class QVBoxLayout;
-
 class QMargins;
+
+class QPoint;
 
 class QPushButton;
 
 class QSize;
+
+class QVBoxLayout;
 
 namespace openstudio {
 
@@ -63,6 +65,10 @@ protected:
 
   void setOkButtonAsDefault(bool isDefault);
 
+  void mouseMoveEvent(QMouseEvent *event);
+  
+  void mousePressEvent(QMouseEvent *event);
+
   void resizeEvent(QResizeEvent * event);
 
   void paintEvent(QPaintEvent *event);
@@ -84,6 +90,10 @@ private:
   QSize m_sizeHint;
 
   QMargins m_layoutContentsMargins;
+
+  QPoint dragPosition;
+
+  bool _move;
 
 signals:
 
