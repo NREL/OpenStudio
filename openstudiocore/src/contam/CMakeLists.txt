@@ -86,13 +86,13 @@ TARGET_LINK_LIBRARIES( OsmToPrj
   openstudio_contam
 )
 
-#add_executable(PrjToOsm PrjToOsm.cpp)
-#
-#TARGET_LINK_LIBRARIES( PrjToOsm
-#  ${${target_name}_depends}
-#  openstudio_osversion
-#  openstudio_contam
-#)
+add_executable(epw2wth epw2wth.cpp)
+
+TARGET_LINK_LIBRARIES( epw2wth 
+  ${${target_name}_depends}
+  openstudio_osversion
+  openstudio_contam
+)
 
 add_executable(FitInfiltration FitInfiltration.cpp)
 
