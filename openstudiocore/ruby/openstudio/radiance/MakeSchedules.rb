@@ -194,12 +194,12 @@ model.getThermalZones.each do |thermalZone|
   
   space_name = space.name.get.gsub(' ', '_').gsub(':', '_')
 
-  sqlPath = workPath / OpenStudio::Path.new("/output/radout.sql")
+  radSqlPath = workPath / OpenStudio::Path.new("/output/radout.sql")
 
   # load the illuminance map
   # assume this will be reported in 1 hour timesteps starting on 1/1
   averageIlluminances = []
-  sqlFile = OpenStudio::SqlFile.new(sqlPath)
+  radSqlFile = OpenStudio::SqlFile.new(radSqlPath)
 
   if options.verbose == true
     puts "Loading radiances sql file from " + sqlPath.to_s
@@ -207,11 +207,11 @@ model.getThermalZones.each do |thermalZone|
 
   if options.setpointInput == true
     # we have to calculate the average ourselves
-    reportIndicies = sqlFile.illuminanceMapHourlyReportIndices(space_name)
+    reportIndicies = radSqlFile.illuminanceMapHourlyReportIndices(space_name)
 
     reportIndicies.each do |index|
 
-      map = sqlFile.illuminanceMap(index)
+      map = radSqlFile.illuminanceMap(index)
       #  averageIlluminances << OpenStudio::mean(map)
       sum = 0
       illuminances = Array.new
@@ -241,7 +241,7 @@ model.getThermalZones.each do |thermalZone|
   else 
     # use the sensor input
     spacename = space.name.get.gsub(' ', '_').gsub(':', '_')
-    envPeriods = sqlFile.availableEnvPeriods
+    envPeriods = radSqlFile.availableEnvPeriods
 
     if envPeriods.size == 0
       puts "No available environment periods in radiance sql file, skipping"
@@ -251,7 +251,7 @@ model.getThermalZones.each do |thermalZone|
     if options.verbose == true
       puts "Using environment period " + envPeriods[0]
     end
-    daylightSensor = sqlFile.timeSeries(envPeriods[0], "Hourly", "Daylight Sensor Illuminance", space_name)
+    daylightSensor = radSqlFile.timeSeries(envPeriods[0], "Hourly", "Daylight Sensor Illuminance", space_name)
     
     if daylightSensor.empty?
       puts "Daylight sensor data could not be loaded, skipping"
