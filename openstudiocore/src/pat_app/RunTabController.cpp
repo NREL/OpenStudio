@@ -279,20 +279,28 @@ void RunTabController::onPlayButtonClicked()
     }
 
   }else if(analysisStatus == analysisdriver::AnalysisStatus::Running){
-    if (cloudAnalysisDriver){
 
-      // DLM: it is a big deal to quit the cloud, should we prompt the user?
-      QMessageBox::StandardButton test = QMessageBox::question(runView, "Stop Cloud", "Do you want to stop the cloud?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-      if (test == QMessageBox::Yes) {
+    QMessageBox::StandardButton test = QMessageBox::question(runView, "Stop Analysis", "Do you want to stop the analysis?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (test == QMessageBox::Yes) {
+
+      if (cloudAnalysisDriver){
         // request stop
         cloudAnalysisDriver->requestStop(false);
-      }
 
-    }else{
-      // request stop
-      project->runManager().setPaused(true);
-      project->stop();
+        // it is a big deal to quit the cloud, prompt the user
+        test = QMessageBox::question(runView, "Stop Cloud", "Do you also want to stop the cloud?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (test == QMessageBox::Yes) {
+          // stop cloud
+          PatApp::instance()->cloudMonitor()->stopCloud();
+        }
+
+      }else{
+        // request stop
+        project->runManager().setPaused(true);
+        project->stop();
+      }
     }
+
   }
 }
 

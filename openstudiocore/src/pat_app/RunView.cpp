@@ -323,18 +323,12 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
       playButton->setStatus(PlayButton::ERROR);
       break;
   }
-  // override playButton::setStatus for cloud status
-  if(cloudStatus == CLOUD_RUNNING){
-    if (analysisStatus == analysisdriver::AnalysisStatus::Running){
-      playButton->setEnabled(false);
-    }
-  }else if(cloudStatus == CLOUD_STOPPED){
-    // no-op
-  }else{
+  // playButton enabled is set in setStatus, might need to override it based on cloudStatus
+  if((cloudStatus == CLOUD_STARTING) || 
+     (cloudStatus == CLOUD_STOPPING) || 
+     (cloudStatus == CLOUD_ERROR)){
     playButton->setEnabled(false);
   }
-
-
 
   // update progress bar
   if (analysisStatus == analysisdriver::AnalysisStatus::Running){
@@ -386,15 +380,32 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
   cloudLostConnectionButton->hide();
   if( cloudStatus == CLOUD_STOPPED ){
     cloudOnButton->show();
+    // don't allow turn on cloud while running, starting, or stopping analysis
+    if ((analysisStatus == analysisdriver::AnalysisStatus::Running) || 
+        (analysisStatus == analysisdriver::AnalysisStatus::Starting) ||
+        (analysisStatus == analysisdriver::AnalysisStatus::Stopping)){ 
+      cloudOnButton->setEnabled(false);
+    }else{
+      cloudOnButton->setEnabled(true);
+    }
   }else if( cloudStatus == CLOUD_STARTING ){
     cloudStartingButton->show();
   }else if( cloudStatus == CLOUD_RUNNING ){
     cloudOffButton->show();
+    // don't allow turn off cloud while running, starting, or stopping analysis
+    if ((analysisStatus == analysisdriver::AnalysisStatus::Running) || 
+        (analysisStatus == analysisdriver::AnalysisStatus::Starting) ||
+        (analysisStatus == analysisdriver::AnalysisStatus::Stopping)){ 
+      cloudOffButton->setEnabled(false);
+    }else{
+      cloudOffButton->setEnabled(true);
+    }
   }else if( cloudStatus == CLOUD_STOPPING ){
     cloudStoppingButton->show();
   }else if( cloudStatus == CLOUD_ERROR ){
     cloudLostConnectionButton->show();
   }
+
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
