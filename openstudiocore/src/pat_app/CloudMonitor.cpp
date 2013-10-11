@@ -151,11 +151,14 @@ bool checkCloudServiceRunning()
   bool cloudServiceRunning = false;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-
-  if( session && boost::optional<Url> serverUrl = session->serverUrl() )
+  if( session)
   {
-    OSServer server(serverUrl.get());
-    cloudServiceRunning = server.available();
+    boost::optional<Url> serverUrl = session->serverUrl();
+    if (serverUrl)
+    {
+      OSServer server(serverUrl.get());
+      cloudServiceRunning = server.available();
+    }
   }
   
   return cloudServiceRunning;
