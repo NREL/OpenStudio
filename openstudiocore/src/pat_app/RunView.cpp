@@ -299,7 +299,7 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
       m_runText = "Stopping";
       break;
     case analysisdriver::AnalysisStatus::Error:
-      m_runText = "Run Error";
+      m_runText = "Restart Run";
       break;
   }
   m_playLabel->setText(m_runText);
