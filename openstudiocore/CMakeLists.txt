@@ -101,6 +101,9 @@ IF (BUILD_V8_BINDINGS)
   OPTION( BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON )
 ENDIF()
 
+# Configure vagrant 
+SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
+
 # Require that DAKOTA_FOUND
 #
 # Some code (certain analysisdriver tests) are conditionally compiled depending on 

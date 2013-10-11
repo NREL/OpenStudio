@@ -700,6 +700,7 @@ namespace detail {
 
   void DataPoint_Impl::setProblem(const Problem& problem) {
     m_problem = problem;
+    m_problemUUID = problem.uuid();
   }
 
   QVariant DataPoint_Impl::toVariant() const {

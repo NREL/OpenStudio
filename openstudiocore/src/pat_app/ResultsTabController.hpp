@@ -27,8 +27,8 @@
 #include <analysis/DataPoint.hpp>
 
 #include <QObject>
-#include <QSharedPointer>
 #include <QPointer>
+#include <QSharedPointer>
 
 namespace openstudio {
   
@@ -59,13 +59,13 @@ class ResultsTabController : public QObject
 
     void openDirectory();
 
+    void downloadResults();
+
+    void enableDownloadResultsButton();
+
     void enableViewFileButton();
 
-    void disableViewFileButton();
-
     void enableOpenDirectoryButton();
-
-    void disableOpenDirectoryButton();
 
   private:
 

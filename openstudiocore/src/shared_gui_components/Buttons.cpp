@@ -19,8 +19,34 @@
 
 #include "Buttons.hpp"
 #include <QString>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QPixmap>
+#include <QTimer>
 
 namespace openstudio {
+
+OrangeButton::OrangeButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  QString style;
+  style.append("QPushButton { ");
+  style.append("border-radius: 4px; ");
+  style.append("border: 1px solid #949393; ");
+  style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
+  style.append("                             stop: 0 #FDBC3B, "); 
+  style.append("                             stop: 1 #F47920 ); ");
+  style.append("height: 22px; ");
+  style.append("font-size: 12px; ");
+  style.append("margin: 0; ");
+  style.append("padding-left: 10px; ");
+  style.append("padding-right: 10px; ");
+  style.append("} ");
+
+  setStyleSheet(style);
+}
 
 GrayButton::GrayButton(QWidget * parent)
   : QPushButton()
@@ -270,55 +296,259 @@ CreateFromFileButton::CreateFromFileButton()
   setText("Create From External File");
 }
 
-PlayButton::PlayButton(QWidget * parent)
+CloudLostConnectionButton::CloudLostConnectionButton(QWidget * parent)
   : QPushButton(parent)
 {
   setFlat(true);
 
+  setFixedSize(130,24);
+
   QString style;
 
   style.append("QPushButton {"
-               "  background-color:transparent;"
-               "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
-               "  background-position:right;"
-               "  background-repeat:none;"
+               "  background-image:url(':/shared_gui_components/images/cloud_lost_connection.png');"
                "  border:none;"
-               "  font:bold 13px;"
-               "  height:35px;"
-               "  text-align:left;"
-               "}");
-  style.append("QPushButton:hover {"
-               "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
-               "}");
-  style.append("QPushButton:pressed {"
-               "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
-               "}");
-
-  // pause button
-  /*
-  style.append("QPushButton:checked {"
-               "  background-image:url(':/shared_gui_components/images/pause_regular.png');"
-               "}");
-  style.append("QPushButton:checked:hover {"
-               "  background-image:url(':/shared_gui_components/images/pause_over.png');"
-               "}");
-  style.append("QPushButton:checked:pressed {"
-               "  background-image:url(':/shared_gui_components/images/pause_press.png');"
-               "}");
-  */
-
-  // stop button
-  style.append("QPushButton:checked {"
-               "  background-image:url(':/shared_gui_components/images/run_cancel.png');"
-               "}");
-  style.append("QPushButton:checked:hover {"
-               "  background-image:url(':/shared_gui_components/images/run_cancel_over.png');"
-               "}");
-  style.append("QPushButton:checked:pressed {"
-               "  background-image:url(':/shared_gui_components/images/run_cancel_press.png');"
                "}");
 
   setStyleSheet(style);
+
+}
+CloudOffButton::CloudOffButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/cloud_off.png');"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+}
+
+CloudOnButton::CloudOnButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/cloud_on.png');"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+}
+
+CloudStartingButton::CloudStartingButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+
+  m_background = new QPixmap(":/shared_gui_components/images/cloud_starting.png");
+  m_arrow = new QPixmap(":/shared_gui_components/images/cloud_arrow.png");
+
+  m_rotation = 0.0;
+
+  m_timer = new QTimer(this);
+  connect(m_timer,SIGNAL(timeout()),this,SLOT(rotate()));
+  m_timer->start(50);
+}
+
+void CloudStartingButton::rotate()
+{
+  m_rotation += 10.0;
+
+  update();
+}
+
+void CloudStartingButton::paintEvent ( QPaintEvent * event )
+{
+  QPainter painter(this);
+
+  double transX = m_arrow->width()/2.0;
+  double transY = m_arrow->height()/2.0;
+
+  QTransform t;
+  t.translate(transX, transY);
+  t.rotate(m_rotation);
+  t.translate(-transX, -transY);
+
+  QPixmap rotatedArrow = QPixmap(m_arrow->transformed(t, Qt::SmoothTransformation));
+
+  double transX2 = rotatedArrow.width()/2.0;
+  double transY2 = rotatedArrow.height()/2.0;
+
+  painter.drawPixmap(0, 0, *m_background);
+  painter.drawPixmap(12+transX-transX2, 5+transY-transY2, rotatedArrow);
+}
+
+CloudStoppingButton::CloudStoppingButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+
+  setFixedSize(130,24);
+
+  QString style;
+
+  style.append("QPushButton {"
+               "  border:none;"
+               "}");
+
+  setStyleSheet(style);
+
+  m_background = new QPixmap(":/shared_gui_components/images/cloud_stopping.png");
+  m_arrow = new QPixmap(":/shared_gui_components/images/cloud_arrow_magenta.png");
+
+  m_rotation = 0.0;
+
+  m_timer = new QTimer(this);
+  connect(m_timer,SIGNAL(timeout()),this,SLOT(rotate()));
+  m_timer->start(50);
+}
+
+void CloudStoppingButton::rotate()
+{
+  m_rotation += 10.0;
+
+  update();
+}
+
+void CloudStoppingButton::paintEvent ( QPaintEvent * event )
+{
+  QPainter painter(this);
+
+  double transX = m_arrow->width()/2.0;
+  double transY = m_arrow->height()/2.0;
+
+  QTransform t;
+  t.translate(transX, transY);
+  t.rotate(m_rotation);
+  t.translate(-transX, -transY);
+
+  QPixmap rotatedArrow = QPixmap(m_arrow->transformed(t, Qt::SmoothTransformation));
+
+  double transX2 = rotatedArrow.width()/2.0;
+  double transY2 = rotatedArrow.height()/2.0;
+
+  painter.drawPixmap(0, 0, *m_background);
+  painter.drawPixmap(12+transX-transX2, 5+transY-transY2, rotatedArrow);
+}
+
+PlayButton::PlayButton(QWidget * parent)
+  : QPushButton(parent)
+{
+  setFlat(true);
+  setFixedSize(35,35);
+
+  setStatus(IDLE);
+}
+
+PlayButton::Status PlayButton::status() const
+{
+  return m_status;
+}
+
+void PlayButton::setStatus(const Status & status)
+{
+  QString style;
+
+  switch (status)
+  {
+    case IDLE:
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
+                   "  border:none;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
+                   "}");
+      setStyleSheet(style);
+      setEnabled(true);
+      break;
+    case IDLEDISABLED:
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_button_disabled.png');"
+                   "  border:none;"
+                   "}");
+      setStyleSheet(style);
+      setEnabled(false);
+      break;
+    case STARTING:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/starting_simulation_button.png');"
+                   "  border:none;"
+                   "}");
+
+      setStyleSheet(style);
+      setEnabled(false);
+      break;
+    case RUNNING:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel.png');"
+                   "  border:none;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_cancel_press.png');"
+                   "}");
+
+      setStyleSheet(style);
+      setEnabled(true);
+      break;
+    case STOPPING:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/stopping_simulation_button.png');"
+                   "  border:none;"
+                   "}");
+
+      setStyleSheet(style);
+      setEnabled(false);
+      break;
+    case ERROR:
+      style.clear();
+      style.append("QPushButton {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
+                   "  border:none;"
+                   "}");
+      style.append("QPushButton:hover {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_over.png');"
+                   "}");
+      style.append("QPushButton:pressed {"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_press.png');"
+                   "}");
+      setStyleSheet(style);
+      setEnabled(true);
+      break;
+  }
+
+  m_status = status;
 }
 
 

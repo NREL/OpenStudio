@@ -251,6 +251,7 @@ AWSSessionRecord::AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase
         database)
 {
   OS_ASSERT(getImpl<detail::AWSSessionRecord_Impl>());
+  constructRelatedRecords(awsSession,database);
 }
 
 AWSSessionRecord::AWSSessionRecord(const QSqlQuery& query, ProjectDatabase& database)

@@ -18,24 +18,29 @@
 **********************************************************************/
 
 #include <pat_app/ResultsTabController.hpp>
-#include <pat_app/ResultsView.hpp>
+
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/PatApp.hpp>
+#include <pat_app/ResultsView.hpp>
 
 #include <analysis/DataPoint.hpp>
 
+#include <analysisdriver/CloudAnalysisDriver.hpp>
+#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+
 #include <model/UtilityBill.hpp>
 
-#include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/FileInfo.hpp>
+#include <runmanager/lib/Job.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 
 #include <QDesktopServices>
+#include <QDir>
 #include <QMessageBox>
 #include <QRegExp>
-#include <QDir>
 
 namespace openstudio {
 
@@ -52,6 +57,9 @@ ResultsTabController::ResultsTabController()
   OS_ASSERT(test);
 
   test = connect(resultsView, SIGNAL(openDirButtonClicked(bool)), this, SLOT(openDirectory()));
+  OS_ASSERT(test); 
+  
+  test = connect(resultsView, SIGNAL(downloadResultsButtonClicked(bool)), this, SLOT(downloadResults()));
   OS_ASSERT(test);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
@@ -73,6 +81,9 @@ ResultsTabController::ResultsTabController()
     bool bingo = false;
 
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    OS_ASSERT(bingo);
+
+    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
     OS_ASSERT(bingo);
 
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
@@ -201,36 +212,130 @@ void ResultsTabController::openDirectory()
 
 }
 
-void ResultsTabController::enableViewFileButton()
+void ResultsTabController::downloadResults()
 {
-  if( resultsView ) {
-    if (!m_baselineDataPointResultListController->selectionController()->selectedItems().empty()){
-      resultsView->enableViewFileButton(true);
-    } else {
-      resultsView->enableViewFileButton(false);
+  if( resultsView ){
+
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+        
+        boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+        if(project){
+          boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+          if(cloudAnalysisDriver){
+
+            bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
+            if (sameSession){
+
+              bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+              if (!success){
+                // could not request this datapoint's results right now, set this for later?
+                dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
+              }
+
+            }else{
+              QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");
+            }
+
+            // prevent people from clicking this over and over again? should there be another state?
+            resultsView->enableDownloadResultsButton(false, sameSession);
+          }
+        }
+      }
     }
   }
 }
 
-void ResultsTabController::disableViewFileButton()
+void ResultsTabController::enableDownloadResultsButton()
 {
-  if( resultsView ) { resultsView->enableViewFileButton(false); }
+  if( resultsView ){
+
+    bool enabled = false;
+    bool sameSession = true; // default to true for nothing selected case
+
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+    CloudStatus status = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
+    if(project && (status == CLOUD_RUNNING)){
+
+      std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+      if (!selectedItems.empty()){
+
+        DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+        if (dataPointResultListItem){
+
+          analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+
+          // check if data point is running or has run in the current cloud session
+          boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+          if (cloudAnalysisDriver){
+            sameSession = cloudAnalysisDriver->inSession(dataPoint);
+          }
+
+          // Determine if datapoint has already has detailed data
+          bool hasDetailedResults = !dataPoint.directory().empty();
+          if(!hasDetailedResults){
+            enabled = true;
+          }else{
+            enabled = false;
+            sameSession = true; // already have results, doesn't matter
+          }
+        }
+      }
+    }
+
+    resultsView->enableDownloadResultsButton(enabled, sameSession);
+  }
+}
+
+void ResultsTabController::enableViewFileButton()
+{
+  if( resultsView ) {
+
+    bool enabled = false;
+
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+
+        // Determine if datapoint has detailed data
+        if(dataPoint.complete() && !dataPoint.directory().empty()){
+          enabled = true;
+        }
+      }
+    }
+
+    resultsView->enableViewFileButton(enabled);
+  }
 }
 
 void ResultsTabController::enableOpenDirectoryButton()
 {
   if( resultsView ) {
-    if (!m_baselineDataPointResultListController->selectionController()->selectedItems().empty()){
-      resultsView->enableOpenDirectoryButton(true);
-    } else {
-     resultsView->enableOpenDirectoryButton(false);
-    }
-  }
-}
 
-void ResultsTabController::disableOpenDirectoryButton()
-{
-  if( resultsView ) { resultsView->enableOpenDirectoryButton(false); }
+    bool enabled = false;
+
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+
+        // Determine if datapoint has already has detailed data
+        bool hasDetailedResults = !dataPoint.directory().empty();
+
+        if(hasDetailedResults){
+          enabled = true;
+        }
+      }
+    }
+    resultsView->enableOpenDirectoryButton(enabled);
+  }
 }
 
 DataPointResultListItem::DataPointResultListItem(const openstudio::analysis::DataPoint& dataPoint,
@@ -444,8 +549,6 @@ std::vector<openstudio::analysis::DataPoint> DataPointCalibrationListController:
 
   return result;
 }
-
-
 
 }
 
