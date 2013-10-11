@@ -104,6 +104,9 @@ namespace detail{
     // returns the result of the last validSecretKey validation of the current secretKey
     bool validSecretKey() const;
 
+    // resets the AWS access key and deletes the secret key file
+    void clearKeys();
+
     // returns the saved default number of workers
     unsigned numWorkers() const;
 
@@ -425,7 +428,24 @@ namespace detail{
     // returns the total number of instances running on EC2 in the current region
     unsigned totalInstances(int msec);
 
+    bool requestEstimatedCharges();
+
+    bool requestTotalInstances();
+
+    double lastEstimatedCharges() const;
+
+    unsigned lastTotalInstances() const;
+
     //@}
+
+  signals:
+    
+    /// emitted when the estimated charges request completes
+    void estimatedChargesAvailable();
+
+    /// emitted when the total instances request completes
+    void totalInstancesAvailable();
+
 
   private slots:
 
@@ -457,9 +477,6 @@ namespace detail{
 
   private:
     
-    bool requestEstimatedCharges();
-    bool requestTotalInstances();
-
     bool waitForFinished(int msec, const boost::function<bool ()>& f);
     bool requestInternetAvailableFinished() const;
     bool requestServiceAvailableFinished() const;
@@ -500,9 +517,6 @@ namespace detail{
     bool parseCheckTerminatedResults(const ProcessResults &);
     double parseCheckEstimatedChargesResults(const ProcessResults &);
     unsigned parseCheckTotalInstancesResults(const ProcessResults &);
-
-    double lastEstimatedCharges() const;
-    unsigned lastTotalInstances() const;
 
     bool userAgreementSigned() const;
     bool authenticated() const;

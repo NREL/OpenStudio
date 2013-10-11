@@ -956,7 +956,6 @@ boost::optional<double> BillingPeriod::totalCost() const
 bool BillingPeriod::setStartDate(const Date& startDate)
 {
   Date currentStartDate = this->startDate();
-  unsigned currentNumberOfDays = this->numberOfDays();
   Date currentEndDate = this->endDate();
 
   /* If startDate is before endDate then endDate is retained.
@@ -1086,7 +1085,7 @@ bool BillingPeriod::withinPeriodicRunPeriod() const
   }
 
   bool overlapsRunPeriod = this->overlapsRunPeriod();
-  if (!withinRunPeriod){
+  if (!overlapsRunPeriod){
     return false;
   }
 

@@ -216,11 +216,8 @@ namespace openstudio{
     bool AWSSettings_Impl::setAccessKey(const std::string& accessKey) {
       std::string key = toQString(accessKey).trimmed().toStdString();
       if (validAccessKey(key)) {
-        if (m_accessKey != key) {
-          m_accessKey = key;
-          m_validAccessKey = true;
-          onChange();
-        }
+        m_accessKey = key;
+        m_validAccessKey = true;
         return true;
       }
       return false;
@@ -233,11 +230,8 @@ namespace openstudio{
     bool AWSSettings_Impl::setSecretKey(const std::string& secretKey) {
       std::string key = toQString(secretKey).trimmed().toStdString();
       if (validSecretKey(key)) {
-        if (m_secretKey != key) {
-          m_secretKey = key;
-          m_validSecretKey = true;
-          onChange();
-        }
+        m_secretKey = key;
+        m_validSecretKey = true;
         return true;
       }
       return false;
@@ -257,6 +251,11 @@ namespace openstudio{
 
     bool AWSSettings_Impl::validSecretKey() const {
       return m_validSecretKey;
+    }
+
+    void AWSSettings_Impl::clearKeys() {
+      m_accessKey.clear();
+      m_secretKey.clear();
     }
 
     unsigned AWSSettings_Impl::numWorkers() const {
@@ -742,12 +741,18 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForServer(int msec)
     {
-      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this));
+      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
+        return serverStarted();
+      }
+      return false;
     }
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
     {
-      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this));
+      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
+        return workersStarted();
+      }
+      return false;
     }
 
     bool AWSProvider_Impl::serverRunning(int msec)
@@ -772,7 +777,10 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForTerminated(int msec)
     {
-      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this));
+      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
+        return m_instancesStopped;
+      }
+      return false;
     }
 
     bool AWSProvider_Impl::terminateCompleted(int msec)
@@ -792,7 +800,7 @@ namespace openstudio{
           return lastEstimatedCharges();
         }
       }
-      return 0;
+      return 0.0;
     }
 
     unsigned AWSProvider_Impl::totalInstances(int msec)
@@ -846,7 +854,13 @@ namespace openstudio{
 
       clearErrorsAndWarnings();
 
-      if (!m_awsSettings.validAccessKey()) {
+      if (m_awsSettings.accessKey().empty()) {
+        logError("The Access Key cannot be empty");
+        return false;
+      } else if (m_awsSettings.secretKey().empty()) {
+        logError("The Secret Key cannot be empty");
+        return false;
+      } else if (!m_awsSettings.validAccessKey()) {
         logError("Invalid Access Key");
         return false;
       } else if (!m_awsSettings.validSecretKey()) {
@@ -1041,8 +1055,6 @@ namespace openstudio{
 
       clearErrorsAndWarnings();
 
-      if (!userAgreementSigned()) return false;
-
       if (!authenticated()) return false;
 
       m_lastEstimatedCharges = 0;
@@ -1060,8 +1072,6 @@ namespace openstudio{
       }
 
       clearErrorsAndWarnings();
-
-      if (!userAgreementSigned()) return false;
 
       if (!authenticated()) return false;
 
@@ -1449,6 +1459,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseServiceAvailableResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1466,6 +1481,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseValidateCredentialsResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1474,9 +1494,9 @@ namespace openstudio{
 
         int code = map["error"].toMap()["code"].toInt();
         if (code == 401) {
-          logWarning("Invalid Access Key");
+          logError("Invalid Access Key");
         } else if (code == 403) {
-          logWarning("Invalid Secret Key");
+          logError("Invalid Secret Key");
         }
       } else {
         logError("Error parsing validateCredentials JSON: " + toString(parser.errorString()));
@@ -1487,6 +1507,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseResourcesAvailableToStartResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1506,6 +1531,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1533,6 +1563,11 @@ namespace openstudio{
     bool AWSProvider_Impl::parseWorkerStartedResults(const ProcessResults &t_results)
     {
       m_privateKey.remove();
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1563,6 +1598,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseCheckServerRunningResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1583,6 +1623,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseCheckWorkerRunningResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1613,6 +1658,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseInstancesStoppedResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1635,6 +1685,11 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseCheckTerminatedResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return false;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1657,6 +1712,11 @@ namespace openstudio{
 
     double AWSProvider_Impl::parseCheckEstimatedChargesResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return 0.0;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1664,17 +1724,29 @@ namespace openstudio{
         if (!map.keys().contains("error")) {
           return map["estimated_charges"].toDouble();
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          QString message = map["error"].toMap()["message"].toString();
+          if (message == "InvalidClientTokenId") {
+            logError("Invalid Access Key");
+          } else if (message == "SignatureDoesNotMatch") {
+            logError("Invalid Secret Key");
+          } else {
+            logError(message.toStdString());
+          }
         } 
       } else {
         logError("Error parsing checkEstimatedCharges JSON: " + toString(parser.errorString()));
       }
       
-      return false;
+      return 0.0;
     }
 
     unsigned AWSProvider_Impl::parseCheckTotalInstancesResults(const ProcessResults &t_results)
     {
+      if (t_results.output.isEmpty()) {
+        logError("Process failed to return output");
+        return 0;
+      }
+      
       QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
@@ -1682,13 +1754,20 @@ namespace openstudio{
         if (!map.keys().contains("error")) {
           return map["total_instances"].toUInt();
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          int code = map["error"].toMap()["code"].toInt();
+          if (code == 401) {
+            logError("Invalid Access Key");
+          } else if (code == 403) {
+            logError("Invalid Secret Key");
+          } else {
+            logError(map["error"].toMap()["message"].toString().toStdString());
+          }
         } 
       } else {
         logError("Error parsing checkTotalInstances JSON: " + toString(parser.errorString()));
       }
       
-      return false;
+      return 0;
     }
 
     void AWSProvider_Impl::onCheckInternetComplete(int, QProcess::ExitStatus)
@@ -1775,12 +1854,14 @@ namespace openstudio{
     void AWSProvider_Impl::onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)
     {
       m_lastEstimatedCharges = parseCheckEstimatedChargesResults(handleProcessCompleted(m_checkEstimatedChargesProcess));
+      emit estimatedChargesAvailable();
       m_checkEstimatedChargesProcess = 0;
     }
 
     void AWSProvider_Impl::onCheckTotalInstancesComplete(int, QProcess::ExitStatus)
     {
       m_lastTotalInstances = parseCheckTotalInstancesResults(handleProcessCompleted(m_checkTotalInstancesProcess));
+      emit totalInstancesAvailable();
       m_checkTotalInstancesProcess = 0;
     }
 
@@ -1873,6 +1954,10 @@ namespace openstudio{
 
   bool AWSSettings::validSecretKey() const {
     return getImpl<detail::AWSSettings_Impl>()->validSecretKey();
+  }
+
+  void AWSSettings::clearKeys() {
+    getImpl<detail::AWSSettings_Impl>()->clearKeys();
   }
 
   unsigned AWSSettings::numWorkers() const {
@@ -2085,7 +2170,7 @@ namespace openstudio{
   std::vector<std::string> AWSProvider::serverInstanceTypes() {
     static std::vector<std::string> serverInstanceTypes;
     if (!serverInstanceTypes.size()) {
-      serverInstanceTypes.push_back("t1.micro");
+      //serverInstanceTypes.push_back("t1.micro"); // DLM: insufficient memory for testing
       serverInstanceTypes.push_back("m1.large");
       serverInstanceTypes.push_back("m1.xlarge");
       serverInstanceTypes.push_back("m2.xlarge");
@@ -2115,12 +2200,28 @@ namespace openstudio{
     return "c1.xlarge";
   }
 
+  bool AWSProvider::requestEstimatedCharges() {
+    return getImpl<detail::AWSProvider_Impl>()->requestEstimatedCharges();
+  }
+
+  bool AWSProvider::requestTotalInstances() {
+    return getImpl<detail::AWSProvider_Impl>()->requestTotalInstances();
+  }
+
   double AWSProvider::estimatedCharges(int msec) {
     return getImpl<detail::AWSProvider_Impl>()->estimatedCharges(msec);
   }
 
   unsigned AWSProvider::totalInstances(int msec) {
     return getImpl<detail::AWSProvider_Impl>()->totalInstances(msec);
+  }
+
+  double AWSProvider::lastEstimatedCharges() const {
+    return getImpl<detail::AWSProvider_Impl>()->lastEstimatedCharges();
+  }
+
+  unsigned AWSProvider::lastTotalInstances() const {
+    return getImpl<detail::AWSProvider_Impl>()->lastTotalInstances();
   }
 
 

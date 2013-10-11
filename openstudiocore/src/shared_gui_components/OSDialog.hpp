@@ -22,7 +22,7 @@
 
 #include <QDialog>
 
-class QBoxLayout;
+class QVBoxLayout;
 
 class QMargins;
 
@@ -43,15 +43,17 @@ public:
 
   virtual ~OSDialog() {}
 
-  QSize sizeHint() const;
+  //QSize sizeHint() const;
 
-  void setSizeHint(const QSize & sizeHint);
+  //void setSizeHint(const QSize & sizeHint);
 
   QMargins layoutContentsMargins() const;
 
   void setLayoutContentsMargins(const QMargins & layoutContentsMargins);
 
-  QBoxLayout * upperLayout();
+  QVBoxLayout * upperLayout();
+
+  QPushButton * backButton();
 
   QPushButton * cancelButton();
 
@@ -67,6 +69,8 @@ protected:
 
   bool m_isIP;
 
+  QPushButton * m_backButton;
+
   QPushButton * m_cancelButton;
 
   QPushButton * m_okButton;
@@ -75,13 +79,15 @@ private:
 
   virtual void createLayout();
 
-  QBoxLayout * m_upperLayout;
+  QVBoxLayout * m_upperLayout;
 
   QSize m_sizeHint;
 
   QMargins m_layoutContentsMargins;
 
 signals:
+
+  void backButtonClicked(bool checked);
 
   void cancelButtonClicked(bool checked);
 
@@ -91,6 +97,8 @@ signals:
 
 protected slots:
 
+  virtual void on_backButton(bool checked); 
+  
   virtual void on_cancelButton(bool checked);
 
   virtual void on_okButton(bool checked);
