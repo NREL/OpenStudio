@@ -46,6 +46,7 @@ public:
 private:
 
   void createWidgets();
+  void displayErrors();
 
   bool m_totalInstancesAvailable;
   bool m_estimatedChargesAvailable;
