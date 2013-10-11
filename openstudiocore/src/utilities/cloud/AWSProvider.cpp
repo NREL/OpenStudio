@@ -2202,7 +2202,7 @@ namespace openstudio{
   }
 
   unsigned AWSProvider::lastTotalInstances() const {
-    return getImpl<detail::AWSProvider_Impl>()->lastEstimatedCharges();
+    return getImpl<detail::AWSProvider_Impl>()->lastTotalInstances();
   }
 
 
