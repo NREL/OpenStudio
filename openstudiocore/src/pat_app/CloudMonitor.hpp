@@ -247,7 +247,13 @@ class ReconnectCloudWorker : public QObject
 
   virtual ~ReconnectCloudWorker();
 
-  CloudStatus status() const;
+  bool internetAvailable() const;
+
+  bool authenticated() const;
+
+  bool cloudRunning() const;
+
+  bool cloudServiceRunning() const;
 
   signals:
 
@@ -262,6 +268,14 @@ class ReconnectCloudWorker : public QObject
   Q_DISABLE_COPY(ReconnectCloudWorker);
 
   QPointer<CloudMonitor> m_monitor;
+
+  bool m_internetAvailable;
+
+  bool m_authenticated;
+
+  bool m_cloudRunning;
+
+  bool m_cloudServiceRunning;
 
   CloudStatus m_status;
 };

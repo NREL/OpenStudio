@@ -382,16 +382,22 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
 
   m_reconnectCloudThread.clear();
 
-  if( m_reconnectCloudWorker->status() == CLOUD_RUNNING )
+  boost::optional<CloudSettings> settings = currentProjectSettings();
+
+  boost::optional<CloudSession> session = currentProjectSession();
+
+  if( m_reconnectCloudWorker->cloudServiceRunning() )
   {
     setStatus(CLOUD_RUNNING);
+  }
+  else if( settings && session )
+  {
+    setStatus(CLOUD_ERROR);
   }
   else
   {
     setStatus(CLOUD_STOPPED);
   }
-
-  // TODO Handle other states
 }
 
 void CloudMonitor::onCloudConnectionError()
@@ -748,19 +754,36 @@ ReconnectCloudWorker::~ReconnectCloudWorker()
 
 void ReconnectCloudWorker::startWorking()
 {
-  m_status = CLOUD_STOPPED;
+  m_cloudServiceRunning = detail::checkCloudServiceRunning();
 
-  if( detail::reconnectToCloudSession() )
+  if( ! m_cloudServiceRunning )
   {
-    m_status = CLOUD_RUNNING;
+    m_cloudRunning = detail::checkCloudRunning();
+    m_authenticated = detail::checkAuthenticated();
+    m_internetAvailable = detail::checkInternetAvailable();
   }
 
   emit doneWorking();
 }
 
-CloudStatus ReconnectCloudWorker::status() const
+bool ReconnectCloudWorker::internetAvailable() const
 {
-  return m_status;
+  return m_internetAvailable;
+}
+
+bool ReconnectCloudWorker::cloudRunning() const
+{
+  return m_cloudRunning;
+}
+
+bool ReconnectCloudWorker::cloudServiceRunning() const
+{
+  return m_cloudServiceRunning;
+}
+
+bool ReconnectCloudWorker::authenticated() const
+{
+  return m_authenticated;
 }
 
 RecoverCloudWorker::RecoverCloudWorker(CloudMonitor * monitor)
