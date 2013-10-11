@@ -237,15 +237,21 @@ void CloudMonitor::startCloud()
 
     if( boost::optional<AWSSettings> awsSettings = settings.optionalCast<AWSSettings>() )
     {
-      if( ! awsSettings->validAccessKey() || 
-          ! awsSettings->validSecretKey() || 
-          ! awsSettings->userAgreementSigned() )
-      {
-        QString error("Missing or invalid cloud settings.  Verify settings from Cloud menu.");
-        
+      if( !awsSettings->validAccessKey() ) {
+        QString error("Invalid Access Key.  Verify settings from Cloud menu.");
         QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
-
         preCheckPassed = false;
+
+      } else if( !awsSettings->validSecretKey() ) {
+        QString error("Invalid Secret Key.  Verify settings from Cloud menu.");
+        QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
+        preCheckPassed = false;
+
+      } else if( !awsSettings->userAgreementSigned() ) {
+        QString error("The user agreement must be reviewed and signed before continuing.  Verify settings from Cloud menu.");
+        QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
+        preCheckPassed = false;
+
       }
     }
 
@@ -280,7 +286,7 @@ void CloudMonitor::onStartCloudWorkerComplete()
   {
     setStatus(CLOUD_ERROR);
     
-    QString error("Invalid cloud credentials.  Verify account settings from Cloud menu.");
+    QString error("Invalid cloud credentials.  Verify settings from Cloud menu.");
 
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
 
