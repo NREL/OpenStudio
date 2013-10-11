@@ -308,7 +308,12 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
   switch (analysisStatus.value())
   {
     case analysisdriver::AnalysisStatus::Idle:
-      playButton->setStatus(PlayButton::IDLE);
+      if((cloudStatus == CLOUD_STARTING) || 
+         (cloudStatus == CLOUD_STOPPING)){
+        playButton->setStatus(PlayButton::IDLEDISABLED);
+      }else{
+        playButton->setStatus(PlayButton::IDLE);
+      }
       break;
     case analysisdriver::AnalysisStatus::Starting:
       playButton->setStatus(PlayButton::STARTING);
@@ -322,12 +327,6 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
     case analysisdriver::AnalysisStatus::Error:
       playButton->setStatus(PlayButton::ERROR);
       break;
-  }
-  // playButton enabled is set in setStatus, might need to override it based on cloudStatus
-  if((cloudStatus == CLOUD_STARTING) || 
-     (cloudStatus == CLOUD_STOPPING) || 
-     (cloudStatus == CLOUD_ERROR)){
-    playButton->setEnabled(false);
   }
 
   // update progress bar

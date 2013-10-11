@@ -266,7 +266,7 @@ class PlayButton : public QPushButton
 
   public:
 
-  enum Status { IDLE, STARTING, RUNNING, STOPPING, ERROR };
+  enum Status { IDLE, IDLEDISABLED, STARTING, RUNNING, STOPPING, ERROR };
 
   PlayButton(QWidget * parent = 0);
   virtual ~PlayButton() {}

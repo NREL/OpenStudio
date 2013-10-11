@@ -371,6 +371,7 @@
     <file alias="shared_gui_components/images/run_cancel_over.png">../shared_gui_components/images/run_cancel_over.png</file>
     <file alias="shared_gui_components/images/run_cancel_press.png">../shared_gui_components/images/run_cancel_press.png</file>
     <file alias="shared_gui_components/images/run_simulation_button.png">../shared_gui_components/images/run_simulation_button.png</file>
+    <file alias="shared_gui_components/images/run_simulation_button_disabled.png">../shared_gui_components/images/run_simulation_button_disabled.png</file>
     <file alias="shared_gui_components/images/run_simulation_over.png">../shared_gui_components/images/run_simulation_over.png</file>
     <file alias="shared_gui_components/images/run_simulation_press.png">../shared_gui_components/images/run_simulation_press.png</file>
     <file alias="shared_gui_components/images/searchbox_magnifyingglass.png">../shared_gui_components/images/searchbox_magnifyingglass.png</file>

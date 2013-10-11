@@ -473,7 +473,6 @@ void PlayButton::setStatus(const Status & status)
   switch (status)
   {
     case IDLE:
-
       style.append("QPushButton {"
                    "  background-color:transparent;"
                    "  background-image:url(':/shared_gui_components/images/run_simulation_button.png');"
@@ -492,6 +491,20 @@ void PlayButton::setStatus(const Status & status)
                    "}");
       setStyleSheet(style);
       setEnabled(true);
+      break;
+    case IDLEDISABLED:
+      style.append("QPushButton {"
+                   "  background-color:transparent;"
+                   "  background-image:url(':/shared_gui_components/images/run_simulation_button_disabled.png');"
+                   "  background-position:right;"
+                   "  background-repeat:none;"
+                   "  border:none;"
+                   "  font:bold 13px;"
+                   "  height:35px;"
+                   "  text-align:left;"
+                   "}");
+      setStyleSheet(style);
+      setEnabled(false);
       break;
     case STARTING:
       style.clear();
