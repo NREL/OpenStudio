@@ -379,6 +379,6 @@ building_average_space.each {|e| building_average_space_sum += e}
 building_average = building_average_space_sum / building_average_space.length
 
 File.open('./DaylightingMetrics.csv', 'w') do |file|
-  file.puts "Building average daylight autonomy: #{building_average}"
+  file.puts "Building average daylight autonomy:#{building_average}"
   file.puts summary_report
 end
