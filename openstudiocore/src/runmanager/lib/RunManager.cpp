@@ -186,14 +186,21 @@ namespace runmanager {
     return m_impl->outOfDate(job);
   }
 
-  void RunManager::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &t_basePath)
+  bool RunManager::enqueue(const Job &job, bool force, const openstudio::path &basePath)
   {
-    m_impl->enqueue(job, force, t_basePath);
+    return m_impl->enqueue(job, force, basePath);
   }
 
-  void RunManager::enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath)
+  boost::optional<Job> RunManager::enqueueOrReturnExisting(const Job &job,
+                                                           bool force,
+                                                           const openstudio::path &basePath)
   {
-    m_impl->enqueue(jobs, force, t_basePath);
+    return m_impl->enqueueOrReturnExisting(job,force,basePath);
+  }
+
+  bool RunManager::enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath)
+  {
+    return m_impl->enqueue(jobs, force, t_basePath);
   }
 
   void RunManager::remove(const openstudio::runmanager::Job &job)

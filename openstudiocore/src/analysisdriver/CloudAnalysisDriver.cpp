@@ -679,6 +679,11 @@ namespace detail {
 
         success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
       }
+      else {
+        // no running to do, just get results
+        appendErrorsAndWarnings(*m_requestRun);
+        m_requestRun.reset();
+      }
       
       // restart download process(es)
       if (!m_jsonQueue.empty()) {
@@ -689,6 +694,8 @@ namespace detail {
         OS_ASSERT(!m_checkForResultsToDownload && !m_requestDetails);
         startDownloadingDetails();
       }
+
+      checkForRunCompleteOrStopped();
     }
 
     if (!success) {
@@ -1437,7 +1444,15 @@ namespace detail {
       job.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
 
       // add job to database
-      project().runManager().enqueue(job, true);
+      // ETH: Added enqueueOrReturnExisting because failure to enqueue resulted in
+      // landing in the catch clause below. Clearing results for a DataPoint does remove the
+      // topLevelJob, but maybe the initial fake job threw us off, that is, maybe the original
+      // fake job  (with a different UUID than the final job) needs to get thrown away and is
+      // not?
+      boost::optional<runmanager::Job> substitute = project().runManager().enqueueOrReturnExisting(job, true);
+      if (substitute) {
+        job = *substitute;
+      }
 
       // attach externalJob to datapoint
       bool test = project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
@@ -1545,6 +1560,8 @@ namespace detail {
       registerDownloadingJsonFailure();
     }
 
+    setStatus(AnalysisStatus::Running);
+
     return success;
   }
 
@@ -1577,6 +1594,8 @@ namespace detail {
     if (!success) {
       registerDownloadingDetailsFailure();
     }
+
+    setStatus(AnalysisStatus::Running);
 
     return success;
   }
@@ -1694,7 +1713,7 @@ namespace detail {
       }
     }
     else {
-      if (!isRunning() && !isDownloading()) {
+      if (!(isRunning() || isDownloading())) {
         // not trying to stop and not doing anything
         if (numIncompleteDataPoints() == 0) {
           if (m_onlyProcessingDownloadRequests) {
