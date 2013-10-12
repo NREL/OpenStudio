@@ -58,27 +58,29 @@ namespace exportxml {
 
   private:
 
-    QString escapeName(const std::string& name);
+    boost::optional<QDomElement> exportMeasure(QDomDocument& doc,
+                                              const WorkflowStepJob& wfJob);
 
-    boost::optional<QDomElement> exportMeasure(QDomDocument& doc, BCLMeasure& measure );
-    boost::optional<QDomElement> exportDesignAlternative(QDomDocument& doc, 
-                                                          //model::Model& model,
-                                                          SqlFile& sql,
+
+    boost::optional<QDomElement> exportAlternative(QDomDocument& doc, 
+                                                          Attribute& alternativeAttr,
                                                           analysis::DataPoint dataPt,
                                                           std::vector<WorkflowStepJob>& jobs,
-                                                          bool isBaseline);
-    boost::optional<QDomElement> exportAnnual(QDomDocument& doc,
-                                              //model::Model& model,
-                                              SqlFile& sql );
-    boost::optional<QDomElement> exportMonthly(QDomDocument& doc,
-                                                //model::Model& model,
-                                                SqlFile& sql);
-    boost::optional<QDomElement> exportAlternativeMeasure(QDomDocument& doc, WorkflowStepJob& wfJob);
+                                                          std::string edaBaselineName,
+                                                          std::string proposedBaselineName,
+                                                          std::string certificationBaselineName);
 
     boost::optional<QDomElement> exportCashFlow(QDomDocument& doc, 
-                                                std::map<std::string, double>& cashFlowMap, 
-                                                std::string cashFlowTypeStr);    
+                                                const Attribute& cashFlowAttr);
 
+    boost::optional<QDomElement> exportAnnual(QDomDocument& doc,
+                                              const Attribute& annualAttr );
+
+    boost::optional<QDomElement> exportMonthly(QDomDocument& doc,
+                                                const Attribute& monthlyAttr);
+
+    boost::optional<QDomElement> exportChecks(QDomDocument& doc,
+                                              const Attribute& checksAttr);
 
   };
 

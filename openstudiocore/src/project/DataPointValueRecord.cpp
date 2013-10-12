@@ -131,6 +131,10 @@ namespace detail {
     return result;
   }
 
+  boost::optional<int> DataPointValueRecord_Impl::continuousVariableRecordId() const {
+    return m_continuousVariableRecordId;
+  }
+
   boost::optional<ContinuousVariableRecord> 
   DataPointValueRecord_Impl::continuousVariableRecord() const
   {
@@ -146,7 +150,6 @@ namespace detail {
   double DataPointValueRecord_Impl::dataPointValue() const {
     return m_dataPointValue;
   }
-
   void DataPointValueRecord_Impl::bindValues(QSqlQuery& query) const {
     ObjectRecord_Impl::bindValues(query);
 
@@ -416,6 +419,10 @@ DataPointRecord DataPointValueRecord::dataPointRecord() const {
 
 boost::optional<FunctionRecord> DataPointValueRecord::functionRecord() const {
   return getImpl<detail::DataPointValueRecord_Impl>()->functionRecord();
+}
+
+boost::optional<int> DataPointValueRecord::continuousVariableRecordId() const {
+  return getImpl<detail::DataPointValueRecord_Impl>()->continuousVariableRecordId();
 }
 
 boost::optional<ContinuousVariableRecord> DataPointValueRecord::continuousVariableRecord() const {

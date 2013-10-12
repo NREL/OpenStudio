@@ -242,6 +242,9 @@ SET(osversion_resources_src
   osversion/1_0_6/OpenStudio.idd
   osversion/1_0_6/example.osm
   osversion/1_0_6/example.osc
+  osversion/1_0_7/OpenStudio.idd
+  osversion/1_0_7/example.osm
+  osversion/1_0_7/example.osc
   osversion/unknown.osc
 )
 
@@ -339,6 +342,8 @@ SET(project_resources_src
   project/version/project_1_0_3.db  
   project/version/project_1_0_4.osp
   project/version/project_1_0_4.db  
+  project/version/project_1_0_6.osp
+  project/version/project_1_0_6.db  
 )
 
 # update the resources

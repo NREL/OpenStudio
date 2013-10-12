@@ -186,14 +186,21 @@ namespace runmanager {
     return m_impl->outOfDate(job);
   }
 
-  void RunManager::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &t_basePath)
+  bool RunManager::enqueue(const Job &job, bool force, const openstudio::path &basePath)
   {
-    m_impl->enqueue(job, force, t_basePath);
+    return m_impl->enqueue(job, force, basePath);
   }
 
-  void RunManager::enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath)
+  boost::optional<Job> RunManager::enqueueOrReturnExisting(const Job &job,
+                                                           bool force,
+                                                           const openstudio::path &basePath)
   {
-    m_impl->enqueue(jobs, force, t_basePath);
+    return m_impl->enqueueOrReturnExisting(job,force,basePath);
+  }
+
+  bool RunManager::enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath)
+  {
+    return m_impl->enqueue(jobs, force, t_basePath);
   }
 
   void RunManager::remove(const openstudio::runmanager::Job &job)
@@ -300,12 +307,20 @@ namespace runmanager {
 
   void RunManager::updateJob(const openstudio::runmanager::Job &t_job, const openstudio::path &t_path)
   {
-    m_impl->updateJob(t_job, t_path);
+    LOG(Info, "We are re-creating the updating job as an externally managed job, we may want to reevaluate this");
+    m_impl->updateJob(detail::JSON::toJob(detail::JSON::toJSON(t_job), true), t_path);
+  }
+
+  void RunManager::updateJob(const openstudio::UUID &t_uuid, const Job &t_job)
+  {
+    LOG(Info, "We are re-creating the updating job as an externally managed job, we may want to reevaluate this");
+    m_impl->updateJob(t_uuid, detail::JSON::toJob(detail::JSON::toJSON(t_job), true));
   }
 
   void RunManager::updateJob(const openstudio::runmanager::Job &t_job)
   {
-    m_impl->updateJob(t_job);
+    LOG(Info, "We are re-creating the updating job as an externally managed job, we may want to reevaluate this");
+    m_impl->updateJob(detail::JSON::toJob(detail::JSON::toJSON(t_job), true));
   }
 
 
@@ -324,17 +339,18 @@ namespace runmanager {
     updateJobs(detail::JSON::toVectorOfJob(t_variant, t_version, t_externallyManaged));
   }
 
+  /// merge job trees
+  void RunManager::updateJobs(const std::vector<Job> &t_jobs)
+  {
+    m_impl->updateJobs(t_jobs);
+  }
+
   void RunManager::loadJobs(const openstudio::path &t_path)
   {
     m_impl->loadJobs(t_path);
   }
 
 
-  /// merge job trees
-  void RunManager::updateJobs(const std::vector<Job> &t_jobs)
-  {
-    m_impl->updateJobs(t_jobs);
-  }
 
   std::string RunManager::jobsToJson() const
   {

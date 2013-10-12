@@ -130,6 +130,10 @@ namespace detail{
     return std::vector<JoinRecord>();
   }
 
+  boost::optional<int> MeasureRecord_Impl::variableRecordId() const {
+    return m_variableRecordId;
+  }
+
   boost::optional<MeasureGroupRecord> MeasureRecord_Impl::measureGroupRecord() const
   {
     OptionalMeasureGroupRecord result;
@@ -410,20 +414,23 @@ MeasureRecord MeasureRecord::factoryFromMeasure(
   return MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl>());
 }
 
+boost::optional<int> MeasureRecord::variableRecordId() const {
+  return getImpl<detail::MeasureRecord_Impl>()->variableRecordId();
+}
 
 boost::optional<MeasureGroupRecord> MeasureRecord::measureGroupRecord() const
 {
-  return this->getImpl<detail::MeasureRecord_Impl>()->measureGroupRecord();
+  return getImpl<detail::MeasureRecord_Impl>()->measureGroupRecord();
 }
 
 bool MeasureRecord::isSelected() const
 {
-  return this->getImpl<detail::MeasureRecord_Impl>()->isSelected();
+  return getImpl<detail::MeasureRecord_Impl>()->isSelected();
 }
 
 bool MeasureRecord::setIsSelected(bool isSelected)
 {
-  return this->getImpl<detail::MeasureRecord_Impl>()->setIsSelected(isSelected);
+  return getImpl<detail::MeasureRecord_Impl>()->setIsSelected(isSelected);
 }
 
 boost::optional<int> MeasureRecord::measureVectorIndex() const {

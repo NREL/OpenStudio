@@ -285,6 +285,15 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
 
   std::string toJSON(const DataPointSerializationOptions& options) const;
 
+  static boost::optional<DataPoint> loadJSON(const openstudio::path& p,
+                                             const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<DataPoint> loadJSON(std::istream& json,
+                                             const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<DataPoint> loadJSON(const std::string& json,
+                                             const openstudio::path& newProjectDir=openstudio::path());
+
   //@}
  protected:
   /// @cond

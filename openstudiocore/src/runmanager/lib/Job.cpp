@@ -48,6 +48,11 @@ namespace runmanager {
     m_impl->setIndex(index);
   }
 
+  JobParams Job::allParams() const
+  {
+    return m_impl->allParams();
+  }
+
   Files Job::relativeOutputFiles() const
   {
     return m_impl->relativeOutputFiles();
@@ -484,15 +489,32 @@ namespace runmanager {
     return detail::JSON::toJSON(*this);
   }
 
-  void Job::updateJob(const Job &t_other)
+  void Job::updateJob(const Job &t_other, bool t_allowUUIDUpdate)
   {
-    m_impl->updateJob(t_other.m_impl);
+    m_impl->updateJob(t_other.m_impl, t_allowUUIDUpdate);
   }
 
   bool Job::externallyManaged() const
   {
     return m_impl->externallyManaged();
   }
+
+  void Job::sendSignals()
+  {
+    return m_impl->sendSignals();
+  }
+
+
+  void Job::makeExternallyManaged()
+  {
+    m_impl->makeExternallyManaged();
+  }
+
+  void Job::setStatus(const AdvancedStatus &t_status)
+  {
+    m_impl->setStatus(t_status);
+  }
+
 }
 }
 

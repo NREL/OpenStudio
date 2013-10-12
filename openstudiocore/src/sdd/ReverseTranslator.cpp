@@ -76,6 +76,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
+#include <QFileInfo>
 
 namespace openstudio {
 namespace sdd {
@@ -719,7 +720,15 @@ namespace sdd {
       model::YearDescription yearDescription = model.getUniqueModelObject<model::YearDescription>();
       yearDescription.setCalendarYear(yearElement.text().toInt());
 
+      std::string runPeriodName = "Run Period";
+      QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
+      if (!annualWeatherFileElement.isNull()){
+        QFileInfo annualWeatherFile(annualWeatherFileElement.text());
+        runPeriodName = toString(annualWeatherFile.baseName());
+      }
+
       model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();
+      runPeriod.setName(runPeriodName);
       runPeriod.setBeginMonth(beginMonthElement.text().toInt());
       runPeriod.setBeginDayOfMonth(beginDayElement.text().toInt());
       runPeriod.setEndMonth(endMonthElement.text().toInt());

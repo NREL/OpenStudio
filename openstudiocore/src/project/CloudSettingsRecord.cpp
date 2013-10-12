@@ -20,10 +20,14 @@
 #include <project/CloudSettingsRecord.hpp>
 #include <project/CloudSettingsRecord_Impl.hpp>
 
+#include <project/AWSSettingsRecord.hpp>
+#include <project/AWSSettingsRecord_Impl.hpp>
 #include <project/JoinRecord.hpp>
 #include <project/VagrantSettingsRecord.hpp>
 #include <project/VagrantSettingsRecord_Impl.hpp>
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 
@@ -204,6 +208,9 @@ boost::optional<CloudSettingsRecord> CloudSettingsRecord::factoryFromQuery(const
     case CloudSettingsRecordType::VagrantSettingsRecord : 
       result = VagrantSettingsRecord(query, database).cast<CloudSettingsRecord>();
      break;
+    case CloudSettingsRecordType::AWSSettingsRecord :
+      result = AWSSettingsRecord(query, database).cast<AWSSettingsRecord>();
+     break;
     default :
       LOG(Error,"Unknown CloudSettingsRecordType " << cloudSettingsRecordType);
       return boost::none;
@@ -216,6 +223,9 @@ CloudSettingsRecord CloudSettingsRecord::factoryFromCloudSettings(const CloudSet
 {
   if (cloudSettings.optionalCast<VagrantSettings>()) {
     return VagrantSettingsRecord(cloudSettings.cast<VagrantSettings>(), database);
+  }
+  if (cloudSettings.optionalCast<AWSSettings>()) {
+    return AWSSettingsRecord(cloudSettings.cast<AWSSettings>(), database);
   }
 
   OS_ASSERT(false);

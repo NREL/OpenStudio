@@ -123,7 +123,9 @@ namespace detail {
                            m_workerPath,
                            workerUrlRecord().url(),
                            m_haltOnStop,
-                           m_username);
+                           m_username,
+                           false,
+                           0);
   }
 
   void VagrantSettingsRecord_Impl::revertToLastRecordIds() {

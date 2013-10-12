@@ -88,6 +88,10 @@ class PatMainWindow : public QMainWindow
 
   void openBclDlgClicked();
 
+  void openCloudDlgClicked();
+
+  void openMonitorUseDlgClicked();
+
   protected:
 
   void closeEvent(QCloseEvent * event);

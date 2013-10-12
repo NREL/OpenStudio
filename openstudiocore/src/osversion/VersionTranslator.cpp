@@ -133,6 +133,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.0.4"));
   m_startVersions.push_back(VersionString("1.0.5"));
   m_startVersions.push_back(VersionString("1.0.6"));
+  m_startVersions.push_back(VersionString("1.0.7"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -341,10 +342,23 @@ void VersionTranslator::initializeMap(std::istream& is) {
     return;
   }
   if (currentVersion > VersionString(openStudioVersion())) {
-    LOG(Error,"Version extracted from file '" << currentVersion.str()
-        << "' is not supported by OpenStudio Version " << openStudioVersion()
-        << ". Please check http://openstudio.nrel.gov for updates.");
-    return;
+    // if currentVersion is just one ahead, may be a developer using the cloud. 
+    // let it pass as if currentVersion == openStudioVersion(), with a warning
+    if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
+      LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
+          << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
+          << "Proceeding as if these versions are the same. Use with caution. (You "
+          << "should only be seeing this if you are a developer working with cloud "
+          << "resources.)");
+      currentVersion = VersionString(openStudioVersion());
+    }
+    else {
+      // if currentVersion is farther ahead, log error and return nothing
+      LOG(Error,"Version extracted from file '" << currentVersion.str()
+          << "' is not supported by OpenStudio Version " << openStudioVersion()
+          << ". Please check http://openstudio.nrel.gov for updates.");
+      return;
+    }
   }
 
   // load IdfFile with correct IddFile and save

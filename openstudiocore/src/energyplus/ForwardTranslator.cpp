@@ -43,9 +43,12 @@
 
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
+#include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
+#include <utilities/idd/FluidProperties_GlycolConcentration_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
 #include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
@@ -56,7 +59,11 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/plot/ProgressBar.hpp>
 
+#include <QFile>
+#include <QTextStream>
 #include <QThread>
+
+#include <sstream>
 
 using namespace openstudio::model;
 
@@ -71,6 +78,7 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
+  createFluidPropertiesMap();
 
   // temp code 
   m_keepRunControlSpecialDays = false;
@@ -385,6 +393,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVAC(airLoopHVAC);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat :
+    {
+      model::AirTerminalSingleDuctConstantVolumeReheat airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeReheat>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeReheat(airTerminal);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam :
     {
       model::AirTerminalSingleDuctConstantVolumeCooledBeam airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
@@ -401,6 +415,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::AirTerminalSingleDuctUncontrolled airTerminal = modelObject.cast<AirTerminalSingleDuctUncontrolled>();
       retVal = translateAirTerminalSingleDuctUncontrolled(airTerminal);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat :
+    {
+      model::AirTerminalSingleDuctVAVNoReheat airTerminal = modelObject.cast<AirTerminalSingleDuctVAVNoReheat>();
+      retVal = translateAirTerminalSingleDuctVAVNoReheat(airTerminal);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat :
@@ -1075,6 +1095,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePortList(portList);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_Case :
+    {
+      model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();
+      retVal = translateRefrigerationCase(refrigerationCase);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Refrigeration_Compressor :
+    {
+      model::RefrigerationCompressor refrigerationCompressor = modelObject.cast<RefrigerationCompressor>();
+      retVal = translateRefrigerationCompressor(refrigerationCompressor);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled :
+    {
+      model::RefrigerationCondenserAirCooled refrigerationCondenserAirCooled = modelObject.cast<RefrigerationCondenserAirCooled>();
+      retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Refrigeration_System :
+    {
+      model::RefrigerationSystem refrigerationSystem = modelObject.cast<RefrigerationSystem>();
+      retVal = translateRefrigerationSystem(refrigerationSystem);
+      break;
+    }
   case openstudio::IddObjectType::OS_Rendering_Color :
     {
       // no-op
@@ -1623,10 +1667,10 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_Water);
-	 result.push_back(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
+  result.push_back(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
   result.push_back(IddObjectType::OS_Coil_Heating_Gas);
   result.push_back(IddObjectType::OS_Coil_Heating_Water);
-	 result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
+  result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
   result.push_back(IddObjectType::OS_Connection);
   result.push_back(IddObjectType::OS_Connector_Mixer);
   result.push_back(IddObjectType::OS_Connector_Splitter);
@@ -1663,6 +1707,12 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+
+  result.push_back(IddObjectType::OS_Refrigeration_Case);
+  result.push_back(IddObjectType::OS_Refrigeration_Compressor);
+  result.push_back(IddObjectType::OS_Refrigeration_Condenser_AirCooled);
+  result.push_back(IddObjectType::OS_Refrigeration_System);
+
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 
@@ -2155,6 +2205,117 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
   if (OptionalString moName = modelObject.name()) {
     idfObject.setName(*moName);
   }
+  return idfObject;
+}
+
+boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
+  QFile file(QString().fromStdString(path));
+  bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
+  OS_ASSERT(opened);
+
+  QTextStream in(&file);
+  std::stringstream ss;
+  ss << in.readAll().toStdString();
+
+  return IdfFile::load(ss, IddFileType::EnergyPlus);
+}
+
+void ForwardTranslator::createFluidPropertiesMap()
+{
+  m_fluidPropertiesMap.insert(make_pair("R11", ":/Resources/R11_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R12", ":/Resources/R12_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R22", ":/Resources/R22_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R123", ":/Resources/R123_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R134a", ":/Resources/R134a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R404a", ":/Resources/R404a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R407a", ":/Resources/R407a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R410a", ":/Resources/R410a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("NH3", ":/Resources/NH3_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R507a", ":/Resources/R507a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R744", ":/Resources/R744_FluidPropertiesDataSet.idf"));
+}
+
+boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& glycolType, int glycolConcentration) {
+
+  std::stringstream sstm;
+  sstm << glycolType << "_" << glycolConcentration;
+  std::string glycolName = sstm.str();
+
+  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+     it != m_idfObjects.end();
+     it++ )
+  {
+    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+      if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
+        return *it;
+      }
+    }
+  }
+
+  IdfObject fluidPropName(openstudio::IddObjectType::FluidProperties_Name);
+  fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
+  fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");
+
+  IdfObject fluidPropGlyConcentration(openstudio::IddObjectType::FluidProperties_GlycolConcentration);
+  fluidPropGlyConcentration.setName(glycolName);
+  if(istringEqual(glycolType, "PropyleneGlycol")){
+    fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, "PropyleneGlycol");
+  }
+  else if(istringEqual(glycolType, "EthyleneGlycol")){
+    fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, "EthyleneGlycol");
+  }
+  else {
+    return boost::none;
+  }
+  fluidPropGlyConcentration.setDouble(FluidProperties_GlycolConcentrationFields::GlycolConcentration, glycolConcentration * 0.01);
+
+  m_idfObjects.push_back(fluidPropName);
+  m_idfObjects.push_back(fluidPropGlyConcentration);
+
+  return fluidPropName;
+}
+
+boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& fluidType) {
+
+  boost::optional<IdfObject> idfObject;
+  boost::optional<IdfFile> idfFile;
+
+  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+     it != m_idfObjects.end();
+     it++ )
+  {
+    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+      if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
+        return *it;
+      }
+    }
+  }
+
+  FluidPropertiesMap::const_iterator objInMap = m_fluidPropertiesMap.find( fluidType );
+  if( objInMap != m_fluidPropertiesMap.end() )
+  {
+    idfFile = findIdfFile(objInMap->second);
+  }
+  else
+  {
+    LOG(Warn, "Fluid Type not valid choice: '" << fluidType << "'");
+    return boost::none;
+  }
+
+  if(idfFile){
+    std::vector<IdfObject> fluidObjects = idfFile->objects();
+
+    for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
+       it != fluidObjects.end();
+       it++ )
+    {
+      if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+        idfObject = *it;
+      }
+      m_idfObjects.push_back(*it);
+    }
+  }
+
   return idfObject;
 }
 

@@ -22,8 +22,7 @@
 
 #include <QWidget>
 #include <QPointer>
-
-class QPushButton;
+#include <QPushButton>
 
 namespace openstudio {
 
@@ -32,7 +31,7 @@ class OSViewSwitcher;
 // OSHeader is an empty QWidget that must be subclassed to show something interesting.
 // The purpose of this class is to ensure that there is a toggle button to support OSCollapsibleView. 
 // It is the responsibility of the subclass to insert the toggle button into a layout.
-class OSHeader : public QWidget
+class OSHeader : public QPushButton
 {
   Q_OBJECT
 
@@ -72,7 +71,6 @@ class OSCollapsibleView : public QWidget
   void setExpanded(bool expanded);
 
   bool isExpanded();
-
 
   private:
 
