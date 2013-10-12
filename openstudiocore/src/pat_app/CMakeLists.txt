@@ -13,7 +13,9 @@ SET( ${target_name}_SRC
   DesignAlternativesView.cpp
   DesignAlternativesView.hpp
   ExportXML.cpp
-  ExportXML.hpp  
+  ExportXML.hpp
+  ExportXMLDialog.cpp
+  ExportXMLDialog.hpp
   HorizontalTabWidget.cpp
   HorizontalTabWidget.hpp
   main.cpp
@@ -136,6 +138,7 @@ SET( ${target_name}_moc
   CloudMonitor.hpp
   DesignAlternativesTabController.hpp
   DesignAlternativesView.hpp
+  ExportXMLDialog.hpp
   HorizontalTabWidget.hpp
   MainRightColumnController.hpp
   MeasuresTabController.hpp
