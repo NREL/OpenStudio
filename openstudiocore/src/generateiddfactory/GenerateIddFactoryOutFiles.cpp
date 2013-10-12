@@ -48,9 +48,7 @@ IddFactoryOutFile::IddFactoryOutFile(const std::string& filename,
 std::string IddFactoryOutFile::finalize(const std::string& oldChecksum) {
   tempFile.close();
   std::string newChecksum = openstudio::checksum(tempPath);
-  // ETH@20111122 Always copy for now. CMake/build process can't yet handle "sometimes generated" 
-  // files.
-  bool copyFile = true; // (newChecksum != oldChecksum);
+  bool copyFile = (newChecksum != oldChecksum);
   if (copyFile) {
     if (boost::filesystem::exists(finalPath)) {
       boost::filesystem::remove(finalPath);
