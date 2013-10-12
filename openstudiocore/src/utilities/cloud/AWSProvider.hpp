@@ -308,6 +308,33 @@ namespace detail {
     // returns the recommended default worker instance type
     static std::string defaultWorkerInstanceType();
 
+    static std::vector<unsigned> serverProcessorCounts();
+
+    static std::vector<unsigned> workerProcessorCounts();
+
+    static std::vector<std::string> serverPrettyNames();
+
+    static std::vector<std::string> workerPrettyNames();
+
+    static std::string getServerPrettyName(const std::string & instanceType);
+
+    static std::string getWorkerPrettyName(const std::string & instanceType);
+
+    static unsigned getServerProcessorCount(const std::string & instanceType);
+
+    static unsigned getWorkerProcessorCount(const std::string & instanceType);
+
+    struct AWSComputerInformation {
+      public:
+        std::string instanceType;
+        std::string prettyName;
+        unsigned processorCount;
+    };
+
+    static std::vector<AWSComputerInformation> serverInformation();  
+
+    static std::vector<AWSComputerInformation> workerInformation();
+
     // returns true if the cloud server successfully requests the estimated charges
     bool requestEstimatedCharges();
 
@@ -326,7 +353,6 @@ namespace detail {
     // returns the last value of the total instances check
     unsigned lastTotalInstances() const;
 
-
     //@}
   protected:
 
@@ -335,8 +361,6 @@ namespace detail {
     typedef detail::AWSProvider_Impl ImplType;
 
     friend class CloudProvider;
-
-  private:
 
   };
 

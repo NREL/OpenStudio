@@ -827,7 +827,13 @@ void AmazonProviderWidget::createLoginWidget()
 
 void AmazonProviderWidget::createSettingsWidget()
 {
+  QHBoxLayout * hLayout = 0;
+
+  QVBoxLayout * vLayout = 0;
+
   QLabel * label = 0;
+
+  bool isConnected = false;
 
   // LEFT SETTINGS PAGE
 
@@ -848,19 +854,115 @@ void AmazonProviderWidget::createSettingsWidget()
 
   label = new QLabel;
   label->setObjectName("H2");
-  label->setText("Server Instance Type");
+  label->setText("Server Information");
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_serverInstanceTypeComboBox = new QComboBox();
-  m_leftSettingsLayout->addWidget(m_serverInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
-  
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  m_leftSettingsLayout->addLayout(hLayout);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
   label = new QLabel;
   label->setObjectName("H2");
-  label->setText("Worker Instance Type");
+  label->setText("Instance Type");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_serverInstanceTypeComboBox = new QComboBox();
+  vLayout->addWidget(m_serverInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  isConnected = connect(m_serverInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
+    this, SLOT(on_serverInstanceTypeComboBox(const QString &)));
+  OS_ASSERT(isConnected); 
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Name");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_serverNameLabel = new QLabel;
+  m_serverNameLabel->setFixedWidth(200);
+  vLayout->addWidget(m_serverNameLabel,0,Qt::AlignTop | Qt::AlignLeft);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("CPU Count");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_serverCpuCountLabel = new QLabel;
+  vLayout->addWidget(m_serverCpuCountLabel,0,Qt::AlignTop | Qt::AlignLeft);
+
+  QSpacerItem * vSpacer = 0;
+  vSpacer = new QSpacerItem(0, 10, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  m_leftSettingsLayout->addSpacerItem(vSpacer); 
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Worker Information");
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  m_leftSettingsLayout->addLayout(hLayout);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Instance Type");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
   m_workerInstanceTypeComboBox = new QComboBox();
-  m_leftSettingsLayout->addWidget(m_workerInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
+  vLayout->addWidget(m_workerInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  isConnected = connect(m_workerInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
+    this, SLOT(on_workerInstanceTypeComboBox(const QString &)));
+  OS_ASSERT(isConnected); 
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Name");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_workerNameLabel = new QLabel;
+  m_workerNameLabel->setFixedWidth(200);
+  vLayout->addWidget(m_workerNameLabel,0,Qt::AlignTop | Qt::AlignLeft);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("CPU Count");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_workerCpuCountLabel = new QLabel;
+  vLayout->addWidget(m_workerCpuCountLabel,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
   label->setObjectName("H2");
@@ -977,5 +1079,21 @@ void AmazonProviderWidget::saveData()
 }
 
 //***** SLOTS *****
+
+void AmazonProviderWidget::on_serverInstanceTypeComboBox(const QString & text)
+{
+  QString temp;
+
+  m_serverNameLabel->setText(AWSProvider::getServerPrettyName(text.toStdString()).c_str());
+  m_serverCpuCountLabel->setText(temp.setNum(AWSProvider::getServerProcessorCount(text.toStdString())));
+}
+
+void AmazonProviderWidget::on_workerInstanceTypeComboBox(const QString & text)
+{
+  QString temp;
+
+  m_workerNameLabel->setText(AWSProvider::getWorkerPrettyName(text.toStdString()).c_str());
+  m_workerCpuCountLabel->setText(temp.setNum(AWSProvider::getWorkerProcessorCount(text.toStdString())));
+}
 
 } // openstudio
