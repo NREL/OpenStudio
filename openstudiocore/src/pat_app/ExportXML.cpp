@@ -114,7 +114,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   //simulation_software
   QDomElement softwareElem = doc.createElement("simulation_software");
   analysisElem.appendChild(softwareElem);
-  QString softwareName = toQString("OpenStudio");
+  QString softwareName = QString("OpenStudio");
   softwareElem.appendChild(doc.createTextNode(softwareName));
 
   //get the problem from the project
