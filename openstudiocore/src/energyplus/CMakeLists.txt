@@ -113,7 +113,11 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCondenserCascade.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserEvaporativeCooled.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCondenserWaterCooled.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationSubcoolerLiquidSuction.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationSubcoolerMechanical.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSecondarySystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationWalkIn.cpp

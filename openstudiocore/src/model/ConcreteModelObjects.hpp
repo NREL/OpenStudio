@@ -20,9 +20,6 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
- #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
- #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
-
 #include <model/AirGap.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
@@ -108,6 +105,8 @@
 #include <model/ElectricEquipment.hpp>
 #include <model/ElectricEquipmentDefinition.hpp>
 #include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
+#include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
+#include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
 #include <model/ExteriorLights.hpp>
 #include <model/ExteriorLightsDefinition.hpp>
 #include <model/Facility.hpp>
@@ -165,7 +164,11 @@
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
+#include <model/RefrigerationCondenserCascade.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
+#include <model/RefrigerationCondenserWaterCooled.hpp>
+#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
+#include <model/RefrigerationSubcoolerMechanical.hpp>
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationSystem.hpp>
 #include <model/RefrigerationWalkIn.hpp>
@@ -400,7 +403,11 @@
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+#include <model/RefrigerationCondenserCascade_Impl.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
+#include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
+#include <model/RefrigerationSubcoolerLiquidSuction_Impl.hpp>
+#include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
 #include <model/RefrigerationSecondarySystem_Impl.hpp>
 #include <model/RefrigerationSystem_Impl.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
@@ -494,4 +501,3 @@
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP
-

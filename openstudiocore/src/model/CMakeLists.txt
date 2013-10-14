@@ -508,9 +508,21 @@ SET( ${target_name}_src
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
+  RefrigerationCondenserCascade.hpp
+  RefrigerationCondenserCascade_Impl.hpp
+  RefrigerationCondenserCascade.cpp
   RefrigerationCondenserEvaporativeCooled.hpp
   RefrigerationCondenserEvaporativeCooled_Impl.hpp
   RefrigerationCondenserEvaporativeCooled.cpp
+  RefrigerationCondenserWaterCooled.hpp
+  RefrigerationCondenserWaterCooled_Impl.hpp
+  RefrigerationCondenserWaterCooled.cpp
+  RefrigerationSubcoolerLiquidSuction.hpp
+  RefrigerationSubcoolerLiquidSuction_Impl.hpp
+  RefrigerationSubcoolerLiquidSuction.cpp
+  RefrigerationSubcoolerMechanical.hpp
+  RefrigerationSubcoolerMechanical_Impl.hpp
+  RefrigerationSubcoolerMechanical.cpp
   RefrigerationSecondarySystem.hpp
   RefrigerationSecondarySystem_Impl.hpp
   RefrigerationSecondarySystem.cpp
@@ -1001,7 +1013,11 @@ SET( ${target_name}_moc
   RefrigerationCase_Impl.hpp
   RefrigerationCompressor_Impl.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
+  RefrigerationCondenserCascade_Impl.hpp
   RefrigerationCondenserEvaporativeCooled_Impl.hpp
+  RefrigerationCondenserWaterCooled_Impl.hpp
+  RefrigerationSubcoolerLiquidSuction_Impl.hpp
+  RefrigerationSubcoolerMechanical_Impl.hpp
   RefrigerationSecondarySystem_Impl.hpp
   RefrigerationSystem_Impl.hpp
   RefrigerationWalkIn_Impl.hpp
@@ -1233,7 +1249,11 @@ SET( ${target_name}_test_src
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
+  test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
+  test/RefrigerationCondenserWaterCooled_GTest.cpp
+  test/RefrigerationSubcoolerLiquidSuction_GTest.cpp
+  test/RefrigerationSubcoolerMechanical_GTest.cpp
   test/RefrigerationSecondarySystem_GTest.cpp
   test/RefrigerationSystem_GTest.cpp
   test/RefrigerationWalkIn_GTest.cpp
@@ -1328,5 +1348,4 @@ MAKE_SWIG_TARGET( OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHV
 MAKE_SWIG_TARGET( OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
 
 MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration )
-
 

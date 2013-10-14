@@ -6262,8 +6262,8 @@ OS:Refrigeration:Compressor,
         \type object-list
         \object-list BicubicCurves
 
-OS:Refrigeration:Subcooler,
-        \min-fields 6
+OS:Refrigeration:Subcooler:Mechanical,
+        \min-fields 4
   A1,   \field Handle
         \type handle
         \required-field
@@ -6271,12 +6271,26 @@ OS:Refrigeration:Subcooler,
         \type alpha
         \required-field
         \reference RefrigerationSubcoolerNames
-  A3,   \field Subcooler Type
-        \type choice
-        \key Mechanical
-        \key LiquidSuction
-        \default LiquidSuction
-        \note Plan to add ambient subcoolers at future time
+  A3,   \field Capacity-Providing System
+        \type object-list
+        \object-list RefrigerationSystemNames
+        \note Name of the Detailed Refrigeration System providing cooling capacity
+        \note Applicable only and required for mechanical subcoolers
+  N1;   \field Outlet Control Temperature
+        \type real
+        \units C
+        \note Control Temperature Out for subcooled liquid
+        \note Applicable only and required for mechanical subcoolers
+
+OS:Refrigeration:Subcooler:LiquidSuction,
+        \min-fields 5
+  A1,   \field Handle
+        \type handle
+        \required-field
+  A2,   \field Name
+        \type alpha
+        \required-field
+        \reference RefrigerationSubcoolerNames
   N1,   \field Liquid Suction Design Subcooling Temperature Difference
         \type real
         \units deltaC
@@ -6287,24 +6301,14 @@ OS:Refrigeration:Subcooler,
         \units C
         \note Design inlet temperature on liquid side
         \note Applicable only and required for liquid suction heat exchangers (LSHX)
-  N3,   \field Design Vapor Inlet Temperature
+  N3;   \field Design Vapor Inlet Temperature
         \type real
         \units C
         \note Design inlet temperature on vapor side
         \note Applicable only and required for liquid suction heat exchangers (LSHX)
         \note Design vapor inlet temperature must be less than or equal to
         \note      the Liquid inlet design temp
-  A4,   \field Capacity-Providing System
-        \type object-list
-        \object-list RefrigerationSystemNames
-        \note Name of the Detailed Refrigeration System providing cooling capacity
-        \note Applicable only and required for mechanical subcoolers
-  N4;   \field Outlet Control Temperature
-        \type real
-        \units C
-        \note Control Temperature Out for subcooled liquid
-        \note Applicable only and required for mechanical subcoolers
-
+		
 OS:Refrigeration:System,
         \min-fields 8
   A1,   \field Handle
