@@ -30,5 +30,12 @@ cd /mnt/openstudio/rails-models && unzip -o rails-models.zip
 # Run this once more to make sure all files have world writable permissions (for now)
 sudo chmod -R 777 /mnt/openstudio
 
+#turn off hyperthreading
+for cpunum in $(
+  cat /sys/devices/system/cpu/cpu*/topology/thread_siblings_list | 
+  cut -s -d, -f2- | tr ',' '\n' | sort -un); do
+    echo 0 > /sys/devices/system/cpu/cpu$cpunum/online
+done
+
 #file flag the user_data has completed
 cat /dev/null > /home/ubuntu/user_data_done
