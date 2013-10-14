@@ -57,7 +57,7 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string> alternatives, QW
   vLayout->addWidget(label);
   m_edaBaselineComboBox = new QComboBox(this);
   //make all alternatives available in the dropdown box
-  m_edaBaselineComboBox->addItem(toQString("No EDA Baseline"));
+  m_edaBaselineComboBox->addItem(QString("No EDA Baseline"));
   Q_FOREACH( const std::string & alternativeName, alternatives) {
     m_edaBaselineComboBox->addItem(toQString(alternativeName));
   }
@@ -70,7 +70,7 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string> alternatives, QW
   label->setObjectName("H2");
   vLayout->addWidget(label);
   m_proposedBaselineComboBox = new QComboBox(this);
-  m_proposedBaselineComboBox->addItem(toQString("No Proposed Baseline"));
+  m_proposedBaselineComboBox->addItem(QString("No Proposed Baseline"));
   //make all alternatives available in the dropdown box
   Q_FOREACH( const std::string & alternativeName, alternatives) {
     m_proposedBaselineComboBox->addItem(toQString(alternativeName));
@@ -85,7 +85,7 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string> alternatives, QW
   vLayout->addWidget(label);
   m_certificationBaselineComboBox = new QComboBox(this);
   //make all alternatives available in the dropdown box
-  m_certificationBaselineComboBox->addItem(toQString("No Certification Baseline"));
+  m_certificationBaselineComboBox->addItem(QString("No Certification Baseline"));
   Q_FOREACH( const std::string & alternativeName, alternatives) {
     m_certificationBaselineComboBox->addItem(toQString(alternativeName));
   }
