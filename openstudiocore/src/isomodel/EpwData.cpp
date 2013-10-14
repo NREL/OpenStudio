@@ -5,48 +5,43 @@ namespace isomodel {
 
 EpwData::EpwData(void)
 {
-	this->data = new double * [7];
-  for(int c = 0;c<7;c++)
-	{
-		data[c] = NULL;
-	}
+	this->m_data.resize(7);
 }
 
 
 EpwData::~EpwData(void)
 {
-	delete[] data;
 }
 
 
-void EpwData::parseHeader(string line)
+void EpwData::parseHeader(std::string line)
 {
-	stringstream linestream (line);
-	string s;
+	std::stringstream linestream (line);
+	std::string s;
   //cout << "Weather Location Header: "<<endl;
 	for(int i = 0;i<10;i++)
 	{
-		getline(linestream, s, ',');
+		std::getline(linestream, s, ',');
 		switch(i)
 		{	
 		case 1:
-			this->location = s;
+			this->m_location = s;
 			//cout << "\tLocation: " << s <<endl;
 			break;
 		case 5:
-			this->stationid = s;
+			this->m_stationid = s;
 			//cout << "\tStation ID: " << s <<endl;
 			break;
 		case 6:
-			this->latitude = atof(s.c_str());
+			this->m_latitude = atof(s.c_str());
 			//cout << "\tLatitude: " << s <<endl;
 			break;
 		case 7:
-			this->longitude = atof(s.c_str());
+			this->m_longitude = atof(s.c_str());
 			//cout << "\tLongitude: " << s <<endl;
 			break;
 		case 8:
-			this->timezone = (int)atof(s.c_str());
+			this->m_timezone = (int)atof(s.c_str());
 			//cout << "\tTimezone: " << s <<endl;
 			break;
 		default:
@@ -54,14 +49,14 @@ void EpwData::parseHeader(string line)
 		}
 	}			
 }
-void EpwData::parseData(string line, int row)
+void EpwData::parseData(std::string line, int row)
 {
-	stringstream linestream (line);
-	string s;
+	std::stringstream linestream (line);
+	std::string s;
 	int col = 0;
 	for(int i = 0;i<22;i++)
 	{
-		getline(linestream, s, ',');
+		std::getline(linestream, s, ',');
 		switch(i)
 		{	
 			case 6:
@@ -71,7 +66,7 @@ void EpwData::parseData(string line, int row)
 			case 14:
 			case 15:
 			case 21:
-				this->data[col++][row] = (double)::atof(s.c_str());
+				this->m_data[col++][row] = (double)::atof(s.c_str());
 				break;
 			default:
 				break;
@@ -81,70 +76,70 @@ void EpwData::parseData(string line, int row)
 std::string EpwData::toISOData(){
   std::string results;
   TimeFrame frames;
-	SolarRadiation* pos = new SolarRadiation(&frames,this);
-	pos->Calculate();
-  stringstream sstream;
-  sstream << "mdbt" << endl;
+	SolarRadiation pos(&frames,this);
+	pos.Calculate();
+  std::stringstream sstream;
+  sstream << "mdbt" << std::endl;
 	for(int i = 0;i<12;i++)
 	{
-		sstream << i << "," << pos->MonthlyDryBulbTemp[i] <<endl;
+		sstream << i << "," << pos.monthlyDryBulbTemp()[i] <<std::endl;
 	}
-	sstream << "mwind" << endl;
+	sstream << "mwind" << std::endl;
 	for(int i = 0;i<12;i++)
 	{
-		sstream << i << "," << pos->MonthlyWindspeed[i] <<endl;
+		sstream << i << "," << pos.monthlyWindspeed()[i] <<std::endl;
 	}
-	sstream << "mEgh" << endl;
+	sstream << "mEgh" << std::endl;
 	for(int i = 0;i<12;i++)
 	{
-		sstream << i << "," << pos->MonthlyGlobalHorizontalRadiation[i] <<endl;
+		sstream << i << "," << pos.monthlyGlobalHorizontalRadiation()[i] <<std::endl;
 	}
-	sstream << "hdbt" << endl;
+	sstream << "hdbt" << std::endl;
 	for(int i = 0;i<12;i++)
 	{
     sstream << i;
 		for(int h = 0;h<24;h++)
 		{
-			sstream << "," << pos->HourlyDryBulbTemp[i][h];
+			sstream << "," << pos.hourlyDryBulbTemp()[i][h];
 		} 
-		sstream <<endl;
+		sstream <<std::endl;
 	}
-	sstream << "hEgh" << endl;
+	sstream << "hEgh" << std::endl;
 	for(int i = 0;i<12;i++)
 	{
 		sstream << i;
 		for(int h = 0;h<24;h++)
 		{
-			sstream << "," << pos->HourlyGlobalHorizontalRadiation[i][h];
+			sstream << "," << pos.hourlyGlobalHorizontalRadiation()[i][h];
 		} 
-		sstream <<endl;
+		sstream <<std::endl;
 	}
-	sstream << "solar" << endl;
+	sstream << "solar" << std::endl;
 	for(int i = 0;i<12;i++)
 	{
 		sstream << i;
 		for(int s = 0;s<NUM_SURFACES;s++)
 		{
-			sstream << "," << pos->MonthlySolarRadiation[i][s];
+			sstream << "," << pos.monthlySolarRadiation()[i][s];
 		} 
-		sstream <<endl;
+		sstream <<std::endl;
 	}
   return sstream.str();
 }
 void EpwData::loadData(std::string fn)
 {
-	string line;
-	ifstream myfile (fn);
+	std::string line;
+	std::ifstream myfile (fn);
 	int i = 0;
 	int row = 0;
 	
 	for(int c = 0;c<7;c++)
 	{
-		data[c] = new double[8760];
+		m_data[c].resize(8760);
 	}
 	if (myfile.is_open())
 	{
-		while ( myfile.good())
+		while ( myfile.good() && row < 8760)
 		{
 			i++;
 			getline (myfile,line);
@@ -155,7 +150,7 @@ void EpwData::loadData(std::string fn)
 			else if(i > 8)
 			{
 				this->parseData(line,row++);
-			}
+			}      
 		}
 		myfile.close();
 	}

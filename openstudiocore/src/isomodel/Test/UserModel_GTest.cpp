@@ -57,7 +57,7 @@ TEST_F(ISOModelFixture, UserModel)
   userModel.setLightingOccupancySensorSystem(0.191200546809349);
   userModel.setConstantIlluminationControl(0.295905191092175);
   userModel.setCoolingSystemCOP(0.977647331541828);
-  userModel.setCoolingSystemIPLV(0.86953551426846);
+  userModel.setCoolingSystemIPLVToCOPRatio(0.86953551426846);
   userModel.setHeatingEnergyCarrier(0.263002176275548);
   userModel.setHeatingSystemEfficiency(0.710454137223511);
   userModel.setVentilationType(0.0841726806995226);
@@ -188,7 +188,7 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(0.191200546809349, userModel.lightingOccupancySensorSystem());
   EXPECT_EQ(0.295905191092175, userModel.constantIlluminationControl());
   EXPECT_EQ(0.977647331541828, userModel.coolingSystemCOP());
-  EXPECT_EQ(0.86953551426846, userModel.coolingSystemIPLV());
+  EXPECT_EQ(0.86953551426846, userModel.coolingSystemIPLVToCOPRatio());
   EXPECT_EQ(0.263002176275548, userModel.heatingEnergyCarrier());
   EXPECT_EQ(0.710454137223511, userModel.heatingSystemEfficiency());
   EXPECT_EQ(0.0841726806995226, userModel.ventilationType());
@@ -333,7 +333,7 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(1.0, userModel.lightingOccupancySensorSystem());
   EXPECT_EQ(1.0, userModel.constantIlluminationControl());
   EXPECT_EQ(3.0, userModel.coolingSystemCOP());
-  EXPECT_EQ(1.0, userModel.coolingSystemIPLV());
+  EXPECT_EQ(1.0, userModel.coolingSystemIPLVToCOPRatio());
   EXPECT_EQ(2.0, userModel.heatingEnergyCarrier());
   EXPECT_EQ(0.80000000000000004, userModel.heatingSystemEfficiency());
   EXPECT_EQ(1.0, userModel.ventilationType());

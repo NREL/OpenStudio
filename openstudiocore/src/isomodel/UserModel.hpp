@@ -66,7 +66,7 @@ namespace isomodel {
     double _lightingOccupancySensorSystem;
     double _constantIlluminationControl;
     double _coolingSystemCOP;
-    double _coolingSystemIPLV;
+    double _coolingSystemIPLVToCOPRatio;
     double _heatingEnergyCarrier;
     double _heatingSystemEfficiency;
     double _ventilationType;
@@ -249,7 +249,7 @@ namespace isomodel {
     double lightingOccupancySensorSystem(){return _lightingOccupancySensorSystem;} const 
     double constantIlluminationControl(){return _constantIlluminationControl;} const 
     double coolingSystemCOP(){return _coolingSystemCOP;} const 
-    double coolingSystemIPLV(){return _coolingSystemIPLV;} const 
+    double coolingSystemIPLVToCOPRatio(){return _coolingSystemIPLVToCOPRatio;} const 
     double heatingEnergyCarrier(){return _heatingEnergyCarrier;} const 
     double heatingSystemEfficiency(){return _heatingSystemEfficiency;} const 
     double ventilationType(){return _ventilationType;} const 
@@ -445,7 +445,7 @@ namespace isomodel {
     void setLightingOccupancySensorSystem(double val){ _lightingOccupancySensorSystem = val;}
     void setConstantIlluminationControl(double val){ _constantIlluminationControl = val;}
     void setCoolingSystemCOP(double val){ _coolingSystemCOP = val;}
-    void setCoolingSystemIPLV(double val){ _coolingSystemIPLV = val;}
+    void setCoolingSystemIPLVToCOPRatio(double val){ _coolingSystemIPLVToCOPRatio = val;}
     void setHeatingEnergyCarrier(double val){ _heatingEnergyCarrier = val;}
     void setHeatingSystemEfficiency(double val){ _heatingSystemEfficiency = val;}
     void setVentilationType(double val){ _ventilationType = val;}

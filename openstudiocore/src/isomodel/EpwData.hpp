@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <sstream>
 #include <isomodel/SolarRadiation.hpp>
 #include <isomodel/TimeFrame.hpp>
@@ -29,28 +30,35 @@
 namespace openstudio {
 namespace isomodel {
 
-#define DBT  0
-#define DPT  1
-#define RH   2
-#define EGH  3
-#define EB   4
-#define ED   5
-#define WSPD 6
+const int DBT = 0;
+const int DPT = 1;
+const int RH = 2;
+const int EGH = 3;
+const int EB = 4;
+const int ED = 5;
+const int WSPD = 6;
 
 class SolarRadiation;
-using namespace std;
+
 class EpwData
 {
 protected:
-	void parseHeader(string line);
-	void parseData(string line, int row);
+	void parseHeader(std::string line);
+	void parseData(std::string line, int row);
+	std::string m_location,m_stationid;
+	int m_timezone;
+	double m_latitude,m_longitude;
+	std::vector< std::vector<double> > m_data;
 public:
-	string location,stationid;
-	int timezone;
-	double latitude,longitude;
-	double** data;
 	EpwData(void);
 	~EpwData(void);
+  std::string location(){return m_location;}
+  std::string stationid(){return m_stationid;}
+  int timezone(){return m_timezone;}
+  double latitude(){return m_latitude;}
+  double longitude(){return m_longitude;}
+  std::vector< std::vector<double> > data(){return m_data;}
+
 
 	void loadData(std::string);
   std::string toISOData();

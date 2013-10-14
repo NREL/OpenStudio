@@ -66,7 +66,7 @@ namespace isomodel {
     boost::shared_ptr<Cooling> cooling(new Cooling);
     cooling->setCOP(_coolingSystemCOP);
     cooling->setHvacLossFactor(_hvacCoolingLossFactor);
-    cooling->setPartialLoadValue(_coolingSystemIPLV);
+    cooling->setPartialLoadValue(_coolingSystemIPLVToCOPRatio);
     cooling->setPumpControlReduction(_coolingPumpControl);
     cooling->setTemperatureSetPointOccupied(_coolingOccupiedSetpoint);
     cooling->setTemperatureSetPointUnoccupied(_coolingUnoccupiedSetpoint);
@@ -450,8 +450,8 @@ namespace isomodel {
       setConstantIlluminationControl(atof(attributeValue));
     } else if(!attributeName.compare("coolingsystemcop")){
       setCoolingSystemCOP(atof(attributeValue));
-    } else if(!attributeName.compare("coolingsystemiplv")){
-      setCoolingSystemIPLV(atof(attributeValue));
+    } else if(!attributeName.compare("coolingsystemiplvtocopratio")){
+      setCoolingSystemIPLVToCOPRatio (atof(attributeValue));
     } else if(!attributeName.compare("heatingenergycarrier")){
       setHeatingEnergyCarrier(atof(attributeValue));
     } else if(!attributeName.compare("heatingsystemefficiency")){

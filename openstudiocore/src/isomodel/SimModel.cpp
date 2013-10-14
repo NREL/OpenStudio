@@ -2509,7 +2509,7 @@ std::cout << umodel.daylightSensorSystem() << std::endl;
 std::cout << umodel.lightingOccupancySensorSystem() << std::endl;
 std::cout << umodel.constantIlluminationControl() << std::endl;
 std::cout << umodel.coolingSystemCOP() << std::endl;
-std::cout << umodel.coolingSystemIPLV() << std::endl;
+std::cout << umodel.coolingSystemIPLVToCOPRatio() << std::endl;
 std::cout << umodel.heatingEnergyCarrier() << std::endl;
 std::cout << umodel.heatingSystemEfficiency() << std::endl;
 std::cout << umodel.ventilationType() << std::endl;
