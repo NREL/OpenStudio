@@ -107,7 +107,7 @@ def find_processors(instance)
   processors = 1
   case instance
     when 'cc2.8xlarge'
-      processors = 32
+      processors = 16
     when 'c1.xlarge'
       processors = 8
     when 'm2.4xlarge'
@@ -121,9 +121,9 @@ def find_processors(instance)
     when 'm1.large'
       processors = 2
     when 'm3.xlarge'
-      processors = 4
+      processors = 2
     when 'm3.2xlarge'
-      processors = 8
+      processors = 4
   end
 
   return processors
