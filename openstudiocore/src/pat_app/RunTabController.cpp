@@ -278,6 +278,15 @@ void RunTabController::onPlayButtonClicked()
       analysisDriver.unpauseQueue();
     }
 
+  }else if(analysisStatus == analysisdriver::AnalysisStatus::Error){
+
+    if (cloudAnalysisDriver){
+      // start the run
+      cloudAnalysisDriver->requestRun();
+    }else{
+      // DLM: should never get here
+    }
+
   }else if(analysisStatus == analysisdriver::AnalysisStatus::Running){
 
     QMessageBox::StandardButton test = QMessageBox::question(runView, "Stop Analysis", "Do you want to stop the analysis?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
