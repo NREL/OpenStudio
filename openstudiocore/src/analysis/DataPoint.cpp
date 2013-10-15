@@ -514,10 +514,15 @@ namespace detail {
       return false;
     }
 
-    // unzip 
-    UnzipFile unzip(zipPath);
-    unzip.extractAllFiles(directory());
-    // TODO: Delete zip file once extracted. Leave for now for debugging.
+    try{
+      // unzip 
+      UnzipFile unzip(zipPath);
+      unzip.extractAllFiles(directory());
+      // TODO: Delete zip file once extracted. Leave for now for debugging.
+    }catch(const std::exception&){
+      LOG(Info,"Could not unzip dataPoint.zip file in directory '" << toString(directory()) << "'.");
+      return false;
+    }
 
     // fix up topLevelJob
     OS_ASSERT(m_topLevelJob);
