@@ -401,6 +401,17 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
   else if( settings && session )
   {
     setStatus(CLOUD_ERROR);
+
+    LostCloudConnectionDialog dialog(m_reconnectCloudWorker->internetAvailable(),
+                                     m_reconnectCloudWorker->authenticated(),
+                                     m_reconnectCloudWorker->cloudRunning());
+
+    dialog.exec();
+
+    if( dialog.clearCloudSession() )
+    {
+      stopCloud();
+    }
   }
   else
   {
