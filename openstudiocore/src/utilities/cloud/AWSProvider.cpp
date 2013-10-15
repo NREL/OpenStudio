@@ -55,9 +55,9 @@ namespace openstudio{
         m_numWorkers(2),
         m_terminationDelayEnabled(false),
         m_terminationDelay(0),
-        m_region(AWSProvider::defaultRegion()),
-        m_serverInstanceType(AWSProvider::defaultServerInstanceType()),
-        m_workerInstanceType(AWSProvider::defaultWorkerInstanceType())
+        m_region(AWSProvider_Impl::defaultRegion()),
+        m_serverInstanceType(AWSProvider_Impl::defaultServerInstanceType()),
+        m_workerInstanceType(AWSProvider_Impl::defaultWorkerInstanceType())
     {
       loadSettings(true);
     }
@@ -78,9 +78,9 @@ namespace openstudio{
         m_numWorkers(2),
         m_terminationDelayEnabled(false),
         m_terminationDelay(0),
-        m_region(AWSProvider::defaultRegion()),
-        m_serverInstanceType(AWSProvider::defaultServerInstanceType()),
-        m_workerInstanceType(AWSProvider::defaultWorkerInstanceType())
+        m_region(AWSProvider_Impl::defaultRegion()),
+        m_serverInstanceType(AWSProvider_Impl::defaultServerInstanceType()),
+        m_workerInstanceType(AWSProvider_Impl::defaultWorkerInstanceType())
     {
       loadSettings(true);
       m_userAgreementSigned = userAgreementSigned;
@@ -299,7 +299,7 @@ namespace openstudio{
     }
 
     void AWSSettings_Impl::setRegion(const std::string& region) {
-      std::vector<std::string> regions = AWSProvider::availableRegions();
+      std::vector<std::string> regions = AWSProvider_Impl::availableRegions();
       if (std::find(regions.begin(), regions.end(), region) != regions.end() && m_region != region) {
         m_region = region;
         onChange();
@@ -311,7 +311,7 @@ namespace openstudio{
     }
 
     void AWSSettings_Impl::setServerInstanceType(const std::string& instanceType) {
-      std::vector<std::string> instanceTypes = AWSProvider::serverInstanceTypes();
+      std::vector<std::string> instanceTypes = AWSProvider_Impl::serverInstanceTypes();
       if (std::find(instanceTypes.begin(), instanceTypes.end(), instanceType) != instanceTypes.end() && m_serverInstanceType != instanceType) {
         m_serverInstanceType = instanceType;
         onChange();
@@ -323,7 +323,7 @@ namespace openstudio{
     }
 
     void AWSSettings_Impl::setWorkerInstanceType(const std::string& instanceType) {
-      std::vector<std::string> instanceTypes = AWSProvider::workerInstanceTypes();
+      std::vector<std::string> instanceTypes = AWSProvider_Impl::workerInstanceTypes();
       if (std::find(instanceTypes.begin(), instanceTypes.end(), instanceType) != instanceTypes.end() && m_workerInstanceType != instanceType) {
         m_workerInstanceType = instanceType;
         onChange();
@@ -543,6 +543,202 @@ namespace openstudio{
       }
 
       m_privateKey.setAutoRemove(false);
+    }
+
+    std::vector<std::string> AWSProvider_Impl::availableRegions() {
+      static std::vector<std::string> regions;
+      if (!regions.size()) {
+        regions.push_back("us-east-1");
+      }
+      return regions;
+    }
+
+    std::string AWSProvider_Impl::defaultRegion() {
+      return "us-east-1";
+    }
+
+    std::vector<std::string> AWSProvider_Impl::serverInstanceTypes() {
+      static std::vector<std::string> instanceTypes;
+      if (!instanceTypes.size()) {
+        std::vector<AWSComputerInformation> info = serverInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          instanceTypes.push_back(awsComputerInformation.instanceType);
+        }
+      }
+      return instanceTypes;
+    }
+
+    std::string AWSProvider_Impl::defaultServerInstanceType() {
+      return "m1.large";
+    }
+
+    std::vector<std::string> AWSProvider_Impl::workerInstanceTypes() {
+      static std::vector<std::string> instanceTypes;
+      if (!instanceTypes.size()) {
+        std::vector<AWSComputerInformation> info = workerInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          instanceTypes.push_back(awsComputerInformation.instanceType);
+        }
+      }
+      return instanceTypes;
+    }
+
+    std::string AWSProvider_Impl::defaultWorkerInstanceType() {
+      return "c1.xlarge";
+    }
+
+    std::vector<unsigned> AWSProvider_Impl::serverProcessorCounts() {
+      static std::vector<unsigned> processorCounts;
+      if (!processorCounts.size()) {
+        std::vector<AWSComputerInformation> info = serverInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          processorCounts.push_back(awsComputerInformation.processorCount);
+        }
+      }
+      return processorCounts;
+    }
+
+    std::vector<unsigned> AWSProvider_Impl::workerProcessorCounts() {
+      static std::vector<unsigned> processorCounts;
+      if (!processorCounts.size()) {
+        std::vector<AWSComputerInformation> info = workerInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          processorCounts.push_back(awsComputerInformation.processorCount);
+        }
+      }
+      return processorCounts;
+    }
+
+    std::vector<std::string> AWSProvider_Impl::serverPrettyNames() {
+      static std::vector<std::string> prettyNames;
+      if (!prettyNames.size()) {
+        std::vector<AWSComputerInformation> info = serverInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          prettyNames.push_back(awsComputerInformation.prettyName);
+        }
+      }
+      return prettyNames;
+    }
+
+    std::vector<std::string> AWSProvider_Impl::workerPrettyNames() {
+      static std::vector<std::string> prettyNames;
+      if (!prettyNames.size()) {
+        std::vector<AWSComputerInformation> info = workerInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          prettyNames.push_back(awsComputerInformation.prettyName);
+        }
+      }
+      return prettyNames;
+    }
+
+    std::string AWSProvider_Impl::getServerPrettyName(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = serverInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<std::string> prettyNames = serverPrettyNames();
+      return prettyNames.at(index);
+    }
+
+    std::string AWSProvider_Impl::getWorkerPrettyName(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = workerInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<std::string> prettyNames = workerPrettyNames();
+      return prettyNames.at(index);
+    }
+
+    unsigned AWSProvider_Impl::getServerProcessorCount(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = serverInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<unsigned> processorCounts = serverProcessorCounts();
+      return processorCounts.at(index);
+    }
+
+    unsigned AWSProvider_Impl::getWorkerProcessorCount(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = workerInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<unsigned> processorCounts = workerProcessorCounts();
+      return processorCounts.at(index);
+    }
+
+    std::vector<AWSProvider_Impl::AWSComputerInformation> AWSProvider_Impl::serverInformation(){
+      static std::vector<AWSComputerInformation> info;
+      if (!info.size()) {
+        AWSComputerInformation awsComputerInformation;
+
+        awsComputerInformation.instanceType = "m1.large";
+        awsComputerInformation.prettyName = "M1 Large";
+        awsComputerInformation.processorCount = 2;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m1.xlarge";
+        awsComputerInformation.prettyName = "M1 Extra Large";
+        awsComputerInformation.processorCount = 4;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m2.xlarge";
+        awsComputerInformation.prettyName = "M1 Extra Large";
+        awsComputerInformation.processorCount = 4;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m2.2xlarge";
+        awsComputerInformation.prettyName = "High-Memory Double Extra Large";
+        awsComputerInformation.processorCount = 4;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m2.4xlarge";
+        awsComputerInformation.prettyName = "High-Memory Quadruple Extra Large";
+        awsComputerInformation.processorCount = 8;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m3.xlarge";
+        awsComputerInformation.prettyName = "M3 Extra Large";
+        awsComputerInformation.processorCount = 4;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m3.2xlarge";
+        awsComputerInformation.prettyName = "M3 Double Extra Large";
+        awsComputerInformation.processorCount = 8;
+        info.push_back(awsComputerInformation);
+      }
+      return info;
+    }
+
+    std::vector<AWSProvider_Impl::AWSComputerInformation> AWSProvider_Impl::workerInformation(){
+      static std::vector<AWSComputerInformation> info;
+      if (!info.size()) {
+        AWSComputerInformation awsComputerInformation;
+
+        awsComputerInformation.instanceType = "t1.micro";
+        awsComputerInformation.prettyName = "Micro";
+        awsComputerInformation.processorCount = 1;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "c1.xlarge";
+        awsComputerInformation.prettyName = "High-CPU Extra Large";
+        awsComputerInformation.processorCount = 8;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "cc2.8xlarge";
+        awsComputerInformation.prettyName = "Cluster Compute Eight Extra Large";
+        awsComputerInformation.processorCount = 32;
+        info.push_back(awsComputerInformation);
+      }
+      return info;
     }
 
     std::string AWSProvider_Impl::type() const
@@ -2226,22 +2422,19 @@ namespace openstudio{
   }
 
   std::string AWSProvider::defaultRegion() {
-    return "us-east-1";
+    // TODO return getImpl<detail::AWSProvider_Impl>()->defaultRegion();
+    return "us-east-1"; // TODO
   }
 
   std::vector<std::string> AWSProvider::serverInstanceTypes() {
-    static std::vector<std::string> serverInstanceTypes;
-    if (!serverInstanceTypes.size()) {
-      //serverInstanceTypes.push_back("t1.micro"); // DLM: insufficient memory for testing
-      serverInstanceTypes.push_back("m1.large");
-      serverInstanceTypes.push_back("m1.xlarge");
-      serverInstanceTypes.push_back("m2.xlarge");
-      serverInstanceTypes.push_back("m2.2xlarge");
-      serverInstanceTypes.push_back("m2.4xlarge");
-      serverInstanceTypes.push_back("m3.xlarge");
-      serverInstanceTypes.push_back("m3.2xlarge");
+    static std::vector<std::string> instanceTypes;
+    if (!instanceTypes.size()) {
+      std::vector<AWSComputerInformation> info = serverInformation();
+      Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        instanceTypes.push_back(awsComputerInformation.instanceType);
+      }
     }
-    return serverInstanceTypes;
+    return instanceTypes;
   }
 
   std::string AWSProvider::defaultServerInstanceType() {
@@ -2249,17 +2442,174 @@ namespace openstudio{
   }
 
   std::vector<std::string> AWSProvider::workerInstanceTypes() {
-    static std::vector<std::string> workerInstanceTypes;
-    if (!workerInstanceTypes.size()) {
-      workerInstanceTypes.push_back("t1.micro");
-      workerInstanceTypes.push_back("c1.xlarge");
-      workerInstanceTypes.push_back("cc2.8xlarge");
+    static std::vector<std::string> instanceTypes;
+    if (!instanceTypes.size()) {
+      std::vector<AWSComputerInformation> info = workerInformation();
+      Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        instanceTypes.push_back(awsComputerInformation.instanceType);
+      }
     }
-    return workerInstanceTypes;
+    return instanceTypes;
   }
 
   std::string AWSProvider::defaultWorkerInstanceType() {
     return "c1.xlarge";
+  }
+
+  std::vector<unsigned> AWSProvider::serverProcessorCounts() {
+    static std::vector<unsigned> processorCounts;
+    if (!processorCounts.size()) {
+      std::vector<AWSComputerInformation> info = serverInformation();
+      Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        processorCounts.push_back(awsComputerInformation.processorCount);
+      }
+    }
+    return processorCounts;
+  }
+
+  std::vector<unsigned> AWSProvider::workerProcessorCounts() {
+    static std::vector<unsigned> processorCounts;
+    if (!processorCounts.size()) {
+      std::vector<AWSComputerInformation> info = workerInformation();
+      Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        processorCounts.push_back(awsComputerInformation.processorCount);
+      }
+    }
+    return processorCounts;
+  }
+
+  std::vector<std::string> AWSProvider::serverPrettyNames() {
+    static std::vector<std::string> prettyNames;
+    if (!prettyNames.size()) {
+      std::vector<AWSComputerInformation> info = serverInformation();
+      Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        prettyNames.push_back(awsComputerInformation.prettyName);
+      }
+    }
+    return prettyNames;
+  }
+
+  std::vector<std::string> AWSProvider::workerPrettyNames() {
+    static std::vector<std::string> prettyNames;
+    if (!prettyNames.size()) {
+      std::vector<AWSComputerInformation> info = workerInformation();
+      Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        prettyNames.push_back(awsComputerInformation.prettyName);
+      }
+    }
+    return prettyNames;
+  }
+
+  std::string AWSProvider::getServerPrettyName(const std::string & instanceType) {
+    static std::vector<std::string> instanceTypes = serverInstanceTypes();
+    std::vector<std::string>::iterator it;
+    it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+    unsigned index = it - instanceTypes.begin();
+    OS_ASSERT(index < instanceTypes.size());
+
+    static std::vector<std::string> prettyNames = serverPrettyNames();
+    return prettyNames.at(index);
+  }
+
+  std::string AWSProvider::getWorkerPrettyName(const std::string & instanceType) {
+    static std::vector<std::string> instanceTypes = workerInstanceTypes();
+    std::vector<std::string>::iterator it;
+    it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+    unsigned index = it - instanceTypes.begin();
+    OS_ASSERT(index < instanceTypes.size());
+
+    static std::vector<std::string> prettyNames = workerPrettyNames();
+    return prettyNames.at(index);
+  }
+
+  unsigned AWSProvider::getServerProcessorCount(const std::string & instanceType) {
+    static std::vector<std::string> instanceTypes = serverInstanceTypes();
+    std::vector<std::string>::iterator it;
+    it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+    unsigned index = it - instanceTypes.begin();
+    OS_ASSERT(index < instanceTypes.size());
+
+    static std::vector<unsigned> processorCounts = serverProcessorCounts();
+    return processorCounts.at(index);
+  }
+
+  unsigned AWSProvider::getWorkerProcessorCount(const std::string & instanceType) {
+    static std::vector<std::string> instanceTypes = workerInstanceTypes();
+    std::vector<std::string>::iterator it;
+    it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+    unsigned index = it - instanceTypes.begin();
+    OS_ASSERT(index < instanceTypes.size());
+
+    static std::vector<unsigned> processorCounts = workerProcessorCounts();
+    return processorCounts.at(index);
+  }
+
+  std::vector<AWSProvider::AWSComputerInformation> AWSProvider::serverInformation(){
+    static std::vector<AWSComputerInformation> info;
+    if (!info.size()) {
+      AWSComputerInformation awsComputerInformation;
+
+      awsComputerInformation.instanceType = "m1.large";
+      awsComputerInformation.prettyName = "M1 Large";
+      awsComputerInformation.processorCount = 2;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "m1.xlarge";
+      awsComputerInformation.prettyName = "M1 Extra Large";
+      awsComputerInformation.processorCount = 4;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "m2.xlarge";
+      awsComputerInformation.prettyName = "High-Memory Extra Large";
+      awsComputerInformation.processorCount = 4;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "m2.2xlarge";
+      awsComputerInformation.prettyName = "High-Memory Double Extra Large";
+      awsComputerInformation.processorCount = 4;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "m2.4xlarge";
+      awsComputerInformation.prettyName = "High-Memory Quadruple Extra Large";
+      awsComputerInformation.processorCount = 8;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "m3.xlarge";
+      awsComputerInformation.prettyName = "M3 Extra Large";
+      awsComputerInformation.processorCount = 4;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "m3.2xlarge";
+      awsComputerInformation.prettyName = "M3 Double Extra Large";
+      awsComputerInformation.processorCount = 8;
+      info.push_back(awsComputerInformation);
+    }
+    return info;
+  }
+
+  std::vector<AWSProvider::AWSComputerInformation> AWSProvider::workerInformation(){
+    // TODO need to make calls to getImpl for all new methods
+    //return getImpl<detail::AWSProvider_Impl>()->workerInformation();
+    static std::vector<AWSComputerInformation> info;
+    if (!info.size()) {
+      AWSComputerInformation awsComputerInformation;
+
+      awsComputerInformation.instanceType = "t1.micro";
+      awsComputerInformation.prettyName = "Micro";
+      awsComputerInformation.processorCount = 1;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "c1.xlarge";
+      awsComputerInformation.prettyName = "High-CPU Extra Large";
+      awsComputerInformation.processorCount = 8;
+      info.push_back(awsComputerInformation);
+
+      awsComputerInformation.instanceType = "cc2.8xlarge";
+      awsComputerInformation.prettyName = "Cluster Compute Eight Extra Large";
+      awsComputerInformation.processorCount = 32;
+      info.push_back(awsComputerInformation);
+    }
+    return info;
   }
 
   bool AWSProvider::requestEstimatedCharges() {
