@@ -304,9 +304,14 @@ void RunTabController::onPlayButtonClicked()
         }
 
       }else{
-        // request stop
-        project->runManager().setPaused(true);
-        project->stop();
+            
+        // check if we already have current analysis
+        std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
+        if (!currentAnalyses.empty()){
+          analysisDriver.stop(currentAnalyses[0]);
+        }else{
+          // should not get here, nothing to stop
+        }
       }
     }
 
