@@ -91,9 +91,9 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-876734ee'
+@server_image_id = 'ami-73abf81a'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-cf7f2ca6'
+  @worker_image_id = 'ami-91a4f7f8'
 else
   @worker_image_id = 'ami-cd7f2ca4'
 end
@@ -115,7 +115,7 @@ def find_processors(instance)
     when 'm2.2xlarge'
       processors = 4
     when 'm2.xlarge'
-      processors = 4
+      processors = 2
     when 'm1.xlarge'
       processors = 4
     when 'm1.large'
