@@ -550,6 +550,7 @@ namespace detail {
         persistJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>(t_job);
         persistJobTools(t_job);
         persistJobParams(t_job);
+        persistJobStatus(t_job);
       }
 
 
@@ -2424,7 +2425,7 @@ namespace detail {
     try {
       Job j = getJob(t_job.uuid());
       m_dbholder->deleteJobTree(t_job);
-      j.updateJob(t_job, false);
+      j.updateJob(t_job, false);      
       m_dbholder->persistJobTree(t_job);
       j.setBasePathRecursive(t_path);
     } catch (const std::out_of_range &) {
