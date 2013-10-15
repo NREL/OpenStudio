@@ -309,7 +309,7 @@ void CloudMonitor::onStartCloudWorkerComplete()
   {
     setStatus(CLOUD_ERROR);
 
-    QString error("Unknown error starting cloud.");
+    QString error("Unknown error starting cloud.  Check for any unintentionally running instances using AWS console and terminate them to avoid charges.");
     
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Error", error);
 
