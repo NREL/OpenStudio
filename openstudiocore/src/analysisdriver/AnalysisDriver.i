@@ -26,6 +26,7 @@
 
 %{
 
+  #include <analysisdriver/AnalysisDriverEnums.hpp>
   #include <analysisdriver/AnalysisDriver.hpp>
   #include <analysisdriver/CurrentAnalysis.hpp>
   #include <analysisdriver/AnalysisRunOptions.hpp>
@@ -124,6 +125,8 @@
 %ignore std::vector<openstudio::analysisdriver::SimpleProject>::resize(size_type);
 %template(SimpleProjectVector) std::vector<openstudio::analysisdriver::SimpleProject>;
 %template(OptionalSimpleProject) boost::optional<openstudio::analysisdriver::SimpleProject>;
+
+%include <analysisdriver/AnalysisDriverEnums.hpp>
 
 ANALYSISDRIVER_WRAP(AnalysisRunOptions)
 ANALYSISDRIVER_WRAP(CurrentAnalysis)

@@ -808,7 +808,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   // Type
   QDomElement coilHeatingTypeElement = heatingCoilElement.firstChildElement("Type");
   QDomElement nameElement = heatingCoilElement.firstChildElement("Name");
-  QDomElement capTotRtdElement = heatingCoilElement.firstChildElement("CapTotGrossRtd");
+  QDomElement capTotRtdElement = heatingCoilElement.firstChildElement("CapTotGrossRtdSim");
 
   // CapTotGrossRtd
   boost::optional<double> capTotGrossRtd;
@@ -1053,7 +1053,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
 
     // HtPumpCrankcaseHtCap
-    QDomElement htPumpCrankcaseHtCapElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseHtCap");
+    QDomElement htPumpCrankcaseHtCapElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseHtrCapSim");
     value = htPumpCrankcaseHtCapElement.text().toDouble(&ok);
     if( ok )
     {
@@ -1082,7 +1082,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
 
     // HtPumpDefHtCap
-    QDomElement htPumpDefHtCapElement = heatingCoilElement.firstChildElement("HtPumpDefHtCap");
+    QDomElement htPumpDefHtCapElement = heatingCoilElement.firstChildElement("HtPumpDefHtCapSim");
     value = htPumpDefHtCapElement.text().toDouble(&ok);
     if( ok )
     {
@@ -1159,7 +1159,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   QDomElement mtrEffElement = fanElement.firstChildElement("MtrEff");
 
   // FlowCap
-  QDomElement flowCapElement = fanElement.firstChildElement("FlowCap");
+  QDomElement flowCapElement = fanElement.firstChildElement("FlowCapSim");
 
   // TotStaticPress
   QDomElement totStaticPressElement = fanElement.firstChildElement("TotStaticPress"); 
@@ -1344,15 +1344,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     if( ! fanElement.isNull() )
     {
-      flowCapElement = fanElement.firstChildElement("FlowCap");
+      flowCapElement = fanElement.firstChildElement("FlowCapSim");
     }
   }
 
   // CapTotRtd
-  QDomElement capTotRtdElement = coolingCoilElement.firstChildElement("CapTotGrossRtd");
+  QDomElement capTotRtdElement = coolingCoilElement.firstChildElement("CapTotGrossRtdSim");
 
   // CapSensRtd
-  QDomElement capSensRtdElement = coolingCoilElement.firstChildElement("CapSensGrossRtd");
+  QDomElement capSensRtdElement = coolingCoilElement.firstChildElement("CapSensGrossRtdSim");
 
   // Type
   QDomElement coilCoolingTypeElement = coolingCoilElement.firstChildElement("Type");
@@ -1543,7 +1543,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       // DXCrankcaseHtCap
-      QDomElement dxCrankcaseHtCapElement = coolingCoilElement.firstChildElement("DXCrankcaseHtCap");
+      QDomElement dxCrankcaseHtCapElement = coolingCoilElement.firstChildElement("DXCrankcaseHtrCapSim");
       value = dxCrankcaseHtCapElement.text().toDouble(&ok);
       if( ok )
       {
@@ -1818,7 +1818,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     {
       // Design Water Volum Flow Rate of Coil
 
-      QDomElement fluidFlowRtDsgnElement = coolingCoilElement.firstChildElement("FluidFlowRtDsgn");
+      QDomElement fluidFlowRtDsgnElement = coolingCoilElement.firstChildElement("FluidFlowRtDsgnSim");
 
       coilCooling.setDesignWaterFlowRate(fluidFlowRtDsgnElement.text().toDouble() * 0.00006309);
 
@@ -1905,7 +1905,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
 
   // Ventilation
-  QDomElement ventRtElement = thermalZoneElement.firstChildElement("DsgnVentRt");
+  QDomElement ventRtElement = thermalZoneElement.firstChildElement("DsgnVentRtSim");
   if (!ventRtElement.isNull() && (ventRtElement.text().toDouble() > 0))
   {
     openstudio::Quantity ventRateIP(ventRtElement.text().toDouble(), openstudio::createUnit("cfm",UnitSystem::BTU).get());
@@ -1913,7 +1913,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     OS_ASSERT(ventRateSI);
     OS_ASSERT(ventRateSI->units() == SIUnit(SIExpnt(0,3,-1)));
 
-    // DsgnVentRt is CFM, so divide it up evenly among all attached spaces.
+    // DsgnVentRtSim is CFM, so divide it up evenly among all attached spaces.
     std::vector<model::Space> spaces = thermalZone.spaces();
 
     for( std::vector<model::Space>::iterator it = spaces.begin();
@@ -2221,9 +2221,9 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   QDomElement typeElement = trmlUnitElement.firstChildElement("Type");
 
   // PriAirFlow
-  QDomElement priAirFlowElement = trmlUnitElement.firstChildElement("PriAirFlowMax");
+  QDomElement priAirFlowElement = trmlUnitElement.firstChildElement("PriAirFlowMaxSim");
 
-  QDomElement priAirFlowMinElement = trmlUnitElement.firstChildElement("PriAirFlowMin");
+  QDomElement priAirFlowMinElement = trmlUnitElement.firstChildElement("PriAirFlowMinSim");
 
   boost::optional<double> primaryAirFlow;
   boost::optional<double> primaryAirFlowMin;
@@ -2342,7 +2342,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     terminal.setConstantMinimumAirFlowFraction(0.0);
 
-    QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMax");
+    QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
     value = htgAirFlowMaxElement.text().toDouble(&ok);
     if( ok && primaryAirFlow )
     {
@@ -3519,7 +3519,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
   QDomElement fanElement = element.firstChildElement("Fan"); 
 
-  QDomElement flowCapElement = fanElement.firstChildElement("FlowCap");
+  QDomElement flowCapElement = fanElement.firstChildElement("FlowCapSim");
 
   boost::optional<double> flowCap;
 
@@ -3793,7 +3793,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       {
         bool ok;
 
-        double value = heatingCoilElement.firstChildElement("CapTotGrossRtd").text().toDouble(&ok);
+        double value = heatingCoilElement.firstChildElement("CapTotGrossRtdSim").text().toDouble(&ok);
 
         if( ok ) 
         {
@@ -3829,7 +3829,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       {
         bool ok;
 
-        double value = heatingCoilElement.firstChildElement("FluidFlowRtDsgn").text().toDouble(&ok);
+        double value = heatingCoilElement.firstChildElement("FluidFlowRtDsgnSim").text().toDouble(&ok);
 
         if( ok ) 
         {
@@ -3887,7 +3887,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     model::HVACComponent heatingCoil = mo->cast<model::HVACComponent>();
 
     // get the heating coil's max flow rate (units are gpm in the sdd file)
-    QDomElement dsnHtgFlowRtElement = heatingCoilElement.firstChildElement("FluidFlowRtDsgn");
+    QDomElement dsnHtgFlowRtElement = heatingCoilElement.firstChildElement("FluidFlowRtDsgnSim");
 
     boost::optional<double> dsnHtgFlowRt;
 
@@ -3914,7 +3914,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     model::HVACComponent coolingCoil = mo->cast<model::HVACComponent>();
 
     // get the cooling coil's max flow rate (units are gpm in the sdd file)
-    QDomElement dsnClgFlowRtElement = coolingCoilElement.firstChildElement("FluidFlowRtDsgn");
+    QDomElement dsnClgFlowRtElement = coolingCoilElement.firstChildElement("FluidFlowRtDsgnSim");
 
     boost::optional<double> dsnClgFlowRt;
 

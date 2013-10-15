@@ -54,6 +54,7 @@ namespace detail {
       m_runOptions(runOptions),
       m_numOSJobsInIteration(0),
       m_numOSJobsComplete(0),
+      m_numOSJobsFailed(0),
       m_dakotaStarted(false)
   {}
 
@@ -86,6 +87,10 @@ namespace detail {
     return m_numOSJobsComplete;
   }
 
+  int CurrentAnalysis_Impl::numFailedJobsInOSIteration() const {
+    return m_numOSJobsFailed;
+  }
+
   int CurrentAnalysis_Impl::totalNumJobsInOSIteration() const {
     return m_numOSJobsInIteration;
   }
@@ -108,6 +113,7 @@ namespace detail {
 
     m_numOSJobsInIteration = numJobs;
     m_numOSJobsComplete = 0;
+    m_numOSJobsFailed = 0;
     emit iterationProgress(numCompletedJobsInOSIteration(),totalNumJobsInOSIteration());
   }
 
@@ -210,8 +216,15 @@ namespace detail {
                                                           boost::bind(jobUUIDsEqual,_1,completedJob));
     OS_ASSERT(it != m_queuedOSDataPoints.end());
     analysis::DataPoint result = *it;
-    m_queuedOSDataPoints.erase(it);
+    
     ++m_numOSJobsComplete;
+
+    if (it->failed()){
+      ++m_numOSJobsFailed;
+    }
+
+    m_queuedOSDataPoints.erase(it);
+
     emit iterationProgress(numCompletedJobsInOSIteration(),totalNumJobsInOSIteration());
     return result;
   }
@@ -373,6 +386,11 @@ int CurrentAnalysis::numQueuedDakotaJobs() const {
 int CurrentAnalysis::numCompletedJobsInOSIteration() const {
   return getImpl()->numCompletedJobsInOSIteration();
 }
+
+int CurrentAnalysis::numFailedJobsInOSIteration() const {
+  return getImpl()->numFailedJobsInOSIteration();
+}
+
 
 int CurrentAnalysis::totalNumJobsInOSIteration() const {
   return getImpl()->totalNumJobsInOSIteration();

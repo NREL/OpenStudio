@@ -91,11 +91,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-75693f1c'
+@server_image_id = 'ami-876734ee'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-776c3a1e'
+  @worker_image_id = 'ami-cf7f2ca6'
 else
-  @worker_image_id = 'ami-476c3a2e'
+  @worker_image_id = 'ami-cd7f2ca4'
 end
 
 def create_struct(instance, procs)
@@ -107,7 +107,7 @@ def find_processors(instance)
   processors = 1
   case instance
     when 'cc2.8xlarge'
-      processors = 32
+      processors = 16
     when 'c1.xlarge'
       processors = 8
     when 'm2.4xlarge'
@@ -121,9 +121,9 @@ def find_processors(instance)
     when 'm1.large'
       processors = 2
     when 'm3.xlarge'
-      processors = 4
+      processors = 2
     when 'm3.2xlarge'
-      processors = 8
+      processors = 4
   end
 
   return processors
@@ -534,12 +534,13 @@ begin
       error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
   end
     #puts \"Status: #{resp.http_response.status}\"
+rescue SystemExit => e
 rescue Exception => e
   if e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')
   elsif defined? e.http_response
     error(e.http_response.status, e.code)
-  elsif e != 'exit'
+  else
     error(-1, "#{e}: #{e.backtrace}")
   end
 
