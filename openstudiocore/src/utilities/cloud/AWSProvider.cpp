@@ -706,6 +706,11 @@ namespace openstudio{
           return lastInternetAvailable();
         }
       }
+      if (m_checkInternetProcess){
+        m_checkInternetProcess->disconnect(this, 0);
+        m_checkInternetProcess->terminate();
+        m_checkInternetProcess = 0;
+      }
       return false;
     }
 
@@ -715,6 +720,11 @@ namespace openstudio{
         if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
+      }
+      if (m_checkServiceProcess){
+        m_checkServiceProcess->disconnect(this, 0);
+        m_checkServiceProcess->terminate();
+        m_checkServiceProcess = 0;
       }
       return false;
     }
@@ -726,6 +736,11 @@ namespace openstudio{
           return lastValidateCredentials();
         }
       }
+      if (m_checkValidateProcess){
+        m_checkValidateProcess->disconnect(this, 0);
+        m_checkValidateProcess->terminate();
+        m_checkValidateProcess = 0;
+      }
       return false;
     }
 
@@ -736,6 +751,11 @@ namespace openstudio{
           return lastResourcesAvailableToStart();
         }
       }
+      if (m_checkResourcesProcess){
+        m_checkResourcesProcess->disconnect(this, 0);
+        m_checkResourcesProcess->terminate();
+        m_checkResourcesProcess = 0;
+      }
       return false;
     }
 
@@ -744,6 +764,11 @@ namespace openstudio{
       if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
         return serverStarted();
       }
+      if (m_startServerProcess){
+        m_startServerProcess->disconnect(this, 0);
+        m_startServerProcess->terminate();
+        m_startServerProcess = 0;
+      }
       return false;
     }
 
@@ -751,6 +776,11 @@ namespace openstudio{
     {
       if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
         return workersStarted();
+      }
+      if (m_startWorkerProcess){
+        m_startWorkerProcess->disconnect(this, 0);
+        m_startWorkerProcess->terminate();
+        m_startWorkerProcess = 0;
       }
       return false;
     }
@@ -762,6 +792,11 @@ namespace openstudio{
           return lastServerRunning();
         }
       }
+      if (m_checkServerRunningProcess){
+        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkServerRunningProcess->terminate();
+        m_checkServerRunningProcess = 0;
+      }
       return false;
     }
 
@@ -772,6 +807,11 @@ namespace openstudio{
           return lastWorkersRunning();
         }
       }
+      if (m_checkWorkerRunningProcess){
+        m_checkWorkerRunningProcess->disconnect(this, 0);
+        m_checkWorkerRunningProcess->terminate();
+        m_checkWorkerRunningProcess = 0;
+      }
       return false;
     }
 
@@ -779,6 +819,11 @@ namespace openstudio{
     {
       if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
         return m_instancesStopped;
+      }
+      if (m_stopInstancesProcess){
+        m_stopInstancesProcess->disconnect(this, 0);
+        m_stopInstancesProcess->terminate();
+        m_stopInstancesProcess = 0;
       }
       return false;
     }
@@ -790,6 +835,11 @@ namespace openstudio{
           return lastTerminateCompleted();
         }
       }
+      if (m_checkTerminatedProcess){
+        m_checkTerminatedProcess->disconnect(this, 0);
+        m_checkTerminatedProcess->terminate();
+        m_checkTerminatedProcess = 0;
+      }
       return false;
     }
 
@@ -800,6 +850,11 @@ namespace openstudio{
           return lastEstimatedCharges();
         }
       }
+      if (m_checkEstimatedChargesProcess){
+        m_checkEstimatedChargesProcess->disconnect(this, 0);
+        m_checkEstimatedChargesProcess->terminate();
+        m_checkEstimatedChargesProcess = 0;
+      }
       return 0.0;
     }
 
@@ -809,6 +864,11 @@ namespace openstudio{
         if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
           return lastTotalInstances();
         }
+      }
+      if (m_checkTotalInstancesProcess){
+        m_checkTotalInstancesProcess->disconnect(this, 0);
+        m_checkTotalInstancesProcess->terminate();
+        m_checkTotalInstancesProcess = 0;
       }
       return 0;
     }
