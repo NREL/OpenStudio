@@ -228,14 +228,14 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     // ensure that building exist
     boost::optional<model::Building> building = model.building();
     if (!building){
-      building = model.getUniqueModelObject<model::Building>()
+      building = model.getUniqueModelObject<model::Building>();
     }
     translateAndMapModelObject(*building);
 
     // ensure that simulation control exists
     boost::optional<model::SimulationControl> simulationControl = model.getOptionalUniqueModelObject<model::SimulationControl>();
     if (!simulationControl){
-      simulationControl = model.getUniqueModelObject<model::SimulationControl>()
+      simulationControl = model.getUniqueModelObject<model::SimulationControl>();
     }
     translateAndMapModelObject(*simulationControl);
 
@@ -247,7 +247,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     // ensure that sizing parameters control exists
     boost::optional<model::SizingParameters> sizingParameters = model.getOptionalUniqueModelObject<model::SizingParameters>();
     if (!sizingParameters){
-      sizingParameters = model.getUniqueModelObject<model::SizingParameters>()
+      sizingParameters = model.getUniqueModelObject<model::SizingParameters>();
     }
     translateAndMapModelObject(*sizingParameters);
 
@@ -255,7 +255,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     // DLM: should this only be done if there is a WeatherFile object?
     boost::optional<model::RunPeriod> runPeriod = model.runPeriod();
     if (!runPeriod){
-      runPeriod = model.getUniqueModelObject<model::RunPeriod>()
+      runPeriod = model.getUniqueModelObject<model::RunPeriod>();
     }
     translateAndMapModelObject(*runPeriod);
 
@@ -842,7 +842,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
       retVal = translateElectricEquipment(equipment);
-      break
+      break;
     }     
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
@@ -1112,7 +1112,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::RefrigerationCondenserAirCooled refrigerationCondenserAirCooled = modelObject.cast<RefrigerationCondenserAirCooled>();
       retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
       break;
-    
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Condenser_Cascade:
     {
       model::RefrigerationCondenserCascade refrigerationCondenserCascade = modelObject.cast<RefrigerationCondenserCascade>();
@@ -1120,7 +1120,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       break;
     }
   case openstudio::IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled :
-    
+    {
       model::RefrigerationCondenserEvaporativeCooled refrigerationCondenserEvaporativeCooled = modelObject.cast<RefrigerationCondenserEvaporativeCooled>();
       retVal = translateRefrigerationCondenserEvaporativeCooled(refrigerationCondenserEvaporativeCooled);
       break;
@@ -1144,7 +1144,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       break;
     }
   case openstudio::IddObjectType::OS_Refrigeration_SecondarySystem :
-    
+    {
       model::RefrigerationSecondarySystem refrigerationSecondarySystem = modelObject.cast<RefrigerationSecondarySystem>();
       retVal = translateRefrigerationSecondarySystem(refrigerationSecondarySystem);
       break;
@@ -1748,7 +1748,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
-  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric)
+  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
   // put these down here so they have a chance to be translated with their "parent"
