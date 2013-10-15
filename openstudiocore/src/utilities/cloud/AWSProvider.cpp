@@ -92,6 +92,8 @@ namespace openstudio{
       setWorkerInstanceType(workerInstanceType);
     }
 
+    // DLM: we should deal with running processes in this destructor
+
     std::string AWSSettings_Impl::cloudProviderType() const {
       return AWSProvider_Impl::cloudProviderType();
     }
