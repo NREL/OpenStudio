@@ -945,6 +945,27 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
        itr != files.end();
        ++itr)
   {
+    openstudio::path relativePath = openstudio::relativePath(itr->path(), t_measure.directory());
+
+    bool isTestPath = false;
+    for (openstudio::path::const_iterator pathitr = relativePath.begin();
+         pathitr != relativePath.end();
+         ++pathitr)
+    {
+      if (boost::iequals(openstudio::toString(*pathitr), "tests"))
+      {
+        isTestPath = true;
+        break;
+      }
+    }
+
+    if (!isTestPath)
+    {
+      LOG(Trace, "Adding required file from measure: " << openstudio::toString(itr->path()) << " to: " << openstudio::toString(itr->path().filename()));
+    } else {
+      LOG(Trace, "Skipping test file from measure: " << openstudio::toString(itr->path()));
+    }
+
     addRequiredFile(itr->path(), itr->path().filename());
   }
 

@@ -1125,7 +1125,7 @@ namespace detail {
             try {
               f.addRequiredFile(QUrl::fromUserInput(toQString(itr2->from)), toPath(itr2->to));
             } catch (const std::runtime_error &) {
-              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict");
+              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict: '" << openstudio::toString(itr2->from) << "' to '" << openstudio::toString(itr2->to));
               throw;
             }
           }
