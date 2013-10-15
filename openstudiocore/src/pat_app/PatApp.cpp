@@ -1159,7 +1159,16 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     mainWindow->mainMenu->configure(true);
 
     // show the right tab
-    showVerticalTab(PatApp::MEASURES);
+    if( m_cloudMonitor->status() != CLOUD_STOPPED )
+    {
+      showVerticalTab(PatApp::RUN);
+    }
+    else
+    {
+      showVerticalTab(PatApp::MEASURES);
+    }
+
+    updateAppState();
 
   }else{
 
@@ -1170,7 +1179,6 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // show the right tab
     showStartupView();
-
   }
 }
 
