@@ -913,6 +913,7 @@ namespace detail {
     boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = spaces[0].designSpecificationOutdoorAir();
     bool allDesignSpecificationOutdoorAirDefaulted = spaces[0].isDesignSpecificationOutdoorAirDefaulted();
     bool anyDesignSpecificationOutdoorAirSchedules = false;
+    bool anyMaxOutdoorAirMethod = false;
     double sumOutdoorAirForPeople = 0.0;
     double sumOutdoorAirForFloorArea = 0.0;
     double sumOutdoorAirRate = 0.0;
@@ -1007,13 +1008,13 @@ namespace detail {
         double outdoorAirRate = thisDesignSpecificationOutdoorAir->outdoorAirFlowRate();
         double outdoorAirForVolume = volume*thisDesignSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
 
+        sumOutdoorAirForPeople += outdoorAirForPeople;
+        sumOutdoorAirForFloorArea += outdoorAirForFloorArea;
+        sumOutdoorAirRate += outdoorAirRate;
+        sumOutdoorAirForVolume += outdoorAirForVolume;
+
         if (istringEqual("Max", thisDesignSpecificationOutdoorAir->outdoorAirMethod())){
-          sumOutdoorAirRate += std::max(outdoorAirForPeople, std::max(outdoorAirForFloorArea, std::max(outdoorAirRate, outdoorAirForVolume)));
-        }else{
-          sumOutdoorAirForPeople += outdoorAirForPeople;
-          sumOutdoorAirForFloorArea += outdoorAirForFloorArea;
-          sumOutdoorAirRate += outdoorAirRate;
-          sumOutdoorAirForVolume += outdoorAirForVolume;
+          anyMaxOutdoorAirMethod = true;
         }
 
       }else{
@@ -1193,7 +1194,11 @@ namespace detail {
 
       // make a new designSpecificationOutdoorAir
       designSpecificationOutdoorAir = DesignSpecificationOutdoorAir(model);
-      designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      if( anyMaxOutdoorAirMethod ) {
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Maximum");
+      } else {
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      }
       designSpecificationOutdoorAir->setOutdoorAirFlowperPerson(outdoorAirForPeople);
       designSpecificationOutdoorAir->setOutdoorAirFlowperFloorArea(outdoorAirForFloorArea);
       designSpecificationOutdoorAir->setOutdoorAirFlowRate(sumOutdoorAirRate);
