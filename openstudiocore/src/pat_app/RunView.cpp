@@ -652,6 +652,12 @@ void DataPointRunHeaderView::update()
   unsigned numErrors(0);
   if (topLevelJob){
     lastRunTime = topLevelJob->startTime();
+
+    // if running remotely we may not know startTime, use end time
+    if (topLevelJob->externallyManaged() && !lastRunTime){
+      lastRunTime = topLevelJob->lastRun();
+    }
+
     openstudio::runmanager::JobErrors treeErrors = topLevelJob->treeErrors();
     numNAs = treeErrors.numNAs;
     numErrors = treeErrors.errors().size();
@@ -679,6 +685,13 @@ void DataPointRunHeaderView::update()
   m_errors->setText(QString::number(numErrors) + QString(numErrors == 1 ? " Error" : " Errors"));
   m_errors->setStyleSheet(errorsStyle);
 
+  QString lastRunTimeString;
+  if(lastRunTime){
+    lastRunTimeString = toQString(lastRunTime->toString());
+  }else{
+    lastRunTimeString = "Not Started";
+  }
+
   QString status;
   QString statusStyle;
   if (m_dataPoint.isComplete()){
@@ -691,8 +704,24 @@ void DataPointRunHeaderView::update()
     }
   }else{
     if (topLevelJob){
+      
+      runmanager::TreeStatusEnum treeStatus = topLevelJob->treeStatus();
       status = toQString(topLevelJob->treeStatus().valueDescription());
       statusStyle = "";
+
+      if (topLevelJob->externallyManaged() && (treeStatus == runmanager::TreeStatusEnum::Waiting)){
+        runmanager::AdvancedStatus advancedStatus = topLevelJob->status();
+        if (advancedStatus.value() == runmanager::AdvancedStatusEnum::Processing){
+          status = "Running";
+        }else if (advancedStatus.value() == runmanager::AdvancedStatusEnum::CopyingResultFiles){
+          status = "Downloading";
+        }else if (advancedStatus.value() == runmanager::AdvancedStatusEnum::Queuing){
+          status = "Waiting";
+        }
+        if(!lastRunTime){
+          lastRunTimeString = "Running Remotely";
+        }
+      }
     }else{
       status = "Not Started";
       statusStyle = "";
@@ -700,13 +729,9 @@ void DataPointRunHeaderView::update()
   }
 
   m_name->setText(toQString(m_dataPoint.name()));
-  if(lastRunTime){
-    m_lastRunTime->setText(toQString(lastRunTime->toString()));
-  }else{
-    m_lastRunTime->setText(QString("Not Started"));
-  }
   m_status->setText(status);
   m_status->setStyleSheet(statusStyle);
+  m_lastRunTime->setText(lastRunTimeString);
 
   QString style;
 
@@ -924,7 +949,8 @@ void DataPointJobHeaderView::setName(const std::string& name)
 void DataPointJobHeaderView::setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime)
 {
   if (lastRunTime){
-    m_lastRunTime->setText(toQString(lastRunTime->toString()));
+    std::string s = lastRunTime->toString();
+    m_lastRunTime->setText(toQString(s));
   }else{
     m_lastRunTime->setText("Not Started");
   }
@@ -934,7 +960,8 @@ void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedSta
 {
   if (!isCanceled)
   {
-    m_status->setText(toQString(status.toString()));
+    std::string s = status.toString();
+    m_status->setText(toQString(s));
   } else {
     m_status->setText("Canceled");
   }
