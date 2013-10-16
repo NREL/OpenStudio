@@ -488,6 +488,14 @@ void CloudProviderWidget::createWidgets()
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
+  label->setObjectName("H1");
+  label->setOpenExternalLinks(true);
+  label->setText("PAT cloud support with Amazon EC2 is a new feature, and is still under active development to improve interprocess reliability and performance. The user assumes all responsibility for orphaned EC2 processes, and it is strongly recommended that you monitor EC2 cloud usage at <a href=\"http://aws.amazon.com\">aws.amazon.com</a> to avoid any unwanted charges.");
+  m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  label = new QLabel;
+  label->setFixedWidth(TEXT_WIDTH);
+  label->setWordWrap(true);
   label->setObjectName("H2");
   label->setText("Results for simulation run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances and any results not downloaded will be lost.");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
