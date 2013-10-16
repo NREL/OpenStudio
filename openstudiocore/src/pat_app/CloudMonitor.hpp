@@ -255,6 +255,8 @@ class ReconnectCloudWorker : public QObject
 
   bool cloudServiceRunning() const;
 
+  bool projectIsOnCloud() const;
+
   signals:
 
   void doneWorking();
@@ -276,6 +278,8 @@ class ReconnectCloudWorker : public QObject
   bool m_cloudRunning;
 
   bool m_cloudServiceRunning;
+
+  bool m_projectIsOnCloud;
 
   CloudStatus m_status;
 };

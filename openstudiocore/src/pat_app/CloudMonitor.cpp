@@ -24,6 +24,8 @@
 #include "RunTabController.hpp"
 #include "RunView.hpp"
 
+#include <project/ProjectDatabase.hpp>
+#include <analysisdriver/CloudAnalysisDriver.hpp>
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
@@ -397,6 +399,21 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
   if( m_reconnectCloudWorker->cloudServiceRunning() )
   {
     setStatus(CLOUD_RUNNING);
+
+    if( m_reconnectCloudWorker->projectIsOnCloud() )
+    {
+      boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+
+      if( project )
+      {
+        boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+
+        if( cloudAnalysisDriver )
+        {
+          cloudAnalysisDriver->requestRun();
+        }
+      }
+    }
   }
   else if( settings && session )
   {
@@ -775,7 +792,36 @@ void ReconnectCloudWorker::startWorking()
 {
   m_cloudServiceRunning = detail::checkCloudServiceRunning();
 
-  if( ! m_cloudServiceRunning )
+  m_projectIsOnCloud = false;
+
+  if( m_cloudServiceRunning )
+  {
+    // It would be better to put this code related to running analysis somewhere outside of CloudMonitor
+    // or bring all of the "run" code into cloud monitor.  This is a convenience to save time.
+    // Consider a RunMonitor counterpart to CloudMonitor.
+    boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+    if( session)
+    {
+      boost::optional<Url> serverUrl = session->serverUrl();
+      if (serverUrl)
+      {
+        OSServer server(serverUrl.get());
+
+        std::vector<UUID> projectIDs = server.projectUUIDs(10000);
+
+        if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+        {
+          std::vector<UUID>::iterator it;
+          it = std::find(projectIDs.begin(),projectIDs.end(),project->projectDatabase().handle());
+          if( it != projectIDs.end() )
+          {
+            m_projectIsOnCloud = true;
+          }
+        }
+      }
+    }
+  }
+  else
   {
     m_cloudRunning = detail::checkCloudRunning();
     m_authenticated = detail::checkAuthenticated();
@@ -783,6 +829,11 @@ void ReconnectCloudWorker::startWorking()
   }
 
   emit doneWorking();
+}
+
+bool ReconnectCloudWorker::projectIsOnCloud() const
+{
+  return m_projectIsOnCloud;
 }
 
 bool ReconnectCloudWorker::internetAvailable() const
