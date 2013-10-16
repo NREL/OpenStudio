@@ -531,6 +531,9 @@ namespace detail {
       runManager->updateJob(*m_topLevelJob, directory());
     }
 
+    // make sure we have the right reference to the job, since runmanager copies it in.
+    m_topLevelJob = runManager->getJob(m_topLevelJob->uuid());
+
     // get file references for
     //   m_osmInputData
     //   m_idfInputData
