@@ -28,6 +28,8 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include <QStringList>
+#include <QFile>
+#include <QTextStream>
 
 namespace openstudio{
 
@@ -1389,6 +1391,74 @@ boost::optional<int> EpwFile::endDateActualYear() const
 std::vector<EpwDataPoint> EpwFile::data() const
 {
   return m_data;
+}
+
+bool EpwFile::translateToWth(openstudio::path path, std::string description) const
+{
+  if(description.empty())
+  {
+    description = "Translated from " + openstudio::toString(this->path());
+  }
+
+  if(!data().size())
+  {
+    LOG(Error, "EPW file contains no data to translate");
+    return false;
+  }
+
+  QFile fp(openstudio::toQString(path));
+  if(!fp.open(QFile::WriteOnly))
+  {
+    LOG(Error, "Failed to open file '" + openstudio::toString(path) + "'");
+    return false;
+  }
+
+  QTextStream stream(&fp);
+
+  stream << "WeatherFile ContamW 2.0\n";
+  stream << openstudio::toQString(description) << "\n";
+  stream << QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth());
+  stream << QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth());
+  stream << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
+  openstudio::Time delta(1,0);
+  int dayofweek = startDayOfWeek().value()+1;
+  for(openstudio::Date current=startDate();current<=endDate();current += delta)
+  {
+    stream << QString("%1/%2\t%3\t%3\t0\t283.15\n")
+      .arg(openstudio::month(current.monthOfYear()))
+      .arg(current.dayOfMonth())
+      .arg(dayofweek);
+    dayofweek++;
+    if(dayofweek > 7)
+    {
+      dayofweek=1;
+    }
+  }
+
+  // Cheat to get data at the start time - this will need to change
+  openstudio::EpwDataPoint firstPt = data()[data().size()-1];
+  openstudio::DateTime dateTime = data()[0].dateTime();
+  openstudio::Time dt = timeStep();
+  dateTime -= dt;
+  firstPt.setDateTime(dateTime);
+
+  stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
+  try
+  {
+    stream << firstPt.toWthString() << '\n';
+    for(unsigned int i=0;i<data().size();i++)
+    {
+      stream << data()[i].toWthString() << '\n';
+    }
+  }
+  catch(...)
+  {
+    LOG(Error, "Translation to WTH has failed");
+    fp.close();
+    return false;
+  }
+  fp.close();
+  return true;
 }
 
 bool EpwFile::parse(bool storeData)

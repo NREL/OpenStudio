@@ -86,15 +86,29 @@ int main(int argc, char *argv[])
   openstudio::path inputPath = openstudio::toPath(inputPathString);
 
   boost::optional<openstudio::EpwFile> epwFile;
-  try{
+  try
+  {
     epwFile = openstudio::EpwFile(inputPath,true);
     OS_ASSERT(epwFile);
   }
-  catch(std::exception&){
-    std::cout << "Could not open epw file '" << inputPathString << "'";
+  catch(std::exception&)
+  {
+    std::cout << "Could not open EPW file '" << inputPathString << "'";
     return EXIT_FAILURE;
   }
 
+  openstudio::path outPath = inputPath.replace_extension(openstudio::toPath("wth").string());
+  if(!outputPathString.empty())
+  {
+    outPath = openstudio::toPath(outputPathString);
+  }
+
+  if(!epwFile->translateToWth(outPath))
+  {
+    std::cout << "Translation to WTH file failed, check for errors and warnings and try again" << std::endl;
+  }
+
+  /*
   if(!epwFile->data().size())
   {
     std::cout << "Input EPW file has no data to translate" << std::endl;
@@ -104,11 +118,7 @@ int main(int argc, char *argv[])
   std::cout << epwFile->city() << std::endl;
   std::cout << epwFile->data().size() << std::endl;
 
-  openstudio::path outPath = inputPath.replace_extension(openstudio::toPath("wth").string());
-  if(!outputPathString.empty())
-  {
-    outPath = openstudio::toPath(outputPathString);
-  }
+  
 
   std::string description = "Converted EPW file";
 
@@ -157,6 +167,8 @@ int main(int argc, char *argv[])
 
   firstPt.setDateTime(dateTime);
 
+  */
+
   /*
   std::cout << month(dateTime.date().monthOfYear()) << '/' << dateTime.date().dayOfMonth() << ' '
     << dateTime.time().hours() << ':' << dateTime.time().minutes() << ':' << dateTime.time().seconds() << std::endl;
@@ -165,6 +177,8 @@ int main(int argc, char *argv[])
 
   std::cout << month(epwFile->startDate().monthOfYear()) << '/' << epwFile->startDate().dayOfMonth() << std::endl;
   */
+
+  /*
   stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
   stream << firstPt.toWthString() << '\n';
   for(unsigned int i=0;i<epwFile->data().size();i++)
@@ -173,76 +187,7 @@ int main(int argc, char *argv[])
   }
 
   fp.close();
-
-  /*
-
-  // Open the model
-  //openstudio::path inputPath = openstudio::toPath(inputPathString);
-  openstudio::osversion::VersionTranslator vt;
-  boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
-
-  if(!model)
-  {
-    std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Try to find and connect a results file - this really should be done using the RunManager database,
-  // but I don't know how to do that and it can be done right at a later date by someone who knows how
-  openstudio::path dir = inputPath.parent_path() / inputPath.stem();
-  boost::optional<openstudio::path> sqlpath = findFile(dir,"eplusout.sql");
-  if(sqlpath)
-  {
-    std::cout<<"Found results file!"<<std::endl;
-    model->setSqlFile(openstudio::SqlFile(*sqlpath));
-  }
-
-  openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
-  openstudio::path cvfPath = inputPath.replace_extension(openstudio::toPath("cvf").string());
-
-  openstudio::contam::ForwardTranslator translator;
-  if(setLevel)
-  {
-    translator.setAirtightnessLevel(leakageDescriptorString);
-  }
-  else
-  {
-    translator.setExteriorFlowRate(flow);
-  }
-  QFile file(openstudio::toQString(prjPath));
-  if(file.open(QFile::WriteOnly))
-  {
-    QTextStream textStream(&file);
-    if(!translator.translate(*model))
-    {
-      std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
-      return EXIT_FAILURE;
-    }
-    // Write out a CVF if needed
-    //std::cout << translator.rc().CVFpath() << std::endl;
-    if(translator.writeCvFile(cvfPath))
-    {
-      // Need to set the CVF file in the PRJ, this path may need to be made relative. Not too sure
-      translator.rc().setCVFpath(openstudio::toString(cvfPath));
-      // Turn on transient simulation
-      translator.rc().setSim_af(1);
-      // This should be done somewhere else
-      translator.rc().setDate_1("Dec31");
-      translator.rc().setTime_1("24:00:00");
-      //std::cout << translator.rc().CVFpath() << std::endl;
-    }
-    textStream << openstudio::toQString(translator.toString());
-  }
-  else
-  {
-    std::cout << "Failed to open file '"<< openstudio::toString(prjPath) << "'." << std::endl;
-    std::cout << "Check that this file location is accessible and may be written." << std::endl;
-    return EXIT_FAILURE;
-  }
-  file.close();
   */
-  // The details on what we should do with these maps are still unclear
-  // openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
-  // translator.writeMaps(mapPath);
+
   return EXIT_SUCCESS;
 }

@@ -265,6 +265,9 @@ public:
   /// get the weather data
   std::vector<EpwDataPoint> data() const;
 
+  /// export to CONTAM WTH file
+  bool translateToWth(openstudio::path path,std::string description=std::string()) const;
+
 private:
 
   bool parse(bool storeData=false);
