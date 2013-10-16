@@ -219,8 +219,10 @@ namespace detail {
 
     // see if trivially complete
     m_iteration = project().analysis().dataPointsToQueue();
+    DataPointVector missingDetails = project().analysis().dataPointsNeedingDetails();
+    m_iteration.insert(m_iteration.end(),missingDetails.begin(),missingDetails.end());
     if (m_iteration.empty()) {
-      LOG(Info,"Nothing to run. Run request trivially successful.");
+      LOG(Info,"Nothing to run or download. Run request trivially successful.");
       m_lastRunSuccess = true;
       return false; // false because no signal to wait for
     }
@@ -331,6 +333,7 @@ namespace detail {
     bool found(false);
     if (m_onlyProcessingDownloadRequests && !isDownloading()) {
       resetState();
+      setStatus(AnalysisStatus::Running);
     }
     else {
       // see if already in process, in which case, the right thing should happen automatically
@@ -1620,6 +1623,8 @@ namespace detail {
       emit detailedDownloadRequestsComplete(false);
     }
 
+    setStatus(AnalysisStatus::Running);
+
     // don't register failure here. calling method will do so.
 
     return success;
@@ -1643,6 +1648,8 @@ namespace detail {
       logError("Cannot start downloading data point details because the CloudSession has been terminated.");
       emit detailedDownloadRequestsComplete(false);
     }
+
+    setStatus(AnalysisStatus::Running);
 
     // don't register failure here. calling method will do so.
 
