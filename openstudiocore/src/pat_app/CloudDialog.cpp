@@ -488,9 +488,13 @@ void CloudProviderWidget::createWidgets()
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
-  label->setObjectName("H2");
-  label->setText("Results for simulation run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances and any results not downloaded will be lost.");
+  label->setObjectName("H1");
+  label->setText("<FONT COLOR = RED>Results for simulation run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances and any results not downloaded will be lost.");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  QSpacerItem * spacerItem = NULL;
+  spacerItem = new QSpacerItem(0,25,QSizePolicy::Fixed,QSizePolicy::Fixed);
+  m_rightSettingsLayout->addItem(spacerItem);
 }
 
 //***** SLOTS *****
@@ -825,6 +829,10 @@ void AmazonProviderWidget::createLoginWidget()
   m_secretKeyLineEdit = new QLineEdit();
   m_secretKeyLineEdit->setMinimumWidth(KEY_WIDTH);
   m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+
+  QSpacerItem * spacerItem = NULL;
+  spacerItem = new QSpacerItem(0,30,QSizePolicy::Fixed,QSizePolicy::Fixed);
+  m_leftLoginLayout->addItem(spacerItem);
 
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
