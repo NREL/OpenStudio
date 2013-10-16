@@ -36,48 +36,16 @@ void usage( boost::program_options::options_description desc)
   std::cout << desc << std::endl;
 }
 
-static boost::optional<openstudio::path> findFile(openstudio::path base, std::string filename)
-{
-  //boost::filesystem::recursive_directory_iterator(base);
-  //boost::filesystem::recursive_directory_iterator();
-  //boost::filesystem2::basic_recursive_directory_iterator(base);
-  if(boost::filesystem::is_directory(base))
-  {
-    openstudio::path filepath = base / openstudio::toPath(filename);
-    std::cout<<"Looking for "<<openstudio::toString(filepath)<<std::endl;
-    if(boost::filesystem::exists(filepath))
-    {
-      return boost::optional<openstudio::path>(filepath);
-    }
-    // WHY!?!?!
-    boost::filesystem2::path basepath(openstudio::toString(base));
-    boost::filesystem::directory_iterator iter(basepath);
-    boost::filesystem::directory_iterator end;
-    for(;iter!=end;++iter)
-    {
-      boost::optional<openstudio::path> optional = findFile(openstudio::toPath(iter->path().string()),filename);
-      if(optional)
-      {
-        return optional;
-      }
-    }
-  }
-  return false;
-}
-
 int main(int argc, char *argv[])
 {
   std::string inputPathString;
-  std::string leakageDescriptorString="Average";
-  double flow=27.1;
-  bool setLevel = true;
+  std::string outputPathString;
   boost::program_options::options_description desc("Allowed options");
 
   desc.add_options()
-    ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate per envelope area [m^3/h/m^2]")
     ("help,h", "print help message")
-    ("input-path,i", boost::program_options::value<std::string>(&inputPathString), "path to input OSM file")
-    ("level,l", boost::program_options::value<std::string>(&leakageDescriptorString), "airtightness: Leaky|Average|Tight (default: Average)")
+    ("input-path,i", boost::program_options::value<std::string>(&inputPathString), "path to input EPW file")
+    ("output-path,o", boost::program_options::value<std::string>(&outputPathString), "path to output WTH file")
     ("quiet,q", "suppress progress output");
 
   boost::program_options::positional_options_description pos;
@@ -113,19 +81,13 @@ int main(int argc, char *argv[])
     usage(desc);
     return EXIT_FAILURE;
   }
-
-  if(vm.count("flow"))
-  {
-    // Probably should do a sanity check of input - but maybe later
-    setLevel = false;
-  }
   
   // Open the EPW file
   openstudio::path inputPath = openstudio::toPath(inputPathString);
 
   boost::optional<openstudio::EpwFile> epwFile;
   try{
-    epwFile = openstudio::EpwFile(inputPath);
+    epwFile = openstudio::EpwFile(inputPath,true);
     OS_ASSERT(epwFile);
   }
   catch(std::exception&){
@@ -133,7 +95,84 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
+  if(!epwFile->data().size())
+  {
+    std::cout << "Input EPW file has no data to translate" << std::endl;
+    return EXIT_FAILURE;
+  }
+
   std::cout << epwFile->city() << std::endl;
+  std::cout << epwFile->data().size() << std::endl;
+
+  openstudio::path outPath = inputPath.replace_extension(openstudio::toPath("wth").string());
+  if(!outputPathString.empty())
+  {
+    outPath = openstudio::toPath(outputPathString);
+  }
+
+  std::string description = "Converted EPW file";
+
+  QFile fp(openstudio::toQString(outPath));
+  if(!fp.open(QFile::WriteOnly))
+  {
+    std::cout << "Failed to open file '" << openstudio::toString(outPath) << "'" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  QTextStream stream(&fp);
+
+  stream << "WeatherFile ContamW 2.0\n";
+  stream << openstudio::toQString(description) << "\n";
+  stream << QString("%1/%2\t!start date\n").arg(openstudio::month(epwFile->startDate().monthOfYear())).arg(epwFile->startDate().dayOfMonth());
+  stream << QString("%1/%2\t!end date\n").arg(openstudio::month(epwFile->endDate().monthOfYear())).arg(epwFile->endDate().dayOfMonth());
+  stream << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
+  openstudio::Time delta(1,0);
+  int dayofweek = epwFile->startDayOfWeek().value()+1;
+  for(openstudio::Date current=epwFile->startDate();current<=epwFile->endDate();current += delta)
+  {
+    stream << QString("%1/%2\t%3\t%3\t0\t283.15\n")
+      .arg(openstudio::month(current.monthOfYear()))
+      .arg(current.dayOfMonth())
+      .arg(dayofweek);
+    dayofweek++;
+    if(dayofweek > 7)
+    {
+      dayofweek=1;
+    }
+  }
+  // Cheat to get data at the start time
+
+  openstudio::EpwDataPoint firstPt = epwFile->data()[epwFile->data().size()-1];
+  openstudio::DateTime dateTime = epwFile->data()[0].dateTime();
+  std::cout << "Date/time of first data point: " << month(dateTime.date().monthOfYear()) << '/' << dateTime.date().dayOfMonth() 
+    << ' ' << dateTime.time().hours() << ':' << dateTime.time().minutes() << ':' << dateTime.time().seconds() << std::endl;
+  openstudio::Date date = epwFile->data()[0].date();
+  std::cout << "Date of first data point: " << month(date.monthOfYear()) << '/' << date.dayOfMonth() << std::endl;
+  openstudio::Time time = epwFile->data()[0].time();
+  std::cout << "Time of first data point: " << time.hours() << ':' << time.minutes() << ':' << time.seconds() << std::endl;
+  openstudio::Time dt = epwFile->timeStep();
+  std::cout << "Time step: " << dt.hours() << "::" << dt.minutes() << std::endl;
+
+  dateTime -= dt;
+
+  firstPt.setDateTime(dateTime);
+
+  /*
+  std::cout << month(dateTime.date().monthOfYear()) << '/' << dateTime.date().dayOfMonth() << ' '
+    << dateTime.time().hours() << ':' << dateTime.time().minutes() << ':' << dateTime.time().seconds() << std::endl;
+
+  std::cout << epwFile->startDayOfWeek().value()+1 << std::endl;
+
+  std::cout << month(epwFile->startDate().monthOfYear()) << '/' << epwFile->startDate().dayOfMonth() << std::endl;
+  */
+  stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
+  stream << firstPt.toWthString() << '\n';
+  for(unsigned int i=0;i<epwFile->data().size();i++)
+  {
+    stream << epwFile->data()[i].toWthString() << '\n';
+  }
+
+  fp.close();
 
   /*
 

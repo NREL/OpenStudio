@@ -1360,6 +1360,10 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     if(sqlFile)
     {
       std::vector<std::string> available = sqlFile->availableTimeSeries();
+      BOOST_FOREACH(std::string var, available)
+      {
+        std::cout << '\t' << var << std::endl;
+      }
       std::string envPeriod; 
       BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
       {
