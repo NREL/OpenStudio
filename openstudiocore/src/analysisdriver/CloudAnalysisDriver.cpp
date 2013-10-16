@@ -649,8 +649,9 @@ namespace detail {
       BOOST_FOREACH(const DataPoint& missingDetails, project().analysis().dataPointsNeedingDetails()) {
         if (std::find(completeUUIDs.begin(),completeUUIDs.end(),missingDetails.uuid()) != completeUUIDs.end()) {
           // details queue -- are complete, but details were reqeusted and have not yet been downloaded
-          OS_ASSERT(std::find(m_iteration.begin(),m_iteration.end(),missingDetails) == m_iteration.end());
-          m_iteration.push_back(missingDetails);
+          if (!inIteration(missingDetails)) {
+            m_iteration.push_back(missingDetails);
+          }
           m_preDetailsQueue.push_back(missingDetails);
         }
         else {
