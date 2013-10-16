@@ -1853,6 +1853,10 @@ namespace detail {
     m_tools = newtools;
     m_params = newparams;
     m_id = newUUID;
+    m_outdir = boost::none;
+    m_allTools = boost::none;
+    m_allParams = boost::none;
+    m_allInputFiles = boost::none;
     l.unlock();
 
     sendSignals(oldState, newState, oldUUID, newUUID);
