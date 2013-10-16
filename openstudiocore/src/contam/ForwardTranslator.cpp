@@ -37,11 +37,13 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/PortList.hpp>
+#include <model/WeatherFile.hpp>
 
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/geometry/Geometry.hpp>
 #include <utilities/plot/ProgressBar.hpp>
+#include <utilities/filetypes/EpwFile.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -1391,7 +1393,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
             int nr =  m_zoneMap[thermalZone.handle()];
             // std::cout << "Found time series for zone " << name.get() << ", CONTAM index " << nr << std::endl;
             // Create a control node
-            std::string controlName = QString("ctrl_%1").arg(nr).toStdString();
+            std::string controlName = QString("ctrl_z_%1").arg(nr).toStdString();
             std::string valueName = QString("temp_%1").arg(nr).toStdString();
             m_cvf.addTimeSeries(valueName,*timeSeries);
             prj::CvfDat ctrl;
@@ -1409,52 +1411,93 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
       }
       else
       {
-        LOG(Warn, "Activate \"Zone Mean Air Temperature\" to set zone temperature controls.");
+        LOG(Warn, "Activate \"Zone Mean Air Temperature\" output to set zone temperature controls.");
       }
-      // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
-      // This should be moved to inside the contam translator
-      /*
-      BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
+      if(std::find(available.begin(), available.end(), "System Node MassFlowRate")!=available.end())
       {
         LOG(Warn, "Zone equipment not yet accounted for.");
-        // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
-        boost::optional<model::Node> returnAirNode;
-        boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
-        if (returnAirModelObject)
+        // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
+        // This should be moved to inside the contam translator
+        BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
         {
-          returnAirNode = returnAirModelObject->optionalCast<model::Node>();
-        }
-        if (returnAirNode)
-        {
-          std::string keyValue = returnAirNode->name().get();
-          keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
-          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
-            "System Node MassFlowRate", keyValue);
-          if (timeSeries)
-          {
-            openstudio::Vector values = timeSeries->values();
-          }
-        }
+          // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
 
-        boost::optional<model::Node> supplyAirNode;
-        boost::optional<model::ModelObject> supplyAirModelObject = thermalZone.inletPortList().airLoopHVACModelObject();
-        if (supplyAirModelObject)
-        {
-          supplyAirNode = supplyAirModelObject->optionalCast<model::Node>();
-        }
-        if (supplyAirNode)
-        {
-          std::string keyValue = supplyAirNode->name().get();
-          keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
-          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
-            "System Node MassFlowRate", keyValue);
-          if (timeSeries)
+          boost::optional<model::Node> supplyAirNode;
+          boost::optional<model::ModelObject> supplyAirModelObject = thermalZone.inletPortList().airLoopHVACModelObject();
+          if (supplyAirModelObject)
           {
-            openstudio::Vector values = timeSeries->values();
+            supplyAirNode = supplyAirModelObject->optionalCast<model::Node>();
           }
+          if (supplyAirNode)
+          {
+            std::string keyValue = supplyAirNode->name().get();
+            keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+            boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
+              "System Node MassFlowRate", keyValue);
+            if (timeSeries)
+            {
+              std::cout << "Found time series for supply to zone " << thermalZone.name().get() << std::endl;
+              nr = m_pathMap.value(thermalZone.name().get()+" supply",0);
+              // There really should not be a case of missing number here, but it is better to be safe
+              if(!nr)
+              {
+                LOG(Error,"Supply node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
+                continue;
+              }
+              // Create a control node
+              std::string controlName = QString("ctrl_p_%1").arg(nr).toStdString();
+              std::string valueName = QString("supply_%1").arg(nr).toStdString();
+              m_cvf.addTimeSeries(valueName,*timeSeries);
+              prj::CvfDat ctrl;
+              ctrl.setName(controlName);
+              ctrl.setValuename(valueName);
+              addControlNode(ctrl);
+              // Connect to the path
+              paths()[nr-1].setPc(ctrl.nr());
+            }
+          }
+
+          boost::optional<model::Node> returnAirNode;
+          boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
+          if (returnAirModelObject)
+          {
+            returnAirNode = returnAirModelObject->optionalCast<model::Node>();
+          }
+          if (returnAirNode)
+          {
+            std::string keyValue = returnAirNode->name().get();
+            keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+            boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
+              "System Node MassFlowRate", keyValue);
+            if (timeSeries)
+            {
+              std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
+              nr = m_pathMap.value(thermalZone.name().get()+" return",0);
+              // There really should not be a case of missing number here, but it is better to be safe
+              if(!nr)
+              {
+                LOG(Error,"Return node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
+                continue;
+              }
+              // Create a control node
+              std::string controlName = QString("ctrl_p_%1").arg(nr).toStdString();
+              std::string valueName = QString("return_%1").arg(nr).toStdString();
+              m_cvf.addTimeSeries(valueName,*timeSeries);
+              prj::CvfDat ctrl;
+              ctrl.setName(controlName);
+              ctrl.setValuename(valueName);
+              addControlNode(ctrl);
+              // Connect to the path
+              paths()[nr-1].setPc(ctrl.nr());
+            }
+          }
+          
         }
       }
-      */
+      else
+      {
+        LOG(Warn, "Activate \"System Node MassFlowRate\" output to set zone supply/return flows.");
+      }
       // The modification of the PRJ for transient simulation probably should be here
     }
     else
@@ -1506,6 +1549,42 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
   //ZoneData *afz = zoneList.at(i);
   //double flowRate = afz->area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
 
+}
+
+bool ForwardTranslator::translateEpw(const openstudio::model::Model& model, openstudio::path outpath)
+{
+  boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+  if(!weatherFile)
+  {
+    LOG(Warn,"No weather file object to process");
+    return false;
+  }
+  boost::optional<openstudio::path> path=weatherFile->path();
+  if(!path)
+  {
+    LOG(Warn,"No weather file path to process");
+    return false;
+  }
+  std::cout << openstudio::toString(*path) << std::endl;
+  try
+  {
+    EpwFile epw(*path,true);
+    try
+    {
+      epw.translateToWth(outpath);
+    }
+    catch(...) // Is this going to work?
+    {
+      LOG(Error,"Translation of EPW file failed, weather will be steady state");
+      return false;
+    }
+  }
+  catch(...)
+  {
+    LOG(Error,"Failed to correctly load EPW file, weather will be steady state");
+    return false;
+  }
+  return true;
 }
 
 std::string ForwardTranslator::toString()

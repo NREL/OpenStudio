@@ -82,6 +82,10 @@ public:
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
     bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"), ProgressBar* progressBar=NULL);
 
+  // Translation functions - need to add more of these by chopping out parts of the main translation function
+  // Some will probably need to be private, but this one is not so paths can be handled correctly
+  bool translateEpw(const openstudio::model::Model& model, openstudio::path outpath);
+
   bool ready() const {return m_ready && valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
@@ -103,13 +107,13 @@ public:
   std::vector<LogMessage> errors() const;
 
 private:
+  // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
   int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
   int tableLookup(std::map<Handle,int> map, Handle handle, const char *name);
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
-  // prj::Model m_data;
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
   std::map<std::string,int> m_afeMap;  // Map from descriptor ("exterior", "floor", etc.) to CONTAM airflow element index

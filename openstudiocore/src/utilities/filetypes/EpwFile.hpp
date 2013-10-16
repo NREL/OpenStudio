@@ -36,7 +36,8 @@ class IdfObject;
 /** WeatherStringData is one line from the EPW file. All floating point numbers are stored as strings,
 * but are checked as numbers.
 */
-class UTILITIES_API EpwDataPoint{
+class UTILITIES_API EpwDataPoint
+{
 public:
   EpwDataPoint(std::string line);
   EpwDataPoint(int year=1,int month=1,int day=1,int hour=0,int minute=0,

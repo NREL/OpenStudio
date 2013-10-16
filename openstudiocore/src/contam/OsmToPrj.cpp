@@ -142,6 +142,7 @@ int main(int argc, char *argv[])
 
   openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
   openstudio::path cvfPath = inputPath.replace_extension(openstudio::toPath("cvf").string());
+  openstudio::path wthPath = inputPath.replace_extension(openstudio::toPath("wth").string());
 
   openstudio::contam::ForwardTranslator translator;
   if(setLevel)
@@ -161,6 +162,9 @@ int main(int argc, char *argv[])
       std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
       return EXIT_FAILURE;
     }
+    // Attempt to translate weather
+    translator.translateEpw(*model,wthPath);
+
     // Write out a CVF if needed
     //std::cout << translator.rc().CVFpath() << std::endl;
     if(translator.writeCvFile(cvfPath))
