@@ -2549,6 +2549,12 @@ namespace openstudio{
     if (!info.size()) {
       AWSComputerInformation awsComputerInformation;
 
+      // micro is currently insufficient to run server
+      //awsComputerInformation.instanceType = "t1.micro";
+      //awsComputerInformation.prettyName = "Micro";
+      //awsComputerInformation.processorCount = 1;
+      //info.push_back(awsComputerInformation);
+
       awsComputerInformation.instanceType = "m1.large";
       awsComputerInformation.prettyName = "M1 Large";
       awsComputerInformation.processorCount = 2;
@@ -2594,10 +2600,11 @@ namespace openstudio{
     if (!info.size()) {
       AWSComputerInformation awsComputerInformation;
 
-      awsComputerInformation.instanceType = "t1.micro";
-      awsComputerInformation.prettyName = "Micro";
-      awsComputerInformation.processorCount = 1;
-      info.push_back(awsComputerInformation);
+      // micro is currently insufficient to run worker
+      //awsComputerInformation.instanceType = "t1.micro";
+      //awsComputerInformation.prettyName = "Micro";
+      //awsComputerInformation.processorCount = 1;
+      //info.push_back(awsComputerInformation);
 
       awsComputerInformation.instanceType = "c1.xlarge";
       awsComputerInformation.prettyName = "High-CPU Extra Large";
