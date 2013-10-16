@@ -266,7 +266,7 @@ namespace detail {
 
   };
 
-  struct AWSComputerInformation {
+  struct UTILITIES_API AWSComputerInformation {
     public:
       std::string instanceType;
       std::string prettyName;
