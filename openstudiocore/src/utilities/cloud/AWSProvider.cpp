@@ -92,8 +92,6 @@ namespace openstudio{
       setWorkerInstanceType(workerInstanceType);
     }
 
-    // DLM: we should deal with running processes in this destructor
-
     std::string AWSSettings_Impl::cloudProviderType() const {
       return AWSProvider_Impl::cloudProviderType();
     }
@@ -545,6 +543,8 @@ namespace openstudio{
       m_privateKey.setAutoRemove(false);
     }
 
+    // DLM: we should deal with running processes in the AWSProvider_Impl destructor
+
     std::vector<std::string> AWSProvider_Impl::availableRegions() {
       static std::vector<std::string> regions;
       if (!regions.size()) {
@@ -906,7 +906,7 @@ namespace openstudio{
       }
       if (m_checkInternetProcess){
         m_checkInternetProcess->disconnect(this, 0);
-        m_checkInternetProcess->terminate();
+        m_checkInternetProcess->kill();
         m_checkInternetProcess = 0;
       }
       return false;
@@ -921,7 +921,7 @@ namespace openstudio{
       }
       if (m_checkServiceProcess){
         m_checkServiceProcess->disconnect(this, 0);
-        m_checkServiceProcess->terminate();
+        m_checkServiceProcess->kill();
         m_checkServiceProcess = 0;
       }
       return false;
@@ -936,7 +936,7 @@ namespace openstudio{
       }
       if (m_checkValidateProcess){
         m_checkValidateProcess->disconnect(this, 0);
-        m_checkValidateProcess->terminate();
+        m_checkValidateProcess->kill();
         m_checkValidateProcess = 0;
       }
       return false;
@@ -951,7 +951,7 @@ namespace openstudio{
       }
       if (m_checkResourcesProcess){
         m_checkResourcesProcess->disconnect(this, 0);
-        m_checkResourcesProcess->terminate();
+        m_checkResourcesProcess->kill();
         m_checkResourcesProcess = 0;
       }
       return false;
@@ -964,7 +964,7 @@ namespace openstudio{
       }
       if (m_startServerProcess){
         m_startServerProcess->disconnect(this, 0);
-        m_startServerProcess->terminate();
+        m_startServerProcess->kill();
         m_startServerProcess = 0;
       }
       return false;
@@ -977,7 +977,7 @@ namespace openstudio{
       }
       if (m_startWorkerProcess){
         m_startWorkerProcess->disconnect(this, 0);
-        m_startWorkerProcess->terminate();
+        m_startWorkerProcess->kill();
         m_startWorkerProcess = 0;
       }
       return false;
@@ -992,7 +992,7 @@ namespace openstudio{
       }
       if (m_checkServerRunningProcess){
         m_checkServerRunningProcess->disconnect(this, 0);
-        m_checkServerRunningProcess->terminate();
+        m_checkServerRunningProcess->kill();
         m_checkServerRunningProcess = 0;
       }
       return false;
@@ -1007,7 +1007,7 @@ namespace openstudio{
       }
       if (m_checkWorkerRunningProcess){
         m_checkWorkerRunningProcess->disconnect(this, 0);
-        m_checkWorkerRunningProcess->terminate();
+        m_checkWorkerRunningProcess->kill();
         m_checkWorkerRunningProcess = 0;
       }
       return false;
@@ -1020,7 +1020,7 @@ namespace openstudio{
       }
       if (m_stopInstancesProcess){
         m_stopInstancesProcess->disconnect(this, 0);
-        m_stopInstancesProcess->terminate();
+        m_stopInstancesProcess->kill();
         m_stopInstancesProcess = 0;
       }
       return false;
@@ -1035,7 +1035,7 @@ namespace openstudio{
       }
       if (m_checkTerminatedProcess){
         m_checkTerminatedProcess->disconnect(this, 0);
-        m_checkTerminatedProcess->terminate();
+        m_checkTerminatedProcess->kill();
         m_checkTerminatedProcess = 0;
       }
       return false;
@@ -1050,7 +1050,7 @@ namespace openstudio{
       }
       if (m_checkEstimatedChargesProcess){
         m_checkEstimatedChargesProcess->disconnect(this, 0);
-        m_checkEstimatedChargesProcess->terminate();
+        m_checkEstimatedChargesProcess->kill();
         m_checkEstimatedChargesProcess = 0;
       }
       return 0.0;
@@ -1065,7 +1065,7 @@ namespace openstudio{
       }
       if (m_checkTotalInstancesProcess){
         m_checkTotalInstancesProcess->disconnect(this, 0);
-        m_checkTotalInstancesProcess->terminate();
+        m_checkTotalInstancesProcess->kill();
         m_checkTotalInstancesProcess = 0;
       }
       return 0;
