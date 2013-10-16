@@ -675,7 +675,7 @@ namespace openstudio{
       return processorCounts.at(index);
     }
 
-    std::vector<AWSProvider_Impl::AWSComputerInformation> AWSProvider_Impl::serverInformation(){
+    std::vector<AWSComputerInformation> AWSProvider_Impl::serverInformation(){
       static std::vector<AWSComputerInformation> info;
       if (!info.size()) {
         AWSComputerInformation awsComputerInformation;
@@ -718,7 +718,7 @@ namespace openstudio{
       return info;
     }
 
-    std::vector<AWSProvider_Impl::AWSComputerInformation> AWSProvider_Impl::workerInformation(){
+    std::vector<AWSComputerInformation> AWSProvider_Impl::workerInformation(){
       static std::vector<AWSComputerInformation> info;
       if (!info.size()) {
         AWSComputerInformation awsComputerInformation;
@@ -2544,7 +2544,7 @@ namespace openstudio{
     return processorCounts.at(index);
   }
 
-  std::vector<AWSProvider::AWSComputerInformation> AWSProvider::serverInformation(){
+  std::vector<AWSComputerInformation> AWSProvider::serverInformation(){
     static std::vector<AWSComputerInformation> info;
     if (!info.size()) {
       AWSComputerInformation awsComputerInformation;
@@ -2587,7 +2587,7 @@ namespace openstudio{
     return info;
   }
 
-  std::vector<AWSProvider::AWSComputerInformation> AWSProvider::workerInformation(){
+  std::vector<AWSComputerInformation> AWSProvider::workerInformation(){
     // TODO need to make calls to getImpl for all new methods
     //return getImpl<detail::AWSProvider_Impl>()->workerInformation();
     static std::vector<AWSComputerInformation> info;

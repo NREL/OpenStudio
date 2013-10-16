@@ -288,6 +288,13 @@ namespace detail{
 
     std::string m_workerInstanceType;
   };
+  
+  struct AWSComputerInformation {
+    public:
+      std::string instanceType;
+      std::string prettyName;
+      unsigned processorCount;
+  };
 
   /// AWSProvider is a CloudProvider that provides access to Amazon EC2 and CloudWatch services.
   class UTILITIES_API AWSProvider_Impl : public CloudProvider_Impl {
@@ -437,13 +444,6 @@ namespace detail{
     static unsigned getServerProcessorCount(const std::string & instanceType);
 
     static unsigned getWorkerProcessorCount(const std::string & instanceType);
-
-    struct AWSComputerInformation {
-      public:
-        std::string instanceType;
-        std::string prettyName;
-        unsigned processorCount;
-    };
 
     static std::vector<AWSComputerInformation> serverInformation();  
 

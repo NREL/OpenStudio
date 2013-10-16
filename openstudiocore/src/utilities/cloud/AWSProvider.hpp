@@ -266,6 +266,13 @@ namespace detail {
 
   };
 
+  struct AWSComputerInformation {
+    public:
+      std::string instanceType;
+      std::string prettyName;
+      unsigned processorCount;
+  };
+
   /// \relates AWSSession
   typedef boost::optional<AWSSession> OptionalAWSSession;
 
@@ -323,13 +330,6 @@ namespace detail {
     static unsigned getServerProcessorCount(const std::string & instanceType);
 
     static unsigned getWorkerProcessorCount(const std::string & instanceType);
-
-    struct AWSComputerInformation {
-      public:
-        std::string instanceType;
-        std::string prettyName;
-        unsigned processorCount;
-    };
 
     static std::vector<AWSComputerInformation> serverInformation();  
 
