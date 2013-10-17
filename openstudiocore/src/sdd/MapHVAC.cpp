@@ -1904,6 +1904,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
+  // Sizing
+
+  double clgDsgnSupAirTemp = 60.0;
+  double clgDsgnSizingFac = 1.0;
+  double htgDsgnSupAirTemp = 95.0;
+  double htgDsgnSizingFac = 1.0;
+  double htgDsgnMaxFlowFrac = 0.5;
+
+  QDomElement clgDsgnSupAirTempElement = thermalZoneElement.firstChildElement("ClgDsgnSupAirTemp");
+  QDomElement clgDsgnSizingFacElement;
+  QDomElement htgDsgnSupAirTempElement;
+  QDomElement htgDsgnSizingFacElement;
+  QDomElement htgDsgnMaxFlowFracElement;
+
   // Ventilation
   QDomElement ventRtElement = thermalZoneElement.firstChildElement("DsgnVentRtSim");
   if (!ventRtElement.isNull() && (ventRtElement.text().toDouble() > 0))
