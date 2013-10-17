@@ -30,6 +30,9 @@
 #include <boost/function.hpp>
 
 namespace openstudio{
+
+  struct AWSComputerInformation;
+
 namespace detail{
 
   /// AWSSettings_Impl is a CloudSettings_Impl.
@@ -287,13 +290,6 @@ namespace detail{
     std::string m_serverInstanceType;
 
     std::string m_workerInstanceType;
-  };
-  
-  struct AWSComputerInformation {
-    public:
-      std::string instanceType;
-      std::string prettyName;
-      unsigned processorCount;
   };
 
   /// AWSProvider is a CloudProvider that provides access to Amazon EC2 and CloudWatch services.
