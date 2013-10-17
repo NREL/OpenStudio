@@ -941,15 +941,6 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
   m_logSink.resetStringStream();
   QString output;
   int nr;
-  // Load the template
-  //openstudio::contam::prj::Data data(":/templates/template.prj",false);
-  //m_data.read(":/templates/template.prj",false);
-  //if(!m_data.valid)
-  //{
-  //  return false;
-  //}
-  // The template is a legal PRJ file, so it has one level. Not for long.
-  //m_data.levels.clear();
   //
   // All of the model specific elements should probably be cleared here 
   //
@@ -1559,19 +1550,33 @@ bool ForwardTranslator::translateEpw(const openstudio::model::Model& model, open
     LOG(Warn,"No weather file object to process");
     return false;
   }
-  boost::optional<openstudio::path> path=weatherFile->path();
-  if(!path)
+  boost::optional<EpwFile> epwFile = weatherFile->file();
+  if(!epwFile)
   {
     LOG(Warn,"No weather file path to process");
     return false;
   }
-  std::cout << openstudio::toString(*path) << std::endl;
   try
   {
-    EpwFile epw(*path,true);
+    epwFile->translateToWth(outpath);
+  }
+  catch(...)
+  {
+    LOG(Error,"Translation of EPW file failed, weather will be steady state");
+    return false;
+  }
+  return true;
+}
+
+bool ForwardTranslator::translateEpw(openstudio::path epwpath, openstudio::path outpath)
+{
+  std::cout << openstudio::toString(epwpath) << std::endl;
+  try
+  {
+    EpwFile epwFile(epwpath,true);
     try
     {
-      epw.translateToWth(outpath);
+      epwFile.translateToWth(outpath);
     }
     catch(...) // Is this going to work?
     {

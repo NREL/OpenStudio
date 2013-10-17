@@ -20,6 +20,7 @@
 
 #include <contam/ForwardTranslator.hpp>
 #include <model/Model.hpp>
+#include <model/WeatherFile.hpp>
 #include <osversion/VersionTranslator.hpp>
 #include <utilities/core/CommandLine.hpp>
 #include <utilities/core/Path.hpp>
@@ -160,10 +161,42 @@ int main(int argc, char *argv[])
     if(!translator.translate(*model))
     {
       std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
+      file.close();
       return EXIT_FAILURE;
     }
     // Attempt to translate weather
-    translator.translateEpw(*model,wthPath);
+    boost::optional<openstudio::model::WeatherFile> weatherFile = model->weatherFile();
+    if(weatherFile)
+    {
+      boost::optional<openstudio::path> path = weatherFile->path();
+      if(path)
+      {
+        boost::optional<openstudio::path> epwPath = findFile(dir,openstudio::toString(path->string()));
+        if(epwPath)
+        {
+          if(translator.translateEpw(*epwPath,wthPath))
+          {
+            translator.rc().setWTHpath(openstudio::toString(wthPath));
+          }
+          else
+          {
+            std::cout << "EPW translation to WTH failed, WTH file will not be used in simulation" << std::endl;
+          }
+        }
+        else
+        {
+          std::cout << "Failed to find EPW file, WTH file will not be written" << std::endl;
+        }
+      }
+      else
+      {
+        std::cout << "No path to EPW file, WTH file will not be written" << std::endl;
+      }
+    }
+    else
+    {
+      std::cout << "No weather file object to process, WTH file will not be written" << std::endl;
+    }
 
     // Write out a CVF if needed
     //std::cout << translator.rc().CVFpath() << std::endl;

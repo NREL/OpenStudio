@@ -83,8 +83,9 @@ public:
     bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"), ProgressBar* progressBar=NULL);
 
   // Translation functions - need to add more of these by chopping out parts of the main translation function
-  // Some will probably need to be private, but this one is not so paths can be handled correctly
+  // Some will probably need to be private, but these are not so paths can be handled correctly
   bool translateEpw(const openstudio::model::Model& model, openstudio::path outpath);
+  bool translateEpw(openstudio::path epwpath, openstudio::path outpath);
 
   bool ready() const {return m_ready && valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
