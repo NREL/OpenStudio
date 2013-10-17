@@ -22,12 +22,13 @@
 #include <model/RefrigerationSystem.hpp>
 #include <model/ThermalZone.hpp>
 //#include <model/RefrigerationCondenserAirCooled.hpp>
-//#include <model/RefrigerationCondenserCascade.hpp>
+#include <model/RefrigerationCondenserCascade.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationWalkIn.hpp>
-//#include <model/RefrigerationSubcooler.hpp>
+#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
+#include <model/RefrigerationSubcoolerMechanical.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 
 #include <utilities/idd/Refrigeration_System_FieldEnums.hxx>
@@ -105,9 +106,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
 //Refrigeration Transfer Load or TransferLoad List Name
   std::vector<RefrigerationSecondarySystem> secondarySystemLoads = modelObject.secondarySystemLoads();
-  //std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = modelObject.cascadeCondenserLoads();
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = modelObject.cascadeCondenserLoads();
 
-  if( !secondarySystemLoads.empty() ) //|| !cascadeCondenserLoads.empty() )
+  if( !secondarySystemLoads.empty() || !cascadeCondenserLoads.empty() )
   {
     // Name
     name = " Transfer Load List";
@@ -133,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       }
     }
 
-    /*for( std::vector<RefrigerationCondenserCascade>::iterator it = cascadeCondenserLoads.begin();
+    for( std::vector<RefrigerationCondenserCascade>::iterator it = cascadeCondenserLoads.begin();
        it != cascadeCondenserLoads.end();
        it++ )
     {
@@ -145,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
         eg.setString(Refrigeration_TransferLoadListExtensibleFields::CascadeCondenserNameorSecondarySystemName,_cascadeCondenserLoad->name().get()); 
       }
-    }*/
+    }
   }
 
 //Refrigeration Condenser Name
@@ -207,7 +208,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
         refrigerationSystem.setString(Refrigeration_SystemFields::RefrigerationSystemWorkingFluidType,value.get());
       }
     }
-    //refrigerationSystem.setString(Refrigeration_SystemFields::RefrigerationSystemWorkingFluidType,s.get());
   }
 
 //Suction Temperature Control Type
@@ -217,7 +217,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   }
 
 //Mechanical Subcooler Name
-  /*boost::optional<ModelObject> mechanicalSubcooler = modelObject.mechanicalSubcooler();
+  boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler = modelObject.mechanicalSubcooler();
 
   if( mechanicalSubcooler )
   {
@@ -227,10 +227,10 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
     {
       refrigerationSystem.setString(Refrigeration_SystemFields::MechanicalSubcoolerName,_mechanicalSubcooler->name().get());
     }
-  }*/
+  }
 
 //Liquid Suction Heat Exchanger Subcooler Name
-  /*boost::optional<ModelObject> liquidSuctionHeatExchangerSubcooler = modelObject.liquidSuctionHeatExchangerSubcooler();
+  boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler = modelObject.liquidSuctionHeatExchangerSubcooler();
 
   if( liquidSuctionHeatExchangerSubcooler )
   {
@@ -240,7 +240,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
     {
       refrigerationSystem.setString(Refrigeration_SystemFields::LiquidSuctionHeatExchangerSubcoolerName,_liquidSuctionHeatExchangerSubcooler->name().get());
     }
-  }*/
+  }
 
 //Sum UA Suction Piping
   d = modelObject.sumUASuctionPiping();
