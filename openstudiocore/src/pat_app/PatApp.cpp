@@ -297,7 +297,7 @@ void PatApp::saveAs()
   } else if (status == CLOUD_ERROR) {
     QMessageBox::warning(mainWindow, 
       "Cannot Save Copy", 
-      "PAT cannot save a copy of the current project while the cloud is in an error state.  Once the cloud connection is established and the session is terminated this operation will become available.", 
+      "PAT cannot save a copy of the current project while the cloud is in an error state.  Once the cloud connection is established or the session is terminated this operation will become available.", 
       QMessageBox::Ok);
 
     return;
@@ -455,6 +455,54 @@ void PatApp::open()
 
 void PatApp::create()
 {
+  CloudStatus status = cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Create New Project", 
+      "Projects cannot be created while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    return;
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // if project is running we can create, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't create
+    // if project is stopping we can create, 90% sure we should turn cloud off
+    // if project is error we can create, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(mainWindow, 
+        "Cannot Create New Project", 
+        "Projects cannot be created while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+      return;
+    }else{
+      int result = QMessageBox::warning(mainWindow, 
+                      "Create Project?", 
+                      "The cloud is currently running and charges are accruing.  Are you sure you want to create and open a new project?", 
+                      QMessageBox::Ok, 
+                      QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    }
+
+  } else if (status == CLOUD_STOPPED) {
+
+  // DLM: check if running locally?
+
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(mainWindow, 
+                    "Create Project?", 
+                    "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to create and open a new project?", 
+                    QMessageBox::Ok, 
+                    QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) return;
+  }
+
   NewProjectDialog * dialog = new NewProjectDialog();
 
   QString projectName;
