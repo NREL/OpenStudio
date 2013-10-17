@@ -1211,9 +1211,11 @@ namespace detail {
 
       // make a new designSpecificationOutdoorAir
       designSpecificationOutdoorAir = DesignSpecificationOutdoorAir(model);
-      if( anyMaxOutdoorAirMethod ) {
+      if( anySumOutdoorAirMethod && anyMaxOutdoorAirMethod ) {
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      }else if( anyMaxOutdoorAirMethod ) {
         designSpecificationOutdoorAir->setOutdoorAirMethod("Maximum");
-      } else {
+      }else{
         designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
       }
       designSpecificationOutdoorAir->setOutdoorAirFlowperPerson(outdoorAirForPeople);
