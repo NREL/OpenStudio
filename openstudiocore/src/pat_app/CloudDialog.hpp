@@ -267,10 +267,20 @@ private:
   QComboBox * m_regionComboBox;
 
   QComboBox * m_serverInstanceTypeComboBox;
+  QLabel * m_serverNameLabel;
+  QLabel * m_serverCpuCountLabel;
 
   QComboBox * m_workerInstanceTypeComboBox;
+  QLabel * m_workerNameLabel;
+  QLabel * m_workerCpuCountLabel;
 
   QLineEdit * m_numberOfWorkerInstancesLineEdit;
+
+private slots:
+    
+  void on_serverInstanceTypeComboBox(const QString & text);
+
+  void on_workerInstanceTypeComboBox(const QString & text);
 
 };
 
