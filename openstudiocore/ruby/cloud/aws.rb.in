@@ -35,7 +35,7 @@
 #
 ######################################################################
 
-require 'aws'
+require 'aws-sdk'
 require 'json'
 require 'logger'
 require 'net/http'
