@@ -437,6 +437,31 @@ namespace detail {
   std::vector<std::pair<openstudio::path, openstudio::path> > ToolBasedJob::acquireRequiredFiles(
       const std::vector<std::pair<QUrl, openstudio::path> > &t_urls)
   {
+    class RequiredFileChecker
+    {
+      public:
+        /// Track which required files have been added, returning false if the destination exists
+        /// while logging an error as to what exactly happened
+        bool addFile(const openstudio::path &t_from, const openstudio::path &t_to)
+        {
+          std::map<openstudio::path, openstudio::path>::const_iterator itr = m_files.find(t_to);
+
+          if (itr != m_files.end())
+          {
+            LOG(Error, "acquireRequiredFiles: Unable to add file From: '" << openstudio::toString(t_from) << "' to '" << openstudio::toString(t_to) << "'. Existing required file from: '" << openstudio::toString(itr->second) << "' to '" << openstudio::toString(itr->first) << "' already exists.");
+            return false;
+          } else {
+            m_files[t_to] = t_from;
+            return true;
+          }
+        }
+
+      private:
+      std::map<openstudio::path, openstudio::path> m_files;
+    };
+
+    RequiredFileChecker rfc;
+
     std::vector<std::pair<openstudio::path, openstudio::path> > retval;
 
     for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = t_urls.begin();
@@ -517,19 +542,24 @@ namespace detail {
                     relative = addfolder / relative;
                   }
 
-                  m_addedRequiredFiles.insert(std::make_pair(p, relative));
+                  if (rfc.addFile(p, itr->second.parent_path() / relative))
+                  {
+                    m_addedRequiredFiles.insert(std::make_pair(p, relative));
 
-                  LOG(Info, "Adding OSM requesite file: " << openstudio::toString(p) 
-                      << " to be installed at: " << openstudio::toString(relative));
-                  retval.push_back(std::make_pair(p, itr->second.parent_path() / relative));
+                    LOG(Info, "Adding OSM requesite file: " << openstudio::toString(p) 
+                        << " to be installed at: " << openstudio::toString(relative));
+                    retval.push_back(std::make_pair(p, itr->second.parent_path() / relative));
+                  }
                 }
               }
             }
-
           }
         }
 
-        retval.push_back(std::make_pair(file, itr->second));
+        if (rfc.addFile(file, itr->second))
+        {
+          retval.push_back(std::make_pair(file, itr->second));
+        }
 
       } else {
         throw std::runtime_error("Unsupported file scheme: " + toString(itr->first.scheme()));
