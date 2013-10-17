@@ -142,6 +142,8 @@ bool CvFile::write(openstudio::path filepath)
 ForwardTranslator::ForwardTranslator()
 {
   m_ready=false;
+  m_ratioOverride=false;
+  m_returnSupplyRatio=0.9;
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
@@ -158,6 +160,8 @@ ForwardTranslator::ForwardTranslator()
 ForwardTranslator::ForwardTranslator(std::string leakageDescriptor)
 {
   m_ready=false;
+  m_ratioOverride=false;
+  m_returnSupplyRatio=0.9;
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
@@ -174,6 +178,8 @@ ForwardTranslator::ForwardTranslator(std::string leakageDescriptor)
 ForwardTranslator::ForwardTranslator(double flow,double n,double deltaP)
 {
   m_ready=false;
+  m_ratioOverride=false;
+  m_returnSupplyRatio=0.9;
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
@@ -1445,44 +1451,68 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
               addControlNode(ctrl);
               // Connect to the path
               paths()[nr-1].setPc(ctrl.nr());
+              if(m_ratioOverride) // This assumes that there *is* a return, which could be wrong? maybe?
+              {
+                // Create a new time series
+                TimeSeries returnSeries = (*timeSeries)*m_returnSupplyRatio;
+                nr = m_pathMap.value(thermalZone.name().get()+" return",0);
+                // There really should not be a case of missing number here, but it is better to be safe
+                if(!nr)
+                {
+                  LOG(Error,"Failed to find return path for zone '" << thermalZone.name().get() << "'");
+                  continue;
+                }
+                // Create a control node
+                std::string controlName = QString("ctrl_p_%1r").arg(nr).toStdString();
+                std::string valueName = QString("return_%1").arg(nr).toStdString();
+                m_cvf.addTimeSeries(valueName,*timeSeries);
+                prj::CvfDat ctrl;
+                ctrl.setName(controlName);
+                ctrl.setValuename(valueName);
+                addControlNode(ctrl);
+                // Connect to the path
+                paths()[nr-1].setPc(ctrl.nr());
+              }
             }
           }
 
-          boost::optional<model::Node> returnAirNode;
-          boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
-          if (returnAirModelObject)
+          if(!m_ratioOverride)
           {
-            returnAirNode = returnAirModelObject->optionalCast<model::Node>();
-          }
-          if (returnAirNode)
-          {
-            std::string keyValue = returnAirNode->name().get();
-            keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
-            boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
-              "System Node MassFlowRate", keyValue);
-            if (timeSeries)
+            boost::optional<model::Node> returnAirNode;
+            boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
+            if (returnAirModelObject)
             {
-              std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
-              nr = m_pathMap.value(thermalZone.name().get()+" return",0);
-              // There really should not be a case of missing number here, but it is better to be safe
-              if(!nr)
+              returnAirNode = returnAirModelObject->optionalCast<model::Node>();
+            }
+            if (returnAirNode)
+            {
+              std::string keyValue = returnAirNode->name().get();
+              keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+              boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
+                "System Node MassFlowRate", keyValue);
+              if (timeSeries)
               {
-                LOG(Error,"Return node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
-                continue;
+                std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
+                nr = m_pathMap.value(thermalZone.name().get()+" return",0);
+                // There really should not be a case of missing number here, but it is better to be safe
+                if(!nr)
+                {
+                  LOG(Error,"Return node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
+                  continue;
+                }
+                // Create a control node
+                std::string controlName = QString("ctrl_p_%1").arg(nr).toStdString();
+                std::string valueName = QString("return_%1").arg(nr).toStdString();
+                m_cvf.addTimeSeries(valueName,*timeSeries);
+                prj::CvfDat ctrl;
+                ctrl.setName(controlName);
+                ctrl.setValuename(valueName);
+                addControlNode(ctrl);
+                // Connect to the path
+                paths()[nr-1].setPc(ctrl.nr());
               }
-              // Create a control node
-              std::string controlName = QString("ctrl_p_%1").arg(nr).toStdString();
-              std::string valueName = QString("return_%1").arg(nr).toStdString();
-              m_cvf.addTimeSeries(valueName,*timeSeries);
-              prj::CvfDat ctrl;
-              ctrl.setName(controlName);
-              ctrl.setValuename(valueName);
-              addControlNode(ctrl);
-              // Connect to the path
-              paths()[nr-1].setPc(ctrl.nr());
             }
           }
-          
         }
       }
       else
@@ -1520,7 +1550,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
           int returnNr = m_pathMap.value(returnName,0);
           if(returnNr)
           {
-            paths()[returnNr-1].setFahs(QString().sprintf("%g",0.9*flowRate).toStdString());
+            paths()[returnNr-1].setFahs(QString().sprintf("%g",m_returnSupplyRatio*flowRate).toStdString());
           }
         }
       }

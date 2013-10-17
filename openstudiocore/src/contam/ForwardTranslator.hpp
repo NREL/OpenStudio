@@ -94,6 +94,24 @@ public:
   bool setAirtightnessLevel(std::string level);
   bool setExteriorFlowRate(double flow,double n=0.65,double deltaP=75.0);
 
+  // Getters and setters
+  double returnSupplyRatio() const
+  {
+    return m_returnSupplyRatio;
+  }
+  void setReturnSupplyRatio(double returnSupplyRatio)
+  {
+    m_returnSupplyRatio = fabs(returnSupplyRatio);
+  }
+  bool ratioOverride() const
+  {
+    return m_ratioOverride;
+  }
+  void setRatioOverride(bool ratioOverride)
+  {
+    m_ratioOverride = ratioOverride;
+  }
+
   // We may need more functions like this that modify the CONTAM model
   bool setSteadyWeather(double windSpeed, double windDirection);
   int addNewAirflowElement(std::string name,double flow,double n=0.65,double deltaP=75.0);
@@ -128,6 +146,8 @@ private:
   CvFile m_cvf;
 
   bool m_ready;
+  double m_returnSupplyRatio;
+  bool m_ratioOverride;
 
   ProgressBar* m_progressBar;
 
