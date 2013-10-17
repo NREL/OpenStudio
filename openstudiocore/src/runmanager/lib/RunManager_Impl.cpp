@@ -550,7 +550,7 @@ namespace detail {
         persistJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>(t_job);
         persistJobTools(t_job);
         persistJobParams(t_job);
-        persistJobStatus(t_job);
+        persistJobStatusInternal(t_job);
       }
 
 
@@ -606,12 +606,19 @@ namespace detail {
         }
       }
 
-
       void persistJobStatus(const openstudio::UUID &t_uuid, const JobErrors &t_errors, const boost::optional<openstudio::DateTime> &t_lastRun,
           const Files &t_files)
       {
-        LOG(Debug, "(" << openstudio::toString(m_dbPath) << ") Persisting job status for " << openstudio::toString(t_uuid));
         m_db.begin();
+        persistJobStatusInternal(t_uuid, t_errors, t_lastRun, t_files);
+        m_db.commit();
+      }
+
+
+      void persistJobStatusInternal(const openstudio::UUID &t_uuid, const JobErrors &t_errors, const boost::optional<openstudio::DateTime> &t_lastRun,
+          const Files &t_files)
+      {
+        LOG(Debug, "(" << openstudio::toString(m_dbPath) << ") Persisting job status for " << openstudio::toString(t_uuid));
         deleteJobStatus(t_uuid);
         deleteJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>(t_uuid);
 
@@ -623,7 +630,6 @@ namespace detail {
         {
           LOG(Debug, "Not persisting, job has not actually finished " << openstudio::toString(t_uuid));
           // Job has not been run, nothing to persist besides deleting the old one
-          m_db.commit();
           return;
         }
 
@@ -653,7 +659,11 @@ namespace detail {
         }
 
         LOG(Debug, "Done persisting job, committing " << openstudio::toString(t_uuid));
-        m_db.commit();
+      }
+
+      void persistJobStatusInternal(const openstudio::runmanager::Job &t_job)
+      {
+        persistJobStatusInternal(t_job.uuid(), t_job.errors(), t_job.lastRun(), openstudio::runmanager::Files(t_job.outputFiles()));
       }
 
       void persistJobStatus(const openstudio::runmanager::Job &t_job)
