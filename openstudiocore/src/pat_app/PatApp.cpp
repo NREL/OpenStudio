@@ -620,6 +620,16 @@ void PatApp::on_closeBclDlg()
 
 void PatApp::openCloudDlg()
 {
+  if( ! (m_cloudMonitor->status() == CLOUD_STOPPED) )
+  {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Access Cloud Settings", 
+      "The cloud settings are not available while the cloud is running.  Please turn off the cloud to change settings.", 
+      QMessageBox::Ok);
+
+    return;
+  }
+
   if(!m_cloudDialog){
     m_cloudDialog = new CloudDialog();
 
