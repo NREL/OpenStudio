@@ -47,6 +47,8 @@
 #include <model/Curve_Impl.hpp>
 #include <model/ScheduleRuleset.hpp>
 #include <model/ScheduleDay.hpp>
+#include <model/SizingZone.hpp>
+#include <model/SizingZone_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Space.hpp>
@@ -1906,17 +1908,65 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   // Sizing
 
-  double clgDsgnSupAirTemp = 60.0;
+  double clgDsgnSupAirTemp = 14.0;
   double clgDsgnSizingFac = 1.0;
-  double htgDsgnSupAirTemp = 95.0;
+  double htgDsgnSupAirTemp = 40.0;
   double htgDsgnSizingFac = 1.0;
   double htgDsgnMaxFlowFrac = 0.5;
+  double value;
+  bool ok;
 
   QDomElement clgDsgnSupAirTempElement = thermalZoneElement.firstChildElement("ClgDsgnSupAirTemp");
-  QDomElement clgDsgnSizingFacElement;
-  QDomElement htgDsgnSupAirTempElement;
-  QDomElement htgDsgnSizingFacElement;
-  QDomElement htgDsgnMaxFlowFracElement;
+  value = clgDsgnSupAirTempElement.text().toDouble(&ok);
+  if( ok )
+  {
+    clgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
+  }
+
+  QDomElement clgDsgnSizingFacElement = thermalZoneElement.firstChildElement("ClgDsgnSizingFac");
+  value = clgDsgnSizingFacElement.text().toDouble(&ok);
+  if( ok )
+  {
+    clgDsgnSizingFac = value;
+  }
+
+  QDomElement htgDsgnSupAirTempElement = thermalZoneElement.firstChildElement("HtgDsgnSupAirTemp");
+  value = htgDsgnSupAirTempElement.text().toDouble(&ok);
+  if( ok )
+  {
+    htgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
+  }
+
+  QDomElement htgDsgnSizingFacElement = thermalZoneElement.firstChildElement("HtgDsgnSizingFac");
+  value = htgDsgnSizingFacElement.text().toDouble(&ok);
+  if( ok )
+  {
+    htgDsgnSizingFac = value; 
+  }
+
+  QDomElement htgDsgnMaxFlowFracElement = thermalZoneElement.firstChildElement("HtgDsgnMaxFlowFrac");
+  value = htgDsgnMaxFlowFracElement.text().toDouble(&ok);
+  if( ok )
+  {
+    htgDsgnMaxFlowFrac = value;
+  }
+
+  model::SizingZone sizingZone = thermalZone.sizingZone();
+  sizingZone.setZoneCoolingDesignSupplyAirTemperature(clgDsgnSupAirTemp);
+  sizingZone.setZoneCoolingSizingFactor(clgDsgnSizingFac);
+  sizingZone.setZoneHeatingDesignSupplyAirTemperature(htgDsgnSupAirTemp);
+  sizingZone.setZoneHeatingSizingFactor(htgDsgnSizingFac);
+  sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
+
+  sizingZone.setCoolingDesignAirFlowMethod("DesignDay");
+  if( htgDsgnMaxFlowFrac > 0.0 )
+  {
+    sizingZone.setHeatingDesignAirFlowMethod("DesignDayWithLimit");
+  }
+  else
+  {
+    sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
+  }
 
   // Ventilation
   QDomElement ventRtElement = thermalZoneElement.firstChildElement("DsgnVentRtSim");
