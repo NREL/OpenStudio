@@ -531,6 +531,7 @@ namespace detail {
       runManager->updateJob(*m_topLevelJob, directory());
     }
 
+
     // get file references for
     //   m_osmInputData
     //   m_idfInputData

@@ -93,6 +93,7 @@ SET( runmanager_src
   RubyJobUtils.cpp
   NormalizeURLs.hpp
   NormalizeURLs.cpp
+  TreeStatus.hpp
   ToolFinder.hpp
   ToolFinder.cpp
   ModelInModelOutJob.hpp

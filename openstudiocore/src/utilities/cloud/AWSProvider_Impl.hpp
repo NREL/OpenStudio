@@ -30,6 +30,9 @@
 #include <boost/function.hpp>
 
 namespace openstudio{
+
+  struct AWSComputerInformation;
+
 namespace detail{
 
   /// AWSSettings_Impl is a CloudSettings_Impl.
@@ -437,13 +440,6 @@ namespace detail{
     static unsigned getServerProcessorCount(const std::string & instanceType);
 
     static unsigned getWorkerProcessorCount(const std::string & instanceType);
-
-    struct AWSComputerInformation {
-      public:
-        std::string instanceType;
-        std::string prettyName;
-        unsigned processorCount;
-    };
 
     static std::vector<AWSComputerInformation> serverInformation();  
 

@@ -66,6 +66,8 @@ protected:
   void setOkButtonAsDefault(bool isDefault);
 
   void mouseMoveEvent(QMouseEvent *event);
+
+  void mouseReleaseEvent(QMouseEvent *event);
   
   void mousePressEvent(QMouseEvent *event);
 

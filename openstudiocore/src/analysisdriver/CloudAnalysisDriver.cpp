@@ -219,8 +219,10 @@ namespace detail {
 
     // see if trivially complete
     m_iteration = project().analysis().dataPointsToQueue();
+    DataPointVector missingDetails = project().analysis().dataPointsNeedingDetails();
+    m_iteration.insert(m_iteration.end(),missingDetails.begin(),missingDetails.end());
     if (m_iteration.empty()) {
-      LOG(Info,"Nothing to run. Run request trivially successful.");
+      LOG(Info,"Nothing to run or download. Run request trivially successful.");
       m_lastRunSuccess = true;
       return false; // false because no signal to wait for
     }
@@ -331,6 +333,7 @@ namespace detail {
     bool found(false);
     if (m_onlyProcessingDownloadRequests && !isDownloading()) {
       resetState();
+      setStatus(AnalysisStatus::Running);
     }
     else {
       // see if already in process, in which case, the right thing should happen automatically
@@ -646,8 +649,9 @@ namespace detail {
       BOOST_FOREACH(const DataPoint& missingDetails, project().analysis().dataPointsNeedingDetails()) {
         if (std::find(completeUUIDs.begin(),completeUUIDs.end(),missingDetails.uuid()) != completeUUIDs.end()) {
           // details queue -- are complete, but details were reqeusted and have not yet been downloaded
-          OS_ASSERT(std::find(m_iteration.begin(),m_iteration.end(),missingDetails) == m_iteration.end());
-          m_iteration.push_back(missingDetails);
+          if (!inIteration(missingDetails)) {
+            m_iteration.push_back(missingDetails);
+          }
           m_preDetailsQueue.push_back(missingDetails);
         }
         else {
@@ -1620,6 +1624,8 @@ namespace detail {
       emit detailedDownloadRequestsComplete(false);
     }
 
+    setStatus(AnalysisStatus::Running);
+
     // don't register failure here. calling method will do so.
 
     return success;
@@ -1643,6 +1649,8 @@ namespace detail {
       logError("Cannot start downloading data point details because the CloudSession has been terminated.");
       emit detailedDownloadRequestsComplete(false);
     }
+
+    setStatus(AnalysisStatus::Running);
 
     // don't register failure here. calling method will do so.
 

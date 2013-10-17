@@ -133,27 +133,27 @@ QPushButton * OSDialog::okButton()
 
 void OSDialog::mousePressEvent(QMouseEvent *event)
 {
-  if (event->button() == Qt::LeftButton) 
-  {
-    if( event->y() < 50 )
-    {
-        dragPosition = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
-        _move = true;
+  if(event->button() == Qt::LeftButton){
+    if(event->y() < 50){
+      dragPosition = event->globalPos() - frameGeometry().topLeft();
+      event->accept();
+      _move = true;
     }
-    else
-    {
+    else{
       _move = false;
     }
   }
 }
 
+void OSDialog::mouseReleaseEvent(QMouseEvent *event)
+{
+  _move = false;
+}
+
 void OSDialog::mouseMoveEvent(QMouseEvent *event)
 {
-  if(event->buttons() & Qt::LeftButton) 
-  {
-    if( _move )
-    {
+  if(event->buttons() & Qt::LeftButton) {
+    if(_move){
       move(event->globalPos() - dragPosition);
       event->accept();
     }
