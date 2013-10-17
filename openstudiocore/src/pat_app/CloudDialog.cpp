@@ -489,7 +489,7 @@ void CloudProviderWidget::createWidgets()
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
   label->setObjectName("H1");
-  label->setText("<FONT COLOR = RED>Results for simulation run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances and any results not downloaded will be lost.");
+  label->setText("<FONT COLOR = RED>Results for simulations run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances, and any results not downloaded will be lost.");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   QSpacerItem * spacerItem = NULL;
@@ -819,6 +819,7 @@ void AmazonProviderWidget::createLoginWidget()
 
   m_accessKeyLineEdit = new QLineEdit();
   m_accessKeyLineEdit->setMinimumWidth(KEY_WIDTH);
+  m_accessKeyLineEdit->setMaxLength(20);
   m_leftLoginLayout->addWidget(m_accessKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
@@ -828,6 +829,8 @@ void AmazonProviderWidget::createLoginWidget()
 
   m_secretKeyLineEdit = new QLineEdit();
   m_secretKeyLineEdit->setMinimumWidth(KEY_WIDTH);
+  m_secretKeyLineEdit->setEchoMode(QLineEdit::PasswordEchoOnEdit);
+  m_secretKeyLineEdit->setMaxLength(40);
   m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
   QSpacerItem * spacerItem = NULL;

@@ -569,7 +569,7 @@ namespace openstudio{
     }
 
     std::string AWSProvider_Impl::defaultServerInstanceType() {
-      return "m1.large";
+      return "m2.xlarge";
     }
 
     std::vector<std::string> AWSProvider_Impl::workerInstanceTypes() {
