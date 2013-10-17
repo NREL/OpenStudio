@@ -1969,26 +1969,48 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
 
   // Ventilation
-  QDomElement ventRtElement = thermalZoneElement.firstChildElement("DsgnVentRtSim");
-  if (!ventRtElement.isNull() && (ventRtElement.text().toDouble() > 0))
+
+  double ventPerPersonSim = 0.0;
+  double ventPerAreaSim = 0.0;
+  double value;
+  bool ok;
+  std::string ventSpecMthdSim = "Maximum";
+
+  QDomElement ventPerPersonSimElement = thermalZoneElement.firstChildElement("VentPerPersonSim");
+  value = ventPerPersonSimElement.text().toDouble(&ok);
+  if( ok )
   {
-    openstudio::Quantity ventRateIP(ventRtElement.text().toDouble(), openstudio::createUnit("cfm",UnitSystem::BTU).get());
-    OptionalQuantity ventRateSI = QuantityConverter::instance().convert(ventRateIP, siSys);
-    OS_ASSERT(ventRateSI);
-    OS_ASSERT(ventRateSI->units() == SIUnit(SIExpnt(0,3,-1)));
+    // cfm / person -> m^3/s / person
+    ventPerPersonSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
 
-    // DsgnVentRtSim is CFM, so divide it up evenly among all attached spaces.
-    std::vector<model::Space> spaces = thermalZone.spaces();
+  QDomElement ventPerAreaSimElement = thermalZoneElement.firstChildElement("VentPerAreaSim");
+  value = ventPerAreaSimElement.text().toDouble(&ok);
+  if( ok )
+  {
+    // cfm / ft^2 -> m^3/s / m^2
+    ventPerAreaSim = value * 0.00508;
+  }
 
-    for( std::vector<model::Space>::iterator it = spaces.begin();
-         it != spaces.end();
-         it++ )
-    {
-      openstudio::model::DesignSpecificationOutdoorAir designSpecificationOutdoorAir(model);
-      designSpecificationOutdoorAir.setName(name + " Design Specification Outdoor Air");
-      designSpecificationOutdoorAir.setOutdoorAirFlowRate(ventRateSI->value() / spaces.size());
-      it->setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
-    }
+  QDomElement ventSpecMthdSimElement = thermalZoneElement.firstChildElement("VentSpecMthdSim");
+  if( istringEqual(ventSpecMthdSimElement.text().toStdString(),"Sum") )
+  {
+    ventSpecMthdSim = "Sum";
+  }
+
+  openstudio::model::DesignSpecificationOutdoorAir designSpecificationOutdoorAir(model);
+  designSpecificationOutdoorAir.setName(name + " Design Specification Outdoor Air");
+  designSpecificationOutdoorAir.setOutdoorAirFlowperPerson(ventPerPersonSim);
+  designSpecificationOutdoorAir.setOutdoorAirFlowperFloorArea(ventPerAreaSim);
+  designSpecificationOutdoorAir.setOutdoorAirMethod(ventSpecMthdSim);
+
+  std::vector<model::Space> spaces = thermalZone.spaces();
+
+  for( std::vector<model::Space>::iterator it = spaces.begin();
+       it != spaces.end();
+       it++ )
+  {
+    it->setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
   }
 
   // Mult
