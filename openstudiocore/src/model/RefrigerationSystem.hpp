@@ -27,15 +27,14 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ModelObjectList;
-//class RefrigerationAllTypesCondenser;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
 class RefrigerationSecondarySystem;
-//class RefrigerationCondenserCascade;
-//class RefrigerationSubcooler;
+class RefrigerationCondenserCascade;
+class RefrigerationSubcoolerLiquidSuction;
+class RefrigerationSubcoolerMechanical;
 class ThermalZone;
 
 namespace detail {
@@ -102,13 +101,13 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
-  //bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+  bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
 
-  //void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+  void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
 
-  //void removeAllCascadeCondenserLoads();
+  void removeAllCascadeCondenserLoads();
 
-  //std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
+  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
   /** @name Getters */
   //@{
@@ -134,11 +133,11 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   bool isSuctionTemperatureControlTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcooler.
-  //boost::optional<RefrigerationSubcooler> mechanicalSubcooler() const;
+  // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcoolerMechanical.
+  boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler() const;
 
-  // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcooler.
-  //boost::optional<RefrigerationSubcooler> liquidSuctionHeatExchangerSubcooler() const;
+  // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcoolerLiquidSuction.
+  boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler() const;
 
   double sumUASuctionPiping() const;
 
@@ -195,15 +194,15 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetSuctionTemperatureControlType();
 
-  // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcooler.
-  //bool setMechanicalSubcooler(const RefrigerationSubcooler& refrigerationSubcooler);
+  // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcoolerMechanical.
+  bool setMechanicalSubcooler(const RefrigerationSubcoolerMechanical& refrigerationSubcoolerMechanical);
 
-  //void resetMechanicalSubcooler();
+  void resetMechanicalSubcooler();
 
-  // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcooler.
-  //bool setLiquidSuctionHeatExchangerSubcooler(const RefrigerationSubcooler& refrigerationSubcooler);
+  // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcoolerLiquidSuction.
+  bool setLiquidSuctionHeatExchangerSubcooler(const RefrigerationSubcoolerLiquidSuction& refrigerationSubcoolerLiquidSuction);
 
-  //void resetLiquidSuctionHeatExchangerSubcooler();
+  void resetLiquidSuctionHeatExchangerSubcooler();
 
   void setSumUASuctionPiping(double sumUASuctionPiping);
 

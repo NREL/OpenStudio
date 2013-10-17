@@ -154,6 +154,20 @@ TEST_F(ModelFixture,RefrigerationCondenserCascade_CondensatePipingRefrigerantInv
 	EXPECT_EQ(-10.0, refrigerationCondenserCascade.condensatePipingRefrigerantInventory());
 }
 
+TEST_F(ModelFixture, RefrigerationCondenserCascade_Remove)
+{
+  Model model;
+  RefrigerationCondenserCascade testObject = RefrigerationCondenserCascade(model);
+
+  std::vector<RefrigerationCondenserCascade> refrigerationCascadeCondensers = model.getModelObjects<RefrigerationCondenserCascade>();
+  EXPECT_EQ(1, refrigerationCascadeCondensers.size());
+
+  testObject.remove();
+
+  refrigerationCascadeCondensers = model.getModelObjects<RefrigerationCondenserCascade>();
+  EXPECT_EQ(0, refrigerationCascadeCondensers.size());
+}
+
 TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithDefaultData)
 {
 	Model m; 

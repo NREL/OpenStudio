@@ -328,9 +328,6 @@ RefrigerationWalkInZoneBoundary::RefrigerationWalkInZoneBoundary(const Model& mo
   OS_ASSERT(getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>());
 
   bool ok = true;
-// Maybe pass in a thermalZone?
-  //ok = setThermalZone(thermalZone);
-  //OS_ASSERT(ok);
   ok = setTotalInsulatedSurfaceAreaFacingZone(43.4);
   OS_ASSERT(ok);
   ok = setInsulatedSurfaceUValueFacingZone(.235);

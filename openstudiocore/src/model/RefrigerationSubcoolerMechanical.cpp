@@ -20,9 +20,10 @@
 #include <model/RefrigerationSubcoolerMechanical.hpp>
 #include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/RefrigerationSystem.hpp>
 #include <model/RefrigerationSystem_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/OS_Refrigeration_Subcooler_Mechanical_FieldEnums.hxx>
 
@@ -67,6 +68,15 @@ namespace detail {
 
   IddObjectType RefrigerationSubcoolerMechanical_Impl::iddObjectType() const {
     return RefrigerationSubcoolerMechanical::iddObjectType();
+  }
+
+  ModelObject RefrigerationSubcoolerMechanical_Impl::clone(Model model) const
+  {
+    RefrigerationSubcoolerMechanical modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSubcoolerMechanical>();
+
+    modelObjectClone.resetCapacityProvidingSystem();
+
+    return modelObjectClone;
   }
 
   boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::capacityProvidingSystem() const {

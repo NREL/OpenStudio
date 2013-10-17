@@ -182,12 +182,9 @@ namespace detail {
          it != groups.end();
          it++ )
     {
-      //if( boost::optional<WorkspaceObject> workspaceExtensibleObject = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) ) {
-      //  if( boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = workspaceExtensibleObject->optionalCast<RefrigerationWalkInZoneBoundary>() ) {
-          if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary)->optionalCast<RefrigerationWalkInZoneBoundary>()) {
+        if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary)->optionalCast<RefrigerationWalkInZoneBoundary>()) {
           result.push_back( refrigerationWalkInZoneBoundary.get() );
         }
-      //}
     }
 
     return result;

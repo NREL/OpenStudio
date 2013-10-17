@@ -94,6 +94,20 @@ TEST_F(ModelFixture,RefrigerationSubcoolerLiquidSuction_DesignVaporInletTemperat
 	EXPECT_EQ( -15.0, refrigerationSubcoolerLiquidSuction.designVaporInletTemperature() );
 }
 
+TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_Remove)
+{
+  Model model;
+  RefrigerationSubcoolerLiquidSuction testObject = RefrigerationSubcoolerLiquidSuction(model);
+
+  std::vector<RefrigerationSubcoolerLiquidSuction> refrigerationLiquidSuctionSubcoolers = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+  EXPECT_EQ(1, refrigerationLiquidSuctionSubcoolers.size());
+
+  testObject.remove();
+
+  refrigerationLiquidSuctionSubcoolers = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+  EXPECT_EQ(0, refrigerationLiquidSuctionSubcoolers.size());
+}
+
 TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_CloneOneModelWithDefaultData)
 {
 	Model m; 

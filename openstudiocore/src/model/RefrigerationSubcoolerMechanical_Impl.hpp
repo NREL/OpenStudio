@@ -60,6 +60,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    virtual ModelObject clone(Model model) const;
+
     //@}
     /** @name Getters */
     //@{
