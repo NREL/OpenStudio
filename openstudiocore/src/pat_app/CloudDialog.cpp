@@ -52,7 +52,7 @@
 #define ADDRESS_WIDTH 110
 #define PORT_WIDTH 30
 #define TEXT_WIDTH 350
-#define TEXT_HEIGHT 400
+#define TEXT_HEIGHT 390
 
 using namespace openstudio::pat;
 
@@ -74,8 +74,8 @@ CloudDialog::CloudDialog(QWidget* parent)
   m_vagrantProviderWidget(0),
   m_legalAgreement(0)
 {
-  this->setWindowTitle("Cloud Settings");
-  this->setFixedSize(QSize(800,550));
+  setWindowTitle("Cloud Settings");
+  setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 }
 
@@ -149,11 +149,13 @@ void CloudDialog::createWidgets()
   m_legalAgreement->setText(awsSettings.userAgreementText().c_str());
 
   QScrollArea * scrollArea = new QScrollArea();
-  scrollArea->setFixedHeight(TEXT_HEIGHT);
+  scrollArea->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
   scrollArea->setFixedWidth(TEXT_WIDTH + 15);
+  scrollArea->setMinimumHeight(TEXT_HEIGHT);
   scrollArea->setStyleSheet("background-color:transparent;");
   scrollArea->setWidget(m_legalAgreement);
   scrollArea->setWidgetResizable(true);
+  scrollArea->setAlignment(Qt::AlignTop);
   scrollArea->setFrameShape(QFrame::NoFrame);
   m_rightLoginLayout->addWidget(scrollArea);
 
@@ -161,11 +163,13 @@ void CloudDialog::createWidgets()
   m_iAcceptCheckBox->hide();
   m_rightLoginLayout->addWidget(m_iAcceptCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
 
+  m_rightLoginLayout->addSpacing(5);
+
   isConnected = connect(m_iAcceptCheckBox, SIGNAL(clicked(bool)),
     this, SLOT(iAcceptClicked(bool)));
   OS_ASSERT(isConnected);
 
-  m_rightLoginLayout->addStretch();
+  m_rightLoginLayout->addSpacing(5);
     
   // SETTINGS PAGE
 
@@ -241,7 +245,7 @@ void CloudDialog::createWidgets()
   #ifdef Q_WS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
-    setWindowFlags(Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 
   cloudResourceChanged(m_cloudResourceComboBox->currentText());
@@ -833,9 +837,7 @@ void AmazonProviderWidget::createLoginWidget()
   m_secretKeyLineEdit->setMaxLength(40);
   m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  QSpacerItem * spacerItem = NULL;
-  spacerItem = new QSpacerItem(0,30,QSizePolicy::Fixed,QSizePolicy::Fixed);
-  m_leftLoginLayout->addItem(spacerItem);
+  m_leftLoginLayout->addSpacing(30);
 
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
@@ -843,6 +845,7 @@ void AmazonProviderWidget::createLoginWidget()
   label->setObjectName("H1");
   label->setOpenExternalLinks(true);
   label->setText("<FONT COLOR = RED>PAT cloud support with Amazon EC2 is a new feature, and is still under active development to improve interprocess reliability and performance. The user assumes all responsibility for orphaned EC2 processes, and it is strongly recommended that you monitor EC2 cloud usage at <a href=\"http://aws.amazon.com\">aws.amazon.com</a> to avoid any unwanted charges.");
+  label->setAlignment(Qt::AlignTop);
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_leftLoginLayout->addStretch();

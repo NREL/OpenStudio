@@ -584,7 +584,7 @@ namespace openstudio{
     }
 
     std::string AWSProvider_Impl::defaultWorkerInstanceType() {
-      return "c1.xlarge";
+      return "cc2.8xlarge";
     }
 
     std::vector<unsigned> AWSProvider_Impl::serverProcessorCounts() {

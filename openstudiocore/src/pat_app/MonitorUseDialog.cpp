@@ -52,9 +52,9 @@ MonitorUseDialog::MonitorUseDialog(QWidget* parent)
   m_totalInstancesAvailable(false),
   m_estimatedChargesAvailable(false)
 {
-  this->setWindowTitle("Monitor Use");
-  this->setFixedSize(QSize(350,300));
-  this->cancelButton()->hide();
+  setWindowTitle("Monitor Use");
+  cancelButton()->hide();
+  setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 }
 
@@ -94,6 +94,7 @@ void MonitorUseDialog::createWidgets()
                   "  border:none;"
                   "}";
   m_billingInfoButton->setStyleSheet(style);
+  m_billingInfoButton->setFlat(true);
   m_billingInfoButton->setToolTip(BILLING_MESSAGE);
   bool isConnected = connect(m_billingInfoButton, SIGNAL(clicked(bool)),
                              this, SLOT(displayBillingMessage(bool)));
@@ -167,6 +168,8 @@ void MonitorUseDialog::createWidgets()
                              this, SLOT(on_cloudStatus(bool)));
   OS_ASSERT(isConnected);
 
+  layout->addSpacing(5);
+
   /////
 
   label = new QLabel();
@@ -200,7 +203,7 @@ void MonitorUseDialog::createWidgets()
   #ifdef Q_WS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
-    setWindowFlags(Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 }
 
