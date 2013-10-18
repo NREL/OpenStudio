@@ -261,12 +261,12 @@ void RunTabController::onPlayButtonClicked()
         analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*project);
         analysisdriver::CurrentAnalysis currentAnalysis = analysisDriver.run(analysis, runOptions);
 
-        // start the run
-        analysisDriver.unpauseQueue();
-
         // connect currentAnalysis to update progress on this
         bool isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
+
+        // start the run
+        analysisDriver.unpauseQueue();
       }
 
       // update progress
