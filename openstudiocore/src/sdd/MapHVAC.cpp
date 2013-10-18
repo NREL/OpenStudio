@@ -1972,8 +1972,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   double ventPerPersonSim = 0.0;
   double ventPerAreaSim = 0.0;
-  double value;
-  bool ok;
+
   std::string ventSpecMthdSim = "Maximum";
 
   QDomElement ventPerPersonSimElement = thermalZoneElement.firstChildElement("VentPerPersonSim");
