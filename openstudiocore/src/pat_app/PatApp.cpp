@@ -1660,35 +1660,6 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
   vertLayout->addStretch();
 }
 
-void NewProjectDialog::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() == Qt::LeftButton)
-  {
-    if( event->y() < 50 )
-    {
-        dragPosition = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
-        _move = true;
-    }
-    else
-    {
-      _move = false;
-    }
-  }
-}
-
-void NewProjectDialog::mouseMoveEvent(QMouseEvent *event)
-{
-  if(event->buttons() & Qt::LeftButton)
-  {
-    if( _move )
-    {
-      move(event->globalPos() - dragPosition);
-      event->accept();
-    }
-  }
-}
-
 void NewProjectDialog::enableOkButton()
 {
   if(m_projectNameLineEdit->text().length() > 0){

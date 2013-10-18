@@ -60,13 +60,13 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions) 
 {
-	//make the example model
-	Model model = model::exampleModel();
+  //make the example model
+  Model model = model::exampleModel();
 
-	//loop through all zones and add a radiant system to each one
-	BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  //loop through all zones and add a radiant system to each one
+  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
 
-		//make a constant flow radiant unit
+    //make a constant flow radiant unit
     ScheduleConstant availabilitySched(model);
     ScheduleConstant coolingHighWaterTempSched(model);
     ScheduleConstant coolingLowWaterTempSched(model);
@@ -90,53 +90,53 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
     CoilCoolingLowTempRadiantConstFlow testCC(model,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched);
     CoilHeatingLowTempRadiantConstFlow testHC(model,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched);
 
-    ZoneHVACLowTempRadiantConstFlow testRad(model,availabilitySched,testHC,testCC);
+    ZoneHVACLowTempRadiantConstFlow testRad(model,availabilitySched,testHC,testCC, 100.0);
 
-		//set the coils
-		testRad.setHeatingCoil(testHC);
-		testRad.setCoolingCoil(testCC);
-		
-		//add it to the thermal zone
-		testRad.addToThermalZone(thermalZone);
+    //set the coils
+    testRad.setHeatingCoil(testHC);
+    testRad.setCoolingCoil(testCC);
+    
+    //add it to the thermal zone
+    testRad.addToThermalZone(thermalZone);
 
-		//attach to ceilings
-		testRad.setRadiantSurfaceType("Ceilings");
+    //attach to ceilings
+    testRad.setRadiantSurfaceType("Ceilings");
 
-		//test that "surfaces" method returns 0 since no 
-		//ceilings have an internal source construction
-		EXPECT_EQ(0,testRad.surfaces().size());
+    //test that "surfaces" method returns 0 since no 
+    //ceilings have an internal source construction
+    EXPECT_EQ(0,testRad.surfaces().size());
 
-	}
+  }
 
-	// Create some materials and make an internal source construction
-	StandardOpaqueMaterial exterior(model);
-	StandardOpaqueMaterial interior(model);
-	OpaqueMaterialVector layers;
-	layers.push_back(exterior);
-	layers.push_back(interior);
-	ConstructionWithInternalSource construction(layers);
+  // Create some materials and make an internal source construction
+  StandardOpaqueMaterial exterior(model);
+  StandardOpaqueMaterial interior(model);
+  OpaqueMaterialVector layers;
+  layers.push_back(exterior);
+  layers.push_back(interior);
+  ConstructionWithInternalSource construction(layers);
 
-	//set building's default ceiling construction to internal source construction
-	DefaultConstructionSet defConSet = model.getModelObjects<DefaultConstructionSet>()[0];
-	defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
+  //set building's default ceiling construction to internal source construction
+  DefaultConstructionSet defConSet = model.getModelObjects<DefaultConstructionSet>()[0];
+  defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
 
-	//translate the model to EnergyPlus
-	ForwardTranslator trans;
-	Workspace workspace = trans.translateModel(model);
+  //translate the model to EnergyPlus
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModel(model);
 
-	//loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-	BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
+  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
 
-		//get the radiant zone equipment
-		BOOST_FOREACH(ModelObject equipment, thermalZone.equipment()){
-			if (equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>()){
-				ZoneHVACLowTempRadiantConstFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>().get();
-				BOOST_FOREACH(IdfExtensibleGroup extGrp, testRad.extensibleGroups()){
-					EXPECT_EQ(0.25,extGrp.getDouble(1,false));
-				}
-			}
-		}
-	}
+    //get the radiant zone equipment
+    BOOST_FOREACH(ModelObject equipment, thermalZone.equipment()){
+      if (equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>()){
+        ZoneHVACLowTempRadiantConstFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>().get();
+        BOOST_FOREACH(IdfExtensibleGroup extGrp, testRad.extensibleGroups()){
+          EXPECT_EQ(0.25,extGrp.getDouble(1,false));
+        }
+      }
+    }
+  }
 
 } 
 

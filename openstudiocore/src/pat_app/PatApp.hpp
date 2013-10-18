@@ -297,21 +297,9 @@ public:
 
   QLineEdit * m_projectNameLineEdit;
 
-protected:
-
-  void mouseMoveEvent(QMouseEvent *event);
-
-  void mousePressEvent(QMouseEvent *event);
-
 private slots:
 
   void enableOkButton();
-
-private:
-
-  QPoint dragPosition;
-
-  bool _move;
 
 };
 
