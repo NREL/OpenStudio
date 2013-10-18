@@ -65,6 +65,8 @@ class RunTabController : public QObject
 
     void onIterationProgress();
 
+    void onDataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
     void reqestRefresh();
 
     void refresh();
@@ -95,6 +97,8 @@ class DataPointRunListController : public OSListController
   QSharedPointer<OSListItem> itemAt(int i);
 
   int count();
+
+  void emitItemChanged(int i);
 
  private:
 
