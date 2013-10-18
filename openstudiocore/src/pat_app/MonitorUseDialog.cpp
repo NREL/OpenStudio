@@ -200,9 +200,9 @@ void MonitorUseDialog::createWidgets()
 
   // OS SETTINGS
 
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #else
+  #elif defined(Q_OS_WIN32)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 }
