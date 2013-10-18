@@ -124,6 +124,10 @@ namespace detail {
     
     if (m_status == AnalysisStatus::Idle){
       setStatus(AnalysisStatus::Starting);
+
+      // DLM: this allows GUIs to update before rest of function completes
+      // this could cause problems if one of these events was a stop button request...
+      Application::instance().processEvents();
     }
 
     cleanOutIncompleteJobs(analysis);

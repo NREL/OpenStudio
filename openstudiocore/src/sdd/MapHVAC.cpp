@@ -478,6 +478,40 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.setMaximumFractionofOutdoorAirSchedule(maxOARatSchedule);
       }
 
+      // OASchMthd 
+
+      QDomElement oaSchMthdElement = airSystemOACtrlElement.firstChildElement("OASchMthd");
+      if( istringEqual(oaSchMthdElement.text().toStdString(),"Constant") )
+      {
+        model::Schedule schedule = alwaysOnSchedule(model);
+        oaController.setMinimumOutdoorAirSchedule(schedule);
+      }
+      else if( istringEqual(oaSchMthdElement.text().toStdString(),"FollowAvailability") )
+      {
+        if( availabilitySchedule )
+        {
+          model::Schedule schedule = availabilitySchedule->clone(model).cast<model::Schedule>();
+
+          schedule.setName(nameElement.text().toStdString() + " OA Schedule");
+
+          // TODO offset this schedule by AvailSchOffsetEnd and AvailSchOffsetStart
+
+          oaController.setMinimumOutdoorAirSchedule(schedule);
+        }
+      }
+      else if( istringEqual(oaSchMthdElement.text().toStdString(),"Scheduled") )
+      {
+        QDomElement oaSchRefElement = airSystemOACtrlElement.firstChildElement("OASchRef");
+
+        boost::optional<model::Schedule> schedule; 
+        schedule = model.getModelObjectByName<model::Schedule>(oaSchRefElement.text().toStdString());
+
+        if( schedule )
+        {
+          oaController.setMinimumOutdoorAirSchedule(schedule.get());
+        }
+      }
+
       // EconoCtrlMthd
       QDomElement econoCtrlMthdElement = airSystemOACtrlElement.firstChildElement("EconoCtrlMthd");
 
@@ -2824,7 +2858,32 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     if( boost::optional<model::ModelObject> mo = translateHtRej(htRejElement,doc,model) )
     {
-      plantLoop.addSupplyBranchForComponent(mo->cast<model::HVACComponent>());
+      model::StraightComponent tower = mo->cast<model::StraightComponent>();
+
+      plantLoop.addSupplyBranchForComponent(tower);
+
+      QDomElement pumpElement = htRejElement.firstChildElement("Pump"); 
+
+      if( ! pumpElement.isNull() )
+      {
+        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
+
+        if( mo2 )
+        {
+          model::Node inletNode = tower.inletModelObject()->cast<model::Node>();
+
+          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
+          {
+            pump->addToNode(inletNode);
+
+            LOG(Warn,"Variable speed branch pumps are unsupported");
+          }
+          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
+          {
+            pump->addToNode(inletNode);
+          }
+        }
+      }
     }
   }
 
