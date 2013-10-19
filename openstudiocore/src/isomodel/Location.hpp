@@ -31,10 +31,11 @@ namespace isomodel {
     ~Location(void);
     double terrain() const {return _terrain;}	
     void setTerrain(double value) {_terrain = value;}
-    WeatherData* weather() const {return _weather; }
+    boost::shared_ptr<WeatherData> weather() const {return _weather; }
+    void setWeatherData(boost::shared_ptr<WeatherData> value){ _weather = value;}
   private:
     double _terrain;
-    WeatherData* _weather;    
+    boost::shared_ptr<WeatherData> _weather;    
   };
 
 } // isomodel

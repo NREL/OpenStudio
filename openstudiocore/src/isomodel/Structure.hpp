@@ -40,8 +40,7 @@ class Structure
     Vector windowShadingCorrectionFactor() const {return _windowShadingCorrectionFactor;}
     double interiorHeatCapacity() const {return _interiorHeatCapacity;}
     double wallHeatCapacity() const {return _wallHeatCapacity;}
-    double stories() const {return _stories;}
-    double floorToFloorHeight() const {return _floorToFloorHeight;}
+    double buildingHeight() const {return _buildingHeight;}
     double infiltrationRate() const {return _infiltrationRate;}
     void setFloorArea(double value) {_floorArea = value;}
     void setWallArea(Vector value) {_wallArea = value;}
@@ -55,8 +54,7 @@ class Structure
     void setWindowShadingCorrectionFactor(Vector value) {_windowShadingCorrectionFactor = value;}
     void setInteriorHeatCapacity(double value) {_interiorHeatCapacity = value;}
     void setWallHeatCapacity(double value) {_wallHeatCapacity = value;}
-    void setStories(double value) {_stories = value;}
-    void setFloorToFloorHeight(double value) {_floorToFloorHeight = value;}
+    void setBuildingHeight(double value) {_buildingHeight = value;}
     void setInfiltrationRate(double value) {_infiltrationRate = value;}
 
   private:
@@ -72,8 +70,7 @@ class Structure
     Vector _windowShadingCorrectionFactor;
     double _interiorHeatCapacity;
     double _wallHeatCapacity;
-    double _stories;
-    double _floorToFloorHeight;
+    double _buildingHeight;
     double _infiltrationRate;
 
   };
