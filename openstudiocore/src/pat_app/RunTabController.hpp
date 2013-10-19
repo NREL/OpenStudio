@@ -67,7 +67,7 @@ class RunTabController : public QObject
 
     void onDataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
-    void reqestRefresh();
+    void requestRefresh();
 
     void refresh();
 

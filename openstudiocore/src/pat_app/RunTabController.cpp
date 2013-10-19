@@ -247,7 +247,7 @@ void RunTabController::onPlayButtonClicked()
       if (cloudAnalysisDriver){
 
         // refresh this tab when data points are queued
-        bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+        bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onDataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), Qt::QueuedConnection);
         OS_ASSERT(bingo);
 
         // connect cloudAnalysisDriver to update progress on this
@@ -374,7 +374,7 @@ void RunTabController::onDataPointQueued(const openstudio::UUID& analysis, const
   }
 }
 
-void RunTabController::reqestRefresh()
+void RunTabController::requestRefresh()
 {
   if (!m_refreshScheduled){
     m_refreshScheduled = true;
