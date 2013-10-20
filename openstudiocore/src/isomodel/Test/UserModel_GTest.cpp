@@ -304,11 +304,8 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_FALSE(userModel.valid());
 
   path p = resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO");
-  wpath = "";
-  const wchar_t* wstr = p.string().c_str();
-  for(uint i = 0;i<p.string().length();i++)
-    wpath += wstr[i];
-  userModel.load(wpath.c_str());
+  userModel.load(openstudio::toString(p));
+
   EXPECT_EQ(0.9, userModel.terrainClass());
   EXPECT_EQ(10000.0, userModel.floorArea());
   EXPECT_EQ(8.0, userModel.buildingHeight());
@@ -493,20 +490,20 @@ TEST_F(ISOModelFixture, UserModel)
   double mwindExp[] = {4.88199, 5.06756, 5.48978, 4.83181, 3.74718, 4.88611, 4.23884, 3.84543, 3.41347, 4.78804, 5.29569, 4.29476};
 
   int v=0;
-  for(uint r = 0;r<msolar.size1();r++){
-    for(uint c = 0;c<msolar.size2();c++,v++){
+  for(size_t r = 0;r<msolar.size1();r++){
+    for(size_t c = 0;c<msolar.size2();c++,v++){
       EXPECT_EQ(msolarExp[v], msolar(r,c));
     }
   }
   v=0;
-  for(uint r = 0;r<mhdbt.size1();r++){
-    for(uint c = 0;c<mhdbt.size2();c++,v++){
+  for(size_t r = 0;r<mhdbt.size1();r++){
+    for(size_t c = 0;c<mhdbt.size2();c++,v++){
       EXPECT_EQ(mhdbtExp[v], mhdbt(r,c));
     }
   }
   v=0;
-  for(uint r = 0;r<mhEgh.size1();r++){
-    for(uint c = 0;c<mhEgh.size2();c++,v++){
+  for(size_t r = 0;r<mhEgh.size1();r++){
+    for(size_t c = 0;c<mhEgh.size2();c++,v++){
       EXPECT_EQ(mhEghExp[v], mhEgh(r,c));
     }
   }

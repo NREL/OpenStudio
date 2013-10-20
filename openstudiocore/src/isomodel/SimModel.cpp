@@ -94,7 +94,7 @@ void one(Vector& vec){
   Vector mult(const Vector& v1, const double s1)
   {
     Vector vp = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vp[i] = v1[i] * s1;
     }
     return vp;
@@ -103,7 +103,7 @@ void one(Vector& vec){
   Vector mult(const Vector& v1, const double* v2)
   {
     Vector vp = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vp[i] = v1[i] * v2[i];
     }
     return vp;
@@ -112,7 +112,7 @@ void one(Vector& vec){
   Vector mult(const Vector& v1, const Vector& v2)
   {
     Vector vp = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vp[i] = v1[i] * v2[i];
     }
     return vp;
@@ -121,9 +121,9 @@ void one(Vector& vec){
   Vector div(const Vector& v1,const double s1)
   {
     Vector vp = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       if(s1==0)
-        vp[i] = DBL_MAX;
+        vp[i] = std::numeric_limits<double>::max();
       else
         vp[i] = v1[i] / s1;
     }
@@ -132,9 +132,9 @@ void one(Vector& vec){
   Vector div(const double s1, const Vector& v1)
   {
     Vector vp = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       if(v1[i]==0)
-        vp[i] = DBL_MAX;
+        vp[i] = std::numeric_limits<double>::max();
       else
         vp[i] = s1 / v1[i];
     }
@@ -144,9 +144,9 @@ void one(Vector& vec){
   Vector div(const Vector& v1, const Vector& v2)
   {
     Vector vp = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       if(v2[i]==0)
-        vp[i] = DBL_MAX;
+        vp[i] = std::numeric_limits<double>::max();
       else
         vp[i] = v1[i] / v2[i];
     }
@@ -155,7 +155,7 @@ void one(Vector& vec){
   Vector sum(const Vector& v1, const Vector& v2)
   {
     Vector vs = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vs[i] = v1[i] + v2[i];
     }
     return vs;
@@ -163,35 +163,35 @@ void one(Vector& vec){
   Vector sum(const Vector& v1, const double v2)
   {
     Vector vs = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vs[i] = v1[i] + v2;
     }
     return vs;
   }
   Vector dif(const Vector& v1, const Vector& v2){
     Vector vd = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vd[i] = v1[i] - v2[i];
     }
     return vd;
   }
   Vector dif(const Vector& v1, const double v2){
     Vector vd = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vd[i] = v1[i] - v2;
     }
     return vd;
   }
   Vector dif(const double v1, const Vector& v2){
     Vector vd = Vector(v2.size());
-    for(uint i = 0;i<v2.size();i++) {
+    for(size_t i = 0;i<v2.size();i++) {
       vd[i] = v1 - v2[i];
     }
     return vd;
   }
   double maximum(const Vector& v1){
-    double max = -DBL_MAX;
-    for(uint i = 0;i<v1.size();i++) {
+    double max = -std::numeric_limits<double>::max();
+    for(size_t i = 0;i<v1.size();i++) {
       if(v1[i]>max)
         max=v1[i];
     }
@@ -199,21 +199,21 @@ void one(Vector& vec){
   }
   Vector maximum(const Vector& v1, const Vector& v2){
     Vector vx = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vx[i] = std::max(v1[i],v2[i]);
     }
     return vx;
   }
   Vector maximum(const Vector& v1, double val){
     Vector vx = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vx[i] = std::max(v1[i],val);
     }
     return vx;
   }
   double minimum(const Vector& v1){
-    double min = DBL_MAX;
-    for(uint i = 0;i<v1.size();i++) {
+    double min = std::numeric_limits<double>::max();
+    for(size_t i = 0;i<v1.size();i++) {
       if(v1[i]<min)
         min=v1[i];
     }
@@ -221,21 +221,21 @@ void one(Vector& vec){
   }
   Vector minimum(const Vector& v1, double val) {
     Vector vn = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       vn[i] = std::min(v1[i],val);
     }
     return vn;
   }
   Vector abs(const Vector& v1){
     Vector va = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       va[i] = std::abs(v1[i]);
     }
     return va;
   }
   Vector pow(const Vector& v1, const double xp){
     Vector va = Vector(v1.size());
-    for(uint i = 0;i<v1.size();i++) {
+    for(size_t i = 0;i<v1.size();i++) {
       va[i] = std::pow(v1[i],xp);
     }
     return va;
@@ -294,9 +294,9 @@ const double kWh2MJ = 3.6f;
     double hoursUnoccupiedDuringWeek = (daysOccupiedPerWeek - 1) * hoursUnoccupiedPerDay;
     frac_hrs_wk_nt = hoursUnoccupiedDuringWeek / hoursInWeek;
 
-    double occupationDensity = pop->densityOccupied();
-    double unoccupiedDensity = pop->densityUnoccupied();
-    double densityRatio = occupationDensity / unoccupiedDensity;
+    // double occupationDensity = pop->densityOccupied();
+    // double unoccupiedDensity = pop->densityUnoccupied();
+    // double densityRatio = occupationDensity / unoccupiedDensity;
 
     double totalWeekendHours = hoursInWeek - hoursOccupiedDuringWeek - hoursUnoccupiedDuringWeek;
     frac_hrs_wke_tot = totalWeekendHours / hoursInWeek;
@@ -433,7 +433,7 @@ end
 v_hrs_sun_down_mo=v_frac_hrs_sun_down.*v_hrs_ina_mo;  
     */
     //Vector v_hrs_sun_down_mo = Vector(v_frac_hrs_sun_down.size());
-    for(uint i = 0;i<v_frac_hrs_sun_down.size();i++) {
+    for(size_t i = 0;i<v_frac_hrs_sun_down.size();i++) {
       v_hrs_sun_down_mo[i] = v_frac_hrs_sun_down[i] * hoursInMonth[i];
     }
   }
@@ -651,7 +651,7 @@ v_win_A_sol=v_win_F_shgl.*v_g_gl.*(1-v_win_ff).*v_win_A;
 
 */
 
-    double n_v_env_form_factors[]={0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1};
+    // double n_v_env_form_factors[]={0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1};
     double n_R_sc_ext=0.04;
     v_wall_R_sc = Vector(vsize);
     for(int i = 0;i<vsize;i++){
@@ -712,8 +712,8 @@ v_wall_A_sol=v_wall_alpha_sc.*v_wall_R_sc.*v_wall_U.*v_wall_A;
       v_win_SCF_frac[i]=1;
     }
     Matrix m_I_sol(12,9);//month x direction + 1 (roof?)
-    for(uint r = 0;r<m_I_sol.size1();r++){
-      for(uint c = 0;c<m_I_sol.size2()-1;c++){
+    for(size_t r = 0;r<m_I_sol.size1();r++){
+      for(size_t c = 0;c<m_I_sol.size2()-1;c++){
         m_I_sol(r,c) = location->weather()->msolar()(r,c);
       }
       m_I_sol(r,m_I_sol.size2()-1) = location->weather()->mEgh()[r];
@@ -726,8 +726,8 @@ v_I_sol=[W.msolar W.mEgh];  % create a new solar irradiance vector with the hori
 */
     Vector v_win_phi_sol(12);
     Vector temp(9);
-    for(uint i = 0;i<v_win_phi_sol.size();i++){
-      for(uint j = 0;j<temp.size();j++){
+    for(size_t i = 0;i<v_win_phi_sol.size();i++){
+      for(size_t j = 0;j<temp.size();j++){
         temp[j] = structure->windowShadingCorrectionFactor()[j] * v_win_SCF_frac[j] * v_win_A_sol[j] * m_I_sol(i,j);
       }
       v_win_phi_sol[i] = sum(temp);
@@ -754,15 +754,15 @@ end
 % 11.4.6 says take ?er=9k in sub polar zones, 13 K in tropical or 11 K in intermediate
 */
     Vector theta_er(9);
-    for(uint i = 0;i<theta_er.size();i++) {
+    for(size_t i = 0;i<theta_er.size();i++) {
       theta_er[i]=11.0;
     }
     double n_v_env_form_factors[]={0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1};
     
     Vector v_wall_phi_r = mult(mult(mult(mult(v_wall_R_sc,v_wall_U),v_wall_A),v_win_hr),theta_er);
     Vector v_wall_phi_sol(12);
-    for(uint i = 0;i<v_win_phi_sol.size();i++){
-      for(uint j = 0;j<temp.size();j++){
+    for(size_t i = 0;i<v_win_phi_sol.size();i++){
+      for(size_t j = 0;j<temp.size();j++){
         temp[j] = v_wall_A_sol[j] * m_I_sol(i,j) - v_wall_phi_r[j] * n_v_env_form_factors[j];
       }
       v_wall_phi_sol[i] = sum(temp);
@@ -810,7 +810,7 @@ v_E_sol= v_phi_sol.* v_Msec_ina_mo(I); % total envelope heat gain in MJ
     double phi_plug_unocc = building->electricApplianceHeatGainUnoccupied() + building->gasApplianceHeatGainUnoccupied(); //%get the heat again in W/m2 from appliances during unoccupied times
     phi_plug_avg=phi_plug_occ*frac_hrs_wk_day + phi_plug_unocc*(1-frac_hrs_wk_day); //% get the average heat gain from appliances in W/m2
 
-    double phi_illum_occ = Q_illum_occ/structure->floorArea()/hoursInYear/frac_hrs_wk_day*1000; //% convert occ illum energy from kWh to W/m2
+    // double phi_illum_occ = Q_illum_occ/structure->floorArea()/hoursInYear/frac_hrs_wk_day*1000; //% convert occ illum energy from kWh to W/m2
     double phi_illum_unocc = Q_illum_unocc/structure->floorArea()/hoursInYear/(1-frac_hrs_wk_day)*1000; //% convert unocc illum engergy from kWh to W/m2
     phi_illum_avg = Q_illum_tot_yr/structure->floorArea()/hoursInYear*1000; //% % convert avg E_illum from kWh per year to average W/m2
     
@@ -964,7 +964,7 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
     Vector v_ht_tset_ctrl(12);
     Vector v_cl_tset_ctrl(12);
 
-    for(uint i = 0;i<v_cl_tset_ctrl.size();i++){
+    for(size_t i = 0;i<v_cl_tset_ctrl.size();i++){
       v_cl_tset_ctrl[i] = cl_tset_ctrl;
       v_ht_tset_ctrl[i] = ht_tset_ctrl;
     }
@@ -1102,8 +1102,8 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
     if(T_ht_ctrl_flag==1){//if the HVAC heating controls are turned on.
       Matrix M_Ta(12,4);
       Vector v_Tstart(v_ht_tset_ctrl);
-      for(uint i = 0;i<M_Ta.size2();i++){
-        for(uint j = 0;j<M_Ta.size1();j++){
+      for(size_t i = 0;i<M_Ta.size2();i++){
+        for(size_t j = 0;j<M_Ta.size1();j++){
           v_Tstart(j) = M_Ta(j,i) = (v_Tstart(j) - M_Te(j,i) - M_dT(j,i)) * exp(-1 * v_ti(i) / tau) + M_Te(j,i) + M_dT(j,i);
         }
       }
@@ -1122,11 +1122,11 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
       */
 
       Matrix M_Taa(12,5);
-      for(uint j = 0;j<M_Taa.size1();j++){
+      for(size_t j = 0;j<M_Taa.size1();j++){
         M_Taa(j,1) = v_ht_tset_ctrl[j];
       }
-      for(uint i = 1;i<M_Taa.size2();i++){
-        for(uint j = 0;j<M_Taa.size1();j++){
+      for(size_t i = 1;i<M_Taa.size2();i++){
+        for(size_t j = 0;j<M_Taa.size1();j++){
           M_Taa(j,i) = std::max(M_Ta(j,i-1),ht_tset_unocc);
         }
       }
@@ -1144,20 +1144,20 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
       */
       Matrix M_Tb(12,5);
       
-      for(uint i = 0;i<M_Tb.size2();i++){
-        for(uint j = 0;j<M_Tb.size1();j++){
+      for(size_t i = 0;i<M_Tb.size2();i++){
+        for(size_t j = 0;j<M_Tb.size1();j++){
           double v_T_avg= tau / v_ti(i) * (M_Taa(j,i) - M_Te(j,i) -M_dT(j,i)) * (1-exp(-1 * v_ti(i) / tau)) + M_Te(j,i) +M_dT(j,i); 
           M_Tb(j,i) = std::max(v_T_avg, ht_tset_unocc);
         }
       }
-      for(uint i = 0;i<v_Th_wke_avg.size();i++){
+      for(size_t i = 0;i<v_Th_wke_avg.size();i++){
         double sum = 0;
-        for(uint j = 0;j<M_Tb.size2();j++){
+        for(size_t j = 0;j<M_Tb.size2();j++){
           sum+=M_Tb(i,j);
         }
         v_Th_wke_avg[i] = sum / M_Tb.size2();
       }
-      for(uint j = 0;j<M_Tb.size1();j++){
+      for(size_t j = 0;j<M_Tb.size1();j++){
         v_Th_wk_nt[j] = M_Tb(j,1);
       }
     }
@@ -1193,8 +1193,8 @@ end*/
     if(T_cl_ctrl_flag==1){
       Matrix M_Tc(12,4);
       Vector v_Tstart(v_cl_tset_ctrl);
-      for(uint i = 0;i<M_Tc.size2();i++){
-        for(uint j = 0;j<M_Tc.size1();j++){
+      for(size_t i = 0;i<M_Tc.size2();i++){
+        for(size_t j = 0;j<M_Tc.size1();j++){
           v_Tstart(j) = M_Tc(j,i) = (v_Tstart(j) - M_Te(j,i) - M_dT(j,i)) * exp(-1 * v_ti(i) / tau) + M_Te(j,i) + M_dT(j,i);
         }
       }
@@ -1209,11 +1209,11 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
     end
     */
       Matrix M_Tcc(12,5);
-      for(uint j = 0;j<M_Tcc.size1();j++){
+      for(size_t j = 0;j<M_Tcc.size1();j++){
         M_Tcc(j,1) = std::min(v_ht_tset_ctrl[j],cl_tset_unocc);
       }
-      for(uint i = 1;i<M_Tcc.size2();i++){
-        for(uint j = 0;j<M_Tcc.size1();j++){
+      for(size_t i = 1;i<M_Tcc.size2();i++){
+        for(size_t j = 0;j<M_Tcc.size1();j++){
           M_Tcc(j,i) = std::max(M_Tc(j,i-1),cl_tset_unocc);
         }
       }
@@ -1231,22 +1231,22 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
       
       Matrix M_Td(12,5);
       
-      for(uint i = 0;i<M_Td.size2();i++){
-        for(uint j = 0;j<M_Td.size1();j++){
+      for(size_t i = 0;i<M_Td.size2();i++){
+        for(size_t j = 0;j<M_Td.size1();j++){
           double v_T_avg= tau / v_ti(i) * (M_Tcc(j,i) - M_Te(j,i) -M_dT(j,i)) * (1-exp(-1 * v_ti(i) / tau)) + M_Te(j,i) +M_dT(j,i); 
           M_Td(j,i) = std::max(v_T_avg, cl_tset_unocc);
         }
       }
 
       
-      for(uint i = 0;i<v_Th_wke_avg.size();i++){
+      for(size_t i = 0;i<v_Th_wke_avg.size();i++){
         double sum = 0;
-        for(uint j = 0;j<M_Td.size2();j++){
+        for(size_t j = 0;j<M_Td.size2();j++){
           sum+=M_Td(i,j);
         }
         v_Tc_wke_avg[i] = sum / M_Td.size2();
       }
-      for(uint j = 0;j<M_Td.size1();j++){
+      for(size_t j = 0;j<M_Td.size1();j++){
         v_Tc_wk_nt[j] = M_Td(j,1);
       }
         /*
@@ -1280,7 +1280,7 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
     
     //v_Th_avg(v_Th_wk_avg);
     //v_Tc_avg(v_Tc_wk_avg);
-    for(uint i = 0;i<v_Tc_wk_avg.size();i++){
+    for(size_t i = 0;i<v_Tc_wk_avg.size();i++){
       v_Th_avg[i] = std::min(v_Th_wk_avg[i],ht_tset_ctrl);
       v_Tc_avg[i] = std::min(v_Tc_wk_avg[i],cl_tset_ctrl);
     }
@@ -1475,7 +1475,7 @@ end
   double initVal = ventilation->type() == 3 ? 0 : (vent_op_frac * qv_supp * vent_outdoor_frac * (1 - vent_ht_recov));
   Vector v_qv_mve_ht(12);
   Vector v_qv_mve_cl(12);
-  for(uint i = 0;i<v_qv_mve_ht.size();i++){
+  for(size_t i = 0;i<v_qv_mve_ht.size();i++){
     v_qv_mve_cl[i] = v_qv_mve_ht[i] = initVal;
   }
   Vector v_qve_ht = sum(v_qv_inf_ht, v_qv_mve_ht);
@@ -1554,12 +1554,12 @@ v_QT_ht = H_tr.*(v_Th_avg-v_mdbt).*v_Msec_ina_mo;  %QT = transmission loss (MJ)
 v_QV_ht = v_Hve_ht*In.cond_flr_area.*(v_Th_avg-v_mdbt).*v_Msec_ina_mo; % QV in MJ
 v_Qtot_ht = v_QT_ht+v_QV_ht ; %QL_total total heat loss in MJ
 */
-    Vector v_gamma_H_ht = div(v_tot_mo_ht_gain , sum(v_Qtot_ht, DBL_MIN));
+    Vector v_gamma_H_ht = div(v_tot_mo_ht_gain , sum(v_Qtot_ht, std::numeric_limits<double>::min()));
     Vector v_eta_g_H(12);
-    for(uint i = 0;i<v_eta_g_H.size();i++){
+    for(size_t i = 0;i<v_eta_g_H.size();i++){
       v_eta_g_H[i] = v_gamma_H_ht(i) > 0 ? 
                         (1-std::pow(v_gamma_H_ht[i],a_H)) / (1-std::pow(v_gamma_H_ht[i],(a_H+1))) : 
-                        1 / (v_gamma_H_ht(i)+DBL_MIN);
+                        1 / (v_gamma_H_ht(i)+std::numeric_limits<double>::min());
     }
     v_Qneed_ht = dif(v_Qtot_ht,mult(v_eta_g_H,v_tot_mo_ht_gain));
     Qneed_ht_yr = sum(v_Qneed_ht);
@@ -1587,13 +1587,13 @@ Qneed_ht_yr = sum(v_Qneed_ht);
     Vector v_QV_cl = mult(mult(mult(v_Hve_cl, structure->floorArea()), dif(v_Tc_avg, location->weather()->mdbt())), megasecondsInMonth);// % QT for coolin in MJ
     Vector v_Qtot_cl = sum(v_QT_cl, v_QV_cl);// % QL = QT + QV for cooling = total cooling heat loss in MJ
 
-    Vector v_gamma_H_cl = div(v_Qtot_cl,sum(v_tot_mo_ht_gain,DBL_MIN));//  %gamma_C = heat loss ratio Qloss/Qgain 
+    Vector v_gamma_H_cl = div(v_Qtot_cl,sum(v_tot_mo_ht_gain,std::numeric_limits<double>::min()));//  %gamma_C = heat loss ratio Qloss/Qgain 
 
     //% compute the cooling gain utilization factor eta_g_cl
     Vector v_eta_g_CL(12);
-    for(uint i = 0;i<v_eta_g_CL.size();i++){
+    for(size_t i = 0;i<v_eta_g_CL.size();i++){
       double numer = (1.0-std::pow(v_gamma_H_cl[i],a_H));
-      double denom = (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0)));
+      //double denom = (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0)));
       if(DEBUG_ISO_MODEL_SIMULATION)
       {
         std::cout << numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << a_H <<std::endl;
@@ -1646,8 +1646,8 @@ T_sup_cl = In.cl_tset_occ-n_dT_supp_cl;  %cool air supply temp - assume 7C lower
 n_rhoC_a = 1.22521.*0.001012; % rho*Cp for air (MJ/m3/K)
 */
 
-    Vector v_Vair_ht = div(v_Qneed_ht,sum(mult(dif(T_sup_ht, v_Th_avg), n_rhoC_a), DBL_MIN));
-    Vector v_Vair_cl = div(v_Qneed_cl,sum(mult(dif(v_Tc_avg, T_sup_cl), n_rhoC_a), DBL_MIN));
+    Vector v_Vair_ht = div(v_Qneed_ht,sum(mult(dif(T_sup_ht, v_Th_avg), n_rhoC_a), std::numeric_limits<double>::min()));
+    Vector v_Vair_cl = div(v_Qneed_cl,sum(mult(dif(v_Tc_avg, T_sup_cl), n_rhoC_a), std::numeric_limits<double>::min()));
     ventilation->fanPower();
     ventilation->fanControlFactor();
     structure->floorArea();
@@ -1762,13 +1762,13 @@ v_Qloss_cl_dist = v_Qneed_cl*(1-eta_dist_cl)/eta_dist_cl;  %losses from HVAC coo
     if(DH_YesNo == 1) {
       v_Qht_DH = sum(v_Qneed_ht,v_Qloss_ht_dist);
     } else {
-      v_Qht_sys = div(sum(v_Qloss_ht_dist, v_Qneed_ht), heating->efficiency() + DBL_MIN);
+      v_Qht_sys = div(sum(v_Qloss_ht_dist, v_Qneed_ht), heating->efficiency() + std::numeric_limits<double>::min());
     }
 
     if(DC_YesNo == 1) {
       v_Qcool_DC = sum(v_Qneed_cl,v_Qloss_cl_dist);
     } else {
-      v_Qcl_sys = div(sum(v_Qloss_cl_dist, v_Qneed_cl), IEER + DBL_MIN);
+      v_Qcl_sys = div(sum(v_Qloss_cl_dist, v_Qneed_cl), IEER + std::numeric_limits<double>::min());
     }
     printVector("v_Qht_sys",v_Qht_sys);
     printVector("v_Qht_DH",v_Qht_DH);
@@ -1901,7 +1901,6 @@ v_Q_pumps_cl = Q_pumps_cl*v_frac_cl_mode/frac_cl_total; % break down total into 
  Vector v_frac_tot = div(sum(v_Qneed_ht, v_Qneed_cl), Qneed_ht_yr + Qneed_cl_yr);
  double frac_total = sum(v_frac_tot);
  double Q_pumps_tot = Q_pumps_ht + Q_pumps_cl;
- v_Q_pump_tot;
  if(Q_pumps_ht==0 || Q_pumps_cl==0)
  {
   v_Q_pump_tot = sum(v_Q_pumps_ht, v_Q_pumps_cl);
@@ -1981,8 +1980,6 @@ Q_dhw_yr = In.DHW_demand*(n_dhw_tset-n_dhw_tsupply).*n_CP_h20; % total annual en
     printVector("v_Q_dhw_need",v_Q_dhw_need);
     zero(Z);
     printVector("Z",Z);
-    v_Q_dhw_elec;
-    v_Q_dhw_gas;
 
     if(heating->hotWaterEnergyType() == 1)
     {
@@ -2352,6 +2349,7 @@ end
             v_Q_dhw_gas,
             frac_hrs_wk_day);
   }
+
   ISOResults SimModel::outputGeneration(const Vector& v_Qelec_ht,
     const Vector& v_Qcl_elec_tot,
     const Vector& v_Q_illum_tot,
@@ -2430,6 +2428,7 @@ Eelec_dhw  = v_Q_dhw_elec/In.cond_flr_area;
       results[i].addEndUse(Egas_dhw[i], EndUseFuelType::Gas, EndUseCategoryType::WaterSystems);
       allResults.monthlyResults.push_back(results[i]);
     }
+
     return allResults;
 
 /*
@@ -2462,7 +2461,7 @@ Ebldg.rows=['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'D
 */
     double yrSum = 0;
     Vector monthly(Etot_ht.size());
-    for(uint i = 0;i<Etot_ht.size();i++)
+    for(size_t i = 0;i<Etot_ht.size();i++)
     {
         monthly[i] = Etot_ht[i] + Etot_cl[i] + Etot_int_lt[i] + Etot_ext_lt[i] +
                      Etot_fan[i] + Etot_pump[i] + Etot_plug[i] + Etot_dhw[i];
@@ -2478,143 +2477,146 @@ Ebldg.yr=sum(Ebldg.mon);
 } // isomodel
 } // openstudio
 
+
 int main(int argc, char* argv[]) {
   if(argc < 2) {
-    std::cout << "Usage: " << argv[0] << " <filename.ISO>" <<endl;
+    std::cout << "Usage: " << argv[0] << " <filename.ISO>" << std::endl;
     return -1;
   }
+
   openstudio::isomodel::UserModel umodel;
   umodel.load(argv[1]);
+
   std::cout << umodel.terrainClass() << std::endl;
-std::cout << umodel.floorArea() << std::endl;
-std::cout << umodel.buildingHeight() << std::endl;
-std::cout << umodel.buildingOccupancyFrom() << std::endl;
-std::cout << umodel.buildingOccupancyTo() << std::endl;
-std::cout << umodel.equivFullLoadOccupancyFrom() << std::endl;
-std::cout << umodel.equivFullLoadOccupancyTo() << std::endl;
-std::cout << umodel.peopleDensityOccupied() << std::endl;
-std::cout << umodel.peopleDensityUnoccupied() << std::endl;
-std::cout << umodel.heatingOccupiedSetpoint() << std::endl;
-std::cout << umodel.heatingUnoccupiedSetpoint() << std::endl;
-std::cout << umodel.coolingOccupiedSetpoint() << std::endl;
-std::cout << umodel.coolingUnoccupiedSetpoint() << std::endl;
-std::cout << umodel.elecPowerAppliancesOccupied() << std::endl;
-std::cout << umodel.elecPowerAppliancesUnoccupied() << std::endl;
-std::cout << umodel.gasPowerAppliancesOccupied() << std::endl;
-std::cout << umodel.gasPowerAppliancesUnoccupied() << std::endl;
-std::cout << umodel.lightingPowerIntensityOccupied() << std::endl;
-std::cout << umodel.lightingPowerIntensityUnoccupied() << std::endl;
-std::cout << umodel.exteriorLightingPower() << std::endl;
-std::cout << umodel.daylightSensorSystem() << std::endl;
-std::cout << umodel.lightingOccupancySensorSystem() << std::endl;
-std::cout << umodel.constantIlluminationControl() << std::endl;
-std::cout << umodel.coolingSystemCOP() << std::endl;
-std::cout << umodel.coolingSystemIPLVToCOPRatio() << std::endl;
-std::cout << umodel.heatingEnergyCarrier() << std::endl;
-std::cout << umodel.heatingSystemEfficiency() << std::endl;
-std::cout << umodel.ventilationType() << std::endl;
-std::cout << umodel.freshAirFlowRate() << std::endl;
-std::cout << umodel.supplyExhaustRate() << std::endl;
-std::cout << umodel.heatRecovery() << std::endl;
-std::cout << umodel.exhaustAirRecirclation() << std::endl;
-std::cout << umodel.buildingAirLeakage() << std::endl;
-std::cout << umodel.dhwDemand() << std::endl;
-std::cout << umodel.dhwEfficiency() << std::endl;
-std::cout << umodel.dhwDistributionSystem() << std::endl;
-std::cout << umodel.dhwEnergyCarrier() << std::endl;
-std::cout << umodel.bemType() << std::endl;
-std::cout << umodel.interiorHeatCapacity() << std::endl;
-std::cout << umodel.specificFanPower() << std::endl;
-std::cout << umodel.fanFlowControlFactor() << std::endl;
-std::cout << umodel.roofSHGC() << std::endl;
-std::cout << umodel.wallAreaS() << std::endl;
-std::cout << umodel.wallAreaSE() << std::endl;
-std::cout << umodel.wallAreaE() << std::endl;
-std::cout << umodel.wallAreaNE() << std::endl;
-std::cout << umodel.wallAreaN() << std::endl;
-std::cout << umodel.wallAreaNW() << std::endl;
-std::cout << umodel.wallAreaW() << std::endl;
-std::cout << umodel.wallAreaSW() << std::endl;
-std::cout << umodel.roofArea() << std::endl;
-std::cout << umodel.wallUvalueS() << std::endl;
-std::cout << umodel.wallUvalueSE() << std::endl;
-std::cout << umodel.wallUvalueE() << std::endl;
-std::cout << umodel.wallUvalueNE() << std::endl;
-std::cout << umodel.wallUvalueN() << std::endl;
-std::cout << umodel.wallUvalueNW() << std::endl;
-std::cout << umodel.wallUvalueW() << std::endl;
-std::cout << umodel.wallUvalueSW() << std::endl;
-std::cout << umodel.roofUValue() << std::endl;
-std::cout << umodel.wallSolarAbsorptionS() << std::endl;
-std::cout << umodel.wallSolarAbsorptionSE() << std::endl;
-std::cout << umodel.wallSolarAbsorptionE() << std::endl;
-std::cout << umodel.wallSolarAbsorptionNE() << std::endl;
-std::cout << umodel.wallSolarAbsorptionN() << std::endl;
-std::cout << umodel.wallSolarAbsorptionNW() << std::endl;
-std::cout << umodel.wallSolarAbsorptionW() << std::endl;
-std::cout << umodel.wallSolarAbsorptionSW() << std::endl;
-std::cout << umodel.roofSolarAbsorption() << std::endl;
-std::cout << umodel.wallThermalEmissivityS() << std::endl;
-std::cout << umodel.wallThermalEmissivitySE() << std::endl;
-std::cout << umodel.wallThermalEmissivityE() << std::endl;
-std::cout << umodel.wallThermalEmissivityNE() << std::endl;
-std::cout << umodel.wallThermalEmissivityN() << std::endl;
-std::cout << umodel.wallThermalEmissivityNW() << std::endl;
-std::cout << umodel.wallThermalEmissivityW() << std::endl;
-std::cout << umodel.wallThermalEmissivitySW() << std::endl;
-std::cout << umodel.roofThermalEmissivity() << std::endl;
-std::cout << umodel.windowAreaS() << std::endl;
-std::cout << umodel.windowAreaSE() << std::endl;
-std::cout << umodel.windowAreaE() << std::endl;
-std::cout << umodel.windowAreaNE() << std::endl;
-std::cout << umodel.windowAreaN() << std::endl;
-std::cout << umodel.windowAreaNW() << std::endl;
-std::cout << umodel.windowAreaW() << std::endl;
-std::cout << umodel.windowAreaSW() << std::endl;
-std::cout << umodel.skylightArea() << std::endl;
-std::cout << umodel.windowUvalueS() << std::endl;
-std::cout << umodel.windowUvalueSE() << std::endl;
-std::cout << umodel.windowUvalueE() << std::endl;
-std::cout << umodel.windowUvalueNE() << std::endl;
-std::cout << umodel.windowUvalueN() << std::endl;
-std::cout << umodel.windowUvalueNW() << std::endl;
-std::cout << umodel.windowUvalueW() << std::endl;
-std::cout << umodel.windowUvalueSW() << std::endl;
-std::cout << umodel.skylightUvalue() << std::endl;
-std::cout << umodel.windowSHGCS() << std::endl;
-std::cout << umodel.windowSHGCSE() << std::endl;
-std::cout << umodel.windowSHGCE() << std::endl;
-std::cout << umodel.windowSHGCNE() << std::endl;
-std::cout << umodel.windowSHGCN() << std::endl;
-std::cout << umodel.windowSHGCNW() << std::endl;
-std::cout << umodel.windowSHGCW() << std::endl;
-std::cout << umodel.windowSHGCSW() << std::endl;
-std::cout << umodel.skylightSHGC() << std::endl;
-std::cout << umodel.windowSCFS() << std::endl;
-std::cout << umodel.windowSCFSE() << std::endl;
-std::cout << umodel.windowSCFE() << std::endl;
-std::cout << umodel.windowSCFNE() << std::endl;
-std::cout << umodel.windowSCFN() << std::endl;
-std::cout << umodel.windowSCFNW() << std::endl;
-std::cout << umodel.windowSCFW() << std::endl;
-std::cout << umodel.windowSCFSW() << std::endl;
-std::cout << umodel.windowSDFS() << std::endl;
-std::cout << umodel.windowSDFSE() << std::endl;
-std::cout << umodel.windowSDFE() << std::endl;
-std::cout << umodel.windowSDFNE() << std::endl;
-std::cout << umodel.windowSDFN() << std::endl;
-std::cout << umodel.windowSDFNW() << std::endl;
-std::cout << umodel.windowSDFW() << std::endl;
-std::cout << umodel.windowSDFSW() << std::endl;
-std::cout << umodel.exteriorHeatCapacity() << std::endl;
-std::cout << umodel.infiltration() << std::endl;
-std::cout << umodel.hvacWasteFactor() << std::endl;
-std::cout << umodel.hvacHeatingLossFactor() << std::endl;
-std::cout << umodel.hvacCoolingLossFactor() << std::endl;
-std::cout << umodel.dhwDistributionEfficiency() << std::endl;
-std::cout << umodel.heatingPumpControl() << std::endl;
-std::cout << umodel.coolingPumpControl() << std::endl;
-std::cout << umodel.heatGainPerPerson() << std::endl;
+  std::cout << umodel.floorArea() << std::endl;
+  std::cout << umodel.buildingHeight() << std::endl;
+  std::cout << umodel.buildingOccupancyFrom() << std::endl;
+  std::cout << umodel.buildingOccupancyTo() << std::endl;
+  std::cout << umodel.equivFullLoadOccupancyFrom() << std::endl;
+  std::cout << umodel.equivFullLoadOccupancyTo() << std::endl;
+  std::cout << umodel.peopleDensityOccupied() << std::endl;
+  std::cout << umodel.peopleDensityUnoccupied() << std::endl;
+  std::cout << umodel.heatingOccupiedSetpoint() << std::endl;
+  std::cout << umodel.heatingUnoccupiedSetpoint() << std::endl;
+  std::cout << umodel.coolingOccupiedSetpoint() << std::endl;
+  std::cout << umodel.coolingUnoccupiedSetpoint() << std::endl;
+  std::cout << umodel.elecPowerAppliancesOccupied() << std::endl;
+  std::cout << umodel.elecPowerAppliancesUnoccupied() << std::endl;
+  std::cout << umodel.gasPowerAppliancesOccupied() << std::endl;
+  std::cout << umodel.gasPowerAppliancesUnoccupied() << std::endl;
+  std::cout << umodel.lightingPowerIntensityOccupied() << std::endl;
+  std::cout << umodel.lightingPowerIntensityUnoccupied() << std::endl;
+  std::cout << umodel.exteriorLightingPower() << std::endl;
+  std::cout << umodel.daylightSensorSystem() << std::endl;
+  std::cout << umodel.lightingOccupancySensorSystem() << std::endl;
+  std::cout << umodel.constantIlluminationControl() << std::endl;
+  std::cout << umodel.coolingSystemCOP() << std::endl;
+  std::cout << umodel.coolingSystemIPLVToCOPRatio() << std::endl;
+  std::cout << umodel.heatingEnergyCarrier() << std::endl;
+  std::cout << umodel.heatingSystemEfficiency() << std::endl;
+  std::cout << umodel.ventilationType() << std::endl;
+  std::cout << umodel.freshAirFlowRate() << std::endl;
+  std::cout << umodel.supplyExhaustRate() << std::endl;
+  std::cout << umodel.heatRecovery() << std::endl;
+  std::cout << umodel.exhaustAirRecirclation() << std::endl;
+  std::cout << umodel.buildingAirLeakage() << std::endl;
+  std::cout << umodel.dhwDemand() << std::endl;
+  std::cout << umodel.dhwEfficiency() << std::endl;
+  std::cout << umodel.dhwDistributionSystem() << std::endl;
+  std::cout << umodel.dhwEnergyCarrier() << std::endl;
+  std::cout << umodel.bemType() << std::endl;
+  std::cout << umodel.interiorHeatCapacity() << std::endl;
+  std::cout << umodel.specificFanPower() << std::endl;
+  std::cout << umodel.fanFlowControlFactor() << std::endl;
+  std::cout << umodel.roofSHGC() << std::endl;
+  std::cout << umodel.wallAreaS() << std::endl;
+  std::cout << umodel.wallAreaSE() << std::endl;
+  std::cout << umodel.wallAreaE() << std::endl;
+  std::cout << umodel.wallAreaNE() << std::endl;
+  std::cout << umodel.wallAreaN() << std::endl;
+  std::cout << umodel.wallAreaNW() << std::endl;
+  std::cout << umodel.wallAreaW() << std::endl;
+  std::cout << umodel.wallAreaSW() << std::endl;
+  std::cout << umodel.roofArea() << std::endl;
+  std::cout << umodel.wallUvalueS() << std::endl;
+  std::cout << umodel.wallUvalueSE() << std::endl;
+  std::cout << umodel.wallUvalueE() << std::endl;
+  std::cout << umodel.wallUvalueNE() << std::endl;
+  std::cout << umodel.wallUvalueN() << std::endl;
+  std::cout << umodel.wallUvalueNW() << std::endl;
+  std::cout << umodel.wallUvalueW() << std::endl;
+  std::cout << umodel.wallUvalueSW() << std::endl;
+  std::cout << umodel.roofUValue() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionS() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionSE() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionE() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionNE() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionN() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionNW() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionW() << std::endl;
+  std::cout << umodel.wallSolarAbsorptionSW() << std::endl;
+  std::cout << umodel.roofSolarAbsorption() << std::endl;
+  std::cout << umodel.wallThermalEmissivityS() << std::endl;
+  std::cout << umodel.wallThermalEmissivitySE() << std::endl;
+  std::cout << umodel.wallThermalEmissivityE() << std::endl;
+  std::cout << umodel.wallThermalEmissivityNE() << std::endl;
+  std::cout << umodel.wallThermalEmissivityN() << std::endl;
+  std::cout << umodel.wallThermalEmissivityNW() << std::endl;
+  std::cout << umodel.wallThermalEmissivityW() << std::endl;
+  std::cout << umodel.wallThermalEmissivitySW() << std::endl;
+  std::cout << umodel.roofThermalEmissivity() << std::endl;
+  std::cout << umodel.windowAreaS() << std::endl;
+  std::cout << umodel.windowAreaSE() << std::endl;
+  std::cout << umodel.windowAreaE() << std::endl;
+  std::cout << umodel.windowAreaNE() << std::endl;
+  std::cout << umodel.windowAreaN() << std::endl;
+  std::cout << umodel.windowAreaNW() << std::endl;
+  std::cout << umodel.windowAreaW() << std::endl;
+  std::cout << umodel.windowAreaSW() << std::endl;
+  std::cout << umodel.skylightArea() << std::endl;
+  std::cout << umodel.windowUvalueS() << std::endl;
+  std::cout << umodel.windowUvalueSE() << std::endl;
+  std::cout << umodel.windowUvalueE() << std::endl;
+  std::cout << umodel.windowUvalueNE() << std::endl;
+  std::cout << umodel.windowUvalueN() << std::endl;
+  std::cout << umodel.windowUvalueNW() << std::endl;
+  std::cout << umodel.windowUvalueW() << std::endl;
+  std::cout << umodel.windowUvalueSW() << std::endl;
+  std::cout << umodel.skylightUvalue() << std::endl;
+  std::cout << umodel.windowSHGCS() << std::endl;
+  std::cout << umodel.windowSHGCSE() << std::endl;
+  std::cout << umodel.windowSHGCE() << std::endl;
+  std::cout << umodel.windowSHGCNE() << std::endl;
+  std::cout << umodel.windowSHGCN() << std::endl;
+  std::cout << umodel.windowSHGCNW() << std::endl;
+  std::cout << umodel.windowSHGCW() << std::endl;
+  std::cout << umodel.windowSHGCSW() << std::endl;
+  std::cout << umodel.skylightSHGC() << std::endl;
+  std::cout << umodel.windowSCFS() << std::endl;
+  std::cout << umodel.windowSCFSE() << std::endl;
+  std::cout << umodel.windowSCFE() << std::endl;
+  std::cout << umodel.windowSCFNE() << std::endl;
+  std::cout << umodel.windowSCFN() << std::endl;
+  std::cout << umodel.windowSCFNW() << std::endl;
+  std::cout << umodel.windowSCFW() << std::endl;
+  std::cout << umodel.windowSCFSW() << std::endl;
+  std::cout << umodel.windowSDFS() << std::endl;
+  std::cout << umodel.windowSDFSE() << std::endl;
+  std::cout << umodel.windowSDFE() << std::endl;
+  std::cout << umodel.windowSDFNE() << std::endl;
+  std::cout << umodel.windowSDFN() << std::endl;
+  std::cout << umodel.windowSDFNW() << std::endl;
+  std::cout << umodel.windowSDFW() << std::endl;
+  std::cout << umodel.windowSDFSW() << std::endl;
+  std::cout << umodel.exteriorHeatCapacity() << std::endl;
+  std::cout << umodel.infiltration() << std::endl;
+  std::cout << umodel.hvacWasteFactor() << std::endl;
+  std::cout << umodel.hvacHeatingLossFactor() << std::endl;
+  std::cout << umodel.hvacCoolingLossFactor() << std::endl;
+  std::cout << umodel.dhwDistributionEfficiency() << std::endl;
+  std::cout << umodel.heatingPumpControl() << std::endl;
+  std::cout << umodel.coolingPumpControl() << std::endl;
+  std::cout << umodel.heatGainPerPerson() << std::endl;
 
   WeatherData wd = *umodel.loadWeather();
 
@@ -2660,6 +2662,10 @@ std::cout << umodel.heatGainPerPerson() << std::endl;
     std::cout << results.monthlyResults[i].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) << ", ";
     std::cout << results.monthlyResults[i].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) << std::endl;
   }
+
   char c;
   std::cin >> c;
 }
+
+
+

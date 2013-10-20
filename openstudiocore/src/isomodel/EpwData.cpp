@@ -129,7 +129,7 @@ std::string EpwData::toISOData(){
 void EpwData::loadData(std::string fn)
 {
 	std::string line;
-	std::ifstream myfile (fn);
+	std::ifstream myfile (fn.c_str());
 	int i = 0;
 	int row = 0;
 	

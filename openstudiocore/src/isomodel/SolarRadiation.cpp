@@ -148,7 +148,7 @@ void SolarRadiation::calculateAverages()
 	int month= 0;
 	int midx = -1;
 	int cnt  = 0;
-	int days = 0;
+        // int days = 0;
 	int h = 0;
   
   std::vector< std::vector<double> > data = weatherData->data();

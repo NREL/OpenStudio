@@ -559,7 +559,7 @@ namespace isomodel {
   }
   void UserModel::loadBuilding(std::string buildingFile){
     string line;
-    ifstream inputFile (buildingFile);
+    ifstream inputFile(buildingFile.c_str());
     if (inputFile.is_open()) {
       while (inputFile.good()) {
         getline (inputFile,line);

@@ -36,3 +36,4 @@ void ISOModelFixture::TearDownTestCase() {
 }
 
 boost::shared_ptr<openstudio::FileLogSink> ISOModelFixture::logFile;
+

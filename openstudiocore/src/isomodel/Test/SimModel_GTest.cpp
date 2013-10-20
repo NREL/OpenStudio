@@ -28,7 +28,7 @@ using namespace openstudio::isomodel;
 using namespace openstudio;
 
 void testGenericFunctions() {
-  double scalar = 2, dResults=0;
+  double scalar = 2;
   double test[] = {0,1,2,3,4,5,6,7,8,9,10,11};
   Vector vTest = Vector(12), vTest2 = Vector(12);
   for(unsigned int i = 0;i<vTest.size();i++){
@@ -68,13 +68,13 @@ void testGenericFunctions() {
   }
 
   results = div(scalar, vTest);
-  EXPECT_EQ(DBL_MAX, results[0]);
+  EXPECT_EQ(std::numeric_limits<double>::max(), results[0]);
   for(unsigned int i = 1;i<vTest.size();i++){
     EXPECT_EQ(scalar / i, results[i]);
   }
 
   results = div(vTest, vTest);
-  EXPECT_EQ(DBL_MAX, results[0]);  //0 / 0
+  EXPECT_EQ(std::numeric_limits<double>::max(), results[0]);  //0 / 0
   for(unsigned int i = 1;i<vTest.size();i++){
     EXPECT_EQ(1, results[i]);
   }

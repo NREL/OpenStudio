@@ -49,3 +49,4 @@ class ISOModelFixture : public ::testing::Test {
 };
 
 #endif // ISOMODELTEST_TEST_ISOMODELFIXTURE_HPP
+
