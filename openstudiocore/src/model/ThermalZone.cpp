@@ -922,13 +922,12 @@ namespace detail {
 
     // Quick check to see what kind of ventilation methods are used
     BOOST_FOREACH(Space space, spaces){
-      boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir;
-      designSpecificationOutdoorAir = space.designSpecificationOutdoorAir();
-
-      if (istringEqual("Maximum", designSpecificationOutdoorAir->outdoorAirMethod())){
-        anyMaxOutdoorAirMethod = true;
-      } else if(istringEqual("Sum", designSpecificationOutdoorAir->outdoorAirMethod())) {
-        anySumOutdoorAirMethod = true;
+      if (boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = space.designSpecificationOutdoorAir()) {
+        if (istringEqual("Maximum", designSpecificationOutdoorAir->outdoorAirMethod())){
+          anyMaxOutdoorAirMethod = true;
+        } else if(istringEqual("Sum", designSpecificationOutdoorAir->outdoorAirMethod())) {
+          anySumOutdoorAirMethod = true;
+        }
       }
     }
 
