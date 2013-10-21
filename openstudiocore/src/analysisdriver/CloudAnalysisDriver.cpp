@@ -1154,6 +1154,9 @@ namespace detail {
       boost::optional<RunManager> rm = project().runManager();
       bool test = toUpdate.updateFromJSON(json,rm);
       project().save();
+
+      // DLM: Elaine, it seems that if this point is CloudDetailed we should not emit these signals until the download is done?
+      // we are having issues where datapoint shows green arrow before results are available
       emit resultsChanged();
       emit dataPointComplete(project().analysis().uuid(),toUpdate.uuid());
       OS_ASSERT(toUpdate.runType() != DataPointRunType::Local);
@@ -1478,6 +1481,8 @@ namespace detail {
         OS_ASSERT(false);
       }
 
+      // DLM: Elaine do we need to do this here?  Saving after each data point is very costly, could we do this at the end on either 
+      // successful completion or failure?
       project().save();
 
       emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
