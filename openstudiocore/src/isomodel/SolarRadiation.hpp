@@ -34,6 +34,9 @@ class EpwData;
 class SolarRadiation
 {
   public:
+    SolarRadiation(TimeFrame* frame, EpwData* wdata, double tilt=PI);
+    ~SolarRadiation(void);
+
     static const double PI = 3.141592653589;//3.1415926535897932384626433832795028841971693993751058209 
     static const int NUM_SURFACES = 8;
     static const int MONTHS = 12;
@@ -41,8 +44,6 @@ class SolarRadiation
 
     void Calculate();
 
-    SolarRadiation(TimeFrame* frame, EpwData* wdata, double tilt=PI);
-    ~SolarRadiation(void);
     //outputs
     std::vector<std::vector<double> > eglobe(){return m_eglobe;}//total solar radiation from direct beam, ground reflect and diffuse
     //averages
@@ -57,8 +58,8 @@ class SolarRadiation
     std::vector<std::vector<double> > hourlyGlobalHorizontalRadiation(){return m_hourlyGlobalHorizontalRadiation;}
 
   protected:
-    openstudio::isomodel::TimeFrame* frame;
-    openstudio::isomodel::EpwData* weatherData;
+    openstudio::isomodel::TimeFrame* m_frame;
+    openstudio::isomodel::EpwData* m_weatherData;
     void calculateSurfaceSolarRadiation();
     void calculateAverages();
     void calculateMonthAvg(int midx, int cnt);

@@ -3,9 +3,10 @@
 namespace openstudio {
 namespace isomodel {
 
-EpwData::EpwData()
-  : m_data(7)
+EpwData::EpwData(const openstudio::path &t_path)
+  : m_data(7, std::vector<double>(8760))
 {
+  loadData(t_path);
 }
 
 void EpwData::parseHeader(const std::string &line)
@@ -20,23 +21,23 @@ void EpwData::parseHeader(const std::string &line)
     switch(i)
     {	
       case 1:
-        this->m_location = s;
+        m_location = s;
         //cout << "\tLocation: " << s <<endl;
         break;
       case 5:
-        this->m_stationid = s;
+        m_stationid = s;
         //cout << "\tStation ID: " << s <<endl;
         break;
       case 6:
-        this->m_latitude = atof(s.c_str());
+        m_latitude = atof(s.c_str());
         //cout << "\tLatitude: " << s <<endl;
         break;
       case 7:
-        this->m_longitude = atof(s.c_str());
+        m_longitude = atof(s.c_str());
         //cout << "\tLongitude: " << s <<endl;
         break;
       case 8:
-        this->m_timezone = atoi(s.c_str());
+        m_timezone = atoi(s.c_str());
         //cout << "\tTimezone: " << s <<endl;
         break;
       default:
@@ -45,12 +46,12 @@ void EpwData::parseHeader(const std::string &line)
   }			
 }
 
-void EpwData::parseData(const std::string &line, int row)
+void EpwData::parseData(const std::string &line, size_t row)
 {
   std::stringstream linestream(line);
-  int col = 0;
+  size_t col = 0;
 
-  for(int i = 0;i<22;i++)
+  for(size_t i = 0;i<22;i++)
   {
     std::string s;
     std::getline(linestream, s, ',');
@@ -63,7 +64,9 @@ void EpwData::parseData(const std::string &line, int row)
       case 14:
       case 15:
       case 21:
-        this->m_data[col++][row] = ::atof(s.c_str());
+        assert(col < m_data.size());
+        assert(row < m_data[col].size());
+        m_data[col++][row] = ::atof(s.c_str());
         break;
       default:
         break;
@@ -124,19 +127,14 @@ std::string EpwData::toISOData(){
   return sstream.str();
 }
 
-void EpwData::loadData(const std::string &fn)
+void EpwData::loadData(const openstudio::path &fn)
 {
-
-  for(int c = 0;c<7;c++)
-  {
-    m_data[c].resize(8760);
-  }
-
-  std::ifstream myfile(fn.c_str());
+  // Array was fully initialized in constructor
+  std::ifstream myfile(openstudio::toString(fn).c_str());
   if (myfile.is_open())
   {
-    int i = 0;
-    int row = 0;
+    size_t i = 0;
+    size_t row = 0;
     while ( myfile.good() && row < 8760)
     {
       i++;
@@ -144,14 +142,16 @@ void EpwData::loadData(const std::string &fn)
       getline(myfile,line);
       if(i==1)
       {
-        this->parseHeader(line);
+        parseHeader(line);
       }
       else if(i > 8)
       {
-        this->parseData(line,row++);
+        parseData(line,row++);
       }      
     }
     myfile.close();
+  } else {
+    throw std::runtime_error("Unable to open weather file: " + openstudio::toString(fn));
   }
 }
 }

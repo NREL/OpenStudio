@@ -53,3 +53,4 @@ class Building
 } // isomodel
 } // openstudio
 #endif // ISOMODEL_BUILDING_HPP
+

@@ -17,10 +17,10 @@ namespace isomodel {
         for(int K=1;K<=24;K++)
         {
           assert(i < TIMESLICES);
-          this->Hour[i] = K;
-          this->Day[i] = J;
-          this->Month[i] = I;
-          this->YTD[i++] = j;
+          Hour[i] = K;
+          Day[i] = J;
+          Month[i] = I;
+          YTD[i++] = j;
         }
       }		
     }

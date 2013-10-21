@@ -24,8 +24,9 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <isomodel/SolarRadiation.hpp>
-#include <isomodel/TimeFrame.hpp>
+#include "SolarRadiation.hpp"
+#include "TimeFrame.hpp"
+#include <utilities/core/Path.hpp>
 
 namespace openstudio {
 namespace isomodel {
@@ -43,7 +44,7 @@ class SolarRadiation;
 class EpwData
 {
   public:
-    EpwData();
+    EpwData(const openstudio::path &t_path);
 
     std::string location(){return m_location;}
     std::string stationid(){return m_stationid;}
@@ -52,13 +53,12 @@ class EpwData
     double longitude(){return m_longitude;}
     std::vector< std::vector<double> > data(){return m_data;}
 
-
-    void loadData(const std::string &);
     std::string toISOData();
 
   protected:
+    void loadData(const openstudio::path &t_path);
     void parseHeader(const std::string &line);
-    void parseData(const std::string &line, int row);
+    void parseData(const std::string &line, size_t row);
     std::string m_location,m_stationid;
     int m_timezone;
     double m_latitude,m_longitude;

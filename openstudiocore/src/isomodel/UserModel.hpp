@@ -43,10 +43,11 @@ namespace isomodel {
      * the UserModel with a new set of weather data
      */
     boost::shared_ptr<WeatherData> loadWeather();
+
     /**
      * Loads an ISO model from the specified .ISO file
      */
-    void load(std::string buildingFile);
+    void load(const openstudio::path &t_buildingFile);
 
     /**
      * Generates a SimModel from the specified parameters of the 
@@ -64,7 +65,7 @@ namespace isomodel {
      * }
      */
     bool valid(){return _valid;}
-    std::string weatherFilePath(){return _weatherFilePath;}
+    openstudio::path weatherFilePath(){return _weatherFilePath;}
     double terrainClass(){return _terrainClass;} const 
     double floorArea(){return _floorArea;} const 
     double buildingHeight(){return _buildingHeight;} const 
@@ -260,7 +261,7 @@ namespace isomodel {
     double coolingPumpControl(){return _coolingPumpControl;}
     double heatGainPerPerson(){return _heatGainPerPerson;}
     
-    void setWeatherFilePath(std::string val){_weatherFilePath = val;}
+    void setWeatherFilePath(const openstudio::path &val){_weatherFilePath = val;}
     void setTerrainClass(double val){ _terrainClass = val;}
     void setFloorArea(double val){ _floorArea = val;}
     void setBuildingHeight(double val){ _buildingHeight = val;}
@@ -337,8 +338,7 @@ namespace isomodel {
     void setHeatGainPerPerson(double val){ _heatGainPerPerson = val;}
 
   private:
-    std::string resolveFilename(std::string baseFile, std::string relativeFile);
-    void parseStructure(std::string attributeName, const char* attributeValue);
+    void parseStructure(const std::string &attributeName, const char* attributeValue);
 
     REGISTER_LOGGER("openstudio.isomodel.UserModel");
     boost::shared_ptr<WeatherData> _weather; 
@@ -488,13 +488,13 @@ namespace isomodel {
     double _coolingPumpControl;
     double _heatGainPerPerson;
 
-    std::string _weatherFilePath;
-    std::string dataFile;
+    openstudio::path _weatherFilePath;
+    openstudio::path _dataFile;
 
 
-    void parseLine(std::string line);
-    void loadBuilding(std::string buildingFile);
-    int weatherState(std::string header);
+    void parseLine(const std::string &line);
+    void loadBuilding(const openstudio::path &t_buildingFile);
+    int weatherState(const std::string &header);
 
   };
 

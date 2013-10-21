@@ -299,7 +299,7 @@ TEST_F(ISOModelFixture, UserModel)
   userModel.load(wpath);
   EXPECT_FALSE(userModel.valid());
   userModel.setWeatherFilePath(wpath);
-  EXPECT_EQ(0, userModel.weatherFilePath().compare(wpath));
+  EXPECT_EQ(userModel.weatherFilePath(), openstudio::toPath(wpath));
   userModel.loadWeather();
   EXPECT_FALSE(userModel.valid());
 
@@ -436,7 +436,7 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(1.0, userModel.heatingPumpControl());
   EXPECT_EQ(1.0, userModel.coolingPumpControl());
   EXPECT_EQ(120.0, userModel.heatGainPerPerson());
-  EXPECT_EQ(0, userModel.weatherFilePath().compare("weather.epw"));
+  EXPECT_EQ(userModel.weatherFilePath(), openstudio::toPath("weather.epw"));
   WeatherData wd = *userModel.loadWeather();
 
   Matrix msolar = wd.msolar();

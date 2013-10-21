@@ -49,3 +49,4 @@ namespace isomodel {
 } // isomodel
 } // openstudio
 #endif // ISOMODEL_COOLING_HPP
+
