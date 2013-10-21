@@ -4,14 +4,7 @@
 namespace openstudio {
 namespace isomodel {
 
-Cooling::Cooling(void)
-{
-}
-
-
-Cooling::~Cooling(void)
-{
-}
+// nothing to see here now
 
 } // isomodel
 } // openstudio

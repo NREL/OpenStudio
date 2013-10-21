@@ -24,8 +24,6 @@ namespace isomodel {
 class Building
   {
   public:
-    Building(void);
-    ~Building(void);
     double lightingOccupancySensor() const {return _lightingOccupancySensor;}
     double constantIllumination() const {return _constantIllumination;}
     double electricApplianceHeatGainOccupied() const {return _electricApplianceHeatGainOccupied;}
@@ -40,6 +38,7 @@ class Building
     void setGasApplianceHeatGainOccupied(double value) {_gasApplianceHeatGainOccupied = value;}
     void setGasApplianceHeatGainUnoccupied(double value) {_gasApplianceHeatGainUnoccupied = value;}
     void setBuildingEnergyManagement(double value) {_buildingEnergyManagement = value;}
+
   private:
     double _lightingOccupancySensor;
     double _constantIllumination;

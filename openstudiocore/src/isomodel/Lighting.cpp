@@ -4,16 +4,7 @@
 namespace openstudio {
 namespace isomodel {
 
-
-Lighting::Lighting(void)
-{
-}
-
-
-Lighting::~Lighting(void)
-{
-}
-
+// nothing to see here
 
 } // isomodel
 } // openstudio

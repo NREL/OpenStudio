@@ -24,8 +24,6 @@ namespace isomodel {
 class Heating
   {
   public:
-    Heating(void);
-    ~Heating(void);
     double temperatureSetPointOccupied() const {return _temperatureSetPointOccupied;}
     double temperatureSetPointUnoccupied() const {return _temperatureSetPointUnoccupied;}
     double hvacLossFactor() const {return _hvacLossFactor;}

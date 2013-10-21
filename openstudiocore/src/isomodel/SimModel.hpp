@@ -43,31 +43,31 @@ namespace openstudio {
 
 namespace isomodel { 
 
-//flag to turn on debug printing of many intermediate variables to stdout
+  //flag to turn on debug printing of many intermediate variables to stdout
 #define DEBUG_ISO_MODEL_SIMULATION false
 
-ISOMODEL_API Vector mult(const double* v1, const double s1, int size);
-ISOMODEL_API Vector mult(const Vector& v1, const double s1);
-ISOMODEL_API Vector mult(const Vector& v1, const double* v2);
-ISOMODEL_API Vector mult(const Vector& v1, const Vector& v2);
-ISOMODEL_API Vector div(const Vector& v1,const double s1);
-ISOMODEL_API Vector div(const double s1, const Vector& v1);
-ISOMODEL_API Vector div(const Vector& v1, const Vector& v2);
-ISOMODEL_API Vector sum(const Vector& v1, const Vector& v2);
-ISOMODEL_API Vector sum(const Vector& v1, const double v2);
-ISOMODEL_API Vector dif(const Vector& v1, const Vector& v2);
-ISOMODEL_API Vector dif(const Vector& v1, const double v2);
-ISOMODEL_API Vector dif(const double v1, const Vector& v2);
+  ISOMODEL_API Vector mult(const double* v1, const double s1, int size);
+  ISOMODEL_API Vector mult(const Vector& v1, const double s1);
+  ISOMODEL_API Vector mult(const Vector& v1, const double* v2);
+  ISOMODEL_API Vector mult(const Vector& v1, const Vector& v2);
+  ISOMODEL_API Vector div(const Vector& v1,const double s1);
+  ISOMODEL_API Vector div(const double s1, const Vector& v1);
+  ISOMODEL_API Vector div(const Vector& v1, const Vector& v2);
+  ISOMODEL_API Vector sum(const Vector& v1, const Vector& v2);
+  ISOMODEL_API Vector sum(const Vector& v1, const double v2);
+  ISOMODEL_API Vector dif(const Vector& v1, const Vector& v2);
+  ISOMODEL_API Vector dif(const Vector& v1, const double v2);
+  ISOMODEL_API Vector dif(const double v1, const Vector& v2);
 
-ISOMODEL_API Vector maximum(const Vector& v1, const Vector& v2);
-ISOMODEL_API Vector maximum(const Vector& v1, double val);
-ISOMODEL_API double maximum(const Vector& v1);
+  ISOMODEL_API Vector maximum(const Vector& v1, const Vector& v2);
+  ISOMODEL_API Vector maximum(const Vector& v1, double val);
+  ISOMODEL_API double maximum(const Vector& v1);
 
-ISOMODEL_API Vector minimum(const Vector& v1, double val);
-ISOMODEL_API double minimum(const Vector& v1);
+  ISOMODEL_API Vector minimum(const Vector& v1, double val);
+  ISOMODEL_API double minimum(const Vector& v1);
 
-ISOMODEL_API Vector abs(const Vector& v1);
-ISOMODEL_API Vector pow(const Vector& v1, const double xp);
+  ISOMODEL_API Vector abs(const Vector& v1);
+  ISOMODEL_API Vector pow(const Vector& v1, const double xp);
 
   struct ISOMODEL_API ISOResults{    
       std::vector<EndUses> monthlyResults;
@@ -230,8 +230,7 @@ ISOMODEL_API Vector pow(const Vector& v1, const double xp);
     void setHeating(boost::shared_ptr<Heating> value){heating=value;}
     void setCooling(boost::shared_ptr<Cooling> value){cooling=value;}
     void setVentilation(boost::shared_ptr<Ventilation> value){ventilation=value;}
-    SimModel();
-    virtual ~SimModel();
+
     /*
      *  Runs the ISO Model cacluations for the given set of input parameters.
      *  returns ISOResults which is a vector of EndUses, one EndUses per month of the year

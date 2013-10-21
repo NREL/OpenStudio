@@ -4,14 +4,7 @@
 namespace openstudio {
 namespace isomodel {
 
-Location::Location(void)
-{
-}
-
-
-Location::~Location(void)
-{
-}
+// nothing to see here
 
 
 } // isomodel

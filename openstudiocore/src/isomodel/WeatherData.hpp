@@ -29,9 +29,6 @@ namespace isomodel {
 class ISOMODEL_API WeatherData
 {
 public:
-  WeatherData(void);
-  ~WeatherData(void);
-  
   /**
    * mean monthly Global Horizontal Radiation (W/m2)
    */
@@ -60,9 +57,10 @@ public:
    * mean monthly Global Horizontal Radiation for each of the 24 hours of the day (W/m2)
    */
   Matrix mhEgh(){return _mhEgh;}
-  void setMhEgh(Matrix val){_mhEgh = val;}
-  void setMsolar(Matrix val){_msolar = val;}
-  void setMhdbt(Matrix val){_mhdbt = val;}
+  void setMhEgh(const Matrix &val){_mhEgh = val;}
+  void setMsolar(const Matrix &val){_msolar = val;}
+  void setMhdbt(const Matrix &val){_mhdbt = val;}
+
 private:
   Matrix _msolar;
   Matrix _mhdbt;

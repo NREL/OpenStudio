@@ -24,8 +24,6 @@ namespace isomodel {
 class Population
   {
   public:
-    Population(void);
-    ~Population(void);
     double hoursEnd() const {return _hoursEnd;}	
     double hoursStart() const {return _hoursStart;}	
     double daysEnd() const {return _daysEnd;}	

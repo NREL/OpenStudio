@@ -26,8 +26,6 @@ namespace isomodel {
 class Structure
   {
   public:
-    Structure(void);
-    ~Structure(void);
     double floorArea() const {return _floorArea;}
     Vector wallArea() const {return _wallArea;}
     Vector windowArea() const {return _windowArea;}
@@ -43,15 +41,15 @@ class Structure
     double buildingHeight() const {return _buildingHeight;}
     double infiltrationRate() const {return _infiltrationRate;}
     void setFloorArea(double value) {_floorArea = value;}
-    void setWallArea(Vector value) {_wallArea = value;}
-    void setWindowArea(Vector value) {_windowArea = value;}
-    void setWallUniform(Vector value) {_wallUniform = value;}
-    void setWindowUniform(Vector value) {_windowUniform = value;}
-    void setWallThermalEmissivity(Vector value) {_wallThermalEmissivity = value;}
-    void setWallSolarAbsorbtion(Vector value) {_wallSolarAbsorbtion = value;}
+    void setWallArea(const Vector &value) {_wallArea = value;}
+    void setWindowArea(const Vector &value) {_windowArea = value;}
+    void setWallUniform(const Vector &value) {_wallUniform = value;}
+    void setWindowUniform(const Vector &value) {_windowUniform = value;}
+    void setWallThermalEmissivity(const Vector &value) {_wallThermalEmissivity = value;}
+    void setWallSolarAbsorbtion(const Vector &value) {_wallSolarAbsorbtion = value;}
     void setWindowShadingDevice(double value) {_windowShadingDevice = value;}
-    void setWindowNormalIncidenceSolarEnergyTransmittance(Vector value) {_windowNormalIncidenceSolarEnergyTransmittance = value;}
-    void setWindowShadingCorrectionFactor(Vector value) {_windowShadingCorrectionFactor = value;}
+    void setWindowNormalIncidenceSolarEnergyTransmittance(const Vector &value) {_windowNormalIncidenceSolarEnergyTransmittance = value;}
+    void setWindowShadingCorrectionFactor(const Vector &value) {_windowShadingCorrectionFactor = value;}
     void setInteriorHeatCapacity(double value) {_interiorHeatCapacity = value;}
     void setWallHeatCapacity(double value) {_wallHeatCapacity = value;}
     void setBuildingHeight(double value) {_buildingHeight = value;}

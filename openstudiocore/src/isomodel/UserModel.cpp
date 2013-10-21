@@ -23,14 +23,7 @@ using namespace std;
 namespace openstudio {
 namespace isomodel {
 
-  UserModel::UserModel()
-  {
-  }
-
-  UserModel::~UserModel()
-  {
-  }
-  
+ 
   SimModel UserModel::toSimModel() const
   {
     if(!_valid){
@@ -221,6 +214,7 @@ namespace isomodel {
     size_t next = 0;
     if(source.size()==0)
       return results;
+
     while ((next = source.find_first_of(delimiter, prev)) != std::string::npos)
     {
         if (keepEmpty || (next - prev != 0))
@@ -237,6 +231,7 @@ namespace isomodel {
 
     return results;
   }
+
   // trim from front
   static inline std::string &ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));

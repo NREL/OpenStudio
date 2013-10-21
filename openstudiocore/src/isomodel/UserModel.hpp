@@ -194,6 +194,7 @@ namespace isomodel {
     void parseLine(std::string line);
     void loadBuilding(std::string buildingFile);
     int weatherState(std::string header);
+
   public:
     /**
      * Loads the specified weather data from disk.
@@ -206,8 +207,7 @@ namespace isomodel {
      * Loads an ISO model from the specified .ISO file
      */
     void load(std::string buildingFile);
-    UserModel();
-    virtual ~UserModel();  
+
     /**
      * Generates a SimModel from the specified parameters of the 
      * UserModel

@@ -25,8 +25,6 @@ namespace isomodel {
 class Ventilation
   {
   public:
-    Ventilation(void);
-    ~Ventilation(void);
     double supplyRate() const {return _supplyRate;}
     double supplyDifference() const {return _supplyDifference;}
     double heatRecoveryEfficiency() const {return _heatRecoveryEfficiency;}

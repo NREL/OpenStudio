@@ -4,15 +4,7 @@
 namespace openstudio {
 namespace isomodel {
 
-
-Structure::Structure(void)
-{
-}
-
-
-Structure::~Structure(void)
-{
-}
+// nothing to see here
 
 } // isomodel
 } // openstudio

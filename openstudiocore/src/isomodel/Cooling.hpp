@@ -24,8 +24,6 @@ namespace isomodel {
   class Cooling
   {
   public:
-    Cooling(void);
-    ~Cooling(void);
     double temperatureSetPointOccupied() const  {return _temperatureSetPointOccupied;}
     double temperatureSetPointUnoccupied() const {return _temperatureSetPointUnoccupied;}
     double cop() const {return _cOP;}
@@ -38,6 +36,7 @@ namespace isomodel {
     void setPartialLoadValue(double value) {_partialLoadValue = value;}
     void setHvacLossFactor(double value) {_hvacLossFactor = value;}
     void setPumpControlReduction(double value) {_pumpControlReduction = value;}
+
   private:
     double _temperatureSetPointOccupied;
     double _temperatureSetPointUnoccupied;

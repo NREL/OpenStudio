@@ -4,15 +4,7 @@
 namespace openstudio {
 namespace isomodel {
 
-
-WeatherData::WeatherData(void)
-{
-}
-
-
-WeatherData::~WeatherData(void)
-{
-}
+// nothing to see here
 
 }
 }

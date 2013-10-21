@@ -17,8 +17,6 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 #include <isomodel/SimModel.hpp>
-//to run main
-#include <isomodel/UserModel.hpp>
 
 
 using namespace openstudio::isomodel;
@@ -27,59 +25,59 @@ using namespace openstudio;
 namespace openstudio {
 namespace isomodel {
 
+  //Utility Functions -- breaks when you attempt to move into the .hpp
+  void printVector(const char* vecName, Vector vec){
+    if(DEBUG_ISO_MODEL_SIMULATION)
+    {
+      std::cout << vecName << "("<< vec.size() <<") = [";
+      if(vec.size()>0) {    
+        std::cout << vec[0]; 
+        for(unsigned int i = 1;i<vec.size() ;i++){
+          std::cout << ", " << vec[i];  
+        }
+      }
+      std::cout << "]" << std::endl;
+    }
+  }
 
-
-//Utility Functions -- breaks when you attempt to move into the .hpp
-void printVector(const char* vecName, Vector vec){
-  if(DEBUG_ISO_MODEL_SIMULATION)
-  {
-    std::cout << vecName << "("<< vec.size() <<") = [";
-    if(vec.size()>0) {    
-      std::cout << vec[0]; 
-      for(unsigned int i = 1;i<vec.size() ;i++){
-        std::cout << ", " << vec[i];  
+  void printMatrix(const char* matName, Matrix mat){
+    if(DEBUG_ISO_MODEL_SIMULATION)
+    {
+      std::cout << matName << "("<< mat.size1() <<", " << mat.size2() <<  "): " << std::endl << "\t";
+      for(unsigned int j = 0;j< mat.size2(); j++){
+        std::cout << "," << j;
+      }
+      for(unsigned int i = 0;i<mat.size1() ;i++){
+        std::cout << "\t" << i;
+        for(unsigned int j = 0;j< mat.size2(); j++){
+          std::cout << "," << mat(i,j) ;
+        }    
+        std::cout << std::endl; 
       }
     }
-    std::cout << "]" << std::endl;
   }
-}
+  /**
+   * Initializes a vector to the specified value
+   */
+  void vectorInit(Vector& vec, double val){  
+    for(unsigned int i = 0;i<vec.size() ;i++){
+      vec[i] = val;
+    }
+  }
 
-void printMatrix(const char* matName, Matrix mat){
-  if(DEBUG_ISO_MODEL_SIMULATION)
-  {
-    std::cout << matName << "("<< mat.size1() <<", " << mat.size2() <<  "): " << std::endl << "\t";
-    for(unsigned int j = 0;j< mat.size2(); j++){
-      std::cout << "," << j;
-    }
-    for(unsigned int i = 0;i<mat.size1() ;i++){
-        std::cout << "\t" << i;
-      for(unsigned int j = 0;j< mat.size2(); j++){
-        std::cout << "," << mat(i,j) ;
-      }    
-      std::cout << std::endl; 
-    }
+  /**
+   * Initializes a vector to 0
+   */
+  void zero(Vector& vec){
+    vectorInit(vec, 0);
   }
-}
-/**
-* Initializes a vector to the specified value
-*/
-void vectorInit(Vector& vec, double val){  
-  for(unsigned int i = 0;i<vec.size() ;i++){
-    vec[i] = val;
+
+  /**
+   * Initializes a vector to 1
+   */
+  void one(Vector& vec){
+    vectorInit(vec, 1);
   }
-}
-/**
-* Initializes a vector to 0
-*/
-void zero(Vector& vec){
-  vectorInit(vec, 0);
-}
-/**
-* Initializes a vector to 1
-*/
-void one(Vector& vec){
-  vectorInit(vec, 1);
-}
 
   /// array-scalar product
   Vector mult(const double* v1, const double s1, int size)
@@ -241,29 +239,19 @@ void one(Vector& vec){
     return va;
   }
 
-//End Utility Functions
+  //End Utility Functions
+  const double daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  const double hoursInMonth[] = {744,	672,	744,	720,	744,	720,	744,	744,	720,	744,	720,	744};
+  const double megasecondsInMonth[] = {2.6784,	2.4192,	2.6784,	2.592,	2.6784,	2.592,	2.6784,	2.6784,	2.592,	2.6784,	2.592,	2.6784};
+  const double monthFractionOfYear[] = {0.0849315068493151,	0.0767123287671233,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151};
+  const double daysInYear = 365;
+  const double hoursInYear = 8760;
+  const double hoursInWeek = 168;
+  const double  EECALC_NUM_MONTHS = 12;
+  const double  EECALC_NUM_HOURS = 24;
+  const double  EECALC_WEEKDAY_START = 7;
+  const double kWh2MJ = 3.6f;
 
-
-
-const double daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-const double hoursInMonth[] = {744,	672,	744,	720,	744,	720,	744,	744,	720,	744,	720,	744};
-const double megasecondsInMonth[] = {2.6784,	2.4192,	2.6784,	2.592,	2.6784,	2.592,	2.6784,	2.6784,	2.592,	2.6784,	2.592,	2.6784};
-const double monthFractionOfYear[] = {0.0849315068493151,	0.0767123287671233,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151};
-const double daysInYear = 365;
-const double hoursInYear = 8760;
-const double hoursInWeek = 168;
-const double  EECALC_NUM_MONTHS = 12;
-const double  EECALC_NUM_HOURS = 24;
-const double  EECALC_WEEKDAY_START = 7;
-const double kWh2MJ = 3.6f;
-
-  SimModel::SimModel()
-  {
-  }
-
-  SimModel::~SimModel()
-  {
-  }
   //Solver functions
   void SimModel::scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
     Vector& weekdayUnoccupiedMegaseconds,
@@ -616,7 +604,7 @@ v_wall_alpha_sc =In.wall_solar_alpha; %wall solar absorption coefficient
     Vector v_win_SDF_frac = Vector(vsize);
     for(int i = 0;i<vsize;i++){
       v_win_ff[i] = 1.0 - n_win_ff;
-      v_win_SDF[i] = n_win_SDF_table[((int)structure->windowShadingDevice())-1];
+      v_win_SDF[i] = n_win_SDF_table[static_cast<int>(structure->windowShadingDevice())-1];
       v_win_SDF_frac[i] = 1.0;
     }
     Vector v_win_F_shgl = mult(v_win_SDF,v_win_SDF_frac);
@@ -945,7 +933,7 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
   {
   //BEM Type
     double T_adj = 0;
-    switch((int)building->buildingEnergyManagement()){
+    switch(static_cast<int>(building->buildingEnergyManagement())){
       case 1:
         T_adj = 0.0;
         break;

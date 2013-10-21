@@ -24,8 +24,6 @@ namespace isomodel {
 class Lighting
   {
   public:
-    Lighting(void);
-    ~Lighting(void);
     double powerDensityOccupied() const {return _powerDensityOccupied;}
     double powerDensityUnoccupied() const {return _powerDensityUnoccupied;}
     double dimmingFraction() const {return _dimmingFraction;}

@@ -21,18 +21,20 @@
 
 namespace openstudio {
 namespace isomodel {
-#define TIMESLICES 8760
 
-class TimeFrame
-{
-protected:
-	
-public:
-	int monthLength(int month);
-	int YTD[TIMESLICES], Hour[TIMESLICES], Day[TIMESLICES], Month[TIMESLICES];
-	TimeFrame(void);
-	~TimeFrame(void);
-};
+  class TimeFrame
+  {
+    protected:
+
+    public:
+      static const int TIMESLICES=8760;
+
+      TimeFrame();
+
+      int monthLength(int month);
+      int YTD[TIMESLICES], Hour[TIMESLICES], Day[TIMESLICES], Month[TIMESLICES];
+
+  };
 }
 }
 #endif

@@ -4,14 +4,7 @@
 namespace openstudio {
 namespace isomodel {
 
-Population::Population(void)
-{
-}
-
-
-Population::~Population(void)
-{
-}
+// nothing to see here
 
 
 } // isomodel
