@@ -33,10 +33,11 @@ namespace isomodel {
   
   SimModel UserModel::toSimModel() const
   {
-    SimModel sim = SimModel();
     if(!_valid){
-      return *((SimModel*)NULL);
+      throw std::runtime_error("UserModel is not valid, cannot create SimModel");
     }
+
+    SimModel sim;
 
     boost::shared_ptr<Population> pop(new Population);
     pop->setDaysStart(_buildingOccupancyFrom);

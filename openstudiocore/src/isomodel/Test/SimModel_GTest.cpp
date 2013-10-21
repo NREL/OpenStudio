@@ -157,7 +157,8 @@ TEST_F(ISOModelFixture, SimModel)
 {
   //testGenericFunctions();
   UserModel userModel;
-  userModel.load("C:\\Workspaces\\OpenStudio\\git\\OpenStudio\\openstudiocore\\resources\\isomodel\\exampleModel.ISO");
+  userModel.load(openstudio::toString(resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO")));
+  ASSERT_TRUE(userModel.valid());
   SimModel simModel = userModel.toSimModel();    
   ISOResults results = simModel.simulate();
 
