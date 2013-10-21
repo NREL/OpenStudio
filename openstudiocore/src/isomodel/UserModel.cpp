@@ -550,7 +550,7 @@ namespace isomodel {
       parseStructure(attributeName,attributeValue);//avoid max nested ifs.  Might be better to change to a map eventually
     }    
     else {
-      cout << "Unknown Attribute: "<< attributeName << " = " << attributeValue <<endl;
+      LOG(Error, "Unknown Attribute: "<< attributeName << " = " << attributeValue);
     }    
   }
   void UserModel::loadBuilding(std::string buildingFile){
@@ -566,7 +566,7 @@ namespace isomodel {
       inputFile.close();
     }
     else {
-      cout << "Unable to open file"; 
+      LOG(Error, "Unable to open file" << openstudio::toString(buildingFile));
     }
   }
     int UserModel::weatherState(std::string header){
@@ -612,8 +612,8 @@ namespace isomodel {
     }
     return result;
   }
+
   boost::shared_ptr<WeatherData> UserModel::loadWeather(){
-    boost::shared_ptr<WeatherData> wdata(new WeatherData);
     std::vector<std::string> linesplit;
     std::string weatherFilename;
     //see if weather file path is absolute path
@@ -627,9 +627,9 @@ namespace isomodel {
       weatherFilename = resolveFilename(this->dataFile,_weatherFilePath);
       if ( !boost::filesystem::exists( weatherFilename ) )
       {
-        std::cout << "Weather File Not Found: " << _weatherFilePath << std::endl;
+        LOG(Error, "Weather File Not Found: " << openstudio::toString(_weatherFilePath));
         _valid = false;
-        return wdata;//using shared_ptr doesn't compile with any attempt at returning null
+        return boost::shared_ptr<WeatherData>();
       }
     }
     string line;
@@ -688,6 +688,8 @@ namespace isomodel {
         row++;
       }
     }
+
+    boost::shared_ptr<WeatherData> wdata(new WeatherData);
     wdata->setMdbt(_mdbt);
     wdata->setMEgh(_mEgh);
     wdata->setMhdbt(_mhdbt);
@@ -702,7 +704,7 @@ namespace isomodel {
     _valid = true;
     if ( !boost::filesystem::exists( buildingFile ) )
     {
-      std::cout << "ISO Model File Not Found: " << buildingFile << std::endl;
+      LOG(Error, "ISO Model File Not Found: " << openstudio::toString(buildingFile));
       _valid = false;
       return;
     }

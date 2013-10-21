@@ -43,9 +43,6 @@ namespace openstudio {
 
 namespace isomodel { 
 
-  //flag to turn on debug printing of many intermediate variables to stdout
-#define DEBUG_ISO_MODEL_SIMULATION false
-
   ISOMODEL_API Vector mult(const double* v1, const double s1, int size);
   ISOMODEL_API Vector mult(const Vector& v1, const double s1);
   ISOMODEL_API Vector mult(const Vector& v1, const double* v2);
@@ -90,6 +87,7 @@ namespace isomodel {
      */
     ISOResults simulate() const;
     REGISTER_LOGGER("openstudio.isomodel.SimModel");
+
   private:      
     boost::shared_ptr<Population> pop;
     boost::shared_ptr<Location> location;
@@ -237,6 +235,9 @@ namespace isomodel {
             const Vector& v_Qcl_gas_tot,
             const Vector& v_Q_dhw_gas,
             double frac_hrs_wk_day) const;
+
+    static void printVector(const char* vecName, const Vector &vec);
+    static void printMatrix(const char* matName, const Matrix &mat);
   };
 } // isomodel
 } // openstudio

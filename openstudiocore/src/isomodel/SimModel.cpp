@@ -18,6 +18,10 @@
  **********************************************************************/
 #include <isomodel/SimModel.hpp>
 
+#if _DEBUG || (__GNUC__ && !NDEBUG)
+#define DEBUG_ISO_MODEL_SIMULATION
+#endif
+
 
 using namespace openstudio::isomodel;
 using namespace openstudio;
@@ -25,36 +29,41 @@ using namespace openstudio;
 namespace openstudio {
 namespace isomodel {
 
-  //Utility Functions -- breaks when you attempt to move into the .hpp
-  void printVector(const char* vecName, Vector vec){
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << vecName << "("<< vec.size() <<") = [";
-      if(vec.size()>0) {    
-        std::cout << vec[0]; 
-        for(unsigned int i = 1;i<vec.size() ;i++){
-          std::cout << ", " << vec[i];  
-        }
+  void SimModel::printVector(const char* vecName, const Vector &vec){
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    std::stringstream ss;
+
+    ss << vecName << "("<< vec.size() <<") = [";
+    if(vec.size()>0) {    
+      ss << vec[0]; 
+      for(unsigned int i = 1;i<vec.size() ;i++){
+        ss << ", " << vec[i];  
       }
-      std::cout << "]" << std::endl;
     }
+    ss << "]";
+    LOG(Trace, ss.str());
+#endif
   }
 
-  void printMatrix(const char* matName, Matrix mat){
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << matName << "("<< mat.size1() <<", " << mat.size2() <<  "): " << std::endl << "\t";
-      for(unsigned int j = 0;j< mat.size2(); j++){
-        std::cout << "," << j;
-      }
-      for(unsigned int i = 0;i<mat.size1() ;i++){
-        std::cout << "\t" << i;
-        for(unsigned int j = 0;j< mat.size2(); j++){
-          std::cout << "," << mat(i,j) ;
-        }    
-        std::cout << std::endl; 
-      }
+  void SimModel::printMatrix(const char* matName, const Matrix &mat){
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    std::stringstream ss;
+
+    ss << matName << "("<< mat.size1() <<", " << mat.size2() <<  "): " << "\t";
+    for(unsigned int j = 0;j< mat.size2(); j++){
+      ss << "," << j;
     }
+    for(unsigned int i = 0;i<mat.size1() ;i++){
+      ss << "\t" << i;
+      for(unsigned int j = 0;j< mat.size2(); j++){
+        ss << "," << mat(i,j);
+      }    
+      ss << std::endl;
+    }
+
+    LOG(Trace, ss.str());
+#endif
+
   }
   /**
    * Initializes a vector to the specified value
@@ -1582,11 +1591,11 @@ Qneed_ht_yr = sum(v_Qneed_ht);
     for(size_t i = 0;i<v_eta_g_CL.size();i++){
       double numer = (1.0-std::pow(v_gamma_H_cl[i],a_H));
       //double denom = (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0)));
-      if(DEBUG_ISO_MODEL_SIMULATION)
-      {
-        std::cout << numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << a_H <<std::endl;
-        std::cout << numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << (a_H+1.0) <<std::endl;
-      }
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+      LOG(Trace, numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << a_H);
+      LOG(Trace, numer << " = 1.0 - " << v_gamma_H_cl[i] << "^" << (a_H+1.0));
+#endif
+
       v_eta_g_CL[i] = v_gamma_H_cl(i) > 0.0 ? 
                         (1.0-std::pow(v_gamma_H_cl[i],a_H)) / (1.0-std::pow(v_gamma_H_cl[i],(a_H+1.0))) : 
                         1.0;
@@ -1647,12 +1656,12 @@ n_rhoC_a = 1.22521.*0.001012; % rho*Cp for air (MJ/m3/K)
     printVector("v_Vair_tot",v_Vair_tot);
     Vector fanPower = mult(v_Vair_tot,ventilation->fanPower()*ventilation->fanControlFactor());
     printVector("fanPower",fanPower);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "ventilation->fanPower() = " << ventilation->fanPower() << std::endl;
-      std::cout << "ventilation->fanControlFactor() = " << ventilation->fanControlFactor() << std::endl;
-      std::cout << "structure->floorArea() = " << structure->floorArea() << std::endl;
-    }
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "ventilation->fanPower() = " << ventilation->fanPower());
+    LOG(Trace, "ventilation->fanControlFactor() = " << ventilation->fanControlFactor());
+    LOG(Trace, "structure->floorArea() = " << structure->floorArea());
+#endif
 
     v_Qfan_tot = div(div(fanPower,structure->floorArea()),3600);//% compute fan energy in kWh/m2
 
@@ -1837,91 +1846,93 @@ v_Qcl_gas_tot = v_Qcl_DC_abs; % total gas cooliing energy
   ) const
   {
 
-  /*
-  %% Pump Energy
- 
-%%% NOTE original GIT spreadsheet had this hardwired
-%Q_pumps_yr = 8;  %  set pump energy density 8 MJ/m2/yr
-%  
-%
-%  new GIT model following EPA NR 2007 6.9.7.1 and 6.9.7.2
-% European Performance Assessment - Non Residential
- 
- */
- double n_E_pumps = 0.25;
- Vector v_Q_pumps = mult(megasecondsInMonth, n_E_pumps, 12);
- double Q_pumps_yr = sum(v_Q_pumps);
+    /*
+       %% Pump Energy
 
- Vector v_frac_ht_mode = div(v_Qneed_ht,sum(v_Qneed_ht, v_Qneed_cl));
- double frac_ht_total=sum(v_frac_ht_mode);
- double Q_pumps_ht = Q_pumps_yr * heating->pumpControlReduction() * structure->floorArea(); 
- Vector v_Q_pumps_ht = div(mult(v_frac_ht_mode, Q_pumps_ht), frac_ht_total);
- /*
- n_E_pumps = 0.25;  % specific power of systems pumps + control systems in W/m2
- v_Q_pumps=n_E_pumps*v_Msec_ina_mo;  % energy per month for pumps + control if running continuously in MJ/m2/mo
- 
-Q_pumps_yr=sum(v_Q_pumps);% total annual energy for pumps+ctrl if running continuously MJ/m2/yr
+       %%% NOTE original GIT spreadsheet had this hardwired
+       %Q_pumps_yr = 8;  %  set pump energy density 8 MJ/m2/yr
+       %  
+       %
+       %  new GIT model following EPA NR 2007 6.9.7.1 and 6.9.7.2
+       % European Performance Assessment - Non Residential
+
+*/
+    double n_E_pumps = 0.25;
+    Vector v_Q_pumps = mult(megasecondsInMonth, n_E_pumps, 12);
+    double Q_pumps_yr = sum(v_Q_pumps);
+
+    Vector v_frac_ht_mode = div(v_Qneed_ht,sum(v_Qneed_ht, v_Qneed_cl));
+    double frac_ht_total=sum(v_frac_ht_mode);
+    double Q_pumps_ht = Q_pumps_yr * heating->pumpControlReduction() * structure->floorArea(); 
+    Vector v_Q_pumps_ht = div(mult(v_frac_ht_mode, Q_pumps_ht), frac_ht_total);
+    /*
+       n_E_pumps = 0.25;  % specific power of systems pumps + control systems in W/m2
+       v_Q_pumps=n_E_pumps*v_Msec_ina_mo;  % energy per month for pumps + control if running continuously in MJ/m2/mo
+
+       Q_pumps_yr=sum(v_Q_pumps);% total annual energy for pumps+ctrl if running continuously MJ/m2/yr
 
 
- v_frac_ht_mode = v_Qneed_ht./(v_Qneed_ht+v_Qneed_cl);  %fraction of time system is in in heating mode each month
- frac_ht_total=sum(v_frac_ht_mode);  % total heating pump energy fraction
- Q_pumps_ht=Q_pumps_yr*In.pump_heat_ctrl_factor*In.cond_flr_area; % total heating pump energy;
- v_Q_pumps_ht = Q_pumps_ht*v_frac_ht_mode/frac_ht_total;  % break down total according to fractional operation and monthly fraction
- 
-%v_frac_pump_ht = v_Qneed_ht./(v_Qneed_ht+v_Qneed_cl);  %heating pump operation fraction for each month.
-%v_Q_pump_mo=Q_pumps_yr*In.pump_heat_ctrl_factor*In.cond_flr_area.*v_frac_ht_mode;
- 
- */
- Vector v_frac_cl_mode = div(v_Qneed_cl, sum(v_Qneed_ht, v_Qneed_cl));
- double frac_cl_total = sum(v_frac_cl_mode);
- double Q_pumps_cl = Q_pumps_yr * cooling->pumpControlReduction() * structure->floorArea();
- Vector v_Q_pumps_cl = div(mult(v_frac_cl_mode, Q_pumps_cl), frac_cl_total);
+       v_frac_ht_mode = v_Qneed_ht./(v_Qneed_ht+v_Qneed_cl);  %fraction of time system is in in heating mode each month
+       frac_ht_total=sum(v_frac_ht_mode);  % total heating pump energy fraction
+       Q_pumps_ht=Q_pumps_yr*In.pump_heat_ctrl_factor*In.cond_flr_area; % total heating pump energy;
+       v_Q_pumps_ht = Q_pumps_ht*v_frac_ht_mode/frac_ht_total;  % break down total according to fractional operation and monthly fraction
 
- /*
-v_frac_cl_mode = v_Qneed_cl./(v_Qneed_ht+v_Qneed_cl);% fraction of time system is in cooling mode
-frac_cl_total=sum(v_frac_cl_mode); % total cooling pump energy fraction
-Q_pumps_cl=Q_pumps_yr*In.pump_cool_ctrl_factor*In.cond_flr_area; % total cooling pump energy fraction
-v_Q_pumps_cl = Q_pumps_cl*v_frac_cl_mode/frac_cl_total; % break down total into monthly fractional parts
- 
-%v_frac_pump_cl = v_Qneed_cl./(v_Qneed_ht+v_Qneed_cl);% cooling pump operation factor
+       %v_frac_pump_ht = v_Qneed_ht./(v_Qneed_ht+v_Qneed_cl);  %heating pump operation fraction for each month.
+       %v_Q_pump_mo=Q_pumps_yr*In.pump_heat_ctrl_factor*In.cond_flr_area.*v_frac_ht_mode;
 
- */
- Vector v_frac_tot = div(sum(v_Qneed_ht, v_Qneed_cl), Qneed_ht_yr + Qneed_cl_yr);
- double frac_total = sum(v_frac_tot);
- double Q_pumps_tot = Q_pumps_ht + Q_pumps_cl;
- if(Q_pumps_ht==0 || Q_pumps_cl==0)
- {
-  v_Q_pump_tot = sum(v_Q_pumps_ht, v_Q_pumps_cl);
- }
- else
- {
-  v_Q_pump_tot = div(mult(v_frac_tot, Q_pumps_tot), frac_total);
- }
- /*
- v_frac_tot = (v_Qneed_ht+v_Qneed_cl)/(Qneed_ht_yr+Qneed_cl_yr); % total pump operational factor
- frac_total = sum(v_frac_tot);
- Q_pumps_tot = Q_pumps_ht + Q_pumps_cl;
- 
- if (Q_pumps_ht==0 || Q_pumps_cl==0)
-    v_Q_pump_tot = v_Q_pumps_ht+v_Q_pumps_cl;
- else
-     v_Q_pump_tot = Q_pumps_tot*v_frac_tot/frac_total;
- end
+*/
+    Vector v_frac_cl_mode = div(v_Qneed_cl, sum(v_Qneed_ht, v_Qneed_cl));
+    double frac_cl_total = sum(v_frac_cl_mode);
+    double Q_pumps_cl = Q_pumps_yr * cooling->pumpControlReduction() * structure->floorArea();
+    Vector v_Q_pumps_cl = div(mult(v_frac_cl_mode, Q_pumps_cl), frac_cl_total);
 
- %Q_pump_tot_yr=sum(v_Q_pump_tot);
+    /*
+       v_frac_cl_mode = v_Qneed_cl./(v_Qneed_ht+v_Qneed_cl);% fraction of time system is in cooling mode
+       frac_cl_total=sum(v_frac_cl_mode); % total cooling pump energy fraction
+       Q_pumps_cl=Q_pumps_yr*In.pump_cool_ctrl_factor*In.cond_flr_area; % total cooling pump energy fraction
+       v_Q_pumps_cl = Q_pumps_cl*v_frac_cl_mode/frac_cl_total; % break down total into monthly fractional parts
 
-  */
+       %v_frac_pump_cl = v_Qneed_cl./(v_Qneed_ht+v_Qneed_cl);% cooling pump operation factor
+
+*/
+    Vector v_frac_tot = div(sum(v_Qneed_ht, v_Qneed_cl), Qneed_ht_yr + Qneed_cl_yr);
+    double frac_total = sum(v_frac_tot);
+    double Q_pumps_tot = Q_pumps_ht + Q_pumps_cl;
+    if(Q_pumps_ht==0 || Q_pumps_cl==0)
+    {
+      v_Q_pump_tot = sum(v_Q_pumps_ht, v_Q_pumps_cl);
+    }
+    else
+    {
+      v_Q_pump_tot = div(mult(v_frac_tot, Q_pumps_tot), frac_total);
+    }
+    /*
+       v_frac_tot = (v_Qneed_ht+v_Qneed_cl)/(Qneed_ht_yr+Qneed_cl_yr); % total pump operational factor
+       frac_total = sum(v_frac_tot);
+       Q_pumps_tot = Q_pumps_ht + Q_pumps_cl;
+
+       if (Q_pumps_ht==0 || Q_pumps_cl==0)
+       v_Q_pump_tot = v_Q_pumps_ht+v_Q_pumps_cl;
+       else
+       v_Q_pump_tot = Q_pumps_tot*v_frac_tot/frac_total;
+       end
+
+       %Q_pump_tot_yr=sum(v_Q_pump_tot);
+
+*/
 
   }
+
   void SimModel::energyGeneration() const
   {
-  /*
-   %% Energy Generation
- 
-%%% NOT INCLUDED YET
-  */
+    /*
+       %% Energy Generation
+
+       %%% NOT INCLUDED YET
+       */
 
   }
+
   void SimModel::heatedWater(Vector& v_Q_dhw_elec, Vector& v_Q_dhw_gas) const
   {
     double n_dhw_tset = 60;// % water temperature set point (C)
@@ -2045,8 +2056,11 @@ end
   
     //openstudio::isomodel::loadDefaults(simModel);
   
-    if(DEBUG_ISO_MODEL_SIMULATION)
-      std::cout << std::endl << "scheduleAndOccupancy: " << std::endl;
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "scheduleAndOccupancy: ");
+#endif
+
+
     scheduleAndOccupancy(weekdayOccupiedMegaseconds,
           weekdayUnoccupiedMegaseconds,
           weekendOccupiedMegaseconds,
@@ -2060,24 +2074,24 @@ end
           frac_hrs_wke_tot);
 
 
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "frac_hrs_wk_day: " << frac_hrs_wk_day <<std::endl;
-      std::cout << "hoursUnoccupiedPerDay: " << hoursUnoccupiedPerDay <<std::endl;
-      std::cout << "hoursOccupiedPerDay: " << hoursOccupiedPerDay <<std::endl;
-      std::cout << "frac_hrs_wk_nt: " << frac_hrs_wk_nt <<std::endl;
-      std::cout << "frac_hrs_wke_tot: " << frac_hrs_wke_tot <<std::endl;
-  
-      printVector("weekdayOccupiedMegaseconds",weekdayOccupiedMegaseconds);
-      printVector("weekdayUnoccupiedMegaseconds",weekdayUnoccupiedMegaseconds);
-      printVector("weekendOccupiedMegaseconds",weekendOccupiedMegaseconds);
-      printVector("weekendUnoccupiedMegaseconds",weekendUnoccupiedMegaseconds);
-      printVector("clockHourOccupied",clockHourOccupied);
-      printVector("clockHourUnoccupied",clockHourUnoccupied);
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "frac_hrs_wk_day: " << frac_hrs_wk_day);
+    LOG(Trace, "hoursUnoccupiedPerDay: " << hoursUnoccupiedPerDay);
+    LOG(Trace, "hoursOccupiedPerDay: " << hoursOccupiedPerDay);
+    LOG(Trace, "frac_hrs_wk_nt: " << frac_hrs_wk_nt);
+    LOG(Trace, "frac_hrs_wke_tot: " << frac_hrs_wke_tot);
 
-  
-      std::cout << std::endl << "solarRadiationBreakdown: " << std::endl;
-    }
+    printVector("weekdayOccupiedMegaseconds",weekdayOccupiedMegaseconds);
+    printVector("weekdayUnoccupiedMegaseconds",weekdayUnoccupiedMegaseconds);
+    printVector("weekendOccupiedMegaseconds",weekendOccupiedMegaseconds);
+    printVector("weekendUnoccupiedMegaseconds",weekendUnoccupiedMegaseconds);
+    printVector("clockHourOccupied",clockHourOccupied);
+    printVector("clockHourUnoccupied",clockHourUnoccupied);
+
+
+    LOG(Trace, "solarRadiationBreakdown: ");
+#endif
+
     solarRadiationBreakdown(weekdayOccupiedMegaseconds,
           weekdayUnoccupiedMegaseconds,
           weekendOccupiedMegaseconds,
@@ -2090,60 +2104,60 @@ end
           frac_Pgh_wke_nt,
           v_Tdbt_nt);
 
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_hrs_sun_down_mo",v_hrs_sun_down_mo);
-      printVector("frac_Pgh_wk_nt",frac_Pgh_wk_nt);
-      printVector("frac_Pgh_wke_day",frac_Pgh_wke_day);
-      printVector("frac_Pgh_wke_nt",frac_Pgh_wke_nt);
-      printVector("v_Tdbt_nt",v_Tdbt_nt);
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_hrs_sun_down_mo",v_hrs_sun_down_mo);
+    printVector("frac_Pgh_wk_nt",frac_Pgh_wk_nt);
+    printVector("frac_Pgh_wke_day",frac_Pgh_wke_day);
+    printVector("frac_Pgh_wke_nt",frac_Pgh_wke_nt);
+    printVector("v_Tdbt_nt",v_Tdbt_nt);
 
-        
-      std::cout << std::endl << "lightingEnergyUse: " << std::endl;
-    }
+
+    LOG(Trace, "lightingEnergyUse: ");
+#endif
+
     lightingEnergyUse(v_hrs_sun_down_mo, 
           Q_illum_occ, Q_illum_unocc, 
           Q_illum_tot_yr, 
           v_Q_illum_tot, 
           v_Q_illum_ext_tot);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "Q_illum_occ: " << Q_illum_occ <<std::endl;
-      std::cout << "Q_illum_unocc: " << Q_illum_unocc <<std::endl;
-      std::cout << "Q_illum_unocc: " << Q_illum_unocc <<std::endl;
-      printVector("v_Q_illum_tot",v_Q_illum_tot);
-      printVector("v_Q_illum_ext_tot",v_Q_illum_ext_tot);
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "Q_illum_occ: " << Q_illum_occ);
+    LOG(Trace, "Q_illum_unocc: " << Q_illum_unocc);
+    LOG(Trace, "Q_illum_unocc: " << Q_illum_unocc);
+    printVector("v_Q_illum_tot",v_Q_illum_tot);
+    printVector("v_Q_illum_ext_tot",v_Q_illum_ext_tot);
 
 
-      std::cout << std::endl << "envelopCalculations: " << std::endl;/*
-      v_wall_A = structure->wallArea();
-        v_win_A = structure->windowArea();
-        v_wall_U = structure->wallUniform();
-        Vector v_win_U = structure->windowUniform();*/
-      printVector("structure->wallArea()",structure->wallArea());
-      printVector("structure->windowArea()",structure->windowArea());
-      printVector("structure->wallUniform()",structure->wallUniform());
-      printVector("structure->windowUniform()",structure->windowUniform());
-    }
+    LOG(Trace, "envelopCalculations: ");/*
+                                                                      v_wall_A = structure->wallArea();
+                                                                      v_win_A = structure->windowArea();
+                                                                      v_wall_U = structure->wallUniform();
+                                                                      Vector v_win_U = structure->windowUniform();*/
+    printVector("structure->wallArea()",structure->wallArea());
+    printVector("structure->windowArea()",structure->windowArea());
+    printVector("structure->wallUniform()",structure->wallUniform());
+    printVector("structure->windowUniform()",structure->windowUniform());
+#endif
+
     envelopCalculations(v_win_A,
           v_wall_emiss,
           v_wall_alpha_sc,
           v_wall_U,
           v_wall_A,
           H_tr);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "H_tr: " << H_tr <<std::endl;
-      printVector("v_win_A",v_win_A);
-      printVector("v_wall_emiss",v_wall_emiss);
-      printVector("v_wall_alpha_sc",v_wall_alpha_sc);
-      printVector("v_wall_U",v_wall_U);
-      printVector("v_wall_A",v_wall_A);
 
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "H_tr: " << H_tr);
+    printVector("v_win_A",v_win_A);
+    printVector("v_wall_emiss",v_wall_emiss);
+    printVector("v_wall_alpha_sc",v_wall_alpha_sc);
+    printVector("v_wall_U",v_wall_U);
+    printVector("v_wall_A",v_wall_A);
 
+    LOG(Trace, "windowSolarGain: ");
+#endif
 
-      std::cout << std::endl << "windowSolarGain: " << std::endl;
-    }
     windowSolarGain(v_win_A, 
           v_wall_emiss, 
           v_wall_alpha_sc,
@@ -2154,15 +2168,15 @@ end
           v_wall_R_sc,
           v_win_A_sol);
           
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_wall_A_sol",v_wall_A_sol);
-      printVector("v_win_hr",v_win_hr);
-      printVector("v_wall_R_sc",v_wall_R_sc);
-      printVector("v_win_A_sol",v_win_A_sol);
-        
-      std::cout << std::endl << "solarHeatGain: " << std::endl;
-    }
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_wall_A_sol",v_wall_A_sol);
+    printVector("v_win_hr",v_win_hr);
+    printVector("v_wall_R_sc",v_wall_R_sc);
+    printVector("v_win_A_sol",v_win_A_sol);
+
+    LOG(Trace, "solarHeatGain: ");
+#endif
+
     solarHeatGain(v_win_A_sol,
           v_wall_R_sc,
           v_wall_U,
@@ -2171,13 +2185,12 @@ end
           v_wall_A_sol,
           v_E_sol);
           
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_E_sol",v_E_sol);
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_E_sol",v_E_sol);
 
-        
-      std::cout << std::endl << "heatGainsAndLosses: " << std::endl;
-    }
+    LOG(Trace, "heatGainsAndLosses: ");
+#endif
+
     heatGainsAndLosses(frac_hrs_wk_day, 
           Q_illum_occ, 
           Q_illum_unocc, 
@@ -2188,24 +2201,27 @@ end
           phi_int_wke_nt, 
           phi_int_wke_day,
           phi_int_wk_nt);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "phi_int_avg: " << phi_int_avg <<std::endl;
-      std::cout << "phi_plug_avg: " << phi_plug_avg <<std::endl;
-      std::cout << "phi_illum_avg: " << phi_illum_avg <<std::endl;
-      std::cout << "phi_int_wke_nt: " << phi_int_wke_nt <<std::endl;
-      std::cout << "phi_int_wke_day: " << phi_int_wke_day <<std::endl;
-      std::cout << "phi_int_wk_nt: " << phi_int_wk_nt <<std::endl;
-        
-      std::cout << std::endl << "internalHeatGain: " << std::endl;
-    }
-    internalHeatGain(phi_int_avg, phi_plug_avg, phi_illum_avg, phi_I_tot);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "phi_I_tot: " << phi_I_tot <<std::endl;
 
-      std::cout << std::endl << "unoccupiedHeatGain: " << std::endl;
-    }
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "phi_int_avg: " << phi_int_avg);
+    LOG(Trace, "phi_plug_avg: " << phi_plug_avg);
+    LOG(Trace, "phi_illum_avg: " << phi_illum_avg);
+    LOG(Trace, "phi_int_wke_nt: " << phi_int_wke_nt);
+    LOG(Trace, "phi_int_wke_day: " << phi_int_wke_day);
+    LOG(Trace, "phi_int_wk_nt: " << phi_int_wk_nt);
+
+    LOG(Trace, "internalHeatGain: ");
+#endif
+
+    internalHeatGain(phi_int_avg, phi_plug_avg, phi_illum_avg, phi_I_tot);
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "phi_I_tot: " << phi_I_tot);
+
+    LOG(Trace, "unoccupiedHeatGain: ");
+#endif
+
+
     unoccupiedHeatGain(phi_int_wk_nt, 
           phi_int_wke_day, 
           phi_int_wke_nt,
@@ -2219,15 +2235,14 @@ end
           v_P_tot_wke_day, 
           v_P_tot_wk_nt, 
           v_P_tot_wke_nt);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_P_tot_wke_day",v_P_tot_wke_day);
-      printVector("v_P_tot_wk_nt",v_P_tot_wk_nt);
-      printVector("v_P_tot_wke_nt",v_P_tot_wke_nt);
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_P_tot_wke_day",v_P_tot_wke_day);
+    printVector("v_P_tot_wk_nt",v_P_tot_wk_nt);
+    printVector("v_P_tot_wke_nt",v_P_tot_wke_nt);
 
-        
-      std::cout << std::endl << "interiorTemp: " << std::endl;
-    }
+    LOG(Trace, "interiorTemp: ");
+#endif
+
     interiorTemp(v_wall_A, 
           v_P_tot_wke_day,
           v_P_tot_wk_nt,
@@ -2242,27 +2257,29 @@ end
           v_Th_avg,
           v_Tc_avg,
           tau);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "tau: " << tau <<std::endl;
-      printVector("v_Th_avg",v_Th_avg);
-      printVector("v_Tc_avg",v_Tc_avg);
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "tau: " << tau);
+    printVector("v_Th_avg",v_Th_avg);
+    printVector("v_Tc_avg",v_Tc_avg);
 
 
-      std::cout << std::endl << "ventilationCalc: " << std::endl;
-    }
+    LOG(Trace, "ventilationCalc: ");
+#endif
+
     ventilationCalc(v_Th_avg,
           v_Tc_avg,
           frac_hrs_wk_day,
           v_Hve_ht,
           v_Hve_cl);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_Hve_ht",v_Hve_ht);
-      printVector("v_Hve_cl",v_Hve_cl);
-        
-      std::cout << std::endl << "heatingAndCooling: " << std::endl;
-    }
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_Hve_ht",v_Hve_ht);
+    printVector("v_Hve_cl",v_Hve_cl);
+
+    LOG(Trace, "heatingAndCooling: ");
+#endif
+
     heatingAndCooling(v_E_sol,
           v_Th_avg,
           v_Hve_ht,
@@ -2277,14 +2294,15 @@ end
           v_Qneed_cl,
           Qneed_ht_yr, 
           Qneed_cl_yr);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << "Qneed_ht_yr: " << Qneed_ht_yr <<std::endl;
-      std::cout << "Qneed_cl_yr: " << Qneed_cl_yr <<std::endl;
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+      LOG(Trace, "Qneed_ht_yr: " << Qneed_ht_yr);
+      LOG(Trace, "Qneed_cl_yr: " << Qneed_cl_yr);
       printVector("v_Qfan_tot",v_Qfan_tot);
         
-      std::cout << std::endl << "hvac: " << std::endl;
-    }
+      LOG(Trace, "hvac: ");
+#endif
+
     hvac(v_Qneed_ht,
           v_Qneed_cl,
           Qneed_ht_yr, 
@@ -2293,37 +2311,40 @@ end
           v_Qgas_ht,
           v_Qcl_elec_tot,
           v_Qcl_gas_tot);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_Qelec_ht",v_Qelec_ht);
-      printVector("v_Qgas_ht",v_Qgas_ht);
-      printVector("v_Qcl_elec_tot",v_Qcl_elec_tot);
-      printVector("v_Qcl_gas_tot",v_Qcl_gas_tot);
 
-      std::cout << std::endl << "pump: " << std::endl;
-    }
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_Qelec_ht",v_Qelec_ht);
+    printVector("v_Qgas_ht",v_Qgas_ht);
+    printVector("v_Qcl_elec_tot",v_Qcl_elec_tot);
+    printVector("v_Qcl_gas_tot",v_Qcl_gas_tot);
+
+    LOG(Trace, "pump: ");
+#endif
+
     pump(v_Qneed_ht,
           v_Qneed_cl,
           Qneed_ht_yr, 
           Qneed_cl_yr,
           v_Q_pump_tot);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_Q_pump_tot",v_Q_pump_tot);
-        
-      std::cout << std::endl << "energyGeneration: " << std::endl;
-    }
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_Q_pump_tot",v_Q_pump_tot);
+
+    LOG(Trace, "energyGeneration: ");
+#endif
+
     energyGeneration();
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      std::cout << std::endl << "heatedWater: " << std::endl;
-    }
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "heatedWater: ");
+#endif
+
     heatedWater(v_Q_dhw_elec, v_Q_dhw_gas);
-    if(DEBUG_ISO_MODEL_SIMULATION)
-    {
-      printVector("v_Q_dhw_elec",v_Q_dhw_elec);
-      printVector("v_Q_dhw_gas",v_Q_dhw_gas);
-    }
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_Q_dhw_elec",v_Q_dhw_elec);
+    printVector("v_Q_dhw_gas",v_Q_dhw_gas);
+#endif
 
     return outputGeneration(v_Qelec_ht,
             v_Qcl_elec_tot,
