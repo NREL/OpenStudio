@@ -33,6 +33,29 @@ class EpwData;
 
 class SolarRadiation
 {
+  public:
+    static const double PI = 3.141592653589;//3.1415926535897932384626433832795028841971693993751058209 
+    static const int NUM_SURFACES = 8;
+    static const int MONTHS = 12;
+    static const int HOURS = 24;
+
+    void Calculate();
+
+    SolarRadiation(TimeFrame* frame, EpwData* wdata, double tilt=PI);
+    ~SolarRadiation(void);
+    //outputs
+    std::vector<std::vector<double> > eglobe(){return m_eglobe;}//total solar radiation from direct beam, ground reflect and diffuse
+    //averages
+    std::vector<double> monthlyDryBulbTemp(){return m_monthlyDryBulbTemp;}
+    std::vector<double> monthlyDewPointTemp(){return m_monthlyDewPointTemp;}
+    std::vector<double> monthlyRelativeHumidity(){return m_monthlyRelativeHumidity;}
+    std::vector<double> monthlyWindspeed(){return m_monthlyWindspeed;}
+    std::vector<double> monthlyGlobalHorizontalRadiation(){return m_monthlyGlobalHorizontalRadiation;}
+    std::vector<std::vector<double> > monthlySolarRadiation(){return m_monthlySolarRadiation;}
+    std::vector<std::vector<double> > hourlyDryBulbTemp(){return m_hourlyDryBulbTemp;}
+    std::vector<std::vector<double> > hourlyDewPointTemp(){return m_hourlyDewPointTemp;}
+    std::vector<std::vector<double> > hourlyGlobalHorizontalRadiation(){return m_hourlyGlobalHorizontalRadiation;}
+
   protected:
     openstudio::isomodel::TimeFrame* frame;
     openstudio::isomodel::EpwData* weatherData;
@@ -60,28 +83,6 @@ class SolarRadiation
     std::vector<std::vector<double> > m_hourlyDewPointTemp;
     std::vector<std::vector<double> > m_hourlyGlobalHorizontalRadiation;
 
-  public:
-    static const double PI = 3.141592653589;//3.1415926535897932384626433832795028841971693993751058209 
-    static const int NUM_SURFACES = 8;
-    static const int MONTHS = 12;
-    static const int HOURS = 24;
-
-    void Calculate();
-
-    SolarRadiation(TimeFrame* frame, EpwData* wdata, double tilt=PI);
-    ~SolarRadiation(void);
-    //outputs
-    std::vector<std::vector<double> > eglobe(){return m_eglobe;}//total solar radiation from direct beam, ground reflect and diffuse
-    //averages
-    std::vector<double> monthlyDryBulbTemp(){return m_monthlyDryBulbTemp;}
-    std::vector<double> monthlyDewPointTemp(){return m_monthlyDewPointTemp;}
-    std::vector<double> monthlyRelativeHumidity(){return m_monthlyRelativeHumidity;}
-    std::vector<double> monthlyWindspeed(){return m_monthlyWindspeed;}
-    std::vector<double> monthlyGlobalHorizontalRadiation(){return m_monthlyGlobalHorizontalRadiation;}
-    std::vector<std::vector<double> > monthlySolarRadiation(){return m_monthlySolarRadiation;}
-    std::vector<std::vector<double> > hourlyDryBulbTemp(){return m_hourlyDryBulbTemp;}
-    std::vector<std::vector<double> > hourlyDewPointTemp(){return m_hourlyDewPointTemp;}
-    std::vector<std::vector<double> > hourlyGlobalHorizontalRadiation(){return m_hourlyGlobalHorizontalRadiation;}
 
 };
 

@@ -24,8 +24,6 @@ namespace isomodel {
 
   class TimeFrame
   {
-    protected:
-
     public:
       static const int TIMESLICES=8760;
 

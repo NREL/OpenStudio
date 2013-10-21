@@ -42,14 +42,6 @@ class SolarRadiation;
 
 class EpwData
 {
-  protected:
-    void parseHeader(const std::string &line);
-    void parseData(const std::string &line, int row);
-    std::string m_location,m_stationid;
-    int m_timezone;
-    double m_latitude,m_longitude;
-    std::vector< std::vector<double> > m_data;
-
   public:
     EpwData();
 
@@ -63,6 +55,14 @@ class EpwData
 
     void loadData(const std::string &);
     std::string toISOData();
+
+  protected:
+    void parseHeader(const std::string &line);
+    void parseData(const std::string &line, int row);
+    std::string m_location,m_stationid;
+    int m_timezone;
+    double m_latitude,m_longitude;
+    std::vector< std::vector<double> > m_data;
 
 };
 
