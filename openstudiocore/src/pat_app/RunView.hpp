@@ -151,6 +151,8 @@ class DataPointRunHeaderView : public OSHeader
 
   void update();
 
+  void requestUpdate();
+
  private slots:
 
   void on_clicked(bool checked);
@@ -172,6 +174,8 @@ class DataPointRunHeaderView : public OSHeader
 
   QPushButton* m_download;
   QPushButton* m_clear;
+
+  bool m_updateRequested;
 };
 
 class DataPointRunContentView : public OSListView
@@ -199,6 +203,15 @@ class DataPointRunItemView : public OSCollapsibleView
   DataPointRunHeaderView * dataPointRunHeaderView;
 
   DataPointRunContentView * dataPointRunContentView;
+
+  public slots:
+
+  void checkForUpdate();
+
+  private:
+
+  openstudio::analysis::DataPoint m_dataPoint;
+  UUID m_topLevelJobUUID;
 };
 
 class DataPointJobHeaderView : public OSHeader
@@ -285,9 +298,13 @@ public slots:
 
   void update();
 
+  void requestUpdate();
+
 private:
 
   analysis::WorkflowStepJob m_workflowStepJob;
+
+  bool m_updateRequested;
 
 };
 
