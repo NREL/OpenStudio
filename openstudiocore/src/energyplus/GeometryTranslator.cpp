@@ -266,7 +266,7 @@ namespace energyplus {
   // get the transformation from zone to building
   Transformation GeometryTranslator::zoneTransformation(const WorkspaceObject& zone) const
   {
-    BOOST_ASSERT(zone.iddObject().type() == IddObjectType::Zone);
+    OS_ASSERT(zone.iddObject().type() == IddObjectType::Zone);
 
     OptionalDouble x = zone.getDouble(ZoneFields::XOrigin, true);
     OptionalDouble y = zone.getDouble(ZoneFields::YOrigin, true);
@@ -333,7 +333,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Site_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Site_Detailed);
         // set vertices
         setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -389,7 +389,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Building_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Building_Detailed);
         // set vertices
         setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -429,7 +429,7 @@ namespace energyplus {
       OptionalDouble yMax;
       BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
 
-        BOOST_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -492,7 +492,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject, false);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -532,7 +532,7 @@ namespace energyplus {
       OptionalDouble yMax;
       BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
 
-        BOOST_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -597,7 +597,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject, false);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -634,7 +634,7 @@ namespace energyplus {
       OptionalDouble yMax;
       BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
 
-        BOOST_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -716,7 +716,7 @@ namespace energyplus {
       // swap old object with left one
       bool ok = m_workspace.swap(oldObject, leftObject, false);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, leftVertices);
       }else{
@@ -762,7 +762,7 @@ namespace energyplus {
       OptionalDouble yMax;
       BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
 
-        BOOST_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -847,7 +847,7 @@ namespace energyplus {
       // swap old object with left one
       bool ok = m_workspace.swap(oldObject, leftObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, leftVertices);
       }else{
@@ -936,7 +936,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -1000,7 +1000,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -1066,7 +1066,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -1130,7 +1130,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -1194,7 +1194,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -1258,7 +1258,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
       }else{
@@ -1323,7 +1323,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1382,7 +1382,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1441,7 +1441,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1514,7 +1514,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1587,7 +1587,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1660,7 +1660,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1733,7 +1733,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1807,7 +1807,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1880,7 +1880,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -1953,7 +1953,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -2026,7 +2026,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -2099,7 +2099,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{
@@ -2172,7 +2172,7 @@ namespace energyplus {
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
       if (ok){
-        BOOST_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
+        OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
       }else{

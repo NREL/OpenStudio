@@ -70,7 +70,7 @@ namespace detail {
   Building_Impl::Building_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Building::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Building::iddObjectType());
   }
 
   Building_Impl::Building_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -78,7 +78,7 @@ namespace detail {
                                bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Building::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Building::iddObjectType());
   }
 
   Building_Impl::Building_Impl(const Building_Impl& other,
@@ -155,7 +155,7 @@ namespace detail {
 
   std::string Building_Impl::buildingType() const {
     boost::optional<std::string> result = getString(OS_BuildingFields::BuildingType,true);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return *result;
   }
 
@@ -169,7 +169,7 @@ namespace detail {
 
   double Building_Impl::northAxis() const {
     boost::optional<double> value = getDouble(OS_BuildingFields::NorthAxis,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -179,7 +179,7 @@ namespace detail {
 
   double Building_Impl::nominalFloortoFloorHeight() const {
     boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoFloorHeight,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -195,18 +195,18 @@ namespace detail {
 
   void Building_Impl::resetBuildingType() {
     bool result = setString(OS_BuildingFields::BuildingType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Building_Impl::setNorthAxis(double northAxis) {
     bool result = false;
     result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Building_Impl::resetNorthAxis() {
     bool result = setString(OS_BuildingFields::NorthAxis, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Building_Impl::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
@@ -217,7 +217,7 @@ namespace detail {
 
   void Building_Impl::resetNominalFloortoFloorHeight() {
     bool result = setString(OS_BuildingFields::NominalFloortoFloorHeight, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<SpaceType> Building_Impl::spaceType() const
@@ -233,7 +233,7 @@ namespace detail {
   void Building_Impl::resetSpaceType()
   {
     bool test = setString(OS_BuildingFields::SpaceTypeName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   boost::optional<DefaultConstructionSet> Building_Impl::defaultConstructionSet() const
@@ -324,7 +324,8 @@ namespace detail {
     SurfaceVector candidates = model().getModelObjects<Surface>();
     BOOST_FOREACH(const Surface& candidate,candidates) {
       std::string surfaceType = candidate.surfaceType();
-      if (openstudio::istringEqual(surfaceType, "Roof")) {
+      std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
+      if (openstudio::istringEqual(surfaceType, "RoofCeiling") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
         result.push_back(candidate);
       }
     }
@@ -555,14 +556,14 @@ namespace detail {
   openstudio::Quantity Building_Impl::northAxis_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,false);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
   openstudio::Quantity Building_Impl::northAxis_IP() const
   {
     OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,true);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -576,14 +577,14 @@ namespace detail {
   openstudio::Quantity Building_Impl::nominalFloortoFloorHeight_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoFloorHeight,true,false);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
   openstudio::Quantity Building_Impl::nominalFloortoFloorHeight_IP() const
   {
     OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoFloorHeight,true,true);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 

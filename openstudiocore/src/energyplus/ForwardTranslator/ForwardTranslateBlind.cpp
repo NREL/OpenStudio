@@ -39,142 +39,142 @@ boost::optional<IdfObject> ForwardTranslator::translateBlind( model::Blind & mod
 
   idfObject.setString(WindowMaterial_BlindFields::Name, modelObject.name().get());
 
-  OptionalString s = modelObject.getString(OS_WindowMaterial_BlindFields::SlatOrientation, false, true);
+  OptionalString s = modelObject.getString(OS_WindowMaterial_BlindFields::SlatOrientation, true, true);
   if (s){
     idfObject.setString(WindowMaterial_BlindFields::SlatOrientation, *s);
   }
 
-  OptionalDouble d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatWidth, false);
+  OptionalDouble d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatWidth, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatWidth, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatSeparation, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatSeparation, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatSeparation, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatThickness, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatThickness, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatThickness, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatAngle, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatAngle, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatAngle, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatConductivity, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatConductivity, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatConductivity, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatBeamSolarTransmittance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindtoGlassDistance, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindtoGlassDistance, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BlindtoGlassDistance, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BlindTopOpeningMultiplier, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, *d);
   }
   
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::MinimumSlatAngle, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::MinimumSlatAngle, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::MinimumSlatAngle, *d);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::MaximumSlatAngle, false);
+  d = modelObject.getDouble(OS_WindowMaterial_BlindFields::MaximumSlatAngle, true);
   if (d){
     idfObject.setDouble(WindowMaterial_BlindFields::MaximumSlatAngle, *d);
   }

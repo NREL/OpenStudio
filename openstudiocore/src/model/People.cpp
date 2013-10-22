@@ -47,7 +47,7 @@ namespace detail {
   People_Impl::People_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == People::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == People::iddObjectType());
   }
 
   People_Impl::People_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                            bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == People::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == People::iddObjectType());
   }
 
   People_Impl::People_Impl(const People_Impl& other,
@@ -68,14 +68,13 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
-      result.push_back("People Number Of Occupants");
-      result.push_back("People Radiant Heat Gain");
-      result.push_back("People Convective Heat Gain");
-      result.push_back("People Sensible Heat Gain");
-      result.push_back("People Latent Heat Gain");
-      result.push_back("People Total Heat Gain");
-      result.push_back("People Air Temperatures");
-      result.push_back("People Air Relative Humidity");
+      result.push_back("People Occupant Count");
+      result.push_back("People Radiant Heating Energy");
+      result.push_back("People Convective Heating Energy");
+      result.push_back("People Sensible Heating Energy");
+      result.push_back("People Latent Gain Energy");
+      result.push_back("People Total Heating Energy");
+      result.push_back("People Air Temperature");
     }
     return result;
   }
@@ -119,8 +118,6 @@ namespace detail {
     }
 
     this->makeUnique();
-
-    double floorArea = space->floorArea();
 
     PeopleDefinition peopleDefinition = this->peopleDefinition();
     BOOST_FOREACH(LifeCycleCost cost, peopleDefinition.lifeCycleCosts()){
@@ -190,7 +187,7 @@ namespace detail {
 
   double People_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_PeopleFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -206,7 +203,7 @@ namespace detail {
 
   void People_Impl::resetMultiplier() {
     bool result = setString(OS_PeopleFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   int People_Impl::spaceIndex() const {
@@ -267,7 +264,7 @@ namespace detail {
 
   void People_Impl::resetNumberofPeopleSchedule() {
     bool result = setString(OS_PeopleFields::NumberofPeopleScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> People_Impl::activityLevelSchedule() const {
@@ -299,7 +296,7 @@ namespace detail {
 
   void People_Impl::resetActivityLevelSchedule() {
     bool result = setString(OS_PeopleFields::ActivityLevelScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> People_Impl::workEfficiencySchedule() const
@@ -316,7 +313,7 @@ namespace detail {
 
   void People_Impl::resetWorkEfficiencySchedule() {
     bool result = setString(OS_PeopleFields::WorkEfficiencyScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> People_Impl::clothingInsulationSchedule() const
@@ -333,7 +330,7 @@ namespace detail {
 
   void People_Impl::resetClothingInsulationSchedule() {
     bool result = setString(OS_PeopleFields::ClothingInsulationScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> People_Impl::airVelocitySchedule() const
@@ -350,7 +347,7 @@ namespace detail {
 
   void People_Impl::resetAirVelocitySchedule() {
     bool result = setString(OS_PeopleFields::AirVelocityScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<double> People_Impl::numberOfPeople() const {
@@ -539,7 +536,7 @@ namespace detail {
 People::People(const PeopleDefinition& peopleDefinition)
   : SpaceLoadInstance(People::iddObjectType(),peopleDefinition)
 {
-  BOOST_ASSERT(getImpl<detail::People_Impl>());
+  OS_ASSERT(getImpl<detail::People_Impl>());
 }
 
 IddObjectType People::iddObjectType() {

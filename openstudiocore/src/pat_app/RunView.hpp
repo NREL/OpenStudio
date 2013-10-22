@@ -21,15 +21,22 @@
 #define OPENSTUDIO_RUNVIEW_H
 
 #include <pat_app/PatMainTabView.hpp>
+#include "PatConstants.hpp"
+
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
+#include "../shared_gui_components/Buttons.hpp"
 
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 
+#include <analysisdriver/AnalysisDriverEnums.hpp>
+
 #include <boost/optional.hpp>
 
 #include <QProgressBar>
+
+class QPushButton;
 
 namespace openstudio{
 
@@ -43,12 +50,11 @@ namespace analysis {
   class DataPoint;
 }
 
-class PlayButton;
-
 namespace pat {
 
 class PatProgressBar;
 class RunStatusView;
+class ToggleCloudButton;
 
 class RunView : public PatMainTabView
 {
@@ -67,6 +73,7 @@ class RunView : public PatMainTabView
     OSListView * dataPointRunListView;
 };
 
+
 class RunStatusView : public QWidget
 {
   Q_OBJECT
@@ -77,22 +84,57 @@ class RunStatusView : public QWidget
 
    virtual ~RunStatusView() {}
 
-   void setRunning(bool isRunning);
+   void setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration);
 
-   void setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration, bool isRunning);
+   PlayButton * playButton;
+
+   QLabel * m_playLabel;
+
+   QString m_runText;
+
+   CloudOnButton * cloudOnButton;
+
+   CloudStartingButton * cloudStartingButton;
+
+   CloudOffButton * cloudOffButton;
+
+   CloudStoppingButton * cloudStoppingButton;
+
+   CloudLostConnectionButton * cloudLostConnectionButton;
 
    void paintEvent(QPaintEvent * e);
 
- signals:
+ public slots:
+   
+  void setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus);
 
-   void playButtonClicked(bool);
+ private slots:
+
+  void on_selectAllDataPoints(bool checked);
+
+  void on_clearSelectionDataPoints(bool checked);
+
+  void on_selectAllDownloads(bool checked);
+
+  void on_selectAllClears(bool checked);
+
+  void updateCloudData();
 
  private:
 
-  PlayButton* m_playButton;
+  friend class RunTabController;
+
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
+  QPushButton * m_selectAllClears;
+  QPushButton * m_selectAllDownloads;
+  QLabel * m_selectAllDownloadsLabel;
+  QPushButton * m_selectAllDataPoints;
+  QPushButton * m_clearSelectionDataPoints;
+  QLabel * m_cloudTime;
+  QLabel * m_cloudInstances;
+  QTimer * m_timer;
 };
 
 class DataPointRunHeaderView : public OSHeader
@@ -109,6 +151,16 @@ class DataPointRunHeaderView : public OSHeader
 
   void update();
 
+  void requestUpdate();
+
+ private slots:
+
+  void on_clicked(bool checked);
+
+  void on_downloadClicked(bool checked);
+
+  void on_clearClicked(bool checked);
+
  private:
 
   openstudio::analysis::DataPoint m_dataPoint;
@@ -119,6 +171,11 @@ class DataPointRunHeaderView : public OSHeader
   QLabel* m_nas;
   QLabel* m_warnings;
   QLabel* m_errors;
+
+  QPushButton* m_download;
+  QPushButton* m_clear;
+
+  bool m_updateRequested;
 };
 
 class DataPointRunContentView : public OSListView
@@ -146,6 +203,15 @@ class DataPointRunItemView : public OSCollapsibleView
   DataPointRunHeaderView * dataPointRunHeaderView;
 
   DataPointRunContentView * dataPointRunContentView;
+
+  public slots:
+
+  void checkForUpdate();
+
+  private:
+
+  openstudio::analysis::DataPoint m_dataPoint;
+  UUID m_topLevelJobUUID;
 };
 
 class DataPointJobHeaderView : public OSHeader
@@ -162,7 +228,7 @@ class DataPointJobHeaderView : public OSHeader
 
   void setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime);
 
-  void setStatus(const openstudio::runmanager::AdvancedStatus& status);
+  void setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled);
 
   void setNA(bool na);
 
@@ -232,9 +298,13 @@ public slots:
 
   void update();
 
+  void requestUpdate();
+
 private:
 
   analysis::WorkflowStepJob m_workflowStepJob;
+
+  bool m_updateRequested;
 
 };
 
@@ -252,7 +322,6 @@ class PatProgressBar : public QProgressBar
 
   void setValue(int value);
 };
-
 
 }
 

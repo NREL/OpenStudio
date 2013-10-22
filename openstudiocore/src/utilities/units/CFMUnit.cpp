@@ -20,6 +20,8 @@
 #include <utilities/units/CFMUnit.hpp>
 #include <utilities/units/CFMUnit_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 namespace detail {
@@ -61,7 +63,7 @@ namespace detail {
   }
 
   Unit CFMUnit_Impl::clone() const {
-    BOOST_ASSERT(system() == UnitSystem::CFM);
+    OS_ASSERT(system() == UnitSystem::CFM);
     boost::shared_ptr<CFMUnit_Impl> impl(new CFMUnit_Impl(*this));
     return CFMUnit(impl).cast<Unit>();
   }

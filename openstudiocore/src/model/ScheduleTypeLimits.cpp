@@ -30,7 +30,7 @@
 #include <utilities/units/BTUUnit.hpp>
 #include <utilities/units/CFMUnit.hpp>
 #include <utilities/units/WhUnit.hpp>
-#include <utilities/units/CelciusUnit.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/TemperatureUnit_Impl.hpp>
 #include <utilities/units/UnitFactory.hpp>
@@ -47,7 +47,7 @@ namespace detail {
                                                    bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleTypeLimits::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleTypeLimits::iddObjectType());
   }
 
   ScheduleTypeLimits_Impl::ScheduleTypeLimits_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                    bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleTypeLimits::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleTypeLimits::iddObjectType());
   }
 
   ScheduleTypeLimits_Impl::ScheduleTypeLimits_Impl(const ScheduleTypeLimits_Impl& other,
@@ -100,7 +100,7 @@ namespace detail {
 
   std::string ScheduleTypeLimits_Impl::unitType() const {
     boost::optional<std::string> value = getString(OS_ScheduleTypeLimitsFields::UnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -115,7 +115,7 @@ namespace detail {
     } else {
       result = setString(OS_ScheduleTypeLimitsFields::LowerLimitValue, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ScheduleTypeLimits_Impl::setLowerLimitValue(const OSOptionalQuantity& lowerLimitValue) {
@@ -137,7 +137,7 @@ namespace detail {
 
   void ScheduleTypeLimits_Impl::resetLowerLimitValue() {
     bool result = setString(OS_ScheduleTypeLimitsFields::LowerLimitValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ScheduleTypeLimits_Impl::setUpperLimitValue(boost::optional<double> upperLimitValue) {
@@ -147,7 +147,7 @@ namespace detail {
     } else {
       result = setString(OS_ScheduleTypeLimitsFields::UpperLimitValue, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ScheduleTypeLimits_Impl::setUpperLimitValue(const OSOptionalQuantity& upperLimitValue) {
@@ -169,7 +169,7 @@ namespace detail {
 
   void ScheduleTypeLimits_Impl::resetUpperLimitValue() {
     bool result = setString(OS_ScheduleTypeLimitsFields::UpperLimitValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ScheduleTypeLimits_Impl::setNumericType(boost::optional<std::string> numericType) {
@@ -184,7 +184,7 @@ namespace detail {
 
   void ScheduleTypeLimits_Impl::resetNumericType() {
     bool result = setString(OS_ScheduleTypeLimitsFields::NumericType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ScheduleTypeLimits_Impl::setUnitType(std::string unitType) {
@@ -195,7 +195,7 @@ namespace detail {
 
   void ScheduleTypeLimits_Impl::resetUnitType() {
     bool result = setString(OS_ScheduleTypeLimitsFields::UnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   OSOptionalQuantity ScheduleTypeLimits_Impl::getQuantityFromDouble(unsigned index,
@@ -203,11 +203,11 @@ namespace detail {
                                                                     bool returnIP) const
   {
     OptionalUnit siUnits = ScheduleTypeLimits::units(unitType(),false);
-    BOOST_ASSERT(siUnits);
+    OS_ASSERT(siUnits);
     OptionalUnit units = siUnits->clone();
     if (returnIP) {
       units = ScheduleTypeLimits::units(unitType(),true);
-      BOOST_ASSERT(units);
+      OS_ASSERT(units);
     }
     if (value) {
       Quantity siQuantity(*value,*siUnits);
@@ -216,7 +216,7 @@ namespace detail {
       }
       else {
         OptionalQuantity result = convert(siQuantity,*units);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         return OSOptionalQuantity(*result);
       }
     }
@@ -270,7 +270,7 @@ namespace detail {
 ScheduleTypeLimits::ScheduleTypeLimits(const Model& model)
   : ResourceObject(ScheduleTypeLimits::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleTypeLimits_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleTypeLimits_Impl>());
 }
 
 IddObjectType ScheduleTypeLimits::iddObjectType() {
@@ -350,7 +350,7 @@ boost::optional<Unit> ScheduleTypeLimits::units(std::string unitType, bool retur
           result->cast<TemperatureUnit>().setAsRelative();
         }
         else {
-          result = createCelciusTemperature();
+          result = createCelsiusTemperature();
           result->cast<TemperatureUnit>().setAsRelative();
         }
       }
@@ -416,7 +416,7 @@ boost::optional<Unit> ScheduleTypeLimits::units(std::string unitType, bool retur
           result = createFahrenheitTemperature();
         }
         else {
-          result = createCelciusTemperature();
+          result = createCelsiusTemperature();
         }
       }
       break;

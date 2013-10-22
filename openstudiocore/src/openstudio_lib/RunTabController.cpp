@@ -23,6 +23,8 @@
 #include <model/Model_Impl.hpp>
 #include <runmanager/lib/JobStatusWidget.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 RunTabController::RunTabController(const model::Model & model, const openstudio::path &t_modelPath,
@@ -47,7 +49,7 @@ RunTabController::RunTabController(const model::Model & model, const openstudio:
 openstudio::RunView * RunTabController::runView(){
 
   // make sure non-null pointer
-  Q_ASSERT(m_runView);
+  OS_ASSERT(m_runView);
 
   return m_runView;
 }

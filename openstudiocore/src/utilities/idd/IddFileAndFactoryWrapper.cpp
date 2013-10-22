@@ -256,7 +256,7 @@ IddFile IddFileAndFactoryWrapper::iddFile() const {
 
 IddFileType IddFileAndFactoryWrapper::iddFileType() const {
   if (m_iddFileType) { return *m_iddFileType; }
-  BOOST_ASSERT(m_iddFile);
+  OS_ASSERT(m_iddFile);
   return IddFileType(IddFileType::UserCustom);
 }
 

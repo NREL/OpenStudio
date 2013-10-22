@@ -20,46 +20,56 @@
 #include <pat_app/PatApp.hpp>
 
 #include <pat_app/AboutBox.hpp>
-#include "../shared_gui_components/BCLMeasureDialog.hpp"
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/DesignAlternativesTabController.hpp>
 #include <pat_app/DesignAlternativesView.hpp>
-#include "../shared_gui_components/EditController.hpp"
 #include <pat_app/ExportXML.hpp>
 #include <pat_app/HorizontalTabWidget.hpp>
-#include "../shared_gui_components/LocalLibraryController.hpp"
-#include "../shared_gui_components/LocalLibraryView.hpp"
 #include <pat_app/MainRightColumnController.hpp>
 #include <pat_app/MeasuresTabController.hpp>
 #include <pat_app/MeasuresView.hpp>
-#include "../shared_gui_components/OSViewSwitcher.hpp"
-#include <pat_app/PatMainWindow.hpp>
 #include <pat_app/PatMainMenu.hpp>
+#include <pat_app/PatMainWindow.hpp>
 #include <pat_app/PatVerticalTabWidget.hpp>
 #include <pat_app/ResultsTabController.hpp>
 #include <pat_app/ResultsView.hpp>
 #include <pat_app/RunTabController.hpp>
 #include <pat_app/RunView.hpp>
 #include <pat_app/StartupView.hpp>
-#include <pat_app/StartupView.hpp>
-#include "../shared_gui_components/ProcessEventsProgressBar.hpp"
+#include <pat_app/VagrantConfiguration.hxx>
+
+#include "../shared_gui_components/BCLMeasureDialog.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
+#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/LocalLibraryController.hpp"
+#include "../shared_gui_components/LocalLibraryView.hpp"
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+#include "../shared_gui_components/ProcessEventsProgressBar.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/AnalysisObject.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
+#include <analysisdriver/CurrentAnalysis.hpp>
+#include <analysisdriver/SimpleProject_Impl.hpp>
 
-#include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/RunManager.hpp>
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/ZipFile.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/cloud/CloudProvider_Impl.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include <utilities/core/Application.hpp>
+#include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
+#include <utilities/core/System.hpp>
+#include <utilities/core/ZipFile.hpp>
+
+#include <boost/filesystem.hpp>
 
 #include <QAbstractButton>
 #include <QBoxLayout>
@@ -80,19 +90,18 @@
 #include <QTimer>
 #include <QUrl>
 
-#include <boost/filesystem.hpp>
-
 namespace openstudio {
 
 namespace pat {
 
 PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter )
   : QApplication(argc, argv),
-    m_onlineBclDialog(NULL),
+    m_onlineBclDialog(0),
+    m_cloudDialog(0),
     m_measureManager(t_argumentGetter, this)
 {
   bool isConnected = connect(this,SIGNAL(userMeasuresDirChanged()),&m_measureManager,SLOT(updateMeasuresLists()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   setOrganizationName("NREL");
   setOrganizationDomain("nrel.gov");
@@ -123,7 +132,11 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
     LOG_FREE(Warn, "PatApp", "Incorrect number of arguments " << args.size());
   }
 
+  m_cloudMonitor = QSharedPointer<CloudMonitor>(new CloudMonitor());
 
+  isConnected = connect(m_cloudMonitor.data(),SIGNAL(cloudStatusChanged(const CloudStatus &)),
+                        this,SLOT(onCloudStatusChanged(const CloudStatus &)));
+  OS_ASSERT(isConnected);
 
   mainWindow = new PatMainWindow();
 
@@ -177,46 +190,52 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
                                          false );
 
   isConnected = connect(mainWindow->verticalTabWidget,SIGNAL(tabSelected(int)),this,SLOT(showVerticalTab(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(loadFileClicked()), this, SLOT(open()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(newClicked()), this, SLOT(create()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(exitClicked()),this,SLOT(quit()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(openBclDlgClicked()),this,SLOT(openBclDlg()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainWindow, SIGNAL(openCloudDlgClicked()),this,SLOT(openCloudDlg()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainWindow, SIGNAL(openMonitorUseDlgClicked()),this,SLOT(openMonitorUseDlg()));
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(helpClicked()),this,SLOT(showHelp()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(aboutClicked()),this,SLOT(showAbout()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(clearAllResultsClicked()), this, SLOT(clearAllResults()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(exportXmlClicked()), this, SLOT(exportXml()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(showToolsClicked()), this, SLOT(showTools()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(changeMeasuresClicked()), this, SLOT(changeUserMeasuresDir()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainWindow->show();
 
@@ -265,6 +284,25 @@ void PatApp::save()
 
 void PatApp::saveAs()
 {
+  CloudStatus status = cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING || status == CLOUD_RUNNING) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Save Copy", 
+      "PAT cannot save a copy of the current project while the cloud is starting, running, or stopping.  Once the cloud connection is terminated this operation will become available.", 
+      QMessageBox::Ok);
+
+    return;
+
+  } else if (status == CLOUD_ERROR) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Save Copy", 
+      "PAT cannot save a copy of the current project while the cloud is in an error state.  Once the cloud connection is established or the session is terminated this operation will become available.", 
+      QMessageBox::Ok);
+
+    return;
+  }
+
   userInteractiveSaveAsProject();
 }
 
@@ -279,8 +317,59 @@ QSharedPointer<EditController> PatApp::editController()
 }
 
 
-void PatApp::quit()
+void PatApp::quit(bool fromCloseEvent)
 {
+  if (!fromCloseEvent) {
+
+    // This duplicates the PatMainWindow closeEvent.  This is only used when File->Exit is called which bypasses that closeEvent
+    CloudStatus status = cloudMonitor()->status();
+
+    if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+      QMessageBox::warning(mainWindow, 
+        "Cannot Exit PAT", 
+        "PAT cannot be closed while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+
+      return;
+
+    } else if (status == CLOUD_RUNNING) {
+
+      // if project is running we can quit, user might want to leave cloud on
+      // if project is idle we can quit, 99% sure we should turn cloud off
+      // if project is starting can't quit
+      // if project is stopping we can quit, 90% sure we should turn cloud off
+      // if project is error we can quit, 90% sure we should turn cloud off
+      boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+      if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+        QMessageBox::warning(mainWindow, 
+          "Cannot Exit PAT", 
+          "PAT cannot be closed while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+          QMessageBox::Ok);
+        return;
+      }else{
+        int result = QMessageBox::warning(mainWindow, 
+                       "Close PAT?", 
+                       "The cloud is currently running and charges are accruing.  Are you sure you want to exit PAT?", 
+                       QMessageBox::Ok, 
+                       QMessageBox::Cancel);
+
+        if(result == QMessageBox::Cancel) return;
+      }
+
+    } else if (status == CLOUD_STOPPED) {
+    // DLM: check if running locally?
+
+    } else if (status == CLOUD_ERROR) {
+      int result = QMessageBox::warning(mainWindow, 
+                     "Close PAT?", 
+                     "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to exit PAT?", 
+                     QMessageBox::Ok, 
+                     QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    }
+  }
+
   // no more clicking around we are quitting
   mainWindow->setEnabled(false);
   this->processEvents();
@@ -307,15 +396,113 @@ void PatApp::quit()
 
 void PatApp::open()
 {
+  CloudStatus status = cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Open Project", 
+      "Projects cannot be opened while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    return;
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // if project is running we can open, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't open
+    // if project is stopping we can open, 90% sure we should turn cloud off
+    // if project is error we can open, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(mainWindow, 
+        "Cannot Open Project", 
+        "Projects cannot be opened while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+      return;
+    }else{
+      int result = QMessageBox::warning(mainWindow, 
+                      "Open Project?", 
+                      "The cloud is currently running and charges are accruing.  Are you sure you want to open a different project?", 
+                      QMessageBox::Ok, 
+                      QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    }
+
+  } else if (status == CLOUD_STOPPED) {
+
+  // DLM: check if running locally?
+
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(mainWindow, 
+                    "Open Project?", 
+                    "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to open a different project?", 
+                    QMessageBox::Ok, 
+                    QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) return;
+  }
+
   QString fileName = QFileDialog::getOpenFileName( mainWindow,
                                                    tr("Open Project"),
                                                    QDir::homePath(),
                                                    tr("(project.osp)") );
+  if (!fileName.length()) return;
+
   userInteractiveOpenProject(fileName);
 }
 
 void PatApp::create()
 {
+  CloudStatus status = cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Create New Project", 
+      "Projects cannot be created while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    return;
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // if project is running we can create, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't create
+    // if project is stopping we can create, 90% sure we should turn cloud off
+    // if project is error we can create, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(mainWindow, 
+        "Cannot Create New Project", 
+        "Projects cannot be created while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+      return;
+    }else{
+      int result = QMessageBox::warning(mainWindow, 
+                      "Create Project?", 
+                      "The cloud is currently running and charges are accruing.  Are you sure you want to create and open a new project?", 
+                      QMessageBox::Ok, 
+                      QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    }
+
+  } else if (status == CLOUD_STOPPED) {
+
+  // DLM: check if running locally?
+
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(mainWindow, 
+                    "Create Project?", 
+                    "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to create and open a new project?", 
+                    QMessageBox::Ok, 
+                    QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) return;
+  }
+
   NewProjectDialog * dialog = new NewProjectDialog();
 
   QString projectName;
@@ -358,7 +545,7 @@ void PatApp::create()
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::createPATProject(projectDir, options);
     if(project.is_initialized()){
-      Q_ASSERT(project->isPATProject());
+      OS_ASSERT(project->isPATProject());
 
       attachProject(project);
 
@@ -403,7 +590,7 @@ void PatApp::openBclDlg()
       }
       else{
         // should never get here
-        Q_ASSERT(false);
+        OS_ASSERT(false);
       }
     }
   }
@@ -414,7 +601,7 @@ void PatApp::openBclDlg()
 
     bool isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeBclDlg()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
   }
   if(m_onlineBclDialog && !m_onlineBclDialog->isVisible()){
     m_onlineBclDialog->setGeometry(mainWindow->geometry());
@@ -429,6 +616,54 @@ void PatApp::on_closeBclDlg()
     m_measureManager.updateMeasuresLists();
     m_onlineBclDialog->setShowNewComponents(false);
   }
+}
+
+void PatApp::openCloudDlg()
+{
+  if( ! (m_cloudMonitor->status() == CLOUD_STOPPED) )
+  {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Access Cloud Settings", 
+      "The cloud settings are not available while the cloud is running.  Please turn off the cloud to change settings.", 
+      QMessageBox::Ok);
+
+    return;
+  }
+
+  if(!m_cloudDialog){
+    m_cloudDialog = new CloudDialog();
+
+    bool isConnected = connect(m_cloudDialog, SIGNAL(rejected()),
+                               this, SLOT(on_closeBclDlg()));
+    OS_ASSERT(isConnected);
+  }
+  if(m_cloudDialog && !m_cloudDialog->isVisible()){
+    m_cloudDialog->show();
+  }
+}
+
+void PatApp::on_closeCloudDlg()
+{
+// TODO m_cloudDialog
+}
+
+void PatApp::openMonitorUseDlg()
+{
+  if(!m_monitorUseDialog){
+    m_monitorUseDialog = new MonitorUseDialog();
+
+    bool isConnected = connect(m_monitorUseDialog, SIGNAL(rejected()),
+                               this, SLOT(on_closeMonitorUseDlg()));
+    OS_ASSERT(isConnected);
+  }
+  if(m_monitorUseDialog && !m_monitorUseDialog->isVisible()){
+    m_monitorUseDialog->show();
+  }
+}
+
+void PatApp::on_closeMonitorUseDlg()
+{
+// TODO m_monitorUseDialog
 }
 
 void PatApp::showHelp()
@@ -489,7 +724,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
       m_project->seedIdf(processEventsProgressBar);
       
       // update any duplicate measures of different versions
-      BOOST_FOREACH(const BCLMeasure& measure, result.second) {
+      Q_FOREACH(const BCLMeasure& measure, result.second) {
         measureManager().updateMeasure(*m_project,measure);
       }
 
@@ -676,8 +911,6 @@ void PatApp::showVerticalTab(int verticalId)
   m_measuresTabController.clear();
   m_resultsTabController.clear();
 
-  bool isConnected = false;
-
   switch( m_mainTabId )
   {
     case MEASURES:
@@ -714,6 +947,11 @@ void PatApp::showVerticalTab(int verticalId)
   mainWindow->verticalTabWidget->blockSignals(true);
   mainWindow->verticalTabWidget->selectTab(m_mainTabId);
   mainWindow->verticalTabWidget->blockSignals(false);
+
+  mainWindow->setEnabled(true);
+  mainWindow->setFocus();
+
+  updateAppState();
 }
 
 void PatApp::showStartupView()
@@ -809,55 +1047,16 @@ void PatApp::exportXml()
     return;
   }
 
-  QMessageBox::information(mainWindow, "Exporting XML Report", "This may take several minutes, you will get a message when the export is complete.");
+  //QMessageBox::information(mainWindow, "Exporting XML Report", "This may take several minutes, you will get a message when the export is complete.");
   mainWindow->setEnabled(false);
   this->processEvents();
 
   //make results.xml inside the project directory
   openstudio::path resultsXmlPath = projectPath / toPath("results.xml");
   openstudio::analysis::exportxml::ExportXML newXMLdoc;
-  bool xmlExportSuccess = newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath));
+  newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath));
 
-  //make qaqc.xml inside the project directory
-  openstudio::path rubyIncludePath = getOpenStudioRubyIncludePath();
-  openstudio::path rubyScriptsPath = getOpenStudioRubyScriptsPath();
-  openstudio::path qaqcPath = rubyScriptsPath / toPath("openstudio/qaqc/CreateQAQCXML.rb");
-  openstudio::path qaqcXmlPath = projectPath / toPath("qaqc.xml");
-
-  // create a run manager to call ruby script to generate qaqc xml
-  runmanager::RunManager rm;
-  runmanager::ConfigOptions configOpts(true);
-  rm.setConfigOptions(configOpts);
-  rm.setPaused(true);
-
-  // set up ruby job
   openstudio::path outdir = projectPath / toPath("QAQC");
-  try {
-    boost::filesystem::remove_all(outdir);
-  }catch(std::exception&){
-  }
-  boost::filesystem::create_directories(outdir);
-
-  runmanager::RubyJobBuilder rubyJob;
-  rubyJob.setScriptFile(qaqcPath);
-  rubyJob.addScriptArgument(toString(projectPath) + "/");
-  rubyJob.addScriptArgument(toString(projectPath) + "/");
-
-  runmanager::Workflow wf;
-  rubyJob.setIncludeDir(rubyIncludePath);
-  rubyJob.addToWorkflow(wf);
-  runmanager::Tools tools = rm.getConfigOptions().getTools();
-  wf.add(tools);
-
-  // run ruby job
-  runmanager::Job j = wf.create(outdir);
-  rm.enqueue(j,true);
-  rm.setPaused(false);
-
-  // this may or may not be what you want.
-  // should the UI be usable or not while this is running?
-  // it can be handled via signal too.
-  rm.waitForFinished();
 
   // make zip file
   try{
@@ -870,14 +1069,7 @@ void PatApp::exportXml()
       // log
     }
 
-    if (boost::filesystem::exists(qaqcXmlPath)){
-      zf.addFile(qaqcXmlPath, openstudio::toPath("qaqc.xml"));
-    }else{
-      // log
-    }
-
     boost::filesystem::remove(resultsXmlPath);
-    boost::filesystem::remove(qaqcXmlPath);
     boost::filesystem::remove_all(outdir);
 
   }catch(std::exception&){
@@ -1002,7 +1194,7 @@ bool PatApp::openFile(const QString& fileName)
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::openPATProject(projectDir, options);
     if(project.is_initialized()){
-      Q_ASSERT(project->isPATProject());
+      OS_ASSERT(project->isPATProject());
       attachProject(project);
       mainWindow->setWindowTitle("");
       mainWindow->setWindowFilePath(dir.absolutePath());
@@ -1041,6 +1233,9 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // detach all signals from analysis
     analysis.disconnect();
+
+    // detach all signals from project
+    disconnect(m_project->getImpl().get(), 0, this, 0);
   }
 
   // set this project as current project
@@ -1064,52 +1259,50 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // connect signals from the the analysis to this
     bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     isConnected = analysis.connect(SIGNAL(clean()), this, SLOT(markAsUnmodified()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     // DLM: would like to make this a queued connection but ChangeType is not a QObject, burying ChangeType in impl class is kind of annoying too
     isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(queueAnalysisChanged()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     isConnected = analysis.connect(SIGNAL(seedChanged()), this, SLOT(analysisSeedChanged()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
-    // DLM: where should this logic live?
-    // DLM: tabs 3 and 4 were not getting enabled once we did have data points, if we want to do this
-    // we need to enable those somewhere
-    //if (analysis.dataPoints().empty()){
-    //  mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
-    //  mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
-    //  mainWindow->verticalTabWidget->enableTab(false,PatApp::RUN);
-    //  mainWindow->verticalTabWidget->enableTab(false,PatApp::RESULTS);
-    //}else{
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
-      mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
-    //}
+    isConnected = connect(m_project->getImpl().get(),SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)),
+                          this,SLOT(onAnalysisStatusChanged(analysisdriver::AnalysisStatus)));
+    OS_ASSERT(isConnected);
+
+    m_cloudMonitor->reconnectCloud();
+
+    mainWindow->verticalTabWidget->enableTabs(true);
 
     // enable main menu functionality
     mainWindow->mainMenu->configure(true);
 
     // show the right tab
-    showVerticalTab(PatApp::MEASURES);
+    if( m_cloudMonitor->status() != CLOUD_STOPPED )
+    {
+      showVerticalTab(PatApp::RUN);
+    }
+    else
+    {
+      showVerticalTab(PatApp::MEASURES);
+    }
+
+    updateAppState();
 
   }else{
 
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::RUN);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
+    mainWindow->verticalTabWidget->enableTabs(false);
 
     // disable main menu functionality
      mainWindow->mainMenu->configure(false);
 
     // show the right tab
     showStartupView();
-
   }
 }
 
@@ -1126,6 +1319,26 @@ const MeasureManager &PatApp::measureManager() const
 QSharedPointer<MainRightColumnController> PatApp::mainRightColumnController() const
 {
   return m_mainRightColumnController;
+}
+
+QSharedPointer<DesignAlternativesTabController> PatApp::designAlternativesTabController() const
+{
+  return m_designAlternativesTabController;
+}
+
+QSharedPointer<MeasuresTabController> PatApp::measuresTabController() const
+{
+  return m_measuresTabController;
+}
+
+QSharedPointer<ResultsTabController> PatApp::resultsTabController() const
+{
+  return m_resultsTabController;
+}
+
+QSharedPointer<RunTabController> PatApp::runTabController() const
+{
+  return m_runTabController;
 }
 
 void PatApp::addMeasure()
@@ -1185,16 +1398,16 @@ void PatApp::downloadUpdatedBCLMeasures()
 
 void PatApp::disableTabsDuringRun()
 {
-  bool isRunning = project()->isRunning();
+  //bool isRunning = project()->isRunning();
 
-  // user cannot navigate to tabs 1 or 2 if we are running
-  if(isRunning){
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
-    mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
-  }else{
-    mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
-    mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
-  }
+  //// user cannot navigate to tabs 1 or 2 if we are running
+  //if(isRunning){
+  //  mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+  //  mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+  //}else{
+  //  mainWindow->verticalTabWidget->enableTab(true, PatApp::MEASURES);
+  //  mainWindow->verticalTabWidget->enableTab(true, PatApp::DESIGN_ALTERNATIVES);
+  //}
 }
 
 void PatApp::updateSelectedMeasureState()
@@ -1213,11 +1426,205 @@ QWidget *PatApp::mainWidget() {
   return w; 
 }
 
+QSharedPointer<CloudMonitor> PatApp::cloudMonitor() const
+{
+  return m_cloudMonitor;
+}
+
+void PatApp::onCloudStatusChanged(const CloudStatus & newCloudStatus)
+{
+  if( m_project )
+  {
+    analysisdriver::AnalysisStatus analysisStatus = m_project->status();
+
+    setAppState(newCloudStatus, analysisStatus);
+  }
+  else
+  {
+    setAppState(newCloudStatus,analysisdriver::AnalysisStatus::Idle);
+  }
+}
+
+void PatApp::onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus)
+{
+  CloudStatus cloudStatus = m_cloudMonitor->status();
+
+  setAppState(cloudStatus, newAnalysisStatus);
+}
+
+void PatApp::updateAppState()
+{
+  CloudStatus cloudStatus = m_cloudMonitor->status();
+
+  if( m_project )
+  {
+    analysisdriver::AnalysisStatus analysisStatus = m_project->status();
+
+    setAppState(cloudStatus, analysisStatus);
+  }
+  else
+  {
+    setAppState(cloudStatus,analysisdriver::AnalysisStatus::Idle);
+  }
+}
+
+// Control tabs, play button, cloud button, download button, ... add to list as required
+void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::AnalysisStatus & analysisStatus)
+{
+  switch (cloudStatus)
+  {
+    case CLOUD_STARTING:
+      switch (analysisStatus.value())
+      {
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
+          break;
+      }
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
+      break;
+    case CLOUD_RUNNING:
+      switch (analysisStatus.value())
+      {
+        case analysisdriver::AnalysisStatus::Idle:
+          mainWindow->verticalTabWidget->enableTabs(true);
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
+          break;
+        case analysisdriver::AnalysisStatus::Error:
+          mainWindow->verticalTabWidget->enableTabs(true);
+          break;
+      }
+      break;
+    case CLOUD_STOPPING:
+      switch (analysisStatus.value())
+      {
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
+          break;
+      }
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
+      break;
+    case CLOUD_STOPPED:
+      switch (analysisStatus.value())
+      {
+        case analysisdriver::AnalysisStatus::Idle:
+          mainWindow->verticalTabWidget->enableTabs(true);
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+          mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+          mainWindow->verticalTabWidget->enableTab(true, PatApp::RESULTS);
+          break;
+        case analysisdriver::AnalysisStatus::Error:
+          mainWindow->verticalTabWidget->enableTabs(true);
+          break;
+      }
+      break;
+    case CLOUD_ERROR:
+      switch (analysisStatus.value())
+      {
+        case analysisdriver::AnalysisStatus::Idle:
+          break;
+        case analysisdriver::AnalysisStatus::Starting:
+          break;
+        case analysisdriver::AnalysisStatus::Running:
+          break;
+        case analysisdriver::AnalysisStatus::Stopping:
+          break;
+        case analysisdriver::AnalysisStatus::Error:
+          break;
+      }
+      mainWindow->verticalTabWidget->selectTab(PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::DESIGN_ALTERNATIVES);
+      mainWindow->verticalTabWidget->enableTab(true, PatApp::RUN);
+      mainWindow->verticalTabWidget->enableTab(false, PatApp::RESULTS);
+      break;
+  }
+
+  if( m_runTabController )
+  {
+    m_runTabController->runView->runStatusView->setStatus(cloudStatus, analysisStatus);
+  }
+}
+
+CloudSettings PatApp::cloudSettings()
+{
+  // AWSSettings and VagrantSettings persist to different QSettings
+  // so it is ambiguous which to load.  This is a shortcut.
+  // If more cloud providers are introduced something better needs to be done.
+
+  if( showVagrant() )
+  {
+    VagrantSettings settings;
+
+    settings.loadSettings(true);
+
+    return settings;
+  }
+  else
+  {
+    AWSSettings settings;
+
+    settings.loadSettings(true);
+
+    return settings;
+  }
+}
 
 NewProjectDialog::NewProjectDialog(QWidget * parent)
   : OSDialog(parent)
 {
-  setSizeHint(QSize(440,240));
+  //setSizeHint(QSize(440,240));
 
   okButton()->setText("Continue");
 
@@ -1237,7 +1644,7 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
   m_projectNameLineEdit = new QLineEdit();
   m_okButton->setEnabled(false);
   bool bingo = connect(m_projectNameLineEdit,SIGNAL(textChanged(const QString &)),this,SLOT(enableOkButton()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   QRegExp regExp("^([a-zA-Z0-9 ]+[-]?[_]?)*$");
   m_projectNameLineEdit->setValidator( new QRegExpValidator(regExp, this) );
@@ -1253,35 +1660,6 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
   vertLayout->addStretch();
 }
 
-void NewProjectDialog::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() == Qt::LeftButton)
-  {
-    if( event->y() < 50 )
-    {
-        dragPosition = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
-        _move = true;
-    }
-    else
-    {
-      _move = false;
-    }
-  }
-}
-
-void NewProjectDialog::mouseMoveEvent(QMouseEvent *event)
-{
-  if(event->buttons() & Qt::LeftButton)
-  {
-    if( _move )
-    {
-      move(event->globalPos() - dragPosition);
-      event->accept();
-    }
-  }
-}
-
 void NewProjectDialog::enableOkButton()
 {
   if(m_projectNameLineEdit->text().length() > 0){
@@ -1291,6 +1669,45 @@ void NewProjectDialog::enableOkButton()
     m_okButton->setEnabled(false);
   }
 }
+
+//QSharedPointer<CloudProvider> CloudMonitor::cloudProvider() const
+//{
+//  return m_cloudProvider;
+//}
+//
+//void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
+//{
+//  m_cloudProvider = cloudProvider;
+//
+//  bool bingo;
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarting()),this,SIGNAL(serverStarting()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarted(const Url&)),
+//                  this,SIGNAL(serverStarted(const Url&)));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(workerStarting()),
+//                  this,SIGNAL(workerStarting()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(workerStarted(const Url&)),
+//                  this,SIGNAL(workerStarted(const Url&)));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(allWorkersStarted()),
+//                  this,SIGNAL(allWorkersStarted()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminating()),
+//                  this,SIGNAL(terminating()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminateComplete()),
+//                  this,SIGNAL(terminateComplete()));
+//  OS_ASSERT(bingo);
+//}
 
 } // pat
 

@@ -103,7 +103,7 @@ if model.sqlFile.empty?
 end
 
 # get exterior illuminance timeseries from E+ run
-exteriorIlluminanceTimeseries = eplusoutFile.timeSeries("Run Period 1".upcase, "Hourly", "Exterior Horizontal Illuminance From Sky")
+exteriorIlluminanceTimeseries = eplusoutFile.timeSeries("Run Period 1".upcase, "Hourly", "Site Exterior Horizontal Sky Illuminance")
 
 # summary report string
 summary_report = ""
@@ -145,7 +145,7 @@ building.spaces.each do |space|
   
   
   # get people timeseries from E+ run for this zone
-  peopleTimeseries = eplusoutFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Number Of Occupants", thermalZone.name.get.upcase)
+  peopleTimeseries = eplusoutFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Occupant Count", thermalZone.name.get.upcase)
   
   # loop over all timesteps, return type is std::vector< std::pair<int, DateTime> > 
   hourly_report_indices_dates = radoutFile.illuminanceMapHourlyReportIndicesDates(map_name)
@@ -165,7 +165,7 @@ building.spaces.each do |space|
     # extract timestep and index
     hourly_report_index = hourly_report_index_date.first
     hourly_report_date = hourly_report_index_date.second
-    puts "Calculating Daylight Metrics for Space #{space_name} at #{hourly_report_date}"
+    # puts "Calculating Daylight Metrics for Space #{space_name} at #{hourly_report_date}"
     
     # see if this is a daylit hour
     daylit_hour = false
@@ -338,7 +338,7 @@ building.spaces.each do |space|
     end
   end
   annual_udi_daylit = udi_daylit_sum.to_f / udi_daylit_num.to_f
-  summary_report += "#{space_name}: UDI(#{daylightSetpoint}) Daylit Hours, #{udi_daylit_sum}, #{udi_daylit_num}, #{annual_udi_daylit}\n"
+  summary_report += "#{space_name}: UDI Daylit Hours, #{udi_daylit_sum}, #{udi_daylit_num}, #{annual_udi_daylit}\n"
   
   udi_occupied_sum = 0
   udi_occupied_num = 0
@@ -349,7 +349,7 @@ building.spaces.each do |space|
     end
   end
   annual_udi_occupied = udi_occupied_sum.to_f / udi_occupied_num.to_f
-  summary_report += "#{space_name}: UDI(#{daylightSetpoint}) Occupied Hours, #{udi_occupied_sum}, #{udi_occupied_num}, #{annual_udi_occupied}\n"
+  summary_report += "#{space_name}: UDI Occupied Hours, #{udi_occupied_sum}, #{udi_occupied_num}, #{annual_udi_occupied}\n"
   
   udi_daylit_occupied_sum = 0
   udi_daylit_occupied_num = 0
@@ -360,7 +360,7 @@ building.spaces.each do |space|
     end
   end
   annual_udi_daylit_occupied = udi_daylit_occupied_sum.to_f / cda_daylit_occupied_num.to_f
-  summary_report += "#{space_name}: UDI(#{daylightSetpoint}) Daylit and Occupied Hours, #{cda_daylit_occupied_sum}, #{cda_daylit_occupied_num}, #{annual_udi_daylit_occupied}\n"
+  summary_report += "#{space_name}: UDI Daylit and Occupied Hours, #{cda_daylit_occupied_sum}, #{cda_daylit_occupied_num}, #{annual_udi_daylit_occupied}\n"
 
   # now replace nil with 0 in each timeseries to radout.sql for plotting
 end

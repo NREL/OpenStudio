@@ -256,6 +256,18 @@ namespace openstudio{
 
   };
 
+  /** Uses LocalBCL and RemoteBCL to get a component from the BCL. Will update LocalBCL with the
+   *  downloaded component if that is appropriate. Ultimately returns a BCLComponent from the
+   *  LocalBCL (existing or just downloaded). */
+  UTILITIES_API boost::optional<BCLComponent> getComponent(const std::string& uid,
+                                                           const std::string& versionId = "");
+
+  /** Uses LocalBCL and RemoteBCL to get a measure from the BCL. Will update LocalBCL with the
+   *  downloaded measure if that is appropriate. Ultimately returns a BCLMeasure from the
+   *  LocalBCL (existing or just downloaded). */
+  UTILITIES_API boost::optional<BCLMeasure> getMeasure(const std::string& uid,
+                                                       const std::string& versionId = "");
+
 } // openstudio
 
 #endif // UTILITIES_BCL_BCL_HPP

@@ -99,7 +99,7 @@ def get_timeseries_array(openstudio_sql_file, env_period, timestep, variable_nam
       debug_puts "***The pieces below do NOT make a valid query***" 
       debug_puts "  *#{key_value}* - this key value might not exist for the variable you are looking for"
       debug_puts "  *#{timestep}* - this value should be Hourly, Monthly, Zone Timestep, HVAC System Timestep, etc"
-      debug_puts "  *#{variable_name}* - every word should be capitalized EG:  Refrigeration System Total Compressor Electric Consumption "
+      debug_puts "  *#{variable_name}* - every word should be capitalized EG:  Refrigeration System Total Compressor Electric Energy "
       debug_puts "  *#{env_period}* - you can get an array of all the valid env periods by using the sql_file.availableEnvPeriods() method "
       debug_puts "  Possible key values: #{possible_key_values}"
       debug_puts "  Possible Variable Names: #{possible_variable_names}"

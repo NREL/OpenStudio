@@ -23,6 +23,8 @@
 #include <QWidget>
 
 #include <model/Model.hpp>
+#include <model/ShadowCalculation.hpp>
+#include <model/SimulationControl.hpp>
 
 class QButtonGroup;
 class QCheckBox;
@@ -36,10 +38,13 @@ class QPushButton;
 namespace openstudio {
 
   class OSComboBox;
+  class OSComboBox2;
   class OSIntegerEdit;
+  class OSIntegerEdit2;
   class OSLineEdit;
   class OSQuantityEdit;
   class OSSwitch;
+  class OSSwitch2;
   class ScheduleCalendarWidget;
 
 class SimSettingsView : public QWidget
@@ -87,6 +92,12 @@ private:
   void addField(QGridLayout * gridLayout,
                 int row,
                 int column,
+                QString text,
+                OSComboBox2 * & comboBox);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
                 QLabel * & label,
                 QString text,
                 OSComboBox * & comboBox);
@@ -94,6 +105,26 @@ private:
   void addField(QGridLayout * gridLayout,
                 int row,
                 int column,
+                QLabel * & label,
+                QString text,
+                OSComboBox2 * & comboBox);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QString text,
+                OSIntegerEdit * & integerEdit);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QString text,
+                OSIntegerEdit2 * & integerEdit);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QLabel * & label,
                 QString text,
                 OSIntegerEdit * & integerEdit);
 
@@ -102,7 +133,7 @@ private:
                 int column,
                 QLabel * & label,
                 QString text,
-                OSIntegerEdit * & integerEdit);
+                OSIntegerEdit2 * & integerEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -128,6 +159,12 @@ private:
                 int column,
                 QString text,
                 OSSwitch * & osSwitch);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QString text,
+                OSSwitch2 * & osSwitch);
 
   void attachAll();
   void attachRunPeriod();
@@ -166,6 +203,8 @@ private:
   void detachRadianceParameters();
 
   model::Model m_model;
+  boost::optional<model::ShadowCalculation> m_shadowCalculation;
+  boost::optional<model::SimulationControl> m_simulationControl;
 
   QCheckBox * m_runSimWeatherFiles;
   QCheckBox * m_runSimDesignDays;
@@ -186,13 +225,13 @@ private:
   bool m_isIP;
 
   // SimulationControl
-  OSSwitch * m_doZoneSizingCalculation;
-  OSSwitch * m_doSystemSizingCalculation;
-  OSSwitch * m_doPlantSizingCalculation;
-  OSSwitch * m_runSimulationforSizingPeriods;
-  OSSwitch * m_runSimulationforWeatherFileRunPeriods;
-  OSIntegerEdit * m_maximumNumberofWarmupDays;
-  OSIntegerEdit * m_minimumNumberofWarmupDays;
+  OSSwitch2 * m_doZoneSizingCalculation;
+  OSSwitch2 * m_doSystemSizingCalculation;
+  OSSwitch2 * m_doPlantSizingCalculation;
+  OSSwitch2 * m_runSimulationforSizingPeriods;
+  OSSwitch2 * m_runSimulationforWeatherFileRunPeriods;
+  OSIntegerEdit2 * m_maximumNumberofWarmupDays;
+  OSIntegerEdit2 * m_minimumNumberofWarmupDays;
   OSQuantityEdit * m_loadsConvergenceToleranceValue;
   OSQuantityEdit * m_temperatureConvergenceToleranceValue;
   OSComboBox * m_solarDistribution;
@@ -251,8 +290,8 @@ private:
   // ShadowCalculation
   OSIntegerEdit * m_calculationFrequency;
   OSIntegerEdit * m_maximumFiguresInShadowOverlapCalculations;
-  OSLineEdit * m_polygonClippingAlgorithm;
-  OSLineEdit * m_skyDiffuseModelingAlgorithm;
+  OSComboBox2 * m_polygonClippingAlgorithm;
+  OSComboBox2 * m_skyDiffuseModelingAlgorithm;
 
   // SurfaceConvectionAlgorithmInside
   OSLineEdit * m_algorithmSurfaceConvectionInside;

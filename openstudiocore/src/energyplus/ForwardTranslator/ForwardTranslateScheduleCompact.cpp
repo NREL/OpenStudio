@@ -48,7 +48,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleCompact( Schedule
                                                          modelObject);
 
   OptionalString os;
-  if (os = modelObject.name()) {
+  if ((os = modelObject.name())) {
     scheduleCompact.setName(*os);
   }
 

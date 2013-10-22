@@ -107,6 +107,8 @@ class PROJECT_API DataPointValueRecord : public ObjectRecord {
   /** Returns the FunctionRecord to which this value corresponds. */
   boost::optional<FunctionRecord> functionRecord() const;
 
+  boost::optional<int> continuousVariableRecordId() const;
+
   /** Returns the ContinuousVariableRecord to which this value corresponds. */
   boost::optional<ContinuousVariableRecord> continuousVariableRecord() const;
 
@@ -137,6 +139,13 @@ typedef boost::optional<DataPointValueRecord> OptionalDataPointValueRecord;
 
 /** \relates DataPointValueRecord*/
 typedef std::vector<DataPointValueRecord> DataPointValueRecordVector;
+
+inline PROJECT_API bool continuousVariableRecordIdEquals(const DataPointValueRecord& record, int id){
+  if (boost::optional<int> val = record.continuousVariableRecordId()) {
+    return (*val == id);
+  }
+  return false;
+};
 
 } // project
 } // openstudio

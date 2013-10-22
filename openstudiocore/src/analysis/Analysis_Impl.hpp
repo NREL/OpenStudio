@@ -41,7 +41,7 @@ namespace runmanager {
 
 namespace analysis {
 
-class Analysis;
+struct AnalysisSerializationOptions;
 
 namespace detail {
 
@@ -131,20 +131,24 @@ namespace detail {
 
     std::vector<DataPoint> failedDataPoints() const;
 
+    /** Return all complete \link DataPoint DataPoints\endlink with runType() ==
+     *  DataPointRunType::CloudDetailed and an empty directory(). */
+    std::vector<DataPoint> dataPointsNeedingDetails() const;
+
     /** Get the DataPoints with matching variableValues. VariableValues may contain Null QVariants of
      *  the correct type, which means that any value at that position should be returned. */
     std::vector<DataPoint> getDataPoints(const std::vector<QVariant>& variableValues) const;
 
-    /** Get the DataPoints defined by perturbations. Perturbations must be translatable into a valid set
+    /** Get the DataPoints defined by measures. Perturbations must be translatable into a valid set
      *  of variableValues for the problem(). */
     std::vector<DataPoint> getDataPoints(
-        const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const;
+        const std::vector< boost::optional<Measure> >& measures) const;
 
     std::vector<DataPoint> getDataPoints(const std::string& tag) const;
 
-    /** Get the DataPoint defined by perturbations, if it exists. Perturbations must be a valid set
+    /** Get the DataPoint defined by measures, if it exists. Perturbations must be a valid set
      *  of variable values for the problem(). */
-    boost::optional<DataPoint> getDataPoint(const std::vector<DiscretePerturbation>& perturbations) const;
+    boost::optional<DataPoint> getDataPoint(const std::vector<Measure>& measures) const;
 
     boost::optional<DataPoint> getDataPointByUUID(const UUID& uuid) const;
 
@@ -186,11 +190,11 @@ namespace detail {
      *  openstudio::Exception if dataPoint.variableValues() are not valid for problem(). Should be
      *  called before running a given workflow. Usually called by Algorithm, but may also be called
      *  directly by a user to run custom analyses. */
-    bool addDataPoint(const DataPoint& dataPoint);
+    bool addDataPoint(DataPoint& dataPoint);
 
-    /** Adds a DataPoint to this analysis and returns true if perturbations are valid for problem(),
+    /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
      *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
-    bool addDataPoint(const std::vector<DiscretePerturbation>& perturbations);
+    bool addDataPoint(const std::vector<Measure>& measures);
 
     /** Sets run information on a DataPoint. Returns false if dataPoint is not in this analysis by
      *  UUID. */
@@ -240,6 +244,35 @@ namespace detail {
 
     /** Returns a csv summary of all the data points in this analysis. */
     Table summaryTable() const;
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
+
+    //@}
+    /** @name Serialization
+     *  Methods to save to json format. See AnalysisObject.hpp, openstudio::analysis::loadJSON for
+     *  the de-serialization methods. */
+    //@{
+
+    bool saveJSON(const openstudio::path& p,
+                  const AnalysisSerializationOptions& options,
+                  bool overwrite=false) const;
+
+    std::ostream& toJSON(std::ostream& os,const AnalysisSerializationOptions& options) const;
+
+    std::string toJSON(const AnalysisSerializationOptions& options) const;
+
+    //@}
+    /** @name Protected in or Absent from Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    /** Finalizes Analysis JSON based on options. */
+    QVariant toVariant(const AnalysisSerializationOptions& options) const;
+
+    static Analysis fromVariant(const QVariant& variant,const VersionString& version);
 
     //@}
    signals:

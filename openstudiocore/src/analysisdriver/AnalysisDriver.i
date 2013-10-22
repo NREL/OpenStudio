@@ -26,23 +26,27 @@
 
 %{
 
+  #include <analysisdriver/AnalysisDriverEnums.hpp>
   #include <analysisdriver/AnalysisDriver.hpp>
   #include <analysisdriver/CurrentAnalysis.hpp>
   #include <analysisdriver/AnalysisRunOptions.hpp>
   #include <analysisdriver/AnalysisDriverWatcher.hpp>
   #include <analysisdriver/SimpleProject.hpp>
+  #include <analysisdriver/CloudAnalysisDriver.hpp>
 
   #include <project/ProjectDatabase.hpp>
   #include <project/AnalysisRecord.hpp>
 
   #include <runmanager/lib/JobErrors.hpp>
+  #include <runmanager/lib/SimulationEngine.hpp>
+  #include <runmanager/lib/ErrorEstimation.hpp>
 
-  #include <analysis/Analysis.hpp>
-  #include <analysis/DiscreteVariable.hpp>
-  #include <analysis/OptimizationDataPoint.hpp>
+  #include <analysis/ConcreteAnalysisObjects.hpp>
 
-  #include <utilities/idf/URLSearchPath.hpp>
+  #include <utilities/cloud/AWSProvider.hpp>
+  #include <utilities/cloud/VagrantProvider.hpp>
   #include <utilities/core/FileReference.hpp>
+  #include <utilities/idf/URLSearchPath.hpp>
 
   // to be ignored
   class QAction;
@@ -122,6 +126,8 @@
 %template(SimpleProjectVector) std::vector<openstudio::analysisdriver::SimpleProject>;
 %template(OptionalSimpleProject) boost::optional<openstudio::analysisdriver::SimpleProject>;
 
+%include <analysisdriver/AnalysisDriverEnums.hpp>
+
 ANALYSISDRIVER_WRAP(AnalysisRunOptions)
 ANALYSISDRIVER_WRAP(CurrentAnalysis)
 ANALYSISDRIVER_WRAP(AnalysisDriver)
@@ -136,5 +142,6 @@ ANALYSISDRIVER_WRAP(AnalysisDriver)
 
 ANALYSISDRIVER_WRAP(AnalysisDriverWatcher)
 ANALYSISDRIVER_WRAP(SimpleProject)
+ANALYSISDRIVER_WRAP(CloudAnalysisDriver)
 
 #endif // ANALYSISDRIVER_ANALYSISDRIVER_I

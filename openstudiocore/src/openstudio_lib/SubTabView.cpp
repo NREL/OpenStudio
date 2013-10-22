@@ -82,25 +82,25 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
                                  SIGNAL(itemSelected(OSItem*)),
                                  this,
                                  SIGNAL(itemSelected(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelector,
                                  SIGNAL(itemRemoveClicked(OSItem*)),
                                  this,
                                  SIGNAL(itemRemoveClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelector,
                                  SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
                                  this,
                                  SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelector,
                                  SIGNAL(selectionCleared()),
                                  this,
                                  SIGNAL(selectionCleared()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
 
   // Item Selector Buttons
@@ -111,43 +111,43 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
                                  SIGNAL(itemDropped(const OSItemId&)),
                                  this,
                                  SIGNAL(itemDropped(const OSItemId&)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelectorButtons,
                                  SIGNAL(addClicked()),
                                  this,
                                  SIGNAL(addClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelectorButtons,
                                  SIGNAL(copyClicked()),
                                  this,
                                  SIGNAL(copyClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelectorButtons,
                                  SIGNAL(removeClicked()),
                                  this,
                                  SIGNAL(removeClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelectorButtons,
                                  SIGNAL(purgeClicked()),
                                  this,
                                  SIGNAL(purgeClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelectorButtons,
                                  SIGNAL(openBclDlgClicked()),
                                  this,
                                  SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   //isConnected = QObject::connect(m_itemSelectorButtons,
   //                               SIGNAL(openLibDlgClicked()),
   //                               this,
   //                               SIGNAL(openLibDlgClicked()));
-  //BOOST_ASSERT(isConnected); TODO
+  //OS_ASSERT(isConnected); TODO
 
   // vertical separator
   //QWidget * vLine = new QWidget();
@@ -165,7 +165,7 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
                                  SIGNAL(dropZoneItemClicked(OSItem*)),
                                  this,
                                  SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
    
 OSItemSelector* SubTabView::itemSelector()

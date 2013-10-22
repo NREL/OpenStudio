@@ -66,8 +66,11 @@ OPENSTUDIO_ENUM(VariableRecordType,
 
 /** \class VariableRecordColumns
  *  \brief Column definitions for the VariableRecords table.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
- *  macro call is:
+ *  \details At some point, variableVectorIndex should be renamed to vectorIndex;
+ *  rulesetRecordId shoudl be deprecated; and rubyPerturbationRecordId should be
+ *  renamed to measureRecordId. For general information, see the
+ *  OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
  *  \code
 OPENSTUDIO_ENUM(VariableRecordColumns,
                 ((id)(INTEGER PRIMARY KEY)(0))
@@ -94,6 +97,7 @@ OPENSTUDIO_ENUM(VariableRecordColumns,
                 ((uncertaintyDescriptionType)(INTEGER)(21))
                 ((inputVariableRecordType)(INTEGER)(22))
                 ((outputVariableRecordType)(INTEGER)(23))
+                ((discreteVariableRecordType)(INTEGER)(24))
                 );
  *  \endcode */
 OPENSTUDIO_ENUM(VariableRecordColumns,
@@ -121,6 +125,7 @@ OPENSTUDIO_ENUM(VariableRecordColumns,
                 ((uncertaintyDescriptionType)(INTEGER)(21))
                 ((inputVariableRecordType)(INTEGER)(22))
                 ((outputVariableRecordType)(INTEGER)(23))
+                ((discreteVariableRecordType)(INTEGER)(24))
                 );
 
 /** A VariableRecord is an ObjectRecord parented by a ProblemRecord. */

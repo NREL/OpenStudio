@@ -31,8 +31,8 @@
 #include <utilities/units/BTUUnit_Impl.hpp>
 #include <utilities/units/CFMUnit.hpp>
 #include <utilities/units/CFMUnit_Impl.hpp>
-#include <utilities/units/CelciusUnit.hpp>
-#include <utilities/units/CelciusUnit_Impl.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
+#include <utilities/units/CelsiusUnit_Impl.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/FahrenheitUnit_Impl.hpp>
 
@@ -52,8 +52,8 @@ using openstudio::BTUUnit;
 using openstudio::OptionalBTUUnit;
 using openstudio::CFMUnit;
 using openstudio::OptionalCFMUnit;
-using openstudio::CelciusUnit;
-using openstudio::OptionalCelciusUnit;
+using openstudio::CelsiusUnit;
+using openstudio::OptionalCelsiusUnit;
 using openstudio::FahrenheitUnit;
 using openstudio::OptionalFahrenheitUnit;
 using openstudio::UnitFactory;
@@ -94,13 +94,13 @@ TEST_F(UnitsFixture,UnitFactory_ParseStandardUnits)
   ASSERT_TRUE(t3IP);
 
   OptionalUnit T = UnitFactory::instance().createUnit("C");
-  OptionalCelciusUnit TC = T->optionalCast<CelciusUnit>();
+  OptionalCelsiusUnit TC = T->optionalCast<CelsiusUnit>();
   OptionalFahrenheitUnit TF = T->optionalCast<FahrenheitUnit>();
   ASSERT_TRUE(TC);
   ASSERT_FALSE(TF);
   
   T = UnitFactory::instance().createUnit("F");
-  TC = T->optionalCast<CelciusUnit>();
+  TC = T->optionalCast<CelsiusUnit>();
   TF = T->optionalCast<FahrenheitUnit>();
   ASSERT_FALSE(TC);
   ASSERT_TRUE(TF);
@@ -148,9 +148,9 @@ TEST_F(UnitsFixture,UnitFactory_TestForAndReturnUnitObjects) {
   EXPECT_EQ(-1,cfmU.baseUnitExponent("min"));
   EXPECT_EQ("cfm",cfmU.prettyString());
 
-  ASSERT_EQ(UnitSystem::Celcius,openstudio::getSystem("C").value());
-  CelciusUnit TC = openstudio::createUnit("C")->cast<CelciusUnit>();
-  ASSERT_ANY_THROW(openstudio::createUnit("W/K")->cast<CelciusUnit>());
+  ASSERT_EQ(UnitSystem::Celsius,openstudio::getSystem("C").value());
+  CelsiusUnit TC = openstudio::createUnit("C")->cast<CelsiusUnit>();
+  ASSERT_ANY_THROW(openstudio::createUnit("W/K")->cast<CelsiusUnit>());
 
   ASSERT_FALSE(openstudio::isInSystem("F*ft",UnitSystem::Fahrenheit));
   FahrenheitUnit TF = openstudio::createUnit("F")->cast<FahrenheitUnit>();

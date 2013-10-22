@@ -34,7 +34,7 @@ namespace detail {
                                            bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ProgramControl::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ProgramControl::iddObjectType());
   }
 
   ProgramControl_Impl::ProgramControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -42,7 +42,7 @@ namespace detail {
                                            bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ProgramControl::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ProgramControl::iddObjectType());
   }
 
   ProgramControl_Impl::ProgramControl_Impl(const ProgramControl_Impl& other,
@@ -81,7 +81,7 @@ namespace detail {
 
   void ProgramControl_Impl::resetNumberofThreadsAllowed() {
     bool result = setString(OS_ProgramControlFields::NumberofThreadsAllowed, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -89,12 +89,12 @@ namespace detail {
 ProgramControl::ProgramControl(const Model& model)
   : ModelObject(ProgramControl::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ProgramControl_Impl>());
+  OS_ASSERT(getImpl<detail::ProgramControl_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType ProgramControl::iddObjectType() {

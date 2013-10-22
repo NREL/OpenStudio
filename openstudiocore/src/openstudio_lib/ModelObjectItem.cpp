@@ -60,7 +60,7 @@ ModelObjectItem::ModelObjectItem(const openstudio::model::ModelObject& modelObje
                          SIGNAL(onChange()),
                          this,
                          SLOT(onObjectChanged()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   if (!modelObject.getModelObjectSources<model::ComponentData>().empty()){
     m_bclBadge->setVisible(true);

@@ -17,6 +17,7 @@ SET( runmanager_src
   Job.hpp
   Job_Impl.cpp
   Job_Impl.hpp
+  JobState.hpp
   RunManager.cpp
   RunManager.hpp
   RunManager_Impl.cpp
@@ -92,12 +93,11 @@ SET( runmanager_src
   RubyJobUtils.cpp
   NormalizeURLs.hpp
   NormalizeURLs.cpp
+  TreeStatus.hpp
   ToolFinder.hpp
   ToolFinder.cpp
   ModelInModelOutJob.hpp
   ModelInModelOutJob.cpp
-  ModelObjectPerturbationJob.hpp
-  ModelObjectPerturbationJob.cpp
   EnergyPlusPostProcessJob.hpp
   EnergyPlusPostProcessJob.cpp
   EnergyPlusPreProcessJob.hpp
@@ -131,6 +131,14 @@ SET( runmanager_src
 
   ErrorEstimation.hpp
   ErrorEstimation.cpp
+
+  LinearApproximation.hpp
+  LinearApproximation.cpp
+
+  SimulationEngine.hpp
+  SimulationEngine.cpp
+  JSON.cpp
+  JSON.hpp
 )
 
 IF( BUILD_TESTING OR BUILD_PACKAGE )
@@ -189,7 +197,6 @@ SET( runmanager_moc
   UserScriptJob.hpp
   NullJob.hpp
   ModelInModelOutJob.hpp
-  ModelObjectPerturbationJob.hpp
   EnergyPlusPostProcessJob.hpp
   OpenStudioPostProcessJob.hpp
   EnergyPlusPreProcessJob.hpp
@@ -200,6 +207,7 @@ SET( runmanager_moc
   ModelToRadJob.hpp
   ModelToRadPreProcessJob.hpp
   DakotaJob.hpp
+  SimulationEngine.hpp
 )
 
 SET( runmanager_test_moc
@@ -243,7 +251,6 @@ SET( runmanager_test_src
   Test/MergeJobs_GTest.cpp
   Test/EnergyPlusPostProcessJob_GTest.cpp
   Test/OpenStudioPostProcessJob_GTest.cpp
-  Test/ModelObjectPerturbationJob_GTest.cpp
   Test/FlatOutDir_GTest.cpp
   Test/ModelToRadJob_GTest.cpp
   Test/UserScript_GTest.cpp
@@ -255,6 +262,8 @@ SET( runmanager_test_src
   Test/OSResultLoading_GTest.cpp
   Test/ParallelEnergyPlusJob_GTest.cpp
   Test/ErrorEstimation_GTest.cpp
+  Test/JSON_GTest.cpp
+  Test/ExternallyManagedJobs_GTest.cpp
   "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx"
 )
 
@@ -294,12 +303,12 @@ IF(BUILD_TESTING)
     ${runmanager_test_moc_src}
   )
   SET(runmanager_test_depends
-    ${runamanger_depends}
+    ${runmanager_depends}
     openstudio_runmanager_lib_test
     )
 ELSE()
   SET(runmanager_test_depends
-    ${runamanger_depends}
+    ${runmanager_depends}
     )
 ENDIF()
 

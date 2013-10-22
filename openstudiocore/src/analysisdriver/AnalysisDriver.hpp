@@ -45,11 +45,13 @@ namespace analysisdriver {
 
 class AnalysisRunOptions;
 class CurrentAnalysis;
+class AnalysisStatus;
 
 namespace detail {
 
   class AnalysisDriver_Impl;
   class CurrentAnalysis_Impl;
+  class SimpleProject_Impl;
 
 } // detail
 
@@ -105,6 +107,8 @@ class ANALYSISDRIVER_API AnalysisDriver {
   /** Returns true if this AnalysisDriver is running (is actively queuing and monitoring jobs). */
   bool isRunning() const;
 
+  AnalysisStatus status() const;
+
   /** Call this method between .run calls and code that should execute once the analysis is
    *  finished. If no argument is specified, will run to completion and return true. If a
    *  positive m_secs is specified, will block the process for m_secs, and give a return value
@@ -138,6 +142,7 @@ class ANALYSISDRIVER_API AnalysisDriver {
 
   friend class detail::AnalysisDriver_Impl;
   friend class detail::CurrentAnalysis_Impl;
+  friend class detail::SimpleProject_Impl;
 
   explicit AnalysisDriver(boost::shared_ptr<detail::AnalysisDriver_Impl> impl);
 

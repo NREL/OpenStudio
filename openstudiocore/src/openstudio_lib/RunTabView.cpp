@@ -42,6 +42,8 @@
 
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/sql/SqlFile.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
@@ -121,7 +123,7 @@ RunView::RunView(const model::Model & model,
 
   mainLayout->addWidget(m_playButton, 0, 0);
   isConnected = connect(m_playButton, SIGNAL(clicked(bool)), this, SLOT(playButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Progress bar area
   m_progressBar = new QProgressBar();
@@ -136,7 +138,7 @@ RunView::RunView(const model::Model & model,
 
   isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(on_radianceGroupClicked(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   int buttonCount = 0;
 
@@ -152,7 +154,7 @@ RunView::RunView(const model::Model & model,
 
   isConnected = connect(m_radianceWarningsAndErrorsButton, SIGNAL(clicked(bool)),
                         this, SLOT(on_radianceWarningsAndErrorsClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * radianceHLayout = new QHBoxLayout();
   radianceHLayout->addWidget(m_radianceButton);
@@ -195,7 +197,7 @@ RunView::RunView(const model::Model & model,
   QPushButton *openrunmanagerbutton = new QPushButton("Open RunManager\nfor Multiple Runs");
   mainLayout->addWidget(openrunmanagerbutton, 0, 2);
   isConnected = connect(openrunmanagerbutton, SIGNAL(clicked(bool)), this, SLOT(openRunManagerClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
 
   updateRunManagerStats(t_runManager);
@@ -299,8 +301,16 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
 void RunView::locateEnergyPlus()
 {
   openstudio::runmanager::ConfigOptions co(true);
-  bool energyplus_7_2_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(7,2)).tools().size() == 0;
-  if (energyplus_7_2_not_installed){
+  boost::optional<int> major = getRequiredEnergyPlusVersion().getMajor();
+  boost::optional<int> minor = getRequiredEnergyPlusVersion().getMinor();
+  bool energyplus_not_installed;
+  if (major && minor){
+    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(*major,*minor)).tools().size() == 0;
+  } else {
+    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,0)).tools().size() == 0;
+  }
+  
+  if (energyplus_not_installed){
     m_toolWarningLabel->show();
   } else {
     m_toolWarningLabel->hide();
@@ -379,6 +389,16 @@ void RunView::runFinished(const openstudio::path &t_sqlFile, const openstudio::p
   {
     m_statusLabel->setText("Canceled");
   }
+
+  // DLM: should we attach the sql file to the model here?
+  // DLM: if model is re-opened with results they will not be added here, better to do this on results tab
+  //if (exists(t_sqlFile)){
+  //  SqlFile sqlFile(t_sqlFile);
+  //  if (sqlFile.connectionOpen()){
+  //    boost::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  //    osdocument->model().setSqlFile(sqlFile);
+  //  }
+  //}
   
   m_canceling = false;
   LOG(Debug, "Emitting results generated for sqlfile: " << openstudio::toString(t_sqlFile) << " and radiance file " << openstudio::toString(t_radianceOutputPath));
@@ -541,6 +561,9 @@ void RunView::playButtonClicked(bool t_checked)
     m_canceling = false;
     m_outputWindow->clear();
 
+    // reset the model's sqlFile
+    osdocument->model().resetSqlFile();
+
     // we are starting the simulations
     openstudio::runmanager::RunManager rm = runManager();
     startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), this);
@@ -608,7 +631,7 @@ void RunView::on_radianceWarningsAndErrorsClicked(bool checked)
 void RunView::on_radianceGroupClicked(int idx)
 {
   QAbstractButton * button = m_radianceGroup->button(idx);
-  Q_ASSERT(button);
+  OS_ASSERT(button);
   if(button == m_radianceButton){
     emit useRadianceStateChanged(true);
     updateToolsWarnings();

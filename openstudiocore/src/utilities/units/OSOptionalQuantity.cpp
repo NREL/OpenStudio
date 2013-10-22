@@ -66,7 +66,7 @@ bool OSOptionalQuantity::isSet() const {
 }
 
 Quantity OSOptionalQuantity::get() const {
-  BOOST_ASSERT(m_value);
+  OS_ASSERT(m_value);
   return Quantity(*m_value,units());
 }
 

@@ -48,6 +48,7 @@
 #include <model/Model.hpp>
 #include <model/WeatherFile.hpp>
 
+#include <utilities/core/Finder.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
@@ -67,7 +68,7 @@ using namespace openstudio::analysis;
 using namespace openstudio::project;
 using namespace openstudio::analysisdriver;
 
-TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
+TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessSecondXML) {
 
   // CREATE MINIMAL PROBLEM
   openstudio::runmanager::Workflow simulationWorkflow;
@@ -75,7 +76,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   simulationWorkflow.addJob(openstudio::runmanager::JobType::EnergyPlusPreProcess);
   simulationWorkflow.addJob(openstudio::runmanager::JobType::EnergyPlus);
   simulationWorkflow.addJob(openstudio::runmanager::JobType::OpenStudioPostProcess);
-  openstudio::path postProcessPath = resourcesPath() / toPath("analysisdriver/PostProcessAppendToReportXML.rb");
+  openstudio::path postProcessPath = resourcesPath() / toPath("analysisdriver/PostProcessSecondXML.rb");
   ASSERT_TRUE(boost::filesystem::exists(postProcessPath));
   RubyJobBuilder rjb;
   rjb.setScriptFile(postProcessPath);
@@ -104,7 +105,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
       rubyExePath().parent_path(),
       dakotaExePath().parent_path()));
 
-  Problem problem("No Variables PostProcessAppendToReportXML Workflow",VariableVector(),simulationWorkflow);
+  Problem problem("No Variables PostProcessSecondXML Workflow",VariableVector(),simulationWorkflow);
 
   // DEFINE SEED
   model::Model model = model::exampleModel();
@@ -117,7 +118,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   FileReference seedModel(p);
 
   // CREATE ANALYSIS
-  Analysis analysis("Post-Process Append to Report XML",
+  Analysis analysis("Post-Process Second XML",
                     problem,
                     seedModel);
 
@@ -129,7 +130,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   EXPECT_FALSE(oDataPoint->topLevelJob());
 
   // CREATE DRIVER
-  ProjectDatabase database = getCleanDatabase("PostProcessJobs_PostProcessAppendToReportXML");
+  ProjectDatabase database = getCleanDatabase("PostProcessJobs_PostProcessSecondXML");
   AnalysisDriver analysisDriver(database);
 
   // RUN ANALYSIS
@@ -162,13 +163,15 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   DataPointRecordVector dataPointRecords = DataPointRecord::getDataPointRecords(database);
   ASSERT_EQ(1u,dataPointRecords.size());
   DataPointRecord dataPointRecord = dataPointRecords[0];
-  OptionalFileReferenceRecord oXmlRecord = dataPointRecord.xmlOutputDataRecord();
-  ASSERT_TRUE(oXmlRecord);
-  FileReferenceRecord xmlRecord = *oXmlRecord;
-  OptionalAttributeRecord attributeRecord = xmlRecord.getAttributeRecord("floorArea");
-  EXPECT_TRUE(attributeRecord);
-  attributeRecord = xmlRecord.getAttributeRecord("peakAnnualDemand");
-  EXPECT_TRUE(attributeRecord);
+  AttributeRecordVector attributeRecords = dataPointRecord.attributeRecords();
+  NameFinder<AttributeRecord> finder("floorArea",true);
+  AttributeRecordVector::const_iterator it = std::find_if(attributeRecords.begin(),
+                                                          attributeRecords.end(),
+                                                          finder);
+  EXPECT_FALSE(it == attributeRecords.end());
+  finder = NameFinder<AttributeRecord>("peakAnnualDemand",true);
+  it = std::find_if(attributeRecords.begin(),attributeRecords.end(),finder);
+  EXPECT_FALSE(it == attributeRecords.end());
 }
 
 TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) {
@@ -205,32 +208,34 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) 
   FileReference seedModel(p);
 
   // CREATE ANALYSIS
-  DDACEAlgorithmOptions algOptions(DDACEAlgorithmType::lhs);
-  algOptions.setSamples(1);
+  Analysis analysis("DDACE Latin Hypercube Sampling - UserScriptContinuousWithResponses",
+                    problem,
+                    seedModel);
+
+  // CREATE A DATAPOINT TO RUN
+  std::vector<QVariant> values;
+  values.push_back(QVariant(double(0.2))); // wwr
+  values.push_back(QVariant(double(1.0))); // offset of windows from floor
+  values.push_back(QVariant(double(1.0))); // overhang projection factor
+  OptionalDataPoint oDataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(oDataPoint);
+  bool test = analysis.addDataPoint(*oDataPoint);
+  EXPECT_TRUE(test);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    Analysis analysis("DDACE Latin Hypercube Sampling - UserScriptContinuousWithResponses",
-                      problem,
-                      DDACEAlgorithm(algOptions),
-                      seedModel);
-    ProjectDatabase database = getCleanDatabase("PostProcessJobs_OpenStudioPostProcessAndResponses");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    EXPECT_EQ(2u,summary.nRows());
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  ProjectDatabase database = getCleanDatabase("PostProcessJobs_OpenStudioPostProcessAndResponses");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  EXPECT_EQ(2u,summary.nRows());
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_EQ(problem.responses().size(),dataPoint.responseValues().size());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    EXPECT_EQ(problem.responses().size(),dataPoint.responseValues().size());
   }
 }

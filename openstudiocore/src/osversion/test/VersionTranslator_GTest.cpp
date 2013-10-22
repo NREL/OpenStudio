@@ -33,6 +33,8 @@
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
+#include <model/Version.hpp>
+#include <model/Version_Impl.hpp>
 
 #include <utilities/bcl/RemoteBCL.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
@@ -40,6 +42,7 @@
 #include <utilities/bcl/BCLComponent.hpp>
 
 #include <utilities/idf/IdfObject.hpp>
+#include <utilities/idd/OS_Version_FieldEnums.hxx>
 
 #include <utilities/core/Compare.hpp>
 
@@ -147,6 +150,80 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleComponent) {
       EXPECT_TRUE(result);
     }
   }
+}
+
+TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
+  osversion::VersionTranslator translator;
+
+  model::Model model = model::exampleModel();
+
+  // it is not generally a good idea to mess with the version like this
+  boost::optional<WorkspaceObject> object = model.versionObject();
+  ASSERT_TRUE(object);
+  boost::optional<model::Version> version = object->optionalCast<model::Version>();
+  ASSERT_TRUE(version);
+  VersionString vs(version->versionIdentifier());
+
+  int major = vs.major();
+  int minor = vs.minor();
+  boost::optional<int> patch = vs.patch();
+  ASSERT_TRUE(patch);
+
+  std::stringstream ss;
+
+  // version translate current model
+  ss.str("");
+  ss << model;
+  boost::optional<model::Model> m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
+  // increment patch
+  VersionString nextPatch(major,minor,*patch+1);
+  EXPECT_TRUE(vs.isNextVersion(nextPatch));
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextPatch.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
+  // increment minor
+  VersionString nextMinor(major,minor+1,0);
+  EXPECT_TRUE(vs.isNextVersion(nextMinor));
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMinor.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
+  // increment major
+  VersionString nextMajor(major+1,0,0);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMajor.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
+  // too far ahead
+  VersionString aStepTooFar(major,minor+1,1);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_FALSE(m2);
+
+  aStepTooFar = VersionString(major+1,1,0);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_FALSE(m2);
+
+  aStepTooFar = VersionString(major+1,4);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_FALSE(m2);
 }
 
 TEST_F(OSVersionFixture,VersionTranslator_AllDefaultObjects) {

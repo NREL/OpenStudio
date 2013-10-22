@@ -71,6 +71,8 @@
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QDir>
 #include <QDateTime>
 
@@ -151,6 +153,7 @@ namespace detail {
       errors.addError(ErrorType::Error, e.what());
     }
 
+    LOG(Info, "ModelToRadPreProcess starting, loading model file: " << toString(m_osm->fullPath));
     openstudio::model::OptionalModel model = openstudio::model::Model::load(m_osm->fullPath);
 
     if (!model)
@@ -244,7 +247,7 @@ namespace detail {
           }
 
           std::map<std::string, openstudio::model::ThermalZone>::iterator itr = thermalZones.find(*thermalZone->name());
-          BOOST_ASSERT(itr != thermalZones.end()); // We just added it above if we needed it
+          OS_ASSERT(itr != thermalZones.end()); // We just added it above if we needed it
           new_space.setThermalZone(itr->second);
         } else if (thermalZone && !thermalZone->name()) {
           errors.addError(ErrorType::Warning, "Space discovered in un-named thermalZone, not translating");
@@ -283,25 +286,25 @@ namespace detail {
         itr->remove();
       }
 
-      openstudio::model::OutputVariable outputVariable("Exterior Horizontal Illuminance From Sky", outmodel);
+      openstudio::model::OutputVariable outputVariable("Site Exterior Horizontal Sky Illuminance", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Exterior Beam Normal Illuminance", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Exterior Beam Normal Illuminance", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Solar Altitude Angle", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Solar Altitude Angle", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Solar Azimuth Angle", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Solar Azimuth Angle", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Luminous Efficacy of Sky Diffuse Solar Radiation", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Sky Diffuse Solar Radiation Luminous Efficacy", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Luminous Efficacy of Beam Solar Radiation", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Beam Solar Radiation Luminous Efficacy", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Zone People Number Of Occupants", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Zone People Occupant Count", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
       outputVariable = openstudio::model::OutputVariable("Zone Lights Electric Power", outmodel);
@@ -359,6 +362,20 @@ namespace detail {
     Files f;
     FileInfo fi(outpath / toPath("out.osm"), "osm");
     fi.requiredFiles = m_osm->requiredFiles;
+
+    if (!fi.hasRequiredFile(openstudio::toPath("in.epw")))
+    {
+      /// \todo we need better handling of OSM files and their attachments
+      // epw wasn't found, look for parent one
+      openstudio::path possibleepw = m_osm->fullPath.parent_path() / openstudio::toPath("in.epw");
+
+      if (boost::filesystem::exists(possibleepw))
+      {
+        LOG(Info, "Fixing up EPW file for incoming OSM attachment to " << openstudio::toString(possibleepw));
+        fi.addRequiredFile(possibleepw, openstudio::toPath("in.epw"));
+      }
+    }
+
     f.append(fi);
     return f;
   }

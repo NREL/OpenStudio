@@ -86,7 +86,9 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("0.11.2")] = &VersionTranslator::update_0_11_1_to_0_11_2;
   m_updateMethods[VersionString("0.11.5")] = &VersionTranslator::update_0_11_4_to_0_11_5;
   m_updateMethods[VersionString("0.11.6")] = &VersionTranslator::update_0_11_5_to_0_11_6;
-  m_updateMethods[VersionString("1.0.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
+  m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
+  m_updateMethods[VersionString("1.1.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -125,6 +127,13 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("0.11.5"));
   m_startVersions.push_back(VersionString("0.11.6"));
   m_startVersions.push_back(VersionString("1.0.0"));
+  m_startVersions.push_back(VersionString("1.0.1"));
+  m_startVersions.push_back(VersionString("1.0.2"));
+  m_startVersions.push_back(VersionString("1.0.3"));
+  m_startVersions.push_back(VersionString("1.0.4"));
+  m_startVersions.push_back(VersionString("1.0.5"));
+  m_startVersions.push_back(VersionString("1.0.6"));
+  m_startVersions.push_back(VersionString("1.0.7"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -238,7 +247,7 @@ boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is,
   m_isComponent = isComponent;
 
   initializeMap(is);
-  BOOST_ASSERT(m_map.size() < 2u);
+  OS_ASSERT(m_map.size() < 2u);
   if (m_map.size() == 0u) {
     return boost::none;
   }
@@ -277,7 +286,7 @@ boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is,
   // validity checking
   Workspace finalWorkspace(finalModel);
   model::Model tempModel(finalWorkspace); // None-level strictness!
-  BOOST_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::None);
+  OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::None);
   std::vector<boost::shared_ptr<InterobjectIssueInformation> > issueInfo = fixInterobjectIssuesStage1(
       tempModel,
       m_originalVersion);
@@ -288,7 +297,7 @@ boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is,
     return boost::none;
   }
   bool test = tempModel.setStrictnessLevel(StrictnessLevel::Draft);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   fixInterobjectIssuesStage2(tempModel,issueInfo);
 
   if (isComponent) {
@@ -333,10 +342,23 @@ void VersionTranslator::initializeMap(std::istream& is) {
     return;
   }
   if (currentVersion > VersionString(openStudioVersion())) {
-    LOG(Error,"Version extracted from file '" << currentVersion.str()
-        << "' is not supported by OpenStudio Version " << openStudioVersion()
-        << ". Please check http://openstudio.nrel.gov for updates.");
-    return;
+    // if currentVersion is just one ahead, may be a developer using the cloud. 
+    // let it pass as if currentVersion == openStudioVersion(), with a warning
+    if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
+      LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
+          << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
+          << "Proceeding as if these versions are the same. Use with caution. (You "
+          << "should only be seeing this if you are a developer working with cloud "
+          << "resources.)");
+      currentVersion = VersionString(openStudioVersion());
+    }
+    else {
+      // if currentVersion is farther ahead, log error and return nothing
+      LOG(Error,"Version extracted from file '" << currentVersion.str()
+          << "' is not supported by OpenStudio Version " << openStudioVersion()
+          << ". Please check http://openstudio.nrel.gov for updates.");
+      return;
+    }
   }
 
   // load IdfFile with correct IddFile and save
@@ -386,7 +408,7 @@ void VersionTranslator::update(const VersionString& startVersion) {
          itEnd = m_updateMethods.end(); it != itEnd; ++it)
     {
       // make sure map iteration is behaving as expected
-      BOOST_ASSERT(lastVersion < it->first);
+      OS_ASSERT(lastVersion < it->first);
       lastVersion = it->first;
       if (startVersion < it->first) {
         oIddFile = getIddFile(it->first);
@@ -479,7 +501,7 @@ IdfObject VersionTranslator::updateUrlField_0_7_1_to_0_7_2(const IdfObject& obje
       if (!transformed.empty()) {
         IdfObject objCopy = object.clone();
         bool ok = objCopy.setString(index,transformed);
-        BOOST_ASSERT(ok);
+        OS_ASSERT(ok);
         result = objCopy;
       }
       else {
@@ -667,7 +689,7 @@ std::string VersionTranslator::update_0_7_3_to_0_7_4(const IdfFile& idf_0_7_3, c
         // add match to translated contents list
         handleForContents[0] = toString(match->handle());
         IdfExtensibleGroup reg = componentDataIdf.pushExtensibleGroup(handleForContents);
-        BOOST_ASSERT(!reg.empty());
+        OS_ASSERT(!reg.empty());
       }
 
       if (componentDataIdf.numExtensibleGroups() == 0u) {
@@ -737,7 +759,7 @@ std::vector< boost::shared_ptr<VersionTranslator::InterobjectIssueInformation> >
 VersionTranslator::fixInterobjectIssuesStage1(model::Model& model,
                                               const VersionString& startVersion)
 {
-  BOOST_ASSERT(model.strictnessLevel() == StrictnessLevel::None);
+  OS_ASSERT(model.strictnessLevel() == StrictnessLevel::None);
   std::vector<boost::shared_ptr<InterobjectIssueInformation> > result;
 
   if (startVersion < VersionString("0.8.4")) {
@@ -752,7 +774,7 @@ void VersionTranslator::fixInterobjectIssuesStage2(
     model::Model& model,
     std::vector<boost::shared_ptr<InterobjectIssueInformation> >& stage1Information)
 {
-  BOOST_ASSERT(model.strictnessLevel() == StrictnessLevel::Draft);
+  OS_ASSERT(model.strictnessLevel() == StrictnessLevel::Draft);
 
   BOOST_FOREACH(boost::shared_ptr<InterobjectIssueInformation>& info,stage1Information) {
     if (info->endVersion == VersionString("0.8.4")) {
@@ -806,7 +828,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
           IdfObjectVector::const_iterator jit = std::find(allIdfComponentData.begin(),
                                                           allIdfComponentData.end(),
                                                           cd);
-          BOOST_ASSERT(jit != allIdfComponentData.end());
+          OS_ASSERT(jit != allIdfComponentData.end());
           result->componentDataObjects.back().push_back(*jit);
         }
 
@@ -822,7 +844,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
             continue;
           }
 
-          BOOST_ASSERT(thisUsersIndices.size() == thisUsersKeys.size());
+          OS_ASSERT(thisUsersIndices.size() == thisUsersKeys.size());
           BOOST_FOREACH(unsigned index,thisUsersIndices) {
             it->setString(index,""); // clear for now--only change to be made at none strictness
           }
@@ -897,10 +919,10 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
   }
 
   unsigned nSched = schedulesToFixup->schedules.size();
-  BOOST_ASSERT(schedulesToFixup->users.size() == nSched);
-  BOOST_ASSERT(schedulesToFixup->indices.size() == nSched);
-  BOOST_ASSERT(schedulesToFixup->keys.size() == nSched);
-  BOOST_ASSERT(schedulesToFixup->componentDataObjects.size() == nSched);
+  OS_ASSERT(schedulesToFixup->users.size() == nSched);
+  OS_ASSERT(schedulesToFixup->indices.size() == nSched);
+  OS_ASSERT(schedulesToFixup->keys.size() == nSched);
+  OS_ASSERT(schedulesToFixup->componentDataObjects.size() == nSched);
 
   for (unsigned i = 0; i < nSched; ++i) {
 
@@ -914,18 +936,18 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
     bool okToModifySchedule(true);
 
     unsigned nUsers = schedulesToFixup->users[i].size();
-    BOOST_ASSERT(schedulesToFixup->indices[i].size() == nUsers);
-    BOOST_ASSERT(schedulesToFixup->keys[i].size() == nUsers);
+    OS_ASSERT(schedulesToFixup->indices[i].size() == nUsers);
+    OS_ASSERT(schedulesToFixup->keys[i].size() == nUsers);
 
     for (unsigned j = 0; j < nUsers; ++j) {
       model::ModelObject user = schedulesToFixup->users[i][j];
       UnsignedVector indices = schedulesToFixup->indices[i][j];
       std::vector<model::ScheduleTypeKey> keys = schedulesToFixup->keys[i][j];
 
-      BOOST_ASSERT(!keys.empty());
+      OS_ASSERT(!keys.empty());
 
       unsigned n = keys.size();
-      BOOST_ASSERT(indices.size() == n);
+      OS_ASSERT(indices.size() == n);
       for (unsigned k = 0, n = keys.size(); k < n; ++k) {
         bool ok(false);
         if (scheduleLimits) {
@@ -933,7 +955,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
         }
         if (ok) {
           ok = user.setPointer(indices[k],schedule.handle());
-          BOOST_ASSERT(ok);
+          OS_ASSERT(ok);
           okToModifySchedule = false;
         }
         else {
@@ -954,25 +976,25 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
           if (okToModifySchedule) {
             if (scheduleLimits) {
               ok = schedule.resetScheduleTypeLimits();
-              BOOST_ASSERT(ok); // unhooked schedule in Stage 1
+              OS_ASSERT(ok); // unhooked schedule in Stage 1
             }
             ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,schedule);
-            BOOST_ASSERT(ok);
+            OS_ASSERT(ok);
             scheduleLimits = schedule.scheduleTypeLimits();
             if (model.numObjects() > modelN) {
               m_new.push_back(schedule.scheduleTypeLimits().get().idfObject());
             }
             okToModifySchedule = false;
             ok = user.setPointer(indices[k],schedule.handle());
-            BOOST_ASSERT(ok);
+            OS_ASSERT(ok);
           }
           else {
             model::Schedule clonedSchedule = schedule.clone().cast<model::Schedule>();
             ok = clonedSchedule.resetScheduleTypeLimits();
-            BOOST_ASSERT(ok);
+            OS_ASSERT(ok);
             modelN = model.numObjects();
             ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,clonedSchedule);
-            BOOST_ASSERT(ok);
+            OS_ASSERT(ok);
             if (model.numObjects() > modelN) {
               m_new.push_back(clonedSchedule.scheduleTypeLimits().get().idfObject());
             }
@@ -1009,7 +1031,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
     }
     // remove original schedule type limits if now unused
     if (originalScheduleLimits) {
-      BOOST_ASSERT(*originalScheduleLimits != *scheduleLimits);
+      OS_ASSERT(*originalScheduleLimits != *scheduleLimits);
       if (originalScheduleLimits->sources().empty()) {
         m_untranslated.push_back(originalScheduleLimits->idfObject());
         originalScheduleLimits->remove();
@@ -1113,7 +1135,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
 
     // add component data back to model and mark as refactored
     OptionalWorkspaceObject restoredComponentData = model.addObject(cd);
-    BOOST_ASSERT(restoredComponentData);
+    OS_ASSERT(restoredComponentData);
     restoredComponentData->cast<model::ComponentData>().createVersionUUID();
     m_new.push_back(restoredComponentData->idfObject());
   }
@@ -1124,7 +1146,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
     IdfObjectVector::const_iterator it = std::find_if(schedulesToFixup->originalUsers.begin(),
                                                       schedulesToFixup->originalUsers.end(),
                                                       boost::bind(handleEquals<IdfObject,Handle>,_1,user.handle()));
-    BOOST_ASSERT(it != schedulesToFixup->originalUsers.end());
+    OS_ASSERT(it != schedulesToFixup->originalUsers.end());
     m_refactored.push_back(std::pair<IdfObject,IdfObject>(*it,user.idfObject()));
   }
 
@@ -1939,21 +1961,21 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
 
               boost::optional<std::string> s;
 
-              if( s = object2.getString(0) ) {
+              if( (s = object2.getString(0)) ) {
                 newPortList.setString(0,s.get());
               }
 
-              if( s = object2.getString(1) ) {
+              if( (s = object2.getString(1)) ) {
                 newPortList.setString(1,s.get());
               }
               
-              if( s = object.getString(0) ) {
+              if( (s = object.getString(0)) ) {
                 newPortList.setString(2,s.get());
               }
 
               for( unsigned i = 2; i < object2.numFields(); i++ ) {
 
-                if( s = object2.getString(i) ) {
+                if( (s = object2.getString(i)) ) {
                   newPortList.setString(i + 1, s.get());
                 }
 
@@ -1984,6 +2006,106 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
     }
   }
 
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_0_1_to_1_0_2(const IdfFile& idf_1_0_1, const IddFileAndFactoryWrapper& idd_1_0_2)
+{
+  std::stringstream ss;
+
+  ss << idf_1_0_1.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_0_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  BOOST_FOREACH(const IdfObject& object,idf_1_0_1.objects()) {
+
+    if( object.iddObject().name() == "OS:Boiler:HotWater" ) {
+
+      if(object.getString(15) && istringEqual(object.getString(15).get(),"VariableFlow")) {
+        // Update Boiler Flow Mode
+
+        IdfObject newBoiler = object.clone(true);
+
+        newBoiler.setString(15,"LeavingSetpointModulated");
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newBoiler) );
+
+        ss << newBoiler;
+
+      } else {
+
+        ss << object;
+
+      }
+    } else if( object.iddObject().name() == "OS:Boiler:HotWater" ) {
+
+      if(object.getString(15) && istringEqual(object.getString(15).get(),"VariableFlow")) {
+        // Update Chiller Flow Mode
+
+        IdfObject newChiller = object.clone(true);
+
+        newChiller.setString(15,"LeavingSetpointModulated");
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newChiller) );
+
+        ss << newChiller;
+
+      } else {
+
+        ss << object;
+
+      }
+
+    } else {
+
+      ss << object;
+
+    }
+  }
+
+  return ss.str();
+}
+
+
+std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, const IddFileAndFactoryWrapper& idd_1_0_3)
+{
+  std::stringstream ss;
+
+  ss << idf_1_0_2.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_0_3.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  BOOST_FOREACH(const IdfObject& object,idf_1_0_2.objects()) {
+
+    if( object.iddObject().name() == "OS:RadianceParameters" ) {
+      boost::optional<std::string> value = object.getString(14);
+
+      if (value && (*value == "581" || *value == "2321"))
+      {
+        IdfObject newParameters = object.clone(true);
+
+        if (*value == "581")
+        {
+          newParameters.setString(14, "578");
+        } else {
+          newParameters.setString(14, "2306");
+        }
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newParameters) );
+
+        ss << newParameters;
+      } else {
+        ss << object;
+      }
+    } else {
+      ss << object;
+    }
+  }
+    
   return ss.str();
 }
 

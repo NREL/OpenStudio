@@ -18,6 +18,9 @@
 **********************************************************************/
 
 #include <openstudio_lib/SummaryTabView.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QLabel>
 
 namespace openstudio {
@@ -31,7 +34,7 @@ SummaryTabView::SummaryTabView(const model::Model & model,
   underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_building_summary.png"));
   underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   bool success = this->addTabWidget(underConstructionLabel);
-  BOOST_ASSERT(success);
+  OS_ASSERT(success);
 }
 
 } // openstudio

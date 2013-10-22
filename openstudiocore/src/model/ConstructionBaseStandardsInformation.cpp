@@ -41,14 +41,14 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ConstructionBaseStandardsInformation::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ConstructionBaseStandardsInformation::iddObjectType());
   }
 
   ConstructionBaseStandardsInformation_Impl::ConstructionBaseStandardsInformation_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ConstructionBaseStandardsInformation::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ConstructionBaseStandardsInformation::iddObjectType());
   }
 
   ConstructionBaseStandardsInformation_Impl::ConstructionBaseStandardsInformation_Impl(
@@ -92,7 +92,7 @@ namespace detail {
   std::string ConstructionBaseStandardsInformation_Impl::perturbableLayerType() const {
     std::string result;
     OptionalString choiceValue = getString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,true);
-    BOOST_ASSERT(choiceValue);
+    OS_ASSERT(choiceValue);
     if (istringEqual("Not Applicable",*choiceValue)) { return result; }
     if (istringEqual("Other",*choiceValue)) {
       OptionalString otherValue = getString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType);
@@ -125,7 +125,7 @@ namespace detail {
   {
     bool ok = setPointer(OS_StandardsInformation_ConstructionFields::ConstructionName,
                          construction.handle());
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   bool ConstructionBaseStandardsInformation_Impl::setIntendedSurfaceType(const std::string& type) {
@@ -134,7 +134,7 @@ namespace detail {
 
   void ConstructionBaseStandardsInformation_Impl::setConstructionType(const std::string& type) {
     bool ok = setString(OS_StandardsInformation_ConstructionFields::ConstructionType,type);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   bool ConstructionBaseStandardsInformation_Impl::setPerturbableLayer(unsigned layerIndex) {
@@ -149,7 +149,7 @@ namespace detail {
     if (layerIndex >= oLayeredConstruction->numLayers()) { return false; }
     
     ok = setUnsigned(OS_StandardsInformation_ConstructionFields::PerturbableLayer,layerIndex);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     return true;
   }
 
@@ -166,15 +166,15 @@ namespace detail {
     if (layerIndices.empty()) { return false; }
     
     ok = setUnsigned(OS_StandardsInformation_ConstructionFields::PerturbableLayer,layerIndices[0]);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     return true;
   }
 
   void ConstructionBaseStandardsInformation_Impl::resetPerturbableLayer() {
     bool ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayer,"");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,"");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   void ConstructionBaseStandardsInformation_Impl::setPerturbableLayerType(const std::string& type) 
@@ -184,22 +184,22 @@ namespace detail {
     if (type.empty()) {
       // clear any existing values
       ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,"");
-      BOOST_ASSERT(ok); 
+      OS_ASSERT(ok); 
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
       return;
     }
 
     ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,type);
     if (!ok) {
       ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,"Other");
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,type);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
     else {
       ok = setString(OS_StandardsInformation_ConstructionFields::OtherPerturbableLayerType,"");
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
 
@@ -217,14 +217,14 @@ namespace detail {
 ConstructionBaseStandardsInformation::ConstructionBaseStandardsInformation(Model& model)
   : ModelObject(ConstructionBaseStandardsInformation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ConstructionBaseStandardsInformation_Impl>());
+  OS_ASSERT(getImpl<detail::ConstructionBaseStandardsInformation_Impl>());
 }
 
 ConstructionBaseStandardsInformation::ConstructionBaseStandardsInformation(
     const ConstructionBase& construction)
   : ModelObject(ConstructionBaseStandardsInformation::iddObjectType(),construction.model())
 {
-  BOOST_ASSERT(getImpl<detail::ConstructionBaseStandardsInformation_Impl>());
+  OS_ASSERT(getImpl<detail::ConstructionBaseStandardsInformation_Impl>());
   setConstruction(construction);
 }
 

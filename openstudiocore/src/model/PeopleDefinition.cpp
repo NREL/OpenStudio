@@ -36,7 +36,7 @@ namespace detail {
   PeopleDefinition_Impl::PeopleDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == PeopleDefinition::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == PeopleDefinition::iddObjectType());
   }
 
   PeopleDefinition_Impl::PeopleDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                                bool keepHandle)
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == PeopleDefinition::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == PeopleDefinition::iddObjectType());
   }
 
   PeopleDefinition_Impl::PeopleDefinition_Impl(const PeopleDefinition_Impl& other,
@@ -67,83 +67,42 @@ namespace detail {
 
   std::string PeopleDefinition_Impl::numberofPeopleCalculationMethod() const {
     boost::optional<std::string> value = getString(OS_People_DefinitionFields::NumberofPeopleCalculationMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   boost::optional<double> PeopleDefinition_Impl::numberofPeople() const {
-    OSOptionalQuantity q = getNumberofPeople(false);
-    OptionalDouble result;
-    if (q.isSet()) {
-      result = q.get().value();
-    }
-    return result;
-  }
-  
-  OSOptionalQuantity PeopleDefinition_Impl::getNumberofPeople(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_People_DefinitionFields::NumberofPeople,true,returnIP);
+    OptionalDouble value = getDouble(OS_People_DefinitionFields::NumberofPeople,true);
     if (istringEqual("People", this->numberofPeopleCalculationMethod())) {
-      BOOST_ASSERT(value.isSet());
+      OS_ASSERT(value);
     }
     return value;
-  }  
+  }
 
   boost::optional<double> PeopleDefinition_Impl::peopleperSpaceFloorArea() const {
-    OSOptionalQuantity q = getPeopleperSpaceFloorArea(false);
-    OptionalDouble result;
-    if (q.isSet()) {
-      result = q.get().value();
-    }
-    return result;
-  }
-  
-  OSOptionalQuantity PeopleDefinition_Impl::getPeopleperSpaceFloorArea(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_People_DefinitionFields::PeopleperSpaceFloorArea,true,returnIP);
+    OptionalDouble value = getDouble(OS_People_DefinitionFields::PeopleperSpaceFloorArea,true);
     if (istringEqual("People/Area", this->numberofPeopleCalculationMethod())) {    
-      BOOST_ASSERT(value.isSet());
+      OS_ASSERT(value);
     }
     return value;
-  }  
-
-  boost::optional<double> PeopleDefinition_Impl::spaceFloorAreaperPerson() const {
-    OSOptionalQuantity q = getSpaceFloorAreaperPerson(false);
-    OptionalDouble result;
-    if (q.isSet()) {
-      result = q.get().value();
-    }
-    return result;
   }
   
-  OSOptionalQuantity PeopleDefinition_Impl::getSpaceFloorAreaperPerson(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_People_DefinitionFields::SpaceFloorAreaperPerson,true,returnIP);
+  boost::optional<double> PeopleDefinition_Impl::spaceFloorAreaperPerson() const {
+    OptionalDouble value = getDouble(OS_People_DefinitionFields::SpaceFloorAreaperPerson,true);
     if (istringEqual("Area/Person", this->numberofPeopleCalculationMethod())) {
-      BOOST_ASSERT(value.isSet());
+      OS_ASSERT(value);
     }
     return value;
-  }  
-
-  double PeopleDefinition_Impl::fractionRadiant() const {
-    Quantity q = getFractionRadiant(false);
-    return q.value();
   }
-
-  Quantity PeopleDefinition_Impl::getFractionRadiant(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_People_DefinitionFields::FractionRadiant,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+  
+  double PeopleDefinition_Impl::fractionRadiant() const {
+    OptionalDouble value = getDouble(OS_People_DefinitionFields::FractionRadiant,true);
+    OS_ASSERT(value);
     return value.get();
   }
 
   boost::optional<double> PeopleDefinition_Impl::sensibleHeatFraction() const {
-    OSOptionalQuantity q = getSensibleHeatFraction(false);
-    OptionalDouble result;
-    if (q.isSet()) {
-      result = q.get().value();
-    }
-    return result;
-  }
-
-  OSOptionalQuantity PeopleDefinition_Impl::getSensibleHeatFraction(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_People_DefinitionFields::SensibleHeatFraction,true,returnIP);
+    OptionalDouble value = getDouble(OS_People_DefinitionFields::SensibleHeatFraction,true);
     return value;
   }
 
@@ -155,19 +114,14 @@ namespace detail {
     bool result = false;
     boost::optional<std::string> value = getString(OS_People_DefinitionFields::SensibleHeatFraction, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "canAutocalculate");
+      result = openstudio::istringEqual(value.get(), "Autocalculate");
     }
     return result;
   }
 
   double PeopleDefinition_Impl::carbonDioxideGenerationRate() const {
-    Quantity q = getCarbonDioxideGenerationRate(false);
-    return q.value();
-  }
-
-  Quantity PeopleDefinition_Impl::getCarbonDioxideGenerationRate(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_People_DefinitionFields::CarbonDioxideGenerationRate,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OptionalDouble value = getDouble(OS_People_DefinitionFields::CarbonDioxideGenerationRate,true);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -177,7 +131,7 @@ namespace detail {
 
   bool PeopleDefinition_Impl::enableASHRAE55ComfortWarnings() const {
     boost::optional<std::string> value = getString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -187,7 +141,7 @@ namespace detail {
 
   std::string PeopleDefinition_Impl::meanRadiantTemperatureCalculationType() const {
     boost::optional<std::string> value = getString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -199,7 +153,7 @@ namespace detail {
     OptionalString result;
     if (i < numThermalComfortModelTypes()) {
       IdfExtensibleGroup eg = getExtensibleGroup(i);
-      BOOST_ASSERT(!eg.empty());
+      OS_ASSERT(!eg.empty());
       result = eg.getString(OS_People_DefinitionExtensibleFields::ThermalComfortModelType,true);
     }
     return result;
@@ -210,28 +164,16 @@ namespace detail {
   }
 
   bool PeopleDefinition_Impl::setNumberofPeople(boost::optional<double> numberofPeople) {
-    OSOptionalQuantity temp = getNumberofPeople();
-    if (numberofPeople) {
-      temp = OSOptionalQuantity(Quantity(numberofPeople.get(),temp.units()));
-    }
-    else {
-      temp = OSOptionalQuantity(temp.units());
-    }
-    bool result = setNumberofPeople(temp);
-    return result;
-  }
-  
-  bool PeopleDefinition_Impl::setNumberofPeople(const OSOptionalQuantity& numberofPeople) {
     bool result = false;
-    if (numberofPeople.isSet()) {
-      result = setQuantity(OS_People_DefinitionFields::NumberofPeople,numberofPeople.get());
+    if (numberofPeople) {
+      result = setDouble(OS_People_DefinitionFields::NumberofPeople,numberofPeople.get());
       if (result) {
         result = setString(OS_People_DefinitionFields::NumberofPeopleCalculationMethod, "People");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::PeopleperSpaceFloorArea, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::SpaceFloorAreaperPerson, "");
-        BOOST_ASSERT(result);                
+        OS_ASSERT(result);                
       }
     } else {
       if (istringEqual("People", this->numberofPeopleCalculationMethod())){
@@ -239,31 +181,19 @@ namespace detail {
       }      
     }
     return result;
-  }  
+  }
 
   bool PeopleDefinition_Impl::setPeopleperSpaceFloorArea(boost::optional<double> peopleperSpaceFloorArea) {
-    OSOptionalQuantity temp = getPeopleperSpaceFloorArea();
-    if (peopleperSpaceFloorArea) {
-      temp = OSOptionalQuantity(Quantity(peopleperSpaceFloorArea.get(),temp.units()));
-    }
-    else {
-      temp = OSOptionalQuantity(temp.units());
-    }
-    bool result = setPeopleperSpaceFloorArea(temp);
-    return result;
-  }
-  
-  bool PeopleDefinition_Impl::setPeopleperSpaceFloorArea(const OSOptionalQuantity& peopleperSpaceFloorArea) {
     bool result = false;
-    if (peopleperSpaceFloorArea.isSet()) {
-      result = setQuantity(OS_People_DefinitionFields::PeopleperSpaceFloorArea,peopleperSpaceFloorArea.get());
+    if (peopleperSpaceFloorArea) {
+      result = setDouble(OS_People_DefinitionFields::PeopleperSpaceFloorArea,peopleperSpaceFloorArea.get());
       if (result) {
         result = setString(OS_People_DefinitionFields::NumberofPeopleCalculationMethod, "People/Area");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::NumberofPeople, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::SpaceFloorAreaperPerson, "");
-        BOOST_ASSERT(result);                
+        OS_ASSERT(result);                
       }      
     } else {
       if (istringEqual("People/Area", this->numberofPeopleCalculationMethod())){
@@ -271,31 +201,19 @@ namespace detail {
       }
     }
     return result;
-  }  
-
-  bool PeopleDefinition_Impl::setSpaceFloorAreaperPerson(boost::optional<double> spaceFloorAreaperPerson) {
-    OSOptionalQuantity temp = getSpaceFloorAreaperPerson();
-    if (spaceFloorAreaperPerson) {
-      temp = OSOptionalQuantity(Quantity(spaceFloorAreaperPerson.get(),temp.units()));
-    }
-    else {
-      temp = OSOptionalQuantity(temp.units());
-    }
-    bool result = setSpaceFloorAreaperPerson(temp);
-    return result;
   }
   
-  bool PeopleDefinition_Impl::setSpaceFloorAreaperPerson(const OSOptionalQuantity& spaceFloorAreaperPerson) {
+  bool PeopleDefinition_Impl::setSpaceFloorAreaperPerson(boost::optional<double> spaceFloorAreaperPerson) {
     bool result(false);
-    if (spaceFloorAreaperPerson.isSet()) {
-      result = setQuantity(OS_People_DefinitionFields::SpaceFloorAreaperPerson,spaceFloorAreaperPerson.get());
+    if (spaceFloorAreaperPerson) {
+      result = setDouble(OS_People_DefinitionFields::SpaceFloorAreaperPerson,spaceFloorAreaperPerson.get());
       if (result) {
         result = setString(OS_People_DefinitionFields::NumberofPeopleCalculationMethod, "Area/Person");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::NumberofPeople, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_People_DefinitionFields::PeopleperSpaceFloorArea, "");
-        BOOST_ASSERT(result);      
+        OS_ASSERT(result);      
       }
     } else {
       if (istringEqual("Area/Person", this->numberofPeopleCalculationMethod())){
@@ -303,67 +221,33 @@ namespace detail {
       }
     }
     return result;
-  }  
-
+  }
+  
   bool PeopleDefinition_Impl::setFractionRadiant(double fractionRadiant) {
-    OSOptionalQuantity temp = getQuantity(OS_People_DefinitionFields::FractionRadiant,true,false);
-    bool result = setFractionRadiant(Quantity(fractionRadiant,temp.units()));
-    return result;
-  }
-
-  bool PeopleDefinition_Impl::setFractionRadiant(const Quantity& fractionRadiant) {
-    return setQuantity(OS_People_DefinitionFields::FractionRadiant,fractionRadiant);
-  }
-
-  bool PeopleDefinition_Impl::setSensibleHeatFraction(boost::optional<double> sensibleHeatFraction) {
-    OSOptionalQuantity temp = getSensibleHeatFraction();
-    if (sensibleHeatFraction) {
-      temp = OSOptionalQuantity(Quantity(sensibleHeatFraction.get(),temp.units()));
-    }
-    else {
-      temp = OSOptionalQuantity(temp.units());
-    }
-    bool result = setSensibleHeatFraction(temp);
-    return result;
-  }
-
-  bool PeopleDefinition_Impl::setSensibleHeatFraction(const OSOptionalQuantity& sensibleHeatFraction) {
-    bool result;
-    if (sensibleHeatFraction.isSet()) {
-      result = setQuantity(OS_People_DefinitionFields::SensibleHeatFraction,sensibleHeatFraction.get());
-    } else {
-      result = setString(OS_People_DefinitionFields::SensibleHeatFraction, "");
-    }
-    return result;
+    return setDouble(OS_People_DefinitionFields::FractionRadiant,fractionRadiant);
   }
 
   bool PeopleDefinition_Impl::setSensibleHeatFraction(double sensibleHeatFraction) {
-    return setSensibleHeatFraction(OptionalDouble(sensibleHeatFraction));
+    return setDouble(OS_People_DefinitionFields::SensibleHeatFraction,sensibleHeatFraction);
   }
 
   void PeopleDefinition_Impl::resetSensibleHeatFraction() {
     bool result = setString(OS_People_DefinitionFields::SensibleHeatFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PeopleDefinition_Impl::autocalculateSensibleHeatFraction() {
     bool result = setString(OS_People_DefinitionFields::SensibleHeatFraction, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PeopleDefinition_Impl::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
-    Quantity temp = getCarbonDioxideGenerationRate();
-    bool result = setCarbonDioxideGenerationRate(Quantity(carbonDioxideGenerationRate,temp.units()));
-    return result;
-  }
-
-  bool PeopleDefinition_Impl::setCarbonDioxideGenerationRate(const Quantity& carbonDioxideGenerationRate) {
-    return setQuantity(OS_People_DefinitionFields::CarbonDioxideGenerationRate,carbonDioxideGenerationRate);
+    return setDouble(OS_People_DefinitionFields::CarbonDioxideGenerationRate,carbonDioxideGenerationRate);
   }
 
   void PeopleDefinition_Impl::resetCarbonDioxideGenerationRate() {
     bool result = setString(OS_People_DefinitionFields::CarbonDioxideGenerationRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PeopleDefinition_Impl::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
@@ -373,12 +257,12 @@ namespace detail {
     } else {
       result = setString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PeopleDefinition_Impl::resetEnableASHRAE55ComfortWarnings() {
     bool result = setString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PeopleDefinition_Impl::setMeanRadiantTemperatureCalculationType(std::string meanRadiantTemperatureCalculationType) {
@@ -389,7 +273,7 @@ namespace detail {
 
   void PeopleDefinition_Impl::resetMeanRadiantTemperatureCalculationType() {
     bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PeopleDefinition_Impl::pushThermalComfortModelType(
@@ -407,7 +291,7 @@ namespace detail {
     }
     if (i < n) {
       IdfExtensibleGroup eg = getExtensibleGroup(i);
-      BOOST_ASSERT(!eg.empty());
+      OS_ASSERT(!eg.empty());
       return eg.setString(OS_People_DefinitionExtensibleFields::ThermalComfortModelType,
                           thermalComfortModelType);
     }
@@ -435,7 +319,7 @@ namespace detail {
       return floorArea / areaPerPerson;
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -459,7 +343,7 @@ namespace detail {
       return 1.0 / areaPerPerson;
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -484,7 +368,7 @@ namespace detail {
       return spaceFloorAreaperPerson().get();
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -511,54 +395,6 @@ namespace detail {
     return PeopleDefinition::numberofPeopleCalculationMethodValues();
   }
 
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::numberofPeople_SI() const {
-    return getNumberofPeople(false);
-  }
-
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::numberofPeople_IP() const {
-    return getNumberofPeople(true);
-  }
-
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::peopleperSpaceFloorArea_SI() const {
-    return getPeopleperSpaceFloorArea(false);
-  }
-
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::peopleperSpaceFloorArea_IP() const {
-    return getPeopleperSpaceFloorArea(true);
-  }
-
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::spaceFloorAreaperPerson_SI() const {
-    return getSpaceFloorAreaperPerson(false);
-  }
-
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::spaceFloorAreaperPerson_IP() const {
-    return getSpaceFloorAreaperPerson(true);
-  }
-
-  openstudio::Quantity PeopleDefinition_Impl::fractionRadiant_SI() const {
-    return getFractionRadiant(false);
-  }
-
-  openstudio::Quantity PeopleDefinition_Impl::fractionRadiant_IP() const {
-    return getFractionRadiant(true);
-  }
-
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::sensibleHeatFraction_SI() const {
-    return getSensibleHeatFraction(false);
-  }
-
-  openstudio::OSOptionalQuantity PeopleDefinition_Impl::sensibleHeatFraction_IP() const {
-    return getSensibleHeatFraction(true);
-  }
-
-  openstudio::Quantity PeopleDefinition_Impl::carbonDioxideGenerationRate_SI() const {
-    return getCarbonDioxideGenerationRate(false);
-  }
-
-  openstudio::Quantity PeopleDefinition_Impl::carbonDioxideGenerationRate_IP() const {
-    return getCarbonDioxideGenerationRate(true);
-  }
-
   std::vector<std::string> PeopleDefinition_Impl::meanRadiantTemperatureCalculationTypeValues() const {
     return PeopleDefinition::meanRadiantTemperatureCalculationTypeValues();
   }
@@ -572,11 +408,11 @@ namespace detail {
 PeopleDefinition::PeopleDefinition(const Model& model)
   : SpaceLoadDefinition(PeopleDefinition::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::PeopleDefinition_Impl>());
+  OS_ASSERT(getImpl<detail::PeopleDefinition_Impl>());
   bool ok = getImpl<detail::PeopleDefinition_Impl>()->setNumberofPeople(0.0);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = getImpl<detail::PeopleDefinition_Impl>()->setFractionRadiant(0.3);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType PeopleDefinition::iddObjectType() {
@@ -607,40 +443,20 @@ boost::optional<double> PeopleDefinition::numberofPeople() const {
   return getImpl<detail::PeopleDefinition_Impl>()->numberofPeople();
 }
 
-OSOptionalQuantity PeopleDefinition::getNumberofPeople(bool returnIP) const {
-  return getImpl<detail::PeopleDefinition_Impl>()->getNumberofPeople(returnIP);
-}
-
 boost::optional<double> PeopleDefinition::peopleperSpaceFloorArea() const {
   return getImpl<detail::PeopleDefinition_Impl>()->peopleperSpaceFloorArea();
-}
-
-OSOptionalQuantity PeopleDefinition::getPeopleperSpaceFloorArea(bool returnIP) const {
-  return getImpl<detail::PeopleDefinition_Impl>()->getPeopleperSpaceFloorArea(returnIP);
 }
 
 boost::optional<double> PeopleDefinition::spaceFloorAreaperPerson() const {
   return getImpl<detail::PeopleDefinition_Impl>()->spaceFloorAreaperPerson();
 }
 
-OSOptionalQuantity PeopleDefinition::getSpaceFloorAreaperPerson(bool returnIP) const {
-  return getImpl<detail::PeopleDefinition_Impl>()->getSpaceFloorAreaperPerson(returnIP);
-}
-
 double PeopleDefinition::fractionRadiant() const {
   return getImpl<detail::PeopleDefinition_Impl>()->fractionRadiant();
 }
 
-Quantity PeopleDefinition::getFractionRadiant(bool returnIP) const {
-  return getImpl<detail::PeopleDefinition_Impl>()->getFractionRadiant(returnIP);
-}
-
 boost::optional<double> PeopleDefinition::sensibleHeatFraction() const {
   return getImpl<detail::PeopleDefinition_Impl>()->sensibleHeatFraction();
-}
-
-OSOptionalQuantity PeopleDefinition::getSensibleHeatFraction(bool returnIP) const {
-  return getImpl<detail::PeopleDefinition_Impl>()->getSensibleHeatFraction(returnIP);
 }
 
 bool PeopleDefinition::isSensibleHeatFractionDefaulted() const {
@@ -653,10 +469,6 @@ bool PeopleDefinition::isSensibleHeatFractionAutocalculated() const {
 
 double PeopleDefinition::carbonDioxideGenerationRate() const {
   return getImpl<detail::PeopleDefinition_Impl>()->carbonDioxideGenerationRate();
-}
-
-Quantity PeopleDefinition::getCarbonDioxideGenerationRate(bool returnIP) const {
-  return getImpl<detail::PeopleDefinition_Impl>()->getCarbonDioxideGenerationRate(returnIP);
 }
 
 bool PeopleDefinition::isCarbonDioxideGenerationRateDefaulted() const {
@@ -691,15 +503,7 @@ bool PeopleDefinition::setNumberofPeople(double numberofPeople) {
   return getImpl<detail::PeopleDefinition_Impl>()->setNumberofPeople(numberofPeople);
 }
 
-bool PeopleDefinition::setNumberofPeople(const Quantity& numberofPeople) {
-  return getImpl<detail::PeopleDefinition_Impl>()->setNumberofPeople(numberofPeople);
-}
-
 bool PeopleDefinition::setPeopleperSpaceFloorArea(double peopleperSpaceFloorArea) {
-  return getImpl<detail::PeopleDefinition_Impl>()->setPeopleperSpaceFloorArea(peopleperSpaceFloorArea);
-}
-
-bool PeopleDefinition::setPeopleperSpaceFloorArea(const Quantity& peopleperSpaceFloorArea) {
   return getImpl<detail::PeopleDefinition_Impl>()->setPeopleperSpaceFloorArea(peopleperSpaceFloorArea);
 }
 
@@ -707,27 +511,11 @@ bool PeopleDefinition::setSpaceFloorAreaperPerson(double spaceFloorAreaperPerson
   return getImpl<detail::PeopleDefinition_Impl>()->setSpaceFloorAreaperPerson(spaceFloorAreaperPerson);
 }
 
-bool PeopleDefinition::setSpaceFloorAreaperPerson(const Quantity& spaceFloorAreaperPerson) {
-  return getImpl<detail::PeopleDefinition_Impl>()->setSpaceFloorAreaperPerson(spaceFloorAreaperPerson);
-}
-
 bool PeopleDefinition::setFractionRadiant(double fractionRadiant) {
   return getImpl<detail::PeopleDefinition_Impl>()->setFractionRadiant(fractionRadiant);
 }
 
-bool PeopleDefinition::setFractionRadiant(const Quantity& fractionRadiant) {
-  return getImpl<detail::PeopleDefinition_Impl>()->setFractionRadiant(fractionRadiant);
-}
-
-bool PeopleDefinition::setSensibleHeatFraction(boost::optional<double> sensibleHeatFraction) {
-  return getImpl<detail::PeopleDefinition_Impl>()->setSensibleHeatFraction(sensibleHeatFraction);
-}
-
 bool PeopleDefinition::setSensibleHeatFraction(double sensibleHeatFraction) {
-  return getImpl<detail::PeopleDefinition_Impl>()->setSensibleHeatFraction(sensibleHeatFraction);
-}
-
-bool PeopleDefinition::setSensibleHeatFraction(const Quantity& sensibleHeatFraction) {
   return getImpl<detail::PeopleDefinition_Impl>()->setSensibleHeatFraction(sensibleHeatFraction);
 }
 
@@ -740,10 +528,6 @@ void PeopleDefinition::autocalculateSensibleHeatFraction() {
 }
 
 bool PeopleDefinition::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
-  return getImpl<detail::PeopleDefinition_Impl>()->setCarbonDioxideGenerationRate(carbonDioxideGenerationRate);
-}
-
-bool PeopleDefinition::setCarbonDioxideGenerationRate(const Quantity& carbonDioxideGenerationRate) {
   return getImpl<detail::PeopleDefinition_Impl>()->setCarbonDioxideGenerationRate(carbonDioxideGenerationRate);
 }
 

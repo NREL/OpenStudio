@@ -20,6 +20,8 @@
 #include <analysis/FrechetDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -66,7 +68,7 @@ void FrechetDistribution::setBeta(double value) {
 FrechetDistribution::FrechetDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == FrechetDistribution::type());
+  OS_ASSERT(type() == FrechetDistribution::type());
 }
 
 } // analysis

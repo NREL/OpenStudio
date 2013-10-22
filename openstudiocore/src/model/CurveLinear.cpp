@@ -37,7 +37,7 @@ namespace detail {
   CurveLinear_Impl::CurveLinear_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveLinear::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveLinear::iddObjectType());
   }
 
   CurveLinear_Impl::CurveLinear_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                      bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveLinear::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveLinear::iddObjectType());
   }
 
   CurveLinear_Impl::CurveLinear_Impl(const CurveLinear_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveLinear_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 1u);
+    OS_ASSERT(x.size() == 1u);
     double result = coefficient1Constant();
     result += coefficient2x() * x[0];
     return result;
@@ -79,25 +79,25 @@ namespace detail {
 
   double CurveLinear_Impl::coefficient1Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_LinearFields::Coefficient1Constant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveLinear_Impl::coefficient2x() const {
     boost::optional<double> value = getDouble(OS_Curve_LinearFields::Coefficient2x,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveLinear_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_LinearFields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveLinear_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_LinearFields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -111,7 +111,7 @@ namespace detail {
 
   std::string CurveLinear_Impl::inputUnitTypeforX() const {
     boost::optional<std::string> value = getString(OS_Curve_LinearFields::InputUnitTypeforX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -121,7 +121,7 @@ namespace detail {
 
   std::string CurveLinear_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_LinearFields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -132,25 +132,25 @@ namespace detail {
   void CurveLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = false;
     result = setDouble(OS_Curve_LinearFields::Coefficient1Constant, coefficient1Constant);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setCoefficient2x(double coefficient2x) {
     bool result = false;
     result = setDouble(OS_Curve_LinearFields::Coefficient2x, coefficient2x);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_LinearFields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_LinearFields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -160,12 +160,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_LinearFields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_LinearFields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -175,12 +175,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_LinearFields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_LinearFields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveLinear_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
@@ -191,7 +191,7 @@ namespace detail {
 
   void CurveLinear_Impl::resetInputUnitTypeforX() {
     bool result = setString(OS_Curve_LinearFields::InputUnitTypeforX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveLinear_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -202,7 +202,7 @@ namespace detail {
 
   void CurveLinear_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_LinearFields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -210,7 +210,7 @@ namespace detail {
 CurveLinear::CurveLinear(const Model& model)
   : Curve(CurveLinear::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveLinear_Impl>());
+  OS_ASSERT(getImpl<detail::CurveLinear_Impl>());
   setDouble(OS_Curve_LinearFields::Coefficient1Constant,0.0);
   setDouble(OS_Curve_LinearFields::Coefficient2x,1.0);
   setDouble(OS_Curve_LinearFields::MinimumValueofx,0.0);

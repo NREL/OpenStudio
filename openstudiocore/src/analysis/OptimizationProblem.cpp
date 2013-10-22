@@ -26,9 +26,10 @@
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
-#include <utilities/core/Containers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
 #include <utilities/core/Finder.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -282,6 +283,64 @@ namespace detail {
     }
     m_objectives.clear();
     onChange(AnalysisObject_Impl::InvalidatesResults);
+  }
+
+  QVariant OptimizationProblem_Impl::toVariant() const {
+    QVariantMap problemData = Problem_Impl::toVariant().toMap();
+
+    problemData["problem_type"] = QString("OptimizationProblem");
+
+    if (!objectives().empty()) {
+      QVariantList objectivesList;
+      int index(0);
+      Q_FOREACH(const Function& objective,objectives()) {
+        QVariantMap objectiveMap = objective.toVariant().toMap();
+        objectiveMap["objective_index"] = QVariant(index);
+        objectivesList.push_back(objectiveMap);
+        ++index;
+      }
+      problemData["objectives"] = QVariant(objectivesList);
+    }
+
+    return QVariant(problemData);
+  }
+
+  OptimizationProblem OptimizationProblem_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    Problem slice = Problem_Impl::fromVariant(variant,version);
+
+    QVariantMap map = variant.toMap();
+    FunctionVector objectives;
+    if (map.contains("objectives")) {
+      objectives = deserializeOrderedVector(
+            map["objectives"].toList(),
+            "objective_index",
+            boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
+    }
+
+    return OptimizationProblem(slice.uuid(),
+                               slice.versionUUID(),
+                               slice.name(),
+                               slice.displayName(),
+                               slice.description(),
+                               objectives,
+                               slice.workflow(),
+                               slice.responses());
+  }
+
+  void OptimizationProblem_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                                     const openstudio::path& newBase)
+  {
+    Problem_Impl::updateInputPathData(originalBase,newBase);
+
+    // objectives
+    //
+    // currently does nothing, because the only variables that have path data are
+    // input variables, and any of those used by an objective should also be in workflow().
+    //
+    FunctionVector functions = objectives();
+    BOOST_FOREACH(Function& func,functions) {
+      func.getImpl<detail::Function_Impl>()->updateInputPathData(originalBase,newBase);
+    }
   }
 
 } // detail

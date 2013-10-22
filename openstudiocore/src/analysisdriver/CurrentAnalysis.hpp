@@ -90,6 +90,9 @@ class ANALYSISDRIVER_API CurrentAnalysis {
   /** Returns numJobsInIteration() - numQueuedJobs(). */
   int numCompletedJobsInOSIteration() const;
 
+  /** Returns number of failed jobs. */
+  int numFailedJobsInOSIteration() const;
+
   /** Returns the total number of runmanager::Jobs that need to be queued and simulated to
    *  complete the current OpenStudio iteration. (All data points already present from calling
    *  Analysis::addDataPoint or OpenStudioAlgorithm::createNextIteration.) */

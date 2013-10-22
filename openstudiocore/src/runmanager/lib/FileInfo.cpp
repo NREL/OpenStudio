@@ -31,7 +31,12 @@ FileInfo::FileInfo(const std::string &t_filename,
                    bool t_exists)
   : fullPath(t_fullPath), filename(t_filename), 
     exists(t_exists), lastModified(t_lastModified), key(t_key)
-{}
+{
+  if (fullPath.empty())
+  {
+    fullPath = openstudio::toPath(t_filename);
+  }
+}
 
 FileInfo::FileInfo(const openstudio::path &t_path, const std::string &t_key)
   : fullPath(t_path),
@@ -101,7 +106,9 @@ void FileInfo::addRequiredFile(const QUrl &t_url, const openstudio::path &t_targ
       return;
     }
 
-    if (itr->first == t_url || itr->second == t_target)
+    /// we only actually care if the destinations are the same, not the sources,
+    /// let the user copy the same file to multiple places all day long if required.
+    if (itr->second == t_target)
     {
       throw std::runtime_error("required file conflict from: " + openstudio::toString(itr->first.toString()) + " to: " + openstudio::toString(itr->second));
     }
@@ -123,6 +130,21 @@ void FileInfo::addRequiredFile(const openstudio::path &t_location, const openstu
 void FileInfo::addRequiredFile(const openstudio::path &t_location)
 {
   addRequiredFile(QUrl::fromLocalFile(toQString(t_location.native_file_string())));
+}
+
+bool FileInfo::hasRequiredFile(const openstudio::path &filename)
+{
+  for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
+       itr != requiredFiles.end();
+       ++itr)
+  {
+    if (toPath(itr->second.filename()) == filename)
+    {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 std::pair<QUrl, openstudio::path> FileInfo::getRequiredFile(const openstudio::path &filename)
@@ -151,7 +173,7 @@ const FileInfo &Files::getLastByKey(const std::string &t_key) const
   // by apple. We're going to save the error, then
   try {
     return getLast(boost::bind(&Files::keyCompare, t_key, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByKey: " + std::string(e.what()) + ": " + t_key);
   }
 }
@@ -160,7 +182,7 @@ const FileInfo &Files::getLastByRegex(const std::string &t_regex) const
 {
   try {
     return getLast(boost::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByRegex: " + std::string(e.what()) + ": " + t_regex);
   }
 }
@@ -169,7 +191,7 @@ Files Files::getAllByRegex(const std::string &t_regex) const
 {
   try {
     return getAll(boost::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByRegex: " + std::string(e.what()) + ": " + t_regex);
   }
 }
@@ -178,7 +200,7 @@ Files Files::getAllByKey(const std::string &t_key) const
 {
   try {
     return getAll(boost::bind(&Files::keyCompare, t_key, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getAllByKey: " + std::string(e.what()) + ": " + t_key);
   }
 }
@@ -187,7 +209,7 @@ const FileInfo &Files::getLastByFilename(const std::string &t_filename) const
 {
   try {
     return getLast(boost::bind(&Files::filenameCompare, t_filename, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByFilename: " + std::string(e.what()) + ": " + t_filename);
   }
 }
@@ -196,7 +218,7 @@ Files Files::getAllByFilename(const std::string &t_filename) const
 {
   try {
     return getAll(boost::bind(&Files::filenameCompare, t_filename, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getAllByFilename: " + std::string(e.what()) + ": " + t_filename);
   }
 }
@@ -205,7 +227,7 @@ FileInfo &Files::getLastByRegex(const std::string &t_regex)
 {
   try {
     return getLast(boost::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByRegex: " + std::string(e.what()) + ": " + t_regex);
   }
 }
@@ -214,7 +236,7 @@ const FileInfo &Files::getLastByExtension(const std::string &t_ext) const
 {
   try {
     return getLast(boost::bind(&Files::extensionCompare, t_ext, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByExtension: " + std::string(e.what()) + ": " + t_ext);
   }
 }
@@ -223,7 +245,7 @@ Files Files::getAllByExtension(const std::string &t_ext) const
 {
   try {
     return getAll(boost::bind(&Files::extensionCompare, t_ext, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getAllByExtension: " + std::string(e.what()) + ": " + t_ext);
   }
 }
@@ -232,7 +254,7 @@ FileInfo &Files::getLastByKey(const std::string &t_key)
 {
   try {
     return getLast(boost::bind(&Files::keyCompare, t_key, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByKey: " + std::string(e.what()) + ": " + t_key);
   }
 }
@@ -241,7 +263,7 @@ FileInfo &Files::getLastByFilename(const std::string &t_filename)
 {
   try {
     return getLast(boost::bind(&Files::filenameCompare, t_filename, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByFilename: " + std::string(e.what()) + ": " + t_filename);
   }
 }
@@ -250,7 +272,7 @@ FileInfo &Files::getLastByExtension(const std::string &t_ext)
 {
   try {
     return getLast(boost::bind(&Files::extensionCompare, t_ext, _1));
-  } catch (const std::exception &e) {
+  } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByExtension: " + std::string(e.what()) + ": " + t_ext);
   }
 }

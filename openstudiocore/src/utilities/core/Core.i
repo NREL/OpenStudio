@@ -34,6 +34,7 @@
 %include <utilities/core/Serialization.i>
 %include <utilities/core/Logger.i>
 %include <utilities/core/UpdateManager.i>
+%include <utilities/core/Url.i>
 %include <utilities/core/UUID.i>
 %include <utilities/core/Checksum.i>
 %include <utilities/core/Optional.hpp>
@@ -41,7 +42,7 @@
 %include <utilities/core/ZipFile.i>
 
 // DLM@20110107: this is causing issues for C#
-#ifdef SWIGRUBY
+#if defined(SWIGRUBY) || defined(SWIGJAVASCRIPT)
 %include <utilities/core/System.i>
 #endif
 
@@ -53,6 +54,8 @@
 %template(FileReferenceVector) std::vector<openstudio::FileReference>;
 %template(OptionalFileReference) boost::optional<openstudio::FileReference>;
 %template(OptionalQUrl) boost::optional<QUrl>;
+%template(OptionalQVariant) boost::optional<QVariant>;
+%template(OptionalVersionString) boost::optional<openstudio::VersionString>;
 
 %include <utilities/core/FileReference.hpp>
 

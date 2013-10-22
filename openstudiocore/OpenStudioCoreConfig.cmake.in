@@ -19,9 +19,10 @@ set(OpenStudioCore_INCLUDE_DIRS    "${OpenStudioCore_INSTALL_PREFIX}/../src"
                                "@CMAKE_SOURCE_DIR@/src/gtest/include"
                                "@CMAKE_BINARY_DIR@/src"
                                "@BoostLog_INCLUDE_DIRS@"
+                               "@QJSON_INCLUDE_DIR@"
                                "@GTEST_INCLUDE_DIR@"
     )
-set(OpenStudioCore_LIBRARY_DIRS  "${OpenStudioCore_INSTALL_PREFIX}/Products" "@GTEST_LIB_DIR@")
+set(OpenStudioCore_LIBRARY_DIRS  "${OpenStudioCore_INSTALL_PREFIX}/Products" "@GTEST_LIB_DIR@" "@QJSON_LIBRARY_DIRS@")
 set(OpenStudioCore_CMAKE_DIR "@CMAKE_SOURCE_DIR@")
 set(OpenStudioCore_SWIG_INCLUDE_DIR "@CMAKE_SOURCE_DIR@/src")
 

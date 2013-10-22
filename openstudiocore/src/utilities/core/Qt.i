@@ -233,6 +233,7 @@ class QStandardItem
 {};
 
 %template(QVariantVector) std::vector<QVariant>;
+%template(QVariantVectorVector) std::vector<std::vector<QVariant> >;
 class QVariant {
  public:
   enum Type { Invalid = 0, 

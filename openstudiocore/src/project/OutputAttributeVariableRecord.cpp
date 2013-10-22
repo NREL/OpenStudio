@@ -50,14 +50,14 @@ namespace detail {
       const QSqlQuery& query, ProjectDatabase& database)
     : OutputVariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(OutputAttributeVariableRecord::ColumnsType::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeName = value.toString().toStdString();
   }
 
@@ -107,30 +107,30 @@ namespace detail {
   }
 
   void OutputAttributeVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     OutputVariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(OutputAttributeVariableRecord::ColumnsType::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeName = value.toString().toStdString();
   }
 
   bool OutputAttributeVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = OutputVariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(OutputAttributeVariableRecord::ColumnsType::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeName == value.toString().toStdString());
 
     return result;
@@ -162,7 +162,7 @@ OutputAttributeVariableRecord::OutputAttributeVariableRecord(
                                                        functionCoefficient)),
         functionRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::OutputAttributeVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OutputAttributeVariableRecord_Impl>());
 }
 
 OutputAttributeVariableRecord::OutputAttributeVariableRecord(
@@ -171,7 +171,7 @@ OutputAttributeVariableRecord::OutputAttributeVariableRecord(
         new detail::OutputAttributeVariableRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::OutputAttributeVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OutputAttributeVariableRecord_Impl>());
 }
 
 OutputAttributeVariableRecord::OutputAttributeVariableRecord(
@@ -179,7 +179,7 @@ OutputAttributeVariableRecord::OutputAttributeVariableRecord(
     ProjectDatabase database)
   : OutputVariableRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::OutputAttributeVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OutputAttributeVariableRecord_Impl>());
 }
 
 boost::optional<OutputAttributeVariableRecord> OutputAttributeVariableRecord::factoryFromQuery(

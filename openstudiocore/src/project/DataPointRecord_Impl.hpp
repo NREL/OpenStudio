@@ -25,21 +25,20 @@
 
 #include <project/DataPointRecord.hpp>
 
+#include <analysis/DataPoint.hpp>
+
 namespace openstudio {
-namespace analysis {
-  class DataPoint;
-} // analysis
 namespace project {
 
 class AnalysisRecord;
 class FileReferenceRecord;
 class DataPointValueRecord;
+class MeasureRecord;
 
 namespace detail {
 
   /** DataPointRecord_Impl is a ObjectRecord_Impl that is the implementation class for DataPointRecord.*/
   class PROJECT_API DataPointRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -92,15 +91,30 @@ namespace detail {
     /** Returns the ProblemRecord associated with this DataPointRecord (as a resource). */
     ProblemRecord problemRecord() const;
 
-    /** Returns true if this data point has been run/simulated. Returns true even if failed(). */
+    /** Returns true if this data point has been run/simulated. Returns true even if failed().
+     *  \deprecated */
     bool isComplete() const;
+
+    bool complete() const;
 
     /** Returns true if this data point has been run, but the simulation failed. Returns false
      *  otherwise. (Always returns false if !complete().) */
     bool failed() const;
 
+    bool selected() const;
+
+    analysis::DataPointRunType runType() const;
+
     openstudio::path directory() const;
 
+    std::vector<QVariant> variableValues() const;
+
+    /** Returns the measures associated with this DataPoint via MeasureGroup selection. Returns them
+     *  in ProblemRecord::inputVariableRecords order. */
+    std::vector<MeasureRecord> measureRecords() const;
+
+    /** Returns the continuous variable values associated with this DataPoint. Returns them in 
+     *  ProblemRecord::inputVariableRecords order. */
     std::vector<DataPointValueRecord> continuousVariableValueRecords() const;
 
     std::vector<DataPointValueRecord> responseValueRecords() const;
@@ -113,15 +127,15 @@ namespace detail {
 
     boost::optional<FileReferenceRecord> sqlOutputDataRecord() const;
 
-    /** Returns the FileReferenceRecord that points to this DataPointRecord's XML output data.
-     *  Attributes associated with that file may be accessed through
-     *  xmlOutputDataRecord()->attributeRecords() if xmlOutputDataRecord(), isComplete() and not
-     *  failed(). */
-    boost::optional<FileReferenceRecord> xmlOutputDataRecord() const;
+    /** Returns the FileReferenceRecords that point to this DataPointRecord's XML output data. */
+    std::vector<FileReferenceRecord> xmlOutputDataRecords() const;
 
     boost::optional<openstudio::UUID> topLevelJobUUID() const;
 
     std::vector<TagRecord> tagRecords() const;
+
+    /** Assembles all the AttributeRecords associated with xmlOutputDataRecords(). */
+    std::vector<AttributeRecord> attributeRecords() const;
 
     virtual analysis::DataPoint dataPoint() const;
 
@@ -154,11 +168,6 @@ namespace detail {
 
     void clearSqlOutputDataRecordId();
 
-    /** Impl-only method. Used to make two-way connection with FileReferences. */
-    void setXmlOutputDataRecordId(int id);
-
-    void clearXmlOutputDataRecordId();
-
     //@}
    protected:
     /** Bind data member values to a query for saving. */
@@ -184,11 +193,12 @@ namespace detail {
     DataPointRecordType m_dataPointRecordType;
     bool m_complete;
     bool m_failed;
+    bool m_selected;
+    analysis::DataPointRunType m_runType;
     openstudio::path m_directory;
     boost::optional<int> m_osmInputDataRecordId;
     boost::optional<int> m_idfInputDataRecordId;
     boost::optional<int> m_sqlOutputDataRecordId;
-    boost::optional<int> m_xmlOutputDataRecordId;
     boost::optional<openstudio::UUID> m_topLevelJobUUID;
     std::vector<openstudio::path> m_dakotaParametersFiles;
 
@@ -197,11 +207,12 @@ namespace detail {
     DataPointRecordType m_lastDataPointRecordType;
     bool m_lastComplete;
     bool m_lastFailed;
+    bool m_lastSelected;
+    analysis::DataPointRunType m_lastRunType;
     openstudio::path m_lastDirectory;
     boost::optional<int> m_lastOsmInputDataRecordId;
     boost::optional<int> m_lastIdfInputDataRecordId;
     boost::optional<int> m_lastSqlOutputDataRecordId;
-    boost::optional<int> m_lastXmlOutputDataRecordId;
     boost::optional<openstudio::UUID> m_lastTopLevelJobUUID;
     std::vector<openstudio::path> m_lastDakotaParametersFiles;
   };

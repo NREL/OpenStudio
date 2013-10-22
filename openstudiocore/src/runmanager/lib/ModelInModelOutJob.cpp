@@ -60,7 +60,7 @@ namespace detail {
     try {
       m_model = files.getLastByExtension("osm");
       resetFiles(m_files, m_model);
-    } catch (const std::exception &) {
+    } catch (const std::runtime_error &) {
     }
 
     m_description = buildDescription("osm");

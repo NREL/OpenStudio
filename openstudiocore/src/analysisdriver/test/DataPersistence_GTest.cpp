@@ -24,6 +24,7 @@
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
 
+#include <analysis/Analysis.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DDACEAlgorithm.hpp>
@@ -32,6 +33,7 @@
 
 #include <model/Model.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/FileReference.hpp>
 
 using namespace openstudio;
@@ -76,7 +78,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     WorkflowStepJob jobResult = jobResults[0];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_TRUE(jobResult.discretePerturbation);
+    EXPECT_TRUE(jobResult.measure);
     Job job = jobResult.job.get();
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.outOfDate());
@@ -92,7 +94,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[1];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_FALSE(jobResult.discretePerturbation);
+    EXPECT_FALSE(jobResult.measure);
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
@@ -109,7 +111,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[2];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_TRUE(jobResult.discretePerturbation);
+    EXPECT_TRUE(jobResult.measure);
     job = jobResult.job.get();
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.outOfDate());
@@ -124,7 +126,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[3];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_FALSE(jobResult.discretePerturbation);
+    EXPECT_FALSE(jobResult.measure);
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
@@ -141,7 +143,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[4];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_FALSE(jobResult.discretePerturbation);
+    EXPECT_FALSE(jobResult.measure);
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::ModelToIdf),jobResult.step.workItemType());
     job = jobResult.job.get();
@@ -181,7 +183,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     WorkflowStepJob jobResult = jobResults[0];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_TRUE(jobResult.discretePerturbation);
+    EXPECT_TRUE(jobResult.measure);
     Job job = jobResult.job.get();
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.outOfDate());
@@ -197,7 +199,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[1];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_FALSE(jobResult.discretePerturbation);
+    EXPECT_FALSE(jobResult.measure);
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
@@ -214,7 +216,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[2];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_TRUE(jobResult.discretePerturbation);
+    EXPECT_TRUE(jobResult.measure);
     job = jobResult.job.get();
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.outOfDate());
@@ -229,7 +231,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[3];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_FALSE(jobResult.discretePerturbation);
+    EXPECT_FALSE(jobResult.measure);
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
@@ -246,7 +248,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
 
     jobResult = jobResults[4];
     ASSERT_TRUE(jobResult.job);
-    EXPECT_FALSE(jobResult.discretePerturbation);
+    EXPECT_FALSE(jobResult.measure);
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::ModelToIdf),jobResult.step.workItemType());
     job = jobResult.job.get();

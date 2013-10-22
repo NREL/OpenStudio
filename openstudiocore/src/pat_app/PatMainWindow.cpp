@@ -19,10 +19,13 @@
 
 #include <pat_app/PatMainWindow.hpp>
 
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/HorizontalTabWidget.hpp>
 #include <pat_app/PatApp.hpp>
 #include <pat_app/PatMainMenu.hpp>
 #include <pat_app/PatVerticalTabWidget.hpp>
+
+#include <utilities/core/Assert.hpp>
 
 #include <QAction>
 #include <QApplication>
@@ -34,6 +37,7 @@
 #include <QGraphicsView>
 #include <QListWidget>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QScrollArea>
 #include <QSettings>
 #include <QSizePolicy>
@@ -93,43 +97,49 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
   this->setMenuBar(mainMenu);
 
   isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(saveFileClicked()), this, SIGNAL(saveFileClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(saveAsFileClicked()), this, SIGNAL(saveAsFileClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(clearAllResultsClicked()), this, SIGNAL(clearAllResultsClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(exportXmlClicked()), this, SIGNAL(exportXmlClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(scanForToolsClicked()),this,SIGNAL(scanForToolsClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(showToolsClicked()),this,SIGNAL(showToolsClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   
   isConnected = connect(mainMenu, SIGNAL(changeMeasuresClicked()),this,SIGNAL(changeMeasuresClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(openBclDlgClicked()), this, SIGNAL(openBclDlgClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainMenu, SIGNAL(openCloudDlgClicked()), this, SIGNAL(openCloudDlgClicked()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainMenu, SIGNAL(openMonitorUseDlgClicked()), this, SIGNAL(openMonitorUseDlgClicked()));
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void PatMainWindow::showRightColumn()
@@ -159,7 +169,63 @@ void PatMainWindow::setMainRightColumnView(QWidget * widget)
 
 void PatMainWindow::closeEvent(QCloseEvent *event)
 {
-  qobject_cast<PatApp *>(QApplication::instance())->quit();
+  CloudStatus status = PatApp::instance()->cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(this, 
+      "Cannot Exit PAT", 
+      "PAT cannot be closed while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    event->ignore();
+    return;
+  } else if (status == CLOUD_RUNNING) {
+
+    // if project is running we can quit, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't quit
+    // if project is stopping we can quit, 90% sure we should turn cloud off
+    // if project is error we can quit, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(this, 
+        "Cannot Exit PAT", 
+        "PAT cannot be closed while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+
+      event->ignore();
+      return;
+    }else{
+      int result = QMessageBox::warning(this, 
+                     "Close PAT?", 
+                     "The cloud is currently running and charges are accruing.  Are you sure you want to exit PAT?", 
+                     QMessageBox::Ok, 
+                     QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) {
+        event->ignore();
+        return;
+      }
+    }
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // DLM: check if running locally?
+
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(this, 
+                   "Close PAT?", 
+                   "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to exit PAT?", 
+                   QMessageBox::Ok, 
+                   QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) {
+      event->ignore();
+      return;
+    }
+  }
+
+  qobject_cast<PatApp *>(QApplication::instance())->quit(true);
   writeSettings();
 
   QMainWindow::closeEvent(event);

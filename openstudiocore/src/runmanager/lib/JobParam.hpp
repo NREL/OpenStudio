@@ -50,6 +50,24 @@ namespace runmanager {
       }
 
       /// \param[in] t_params the list of params to search
+      /// \param[in] t_value the value to search for
+      /// \returns the JobParam matching the given value. Throws an exception if it is not found
+      static bool hasByValue(const std::vector<JobParam> &t_params, const std::string &t_value)
+      {
+        std::vector<JobParam>::const_reverse_iterator itr 
+          = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
+
+        if (itr != t_params.rend())
+        {
+          return true;
+        }
+
+        return false;
+      }
+
+
+
+      /// \param[in] t_params the list of params to search
       /// \param[in] t_value the value to remove
       /// Erases the JobParam with the given value if it exists
       static void removeByValue(std::vector<JobParam> &t_params, const std::string &t_value)
@@ -158,6 +176,10 @@ namespace runmanager {
         JobParam::removeByValue(m_params, value);
       }
 
+      bool has(const std::string &value) const
+      {
+        return JobParam::hasByValue(m_params, value);
+      }
 
     private:
       std::vector<JobParam> m_params;

@@ -20,7 +20,11 @@
 #include <analysis/SamplingAlgorithmOptions.hpp>
 #include <analysis/SamplingAlgorithmOptions_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
+
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -38,8 +42,12 @@ namespace detail {
   }
 
   SamplingAlgorithmOptions_Impl::SamplingAlgorithmOptions_Impl(
+      const boost::optional<SamplingAlgorithmSampleType>& sampleType,
+      const boost::optional<SamplingAlgorithmRNGType>& rngType,
       const std::vector<Attribute>& options)
-    : DakotaAlgorithmOptions_Impl(options)
+    : DakotaAlgorithmOptions_Impl(options),
+      m_sampleType(sampleType),
+      m_rngType(rngType)
   {}
 
   AlgorithmOptions SamplingAlgorithmOptions_Impl::clone() const {
@@ -54,7 +62,7 @@ namespace detail {
   int SamplingAlgorithmOptions_Impl::samples() const {
     int result;
     OptionalAttribute option = getOption("samples");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsInteger();
     return result;
   }
@@ -62,7 +70,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::allVariables() const {
     bool result;
     OptionalAttribute option = getOption("allVariables");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -70,7 +78,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::varianceBasedDecomp() const {
     bool result;
     OptionalAttribute option = getOption("varianceBasedDecomp");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -78,7 +86,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::dropTolerance() const {
     bool result;
     OptionalAttribute option = getOption("dropTolerance");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -94,7 +102,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::fixedSeed() const {
     bool result;
     OptionalAttribute option = getOption("fixedSeed");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -109,26 +117,26 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option = getOption("samples");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
     return true;
   }
 
   void SamplingAlgorithmOptions_Impl::setAllVariables(bool value) {
     OptionalAttribute option = getOption("allVariables");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
   void SamplingAlgorithmOptions_Impl::setVarianceBasedDecomp(bool value) {
     OptionalAttribute option = getOption("varianceBasedDecomp");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
   void SamplingAlgorithmOptions_Impl::setDropTolerance(bool value) {
     OptionalAttribute option = getOption("dropTolerance");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
@@ -138,7 +146,7 @@ namespace detail {
       return false;
 	}
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {
@@ -150,7 +158,7 @@ namespace detail {
 
   void SamplingAlgorithmOptions_Impl::setFixedSeed(bool value) {
     OptionalAttribute option = getOption("fixedSeed");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
@@ -174,6 +182,32 @@ namespace detail {
     m_rngType.reset();
   }
 
+  QVariant SamplingAlgorithmOptions_Impl::toVariant() const {
+    QVariantMap map = AlgorithmOptions_Impl::toVariant().toMap();
+
+    if (OptionalSamplingAlgorithmSampleType st = sampleType()) {
+      map["sample_type"] = toQString(st->valueName());
+    }
+    if (OptionalSamplingAlgorithmRNGType rt = rngType()) {
+      map["rng_type"] = toQString(rt->valueName());
+    }
+
+    return QVariant(map);
+  }
+
+  SamplingAlgorithmOptions SamplingAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                      const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return SamplingAlgorithmOptions(
+          map.contains("sample_type") ? SamplingAlgorithmSampleType(map["sample_type"].toString().toStdString()) : OptionalSamplingAlgorithmSampleType(),
+          map.contains("rng_type") ? SamplingAlgorithmRNGType(map["rng_type"].toString().toStdString()) : OptionalSamplingAlgorithmRNGType(),
+          attributes);
+  }
+
 } // detail
 
 SamplingAlgorithmOptions::SamplingAlgorithmOptions()
@@ -181,9 +215,11 @@ SamplingAlgorithmOptions::SamplingAlgorithmOptions()
         new detail::SamplingAlgorithmOptions_Impl()))
 {}
 
-SamplingAlgorithmOptions::SamplingAlgorithmOptions(const std::vector<Attribute>& options)
+SamplingAlgorithmOptions::SamplingAlgorithmOptions(const boost::optional<SamplingAlgorithmSampleType>& sampleType,
+                                                   const boost::optional<SamplingAlgorithmRNGType>& rngType,
+                                                   const std::vector<Attribute>& options)
   : DakotaAlgorithmOptions(boost::shared_ptr<detail::SamplingAlgorithmOptions_Impl>(
-        new detail::SamplingAlgorithmOptions_Impl(options)))
+        new detail::SamplingAlgorithmOptions_Impl(sampleType,rngType,options)))
 {}
 
 boost::optional<SamplingAlgorithmSampleType> SamplingAlgorithmOptions::sampleType() const {

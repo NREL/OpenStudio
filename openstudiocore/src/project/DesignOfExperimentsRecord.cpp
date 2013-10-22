@@ -48,14 +48,14 @@ namespace detail {
                                                                  ProjectDatabase& database)
     : OpenStudioAlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(AlgorithmRecordColumns::designOfExperimentsType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_designOfExperimentsType = analysis::DesignOfExperimentsType(value.toInt());
   }
 
@@ -109,30 +109,30 @@ namespace detail {
   void DesignOfExperimentsRecord_Impl::setLastValues(const QSqlQuery& query, 
                                                      ProjectDatabase& projectDatabase) 
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     OpenStudioAlgorithmRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(AlgorithmRecordColumns::designOfExperimentsType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDesignOfExperimentsType = analysis::DesignOfExperimentsType(value.toInt());
   }
 
   bool DesignOfExperimentsRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = OpenStudioAlgorithmRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(AlgorithmRecordColumns::designOfExperimentsType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_designOfExperimentsType == analysis::DesignOfExperimentsType(value.toInt()));
 
     return result;
@@ -159,7 +159,7 @@ DesignOfExperimentsRecord::DesignOfExperimentsRecord(
         analysisRecord.projectDatabase(),
         designOfExperiments)
 {
-  BOOST_ASSERT(getImpl<detail::DesignOfExperimentsRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DesignOfExperimentsRecord_Impl>());
 }
 
 DesignOfExperimentsRecord::DesignOfExperimentsRecord(const QSqlQuery& query, 
@@ -169,7 +169,7 @@ DesignOfExperimentsRecord::DesignOfExperimentsRecord(const QSqlQuery& query,
         database,
         boost::optional<analysis::OpenStudioAlgorithm>())
 {
-  BOOST_ASSERT(getImpl<detail::DesignOfExperimentsRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DesignOfExperimentsRecord_Impl>());
 }
 
 DesignOfExperimentsRecord::DesignOfExperimentsRecord(
@@ -177,7 +177,7 @@ DesignOfExperimentsRecord::DesignOfExperimentsRecord(
     ProjectDatabase database)
     : OpenStudioAlgorithmRecord(impl, database, boost::optional<analysis::OpenStudioAlgorithm>())
 {
-  BOOST_ASSERT(getImpl<detail::DesignOfExperimentsRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DesignOfExperimentsRecord_Impl>());
 }
 
 boost::optional<DesignOfExperimentsRecord> DesignOfExperimentsRecord::factoryFromQuery(

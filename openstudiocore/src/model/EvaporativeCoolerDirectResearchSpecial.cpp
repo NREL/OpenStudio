@@ -39,14 +39,14 @@ namespace detail{
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == EvaporativeCoolerDirectResearchSpecial::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == EvaporativeCoolerDirectResearchSpecial::iddObjectType());
   }
 
   EvaporativeCoolerDirectResearchSpecial_Impl::EvaporativeCoolerDirectResearchSpecial_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == EvaporativeCoolerDirectResearchSpecial::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == EvaporativeCoolerDirectResearchSpecial::iddObjectType());
   }
 
   EvaporativeCoolerDirectResearchSpecial_Impl::EvaporativeCoolerDirectResearchSpecial_Impl(
@@ -117,11 +117,11 @@ namespace detail{
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<EvaporativeCoolerDirectResearchSpecial_Impl*>(this)->setAvailabilitySchedule(*value);
       value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_EvaporativeCooler_Direct_ResearchSpecialFields::AvailabilityScheduleName);
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
   
@@ -214,7 +214,7 @@ namespace detail{
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(const Model& model,Schedule & schedule)
   : StraightComponent(EvaporativeCoolerDirectResearchSpecial::iddObjectType(),model) 
 {
-  BOOST_ASSERT(getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>());
+  OS_ASSERT(getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>());
 
   this->setAvailabilitySchedule(schedule);
 

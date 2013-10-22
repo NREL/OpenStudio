@@ -73,6 +73,7 @@ namespace detail {
       ///   - childrenChanged(const openstudio::UUID &id) - emitted after the list of children has changed
       ///   - parentChanged(const openstudio::UUID &id) - emitted after the parent has changed
       ///   - treeChanged() - emitted if any of the jobs in the job tree (this one or any children) have changed in any way
+      ///   - uuidChanged(const openstudio::UUID &oldId, const openstudio::UUID &newId) - emitted if the UUID of this job changed
       /// \param[in] signal signal to connect to
       /// \param[in] receiver signal receiver
       /// \param[in] method receiving slot
@@ -246,6 +247,9 @@ namespace detail {
       /// Sets the base path by which relative paths will be evaluated from this job
       void setBasePath(const openstudio::path &t_basePath);
 
+      /// Sets the base path for this job and all child jobs
+      void setBasePathRecursive(const openstudio::path &t_basePath);
+
       /// \returns the output directory that the Job is using
       openstudio::path outdir() const;
 
@@ -255,6 +259,9 @@ namespace detail {
       /// \returns the time the job completed
       boost::optional<openstudio::DateTime> endTime() const;
 
+      /// return all the specific params this job has appended onto the list of
+      /// params acquired from all dependencies
+      JobParams allParams() const;
 
       
       /// \returns true if this job or any job under it is running
@@ -313,9 +320,61 @@ namespace detail {
       /// Swap the internals of this job with rhs.
       void swap(Job &rhs);
 
+  
+      /// \returns a re-created Job tree from the given JSON string.
+      ///
+      /// \throws std::exception if any part of the parsing fails, with desription
+      ///         of where and why.
+      ///
+      /// \sa Job::toJSON for more information
+      static Job fromJSON(const std::string &t_json);
+
+      /// \returns a snapshot of the complete status of this job and all children
+      ///
+      /// All paths and tools are left as-is, as if the job were being persisted in
+      /// the runmanager database. 
+      /// 
+      /// Main uses for this function are transporting the status of a job tree
+      /// across a network and for display locally and for persisting of complex
+      /// workflows.
+      /// 
+      /// With care to use relative paths, or care to re-create the job file 
+      /// structure on two computers it could be used to begin a job tree
+      /// on one computer and continue it on another.
+      ///
+      /// \sa openstudio::runmanager::Workflow::create for information on creating
+      ///     a Job tree from a Workflow 
+      ///
+      /// \sa openstudio::runmanager::Workflow::Workflow for information on
+      ///     creating a Workflow from a Job tree
+      std::string toJSON() const;
+
+      /// Update this job tree with the details from the other job tree. Throws an error
+      /// if the UUID's do not match
+      ///
+      /// Specifically, the static content: input files, params and tools remain static
+      /// but the state, output files, last runtime are updated.
+      void updateJob(const Job &t_other, bool t_allowUUIDUpdate);
+
       Job &operator=(Job rhs);
 
       void moveToThread(QThread* targetThread);
+
+      /// \returns true if the job is flagged as externally managed
+      bool externallyManaged() const;
+
+      /// sets this job (and children) as being externally managed
+      void makeExternallyManaged();
+
+      /// \returns all output files relative to the rundir
+      Files relativeOutputFiles() const;
+
+      // send job state and file output signals as if the job had gone from no state
+      // to the current state
+      void sendSignals();
+
+      /// Sets the advancedstatus of the current job. Only allowed on externally managed jobs
+      void setStatus(const AdvancedStatus &t_status);
 
     protected:
       Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);

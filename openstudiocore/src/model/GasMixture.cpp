@@ -42,7 +42,7 @@ namespace detail {
                                    bool keepHandle)
     : GasLayer_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == GasMixture::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == GasMixture::iddObjectType());
   }
 
   GasMixture_Impl::GasMixture_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -50,7 +50,7 @@ namespace detail {
                                    bool keepHandle)
     : GasLayer_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == GasMixture::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == GasMixture::iddObjectType());
   }
 
   GasMixture_Impl::GasMixture_Impl(const GasMixture_Impl& other,
@@ -266,13 +266,13 @@ namespace detail {
 
     unsigned index = numGases();
     bool ok = setUnsigned(OS_WindowMaterial_GasMixtureFields::NumberofGasesinMixture,index + 1);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
 
     bool result = setGas(index,type,fraction);
 
     if (!result) {
       ok = setUnsigned(OS_WindowMaterial_GasMixtureFields::NumberofGasesinMixture,index);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
 
     return result;
@@ -338,7 +338,7 @@ namespace detail {
 
   unsigned GasMixture_Impl::numGases() const {
     OptionalUnsigned ou = getUnsigned(OS_WindowMaterial_GasMixtureFields::NumberofGasesinMixture,true);
-    BOOST_ASSERT(ou);
+    OS_ASSERT(ou);
     return *ou;
   }
 
@@ -394,7 +394,7 @@ namespace detail {
         LOG_AND_THROW("GasMixture only supports four gases, and is indexed starting with 0. Cannot "
             << "return the gas type at index " << gasIndex << ".");
     };
-    BOOST_ASSERT(result > 0);
+    OS_ASSERT(result > 0);
     return result;
   }
 
@@ -417,13 +417,13 @@ namespace detail {
         LOG_AND_THROW("GasMixture only supports four gases, and is indexed starting with 0. Cannot "
             << "return the gas fraction at index " << gasIndex << ".");
     };
-    BOOST_ASSERT(result > 0);
+    OS_ASSERT(result > 0);
     return result;
   }
 
   double GasMixture_Impl::thickness() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GasMixtureFields::Thickness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -438,7 +438,7 @@ namespace detail {
   Quantity GasMixture_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Thickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -457,7 +457,7 @@ namespace detail {
 
   int GasMixture_Impl::numberofGasesinMixture() const {
     boost::optional<int> value = getInt(OS_WindowMaterial_GasMixtureFields::NumberofGasesinMixture,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -468,39 +468,39 @@ namespace detail {
 
   std::string GasMixture_Impl::gas1Type() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_GasMixtureFields::Gas1Type,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double GasMixture_Impl::gas1Fraction() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GasMixtureFields::Gas1Fraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity GasMixture_Impl::getGas1Fraction(bool returnIP) const {
     OptionalDouble value = gas1Fraction();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Gas1Fraction, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   std::string GasMixture_Impl::gas2Type() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_GasMixtureFields::Gas2Type,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double GasMixture_Impl::gas2Fraction() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GasMixtureFields::Gas2Fraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity GasMixture_Impl::getGas2Fraction(bool returnIP) const {
     OptionalDouble value = gas2Fraction();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Gas2Fraction, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -592,17 +592,17 @@ namespace detail {
 
   void GasMixture_Impl::resetGas1Type() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas1Type, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GasMixture_Impl::resetGas2Type() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas2Type, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GasMixture_Impl::resetGas3Type() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas3Type, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GasMixture_Impl::setGas3Fraction(boost::optional<double> gas3Fraction) {
@@ -634,17 +634,17 @@ namespace detail {
 
   void GasMixture_Impl::resetGas1Fraction() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas1Fraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GasMixture_Impl::resetGas2Fraction() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas2Fraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GasMixture_Impl::resetGas3Fraction() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas3Fraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GasMixture_Impl::setGas4Type(boost::optional<std::string> gas4Type) {
@@ -661,7 +661,7 @@ namespace detail {
 
   void GasMixture_Impl::resetGas4Type() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas4Type, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GasMixture_Impl::setGas4Fraction(boost::optional<double> gas4Fraction) {
@@ -693,7 +693,7 @@ namespace detail {
 
   void GasMixture_Impl::resetGas4Fraction() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas4Fraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> GasMixture_Impl::gas1TypeValues() const {
@@ -759,32 +759,32 @@ GasMixture::GasMixture(const Model& model,
                        double gas4Fraction)
   : GasLayer(GasMixture::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::GasMixture_Impl>());
+  OS_ASSERT(getImpl<detail::GasMixture_Impl>());
   
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThickness(thickness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setNumberofGasesinMixture(numberofGasesinMixture);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas1Type(gas1Type);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas1Fraction(gas1Fraction);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas2Type(gas2Type);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas2Fraction(gas2Fraction);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas3Type(gas3Type);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas3Fraction(gas3Fraction);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas4Type(gas4Type);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGas4Fraction(gas4Fraction);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType GasMixture::iddObjectType() {
@@ -796,7 +796,7 @@ const std::vector<std::string>& GasMixture::validGasTypes() {
   if (result.empty()) {
     result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                             OS_WindowMaterial_GasMixtureFields::Gas1Type);
-    BOOST_ASSERT(!result.empty());
+    OS_ASSERT(!result.empty());
   }
   return result;
 }

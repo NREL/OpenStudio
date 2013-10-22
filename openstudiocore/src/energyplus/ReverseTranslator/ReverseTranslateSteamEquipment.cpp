@@ -33,6 +33,8 @@
 #include <utilities/idd/SteamEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -59,7 +61,7 @@ OptionalModelObject ReverseTranslator::translateSteamEquipment(
   }
 
   s = workspaceObject.getString(openstudio::SteamEquipmentFields::DesignLevelCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("EquipmentLevel", *s)){
@@ -70,14 +72,14 @@ OptionalModelObject ReverseTranslator::translateSteamEquipment(
       LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::SteamEquipmentFields::WattsperZoneFloorArea);
+    d = workspaceObject.getDouble(openstudio::SteamEquipmentFields::PowerperZoneFloorArea);
     if (d){
       definition.setWattsperSpaceFloorArea(*d);
     }else{
       LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::SteamEquipmentFields::WattsperPerson);
+    d = workspaceObject.getDouble(openstudio::SteamEquipmentFields::PowerperPerson);
     if (d){
       definition.setWattsperPerson(*d);
     }else{

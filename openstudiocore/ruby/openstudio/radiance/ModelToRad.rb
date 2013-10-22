@@ -125,7 +125,7 @@ if (not ARGV[1] or not File::file?(ARGV[1]) or File::directory?(ARGV[1]))
   puts "no sql file given, running EnergyPlus..."
  
   # find EnergyPlus
-  ep_hash = OpenStudio::EnergyPlus::find_energyplus(7,2)
+  ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
   ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
   ep_parent_path = ep_path.parent_path()
 
@@ -163,9 +163,14 @@ runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true)
 runmanager.setPaused(true)
 
 # run 
+runDir = OpenStudio::system_complete(runDir)
+puts "Creating rundir: #{runDir}"
+OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
+puts "Creating workflow"
 jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(modelPath), OpenStudio::Path.new())
 runmanager.enqueue(jobtree, true)
 runmanager.getJobs.each {|job| job.setBasePath(resourcePath)}
+puts "Running jobs"
 runmanager.setPaused(false)
 runmanager.waitForFinished()
 

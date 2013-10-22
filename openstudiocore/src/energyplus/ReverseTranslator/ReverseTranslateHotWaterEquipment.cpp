@@ -33,6 +33,8 @@
 #include <utilities/idd/HotWaterEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -58,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateHotWaterEquipment( const Workspa
   }
 
   s = workspaceObject.getString(openstudio::HotWaterEquipmentFields::DesignLevelCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("EquipmentLevel", *s)){
@@ -69,14 +71,14 @@ OptionalModelObject ReverseTranslator::translateHotWaterEquipment( const Workspa
       LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::WattsperZoneFloorArea);
+    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::PowerperZoneFloorArea);
     if (d){
       definition.setWattsperSpaceFloorArea(*d);
     }else{
       LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::WattsperPerson);
+    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::PowerperPerson);
     if (d){
       definition.setWattsperPerson(*d);
     }else{

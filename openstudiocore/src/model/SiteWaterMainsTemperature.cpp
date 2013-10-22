@@ -43,7 +43,7 @@ namespace detail {
   SiteWaterMainsTemperature_Impl::SiteWaterMainsTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SiteWaterMainsTemperature::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SiteWaterMainsTemperature::iddObjectType());
   }
 
   SiteWaterMainsTemperature_Impl::SiteWaterMainsTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                                                  bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SiteWaterMainsTemperature::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SiteWaterMainsTemperature::iddObjectType());
   }
 
   SiteWaterMainsTemperature_Impl::SiteWaterMainsTemperature_Impl(const SiteWaterMainsTemperature_Impl& other,
@@ -92,7 +92,7 @@ namespace detail {
 
   std::string SiteWaterMainsTemperature_Impl::calculationMethod() const {
     boost::optional<std::string> value = getString(OS_Site_WaterMainsTemperatureFields::CalculationMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -130,14 +130,14 @@ namespace detail {
                               schedule);
     if (result) {
       result = setCalculationMethod("Schedule");
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
     return result;
   }
 
   void SiteWaterMainsTemperature_Impl::resetTemperatureSchedule() {
     bool result = setString(OS_Site_WaterMainsTemperatureFields::TemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteWaterMainsTemperature_Impl::setAnnualAverageOutdoorAirTemperature(boost::optional<double> annualAverageOutdoorAirTemperature) {
@@ -146,14 +146,14 @@ namespace detail {
       result = setDouble(OS_Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature, annualAverageOutdoorAirTemperature.get());
       if (result) {
         result = setCalculationMethod("Correlation");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     }
     else {
       resetAnnualAverageOutdoorAirTemperature();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteWaterMainsTemperature_Impl::setAnnualAverageOutdoorAirTemperature(const OSOptionalQuantity& annualAverageOutdoorAirTemperature) {
@@ -175,7 +175,7 @@ namespace detail {
 
   void SiteWaterMainsTemperature_Impl::resetAnnualAverageOutdoorAirTemperature() {
     bool result = setString(OS_Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteWaterMainsTemperature_Impl::setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures) {
@@ -184,7 +184,7 @@ namespace detail {
       result = setDouble(OS_Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures, maximumDifferenceInMonthlyAverageOutdoorAirTemperatures.get());
       if (result) {
         result = setCalculationMethod("Correlation");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     }
     else {
@@ -211,7 +211,7 @@ namespace detail {
 
   void SiteWaterMainsTemperature_Impl::resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures() {
     bool result = setString(OS_Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteWaterMainsTemperature_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const {
@@ -220,7 +220,7 @@ namespace detail {
 
     if (report.level() > StrictnessLevel::Draft) {
       boost::optional<IddKey> key = iddObject().getField(OS_Site_WaterMainsTemperatureFields::CalculationMethod).get().getKey(calculationMethod());
-      BOOST_ASSERT(key);
+      OS_ASSERT(key);
       if (key->name() == "Schedule") {
         if (!temperatureSchedule()) {
           report.insertError(DataError(OS_Site_WaterMainsTemperatureFields::TemperatureScheduleName,
@@ -295,9 +295,9 @@ namespace detail {
 SiteWaterMainsTemperature::SiteWaterMainsTemperature(const Model& model)
   : ModelObject(SiteWaterMainsTemperature::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SiteWaterMainsTemperature_Impl>());
+  OS_ASSERT(getImpl<detail::SiteWaterMainsTemperature_Impl>());
   bool ok = setCalculationMethod("Schedule");
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType SiteWaterMainsTemperature::iddObjectType() {

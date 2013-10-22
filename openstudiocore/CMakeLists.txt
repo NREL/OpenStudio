@@ -16,9 +16,13 @@ SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # 
 
 # OpenStudio version
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
+SET(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version 
-SET(ENERGYPLUS_VERSION "7.2")
+SET(ENERGYPLUS_VERSION "8.0")
+
+# Dakota version
+SET(DAKOTA_VERSION "5.3.1")
 
 # configure file with version information
 CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx )
@@ -77,9 +81,6 @@ OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 # Build SDD
 OPTION( BUILD_SDD "Build with SDD support" ON )
 
-# Build with Dakota support
-OPTION( BUILD_WITH_DAKOTA "Build with Dakota algorithm library support" OFF )
-
 # Build R package
 OPTION( BUILD_R "Build R package" OFF )
 
@@ -100,6 +101,18 @@ IF (BUILD_V8_BINDINGS)
   OPTION( BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON )
 ENDIF()
 
+# Configure vagrant 
+SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
+
+# Require that DAKOTA_FOUND
+#
+# Some code (certain analysisdriver tests) are conditionally compiled depending on 
+# the value of this variable.
+#
+# Dakota is an optional third party algorithm library that we use through its command line
+# interface.
+OPTION( REQUIRE_DAKOTA "Ensure Dakota (third party analysis tool) is found" OFF )
+MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
@@ -177,7 +190,7 @@ ENDIF( BUILD_TESTING )
 IF(UNIX)
   # all warnings
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch")
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=256")
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing --std=c99")
   # effective c++
   #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
@@ -351,11 +364,25 @@ IF( BUILD_PYTHON_BINDINGS )
   SET( ALL_PYTHON_BINDING_TARGETS "" ) # global list
 ENDIF()
 
-# Dakota
-IF (BUILD_WITH_DAKOTA) 
-  FIND_PACKAGE(Dakota REQUIRED)
+IF (REQUIRE_DAKOTA) 
+  FIND_PACKAGE(Dakota "${DAKOTA_VERSION}" REQUIRED)
   MARK_AS_ADVANCED(DAKOTA_EXE)
-ENDIF(BUILD_WITH_DAKOTA)
+ELSE (REQUIRE_DAKOTA)
+  # If DAKOTA_FOUND not yet set, and DAKOTA_FOUND comes back false, emit a message
+  SET(EMIT_DAKOTA_WARNING false)
+  IF (NOT DEFINED DAKOTA_FOUND)
+    SET(EMIT_DAKOTA_WARNING true)
+  ENDIF(NOT DEFINED DAKOTA_FOUND)
+  FIND_PACKAGE(Dakota "${DAKOTA_VERSION}")
+  IF (DAKOTA_FOUND)
+    MARK_AS_ADVANCED(DAKOTA_EXE)
+  ELSE (DAKOTA_FOUND)
+    IF (EMIT_DAKOTA_WARNING)
+      MESSAGE(STATUS "DAKOTA was not found on your system. openstudio_analysisdriver_tests that depend on Dakota will not be built.")
+    ENDIF(EMIT_DAKOTA_WARNING)
+  ENDIF(DAKOTA_FOUND)
+ENDIF(REQUIRE_DAKOTA)
+SET(DAKOTA_FOUND ${DAKOTA_FOUND} CACHE INTERNAL "Boolean indicating whether Dakota was found.")
 
 # Doxygen
 IF( BUILD_DOCUMENTATION )
@@ -542,6 +569,12 @@ find_package(BoostLog REQUIRED)
 INCLUDE_DIRECTORIES( SYSTEM ${BoostLog_INCLUDE_DIRS} )
 LINK_DIRECTORIES( ${BoostLog_LIBRARY_DIRS} )
 
+# QJSON 
+
+find_package(QJSON REQUIRED)
+INCLUDE_DIRECTORIES( SYSTEM ${QJSON_INCLUDE_DIR} )
+LINK_DIRECTORIES( ${QJSON_LIBRARY_DIRS} )
+
 # SQLite definitions, used in sqlite and litesql
 ADD_DEFINITIONS( -DSQLITE_THREADSAFE=1 ) # 1 is default, serial access
 #ADD_DEFINITIONS( -DSQLITE_DEBUG )
@@ -687,6 +720,46 @@ INCLUDE_DIRECTORIES( "${CMAKE_BINARY_DIR}/src/" )
 # Include the resources, should happen after find EnergyPlus
 ADD_SUBDIRECTORY(resources)
 
+
+# Set up embedded ruby for use with 'aws-sdk'
+
+IF (WIN32)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-win32)
+  SET(AWS_RUBY_DESTINATION ".")
+  SET(AWS_RUBY_EXTENSION ".zip")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip)
+  SET(AWS_RUBY_CHECKSUM f30b3eb7d5ed73e99b2b6875a43ab8ea)
+ELSEIF(APPLE)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
+  SET(AWS_RUBY_DESTINATION ".")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM 8bb6739c0babb08b4e2259f9797b31a7)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+ELSEIF(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
+  SET(AWS_RUBY_DESTINATION "lib/openstudio")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM f5a8f11f1b2c854a550a15349df79a60)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+ELSEIF(UNIX)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
+  SET(AWS_RUBY_DESTINATION "lib/openstudio")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-i686.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM be333fe95ef13d4c5f3f449dd9b7c534)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+ENDIF()
+
+FILE(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 ) # EXPECTED_MD5 ${AWS_RUBY_CHECKSUM})
+execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+INSTALL( DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}" DESTINATION "${AWS_RUBY_DESTINATION}" )
+
+# end ruby aws-sdk info
+
 FOREACH( D ${project_directories} )
   ADD_SUBDIRECTORY( src/${D} )
 ENDFOREACH()
@@ -697,6 +770,9 @@ ADD_DEPENDENCIES( ResultsViewer ResultsViewer_resources )
 # ruby, after loading projects
 ADD_SUBDIRECTORY( src/ruby_cpp )
 ADD_SUBDIRECTORY( ruby )
+
+# build epw2wea for supporting gendaymtx
+ADD_SUBDIRECTORY( src/epw2wea )
 
 # csharp, after loading projects
 IF(BUILD_CSHARP_BINDINGS)
@@ -859,3 +935,25 @@ IF (NOT UNIX)
       DESTINATION "Ruby/openstudio")
   ENDIF(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 ENDIF()
+
+
+
+
+IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
+  SET(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+  SET(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+
+  FILE(COPY "${ENERGYPLUS_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/EnergyPlus/")
+  FILE(COPY "${RADIANCE_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/Radiance/")
+
+  IF (APPLE)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  ELSE()
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+  ENDIF()
+
+ENDIF()
+
+

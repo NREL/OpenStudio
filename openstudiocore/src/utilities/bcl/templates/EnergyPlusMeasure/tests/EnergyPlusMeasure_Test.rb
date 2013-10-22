@@ -1,4 +1,5 @@
 require 'openstudio'
+
 require 'openstudio/ruleset/ShowRunnerOutput'
 
 require "#{File.dirname(__FILE__)}/../measure.rb"
@@ -6,12 +7,7 @@ require "#{File.dirname(__FILE__)}/../measure.rb"
 require 'test/unit'
 
 class EnergyPlusMeasure_Test < Test::Unit::TestCase
-  
-  # def setup
-  # end
 
-  # def teardown
-  # end
   
   def test_EnergyPlusMeasure
      
@@ -24,7 +20,7 @@ class EnergyPlusMeasure_Test < Test::Unit::TestCase
     # make an empty model
     model = OpenStudio::Model::Model.new
 
-    # forward translate OSM file to IDF file
+    # forward translate OpenStudio Model to EnergyPlus Workspace
     ft = OpenStudio::EnergyPlus::ForwardTranslator.new
     workspace = ft.translateModel(model)
     
@@ -60,5 +56,6 @@ class EnergyPlusMeasure_Test < Test::Unit::TestCase
     assert(result.info.size == 2)
     
   end
+  
 
 end

@@ -38,58 +38,132 @@ namespace openstudio{
     /// constructor from start date, interval length, and values
     /// first reporting interval ends at Date + Time(0) + intervalLength
     TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0)
+      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // length of interval in days
       const double daysPerInterval = intervalLength.totalDays();
 
       // date and time of first report, end of the first reporting interval
-      //const DateTime firstReportDateTime(startDate, intervalLength);
-      m_firstReportDateTime=DateTime(startDate,intervalLength);
+      // DLM: startDate may or may not have baseYear defined
+      m_firstReportDateTime=DateTime(startDate,intervalLength); 
 
       for (unsigned i = 0; i < values.size(); ++i){
         m_daysFromFirstReport(i) = i*daysPerInterval;
+      }
+
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
       }
     }
 
     /// constructor from start date and time, interval length, and values
     /// first reporting interval ends at startDateTime
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0)
+      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // length of interval in days
       const double daysPerInterval = intervalLength.totalDays();
-      m_firstReportDateTime = startDateTime;
+
+      // DLM: startDate may or may not have baseYear defined
+      m_firstReportDateTime = DateTime(startDateTime.date(), startDateTime.time());
 
       for (unsigned i = 0; i < values.size(); ++i){
         m_daysFromFirstReport(i) = i*daysPerInterval;
+      }
+
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
       }
     }
 
 
     /// constructor from first report date and time, days from first report vector, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
-      : m_firstReportDateTime(firstReportDateTime), m_daysFromFirstReport(daysFromFirstReport), m_values(values), m_units(units), m_outOfRangeValue(0.0)
+      : m_daysFromFirstReport(daysFromFirstReport), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      // DLM: firstReportDateTime may or may not have baseYear defined
+      m_firstReportDateTime = firstReportDateTime;
+
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
+      }
     }
 
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) :m_firstReportDateTime(firstReportDateTime), m_daysFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
+      : m_daysFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      // DLM: firstReportDateTime may or may not have baseYear defined
+      m_firstReportDateTime = firstReportDateTime;
+
       //        for (unsigned i = 0; i < values.size(); i++) m_values(i) = values[i];
       //        for (unsigned i = 0; i < daysFromFirstReport.size(); i++) m_daysFromFirstReport(i) = daysFromFirstReport[i];
       std::copy(values.begin(), values.end(), m_values.begin());
       std::copy(daysFromFirstReport.begin(), daysFromFirstReport.end(), m_daysFromFirstReport.begin());
+    
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
+      }
     }
-
-
 
     /// constructor from date times, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0)
+      : m_daysFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      // DLM: startDate may or may not have baseYear defined
       m_firstReportDateTime = dateTimes.front();
-      for (unsigned i = 0; i < dateTimes.size(); ++i){
-        m_daysFromFirstReport(i) = (dateTimes[i]-m_firstReportDateTime).totalDays();
+      unsigned numDateTimes = dateTimes.size();
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+
+      DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
+      if (!calendarYear){
+        // add year
+        firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
+      }
+      
+      for (unsigned i = 0; i < numDateTimes; ++i){
+      
+        DateTime dateTime = dateTimes[i];
+        if (!calendarYear && dateTime.date().baseYear()){
+          // remove year for comparison with m_firstReportDateTime
+          dateTime = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time());
+        }
+
+        // check for wrap around
+        if (!calendarYear && (dateTime < m_firstReportDateTime)){
+          m_wrapAround = true;
+          DateTime wrappedDateTime = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), m_firstReportDateTime.date().year() + 1), dateTime.time());
+          m_daysFromFirstReport(i) = (wrappedDateTime-firstReportDateTimeWithYear).totalDays();
+        }else{
+          m_daysFromFirstReport(i) = (dateTime-m_firstReportDateTime).totalDays();
+        }
       }
     }
 
@@ -206,8 +280,94 @@ namespace openstudio{
     /// get value at date and time
     double TimeSeries_Impl::value(const DateTime& dateTime) const
     {
-      //      return value(dateTime-m_dateTimes.front());
-      return value(dateTime-m_firstReportDateTime);
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+
+      DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
+      if (!calendarYear){
+        firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
+      }
+
+      DateTime dateTimeWithYear = dateTime;
+      if (!dateTimeWithYear.date().baseYear()){
+        dateTimeWithYear = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), dateTime.date().year()), dateTime.time());
+      }
+
+      DateTime dateTimeCompare = dateTime;
+      if (!calendarYear && dateTime.date().baseYear()){
+        // remove year for comparison with m_firstReportDateTime
+        dateTimeCompare = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time());
+      }
+
+      // check for wrap around
+      if (m_wrapAround){
+        if (dateTimeCompare < m_firstReportDateTime){
+          DateTime wrappedDateTime = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), m_firstReportDateTime.date().year() + 1), dateTime.time());
+
+          // wrapped by less than one year, use wrapped value
+          return value(wrappedDateTime-firstReportDateTimeWithYear);
+        }
+      }
+
+      return value(dateTimeWithYear-firstReportDateTimeWithYear);
+    }
+
+    /// get values between start and end date times
+    Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& endDateTime) const
+    {
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+
+      DateTime startDateTimeCompare = startDateTime;
+      if (!calendarYear && startDateTime.date().baseYear()){
+        startDateTimeCompare = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth()), startDateTime.time());
+      }
+
+      DateTime endDateTimeCompare = endDateTime;
+      if (!calendarYear && endDateTime.date().baseYear()){
+        endDateTimeCompare = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth()), endDateTime.time());
+      }
+
+      DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
+      if (!calendarYear){
+        firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
+      }
+
+      DateTime startDateTimeWithYear = startDateTime;
+      if (!startDateTime.date().baseYear()){
+        startDateTimeWithYear = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth(), startDateTime.date().year()), startDateTime.time());
+      }
+
+      DateTime endDateTimeWithYear = endDateTime;
+      if (!endDateTime.date().baseYear()){
+        if (m_wrapAround){
+          if (endDateTimeCompare < startDateTimeCompare){
+            endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year() + 1), endDateTime.time());
+          }else{
+            endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year()), endDateTime.time());
+          }
+        }else{
+          endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year()), endDateTime.time());
+        }
+      }
+
+      double startDaysFromFirstReport = (startDateTimeWithYear - firstReportDateTimeWithYear).totalDays();
+      double endDaysFromFirstReport = (endDateTimeWithYear - firstReportDateTimeWithYear).totalDays();
+
+      unsigned numValues = m_values.size();
+      BOOST_ASSERT(numValues == m_daysFromFirstReport.size());
+
+      Vector result(numValues);
+      unsigned resultSize = 0;
+      for (unsigned i = 0; i < numValues; ++i){
+        if ((m_daysFromFirstReport[i] >= startDaysFromFirstReport) &&
+            (m_daysFromFirstReport[i] <= endDaysFromFirstReport)){
+          result[resultSize] = m_values[i];
+          ++resultSize;
+        }
+      }
+
+      result.resize(resultSize, true);
+
+      return result;
     }
 
     /// get the value used for out of range data
@@ -417,6 +577,12 @@ namespace openstudio{
   double TimeSeries::value(const DateTime& dateTime) const
   {
     return m_impl->value(dateTime);
+  }
+
+  /// get values between start and end date times
+  Vector TimeSeries::values(const DateTime& startDateTime, const DateTime& endDateTime) const
+  {
+    return m_impl->values(startDateTime, endDateTime);
   }
 
   /// get the value used for out of range data

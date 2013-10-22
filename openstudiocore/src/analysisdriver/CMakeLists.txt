@@ -6,6 +6,10 @@ SET( ${target_name}_src
   AnalysisDriver.hpp
   AnalysisDriver_Impl.hpp
   AnalysisDriver.cpp
+  AnalysisDriverEnums.hpp
+  CloudAnalysisDriver.hpp
+  CloudAnalysisDriver_Impl.hpp
+  CloudAnalysisDriver.cpp
   AnalysisRunOptions.hpp
   AnalysisRunOptions.cpp
   CurrentAnalysis.hpp
@@ -14,32 +18,42 @@ SET( ${target_name}_src
   AnalysisDriverWatcher.hpp
   AnalysisDriverWatcher.cpp
   SimpleProject.hpp
+  SimpleProject_Impl.hpp
   SimpleProject.cpp
 )
 
 SET( ${target_name}_moc
   AnalysisDriver_Impl.hpp
+  CloudAnalysisDriver_Impl.hpp
   CurrentAnalysis_Impl.hpp
   AnalysisDriverWatcher.hpp
-  SimpleProject.hpp
+  SimpleProject_Impl.hpp
 )
 
 SET( ${target_name}_test_src
   test/AnalysisDriverFixture.hpp
   test/AnalysisDriverFixture.cpp
+  test/StopWatcher.hpp
+  test/StopWatcher.cpp
   test/AnalysisDriverWatcher_GTest.cpp
   test/AnalysisRunOptions_GTest.cpp
   test/RuntimeBehavior_GTest.cpp
   test/DataPersistence_GTest.cpp
   test/DesignOfExperiments_GTest.cpp
-  test/DDACEAlgorithm_GTest.cpp
-  test/FSUDaceAlgorithm_GTest.cpp
-  test/ParameterStudyAlgorithm_GTest.cpp
   test/PostProcessJobs_GTest.cpp
-  test/PSUADEDaceAlgorithm_GTest.cpp
   test/SimpleProject_GTest.cpp
-  test/SamplingAlgorithm_GTest.cpp
 )
+
+IF(DAKOTA_FOUND)
+  LIST(APPEND ${target_name}_test_src
+    test/DDACEAlgorithm_GTest.cpp
+    test/FSUDaceAlgorithm_GTest.cpp
+    test/ParameterStudyAlgorithm_GTest.cpp  
+    test/PSUADEDaceAlgorithm_GTest.cpp
+    test/SamplingAlgorithm_GTest.cpp
+    test/SimpleProjectDakota_GTest.cpp
+  )
+ENDIF(DAKOTA_FOUND)
 
 SET( ${target_name}_swig_src
   AnalysisDriver.i

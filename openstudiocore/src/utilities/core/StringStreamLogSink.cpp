@@ -73,7 +73,7 @@ namespace openstudio{
   StringStreamLogSink::StringStreamLogSink()
     : LogSink(boost::shared_ptr<detail::StringStreamLogSink_Impl>(new detail::StringStreamLogSink_Impl()))
   {
-    BOOST_ASSERT(getImpl<detail::StringStreamLogSink_Impl>());
+    OS_ASSERT(getImpl<detail::StringStreamLogSink_Impl>());
   }
 
   std::string StringStreamLogSink::string() const

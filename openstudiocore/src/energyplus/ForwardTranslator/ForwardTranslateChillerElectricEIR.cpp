@@ -66,28 +66,28 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   {
     idfObject.setString(Chiller_Electric_EIRFields::ReferenceCapacity,"Autosize");
   }
-  else if( value = modelObject.referenceCapacity() )
+  else if( (value = modelObject.referenceCapacity()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCapacity,value.get()); 
   }
 
   // ReferenceCOP
   
-  if( value = modelObject.referenceCOP() )
+  if( (value = modelObject.referenceCOP()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCOP,value.get());
   }
 
   // ReferenceLeavingChilledWaterTemperature
 
-  if( value = modelObject.referenceLeavingChilledWaterTemperature() )
+  if( (value = modelObject.referenceLeavingChilledWaterTemperature()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceLeavingChilledWaterTemperature,value.get());
   }
 
   // ReferenceEnteringCondenserFluidTemperature
 
-  if( value = modelObject.referenceEnteringCondenserFluidTemperature() )
+  if( (value = modelObject.referenceEnteringCondenserFluidTemperature()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceEnteringCondenserFluidTemperature,value.get());
   }
@@ -98,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   {
     idfObject.setString(Chiller_Electric_EIRFields::ReferenceChilledWaterFlowRate,"Autosize");
   }
-  else if( value = modelObject.referenceChilledWaterFlowRate() )
+  else if( (value = modelObject.referenceChilledWaterFlowRate()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceChilledWaterFlowRate,value.get());
   }
@@ -109,35 +109,35 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   {
     idfObject.setString(Chiller_Electric_EIRFields::ReferenceCondenserFluidFlowRate,"Autosize");
   }
-  else if( value = modelObject.referenceCondenserFluidFlowRate() )
+  else if( (value = modelObject.referenceCondenserFluidFlowRate()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCondenserFluidFlowRate,value.get());
   }
 
   // MinimumPartLoadRatio
 
-  if( value = modelObject.minimumPartLoadRatio() )
+  if( (value = modelObject.minimumPartLoadRatio()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::MinimumPartLoadRatio,value.get());
   }
 
   // MaximumPartLoadRatio
 
-  if( value = modelObject.maximumPartLoadRatio() )
+  if( (value = modelObject.maximumPartLoadRatio()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::MaximumPartLoadRatio,value.get());
   }
 
   // OptimumPartLoadRatio
 
-  if( value = modelObject.optimumPartLoadRatio() )
+  if( (value = modelObject.optimumPartLoadRatio()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::OptimumPartLoadRatio,value.get());
   }
 
   // MinimumUnloadingRatio
   
-  if( value = modelObject.minimumUnloadingRatio() )
+  if( (value = modelObject.minimumUnloadingRatio()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::MinimumUnloadingRatio,value.get());
   }
@@ -195,28 +195,29 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 
   // CondenserFanPowerRatio
 
-  if( value = modelObject.condenserFanPowerRatio() )
+  if( (value = modelObject.condenserFanPowerRatio()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::CondenserFanPowerRatio,value.get());
   }
 
   // CompressorMotorEfficiency
-  
-  if( value = modelObject.compressorMotorEfficiency() )
+  // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
+
+  if( (value = modelObject.compressorMotorEfficiency()) )
   {
-    idfObject.setDouble(Chiller_Electric_EIRFields::CompressorMotorEfficiency,value.get());
+    idfObject.setDouble(Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,value.get());
   }
 
   // LeavingChilledWaterLowerTemperatureLimit
 
-  if( value = modelObject.leavingChilledWaterLowerTemperatureLimit() )
+  if( (value = modelObject.leavingChilledWaterLowerTemperatureLimit()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::LeavingChilledWaterLowerTemperatureLimit,value.get());
   }
 
   // ChillerFlowMode
 
-  if( s = modelObject.chillerFlowMode() )
+  if( (s = modelObject.chillerFlowMode()) )
   {
     idfObject.setString(Chiller_Electric_EIRFields::ChillerFlowMode,s.get());
   }
@@ -261,7 +262,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 //  ((Name)(Name))
 //  ((CoolingCapacityFunctionofTemperatureCurveName)(Cooling Capacity Function of Temperature Curve Name))
 //  ((ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName)(Electric Input to Cooling Output Ratio Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name))
+//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name))
 //  ((CondenserInletNodeName)(Condenser Inlet Node Name))
 //  ((CondenserOutletNodeName)(Condenser Outlet Node Name))
 //  ((DesignHeatRecoveryWaterFlowRate)(Design Heat Recovery Water Flow Rate))

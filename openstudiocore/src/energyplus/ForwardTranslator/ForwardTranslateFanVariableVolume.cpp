@@ -83,26 +83,26 @@ boost::optional<IdfObject> ForwardTranslator::translateFanVariableVolume( FanVar
   {
     idfObject.setString(openstudio::Fan_VariableVolumeFields::MaximumFlowRate,"AutoSize");
   }
-  else if( d = modelObject.maximumFlowRate() )
+  else if( (d = modelObject.maximumFlowRate()) )
   {
     idfObject.setDouble(openstudio::Fan_VariableVolumeFields::MaximumFlowRate,d.get());
   }
 
   // FanPowerMinimumFlowRateInputMethod
-  if( s = modelObject.fanPowerMinimumFlowRateInputMethod() )
+  if( (s = modelObject.fanPowerMinimumFlowRateInputMethod()) )
   {
     idfObject.setString(Fan_VariableVolumeFields::FanPowerMinimumFlowRateInputMethod,s.get());
   }
 
   // FanPowerMinimumFlowFraction
-  if( d = modelObject.fanPowerMinimumFlowFraction() )
+  if( (d = modelObject.fanPowerMinimumFlowFraction()) )
   {
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerMinimumFlowFraction,d.get());
   }
 
   // FanPowerMinimumAirFlowRate
 
-  if( d = modelObject.fanPowerMinimumAirFlowRate() )
+  if( (d = modelObject.fanPowerMinimumAirFlowRate()) )
   {
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerMinimumAirFlowRate,d.get());
   }
@@ -112,35 +112,35 @@ boost::optional<IdfObject> ForwardTranslator::translateFanVariableVolume( FanVar
 
   // FanPowerCoefficient1
 
-  if( d = modelObject.fanPowerCoefficient1() )
+  if( (d = modelObject.fanPowerCoefficient1()) )
   {
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerCoefficient1,d.get());
   }
 
   // FanPowerCoefficient2
 
-  if( d = modelObject.fanPowerCoefficient2() )
+  if( (d = modelObject.fanPowerCoefficient2()) )
   {
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerCoefficient2,d.get());
   }
 
   // FanPowerCoefficient3
 
-  if( d = modelObject.fanPowerCoefficient3() )
+  if( (d = modelObject.fanPowerCoefficient3()) )
   {
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerCoefficient3,d.get());
   }
 
   // FanPowerCoefficient4
 
-  if( d = modelObject.fanPowerCoefficient4() )
+  if( (d = modelObject.fanPowerCoefficient4()) )
   {
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerCoefficient4,d.get());
   }
 
   // FanPowerCoefficient5
 
-  if( d = modelObject.fanPowerCoefficient5() )
+  if( (d = modelObject.fanPowerCoefficient5()) )
   {
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerCoefficient5,d.get());
   }

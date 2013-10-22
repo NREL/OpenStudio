@@ -348,8 +348,10 @@ module OpenStudio
           Plugin.log(OpenStudio::Info,"delete_model_object of type #{@model_object.class} with handle #{old_handle} and #{handles_to_remove.size - 1} non-visible children")    
 
           @model_interface.deleted_model_object_hash[old_handle] = idf_objects_to_restore
-          @model_interface.openstudio_model.removeObjects(handles_to_remove)
           
+          model_watcher_enabled = @model_interface.model_watcher.disable
+          @model_interface.openstudio_model.removeObjects(handles_to_remove)
+          @model_interface.model_watcher.enable if model_watcher_enabled
         end
       end
     end

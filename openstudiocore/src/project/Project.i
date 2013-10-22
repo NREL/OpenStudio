@@ -31,8 +31,6 @@
   #include <project/ProjectDatabaseRecord_Impl.hpp>
   #include <project/ConcreteObjectRecords.hpp>
     
-  #include <ruleset/ConcreteRulesetObjects.hpp>
-  
   #include <analysis/ConcreteAnalysisObjects.hpp>
   
   #include <model/ModelObject.hpp>
@@ -40,12 +38,16 @@
   #include <model/Component.hpp>
   
   #include <runmanager/lib/Workflow.hpp>
+  #include <runmanager/lib/SimulationEngine.hpp>
+  #include <runmanager/lib/ErrorEstimation.hpp>
   
+  #include <utilities/cloud/AWSProvider.hpp>
+  #include <utilities/cloud/VagrantProvider.hpp>
   #include <utilities/data/Attribute.hpp>
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
-  #include <utilities/units/CelciusUnit.hpp>
+  #include <utilities/units/CelsiusUnit.hpp>
   #include <utilities/units/CFMUnit.hpp>
   #include <utilities/units/FahrenheitUnit.hpp>
   #include <utilities/units/GPDUnit.hpp>
@@ -205,44 +207,31 @@ PROJECT_WRAP(Record);
 PROJECT_WRAP(ObjectRecord);
 PROJECT_WRAP(ProjectDatabaseRecord);
 
-OBJECTRECORD_WRAP(TagRecord);
+
 OBJECTRECORD_WRAP(AttributeRecord);
 OBJECTRECORD_WRAP(FileReferenceRecord);
+OBJECTRECORD_WRAP(CloudSessionRecord);
+OBJECTRECORD_WRAP(CloudSettingsRecord);
+OBJECTRECORD_WRAP(TagRecord);
+OBJECTRECORD_WRAP(UrlRecord);
 OBJECTRECORD_WRAP(URLSearchPathRecord);
+OBJECTRECORD_WRAP(VagrantSessionRecord);
+OBJECTRECORD_WRAP(VagrantSettingsRecord);
 
 OBJECTRECORD_WRAP(WorkflowRecord);
 
-OBJECTRECORD_WRAP(ClauseRecord);
-OBJECTRECORD_WRAP(FilterClauseRecord);
-OBJECTRECORD_WRAP(ActionClauseRecord);
-OBJECTRECORD_WRAP(RuleRecord);
-OBJECTRECORD_WRAP(RulesetRecord);
-
-OBJECTRECORD_WRAP(ModelObjectActionClauseRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterClauseRecord);
-OBJECTRECORD_WRAP(ModelObjectActionSetAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectActionSetRelationshipRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterRelationshipRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterBooleanAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterNumericAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterStringAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterTypeRecord);
-OBJECTRECORD_WRAP(ModelRuleRecord);
-OBJECTRECORD_WRAP(ModelRulesetRecord);
 OBJECTRECORD_WRAP(OSArgumentRecord);
 
-OBJECTRECORD_WRAP(DiscretePerturbationRecord);
-OBJECTRECORD_WRAP(NullPerturbationRecord);
-OBJECTRECORD_WRAP(ModelRulesetPerturbationRecord);
-OBJECTRECORD_WRAP(RubyPerturbationRecord);
+OBJECTRECORD_WRAP(MeasureRecord);
+OBJECTRECORD_WRAP(NullMeasureRecord);
+OBJECTRECORD_WRAP(RubyMeasureRecord);
 OBJECTRECORD_WRAP(FunctionRecord);
 OBJECTRECORD_WRAP(LinearFunctionRecord);
 OBJECTRECORD_WRAP(VariableRecord);
 OBJECTRECORD_WRAP(InputVariableRecord);
 OBJECTRECORD_WRAP(DiscreteVariableRecord);
+OBJECTRECORD_WRAP(MeasureGroupRecord);
 OBJECTRECORD_WRAP(ContinuousVariableRecord);
-OBJECTRECORD_WRAP(ModelRulesetContinuousVariableRecord);
 OBJECTRECORD_WRAP(RubyContinuousVariableRecord);
 OBJECTRECORD_WRAP(OutputVariableRecord);
 OBJECTRECORD_WRAP(OutputAttributeVariableRecord);

@@ -40,6 +40,7 @@ class Algorithm;
 namespace detail {
 
   class AlgorithmOptions_Impl;
+  class Algorithm_Impl;
 
 } // detail
 
@@ -128,6 +129,10 @@ class ANALYSIS_API AlgorithmOptions {
   friend class Algorithm;
 
   void setAlgorithm(const Algorithm& algorithm);
+
+  friend class detail::Algorithm_Impl;
+
+  QVariant toVariant() const;
  private:
   boost::shared_ptr<detail::AlgorithmOptions_Impl> m_impl;
 

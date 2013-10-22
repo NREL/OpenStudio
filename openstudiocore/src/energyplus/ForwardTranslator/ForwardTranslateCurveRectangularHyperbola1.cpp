@@ -42,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveRectangularHyperbola
   OptionalString s;
   OptionalDouble d;
 
-  if (s = modelObject.name()) {
+  if ((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
@@ -51,10 +51,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveRectangularHyperbola
   idfObject.setDouble(Curve_RectangularHyperbola1Fields::Coefficient3C3,modelObject.coefficient3C3());
   idfObject.setDouble(Curve_RectangularHyperbola1Fields::MinimumValueofx,modelObject.minimumValueofx());
   idfObject.setDouble(Curve_RectangularHyperbola1Fields::MaximumValueofx,modelObject.maximumValueofx());
-  if (d = modelObject.minimumCurveOutput()) {
+  if ((d = modelObject.minimumCurveOutput())) {
     idfObject.setDouble(Curve_RectangularHyperbola1Fields::MinimumCurveOutput,*d);
   }
-  if (d = modelObject.maximumCurveOutput()) {
+  if ((d = modelObject.maximumCurveOutput())) {
     idfObject.setDouble(Curve_RectangularHyperbola1Fields::MaximumCurveOutput,*d);
   }
   if (!modelObject.isInputUnitTypeforxDefaulted()) {

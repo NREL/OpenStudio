@@ -15,16 +15,6 @@
       <datatype>string</datatype>
     </attribute>
     <attribute>
-      <name>Measure Function</name>
-      <value>Measure</value>
-      <datatype>string</datatype>
-    </attribute>
-    <attribute>
-      <name>Requires EnergyPlus Results</name>
-      <value>false</value>
-      <datatype>boolean</datatype>
-    </attribute>
-    <attribute>
       <name>Uses SketchUp API</name>
       <value>false</value>
       <datatype>boolean</datatype>

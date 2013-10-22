@@ -317,7 +317,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
        << "  ," << std::endl // availability schedule
        << "  ," << std::endl     // zone 
        << "  autosize," << std::endl
-       << "  Electric;";
+       << "  Electricity;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   idfObject = *oObj;

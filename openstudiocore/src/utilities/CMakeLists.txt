@@ -32,6 +32,8 @@ SET( core_src
   core/FileReference.hpp
   core/FileReference.cpp
   core/Finder.hpp
+  core/Json.hpp
+  core/Json.cpp
   core/Logger.hpp
   core/Logger.cpp
   core/LogMessage.hpp
@@ -65,6 +67,7 @@ SET( core_src
   core/System.cpp
   core/UpdateManager.hpp
   core/UpdateManager.cpp
+  core/Url.hpp
   core/UUID.hpp
   core/UUID.cpp
   core/URLHelpers.hpp
@@ -80,6 +83,8 @@ SET( data_src
   data/Attribute.hpp
   data/Attribute_Impl.hpp
   data/Attribute.cpp
+  data/CalibrationResult.hpp
+  data/CalibrationResult.cpp   
   data/EndUses.hpp
   data/EndUses.cpp 
   data/Matrix.hpp
@@ -199,6 +204,21 @@ SET( bcl_src
   bcl/RemoteBCL.cpp
 )
 
+SET( cloud_src
+  cloud/AWSProvider.hpp
+  cloud/AWSProvider_Impl.hpp
+  cloud/AWSProvider.cpp
+  cloud/CloudProvider.hpp
+  cloud/CloudProvider_Impl.hpp
+  cloud/CloudProvider.cpp
+  cloud/OSServer.hpp
+  cloud/OSServer_Impl.hpp
+  cloud/OSServer.cpp
+  cloud/VagrantProvider.hpp
+  cloud/VagrantProvider_Impl.hpp
+  cloud/VagrantProvider.cpp
+)
+
 SET( documentation_src
   mainpage.hpp
 )
@@ -219,6 +239,7 @@ SET( ${target_name}_depends
   litesql
   litesql-util
   miniziplib
+  qjson
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
   ${QT_LIBS}
@@ -233,6 +254,13 @@ SET( bcl_moc
   bcl/BCL.hpp
   bcl/LocalBCL.hpp
   bcl/RemoteBCL.hpp
+)
+
+SET( cloud_moc
+  cloud/AWSProvider_Impl.hpp
+  cloud/CloudProvider_Impl.hpp
+  cloud/OSServer_Impl.hpp
+  cloud/VagrantProvider_Impl.hpp
 )
 
 SET( core_moc
@@ -285,6 +313,7 @@ ENDFOREACH()
 
 ## Qt MOC generation
 qt4_wrap_cpp( bcl_moc_src ${bcl_moc} )
+qt4_wrap_cpp( cloud_moc_src ${cloud_moc} )
 qt4_wrap_cpp( core_moc_src ${core_moc} )
 qt4_wrap_cpp( idf_moc_src ${idfxx_moc} )
 qt4_wrap_cpp( data_moc_src ${data_moc} )
@@ -299,6 +328,7 @@ SET( bcl_qrc
 qt4_add_resources(bcl_qrc_src ${bcl_qrc})
 # set up groups of source files for Visual Studio
 SOURCE_GROUP( bcl FILES ${bcl_src} )
+SOURCE_GROUP( cloud FILES ${cloud_src} )
 SOURCE_GROUP( core FILES ${core_src} )
 SOURCE_GROUP( data FILES ${data_src} )
 SOURCE_GROUP( document FILES ${document_src} )
@@ -329,6 +359,8 @@ SET( ${target_name}_src
   ${bcl_src}
   ${bcl_moc_src}
   ${bcl_qrc_src}
+  ${cloud_src}
+  ${cloud_moc_src}
   ${core_src}  
   ${core_moc_src}
   ${data_src} 
@@ -354,6 +386,8 @@ SET( ${target_name}_test_src
   ${idf_test_src}
   ${idf_test_moc_src}
   ${sql_test_src}
+  cloud/test/AWSProvider_GTest.cpp
+  cloud/test/VagrantProvider_GTest.cpp
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
   core/test/Checksum_GTest.cpp
@@ -377,6 +411,7 @@ SET( ${target_name}_test_src
   data/Test/DataFixture.hpp
   data/Test/DataFixture.cpp
   data/Test/Attribute_GTest.cpp
+  data/Test/CalibrationResult_GTest.cpp
   data/Test/EndUses_GTest.cpp
   data/Test/Matrix_GTest.cpp
   data/Test/TimeSeries_GTest.cpp
@@ -420,7 +455,7 @@ SET( ${target_name}_test_src
   units/test/IPUnit_GTest.cpp
   units/test/BTUUnit_GTest.cpp
   units/test/CFMUnit_GTest.cpp
-  units/test/CelciusUnit_GTest.cpp
+  units/test/CelsiusUnit_GTest.cpp
   units/test/FahrenheitUnit_GTest.cpp
   units/test/UnitFactory_GTest.cpp
   units/test/QuantityRegex_GTest.cpp
@@ -441,6 +476,7 @@ SET( ${target_name}_test_src
 
 SET( ${target_name}_swig_src
   #  Utilities.i
+  ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx
   ${idd_swig_src}
   ${idf_swig_src}
   ${sql_swig_src}
@@ -460,12 +496,14 @@ SET( ${target_name}_swig_src
   core/Singleton.i
   core/System.i
   core/UpdateManager.i
+  core/Url.i
   core/UUID.i
   core/UnzipFile.i
   core/ZipFile.i
   core/ruby/LanguageSpecific.i
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i
+  cloud/Cloud.i
   economics/Economics.i
   filetypes/Filetypes.i
   geometry/Geometry.i
@@ -477,6 +515,7 @@ SET( ${target_name}_swig_src
   time/DateTime.i
   data/Data.i
   data/Attribute.i
+  data/CalibrationResult.i
   data/EndUses.i
   data/Matrix.i
   data/TimeSeries.i
@@ -532,6 +571,7 @@ MAKE_SWIG_TARGET( OpenStudioUtilitiesIdd utilitiesidd "${CMAKE_CURRENT_SOURCE_DI
 MAKE_SWIG_TARGET( OpenStudioUtilitiesIdf utilitiesidf "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesIdf.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdd )
 
 MAKE_SWIG_TARGET( OpenStudioUtilitiesBCL utilitiesbcl "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesBCL.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdf )
+MAKE_SWIG_TARGET( OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore )
 MAKE_SWIG_TARGET( OpenStudioUtilitiesData utilitiesdata "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesData.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesBCL )
 MAKE_SWIG_TARGET( OpenStudioUtilitiesDocument utilitiesdocument "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesDocument.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesData )
 MAKE_SWIG_TARGET( OpenStudioUtilitiesEconomics utilitieseconomics "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesEconomics.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesDocument )

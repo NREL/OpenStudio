@@ -73,11 +73,18 @@ class UTILITIES_API SqlFile {
   explicit SqlFile(const openstudio::path& path);
 
   /// initializes a new sql file for output
+  /// Does not create the indexes, that must be done manually
   SqlFile(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
       const openstudio::Calendar &t_calendar);
 
   // virtual destructor
   virtual ~SqlFile();
+
+  // Remove indexes that exist, useful for performance reasons.
+  void removeIndexes();
+
+  // create indexes on the sql file if they do not exist
+  void createIndexes();
 
   //@}
   /** @name File Queries and Operations */

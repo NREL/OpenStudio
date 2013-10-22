@@ -20,6 +20,8 @@
 #include <model/FenestrationMaterial.hpp>
 #include <model/FenestrationMaterial_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -174,7 +176,7 @@ double FenestrationMaterial::xenonMolecularWeight() {
 FenestrationMaterial::FenestrationMaterial(IddObjectType type,const Model& model)
   : Material(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::FenestrationMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::FenestrationMaterial_Impl>());
 }
 
 FenestrationMaterial::FenestrationMaterial(

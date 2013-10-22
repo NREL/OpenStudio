@@ -32,10 +32,12 @@
 #include <analysis/DDACEAlgorithm.hpp>
 #include <analysis/DesignOfExperimentsOptions.hpp>
 #include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <project/ProjectDatabase.hpp>
@@ -59,9 +61,15 @@
 #include <model/Model.hpp>
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
+#include <model/WeatherFile.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/UnzipFile.hpp>
+#include <utilities/filetypes/EpwFile.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
 #include <OpenStudio.hxx>
@@ -227,9 +235,9 @@ TEST_F(AnalysisDriverFixture,SimpleProject_InsertMeasure) {
     EXPECT_EQ(args[i].type(),argsCopy[i].type());
   }
 
-  // use this measure to create a new variable/ruby perturbation
+  // use this measure to create a new variable/ruby measure
   // now it is important to use the copy in the project
-  DiscreteVariable dv("New Measure Group",DiscretePerturbationVector());
+  MeasureGroup dv("New Measure Group",MeasureVector());
   Problem problem = project.analysis().problem();
   problem.push(dv);
   // here, expect this test to pass.
@@ -237,7 +245,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_InsertMeasure) {
   EXPECT_TRUE(problem.fileTypesAreCompatible(dv,
                                              projectMeasure.inputFileType(),
                                              projectMeasure.outputFileType()));
-  EXPECT_TRUE(dv.push(RubyPerturbation(projectMeasure)));
+  EXPECT_TRUE(dv.push(RubyMeasure(projectMeasure)));
 }
 
 TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
@@ -256,10 +264,10 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   project.registerArguments(projectMeasure,args);
   EXPECT_EQ(1u,project.measures().size());
 
-  // use the measure to create a new variable/ruby perturbation
-  DiscreteVariable dv("New Measure Group",DiscretePerturbationVector());
+  // use the measure to create a new variable/ruby measure
+  MeasureGroup dv("New Measure Group",MeasureVector());
   EXPECT_TRUE(problem.push(dv));
-  RubyPerturbation rp(projectMeasure);
+  RubyMeasure rp(projectMeasure);
   rp.setArguments(args);
   EXPECT_TRUE(dv.push(rp));
   EXPECT_EQ(args.size(),rp.arguments().size());
@@ -295,7 +303,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
     // update the measure
     project.updateMeasure(newVersion,newArgs);
 
-    // verify the final state of SimpleProject and RubyPerturbation
+    // verify the final state of SimpleProject and RubyMeasure
     EXPECT_EQ(1u,project.measures().size());
     BCLMeasure retrievedMeasure = project.getMeasureByUUID(measure.uuid()).get();
     EXPECT_NE(measure.versionUUID(),retrievedMeasure.versionUUID());
@@ -317,8 +325,8 @@ TEST_F(AnalysisDriverFixture,SimpleProject_NonPATToPATProject) {
     openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures");
     openstudio::path dir = measuresDir / toPath("SetWindowToWallRatioByFacade");
     BCLMeasure measure = BCLMeasure::load(dir).get();
-    RubyPerturbation rpert(measure);
-    project.analysis().problem().push(DiscreteVariable("My Variable",DiscretePerturbationVector(1u,rpert)));
+    RubyMeasure rmeasure(measure);
+    project.analysis().problem().push(MeasureGroup("My Variable",MeasureVector(1u,rmeasure)));
     DataPoint baseline = project.baselineDataPoint();
     EXPECT_EQ(1u,baseline.variableValues().size());
     EXPECT_TRUE(project.analysis().isDirty());
@@ -344,170 +352,6 @@ TEST_F(AnalysisDriverFixture,SimpleProject_NonPATToPATProject) {
   }
 }
 
-TEST_F(AnalysisDriverFixture,SimpleProject_ClearAllResults) {
-  // March 12, 2013 - ETH
-  // Writing test because clearing results mostly working, but there seem to be some residual
-  // FileReferenceRecord ids left in the DataPointRecord.
-  // Test passes without making any changes, however.
-
-  // Create and run a project with a single LHS point
-  SimpleProject project = getCleanPATProject("SimpleProject_ClearAllResults");
-  Analysis analysis = project.analysis();
-  Problem problem = retrieveProblem(AnalysisDriverFixtureProblem::Continuous,true,false);
-  analysis.setProblem(problem);
-  openstudio::path p = toPath("./example.osm");
-  model::exampleModel().save(p,true);
-  FileReference seedModel(p);
-  project.setSeed(seedModel);
-  DDACEAlgorithmOptions algopts(DDACEAlgorithmType::lhs);
-  algopts.setSamples(1);
-  DDACEAlgorithm algorithm(algopts);
-  analysis.setAlgorithm(algorithm);
-  if (!dakotaExePath().empty()) {
-    AnalysisDriver analysisDriver = project.analysisDriver();
-    AnalysisRunOptions runOptions = standardRunOptions(project.projectDir());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    analysisDriver.waitForFinished();
-
-    // Check DakotaAlgorithm, DataPoint, and records for expected state
-    EXPECT_TRUE(algorithm.isComplete());
-    EXPECT_FALSE(algorithm.failed());
-    ASSERT_TRUE(algorithm.restartFileReference());
-    EXPECT_TRUE(boost::filesystem::exists(algorithm.restartFileReference().get().path()));
-    ASSERT_TRUE(algorithm.outFileReference());
-    EXPECT_TRUE(boost::filesystem::exists(algorithm.outFileReference().get().path()));
-    EXPECT_TRUE(algorithm.job());
-
-    ASSERT_EQ(1u,analysis.dataPoints().size());
-    DataPoint dataPoint = analysis.dataPoints()[0];
-    EXPECT_TRUE(dataPoint.isComplete());
-    EXPECT_FALSE(dataPoint.failed());
-    EXPECT_FALSE(dataPoint.responseValues().empty());
-    EXPECT_FALSE(dataPoint.directory().empty());
-    EXPECT_TRUE(boost::filesystem::exists(dataPoint.directory()));
-    ASSERT_TRUE(dataPoint.osmInputData());
-    EXPECT_TRUE(boost::filesystem::exists(dataPoint.osmInputData().get().path()));
-    ASSERT_TRUE(dataPoint.idfInputData());
-    EXPECT_TRUE(boost::filesystem::exists(dataPoint.idfInputData().get().path()));
-    EXPECT_FALSE(dataPoint.sqlOutputData());
-    EXPECT_FALSE(dataPoint.xmlOutputData());
-    EXPECT_TRUE(dataPoint.model());
-    EXPECT_TRUE(dataPoint.workspace());
-    EXPECT_FALSE(dataPoint.sqlFile());
-    EXPECT_TRUE(dataPoint.outputAttributes().empty());
-    EXPECT_TRUE(dataPoint.topLevelJob());
-
-    openstudio::UUID dakotaJobUUID, dataPointJobUUID;
-    {
-      AnalysisRecord analysisRecord = project.analysisRecord();
-      RunManager runManager = project.runManager();
-
-      OptionalAlgorithmRecord algorithmRecord = analysisRecord.algorithmRecord();
-      ASSERT_TRUE(algorithmRecord);
-      ASSERT_TRUE(algorithmRecord.get().optionalCast<DakotaAlgorithmRecord>());
-      DakotaAlgorithmRecord dakotaAlgorithmRecord = algorithmRecord->cast<DakotaAlgorithmRecord>();
-
-      EXPECT_TRUE(dakotaAlgorithmRecord.isComplete());
-      OptionalFileReferenceRecord frr = dakotaAlgorithmRecord.restartFileReferenceRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      frr = dakotaAlgorithmRecord.outFileReferenceRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      ASSERT_TRUE(dakotaAlgorithmRecord.jobUUID());
-      dakotaJobUUID = dakotaAlgorithmRecord.jobUUID().get();
-      EXPECT_NO_THROW(runManager.getJob(dakotaJobUUID));
-
-      DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      ASSERT_EQ(1u,dataPointRecords.size());
-      DataPointRecord dataPointRecord = dataPointRecords[0];
-
-      EXPECT_TRUE(dataPointRecord.isComplete());
-      EXPECT_FALSE(dataPointRecord.failed());
-      EXPECT_FALSE(dataPointRecord.directory().empty());
-      EXPECT_TRUE(boost::filesystem::exists(dataPointRecord.directory()));
-      EXPECT_FALSE(dataPointRecord.responseValues().empty());
-      frr = dataPointRecord.osmInputDataRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      frr = dataPointRecord.idfInputDataRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      frr = dataPointRecord.sqlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.xmlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      ASSERT_TRUE(dataPointRecord.topLevelJobUUID());
-      dataPointJobUUID = dataPointRecord.topLevelJobUUID().get();
-      EXPECT_NO_THROW(runManager.getJob(dataPointJobUUID));
-    }
-
-    // Clear all results
-    project.clearAllResults();
-    project.save();
-
-    // Check DakotaAlgorithm, DataPoint, and records for expected state
-    EXPECT_FALSE(algorithm.isComplete());
-    EXPECT_EQ(-1,algorithm.iter());
-    EXPECT_FALSE(algorithm.failed());
-    EXPECT_FALSE(algorithm.restartFileReference());
-    EXPECT_FALSE(algorithm.outFileReference());
-    EXPECT_FALSE(algorithm.job());
-
-    ASSERT_EQ(1u,analysis.dataPoints().size());
-    EXPECT_FALSE(dataPoint.isComplete());
-    EXPECT_FALSE(dataPoint.failed());
-    EXPECT_TRUE(dataPoint.responseValues().empty());
-    EXPECT_TRUE(dataPoint.directory().empty());
-    EXPECT_FALSE(dataPoint.osmInputData());
-    EXPECT_FALSE(dataPoint.idfInputData());
-    EXPECT_FALSE(dataPoint.sqlOutputData());
-    ASSERT_FALSE(dataPoint.xmlOutputData());
-    EXPECT_FALSE(dataPoint.model());
-    EXPECT_FALSE(dataPoint.workspace());
-    EXPECT_FALSE(dataPoint.sqlFile());
-    EXPECT_TRUE(dataPoint.outputAttributes().empty());
-    EXPECT_FALSE(dataPoint.topLevelJob());
-
-    {
-      AnalysisRecord analysisRecord = project.analysisRecord();
-      RunManager runManager = project.runManager();
-
-      OptionalAlgorithmRecord algorithmRecord = analysisRecord.algorithmRecord();
-      ASSERT_TRUE(algorithmRecord);
-      ASSERT_TRUE(algorithmRecord.get().optionalCast<DakotaAlgorithmRecord>());
-      DakotaAlgorithmRecord dakotaAlgorithmRecord = algorithmRecord->cast<DakotaAlgorithmRecord>();
-
-      EXPECT_FALSE(dakotaAlgorithmRecord.isComplete());
-      OptionalFileReferenceRecord frr = dakotaAlgorithmRecord.restartFileReferenceRecord();
-      EXPECT_FALSE(frr);
-      frr = dakotaAlgorithmRecord.outFileReferenceRecord();
-      EXPECT_FALSE(frr);
-      EXPECT_FALSE(dakotaAlgorithmRecord.jobUUID());
-      EXPECT_ANY_THROW(runManager.getJob(dakotaJobUUID));
-
-      DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      ASSERT_EQ(1u,dataPointRecords.size());
-      DataPointRecord dataPointRecord = dataPointRecords[0];
-
-      EXPECT_FALSE(dataPointRecord.isComplete());
-      EXPECT_FALSE(dataPointRecord.failed());
-      EXPECT_TRUE(dataPointRecord.directory().empty());
-      EXPECT_TRUE(dataPointRecord.responseValues().empty());
-      frr = dataPointRecord.osmInputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.idfInputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.sqlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.xmlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      EXPECT_FALSE(dataPointRecord.topLevelJobUUID());
-      EXPECT_ANY_THROW(runManager.getJob(dataPointJobUUID));
-    }
-  }
-}
-
 TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
   // Written to reproduce Bug 1189
   {
@@ -517,12 +361,12 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     Problem problem = project.analysis().problem();
     OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlusPreProcess);
     ASSERT_TRUE(index);
-    DiscreteVariable dv("Idf Measure",DiscretePerturbationVector(1u,NullPerturbation()));
+    MeasureGroup dv("Idf Measure",MeasureVector(1u,NullMeasure()));
     problem.insert(*index,dv);
     BOOST_FOREACH(const BCLMeasure& measure,BCLMeasure::patApplicationMeasures()) {
       if (measure.inputFileType() == FileReferenceType::IDF) {
-        RubyPerturbation pert(measure);
-        dv.push(pert);
+        RubyMeasure measure(measure);
+        dv.push(measure);
         break;
       }
     }
@@ -579,5 +423,162 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     ProblemRecordVector problemRecords = ProblemRecord::getProblemRecords(database);
     ASSERT_EQ(1u,problemRecords.size());
     ASSERT_NO_FATAL_FAILURE(problemRecords[0].problem());
+  }
+}
+
+TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
+  openstudio::path tempZipFilePath;
+
+  {
+    // get project
+    SimpleProject project = getCleanSimpleProject("ProjectToZip");
+    Problem problem = retrieveProblem(AnalysisDriverFixtureProblem::BuggyBCLMeasure,true,true);
+    project.analysis().setProblem(problem);
+    Model model = model::exampleModel();
+    openstudio::path weatherFilePath = energyPlusWeatherDataPath() / toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw");
+    EpwFile weatherFile(weatherFilePath);
+    OptionalWeatherFile oWeatherFileObject = WeatherFile::setWeatherFile(model,weatherFile);
+    EXPECT_TRUE(oWeatherFileObject);
+    openstudio::path p = toPath("./example.osm");
+    model.save(p,true);
+    FileReference seedModel(p);
+    std::pair<bool,std::vector<BCLMeasure> > result = project.setSeed(seedModel);
+    EXPECT_TRUE(result.first);
+    project.makeSelfContained();
+
+    // create zip
+    tempZipFilePath = project.zipFileForCloud();
+
+    // unzip and check contents
+    openstudio::path remoteDir = project.projectDir().parent_path() / toPath("UnzippedProject");
+    if (boost::filesystem::exists(remoteDir)) {
+      boost::filesystem::remove_all(remoteDir);
+    }
+    boost::filesystem::create_directory(remoteDir);
+    openstudio::path zipFilePath = remoteDir / toPath(tempZipFilePath.filename());
+    boost::filesystem::copy_file(tempZipFilePath,zipFilePath);
+    UnzipFile unzip(zipFilePath);
+    unzip.extractAllFiles(remoteDir);
+    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("formulation.json")));
+    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed")));
+    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed/example/files")));
+  }
+
+  // make sure temp files have been removed
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath));
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("formulation.json")));
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("seed")));
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("alternatives")));
+}
+
+TEST_F(AnalysisDriverFixture,SimpleProject_AnalysisFixUpOfFilePaths) {
+  // GET SIMPLE PROJECT
+  SimpleProject project = getCleanSimpleProject("SimpleProject_AnalysisFixUpOfFilePaths");
+  Analysis analysis = project.analysis();
+
+  // SET PROBLEM
+  Problem problem = retrieveProblem("BuggyBCLMeasure",true,false);
+  analysis.setProblem(problem);
+
+  // DEFINE SEED
+  Model model = model::exampleModel();
+  openstudio::path p = toPath("./example.osm");
+  model.save(p,true);
+  FileReference seedModel(p);
+  analysis.setSeed(seedModel);
+
+  // MAKE SELF CONTAINED
+  project.makeSelfContained();
+  project.save();
+
+  // CREATE A COPY IN ANOTHER LOCATION
+  openstudio::path newProjectDir = project.projectDir().parent_path() / toPath("SimpleProjectAnalysisFixUpOfFilePathsCopy");
+  boost::filesystem::remove_all(newProjectDir);
+  OptionalSimpleProject oProjectCopy = saveAs(project,newProjectDir);
+  ASSERT_TRUE(oProjectCopy);
+  SimpleProject projectCopy = *oProjectCopy;
+
+  // UPDATE PATHS IN ORIGINAL ANALYSIS
+  EXPECT_NE(project.projectDir(),projectCopy.projectDir());
+  analysis.updateInputPathData(project.projectDir(),projectCopy.projectDir());
+
+  // BCLMeasure and Seed Paths should be the same.
+  Analysis analysisCopy = projectCopy.analysis();
+  EXPECT_EQ(analysisCopy.seed().path(),analysis.seed().path());
+  InputVariableVector variablesCopy = analysisCopy.problem().variables();
+  InputVariableVector variables = analysis.problem().variables();
+  ASSERT_EQ(variablesCopy.size(),variables.size());
+  for (unsigned i = 0, n = variablesCopy.size(); i < n; ++i) {
+    ASSERT_TRUE(variablesCopy[i].optionalCast<MeasureGroup>());
+    ASSERT_TRUE(variables[i].optionalCast<MeasureGroup>());
+    MeasureGroup measureGroupCopy = variablesCopy[i].cast<MeasureGroup>();
+    MeasureGroup measureGroup = variables[i].cast<MeasureGroup>();
+    ASSERT_EQ(measureGroupCopy.measures(false).size(),measureGroup.measures(false).size());
+    MeasureVector measuresCopy = measureGroupCopy.measures(false);
+    MeasureVector measures = measureGroup.measures(false);
+    for (unsigned j = 0, m = measuresCopy.size(); j < m; ++j) {
+      if (measuresCopy[j].optionalCast<RubyMeasure>()) {
+        ASSERT_TRUE(measures[j].optionalCast<RubyMeasure>());
+        RubyMeasure rubyMeasureCopy = measuresCopy[j].cast<RubyMeasure>();
+        RubyMeasure rubyMeasure = measures[j].cast<RubyMeasure>();
+        ASSERT_TRUE(rubyMeasureCopy.usesBCLMeasure());
+        ASSERT_TRUE(rubyMeasure.usesBCLMeasure());
+        EXPECT_EQ(rubyMeasureCopy.bclMeasureDirectory(),rubyMeasure.bclMeasureDirectory());
+      }
+    }
+  }
+}
+
+TEST_F(AnalysisDriverFixture,SimpleProject_SaveCloudData) {
+  {
+    SimpleProject project = getCleanPATProject("SimpleProject_SaveCloudData");
+
+    // create basic vagrant data
+    VagrantSettings settings;
+    settings.setServerPath(toPath("C:/projects/openstudio-server/vagrant/server")); // fake, but realistic path
+    settings.setServerUrl(Url("http://localhost:8080"));
+    settings.setWorkerPath(toPath("C:/projects/openstudio-server/vagrant/worker")); // fake, but realistic path
+    settings.setWorkerUrl(Url("http://localhost:8081"));
+    settings.setHaltOnStop(true);
+    settings.setUsername("vagrant");
+    settings.setPassword("vagrant");
+    settings.signUserAgreement(true);
+    VagrantSession session(toString(createUUID()),
+                           Url("http://localhost:8080"),
+                           UrlVector(1u,Url("http://localhost:8081")));
+
+    // save in project
+    project.setCloudSettings(settings);
+    EXPECT_TRUE(project.cloudSettings());
+    project.setCloudSession(session);
+    EXPECT_TRUE(project.cloudSession());
+    project.save();
+  }
+
+  {
+    // reopen project and verify that can retrieve vagrant data
+    SimpleProject project = getPATProject("SimpleProject_SaveCloudData");
+
+    ASSERT_TRUE(project.cloudSettings());
+    ASSERT_TRUE(project.cloudSettings()->optionalCast<VagrantSettings>());
+    VagrantSettings settings = project.cloudSettings()->cast<VagrantSettings>();
+    EXPECT_EQ("VagrantProvider",settings.cloudProviderType());
+    EXPECT_TRUE(settings.userAgreementSigned());
+    EXPECT_EQ(toPath("C:/projects/openstudio-server/vagrant/server"),settings.serverPath());
+    EXPECT_EQ(Url("http://localhost:8080"),settings.serverUrl());
+    EXPECT_EQ(toPath("C:/projects/openstudio-server/vagrant/worker"),settings.workerPath());
+    EXPECT_EQ(Url("http://localhost:8081"),settings.workerUrl());
+    EXPECT_TRUE(settings.haltOnStop());
+    EXPECT_EQ("vagrant",settings.username());
+    EXPECT_EQ("",settings.password());
+    ASSERT_TRUE(project.cloudSession());
+    ASSERT_TRUE(project.cloudSession()->optionalCast<VagrantSession>());
+    VagrantSession session = project.cloudSession()->cast<VagrantSession>();
+    EXPECT_EQ("VagrantProvider",session.cloudProviderType());
+    ASSERT_TRUE(session.serverUrl());
+    EXPECT_EQ(Url("http://localhost:8080"),session.serverUrl().get());
+    ASSERT_EQ(1u,session.workerUrls().size());
+    EXPECT_EQ(Url("http://localhost:8081"),session.workerUrls()[0]);
+
   }
 }

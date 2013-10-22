@@ -31,6 +31,8 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 SubTabController::SubTabController(SubTabView* subTabView)
@@ -42,51 +44,51 @@ SubTabController::SubTabController(SubTabView* subTabView)
   bool isConnected = false;
   isConnected = connect(subTabView, SIGNAL(itemSelected(OSItem*)),
                         this, SLOT(selectItem(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(itemRemoveClicked(OSItem*)),
                         this, SLOT(removeItem(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
                         this, SLOT(replaceItem(OSItem*, const OSItemId&)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(selectionCleared()),
                         this, SLOT(clearSelection()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(itemDropped(const OSItemId&)),
                         this, SLOT(handleDrop(const OSItemId&)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(addClicked()),
                         this, SLOT(doAdd()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(copyClicked()),
                         this, SLOT(doCopy()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(removeClicked()),
                         this, SLOT(doRemove()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(purgeClicked()),
                         this, SLOT(doPurge()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(openBclDlgClicked()),
                         this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(openLibDlgClicked()),
                         this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, SLOT(inspectItem(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 SubTabView * SubTabController::subTabView()

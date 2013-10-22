@@ -20,8 +20,9 @@
 #include <cmath>
 
 #include <utilities/economics/CostObject.hpp>
-
 #include <utilities/economics/Economics.hpp>
+
+#include <utilities/core/Assert.hpp>
 
 #define MAX_ERR 0.0001
 #define MAX_LIMIT 100000
@@ -749,7 +750,7 @@ double Economics::getPayBack( const std::vector< double >& cashFlowSavings )
       result = cashFlowSavings[0] / cashFlowSavings[1];
     }
   }
-  return abs(result);
+  return fabs(result);
 }
 
 double Economics::payBack( const std::vector< double >& cashFlowSavings )
@@ -860,7 +861,7 @@ bool Economics::recursiveNewtonCalc( const std::vector<double>& cashFlows, doubl
     polynomialSum += cashFlows.at(i)/(pow((1 + guess), static_cast<int>(i)));
   }
 
-  if(abs(polynomialSum) <= MAX_ERR){
+  if(fabs(polynomialSum) <= MAX_ERR){
     return success = true;
   };
 
@@ -1211,7 +1212,7 @@ void Economics::calcCashFlows( std::vector<double>& cashFlows, const bool includ
     }
     cashFlows.push_back(cashFlow);
   }
-  Q_ASSERT(cashFlows.size() == static_cast<size_t>(m_analysisPeriod + 1));
+  OS_ASSERT(cashFlows.size() == static_cast<size_t>(m_analysisPeriod + 1));
 }
 
 std::vector<double> Economics::getCashFlows(const bool includeEnergySavings)

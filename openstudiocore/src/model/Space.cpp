@@ -111,11 +111,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <QPolygonF>
-
-// DLM: does this introduce graphics dependencies to model?
-//#include <QPainterPath>
-
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
@@ -134,7 +129,7 @@ namespace detail {
   Space_Impl::Space_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : PlanarSurfaceGroup_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Space::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Space::iddObjectType());
   }
 
   Space_Impl::Space_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -142,7 +137,7 @@ namespace detail {
                          bool keepHandle)
     : PlanarSurfaceGroup_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Space::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Space::iddObjectType());
   }
 
   Space_Impl::Space_Impl(const Space_Impl& other,
@@ -310,27 +305,27 @@ namespace detail {
 
     BOOST_FOREACH(ShadingSurfaceGroup shadingSurfaceGroup, this->shadingSurfaceGroups()){
       bool test = shadingSurfaceGroup.setTransformation(childTransformation*shadingSurfaceGroup.transformation());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     BOOST_FOREACH(InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup, this->interiorPartitionSurfaceGroups()){
       bool test = interiorPartitionSurfaceGroup.setTransformation(childTransformation*interiorPartitionSurfaceGroup.transformation());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     BOOST_FOREACH(Luminaire luminaire, this->luminaires()){
       bool test = luminaire.setTransformation(childTransformation*luminaire.transformation());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     BOOST_FOREACH(DaylightingControl daylightingControl, this->daylightingControls()){
       bool test = daylightingControl.setTransformation(childTransformation*daylightingControl.transformation());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     BOOST_FOREACH(IlluminanceMap illuminanceMap, this->illuminanceMaps()){
       bool test = illuminanceMap.setTransformation(childTransformation*illuminanceMap.transformation());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     return true;
@@ -374,7 +369,7 @@ namespace detail {
 
   double Space_Impl::directionofRelativeNorth() const {
     boost::optional<double> value = getDouble(OS_SpaceFields::DirectionofRelativeNorth,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -384,7 +379,7 @@ namespace detail {
 
   double Space_Impl::xOrigin() const {
     boost::optional<double> value = getDouble(OS_SpaceFields::XOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -394,7 +389,7 @@ namespace detail {
 
   double Space_Impl::yOrigin() const {
     boost::optional<double> value = getDouble(OS_SpaceFields::YOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -404,7 +399,7 @@ namespace detail {
 
   double Space_Impl::zOrigin() const {
     boost::optional<double> value = getDouble(OS_SpaceFields::ZOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -414,7 +409,7 @@ namespace detail {
 
   bool Space_Impl::partofTotalFloorArea() const {
     boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -425,45 +420,45 @@ namespace detail {
   void Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::resetDirectionofRelativeNorth() {
     bool result = setString(OS_SpaceFields::DirectionofRelativeNorth, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::resetXOrigin() {
     bool result = setString(OS_SpaceFields::XOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::resetYOrigin() {
     bool result = setString(OS_SpaceFields::YOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::resetZOrigin() {
     bool result = setString(OS_SpaceFields::ZOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::setPartofTotalFloorArea(bool partofTotalFloorArea) {
@@ -473,12 +468,12 @@ namespace detail {
     } else {
       result = setString(OS_SpaceFields::PartofTotalFloorArea, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Space_Impl::resetPartofTotalFloorArea() {
     bool result = setString(OS_SpaceFields::PartofTotalFloorArea, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<SpaceType> Space_Impl::spaceType() const
@@ -700,7 +695,7 @@ namespace detail {
   void Space_Impl::resetThermalZone()
   {
     bool result = this->setString(OS_SpaceFields::ThermalZoneName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   OptionalBuildingStory Space_Impl::buildingStory() const
@@ -716,7 +711,7 @@ namespace detail {
   void Space_Impl::resetBuildingStory()
   {
     bool result = this->setString(OS_SpaceFields::BuildingStoryName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   ShadingSurfaceGroupVector Space_Impl::shadingSurfaceGroups() const
@@ -842,7 +837,7 @@ namespace detail {
   void Space_Impl::resetDesignSpecificationOutdoorAir()
   {
     bool test = setString(OS_SpaceFields::DesignSpecificationOutdoorAirObjectName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   int Space_Impl::multiplier() const
@@ -873,6 +868,20 @@ namespace detail {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors"))
       {
         result += surface.grossArea();
+      }
+    }
+    return result;
+  }
+
+  double Space_Impl::exteriorWallArea() const {
+    double result = 0;
+    BOOST_FOREACH(const Surface& surface, this->surfaces()) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors"))
+      {
+        if (istringEqual(surface.surfaceType(), "Wall"))
+        {
+          result += surface.grossArea();
+        }
       }
     }
     return result;
@@ -959,9 +968,9 @@ namespace detail {
     // set space and number of people
     bool ok(true);
     myPeople->makeUnique();
-    ok = myPeople->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
-    ok = myPeople->peopleDefinition().setNumberofPeople(numberOfPeople); BOOST_ASSERT(ok);
-    ok = myPeople->setMultiplier(1); BOOST_ASSERT(ok);
+    ok = myPeople->setSpace(getObject<Space>()); OS_ASSERT(ok);
+    ok = myPeople->peopleDefinition().setNumberofPeople(numberOfPeople); OS_ASSERT(ok);
+    ok = myPeople->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other people from space
     PeopleVector allMyPeople = people();
@@ -1037,10 +1046,10 @@ namespace detail {
     // set space and number of people
     bool ok(true);
     myPeople->makeUnique();
-    ok = myPeople->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myPeople->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myPeople->peopleDefinition().setPeopleperSpaceFloorArea(peoplePerFloorArea); 
-    BOOST_ASSERT(ok);
-    ok = myPeople->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myPeople->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other people from space
     PeopleVector allMyPeople = people();
@@ -1102,10 +1111,10 @@ namespace detail {
     // set space and number of people
     bool ok(true);
     myPeople->makeUnique();
-    ok = myPeople->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myPeople->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myPeople->peopleDefinition().setSpaceFloorAreaperPerson(floorAreaPerPerson); 
-    BOOST_ASSERT(ok);
-    ok = myPeople->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myPeople->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other people from space
     PeopleVector allMyPeople = people();
@@ -1187,9 +1196,9 @@ namespace detail {
     // set space and lighting power
     bool ok(true);
     myLights->makeUnique();
-    ok = myLights->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
-    ok = myLights->lightsDefinition().setLightingLevel(lightingPower); BOOST_ASSERT(ok);
-    ok = myLights->setMultiplier(1); BOOST_ASSERT(ok);
+    ok = myLights->setSpace(getObject<Space>()); OS_ASSERT(ok);
+    ok = myLights->lightsDefinition().setLightingLevel(lightingPower); OS_ASSERT(ok);
+    ok = myLights->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other lights from space
     LightsVector allMyLights = lights();
@@ -1280,10 +1289,10 @@ namespace detail {
     // set space and lighting power
     bool ok(true);
     myLights->makeUnique();
-    ok = myLights->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myLights->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myLights->lightsDefinition().setWattsperSpaceFloorArea(lightingPowerPerFloorArea); 
-    BOOST_ASSERT(ok);
-    ok = myLights->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myLights->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other lights from space
     LightsVector allMyLights = lights();
@@ -1374,10 +1383,10 @@ namespace detail {
     // set space and lighting power
     bool ok(true);
     myLights->makeUnique();
-    ok = myLights->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myLights->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myLights->lightsDefinition().setWattsperPerson(lightingPowerPerPerson); 
-    BOOST_ASSERT(ok);
-    ok = myLights->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myLights->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other lights from space
     LightsVector allMyLights = lights();
@@ -1464,10 +1473,10 @@ namespace detail {
     // set space and power level
     bool ok(true);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myEquipment->electricEquipmentDefinition().setDesignLevel(electricEquipmentPower); 
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment from space
     ElectricEquipmentVector allMyEquipment = electricEquipment();
@@ -1546,10 +1555,10 @@ namespace detail {
     // set space and power level
     bool ok(true);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myEquipment->electricEquipmentDefinition().setWattsperSpaceFloorArea(electricEquipmentPowerPerFloorArea); 
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment from space
     ElectricEquipmentVector allMyEquipment = electricEquipment();
@@ -1628,10 +1637,10 @@ namespace detail {
     // set space and power level
     bool ok(true);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myEquipment->electricEquipmentDefinition().setWattsperPerson(electricEquipmentPowerPerPerson); 
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment from space
     ElectricEquipmentVector allMyEquipment = electricEquipment();
@@ -1709,10 +1718,10 @@ namespace detail {
     // set space and power level
     bool ok(true);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myEquipment->gasEquipmentDefinition().setDesignLevel(gasEquipmentPower); 
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment from space
     GasEquipmentVector allMyEquipment = gasEquipment();
@@ -1791,10 +1800,10 @@ namespace detail {
     // set space and power level
     bool ok(true);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myEquipment->gasEquipmentDefinition().setWattsperSpaceFloorArea(gasEquipmentPowerPerFloorArea); 
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment from space
     GasEquipmentVector allMyEquipment = gasEquipment();
@@ -1873,10 +1882,10 @@ namespace detail {
     // set space and power level
     bool ok(true);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpace(getObject<Space>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpace(getObject<Space>()); OS_ASSERT(ok);
     ok = myEquipment->gasEquipmentDefinition().setWattsperPerson(gasEquipmentPowerPerPerson); 
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment from space
     GasEquipmentVector allMyEquipment = gasEquipment();
@@ -1919,7 +1928,7 @@ namespace detail {
       BOOST_FOREACH(ModelObject child, spaceType->children()){
         if (child.optionalCast<SpaceLoad>()){
           bool test = child.cast<SpaceLoad>().setSpace(space);
-          BOOST_ASSERT(test);
+          OS_ASSERT(test);
         }
       }
 
@@ -2041,6 +2050,7 @@ namespace detail {
 
   void Space_Impl::matchSurfaces(Space& other)
   {
+    double tol = 0.01;
 
     if (this->handle() == other.handle()){
       return;
@@ -2075,7 +2085,7 @@ namespace detail {
 
         std::reverse(otherVertices.begin(), otherVertices.end());
 
-        if (circularEqual(vertices, otherVertices, 0.001)){
+        if (circularEqual(vertices, otherVertices, tol)){
 
           // TODO: check constructions?
           surface.setAdjacentSurface(otherSurface);
@@ -2091,7 +2101,7 @@ namespace detail {
               otherVertices = transformation*otherSubSurface.vertices();
               std::reverse(otherVertices.begin(), otherVertices.end());
 
-              if (circularEqual(vertices, otherVertices, 0.001)){
+              if (circularEqual(vertices, otherVertices, tol)){
 
                 // TODO: check constructions?
                 subSurface.setAdjacentSubSurface(otherSubSurface);
@@ -2129,14 +2139,14 @@ namespace detail {
   openstudio::Quantity Space_Impl::directionofRelativeNorth_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::DirectionofRelativeNorth,true,false);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
   openstudio::Quantity Space_Impl::directionofRelativeNorth_IP() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::DirectionofRelativeNorth,true,true);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -2149,14 +2159,14 @@ namespace detail {
   openstudio::Quantity Space_Impl::xOrigin_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::XOrigin,true,false);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
   openstudio::Quantity Space_Impl::xOrigin_IP() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::XOrigin,true,true);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -2169,14 +2179,14 @@ namespace detail {
   openstudio::Quantity Space_Impl::yOrigin_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::YOrigin,true,false);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
   openstudio::Quantity Space_Impl::yOrigin_IP() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::YOrigin,true,true);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -2189,14 +2199,14 @@ namespace detail {
   openstudio::Quantity Space_Impl::zOrigin_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::ZOrigin,true,false);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
   openstudio::Quantity Space_Impl::zOrigin_IP() const
   {
     OSOptionalQuantity value = getQuantity(OS_SpaceFields::ZOrigin,true,true);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -2444,19 +2454,21 @@ namespace detail {
       }
       it->remove();
     }
-    BOOST_ASSERT(count == 1);
+    OS_ASSERT(count == 1);
   }
 
   std::vector<Point3d> Space_Impl::floorPrint() const
   {
-    // get all floors
-    double xmin = std::numeric_limits<double>::max();
-    double xmax = std::numeric_limits<double>::min();
-    double ymin = std::numeric_limits<double>::max();
-    double ymax = std::numeric_limits<double>::min();
+    double tol = 0.01; // 1 cm tolerance
+
+    // get all surfaces, sort so results are repeatable
+    std::vector<Surface> surfaces = this->surfaces();
+    std::sort(surfaces.begin(), surfaces.end(), IdfObjectNameLess());
+
+    // find all floors
     boost::optional<double> z;
     std::vector<Surface> floors;
-    BOOST_FOREACH(const Surface& surface, this->surfaces()){
+    BOOST_FOREACH(const Surface& surface, surfaces){
       if (surface.vertices().size() < 3){
         LOG(Warn, "Skipping floor with fewer than 3 vertices");
         continue;
@@ -2465,12 +2477,8 @@ namespace detail {
         floors.push_back(surface);
         BOOST_FOREACH(const Point3d& point, surface.vertices()){
           if (!z){
-            xmin = std::min(xmin, point.x());
-            xmax = std::max(xmax, point.x());
-            ymin = std::min(ymin, point.y());
-            ymax = std::max(ymax, point.y());
             z = point.z();
-          }else if (*z != point.z()){
+          }else if (std::abs(z.get()-point.z()) > tol){
             LOG(Error, "All floor surfaces must lie on the same x, y plane to compute space floor print");
             return std::vector<Point3d>();
           }
@@ -2479,6 +2487,7 @@ namespace detail {
     }
 
     std::vector<Point3d> result;
+    std::vector<Point3d> allPoints;
 
     if (floors.empty()){
       LOG(Error, "No floor surfaces found to compute space floor print");
@@ -2499,45 +2508,8 @@ namespace detail {
 
     }else{
 
-      BOOST_ASSERT(z);
+      OS_ASSERT(z);
 
-      /**Qt based**/
-      /* 
-      QPolygonF maxRectangle;
-      maxRectangle << QPointF(xmax+1, ymax+1);
-      maxRectangle << QPointF(xmax+1, ymin-1);
-      maxRectangle << QPointF(xmin-1, ymin-1);
-      maxRectangle << QPointF(xmin-1, ymax+1);
-      QPolygonF tempRectangle(maxRectangle);
-
-      QPolygonF floorPrintPolygon;
-      QPainterPath painterPath;
-      BOOST_FOREACH(const Surface& floor, floors){
-        QPolygonF floorPolygon;
-        std::vector<Point3d> vertices = floor.vertices();
-        BOOST_FOREACH(const Point3d& point, vertices){
-          floorPolygon << QPointF(point.x(), point.y());
-        }
-        //floorPolygon << QPointF(vertices[0].x(), vertices[0].y());
-
-        floorPrintPolygon = floorPrintPolygon.united(floorPolygon);
-
-        tempRectangle = tempRectangle.subtracted(floorPolygon);
-        
-        painterPath.addPolygon(floorPolygon);
-      }
-
-      floorPrintPolygon = maxRectangle.subtracted(tempRectangle);
-
-      floorPrintPolygon = painterPath.toFillPolygon();
-
-      BOOST_FOREACH(const QPointF& point, floorPrintPolygon.toStdVector()){
-        Point3d p(point.x(), point.y(), *z);
-        result.push_back(p);
-      }
-      */
-
-      /**boost based**/
       typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
       typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
       typedef boost::geometry::model::ring<BoostPoint> BoostRing;
@@ -2550,9 +2522,9 @@ namespace detail {
           BoostPolygon boostPolygon;
           std::vector<Point3d> vertices = floor.vertices();
           BOOST_FOREACH(const Point3d& point, vertices){
-            boost::geometry::append(boostPolygon, boost::make_tuple(point.x(), point.y()));
+            boost::geometry::append(boostPolygon, point3dToTuple(point, allPoints, tol));
           }
-          boost::geometry::append(boostPolygon, boost::make_tuple(vertices[0].x(), vertices[0].y()));
+          boost::geometry::append(boostPolygon, point3dToTuple(vertices[0], allPoints, tol));
 
           BoostMultiPolygon tmpResult;
           boost::geometry::union_(boostResult, boostPolygon, tmpResult);
@@ -2616,15 +2588,32 @@ namespace detail {
     }
 
     // remove colinear points
-    //result = removeColinear(result);
+    result = removeColinear(result);
 
     // reorder the points 
-    //result = reorderULC(result);
+    result = reorderULC(result);
     
     // remove additional colinear points that occur after reordering
-    //result = removeColinear(result);
+    result = removeColinear(result);
 
     return result;
+  }
+
+  
+  // helper function to get a boost polygon point from a Point3d
+  boost::tuple<double, double> Space_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const
+  {
+    // simple method
+    //return boost::make_tuple(point3d.x(), point3d.y());
+
+    // detailed method, try to combine points within tolerance
+    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
+        return boost::make_tuple(otherPoint.x(), otherPoint.y());
+      }
+    }
+    allPoints.push_back(point3d);
+    return boost::make_tuple(point3d.x(), point3d.y());
   }
 
 } // detail
@@ -2632,7 +2621,7 @@ namespace detail {
 Space::Space(const Model& model)
   : PlanarSurfaceGroup(Space::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Space_Impl>());
+  OS_ASSERT(getImpl<detail::Space_Impl>());
 }
 
 IddObjectType Space::iddObjectType() {
@@ -2916,6 +2905,10 @@ double Space::floorArea() const {
 
 double Space::exteriorArea() const {
   return getImpl<detail::Space_Impl>()->exteriorArea();
+}
+
+double Space::exteriorWallArea() const {
+  return getImpl<detail::Space_Impl>()->exteriorWallArea();
 }
 
 double Space::volume() const {

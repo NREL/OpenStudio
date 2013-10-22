@@ -66,7 +66,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( Coil
 
   // Efficiency
 
-  if( value = modelObject.efficiency() )
+  if( (value = modelObject.efficiency()) )
   {
     idfObject.setDouble(Coil_Heating_ElectricFields::Efficiency,value.get());
   }
@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( Coil
   {
     idfObject.setString(Coil_Heating_ElectricFields::NominalCapacity,"Autosize");
   }
-  else if( value = modelObject.nominalCapacity() )
+  else if( (value = modelObject.nominalCapacity()) )
   {
     idfObject.setDouble(Coil_Heating_ElectricFields::NominalCapacity,value.get());
   }

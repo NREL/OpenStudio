@@ -35,7 +35,6 @@ namespace detail {
 
   /** OptimizationProblemRecord_Impl is a ProblemRecord_Impl that is the implementation class for OptimizationProblemRecord.*/
   class PROJECT_API OptimizationProblemRecord_Impl : public ProblemRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

@@ -45,7 +45,7 @@ namespace detail {
   ScheduleRuleset_Impl::ScheduleRuleset_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Schedule_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleRuleset::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleRuleset::iddObjectType());
   }
 
   ScheduleRuleset_Impl::ScheduleRuleset_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -53,7 +53,7 @@ namespace detail {
                                        bool keepHandle)
     : Schedule_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleRuleset::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleRuleset::iddObjectType());
   }
 
   ScheduleRuleset_Impl::ScheduleRuleset_Impl(const ScheduleRuleset_Impl& other,
@@ -68,24 +68,24 @@ namespace detail {
 
     ModelObject newDefaultDaySchedule = defaultDaySchedule().clone(model);
     bool test = newScheduleRuleset.setPointer(OS_Schedule_RulesetFields::DefaultDayScheduleName,newDefaultDaySchedule.handle());
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     if (!isSummerDesignDayScheduleDefaulted()) {
       ModelObject newSummerDesignDaySchedule = summerDesignDaySchedule().clone(model);
       test = newScheduleRuleset.setPointer(OS_Schedule_RulesetFields::SummerDesignDayScheduleName,newSummerDesignDaySchedule.handle());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     if (!isWinterDesignDayScheduleDefaulted()) {
       ModelObject newWinterDesignDaySchedule = winterDesignDaySchedule().clone(model);
       test = newScheduleRuleset.setPointer(OS_Schedule_RulesetFields::WinterDesignDayScheduleName,newWinterDesignDaySchedule.handle());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     BOOST_FOREACH(ScheduleRule scheduleRule, scheduleRules()) {
       ModelObject newScheduleRule = scheduleRule.clone(model);
       test = newScheduleRule.setParent(newScheduleRuleset);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     return newScheduleRulesetAsModelObject;
@@ -169,19 +169,19 @@ namespace detail {
     bool result = setPointer(OS_Schedule_RulesetFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
     if (result) {
       result = defaultDaySchedule().setScheduleTypeLimits(scheduleTypeLimits);
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
       if (!isSummerDesignDayScheduleDefaulted()) {
         result = summerDesignDaySchedule().setScheduleTypeLimits(scheduleTypeLimits);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
       if (!isWinterDesignDayScheduleDefaulted()) {
         result = winterDesignDaySchedule().setScheduleTypeLimits(scheduleTypeLimits);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
       ScheduleRuleVector rules = scheduleRules();
       BOOST_FOREACH(const ScheduleRule& rule, rules) {
         result = rule.daySchedule().setScheduleTypeLimits(scheduleTypeLimits);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     }
     return result;
@@ -191,21 +191,21 @@ namespace detail {
     bool result(false);
     if (okToResetScheduleTypeLimits()) {
       result = setString(OS_Schedule_RulesetFields::ScheduleTypeLimitsName,"");
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
       result = defaultDaySchedule().resetScheduleTypeLimits();
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
       if (!isSummerDesignDayScheduleDefaulted()) {
         result = summerDesignDaySchedule().resetScheduleTypeLimits();
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
       if (!isWinterDesignDayScheduleDefaulted()) {
         result = winterDesignDaySchedule().resetScheduleTypeLimits();
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
       ScheduleRuleVector rules = scheduleRules();
       BOOST_FOREACH(ScheduleRule& rule, rules) {
         result = rule.daySchedule().resetScheduleTypeLimits();
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     }
     return result;
@@ -268,10 +268,10 @@ namespace detail {
     }
     ModelObject clone = schedule.clone();
     bool result = setPointer(OS_Schedule_RulesetFields::SummerDesignDayScheduleName, clone.handle());
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     if (OptionalScheduleTypeLimits limits = scheduleTypeLimits()) {
       result = summerDesignDaySchedule().setScheduleTypeLimits(*limits);
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
     return result;
   }
@@ -283,7 +283,7 @@ namespace detail {
       summerDesignDaySchedule.remove();
     }
     bool test = this->setString(OS_Schedule_RulesetFields::SummerDesignDayScheduleName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   bool ScheduleRuleset_Impl::setWinterDesignDaySchedule(const ScheduleDay& schedule)
@@ -305,10 +305,10 @@ namespace detail {
     }
     ModelObject clone = schedule.clone();
     bool result = setPointer(OS_Schedule_RulesetFields::WinterDesignDayScheduleName, clone.handle());
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     if (OptionalScheduleTypeLimits limits = scheduleTypeLimits()) {
       result = winterDesignDaySchedule().setScheduleTypeLimits(*limits);
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
     return result;
   }
@@ -320,7 +320,7 @@ namespace detail {
       winterDesignDaySchedule.remove();
     }
     bool test = this->setString(OS_Schedule_RulesetFields::WinterDesignDayScheduleName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   struct ScheduleRuleIndexCompare {
@@ -378,10 +378,10 @@ namespace detail {
       }
 
       if (increment != 0){
-        BOOST_ASSERT(i + increment >= 0);
+        OS_ASSERT(i + increment >= 0);
         unsigned newIndex = i + increment;
-        BOOST_ASSERT(newIndex >= 0);
-        BOOST_ASSERT(newIndex < N);
+        OS_ASSERT(newIndex >= 0);
+        OS_ASSERT(newIndex < N);
         scheduleRules[i].setRuleIndex(newIndex);
       }
 
@@ -480,7 +480,7 @@ namespace detail {
 ScheduleRuleset::ScheduleRuleset(const Model& model)
   : Schedule(ScheduleRuleset::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleRuleset_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleRuleset_Impl>());
   ScheduleDay defaultDaySchedule(model);
   getImpl<detail::ScheduleRuleset_Impl>()->setPointer(OS_Schedule_RulesetFields::DefaultDayScheduleName, defaultDaySchedule.handle());
 }

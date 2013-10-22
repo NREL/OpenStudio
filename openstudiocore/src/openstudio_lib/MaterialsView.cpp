@@ -38,6 +38,8 @@
 
 #include <model/Model_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QStackedWidget>
 
 namespace openstudio {
@@ -54,7 +56,7 @@ MaterialsView::MaterialsView(bool isIP,
 {
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                              modelObjectInspectorView(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 std::vector<std::pair<IddObjectType, std::string> > MaterialsView::modelObjectTypesAndNames()
@@ -93,17 +95,17 @@ MaterialsInspectorView::MaterialsInspectorView(bool isIP,
   //underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_building_summary.png"));
   //underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   //int index = this->stackedWidget()->addWidget(underConstructionLabel);
-  //BOOST_ASSERT(index == 0);
+  //OS_ASSERT(index == 0);
 
   //// index of hidden widget is 0
   ////QWidget* hiddenWidget = new QWidget();
   ////int index = this->stackedWidget()->addWidget(hiddenWidget);
-  ////BOOST_ASSERT(index == 0);
+  ////OS_ASSERT(index == 0);
 
   //// index of the default is 1
   //DefaultInspectorView* defaultInspectorView = new DefaultInspectorView(model, parent);
   //index = this->stackedWidget()->addWidget(defaultInspectorView);
-  //BOOST_ASSERT(index == 1);
+  //OS_ASSERT(index == 1);
 
   ////StandardOpaqueMaterialInspectorView* standardOpaqueMaterialInspectorView = new StandardOpaqueMaterialInspectorView(model, parent);
   ////index = this->stackedWidget()->addWidget(standardOpaqueMaterialInspectorView);
@@ -186,7 +188,7 @@ void MaterialsInspectorView::showMaterialAirGapInspectorView(const openstudio::m
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -200,7 +202,7 @@ void MaterialsInspectorView::showMaterialAirWallInspectorView(const openstudio::
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -214,7 +216,7 @@ void MaterialsInspectorView::showMaterialInfraredTransparentInspectorView(const 
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -228,7 +230,7 @@ void MaterialsInspectorView::showMaterialInspectorView(const openstudio::model::
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -242,7 +244,7 @@ void MaterialsInspectorView::showMaterialNoMassInspectorView(const openstudio::m
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -256,7 +258,7 @@ void MaterialsInspectorView::showMaterialRoofVegetationInspectorView(const opens
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -270,7 +272,7 @@ void MaterialsInspectorView::showWindowMaterialBlindInspectorView(const openstud
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -284,7 +286,7 @@ void MaterialsInspectorView::showWindowMaterialGasInspectorView(const openstudio
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -298,7 +300,7 @@ void MaterialsInspectorView::showWindowMaterialGasMixtureInspectorView(const ope
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -312,7 +314,7 @@ void MaterialsInspectorView::showWindowMaterialGlazingGroupThermochromicInspecto
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -326,7 +328,7 @@ void MaterialsInspectorView::showWindowMaterialGlazingInspectorView(const openst
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -340,7 +342,7 @@ void MaterialsInspectorView::showWindowMaterialGlazingRefractionExtinctionMethod
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -354,7 +356,7 @@ void MaterialsInspectorView::showWindowMaterialScreenInspectorView(const openstu
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -368,7 +370,7 @@ void MaterialsInspectorView::showWindowMaterialShadeInspectorView(const openstud
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
@@ -382,7 +384,7 @@ void MaterialsInspectorView::showWindowMaterialSimpleGlazingSystemInspectorView(
                              SIGNAL(toggleUnitsClicked(bool)),
                              view, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   view->selectModelObject(modelObject);
 
