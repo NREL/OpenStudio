@@ -838,55 +838,35 @@ SET( ${target_name}_moc
   AirLoopHVAC_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
-  AirLoopHVACZoneMixer_Impl.hpp
-  AirLoopHVACZoneSplitter_Impl.hpp
-  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
   AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
-  AirToAirComponent_Impl.hpp
-  AirWallMaterial_Impl.hpp
-  AvailabilityManagerAssignmentList_Impl.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerScheduled_Impl.hpp
   Blind_Impl.hpp
   BoilerHotWater_Impl.hpp
   BoilerSteam_Impl.hpp
   Building_Impl.hpp
-  BuildingStandardsInformation_Impl.hpp
   BuildingStory_Impl.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
-  ClimateZones_Impl.hpp
-  CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
-  CoilCoolingDXTwoSpeed_Impl.hpp
 	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingGas_Impl.hpp
-	CoilHeatingLowTempRadiantVarFlow_Impl.hpp
   CoilHeatingWater_Impl.hpp
-  CoilHeatingWaterBaseboard_Impl.hpp
-  ComponentCostAdjustments_Impl.hpp
   ComponentData_Impl.hpp
-  Connection_Impl.hpp
-  ConnectorMixer_Impl.hpp
-  ConnectorSplitter_Impl.hpp
-  Construction_Impl.hpp
   ConstructionBase_Impl.hpp
-  ConstructionBaseStandardsInformation_Impl.hpp
   ConstructionWithInternalSource_Impl.hpp
   ControllerMechanicalVentilation_Impl.hpp
-  ControllerOutdoorAir_Impl.hpp
   ControllerWaterCoil_Impl.hpp
   ConvergenceLimits_Impl.hpp
   CoolingTowerSingleSpeed_Impl.hpp
-  CurrencyType_Impl.hpp
   Curve_Impl.hpp
   CurveBicubic_Impl.hpp
   CurveBiquadratic_Impl.hpp
@@ -919,23 +899,18 @@ SET( ${target_name}_moc
   ElectricEquipment_Impl.hpp
   ElectricEquipmentDefinition_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
-  EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   ExteriorLights_Impl.hpp
   ExteriorLightsDefinition_Impl.hpp
   Facility_Impl.hpp
   FanConstantVolume_Impl.hpp
   FanOnOff_Impl.hpp
   FanVariableVolume_Impl.hpp
-  FenestrationMaterial_Impl.hpp
   FFactorGroundFloorConstruction_Impl.hpp
   Gas_Impl.hpp
   GasEquipment_Impl.hpp
   GasEquipmentDefinition_Impl.hpp
-  GasLayer_Impl.hpp
   GasMixture_Impl.hpp
   GlareSensor_Impl.hpp
-  Glazing_Impl.hpp
-  GroundHeatExchangerVertical_Impl.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HotWaterEquipment_Impl.hpp
@@ -943,7 +918,6 @@ SET( ${target_name}_moc
   HVACComponent_Impl.hpp
   ZoneHVACComponent_Impl.hpp
   IlluminanceMap_Impl.hpp
-  InfraredTransparentMaterial_Impl.hpp
   InsideSurfaceConvectionAlgorithm_Impl.hpp
   InternalMass_Impl.hpp
   InternalMassDefinition_Impl.hpp 
@@ -951,11 +925,8 @@ SET( ${target_name}_moc
   InteriorPartitionSurfaceGroup_Impl.hpp
   LayeredConstruction_Impl.hpp
   LifeCycleCost_Impl.hpp
-  LifeCycleCostParameters_Impl.hpp
-  LifeCycleCostUsePriceEscalation_Impl.hpp
   LightingDesignDay_Impl.hpp
   LightingSimulationControl_Impl.hpp
-  LightingSimulationZone_Impl.hpp
   Lights_Impl.hpp
   LightsDefinition_Impl.hpp
   Loop_Impl.hpp
@@ -964,9 +935,6 @@ SET( ${target_name}_moc
   MasslessOpaqueMaterial_Impl.hpp
   Material_Impl.hpp
   Meter_Impl.hpp
-  Mixer_Impl.hpp
-  ModelPartitionMaterial_Impl.hpp
-  Node_Impl.hpp
   PortList_Impl.hpp
   OpaqueMaterial_Impl.hpp
   OtherEquipment_Impl.hpp
@@ -976,49 +944,28 @@ SET( ${target_name}_moc
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   ParentObject_Impl.hpp
   People_Impl.hpp
-  PeopleDefinition_Impl.hpp
-  PipeAdiabatic_Impl.hpp
   PlanarSurface_Impl.hpp
   PlanarSurfaceGroup_Impl.hpp
-  PlantLoop_Impl.hpp
   ProgramControl_Impl.hpp
   PumpConstantSpeed_Impl.hpp
   PumpVariableSpeed_Impl.hpp
   RadianceParameters_Impl.hpp
   RefractionExtinctionGlazing_Impl.hpp
-  RefrigerationCase_Impl.hpp
-  RefrigerationCompressor_Impl.hpp
-  RefrigerationCondenserAirCooled_Impl.hpp
-  RefrigerationSystem_Impl.hpp
   RenderingColor_Impl.hpp
-  ResourceObject_Impl.hpp
   RoofVegetation_Impl.hpp
-  RunPeriod_Impl.hpp
-  RunPeriodControlDaylightSavingTime_Impl.hpp
-  RunPeriodControlSpecialDays_Impl.hpp
-  Schedule_Impl.hpp
   ScheduleBase_Impl.hpp
-  ScheduleCompact_Impl.hpp
   ScheduleConstant_Impl.hpp
   ScheduleDay_Impl.hpp
   ScheduleFixedInterval_Impl.hpp
-  ScheduleInterval_Impl.hpp
   ScheduleRule_Impl.hpp
-  ScheduleRuleset_Impl.hpp
   ScheduleTypeLimits_Impl.hpp
   ScheduleVariableInterval_Impl.hpp
-  ScheduleWeek_Impl.hpp
-  ScheduleYear_Impl.hpp
   Screen_Impl.hpp
-  SetpointManagerFollowOutdoorAirTemperature_Impl.hpp
   SetpointManagerMixedAir_Impl.hpp
   SetpointManagerOutdoorAirReset_Impl.hpp
   SetpointManagerScheduled_Impl.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
-  SetpointManagerWarmest_Impl.hpp
   Shade_Impl.hpp
-  ShadingControl_Impl.hpp
-  ShadingMaterial_Impl.hpp
   ShadingSurface_Impl.hpp
   ShadingSurfaceGroup_Impl.hpp
   ShadowCalculation_Impl.hpp
@@ -1029,65 +976,42 @@ SET( ${target_name}_moc
   SiteGroundTemperatureBuildingSurface_Impl.hpp
   SiteWaterMainsTemperature_Impl.hpp
   SizingParameters_Impl.hpp
-  SizingPeriod_Impl.hpp
   SizingPlant_Impl.hpp
   SizingSystem_Impl.hpp
   SizingZone_Impl.hpp
-  SkyTemperature_Impl.hpp
   Space_Impl.hpp
   SpaceInfiltrationDesignFlowRate_Impl.hpp
   SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
   SpaceItem_Impl.hpp
   SpaceLoad_Impl.hpp
-  SpaceLoadDefinition_Impl.hpp
   SpaceLoadInstance_Impl.hpp
   SpaceType_Impl.hpp
-  Splitter_Impl.hpp
   StandardGlazing_Impl.hpp
   StandardOpaqueMaterial_Impl.hpp
   SteamEquipment_Impl.hpp
   SteamEquipmentDefinition_Impl.hpp
-  StraightComponent_Impl.hpp
   SubSurface_Impl.hpp
   Surface_Impl.hpp
   ThermalZone_Impl.hpp
-  ThermochromicGlazing_Impl.hpp
   ThermostatSetpointDualSetpoint_Impl.hpp
   TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
   Version_Impl.hpp
-  UtilityBill_Impl.hpp
-  UtilityCost_Charge_Block_Impl.hpp
-  UtilityCost_Charge_Simple_Impl.hpp
-  UtilityCost_Computation_Impl.hpp
-  UtilityCost_Qualify_Impl.hpp
-  UtilityCost_Ratchet_Impl.hpp
-  UtilityCost_Tariff_Impl.hpp
-  UtilityCost_Variable_Impl.hpp
   WaterHeaterMixed_Impl.hpp
-  WaterToAirComponent_Impl.hpp
-  WaterToWaterComponent_Impl.hpp
   WaterUseConnections_Impl.hpp
   WaterUseEquipment_Impl.hpp
   WaterUseEquipmentDefinition_Impl.hpp
   WeatherFile_Impl.hpp
-  WeatherFileConditionType_Impl.hpp
-  WeatherFileDays_Impl.hpp
-  WindowDataFile_Impl.hpp
   YearDescription_Impl.hpp
   ZoneAirContaminantBalance_Impl.hpp
   ZoneAirHeatBalanceAlgorithm_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
-  ZoneHVACBaseboardConvectiveWater_Impl.hpp
-  ZoneHVACEquipmentList_Impl.hpp   
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
-  ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
 	ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
-  ZoneHVACUnitHeater_Impl.hpp
 )
 
 qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )

@@ -33,7 +33,6 @@ class GasLayer;
 namespace detail {
 
   class MODEL_API GasLayer_Impl : public FenestrationMaterial_Impl {
-    Q_OBJECT;
    public:
    
     /** @name Constructors and Destructors */

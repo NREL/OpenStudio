@@ -28,8 +28,7 @@ namespace model {
 namespace detail {
 // derive GenericModelObject_Impl from ModelObject_Impl to override virtual methods
 class MODEL_API GenericModelObject_Impl : public ModelObject_Impl{
-  Q_OBJECT;
-  public:
+ public:
 
   // constructor
   GenericModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

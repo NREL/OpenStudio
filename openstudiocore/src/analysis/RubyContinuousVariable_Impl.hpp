@@ -34,7 +34,6 @@ namespace detail {
   /** RubyContinuousVariable_Impl is a ContinuousVariable_Impl that is the implementation class
    *  for RubyContinuousVariable.*/
   class ANALYSIS_API RubyContinuousVariable_Impl : public ContinuousVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

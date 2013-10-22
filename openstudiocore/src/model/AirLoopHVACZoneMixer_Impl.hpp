@@ -30,8 +30,6 @@ namespace detail{
 
 class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl 
 {
-  Q_OBJECT;
-
   public:
 
   // constructor
