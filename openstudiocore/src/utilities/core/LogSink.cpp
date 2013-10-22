@@ -30,6 +30,7 @@
 #include <boost/log/utility/init/to_file.hpp>
 #include <boost/log/utility/init/to_console.hpp>
 #include <boost/log/utility/init/common_attributes.hpp>
+#include <boost/regex.hpp>
 
 #include <QReadWriteLock>
 #include <QWriteLocker>
@@ -95,18 +96,18 @@ namespace openstudio{
       this->updateFilter(l);
     }
 
-    boost::optional<boost::regex> LogSink_Impl::channelRegex() const
+	boost::optional<std::string> LogSink_Impl::channelRegex() const
     {
       QReadLocker l(m_mutex);
 
-      return m_channelRegex;
+      return m_channelRegex->str();
     }
    
-    void LogSink_Impl::setChannelRegex(const boost::regex& channelRegex)
+    void LogSink_Impl::setChannelRegex(const std::string& channelRegex)
     {
       QWriteLocker l(m_mutex);
 
-      m_channelRegex = channelRegex;
+      m_channelRegex = boost::regex(channelRegex);
 
       this->updateFilter(l);
     }
@@ -260,12 +261,12 @@ namespace openstudio{
     m_impl->resetLogLevel();
   }
 
-  boost::optional<boost::regex> LogSink::channelRegex() const
+  boost::optional<std::string> LogSink::channelRegex() const
   {
     return m_impl->channelRegex();
   }
  
-  void LogSink::setChannelRegex(const boost::regex& channelRegex)
+  void LogSink::setChannelRegex(const std::string& channelRegex)
   {
     m_impl->setChannelRegex(channelRegex);
   }

@@ -24,6 +24,8 @@
 #include <utilities/idd/IddFile.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <boost/regex.hpp>
+
 namespace openstudio {
 
 /** Wraps the functionality of IddFile and \link IddFactorySingleton IddFactory \endlink 

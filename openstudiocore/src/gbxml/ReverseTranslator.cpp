@@ -65,7 +65,7 @@ namespace gbxml {
     : m_lengthMultiplier(1.0)
   {
     m_logSink.setLogLevel(Warn);
-    m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
+    m_logSink.setChannelRegex(std::string("openstudio\\.gbxml\\.ReverseTranslator"));
     m_logSink.setThreadId(QThread::currentThread());
   }
 

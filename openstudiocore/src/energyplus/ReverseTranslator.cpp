@@ -31,6 +31,8 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/plot/ProgressBar.hpp>
 
+#include <string>
+
 #include <QThread>
 
 using namespace openstudio::model;
@@ -44,7 +46,7 @@ namespace energyplus {
 ReverseTranslator::ReverseTranslator()
 {
   m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
+  m_logSink.setChannelRegex(std::string("openstudio\\.energyplus\\.ReverseTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
 }
 
@@ -64,12 +66,12 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
   m_logSink.setThreadId(QThread::currentThread());
 
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.IdfFile"));
+  m_logSink.setChannelRegex(std::string("openstudio\\.IdfFile"));
 
   //load idf and convert to a workspace
   boost::optional<openstudio::IdfFile> idfFile = IdfFile::load(path, IddFileType::EnergyPlus, progressBar);
 
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
+  m_logSink.setChannelRegex(std::string("openstudio\\.energyplus\\.ReverseTranslator"));
 
   // energyplus idfs may not be draft level strictness, eventually need a fixer
   if (!idfFile){
@@ -139,7 +141,7 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   }
 
   // first thing to do is convert geometry system
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.GeometryTranslator"));
+  m_logSink.setChannelRegex(std::string("openstudio\\.energyplus\\.GeometryTranslator"));
 
   m_progressBar = progressBar;
   if (m_progressBar){
@@ -151,7 +153,7 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   GeometryTranslator geometryTranslator(m_workspace);
   geometryTranslator.convert(CoordinateSystem::Relative, CoordinateSystem::Relative);
 
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
+  m_logSink.setChannelRegex(std::string("openstudio\\.energyplus\\.ReverseTranslator"));
 
   // look for site object in workspace and translate if found
   LOG(Trace,"Translating Site:Location object.");

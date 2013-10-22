@@ -32,6 +32,7 @@
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/regex.hpp>
 
 namespace openstudio{
 

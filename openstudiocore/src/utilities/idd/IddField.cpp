@@ -40,6 +40,7 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/regex.hpp>
 
 #include <algorithm>
 
@@ -178,13 +179,14 @@ namespace detail {
     m_name = name;
   }
 
-  void IddField_Impl::incrementFieldId(const boost::regex& fieldType) {
+  void IddField_Impl::incrementFieldId(const std::string& fieldType) {
     boost::regex fieldIdRegex("([AN])([0-9]+)");
     boost::smatch m;
     bool ok = boost::regex_match(m_fieldId,m,fieldIdRegex);
     OS_ASSERT(ok);
     std::string letterStr(m[1].first,m[1].second);
-    if (boost::regex_match(letterStr,fieldType)) {
+	boost::regex fieldTypeRegex = boost::regex(fieldType);
+    if (boost::regex_match(letterStr,fieldTypeRegex)) {
       std::string numberStr(m[2].first,m[2].second);
       int n = boost::lexical_cast<int>(numberStr);
       ++n;
@@ -683,7 +685,7 @@ void IddField::setName(const std::string& name)
   m_impl->setName(name);
 }
 
-void IddField::incrementFieldId(const boost::regex& fieldType) {
+void IddField::incrementFieldId(const std::string& fieldType) {
   m_impl->incrementFieldId(fieldType);
 }
 

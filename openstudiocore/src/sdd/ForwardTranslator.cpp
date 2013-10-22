@@ -43,6 +43,8 @@
 #include <utilities/plot/ProgressBar.hpp>
 #include <utilities/core/Assert.hpp>
 
+#include <string>
+
 #include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
@@ -54,7 +56,7 @@ namespace sdd {
   ForwardTranslator::ForwardTranslator()
   {
     m_logSink.setLogLevel(Warn);
-    m_logSink.setChannelRegex(boost::regex("openstudio\\.sdd\\.ForwardTranslator"));
+	m_logSink.setChannelRegex(std::string("openstudio\\.sdd\\.ForwardTranslator"));
     m_logSink.setThreadId(QThread::currentThread());
   }
 

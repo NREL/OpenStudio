@@ -24,9 +24,9 @@
 
 #include <utilities/core/LogMessage.hpp>
 
-#include <boost/regex.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <string>
 #include <ostream>
 
 class QThread;
@@ -61,10 +61,10 @@ namespace openstudio{
     void resetLogLevel();
 
     /// get the regular expression to match log channels
-    boost::optional<boost::regex> channelRegex() const;
+	boost::optional<std::string> channelRegex() const;
 
     /// set the regular expression to match log channels
-    void setChannelRegex(const boost::regex& filter);
+    void setChannelRegex(const std::string& filter);
 
     /// reset the regular expression to match log channels
     void resetChannelRegex();

@@ -25,6 +25,8 @@
 #include <utilities/core/LogMessage.hpp>
 #include <utilities/core/LogSink.hpp>
 
+#include <boost/regex.hpp>
+
 class QReadWriteLock;
 class QWriteLocker;
 class QThread;
@@ -60,11 +62,11 @@ namespace openstudio{
       /// reset the core logging level
       void resetLogLevel();
 
-      /// get the regular expression to match log channels
-      boost::optional<boost::regex> channelRegex() const;
+	  /// get the regular expression to match log channels.
+	  boost::optional<std::string> channelRegex() const;
 
       /// set the regular expression to match log channels
-      void setChannelRegex(const boost::regex& filter);
+      void setChannelRegex(const std::string& filter);
 
       /// reset the regular expression to match log channels
       void resetChannelRegex();

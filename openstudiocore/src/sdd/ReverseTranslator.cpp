@@ -72,6 +72,8 @@
 #include <utilities/units/UnitFactory.hpp>
 #include <utilities/units/Unit.hpp>
 
+#include <string>
+
 #include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
@@ -95,7 +97,7 @@ namespace sdd {
       m_masterAutosize(masterAutosize)
   {
     m_logSink.setLogLevel(Warn);
-    m_logSink.setChannelRegex(boost::regex("openstudio\\.sdd\\.ReverseTranslator"));
+	m_logSink.setChannelRegex(std::string("openstudio\\.sdd\\.ReverseTranslator"));
     m_logSink.setThreadId(QThread::currentThread());
   }
 

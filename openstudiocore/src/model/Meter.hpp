@@ -23,6 +23,8 @@
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject.hpp>
 
+#include <boost/regex.hpp>
+
 namespace openstudio {
 
 class EndUseType;

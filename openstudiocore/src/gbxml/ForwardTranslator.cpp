@@ -50,6 +50,8 @@
 
 #include <boost/math/constants/constants.hpp>
 
+#include <string>
+
 #include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
@@ -61,7 +63,7 @@ namespace gbxml {
   ForwardTranslator::ForwardTranslator()
   {
     m_logSink.setLogLevel(Warn);
-    m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ForwardTranslator"));
+    m_logSink.setChannelRegex(std::string("openstudio\\.gbxml\\.ForwardTranslator"));
     m_logSink.setThreadId(QThread::currentThread());
   }
 

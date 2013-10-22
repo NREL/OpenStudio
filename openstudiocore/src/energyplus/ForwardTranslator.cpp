@@ -56,6 +56,8 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/plot/ProgressBar.hpp>
 
+#include <string>
+
 #include <QThread>
 
 using namespace openstudio::model;
@@ -69,7 +71,7 @@ namespace energyplus {
 ForwardTranslator::ForwardTranslator()
 {
   m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
+  m_logSink.setChannelRegex(std::string("openstudio\\.energyplus\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
 
   // temp code 

@@ -25,6 +25,8 @@
 #include <utilities/core/Containers.hpp>
 #include <utilities/data/Attribute.hpp>
 
+#include <boost/regex.hpp>
+
 #include <iomanip>
 
 using openstudio::model::ModelObject;

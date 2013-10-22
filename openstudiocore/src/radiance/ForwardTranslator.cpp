@@ -61,6 +61,7 @@
 #include <cstring>
 #include <cmath>
 #include <sstream>
+#include <string>
 #include <iterator>
 #include <algorithm>
 #include <fstream>
@@ -125,7 +126,7 @@ namespace radiance {
   ForwardTranslator::ForwardTranslator()
   {
     m_logSink.setLogLevel(Warn);
-    m_logSink.setChannelRegex(boost::regex("openstudio\\.radiance\\.ForwardTranslator"));
+	m_logSink.setChannelRegex(std::string("openstudio\\.radiance\\.ForwardTranslator"));
     m_logSink.setThreadId(QThread::currentThread());
   }
 

@@ -94,7 +94,7 @@ class UTILITIES_API IddField {
 
   /** Increments the field id number, that is, A1 becomes A2, etc. Added to support
    *  IddObject::insertHandleField(). Not for general use. */
-  void incrementFieldId(const boost::regex& fieldType = boost::regex("A"));
+  void incrementFieldId(const std::string& fieldType = std::string("A"));
 
   //@}
   /** @name Queries */

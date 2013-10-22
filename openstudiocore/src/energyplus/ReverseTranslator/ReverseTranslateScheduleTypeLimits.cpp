@@ -28,6 +28,8 @@
 
 #include <utilities/core/Assert.hpp>
 
+#include <boost/regex.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {

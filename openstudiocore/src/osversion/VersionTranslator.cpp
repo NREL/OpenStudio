@@ -51,6 +51,8 @@
 
 #include <OpenStudio.hxx>
 
+#include <string>
+
 #include <QThread>
 
 #include <boost/foreach.hpp>
@@ -66,7 +68,7 @@ VersionTranslator::VersionTranslator()
   : m_originalVersion("0.0.0")
 {
   m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.osversion\\.VersionTranslator"));
+  m_logSink.setChannelRegex(std::string("openstudio\\.osversion\\.VersionTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
 
   // Register required update methods, indexed on the file version returned by the method (the
