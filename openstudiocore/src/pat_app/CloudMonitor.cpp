@@ -311,7 +311,18 @@ void CloudMonitor::onStartCloudWorkerComplete()
   {
     setStatus(CLOUD_ERROR);
 
-    QString error("Unknown error starting cloud.  Check for any unintentionally running instances using AWS console and terminate them to avoid charges.");
+    QString error;
+    if( m_startCloudWorker->errors().size() )
+    {
+      QString errorMsg = toQString(m_startCloudWorker->errors()[0]);
+      if (errorMsg == "InvalidAMIID.NotFound")
+      {
+        errorMsg = "AMI not found";
+      }
+      error = "Error starting cloud: " + errorMsg + ".  Check for any unintentionally running instances using AWS console and terminate them to avoid charges.";
+    } else {
+      error = "Unknown error starting cloud.  Check for any unintentionally running instances using AWS console and terminate them to avoid charges.";
+    }
     
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Error", error);
 
@@ -666,14 +677,14 @@ void StartCloudWorker::startWorking()
 
   m_validCredentials = provider->validateCredentials();
 
-  if( ! m_validCredentials )
+  if( ! m_error && ! m_validCredentials )
   {
     m_error = true;
   }
 
   m_resourcesAvailableToStart = provider->resourcesAvailableToStart();
 
-  if( ! m_resourcesAvailableToStart )
+  if( ! m_error && ! m_resourcesAvailableToStart )
   {
     m_error = true;
   }
@@ -731,6 +742,9 @@ void StartCloudWorker::startWorking()
   }
   else
   {
+    m_errors = provider->errors();
+    m_warnings = provider->warnings();
+
     if( provider->requestTerminate() )
     {
       provider->waitForTerminated();
@@ -758,6 +772,16 @@ bool StartCloudWorker::resourcesAvailableToStart() const
 bool StartCloudWorker::error() const
 {
   return m_error;
+}
+
+std::vector<std::string> StartCloudWorker::errors() const
+{
+  return m_errors;
+}
+
+std::vector<std::string> StartCloudWorker::warnings() const
+{
+  return m_warnings;
 }
 
 StopCloudWorker::StopCloudWorker(CloudMonitor * monitor)

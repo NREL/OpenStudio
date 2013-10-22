@@ -1725,7 +1725,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseServiceAvailableResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ServiceAvailable process failed to return output");
         return false;
       }
       
@@ -1747,7 +1747,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseValidateCredentialsResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ValidateCredentials process failed to return output");
         return false;
       }
       
@@ -1773,7 +1773,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseResourcesAvailableToStartResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ResourcesAvailableToStart process failed to return output");
         return false;
       }
       
@@ -1797,7 +1797,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ServerStarted process failed to return output");
         return false;
       }
       
@@ -1829,7 +1829,7 @@ namespace openstudio{
     {
       m_privateKey.remove();
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("WorkerStarted process failed to return output");
         return false;
       }
       
@@ -1864,7 +1864,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseCheckServerRunningResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckServerRunning process failed to return output");
         return false;
       }
       
@@ -1889,7 +1889,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseCheckWorkerRunningResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckWorkerRunning process failed to return output");
         return false;
       }
       
@@ -1924,7 +1924,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseInstancesStoppedResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("InstancesStopped process failed to return output");
         return false;
       }
       
@@ -1951,7 +1951,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseCheckTerminatedResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckTerminated process failed to return output");
         return false;
       }
       
@@ -1978,7 +1978,7 @@ namespace openstudio{
     double AWSProvider_Impl::parseCheckEstimatedChargesResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckEstimatedCharges process failed to return output");
         return 0.0;
       }
       
@@ -2008,7 +2008,7 @@ namespace openstudio{
     unsigned AWSProvider_Impl::parseCheckTotalInstancesResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckTotalInstances process failed to return output");
         return 0;
       }
       
