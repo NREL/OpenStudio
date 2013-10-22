@@ -2238,16 +2238,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   sizingZone.setZoneCoolingSizingFactor(clgDsgnSizingFac);
   sizingZone.setZoneHeatingDesignSupplyAirTemperature(htgDsgnSupAirTemp);
   sizingZone.setZoneHeatingSizingFactor(htgDsgnSizingFac);
-  sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
 
+  sizingZone.setCoolingMinimumAirFlowperZoneFloorArea(0.0);
+  sizingZone.setCoolingMinimumAirFlow(0.0);
+  sizingZone.setCoolingMinimumAirFlowFraction(0.0);
   sizingZone.setCoolingDesignAirFlowMethod("DesignDay");
+
+  sizingZone.setHeatingMaximumAirFlowperZoneFloorArea(0.0);
+  sizingZone.setHeatingMaximumAirFlow(0.0);
+  sizingZone.setHeatingMaximumAirFlowFraction(0.0);
+  sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
+
   if( htgDsgnMaxFlowFrac > 0.0 )
   {
     sizingZone.setHeatingDesignAirFlowMethod("DesignDayWithLimit");
-  }
-  else
-  {
-    sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
+    sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
   }
 
   // Ventilation
