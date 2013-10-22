@@ -31,6 +31,7 @@ class Population
     double densityOccupied() const {return _densityOccupied;}	
     double densityUnoccupied() const {return _densityUnoccupied;}	
     double heatGainPerPerson() const {return _heatGainPerPerson;}	
+
     void setHoursEnd(double value) {_hoursEnd = value;}
     void setHoursStart(double value) {_hoursStart = value;}
     void setDaysEnd(double value) {_daysEnd = value;}

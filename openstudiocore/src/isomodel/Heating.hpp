@@ -35,6 +35,7 @@ class Heating
     double hotWaterDistributionEfficiency() const {return _hotWaterDistributionEfficiency;}
     double hotWaterSystemEfficiency() const {return _hotWaterSystemEfficiency;}
     double hotWaterEnergyType() const {return _hotWaterEnergyType;}
+
     void setTemperatureSetPointOccupied(double value) {_temperatureSetPointOccupied = value;}
     void setTemperatureSetPointUnoccupied(double value) {_temperatureSetPointUnoccupied = value;}
     void setHvacLossFactor(double value) {_hvacLossFactor = value;}

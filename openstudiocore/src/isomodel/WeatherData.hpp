@@ -32,31 +32,32 @@ public:
   /**
    * mean monthly Global Horizontal Radiation (W/m2)
    */
-  Vector mEgh(){return _mEgh;}
+  Vector mEgh() const {return _mEgh;}
   void setMEgh(Vector val){_mEgh = val;}
   /**
    * mean monthly dry bulb temp (C)
    */
-  Vector mdbt(){return _mdbt;}
+  Vector mdbt() const {return _mdbt;}
   void setMdbt(Vector val){_mdbt = val;}
   /**
    * mean monthly wind speed; (m/s) 
    */
-  Vector mwind(){return _mwind;}
+  Vector mwind() const {return _mwind;}
   void setMwind(Vector val){_mwind = val;}
 
   /**
    * mean monthly total solar radiation (W/m2) on a vertical surface for each of the 8 cardinal directions
    */
-  Matrix msolar(){return _msolar;}
+  Matrix msolar() const {return _msolar;}
   /**
    * mean monthly dry bulb temp for each of the 24 hours of the day (C)
    */
-  Matrix mhdbt(){return _mhdbt;}
+  Matrix mhdbt() const {return _mhdbt;}
   /**
    * mean monthly Global Horizontal Radiation for each of the 24 hours of the day (W/m2)
    */
-  Matrix mhEgh(){return _mhEgh;}
+  Matrix mhEgh() const {return _mhEgh;}
+
   void setMhEgh(const Matrix &val){_mhEgh = val;}
   void setMsolar(const Matrix &val){_msolar = val;}
   void setMhdbt(const Matrix &val){_mhdbt = val;}

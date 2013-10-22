@@ -30,6 +30,7 @@ namespace isomodel {
     double partialLoadValue() const {return _partialLoadValue;}
     double hvacLossFactor() const {return _hvacLossFactor;}
     double pumpControlReduction() const {return _pumpControlReduction;}
+
     void setTemperatureSetPointOccupied(double value) {_temperatureSetPointOccupied = value;}
     void setTemperatureSetPointUnoccupied(double value) {_temperatureSetPointUnoccupied = value;}
     void setCOP(double value) {_cOP = value;}

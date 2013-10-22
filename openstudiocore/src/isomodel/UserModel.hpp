@@ -64,108 +64,108 @@ namespace isomodel {
      *     userModel.toSimModel().simulate();
      * }
      */
-    bool valid(){return _valid;}
-    openstudio::path weatherFilePath(){return _weatherFilePath;}
-    double terrainClass(){return _terrainClass;} const 
-    double floorArea(){return _floorArea;} const 
-    double buildingHeight(){return _buildingHeight;} const 
-    double buildingOccupancyFrom(){return _buildingOccupancyFrom;} const 
-    double buildingOccupancyTo(){return _buildingOccupancyTo;} const 
-    double equivFullLoadOccupancyFrom(){return _equivFullLoadOccupancyFrom;} const 
-    double equivFullLoadOccupancyTo(){return _equivFullLoadOccupancyTo;} const 
-    double peopleDensityOccupied(){return _peopleDensityOccupied;} const 
-    double peopleDensityUnoccupied(){return _peopleDensityUnoccupied;} const 
-    double heatingOccupiedSetpoint(){return _heatingOccupiedSetpoint;} const 
-    double heatingUnoccupiedSetpoint(){return _heatingUnoccupiedSetpoint;} const 
-    double coolingOccupiedSetpoint(){return _coolingOccupiedSetpoint;} const 
-    double coolingUnoccupiedSetpoint(){return _coolingUnoccupiedSetpoint;} const 
-    double elecPowerAppliancesOccupied(){return _elecPowerAppliancesOccupied;} const 
-    double elecPowerAppliancesUnoccupied(){return _elecPowerAppliancesUnoccupied;} const 
-    double gasPowerAppliancesOccupied(){return _gasPowerAppliancesOccupied;} const 
-    double gasPowerAppliancesUnoccupied(){return _gasPowerAppliancesUnoccupied;} const 
-    double lightingPowerIntensityOccupied(){return _lightingPowerIntensityOccupied;} const 
-    double lightingPowerIntensityUnoccupied(){return _lightingPowerIntensityUnoccupied;} const 
-    double exteriorLightingPower(){return _exteriorLightingPower;} const 
-    double daylightSensorSystem(){return _daylightSensorSystem;} const 
-    double lightingOccupancySensorSystem(){return _lightingOccupancySensorSystem;} const 
-    double constantIlluminationControl(){return _constantIlluminationControl;} const 
-    double coolingSystemCOP(){return _coolingSystemCOP;} const 
-    double coolingSystemIPLVToCOPRatio(){return _coolingSystemIPLVToCOPRatio;} const 
-    double heatingEnergyCarrier(){return _heatingEnergyCarrier;} const 
-    double heatingSystemEfficiency(){return _heatingSystemEfficiency;} const 
-    double ventilationType(){return _ventilationType;} const 
-    double freshAirFlowRate(){return _freshAirFlowRate;} const 
-    double supplyExhaustRate(){return _supplyExhaustRate;} const 
-    double heatRecovery(){return _heatRecovery;} const 
-    double exhaustAirRecirclation(){return _exhaustAirRecirclation;} const 
-    double buildingAirLeakage(){return _buildingAirLeakage;} const 
-    double dhwDemand(){return _dhwDemand;} const 
-    double dhwEfficiency(){return _dhwEfficiency;} const 
-    double dhwDistributionSystem(){return _dhwDistributionSystem;} const 
-    double dhwEnergyCarrier(){return _dhwEnergyCarrier;} const 
-    double bemType(){return _bemType;} const 
-    double interiorHeatCapacity(){return _interiorHeatCapacity;} const 
-    double specificFanPower(){return _specificFanPower;} const 
-    double fanFlowControlFactor(){return _fanFlowControlFactor;} const 
+    bool valid() const {return _valid;}
+    openstudio::path weatherFilePath() const {return _weatherFilePath;}
+    double terrainClass() const {return _terrainClass;} 
+    double floorArea() const {return _floorArea;} 
+    double buildingHeight() const {return _buildingHeight;} 
+    double buildingOccupancyFrom() const {return _buildingOccupancyFrom;} 
+    double buildingOccupancyTo() const {return _buildingOccupancyTo;} 
+    double equivFullLoadOccupancyFrom() const {return _equivFullLoadOccupancyFrom;} 
+    double equivFullLoadOccupancyTo() const {return _equivFullLoadOccupancyTo;} 
+    double peopleDensityOccupied() const {return _peopleDensityOccupied;} 
+    double peopleDensityUnoccupied() const {return _peopleDensityUnoccupied;} 
+    double heatingOccupiedSetpoint() const {return _heatingOccupiedSetpoint;} 
+    double heatingUnoccupiedSetpoint() const {return _heatingUnoccupiedSetpoint;} 
+    double coolingOccupiedSetpoint() const {return _coolingOccupiedSetpoint;} 
+    double coolingUnoccupiedSetpoint() const {return _coolingUnoccupiedSetpoint;} 
+    double elecPowerAppliancesOccupied() const {return _elecPowerAppliancesOccupied;}
+    double elecPowerAppliancesUnoccupied() const {return _elecPowerAppliancesUnoccupied;}
+    double gasPowerAppliancesOccupied() const {return _gasPowerAppliancesOccupied;} 
+    double gasPowerAppliancesUnoccupied() const {return _gasPowerAppliancesUnoccupied;}
+    double lightingPowerIntensityOccupied() const {return _lightingPowerIntensityOccupied;}
+    double lightingPowerIntensityUnoccupied() const {return _lightingPowerIntensityUnoccupied;}
+    double exteriorLightingPower() const {return _exteriorLightingPower;}
+    double daylightSensorSystem() const {return _daylightSensorSystem;}
+    double lightingOccupancySensorSystem() const {return _lightingOccupancySensorSystem;} 
+    double constantIlluminationControl() const {return _constantIlluminationControl;} 
+    double coolingSystemCOP() const {return _coolingSystemCOP;} 
+    double coolingSystemIPLVToCOPRatio() const {return _coolingSystemIPLVToCOPRatio;} 
+    double heatingEnergyCarrier() const {return _heatingEnergyCarrier;} 
+    double heatingSystemEfficiency() const {return _heatingSystemEfficiency;}
+    double ventilationType() const {return _ventilationType;} 
+    double freshAirFlowRate() const {return _freshAirFlowRate;} 
+    double supplyExhaustRate() const {return _supplyExhaustRate;} 
+    double heatRecovery() const {return _heatRecovery;} 
+    double exhaustAirRecirclation() const {return _exhaustAirRecirclation;} 
+    double buildingAirLeakage() const {return _buildingAirLeakage;} 
+    double dhwDemand() const {return _dhwDemand;} 
+    double dhwEfficiency() const {return _dhwEfficiency;} 
+    double dhwDistributionSystem() const {return _dhwDistributionSystem;} 
+    double dhwEnergyCarrier() const {return _dhwEnergyCarrier;} 
+    double bemType() const {return _bemType;} 
+    double interiorHeatCapacity() const {return _interiorHeatCapacity;} 
+    double specificFanPower() const {return _specificFanPower;}
+    double fanFlowControlFactor() const {return _fanFlowControlFactor;} 
 
-    double roofUValue(){return _roofUValue;} const
-    double roofSHGC(){return _roofSHGC;} const
-    double wallUvalueS(){return _wallUvalueS;} const	
-    double wallUvalueSE(){return _wallUvalueSE;} const	
-    double wallUvalueE(){return _wallUvalueE;} const	
-    double wallUvalueNE(){return _wallUvalueNE;} const	
-    double wallUvalueN(){return _wallUvalueN;} const	
-    double wallUvalueNW(){return _wallUvalueNW;} const	
-    double wallUvalueW(){return _wallUvalueW;} const	
-    double wallUvalueSW(){return _wallUvalueSW;} const	
-    double wallSolarAbsorptionS(){return _wallSolarAbsorptionS;} const
-    double wallSolarAbsorptionSE(){return _wallSolarAbsorptionSE;} const
-    double wallSolarAbsorptionE(){return _wallSolarAbsorptionE;} const
-    double wallSolarAbsorptionNE(){return _wallSolarAbsorptionNE;} const
-    double wallSolarAbsorptionN(){return _wallSolarAbsorptionN;} const
-    double wallSolarAbsorptionNW(){return _wallSolarAbsorptionNW;} const
-    double wallSolarAbsorptionW(){return _wallSolarAbsorptionW;} const
-    double wallSolarAbsorptionSW(){return _wallSolarAbsorptionSW;} const
-    double wallThermalEmissivityS(){return _wallThermalEmissivityS;} const
-    double wallThermalEmissivitySE(){return _wallThermalEmissivitySE;} const
-    double wallThermalEmissivityE(){return _wallThermalEmissivityE;} const
-    double wallThermalEmissivityNE(){return _wallThermalEmissivityNE;} const
-    double wallThermalEmissivityN(){return _wallThermalEmissivityN;} const
-    double wallThermalEmissivityNW(){return _wallThermalEmissivityNW;} const
-    double wallThermalEmissivityW(){return _wallThermalEmissivityW;} const
-    double wallThermalEmissivitySW(){return _wallThermalEmissivitySW;} const
-    double windowUvalueS(){return _windowUvalueS;} const
-    double windowUvalueSE(){return _windowUvalueSE;} const
-    double windowUvalueE(){return _windowUvalueE;} const
-    double windowUvalueNE(){return _windowUvalueNE;} const
-    double windowUvalueN(){return _windowUvalueN;} const
-    double windowUvalueNW(){return _windowUvalueNW;} const
-    double windowUvalueW(){return _windowUvalueW;} const
-    double windowUvalueSW(){return _windowUvalueSW;} const
-    double windowSHGCS(){return _windowSHGCS;} const
-    double windowSHGCSE(){return _windowSHGCSE;} const
-    double windowSHGCE(){return _windowSHGCE;} const
-    double windowSHGCNE(){return _windowSHGCNE;} const
-    double windowSHGCN(){return _windowSHGCN;} const
-    double windowSHGCNW(){return _windowSHGCNW;} const
-    double windowSHGCW(){return _windowSHGCW;} const
-    double windowSHGCSW(){return _windowSHGCSW;} const
-    double windowSCFS(){return _windowSCFS;} const
-    double windowSCFSE(){return _windowSCFSE;} const
-    double windowSCFE(){return _windowSCFE;} const
-    double windowSCFNE(){return _windowSCFNE;} const
-    double windowSCFN(){return _windowSCFN;} const
-    double windowSCFNW(){return _windowSCFNW;} const
-    double windowSCFW(){return _windowSCFW;} const
-    double windowSCFSW(){return _windowSCFSW;} const
-    double windowSDFS(){return _windowSDFS;} const
-    double windowSDFSE(){return _windowSDFSE;} const
-    double windowSDFE(){return _windowSDFE;} const
-    double windowSDFNE(){return _windowSDFNE;} const
-    double windowSDFN(){return _windowSDFN;} const
-    double windowSDFNW(){return _windowSDFNW;} const
-    double windowSDFW(){return _windowSDFW;} const
-    double windowSDFSW(){return _windowSDFSW;} const
+    double roofUValue() const {return _roofUValue;}
+    double roofSHGC() const {return _roofSHGC;}
+    double wallUvalueS() const {return _wallUvalueS;} 
+    double wallUvalueSE() const {return _wallUvalueSE;} 
+    double wallUvalueE() const {return _wallUvalueE;} 
+    double wallUvalueNE() const {return _wallUvalueNE;} 
+    double wallUvalueN() const {return _wallUvalueN;} 
+    double wallUvalueNW() const {return _wallUvalueNW;}
+    double wallUvalueW() const {return _wallUvalueW;}
+    double wallUvalueSW() const {return _wallUvalueSW;}
+    double wallSolarAbsorptionS() const {return _wallSolarAbsorptionS;} 
+    double wallSolarAbsorptionSE() const {return _wallSolarAbsorptionSE;}
+    double wallSolarAbsorptionE() const {return _wallSolarAbsorptionE;} 
+    double wallSolarAbsorptionNE() const {return _wallSolarAbsorptionNE;}
+    double wallSolarAbsorptionN() const {return _wallSolarAbsorptionN;}
+    double wallSolarAbsorptionNW() const {return _wallSolarAbsorptionNW;}
+    double wallSolarAbsorptionW() const {return _wallSolarAbsorptionW;}
+    double wallSolarAbsorptionSW() const {return _wallSolarAbsorptionSW;}
+    double wallThermalEmissivityS() const {return _wallThermalEmissivityS;} 
+    double wallThermalEmissivitySE() const {return _wallThermalEmissivitySE;} 
+    double wallThermalEmissivityE() const {return _wallThermalEmissivityE;} 
+    double wallThermalEmissivityNE() const {return _wallThermalEmissivityNE;}
+    double wallThermalEmissivityN() const {return _wallThermalEmissivityN;}
+    double wallThermalEmissivityNW() const {return _wallThermalEmissivityNW;}
+    double wallThermalEmissivityW() const {return _wallThermalEmissivityW;}
+    double wallThermalEmissivitySW() const {return _wallThermalEmissivitySW;} 
+    double windowUvalueS() const {return _windowUvalueS;} 
+    double windowUvalueSE() const {return _windowUvalueSE;}
+    double windowUvalueE() const {return _windowUvalueE;}
+    double windowUvalueNE() const {return _windowUvalueNE;}
+    double windowUvalueN() const {return _windowUvalueN;} 
+    double windowUvalueNW() const {return _windowUvalueNW;}
+    double windowUvalueW() const {return _windowUvalueW;} 
+    double windowUvalueSW() const {return _windowUvalueSW;}
+    double windowSHGCS() const {return _windowSHGCS;} 
+    double windowSHGCSE() const {return _windowSHGCSE;}
+    double windowSHGCE() const {return _windowSHGCE;} 
+    double windowSHGCNE() const {return _windowSHGCNE;} 
+    double windowSHGCN() const {return _windowSHGCN;}
+    double windowSHGCNW() const {return _windowSHGCNW;} 
+    double windowSHGCW() const {return _windowSHGCW;}
+    double windowSHGCSW() const {return _windowSHGCSW;}
+    double windowSCFS() const {return _windowSCFS;}
+    double windowSCFSE() const {return _windowSCFSE;}
+    double windowSCFE() const {return _windowSCFE;} 
+    double windowSCFNE() const {return _windowSCFNE;} 
+    double windowSCFN() const {return _windowSCFN;}
+    double windowSCFNW() const {return _windowSCFNW;}
+    double windowSCFW() const {return _windowSCFW;}
+    double windowSCFSW() const {return _windowSCFSW;}
+    double windowSDFS() const {return _windowSDFS;}
+    double windowSDFSE() const {return _windowSDFSE;}
+    double windowSDFE() const {return _windowSDFE;} 
+    double windowSDFNE() const {return _windowSDFNE;} 
+    double windowSDFN() const {return _windowSDFN;} 
+    double windowSDFNW() const {return _windowSDFNW;} 
+    double windowSDFW() const {return _windowSDFW;}
+    double windowSDFSW() const {return _windowSDFSW;} 
 
 
     void setValid(bool val){_valid = val;}
@@ -228,38 +228,38 @@ namespace isomodel {
     void setWindowUvalueSW(double val){_windowUvalueSW=val;}
 
 
-    double wallAreaS(){return _wallAreaS;}
-    double wallAreaSE(){return _wallAreaSE;}
-    double wallAreaE(){return _wallAreaE;}
-    double wallAreaNE(){return _wallAreaNE;}
-    double wallAreaN(){return _wallAreaN;}
-    double wallAreaNW(){return _wallAreaNW;}
-    double wallAreaW(){return _wallAreaW;}
-    double wallAreaSW(){return _wallAreaSW;}
-    double roofArea(){return _roofArea;}
-    double windowAreaS(){return _windowAreaS;}
-    double windowAreaSE(){return _windowAreaSE;}
-    double windowAreaE(){return _windowAreaE;}
-    double windowAreaNE(){return _windowAreaNE;}
-    double windowAreaN(){return _windowAreaN;}
-    double windowAreaNW(){return _windowAreaNW;}
-    double windowAreaW(){return _windowAreaW;}
-    double windowAreaSW(){return _windowAreaSW;}
-    double skylightArea(){return _skylightArea;}
-    double roofSolarAbsorption(){return _roofSolarAbsorption;}
-    double roofThermalEmissivity(){return _roofThermalEmissivity;}
-    double skylightUvalue(){return _skylightUvalue;}
-    double skylightSHGC(){return _skylightSHGC;}
+    double wallAreaS() const {return _wallAreaS;}
+    double wallAreaSE() const {return _wallAreaSE;}
+    double wallAreaE() const {return _wallAreaE;}
+    double wallAreaNE() const {return _wallAreaNE;}
+    double wallAreaN() const {return _wallAreaN;}
+    double wallAreaNW() const {return _wallAreaNW;}
+    double wallAreaW() const {return _wallAreaW;}
+    double wallAreaSW() const {return _wallAreaSW;}
+    double roofArea() const {return _roofArea;}
+    double windowAreaS() const {return _windowAreaS;}
+    double windowAreaSE() const {return _windowAreaSE;}
+    double windowAreaE() const {return _windowAreaE;}
+    double windowAreaNE() const {return _windowAreaNE;}
+    double windowAreaN() const {return _windowAreaN;}
+    double windowAreaNW() const {return _windowAreaNW;}
+    double windowAreaW() const {return _windowAreaW;}
+    double windowAreaSW() const {return _windowAreaSW;}
+    double skylightArea() const {return _skylightArea;}
+    double roofSolarAbsorption() const {return _roofSolarAbsorption;}
+    double roofThermalEmissivity() const {return _roofThermalEmissivity;}
+    double skylightUvalue() const {return _skylightUvalue;}
+    double skylightSHGC() const {return _skylightSHGC;}
     
-    double exteriorHeatCapacity(){return _exteriorHeatCapacity;}
-    double infiltration(){return _infiltration;}
-    double hvacWasteFactor(){return _hvacWasteFactor;}
-    double hvacHeatingLossFactor(){return _hvacHeatingLossFactor;}
-    double hvacCoolingLossFactor(){return _hvacCoolingLossFactor;}
-    double dhwDistributionEfficiency(){return _dhwDistributionEfficiency;}
-    double heatingPumpControl(){return _heatingPumpControl;}
-    double coolingPumpControl(){return _coolingPumpControl;}
-    double heatGainPerPerson(){return _heatGainPerPerson;}
+    double exteriorHeatCapacity() const {return _exteriorHeatCapacity;}
+    double infiltration() const {return _infiltration;}
+    double hvacWasteFactor() const {return _hvacWasteFactor;}
+    double hvacHeatingLossFactor() const {return _hvacHeatingLossFactor;}
+    double hvacCoolingLossFactor() const {return _hvacCoolingLossFactor;}
+    double dhwDistributionEfficiency() const {return _dhwDistributionEfficiency;}
+    double heatingPumpControl() const {return _heatingPumpControl;}
+    double coolingPumpControl() const {return _coolingPumpControl;}
+    double heatGainPerPerson() const {return _heatGainPerPerson;}
     
     void setWeatherFilePath(const openstudio::path &val){_weatherFilePath = val;}
     void setTerrainClass(double val){ _terrainClass = val;}

@@ -24,7 +24,6 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include "SolarRadiation.hpp"
 #include "TimeFrame.hpp"
 #include <utilities/core/Path.hpp>
 
@@ -39,21 +38,20 @@ const int EB = 4;
 const int ED = 5;
 const int WSPD = 6;
 
-class SolarRadiation;
 
 class EpwData
 {
   public:
     EpwData(const openstudio::path &t_path);
 
-    std::string location(){return m_location;}
-    std::string stationid(){return m_stationid;}
-    int timezone(){return m_timezone;}
-    double latitude(){return m_latitude;}
-    double longitude(){return m_longitude;}
-    std::vector< std::vector<double> > data(){return m_data;}
+    std::string location() const {return m_location;}
+    std::string stationid() const {return m_stationid;}
+    int timezone() const {return m_timezone;}
+    double latitude() const {return m_latitude;}
+    double longitude() const {return m_longitude;}
+    std::vector< std::vector<double> > data() const {return m_data;}
 
-    std::string toISOData();
+    std::string toISOData() const;
 
   protected:
     void loadData(const openstudio::path &t_path);

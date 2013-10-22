@@ -31,6 +31,7 @@ class Building
     double gasApplianceHeatGainOccupied() const {return _gasApplianceHeatGainOccupied;}
     double gasApplianceHeatGainUnoccupied() const {return _gasApplianceHeatGainUnoccupied;}
     double buildingEnergyManagement() const {return _buildingEnergyManagement;}
+
     void setLightingOccupancySensor(double value) {_lightingOccupancySensor = value;}
     void setConstantIllumination(double value) {_constantIllumination = value;}
     void setElectricApplianceHeatGainOccupied(double value) {_electricApplianceHeatGainOccupied = value;}

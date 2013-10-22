@@ -1,4 +1,5 @@
 #include <isomodel/EpwData.hpp>
+#include "SolarRadiation.hpp"
 
 namespace openstudio {
 namespace isomodel {
@@ -74,9 +75,9 @@ void EpwData::parseData(const std::string &line, size_t row)
   }	
 }
 
-std::string EpwData::toISOData(){
+std::string EpwData::toISOData() const {
   TimeFrame frames;
-  SolarRadiation pos(&frames,this);
+  SolarRadiation pos(frames, *this);
   pos.Calculate();
   std::stringstream sstream;
   sstream << "mdbt" << std::endl;

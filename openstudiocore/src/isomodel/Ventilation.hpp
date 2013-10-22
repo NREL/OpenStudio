@@ -33,6 +33,7 @@ class Ventilation
     double fanPower() const {return _fanPower;}
     double fanControlFactor() const {return _fanControlFactor;}
     double wasteFactor() const {return _wasteFactor;}
+
     void setSupplyRate(double value) {_supplyRate = value;}
     void setSupplyDifference(double value) {_supplyDifference = value;}
     void setHeatRecoveryEfficiency(double value) {_heatRecoveryEfficiency = value;}

@@ -8,19 +8,27 @@ namespace isomodel {
   double SurfaceAzimuths[] =  {0, -45, -90, -135, 180, 135, 90, 45};
 
 
-  SolarRadiation::SolarRadiation(TimeFrame* frame, EpwData* wdata, double tilt)
+  SolarRadiation::SolarRadiation(const TimeFrame &frame, const EpwData &wdata, double tilt)
+    : m_frame(frame), 
+      m_weatherData(wdata),
+
+      m_surfaceTilt(tilt/2.0), //surface tilt in radians (pi/2 is vertical, 0 is horizontal)
+      m_localMeridian(wdata.timezone() * 15.0), //compute the local meridian from the time zone.  Negative is W of the prime meridian
+      m_longitude(wdata.longitude()),
+      m_latitude(wdata.latitude() * PI / 180.0), //convert latitute to radians
+
+      m_eglobe(TimeFrame::TIMESLICES),
+
+      m_monthlyDryBulbTemp(MONTHS),
+      m_monthlyDewPointTemp(MONTHS),
+      m_monthlyRelativeHumidity(MONTHS),
+      m_monthlyWindspeed(MONTHS),
+      m_monthlyGlobalHorizontalRadiation(MONTHS),
+      m_monthlySolarRadiation(MONTHS),
+      m_hourlyDryBulbTemp(MONTHS),
+      m_hourlyDewPointTemp(MONTHS),
+      m_hourlyGlobalHorizontalRadiation(MONTHS)
   {
-    m_monthlyDryBulbTemp.resize(MONTHS);
-    m_monthlyDewPointTemp.resize(MONTHS);
-    m_monthlyRelativeHumidity.resize(MONTHS);
-    m_monthlyWindspeed.resize(MONTHS);
-    m_monthlyGlobalHorizontalRadiation.resize(MONTHS);
-    m_monthlySolarRadiation.resize(MONTHS);
-    m_hourlyDryBulbTemp.resize(MONTHS);
-    m_hourlyDewPointTemp.resize(MONTHS);
-    m_hourlyGlobalHorizontalRadiation.resize(MONTHS);
-    m_monthlySolarRadiation.resize(MONTHS);
-    m_eglobe.resize(TimeFrame::TIMESLICES);
 
     for(int i = 0;i<MONTHS;i++){      
       m_hourlyDryBulbTemp[i].resize(HOURS);
@@ -36,12 +44,6 @@ namespace isomodel {
       m_eglobe[i].resize(NUM_SURFACES);
     }
 
-    m_frame = frame;
-    m_weatherData = wdata;
-    m_longitude = wdata->longitude();
-    m_localMeridian = wdata->timezone() * 15.0; //compute the local meridian from the time zone.  Negative is W of the prime meridian
-    m_latitude = wdata->latitude() * PI / 180.0; //convert latitute to radians
-    m_surfaceTilt = tilt/2.0;	//surface tilt in radians (pi/2 is vertical, 0 is horizontal);
   }
 
   SolarRadiation::~SolarRadiation() {}
@@ -61,15 +63,15 @@ namespace isomodel {
 
     double AngleOfIncidence,SurfaceSolarAzimuth,DirectBeam,DiffuseRadiation,DiffuseComponent;
 
-    const std::vector< std::vector<double> > &data = m_weatherData->data();
+    const std::vector< std::vector<double> > &data = m_weatherData.data();
     const std::vector<double> &vecEB = data[EB];
     const std::vector<double> &vecED = data[ED];
     for(int i = 0;i< TimeFrame::TIMESLICES;i++)
     {
       // First compute the solar azimuth for each hour of the year for our location
-      Revolution = 2.0 * PI * (static_cast<double>(m_frame->YTD[i])-1.0) / 365.0;//should be .25? //calculation revolution angle around sun in radians
+      Revolution = 2.0 * PI * (static_cast<double>(m_frame.YTD[i])-1.0) / 365.0;//should be .25? //calculation revolution angle around sun in radians
       EquationOfTime = 2.2918 * (0.0075 + 0.1868 * cos(Revolution) - 3.2077 * sin(Revolution) - 1.4615 * cos(2 * Revolution) - 4.089 * sin(2 * Revolution));//equation of time??
-      ApparentSolarTime = m_frame->Hour[i] + EquationOfTime  / 60.0 + (m_longitude-m_localMeridian) / 15.0;  // Apparent Solar Time in hours
+      ApparentSolarTime = m_frame.Hour[i] + EquationOfTime  / 60.0 + (m_longitude-m_localMeridian) / 15.0;  // Apparent Solar Time in hours
 
       //the following is a more accurate formula for declination as taken from - Duffie and Beckman P. 14
       SolarDeclination =  0.006918-0.399913 * cos(Revolution) + 0.070257 * sin(Revolution) - 0.006758 * cos(2.0 * Revolution) + 0.00907 * sin(2.0 * Revolution)
@@ -118,7 +120,7 @@ namespace isomodel {
         m_monthlySolarRadiation[midx][s] /= cnt;
       }
       //hours are averaged over days in the month
-      days = m_frame->monthLength(midx+1);
+      days = m_frame.monthLength(midx+1);
       for(int h = 0;h<24;h++)
       {
         m_hourlyDryBulbTemp[midx][h] /= days;
@@ -155,7 +157,7 @@ namespace isomodel {
     // int days = 0;
     int h = 0;
 
-    const std::vector< std::vector<double> > &data = m_weatherData->data();
+    const std::vector< std::vector<double> > &data = m_weatherData.data();
     const std::vector<double> &vecDBT = data[DBT];
     const std::vector<double> &vecDPT = data[DPT];
     const std::vector<double> &vecRH = data[RH];
@@ -165,9 +167,9 @@ namespace isomodel {
 
     for(int i = 0;i<TimeFrame::TIMESLICES;i++, cnt++)
     {
-      if(m_frame->Month[i] != month)
+      if(m_frame.Month[i] != month)
       {
-        month = m_frame->Month[i];
+        month = m_frame.Month[i];
         //on month change, average bin out over count
         calculateMonthAvg(midx,cnt);
         midx++;
@@ -186,7 +188,7 @@ namespace isomodel {
         m_monthlySolarRadiation[midx][s] += m_eglobe[i][s];
       }
 
-      h = m_frame->Hour[i]-1;
+      h = m_frame.Hour[i]-1;
       m_hourlyDryBulbTemp[midx][h] += vecDBT[i];
       m_hourlyDewPointTemp[midx][h] += vecDPT[i];
       m_hourlyGlobalHorizontalRadiation[midx][h] += vecEGH[i];

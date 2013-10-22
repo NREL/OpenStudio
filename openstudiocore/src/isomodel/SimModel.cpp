@@ -360,7 +360,7 @@ v_Egh_day=(M_mhEgh*v_day_hrs_yesno)./sum(v_day_hrs_yesno);  %monthly avg global 
 v_Egh_nt=(M_mhEgh*v_nt_hrs_yesno)./sum(v_nt_hrs_yesno);  %monthly avg Egh during the "night" hours
 */
 
-    Vector v_Wgh_wk_day = mult(v_Egh_day, weekdayOccupiedMegaseconds);
+    Vector v_Wgh_wk_day = mult(v_Egh_day,weekdayOccupiedMegaseconds);
     Vector v_Wgh_wk_nt = mult(v_Egh_nt,weekdayUnoccupiedMegaseconds);
     Vector v_Wgh_wke_day = mult(v_Egh_day,weekendOccupiedMegaseconds);
     Vector v_Wgh_wke_nt = mult(v_Egh_nt,weekendUnoccupiedMegaseconds);

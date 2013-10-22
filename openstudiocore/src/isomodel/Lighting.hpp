@@ -28,6 +28,7 @@ class Lighting
     double powerDensityUnoccupied() const {return _powerDensityUnoccupied;}
     double dimmingFraction() const {return _dimmingFraction;}
     double exteriorEnergy() const {return _exteriorEnergy;}
+
     void setPowerDensityOccupied(double value) {_powerDensityOccupied = value;}
     void setPowerDensityUnoccupied(double value) {_powerDensityUnoccupied = value;}
     void setDimmingFraction(double value) {_dimmingFraction = value;}
