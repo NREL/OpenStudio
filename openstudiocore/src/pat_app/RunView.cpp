@@ -518,6 +518,7 @@ void RunStatusView::on_selectAllClears(bool checked)
         std::vector<analysis::DataPoint> dataPoints = analysis.dataPoints();
         Q_FOREACH(analysis::DataPoint dataPoint, dataPoints) {
           analysisdriver::clearResults(analysis,dataPoint,driver);
+          emit dataPointResultsCleared(dataPoint.uuid());
         }
       }
     }
@@ -888,6 +889,7 @@ void DataPointRunHeaderView::on_clearClicked(bool checked)
     analysis::Analysis analysis = project->analysis();
     analysisdriver::AnalysisDriver driver = project->analysisDriver();
     analysisdriver::clearResults(analysis,m_dataPoint,driver);
+    emit dataPointResultsCleared(m_dataPoint.uuid());
   }
 }
 
@@ -906,6 +908,11 @@ DataPointRunItemView::DataPointRunItemView(const openstudio::analysis::DataPoint
   dataPointRunContentView = new DataPointRunContentView(); 
   setContent(dataPointRunContentView);
 
+  // pass dataPointResultsCleared signal through
+  bool bingo = connect(dataPointRunHeaderView,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
+                       this,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)));
+  OS_ASSERT(bingo);
+
   checkForUpdate();
 }
 
@@ -919,6 +926,10 @@ void DataPointRunItemView::checkForUpdate()
 
   if (topLevelJobUUID != m_topLevelJobUUID){
     m_topLevelJobUUID = topLevelJobUUID;
+    // ETH: It would be nice if update() or something else could somehow get to 
+    // RunTabController::emitDataPointChanged(m_dataPoint.uuid()) (after that method was made public, 
+    // of course), but I do not know if there is a nice/appropriate path through the code from here to get to 
+    // the RunTabController.
     update();
   }
 }
