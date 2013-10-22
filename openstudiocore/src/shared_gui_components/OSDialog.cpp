@@ -41,7 +41,8 @@ OSDialog::OSDialog(bool isIP,
   m_okButton(NULL),
   m_upperLayout(NULL),
   m_sizeHint(QSize(800,500)),
-  m_layoutContentsMargins(QMargins(20,70,20,20))
+  m_layoutContentsMargins(QMargins(20,70,20,20)),
+  _move(false)
 {
   setStyleSheet("openstudio--OSDialog { background: #E6E6E6; }");
   
@@ -133,27 +134,27 @@ QPushButton * OSDialog::okButton()
 
 void OSDialog::mousePressEvent(QMouseEvent *event)
 {
-  if (event->button() == Qt::LeftButton) 
-  {
-    if( event->y() < 50 )
-    {
-        dragPosition = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
-        _move = true;
+  if(event->button() == Qt::LeftButton){
+    if(event->y() < 50){
+      dragPosition = event->globalPos() - frameGeometry().topLeft();
+      event->accept();
+      _move = true;
     }
-    else
-    {
+    else{
       _move = false;
     }
   }
 }
 
+void OSDialog::mouseReleaseEvent(QMouseEvent *event)
+{
+  _move = false;
+}
+
 void OSDialog::mouseMoveEvent(QMouseEvent *event)
 {
-  if(event->buttons() & Qt::LeftButton) 
-  {
-    if( _move )
-    {
+  if(event->buttons() & Qt::LeftButton) {
+    if(_move){
       move(event->globalPos() - dragPosition);
       event->accept();
     }

@@ -913,10 +913,23 @@ namespace detail {
     boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = spaces[0].designSpecificationOutdoorAir();
     bool allDesignSpecificationOutdoorAirDefaulted = spaces[0].isDesignSpecificationOutdoorAirDefaulted();
     bool anyDesignSpecificationOutdoorAirSchedules = false;
+    bool anyMaxOutdoorAirMethod = false;
+    bool anySumOutdoorAirMethod = false;
     double sumOutdoorAirForPeople = 0.0;
     double sumOutdoorAirForFloorArea = 0.0;
     double sumOutdoorAirRate = 0.0;
     double sumOutdoorAirForVolume = 0.0;
+
+    // Quick check to see what kind of ventilation methods are used
+    BOOST_FOREACH(Space space, spaces){
+      if (boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = space.designSpecificationOutdoorAir()) {
+        if (istringEqual("Maximum", designSpecificationOutdoorAir->outdoorAirMethod())){
+          anyMaxOutdoorAirMethod = true;
+        } else if(istringEqual("Sum", designSpecificationOutdoorAir->outdoorAirMethod())) {
+          anySumOutdoorAirMethod = true;
+        }
+      }
+    }
 
     // find common variables for the new space
     BOOST_FOREACH(Space space, spaces){
@@ -1007,9 +1020,13 @@ namespace detail {
         double outdoorAirRate = thisDesignSpecificationOutdoorAir->outdoorAirFlowRate();
         double outdoorAirForVolume = volume*thisDesignSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
 
-        if (istringEqual("Max", thisDesignSpecificationOutdoorAir->outdoorAirMethod())){
-          sumOutdoorAirRate += std::max(outdoorAirForPeople, std::max(outdoorAirForFloorArea, std::max(outdoorAirRate, outdoorAirForVolume)));
-        }else{
+        // First check if this space uses the Maximum method and other spaces do not
+        if (istringEqual("Maximum", thisDesignSpecificationOutdoorAir->outdoorAirMethod()) && anySumOutdoorAirMethod ){
+          sumOutdoorAirRate += std::max(outdoorAirForPeople, 
+                                        std::max(outdoorAirForFloorArea, 
+                                        std::max(outdoorAirRate, 
+                                        outdoorAirForVolume)));
+        }else{ 
           sumOutdoorAirForPeople += outdoorAirForPeople;
           sumOutdoorAirForFloorArea += outdoorAirForFloorArea;
           sumOutdoorAirRate += outdoorAirRate;
@@ -1193,7 +1210,13 @@ namespace detail {
 
       // make a new designSpecificationOutdoorAir
       designSpecificationOutdoorAir = DesignSpecificationOutdoorAir(model);
-      designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      if( anySumOutdoorAirMethod && anyMaxOutdoorAirMethod ) {
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      }else if( anyMaxOutdoorAirMethod ) {
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Maximum");
+      }else{
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      }
       designSpecificationOutdoorAir->setOutdoorAirFlowperPerson(outdoorAirForPeople);
       designSpecificationOutdoorAir->setOutdoorAirFlowperFloorArea(outdoorAirForFloorArea);
       designSpecificationOutdoorAir->setOutdoorAirFlowRate(sumOutdoorAirRate);

@@ -30,6 +30,9 @@
 #include <boost/function.hpp>
 
 namespace openstudio{
+
+  struct AWSComputerInformation;
+
 namespace detail{
 
   /// AWSSettings_Impl is a CloudSettings_Impl.
@@ -422,6 +425,26 @@ namespace detail{
     // returns the recommended default worker instance type
     static std::string defaultWorkerInstanceType();
 
+    static std::vector<unsigned> serverProcessorCounts();
+
+    static std::vector<unsigned> workerProcessorCounts();
+
+    static std::vector<std::string> serverPrettyNames();
+
+    static std::vector<std::string> workerPrettyNames();
+
+    static std::string getServerPrettyName(const std::string & instanceType);
+
+    static std::string getWorkerPrettyName(const std::string & instanceType);
+
+    static unsigned getServerProcessorCount(const std::string & instanceType);
+
+    static unsigned getWorkerProcessorCount(const std::string & instanceType);
+
+    static std::vector<AWSComputerInformation> serverInformation();  
+
+    static std::vector<AWSComputerInformation> workerInformation();
+
     // returns the EC2 estimated charges from CloudWatch in USD
     double estimatedCharges(int msec);
 
@@ -445,7 +468,6 @@ namespace detail{
 
     /// emitted when the total instances request completes
     void totalInstancesAvailable();
-
 
   private slots:
 
@@ -520,14 +542,14 @@ namespace detail{
 
     bool userAgreementSigned() const;
     bool authenticated() const;
-    
+
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
 
     path m_ruby;
     path m_script;
     mutable QTemporaryFile m_privateKey;
-    
+
     QProcess* m_checkInternetProcess;
     QProcess* m_checkServiceProcess;
     QProcess* m_checkValidateProcess;

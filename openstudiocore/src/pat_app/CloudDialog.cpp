@@ -40,6 +40,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QStackedWidget>
 #include <QUrl>
 
@@ -47,11 +48,11 @@
 #define VAGRANT_PROVIDER "Vagrant"
 #define AMAZON_PROVIDER "Amazon EC2"
 #define EDIT_WIDTH 150
-#define KEY_WIDTH 260
+#define KEY_WIDTH 300
 #define ADDRESS_WIDTH 110
 #define PORT_WIDTH 30
 #define TEXT_WIDTH 350
-#define TEXT_HEIGHT 400
+#define TEXT_HEIGHT 390
 
 using namespace openstudio::pat;
 
@@ -73,8 +74,8 @@ CloudDialog::CloudDialog(QWidget* parent)
   m_vagrantProviderWidget(0),
   m_legalAgreement(0)
 {
-  this->setWindowTitle("Cloud Settings");
-  this->setFixedSize(QSize(800,541));
+  setWindowTitle("Cloud Settings");
+  setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 }
 
@@ -143,23 +144,32 @@ void CloudDialog::createWidgets()
   m_legalAgreement = new QLabel;
   m_legalAgreement->hide();
   m_legalAgreement->setWordWrap(true);
-  m_legalAgreement->setFixedHeight(TEXT_HEIGHT);
-  m_legalAgreement->setFixedWidth(TEXT_WIDTH);
 
   AWSSettings awsSettings;
   m_legalAgreement->setText(awsSettings.userAgreementText().c_str());
 
-  m_rightLoginLayout->addWidget(m_legalAgreement,0,Qt::AlignTop | Qt::AlignLeft);
+  QScrollArea * scrollArea = new QScrollArea();
+  scrollArea->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+  scrollArea->setFixedWidth(TEXT_WIDTH + 15);
+  scrollArea->setMinimumHeight(TEXT_HEIGHT);
+  scrollArea->setStyleSheet("background-color:transparent;");
+  scrollArea->setWidget(m_legalAgreement);
+  scrollArea->setWidgetResizable(true);
+  scrollArea->setAlignment(Qt::AlignTop);
+  scrollArea->setFrameShape(QFrame::NoFrame);
+  m_rightLoginLayout->addWidget(scrollArea);
 
   m_iAcceptCheckBox = new QCheckBox("I Agree");
   m_iAcceptCheckBox->hide();
   m_rightLoginLayout->addWidget(m_iAcceptCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
 
+  m_rightLoginLayout->addSpacing(5);
+
   isConnected = connect(m_iAcceptCheckBox, SIGNAL(clicked(bool)),
     this, SLOT(iAcceptClicked(bool)));
   OS_ASSERT(isConnected);
 
-  m_rightLoginLayout->addStretch();
+  m_rightLoginLayout->addSpacing(5);
     
   // SETTINGS PAGE
 
@@ -232,10 +242,10 @@ void CloudDialog::createWidgets()
 
   // OS SETTINGS
 
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #else
-    setWindowFlags(Qt::WindowCloseButtonHint);
+  #elif defined(Q_OS_WIN32)
+    setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 
   cloudResourceChanged(m_cloudResourceComboBox->currentText());
@@ -482,9 +492,13 @@ void CloudProviderWidget::createWidgets()
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
-  label->setObjectName("H2");
-  label->setText("Results for simulation run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances and any results not downloaded will be lost.");
+  label->setObjectName("H1");
+  label->setText("<FONT COLOR = RED>Results for simulations run on the cloud are only available while the cloud is running.  Stopping the cloud will terminate all instances, and any results not downloaded will be lost.");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  QSpacerItem * spacerItem = NULL;
+  spacerItem = new QSpacerItem(0,25,QSizePolicy::Fixed,QSizePolicy::Fixed);
+  m_rightSettingsLayout->addItem(spacerItem);
 }
 
 //***** SLOTS *****
@@ -791,6 +805,8 @@ AmazonProviderWidget::~AmazonProviderWidget()
 
 void AmazonProviderWidget::createLoginWidget()
 {
+  m_leftLoginLayout->setContentsMargins(QMargins(0,0,0,0));
+
   QLabel * label = 0;
 
   // LEFT LOGIN PAGE
@@ -806,7 +822,8 @@ void AmazonProviderWidget::createLoginWidget()
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_accessKeyLineEdit = new QLineEdit();
-  m_accessKeyLineEdit->setFixedWidth(KEY_WIDTH);
+  m_accessKeyLineEdit->setMinimumWidth(KEY_WIDTH);
+  m_accessKeyLineEdit->setMaxLength(20);
   m_leftLoginLayout->addWidget(m_accessKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
@@ -815,8 +832,21 @@ void AmazonProviderWidget::createLoginWidget()
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_secretKeyLineEdit = new QLineEdit();
-  m_secretKeyLineEdit->setFixedWidth(KEY_WIDTH);
+  m_secretKeyLineEdit->setMinimumWidth(KEY_WIDTH);
+  m_secretKeyLineEdit->setEchoMode(QLineEdit::PasswordEchoOnEdit);
+  m_secretKeyLineEdit->setMaxLength(40);
   m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_leftLoginLayout->addSpacing(30);
+
+  label = new QLabel;
+  label->setFixedWidth(TEXT_WIDTH);
+  label->setWordWrap(true);
+  label->setObjectName("H1");
+  label->setOpenExternalLinks(true);
+  label->setText("<FONT COLOR = RED>PAT cloud support with Amazon EC2 is a new feature, and is still under active development to improve interprocess reliability and performance. The user assumes all responsibility for orphaned EC2 processes, and it is strongly recommended that you monitor EC2 cloud usage at <a href=\"http://aws.amazon.com\">aws.amazon.com</a> to avoid any unwanted charges.");
+  label->setAlignment(Qt::AlignTop);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_leftLoginLayout->addStretch();
 
@@ -827,7 +857,13 @@ void AmazonProviderWidget::createLoginWidget()
 
 void AmazonProviderWidget::createSettingsWidget()
 {
+  QHBoxLayout * hLayout = 0;
+
+  QVBoxLayout * vLayout = 0;
+
   QLabel * label = 0;
+
+  bool isConnected = false;
 
   // LEFT SETTINGS PAGE
 
@@ -841,34 +877,126 @@ void AmazonProviderWidget::createSettingsWidget()
 
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
-  label->setFixedHeight(60);
   label->setWordWrap(true);
   label->setText("This is the only region with CloudWatch enabled.  CloudWatch allows you to monitor your cost and performance.  The AWS Management Console provides a dashboard, alarms, and graphs.");
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;
   label->setObjectName("H2");
-  label->setText("Server Instance Type");
+  label->setText("Server Information");
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_serverInstanceTypeComboBox = new QComboBox();
-  m_leftSettingsLayout->addWidget(m_serverInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
-  
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(15);
+  m_leftSettingsLayout->addLayout(hLayout);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
   label = new QLabel;
   label->setObjectName("H2");
-  label->setText("Worker Instance Type");
+  label->setText("Instance Type");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_serverInstanceTypeComboBox = new QComboBox();
+  vLayout->addWidget(m_serverInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  isConnected = connect(m_serverInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
+    this, SLOT(on_serverInstanceTypeComboBox(const QString &)));
+  OS_ASSERT(isConnected); 
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("CPU Count");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_serverCpuCountLabel = new QLabel;
+  vLayout->addWidget(m_serverCpuCountLabel,0,Qt::AlignTop | Qt::AlignLeft);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Name");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_serverNameLabel = new QLabel;
+  vLayout->addWidget(m_serverNameLabel,0,Qt::AlignTop | Qt::AlignLeft);
+
+  QSpacerItem * vSpacer = 0;
+  vSpacer = new QSpacerItem(0, 15, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  m_leftSettingsLayout->addSpacerItem(vSpacer); 
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Worker Information");
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(15);
+  m_leftSettingsLayout->addLayout(hLayout);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Instance Type");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
   m_workerInstanceTypeComboBox = new QComboBox();
-  m_leftSettingsLayout->addWidget(m_workerInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
-  
+  vLayout->addWidget(m_workerInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  isConnected = connect(m_workerInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
+    this, SLOT(on_workerInstanceTypeComboBox(const QString &)));
+  OS_ASSERT(isConnected); 
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("CPU Count");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_workerCpuCountLabel = new QLabel;
+  vLayout->addWidget(m_workerCpuCountLabel,0,Qt::AlignTop | Qt::AlignLeft);
+
+  vLayout = new QVBoxLayout;
+  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Name");
+  vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_workerNameLabel = new QLabel;
+  vLayout->addWidget(m_workerNameLabel,0,Qt::AlignTop | Qt::AlignLeft);
+
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Number of Worker Instances");
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_numberOfWorkerInstancesLineEdit = new QLineEdit();
-  m_numberOfWorkerInstancesLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftSettingsLayout->addWidget(m_numberOfWorkerInstancesLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   QValidator *numberOfWorkerInstancesValidator = new QIntValidator(1, 19, this);
   m_numberOfWorkerInstancesLineEdit->setValidator(numberOfWorkerInstancesValidator);
@@ -977,5 +1105,21 @@ void AmazonProviderWidget::saveData()
 }
 
 //***** SLOTS *****
+
+void AmazonProviderWidget::on_serverInstanceTypeComboBox(const QString & text)
+{
+  QString temp;
+
+  m_serverNameLabel->setText(AWSProvider::getServerPrettyName(text.toStdString()).c_str());
+  m_serverCpuCountLabel->setText(temp.setNum(AWSProvider::getServerProcessorCount(text.toStdString())));
+}
+
+void AmazonProviderWidget::on_workerInstanceTypeComboBox(const QString & text)
+{
+  QString temp;
+
+  m_workerNameLabel->setText(AWSProvider::getWorkerPrettyName(text.toStdString()).c_str());
+  m_workerCpuCountLabel->setText(temp.setNum(AWSProvider::getWorkerProcessorCount(text.toStdString())));
+}
 
 } // openstudio

@@ -24,6 +24,8 @@
 #include "RunTabController.hpp"
 #include "RunView.hpp"
 
+#include <project/ProjectDatabase.hpp>
+#include <analysisdriver/CloudAnalysisDriver.hpp>
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
@@ -309,7 +311,18 @@ void CloudMonitor::onStartCloudWorkerComplete()
   {
     setStatus(CLOUD_ERROR);
 
-    QString error("Unknown error starting cloud.");
+    QString error;
+    if( m_startCloudWorker->errors().size() )
+    {
+      QString errorMsg = toQString(m_startCloudWorker->errors()[0]);
+      if (errorMsg == "InvalidAMIID.NotFound")
+      {
+        errorMsg = "AMI not found";
+      }
+      error = "Error starting cloud: " + errorMsg + ".  Check for any unintentionally running instances using AWS console and terminate them to avoid charges.";
+    } else {
+      error = "Unknown error starting cloud.  Check for any unintentionally running instances using AWS console and terminate them to avoid charges.";
+    }
     
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Error", error);
 
@@ -397,10 +410,36 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
   if( m_reconnectCloudWorker->cloudServiceRunning() )
   {
     setStatus(CLOUD_RUNNING);
+
+    if( m_reconnectCloudWorker->projectIsOnCloud() )
+    {
+      boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+
+      if( project )
+      {
+        boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+
+        if( cloudAnalysisDriver )
+        {
+          cloudAnalysisDriver->requestRun();
+        }
+      }
+    }
   }
   else if( settings && session )
   {
     setStatus(CLOUD_ERROR);
+
+    LostCloudConnectionDialog dialog(m_reconnectCloudWorker->internetAvailable(),
+                                     m_reconnectCloudWorker->authenticated(),
+                                     m_reconnectCloudWorker->cloudRunning());
+
+    dialog.exec();
+
+    if( dialog.clearCloudSession() )
+    {
+      stopCloud();
+    }
   }
   else
   {
@@ -638,14 +677,14 @@ void StartCloudWorker::startWorking()
 
   m_validCredentials = provider->validateCredentials();
 
-  if( ! m_validCredentials )
+  if( ! m_error && ! m_validCredentials )
   {
     m_error = true;
   }
 
   m_resourcesAvailableToStart = provider->resourcesAvailableToStart();
 
-  if( ! m_resourcesAvailableToStart )
+  if( ! m_error && ! m_resourcesAvailableToStart )
   {
     m_error = true;
   }
@@ -703,6 +742,9 @@ void StartCloudWorker::startWorking()
   }
   else
   {
+    m_errors = provider->errors();
+    m_warnings = provider->warnings();
+
     if( provider->requestTerminate() )
     {
       provider->waitForTerminated();
@@ -730,6 +772,16 @@ bool StartCloudWorker::resourcesAvailableToStart() const
 bool StartCloudWorker::error() const
 {
   return m_error;
+}
+
+std::vector<std::string> StartCloudWorker::errors() const
+{
+  return m_errors;
+}
+
+std::vector<std::string> StartCloudWorker::warnings() const
+{
+  return m_warnings;
 }
 
 StopCloudWorker::StopCloudWorker(CloudMonitor * monitor)
@@ -764,7 +816,36 @@ void ReconnectCloudWorker::startWorking()
 {
   m_cloudServiceRunning = detail::checkCloudServiceRunning();
 
-  if( ! m_cloudServiceRunning )
+  m_projectIsOnCloud = false;
+
+  if( m_cloudServiceRunning )
+  {
+    // It would be better to put this code related to running analysis somewhere outside of CloudMonitor
+    // or bring all of the "run" code into cloud monitor.  This is a convenience to save time.
+    // Consider a RunMonitor counterpart to CloudMonitor.
+    boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+    if( session)
+    {
+      boost::optional<Url> serverUrl = session->serverUrl();
+      if (serverUrl)
+      {
+        OSServer server(serverUrl.get());
+
+        std::vector<UUID> projectIDs = server.projectUUIDs(10000);
+
+        if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+        {
+          std::vector<UUID>::iterator it;
+          it = std::find(projectIDs.begin(),projectIDs.end(),project->projectDatabase().handle());
+          if( it != projectIDs.end() )
+          {
+            m_projectIsOnCloud = true;
+          }
+        }
+      }
+    }
+  }
+  else
   {
     m_cloudRunning = detail::checkCloudRunning();
     m_authenticated = detail::checkAuthenticated();
@@ -772,6 +853,11 @@ void ReconnectCloudWorker::startWorking()
   }
 
   emit doneWorking();
+}
+
+bool ReconnectCloudWorker::projectIsOnCloud() const
+{
+  return m_projectIsOnCloud;
 }
 
 bool ReconnectCloudWorker::internetAvailable() const

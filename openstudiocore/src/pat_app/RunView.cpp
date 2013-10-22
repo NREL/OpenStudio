@@ -561,18 +561,10 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_warnings(0),
   m_errors(0),
   m_download(0),
-  m_clear(0)
+  m_clear(0),
+  m_updateRequested(false)
 {
   setFixedHeight(30);
-
-  bool isConnected = false;
-
-  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
-  isConnected = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus&)), this, SLOT(update()));
-  OS_ASSERT(isConnected);
-
-  isConnected = m_dataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
-  OS_ASSERT(isConnected);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
@@ -613,6 +605,7 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_download->setFixedSize(QSize(18,18));
   mainHLayout->addWidget(m_download);
 
+  bool isConnected;
   isConnected = connect(m_download,SIGNAL(clicked(bool)),
                         this,SLOT(on_downloadClicked(bool)));
   OS_ASSERT(isConnected);
@@ -642,8 +635,18 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   update();
 }
 
+void DataPointRunHeaderView::requestUpdate()
+{
+  if (!m_updateRequested){
+    m_updateRequested = true;
+    QTimer::singleShot(0, this, SLOT(update()));
+  }
+}
+
 void DataPointRunHeaderView::update()
 {
+  m_updateRequested = false;
+
   boost::optional<openstudio::runmanager::Job> topLevelJob = m_dataPoint.topLevelJob();
 
   boost::optional<openstudio::DateTime> lastRunTime;
@@ -652,6 +655,12 @@ void DataPointRunHeaderView::update()
   unsigned numErrors(0);
   if (topLevelJob){
     lastRunTime = topLevelJob->startTime();
+
+    // if running remotely we may not know startTime, use end time
+    if (topLevelJob->externallyManaged() && !lastRunTime){
+      lastRunTime = topLevelJob->lastRun();
+    }
+
     openstudio::runmanager::JobErrors treeErrors = topLevelJob->treeErrors();
     numNAs = treeErrors.numNAs;
     numErrors = treeErrors.errors().size();
@@ -679,6 +688,13 @@ void DataPointRunHeaderView::update()
   m_errors->setText(QString::number(numErrors) + QString(numErrors == 1 ? " Error" : " Errors"));
   m_errors->setStyleSheet(errorsStyle);
 
+  QString lastRunTimeString;
+  if(lastRunTime){
+    lastRunTimeString = toQString(lastRunTime->toString());
+  }else{
+    lastRunTimeString = "Not Started";
+  }
+
   QString status;
   QString statusStyle;
   if (m_dataPoint.isComplete()){
@@ -691,8 +707,24 @@ void DataPointRunHeaderView::update()
     }
   }else{
     if (topLevelJob){
+      
+      runmanager::TreeStatusEnum treeStatus = topLevelJob->treeStatus();
       status = toQString(topLevelJob->treeStatus().valueDescription());
       statusStyle = "";
+
+      if (topLevelJob->externallyManaged() && (treeStatus == runmanager::TreeStatusEnum::Waiting)){
+        runmanager::AdvancedStatus advancedStatus = topLevelJob->status();
+        if (advancedStatus.value() == runmanager::AdvancedStatusEnum::Processing){
+          status = "Running";
+        }else if (advancedStatus.value() == runmanager::AdvancedStatusEnum::CopyingResultFiles){
+          status = "Downloading";
+        }else if (advancedStatus.value() == runmanager::AdvancedStatusEnum::Queuing){
+          status = "Waiting";
+        }
+        if(!lastRunTime){
+          lastRunTimeString = "Running Remotely";
+        }
+      }
     }else{
       status = "Not Started";
       statusStyle = "";
@@ -700,13 +732,9 @@ void DataPointRunHeaderView::update()
   }
 
   m_name->setText(toQString(m_dataPoint.name()));
-  if(lastRunTime){
-    m_lastRunTime->setText(toQString(lastRunTime->toString()));
-  }else{
-    m_lastRunTime->setText(QString("Not Started"));
-  }
   m_status->setText(status);
   m_status->setStyleSheet(statusStyle);
+  m_lastRunTime->setText(lastRunTimeString);
 
   QString style;
 
@@ -870,13 +898,29 @@ DataPointRunContentView::DataPointRunContentView()
 }
 
 DataPointRunItemView::DataPointRunItemView(const openstudio::analysis::DataPoint& dataPoint)
-  : OSCollapsibleView()
+  : OSCollapsibleView(), m_dataPoint(dataPoint)
 {
   dataPointRunHeaderView = new DataPointRunHeaderView(dataPoint);
   setHeader(dataPointRunHeaderView);
  
   dataPointRunContentView = new DataPointRunContentView(); 
   setContent(dataPointRunContentView);
+
+  checkForUpdate();
+}
+
+void DataPointRunItemView::checkForUpdate()
+{
+  UUID topLevelJobUUID;
+  boost::optional<runmanager::Job> topLevelJob = m_dataPoint.topLevelJob();
+  if (topLevelJob){
+    topLevelJobUUID = topLevelJob->uuid();
+  }
+
+  if (topLevelJobUUID != m_topLevelJobUUID){
+    m_topLevelJobUUID = topLevelJobUUID;
+    update();
+  }
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -924,7 +968,8 @@ void DataPointJobHeaderView::setName(const std::string& name)
 void DataPointJobHeaderView::setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime)
 {
   if (lastRunTime){
-    m_lastRunTime->setText(toQString(lastRunTime->toString()));
+    std::string s = lastRunTime->toString();
+    m_lastRunTime->setText(toQString(s));
   }else{
     m_lastRunTime->setText("Not Started");
   }
@@ -934,7 +979,8 @@ void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedSta
 {
   if (!isCanceled)
   {
-    m_status->setText(toQString(status.toString()));
+    std::string s = status.toString();
+    m_status->setText(toQString(s));
   } else {
     m_status->setText("Canceled");
   }
@@ -1037,7 +1083,8 @@ void DataPointJobContentView::addStdErrorMessage(const std::string& message)
 
 DataPointJobItemView::DataPointJobItemView(const analysis::WorkflowStepJob& workflowStepJob)
   : OSCollapsibleView(),
-    m_workflowStepJob(workflowStepJob)
+    m_workflowStepJob(workflowStepJob),
+    m_updateRequested(false)
 {
   setStyleSheet("openstudio--pat--DataPointJobItemView { background: #C3C3C3; margin-left:10px; }");
 
@@ -1058,8 +1105,18 @@ void DataPointJobItemView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+void DataPointJobItemView::requestUpdate()
+{
+  if (!m_updateRequested){
+    m_updateRequested = true;
+    QTimer::singleShot(0, this, SLOT(update()));
+  }
+}
+
 void DataPointJobItemView::update()
 {
+  m_updateRequested = false;
+
   if (m_workflowStepJob.measure) {
     dataPointJobHeaderView->setName(m_workflowStepJob.measure->name());
   }

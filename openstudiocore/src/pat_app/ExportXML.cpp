@@ -114,7 +114,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   //simulation_software
   QDomElement softwareElem = doc.createElement("simulation_software");
   analysisElem.appendChild(softwareElem);
-  QString softwareName = toQString("OpenStudio");
+  QString softwareName = QString("OpenStudio");
   softwareElem.appendChild(doc.createTextNode(softwareName));
 
   //get the problem from the project
@@ -684,26 +684,30 @@ boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
   //checks
   QDomElement checksElem = doc.createElement("checks");
   Q_FOREACH( const Attribute & checkAttr, checksAttr.valueAsAttributeVector()) {
-    Q_FOREACH( const Attribute & checkValAttr, checksAttr.valueAsAttributeVector()) {
-      if ( checkValAttr.name() == "name" ) {
-        QDomElement elem = doc.createElement("name");
-        checksElem.appendChild(elem);
-        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString())));
-      }
-      if ( checkValAttr.name() == "description" ) {
-        QDomElement elem = doc.createElement("description");
-        checksElem.appendChild(elem); 
-        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
-      }
-      if ( checkValAttr.name() == "category" ) {
-        QDomElement elem = doc.createElement("category");
-        checksElem.appendChild(elem); 
-        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
-      }
-      if ( checkValAttr.name() == "flag" ) {
-        QDomElement elem = doc.createElement("flag");
-        checksElem.appendChild(elem); 
-        elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
+    if ( checkAttr.name() == "check" ) {
+      QDomElement checkElem = doc.createElement("check");
+      checksElem.appendChild(checkElem);
+      Q_FOREACH( const Attribute & checkValAttr, checkAttr.valueAsAttributeVector()) {
+        if ( checkValAttr.name() == "name" ) {
+          QDomElement elem = doc.createElement("name");
+          checkElem.appendChild(elem);
+          elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString())));
+        }
+        if ( checkValAttr.name() == "description" ) {
+          QDomElement elem = doc.createElement("description");
+          checkElem.appendChild(elem); 
+          elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
+        }
+        if ( checkValAttr.name() == "category" ) {
+          QDomElement elem = doc.createElement("category");
+          checkElem.appendChild(elem); 
+          elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
+        }
+        if ( checkValAttr.name() == "flag" ) {
+          QDomElement elem = doc.createElement("flag");
+          checkElem.appendChild(elem); 
+          elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
+        }
       }
     }
   }

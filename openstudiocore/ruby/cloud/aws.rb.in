@@ -35,7 +35,7 @@
 #
 ######################################################################
 
-require 'aws'
+require 'aws-sdk'
 require 'json'
 require 'logger'
 require 'net/http'
@@ -91,11 +91,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-4f1e4e26'
+@server_image_id = 'ami-1b376a72'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-111e4e78'
+  @worker_image_id = 'ami-a30b56ca'
 else
-  @worker_image_id = 'ami-351e4e5c'
+  @worker_image_id = 'ami-970b56fe'
 end
 
 def create_struct(instance, procs)
@@ -107,7 +107,7 @@ def find_processors(instance)
   processors = 1
   case instance
     when 'cc2.8xlarge'
-      processors = 32
+      processors = 16
     when 'c1.xlarge'
       processors = 8
     when 'm2.4xlarge'
@@ -115,15 +115,15 @@ def find_processors(instance)
     when 'm2.2xlarge'
       processors = 4
     when 'm2.xlarge'
-      processors = 4
+      processors = 2
     when 'm1.xlarge'
       processors = 4
     when 'm1.large'
       processors = 2
     when 'm3.xlarge'
-      processors = 4
+      processors = 2
     when 'm3.2xlarge'
-      processors = 8
+      processors = 4
   end
 
   return processors
