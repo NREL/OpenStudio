@@ -185,6 +185,10 @@ class StartCloudWorker : public QObject
 
   bool error() const;
 
+  std::vector<std::string> errors() const;
+    
+  std::vector<std::string> warnings() const;
+
   signals:
 
   void doneWorking();
@@ -210,6 +214,10 @@ class StartCloudWorker : public QObject
   bool m_resourcesAvailableToStart;
 
   bool m_error;
+
+  std::vector<std::string> m_errors;
+
+  std::vector<std::string> m_warnings;
 };
 
 class StopCloudWorker : public QObject

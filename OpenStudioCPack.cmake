@@ -9,6 +9,8 @@ SET(FULL_VERSION_STRING ${OPENSTUDIO_VERSION}.${CMAKE_VERSION_BUILD})
 IF (CMAKE_CL_64)
   SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${FULL_VERSION_STRING}-Win64") 
   SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+ELSEIF(UNIX AND NOT APPLE AND NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+  SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${FULL_VERSION_STRING}-${CMAKE_SYSTEM_NAME}-x86")
 ElSE()
   SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${FULL_VERSION_STRING}-${CMAKE_SYSTEM_NAME}") 
 ENDIF()
@@ -26,6 +28,10 @@ SET( CPACK_PACKAGE_EXECUTABLES "OpenStudio" "OpenStudio"
    )
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance. OpenStudio is an open source project to facilitate community development, extension, and private sector adoption. It includes graphical interfaces along with a Software Development Kit (SDK).")
+
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Description.txt")
+SET(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Description.txt")
+SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/CPack.Welcome.txt")
 
 SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "OpenStudio\n ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-thread1.46.1, libboost-system1.46.1, libboost-regex1.46.1, libboost-filesystem1.46.1, libboost-date-time1.46.1, libboost-program-options1.46.1, libboost-serialization1.46.1, libqt4-sql, libqt4-network, libruby1.8, ruby1.8, ruby, libqt4-sql-sqlite, libqtgui4, libqt4-xml, libqt4-webkit")
