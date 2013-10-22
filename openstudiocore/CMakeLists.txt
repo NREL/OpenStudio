@@ -889,7 +889,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_0_0_20130628.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_1_0_20131018.pdf" DESTINATION . )
 
 ###############################################################################
 
