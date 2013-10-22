@@ -36,9 +36,11 @@ using namespace openstudio;
 
 TEST_F(ISOModelFixture, ForwardTranslator)
 {
-  //Model model = exampleModel();
+  Model model = exampleModel();
 
-  //ForwardTranslator forwardTranslator;
-  //UserModel userModel = forwardTranslator.translateModel(model);
-  //SimModel simModel = userModel.toSimModel();
+  ForwardTranslator forwardTranslator;
+  UserModel userModel = forwardTranslator.translateModel(model);
+  SimModel simModel = userModel.toSimModel();
+  ISOResults results = simModel.simulate();
+
 }
