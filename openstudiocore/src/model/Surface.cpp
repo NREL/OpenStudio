@@ -942,15 +942,25 @@ namespace detail {
     // check if either polygon overlaps itself
     try{
       boost::geometry::detail::overlay::has_self_intersections(facePolygon);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      LOG(Error, "Cannot intersect self intersecting polygon" << faceVertices);
+      return false;
+    }
+    try{
       boost::geometry::detail::overlay::has_self_intersections(otherFacePolygon);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG(Error, "Cannot intersect self intersecting polygon");
+      LOG(Error, "Cannot intersect self intersecting polygon" << otherFaceVertices);
       return false;
     }
 
     // intersect the points in face coordinates, 
     std::vector<BoostPolygon> intersectionResult;
-    boost::geometry::intersection(facePolygon, otherFacePolygon, intersectionResult);
+    try{
+      boost::geometry::intersection(facePolygon, otherFacePolygon, intersectionResult);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      LOG(Error, "overlay_invalid_input_exception");
+      return false;
+    }
 
     // check if intersection is empty
     if (intersectionResult.empty()){
@@ -961,13 +971,13 @@ namespace detail {
     // could match here but will save that for other discrete operation
 
     // sort intersections by size, biggest first
-    std::sort(intersectionResult.begin(), intersectionResult.end(), BoostPolygonAreaGreater());
     if (intersectionResult.size() > 1){
+      std::sort(intersectionResult.begin(), intersectionResult.end(), BoostPolygonAreaGreater());
       BOOST_FOREACH(BoostPolygon p, intersectionResult){
         std::vector<Point3d> testVertices = verticesFromBoostPolygon(p);
         boost::optional<double> testArea = getArea(testVertices);
         if (testArea){
-          LOG(Info, "Area: " << *testArea);
+          LOG(Debug, "Area: " << *testArea);
         }
       }
     }
@@ -980,6 +990,12 @@ namespace detail {
       return false;
     }else if (*testArea < tol*tol){
       LOG(Info, "Ignoring very small intersection of " << *testArea << "m^2");
+      return false;
+    }
+    try{
+      boost::geometry::detail::overlay::has_self_intersections(intersectionResult[0]);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      LOG(Error, "Ignoring self intersecting polygon in intersection");
       return false;
     }
 
@@ -1014,6 +1030,12 @@ namespace detail {
         return false;
       }else if (*intersectionArea < tol*tol){
         LOG(Info, "Ignoring very small intersection of " << *intersectionArea << "m^2");
+        continue;
+      }
+      try{
+        boost::geometry::detail::overlay::has_self_intersections(intersectionResult[i]);
+      }catch(const boost::geometry::overlay_invalid_input_exception&){
+        LOG(Error, "Ignoring self intersecting polygon in intersection");
         continue;
       }
 
@@ -1064,6 +1086,12 @@ namespace detail {
           LOG(Info, "Ignoring very small difference of " << *faceDifferenceArea << "m^2");
           continue;
         }
+        try{
+          boost::geometry::detail::overlay::has_self_intersections(faceDifferenceResult[i]);
+        }catch(const boost::geometry::overlay_invalid_input_exception&){
+          LOG(Error, "Ignoring self intersecting polygon in difference");
+          continue;
+        }
 
         // new surface in this space
         std::vector<Point3d> newBuildingVertices = faceTransformation * faceDifferenceVertices;
@@ -1101,6 +1129,12 @@ namespace detail {
           return false;
         }else if (*faceDifferenceArea < tol*tol){
           LOG(Info, "Ignoring very small difference of " << *faceDifferenceArea << "m^2");
+          continue;
+        }
+        try{
+          boost::geometry::detail::overlay::has_self_intersections(otherFaceDifferenceResult[i]);
+        }catch(const boost::geometry::overlay_invalid_input_exception&){
+          LOG(Error, "Ignoring self intersecting polygon in difference");
           continue;
         }
 

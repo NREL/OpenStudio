@@ -2114,6 +2114,35 @@ namespace detail {
     }
   }
 
+  void Space_Impl::intersectSurfaces(Space& other)
+  {
+    if (this->handle() == other.handle()){
+      return;
+    }
+
+    std::vector<Surface> surfaces = this->surfaces();
+    std::vector<Surface> otherSurfaces = other.surfaces();
+    unsigned numberSurfaces = surfaces.size() + otherSurfaces.size(); 
+
+    unsigned lastNumberSurfaces = 0;
+    while(numberSurfaces != lastNumberSurfaces){
+
+      lastNumberSurfaces = numberSurfaces;
+     
+      BOOST_FOREACH(Surface surface, surfaces){
+        BOOST_FOREACH(Surface otherSurface, otherSurfaces){
+          // number of surfaces in each space will only increase in intersect
+          surface.intersect(otherSurface);
+        }
+      }
+
+      surfaces = this->surfaces();
+      otherSurfaces = other.surfaces();
+      numberSurfaces = surfaces.size() + otherSurfaces.size();
+    }
+
+  }
+
   std::vector<Surface> Space_Impl::findSurfaces(boost::optional<double> minDegreesFromNorth,
                                                 boost::optional<double> maxDegreesFromNorth,
                                                 boost::optional<double> minDegreesTilt,
@@ -3089,6 +3118,10 @@ void Space::unmatchSurfaces() {
 
 void Space::matchSurfaces(Space& space) {
   getImpl<detail::Space_Impl>()->matchSurfaces(space);
+}
+
+void Space::intersectSurfaces(Space& space) {
+  getImpl<detail::Space_Impl>()->intersectSurfaces(space);
 }
 
 std::vector <Surface> Space::findSurfaces(boost::optional<double> minDegreesFromNorth,

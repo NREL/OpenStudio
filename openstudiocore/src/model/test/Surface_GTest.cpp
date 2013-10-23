@@ -1961,7 +1961,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameSize){
   EXPECT_EQ(1u, space2.surfaces().size());
   EXPECT_EQ(4u, surface2.vertices().size());
 
-  EXPECT_FALSE(surface1.intersect(surface2));
+  EXPECT_TRUE(surface1.intersect(surface2));
 
   EXPECT_EQ(1u, space1.surfaces().size());
   EXPECT_EQ(4u, surface1.vertices().size());
