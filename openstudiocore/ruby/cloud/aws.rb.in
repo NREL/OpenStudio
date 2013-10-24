@@ -91,11 +91,19 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-bf500cd6'
-if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-37a2fe5e'
+resp = Net::HTTP.get_response('developer.nrel.gov','/downloads/buildings/openstudio/rsrc/amis.json')
+if resp.code == '200'
+  result = JSON.parse(resp.body)
+  version = result.has_key?(OPENSTUDIO_VERSION) ? OPENSTUDIO_VERSION : 'default'
+
+  @server_image_id = result[version]['server']
+  if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
+    @worker_image_id = result[version]['cc2worker']
+  else
+    @worker_image_id = result[version]['worker']
+  end
 else
-  @worker_image_id = 'ami-2bdc8042'
+  error(resp.code, 'Unable to download AMI IDs')
 end
 
 def create_struct(instance, procs)
