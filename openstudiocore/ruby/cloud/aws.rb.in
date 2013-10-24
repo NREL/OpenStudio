@@ -93,9 +93,9 @@ end
 
 @server_image_id = 'ami-bf500cd6'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-6344180a'
+  @worker_image_id = 'ami-37a2fe5e'
 else
-  @worker_image_id = 'ami-6d461a04'
+  @worker_image_id = 'ami-2bdc8042'
 end
 
 def create_struct(instance, procs)
