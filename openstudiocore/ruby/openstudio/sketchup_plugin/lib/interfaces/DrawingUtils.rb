@@ -29,6 +29,7 @@ module DrawingUtils
   # Tries to match a face to a base face.
   def DrawingUtils.detect_base_face(face)
     base_face = nil
+    face_normal = face.normal
     face_points = face.full_polygon.reduce.points
 
     for child_entity in face.all_connected
@@ -36,7 +37,7 @@ module DrawingUtils
         # Eliminate faces that are not parallel.
         # Another test would be to check if both are in the same plane.
         # There are some precision issues with 'face.plane' however.
-        if (child_entity.normal.parallel?(face.normal))
+        if (child_entity.normal.parallel?(face_normal))
           # Detect if the vertices of the entity are a subset of this face.
           if (face_points.is_subset_of?(child_entity.full_polygon.reduce.points))
             base_face = child_entity
