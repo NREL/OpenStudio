@@ -82,8 +82,8 @@ namespace detail {
     virtual unsigned inletPort();
 
     virtual unsigned outletPort();
-	
-	virtual bool addToNode(Node& node);
+
+    virtual bool addToNode(Node& node);
 
     virtual std::vector<openstudio::IdfObject> remove();
 

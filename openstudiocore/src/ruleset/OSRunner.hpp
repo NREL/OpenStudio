@@ -208,7 +208,7 @@ class RULESET_API OSRunner {
   boost::optional<openstudio::WorkspaceObject> getOptionalWorkspaceObjectChoiceValue(
       const std::string& argument_name,
       const std::map<std::string,OSArgument>& user_arguments, 
-	  const openstudio::Workspace& workspace);
+      const openstudio::Workspace& workspace);
 
   //@}
 

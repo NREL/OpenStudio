@@ -53,7 +53,7 @@ class ANALYSIS_API GeometricDistribution : public UncertaintyDescription {
   /** @name Setters */
   //@{
 
-	/** Value needs to be between 0 and 1. */
+  /** Value needs to be between 0 and 1. */
   bool setProbabilityPerTrial(double value);
 
   //@}

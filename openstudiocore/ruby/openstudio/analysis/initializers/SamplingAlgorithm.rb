@@ -35,8 +35,8 @@ class Sampling < DakotaInitializer
     result << "        sampling,\n"
     result << "          samples = 4\n"
     #result << "          response_levels = 0.1 0.2 0.6\n"
-		result << "          sample_type = lhs\n"
-		#result << "          distribution cumulative\n"
+    result << "          sample_type = lhs\n"
+    #result << "          distribution cumulative\n"
     #result << "          seed = 98765 rng rnum2\n\n"
     return result
   end  
@@ -44,7 +44,7 @@ class Sampling < DakotaInitializer
   def in_file_variables()
     result = String.new
     result << "variables,\n"
-		result << "        uniform_uncertain = " + @problem.nx.to_s + "\n"
+    result << "        uniform_uncertain = " + @problem.nx.to_s + "\n"
     if not @problem.x0.empty?
       result << "          initial_point "
       for i in 1..@problem.x0.size()

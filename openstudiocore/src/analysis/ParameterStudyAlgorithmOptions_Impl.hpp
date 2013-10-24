@@ -47,7 +47,7 @@ namespace detail {
      *  <li>multidim_parameter_study requires partitions.
      *  </ul>*/
     ParameterStudyAlgorithmOptions_Impl(const ParameterStudyAlgorithmType& algorithmType);
-	
+
     /** Constructor provided for deserialization; not for general use. */
     ParameterStudyAlgorithmOptions_Impl(const ParameterStudyAlgorithmType& algorithmType,
                                         const std::vector<Attribute>& options);

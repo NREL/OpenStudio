@@ -261,15 +261,15 @@ namespace sdd {
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHoliday(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
-		//<Name>Thanksgiving Day</Name>
-		//<SpecMthd>Fourth</SpecMthd>
-		//<DayOfWeek>Thursday</DayOfWeek>
-		//<Month>November</Month>
+    //<Name>Thanksgiving Day</Name>
+    //<SpecMthd>Fourth</SpecMthd>
+    //<DayOfWeek>Thursday</DayOfWeek>
+    //<Month>November</Month>
 
-		//<Name>Christmas Day</Name>
-		//<SpecMthd>Date</SpecMthd>
-		//<Month>December</Month>
-		//<Day>25</Day>
+    //<Name>Christmas Day</Name>
+    //<SpecMthd>Date</SpecMthd>
+    //<Month>December</Month>
+    //<Day>25</Day>
 
     boost::optional<openstudio::model::ModelObject> result;
 

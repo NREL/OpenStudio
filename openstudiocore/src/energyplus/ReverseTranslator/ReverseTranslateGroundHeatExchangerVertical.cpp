@@ -35,123 +35,123 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateGroundHeatExchangerVertical( const WorkspaceObject & workspaceObject )
 {
-	if( workspaceObject.iddObject().type() != IddObjectType::GroundHeatExchanger_Vertical ){
-		LOG(Error, "WorkspaceObject is not IddObjectType: GroundHeatExchanger:Vertical");
-		return boost::none;
-	}
+  if( workspaceObject.iddObject().type() != IddObjectType::GroundHeatExchanger_Vertical ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: GroundHeatExchanger:Vertical");
+    return boost::none;
+  }
 
-	GroundHeatExchangerVertical ghex = GroundHeatExchangerVertical( m_model );
+  GroundHeatExchangerVertical ghex = GroundHeatExchangerVertical( m_model );
 
-	boost::optional<double> d;
-	boost::optional<std::string> s = workspaceObject.getString(GroundHeatExchanger_VerticalFields::Name);
+  boost::optional<double> d;
+  boost::optional<std::string> s = workspaceObject.getString(GroundHeatExchanger_VerticalFields::Name);
 
-	if (s) {
-	  ghex.setName(s.get());
-	}
+  if (s) {
+    ghex.setName(s.get());
+  }
 
-	//TODO: Need to address Inlet Node Name and Outlet Node Name somehow, probably with PlantLoop.
+  //TODO: Need to address Inlet Node Name and Outlet Node Name somehow, probably with PlantLoop.
 
-	//Maximum Flow Rate
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::MaximumFlowRate);
-	if (d) {
-		ghex.setMaximumFlowRate(*d);
-	}
+  //Maximum Flow Rate
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::MaximumFlowRate);
+  if (d) {
+    ghex.setMaximumFlowRate(*d);
+  }
 
-	//Number of Bore Holes
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::NumberofBoreHoles);
-	if (d) {
-		ghex.setNumberofBoreHoles(*d);
-	}
+  //Number of Bore Holes
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::NumberofBoreHoles);
+  if (d) {
+    ghex.setNumberofBoreHoles(*d);
+  }
 
-	//Bore Hole Length
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::BoreHoleLength);
-	if (d) {
-		ghex.setBoreHoleLength(*d);
-	}
+  //Bore Hole Length
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::BoreHoleLength);
+  if (d) {
+    ghex.setBoreHoleLength(*d);
+  }
 
-	//Bore Hole Radius
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::BoreHoleRadius);
-	if (d) {
-		ghex.setBoreHoleRadius(*d);
-	}
+  //Bore Hole Radius
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::BoreHoleRadius);
+  if (d) {
+    ghex.setBoreHoleRadius(*d);
+  }
 
-	//Ground Thermal Conductivity
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroundThermalConductivity);
-	if (d) {
-		ghex.setGroundThermalConductivity(*d);
-	}
+  //Ground Thermal Conductivity
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroundThermalConductivity);
+  if (d) {
+    ghex.setGroundThermalConductivity(*d);
+  }
 
-	//Ground Thermal Heat Capacity
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroundThermalHeatCapacity);
-	if (d) {
-		ghex.setGroundThermalHeatCapacity(*d);
-	}
+  //Ground Thermal Heat Capacity
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroundThermalHeatCapacity);
+  if (d) {
+    ghex.setGroundThermalHeatCapacity(*d);
+  }
 
-	//Ground Temperature
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroundTemperature);
-	if (d) {
-		ghex.setGroundTemperature(*d);
-	}
+  //Ground Temperature
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroundTemperature);
+  if (d) {
+    ghex.setGroundTemperature(*d);
+  }
 
-	//Design Flow Rate
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::DesignFlowRate);
-	if (d) {
-		ghex.setDesignFlowRate(*d);
-	}
+  //Design Flow Rate
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::DesignFlowRate);
+  if (d) {
+    ghex.setDesignFlowRate(*d);
+  }
 
-	//Grout Thermal Conductivity
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroutThermalConductivity);
-	if (d) {
-		ghex.setGroutThermalConductivity(*d);
-	}
+  //Grout Thermal Conductivity
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GroutThermalConductivity);
+  if (d) {
+      ghex.setGroutThermalConductivity(*d);
+  }
 
-	//Pipe Thermal Conductivity
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::PipeThermalConductivity);
-	if (d) {
-		ghex.setPipeThermalConductivity(*d);
-	}
+  //Pipe Thermal Conductivity
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::PipeThermalConductivity);
+  if (d) {
+    ghex.setPipeThermalConductivity(*d);
+  }
 
-	//Pipe Out Diameter
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::PipeOutDiameter);
-	if (d) {
-		ghex.setPipeOutDiameter(*d);
-	}
+  //Pipe Out Diameter
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::PipeOutDiameter);
+  if (d) {
+    ghex.setPipeOutDiameter(*d);
+  }
 
-	//U-Tube Distance
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::UTubeDistance);
-	if (d) {
-		ghex.setUTubeDistance(*d);
-	}
+  //U-Tube Distance
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::UTubeDistance);
+  if (d) {
+    ghex.setUTubeDistance(*d);
+  }
 
-	//Pipe Thickness
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::PipeThickness);
-	if (d) {
-		ghex.setPipeThickness(*d);
-	}
+  //Pipe Thickness
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::PipeThickness);
+  if (d) {
+    ghex.setPipeThickness(*d);
+  }
 
-	//Maximum Length of Simulation
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::MaximumLengthofSimulation);
-	if (d) {
-		ghex.setMaximumLengthofSimulation(*d);
-	}
+  //Maximum Length of Simulation
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::MaximumLengthofSimulation);
+  if (d) {
+    ghex.setMaximumLengthofSimulation(*d);
+  }
 
-	//G-Function Reference Ratio
-	d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio);
-	if (d) {
-		ghex.setGFunctionReferenceRatio(*d);
-	}
+  //G-Function Reference Ratio
+  d = workspaceObject.getDouble(GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio);
+  if (d) {
+    ghex.setGFunctionReferenceRatio(*d);
+  }
 
-	std::vector<IdfExtensibleGroup> groups = workspaceObject.extensibleGroups();
-	ghex.removeAllGFunctions();
+  std::vector<IdfExtensibleGroup> groups = workspaceObject.extensibleGroups();
+  ghex.removeAllGFunctions();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         it++ )
-    {
-    	ghex.pushExtensibleGroup(it->fields());
-    }
+  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
+       it != groups.end();
+       it++ )
+  {
+    ghex.pushExtensibleGroup(it->fields());
+  }
 
-    return ghex;
+  return ghex;
 }
 
 } // energyplus

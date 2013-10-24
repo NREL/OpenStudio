@@ -98,15 +98,15 @@ namespace detail {
     return result;
   }
   
-		unsigned CoilHeatingLowTempRadiantVarFlow_Impl::inletPort()
-		{
-				return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName;
-		}
+  unsigned CoilHeatingLowTempRadiantVarFlow_Impl::inletPort()
+  {
+    return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName;
+  }
 
   unsigned CoilHeatingLowTempRadiantVarFlow_Impl::outletPort()
-		{
-				return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName;
-		}
+  {
+    return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName;
+  }
 
   boost::optional<ZoneHVACComponent> CoilHeatingLowTempRadiantVarFlow_Impl::containingZoneHVACComponent() const
   {
@@ -257,7 +257,7 @@ namespace detail {
 } // detail
 
 CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(const Model& model,Schedule& heatingControlTemperature)
-																																																																			
+
   : StraightComponent(CoilHeatingLowTempRadiantVarFlow::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>());

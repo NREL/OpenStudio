@@ -358,7 +358,7 @@ boost::optional<int> LifeCycleCost_Impl::costedQuantity() const
 
   }else if (modelObject.optionalCast<PlantLoop>()){
     result = 1;
-	
+
   }else if (modelObject.optionalCast<HVACComponent>()){
     result = 1;
 

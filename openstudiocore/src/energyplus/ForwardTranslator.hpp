@@ -607,7 +607,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
 
   // helper method used by ForwardTranslatePlantLoop
-  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects,	model::PlantLoop & plantLoop);
+  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::PlantLoop & plantLoop);
 
   // translate all constructions
   void translateConstructions(const model::Model & model);
