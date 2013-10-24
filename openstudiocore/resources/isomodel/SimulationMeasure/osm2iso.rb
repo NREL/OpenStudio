@@ -974,6 +974,8 @@ if not model.getSpaceInfiltrationEffectiveLeakageAreas.empty?
 	infiltration.each do |infil|
 		# set default average envelope air leakage (infiltration) as 7 m3/h/m2 which is about the EnergyPlus defaults
 		logfile.puts "EffectiveLeakageArea not Implemented Yet, Infiltration Rate Set to 7.0 m3/m2/h @ 75 Pa"
+                
+                # JMT this line doesn't make any sense, why is it here?
 		infiltration_rate = 7.0		
 	end
 elsif not model.getSpaceInfiltrationDesignFlowRates.empty?
