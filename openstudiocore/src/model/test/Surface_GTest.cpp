@@ -2612,6 +2612,84 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
   EXPECT_EQ(surface2.handle(), surface1.adjacentSurface()->handle());
 }
 
+TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+  Space space3(model);
+  Space space4(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(33.5280021336, -29.717998476, 91.44));
+  points1.push_back(Point3d(33.5280021336, -29.717998476, 86.868));
+  points1.push_back(Point3d(33.5280021336, 29.718001524, 86.868));
+  points1.push_back(Point3d(33.5280021336, 29.718001524, 91.44));
+  Surface surface1(points1, model);
+  surface1.setName("Surface 1292");
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
+  EXPECT_EQ("Wall", surface1.surfaceType());
+  EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface1.sunExposure());
+  EXPECT_EQ("WindExposed", surface1.windExposure());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(33.5280021336, -29.717998476, 96.012));
+  points2.push_back(Point3d(33.5280021336, -29.717998476, 91.44));
+  points2.push_back(Point3d(33.5280021336, 29.718001524, 91.44));
+  points2.push_back(Point3d(33.5280021336, 29.718001524, 96.012));
+  Surface surface2(points2, model);
+  surface2.setName("Surface 1358");
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
+  EXPECT_EQ("Wall", surface2.surfaceType());
+  EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface2.sunExposure());
+  EXPECT_EQ("WindExposed", surface2.windExposure());
+
+  Point3dVector points3;
+  points3.push_back(Point3d(33.5280021336, -29.717998476, 100.584));
+  points3.push_back(Point3d(33.5280021336, -29.717998476, 96.012));
+  points3.push_back(Point3d(33.5280021336, 29.718001524, 96.012));
+  points3.push_back(Point3d(33.5280021336, 29.718001524, 100.584));
+  Surface surface3(points3, model);
+  surface3.setName("Surface 1424");
+  surface3.setSpace(space3);
+  double surface3Area = surface3.grossArea();
+  EXPECT_GT(surface3Area,0.0);
+  EXPECT_EQ("Wall", surface3.surfaceType());
+  EXPECT_EQ("Outdoors", surface3.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface3.sunExposure());
+  EXPECT_EQ("WindExposed", surface3.windExposure());
+
+  Point3dVector points4;
+  points4.push_back(Point3d(28.9560021336, -25.145998476, 96.012));
+  points4.push_back(Point3d(28.9560021336, -25.145998476, 91.44));
+  points4.push_back(Point3d(28.9560021336, 25.146001524, 91.44));
+  points4.push_back(Point3d(28.9560021336, 25.146001524, 96.012));
+  Surface surface4(points4, model);
+  surface4.setName("Surface 1384");
+  surface4.setSpace(space4);
+  double surface4Area = surface4.grossArea();
+  EXPECT_GT(surface4Area,0.0);
+  EXPECT_EQ("Wall", surface4.surfaceType());
+  EXPECT_EQ("Outdoors", surface4.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface3.sunExposure());
+  EXPECT_EQ("WindExposed", surface4.windExposure());
+
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_FALSE(surface1.intersect(surface2));
+  EXPECT_FALSE(surface1.intersect(surface3));
+  EXPECT_FALSE(surface1.intersect(surface4));
+  EXPECT_FALSE(surface2.intersect(surface3));
+  EXPECT_FALSE(surface2.intersect(surface4));
+  EXPECT_FALSE(surface3.intersect(surface4));
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+}
+
 TEST_F(ModelFixture, Surface_Figure8_SameSense){
 
   Model model;
