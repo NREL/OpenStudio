@@ -138,6 +138,23 @@ public:
     }
 
     int airflowElementNrByName(STRING name) const;
+    
+    template <class T> bool replaceAirflowElement(int nr, T element)
+    {
+      if(nr>0 && nr<=m_airflowElements.size())
+      {
+        T *copy = new T;
+        *copy = element;
+        AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
+        if(pointer)
+        {
+            copy->setNr(nr);
+            m_airflowElements.replace(nr-1,QSharedPointer<AirflowElement>(pointer));
+            return true;
+        }
+      }
+      return false;
+    }
 
     VECTOR_TYPE<CvfDat> getCvfDat()
     {

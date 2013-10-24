@@ -1077,7 +1077,6 @@ bool ForwardTranslator::translateEpw(openstudio::path outpath)
 
 bool ForwardTranslator::translateEpw(openstudio::path epwpath, openstudio::path outpath)
 {
-  std::cout << openstudio::toString(epwpath) << std::endl;
   try
   {
     EpwFile epwFile(epwpath,true);
@@ -1105,23 +1104,6 @@ std::string ForwardTranslator::toString()
     return prj::Model::toString();
   return std::string();
 }
-
-
-//bool ForwardTranslator::translate(const openstudio::model::Model& model, double leakageRate, bool translateHVAC,
-//  ProgressBar *progressBar)
-//{
-  // Use the leakage rate to add new leakage paths
-  /*
-  std::map<std::string,int> afeMap;
-  afeMap["exterior"] = addAirflowElement("CustomExterior",leakageRate);
-  afeMap["roof"] = addAirflowElement("CustomRoof",leakageRate);
-  afeMap["interior"] = addAirflowElement("CustomInterior",2*leakageRate);
-  afeMap["floor"] = addAirflowElement("CustomFloor",2*leakageRate);
-
-  return translate(model, afeMap, translateHVAC, progressBar);
-  */
- // return false;
-//}
 
 bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
 {
