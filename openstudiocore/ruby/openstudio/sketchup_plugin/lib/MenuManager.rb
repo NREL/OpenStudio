@@ -227,7 +227,7 @@ module OpenStudio
             
       @export_gbxml_cmd = UI::Command.new("Export gbXML Model") { Plugin.command_manager.export_gbxml }
       @export_gbxml_cmd.set_validation_proc { enable_if_model_interface }
-	        
+            
       @export_sdd_cmd = UI::Command.new("Export SDD Model") { Plugin.command_manager.export_sdd }
       @export_sdd_cmd.set_validation_proc { enable_if_model_interface }
       
@@ -773,7 +773,7 @@ module OpenStudio
       id = @plugin_menu.add_item(@prefs_cmd)
       @plugin_menu.set_validation_proc(id) { MF_ENABLED }
       
-	  # since run is turned of we don't need to scan for tools
+      # since run is turned of we don't need to scan for tools
       # id = @plugin_menu.add_item(@scan_tools_cmd)
       # @plugin_menu.set_validation_proc(id) { MF_ENABLED }
 
@@ -794,7 +794,7 @@ module OpenStudio
       
       @plugin_menu.add_separator
       @plugin_menu.add_item(@openstudio_cmd)
-	    # turned off run in GUI but left code behind
+      # turned off run in GUI but left code behind
       # @plugin_menu.add_item(@run_cmd)
       # @plugin_menu.add_item(@resultsviewer_cmd)
       
@@ -908,7 +908,7 @@ module OpenStudio
         @user_scripts_menu.add_separator
         
         @user_script_cmds = Hash.new
-		
+        
         # add menu items for sub directories
            
       end
@@ -984,7 +984,7 @@ module OpenStudio
       @command_toolbar.add_item(@info_tool_cmd)
       @command_toolbar.add_item(@show_errors_cmd)
       @command_toolbar.add_separator
-	  # turned off run in GUI but left code behind
+      # turned off run in GUI but left code behind
       # @command_toolbar.add_item(@run_cmd)
       # @command_toolbar.add_item(@resultsviewer_cmd)
       @command_toolbar.add_item(@openstudio_cmd)

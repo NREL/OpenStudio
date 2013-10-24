@@ -154,7 +154,7 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       # parent is the containing entity except for sub surfaces
-	  
+      
       if (@parent.nil?)
         # Create a new space just for this surface.
         Plugin.log(OpenStudio::Warn, "Creating containing SurfaceGroup for PlanarSurface #{@model_object.name}")
@@ -180,14 +180,14 @@ module OpenStudio
       end
 
       containing_entity = self.containing_entity
-	  
+      
       if containing_entity.deleted?
         # how did this happen?
         Plugin.log(OpenStudio::Error, "Containing entity #{containing_entity} has been deleted, cannot create entity for PlanarSurface #{@model_object.name}")
         Plugin.log(OpenStudio::Error, "Parent = #{@parent}, parent entity = #{@parent.entity}")
         return nil
       end
-	  
+      
       group = containing_entity.drawing_interface if containing_entity
       group_had_observers = group.remove_observers if group
         

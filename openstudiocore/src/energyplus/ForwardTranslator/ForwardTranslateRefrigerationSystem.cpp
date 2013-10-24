@@ -60,43 +60,43 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   if( !cases.empty() ) //|| !walkins.empty() )
   {
-  	// Name
-  	name = " Case List";
-	refrigerationSystem.setString(Refrigeration_SystemFields::RefrigeratedCaseorWalkinorCaseAndWalkInListName, refrigerationSystem.name().get() + name);
+    // Name
+    name = " Case List";
+    refrigerationSystem.setString(Refrigeration_SystemFields::RefrigeratedCaseorWalkinorCaseAndWalkInListName, refrigerationSystem.name().get() + name);
 
-	IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
+    IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
 
-	m_idfObjects.push_back(_caseAndWalkinList);
+    m_idfObjects.push_back(_caseAndWalkinList);
 
-	_caseAndWalkinList.setName(refrigerationSystem.name().get() + name);
+    _caseAndWalkinList.setName(refrigerationSystem.name().get() + name);
 
-	for( std::vector<RefrigerationCase>::iterator it = cases.begin();
-	   it != cases.end();
-	   it++ )
-	{
-		boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
+    for( std::vector<RefrigerationCase>::iterator it = cases.begin();
+       it != cases.end();
+       it++ )
+    {
+      boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
 
-		if( _case )
-		{
-		  IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+      if( _case )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
-		}
-	}
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
+      }
+    }
 
-	/*for( std::vector<RefrigerationWalkin>::iterator it = walkins.begin();
-	   it != walkins.end();
-	   it++ )
-	{
-		boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
+    /*for( std::vector<RefrigerationWalkin>::iterator it = walkins.begin();
+       it != walkins.end();
+       it++ )
+    {
+      boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
 
-		if( _walkin )
-		{
-		  IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+      if( _walkin )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
-		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
-		}
-	}*/
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+      }
+    }*/
   }
 
 //Refrigeration Transfer Load or TransferLoad List Name
@@ -120,35 +120,35 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   if( !compressors.empty() )
   {
-  	// Name
-  	name = " Compressor List";
-  	refrigerationSystem.setString(Refrigeration_SystemFields::CompressororCompressorListName, refrigerationSystem.name().get() + name);
+    // Name
+    name = " Compressor List";
+    refrigerationSystem.setString(Refrigeration_SystemFields::CompressororCompressorListName, refrigerationSystem.name().get() + name);
 
-  	IdfObject _compressorList(IddObjectType::Refrigeration_CompressorList);
+    IdfObject _compressorList(IddObjectType::Refrigeration_CompressorList);
 
-  	m_idfObjects.push_back(_compressorList);
+    m_idfObjects.push_back(_compressorList);
 
-  	_compressorList.setName(refrigerationSystem.name().get() + name);
+    _compressorList.setName(refrigerationSystem.name().get() + name);
 
-  	for( std::vector<RefrigerationCompressor>::iterator it = compressors.begin();
-  	   it != compressors.end();
-  	   it++ )
-  	{
-  		boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
+    for( std::vector<RefrigerationCompressor>::iterator it = compressors.begin();
+       it != compressors.end();
+       it++ )
+    {
+      boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
 
-  		if( _compressor )
-  		{
-  		  IdfExtensibleGroup eg = _compressorList.pushExtensibleGroup();
+      if( _compressor )
+      {
+        IdfExtensibleGroup eg = _compressorList.pushExtensibleGroup();
 
-  		  eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
-  		}
-  	}
+        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
+      }
+    }
   }
 
 //Minimum Condensing Temperature
   d = modelObject.minimumCondensingTemperature();
   if (d) {
-  	refrigerationSystem.setDouble(Refrigeration_SystemFields::MinimumCondensingTemperature,d.get());
+    refrigerationSystem.setDouble(Refrigeration_SystemFields::MinimumCondensingTemperature,d.get());
   }
 
 //Refrigeration System Working Fluid Type
@@ -161,7 +161,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 //Suction Temperature Control Type
   s = modelObject.suctionTemperatureControlType();
   if (s) {
-  	refrigerationSystem.setString(Refrigeration_SystemFields::SuctionTemperatureControlType,s.get());
+    refrigerationSystem.setString(Refrigeration_SystemFields::SuctionTemperatureControlType,s.get());
   }
 
 //Mechanical Subcooler Name
@@ -193,7 +193,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 //Sum UA Suction Piping
   d = modelObject.sumUASuctionPiping();
   if (d) {
-  	refrigerationSystem.setDouble(Refrigeration_SystemFields::SumUASuctionPiping,d.get());
+    refrigerationSystem.setDouble(Refrigeration_SystemFields::SumUASuctionPiping,d.get());
   }
 
 //Suction Piping Zone Name
@@ -212,27 +212,27 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 //End-Use Subcategory
   s = modelObject.endUseSubcategory();
   if (s) {
-  	refrigerationSystem.setString(Refrigeration_SystemFields::EndUseSubcategory,s.get());
+    refrigerationSystem.setString(Refrigeration_SystemFields::EndUseSubcategory,s.get());
   }
 
 //Number of Compressor Stages 
   /*s = modelObject.numberofCompressorStages();
   if (s) {
-  	refrigerationSystem.setString(Refrigeration_SystemFields::NumberofCompressorStages,s.get());
+    refrigerationSystem.setString(Refrigeration_SystemFields::NumberofCompressorStages,s.get());
   }*/
   refrigerationSystem.setString(Refrigeration_SystemFields::NumberofCompressorStages,"1");
 
 //Intercooler Type 
   /*s = modelObject.intercoolerType();
   if (s) {
-  	refrigerationSystem.setString(Refrigeration_SystemFields::IntercoolerType,s.get());
+    refrigerationSystem.setString(Refrigeration_SystemFields::IntercoolerType,s.get());
   }*/
   refrigerationSystem.setString(Refrigeration_SystemFields::IntercoolerType,"None");
 
 //Shell-and-Coil Intercooler Effectiveness 
   /*d = modelObject.shellandCoilIntercoolerEffectiveness();
   if (d) {
-  	refrigerationSystem.setDouble(Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness,d.get());
+    refrigerationSystem.setDouble(Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness,d.get());
   }*/
   refrigerationSystem.setDouble(Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness,0.8);
 
@@ -241,27 +241,27 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   if( !highStageCompressorList.empty() )
   {
-	refrigerationSystem.setString(Refrigeration_SystemFields::HighStageCompressororCompressorListName, refrigerationSystem.name() + " High Stage Compressor List";
+    refrigerationSystem.setString(Refrigeration_SystemFields::HighStageCompressororCompressorListName, refrigerationSystem.name() + " High Stage Compressor List";
 
-	IdfObject _highStageCompressorListList(IddObjectType::Refrigeration_CompressorList);
+    IdfObject _highStageCompressorListList(IddObjectType::Refrigeration_CompressorList);
 
-	m_idfObjects.push_back(_highStageCompressorListList);
+    m_idfObjects.push_back(_highStageCompressorListList);
 
-	_highStageCompressorListList.setName(refrigerationSystem.name() + " High Stage Compressor List");
+    _highStageCompressorListList.setName(refrigerationSystem.name() + " High Stage Compressor List");
 
-	for( std::vector<ModelObject>::iterator it = highStageCompressorList.begin();
-	   it != highStageCompressorList.end();
-	   it++ )
-	{
-		boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
+    for( std::vector<ModelObject>::iterator it = highStageCompressorList.begin();
+       it != highStageCompressorList.end();
+       it++ )
+    {
+      boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
 
-		if( _compressor )
-		{
-		  IdfExtensibleGroup eg = _highStageCompressorListList.pushExtensibleGroup();
+      if( _compressor )
+      {
+        IdfExtensibleGroup eg = _highStageCompressorListList.pushExtensibleGroup();
 
-		  eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
-		}
-	}
+        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
+      }
+    }
   }*/
 
   return refrigerationSystem;

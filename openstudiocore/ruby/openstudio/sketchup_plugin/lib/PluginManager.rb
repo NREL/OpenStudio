@@ -371,7 +371,7 @@ module OpenStudio
       hash["Disable OpenStudio User Scripts"] = false
       hash["Unit System"] = "IP"
       hash['Warn on Idf Export'] = true
-	    hash['Warn on gbXML Export'] = true
+      hash['Warn on gbXML Export'] = true
       hash['Warn on SDD Export'] = true
       hash['Show Errors on Idf Translation'] = true
       hash['Show Warnings on Idf Translation'] = true
@@ -415,7 +415,7 @@ module OpenStudio
       write_pref("Open Dialogs", nil)
       write_pref("Text Editor Path", nil)
       write_pref("Warn on Idf Export", nil)
-	    write_pref("Warn on gbXML Export", nil)
+      write_pref("Warn on gbXML Export", nil)
       write_pref("Show Errors on Idf Translation", nil)
       write_pref("Show Warnings on Idf Translation", nil)
       write_pref("Show Errors on gbXML Translation", nil)
