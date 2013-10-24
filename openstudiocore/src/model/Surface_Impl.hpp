@@ -33,6 +33,7 @@ namespace model {
 class Space;
 class SubSurface;
 class Surface;
+class SurfaceIntersection;
 
 namespace detail {
 
@@ -239,6 +240,7 @@ namespace detail {
      *  If the surfaces are the same, returns true but no new geometry is created.
      *  Returns true if an intersection occurred. Does not set surface adjacency. */
     bool intersect(Surface& otherSurface);
+    boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
 
     /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.  
         Returns the new Surface if created. */

@@ -2122,23 +2122,69 @@ namespace detail {
 
     std::vector<Surface> surfaces = this->surfaces();
     std::vector<Surface> otherSurfaces = other.surfaces();
-    unsigned numberSurfaces = surfaces.size() + otherSurfaces.size(); 
+    
+    std::map<std::string, bool> hasSubSurfaceMap;
+    std::map<std::string, bool> hasAdjacentSurfaceMap;
+    std::set<std::string> completedIntersections;
 
-    unsigned lastNumberSurfaces = 0;
-    while(numberSurfaces != lastNumberSurfaces){
+    bool anyNewSurfaces = true;
+    while(anyNewSurfaces){
 
-      lastNumberSurfaces = numberSurfaces;
-     
+      anyNewSurfaces = false;
+      std::vector<Surface> newSurfaces;
+      std::vector<Surface> newOtherSurfaces;
+
       BOOST_FOREACH(Surface surface, surfaces){
+        std::string surfaceHandle = toString(surface.handle());
+        if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()){
+          hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
+          hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface();
+        } 
+
+        if (hasSubSurfaceMap[surfaceHandle] || hasAdjacentSurfaceMap[surfaceHandle]){
+          continue;
+        }
+
         BOOST_FOREACH(Surface otherSurface, otherSurfaces){
+          std::string otherSurfaceHandle = toString(otherSurface.handle());
+          if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()){
+            hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
+            hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface();
+          } 
+
+          if (hasSubSurfaceMap[otherSurfaceHandle] || hasAdjacentSurfaceMap[otherSurfaceHandle]){
+            continue;
+          }
+
+          // see if we have already tested these for intersection, 
+          // surfaces that previously did not intersect will not intersect if vertices change
+          // surfaces that previously did intersect will intersect exactly
+          std::string intersectionKey = surfaceHandle + otherSurfaceHandle;
+          if (completedIntersections.find(intersectionKey) != completedIntersections.end()){
+            continue;
+          }
+          completedIntersections.insert(intersectionKey);
+
           // number of surfaces in each space will only increase in intersect
-          surface.intersect(otherSurface);
+          boost::optional<SurfaceIntersection> intersection = surface.computeIntersection(otherSurface);
+          if (intersection){
+            std::vector<Surface> newSurfaces1 = intersection->newSurfaces1();
+            newSurfaces.insert(newSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
+
+            std::vector<Surface> newSurfaces2 = intersection->newSurfaces2();
+            newOtherSurfaces.insert(newOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
+          }
         }
       }
 
-      surfaces = this->surfaces();
-      otherSurfaces = other.surfaces();
-      numberSurfaces = surfaces.size() + otherSurfaces.size();
+      if (!newSurfaces.empty()){
+        surfaces.insert(surfaces.end(), newSurfaces.begin(), newSurfaces.end());
+        anyNewSurfaces = true;
+      }
+      if (!newOtherSurfaces.empty()){
+        otherSurfaces.insert(otherSurfaces.end(), newOtherSurfaces.begin(), newOtherSurfaces.end());
+        anyNewSurfaces = true;
+      }
     }
 
   }
