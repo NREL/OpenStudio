@@ -82,7 +82,7 @@ module OpenStudio
             #  This is a brand new surface or a copy that had to be cleaned.
             if (@drawing_interface.class == Space)
             
-              base_face = DrawingUtils.detect_base_face(entity)
+              base_face = DrawingUtils.detect_base_face(entity, true)
             
               if (base_face.nil?)
                 Plugin.log(OpenStudio::Info, "New Surface in Space")  
@@ -162,9 +162,9 @@ module OpenStudio
             base_face = nil
             if (@drawing_interface.class == Space)
               if (swapped)
-                base_face = DrawingUtils.detect_base_face(entity.drawing_interface.entity)
+                base_face = DrawingUtils.detect_base_face(entity.drawing_interface.entity, true)
               else
-                base_face = DrawingUtils.detect_base_face(entity)
+                base_face = DrawingUtils.detect_base_face(entity, true)
               end
             end
 
