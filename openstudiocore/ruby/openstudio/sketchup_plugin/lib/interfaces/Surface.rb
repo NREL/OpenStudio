@@ -369,6 +369,8 @@ module OpenStudio
         # Get list of children based on actual faces that share vertices with the base face.
         # This is more dynamic than looking at @children which may not be up-to-date yet.
         child_faces = []
+        
+        # DLM: detect_base_face can be expensive, do we have to search all_connected?  is there a way to cache the result of detect_base_face?
         for face in @entity.all_connected 
           if (face.class == Sketchup::Face and @entity == DrawingUtils.detect_base_face(face))
             #puts "found child face->" + face.to_s
@@ -395,6 +397,7 @@ module OpenStudio
             end
           end
 
+          # DLM: what if the door shares a vertex with another surface?
           if (not found)
             new_points << point
           end
