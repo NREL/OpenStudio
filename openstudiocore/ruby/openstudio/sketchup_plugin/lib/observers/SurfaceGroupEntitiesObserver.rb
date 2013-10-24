@@ -86,7 +86,12 @@ module OpenStudio
             
               if (base_face.nil?)
                 Plugin.log(OpenStudio::Info, "New Surface in Space")  
-                Surface.new_from_entity(entity)
+                surface = Surface.new_from_entity(entity)
+                
+                if not surface.model_object
+                  # model object was not created
+                  surface.on_delete_model_object
+                end
               else
               
                 # add a second proc to ensure that surfaces will be drawn before sub surfaces
@@ -96,7 +101,12 @@ module OpenStudio
                     Plugin.log(OpenStudio::Error, "New SubSurface in Space, no Surface found!")  
                   else
                     Plugin.log(OpenStudio::Info, "New SubSurface in Space") 
-                    SubSurface.new_from_entity(entity)
+                    subSurface = SubSurface.new_from_entity(entity)
+                    
+                    if not subSurface.model_object
+                      # model object was not created
+                      subSurface.on_delete_model_object
+                    end
                   
                     # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                     surface.on_change_entity
