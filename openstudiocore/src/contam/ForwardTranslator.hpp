@@ -25,6 +25,7 @@
 
 #include <contam/PrjModel.hpp>
 
+#include <model/Model.hpp>
 #include <utilities/idf/Handle.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Optional.hpp>
@@ -33,11 +34,9 @@
 #include <utilities/data/TimeSeries.hpp>
 #include <utilities/time/Date.hpp>
 
+
 namespace openstudio{
 class ProgressBar;
-namespace model{
-class Model;
-}
 
 namespace contam{
 
@@ -64,34 +63,34 @@ private:
 class CONTAM_API ForwardTranslator : public prj::Model
 {
 public:
-  ForwardTranslator();
-  ForwardTranslator(std::string leakageDescriptor);
-  ForwardTranslator(double flow,double n=0.65,double deltaP=75.0);
-  boost::optional<std::string> translateToString(const openstudio::model::Model& model,
-    bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"));
-  //bool translate(const openstudio::model::Model& model,bool translateHVAC=true,
-  //  std::string leakageDescriptor=std::string("Average"),ProgressBar *progressBar=0);
+  ForwardTranslator(const openstudio::model::Model& model);
+  ForwardTranslator(const openstudio::model::Model& model,std::string leakageDescriptor);
+  ForwardTranslator(const openstudio::model::Model& model,double flow,double n=0.65,double deltaP=75.0);
 
-  bool translate(const openstudio::model::Model& model,bool translateHVAC=true,ProgressBar *progressBar=0);
+  // Translators
+  boost::optional<std::string> translateToString(bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"));
+  bool translate(bool translateHVAC=true,ProgressBar *progressBar=0);
   std::string toString();
   bool toPrj(const openstudio::path& path);
   
-  //bool translate(const openstudio::model::Model& model, double leakageRate=27.1, bool translateHVAC=true, 
-  //  ProgressBar *progressBar=0);
-  
+  // Static translation function
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
-    bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"), ProgressBar* progressBar=NULL);
+    bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=NULL);
 
-  // Translation functions - need to add more of these by chopping out parts of the main translation function
-  // Some will probably need to be private, but these are not so paths can be handled correctly
-  bool translateEpw(const openstudio::model::Model& model, openstudio::path outpath);
+  // Secondary translation functions - need to add more of these by chopping out parts of the main translation function
+  bool translateEpw(openstudio::path outpath);
   bool translateEpw(openstudio::path epwpath, openstudio::path outpath);
 
   bool ready() const {return m_ready && valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
+  // Getters and setters - the setters will modify how translation is done. Setters that could fail return a boolean
+  boost::optional<std::string> airtightnessLevel() const;
   bool setAirtightnessLevel(std::string level);
+  double exteriorFlowRate() const;
+  double exteriorExponent() const;
+  double exteriorDeltaP() const;
   bool setExteriorFlowRate(double flow,double n=0.65,double deltaP=75.0);
 
   // Getters and setters
@@ -133,6 +132,8 @@ private:
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
+  void reset();
+
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
   std::map<std::string,int> m_afeMap;  // Map from descriptor ("exterior", "floor", etc.) to CONTAM airflow element index
@@ -143,9 +144,11 @@ private:
   std::map <Handle, int> m_surfaceMap;    // Surface paths stored by handle
   QMap <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
 
+  openstudio::model::Model m_model;
   CvFile m_cvf;
 
   bool m_ready;
+  boost::optional<std::string> m_leakageDescriptor;
   double m_returnSupplyRatio;
   bool m_ratioOverride;
 

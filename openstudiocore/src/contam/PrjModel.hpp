@@ -104,7 +104,7 @@ public:
         m_windPressureProfiles = windPressureProfiles;
     }
 
-    VECTOR_TYPE<PlrTest1> getPlrTest1()
+    VECTOR_TYPE<PlrTest1> getPlrTest1() const
     {
         VECTOR_TYPE<PlrTest1> afe;
         for(int i=0;i<m_airflowElements.size();i++)

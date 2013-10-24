@@ -290,7 +290,7 @@ boost::optional<QVector<double> > InfiltrationCalculator::simulate(std::map <ope
 boost::optional<std::map<Handle,DesignFlowRateCoeffs> > InfiltrationCalculator::windSpeed2Pt()
 {
   double density = 1.2041;
-  openstudio::contam::ForwardTranslator translator;
+  openstudio::contam::ForwardTranslator translator(m_model);
 
   if(m_flowSpec)
   {
@@ -301,7 +301,7 @@ boost::optional<std::map<Handle,DesignFlowRateCoeffs> > InfiltrationCalculator::
     translator.setAirtightnessLevel(m_leakageDescriptor);
   }
   
-  if(!translator.translate(m_model,false))
+  if(!translator.translate(false))
   {
     LOG(Error, "Translation failed, check errors and warnings for more information.");
     return false;

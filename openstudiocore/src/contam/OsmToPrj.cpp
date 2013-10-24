@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
   openstudio::path cvfPath = inputPath.replace_extension(openstudio::toPath("cvf").string());
   openstudio::path wthPath = inputPath.replace_extension(openstudio::toPath("wth").string());
 
-  openstudio::contam::ForwardTranslator translator;
+  openstudio::contam::ForwardTranslator translator(model.get());
   if(setLevel)
   {
     translator.setAirtightnessLevel(leakageDescriptorString);
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
   if(file.open(QFile::WriteOnly))
   {
     QTextStream textStream(&file);
-    if(!translator.translate(*model))
+    if(!translator.translate())
     {
       std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
       file.close();
