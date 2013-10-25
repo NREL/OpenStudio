@@ -2,19 +2,33 @@
 ######################################################################
 # == Synopsis 
 #
-#   Load an osm file, convert to an ISO file
-# do this externally from 
+#   Load an osm file, convert to an .ism format ISO file
 #
 # == Usage
 #
-#   ruby osm2iso.rb ARGV[0] 
-# 
+#   ruby osm2iso.rb ARGV[0] ARGV[1]
+#
+# == Inputs
 #   ARGV[0] - path to OSM file for conversion
+#	ARGV[1] - path to EPW weather file, this input is optional
 #
-# == Examples (replace input.osm with your input file/path
+# == Outputs
 #
-#   ruby osm2iso.rb input.osm
+#	file.ism - ISO format flat text file
+#	file.osm2iso.log - log file detailing conversion process
 #
+# == Examples (replace input.osm and weather.epw with your input files/paths)
+#
+#   ruby osm2isovxx.rb input.osm weather.epw
+#
+
+#V 0.86 23-Oct-2013 RTM
+# added in calculation of hours and days of occupancy
+
+#V 0.85 21-Oct-2013 RTM
+# cleaned up code a bit, moved default input stuff much higher in ruby script for easier editing
+# 
+
 #V 0.84 15-Oct-2013 RTM 
 # changed variable name for IPLV to IPLVToCopRatio to reflect code changes
 
@@ -63,22 +77,18 @@ require 'openstudio'
 
 weather_file_path="c:\\epw\\ord.epw"
 
-if ARGV.length < 1
-	puts "Usage: ruby osm2iso.rb 'C:\\path\\to\\model.osm'"
+if ARGV.length == 0
+	puts "Usage: ruby osm2iso.rb 'C:\\path\\to\\model.osm'  'C:\\path\\to\\weather.epw'"
+	puts "Weather file is optional, Model file is not"
 	exit(-1)
  end
-
- # use this as a very small number to add to denominators to avoid divide by zero
-epsilon = 0.00000000000001
-
+ 
+ # if there is a second command line input, assume it is a weather file 
+ if ARGV.length == 2
+	weather_file_path=ARGV[1]
+ end
 
 input_file = ARGV[0]
-# strip off the OSM and add an ISO to the filename to get the output file
-osm2iso_log_file = input_file.chomp(".osm") + ".osm2iso.log"
-# strip off the OSM and add an ISO to the filename to get the output file
-osm2iso_output_file = input_file.chomp(".osm") + ".ISO"
-
-
 
 basename = File.basename(input_file,".*")	# get the base file without the path to it or extensions at the end
 dirname = File.dirname(input_file)	# get the path to the file without the file itself
@@ -87,26 +97,15 @@ osm2iso_log_file = File.join(dirname, basename + ".osm2iso.log")
 # output file is base filename + .ISOout + .csv
 osm2iso_output_file = File.join(dirname, basename + ".ism")
 
-
 puts "Writing processing log to #{osm2iso_log_file}"
+
 # create output file and start writing out 
 logfile = File.new(osm2iso_log_file, 'w')
-
-
-# print out the name of this script with $0
-#puts "Running  #{$0}  on input file  #{input_file}"
-#logfile.puts "Running ruby #{$0} #{input_file}"
 logfile.puts "Starting Log File"
 
-#logfile.puts "Input File: #{input_file}"
 logfile.puts "Output File: #{osm2iso_output_file}"
 
-# puts "...Loading OSM"
-# logfile.puts "*****************************"
-# logfile.puts "  Loading Model"
-# logfile.puts "*****************************"
-
-# # load the model
+# load the model
 model = OpenStudio::Model::Model::load(OpenStudio::Path.new(input_file))
 if model.empty?
   puts "Model cannot be read"
@@ -115,108 +114,184 @@ end
 model = model.get
 
 puts "...Setting Defaults"
-logfile.puts "*****************************"
-logfile.puts "       Setting Defaults"
-logfile.puts "*****************************"
-# these are items that aren't in the OSM file can't be extracted and must be set by user	
+
+# set the flags below to true or false to try to get info from OSM file or simply use defaults below
+OSM_extract_occupancy = true		# extract days and hours of occupancy
+OSM_extract_temp_setpoint = true	# extract temperature setpoints
+OSM_extract_dhw = true				# extract dhw info
+OSM_extract_vent_rate = true		# extract the ventilation rate
+OSM_extract_infil_rate = true		# extract infiltration rate info
+OSM_extract_HVAC = true			# extract HVAC info like cooling COP, heating efficiencies, fuel type. 
+OSM_extract_glazing_info = true	# extract glazing info (U & SHGC) 
+OSM_extract_wallroof_info = true	# extract the wall and roof U and other info 
+# NOTE  YOU *MUST* SET HVAC SYSTEM TYPE and IPLV/COP ratio below
+
+# set fan and pump control factors;  (1.0 = no energy saving features)   
+# start the strings with a floating point as that's what is stripped off to set the falue
+# fan control  1 = no control, 0.75 = inlet blade adjuct, 0.65= variable speed  see NEN 2916 7.3.3.4  
+fan_flow_control_factor_default = "1.0 - No energy savings measures" 	# set default fan flow control factor to 1.0 (no energy savings)
+# pump control 0 = no pump, 0.5 = auto pump controls for more 50% of pumps, 1.0 = all other cases.   See NEN 2914 9.4.3
+heating_pump_control_factor_default = "1.0 - No energy savings measures" # set default heating pump control factor to 1.0 (no control or vfd)
+cooling_pump_control_factor_default = "1.0 - No energy savings measures"	# set default cooling pump control factor to 1.0 (no control or vfd)
+
+
+# until we can extract HVAC inputs and guess at HVAC type, set these defaults
+# give the HVAC type number first and a descriptive string after
+hvac_type_default = "24 - VAV with water heating/cooling (boiler + chiller)"		# set default HVAC type to VAV 
+cooling_IPLVToCop_ratio = 1.0 			# set default system partial load ratio
+ventilation_type_default= "1 - mechanical only"			#set ventilation type (1 = mech only, 2 = natural, 3 = mixed)
+bem_type_default = "1 - none or minimal BEM"  # set bem_type=1 (1 = none or minimal BEM, 2 = modern BEM, 3 = advanced BEM w/ FDD)
+
+# HVAC settings that are hard to extract but might be changed
+exhaust_recirculation_fraction = 0.0 	# set fraction of air recirculated  to 0.0 (i.e. total outside air)
+heat_recovery_fraction = 0.0  			# set ventilation heat recovery fraction to 0 since OS doesn't support heat recovery yet
+
+#these are items that aren't modeled in OS or are hard to extract so set default values
+occupancy_sensors_default = "1 - Less than 60% of space with occupancy sensors"	# occupancy sensors:  false = none or minimal true > if 60% of floor space has it 
+const_illum_ctrl_default = "1 - No constant illumination Control" 	#constant illumination control: false = none, true 		
+
+# this can be changed within OS, but it is often not sent.
+specific_fan_power = 1/0.7733  # set default specific fan power (L/W) to match EnergyPlus default
+
+# set default SCF and SDF for all windows.   
+solar_control_factor = 1.0
+shading_device_factor = 1.0
+
+# set fall through defaults in case extraction fails or we decide not to extract
+
+# default occupancy info if we can't extract	
 occupancy_day_start = 1 	# set default starting day of occupancy as monday (Su=0, Mon=1 Sa=6)
 occupancy_day_end = 5 		# set the default ending day of occupancy
 occupancy_hour_start = 8 	# set the default starting hour for occupancy for an occupied day
 occupancy_hour_end = 18 	# set the default ending hour for occupancy for an unoccupied day
+
+# temperature setpoint defaults
+heating_setpoint_occ_default = 21 		# set the default temperature setpoint for heating during occupied times
+heating_setpoint_unocc_default = 15	# set the default temperature setpoint for heating during unccupied times
+cooling_setpoint_occ_default = 25 		# set the default temp setpoint for cooling during occupied times
+cooling_setpoint_unocc_default = 28 	# set the default temp setpoint for cooling during unoccupied times
+
+# HVAC defaults
+cooling_COP_default = 3.2			
+heating_system_efficiency_default = 0.8	
+heating_fuel_type_default = 2  		# set default fuel type to 2 = gas
+
+# Ventilation defaults
+vent_rate_per_person_default = 10 	# set default ventilation rate (10 L/s/persoin ~ 20 cfm/person is good for offices)
+
+# DHW defaults
+#set dhw distribution type 0, close to taps, 1 far from taps, 2 = circulation/other/ unknown) 
+dhw_dist_type_default = "2 - Circulation or Unknown DHW Distribution System" 
+dhw_rate_per_person_default = 3.8 	# set default dhw rate at 3.8 L/person/day from ASHRAE HVAC Apps chapter 50
+dhw_fuel_type_default = 2			# set default DHW fuel to gas (1 = electric, 2 = gas)
+dhw_system_efficiency_default = 0.8	
+
+# Infiltration defaults
+infil_rate_default = 7.0	# set default infiltration rate to 7 m3/m2/hr@ 75 Pa by default to match normal EnergyPlus default values
+	
+# set envelope defaults U in W/m2/K
+wall_U_default= 0.3						# default U
+roof_U_default = 0.2		# default roof U
+solar_absorptivity_default = 0.7	# default solar absoprtion coefficient
+thermal_emissivity_default = 0.7	# default 
+glazing_U_default = 3.0		# default is simple IGU
+glazing_SHGC_default = 0.7	# default is clear IGU
+
+# set default inside and outside air film R values
+outside_air_film_R= 0.04	# set the outside air film coefficient R value in m2*K/W
+inside_air_film_R = 0.13  	# set the inside air film coefficient R value in m2*K/W
+
+
+# convert strings to integers and floats
+bem_type = bem_type_default.to_i
+hvac_type=hvac_type_default.to_i
+ventilation_type = ventilation_type_default.to_i
+
+fan_flow_control_factor = fan_flow_control_factor_default.to_f
+heating_pump_control_factor = heating_pump_control_factor_default.to_f
+cooling_pump_control_factor = cooling_pump_control_factor_default.to_f	
+dhw_dist_type = dhw_dist_type_default.to_i
+
+occupancy_sensors = occupancy_sensors_default.to_i
+const_illum_ctrl = const_illum_ctrl_default.to_i
+
+# set SCF (external solar control) and SDF (shading) these for all directions N, NE, E, SE, S, SW, W, NW
+window_SCF = Array.new(8,solar_control_factor) # set default window solar control factor = 1.0 (no overhang solar control)
+window_SDF = Array.new(8,shading_device_factor) # set default window shading device factor = 1.0 (no shades)
+
+
+logfile.puts "*****************************"
+logfile.puts "       Setting Defaults"
+logfile.puts "*****************************"
+
+
+logfile.puts "Occupancy Sensors set to #{occupancy_sensors_default}"
+logfile.puts "Constant Illumination Control set to #{const_illum_ctrl_default}"	
+
+logfile.puts "HVAC system type set to #{hvac_type_default}"
+logfile.puts "HVAC set IPLV/COP,  mean partial load fraction,  to #{cooling_IPLVToCop_ratio}"
+logfile.puts "Heat recovery set to #{heat_recovery_fraction}"
+logfile.puts "Exhaust air recirculation fraction set to #{exhaust_recirculation_fraction}"
+logfile.puts "Ventilation type set to #{ventilation_type_default}"
+logfile.puts "BAS/BEM set to #{bem_type_default}"
+
+logfile.puts "Specific fan power set to #{specific_fan_power} (L/s/W)"
+logfile.puts "DHW distribution system set #{dhw_dist_type_default}"
+logfile.puts "Fan Flow Control Factor set #{fan_flow_control_factor_default}"
+logfile.puts "Heating Pump Control Factor set #{heating_pump_control_factor_default}"
+logfile.puts "Cooling pump Control Factor set #{cooling_pump_control_factor_default}"
+logfile.puts "Setting window  SCF=#{solar_control_factor}, SDF=#{shading_device_factor}"
+
+logfile.puts "*****************************"
+logfile.puts "Setting Fall Through Defaults"
+logfile.puts "*****************************"
 
 logfile.puts "Occupancy Start Day = #{occupancy_day_start} with Sun = 0, Sat = 6"
 logfile.puts "Occupancy End Day = #{occupancy_day_end} with Sun = 0, Sat = 6"
 logfile.puts "Occupancy Start Hour = #{occupancy_hour_start} "
 logfile.puts "Occupancy End Hour = #{occupancy_hour_end}"
 
-#these are items that aren't modeled in OS so set default values
-occupancy_sensors = 1 	# occupancy sensors off in ISO since they can't be modeled directly in OS 
-logfile.puts "Occupancy Sensors set 1 because they are not yet supported "
-const_illum_ctrl = 1 	# constant illumination control is off in ISO since it can't be modeled directly in OS		
-logfile.puts "Constant Illumination Control set to 1 because it is not supported"	
-ventilation_type = 1	#set ventilation type to mechanical only since OS doesn't handle natural ventilation yet
-logfile.puts "Ventilation type set to 1 (mechanical only) because natural ventilation is not yet supported"
-heat_recovery_fraction = 0.0  			# set heat recovery fraction to 0 since OS doesn't support heat recovery yet
-logfile.puts "Heat recovery set to 0.0 because it is not syet upported"
-bem_type = 1			# set bem_type=1 because OS doesn't handle BEM yet
-logfile.puts "BAS/BEM set to none because it is not yet supported"
+logfile.puts "Heating Temp Set Point During Occupied Times = #{heating_setpoint_occ_default} C"
+logfile.puts "Heating Temp Set Point During Unccupied Times = #{heating_setpoint_unocc_default} C"
+logfile.puts "Cooling Temp Set Point During Occupied Times = #{cooling_setpoint_occ_default} C"
+logfile.puts "Cooling Temp Set Point During Unccupied Times = #{cooling_setpoint_unocc_default} C"
 
-#these are inputs that are really not the same as anything in OS so set defaults or get user inputs
-specific_fan_power = 1/0.7733  # set default specific fan power (L/W)
-logfile.puts "Specific fan power set to 1.3 L/W to match EnergyPlus default of 773.3 W/(m3/s)"
+logfile.puts "Default Cooling Cop = #{cooling_COP_default} W/W"
+logfile.puts "Default Heating System Efficiency = #{heating_system_efficiency_default}"
+logfile.puts "Default Heating Fuel Type = #{heating_fuel_type_default}"
 
-fan_flow_control_factor = 1.0 # set default fan flow control factor to 1.0 (no energy savings)
-logfile.puts "Fan Flow Control Factor set to 1.0 (no energy saving features)"
-
-heating_pump_control_factor = 1.0 	# set default heating pump control factor to 1.0 (no control or vfd)
-cooling_pump_control_factor = 1.0 	# set default cooling pump control factor to 1.0 (no control or vfd)
-logfile.puts "Heating and Cooling Pump Control Factor set to 1.0 (no energy savings features)"
-
-#these are inputs often ignored in OS models so use these as defaults
-dhw_dist_type = 2  		#default DHW distribution_type is other/unknown (0, close to taps, 1 far from taps, 2 = circulation/other/ unknown 
-
-logfile.puts "DHW distribution system set to circulation or unknown"
-
-# until we can extract HVAC inputs and guess at HVAC type, set these defaults
-hvac_type = 24			# set default HVAC type to VAV 
-logfile.puts "HVAAC system type set VAV with water heating and water cooling"
-
-cooling_IPLVToCop_ratio = 1.0 	# set default system partial load multiplier
-
-logfile.puts "HVAC set cooling mean partial load fraction to 1.0"
-
-exhaust_recirculation_fraction = 0.0 	# set fraction of air recirculated  to 0.0 (i.e. total outside air)
-# set default infiltration rate until we write code to extract it
-logfile.puts "Exhaust recirculation fraction set to 0.0"
-
-logfile.puts "Shading Not Analyzed: Setting window  SCF=1, SDF=1"
-
-# set SCF (external solar control) and SDF (shading) these for all directions N, NE, E, SE, S, SW, W, NW
-window_SCF = Array.new(8,1.0) # set default window solar control factor = 1.0 (no overhang solar control)
-window_SDF = Array.new(8,1.0) # set default window shading device factor = 1.0 (no shades)
-	
+logfile.puts "Default outside air film resistance = #{outside_air_film_R} W/m2/K"
+logfile.puts "Default inside air film resistance = #{inside_air_film_R} W/m2/K"
 
 puts "...Parsing Model"
 logfile.puts "*****************************"
 logfile.puts "  Parsing Model"
 logfile.puts "*****************************"
 
-# get the weatherfile if one is defined in the OSM and convert to a string
-# wfu = model.getWeatherFile.url.to_s
-# if wfu.empty?
-	# logfile.puts "Warning: A Weather file not defined in the OSM"
-	# weather_file_path="none"
-# else
-	# # strip off the file: part of the URL, only save the stuff after file:
-	# weather_file_path=wfu.split(':').last
-	# logfile.puts "Weather file #{weather_file_path} found"
-# end
 
 # get some important objects from the building model
 building=model.getBuilding
 facility=model.getFacility
 surfaces=model.getSurfaces
-logfile.puts "Found #{surfaces.size} surfaces"
+
 sub_surfaces = model.getSubSurfaces
-logfile.puts "Found #{sub_surfaces.size} sub surfaces"
 spaces = model.getSpaces
-logfile.puts "Found #{spaces.size} spaces"
 thermal_zones = model.getThermalZones
-logfile.puts "Found #{thermal_zones.size} thermal zones"
 space_types = model.getSpaceTypes
-logfile.puts "Found #{space_types.size} space types"
-
 constructions = model.getConstructions
-logfile.puts "Found #{constructions.size} constructions"
-
 internal_masses = model.getInternalMassDefinitions
-logfile.puts "Found #{internal_masses.size} Internal Mass Definitions"
-
 air_loops = model.getAirLoopHVACs
-logfile.puts "Found #{air_loops.size} Air Loops"
 plant_loops = model.getPlantLoops
-logfile.puts "Found #{plant_loops.size} Plant Loops"
 
+logfile.puts "Found #{surfaces.size} surfaces"
+logfile.puts "Found #{sub_surfaces.size} sub surfaces"
+logfile.puts "Found #{spaces.size} spaces"
+logfile.puts "Found #{thermal_zones.size} thermal zones"
+logfile.puts "Found #{space_types.size} space types"
+logfile.puts "Found #{constructions.size} constructions"
+logfile.puts "Found #{internal_masses.size} Internal Mass Definitions"
+logfile.puts "Found #{air_loops.size} Air Loops"
+logfile.puts "Found #{plant_loops.size} Plant Loops"
 
 # get the terrain class from the site object or assign default if none given
 site = model.getSite
@@ -245,12 +320,12 @@ logfile.puts "*****************************"
 logfile.puts "  Analyzing Construction"
 logfile.puts "*****************************"
 
-const_names = []
-const_solarAbsorptance={}
-const_thermalAbsorptance={}
-const_heatCapacity = {}
-const_U = {}
-const_SHGC= {}
+const_names = Array.new
+const_solarAbsorptance=Hash.new
+const_thermalAbsorptance=Hash.new
+const_heatCapacity = Hash.new
+const_U = Hash.new
+const_SHGC= Hash.new
 
 constructions.each do |const|
 	name=const.name.to_s
@@ -277,7 +352,7 @@ constructions.each do |const|
 			const_solarAbsorptance[name]=layers[0].to_OpaqueMaterial.get.solarAbsorptance	
 		end	
 		
-		const_R = 0.04 + 0.12  #set the starting R at 0.04 + 0.13 = avg outside film coeff + inside film coeff for walls
+		const_R = outside_air_film_R + inside_air_film_R  #set the starting R outside + inside film coefficients
 		const_heat_capacity = 0.0
 		layers.each do |layer|
 			if not layer.to_StandardOpaqueMaterial.empty?  # do this stuff if the material can convert to StandardOpaqueMaterial
@@ -309,13 +384,13 @@ constructions.each do |const|
 		const_U[name] = 1.0 / const_R
 		
 	# next find the fenestration/window constructions find U value, heat capcity and SHGC of assembly
+	# this is somewhat flaky and nowhere near as good as extracting from an EnergyPlus file after running OS/EP, but it will have to do for now
 	elsif const.isFenestration
 		const_heatCapacity[name]= 0.0		# assume windows have no heat capacity
 		const_thermalAbsorptance[name]= 0.0  # assume windows have an effective thermal emissivity of 0
 		const_solarAbsorptance[name] = 0.0 	# assume windows have an effective solar absorption of 0
 	
-		const_R = 0.04 + 0.12  #set the starting R at 0.04 + 0.13 = avg outside film coeff + inside film coeff for walls
-
+		const_R = outside_air_film_R + inside_air_film_R  #set the starting R as outside+inside film coefficients
 		# first check if the construction is a  single layer 
 		#simple glazing, if so pull off U factor and SHGC directly, set heat capacity to 0
 		if layers.size == 1 
@@ -391,15 +466,15 @@ constructions.each do |const|
 				const_U[name] = 1.0/(1.0/ material.thermalConductance + const_R)
 				const_SHGC[name] = 0.3
 			elsif not layers[0].to_RefractionExtinctionGlazing
-				logfile.puts "Refraction Extinction Glazing Not Converted - only estimating U value, others set to clear glass values"
+				logfile.puts "Refraction Extinction Glazing Not Converted - only estimating U value, SHGC set to 0.7"
 				material = layer.to_RefractionExtinctionGlazing
 				const_U[name] = 1.0/(1.0/ material.thermalConductance + const_R)
 				const_SHGC[name] = 0.7
 			end
 		else
 			logfile.puts "Only 1 and 3 layer windows are supported at this time, values set to a standard clear, double glaze window"
-			const_U[name] = 3.5
-			const_SHGC[name] = 0.8
+			const_U[name] = glazing_U_default
+			const_SHGC[name] = glazing_SHGC_default
 		end
 	end
 end
@@ -413,21 +488,136 @@ end
 # parse the schedules to find the average schedule value for occupied and unoccupied times
 puts "...Parsing Schedules"
 
-startDate = OpenStudio::Date.new("Jan".to_MonthOfYear,1)
-endDate = OpenStudio::Date.new("Dec".to_MonthOfYear,31)
+schedule_rulesets = model.getScheduleRulesets
+logfile.puts "Found #{schedule_rulesets.size} schedules in the OSM"
 
-sched_names = []
-occ_aves={}
-unocc_aves={}
+# get the year description from the model and set the calendar year to 2007
+# we use 2006 because Jan 1 is a sunday and it makes day 1 = sunday
+yd = model.getYearDescription
+yd.setCalendarYear(2006)
+
+t = Array.new(24)
+(0..23).each do |hour|
+	t[hour] = OpenStudio::Time.new(hour / 24.0)
+end
+	
+if OSM_extract_occupancy
+
+	# create a hash with all the schedule_ruleset since we can't access dayschedules directly from
+	# the schedule stored in the space_type, we need to find the associated schedule_ruleset
+	sched_rulesets = Hash.new
+	schedule_rulesets.each do |ruleset|
+		name=ruleset.name.to_s
+		sched_rulesets[name] = ruleset
+	end
+
+	occupancy_schedules_ave = Array.new(7){Array.new(24,0.0)}
+	nscheds= 0
+	space_area_total = 0.0
+	# get an area weighted average over all the space types. 
+	space_types.each do |space_type|
+		space_area = space_type.floorArea
+		space_area_total += space_area
+		space_type.people.each do |people|
+			# look for an occupancy schedule
+			if not people.numberofPeopleSchedule.empty?
+				# get the schedule.   Unfortuntately we need to find the associated sched ruleset to get the day schedule
+				sched = people.numberofPeopleSchedule.get
+				ruleset = sched_rulesets[sched.name.to_s]
+				(0..51).each do |week|			
+					startDate = yd.makeDate(week*7 +1)
+					endDate = yd.makeDate(week*7 + 8)
+					nscheds +=1
+					space_area_total += space_area
+					dayschedule = ruleset.getDaySchedules(startDate,endDate)	# get the day schedules for the week
+					(0..6).each do |day|
+						(0..23).each do |hour|
+							value = dayschedule[day].getValue(t[hour])
+							occupancy_schedules_ave[day][hour] += value*space_area	# add in area weighted value			
+						end
+					end
+				end
+			end
+		end
+	end
+
+	# now get the area weighted average values for the schedules by dividing by the number of schedules averaged
+	# also get the total daily fractional occupancy (i.e. equivalent hours of full time occupancy)
+
+	threshold = 7.0
+	num_occ_days = 0
+	occ_frac_sum = Array.new(7,0)
+	day_occ = Array.new(7,0)
+	(0..6).each do |day|
+		(0..23).each do |hour|
+			occupancy_schedules_ave[day][hour] = occupancy_schedules_ave[day][hour]/space_area_total
+			occ_frac_sum[day] +=occupancy_schedules_ave[day][hour] 
+		end
+		if occ_frac_sum[day] > threshold
+			day_occ[day] = 1
+			num_occ_days += 1
+		end
+	end
+
+	# now find the first and last occupied day of the week assuming a continuous stream
+	first_occ_day = day_occ.index(1)	# use ruby index to find the first instance of 1 in the day_occ array
+	last_occ_day = 6 - (day_occ.reverse).index(1)	# use index to find the last instance of 1 by reversing array to find how far from the end the last occupied day is
+
+	# now, for the days considered occupied, find an "average" occupancy schedule to estimate the best starting and stopping times
+		# # find an "average" schedule during the occupied days (i.e. do not include unoccupied days in this average)
+	avg_occupied_schedule = Array.new(24,0)
+	avg_occ_sum = 0.0
+	(0..23).each do |hour|
+		avg_occupied_schedule[hour]=0.0
+		(first_occ_day .. last_occ_day).each do |day|
+			avg_occupied_schedule[hour] += occupancy_schedules_ave[day][hour]
+		end
+		if (num_occ_days> 0)
+			avg_occupied_schedule[hour] = avg_occupied_schedule[hour] / num_occ_days
+		end
+		avg_occ_sum += avg_occupied_schedule[hour]
+		#printf("%1.1f, ",avg_occupied_schedule[hour])
+	end
+	#print "\n"
+
+	# now estimate the average number of fully occupied hours per day by rounding down the sum to the nearest number of hours
+	num_occ_hours = avg_occ_sum.floor
+
+	#now we find the best start time for the occupancy by matching a sliding window of full occupancy to the average occupancy
+	#we maximize the sum of the product of actual occupancy and the sliding window to get the best hours of operation
+	# find the start time by maximizing the sum of the product of the start-to-end sliding window and the average hourly occupancy
+	max_sum = 0.0
+	max_index = 0
+	(0 .. (23-num_occ_hours)).each do |start_hour|
+		temp_sum = 0.0
+		(start_hour .. start_hour + num_occ_hours).each do |i|
+			temp_sum += avg_occupied_schedule[i] 
+		end
+		if temp_sum > max_sum
+			max_sum = temp_sum
+			max_index=start_hour
+		end
+	end
+
+	occupancy_day_start = first_occ_day 		# set starting day for occupancy
+	occupancy_day_end = last_occ_day					# set the ending day for occupancy
+	occupancy_hour_start = max_index 			# set starting hour for occupied day
+	occupancy_hour_end = max_index+ num_occ_hours + 1	# set ending hour for an occupied day.   Add one because we want occupancy to drop at that time
+
+end
+
+logfile.puts "*******************************"
+logfile.puts " Calculating Schedule Averages"
+logfile.puts "*******************************"
+
+sched_names = Array.new
+occ_aves=Hash.new
+unocc_aves=Hash.new
 occupied_hours=0.0
 unoccupied_hours = 0.0
 
-logfile.puts "*****************************"
-logfile.puts "  Calculating Schedule Averages"
-logfile.puts "*****************************"
-
-schedule_rulesets = model.getScheduleRulesets
-logfile.puts "Found #{schedule_rulesets.size} schedules in the OSM"
+startDate = yd.makeDate(1)
+endDate = yd.makeDate(365)
 
 schedule_rulesets.each do |schedule|
 	occupied_sum=0;
@@ -435,7 +625,7 @@ schedule_rulesets.each do |schedule|
 	occupied_hours=0;
 	unoccupied_hours=0;
 	
-	# gets one day schedule for each day of the year
+	# gets all the schedule for each day of the year in one array
 	daySchedules = schedule.getDaySchedules(startDate, endDate)
 		
 	#get the day of the week of the starting day of the schedule and subtract 1 from it because we increment before we compare
@@ -448,18 +638,16 @@ schedule_rulesets.each do |schedule|
 		if day_of_week > 6
 			day_of_week =0
 		end
-		
+	
 		# loop over each hour of the day
-		(0..23).each do |t|
-			# get the value at this hour
-			time = OpenStudio::Time.new(t / 24.0)
-			value = daySchedule.getValue(time)
+		(0..23).each do |hour|
+			value = daySchedule.getValue(t[hour])	# get the schedule value at this hour
 			
 			# check if the day of the week is an occupied day or not
 			if (day_of_week >= occupancy_day_start) && (day_of_week <= occupancy_day_end)
 				# check if the hour is also an occupied hour
 				# if so, add value to occupied sum and increment occupied counter
-				if (t >= occupancy_hour_start) && (t < occupancy_hour_end)
+				if (hour >= occupancy_hour_start) && (hour < occupancy_hour_end)
 					occupied_sum+= value
 					occupied_hours += 1
 				else # if hour not occupied, add value to unoccupied and increment unoccupied counter
@@ -477,8 +665,12 @@ schedule_rulesets.each do |schedule|
 	occ_aves[schedule.name.to_s] = occupied_sum / occupied_hours
 	unocc_aves[schedule.name.to_s] = unoccupied_sum / unoccupied_hours
 	logfile.printf("Schedule %s has occupied ave = %3.2f and unoccupied ave = %3.2f\n",schedule.name.to_s, occ_aves[schedule.name.to_s], unocc_aves[schedule.name.to_s])
-	
 end
+
+
+# compute the number of occupied days in a year for water use calculations
+number_days_occupied_per_year = 52 * (occupancy_day_end - occupancy_day_start +1)
+
 # at this point we have an array with the schedule names and two arrays with the averages
 # that are indexed by the schedule names.   
 
@@ -500,25 +692,24 @@ nominal_gpd = building.gasEquipmentPowerPerFloorArea # overall nominal gas equip
 
 # loop over the lighting, equipment, and occupancy schedules to get the occupied and unoccupied values 
 # and compute the area weighted averages
-light_total_area = epsilon   # set this to a tiny number to avoid divide by zero but to also avoid skewing the area
+light_total_area = 0   # set this to a tiny number to avoid divide by zero but to also avoid skewing the area
 light_occ_total = 0
 light_unocc_total = 0
-elec_total_area = epsilon
+elec_total_area = 0
 elec_occ_total = 0
 elec_unocc_total=0
-gas_total_area = epsilon
+gas_total_area = 0
 gas_occ_total = 0
 gas_unocc_total=0
-people_total_area = epsilon
+people_total_area = 0
 people_occ_total = 0
 people_unocc_total = 0
-activity_total_area = epsilon
+activity_total_area = 0
 activity_occ_total = 0
 activity_unocc_total = 0
 
-light_areas=[]
-light_scheds=[]
-
+light_areas=Array.new
+light_scheds=Array.new
 space_types.each do |space_type|
 	# work with the lighting schedule - luminaires are not supported at this time
 	space_area = space_type.floorArea
@@ -570,22 +761,43 @@ space_types.each do |space_type|
 end
 
 # compute the fractional multipliers from the schedule data
-lpd_occ_mult = light_occ_total/light_total_area
-lpd_unocc_mult = light_unocc_total/light_total_area
-epd_occ_mult = elec_occ_total/elec_total_area
-epd_unocc_mult = elec_unocc_total/elec_total_area
-gpd_occ_mult = gas_occ_total/gas_total_area
-gpd_unocc_mult = gas_unocc_total/gas_total_area
-people_occ_mult = people_occ_total/people_total_area
-people_unocc_mult = people_unocc_total/people_total_area
+# set to 1.0 if the lighting area is 0
+if light_total_area > 0
+	lpd_occ_mult = light_occ_total/light_total_area
+	lpd_unocc_mult = light_unocc_total/light_total_area
+else
+	lpd_occ_mult = 1
+	lpd_unocc_mult = 1
+end
+if elec_total_area > 0
+	epd_occ_mult = elec_occ_total/elec_total_area
+	epd_unocc_mult = elec_unocc_total/elec_total_area
+else
+	epd_occ_mult = 1
+	epd_unocc_mult = 1
+end
+if gas_total_area > 0
+	gpd_occ_mult = gas_occ_total/gas_total_area
+	gpd_unocc_mult = gas_unocc_total/gas_total_area
+else
+	gpd_occ_mult = 1
+	gpd_unocc_mult = 1
+end
+if people_total_area > 0
+	people_occ_mult = people_occ_total/people_total_area
+	people_unocc_mult = people_unocc_total/people_total_area	
+else
+	people_occ_mult = 1
+	people_unocc_mult = 1
+end
 
 # compute the activity level (heat gain per person) from schedule data
 activity_level_occ= activity_occ_total/activity_total_area
 activity_level_unocc= activity_unocc_total / activity_total_area
 
 # compute the occupied and unoccupied lighting and equipment power densities
-
 lpd_unoccupied=nominal_lpd*lpd_unocc_mult
+
 # when computing occupied, subtract the occupied because the isomodel calc adds unoccupied to occupied to account for parasitic lighting
 # that people often forget
 lpd_occupied=nominal_lpd*lpd_occ_mult - lpd_unoccupied
@@ -620,7 +832,7 @@ if not facility.exteriorLights.empty?
 	ext_lights.each do |exlight|
 		ext_light_mult = exlight.multiplier
 		ext_light_base = exlight.exteriorLightsDefinition.designLevel
-		exterior_lighting_power = ext_light_base * ext_light_mult
+		exterior_lighting_power += ext_light_base * ext_light_mult
 	end
 	logfile.puts "Found #{ext_lights.size} Exterior Lights"
 end
@@ -632,73 +844,71 @@ if not luminaires.empty?
 	logfile.puts "Warning: Luminaires defined in OSM but not currently translated into ISO"
 end
 
-
 puts "...Calculating Thermostats"
 logfile.puts "*****************************"
 logfile.puts "  Calculating Thermostats"
 logfile.puts "*****************************"
 
-# set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times
-thermostats = model.getThermostatSetpointDualSetpoints
-cooling_setpoint_occ_=0
-cooling_setpoint_unocc=0
+if OSM_extract_temp_setpoint
+	# set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times
+	thermostats = model.getThermostatSetpointDualSetpoints
 
-# get the average heating and cooling thermostat values during occupied and unoccupied times 
-# set some defaults in case  some thermostats aren't defined
-heat_setpoint_occ_default = 21 # set the default temperature setpoint for heating during occupied times
-heat_setpoint_unocc_default = 15 # set the default temperature setpoint for heating during unccupied times
-cool_setpoint_occ_default = 25 # set the default temp setpoint for cooling during occupied times
-cool_setpoint_unocc_default = 28 # set the default temp setpoint for cooling during unoccupied times
+	total_zone_area = 0
+	heat_setpoint_occ_total=0
+	heat_setpoint_unocc_total=0
+	cool_setpoint_occ_total = 0
+	cool_setpoint_unocc_total = 0
 
-total_zone_area = epsilon
-heat_setpoint_occ_total=0
-heat_setpoint_unocc_total=0
-cool_setpoint_occ_total = 0
-cool_setpoint_unocc_total = 0
+	# loop through the zones and find the thermostats rather than use the thermostat vector we can get from the model
+	# we want to do a zone area weighted average in case the different zones have different 
+	thermal_zones.each do |zone|		#loop through the zones 
+		zone_area=zone.floorArea * zone.multiplier
+		total_zone_area += zone_area
 
-# loop through the zones and find the thermostats rather than use the thermostat vector we can get from the model
-# we want to do a zone area weighted average in case the different zones have different 
-thermal_zones.each do |zone|		#loop through the zones 
-	zone_area=zone.floorArea * zone.multiplier
-	total_zone_area += zone_area
-
-	if not zone.thermostatSetpointDualSetpoint.empty?
-		thermostat=zone.thermostatSetpointDualSetpoint.get
-		if not thermostat.coolingSetpointTemperatureSchedule.empty?
-			cool_sched = thermostat.coolingSetpointTemperatureSchedule.get
-			cool_setpoint_occ_total += occ_aves[cool_sched.name.to_s] * zone_area 
-			cool_setpoint_unocc_total += unocc_aves[cool_sched.name.to_s] * zone_area
-		else  # if we have no schedule, use the default values for thiz zone
-			cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
-			cool_setpoint_unocc_total += cool_setpoint_unocc_default * zone_area
-		end
-		if not thermostat.heatingSetpointTemperatureSchedule.empty?
-			heat_sched = thermostat.heatingSetpointTemperatureSchedule.get
-			heat_setpoint_occ_total += occ_aves[heat_sched.name.to_s] * zone_area 
-			heat_setpoint_unocc_total += unocc_aves[heat_sched.name.to_s] * zone_area
+		if not zone.thermostatSetpointDualSetpoint.empty?
+			thermostat=zone.thermostatSetpointDualSetpoint.get
+			if not thermostat.coolingSetpointTemperatureSchedule.empty?
+				cool_sched = thermostat.coolingSetpointTemperatureSchedule.get
+				cool_setpoint_occ_total += occ_aves[cool_sched.name.to_s] * zone_area 
+				cool_setpoint_unocc_total += unocc_aves[cool_sched.name.to_s] * zone_area
+			else  # if we have no schedule, use the default values for thiz zone
+				cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
+				cool_setpoint_unocc_total += cool_setpoint_unocc_default * zone_area
+			end
+			if not thermostat.heatingSetpointTemperatureSchedule.empty?
+				heat_sched = thermostat.heatingSetpointTemperatureSchedule.get
+				heat_setpoint_occ_total += occ_aves[heat_sched.name.to_s] * zone_area 
+				heat_setpoint_unocc_total += unocc_aves[heat_sched.name.to_s] * zone_area
+			else
+				heat_setpoint_occ_total += heat_setpoint_occ_default * zone_area
+				heat_setpoint_unocc_total += heat_setpoint_unocc_default * zone_area	
+			end
 		else
+			cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
 			heat_setpoint_occ_total += heat_setpoint_occ_default * zone_area
-			heat_setpoint_unocc_total += heat_setpoint_unocc_default * zone_area	
+			cool_setpoint_unocc_total += cool_setpoint_unocc_default * zone_area
+			heat_setpoint_unocc_total += heat_setpoint_unocc_default * zone_area		
 		end
-	else
-		cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
-		heat_setpoint_occ_total += heat_setpoint_occ_default * zone_area
-		cool_setpoint_unocc_total += cool_setpoint_unocc_default * zone_area
-		heat_setpoint_unocc_total += heat_setpoint_unocc_default * zone_area		
 	end
+	cooling_setpoint_occ = cool_setpoint_occ_total/total_zone_area
+	cooling_setpoint_unocc = cool_setpoint_unocc_total/total_zone_area
+	heating_setpoint_occ = heat_setpoint_occ_total/total_zone_area
+	heating_setpoint_unocc = heat_setpoint_unocc_total/total_zone_area
+else
+
+	cooling_setpoint_occ = cooling_setpoint_occ_default
+	cooling_setpoint_unocc = cooling_setpoint_unocc_default
+	heating_setpoint_occ = heating_setpoint_occ_default
+	heating_setpoint_unocc = heating_setpoint_unocc_default
 end
-cooling_setpoint_occ = cool_setpoint_occ_total/total_zone_area
-cooling_setpoint_unocc = cool_setpoint_unocc_total/total_zone_area
-heating_setpoint_occ = heat_setpoint_occ_total/total_zone_area
-heating_setpoint_unocc = heat_setpoint_unocc_total/total_zone_area
 
 logfile.printf("Cooling Setpoint Occupied = %1.2f C, Cooling Setpoint Unoccupied = %1.2f C\n",cooling_setpoint_occ, cooling_setpoint_unocc)
 logfile.printf("Heating Setpoint Occupied = %1.2f C, Heating Setpoint Unoccupied = %1.2f C\n",heating_setpoint_occ, heating_setpoint_unocc)
 
 # try to find if >60% of floor area has daylight control
 # loop through spaces, get area and check for any daylighting controls
-total_area=epsilon  # start with a small total area to avoid divide by zero
 daylight_area = 0.0
+total_area = 0.0
 spaces.each do |s|
 	total_area += s.floorArea * s.multiplier  # add up the total floor area
 	daylight_ctrls = s.daylightingControls
@@ -706,7 +916,11 @@ spaces.each do |s|
 		daylight_area += s.floorArea * s.multiplier  # add up the total daylighting control area
 	end
 end
-frac_daylight=daylight_area / total_area
+if total_area > 0
+	frac_daylight=daylight_area / total_area
+else
+	frac_daylight = 0
+end
 
 logfile.printf("Calculated %1.2f of total area has daylighting controls \n",frac_daylight)
 if frac_daylight > 0.6
@@ -735,7 +949,7 @@ maxz = -1000.0
 minz = 1000.0
 spaces.each do |sp|
   # loop through space surfaces to find max z value
-	z_points=[]
+	z_points=Array.new
 	sp.surfaces.each do |s|  
 		s.vertices.each do |vertex|
 			z_points << vertex.z  # get out all the z points for the surface and put in the array
@@ -747,22 +961,20 @@ spaces.each do |sp|
 	end
 end
 building_height=maxz-minz
-
 logfile.puts "Building Height  = #{building_height} m"
 
 # find the areas of wall, roofs, and windows
 # create arrays for the walls and windows
-# set default wall U = 0.3, alpha = 0.5, epsilon=0.5 window U=3.0, window SHGC = 0.5
 direction_names= ["N","NE","E","SE","S","SW","W","NW","N"]
 dirLimit = [0,45,90,135,180,225,270,315,360]
 wall_areas=Array.new(8,0.0)  # generate an 8x1 array filled with zeros
 window_areas=Array.new(8,0.0)
 window_areas=Array.new(8,0.0)
-wall_U = Array.new(8,0.3)
-window_U = Array.new(8,3.0)
-wall_solar_absorption = Array.new(8,0.5)
-wall_thermal_emissivity = Array.new(8,0.5)
-window_SHGC = Array.new(8,0.4)
+wall_U = Array.new(8,0.0)
+window_U = Array.new(8,0.0)
+wall_solar_absorption = Array.new(8,0.0)
+wall_thermal_emissivity = Array.new(8,0.0)
+window_SHGC = Array.new(8,0.0)
 
 wall_HC_sum = 0.0
 wall_U_area = Array.new(8,0.0)
@@ -799,6 +1011,8 @@ building.exteriorWalls.each do |s|
 	
 			wallU = const_U[s.construction.get.name.to_s]
 			# if the U value is not NaN add in the U value and area for weighting
+			# keep a separate area sum for wall U in case there are some segments with undefined U values
+			# we don't want them to be averaged in
 			if not wallU.nan?
 				wall_U_area[i]+= s.netArea
 				wall_U_sum[i] += wallU * s.netArea
@@ -814,23 +1028,36 @@ building.exteriorWalls.each do |s|
 				end
 			end
 			window_areas[i] += s.grossArea-s.netArea		# get just the window area	
-			# add in lines to  compute SCF, and SDF in each direction
+			
+			# add in lines here to  compute SCF, and SDF in each direction in future
+			
 		end		
 	end		
 end 
 
 #  Get the area weighted average of wall absorption, emissivity, U and window U and SHGC
+# If areas are zero then all values are set to zero
 for i in 0 .. 7
-	if not (wall_areas[i] == 0.0)
+	if wall_areas[i] > 0.0
 		wall_solar_absorption[i] = wall_abs_sum[i] / wall_areas[i]
 		wall_thermal_emissivity[i]= wall_emiss_sum[i] / wall_areas[i]
+	else
+		wall_solar_absorption[i]=0
+		wall_thermal_emissivity[i]=0
 	end
-	if not (wall_U_area[i] == 0.0)  # if any wall surfaces have a U value defined, use the weighted average of U values
+	if wall_U_area[i] > 0.0  # if any wall surfaces have a U value defined, use the weighted average of U values
 		wall_U[i] = wall_U_sum[i]/wall_U_area[i]
+	else
+		wall_U[i] = 0
 	end
-	if not (window_areas[i] == 0.0)
+	if window_areas[i] > 0.0
 		window_U[i] = window_U_sum[i]/window_areas[i]
 		window_SHGC[i] = window_SHGC_sum[i] / window_areas[i]
+	else
+		window_U[i] = 0
+		window_SHGC[i] = 0
+		window_SCF[i] = 0
+		window_SDF[i] = 0
 	end
 end
 
@@ -847,13 +1074,8 @@ end
 logfile.printf("Total Wall Area = %1.2f m2\n",total_wall_area)
 logfile.printf("Total Window Area = %1.2f  m2\n",total_window_area)
 
-# set default roof U, absorption, emissivity and skylight U and SHGC
-roof_solar_absorption = 0.9  	# set default roof solar absorption coefficient to 0.9
-roof_thermal_emissivity = 0.9	# set default roof thermal emissivity to 0.9
-roof_U = 0.2					# set default roof U to 0.2 W/m2/K
-skylight_U = 3
-skylight_SHGC = 0.5
 
+# set the loop sums to 0 before the loop
 roof_area=0.0
 skylight_area=0.0
 
@@ -893,15 +1115,22 @@ surfaces.each do |s|
 end
 logfile.puts "Found #{roof_count} roof surfaces"
 
-if not (roof_area == 0.0)
+if roof_area > 0.0
 	roof_solar_absorption = roof_abs_sum / roof_area 		# compute roof absorption as area weighted average
 	roof_thermal_emissivity=  roof_emiss_sum/ roof_area 	# compute roof emissivity as an area weighted average
 	roof_U = roof_U_sum / roof_area 						# compute roof U as area weighted average	
+else
+	roof_solar_absorption = 0		# compute roof absorption as area weighted average
+	roof_thermal_emissivity=  0 	# compute roof emissivity as an area weighted average
+	roof_U = 0
 end
 
-if not (skylight_area == 0.0)
+if skylight_area >0.0
 	skylight_U = skylight_U_sum / skylight_area
 	skylight_SHGC = skylight_SHGC_sum /skylight_area
+else
+	skylight_U = 0
+	skylight_SHGC = 0 
 end
 
 for i in 0..7
@@ -913,32 +1142,6 @@ for i in 0..7
 		direction_names[i],window_areas[i],window_U[i],window_SHGC[i],window_SCF[i],window_SDF[i])
 end
 
-
-# surfaces.each do |s|
-	# next if not s.surfaceType == "RoofCeiling"				# skip surface if not labeled roof
-	# next if not s.outsideBoundaryCondition == "Outdoors"	# skip surface if not outside
-	# roof_count +=1
-	# absorption = const_solarAbsorptance[s.construction.get.name.to_s]
-	# emissivity = const_thermalAbsorptance[s.construction.get.name.to_s]
-	# heatcapacity = const_heatCapacity[s.construction.get.name.to_s]
-	# roofU = const_U[s.construction.get.name.to_s]
-	
-	# roof_abs_sum += absorption * s.netArea
-	# roof_emiss_sum += emissivity * s.netArea
-	# roof_HC_sum += heatcapacity * s.netArea
-	# roof_U_sum += roofU * s.netArea
-
-	# roof_area += s.netArea				
-	# skylight_area += s.grossArea - s.netArea	
-	
-	# subsurface=s.subSurfaces
-	# subsurface.each do |ss|
-		# skylight_U_sum += const_U[ss.construction.get.name.to_s] * ss.surface.get.netArea
-		# skylight_SHGC_sum+= const_SHGC[ss.construction.get.name.to_s] * ss.surface.get.netArea
-	# end	
-	
-# end
-
 logfile.printf("Roof: Area=%1.0f m2, U=%1.2f W/m2/K, Absorption=%1.2f, Emissivity=%1.2f \n",roof_area,roof_U,roof_solar_absorption,roof_thermal_emissivity)
 logfile.printf("Skylight: Area=%1.0f m2, U=%1.2f W/m2/K, SHGC=%1.2f \n",skylight_area,skylight_U,skylight_SHGC)
 
@@ -946,7 +1149,7 @@ logfile.printf("Skylight: Area=%1.0f m2, U=%1.2f W/m2/K, SHGC=%1.2f \n",skylight
 exterior_heat_capacity = (roof_HC_sum+ wall_HC_sum + window_HC_sum)/(total_wall_area + roof_area+ total_window_area)
 logfile.printf("Exterior Heat Capacity = %1.0f J/K/m2 based on surface area\n", exterior_heat_capacity)
 
-# add up the heat capacity of the defined interior surfaces including any internale mass elements
+# add up the heat capacity of the defined interior surfaces including any internal mass elements
 # compute as normalized to floor area and not surface area
 interior_HC_sum = 0.0
 surfaces.each do |s|
@@ -968,105 +1171,111 @@ logfile.puts "   Calculating Infiltration"
 logfile.puts "*****************************"
 
 # compute infiltration
-#first check to see if there effective leakage areas defined and if not those, then design flow rates
-if not model.getSpaceInfiltrationEffectiveLeakageAreas.empty?
-	infiltration = model.getSpaceInfiltrationEffectiveLeakageAreas
-	infiltration.each do |infil|
-		# set default average envelope air leakage (infiltration) as 7 m3/h/m2 which is about the EnergyPlus defaults
-		logfile.puts "EffectiveLeakageArea not Implemented Yet, Infiltration Rate Set to 7.0 m3/m2/h @ 75 Pa"
-                
-                # JMT this line doesn't make any sense, why is it here?
-		infiltration_rate = 7.0		
-	end
-elsif not model.getSpaceInfiltrationDesignFlowRates.empty?
-	infiltration = model.getSpaceInfiltrationDesignFlowRates
-	logfile.puts "Found #{infiltration.size} SpaceInfiltrationDesignFlowRate objects"
-	
-	infil_frac_sum = 0.0
-	infil_rate_sum = 0.0
-	count = 0
-	infiltration.each do |infil|
-		count += 1
-		rate_type = infil.designFlowRateCalculationMethod
-		if not infil.space.empty?
-			logfile.puts "Space defined for Infiltration object ##{count}"
-			case rate_type
-			when "Flow/Space"
-				# add in the design flow rate per space * number of spaces 
-				infil_rate_temp = infil.designFlowRate.to_s.to_f
-				logfile.puts "Infiltration Object # #{count} is Flow/Space, #{infil_rate_temp} m3/s added"
-			when "Flow/ExteriorArea", "Flow/ExteriorWallArea"
-				# add in the flow/exterior area  * the exterior area
-				infil_rate_temp = infil.flowperExteriorSurfaceArea.to_s.to_f * infil.space.exteriorArea
-				logfile.puts "Infiltration Object # #{count} is Flow/ExteriorArea, #{infil_rate_temp} m3/s added"
-			when "Flow/Area"
-				infil_rate_temp = infil.flowperSpaceFloorArea.to_s.to_f * infil.space.floorArea
-				logfile.puts "Infiltration Object # #{count} is Flow/Area, #{infil_rate_temp} m3/s added"
-			when "AirChanges/Hour"
-				infil_rate_temp= 0
-				logfile.puts "Infiltration Object # #{count} is Flow/Space, Not implemented yet so nothing added"
-			else
-				infil_rate_temp= 0
-				logfile.puts "Infiltration Ojbect # #{count} has no calc method defined, so nothing added"
-			end
-		elsif not infil.spaceType.empty?	
-			logfile.puts "No space defined in Infiltration object # #{count}, using spacetype object instead"
-			st=infil.spaceType.get
-			st_volume =0.0
-			st_exterior_area = 0.0
-			st_num = st.spaces.size
-			st.spaces.each do |s|
-				st_volume += s.volume
-				st_exterior_area += s.exteriorArea
-			end
-			logfile.puts "Found #{st.spaces.size} spaces in spacetype for Infiltration object #{count}"
-			logfile. puts "Infiltration design flow rate found of type #{rate_type}"
-			
-			case rate_type
-			when "Flow/Space"
-				# add in the design flow rate per space * number of spaces 
-				infil_rate_temp= infil.designFlowRate.to_s.to_f * st.spaces.size
-				logfile.puts "Infiltration Object # #{count} is Flow/Space, #{infil_rate_temp} m3/s added"
-			when "Flow/ExteriorArea", "Flow/ExteriorWallArea"
-				# add in the flow/exterior area  * the exterior area
-				infil_rate_temp= infil.flowperExteriorSurfaceArea.to_s.to_f * st_exterior_area
-				logfile.puts "Infiltration Object # #{count} is Flow/ExteriorArea, #{infil_rate_temp} m3/s added"				
-			when "Flow/Area"
-				# add in the flow/floor area * floor area
-				infil_rate_temp = infil.flowperSpaceFloorArea.to_s.to_f * st.floorArea
-				logfile.puts "Infiltration Object # #{count} is Flow/Area, #{infil_rate_temp} m3/s added"				
-			when "AirChanges/Hour"
-				infil_rate_temp= 0
-				infil_rate_temp = infil.flowperSpaceFloorArea.to_s.to_f * st.floorArea
-				logfile.puts "Infiltration Object # #{count} is AirChanges/Hour, #{infil_rate_temp} m3/s added"
-			else
-				infil_rate_temp = infil.airChangesperHour.to_s.to_f * st_volume
-				logfile.puts "Infiltration Ojbect # #{count} has no calc method defined, so nothing added"				
-			end
-		else
-			logfile.puts "No space or spacetype defined for Infiltration object # #{count}, skipping analysis"
-		end
-		
-		# now look for the schedule for the infil object and add up the fraction
-		if not infil.schedule.empty?
-			sched = infil.schedule.get.name.to_s
-			# if a schedule exists, get the average yearly fraction by a time weighted average of occupied and unoccupied averages
-			infil_frac =  occ_aves[sched]*frac_year_occ + unocc_aves[sched]*frac_year_unocc
-			logfile.puts "Infiltration schedule found for Infiltration object ##{count}, scaling by #{infil_frac}"
-		else
-			logfile.puts "No Infiltration schedule found for Infiltration object ##{count}, assuming always on"
-			infil_frac = 1.0
-		end
-		infil_rate_sum +=  infil_rate_temp * infil_frac
-	end
-	logfile.printf("Total Infiltration = %1.3f m3/s at 4 Pa (natural pressure difference)\n",infil_rate_sum);
 
-	# get avg infiltration rate and convert to from m3/m2/min @ 4 Pa to m3/m2/h @ 75 Pa with a .67 pressure exponent
-	# assume constant infilration rate is based on a nominal 4 Pa pressure difference 
-	infiltration_rate = infil_rate_sum/(total_wall_area + roof_area)*3600*(75/4)**0.67
+if OSM_extract_infil_rate 
+
+	#first check to see if there effective leakage areas defined and if not those, then design flow rates
+	# as a last resort use the default rates 
+	if (not model.getSpaceInfiltrationEffectiveLeakageAreas.empty?)
+		infiltration = model.getSpaceInfiltrationEffectiveLeakageAreas
+		infiltration.each do |infil|
+			# set default average envelope air leakage (infiltration) as 7 m3/h/m2 which is about the EnergyPlus defaults
+			logfile.puts "EffectiveLeakageArea not Implemented Yet, Infiltration Rate Set to 7.0 m3/m2/h @ 75 Pa"
+			infiltration_rate = infil_rate_default	
+		end
+	elsif not model.getSpaceInfiltrationDesignFlowRates.empty?
+		infiltration = model.getSpaceInfiltrationDesignFlowRates
+		logfile.puts "Found #{infiltration.size} SpaceInfiltrationDesignFlowRate objects"
+		
+		infil_frac_sum = 0.0
+		infil_rate_sum = 0.0
+		count = 0
+		infiltration.each do |infil|
+			count += 1
+			rate_type = infil.designFlowRateCalculationMethod
+			if not infil.space.empty?
+				logfile.puts "Space defined for Infiltration object ##{count}"
+				case rate_type
+				when "Flow/Space"
+					# add in the design flow rate per space * number of spaces 
+					infil_rate_temp = (infil.designFlowRate.to_s).to_f
+					logfile.puts "Infiltration Object # #{count} is Flow/Space, #{infil_rate_temp} m3/s added"
+				when "Flow/ExteriorArea", "Flow/ExteriorWallArea"
+					# add in the flow/exterior area  * the exterior area
+					infil_rate_temp = (infil.flowperExteriorSurfaceArea.to_s).to_f * infil.space.exteriorArea
+					logfile.puts "Infiltration Object # #{count} is Flow/ExteriorArea, #{infil_rate_temp} m3/s added"
+				when "Flow/Area"
+					infil_rate_temp = (infil.flowperSpaceFloorArea.to_s).to_f * infil.space.floorArea
+					logfile.puts "Infiltration Object # #{count} is Flow/Area, #{infil_rate_temp} m3/s added"
+				when "AirChanges/Hour"
+					infil_rate_temp= 0
+					logfile.puts "Infiltration Object # #{count} is Flow/Space, Not implemented yet so nothing added"
+				else
+					infil_rate_temp= 0
+					logfile.puts "Infiltration Ojbect # #{count} has no calc method defined, so nothing added"
+				end
+			elsif not infil.spaceType.empty?	
+				logfile.puts "No space defined in Infiltration object # #{count}, using spacetype object instead"
+				st=infil.spaceType.get
+				st_volume =0.0
+				st_exterior_area = 0.0
+				st_num = st.spaces.size
+				st.spaces.each do |s|
+					st_volume += s.volume
+					st_exterior_area += s.exteriorArea
+				end
+				logfile.puts "Found #{st.spaces.size} spaces in spacetype for Infiltration object #{count}"
+				logfile. puts "Infiltration design flow rate found of type #{rate_type}"
+				
+				case rate_type
+				when "Flow/Space"
+					# add in the design flow rate per space * number of spaces 
+					infil_rate_temp= infil.designFlowRate.to_s.to_f * st.spaces.size
+					logfile.puts "Infiltration Object # #{count} is Flow/Space, #{infil_rate_temp} m3/s added"
+				when "Flow/ExteriorArea", "Flow/ExteriorWallArea"
+					# add in the flow/exterior area  * the exterior area
+					infil_rate_temp= infil.flowperExteriorSurfaceArea.to_s.to_f * st_exterior_area
+					logfile.puts "Infiltration Object # #{count} is Flow/ExteriorArea, #{infil_rate_temp} m3/s added"				
+				when "Flow/Area"
+					# add in the flow/floor area * floor area
+					infil_rate_temp = infil.flowperSpaceFloorArea.to_s.to_f * st.floorArea
+					logfile.puts "Infiltration Object # #{count} is Flow/Area, #{infil_rate_temp} m3/s added"				
+				when "AirChanges/Hour"
+					infil_rate_temp = infil.flowperSpaceFloorArea.to_s.to_f * st.floorArea
+					logfile.puts "Infiltration Object # #{count} is AirChanges/Hour, #{infil_rate_temp} m3/s added"
+				else
+					infil_rate_temp = infil.airChangesperHour.to_s.to_f * st_volume
+					logfile.puts "Infiltration Ojbect # #{count} has no calc method defined, so nothing added"				
+				end
+			else
+				logfile.puts "No space or spacetype defined for Infiltration object # #{count}, skipping analysis"
+			end
+			
+			# now look for the schedule for the infil object and add up the fraction
+			if not infil.schedule.empty?
+				sched = infil.schedule.get.name.to_s
+				# if a schedule exists, get the average yearly fraction by a time weighted average of occupied and unoccupied averages
+				infil_frac =  occ_aves[sched]*frac_year_occ + unocc_aves[sched]*frac_year_unocc
+				logfile.puts "Infiltration schedule found for Infiltration object ##{count}, scaling by #{infil_frac}"
+			else
+				logfile.puts "No Infiltration schedule found for Infiltration object ##{count}, assuming always on"
+				infil_frac = 1.0
+			end
+			infil_rate_sum +=  infil_rate_temp * infil_frac
+		end
+		logfile.printf("Total Infiltration = %1.3f m3/s at 4 Pa (natural pressure difference)\n",infil_rate_sum);
+
+		# get avg infiltration rate and convert to from m3/m2/min @ 4 Pa to m3/m2/h @ 75 Pa with a .67 pressure exponent
+		# assume constant infilration rate is based on a nominal 4 Pa pressure difference 
+		infiltration_rate = infil_rate_sum/(total_wall_area + roof_area)*3600*(75/4)**0.67
+	else
+		logfile.puts "No Infiltration Design Flow Rates Found"
+		infiltration_rate = infil_rate_default			# set to default rate
+	end
 else
-	logfile.puts "No Infiltration Design Flow Rates Found, Infiltration Rate Set to 2.0 m3/m2/h @ 75 Pa"
-	infiltration_rate = 2.0		# set default average envelope air leakage (infiltration) as 2 m3/h/m2 which is about the EnergyPlus default
+	logfile.puts "No Infiltration Extraction From OSM file"
+	infiltration_rate = infil_rate_default		#set to default rate
+
 end
 logfile.printf( "Infiltration rate set to %1.3f m3/h/m2 @ 75 Pa\n", infiltration_rate)
 
@@ -1080,282 +1289,279 @@ logfile.puts "  Analyzing HVAC"
 logfile.puts "*****************************"
 puts "...Analyzing HVAC"
 
-hvac_component_array = []
-hvac_component_area_array=[]
+if OSM_extract_HVAC
 
-plant_loops_array=[]
-plant_loops_area_array=[]
+	hvac_component_array = Array.new
+	hvac_component_area_array=Array.new
 
-# look through the air loops and extract the components
-# for components that can connect to a plant water loop (namely things with water heating and cooling coils)
-air_loops.each do |air_loop|
-	supply_components = air_loop.supplyComponents
+	plant_loops_array=Array.new
+	plant_loops_area_array=Array.new
 
-	zone_area = 0.0
-	# get the total area of all the zones connected through the loop
-	air_loop.thermalZones.each do |z|
-		zone_area += z.floorArea	#
-	end
+	# look through the air loops and extract the components
+	# for components that can connect to a plant water loop (namely things with water heating and cooling coils)
+	air_loops.each do |air_loop|
+		supply_components = air_loop.supplyComponents
 
-	# loop through the components and store them all in a single array
-	# if 
-	supply_components.each do |component|
-		next if not component.to_Node.empty?   				# skip if the component is a node
-		next if not component.to_ConnectorMixer.empty?  	# skip of component is a mixer connector
-		next if not component.to_ConnectorSplitter.empty? 	# skip if component is a splitter
-		next if not component.to_PipeAdiabatic.empty?		# skip if component is a pipe
-			
-		# if the component is a water cooling coil, do not save, but instead save the attached plant loop
-		if (not component.to_CoilCoolingWater.empty?)  # if the component is a cooling coil, don't save the attached plant loop	
-			plant_loops_array << component.to_CoilCoolingWater.get.plantLoop
-			plant_loops_area_array << zone_area
-		# if the component is a water cooling coil, do not save but instead save the attached plant loop
-		elsif not component.to_CoilHeatingWater.empty? # if the component is a heating coil, don't save and search the attached plant loop
-			plant_loop_components = component.to_CoilHeatingWater.get.plantLoop.get.supplyComponents  # get the cooling coil plant loop
-			plant_loops_array << component.to_CoilHeatingWater.get.plantLoop
-			plant_loops_area_array << zone_area	
-		else # otherwise this component is not hooked to a water loop so save it for later parsing
-			hvac_component_array << component
-			hvac_component_area_array << zone_area
+		zone_area = 0.0
+		# get the total area of all the zones connected through the loop
+		air_loop.thermalZones.each do |z|
+			zone_area += z.floorArea	#
 		end
-	end
-end
 
-(0 .. (plant_loops_array.size - 1)).each do |i|
-	supply_components = plant_loops_array[i].get.supplyComponents
-	zone_area = plant_loops_area_array[i]
-
-	supply_components.each do |component|
-		next if not component.to_Node.empty?   				# skip if the component is a node
-		next if not component.to_ConnectorMixer.empty?  	# skip of component is a mixer connector
-		next if not component.to_ConnectorSplitter.empty? 	# skip if component is a splitter
-		next if not component.to_PipeAdiabatic.empty?		# skip if component is a pipe
-		
-		hvac_component_array << component
-		hvac_component_area_array << zone_area	
-	end
-end
-
-
-# now add in any HVAC components not part of an air loop (PTAC, PTHP, unit heaters, etc)
-thermal_zones.each do |zone|
-	zone.equipment.each do |component|
-		hvac_component_array << component
-		hvac_component_area_array << zone.floorArea
-	end
-end
-
-
-cooling_coil_array=[]
-cooling_coil_area_array=[]
-heating_coil_array=[]
-heating_coil_area_array=[]
-(0 .. (hvac_component_array.size-1)).each do |i|
-	component=hvac_component_array[i]
-	area = hvac_component_area_array[i]
-
-	# first check for PTAC
-	if not component.to_ZoneHVACPackagedTerminalAirConditioner.empty?
-		ptac=component.to_ZoneHVACPackagedTerminalAirConditioner.get		
-		cooling_coil_array << component.to_ZoneHVACPackagedTerminalAirConditioner.get.coolingCoil
-		cooling_coil_area_array << area
-		heating_coil_array << component.to_ZoneHVACPackagedTerminalAirConditioner.get.heatingCoil
-		heating_coil_area_array << area
-	# next check for PTHP
-	elsif not component.to_ZoneHVACPackagedTerminalHeatPump.empty?
-		pthp=component.to_ZoneHVACPackagedTerminalHeatPump.get
-		cooling_coil_array << component.to_ZoneHVACPackagedTerminalHeatPump.get.coolingCoil
-		cooling_coil_area_array << area
-		heating_coil_array << component.to_ZoneHVACPackagedTerminalHeatPump.get.heatingCoil
-		heating_coil_area_array << area
-	# next check for water to air heat pump
-	elsif not component.to_ZoneHVACWaterToAirHeatPump.empty?
-		wahp=component.to_ZoneHVACWaterToAirHeatPump.get
-		cooling_coil_array << component.to_ZoneHVACWaterToAirHeatPump.get.coolingCoil
-		cooling_coil_area_array << area			
-		heating_coil_array << component.to_ZoneHVACWaterToAirHeatPump.get.heatingCoil			
-		heating_coil_area_array << area
-	# next check for a component Heater	
-	elsif not component.to_ZoneHVACUnitHeater.empty?
-		heating_coil_array << component.to_ZoneHVACUnitHeater.get.heatingCoil
-		heating_coil_area_array << area	
-	#check for unitary air-to-air heat pump
-	elsif not component.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty?
-		cooling_coil_array << component.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil
-		cooling_coil_area_array << area	
-		heating_coil_array << component.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.heatingCoil
-		heating_coil_area_array << area		
-	# next check for the cooling and heating coils themselves and save them to the lists
-	elsif not component.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil
-		cooling_coil_array << component
-		cooling_coil_area_array << area
-	elsif not component.to_CoilCoolingDXTwoSpeed.empty?  # check for a two speed DX coil
-		cooling_coil_array << component
-		cooling_coil_area_array << area		
-	elsif not component.to_CoilCoolingWater.empty?  # check for plain cooling water coil
-		cooling_coil_array << component
-		cooling_coil_area_array << area	
-	elsif not component.to_ChillerElectricEIR.empty? # check for electric chiller
-		cooling_coil_array << component
-		cooling_coil_area_array << area		
-	elsif not component.to_CoilHeatingWater.empty? 	# check for plain heating water coil
-		heating_coil_array << component
-		heating_coil_area_array << area
-	elsif not component.to_CoilHeatingElectric.empty?
-		heating_coil_array << component
-		heating_coil_area_array << area	
-	elsif not component.to_CoilHeatingGas.empty?
-		heating_coil_array << component
-		heating_coil_area_array << area	
-	elsif not component.to_BoilerHotWater.empty?
-		heating_coil_array << component
-		heating_coil_area_array << area	
-	elsif not component.to_BoilerSteam.empty?
-		heating_coil_array << component
-		heating_coil_area_array << area	
-	end
-end
-
-
-logfile.puts "Found #{cooling_coil_array.size} cooling elements"
-logfile.puts "Found #{heating_coil_array.size} heating elements"
-
-# go through the cooling coil array list and add up the COP*zone area and zone area to compute zonearea weighted COP
-cop_sum = 0.0
-cop_area_sum = 0.0
-cooling_coil_name_array=[]
-(0 .. (cooling_coil_array.size - 1)).each do |i|
-	coil = cooling_coil_array[i]
-	area = cooling_coil_area_array[i]
-	if not coil.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil		
-		cop_sum += coil.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f*area
-		cop_area_sum += area
-	elsif not coil.to_CoilCoolingDXTwoSpeed.empty?	# check for two speed DX coil
-		cop_sum += coil.to_CoilCoolingDXTwoSpeed.get.ratedHighSpeedCOP.to_f*area
-		cop_area_sum += area
-	elsif not coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty? # check for heat pump
-		cop_sum += coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f*area
-		cop_area_sum += area
-	elsif not coil.to_CoilCoolingWater.empty? # check for water cooling coils
-		cop_sum += coil.to_CoilCoolingWater.get*area   	#
-		cop_area_sum += area
-	elsif not coil.to_ChillerElectricEIR.empty?
-		cop_sum += coil.to_ChillerElectricEIR.get.referenceCOP*area   	#
-		cop_area_sum += area
-	
-	end
-end
-
-# if the COP sum is 0 but the cooling coil array is non-zero, check the plant loop for a chiller
-if (cop_sum == 0.0  ) && (cooling_coil_array.size > 0)
-	puts "checking plant loop for chiller"
-	
-	plant_loops.each do |plant_loop|
-		supply_components = plant_loop.supplyComponents
-		# loop through the components and get the efficiency
-		area=building.floorArea
+		# loop through the components and store them all in a single array
+		# if 
 		supply_components.each do |component|
-			# if we are here then we don't have a specific area assigned to the cooling unit so use the full building floor area
-			if not component.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil
-				cop_array << component.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f
-				cop_areas << building.floorArea	
-			elsif not component.to_CoilCoolingDXTwoSpeed.empty?	# check for two speed DX coil
-				cop_array <<  component.to_CoilCoolingDXTwoSpeed.get.ratedHighSpeedCOP.to_f
-				cop_areas << area	
-			elsif not component.to_to_ChillerElectricEIR.empty?   # check for a chiller
-				cop_sum += coil.to_ChillerElectricEIR.get.referenceCOP*area   	#
-				cop_area_sum += area			
+			next if not component.to_Node.empty?   				# skip if the component is a node
+			next if not component.to_ConnectorMixer.empty?  	# skip of component is a mixer connector
+			next if not component.to_ConnectorSplitter.empty? 	# skip if component is a splitter
+			next if not component.to_PipeAdiabatic.empty?		# skip if component is a pipe
+				
+			# if the component is a water cooling coil, do not save, but instead save the attached plant loop
+			if (not component.to_CoilCoolingWater.empty?)  # if the component is a cooling coil, don't save the attached plant loop	
+				plant_loops_array << component.to_CoilCoolingWater.get.plantLoop
+				plant_loops_area_array << zone_area
+			# if the component is a water cooling coil, do not save but instead save the attached plant loop
+			elsif not component.to_CoilHeatingWater.empty? # if the component is a heating coil, don't save and search the attached plant loop
+				plant_loop_components = component.to_CoilHeatingWater.get.plantLoop.get.supplyComponents  # get the cooling coil plant loop
+				plant_loops_array << component.to_CoilHeatingWater.get.plantLoop
+				plant_loops_area_array << zone_area	
+			else # otherwise this component is not hooked to a water loop so save it for later parsing
+				hvac_component_array << component
+				hvac_component_area_array << zone_area
 			end
 		end
 	end
-end
 
+	(0 .. (plant_loops_array.size - 1)).each do |i|
+		supply_components = plant_loops_array[i].get.supplyComponents
+		zone_area = plant_loops_area_array[i]
 
-if cop_area_sum > 0.0
-	cooling_COP = cop_sum / cop_area_sum
-	logfile.puts "Area Weighted Average Cooling COP = #{cooling_COP}"
-else
-	cooling_COP=0.0
-	logfile.puts "No Cooling Equipment Found, set COP = #{cooling_COP}"
-end
-
-
-# go through the heating coil array list and add up the COP*zone area for gas and electic heating coils
-elec_sum = 0.0
-elec_area_sum = 0.0
-gas_sum = 0.0
-gas_area_sum = 0.0
-(0 .. (heating_coil_array.size - 1)).each do |i|
-	coil = heating_coil_array[i]
-	area = heating_coil_area_array[i]
-
-	if not coil.to_CoilHeatingGas.empty?   # check for gas heating coil
-		gas_sum += coil.to_CoilHeatingGas.get.gasBurnerEfficiency.to_f*area
-		gas_area_sum += area
-	elsif not coil.to_CoilHeatingElectric.empty?	# check for electric heating coil
-		elec_sum += coil.to_CoilHeatingElectric.get.efficiency.to_f*area
-		elec_area_sum += area
-	elsif not coil.to_CoilHeatingDXSingleSpeed.empty?   # check for single speed DX heating coil
-		elec_sum += coil.to_CoilHeatingDXSingleSpeed.get.ratedCOP.to_f*area
-		elec_area_sum += area
-	elsif not coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty? # check for unitary heat pump, extract coil and get 
-		elec_sum += coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.heatingCoil.to_CoilHeatingDXSingleSpeed.get.ratedCOP.to_f*area	
-		elec_area_sum += area	
-	elsif not coil.to_BoilerHotWater.empty?
-		boiler =coil.to_BoilerHotWater.get
-		if boiler.fuelType.to_s =="NaturalGas"			
-			gas_sum +=  boiler.nominalThermalEfficiency.to_f*area
-			gas_area_sum +=  area					
-		else
-			elec_sum += boiler.nominalThermalEfficiency.to_f*area
-			elec_area_sum += area
-		end
-	end # elsif not coil	
-end	
-
-
-# if there seems to be no heating energy used but there are heating elements detected, check the plant loop for a boiler
-if ((gas_sum + elec_sum) == 0.0  ) && (heating_coil_array.size>0)
-	plant_loops.each do |plant_loop|
-		supply_components = plant_loop.supplyComponents
-		# loop through the components and get the efficiency
-		area=building.floorArea
 		supply_components.each do |component|
-			if not component.to_BoilerHotWater.empty?   # check for a hot water boiler
-				boiler = component.to_BoilerHotWater.get
-				if boiler.fuelType.to_s =="NaturalGas"			
-					gas_sum +=  boiler.nominalThermalEfficiency.to_f*area
-					gas_area_sum += area		
-				else
-					elec_sum += boiler.nominalThermalEfficiency.to_f*area
-					elec_area_sum += area	
+			next if not component.to_Node.empty?   				# skip if the component is a node
+			next if not component.to_ConnectorMixer.empty?  	# skip of component is a mixer connector
+			next if not component.to_ConnectorSplitter.empty? 	# skip if component is a splitter
+			next if not component.to_PipeAdiabatic.empty?		# skip if component is a pipe
+			
+			hvac_component_array << component
+			hvac_component_area_array << zone_area	
+		end
+	end
+
+	# now add in any HVAC components not part of an air loop (PTAC, PTHP, unit heaters, etc)
+	thermal_zones.each do |zone|
+		zone.equipment.each do |component|
+			hvac_component_array << component
+			hvac_component_area_array << zone.floorArea
+		end
+	end
+
+	cooling_coil_array=Array.new
+	cooling_coil_area_array=Array.new
+	heating_coil_array=Array.new
+	heating_coil_area_array=Array.new
+	(0 .. (hvac_component_array.size-1)).each do |i|
+		component=hvac_component_array[i]
+		area = hvac_component_area_array[i]
+
+		# first check for PTAC
+		if not component.to_ZoneHVACPackagedTerminalAirConditioner.empty?
+			ptac=component.to_ZoneHVACPackagedTerminalAirConditioner.get		
+			cooling_coil_array << component.to_ZoneHVACPackagedTerminalAirConditioner.get.coolingCoil
+			cooling_coil_area_array << area
+			heating_coil_array << component.to_ZoneHVACPackagedTerminalAirConditioner.get.heatingCoil
+			heating_coil_area_array << area
+		# next check for PTHP
+		elsif not component.to_ZoneHVACPackagedTerminalHeatPump.empty?
+			pthp=component.to_ZoneHVACPackagedTerminalHeatPump.get
+			cooling_coil_array << component.to_ZoneHVACPackagedTerminalHeatPump.get.coolingCoil
+			cooling_coil_area_array << area
+			heating_coil_array << component.to_ZoneHVACPackagedTerminalHeatPump.get.heatingCoil
+			heating_coil_area_array << area
+		# next check for water to air heat pump
+		elsif not component.to_ZoneHVACWaterToAirHeatPump.empty?
+			wahp=component.to_ZoneHVACWaterToAirHeatPump.get
+			cooling_coil_array << component.to_ZoneHVACWaterToAirHeatPump.get.coolingCoil
+			cooling_coil_area_array << area			
+			heating_coil_array << component.to_ZoneHVACWaterToAirHeatPump.get.heatingCoil			
+			heating_coil_area_array << area
+		# next check for a component Heater	
+		elsif not component.to_ZoneHVACUnitHeater.empty?
+			heating_coil_array << component.to_ZoneHVACUnitHeater.get.heatingCoil
+			heating_coil_area_array << area	
+		#check for unitary air-to-air heat pump
+		elsif not component.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty?
+			cooling_coil_array << component.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil
+			cooling_coil_area_array << area	
+			heating_coil_array << component.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.heatingCoil
+			heating_coil_area_array << area		
+		# next check for the cooling and heating coils themselves and save them to the lists
+		elsif not component.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil
+			cooling_coil_array << component
+			cooling_coil_area_array << area
+		elsif not component.to_CoilCoolingDXTwoSpeed.empty?  # check for a two speed DX coil
+			cooling_coil_array << component
+			cooling_coil_area_array << area		
+		elsif not component.to_CoilCoolingWater.empty?  # check for plain cooling water coil
+			cooling_coil_array << component
+			cooling_coil_area_array << area	
+		elsif not component.to_ChillerElectricEIR.empty? # check for electric chiller
+			cooling_coil_array << component
+			cooling_coil_area_array << area		
+		elsif not component.to_CoilHeatingWater.empty? 	# check for plain heating water coil
+			heating_coil_array << component
+			heating_coil_area_array << area
+		elsif not component.to_CoilHeatingElectric.empty?
+			heating_coil_array << component
+			heating_coil_area_array << area	
+		elsif not component.to_CoilHeatingGas.empty?
+			heating_coil_array << component
+			heating_coil_area_array << area	
+		elsif not component.to_BoilerHotWater.empty?
+			heating_coil_array << component
+			heating_coil_area_array << area	
+		elsif not component.to_BoilerSteam.empty?
+			heating_coil_array << component
+			heating_coil_area_array << area	
+		end
+	end
+
+	logfile.puts "Found #{cooling_coil_array.size} cooling elements"
+	logfile.puts "Found #{heating_coil_array.size} heating elements"
+
+	# go through the cooling coil array list and add up the COP*zone area and zone area to compute zonearea weighted COP
+	cop_sum = 0.0
+	cop_area_sum = 0.0
+	cooling_coil_name_array=Array.new
+	(0 .. (cooling_coil_array.size - 1)).each do |i|
+		coil = cooling_coil_array[i]
+		area = cooling_coil_area_array[i]
+		if not coil.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil		
+			cop_sum += coil.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f*area
+			cop_area_sum += area
+		elsif not coil.to_CoilCoolingDXTwoSpeed.empty?	# check for two speed DX coil
+			cop_sum += coil.to_CoilCoolingDXTwoSpeed.get.ratedHighSpeedCOP.to_f*area
+			cop_area_sum += area
+		elsif not coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty? # check for heat pump
+			cop_sum += coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f*area
+			cop_area_sum += area
+		elsif not coil.to_CoilCoolingWater.empty? # check for water cooling coils
+			cop_sum += coil.to_CoilCoolingWater.get*area   	#
+			cop_area_sum += area
+		elsif not coil.to_ChillerElectricEIR.empty?
+			cop_sum += coil.to_ChillerElectricEIR.get.referenceCOP*area   	#
+			cop_area_sum += area
+		end
+	end
+
+	# if the COP sum is 0 but the cooling coil array is non-zero, check the plant loop for a chiller
+	if (cop_sum == 0.0  ) && (cooling_coil_array.size > 0)
+		puts "checking plant loop for chiller"
+		
+		plant_loops.each do |plant_loop|
+			supply_components = plant_loop.supplyComponents
+			# loop through the components and get the efficiency
+			area=building.floorArea
+			supply_components.each do |component|
+				# if we are here then we don't have a specific area assigned to the cooling unit so use the full building floor area
+				if not component.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil
+					cop_array << component.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f
+					cop_areas << building.floorArea	
+				elsif not component.to_CoilCoolingDXTwoSpeed.empty?	# check for two speed DX coil
+					cop_array <<  component.to_CoilCoolingDXTwoSpeed.get.ratedHighSpeedCOP.to_f
+					cop_areas << area	
+				elsif not component.to_to_ChillerElectricEIR.empty?   # check for a chiller
+					cop_sum += coil.to_ChillerElectricEIR.get.referenceCOP*area   	#
+					cop_area_sum += area			
 				end
 			end
 		end
 	end
-end 
 
+	if cop_area_sum > 0.0
+		cooling_COP = cop_sum / cop_area_sum
+		logfile.puts "Area Weighted Average Cooling COP = #{cooling_COP}"
+	else
+		cooling_COP= 1E+12	# set cooling COP to huge number so cooling energy is zero if cooling was found
+		logfile.puts "No Cooling Equipment Found, set COP = #{cooling_COP}"
+	end
 
-if gas_sum > elec_sum
-	heating_fuel_type = 2  # set heating fuel type to gas if heating_gas_area is larger than electric area
-	logfile.puts "Fuel Type Determined to be Mostly or All Gas, HVAC Fuel Type = 2"
+	# go through the heating coil array list and add up the COP*zone area for gas and electic heating coils
+	elec_sum = 0.0
+	elec_area_sum = 0.0
+	gas_sum = 0.0
+	gas_area_sum = 0.0
+	(0 .. (heating_coil_array.size - 1)).each do |i|
+		coil = heating_coil_array[i]
+		area = heating_coil_area_array[i]
+
+		if not coil.to_CoilHeatingGas.empty?   # check for gas heating coil
+			gas_sum += coil.to_CoilHeatingGas.get.gasBurnerEfficiency.to_f*area
+			gas_area_sum += area
+		elsif not coil.to_CoilHeatingElectric.empty?	# check for electric heating coil
+			elec_sum += coil.to_CoilHeatingElectric.get.efficiency.to_f*area
+			elec_area_sum += area
+		elsif not coil.to_CoilHeatingDXSingleSpeed.empty?   # check for single speed DX heating coil
+			elec_sum += coil.to_CoilHeatingDXSingleSpeed.get.ratedCOP.to_f*area
+			elec_area_sum += area
+		elsif not coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty? # check for unitary heat pump, extract coil and get 
+			elec_sum += coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.heatingCoil.to_CoilHeatingDXSingleSpeed.get.ratedCOP.to_f*area	
+			elec_area_sum += area	
+		elsif not coil.to_BoilerHotWater.empty?
+			boiler =coil.to_BoilerHotWater.get
+			if boiler.fuelType.to_s =="NaturalGas"			
+				gas_sum +=  boiler.nominalThermalEfficiency.to_f*area
+				gas_area_sum +=  area					
+			else
+				elec_sum += boiler.nominalThermalEfficiency.to_f*area
+				elec_area_sum += area
+			end
+		end # elsif not coil	
+	end	
+
+	# if there seems to be no heating energy used but there are heating elements detected, check the plant loop for a boiler
+	if ((gas_sum + elec_sum) == 0.0  ) && (heating_coil_array.size>0)
+		plant_loops.each do |plant_loop|
+			supply_components = plant_loop.supplyComponents
+			# loop through the components and get the efficiency
+			area=building.floorArea
+			supply_components.each do |component|
+				if not component.to_BoilerHotWater.empty?   # check for a hot water boiler
+					boiler = component.to_BoilerHotWater.get
+					if boiler.fuelType.to_s =="NaturalGas"			
+						gas_sum +=  boiler.nominalThermalEfficiency.to_f*area
+						gas_area_sum += area		
+					else
+						elec_sum += boiler.nominalThermalEfficiency.to_f*area
+						elec_area_sum += area	
+					end
+				end
+			end
+		end
+	end 
+
+	if gas_sum > elec_sum
+		heating_fuel_type = 2  # set heating fuel type to gas if heating_gas_area is larger than electric area
+		logfile.puts "Fuel Type Determined to be Mostly or All Gas, HVAC Fuel Type = 2"
+	else
+		logfile.puts "Fuel Type Determined to be Mostly or All Electric, HVAC Fuel Type = 1"
+		heating_fuel_type = 1
+	end
+
+	if (gas_sum + elec_sum) > 0.0
+		heating_system_efficiency = (elec_sum + gas_sum)/(elec_area_sum + gas_area_sum)
+		logfile.puts "Average Heating Efficiency = #{heating_system_efficiency}"
+	else
+		logfile.puts "No heating elements found - using HVAC defaults"
+		heating_system_efficiency = heating_system_efficiency_default
+		heating_fuel_type = heating_fuel_type_default
+	end
+
 else
-	logfile.puts "Fuel Type Determined to be Mostly or All Electric, HVAC Fuel Type = 1"
-	heating_fuel_type = 1
+		cooling_COP = cooling_COP_default
+		heating_system_efficiency = heating_system_efficiency_default
+		heating_fuel_type = heating_fuel_type_default
 end
 
-if (gas_sum + elec_sum) > 0.0
-	heating_system_efficiency = (elec_sum + gas_sum)/(elec_area_sum + gas_area_sum)
-	logfile.puts "Average Heating Efficiency = #{heating_system_efficiency}"
-else
-	logfile.puts "No heating elements found - setting Average Heating Efficiency = 0.8 and Heating Fuel Type = 2"
-	heating_system_efficiency = 0.8
-	heating_fuel_type = 2
-end
-
-
-
-	
 # set up the HVAC loss tables
 # hvac type 		0		1		2		3		4		5		6		7		8		9
 #					10		11		12		13		14		15		16		17		18		19
@@ -1380,7 +1586,7 @@ hvac_cold_table =[	0.00, 	0.00, 	0.00, 	0.00, 	0.00, 	0.01,	0.00, 	0.00, 	0.00, 
 hvac_waste_factor=hvac_waste_table[hvac_type]
 hvac_heating_loss_factor = hvac_hot_table[hvac_type]
 hvac_cooling_loss_factor=hvac_cold_table[hvac_type]
-
+logfile.printf("#HVAC type was #{hvac_type_default}")
 logfile.printf("HVAC Waste Factor = %1.2f \n",hvac_waste_factor)
 logfile.printf("HVAC Heating Loss Factor = %1.2f \n",hvac_heating_loss_factor)
 logfile.printf("HVAC Cooling Loss  Factor = %1.2f \n",hvac_cooling_loss_factor)
@@ -1392,114 +1598,122 @@ logfile.puts "Heating Fuel Type = #{heating_fuel_type}"  # heating energy, 1=ele
 logfile.puts "Heating System Efficiency = #{heating_system_efficiency}"
 
 # calculate fresh air ventilation rates
-freshair_flow_rate = 0.0
-spaces.each do |s|
-	
-	if not s.designSpecificationOutdoorAir.empty?
-		outdoor_air = s.designSpecificationOutdoorAir.get
-	
-		# these methods will return 0.0 if nothing is defined
-		air_ach = outdoor_air.outdoorAirFlowAirChangesperHour* s.volume / 3.6 	 		# get ACH and convert to L/s
-		air_rate = outdoor_air.outdoorAirFlowRate * 1000								# get air flow rate in L/s
-		air_per_person = outdoor_air.outdoorAirFlowperPerson * s.numberOfPeople * 1000 	# get in m3/s/person and convert to L/s
-		air_per_area = outdoor_air.outdoorAirFlowperFloorArea * s.floorArea * 1000 		# get in m3/s/m2 and convert to L/s
-
-		if not outdoor_air.outdoorAirFlowRateFractionSchedule.empty?
-			sched = outdoor_air.outdoorAirFlowRateFractionSchedule.get.name.to_s
-			sched_mult=occ_aves[sched]*frac_year_occ + unocc_aves[sched]*frac_year_unocc
-		else
-			sched_mult=1.0	# if no schedule is defined set multiplier to 1.0
-		end
-
-		if outdoor_air.outdoorAirMethod == "Maximum" 
-			space_air_rate = [air_per_person, air_per_area, air_rate, air_ach].max * s.multiplier * sched_mult
-		else 	# if maximum is not selected, assume sum is selected
-			space_air_rate = (air_per_person + air_per_area + air_rate + air_ach) * s.multiplier * sched_mult
-		end
+if OSM_extract_vent_rate
+	freshair_flow_rate = 0.0
+	spaces.each do |s|
 		
-	else  # if no outdoor air rate is defined for space, default to 20 cfm/nominal person and convert to L/S from cfm
-		logfile.puts " No outdoor air rate define for space #{s.name} , default of 20cm/nominal person used"
-		space_air_rate = 20 * s.numberOfPeople/2.12
-	end
-	freshair_flow_rate += space_air_rate
-end
+		if not s.designSpecificationOutdoorAir.empty?
+			outdoor_air = s.designSpecificationOutdoorAir.get
+		
+			# these methods will return 0.0 if nothing is defined
+			air_ach = outdoor_air.outdoorAirFlowAirChangesperHour* s.volume / 3.6 	 		# get ACH and convert to L/s
+			air_rate = outdoor_air.outdoorAirFlowRate * 1000								# get air flow rate in L/s
+			air_per_person = outdoor_air.outdoorAirFlowperPerson * s.numberOfPeople * 1000 	# get in m3/s/person and convert to L/s
+			air_per_area = outdoor_air.outdoorAirFlowperFloorArea * s.floorArea * 1000 		# get in m3/s/m2 and convert to L/s
 
+			if not outdoor_air.outdoorAirFlowRateFractionSchedule.empty?
+				sched = outdoor_air.outdoorAirFlowRateFractionSchedule.get.name.to_s
+				sched_mult=occ_aves[sched]*frac_year_occ + unocc_aves[sched]*frac_year_unocc
+			else
+				sched_mult=1.0	# if no schedule is defined set multiplier to 1.0
+			end
+
+			if outdoor_air.outdoorAirMethod == "Maximum" 
+				space_air_rate = [air_per_person, air_per_area, air_rate, air_ach].max * s.multiplier * sched_mult
+			else 	# if maximum is not selected, assume sum is selected
+				space_air_rate = (air_per_person + air_per_area + air_rate + air_ach) * s.multiplier * sched_mult
+			end
+			
+		else  # if no outdoor air rate is defined for space, default to 20 cfm/nominal person and convert to L/S from cfm
+			logfile.puts " No outdoor air rate define for space #{s.name} , default of 20cm/nominal person used"
+			space_air_rate = 20 * s.numberOfPeople/2.12
+		end
+		freshair_flow_rate += space_air_rate
+	end
+else
+	freshair_flow_rate = number_of_people * vent_rate_per_person_default
+end
 supply_exhaust_rate = freshair_flow_rate	# set exhaust = supply rate as default (i.e. no pressurization)
 logfile.printf("Total ventilation fresh air flow rate = %1.2f L/s\n", freshair_flow_rate)
 logfile.puts "No exhaust rate extraction - set air exhaust rate to ventilation rate" 
 
-
-# Try to find DHW water components and get the water use
-
-# search plant loops for water heaters
-dhw_gas_array=[]
-dhw_elec_array=[]
-plant_loops.each do |plant_loop|
-	supply_components = plant_loop.supplyComponents
-	# loop through the components and find the components that are water heaters
-	supply_components.each do |component|
-		if not component.to_WaterHeaterMixed.empty?   # enter here if the item is a water heater
-			heater = component.to_WaterHeaterMixed.get			# convert component to water heater type
-			if heater.heaterFuelType.to_s =="NaturalGas"		# check to see if the heater is gas or electric	
-				dhw_gas_array << heater.heaterThermalEfficiency.to_f	# store the efficiency
-			else
-				dhw_elec_array << heater.heaterThermalEfficiency.to_f	# store the efficiency
+if OSM_extract_dhw
+	# Try to find DHW water components and get the water use
+	# search plant loops for water heaters
+	dhw_gas_array=Array.new
+	dhw_elec_array=Array.new
+	plant_loops.each do |plant_loop|
+		supply_components = plant_loop.supplyComponents
+		# loop through the components and find the components that are water heaters
+		supply_components.each do |component|
+			if not component.to_WaterHeaterMixed.empty?   # enter here if the item is a water heater
+				heater = component.to_WaterHeaterMixed.get			# convert component to water heater type
+				if heater.heaterFuelType.to_s =="NaturalGas"		# check to see if the heater is gas or electric	
+					dhw_gas_array << heater.heaterThermalEfficiency.to_f	# store the efficiency
+				else
+					dhw_elec_array << heater.heaterThermalEfficiency.to_f	# store the efficiency
+				end
 			end
 		end
 	end
-end
 
-# add up all the uses from the individual components
-dhw_gas_sum=0.0
-dhw_gas_array.each do |gas|
-	dhw_gas_sum += gas	
-end
-dhw_elec_sum=0.0
-dhw_elec_array.each do |elec|
-	dhw_elec_sum += elec
-end
+	# add up all the uses from the individual components
+	dhw_gas_sum=0.0
+	dhw_gas_array.each do |gas|
+		dhw_gas_sum += gas	
+	end
+	dhw_elec_sum=0.0
+	dhw_elec_array.each do |elec|
+		dhw_elec_sum += elec
+	end
 
-# find the average efficiency of water heaters
-n_dhw_units = dhw_gas_array.size + dhw_elec_array.size
-if n_dhw_units > 0  # if the number of water heaters is > 0
-	dhw_system_efficiency = (dhw_gas_sum + dhw_elec_sum)/(dhw_gas_array.size + dhw_elec_array.size)
+	# find the average efficiency of water heaters
+	n_dhw_units = dhw_gas_array.size + dhw_elec_array.size
+	if n_dhw_units > 0  # if the number of water heaters is > 0
+		dhw_system_efficiency = (dhw_gas_sum + dhw_elec_sum)/(dhw_gas_array.size + dhw_elec_array.size)
+	else
+		dhw_system_efficiency = 1.0
+	end
+
+	if dhw_gas_sum > dhw_elec_sum   # if there are more gas DHW water heaters, fuel type is gas
+		dhw_fuel_type = 2
+	else
+		dhw_fuel_type = 1
+	end
+	
+	# extract the water usage by starting with the water use connections and then finding equipment
+	water_connects = model.getWaterUseConnectionss
+	dhw_demand = 0.0
+	water_connects.each do |connect|
+		equipments = connect.waterUseEquipment
+		equipments.each do |equip|
+			if not equip.flowRateFractionSchedule.empty?
+				frac_sched = equip.flowRateFractionSchedule.get.name.to_s
+				# get multiplier by doing a weighted average of occupied and unoccupied times
+				mult = occ_aves[frac_sched]*frac_year_occ + unocc_aves[frac_sched]*frac_year_unocc 
+			else
+				mult = 1.0
+			end
+			peak = equip.waterUseEquipmentDefinition.peakFlowRate*3600*8760  # get peak value and convert from m3/s to m3/yr
+			logfile.printf("DHW: %s, peak use = %1.0f m3/yr, mult = %0.2f \n",frac_sched, peak, mult);
+			dhw_demand += peak * mult
+		end
+	end
+
+	if (dhw_gas_sum + dhw_elec_sum) ==0.0	# if the gas + electric sum = 0 then there were no DHW heaters, so set demand to 0 no matter what
+		dhw_demand = 0.0
+	end	
 else
-	dhw_system_efficiency = 1.0
-end
-
-if dhw_gas_sum > dhw_elec_sum   # if there are more gas DHW water heaters, fuel type is gas
-	dhw_fuel_type = 2
-else
-	dhw_fuel_type = 1
+	dhw_fuel_type = dhw_fuel_type_default
+	dhw_system_efficiency = dhw_system_efficiency_default
+	# demand is # of people * # days * dhw rate/person/day in L/person/day /1000 to get m3/year
+	dhw_demand = number_of_people * dhw_rate_per_person_default*number_days_occupied_per_year/1000 
 end
 
 # use DHW distribution type to set DHW distribution efficiency
 dhw_dist_eff_table=[1.0,0.8,0.6]  # create lookup table
 dhw_distribution_efficiency = dhw_dist_eff_table[dhw_dist_type]
 
-# extract the water usage by starting with the water use connections and then finding equipment
-water_connects = model.getWaterUseConnectionss
-dhw_demand = 0.0
-water_connects.each do |connect|
-	equipments = connect.waterUseEquipment
-	equipments.each do |equip|
-		if not equip.flowRateFractionSchedule.empty?
-			frac_sched = equip.flowRateFractionSchedule.get.name.to_s
-			# get multiplier by doing a weighted average of occupied and unoccupied times
-			mult = occ_aves[frac_sched]*frac_year_occ + unocc_aves[frac_sched]*frac_year_unocc 
-		else
-			mult = 1.0
-		end
-		peak = equip.waterUseEquipmentDefinition.peakFlowRate*3600*8760  # get peak value and convert from m3/s to m3/yr
-		logfile.printf("DHW: %s, peak use = %1.0f m3/yr, mult = %0.2f \n",frac_sched, peak, mult);
-		dhw_demand += peak * mult
-	end
-end
-
-if (dhw_gas_sum + dhw_elec_sum) ==0.0	# if the gas + electric sum = 0 then there were no DHW heaters, so set demand to 0 no matter what
-	dhw_demand = 0.0
-end
-	
 # print out the DHW fuel type, system efficiency, distribution efficiency
 logfile.printf("DHW: Fuel Type = %i, System Efficiency = %0.2f Distribution Efficiency = %0.2f, Demand = %1.2f m3/yr \n", 
 	dhw_fuel_type,  dhw_system_efficiency, dhw_distribution_efficiency,dhw_demand)
@@ -1510,7 +1724,7 @@ puts "Writing Output to #{osm2iso_output_file}"
 time=Time.new  # get the current system clock time
 File.open(osm2iso_output_file, 'w') do |file|
 
-	file.puts "\##{osm2iso_output_file} generated by osm2iso.rb on #{input_file} on #{time.ctime}"
+	file.puts "\##{osm2iso_output_file} generated by osm2isov83.rb on #{input_file} on #{time.ctime}"
 
 	file.puts "weatherFilePath = #{weather_file_path}"
 	file.puts "\# Terrain class urban/city = 0.8, suburban/some shielding = 0.9, country/open = 1.0"
@@ -1538,31 +1752,32 @@ File.open(osm2iso_output_file, 'w') do |file|
 	# when we implement occupied and unoccupied heat gain per person, we comment above and uncomment below
     #file.puts "heatGainPerPersonOccupied=#{activity_level_occ}"
 	#file.puts "heatGainPerPersonUnoccupied=#{activity_level_unocc}"
+
+	file.puts "\# daylight sensors, occupancy sensors, illum control are set to 1 if there is no control.   See iso 15193 Annex F/G for values"
+	file.puts "daylightSensorSystem = #{daylight_sensors}"
+	file.puts "lightingOccupancySensorSystem = #{occupancy_sensors}"
+	file.puts "constantIlluminationControl = #{const_illum_ctrl}"
 	
 	file.puts "\# Temp set points in degrees C"
 	file.puts "heatingOccupiedSetpoint = #{heating_setpoint_occ}"
 	file.puts "heatingUnoccupiedSetpoint= #{heating_setpoint_unocc}"
 	file.puts "coolingOccupiedSetpoint= #{cooling_setpoint_occ}"
 	file.puts "coolingUnoccupiedSetpoint= #{cooling_setpoint_unocc}"
-	
+
+	file.puts "\#HVAC type was set to #{hvac_type_default}"
 	file.puts "\# HVAC waste, heating and cooling loss factors set by HVAC type from EN 15243"
 	file.puts "hvacWasteFactor = #{hvac_waste_factor}"	
 	file.puts "hvacHeatingLossFactor = #{hvac_heating_loss_factor}"
 	file.puts "hvacCoolingLossFactor = #{hvac_cooling_loss_factor}"
 	
-	file.puts "\# daylight sensors, occupancy sensors, illum control are set to 1 if there is no control.   See iso 15193 Annex F/G for values"
-	file.puts "daylightSensorSystem = #{daylight_sensors}"
-	file.puts "lightingOccupancySensorSystem = #{occupancy_sensors}"
-	file.puts "constantIlluminationControl = #{const_illum_ctrl}"
-	
 	file.puts "\# COP is W/W, coolingSystemIPLV is the ratio of IPLV/COP"
 	file.puts "coolingSystemCOP = #{cooling_COP}"
 	file.puts "coolingSystemIPLVToCopRatio =#{cooling_IPLVToCop_ratio}"
-	
+
 	file.puts "\#energycarrier is 1 if electric, 2 if gas"
 	file.puts "heatingEnergyCarrier = #{heating_fuel_type}"  # heating energy, 1=electric, 0=gas
 	file.puts "heatingSystemEfficiency = #{heating_system_efficiency}"
-	
+
 	file.puts "\# vent type is 1 if mech, 2 if natural, 3 if mixed"
 	file.puts "ventilationType = #{ventilation_type}" 
 	file.puts "\# ventilation flow rates in L/s"
@@ -1575,7 +1790,7 @@ File.open(osm2iso_output_file, 'w') do |file|
 
 	file.puts "\# DHW demand in m3/yr use 10 m3/yr/person as a default for offices"
 	file.puts "dhwDemand =  #{dhw_demand}"  #
-	# when we implement occupied and unoccupied infiltration, we comment above and uncomment below
+	# when we implement occupied and unoccupied dhw demand, we comment above and uncomment below
     #file.puts "dhwDemandOccupied=#{dhw_demand_occ}"
 	#file.puts "dhwDemandUnoccupied=#{dhw_demand_unocc}"
 	
@@ -1597,7 +1812,7 @@ File.open(osm2iso_output_file, 'w') do |file|
 	file.puts "\# fan flow control  1= no control, 0.75 = inlet blade adjuct, 0.65= variable speed  see NEN 2916 7.3.3.4  "
 	file.puts "fanFlowcontrolFactor = #{fan_flow_control_factor}"
 	
-	file.puts "\# infiltration in m3/m2/hr based on surface area"
+	file.puts "\# infiltration in m3/m2/hr @ 75 Pa based on surface area"
 	file.puts "infiltration = #{infiltration_rate}" # leakage per unit surface area in m^3/m^2/hr
 	# when we implement occupied and unoccupied infiltration, we comment above and uncomment below
     #file.puts "infiltrationOccupied=#{infiltration_rate_occ}"
