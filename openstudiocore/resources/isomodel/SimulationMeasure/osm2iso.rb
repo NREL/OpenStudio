@@ -122,6 +122,7 @@ OSM_extract_dhw = true				# extract dhw info
 OSM_extract_vent_rate = true		# extract the ventilation rate
 OSM_extract_infil_rate = true		# extract infiltration rate info
 OSM_extract_HVAC = true			# extract HVAC info like cooling COP, heating efficiencies, fuel type. 
+# JMT 10/25/2013 the next two lines initialize unused values
 OSM_extract_glazing_info = true	# extract glazing info (U & SHGC) 
 OSM_extract_wallroof_info = true	# extract the wall and roof U and other info 
 # NOTE  YOU *MUST* SET HVAC SYSTEM TYPE and IPLV/COP ratio below
@@ -190,6 +191,7 @@ dhw_system_efficiency_default = 0.8
 infil_rate_default = 7.0	# set default infiltration rate to 7 m3/m2/hr@ 75 Pa by default to match normal EnergyPlus default values
 	
 # set envelope defaults U in W/m2/K
+# JMT 10/25/2013 the next four lines initialize unused values.
 wall_U_default= 0.3						# default U
 roof_U_default = 0.2		# default roof U
 solar_absorptivity_default = 0.7	# default solar absoprtion coefficient
@@ -406,6 +408,7 @@ constructions.each do |const|
 				const_SHGC[name] = material.solarTransmittance.to_f	# SHGC = solar transmittance - ignore frame
 			elsif not layer.to_ThermochromicGlazing.empty?
 				logfile.puts "thermochromic Glazing Not Converted - only estimating U value, SHGC set to 0.3"
+                                # JMT 10/25/2013 This doesn't make sense, we check for ThermochromicGlazing, then cast to RefractionExtinctionGlazing
 				material = layer.to_RefractionExtinctionGlazing
 				const_U[name] = 1.0/(1.0/ material.thermalConductance.to_f + const_R)
 				const_SHGC[name] = 0.3		
@@ -424,6 +427,7 @@ constructions.each do |const|
 				uValue1 = material1.thermalConductance.to_f
 				norm_back_SR1 = material1.backSideSolarReflectanceatNormalIncidence.to_f
 				# Now get layer 2 properties
+                                # JMT 10/25/2013 In each block below we set norm_ST2, but it's never used
 				if not layers[1].to_StandardGlazing.empty?	# check to see if layer 2 is standard glazing
 					material2 = layers[1].to_StandardGlazing.get			# convert the 2nd layer to a gas mixture
 					norm_ST2 = material2.solarTransmittanceatNormalIncidence.to_f
@@ -462,6 +466,7 @@ constructions.each do |const|
 			
 			elsif not layers[0].to_ThermochromicGlazing.empty?
 				logfile.puts "thermochromic Glazing Not Converted - only estimating U value, SHGC set to 0.3"
+                                # JMT 10/25/2013 This doesn't make sense, we check for ThermochromicGlazing, then cast to RefractionExtinctionGlazing
 				material = layer.to_RefractionExtinctionGlazing
 				const_U[name] = 1.0/(1.0/ material.thermalConductance + const_R)
 				const_SHGC[name] = 0.3
@@ -620,6 +625,7 @@ startDate = yd.makeDate(1)
 endDate = yd.makeDate(365)
 
 schedule_rulesets.each do |schedule|
+        # JMT 10/25/2013 Do you really mean to 0 out the sum with each loop?
 	occupied_sum=0;
 	unoccupied_sum=0;
 	occupied_hours=0;
@@ -675,6 +681,8 @@ number_days_occupied_per_year = 52 * (occupancy_day_end - occupancy_day_start +1
 # that are indexed by the schedule names.   
 
 # define what fraction of the year are occupied and unoccupied
+# JMT 10/25/2013 shouldn't we use the occupied_hours_sum and unoccupied_hours_sum here, which probably should not be 0'd out with
+#                each loop above here
 frac_year_occ = occupied_hours/8760.0
 frac_year_unocc = unoccupied_hours/8760.0
 
@@ -717,6 +725,7 @@ space_types.each do |space_type|
 		if not light.schedule.empty?	# look for a lighting schedule
 			sched = light.schedule.get	# get the schedule
 			light_total_area += space_area
+                        # JMT 10/25/2013 shouldn't the next two be +=?
 			light_occ_total = occ_aves[sched.name.to_s] * space_area
 			light_unocc_total = unocc_aves[sched.name.to_s] * space_area
 		end
@@ -726,6 +735,7 @@ space_types.each do |space_type|
 		if not electric.schedule.empty?  # look for an electric equipment schedule
 			sched = electric.schedule.get
 			elec_total_area += space_area
+                        # JMT 10/25/2013 shouldn't the next two be +=?
 			elec_occ_total = occ_aves[sched.name.to_s] * space_area
 			elec_unocc_total = unocc_aves[sched.name.to_s] * space_area
 		end
@@ -735,6 +745,7 @@ space_types.each do |space_type|
 		if not gas.schedule.empty? 	# look for an gas equipment schedule
 			sched = gas.schedule.get
 			gas_total_area += space_area
+                        # JMT 10/25/2013 shouldn't the next two be +=?
 			gas_occ_total = occ_aves[sched.name.to_s] * space_area
 			gas_unocc_total = unocc_aves[sched.name.to_s] * space_area
 		end	
@@ -745,6 +756,7 @@ space_types.each do |space_type|
 		if not people.numberofPeopleSchedule.empty?
 			sched = people.numberofPeopleSchedule.get
 			people_total_area += space_area
+                        # JMT 10/25/2013 shouldn't the next two be +=?
 			people_occ_total = occ_aves[sched.name.to_s] * space_area
 			people_unocc_total = unocc_aves[sched.name.to_s] * space_area
 		end
@@ -753,6 +765,7 @@ space_types.each do |space_type|
 		if not people.activityLevelSchedule.empty?
 			sched = people.activityLevelSchedule.get
 			activity_total_area += space_area
+                        # JMT 10/25/2013 shouldn't the next two be +=?
 			activity_occ_total = occ_aves[sched.name.to_s] * space_area
 			activity_unocc_total = unocc_aves[sched.name.to_s] * space_area
 		end	
@@ -872,7 +885,8 @@ if OSM_extract_temp_setpoint
 				cool_setpoint_occ_total += occ_aves[cool_sched.name.to_s] * zone_area 
 				cool_setpoint_unocc_total += unocc_aves[cool_sched.name.to_s] * zone_area
 			else  # if we have no schedule, use the default values for thiz zone
-				cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
+                                # JMT 10/25/2013 all references to "cool_setpoint_occ_default, heat_setpoint_occ_default, cool_setpoint_unocc_default, heat_setpoint_unocc_default" should be "cooling_setpoint_occ_default, heating_setpoint_occ_default, cooling_setpoint_unocc_default, heating_setpoint_unocc_default"
+                                cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
 				cool_setpoint_unocc_total += cool_setpoint_unocc_default * zone_area
 			end
 			if not thermostat.heatingSetpointTemperatureSchedule.empty?
@@ -954,6 +968,7 @@ spaces.each do |sp|
 		s.vertices.each do |vertex|
 			z_points << vertex.z  # get out all the z points for the surface and put in the array
 		end
+                # JMT 2013-10-25 What if there are no vertices found? does it matter?
 		minsz = z_points.min + sp.zOrigin	# find the min z for the surface and add the space origin offset
 		maxsz = z_points.max + sp.zOrigin	# find the max z for the surface and add the space origin offset
 		if maxsz > maxz then maxz = maxsz end
@@ -1178,6 +1193,7 @@ if OSM_extract_infil_rate
 	# as a last resort use the default rates 
 	if (not model.getSpaceInfiltrationEffectiveLeakageAreas.empty?)
 		infiltration = model.getSpaceInfiltrationEffectiveLeakageAreas
+                # JMT 2013-10-25 no reason for a loop here, you're setting the same value each time
 		infiltration.each do |infil|
 			# set default average envelope air leakage (infiltration) as 7 m3/h/m2 which is about the EnergyPlus defaults
 			logfile.puts "EffectiveLeakageArea not Implemented Yet, Infiltration Rate Set to 7.0 m3/m2/h @ 75 Pa"
@@ -1186,7 +1202,8 @@ if OSM_extract_infil_rate
 	elsif not model.getSpaceInfiltrationDesignFlowRates.empty?
 		infiltration = model.getSpaceInfiltrationDesignFlowRates
 		logfile.puts "Found #{infiltration.size} SpaceInfiltrationDesignFlowRate objects"
-		
+	
+                # JMT 2013-10-25 infil_frac_sum is set but never used        
 		infil_frac_sum = 0.0
 		infil_rate_sum = 0.0
 		count = 0
@@ -1219,6 +1236,8 @@ if OSM_extract_infil_rate
 				st=infil.spaceType.get
 				st_volume =0.0
 				st_exterior_area = 0.0
+
+                                # JMT 2013-10-15 st_num is set but never used
 				st_num = st.spaces.size
 				st.spaces.each do |s|
 					st_volume += s.volume
@@ -1445,6 +1464,8 @@ if OSM_extract_HVAC
 			cop_sum += coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f*area
 			cop_area_sum += area
 		elsif not coil.to_CoilCoolingWater.empty? # check for water cooling coils
+                        # JMT 2013-10-25 this code cannot execute, to_CoilCoolingWater doesn't return anything convertable to an object
+                        # nor does it have any top of "COP" field, so I don't know how to make this into something that will compile
 			cop_sum += coil.to_CoilCoolingWater.get*area   	#
 			cop_area_sum += area
 		elsif not coil.to_ChillerElectricEIR.empty?
@@ -1464,12 +1485,14 @@ if OSM_extract_HVAC
 			supply_components.each do |component|
 				# if we are here then we don't have a specific area assigned to the cooling unit so use the full building floor area
 				if not component.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil
+                                        # JMT 2013-10-25 we build the cop_array and cop_areas but never use them, should we?
 					cop_array << component.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f
 					cop_areas << building.floorArea	
 				elsif not component.to_CoilCoolingDXTwoSpeed.empty?	# check for two speed DX coil
 					cop_array <<  component.to_CoilCoolingDXTwoSpeed.get.ratedHighSpeedCOP.to_f
 					cop_areas << area	
 				elsif not component.to_to_ChillerElectricEIR.empty?   # check for a chiller
+                                        # JMT 2013-10-15 Seems like "coil." is wrong here, it should be "component."
 					cop_sum += coil.to_ChillerElectricEIR.get.referenceCOP*area   	#
 					cop_area_sum += area			
 				end
