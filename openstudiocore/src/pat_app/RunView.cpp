@@ -698,6 +698,7 @@ void DataPointRunHeaderView::update()
 
   QString status;
   QString statusStyle;
+  bool canceledLocalRun(false);
   if (m_dataPoint.isComplete()){
     if (m_dataPoint.failed()){
       status = "Failed";
@@ -726,6 +727,14 @@ void DataPointRunHeaderView::update()
           lastRunTimeString = "Running Remotely";
         }
       }
+      else if ((treeStatus == runmanager::TreeStatusEnum::Canceled) || 
+               (treeStatus == runmanager::TreeStatusEnum::Failed)) 
+      {
+        canceledLocalRun = true;
+        status = QString("Canceled");
+        statusStyle = "QLabel { color : red; }";
+        m_dataPoint.setSelected(false); // do not run until results are cleared
+      }
     }else{
       status = "Not Started";
       statusStyle = "";
@@ -745,7 +754,7 @@ void DataPointRunHeaderView::update()
   this->setChecked(m_dataPoint.selected());
   this->blockSignals(false);
 
-  if (m_dataPoint.complete()){
+  if (m_dataPoint.complete() || canceledLocalRun){
     style = "openstudio--pat--DataPointRunHeaderView  { "
             "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
             "stop: 0 #808080, stop: 0.5 #b3b3b3, stop: 1.0 #cccccc); "
@@ -768,7 +777,7 @@ void DataPointRunHeaderView::update()
 
   ///// Clear button
 
-  bool hasDataToClear = (m_dataPoint.complete());
+  bool hasDataToClear = (m_dataPoint.complete() || canceledLocalRun);
   if(hasDataToClear){
     style = "QPushButton {"
                           "background-image:url(':/images/clear_results_enabled.png');"
@@ -853,9 +862,9 @@ void DataPointRunHeaderView::on_clicked(bool checked)
   bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
 
   // Ignore signal if dataPoint has data
-  bool isComplete = this->m_dataPoint.complete();
+  bool isCompleteOrStarted = this->m_dataPoint.complete() || !this->m_dataPoint.directory().empty();
   
-  if(!isProjectIdle || isComplete){
+  if(!isProjectIdle || isCompleteOrStarted){
     this->blockSignals(true);
     this->setChecked(!checked);
     this->blockSignals(false);
@@ -889,6 +898,8 @@ void DataPointRunHeaderView::on_clearClicked(bool checked)
     analysis::Analysis analysis = project->analysis();
     analysisdriver::AnalysisDriver driver = project->analysisDriver();
     analysisdriver::clearResults(analysis,m_dataPoint,driver);
+    // if local run canceled, data point got unselected, user probably wants to run it now.
+    m_dataPoint.setSelected(true); 
     emit dataPointResultsCleared(m_dataPoint.uuid());
   }
 }
