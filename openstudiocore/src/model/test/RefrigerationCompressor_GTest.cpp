@@ -66,7 +66,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
 
   std::vector<CurveBicubic> refrigerationCompressorCurves = model.getModelObjects<CurveBicubic>();
   for(std::vector<CurveBicubic>::iterator it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
-  	EXPECT_TRUE(it->parent());
+    EXPECT_TRUE(it->parent());
   }
 
   EXPECT_DOUBLE_EQ(18.3, testObjectClone.ratedReturnGasTemperature().get());
@@ -156,11 +156,11 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData)
   EXPECT_EQ(2, refrigerationCompressorCurves2.size());
 
   for(std::vector<CurveBicubic>::iterator it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
-  	EXPECT_TRUE(it->parent());
+    EXPECT_TRUE(it->parent());
   }
 
   for(std::vector<CurveBicubic>::iterator it = refrigerationCompressorCurves2.begin(); it != refrigerationCompressorCurves2.end(); ++it) {
-  	EXPECT_TRUE(it->parent());
+    EXPECT_TRUE(it->parent());
   }
 
   EXPECT_DOUBLE_EQ(18.3, testObjectClone2.ratedReturnGasTemperature().get());

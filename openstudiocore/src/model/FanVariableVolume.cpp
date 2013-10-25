@@ -804,7 +804,7 @@ namespace detail {
 
   boost::optional<ZoneHVACComponent> FanVariableVolume_Impl::containingZoneHVACComponent() const
   {
-	// ZoneHVACFourPipeFanCoil
+    // ZoneHVACFourPipeFanCoil
 
     std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
 
@@ -821,9 +821,9 @@ namespace detail {
           return *it;
         }
       }
-    }	
+    }
 
-	// ZoneHVACUnitHeater
+    // ZoneHVACUnitHeater
 
     std::vector<ZoneHVACUnitHeater> zoneHVACUnitHeater;
 
@@ -840,7 +840,7 @@ namespace detail {
           return *it;
         }
       }
-    }	
+    }
 
     return boost::none;
   }

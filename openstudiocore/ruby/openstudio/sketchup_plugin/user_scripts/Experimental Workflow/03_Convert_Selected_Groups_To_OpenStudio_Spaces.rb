@@ -29,6 +29,21 @@ class ConvertGroupsToOpenStudioSpaces < OpenStudio::Ruleset::ModelUserScript
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
+
+    manifold_only = OpenStudio::Ruleset::OSArgument::makeBoolArgument("manifold_only",false)
+    manifold_only.setDisplayName("Convert Only Manifold Solid Groups? ")
+    manifold_only.setDefaultValue(true)
+    result << manifold_only
+
+    intersect = OpenStudio::Ruleset::OSArgument::makeBoolArgument("intersect",false)
+    intersect.setDisplayName("Intersect Geometry Before Conversion? ")
+    intersect.setDefaultValue(true)
+    result << intersect
+
+    #todo - add bool for surface matching
+
+    #todo - add bool for assign building stories
+
     return result
   end
     
@@ -36,6 +51,13 @@ class ConvertGroupsToOpenStudioSpaces < OpenStudio::Ruleset::ModelUserScript
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments) # initializes runner for new script
+
+    if not runner.validateUserArguments(arguments(model),user_arguments)
+      return false
+    end
+
+    manifold_only = runner.getBoolArgumentValue("manifold_only",user_arguments)
+    intersect = runner.getBoolArgumentValue("intersect",user_arguments)
 
     # get sketchup model
     suModel = Sketchup.active_model
@@ -52,7 +74,12 @@ class ConvertGroupsToOpenStudioSpaces < OpenStudio::Ruleset::ModelUserScript
             entity.make_unique #this is only needed if a group was copied.
             groupsAndComponents << entity
           else
-            puts "*(warning) Space not created, geometry of group is not a manifold solid."
+            if manifold_only
+              puts "*(warning) Space not created, geometry of group is not a manifold solid."
+            else
+              entity.make_unique #this is only needed if a group was copied.
+              groupsAndComponents << entity
+            end
           end
         else
           puts "#{entity.drawing_interface.model_object.name} is already an OpenStudio Model Object."
@@ -61,12 +88,14 @@ class ConvertGroupsToOpenStudioSpaces < OpenStudio::Ruleset::ModelUserScript
     end
 
     #creating intersections
-    puts "Status: Intersecting group geometry before making spaces."
-    groupsAndComponents.each do |groupAndComponent|
-      if groupAndComponent.class.to_s == "Sketchup::Group"
-        groupAndComponent.entities.intersect_with(true, groupAndComponent.transformation, groupAndComponent, groupAndComponent.transformation, false, groupsAndComponents)
-      elsif groupAndComponent.class.to_s == "Sketchup::ComponentInstance"
-        groupAndComponent.definition.entities.intersect_with(true, groupAndComponent.transformation, groupAndComponent.definition, groupAndComponent.transformation, false, groupsAndComponents)
+    if intersect
+      puts "Status: Intersecting group geometry before making spaces."
+      groupsAndComponents.each do |groupAndComponent|
+        if groupAndComponent.class.to_s == "Sketchup::Group"
+          groupAndComponent.entities.intersect_with(true, groupAndComponent.transformation, groupAndComponent, groupAndComponent.transformation, false, groupsAndComponents)
+        elsif groupAndComponent.class.to_s == "Sketchup::ComponentInstance"
+          groupAndComponent.definition.entities.intersect_with(true, groupAndComponent.transformation, groupAndComponent.definition, groupAndComponent.transformation, false, groupsAndComponents)
+        end
       end
     end
 

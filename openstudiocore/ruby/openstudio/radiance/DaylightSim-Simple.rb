@@ -186,17 +186,17 @@ File.open("#{outPath}/options/treg.opt", "r") do |file|
   options.klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
   options.skyvecDensity = tempSettings[3].split(":")[1]
   options.tregVars = tempSettings[2..-1].join(" ")
-end	  
+end
 
 File.open("#{outPath}/options/dmx.opt", "r") do |file|
   tempIO = file.read
   options.dmx = tempIO
-end	  
+end
 
 File.open("#{outPath}/options/vmx.opt", "r") do |file|
   tempIO = file.read
   options.vmx = tempIO
-end	  
+end
 
 
 
@@ -355,9 +355,9 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
     # do map
     exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} \
-	-I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
+      -I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
 
-#    if t_options.verbose == 'v'	
+#    if t_options.verbose == 'v'
       puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
 #    end
 
@@ -379,10 +379,10 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
         if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
           vwrays_out = `vwrays -d #{view_def}`.strip
           exec_statement("vwrays -ff #{view_def} | rcontrib #{rtrace_args = "#{t_options.vmx}"} -V- -fo -ffc #{vwrays_out} \
-		-f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
+            -f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
         else
           exec_statement("vwrays -ff #{view_def} | rcontrib #{t_options.vmx} -n #{t_simCores} -V- -fo -ffc \
-		$(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
+            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
           # create "contact sheet" of DC images for reference/troubleshooting
           if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
             hdrs = Dir.glob("#{binDir}/*.hdr")

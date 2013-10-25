@@ -164,7 +164,7 @@ const double densityWater = 1000.0;
 
 // Adjust scheduleDay by delaying the start and stop by the respective offset
 // This is used by the OA Controller ventilation schedule
-void adjustScheduleDay(model::ScheduleDay & scheduleDay, int startOffset, int endOffset)
+void adjustScheduleDay(model::ScheduleDay & scheduleDay, int startOffset)
 {
   std::vector<double> values = scheduleDay.values();
   std::vector<Time> times = scheduleDay.times();
@@ -179,14 +179,7 @@ void adjustScheduleDay(model::ScheduleDay & scheduleDay, int startOffset, int en
     {
       Time newStartTime;
 
-      if( startOffset < 0 )
-      {
-        newStartTime = *(timeIt - 1) + Time(0,std::abs(startOffset));
-      }
-      else
-      {
-        newStartTime = *(timeIt - 1) - Time(0,startOffset);
-      }
+      newStartTime = *(timeIt - 1) + Time(0,startOffset);
 
       scheduleDay.removeValue(*(timeIt - 1));
 
@@ -195,33 +188,9 @@ void adjustScheduleDay(model::ScheduleDay & scheduleDay, int startOffset, int en
 
     timeIt++;
   }
-
-  timeIt = times.begin();
-  for( valueIt = values.begin(); valueIt < (values.end() - 1); valueIt++ )
-  {
-    if( equal<double>(*valueIt,0.0,0.01) && equal<double>(*(valueIt - 1),1.0,0.01) )
-    {
-      Time newEndTime;
-
-      if( endOffset < 0 )
-      {
-        newEndTime = *(timeIt - 1) - Time(0,std::abs(endOffset));
-      }
-      else
-      {
-        newEndTime = *(timeIt - 1) + Time(0,endOffset);
-      }
-
-      scheduleDay.removeValue(*(timeIt - 1));
-
-      scheduleDay.addValue(newEndTime,1.0);
-    }
-
-    timeIt++;
-  }
 }
 
-void adjustSchedule(model::ScheduleYear & scheduleYear, int startOffset, int endOffset)
+void adjustSchedule(model::ScheduleYear & scheduleYear, int startOffset)
 {
   std::vector<model::ScheduleWeek> scheduleWeeks = scheduleYear.scheduleWeeks();
 
@@ -261,7 +230,7 @@ void adjustSchedule(model::ScheduleYear & scheduleYear, int startOffset, int end
     {
       if( *scheduleDayIt )
       {
-        adjustScheduleDay( (*scheduleDayIt).get(), startOffset, endOffset );
+        adjustScheduleDay( (*scheduleDayIt).get(), startOffset );
       }
     }
   }
@@ -564,22 +533,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             hvacComponent.addToNode(supplyInletNode);
 
-            if( ! autosize() )
+            if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
             {
-              if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
+              boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
+
+              OS_ASSERT(controller);
+
+              controller->setControllerConvergenceTolerance(0.1);
+
+              if( ! autosize() )
               {
-                boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
-
-                OS_ASSERT(controller);
-
-                controller->setControllerConvergenceTolerance(0.1);
-
                 boost::optional<double> maxFlow = coilCoolingWater->designWaterFlowRate();
 
                 OS_ASSERT(maxFlow);
 
                 controller->setMaximumActuatedFlow(maxFlow.get() * 1.25);
               }
+
+              controller->setMinimumActuatedFlow(0.0);
             }
           }
         }
@@ -606,6 +577,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             controller->setControllerConvergenceTolerance(0.1);
 
+            controller->setMinimumActuatedFlow(0.0);
+
             if( ! autosize() )
             {
               boost::optional<double> capacity = coilHeatingWater->ratedCapacity();
@@ -627,12 +600,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               double maxFlow = capacity.get() / ( density * cp * std::abs(inletTemp.get() - outletTemp.get()));
 
               controller->setMaximumActuatedFlow(maxFlow * 1.25);
-
-              controller->setMinimumActuatedFlow(maxFlow * 1.25 * 0.05);
-            }
-            else
-            {
-              controller->setMinimumActuatedFlow(0.000001);
             }
           }
         }
@@ -714,17 +681,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         model::Schedule schedule = alwaysOnSchedule(model);
         oaController.setMinimumOutdoorAirSchedule(schedule);
       }
-      else if( istringEqual(oaSchMthdElement.text().toStdString(),"FollowAvailability") && availabilitySchedule )
+      else if( istringEqual(oaSchMthdElement.text().toStdString(),"FollowHVACAvailability") && availabilitySchedule )
       {
         if( boost::optional<model::ScheduleYear> availabilityScheduleYear = availabilitySchedule->optionalCast<model::ScheduleYear>() )
         {
           model::ScheduleYear schedule = deepScheduleYearClone(availabilityScheduleYear.get(),nameElement.text().toStdString() + " Schedule");
 
           int startOffset = 0;
-          int endOffset = 0;
           int offsetValue;
 
-          QDomElement availSchOffsetStartElement = airSystemOACtrlElement.firstChildElement("AvailSchOffsetStart");
+          QDomElement availSchOffsetStartElement = airSystemOACtrlElement.firstChildElement("StartUpDelay");
 
           offsetValue = availSchOffsetStartElement.text().toInt(&ok);
       
@@ -733,16 +699,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             startOffset = offsetValue;
           }
 
-          QDomElement availSchOffsetEndElement = airSystemOACtrlElement.firstChildElement("AvailSchOffsetEnd");
-
-          offsetValue = availSchOffsetEndElement.text().toInt(&ok);
-      
-          if( ok )
-          {
-            endOffset = offsetValue;
-          }
-
-          adjustSchedule(schedule,startOffset,endOffset);
+          adjustSchedule(schedule,startOffset);
 
           oaController.setMinimumOutdoorAirSchedule(schedule);
         }
@@ -2238,16 +2195,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   sizingZone.setZoneCoolingSizingFactor(clgDsgnSizingFac);
   sizingZone.setZoneHeatingDesignSupplyAirTemperature(htgDsgnSupAirTemp);
   sizingZone.setZoneHeatingSizingFactor(htgDsgnSizingFac);
-  sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
 
+  sizingZone.setCoolingMinimumAirFlowperZoneFloorArea(0.0);
+  sizingZone.setCoolingMinimumAirFlow(0.0);
+  sizingZone.setCoolingMinimumAirFlowFraction(0.0);
   sizingZone.setCoolingDesignAirFlowMethod("DesignDay");
+
+  sizingZone.setHeatingMaximumAirFlowperZoneFloorArea(0.0);
+  sizingZone.setHeatingMaximumAirFlow(0.0);
+  sizingZone.setHeatingMaximumAirFlowFraction(0.0);
+  sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
+
   if( htgDsgnMaxFlowFrac > 0.0 )
   {
     sizingZone.setHeatingDesignAirFlowMethod("DesignDayWithLimit");
-  }
-  else
-  {
-    sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
+    sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
   }
 
   // Ventilation
@@ -2685,6 +2647,8 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     model::AirTerminalSingleDuctVAVReheat terminal(model,schedule,coil.get());
 
+    terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+
     if( primaryAirFlow )
     {
       terminal.setMaximumAirFlowRate(primaryAirFlow.get());
@@ -2692,7 +2656,6 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     if( primaryAirFlowMin )
     {
-      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
     }
 
@@ -2707,7 +2670,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setDamperHeatingAction("Normal");
     }
 
-    terminal.setConstantMinimumAirFlowFraction(0.0);
+    // terminal.setConstantMinimumAirFlowFraction(0.0);
 
     QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
     value = htgAirFlowMaxElement.text().toDouble(&ok);

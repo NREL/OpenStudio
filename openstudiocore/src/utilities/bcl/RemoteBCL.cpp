@@ -1022,7 +1022,7 @@ namespace openstudio{
   {
     QDomElement root = remoteQueryResponse.domDocument().documentElement();
 
-    if (!root.isNull() && (root.tagName() == "results")){
+    if (!root.isNull() && (root.tagName().startsWith("result"))){
       QDomElement numResultsElement = root.firstChildElement("result_count");
       if (!numResultsElement.isNull()){
         return BCLMetaSearchResult(root);

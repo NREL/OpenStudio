@@ -79,16 +79,16 @@ namespace detail {
   }
   
   unsigned CoilCoolingCooledBeam_Impl::inletPort()
-		{
-				return OS_Coil_Cooling_CooledBeamFields::ChilledWaterInletNodeName;
-		}
+  {
+    return OS_Coil_Cooling_CooledBeamFields::ChilledWaterInletNodeName;
+  }
 
   unsigned CoilCoolingCooledBeam_Impl::outletPort()
-		{
-				return OS_Coil_Cooling_CooledBeamFields::ChilledWaterOutletNodeName;
-		}
-		
-		boost::optional<StraightComponent> CoilCoolingCooledBeam_Impl::containingStraightComponent() const
+  {
+    return OS_Coil_Cooling_CooledBeamFields::ChilledWaterOutletNodeName;
+  }
+
+  boost::optional<StraightComponent> CoilCoolingCooledBeam_Impl::containingStraightComponent() const
   {
     // this coil can only be found in a AirTerminalSingleDuctConstantVolumeCooledBeam
     // check all AirTerminalSingleDuctConstantVolumeCooledBeam in the model, seeing if this coil 

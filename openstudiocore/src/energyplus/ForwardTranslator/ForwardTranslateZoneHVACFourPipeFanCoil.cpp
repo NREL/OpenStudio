@@ -92,17 +92,17 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::AvailabilityScheduleName,
                         availabilitySchedule.name().get() );
 
-	// Supply Air Fan
+    // Supply Air Fan
     HVACComponent supplyAirFan = modelObject.supplyAirFan();
     if( boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan) )
     {
       // SupplyAirFanObjectType
-	  idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name() );
+      idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name() );
 
       // SupplyAirFanName
       idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::SupplyAirFanName,_supplyAirFan->name().get() );
-	  // Supply Air Fan Inlet and Outlet Nodes
-	  if( airOutletNodeName )
+      // Supply Air Fan Inlet and Outlet Nodes
+      if( airOutletNodeName )
       {
         if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
         {
@@ -115,34 +115,34 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
           _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName );
         }
       }
-	}
+    }
 
-	// Cooling Coil
+    // Cooling Coil
     HVACComponent coolingCoil = modelObject.coolingCoil();
     if( boost::optional<IdfObject> _coolingCoil = translateAndMapModelObject(coolingCoil) )
     {
-	  // CoolingCoilObjectType
+      // CoolingCoilObjectType
       idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::CoolingCoilObjectType,_coolingCoil->iddObject().name() );
       // CoolingCoilName
-	  idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::CoolingCoilName,_coolingCoil->name().get() );
+      idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::CoolingCoilName,_coolingCoil->name().get() );
       // Cooling Coil Inlet and Outlet Nodes
-	  if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_Water )
+      if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_Water )
       {
         _coolingCoil->setString(Coil_Cooling_WaterFields::AirInletNodeName,fanOutletNodeName );
         _coolingCoil->setString(Coil_Cooling_WaterFields::AirOutletNodeName,coolingCoilOutletNodeName );
       }
     }
 
-	// Heating Coil
+    // Heating Coil
     HVACComponent heatingCoil = modelObject.heatingCoil();
     if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil) )
     {
-	  // HeatingCoilObjectType
+      // HeatingCoilObjectType
       idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::HeatingCoilObjectType,_heatingCoil->iddObject().name() );
       // HeatingCoilName
-	  idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,_heatingCoil->name().get() );
+      idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,_heatingCoil->name().get() );
       // Heating Coil Inlet and Outlet Nodes
-	  if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+      if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
       {
         _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,coolingCoilOutletNodeName );
         _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,airOutletNodeName.get() );

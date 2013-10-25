@@ -46,7 +46,7 @@ namespace model {
 namespace detail {
 
   ZoneHVACFourPipeFanCoil_Impl::ZoneHVACFourPipeFanCoil_Impl(
-	  const IdfObject& idfObject,
+      const IdfObject& idfObject,
       Model_Impl* model,
       bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
@@ -254,7 +254,7 @@ namespace detail {
   }
 
   boost::optional<Schedule> ZoneHVACFourPipeFanCoil_Impl::outdoorAirSchedule() const {
-	return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirScheduleName);
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirScheduleName);
   }
 
   std::string ZoneHVACFourPipeFanCoil_Impl::outdoorAirMixerObjectType() const {
@@ -422,7 +422,7 @@ namespace detail {
       value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate,maximumSupplyAirFlowRate.get());
       if (value) {
         setMaximumSupplyAirFlowRate(value);
-		result = true;
+        result = true;
       }
     }
     else {
@@ -488,7 +488,7 @@ namespace detail {
       value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate,maximumOutdoorAirFlowRate.get());
       if (value) {
         setMaximumOutdoorAirFlowRate(value);
-		result = true;
+        result = true;
       }
     }
     else {
@@ -594,7 +594,7 @@ namespace detail {
       value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate,maximumColdWaterFlowRate.get());
       if (value) {
         setMaximumColdWaterFlowRate(value);
-		result = true;
+        result = true;
       }
     }
     else {
@@ -678,7 +678,7 @@ namespace detail {
       value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate,maximumHotWaterFlowRate.get());
       if (value) {
         setMaximumHotWaterFlowRate(value);
-		result = true;
+        result = true;
       }
     }
     else {

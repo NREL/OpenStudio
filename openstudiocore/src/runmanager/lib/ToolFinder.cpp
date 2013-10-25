@@ -350,7 +350,7 @@ namespace runmanager {
         QFileInfo fi(*itr);
 
         openstudio::path curPath = openstudio::toPath(p);
-	
+
         if (t_dlg)
         {
           t_dlg->setLabelText(toQString("Scanning For Tools In: " + shortenPath(curPath)));

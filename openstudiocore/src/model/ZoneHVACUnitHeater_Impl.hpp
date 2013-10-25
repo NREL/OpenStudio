@@ -69,7 +69,7 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
-	virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const;
 
     virtual unsigned inletPort();
 

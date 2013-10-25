@@ -47,12 +47,12 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Check_Constructor)
 
 TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Getters_Setters) 
 {  
-		Model model;
+  Model model;
   ScheduleConstant heatingControlTemperatureSchedule(model);
   heatingControlTemperatureSchedule.setValue(15.0);
   
   CoilHeatingLowTempRadiantVarFlow testCoil(model,
-																																														heatingControlTemperatureSchedule);
+                                            heatingControlTemperatureSchedule);
 
   // Field N1 Maximum Hot Water Flow
   
@@ -62,21 +62,21 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Getters_Setters)
   EXPECT_FALSE(testCoil.isMaximumHotWaterFlowAutosized());
   
   testCoil.resetMaximumHotWaterFlow();
-		EXPECT_TRUE(testCoil.isMaximumHotWaterFlowDefaulted());
-		
-		testCoil.autosizeMaximumHotWaterFlow();
-		EXPECT_TRUE(testCoil.isMaximumHotWaterFlowAutosized());
-		
-		// Field N2 Heating Control Throttling Range
-		
-		EXPECT_TRUE(testCoil.setHeatingControlThrottlingRange(1.0));
-		boost::optional<double> value = testCoil.heatingControlThrottlingRange();
+  EXPECT_TRUE(testCoil.isMaximumHotWaterFlowDefaulted());
+  
+  testCoil.autosizeMaximumHotWaterFlow();
+  EXPECT_TRUE(testCoil.isMaximumHotWaterFlowAutosized());
+  
+  // Field N2 Heating Control Throttling Range
+  
+  EXPECT_TRUE(testCoil.setHeatingControlThrottlingRange(1.0));
+  boost::optional<double> value = testCoil.heatingControlThrottlingRange();
   EXPECT_EQ(*value,1.0);
   EXPECT_FALSE(testCoil.isHeatingControlThrottlingRangeDefaulted());
   
   testCoil.resetHeatingControlThrottlingRange();
   value = testCoil.heatingControlThrottlingRange();
-		EXPECT_TRUE(testCoil.isHeatingControlThrottlingRangeDefaulted());
-		EXPECT_EQ(*value,0.5); 
+  EXPECT_TRUE(testCoil.isHeatingControlThrottlingRangeDefaulted());
+  EXPECT_EQ(*value,0.5); 
 }
 
