@@ -217,7 +217,7 @@ namespace sdd {
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::BuildingStory& buildingStory)
   {
     QDomElement nameElement = element.firstChildElement("Name");
-    QDomElement hotWtrHtgRtElement = element.firstChildElement("HotWtrHtgRt");
+    QDomElement hotWtrHtgRtElement = element.firstChildElement("HotWtrHtgRtSim");
     QDomElement hotWtrHtgSchRefElement = element.firstChildElement("HotWtrHtgSchRef");
     QDomElement shwFluidSegRefElement = element.firstChildElement("SHWFluidSegRef");
     QDomNodeList exteriorWallElements = element.elementsByTagName("ExtWall");
