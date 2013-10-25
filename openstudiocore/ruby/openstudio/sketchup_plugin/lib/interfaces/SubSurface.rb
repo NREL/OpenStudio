@@ -353,7 +353,7 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       if (valid_entity?)
-        if (base_face = DrawingUtils.detect_base_face(@entity))
+        if (base_face = DrawingUtils.detect_base_face(@entity, true))
           return(base_face.drawing_interface)
         else
           return(super)  # Return the space interface

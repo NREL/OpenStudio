@@ -27,8 +27,29 @@ module DrawingUtils
 
   # Strictly determined using Faces, not drawing interfaces.
   # Tries to match a face to a base face.
-  def DrawingUtils.detect_base_face(face)
+  def DrawingUtils.detect_base_face(face, force)
     base_face = nil
+    
+    if not force
+      drawing_interface = face.drawing_interface
+      if drawing_interface
+        if drawing_interface.class == OpenStudio::SubSurface
+          parent = drawing_interface.parent
+          if parent
+            base_face = parent.entity
+            if base_face and base_face = Sketchup::Face
+              return base_face
+            else
+              base_face = nil
+            end
+          end
+        else
+          # other classes don't have parent surfaces
+          return nil
+        end
+      end
+    end
+    
     face_normal = face.normal
     face_points = face.full_polygon.reduce.points
 
