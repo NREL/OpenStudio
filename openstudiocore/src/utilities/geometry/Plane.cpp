@@ -111,7 +111,7 @@ namespace openstudio{
         }
       
         Matrix AtA = prod(At, A);
-        double det = det3x3(AtA);
+        double det = det3x3(AtA); // always positive for A'*A
         if (det > maxDet){
           maxDet = det;
           Matrix AtAInv(3,3);
@@ -153,7 +153,7 @@ namespace openstudio{
         }
       
         Matrix AtA = prod(At, A);
-        double det = det3x3(AtA);
+        double det = det3x3(AtA); // always positive for A'*A
         if (det > maxDet){
           maxDet = det;
           Matrix AtAInv(3,3);
@@ -195,7 +195,7 @@ namespace openstudio{
         }
       
         Matrix AtA = prod(At, A);
-        double det = det3x3(AtA);
+        double det = det3x3(AtA); // always positive for A'*A
         if (det > maxDet){
           maxDet = det;
           Matrix AtAInv(3,3);
