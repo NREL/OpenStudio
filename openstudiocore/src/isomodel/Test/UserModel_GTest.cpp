@@ -64,7 +64,7 @@ TEST_F(ISOModelFixture, UserModel)
   userModel.setFreshAirFlowRate(0.903704085971796);
   userModel.setSupplyExhaustRate(0.724248760195895);
   userModel.setHeatRecovery(0.49985550202677);
-  userModel.setExhaustAirRecirclation(0.846564029275989);
+  userModel.setExhaustAirRecirculation(0.846564029275989);
   userModel.setBuildingAirLeakage(0.863462404238138);
   userModel.setDhwDemand(0.881916031629701);
   userModel.setDhwEfficiency(0.105230439331114);
@@ -195,7 +195,7 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(0.903704085971796, userModel.freshAirFlowRate());
   EXPECT_EQ(0.724248760195895, userModel.supplyExhaustRate());
   EXPECT_EQ(0.49985550202677, userModel.heatRecovery());
-  EXPECT_EQ(0.846564029275989, userModel.exhaustAirRecirclation());
+  EXPECT_EQ(0.846564029275989, userModel.exhaustAirRecirculation());
   EXPECT_EQ(0.863462404238138, userModel.buildingAirLeakage());
   EXPECT_EQ(0.881916031629701, userModel.dhwDemand());
   EXPECT_EQ(0.105230439331114, userModel.dhwEfficiency());
@@ -337,7 +337,7 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(5080, userModel.freshAirFlowRate());
   EXPECT_EQ(5080, userModel.supplyExhaustRate());
   EXPECT_EQ(0.0, userModel.heatRecovery());
-  EXPECT_EQ(0.0, userModel.exhaustAirRecirclation());
+  EXPECT_EQ(0.0, userModel.exhaustAirRecirculation());
   EXPECT_EQ(2.4610800585487800, userModel.buildingAirLeakage());
   EXPECT_EQ(0.0, userModel.dhwDemand());
   EXPECT_EQ(0.9, userModel.dhwEfficiency());

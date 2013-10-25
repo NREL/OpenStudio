@@ -53,7 +53,7 @@ namespace isomodel {
      * Generates a SimModel from the specified parameters of the 
      * UserModel
      */  
-    SimModel toSimModel() const;
+    SimModel toSimModel();
 
     /**
      * Indicates whether or not the user model loaded in correctly

@@ -24,8 +24,15 @@ namespace openstudio {
 namespace isomodel {
 
  
-  SimModel UserModel::toSimModel() const
+  SimModel UserModel::toSimModel()
   {
+    _valid = true;
+    if (!_weather)
+    {
+      // weather file isn't loaded yet, let's try to
+      _weather = loadWeather();
+    }
+
     if(!_valid){
       throw std::runtime_error("UserModel is not valid, cannot create SimModel");
     }
@@ -38,6 +45,7 @@ namespace isomodel {
     pop->setHoursEnd(_equivFullLoadOccupancyTo);
     pop->setHoursStart(_equivFullLoadOccupancyFrom);
     pop->setDensityOccupied(_peopleDensityOccupied);
+    
     pop->setDensityUnoccupied(_peopleDensityUnoccupied);
     pop->setHeatGainPerPerson(_heatGainPerPerson);
     sim.setPop(pop);

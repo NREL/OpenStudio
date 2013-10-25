@@ -38,8 +38,10 @@ TEST_F(ISOModelFixture, ForwardTranslator)
 {
   Model model = exampleModel();
 
+  openstudio::path weather = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw");
   ForwardTranslator forwardTranslator;
   UserModel userModel = forwardTranslator.translateModel(model);
+  userModel.setWeatherFilePath(weather);
   SimModel simModel = userModel.toSimModel();
   ISOResults results = simModel.simulate();
 

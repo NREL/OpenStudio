@@ -453,35 +453,36 @@ namespace isomodel {
             double uValue1 = material1.thermalConductance();
             double norm_back_SR1 = material1.backSideSolarReflectanceatNormalIncidence().get();
 
-            double norm_ST2 = 0;
+            /// \todo these are set but not used
+            //double norm_ST2 = 0;
             double uValue2 = 0;
 
             // Now get layer 2 properties;
             if (layers[1].optionalCast<openstudio::model::StandardGlazing>()) { // check to see if layer 2 is standard glazing;
               // convert the 2nd layer to a gas mixture;
               openstudio::model::StandardGlazing material2 = layers[1].optionalCast<openstudio::model::StandardGlazing>().get();
-              norm_ST2 = material2.solarTransmittanceatNormalIncidence().get();
+              //norm_ST2 = material2.solarTransmittanceatNormalIncidence().get();
               uValue2 = material2.thermalConductance();
             } else if (layers[1].optionalCast<openstudio::model::AirGap>()) { // check to see if layer 1 is an air gap;
               // convert the 2nd layer to an air gap;
               openstudio::model::AirGap material2 = layers[1].optionalCast<openstudio::model::AirGap>().get();
-              norm_ST2 = 1.0;
+              //norm_ST2 = 1.0;
               uValue2 = 1.0 / material2.thermalResistance();
             } else if (layers[1].optionalCast<openstudio::model::Gas>()) { // check to see if layer 1 is a gas;
               // convert the 2nd layer to a simple gas layer;
               openstudio::model::Gas material2 = layers[1].optionalCast<openstudio::model::Gas>().get();
-              norm_ST2 = 1.0;
+              //norm_ST2 = 1.0;
               // get U value at 290 K;
               uValue2 = material2.getThermalConductance(290);
             } else if (layers[1].optionalCast<openstudio::model::GasMixture>()) {          // check to see if layer 1 is a gas;
               // convert the 2nd layer to a simple gas layer;
               openstudio::model::GasMixture material2 = layers[1].optionalCast<openstudio::model::GasMixture>().get();
-              norm_ST2 = 1.0;
-              uValue2 = material2.getThermalConductance(290);
+              //norm_ST2 = 1.0;
               // get U value at 290 K;
+              uValue2 = material2.getThermalConductance(290);
             } else {
               // we can't figure out what it is so assume properties of simple 12 mm air gap w/ U~6.0 from ASHRAE 2009;
-              norm_ST2 = 1.0;
+              //norm_ST2 = 1.0;
               uValue2 = 6.0;
             }
 
@@ -1155,16 +1156,20 @@ namespace isomodel {
     //first check to see if there effective leakage areas defined and if !those, then design flow rates;
     if (!model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
       std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
-      BOOST_FOREACH(const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil, infiltration) {
+
+      /// \todo no reason for this to be in a loop
+//      BOOST_FOREACH(const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil, infiltration) {
         // set default average envelope air leakage (infiltration) as 7 m3/h/m2 which is about the EnergyPlus defaults;
         LOG(Debug, "EffectiveLeakageArea !Implemented Yet, Infiltration Rate Set to 7.0 m3/m2/h @ 75 Pa");
         infiltration_rate = 7.0;
-      }
+//      }
+
     } else if (!model.getModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>().empty()) {
       std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
       LOG(Debug, "Found " << infiltration.size() << " SpaceInfiltrationDesignFlowRate objects");
 
-      double infil_frac_sum = 0.0;
+      /// \todo this is not used
+      //double infil_frac_sum = 0.0;
       double infil_rate_sum = 0.0;
       int count = 0;
       BOOST_FOREACH(const openstudio::model::SpaceInfiltrationDesignFlowRate &infil, infiltration) {
@@ -1197,7 +1202,8 @@ namespace isomodel {
           openstudio::model::SpaceType st=infil.spaceType().get();
           double st_volume =0.0;
           double st_exterior_area = 0.0;
-          int st_num = st.spaces().size();
+          /// \todo this is not used
+          //int st_num = st.spaces().size();
           BOOST_FOREACH(const openstudio::model::Space &s, st.spaces()) {
             st_volume += s.volume();
             st_exterior_area += s.exteriorArea();
