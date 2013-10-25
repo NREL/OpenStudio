@@ -222,9 +222,16 @@ OSDocument::OSDocument( openstudio::model::Model library,
       }
     
     }
-  } else {
+    else {
+      // ETH@20131025 - This message needs to get to the user somehow.
+      LOG(Warn, "There was a project file, but it did not open for some reason, so we are creating "
+          << "a new one. Any measure and run information will be lost.");
+    }
+  }
+  if (!m_simpleProject) {
     LOG(Debug, "Creating new project");
-    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
+    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
+        openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
         options,
         true);
 
@@ -241,6 +248,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
     problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
     problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
   }
+
+  OS_ASSERT(m_simpleProject);
   
   // make sure project has baseline stuff setup
   analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
