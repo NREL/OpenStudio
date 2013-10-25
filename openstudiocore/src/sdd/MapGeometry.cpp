@@ -1230,8 +1230,8 @@ namespace sdd {
     if (tagName == "ExtShdgObj"){
 
       //<TransSchRef>OpqShdgTrans Sch</TransSchRef>
-	    //<SolRefl>0.1</SolRefl>
-	    //<VisRefl>0.1</VisRefl>
+      //<SolRefl>0.1</SolRefl>
+      //<VisRefl>0.1</VisRefl>
 
       double solRefl = 0.1;
       QDomElement solReflElement = element.firstChildElement("SolRefl");
@@ -1305,7 +1305,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    // DLM: do not translate aboveGradeStoryCount, Issue 243: 	Forward Translator - AboveGrdStryCount
+    // DLM: do not translate aboveGradeStoryCount, Issue 243: Forward Translator - AboveGrdStryCount
     /*
     // aboveGradeStoryCount
     unsigned numAboveGroundStories = 0;

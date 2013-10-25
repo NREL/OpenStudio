@@ -152,24 +152,24 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
 
     
 // DesignEnteringWaterTemperature
-		
+
   if( (d = modelObject.designEnteringWaterTemperature()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature,d.get());
   }
-	
+
 // DesignEnteringAirTemperature
-		
+
   if( (d = modelObject.designEnteringAirTemperature()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature,d.get());
-  }	
-	
+  }
+
 // DesignEnteringAirWetbulbTemperature
-	if( (d = modelObject.designEnteringAirWetbulbTemperature()) )
+  if( (d = modelObject.designEnteringAirWetbulbTemperature()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature,d.get());
-  }	
+  }
 
   // CapacityControl
 

@@ -32,24 +32,24 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture,CoilHeatingGas) {
   Model model;
-	ScheduleConstant scheduleConstant(model);
+  ScheduleConstant scheduleConstant(model);
 
   CoilHeatingGas coilHeatingGas(model, scheduleConstant);
-	
-	coilHeatingGas.setGasBurnerEfficiency(0.6);
-	EXPECT_EQ(coilHeatingGas.gasBurnerEfficiency(),0.6);
-	
-	coilHeatingGas.setNominalCapacity(1535.0);
-	EXPECT_EQ(coilHeatingGas.nominalCapacity(),1535.0);
-	
-	coilHeatingGas.setParasiticElectricLoad(48.0);
-	EXPECT_EQ(coilHeatingGas.parasiticElectricLoad(),48.0);
-	
-	coilHeatingGas.setParasiticGasLoad(51.0);
-	EXPECT_EQ(coilHeatingGas.parasiticGasLoad(),51.0);
-	
-	ScheduleConstant schedule2(model);
-	coilHeatingGas.setAvailableSchedule(schedule2);
-	EXPECT_EQ(coilHeatingGas.availableSchedule(),schedule2);
+
+  coilHeatingGas.setGasBurnerEfficiency(0.6);
+  EXPECT_EQ(coilHeatingGas.gasBurnerEfficiency(),0.6);
+
+  coilHeatingGas.setNominalCapacity(1535.0);
+  EXPECT_EQ(coilHeatingGas.nominalCapacity(),1535.0);
+
+  coilHeatingGas.setParasiticElectricLoad(48.0);
+  EXPECT_EQ(coilHeatingGas.parasiticElectricLoad(),48.0);
+
+  coilHeatingGas.setParasiticGasLoad(51.0);
+  EXPECT_EQ(coilHeatingGas.parasiticGasLoad(),51.0);
+
+  ScheduleConstant schedule2(model);
+  coilHeatingGas.setAvailableSchedule(schedule2);
+  EXPECT_EQ(coilHeatingGas.availableSchedule(),schedule2);
 }
 
