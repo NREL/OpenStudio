@@ -97,7 +97,7 @@ namespace isomodel {
     double freshAirFlowRate() const {return _freshAirFlowRate;} 
     double supplyExhaustRate() const {return _supplyExhaustRate;} 
     double heatRecovery() const {return _heatRecovery;} 
-    double exhaustAirRecirclation() const {return _exhaustAirRecirclation;} 
+    double exhaustAirRecirculation() const {return _exhaustAirRecirculation;} 
     double buildingAirLeakage() const {return _buildingAirLeakage;} 
     double dhwDemand() const {return _dhwDemand;} 
     double dhwEfficiency() const {return _dhwEfficiency;} 
@@ -293,7 +293,7 @@ namespace isomodel {
     void setFreshAirFlowRate(double val){ _freshAirFlowRate = val;}
     void setSupplyExhaustRate(double val){ _supplyExhaustRate = val;}
     void setHeatRecovery(double val){ _heatRecovery = val;}
-    void setExhaustAirRecirclation(double val){ _exhaustAirRecirclation = val;}
+    void setExhaustAirRecirculation(double val){ _exhaustAirRecirculation = val;}
     void setBuildingAirLeakage(double val){ _buildingAirLeakage = val;}
     void setDhwDemand(double val){ _dhwDemand = val;}
     void setDhwEfficiency(double val){ _dhwEfficiency = val;}
@@ -374,7 +374,7 @@ namespace isomodel {
     double _freshAirFlowRate;
     double _supplyExhaustRate;
     double _heatRecovery;
-    double _exhaustAirRecirclation;
+    double _exhaustAirRecirculation;
     double _buildingAirLeakage;
     double _dhwDemand;
     double _dhwEfficiency;

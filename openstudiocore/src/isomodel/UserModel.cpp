@@ -194,7 +194,7 @@ namespace isomodel {
     sim.setStructure(structure);
 
     boost::shared_ptr<Ventilation> ventilation(new Ventilation);
-    ventilation->setExhaustAirRecirculated(_exhaustAirRecirclation);
+    ventilation->setExhaustAirRecirculated(_exhaustAirRecirculation);
     ventilation->setFanControlFactor(_fanFlowControlFactor);
     ventilation->setFanPower(_specificFanPower);
     ventilation->setHeatRecoveryEfficiency(_heatRecovery);
@@ -463,7 +463,7 @@ namespace isomodel {
     } else if(attributeName == "heatrecovery"){
       setHeatRecovery(atof(attributeValue));
     } else if(attributeName == "exhaustairrecirculation"){
-      setExhaustAirRecirclation(atof(attributeValue));
+      setExhaustAirRecirculation(atof(attributeValue));
     } else if(attributeName == "infiltration"){
       setBuildingAirLeakage(atof(attributeValue));
     } else if(attributeName == "dhwdemand"){
