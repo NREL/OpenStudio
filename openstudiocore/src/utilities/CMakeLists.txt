@@ -427,6 +427,7 @@ SET( ${target_name}_test_src
   economics/test/Economics_GTest.cpp
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/TimeDependentValuationFile_GTest.cpp
+  geometry/Test/BoostGeometry_GTest.cpp
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
   geometry/Test/GeometryFixture.cpp

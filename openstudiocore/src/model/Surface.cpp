@@ -885,6 +885,7 @@ namespace detail {
     Plane otherPlane = otherSpaceTransformation * otherSurface.plane();
 
     if (!plane.reverseEqual(otherPlane)){
+      //LOG(Info, "Planes are not reverse equal, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
       return boost::none;
     }
 
@@ -893,6 +894,7 @@ namespace detail {
     std::vector<Point3d> otherBuildingVertices = otherSpaceTransformation * otherSurface.vertices();
 
     if ((buildingVertices.size() < 3) || (otherBuildingVertices.size() < 3)){
+      LOG(Error, "Fewer than 3 vertices, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
       return boost::none;
     }
 
@@ -903,6 +905,7 @@ namespace detail {
       faceTransformation = Transformation::alignFace(buildingVertices);
       faceTransformationInverse = faceTransformation.inverse();
     }catch(const std::exception&){
+      LOG(Error, "Cannot compute face transform, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
       return boost::none;
     }
 
@@ -925,7 +928,8 @@ namespace detail {
       // should all have zero z coordinate now
       double z = faceVertex.z();
       if (abs(z) > 0.001){
-        LOG(Warn, "Not all points on common plane in intersection");
+        LOG(Error, "Not all points on common plane, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
+        return boost::none;
       }
     }
     // close polygon, use helper method which combines close points
@@ -940,7 +944,8 @@ namespace detail {
       // should all have zero z coordinate now
       double z = otherFaceVertex.z();
       if (abs(z) > 0.001){
-        LOG(Warn, "Not all points on common plane in intersection");
+        LOG(Error, "Not all points on common plane, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
+        return boost::none;
       }
     }
     // close polygon, use helper method which combines close points
@@ -950,13 +955,13 @@ namespace detail {
     try{
       boost::geometry::detail::overlay::has_self_intersections(facePolygon);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG(Error, "Cannot intersect self intersecting polygon" << faceVertices);
+      LOG(Error, "Cannot intersect self intersecting polygon of surface '" << this->name().get() << "', intersection with '" << otherSurface.name().get() << "' fails");
       return boost::none;
     }
     try{
       boost::geometry::detail::overlay::has_self_intersections(otherFacePolygon);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG(Error, "Cannot intersect self intersecting polygon" << otherFaceVertices);
+      LOG(Error, "Cannot intersect self intersecting polygon of surface '" << otherSurface.name().get() << "', intersection with '" << this->name().get() << "' fails");
       return boost::none;
     }
 
@@ -965,12 +970,13 @@ namespace detail {
     try{
       boost::geometry::intersection(facePolygon, otherFacePolygon, intersectionResult);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG(Error, "overlay_invalid_input_exception");
+      LOG(Error, "overlay_invalid_input_exception, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
       return boost::none;
     }
 
     // check if intersection is empty
     if (intersectionResult.empty()){
+      //LOG(Info, "Intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' is empty");
       return boost::none;
     }
 
@@ -983,12 +989,9 @@ namespace detail {
     // sort intersections by size, biggest first
     if (intersectionResult.size() > 1){
       std::sort(intersectionResult.begin(), intersectionResult.end(), BoostPolygonAreaGreater());
-      BOOST_FOREACH(BoostPolygon p, intersectionResult){
-        std::vector<Point3d> testVertices = verticesFromBoostPolygon(p);
-        boost::optional<double> testArea = getArea(testVertices);
-        if (testArea){
-          LOG(Debug, "Area: " << *testArea);
-        }
+      LOG(Info, "Intersection has " << intersectionResult.size() << " elements");
+      BOOST_FOREACH(BoostPolygon intersection, intersectionResult){
+        LOG(Info, "  Area: " << getArea(verticesFromBoostPolygon(intersection)).get());
       }
     }
     
@@ -996,37 +999,46 @@ namespace detail {
     std::vector<Point3d> testVertices = verticesFromBoostPolygon(intersectionResult[0]);
     boost::optional<double> testArea = getArea(testVertices);
     if (!testArea){
-      LOG(Info, "Cannot compute intersection area");
-      return false;
+      LOG(Info, "Cannot compute area of largest intersection, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails, " << testVertices);
+      return boost::none;
     }else if (*testArea < tol*tol){
-      LOG(Info, "Ignoring very small intersection of " << *testArea << "m^2");
-      return false;
+      LOG(Info, "Largest intersection has very small area of " << *testArea << "m^2, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails, " << testVertices);
+      return boost::none;
     }
     try{
       boost::geometry::detail::overlay::has_self_intersections(intersectionResult[0]);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG(Error, "Ignoring self intersecting polygon in intersection");
-      return false;
+      LOG(Error, "Largest intersection is self intersecting, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails, " << testVertices);
+      return boost::none;
     }
+    if (boost::geometry::num_interior_rings(intersectionResult[0]) > 0){
+      LOG(Error, "Largest intersection has interior rings, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails, " << testVertices);
+      return boost::none;
+    };
 
     // this surface minus the intersection
     std::vector<BoostPolygon> faceDifferenceResult;
     boost::geometry::difference(facePolygon, otherFacePolygon, faceDifferenceResult);
+    
+    LOG(Info, "Face difference has " << faceDifferenceResult.size() << " elements");
+    BOOST_FOREACH(BoostPolygon difference, faceDifferenceResult){
+      LOG(Info, "  Area: " << getArea(verticesFromBoostPolygon(difference)).get());
+    }
 
     // other surface minus the intersection
     std::vector<BoostPolygon> otherFaceDifferenceResult;
     boost::geometry::difference(otherFacePolygon, facePolygon, otherFaceDifferenceResult);
 
-    // if both differences are empty then these were the same polygon
-    if (faceDifferenceResult.empty() && otherFaceDifferenceResult.empty()){
-      return SurfaceIntersection(surface, otherSurface, newSurfaces, newOtherSurfaces);
+    LOG(Info, "Other face difference has " << otherFaceDifferenceResult.size() << " elements");
+    BOOST_FOREACH(BoostPolygon difference, otherFaceDifferenceResult){
+      LOG(Info, "  Area: " << getArea(verticesFromBoostPolygon(difference)).get());
     }
 
     // goes from building coordinates to local system 
     Transformation spaceTransformationInverse = spaceTransformation.inverse();
     Transformation otherSpaceTransformationInverse =  otherSpaceTransformation.inverse();
 
-    // first intersection geometry will be set on original surfaces below
+    // first intersection geometry will be set on original surfaces in the difference portion of the algorithm
 
     // if more than one intersection, need to make a new surface in each space
     for (unsigned i = 1; i < intersectionResult.size(); ++i){
@@ -1036,18 +1048,22 @@ namespace detail {
 
       boost::optional<double> intersectionArea = getArea(intersectionVertices);
       if (!intersectionArea){
-        LOG(Info, "Cannot compute intersection area");
-        return boost::none;
+        LOG(Info, "Cannot compute area of secondary intersection, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << intersectionVertices);
+        continue;
       }else if (*intersectionArea < tol*tol){
-        LOG(Info, "Ignoring very small intersection of " << *intersectionArea << "m^2");
+        LOG(Info, "Secondary intersection has very small area of " << *intersectionArea << "m^2, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << intersectionVertices);
         continue;
       }
       try{
         boost::geometry::detail::overlay::has_self_intersections(intersectionResult[i]);
       }catch(const boost::geometry::overlay_invalid_input_exception&){
-        LOG(Error, "Ignoring self intersecting polygon in intersection");
+        LOG(Error, "Secondary intersection is self intersecting, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << intersectionVertices);
         continue;
       }
+      if (boost::geometry::num_interior_rings(intersectionResult[0]) > 0){
+        LOG(Error, "Secondary intersection has interior rings, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << intersectionVertices);
+        continue;
+      };
 
       // new surface in this space
       std::vector<Point3d> newBuildingVertices = faceTransformation * intersectionVertices;
@@ -1069,7 +1085,7 @@ namespace detail {
       // could match here but will save that for other discrete operation
     }
 
-    if (faceDifferenceResult.empty()){
+    if (faceDifferenceResult.empty() && (intersectionResult.size() == 1)){
       // the entire surface was the intersection, no-op
     }else{
       // only part of the surface was the intersection
@@ -1092,18 +1108,22 @@ namespace detail {
       
         boost::optional<double> faceDifferenceArea = getArea(faceDifferenceVertices);
         if (!faceDifferenceArea){
-          LOG(Info, "Cannot compute difference area");
-          return boost::none;
+          LOG(Info, "Cannot compute area of face difference, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << faceDifferenceVertices);
+          continue;
         }else if (*faceDifferenceArea < tol*tol){
-          LOG(Info, "Ignoring very small difference of " << *faceDifferenceArea << "m^2");
+          LOG(Info, "Face difference has very small area of " << *faceDifferenceArea << "m^2, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << faceDifferenceVertices);
           continue;
         }
         try{
           boost::geometry::detail::overlay::has_self_intersections(faceDifferenceResult[i]);
         }catch(const boost::geometry::overlay_invalid_input_exception&){
-          LOG(Error, "Ignoring self intersecting polygon in difference");
+          LOG(Error, "Face difference is self intersecting, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << faceDifferenceVertices);
           continue;
         }
+        if (boost::geometry::num_interior_rings(intersectionResult[0]) > 0){
+          LOG(Error, "Face difference has interior rings, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << faceDifferenceVertices);
+          continue;
+        };
 
         // new surface in this space
         std::vector<Point3d> newBuildingVertices = faceTransformation * faceDifferenceVertices;
@@ -1116,7 +1136,7 @@ namespace detail {
       }
     }
 
-    if (otherFaceDifferenceResult.empty()){
+    if (otherFaceDifferenceResult.empty() && (intersectionResult.size() == 1)){
       // the entire surface was the intersection, no-op
     }else{
       // only part of the surface was the intersection
@@ -1136,20 +1156,24 @@ namespace detail {
         // new vertices in face coordinates, do not add last point
         std::vector<Point3d> otherFaceDifferenceVertices = verticesFromBoostPolygon(otherFaceDifferenceResult[i]);
         
-        boost::optional<double> faceDifferenceArea = getArea(otherFaceDifferenceVertices);
-        if (!faceDifferenceArea){
-          LOG(Info, "Cannot compute difference area");
-          return boost::none;
-        }else if (*faceDifferenceArea < tol*tol){
-          LOG(Info, "Ignoring very small difference of " << *faceDifferenceArea << "m^2");
+        boost::optional<double> otherFaceDifferenceArea = getArea(otherFaceDifferenceVertices);
+        if (!otherFaceDifferenceArea){
+          LOG(Info, "Cannot compute area of other face difference, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << otherFaceDifferenceVertices);
+          continue;
+        }else if (*otherFaceDifferenceArea < tol*tol){
+          LOG(Info, "Other face difference has very small area of " << *otherFaceDifferenceArea << "m^2, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << otherFaceDifferenceVertices);
           continue;
         }
         try{
           boost::geometry::detail::overlay::has_self_intersections(otherFaceDifferenceResult[i]);
         }catch(const boost::geometry::overlay_invalid_input_exception&){
-          LOG(Error, "Ignoring self intersecting polygon in difference");
+          LOG(Error, "Other face difference is self intersecting, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << otherFaceDifferenceVertices);
           continue;
         }
+        if (boost::geometry::num_interior_rings(intersectionResult[0]) > 0){
+          LOG(Error, "Other face difference has interior rings, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' will not include this polygon, " << otherFaceDifferenceVertices);
+          continue;
+        };
 
         // new surface in other space
         std::vector<Point3d> newOtherBuildingVertices = faceTransformation * otherFaceDifferenceVertices;
@@ -1160,6 +1184,23 @@ namespace detail {
         newOtherSurfaces.push_back(newOtherSurface);
       }
     }
+
+    std::string newSurfacesString;
+    for (unsigned i = 0; i < newSurfaces.size(); ++i){
+      newSurfacesString += newSurfaces[i].name().get();
+      if (i != newSurfaces.size()-1){
+        newSurfacesString += ", ";
+      }
+    }
+    std::string newOtherSurfacesString;
+    for (unsigned i = 0; i < newOtherSurfaces.size(); ++i){
+      newOtherSurfacesString += newOtherSurfaces[i].name().get();
+      if (i != newOtherSurfaces.size()-1){
+        newOtherSurfacesString += ", ";
+      }
+    }
+
+    LOG(Info, "Intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' results in [" << newSurfacesString << "] and [" << newOtherSurfacesString << "]");
 
     return SurfaceIntersection(surface, otherSurface, newSurfaces, newOtherSurfaces);
   }
