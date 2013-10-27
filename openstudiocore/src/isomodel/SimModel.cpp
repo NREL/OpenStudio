@@ -29,6 +29,30 @@ using namespace openstudio;
 namespace openstudio {
 namespace isomodel {
 
+  double ISOResults::totalEnergyUse() const
+  {
+    std::vector<EndUses> monthlyResults;
+
+    double sum = 0;
+    std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
+    for (std::vector<EndUses>::const_iterator itr = monthlyResults.begin();
+        itr != monthlyResults.end();
+        ++itr)
+    {
+
+
+      for (std::vector<EndUseFuelType>::const_iterator itr2 = fuelTypes.begin();
+          itr2 != fuelTypes.end();
+          ++itr2)
+      {
+        sum += itr->getEndUseByFuelType(*itr2);
+      }
+    }
+
+    return sum;
+  }
+
+
   void SimModel::printVector(const char* vecName, const Vector &vec){
 #ifdef DEBUG_ISO_MODEL_SIMULATION
     std::stringstream ss;
