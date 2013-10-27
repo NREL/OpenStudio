@@ -90,10 +90,10 @@ namespace detail {
   }
 
   bool DDACEAlgorithmOptions_Impl::setSamples(int value) {
-	  if (value < 0) {
+    if (value < 0) {
       LOG(Warn,"Cannot set DDACEAlgorithmOptions samples to a value less than zero.");
       return false;
-	  }
+    }
     OptionalAttribute option;
     if ((option = getOption("samples"))) {
       option->setValue(value);

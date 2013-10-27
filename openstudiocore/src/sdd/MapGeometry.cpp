@@ -217,7 +217,7 @@ namespace sdd {
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::BuildingStory& buildingStory)
   {
     QDomElement nameElement = element.firstChildElement("Name");
-    QDomElement hotWtrHtgRtElement = element.firstChildElement("HotWtrHtgRt");
+    QDomElement hotWtrHtgRtElement = element.firstChildElement("HotWtrHtgRtSim");
     QDomElement hotWtrHtgSchRefElement = element.firstChildElement("HotWtrHtgSchRef");
     QDomElement shwFluidSegRefElement = element.firstChildElement("SHWFluidSegRef");
     QDomNodeList exteriorWallElements = element.elementsByTagName("ExtWall");
@@ -866,40 +866,6 @@ namespace sdd {
       }
     }
 
-    //***** Hot Water Loads *****
-    {
-      //<HotWtrHtgRt>120</HotWtrHtgRt> - Btu per h person
-      //<HotWtrHtgSchRef>Office HotWtr Sched</HotWtrHtgSchRef>
-
-      QDomElement hotWtrHtgRtElement = element.firstChildElement("HotWtrHtgRt");
-      QDomElement hotWtrHtgSchRefElement = element.firstChildElement("HotWtrHtgSchRef");
-      if (!hotWtrHtgRtElement.isNull() && (hotWtrHtgRtElement.text().toDouble() > 0)){
-
-        openstudio::Quantity hotWaterRateIP(hotWtrHtgRtElement.text().toDouble(), openstudio::createUnit("Btu/h*person").get());
-        OptionalQuantity hotWaterRateSI = QuantityConverter::instance().convert(hotWaterRateIP, whSys);
-        OS_ASSERT(hotWaterRateSI);
-        OS_ASSERT(hotWaterRateSI->units() == WhUnit(WhExpnt(1,0,0,0,0,0,0,0,0,-1,0)));
-
-        openstudio::model::HotWaterEquipmentDefinition hotWaterEquipmentDefinition(model);
-        hotWaterEquipmentDefinition.setName(name + " Hot Water Loads Definition");
-        hotWaterEquipmentDefinition.setWattsperPerson(hotWaterRateSI->value()); // W/person
-
-        openstudio::model::HotWaterEquipment hotWaterEquipment(hotWaterEquipmentDefinition);
-        hotWaterEquipment.setName(name + " Hot Water Loads");
-        hotWaterEquipment.setSpace(space);
-
-        if (!hotWtrHtgSchRefElement.isNull()){
-          std::string scheduleName = escapeName(hotWtrHtgSchRefElement.text());
-          boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
-            hotWaterEquipment.setSchedule(*schedule);
-          }else{
-            LOG(Error, "Could not find schedule '" << scheduleName << "'");
-          }
-        }
-      }
-    }
-
     return space;
   }
 
@@ -1264,8 +1230,8 @@ namespace sdd {
     if (tagName == "ExtShdgObj"){
 
       //<TransSchRef>OpqShdgTrans Sch</TransSchRef>
-	    //<SolRefl>0.1</SolRefl>
-	    //<VisRefl>0.1</VisRefl>
+      //<SolRefl>0.1</SolRefl>
+      //<VisRefl>0.1</VisRefl>
 
       double solRefl = 0.1;
       QDomElement solReflElement = element.firstChildElement("SolRefl");
@@ -1339,7 +1305,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    // DLM: do not translate aboveGradeStoryCount, Issue 243: 	Forward Translator - AboveGrdStryCount
+    // DLM: do not translate aboveGradeStoryCount, Issue 243: Forward Translator - AboveGrdStryCount
     /*
     // aboveGradeStoryCount
     unsigned numAboveGroundStories = 0;

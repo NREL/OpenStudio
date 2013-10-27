@@ -252,17 +252,17 @@ Su Mo Tu We Th Fr Sa
 27 28 29 30 31 
 
 Holidays and Observances:
-Jan 1	New Year's Day
-Jan 19	Martin Luther King Day
-Feb 16	Presidents' Day
-May 25	Memorial Day
+Jan 1   New Year's Day
+Jan 19  Martin Luther King Day
+Feb 16  Presidents' Day
+May 25  Memorial Day
 
-Jul 3	'Independence Day' observed
-Jul 4	Independence Day
-Sep 7	Labor Day
-Oct 12	Columbus Day (Most regions)
+Jul 3   'Independence Day' observed
+Jul 4   Independence Day
+Sep 7   Labor Day
+Oct 12  Columbus Day (Most regions)
 
-Nov 11	Veterans Day
-Nov 26	Thanksgiving Day
-Dec 25	Christmas Day
+Nov 11  Veterans Day
+Nov 26  Thanksgiving Day
+Dec 25  Christmas Day
 */

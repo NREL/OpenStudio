@@ -67,7 +67,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   
   if(s)
   {
-				idfObject.setString(Fan_OnOffFields::AvailabilityScheduleName,*s);
+    idfObject.setString(Fan_OnOffFields::AvailabilityScheduleName,*s);
   }
   
   //  N1 ,Field Fan Efficiency

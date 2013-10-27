@@ -47,6 +47,11 @@
 #include <model/Curve_Impl.hpp>
 #include <model/ScheduleRuleset.hpp>
 #include <model/ScheduleDay.hpp>
+#include <model/ScheduleDay_Impl.hpp>
+#include <model/ScheduleYear.hpp>
+#include <model/ScheduleYear_Impl.hpp>
+#include <model/ScheduleWeek.hpp>
+#include <model/ScheduleWeek_Impl.hpp>
 #include <model/SizingZone.hpp>
 #include <model/SizingZone_Impl.hpp>
 #include <model/Node.hpp>
@@ -141,6 +146,7 @@
 #include <utilities/units/WhUnit.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/time/Time.hpp>
+#include <utilities/time/Date.hpp>
 #include <utilities/units/UnitFactory.hpp>
 #include <utilities/math/FloatCompare.hpp>
 
@@ -155,6 +161,197 @@ namespace sdd {
 
 const double cpWater = 4180.0;
 const double densityWater = 1000.0;
+
+// Adjust scheduleDay by delaying the start and stop by the respective offset
+// This is used by the OA Controller ventilation schedule
+void adjustScheduleDay(model::ScheduleDay & scheduleDay, int startOffset)
+{
+  std::vector<double> values = scheduleDay.values();
+  std::vector<Time> times = scheduleDay.times();
+  
+  std::vector<double>::iterator valueIt;
+  std::vector<Time>::iterator timeIt;
+
+  timeIt = times.begin() + 1;
+  for( valueIt = values.begin() + 1; valueIt < values.end(); valueIt++ )
+  {
+    if( equal<double>(*valueIt,1.0,0.01) && equal<double>(*(valueIt - 1),0.0,0.01) )
+    {
+      Time newStartTime;
+
+      newStartTime = *(timeIt - 1) + Time(0,startOffset);
+
+      scheduleDay.removeValue(*(timeIt - 1));
+
+      scheduleDay.addValue(newStartTime,0.0);
+    }
+
+    timeIt++;
+  }
+}
+
+void adjustSchedule(model::ScheduleYear & scheduleYear, int startOffset)
+{
+  std::vector<model::ScheduleWeek> scheduleWeeks = scheduleYear.scheduleWeeks();
+
+  for( std::vector<model::ScheduleWeek>::iterator it = scheduleWeeks.begin();
+       it != scheduleWeeks.end();
+       it++ )
+  {
+    std::vector<boost::optional<model::ScheduleDay> > scheduleDays;
+
+    scheduleDays.push_back(it->sundaySchedule());
+
+    scheduleDays.push_back(it->mondaySchedule());
+
+    scheduleDays.push_back(it->tuesdaySchedule());
+
+    scheduleDays.push_back(it->wednesdaySchedule());
+
+    scheduleDays.push_back(it->thursdaySchedule());
+
+    scheduleDays.push_back(it->fridaySchedule());
+
+    scheduleDays.push_back(it->saturdaySchedule());
+
+    scheduleDays.push_back(it->holidaySchedule());
+
+    scheduleDays.push_back(it->summerDesignDaySchedule());
+
+    scheduleDays.push_back(it->winterDesignDaySchedule());
+
+    scheduleDays.push_back(it->customDay1Schedule());
+
+    scheduleDays.push_back(it->customDay2Schedule());
+
+    for( std::vector<boost::optional<model::ScheduleDay> >::iterator scheduleDayIt = scheduleDays.begin();
+         scheduleDayIt != scheduleDays.end();
+         scheduleDayIt++ )
+    {
+      if( *scheduleDayIt )
+      {
+        adjustScheduleDay( (*scheduleDayIt).get(), startOffset );
+      }
+    }
+  }
+}
+
+// Make a deep copy into same model as scheduleYear
+model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear & scheduleYear, const std::string & name)
+{
+  model::Model model = scheduleYear.model();
+
+  model::ScheduleYear scheduleYearClone = scheduleYear.clone(model).cast<model::ScheduleYear>();
+  scheduleYearClone.setName(name);
+  scheduleYearClone.clearScheduleWeeks();
+
+  std::vector<model::ScheduleWeek> scheduleWeeks = scheduleYear.scheduleWeeks();
+  std::vector<Date> dates = scheduleYear.dates();
+
+  std::vector<Date>::iterator dateIt = dates.begin();
+
+  int i = 1;
+
+  for( std::vector<model::ScheduleWeek>::iterator it = scheduleWeeks.begin();
+       it != scheduleWeeks.end();
+       it++ )
+  {
+    model::ScheduleWeek scheduleWeekClone = it->clone(model).cast<model::ScheduleWeek>();
+    scheduleWeekClone.setName(name + " Week " + QString::number(i).toStdString());
+    scheduleYearClone.addScheduleWeek(*dateIt,scheduleWeekClone);
+
+    boost::optional<model::ScheduleDay> scheduleDay;
+
+    if( (scheduleDay = it->sundaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Sunday");
+      scheduleWeekClone.setSundaySchedule(s);
+    }
+
+    if( (scheduleDay = it->mondaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Monday");
+      scheduleWeekClone.setMondaySchedule(s);
+    }
+
+    if( (scheduleDay = it->tuesdaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Tuesday");
+      scheduleWeekClone.setTuesdaySchedule(s);
+    }
+
+    if( (scheduleDay = it->wednesdaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Wednesday");
+      scheduleWeekClone.setWednesdaySchedule(s);
+    }
+
+    if( (scheduleDay = it->thursdaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Thursday");
+      scheduleWeekClone.setThursdaySchedule(s);
+    }
+
+    if( (scheduleDay = it->fridaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Friday");
+      scheduleWeekClone.setFridaySchedule(s);
+    }
+
+    if( (scheduleDay = it->saturdaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Saturday");
+      scheduleWeekClone.setSaturdaySchedule(s);
+    }
+
+    if( (scheduleDay = it->holidaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Holiday");
+      scheduleWeekClone.setHolidaySchedule(s);
+    }
+
+    if( (scheduleDay = it->summerDesignDaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Summer");
+      scheduleWeekClone.setSummerDesignDaySchedule(s);
+    }
+
+    if( (scheduleDay = it->winterDesignDaySchedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Winter");
+      scheduleWeekClone.setWinterDesignDaySchedule(s);
+    }
+
+    if( (scheduleDay = it->customDay1Schedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Custom 1");
+      scheduleWeekClone.setCustomDay1Schedule(s);
+    }
+
+    if( (scheduleDay = it->customDay2Schedule()) )
+    {
+      model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+      s.setName(name + " Week " + QString::number(i).toStdString() + " Custom 2");
+      scheduleWeekClone.setCustomDay2Schedule(s);
+    }
+
+    dateIt++;
+    i++;
+  }
+
+  return scheduleYearClone;
+}
 
 model::Schedule ReverseTranslator::defaultDeckTempSchedule(openstudio::model::Model& model)
 {
@@ -336,22 +533,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             hvacComponent.addToNode(supplyInletNode);
 
-            if( ! autosize() )
+            if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
             {
-              if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
+              boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
+
+              OS_ASSERT(controller);
+
+              controller->setControllerConvergenceTolerance(0.1);
+
+              if( ! autosize() )
               {
-                boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
-
-                OS_ASSERT(controller);
-
-                controller->setControllerConvergenceTolerance(0.1);
-
                 boost::optional<double> maxFlow = coilCoolingWater->designWaterFlowRate();
 
                 OS_ASSERT(maxFlow);
 
                 controller->setMaximumActuatedFlow(maxFlow.get() * 1.25);
               }
+
+              controller->setMinimumActuatedFlow(0.0);
             }
           }
         }
@@ -378,6 +577,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             controller->setControllerConvergenceTolerance(0.1);
 
+            controller->setMinimumActuatedFlow(0.0);
+
             if( ! autosize() )
             {
               boost::optional<double> capacity = coilHeatingWater->ratedCapacity();
@@ -399,12 +600,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               double maxFlow = capacity.get() / ( density * cp * std::abs(inletTemp.get() - outletTemp.get()));
 
               controller->setMaximumActuatedFlow(maxFlow * 1.25);
-
-              controller->setMinimumActuatedFlow(maxFlow * 1.25 * 0.05);
-            }
-            else
-            {
-              controller->setMinimumActuatedFlow(0.000001);
             }
           }
         }
@@ -486,15 +681,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         model::Schedule schedule = alwaysOnSchedule(model);
         oaController.setMinimumOutdoorAirSchedule(schedule);
       }
-      else if( istringEqual(oaSchMthdElement.text().toStdString(),"FollowAvailability") )
+      else if( istringEqual(oaSchMthdElement.text().toStdString(),"FollowHVACAvailability") && availabilitySchedule )
       {
-        if( availabilitySchedule )
+        if( boost::optional<model::ScheduleYear> availabilityScheduleYear = availabilitySchedule->optionalCast<model::ScheduleYear>() )
         {
-          model::Schedule schedule = availabilitySchedule->clone(model).cast<model::Schedule>();
+          model::ScheduleYear schedule = deepScheduleYearClone(availabilityScheduleYear.get(),nameElement.text().toStdString() + " Schedule");
 
-          schedule.setName(nameElement.text().toStdString() + " OA Schedule");
+          int startOffset = 0;
+          int offsetValue;
 
-          // TODO offset this schedule by AvailSchOffsetEnd and AvailSchOffsetStart
+          QDomElement availSchOffsetStartElement = airSystemOACtrlElement.firstChildElement("StartUpDelay");
+
+          offsetValue = availSchOffsetStartElement.text().toInt(&ok);
+      
+          if( ok )
+          {
+            startOffset = offsetValue;
+          }
+
+          adjustSchedule(schedule,startOffset);
 
           oaController.setMinimumOutdoorAirSchedule(schedule);
         }
@@ -1990,16 +2195,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   sizingZone.setZoneCoolingSizingFactor(clgDsgnSizingFac);
   sizingZone.setZoneHeatingDesignSupplyAirTemperature(htgDsgnSupAirTemp);
   sizingZone.setZoneHeatingSizingFactor(htgDsgnSizingFac);
-  sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
 
+  sizingZone.setCoolingMinimumAirFlowperZoneFloorArea(0.0);
+  sizingZone.setCoolingMinimumAirFlow(0.0);
+  sizingZone.setCoolingMinimumAirFlowFraction(0.0);
   sizingZone.setCoolingDesignAirFlowMethod("DesignDay");
+
+  sizingZone.setHeatingMaximumAirFlowperZoneFloorArea(0.0);
+  sizingZone.setHeatingMaximumAirFlow(0.0);
+  sizingZone.setHeatingMaximumAirFlowFraction(0.0);
+  sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
+
   if( htgDsgnMaxFlowFrac > 0.0 )
   {
     sizingZone.setHeatingDesignAirFlowMethod("DesignDayWithLimit");
-  }
-  else
-  {
-    sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
+    sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
   }
 
   // Ventilation
@@ -2437,6 +2647,8 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     model::AirTerminalSingleDuctVAVReheat terminal(model,schedule,coil.get());
 
+    terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+
     if( primaryAirFlow )
     {
       terminal.setMaximumAirFlowRate(primaryAirFlow.get());
@@ -2444,7 +2656,6 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     if( primaryAirFlowMin )
     {
-      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
     }
 
@@ -2459,7 +2670,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setDamperHeatingAction("Normal");
     }
 
-    terminal.setConstantMinimumAirFlowFraction(0.0);
+    // terminal.setConstantMinimumAirFlowFraction(0.0);
 
     QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
     value = htgAirFlowMaxElement.text().toDouble(&ok);

@@ -36,7 +36,7 @@ namespace detail {
 
   /** ZoneHVACBaseboardConvectiveWater_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACBaseboardConvectiveWater.*/
   class MODEL_API ZoneHVACBaseboardConvectiveWater_Impl : public ZoneHVACComponent_Impl {
-	Q_OBJECT;
+    Q_OBJECT;
   public:
     /** @name Constructors and Destructors */
     //@{
