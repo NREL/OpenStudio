@@ -1575,7 +1575,7 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
 
   EXPECT_TRUE(surface1.intersect(surface2));
 
-  EXPECT_EQ(2u, space1.surfaces().size());
+  EXPECT_EQ(5u, space1.surfaces().size());
   EXPECT_EQ(4u, surface1.vertices().size());
   EXPECT_EQ(1u, space2.surfaces().size());
   EXPECT_EQ(4u, surface2.vertices().size());
@@ -1590,19 +1590,37 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
   
   BOOST_FOREACH(const Surface& surface, space1.surfaces()){
     if (surface.handle() != surface1.handle()){
+      bool test = false;
+
       points.clear();
       points.push_back(Point3d(0,  0, 0));
-      points.push_back(Point3d(4,  6, 0));
-      points.push_back(Point3d(6,  6, 0));
+      points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(6,  4, 0));
       points.push_back(Point3d(4,  4, 0));
-      points.push_back(Point3d(4,  6, 0));
-      points.push_back(Point3d(0,  0, 0));
-      points.push_back(Point3d(10, 0, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      points.clear();
+      points.push_back(Point3d(0,  10, 0));
+      points.push_back(Point3d(10, 10, 0));
+      points.push_back(Point3d(6,  6, 0));
+      points.push_back(Point3d(6,  4, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      points.clear();
       points.push_back(Point3d(10, 10, 0));
       points.push_back(Point3d(0,  10, 0));
-      EXPECT_TRUE(circularEqual(surface.vertices(), points));
-      EXPECT_DOUBLE_EQ(surface1Area, surface1.grossArea() + surface.grossArea());
+      points.push_back(Point3d(4,  6, 0));
+      points.push_back(Point3d(6,  6, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      points.clear();
+      points.push_back(Point3d(0, 10, 0));
+      points.push_back(Point3d(0, 0, 0));
+      points.push_back(Point3d(4, 4, 0));
+      points.push_back(Point3d(4, 6, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      EXPECT_TRUE(test);
       break;
     }
   }
@@ -2447,10 +2465,10 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
+    points.push_back(Point3d(6,  8, 0));
     points.push_back(Point3d(7,  8, 0));
-    points.push_back(Point3d(8,  8, 0));
-    points.push_back(Point3d(8, 10, 0));
     points.push_back(Point3d(7, 10, 0));
+    points.push_back(Point3d(6, 10, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
     points.clear();
@@ -2483,16 +2501,16 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
+    points.push_back(Point3d(6, 10, 0));
     points.push_back(Point3d(7, 10, 0));
-    points.push_back(Point3d(8, 10, 0));
-    points.push_back(Point3d(8,  8, 0));
     points.push_back(Point3d(7,  8, 0));
+    points.push_back(Point3d(6,  8, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
     points.clear();
     points.push_back(Point3d(2, 15, 0));
-    points.push_back(Point3d(8, 15, 0));
-    points.push_back(Point3d(8, 10, 0));
+    points.push_back(Point3d(7, 15, 0));
+    points.push_back(Point3d(7, 10, 0));
     points.push_back(Point3d(6, 10, 0));
     points.push_back(Point3d(6, 12, 0));
     points.push_back(Point3d(4, 12, 0));

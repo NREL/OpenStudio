@@ -38,9 +38,96 @@ typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
 typedef boost::geometry::model::ring<BoostPoint> BoostRing;
 typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 
+#include <polypartition/polypartition.h>
+
+#include <list>
+
+
 namespace openstudio{
 
   // Private implementation functions
+
+  std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon)
+  {
+    std::vector<BoostPolygon> result;
+
+    // convert to vector of TPPLPoly
+    std::list<TPPLPoly> polys;
+
+    BoostRing outer = boostPolygon.outer();
+    TPPLPoly outerPoly; // must be counter-clockwise
+    outerPoly.Init(outer.size() - 1);
+    outerPoly.SetHole(false);
+    //std::cout << "outer :";
+    for(unsigned i = 0; i < outer.size() - 1; ++i){
+      outerPoly[i].x = outer[i].x();
+      outerPoly[i].y = outer[i].y();
+      //std::cout << "(" << outer[i].x() << ", " << outer[i].y() << ") ";
+    }
+    //std::cout << std::endl;
+    outerPoly.SetOrientation(TPPL_CCW);
+    polys.push_back(outerPoly);
+
+    std::vector<BoostRing> inners = boostPolygon.inners();
+    BOOST_FOREACH(const BoostRing& inner, inners){
+      TPPLPoly innerPoly; // must be clockwise
+      innerPoly.Init(inner.size() - 1);
+      innerPoly.SetHole(true);
+      //std::cout << "inner :";
+      for(unsigned i = 0; i < inner.size() - 1; ++i){
+        innerPoly[i].x = inner[i].x();
+        innerPoly[i].y = inner[i].y();
+        //std::cout << "(" << inner[i].x() << ", " << inner[i].y() << ") ";
+      }
+      //std::cout << std::endl;
+      innerPoly.SetOrientation(TPPL_CW);
+      polys.push_back(innerPoly);
+    }
+
+    // do partitioning
+    TPPLPartition pp;
+    std::list<TPPLPoly> resultPolys;
+    int test = pp.ConvexPartition_HM(&polys,&resultPolys);
+    if (test == 0){
+      LOG_FREE(Error, "utilities.geometry.removeHoles", "Failed to partition polygon");
+      return result;
+    }
+
+    // convert back to BoostPolygon
+    std::list<TPPLPoly>::iterator it, itend;
+    for(it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it){
+      BoostPolygon newBoostPolygon;
+      //std::cout << "result :";
+      for (long i = 0; i < it->GetNumPoints(); ++i){
+        TPPLPoint point = it->GetPoint(i);
+        boost::geometry::append(newBoostPolygon, boost::make_tuple(point.x, point.y));
+        //std::cout << "(" << point.x << ", " << point.y << ") ";
+      }
+      TPPLPoint point = it->GetPoint(0);
+      boost::geometry::append(newBoostPolygon, boost::make_tuple(point.x, point.y));
+      //std::cout << "(" << point.x << ", " << point.y << ") ";
+      //std::cout << std::endl;
+
+      boost::geometry::correct(newBoostPolygon);
+      result.push_back(newBoostPolygon);
+    }
+
+    return result;
+  }
+
+  std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
+  {
+    std::vector<BoostPolygon> result;
+    BOOST_FOREACH(const BoostPolygon polygon, polygons){
+      if (polygon.inners().empty()){
+        result.push_back(polygon);
+      }else{
+        std::vector<BoostPolygon> temp = removeHoles(polygon);
+        result.insert(result.end(), temp.begin(), temp.end());
+      }
+    }
+    return result;
+  }
 
   // convert a Point3d to a BoostPoint
   boost::tuple<double, double> boostPointFromPoint3d(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
@@ -98,22 +185,13 @@ namespace openstudio{
     if (outer.empty()){
       return result;
     }
-
+    
     // add point for each vertex except final vertex
     for(unsigned i = 0; i < outer.size() - 1; ++i){
       result.push_back(Point3d(outer[i].x(), outer[i].y(), 0.0));
     }
-    Point3d lastPoint = result.back();
 
-    BOOST_FOREACH(const BoostRing& inner, polygon.inners()){
-      if (!inner.empty()){
-        // inner loop already in reverse order
-        BOOST_FOREACH(const BoostPoint& p, inner){
-          result.push_back(Point3d(p.x(), p.y(), 0.0));
-        }
-        result.push_back(lastPoint);
-      }
-    }
+    OS_ASSERT(polygon.inners().empty());
 
     result = removeColinear(result);
 
@@ -264,6 +342,10 @@ namespace openstudio{
         LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection is self intersecting, result will not include this polygon, " << newPolygon);
         continue;
       }
+      if (!intersectionResult[i].inners().empty()){
+        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection has inner loops, result will not include this polygon, " << newPolygon);
+        continue;
+      };
 
       newPolygons1.push_back(newPolygon);
       newPolygons2.push_back(newPolygon);
@@ -272,6 +354,7 @@ namespace openstudio{
     // polygon1 minus polygon2
     std::vector<BoostPolygon> differenceResult1;
     boost::geometry::difference(*boostPolygon1, *boostPolygon2, differenceResult1);
+    differenceResult1 = removeHoles(differenceResult1);
     
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult1.size(); ++i){
@@ -299,6 +382,7 @@ namespace openstudio{
     // polygon2 minus polygon1
     std::vector<BoostPolygon> differenceResult2;
     boost::geometry::difference(*boostPolygon2, *boostPolygon1, differenceResult2);
+    differenceResult2 = removeHoles(differenceResult2);
 
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult2.size(); ++i){

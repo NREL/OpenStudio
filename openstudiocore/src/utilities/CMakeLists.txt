@@ -152,6 +152,7 @@ SET( geometry_src
   geometry/Transformation.cpp
   geometry/Vector3d.hpp
   geometry/Vector3d.cpp
+  ../polypartition/polypartition.cpp
 )
 
 SET( math_src
