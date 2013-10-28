@@ -300,12 +300,6 @@ boost::optional<std::map<Handle,DesignFlowRateCoeffs> > InfiltrationCalculator::
   {
     translator.setAirtightnessLevel(m_leakageDescriptor);
   }
-  
-  if(!translator.translate(false))
-  {
-    LOG(Error, "Translation failed, check errors and warnings for more information.");
-    return false;
-  }
 
   // Get all the surfaces
   std::vector<openstudio::model::Surface> surfaces = m_model.getConcreteModelObjects<openstudio::model::Surface>();

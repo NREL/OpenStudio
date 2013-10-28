@@ -63,13 +63,18 @@ private:
 class CONTAM_API ForwardTranslator : public prj::Model
 {
 public:
-  ForwardTranslator(const openstudio::model::Model& model);
-  ForwardTranslator(const openstudio::model::Model& model,std::string leakageDescriptor);
-  ForwardTranslator(const openstudio::model::Model& model,double flow,double n=0.65,double deltaP=75.0);
+  ForwardTranslator(const openstudio::model::Model& model, bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, std::string leakageDescriptor, bool translateHVAC=true,
+    ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double flow, double n, double deltaP,
+    bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, bool translateHVAC=true, 
+    ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, std::string leakageDescriptor,
+    bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, double flow, double n, 
+    double deltaP, bool translateHVAC=true, ProgressBar* progressBar=NULL);
 
-  // Translators
-  boost::optional<std::string> translateToString(bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"));
-  bool translate(bool translateHVAC=true,ProgressBar *progressBar=0);
   std::string toString();
   bool toPrj(const openstudio::path& path);
   
@@ -78,14 +83,14 @@ public:
     bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=NULL);
 
   // Secondary translation functions - need to add more of these by chopping out parts of the main translation function
-  bool translateEpw(openstudio::path outpath);
   bool translateEpw(openstudio::path epwpath, openstudio::path outpath);
 
   bool ready() const {return m_ready && valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
-  // Getters and setters - the setters will modify how translation is done. Setters that could fail return a boolean
+  // Getters and setters - the setters modify how translation is done or modify the model after translation (eventually). 
+  // Setters that could fail return a boolean
   boost::optional<std::string> airtightnessLevel() const;
   bool setAirtightnessLevel(std::string level);
   double exteriorFlowRate() const;
@@ -102,14 +107,17 @@ public:
   {
     m_returnSupplyRatio = fabs(returnSupplyRatio);
   }
+
   bool ratioOverride() const
   {
     return m_ratioOverride;
   }
+  /*
   void setRatioOverride(bool ratioOverride)
   {
     m_ratioOverride = ratioOverride;
   }
+  */
 
   // We may need more functions like this that modify the CONTAM model
   bool setSteadyWeather(double windSpeed, double windDirection);
@@ -125,6 +133,9 @@ public:
   std::vector<LogMessage> errors() const;
 
 private:
+  // Translators
+  bool translate(bool translateHVAC=true);
+
   // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
   int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
@@ -132,7 +143,7 @@ private:
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
-  void reset();
+  void init();
 
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)

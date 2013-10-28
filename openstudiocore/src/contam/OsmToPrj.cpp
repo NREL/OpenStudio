@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
   std::string inputPathString;
   std::string leakageDescriptorString="Average";
   double flow=27.1;
+  double returnSupplyRatio=1.0;
   bool setLevel = true;
   boost::program_options::options_description desc("Allowed options");
 
@@ -137,7 +138,7 @@ int main(int argc, char *argv[])
   boost::optional<openstudio::path> sqlpath = findFile(dir,"eplusout.sql");
   if(sqlpath)
   {
-    std::cout<<"Found results file!"<<std::endl;
+    std::cout<<"Found results file, attaching it to the model."<<std::endl;
     model->setSqlFile(openstudio::SqlFile(*sqlpath));
   }
 
@@ -145,25 +146,32 @@ int main(int argc, char *argv[])
   openstudio::path cvfPath = inputPath.replace_extension(openstudio::toPath("cvf").string());
   openstudio::path wthPath = inputPath.replace_extension(openstudio::toPath("wth").string());
 
-  openstudio::contam::ForwardTranslator translator(model.get());
+  openstudio::contam::ForwardTranslator *translator=0;
   if(setLevel)
   {
-    translator.setAirtightnessLevel(leakageDescriptorString);
+    QVector<std::string> known;
+    known << "Tight" << "Average" << "Leaky";
+    if(!known.contains(leakageDescriptorString))
+    {
+      std::cout << "Unknown airtightness level '" << leakageDescriptorString << "'" << std::endl;
+      return EXIT_FAILURE;
+    }
+    translator = new openstudio::contam::ForwardTranslator(model.get(),leakageDescriptorString,returnSupplyRatio);
   }
   else
   {
-    translator.setExteriorFlowRate(flow);
+    translator = new openstudio::contam::ForwardTranslator(model.get(),returnSupplyRatio,flow,0.65,75.0);
+  }
+  if(!translator->valid())
+  {
+     std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
+     delete translator;
+     return EXIT_FAILURE;
   }
   QFile file(openstudio::toQString(prjPath));
   if(file.open(QFile::WriteOnly))
   {
     QTextStream textStream(&file);
-    if(!translator.translate())
-    {
-      std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
-      file.close();
-      return EXIT_FAILURE;
-    }
     // Attempt to translate weather
     boost::optional<openstudio::model::WeatherFile> weatherFile = model->weatherFile();
     if(weatherFile)
@@ -174,9 +182,9 @@ int main(int argc, char *argv[])
         boost::optional<openstudio::path> epwPath = findFile(dir,openstudio::toString(path->string()));
         if(epwPath)
         {
-          if(translator.translateEpw(*epwPath,wthPath))
+          if(translator->translateEpw(*epwPath,wthPath))
           {
-            translator.rc().setWTHpath(openstudio::toString(wthPath));
+            translator->rc().setWTHpath(openstudio::toString(wthPath));
           }
           else
           {
@@ -200,18 +208,18 @@ int main(int argc, char *argv[])
 
     // Write out a CVF if needed
     //std::cout << translator.rc().CVFpath() << std::endl;
-    if(translator.writeCvFile(cvfPath))
+    if(translator->writeCvFile(cvfPath))
     {
       // Need to set the CVF file in the PRJ, this path may need to be made relative. Not too sure
-      translator.rc().setCVFpath(openstudio::toString(cvfPath));
+      translator->rc().setCVFpath(openstudio::toString(cvfPath));
       // Turn on transient simulation
-      translator.rc().setSim_af(1);
+      translator->rc().setSim_af(1);
       // This should be done somewhere else
-      translator.rc().setDate_1("Dec31");
-      translator.rc().setTime_1("24:00:00");
+      translator->rc().setDate_1("Dec31");
+      translator->rc().setTime_1("24:00:00");
       //std::cout << translator.rc().CVFpath() << std::endl;
     }
-    textStream << openstudio::toQString(translator.toString());
+    textStream << openstudio::toQString(translator->toString());
   }
   else
   {
