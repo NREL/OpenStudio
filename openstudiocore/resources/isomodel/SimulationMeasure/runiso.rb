@@ -82,12 +82,13 @@ puts "...Creating ISOmodel object"
 logfile.puts "Creating ISOmodel object"
 
 userModel = OpenStudio::ISOModel::UserModel.new
+userModel.save(OpenStudio::Path.new("blankmodel.ism"))
 
 puts "...Loading ISOmodel from file #{input_file}"
 logfile.puts "Loading ISOmodel from file #{input_file}"
 puts
 
-userModel.load(input_file)
+userModel.load(OpenStudio::Path.new(input_file))
 
 
 puts userModel.weatherFilePath

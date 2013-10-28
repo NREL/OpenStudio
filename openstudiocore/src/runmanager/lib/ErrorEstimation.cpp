@@ -206,9 +206,9 @@ namespace openstudio {
     }
 
 
-    FuelUses ErrorEstimation::add(const isomodel::ISOResults &t_isoResults, const std::string &t_sourceName, const std::vector<double> &t_variables)
+    FuelUses ErrorEstimation::add(const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_isoResults, const std::string &t_sourceName, const std::vector<double> &t_variables)
     {
-      return add(getUses(t_sourceName, t_isoResults), t_sourceName, t_variables);
+      return add(getUses(t_sourceName, t_userModel, t_isoResults), t_sourceName, t_variables);
     }
 
     FuelUses ErrorEstimation::add(const SqlFile &t_sql, const std::string &t_sourceName, const std::vector<double> &t_variables)
@@ -459,7 +459,7 @@ namespace openstudio {
       return itr->second;
     }
 
-    FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const isomodel::ISOResults &t_results) const
+    FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results) const
     {
       std::map<std::string, double>::const_iterator itr = m_confidences.find(t_sourceName);
 
@@ -485,9 +485,11 @@ namespace openstudio {
         {
           value += itr2->getEndUseByFuelType(*itr);
         }
+        LOG(Debug, "Read fuel use of " << value << " For " << itr->valueName());
 
         try {
-          FuelUse fuse(openstudio::FuelType(itr->valueName()), value * 1000000000, *openstudio::createUnit("J"));
+          // the fuel uses in this case seem to be stored in kWh/m2
+          FuelUse fuse(openstudio::FuelType(itr->valueName()), value * 3600000 * t_userModel.floorArea(), *openstudio::createUnit("J"));
           retval += fuse;
         } catch (const std::exception &e) {
           LOG(Error, "Unmatched fuel type " << e.what());

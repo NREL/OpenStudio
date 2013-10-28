@@ -96,6 +96,7 @@ osm2iso_log_file = File.join(dirname, basename + ".osm2iso.log")
 
 # output file is base filename + .ISOout + .csv
 osm2iso_output_file = File.join(dirname, basename + ".ism")
+osm2iso_cpp_output_file = File.join(dirname, basename + ".cpp.ism");
 
 puts "Writing processing log to #{osm2iso_log_file}"
 
@@ -191,11 +192,6 @@ dhw_system_efficiency_default = 0.8
 infil_rate_default = 7.0	# set default infiltration rate to 7 m3/m2/hr@ 75 Pa by default to match normal EnergyPlus default values
 	
 # set envelope defaults U in W/m2/K
-# JMT 10/25/2013 the next four lines initialize unused values.
-wall_U_default= 0.3						# default U
-roof_U_default = 0.2		# default roof U
-solar_absorptivity_default = 0.7	# default solar absoprtion coefficient
-thermal_emissivity_default = 0.7	# default 
 glazing_U_default = 3.0		# default is simple IGU
 glazing_SHGC_default = 0.7	# default is clear IGU
 
@@ -408,8 +404,7 @@ constructions.each do |const|
 				const_SHGC[name] = material.solarTransmittance.to_f	# SHGC = solar transmittance - ignore frame
 			elsif not layer.to_ThermochromicGlazing.empty?
 				logfile.puts "thermochromic Glazing Not Converted - only estimating U value, SHGC set to 0.3"
-                                # JMT 10/25/2013 This doesn't make sense, we check for ThermochromicGlazing, then cast to RefractionExtinctionGlazing
-				material = layer.to_RefractionExtinctionGlazing
+				material = layer.to_ThermochromicGlazing
 				const_U[name] = 1.0/(1.0/ material.thermalConductance.to_f + const_R)
 				const_SHGC[name] = 0.3		
 			elsif not layer.to_RefractionExtinctionGlazing
@@ -424,6 +419,7 @@ constructions.each do |const|
 				# get layer 1 properties
 				material1 = layers[0].to_StandardGlazing.get   	# convert the 1st layer to a standard glazing
 				norm_ST1 = material1.solarTransmittanceatNormalIncidence.to_f
+                                norm_ST2 = 0
 				uValue1 = material1.thermalConductance.to_f
 				norm_back_SR1 = material1.backSideSolarReflectanceatNormalIncidence.to_f
 				# Now get layer 2 properties
@@ -460,14 +456,13 @@ constructions.each do |const|
 					norm_front_SR3 = material3.frontSideSolarReflectanceatNormalIncidence.to_f					
 				end
 				# compute SHGC of a 3 layer window as ST1 * ST3 / (1 - R1 *R3)
-				const_SHGC[name] = norm_ST1 * norm_ST3 /(1.0 - norm_back_SR1*norm_front_SR3)
+		                const_SHGC[name] = norm_ST1 * norm_ST3 / (1.0 - norm_back_SR1*norm_front_SR3) * norm_ST2
 				# for U value = 1/ (sum R values for each layer + film coefficients)
 				const_U[name] = 1.0/(1.0/uValue1 + 1.0/uValue2 + 1.0/uValue3 + const_R)  
-			
+
 			elsif not layers[0].to_ThermochromicGlazing.empty?
 				logfile.puts "thermochromic Glazing Not Converted - only estimating U value, SHGC set to 0.3"
-                                # JMT 10/25/2013 This doesn't make sense, we check for ThermochromicGlazing, then cast to RefractionExtinctionGlazing
-				material = layer.to_RefractionExtinctionGlazing
+				material = layer.to_ThermochromicGlazing
 				const_U[name] = 1.0/(1.0/ material.thermalConductance + const_R)
 				const_SHGC[name] = 0.3
 			elsif not layers[0].to_RefractionExtinctionGlazing
@@ -624,58 +619,59 @@ unoccupied_hours = 0.0
 startDate = yd.makeDate(1)
 endDate = yd.makeDate(365)
 
+# compute the number of occupied days in a year for water use calculations
+number_days_occupied_per_year = 52 * (occupancy_day_end - occupancy_day_start +1)
+occupied_hours = number_days_occupied_per_year*(occupancy_hour_end - occupancy_hour_start+1)
+unoccupied_hours = 8760-occupied_hours
+
+
 schedule_rulesets.each do |schedule|
-        # JMT 10/25/2013 Do you really mean to 0 out the sum with each loop?
-	occupied_sum=0;
-	unoccupied_sum=0;
-	occupied_hours=0;
-	unoccupied_hours=0;
-	
-	# gets all the schedule for each day of the year in one array
-	daySchedules = schedule.getDaySchedules(startDate, endDate)
-		
-	#get the day of the week of the starting day of the schedule and subtract 1 from it because we increment before we compare
-	day_of_week =  startDate.dayOfWeek.value - 1
+  occupied_sum=0;
+  unoccupied_sum=0;
 
-	# loop over the schedule for each day of the year
-	daySchedules.each do |daySchedule|
+  # gets all the schedule for each day of the year in one array
+  daySchedules = schedule.getDaySchedules(startDate, endDate)
 
-		day_of_week +=1 # increment the day of week counter wrapping around at 7
-		if day_of_week > 6
-			day_of_week =0
-		end
-	
-		# loop over each hour of the day
-		(0..23).each do |hour|
-			value = daySchedule.getValue(t[hour])	# get the schedule value at this hour
-			
-			# check if the day of the week is an occupied day or not
-			if (day_of_week >= occupancy_day_start) && (day_of_week <= occupancy_day_end)
-				# check if the hour is also an occupied hour
-				# if so, add value to occupied sum and increment occupied counter
-				if (hour >= occupancy_hour_start) && (hour < occupancy_hour_end)
-					occupied_sum+= value
-					occupied_hours += 1
-				else # if hour not occupied, add value to unoccupied and increment unoccupied counter
-					unoccupied_sum+= value
-					unoccupied_hours += 1
-				end
-			else	# if day is not occupied, add the hour value to unoccupied 
-				unoccupied_sum+= value
-				unoccupied_hours += 1
-			end
-		end
-	end
-	sched_names << schedule.name
-	
-	occ_aves[schedule.name.to_s] = occupied_sum / occupied_hours
-	unocc_aves[schedule.name.to_s] = unoccupied_sum / unoccupied_hours
-	logfile.printf("Schedule %s has occupied ave = %3.2f and unoccupied ave = %3.2f\n",schedule.name.to_s, occ_aves[schedule.name.to_s], unocc_aves[schedule.name.to_s])
+  #get the day of the week of the starting day of the schedule and subtract 1 from it because we increment before we compare
+  day_of_week =  startDate.dayOfWeek.value - 1
+
+  # loop over the schedule for each day of the year
+  daySchedules.each do |daySchedule|
+
+    day_of_week +=1 # increment the day of week counter wrapping around at 7
+    if day_of_week > 6
+      day_of_week =0
+    end
+
+    # loop over each hour of the day
+    (0..23).each do |hour|
+      value = daySchedule.getValue(t[hour])   # get the schedule value at this hour
+
+      # check if the day of the week is an occupied day or not
+      if (day_of_week >= occupancy_day_start) && (day_of_week <= occupancy_day_end)
+        # check if the hour is also an occupied hour
+        # if so, add value to occupied sum and increment occupied counter
+        if (hour >= occupancy_hour_start) && (hour < occupancy_hour_end)
+          occupied_sum+= value
+        else # if hour not occupied, add value to unoccupied and increment unoccupied counter
+          unoccupied_sum+= value
+        end
+      else    # if day is not occupied, add the hour value to unoccupied 
+        unoccupied_sum+= value
+      end
+    end
+  end
+
+
+  sched_names << schedule.name
+
+  occ_aves[schedule.name.to_s] = occupied_sum / occupied_hours
+  unocc_aves[schedule.name.to_s] = unoccupied_sum / unoccupied_hours
+  logfile.printf("Schedule %s has occupied ave = %3.2f and unoccupied ave = %3.2f\n",schedule.name.to_s, occ_aves[schedule.name.to_s], unocc_aves[schedule.name.to_s])
 end
 
 
-# compute the number of occupied days in a year for water use calculations
-number_days_occupied_per_year = 52 * (occupancy_day_end - occupancy_day_start +1)
+
 
 # at this point we have an array with the schedule names and two arrays with the averages
 # that are indexed by the schedule names.   
@@ -725,9 +721,8 @@ space_types.each do |space_type|
 		if not light.schedule.empty?	# look for a lighting schedule
 			sched = light.schedule.get	# get the schedule
 			light_total_area += space_area
-                        # JMT 10/25/2013 shouldn't the next two be +=?
-			light_occ_total = occ_aves[sched.name.to_s] * space_area
-			light_unocc_total = unocc_aves[sched.name.to_s] * space_area
+			light_occ_total += occ_aves[sched.name.to_s] * space_area
+			light_unocc_total += unocc_aves[sched.name.to_s] * space_area
 		end
 	end
 	
@@ -735,9 +730,8 @@ space_types.each do |space_type|
 		if not electric.schedule.empty?  # look for an electric equipment schedule
 			sched = electric.schedule.get
 			elec_total_area += space_area
-                        # JMT 10/25/2013 shouldn't the next two be +=?
-			elec_occ_total = occ_aves[sched.name.to_s] * space_area
-			elec_unocc_total = unocc_aves[sched.name.to_s] * space_area
+			elec_occ_total += occ_aves[sched.name.to_s] * space_area
+			elec_unocc_total += unocc_aves[sched.name.to_s] * space_area
 		end
 	end
 
@@ -745,9 +739,8 @@ space_types.each do |space_type|
 		if not gas.schedule.empty? 	# look for an gas equipment schedule
 			sched = gas.schedule.get
 			gas_total_area += space_area
-                        # JMT 10/25/2013 shouldn't the next two be +=?
-			gas_occ_total = occ_aves[sched.name.to_s] * space_area
-			gas_unocc_total = unocc_aves[sched.name.to_s] * space_area
+			gas_occ_total += occ_aves[sched.name.to_s] * space_area
+			gas_unocc_total += unocc_aves[sched.name.to_s] * space_area
 		end	
 	end
 	
@@ -756,18 +749,16 @@ space_types.each do |space_type|
 		if not people.numberofPeopleSchedule.empty?
 			sched = people.numberofPeopleSchedule.get
 			people_total_area += space_area
-                        # JMT 10/25/2013 shouldn't the next two be +=?
-			people_occ_total = occ_aves[sched.name.to_s] * space_area
-			people_unocc_total = unocc_aves[sched.name.to_s] * space_area
+			people_occ_total += occ_aves[sched.name.to_s] * space_area
+			people_unocc_total += unocc_aves[sched.name.to_s] * space_area
 		end
 		
 		# look for an occupant activity level schedule
 		if not people.activityLevelSchedule.empty?
 			sched = people.activityLevelSchedule.get
 			activity_total_area += space_area
-                        # JMT 10/25/2013 shouldn't the next two be +=?
-			activity_occ_total = occ_aves[sched.name.to_s] * space_area
-			activity_unocc_total = unocc_aves[sched.name.to_s] * space_area
+			activity_occ_total += occ_aves[sched.name.to_s] * space_area
+			activity_unocc_total += unocc_aves[sched.name.to_s] * space_area
 		end	
 	end
 	
@@ -885,23 +876,22 @@ if OSM_extract_temp_setpoint
 				cool_setpoint_occ_total += occ_aves[cool_sched.name.to_s] * zone_area 
 				cool_setpoint_unocc_total += unocc_aves[cool_sched.name.to_s] * zone_area
 			else  # if we have no schedule, use the default values for thiz zone
-                                # JMT 10/25/2013 all references to "cool_setpoint_occ_default, heat_setpoint_occ_default, cool_setpoint_unocc_default, heat_setpoint_unocc_default" should be "cooling_setpoint_occ_default, heating_setpoint_occ_default, cooling_setpoint_unocc_default, heating_setpoint_unocc_default"
-                                cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
-				cool_setpoint_unocc_total += cool_setpoint_unocc_default * zone_area
+                                cool_setpoint_occ_total += cooling_setpoint_occ_default * zone_area
+				cool_setpoint_unocc_total += cooling_setpoint_unocc_default * zone_area
 			end
 			if not thermostat.heatingSetpointTemperatureSchedule.empty?
 				heat_sched = thermostat.heatingSetpointTemperatureSchedule.get
 				heat_setpoint_occ_total += occ_aves[heat_sched.name.to_s] * zone_area 
 				heat_setpoint_unocc_total += unocc_aves[heat_sched.name.to_s] * zone_area
 			else
-				heat_setpoint_occ_total += heat_setpoint_occ_default * zone_area
-				heat_setpoint_unocc_total += heat_setpoint_unocc_default * zone_area	
+				heat_setpoint_occ_total += heating_setpoint_occ_default * zone_area
+				heat_setpoint_unocc_total += heating_setpoint_unocc_default * zone_area	
 			end
 		else
-			cool_setpoint_occ_total += cool_setpoint_occ_default * zone_area
-			heat_setpoint_occ_total += heat_setpoint_occ_default * zone_area
-			cool_setpoint_unocc_total += cool_setpoint_unocc_default * zone_area
-			heat_setpoint_unocc_total += heat_setpoint_unocc_default * zone_area		
+			cool_setpoint_occ_total += cooling_setpoint_occ_default * zone_area
+			heat_setpoint_occ_total += heating_setpoint_occ_default * zone_area
+			cool_setpoint_unocc_total += cooling_setpoint_unocc_default * zone_area
+			heat_setpoint_unocc_total += heating_setpoint_unocc_default * zone_area		
 		end
 	end
 	cooling_setpoint_occ = cool_setpoint_occ_total/total_zone_area
@@ -1463,11 +1453,6 @@ if OSM_extract_HVAC
 		elsif not coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.empty? # check for heat pump
 			cop_sum += coil.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f*area
 			cop_area_sum += area
-		elsif not coil.to_CoilCoolingWater.empty? # check for water cooling coils
-                        # JMT 2013-10-25 this code cannot execute, to_CoilCoolingWater doesn't return anything convertable to an object
-                        # nor does it have any top of "COP" field, so I don't know how to make this into something that will compile
-			cop_sum += coil.to_CoilCoolingWater.get*area   	#
-			cop_area_sum += area
 		elsif not coil.to_ChillerElectricEIR.empty?
 			cop_sum += coil.to_ChillerElectricEIR.get.referenceCOP*area   	#
 			cop_area_sum += area
@@ -1485,15 +1470,13 @@ if OSM_extract_HVAC
 			supply_components.each do |component|
 				# if we are here then we don't have a specific area assigned to the cooling unit so use the full building floor area
 				if not component.to_CoilCoolingDXSingleSpeed.empty?   # check for single speed DX coil
-                                        # JMT 2013-10-25 we build the cop_array and cop_areas but never use them, should we?
-					cop_array << component.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f
-					cop_areas << building.floorArea	
+					cop_sum += component.to_CoilCoolingDXSingleSpeed.get.ratedCOP.to_f
+					cop_area_sum += building.floorArea	
 				elsif not component.to_CoilCoolingDXTwoSpeed.empty?	# check for two speed DX coil
-					cop_array <<  component.to_CoilCoolingDXTwoSpeed.get.ratedHighSpeedCOP.to_f
-					cop_areas << area	
+					cop_sum +=  component.to_CoilCoolingDXTwoSpeed.get.ratedHighSpeedCOP.to_f
+					cop_area_sum += area	
 				elsif not component.to_to_ChillerElectricEIR.empty?   # check for a chiller
-                                        # JMT 2013-10-15 Seems like "coil." is wrong here, it should be "component."
-					cop_sum += coil.to_ChillerElectricEIR.get.referenceCOP*area   	#
+					cop_sum += component.to_ChillerElectricEIR.get.referenceCOP*area   	#
 					cop_area_sum += area			
 				end
 			end
@@ -1873,4 +1856,10 @@ File.open(osm2iso_output_file, 'w') do |file|
 	end
 end
 logfile.close
+
+translator = OpenStudio::ISOModel::ISOModelForwardTranslator.new();
+isomodel = translator.translateModel(model);
+isomodel.save(OpenStudio::Path.new(osm2iso_cpp_output_file.to_s))
+
+
 puts "Done Converting!"

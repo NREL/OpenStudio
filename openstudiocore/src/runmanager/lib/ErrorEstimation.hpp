@@ -9,6 +9,7 @@
 #include <utilities/sql/SqlFile.hpp>
 
 #include <isomodel/SimModel.hpp>
+#include <isomodel/UserModel.hpp>
 
 #include "LinearApproximation.hpp"
 
@@ -92,7 +93,7 @@ namespace openstudio {
         /// \param[in] t_variables The name of the variable that this data is for
         ///
         /// \returns The error corrected values, or the input values if error correction was not possible
-        openstudio::runmanager::FuelUses add(const isomodel::ISOResults &t_results, const std::string &t_sourceName, const std::vector<double> &t_variables);
+        openstudio::runmanager::FuelUses add(const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results, const std::string &t_sourceName, const std::vector<double> &t_variables);
 
         openstudio::runmanager::FuelUses add(FuelUses t_origUses, const std::string &t_sourceName, const std::vector<double> &t_variables);
 
@@ -120,7 +121,7 @@ namespace openstudio {
         FuelUses getUses(const std::string &t_sourceName, const SqlFile &t_sql) const;
 
         /// Returns the FuelUses from the given ISOResults, with the confidence level of the source name applied
-        FuelUses getUses(const std::string &t_sourceName, const isomodel::ISOResults &t_results) const;
+        FuelUses getUses(const std::string &t_sourceName, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results) const;
     };
 
   }

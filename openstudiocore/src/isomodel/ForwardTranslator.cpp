@@ -253,11 +253,6 @@ namespace isomodel {
     double infil_rate_default = 7.0;    // set default infiltration rate to 7 m3/m2/hr@ 75 Pa by default to match normal EnergyPlus default values
 
     // set envelope defaults U in W/m2/K
-    /// \todo the next 4 are unused values
-    //double wall_U_default= 0.3;                                         // default U
-    //double roof_U_default = 0.2;                // default roof U
-    //double solar_absorptivity_default = 0.7;    // default solar absoprtion coefficient
-    //double thermal_emissivity_default = 0.7;    // default 
     double glazing_U_default = 3.0;             // default is simple IGU
     double glazing_SHGC_default = 0.7;  // default is clear IGU
 
@@ -383,7 +378,7 @@ namespace isomodel {
     // when we have ocean or country, there are no blocks so terrain_class=1.0;
     if (terrain == "Ocean" || terrain == "Country") {
       terrain_class = 1.0;
-    } else if (terrain == "suburbs") {
+    } else if (terrain == "Suburbs") {
       terrain_class = 0.9;
     } else {
       // when city or urban set to 0.8;
@@ -507,9 +502,9 @@ namespace isomodel {
             const_SHGC[name] = material.solarTransmittance();
           } else if (layer.optionalCast<openstudio::model::ThermochromicGlazing>()) {
             LOG(Debug, "thermochromic Glazing Not Converted - only estimating U value, SHGC set to 0.3");
-            /// \todo note, this doesn't make sense, we just checked to see if it was THermochromicGlazing
-            openstudio::model::RefractionExtinctionGlazing material = layer.optionalCast<openstudio::model::RefractionExtinctionGlazing>().get();
-            const_U[name] = 1.0/(1.0/ material.thermalConductance() + const_R);
+            openstudio::model::ThermochromicGlazing material = layer.optionalCast<openstudio::model::ThermochromicGlazing>().get();
+            // \todo this material type doesn't have a thermalConductance
+            //const_U[name] = 1.0/(1.0/ material.thermalConductance() + const_R);
             const_SHGC[name] = 0.3;
           } else if (layer.optionalCast<openstudio::model::RefractionExtinctionGlazing>()) {
             LOG(Debug, "Refraction Extinction Glazing Not Converted - only estimating U value, others set to clear glass values");
@@ -529,35 +524,35 @@ namespace isomodel {
             double norm_back_SR1 = material1.backSideSolarReflectanceatNormalIncidence().get();
 
             /// \todo these are set but not used
-            //double norm_ST2 = 0;
+            double norm_ST2 = 0;
             double uValue2 = 0;
 
             // Now get layer 2 properties;
             if (layers[1].optionalCast<openstudio::model::StandardGlazing>()) { // check to see if layer 2 is standard glazing;
               // convert the 2nd layer to a gas mixture;
               openstudio::model::StandardGlazing material2 = layers[1].optionalCast<openstudio::model::StandardGlazing>().get();
-              //norm_ST2 = material2.solarTransmittanceatNormalIncidence().get();
+              norm_ST2 = material2.solarTransmittanceatNormalIncidence().get();
               uValue2 = material2.thermalConductance();
             } else if (layers[1].optionalCast<openstudio::model::AirGap>()) { // check to see if layer 1 is an air gap;
               // convert the 2nd layer to an air gap;
               openstudio::model::AirGap material2 = layers[1].optionalCast<openstudio::model::AirGap>().get();
-              //norm_ST2 = 1.0;
+              norm_ST2 = 1.0;
               uValue2 = 1.0 / material2.thermalResistance();
             } else if (layers[1].optionalCast<openstudio::model::Gas>()) { // check to see if layer 1 is a gas;
               // convert the 2nd layer to a simple gas layer;
               openstudio::model::Gas material2 = layers[1].optionalCast<openstudio::model::Gas>().get();
-              //norm_ST2 = 1.0;
+              norm_ST2 = 1.0;
               // get U value at 290 K;
               uValue2 = material2.getThermalConductance(290);
             } else if (layers[1].optionalCast<openstudio::model::GasMixture>()) {          // check to see if layer 1 is a gas;
               // convert the 2nd layer to a simple gas layer;
               openstudio::model::GasMixture material2 = layers[1].optionalCast<openstudio::model::GasMixture>().get();
-              //norm_ST2 = 1.0;
+              norm_ST2 = 1.0;
               // get U value at 290 K;
               uValue2 = material2.getThermalConductance(290);
             } else {
               // we can't figure out what it is so assume properties of simple 12 mm air gap w/ U~6.0 from ASHRAE 2009;
-              //norm_ST2 = 1.0;
+              norm_ST2 = 1.0;
               uValue2 = 6.0;
             }
 
@@ -581,15 +576,15 @@ namespace isomodel {
               // norm_front_SR3 = material3.frontSideSolarReflectanceatNormalIncidence().get();
             }
             // compute SHGC of a 3 layer window as ST1 * ST3 / (1 - R1 *R3);
-            const_SHGC[name] = norm_ST1 * norm_ST3 /(1.0 - norm_back_SR1*norm_front_SR3);
+            const_SHGC[name] = norm_ST1 * norm_ST3 /(1.0 - norm_back_SR1*norm_front_SR3) * norm_ST2;
             // for U value = 1/ (sum R values for each layer + film coefficients);
             const_U[name] = 1.0/(1.0/uValue1 + 1.0/uValue2 + 1.0/uValue3 + const_R);
 
           } else if (layers[0].optionalCast<openstudio::model::ThermochromicGlazing>()) {
             LOG(Debug, "thermochromic Glazing Not Converted - only estimating U value, SHGC set to 0.3");
-            /// \todo note, this doesn't make sense, we just checked to see if it was ThermochromicGlazing
-            openstudio::model::RefractionExtinctionGlazing material = layers[0].optionalCast<openstudio::model::RefractionExtinctionGlazing>().get();
-            const_U[name] = 1.0/(1.0/ material.thermalConductance() + const_R);
+            openstudio::model::ThermochromicGlazing material = layers[0].optionalCast<openstudio::model::ThermochromicGlazing>().get();
+            // \todo this material type doesn't have a thermalConductance
+            // const_U[name] = 1.0/(1.0/ material.thermalConductance() + const_R);
             const_SHGC[name] = 0.3;
           } else if (!layers[0].optionalCast<openstudio::model::RefractionExtinctionGlazing>()) {
             LOG(Debug, "Refraction Extinction Glazing Not Converted - only estimating U value, others set to 0.7");
@@ -785,76 +780,68 @@ namespace isomodel {
     std::vector<std::string> sched_names;
     std::map<std::string, double> occ_aves;
     std::map<std::string, double> unocc_aves;
-    double occupied_hours=0.0;
-    double unoccupied_hours = 0.0;
 
     openstudio::Date startDate = yd.makeDate(1);
     openstudio::Date endDate = yd.makeDate(365);
 
 
+    // compute the number of occupied days in a year for water use calculations
+
+    double number_days_occupied_per_year = 52 * (occupancy_day_end - occupancy_day_start +1);
+    double occupied_hours = number_days_occupied_per_year*(occupancy_hour_end - occupancy_hour_start+1);
+    double unoccupied_hours = 8760-occupied_hours;
 
     BOOST_FOREACH(const openstudio::model::ScheduleRuleset &schedule, schedule_rulesets) {
-      /// \todo do you really want to reset the SUM variables on each loop?
       double occupied_sum=0;
       double unoccupied_sum=0;
-      std::string schedule_name = schedule.name().get();
-      occupied_hours=0;
-      unoccupied_hours=0;
 
-      // gets all the schedule for each day of the year;
+      // gets all the schedule for each day of the year in one array
       std::vector<openstudio::model::ScheduleDay> daySchedules = schedule.getDaySchedules(startDate, endDate);
 
-      //get the day of the week of the starting day of the schedule and subtract 1 from it because we increment before we compare;
+      // get the day of the week of the starting day of the schedule and subtract 1 from it because we increment before we compare
       int day_of_week = startDate.dayOfWeek().value() - 1;
 
-      // loop over the schedule for each day of the year;
+      // loop over the schedule for each day of the year
       BOOST_FOREACH(const openstudio::model::ScheduleDay &daySchedule, daySchedules) {
+        day_of_week +=1; // increment the day of week counter wrapping around at 7
 
-        day_of_week +=1;
-        // increment the day of week counter wrapping around at 7;
         if (day_of_week > 6) {
-          day_of_week =0;
+          day_of_week = 0;
         }
 
-        // loop over each hour of the day;
-        for (int hour = 0; hour<=23; ++hour) {
-          // get the value at this hour;
-          double value = daySchedule.getValue(t[hour]);
+        // loop over each hour of the day
+        for (int hour = 0; hour <= 23; ++hour) {
+          double value = daySchedule.getValue(t[hour]);   // get the schedule value at this hour
 
-          // check if the day of the week is an occupied day or not;
+          // check if the day of the week is an occupied day or not
           if ((day_of_week >= occupancy_day_start) && (day_of_week <= occupancy_day_end)) {
-            // check if the hour is also an occupied hour;
-            // if so, add value to occupied sum and increment occupied counter;
+
+            // check if the hour is also an occupied hour
+            // if so, add value to occupied sum and increment occupied counter
             if ((hour >= occupancy_hour_start) && (hour < occupancy_hour_end)) {
               occupied_sum+= value;
-              occupied_hours += 1;
-            } else {
-              // if hour !occupied, add value to unoccupied and increment unoccupied counter;
+            } else { // if hour not occupied, add value to unoccupied and increment unoccupied counter
               unoccupied_sum+= value;
-              unoccupied_hours += 1;
             }
-          } else {
-            // if day is !occupied, add the hour value to unoccupied;
+          } else {    // if day is not occupied, add the hour value to unoccupied 
             unoccupied_sum+= value;
-            unoccupied_hours += 1;
           }
         }
       }
-      sched_names.push_back(schedule_name);
 
-      occ_aves[schedule_name] = occupied_sum / occupied_hours;
-      unocc_aves[schedule_name] = unoccupied_sum / unoccupied_hours;
-      LOG(Debug, "Schedule " << schedule_name << " has occupied ave = " << occ_aves[schedule_name] << " and unoccupied ave = " << unocc_aves[schedule_name]);
+      sched_names.push_back(schedule.name().get());
+      occ_aves[schedule.name().get()] = occupied_sum / occupied_hours;
+      unocc_aves[schedule.name().get()] = unoccupied_sum / unoccupied_hours;
+
+      LOG(Debug, "Schedule " << schedule.name().get() <<  " has occupied ave = " << occ_aves[schedule.name().get()] << " and unoccupied ave = " << unocc_aves[schedule.name().get()]);
 
     }
 
-    double number_days_occupied_per_year = 52 * (occupancy_day_end - occupancy_day_start +1);
 
     // at this point we have an array with the schedule names and two arrays with the averages;
     // that are indexed by the schedule names.;
 
     // define what fraction of the year are occupied and unoccupied;
-    /// \todo this looks wrong, shouldn't it be "occupied_sum" and "unoccupied_sum"
     double frac_year_occ = occupied_hours/8760.0;
     double frac_year_unocc = unoccupied_hours/8760.0;
 
@@ -904,9 +891,8 @@ namespace isomodel {
           // get the schedule;
           openstudio::model::Schedule sched = light.schedule().get();
           light_total_area += space_area;
-          /// \todo shouldn't this be a +=?
-          light_occ_total = occ_aves[sched.name().get()] * space_area;
-          light_unocc_total = unocc_aves[sched.name().get()] * space_area;
+          light_occ_total += occ_aves[sched.name().get()] * space_area;
+          light_unocc_total += unocc_aves[sched.name().get()] * space_area;
         }
       }
 
@@ -915,9 +901,8 @@ namespace isomodel {
         if (electric.schedule()) {
           openstudio::model::Schedule sched = electric.schedule().get();
           elec_total_area += space_area;
-          /// \todo shouldn't this be a +=?
-          elec_occ_total = occ_aves[sched.name().get()] * space_area;
-          elec_unocc_total = unocc_aves[sched.name().get()] * space_area;
+          elec_occ_total += occ_aves[sched.name().get()] * space_area;
+          elec_unocc_total += unocc_aves[sched.name().get()] * space_area;
         }
       }
 
@@ -926,9 +911,8 @@ namespace isomodel {
         if (gas.schedule()) {
           openstudio::model::Schedule sched = gas.schedule().get();
           gas_total_area += space_area;
-          /// \todo shouldn't this be +=?
-          gas_occ_total = occ_aves[sched.name().get()] * space_area;
-          gas_unocc_total = unocc_aves[sched.name().get()] * space_area;
+          gas_occ_total += occ_aves[sched.name().get()] * space_area;
+          gas_unocc_total += unocc_aves[sched.name().get()] * space_area;
         }
       }
 
@@ -937,18 +921,16 @@ namespace isomodel {
         if (people.numberofPeopleSchedule()) {
           openstudio::model::Schedule sched = people.numberofPeopleSchedule().get();
           people_total_area += space_area;
-          /// \todo shouldn't this be +=?
-          people_occ_total = occ_aves[sched.name().get()] * space_area;
-          people_unocc_total = unocc_aves[sched.name().get()] * space_area;
+          people_occ_total += occ_aves[sched.name().get()] * space_area;
+          people_unocc_total += unocc_aves[sched.name().get()] * space_area;
         }
 
         // look for an occupant activity level schedule;
         if (people.activityLevelSchedule()) {
           openstudio::model::Schedule sched = people.activityLevelSchedule().get();
           activity_total_area += space_area;
-          /// \todo shouldn't this be +=?
-          activity_occ_total = occ_aves[sched.name().get()] * space_area;
-          activity_unocc_total = unocc_aves[sched.name().get()] * space_area;
+          activity_occ_total += occ_aves[sched.name().get()] * space_area;
+          activity_unocc_total += unocc_aves[sched.name().get()] * space_area;
         }
       }
 
@@ -1087,7 +1069,6 @@ namespace isomodel {
             cool_setpoint_unocc_total += unocc_aves[cool_sched.name().get()] * zone_area;
           } else {
             // if we have no schedule, use the default values for thiz zone;
-            /// \todo references to cool_setpoint_occ_default should be cooling_setpoint_occ_default
             cool_setpoint_occ_total += cooling_setpoint_occ_default * zone_area;
             cool_setpoint_unocc_total += cooling_setpoint_unocc_default * zone_area;
           }
@@ -1096,7 +1077,6 @@ namespace isomodel {
             heat_setpoint_occ_total += occ_aves[heat_sched.name().get()] * zone_area;
             heat_setpoint_unocc_total += unocc_aves[heat_sched.name().get()] * zone_area;
           } else {
-            /// \todo references to heat_setpoint_occ_default should be heating_setpoint_occ_default
             heat_setpoint_occ_total += heating_setpoint_occ_default * zone_area;
             heat_setpoint_unocc_total += heating_setpoint_unocc_default * zone_area;
           }
@@ -1733,11 +1713,6 @@ namespace isomodel {
           // check for heat pump;
           cop_sum += coil.optionalCast<openstudio::model::AirLoopHVACUnitaryHeatPumpAirToAir>().get().coolingCoil().optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>().get().ratedCOP().get()*area;
           cop_area_sum += area;
-        } else if (coil.optionalCast<openstudio::model::CoilCoolingWater>()) {
-          // check for water cooling coils;
-          /// \todo I don't know what parameter should be used here from the CoilCoolingWater
-          //        cop_sum += coil.optionalCast<openstudio::model::CoilCoolingWater>().get()*area;
-          //        cop_area_sum += area;
         } else if (coil.optionalCast<openstudio::model::ChillerElectricEIR>()) {
           cop_sum += coil.optionalCast<openstudio::model::ChillerElectricEIR>().get().referenceCOP()*area;
 
@@ -1746,9 +1721,6 @@ namespace isomodel {
         }
       }
 
-      /// \todo these are not used anywhere, should they be?
-      std::vector<double> cop_areas;
-      std::vector<double> cop_array;
       // if the COP sum is 0 but the cooling coil array is non-zero, check the plant loop for a chiller;
       if ((cop_sum == 0.0  ) && (cooling_coil_array.size() > 0)) {
         LOG(Debug, "checking plant loop for chiller");
@@ -1761,17 +1733,16 @@ namespace isomodel {
             // if we are here then we don't have a specific area assigned to the cooling unit so use the full building floor area;
             if (component.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>()) {
               // check for single speed DX coil;
-              cop_array.push_back(component.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>().get().ratedCOP().get());
-              cop_areas.push_back(building.floorArea());
+              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXSingleSpeed>().get().ratedCOP().get();
+              cop_area_sum += building.floorArea();
             } else if (component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>()) {
               // check for two speed DX coil;
-              cop_array.push_back( component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP().get());
-              cop_areas.push_back(area);
+              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP().get();
+              cop_area_sum += area;
             } else if (component.optionalCast<openstudio::model::ChillerElectricEIR>()) {
               // check for a chiller;
               /// \todo coil must be wrong here, there's no coil in scope, changing to component
               cop_sum += component.optionalCast<openstudio::model::ChillerElectricEIR>().get().referenceCOP()*area;
-
               cop_area_sum += area;
             }
           }

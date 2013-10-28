@@ -161,7 +161,7 @@ std::pair<double, double> runSimulation(openstudio::runmanager::ErrorEstimation 
     LOG_FREE(Info, "runSimulation", "Unable to generate estimate: " << e.what());
   }
 
-  openstudio::runmanager::FuelUses fuses3 = t_ee.add(isoResults, "ISO", variables);
+  openstudio::runmanager::FuelUses fuses3 = t_ee.add(userModel, isoResults, "ISO", variables);
   openstudio::runmanager::FuelUses fuses2 = t_ee.add(sqlfile2, "Estimation", variables);
   openstudio::runmanager::FuelUses fuses1 = t_ee.add(sqlfile1, "FullRun", variables);
 

@@ -735,7 +735,7 @@ namespace isomodel {
     ofile << "exhaustAirRecirculation = " << _exhaustAirRecirculation << std::endl;
     ofile << "buildingAirLeakage = " << _buildingAirLeakage << std::endl;
     ofile << "dhwDemand = " << _dhwDemand << std::endl;
-    ofile << "dhwEfficiency = " << _dhwEfficiency << std::endl;
+    ofile << "dhwSystemEfficiency = " << _dhwEfficiency << std::endl;
     ofile << "dhwDistributionSystem = " << _dhwDistributionSystem << std::endl;
     ofile << "dhwEnergyCarrier = " << _dhwEnergyCarrier << std::endl;
     ofile << "bemType = " << _bemType << std::endl;
