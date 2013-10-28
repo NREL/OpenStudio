@@ -49,6 +49,11 @@ namespace isomodel {
      */
     void load(const openstudio::path &t_buildingFile);
 
+    /** 
+     * Saves an ISOModel to the specified path
+     */
+    void save(const openstudio::path &t_buildingFile) const;
+
     /**
      * Generates a SimModel from the specified parameters of the 
      * UserModel

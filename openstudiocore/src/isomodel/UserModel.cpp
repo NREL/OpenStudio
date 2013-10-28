@@ -619,9 +619,9 @@ namespace isomodel {
     EpwData edata(weatherFilename);
 
     int state = 0, row=0;
-    Matrix _msolar(12,8);
-    Matrix _mhdbt(12,24);
-    Matrix _mhEgh(12,24);
+    Matrix _msolar(12,8,0);
+    Matrix _mhdbt(12,24,0);
+    Matrix _mhEgh(12,24,0);
     Vector _mEgh(12);
     Vector _mdbt(12);
     Vector _mwind(12);
@@ -694,6 +694,161 @@ namespace isomodel {
     loadBuilding(buildingFile);
     _weather = loadWeather();
   }
+
+
+  void UserModel::save(const openstudio::path &t_buildingFile) const 
+  {
+
+    std::ofstream ofile(openstudio::toString(t_buildingFile).c_str());
+
+    ofile << "terrainClass = " << _terrainClass << std::endl;
+    ofile << "floorArea = " << _floorArea << std::endl;
+    ofile << "buildingHeight = " << _buildingHeight << std::endl;
+    ofile << "buildingOccupancyFrom = " << _buildingOccupancyFrom << std::endl;
+    ofile << "buildingOccupancyTo = " << _buildingOccupancyTo << std::endl;
+    ofile << "equivFullLoadOccupancyFrom = " << _equivFullLoadOccupancyFrom << std::endl;
+    ofile << "equivFullLoadOccupancyTo = " << _equivFullLoadOccupancyTo << std::endl;
+    ofile << "peopleDensityOccupied = " << _peopleDensityOccupied << std::endl;
+    ofile << "peopleDensityUnoccupied = " << _peopleDensityUnoccupied << std::endl;
+    ofile << "heatingOccupiedSetpoint = " << _heatingOccupiedSetpoint << std::endl;
+    ofile << "heatingUnoccupiedSetpoint = " << _heatingUnoccupiedSetpoint << std::endl;
+    ofile << "coolingOccupiedSetpoint = " << _coolingOccupiedSetpoint << std::endl;
+    ofile << "coolingUnoccupiedSetpoint = " << _coolingUnoccupiedSetpoint << std::endl;
+    ofile << "elecPowerAppliancesOccupied = " << _elecPowerAppliancesOccupied << std::endl;
+    ofile << "elecPowerAppliancesUnoccupied = " << _elecPowerAppliancesUnoccupied << std::endl;
+    ofile << "gasPowerAppliancesOccupied = " << _gasPowerAppliancesOccupied << std::endl;
+    ofile << "gasPowerAppliancesUnoccupied = " << _gasPowerAppliancesUnoccupied << std::endl;
+    ofile << "lightingPowerIntensityOccupied = " << _lightingPowerIntensityOccupied << std::endl;
+    ofile << "lightingPowerIntensityUnoccupied = " << _lightingPowerIntensityUnoccupied << std::endl;
+    ofile << "exteriorLightingPower = " << _exteriorLightingPower << std::endl;
+    ofile << "daylightSensorSystem = " << _daylightSensorSystem << std::endl;
+    ofile << "lightingOccupancySensorSystem = " << _lightingOccupancySensorSystem << std::endl;
+    ofile << "constantIlluminationControl = " << _constantIlluminationControl << std::endl;
+    ofile << "coolingSystemCOP = " << _coolingSystemCOP << std::endl;
+    ofile << "coolingSystemIPLVToCOPRatio = " << _coolingSystemIPLVToCOPRatio << std::endl;
+    ofile << "heatingEnergyCarrier = " << _heatingEnergyCarrier << std::endl;
+    ofile << "heatingSystemEfficiency = " << _heatingSystemEfficiency << std::endl;
+    ofile << "ventilationType = " << _ventilationType << std::endl;
+    ofile << "freshAirFlowRate = " << _freshAirFlowRate << std::endl;
+    ofile << "supplyExhaustRate = " << _supplyExhaustRate << std::endl;
+    ofile << "heatRecovery = " << _heatRecovery << std::endl;
+    ofile << "exhaustAirRecirculation = " << _exhaustAirRecirculation << std::endl;
+    ofile << "buildingAirLeakage = " << _buildingAirLeakage << std::endl;
+    ofile << "dhwDemand = " << _dhwDemand << std::endl;
+    ofile << "dhwEfficiency = " << _dhwEfficiency << std::endl;
+    ofile << "dhwDistributionSystem = " << _dhwDistributionSystem << std::endl;
+    ofile << "dhwEnergyCarrier = " << _dhwEnergyCarrier << std::endl;
+    ofile << "bemType = " << _bemType << std::endl;
+    ofile << "interiorHeatCapacity = " << _interiorHeatCapacity << std::endl;
+    ofile << "specificFanPower = " << _specificFanPower << std::endl;
+    ofile << "fanFlowControlFactor = " << _fanFlowControlFactor << std::endl;
+    ofile << "roofSHGC = " << _roofSHGC << std::endl;
+
+    ofile << "wallAreaS = " << _wallAreaS << std::endl;
+    ofile << "wallAreaSE = " << _wallAreaSE << std::endl;
+    ofile << "wallAreaE = " << _wallAreaE << std::endl;
+    ofile << "wallAreaNE = " << _wallAreaNE << std::endl;
+    ofile << "wallAreaN = " << _wallAreaN << std::endl;
+    ofile << "wallAreaNW = " << _wallAreaNW << std::endl;
+    ofile << "wallAreaW = " << _wallAreaW << std::endl;
+    ofile << "wallAreaSW = " << _wallAreaSW << std::endl;
+    ofile << "roofArea = " << _roofArea << std::endl;
+    
+    ofile << "wallUvalueS = " << _wallUvalueS << std::endl;
+    ofile << "wallUvalueSE = " << _wallUvalueSE << std::endl;
+    ofile << "wallUvalueE = " << _wallUvalueE << std::endl;
+    ofile << "wallUvalueNE = " << _wallUvalueNE << std::endl;
+    ofile << "wallUvalueN = " << _wallUvalueN << std::endl;
+    ofile << "wallUvalueNW = " << _wallUvalueNW << std::endl;
+    ofile << "wallUvalueW = " << _wallUvalueW << std::endl;
+    ofile << "wallUvalueSW = " << _wallUvalueSW << std::endl;
+    ofile << "roofUValue = " << _roofUValue << std::endl;
+    
+    ofile << "wallSolarAbsorptionS = " << _wallSolarAbsorptionS << std::endl;
+    ofile << "wallSolarAbsorptionSE = " << _wallSolarAbsorptionSE << std::endl;
+    ofile << "wallSolarAbsorptionE = " << _wallSolarAbsorptionE << std::endl;
+    ofile << "wallSolarAbsorptionNE = " << _wallSolarAbsorptionNE << std::endl;
+    ofile << "wallSolarAbsorptionN = " << _wallSolarAbsorptionN << std::endl;
+    ofile << "wallSolarAbsorptionNW = " << _wallSolarAbsorptionNW << std::endl;
+    ofile << "wallSolarAbsorptionW = " << _wallSolarAbsorptionW << std::endl;
+    ofile << "wallSolarAbsorptionSW = " << _wallSolarAbsorptionSW << std::endl;
+    ofile << "roofSolarAbsorption = " << _roofSolarAbsorption << std::endl;
+
+    ofile << "wallThermalEmissivityS = " << _wallThermalEmissivityS << std::endl;
+    ofile << "wallThermalEmissivitySE = " << _wallThermalEmissivitySE << std::endl;
+    ofile << "wallThermalEmissivityE = " << _wallThermalEmissivityE << std::endl;
+    ofile << "wallThermalEmissivityNE = " << _wallThermalEmissivityNE << std::endl;
+    ofile << "wallThermalEmissivityN = " << _wallThermalEmissivityN << std::endl;
+    ofile << "wallThermalEmissivityNW = " << _wallThermalEmissivityNW << std::endl;
+    ofile << "wallThermalEmissivityW = " << _wallThermalEmissivityW << std::endl;
+    ofile << "wallThermalEmissivitySW = " << _wallThermalEmissivitySW << std::endl;
+    ofile << "roofThermalEmissivity = " << _roofThermalEmissivity << std::endl;
+
+    ofile << "windowAreaS = " << _windowAreaS << std::endl;
+    ofile << "windowAreaSE = " << _windowAreaSE << std::endl;
+    ofile << "windowAreaE = " << _windowAreaE << std::endl;
+    ofile << "windowAreaNE = " << _windowAreaNE << std::endl;
+    ofile << "windowAreaN = " << _windowAreaN << std::endl;
+    ofile << "windowAreaNW = " << _windowAreaNW << std::endl;
+    ofile << "windowAreaW = " << _windowAreaW << std::endl;
+    ofile << "windowAreaSW = " << _windowAreaSW << std::endl;
+    ofile << "skylightArea = " << _skylightArea << std::endl;
+
+    ofile << "windowUvalueS = " << _windowUvalueS << std::endl;
+    ofile << "windowUvalueSE = " << _windowUvalueSE << std::endl;
+    ofile << "windowUvalueE = " << _windowUvalueE << std::endl;
+    ofile << "windowUvalueNE = " << _windowUvalueNE << std::endl;
+    ofile << "windowUvalueN = " << _windowUvalueN << std::endl;
+    ofile << "windowUvalueNW = " << _windowUvalueNW << std::endl;
+    ofile << "windowUvalueW = " << _windowUvalueW << std::endl;
+    ofile << "windowUvalueSW = " << _windowUvalueSW << std::endl;
+    ofile << "skylightUvalue = " << _skylightUvalue << std::endl;
+
+    ofile << "windowSHGCS = " << _windowSHGCS << std::endl;
+    ofile << "windowSHGCSE = " << _windowSHGCSE << std::endl;
+    ofile << "windowSHGCE = " << _windowSHGCE << std::endl;
+    ofile << "windowSHGCNE = " << _windowSHGCNE << std::endl;
+    ofile << "windowSHGCN = " << _windowSHGCN << std::endl;
+    ofile << "windowSHGCNW = " << _windowSHGCNW << std::endl;
+    ofile << "windowSHGCW = " << _windowSHGCW << std::endl;
+    ofile << "windowSHGCSW = " << _windowSHGCSW << std::endl;
+    ofile << "skylightSHGC = " << _skylightSHGC << std::endl;
+
+    ofile << "windowSCFS = " << _windowSCFS << std::endl;
+    ofile << "windowSCFSE = " << _windowSCFSE << std::endl;
+    ofile << "windowSCFE = " << _windowSCFE << std::endl;
+    ofile << "windowSCFNE = " << _windowSCFNE << std::endl;
+    ofile << "windowSCFN = " << _windowSCFN << std::endl;
+    ofile << "windowSCFNW = " << _windowSCFNW << std::endl;
+    ofile << "windowSCFW = " << _windowSCFW << std::endl;
+    ofile << "windowSCFSW = " << _windowSCFSW << std::endl;
+
+    ofile << "windowSDFS = " << _windowSDFS << std::endl;
+    ofile << "windowSDFSE = " << _windowSDFSE << std::endl;
+    ofile << "windowSDFE = " << _windowSDFE << std::endl;
+    ofile << "windowSDFNE = " << _windowSDFNE << std::endl;
+    ofile << "windowSDFN = " << _windowSDFN << std::endl;
+    ofile << "windowSDFNW = " << _windowSDFNW << std::endl;
+    ofile << "windowSDFW = " << _windowSDFW << std::endl;
+    ofile << "windowSDFSW = " << _windowSDFSW << std::endl;
+
+    ofile << "exteriorHeatCapacity = " << _exteriorHeatCapacity << std::endl;
+    ofile << "infiltration = " << _infiltration << std::endl;
+    ofile << "hvacWasteFactor = " << _hvacWasteFactor << std::endl;
+    ofile << "hvacHeatingLossFactor = " << _hvacHeatingLossFactor << std::endl;
+    ofile << "hvacCoolingLossFactor = " << _hvacCoolingLossFactor << std::endl;
+    ofile << "dhwDistributionEfficiency = " << _dhwDistributionEfficiency << std::endl;
+    ofile << "heatingPumpControl = " << _heatingPumpControl << std::endl;
+    ofile << "coolingPumpControl = " << _coolingPumpControl << std::endl;
+    ofile << "heatGainPerPerson = " << _heatGainPerPerson << std::endl;
+
+
+
+
+  }
+
+
+
 
 } // isomodel
 } // openstudio

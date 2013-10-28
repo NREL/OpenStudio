@@ -142,6 +142,7 @@ namespace isomodel {
   /// vector-vector product
   Vector mult(const Vector& v1, const Vector& v2)
   {
+    assert(v1.size() == v2.size());
     Vector vp = Vector(v1.size());
     for(size_t i = 0;i<v1.size();i++) {
       vp[i] = v1[i] * v2[i];
@@ -174,6 +175,7 @@ namespace isomodel {
   ///vector-vector division
   Vector div(const Vector& v1, const Vector& v2)
   {
+    assert(v1.size() == v2.size());
     Vector vp = Vector(v1.size());
     for(size_t i = 0;i<v1.size();i++) {
       if(v2[i]==0)
@@ -185,6 +187,8 @@ namespace isomodel {
   }
   Vector sum(const Vector& v1, const Vector& v2)
   {
+    assert(v1.size() == v2.size());
+
     Vector vs = Vector(v1.size());
     for(size_t i = 0;i<v1.size();i++) {
       vs[i] = v1[i] + v2[i];
@@ -200,6 +204,7 @@ namespace isomodel {
     return vs;
   }
   Vector dif(const Vector& v1, const Vector& v2){
+    assert(v1.size() == v2.size());
     Vector vd = Vector(v1.size());
     for(size_t i = 0;i<v1.size();i++) {
       vd[i] = v1[i] - v2[i];
@@ -229,6 +234,7 @@ namespace isomodel {
     return max;
   }
   Vector maximum(const Vector& v1, const Vector& v2){
+    assert(v1.size() == v2.size());
     Vector vx = Vector(v1.size());
     for(size_t i = 0;i<v1.size();i++) {
       vx[i] = std::max(v1[i],v2[i]);
@@ -635,9 +641,17 @@ v_wall_alpha_sc =In.wall_solar_alpha; %wall solar absorption coefficient
     double n_win_SDF_table[] = {0.5,0.35,1.0};
     Vector v_win_SDF = Vector(vsize);
     Vector v_win_SDF_frac = Vector(vsize);
+
+      /// \todo looking at forward translator, I'm not sure what's supposed to happen here,
+      ///       but I know I cannot let it get below 0 or above 2, previous the code was hitting -1
+      int n_win_SDF_table_index = std::min(2,std::max(static_cast<int>(structure->windowShadingDevice())-1, 0));
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "WindowShadingDevice index: " << n_win_SDF_table_index);
+#endif
     for(int i = 0;i<vsize;i++){
       v_win_ff[i] = 1.0 - n_win_ff;
-      v_win_SDF[i] = n_win_SDF_table[static_cast<int>(structure->windowShadingDevice())-1];
+      v_win_SDF[i] = n_win_SDF_table[n_win_SDF_table_index];
       v_win_SDF_frac[i] = 1.0;
     }
     Vector v_win_F_shgl = mult(v_win_SDF,v_win_SDF_frac);
@@ -660,6 +674,16 @@ v_win_F_shgl = v_win_SDF.*v_win_SDF_frac;
   Vector v_g_gl = mult(v_g_gln, n_win_F_W);
 
   v_win_A_sol = mult(mult(mult(v_win_F_shgl, v_g_gl), v_win_ff), v_win_A);
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_g_gln", v_g_gln);
+    printVector("v_g_gl", v_g_gl);
+    printVector("v_win_ff", v_win_ff);
+    printVector("v_win_A", v_win_A);
+    printVector("v_win_F_shgl", v_win_F_shgl);
+    printVector("v_win_A_sol", v_win_A_sol);
+#endif
+
 
 /*
 v_g_gln = In.win_SHGC ; % normal incidence solar energy transmittance which is SHGC in america
@@ -732,7 +756,7 @@ v_wall_A_sol=v_wall_alpha_sc.*v_wall_R_sc.*v_wall_U.*v_wall_A;
     for(unsigned int i = 0;i<v_win_SCF_frac.size();i++){
       v_win_SCF_frac[i]=1;
     }
-    Matrix m_I_sol(12,9);//month x direction + 1 (roof?)
+    Matrix m_I_sol(12,9,0);//month x direction + 1 (roof?)
     for(size_t r = 0;r<m_I_sol.size1();r++){
       for(size_t c = 0;c<m_I_sol.size2()-1;c++){
         m_I_sol(r,c) = location->weather()->msolar()(r,c);
@@ -982,6 +1006,14 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
     
     double ht_tset_unocc = heating->temperatureSetPointUnoccupied();
     double cl_tset_unocc = cooling->temperatureSetPointUnoccupied();
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "ht_tset_ctrl " << ht_tset_ctrl);
+    LOG(Trace, "cl_tset_ctrl " << cl_tset_ctrl);
+    LOG(Trace, "ht_tset_unocc" << ht_tset_unocc);
+    LOG(Trace, "cl_tset_unocc" << cl_tset_unocc);
+#endif
+
     Vector v_ht_tset_ctrl(12);
     Vector v_cl_tset_ctrl(12);
 
@@ -989,6 +1021,11 @@ v_P_tot_wke_nt = (v_W_int_wke_nt+v_W_sol_wke_nt)./v_Msec_wke_nt; % total heat ga
       v_cl_tset_ctrl[i] = cl_tset_ctrl;
       v_ht_tset_ctrl[i] = ht_tset_ctrl;
     }
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    printVector("v_cl_tset_ctrl", v_cl_tset_ctrl);
+    printVector("v_ht_tset_ctrl", v_ht_tset_ctrl);
+#endif
 
 
   /*
@@ -1081,8 +1118,8 @@ tau=Cm./H_tot/3600;  % time constant of building in *hours* as per eqn 62 in 12.
     Vector v_ti(5); 
     v_ti[0] = v_ti[2] = v_ti[4] = hoursUnoccupiedPerDay;
     v_ti[1] = v_ti[3] = hoursOccupiedPerDay;
-    Matrix M_dT(v_P_tot_wk_nt.size(),5);
-    Matrix M_Te(v_Tdbt_nt.size(),5);
+    Matrix M_dT(v_P_tot_wk_nt.size(),5,0);
+    Matrix M_Te(v_Tdbt_nt.size(),5,0);
     /*
 %%% NOTE 
 % The following code is not a direct translation of the excel spreadsheet
@@ -1121,7 +1158,7 @@ end
 if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
 
     if(T_ht_ctrl_flag==1){//if the HVAC heating controls are turned on.
-      Matrix M_Ta(12,4);
+      Matrix M_Ta(12,4,0);
       Vector v_Tstart(v_ht_tset_ctrl);
       for(size_t i = 0;i<M_Ta.size2();i++){
         for(size_t j = 0;j<M_Ta.size1();j++){
@@ -1142,7 +1179,11 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
     end
       */
 
-      Matrix M_Taa(12,5);
+      Matrix M_Taa(12,5,0);
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+      printMatrix("M_Taa", M_Taa);
+#endif
+
       for(size_t j = 0;j<M_Taa.size1();j++){
         M_Taa(j,1) = v_ht_tset_ctrl[j];
       }
@@ -1151,6 +1192,10 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
           M_Taa(j,i) = std::max(M_Ta(j,i-1),ht_tset_unocc);
         }
       }
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+      printMatrix("M_Taa", M_Taa);
+#endif
+
 
       /*
        % the temp will only decay to the new lower setpoint, so find which is
@@ -1163,8 +1208,8 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
         %v_Tstart=M_Ta(:,I);
     end
       */
-      Matrix M_Tb(12,5);
-      
+      Matrix M_Tb(12,5,0);
+
       for(size_t i = 0;i<M_Tb.size2();i++){
         for(size_t j = 0;j<M_Tb.size1();j++){
           double v_T_avg= tau / v_ti(i) * (M_Taa(j,i) - M_Te(j,i) -M_dT(j,i)) * (1-exp(-1 * v_ti(i) / tau)) + M_Te(j,i) +M_dT(j,i); 
@@ -1212,7 +1257,7 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
 end*/
 
     if(T_cl_ctrl_flag==1){
-      Matrix M_Tc(12,4);
+      Matrix M_Tc(12,4,0);
       Vector v_Tstart(v_cl_tset_ctrl);
       for(size_t i = 0;i<M_Tc.size2();i++){
         for(size_t j = 0;j<M_Tc.size1();j++){
@@ -1229,7 +1274,7 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
         v_Tstart=M_Tc(:,I);
     end
     */
-      Matrix M_Tcc(12,5);
+      Matrix M_Tcc(12,5,0);
       for(size_t j = 0;j<M_Tcc.size1();j++){
         M_Tcc(j,1) = std::min(v_ht_tset_ctrl[j],cl_tset_unocc);
       }
@@ -1250,7 +1295,7 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
       */
 
       
-      Matrix M_Td(12,5);
+      Matrix M_Td(12,5,0);
       
       for(size_t i = 0;i<M_Td.size2();i++){
         for(size_t j = 0;j<M_Td.size1();j++){
@@ -1298,9 +1343,22 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
     
     Vector v_Th_wk_avg = sum(sum(mult(v_Th_wk_day,frac_hrs_wk_day),mult(v_Th_wk_nt,frac_hrs_wk_nt)),mult(v_Th_wke_avg,frac_hrs_wke_tot));
     Vector v_Tc_wk_avg = sum(sum(mult(v_Tc_wk_day,frac_hrs_wk_day),mult(v_Tc_wk_nt,frac_hrs_wk_nt)),mult(v_Tc_wke_avg,frac_hrs_wke_tot));
-    
+   
+
     //v_Th_avg(v_Th_wk_avg);
     //v_Tc_avg(v_Tc_wk_avg);
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "ht_tset_ctrl " << ht_tset_ctrl);
+    LOG(Trace, "cl_tset_ctrl " << cl_tset_ctrl);
+
+    printVector("v_Th_wk_day", v_Th_wk_day);
+    printVector("v_Th_wk_nt", v_Th_wk_nt);
+    printVector("v_Th_wke_nt", v_Th_wke_avg);
+
+    printVector("v_Th_wk_avg", v_Th_wk_avg);
+    printVector("v_Tc_wk_avg", v_Th_wk_avg);
+#endif
+
     for(size_t i = 0;i<v_Tc_wk_avg.size();i++){
       v_Th_avg[i] = std::min(v_Th_wk_avg[i],ht_tset_ctrl);
       v_Tc_avg[i] = std::min(v_Tc_wk_avg[i],cl_tset_ctrl);
@@ -1358,9 +1416,20 @@ vent_outdoor_frac=1-In.vent_recirc_fraction; % fctrl_vent_recirculation
 tot_env_A=sum(In.wall_area)+sum(In.win_area);
 */
     double n_p_exp=0.65;
+    /// \todo Note: v_Q75pa, aka infiltrationRate(), is never being calculated or set, so it is, at least in some cases, a
+    ///             random value (now that the matrices are properly initialized to 0). So when it goes to 0, the rest 
+    ///             of the model goes to infinity for the HVAC calculations.
+    ///             I'm setting it to non-zero here
     double v_Q75pa=structure->infiltrationRate();
+    if (v_Q75pa == 0) v_Q75pa = 0.00000000001; // this might be a vestige of the rmeove of the "epsilon" code in the translator
+
     double floorArea = structure->floorArea();
     double v_Q4pa = v_Q75pa * tot_env_A / floorArea * ( std::pow((4.0/75.0),n_p_exp));
+
+#ifdef DEBUG_ISO_MODEL_SIMULATION
+    LOG(Trace, "v_Q4pa " << v_Q4pa << " v_Q75pa " << v_Q75pa << " tot_env_A " << tot_env_A << " floorArea: " << floorArea << " n_p_exp " << n_p_exp);
+#endif 
+
     double n_zone_frac = 0.7;
     double h_stack = n_zone_frac * vent_zone_height;
     double n_stack_exp=0.667;  //% reset the pressure exponent to 0.667 for this part of the calc
@@ -1468,7 +1537,7 @@ v_qv_inf_cl = max(0,-qv_diff)+v_qv_sw_cl; %q_inf_cool m3/h/m2
  %
  % set to 1 to mimic the behavior of the original spreadsheet
  */
-     int vent_rate_flag = 1;
+    int vent_rate_flag = 1;
     double vent_op_frac;
     switch(vent_rate_flag) {
       case 0:
