@@ -17,12 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/HVACSystemsController.hpp>
-#include <openstudio_lib/LoopLibraryDialog.hpp>
-#include <openstudio_lib/HVACSystemsView.hpp>
-#include <openstudio_lib/LoopScene.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "HVACSystemsController.hpp"
+#include "LoopLibraryDialog.hpp"
+#include "HVACSystemsView.hpp"
+#include "LoopScene.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "RefrigerationScene.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
 #include <openstudio_lib/ServiceWaterScene.hpp>
 #include <openstudio_lib/HorizontalTabWidget.hpp>
@@ -1353,7 +1354,7 @@ void HVACLayoutController::update()
     }
     else if(handle == REFRIGERATION)
     {
-      QGraphicsScene * refrigerationScene = new QGraphicsScene();
+      RefrigerationScene * refrigerationScene = new RefrigerationScene();
 
       m_hvacGraphicsView->setScene(refrigerationScene);
     }
