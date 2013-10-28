@@ -99,6 +99,9 @@
 
 namespace openstudio {
 
+const QString SHW = "SHW";
+const QString REFRIGERATION = "REFRIGERATION";
+
 HVACSystemsController::HVACSystemsController(const model::Model & model)
   : QObject(),
     m_model(model)
@@ -162,12 +165,12 @@ void HVACSystemsController::clearSceneSelection()
   }
 }
 
-Handle HVACSystemsController::currentHandle() const
+QString HVACSystemsController::currentHandle() const
 {
   return m_currentHandle;
 }
 
-void HVACSystemsController::setCurrentHandle(const Handle & handle)
+void HVACSystemsController::setCurrentHandle(const QString & handle)
 {
   m_currentHandle = handle; 
 
@@ -203,17 +206,41 @@ void HVACSystemsController::update()
       systemComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
     }
 
-    systemComboBox->addItem("Service Hot Water","");
+    systemComboBox->addItem("Service Hot Water",SHW);
+    systemComboBox->addItem("Refrigeration",REFRIGERATION);
 
     // Set system combo box current index
-    int index = systemComboBox->findData(currentHandle().toString());
-    if( index >= 0 )
-    { 
+    QString handle = currentHandle();
+    if( handle == SHW  || 
+        m_model.getModelObject<model::WaterUseConnections>(handle)
+      )
+    {
+      int index = systemComboBox->findData(SHW);
+
+      OS_ASSERT(index >= 0);
+      
+      systemComboBox->setCurrentIndex(index);
+    }
+    else if( handle == REFRIGERATION ) 
+    {
+      int index = systemComboBox->findData(REFRIGERATION);
+
+      OS_ASSERT(index >= 0);
+      
       systemComboBox->setCurrentIndex(index);
     }
     else
     {
-      systemComboBox->setCurrentIndex(systemComboBox->findText("Service Hot Water"));
+      int index = systemComboBox->findData(handle);
+
+      if(index >= 0)
+      {
+        systemComboBox->setCurrentIndex(index);
+      }
+      else
+      {
+        systemComboBox->setCurrentIndex(systemComboBox->findData(SHW));
+      }
     }
 
     systemComboBox->blockSignals(false);
@@ -677,9 +704,7 @@ void HVACSystemsController::onAddSystemClicked()
 
 void HVACSystemsController::onSystemComboBoxIndexChanged(int i)
 {
-  QString stringHandle = m_hvacSystemsView->hvacToolbarView->systemComboBox->itemData(i).toString();
-
-  QUuid handle(stringHandle);
+  QString handle = m_hvacSystemsView->hvacToolbarView->systemComboBox->itemData(i).toString();
 
   setCurrentHandle(handle);
 }
@@ -1250,7 +1275,9 @@ void HVACLayoutController::update()
       oldScene->deleteLater();
     }
 
-    boost::optional<model::ModelObject> mo = t_model.getModelObject<model::ModelObject>(m_hvacSystemsController->currentHandle());
+    QString handle = m_hvacSystemsController->currentHandle();
+
+    boost::optional<model::ModelObject> mo = t_model.getModelObject<model::ModelObject>(handle);
 
     if( mo )
     {
@@ -1323,6 +1350,12 @@ void HVACLayoutController::update()
                          SLOT(removeModelObject(model::ModelObject & )) );
         OS_ASSERT(bingo);
       }
+    }
+    else if(handle == REFRIGERATION)
+    {
+      QGraphicsScene * refrigerationScene = new QGraphicsScene();
+
+      m_hvacGraphicsView->setScene(refrigerationScene);
     }
     else
     { 

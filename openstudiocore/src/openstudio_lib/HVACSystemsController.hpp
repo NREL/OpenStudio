@@ -86,9 +86,9 @@ class HVACSystemsController : public QObject
   // Indicates what object or system to display
   // This handle may correspond to a Loop, a ModelObject, such as a WaterUseConnection object,
   // or it may be NULL when displaying the service hot water overview.
-  Handle currentHandle() const;
+  QString currentHandle() const;
 
-  void setCurrentHandle(const Handle & handle);
+  void setCurrentHandle(const QString & handle);
 
   boost::optional<model::Loop> currentLoop() const;
 
@@ -132,7 +132,7 @@ class HVACSystemsController : public QObject
 
   boost::shared_ptr<HVACControlsController> m_hvacControlsController;
 
-  Handle m_currentHandle;
+  QString m_currentHandle;
 
   bool m_dirty;
 
