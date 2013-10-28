@@ -2405,8 +2405,8 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
 
   Point3dVector points2;
   points2.push_back(Point3d(2, 15, 0));
-  points2.push_back(Point3d(8, 15, 0));
-  points2.push_back(Point3d(8,  8, 0));
+  points2.push_back(Point3d(7, 15, 0));
+  points2.push_back(Point3d(7,  8, 0));
   points2.push_back(Point3d(6,  8, 0));
   points2.push_back(Point3d(6, 12, 0));
   points2.push_back(Point3d(4, 12, 0));
@@ -2443,21 +2443,22 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
     points.push_back(Point3d(4,  8, 0));
     points.push_back(Point3d(4, 10, 0));
     points.push_back(Point3d(2, 10, 0));
+    EXPECT_TRUE(circularEqual(surface1.vertices(), points));
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
-    points.push_back(Point3d(6,  8, 0));
+    points.push_back(Point3d(7,  8, 0));
     points.push_back(Point3d(8,  8, 0));
     points.push_back(Point3d(8, 10, 0));
-    points.push_back(Point3d(6, 10, 0));
+    points.push_back(Point3d(7, 10, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
     points.clear();
     points.push_back(Point3d(0,  0, 0));
     points.push_back(Point3d(10, 0, 0));
     points.push_back(Point3d(10,10, 0));
-    points.push_back(Point3d(8, 10, 0));
-    points.push_back(Point3d(8,  8, 0));
+    points.push_back(Point3d(7, 10, 0));
+    points.push_back(Point3d(7,  8, 0));
     points.push_back(Point3d(6,  8, 0));
     points.push_back(Point3d(6, 10, 0));
     points.push_back(Point3d(4, 10, 0));
@@ -2478,13 +2479,14 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
     points.push_back(Point3d(4, 10, 0));
     points.push_back(Point3d(4,  8, 0));
     points.push_back(Point3d(2,  8, 0));
+    EXPECT_TRUE(circularEqual(surface2.vertices(), points));
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
-    points.push_back(Point3d(6, 10, 0));
+    points.push_back(Point3d(7, 10, 0));
     points.push_back(Point3d(8, 10, 0));
     points.push_back(Point3d(8,  8, 0));
-    points.push_back(Point3d(6,  8, 0));
+    points.push_back(Point3d(7,  8, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
     points.clear();

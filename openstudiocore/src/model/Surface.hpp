@@ -251,6 +251,9 @@ private:
   std::vector<Surface> m_newSurfaces2;
 };
 
+/** \relates SurfaceIntersection */
+MODEL_API std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceIntersection);
+
 } // model
 } // openstudio
 

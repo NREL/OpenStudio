@@ -142,6 +142,8 @@ SET( geometry_src
   geometry/EulerAngles.cpp  
   geometry/Geometry.hpp
   geometry/Geometry.cpp  
+  geometry/Intersection.hpp
+  geometry/Intersection.cpp  
   geometry/Plane.hpp
   geometry/Plane.cpp
   geometry/Point3d.hpp
@@ -427,11 +429,11 @@ SET( ${target_name}_test_src
   economics/test/Economics_GTest.cpp
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/TimeDependentValuationFile_GTest.cpp
-  geometry/Test/BoostGeometry_GTest.cpp
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
   geometry/Test/GeometryFixture.cpp
   geometry/Test/Geometry_GTest.cpp
+  geometry/Test/Intersection_GTest.cpp
   geometry/Test/Plane_GTest.cpp
   geometry/Test/Transformation_GTest.cpp
   math/test/FloatCompare_GTest.cpp
