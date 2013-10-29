@@ -122,11 +122,23 @@ namespace openstudio{
       if (polygon.inners().empty()){
         result.push_back(polygon);
       }else{
-        std::vector<BoostPolygon> temp = removeHoles(polygon);
+        // remove holes also removes spikes
+        std::vector<BoostPolygon> temp = removeHoles(polygon); 
         result.insert(result.end(), temp.begin(), temp.end());
       }
     }
     return result;
+  }
+
+  Point3d getCombinedPoint(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
+  {
+    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
+        return otherPoint;
+      }
+    }
+    allPoints.push_back(point3d);
+    return point3d;
   }
 
   // convert a Point3d to a BoostPoint
@@ -138,13 +150,9 @@ namespace openstudio{
     //return boost::make_tuple(point3d.x(), point3d.y());
 
     // detailed method, try to combine points within tolerance
-    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
-      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
-        return boost::make_tuple(otherPoint.x(), otherPoint.y());
-      }
-    }
-    allPoints.push_back(point3d);
-    return boost::make_tuple(point3d.x(), point3d.y());
+    Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
+
+    return boost::make_tuple(resultPoint.x(), resultPoint.y());
   }
 
   // convert vertices to a boost polygon, all vertices must lie on z = 0 plane
@@ -171,13 +179,13 @@ namespace openstudio{
     // close polygon, use helper method which combines close points
     boost::geometry::append(polygon, boostPointFromPoint3d(vertices[0], allPoints, tol));
 
-    boost::geometry::correct(polygon);
+    //boost::geometry::correct(polygon);
 
     return polygon;
   }
 
   // convert a boost polygon to vertices
-  std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon)
+  std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::vector<Point3d>& allPoints, double tol)
   {
     std::vector<Point3d> result;
 
@@ -188,10 +196,25 @@ namespace openstudio{
     
     // add point for each vertex except final vertex
     for(unsigned i = 0; i < outer.size() - 1; ++i){
-      result.push_back(Point3d(outer[i].x(), outer[i].y(), 0.0));
+      Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
+      
+      // try to combine points within tolerance
+      Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
+
+      // don't keep repeated vertices
+      if ((i > 0) && (result.back() == resultPoint)){
+        continue;
+      }
+      result.push_back(resultPoint);
+    }
+
+    if (result.size() < 3){
+      return std::vector<Point3d>();
     }
 
     OS_ASSERT(polygon.inners().empty());
+
+    result = removeSpikes(result);
 
     result = removeColinear(result);
 
@@ -201,11 +224,11 @@ namespace openstudio{
   // struct used to sort polygons in descending area by area
   struct BoostPolygonAreaGreater{
     bool operator()(const BoostPolygon& left, const BoostPolygon& right){
-      boost::optional<double> leftA = getArea(verticesFromBoostPolygon(left));
+      boost::optional<double> leftA = boost::geometry::area(left);
       if (!leftA){
         leftA = 0;
       }
-      boost::optional<double> rightA = getArea(verticesFromBoostPolygon(right));
+      boost::optional<double> rightA = boost::geometry::area(right);
       if (!rightA){
         rightA = 0;
       }
@@ -299,9 +322,9 @@ namespace openstudio{
     }
     
     // check that largest intersection is ok
-    std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0]);
-    boost::optional<double> testArea = getArea(intersectionVertices);
-    if (!testArea){
+    std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0], allPoints, tol);
+    boost::optional<double> testArea = boost::geometry::area(intersectionResult[0]);
+    if (!testArea || intersectionVertices.empty()){
       LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of largest intersection");
       return boost::none;
     }else if (*testArea < tol*tol){
@@ -326,10 +349,10 @@ namespace openstudio{
     // create new polygon for each remaining intersection
     for (unsigned i = 1; i < intersectionResult.size(); ++i){
 
-      std::vector<Point3d> newPolygon = verticesFromBoostPolygon(intersectionResult[i]);
+      std::vector<Point3d> newPolygon = verticesFromBoostPolygon(intersectionResult[i], allPoints, tol);
 
-      testArea = getArea(newPolygon);
-      if (!testArea){
+      testArea = boost::geometry::area(intersectionResult[i]);
+      if (!testArea || newPolygon.empty()){
         LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of intersection, result will not include this polygon, " << newPolygon);
         continue;
       }else if (*testArea < tol*tol){
@@ -359,10 +382,10 @@ namespace openstudio{
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult1.size(); ++i){
 
-      std::vector<Point3d> newPolygon1 = verticesFromBoostPolygon(differenceResult1[i]);
+      std::vector<Point3d> newPolygon1 = verticesFromBoostPolygon(differenceResult1[i], allPoints, tol);
 
-      testArea = getArea(newPolygon1);
-      if (!testArea){
+      testArea = boost::geometry::area(differenceResult1[i]);
+      if (!testArea || newPolygon1.empty()){
         LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon1);
         continue;
       }else if (*testArea < tol*tol){
@@ -387,10 +410,10 @@ namespace openstudio{
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult2.size(); ++i){
 
-      std::vector<Point3d> newPolygon2 = verticesFromBoostPolygon(differenceResult2[i]);
+      std::vector<Point3d> newPolygon2 = verticesFromBoostPolygon(differenceResult2[i], allPoints, tol);
 
-      testArea = getArea(newPolygon2);
-      if (!testArea){
+      testArea = boost::geometry::area(differenceResult2[i]);
+      if (!testArea || newPolygon2.empty()){
         LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon2);
         continue;
       }else if (*testArea < tol*tol){

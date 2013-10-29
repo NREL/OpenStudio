@@ -875,16 +875,21 @@ namespace detail {
     std::vector<Surface> newSurfaces;
     std::vector<Surface> newOtherSurfaces;
 
+    LOG(Debug, "Before intersection");
+    LOG(Debug, surface);
+    LOG(Debug, otherSurface);
+
     // goes from building coordinates to local system 
     Transformation spaceTransformationInverse = spaceTransformation.inverse();
     Transformation otherSpaceTransformationInverse = otherSpaceTransformation.inverse();
 
     std::vector< std::vector<Point3d> > newPolygons1 = intersection->newPolygons1();
-    if (newPolygons1.empty()){
-      // the entire surface was the intersection, no-op
+    std::vector< std::vector<Point3d> > newPolygons2 = intersection->newPolygons2();
+    if (newPolygons1.empty() && newPolygons2.empty()){
+      // both surfaces intersect perfectly, no-op
 
     }else{
-      // only part of the surface was the intersection
+      // new surfaces are created
 
       // new vertices in this space
       std::vector<Point3d> newBuildingVertices = faceTransformation * intersection->polygon1();
@@ -893,32 +898,24 @@ namespace detail {
       newVertices = reorderULC(newVertices);
       this->setVertices(newVertices);
 
+      // new vertices in other space
+      std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersection->polygon2();
+      std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
+      newOtherVertices = reorderULC(newOtherVertices);
+      otherSurface.setVertices(newOtherVertices);
+
       // create surface for each difference
       for (unsigned i = 0; i < newPolygons1.size(); ++i){
 
         // new surface in this space
-        std::vector<Point3d> newBuildingVertices = faceTransformation * newPolygons1[i];
-        std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
+        newBuildingVertices = faceTransformation * newPolygons1[i];
+        newVertices = spaceTransformationInverse * newBuildingVertices;
         std::reverse(newVertices.begin(), newVertices.end());
         newVertices = reorderULC(newVertices);
         Surface newSurface(newVertices, this->model());
         newSurface.setSpace(*space);
         newSurfaces.push_back(newSurface);
       }
-    }
-
-    std::vector< std::vector<Point3d> > newPolygons2 = intersection->newPolygons2();
-    if (newPolygons2.empty()){
-      // the entire surface was the intersection, no-op
-
-    }else{
-      // only part of the surface was the intersection
-
-      // new vertices in this space
-      std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersection->polygon2();
-      std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
-      newOtherVertices = reorderULC(newOtherVertices);
-      otherSurface.setVertices(newOtherVertices);
 
       // create surface for each difference
       for (unsigned i = 0; i < newPolygons2.size(); ++i){
@@ -936,6 +933,16 @@ namespace detail {
     SurfaceIntersection result(surface, otherSurface, newSurfaces, newOtherSurfaces);
 
     LOG(Info, "Intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' results in " << result);
+
+    LOG(Debug, "After intersection");
+    LOG(Debug, surface);
+    LOG(Debug, otherSurface);
+    BOOST_FOREACH(const Surface& s, newSurfaces){
+      LOG(Debug, s);
+    }
+    BOOST_FOREACH(const Surface& s, newOtherSurfaces){
+      LOG(Debug, s);
+    }
 
     return result;
   }
@@ -1628,6 +1635,7 @@ std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceInt
       os << ", ";
     }
   }
+  os << "]";
 
   return os;
 }
