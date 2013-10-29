@@ -1894,13 +1894,18 @@ namespace detail {
     QVariantMap map;
 
     InputVariableVector vars = variables();
-    QVariantList varsList;
+    unsigned mgCnt(0), rcvCnt(0);
     for (unsigned i = 0, n = vars.size(); i < n; ++i) {
-      QVariantMap varMap = vars[i].toServerFormulationVariant().toMap();
-      varMap["variable_index"] = i;
-      varsList.push_back(varMap);
+      if (vars[i].optionalCast<MeasureGroup>()) {
+        ++mgCnt;
+        continue;
+      }
+      if (vars[i].optionalCast<RubyContinuousVariable>()) {
+        ++rcvCnt;
+      }
     }
-    map["variables"] = varsList;
+    map["num_measure_groups"] = QVariant(mgCnt);
+    map["num_ruby_continuous_variables"] = QVariant(rcvCnt);
 
     return QVariant(map);
   }
