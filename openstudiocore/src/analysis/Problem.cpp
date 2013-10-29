@@ -1778,6 +1778,14 @@ namespace detail {
 
       ++index;
     }
+    if (compoundRubyMeasure) {
+      // save out last RubyMeasure step
+      stepMap["variables"] = QVariant(variablesList);
+      workflowList.push_back(stepMap);
+      variablesList.clear();
+      variableIndex = 0;
+      compoundRubyMeasure.reset();
+    }
     problemData["workflow"] = QVariant(workflowList);
 
     if (!responses().empty()) {
