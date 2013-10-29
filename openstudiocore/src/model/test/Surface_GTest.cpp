@@ -1600,7 +1600,7 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
       test = (test || circularEqual(surface.vertices(), points));
 
       points.clear();
-      points.push_back(Point3d(0,  10, 0));
+      points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(10, 10, 0));
       points.push_back(Point3d(6,  6, 0));
       points.push_back(Point3d(6,  4, 0));
@@ -1620,7 +1620,7 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
       points.push_back(Point3d(4, 6, 0));
       test = (test || circularEqual(surface.vertices(), points));
 
-      EXPECT_TRUE(test);
+      EXPECT_TRUE(test) << surface.vertices();
       break;
     }
   }

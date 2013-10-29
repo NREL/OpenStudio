@@ -122,7 +122,6 @@ namespace openstudio{
       if (polygon.inners().empty()){
         result.push_back(polygon);
       }else{
-        // remove holes also removes spikes
         std::vector<BoostPolygon> temp = removeHoles(polygon); 
         result.insert(result.end(), temp.begin(), temp.end());
       }
@@ -208,20 +207,24 @@ namespace openstudio{
       result.push_back(resultPoint);
     }
 
-    if (result.size() < 3){
-      return std::vector<Point3d>();
-    }
-
     OS_ASSERT(polygon.inners().empty());
 
     result = removeSpikes(result);
 
     result = removeColinear(result);
 
+    if (result.size() < 3){
+      return std::vector<Point3d>();
+    }
+
+    if (result.front() == result.back()){
+      result.pop_back();
+    }
+
     return result;
   }
 
-  // struct used to sort polygons in descending area by area
+  // struct used to sort polygons in descending order by area
   struct BoostPolygonAreaGreater{
     bool operator()(const BoostPolygon& left, const BoostPolygon& right){
       boost::optional<double> leftA = boost::geometry::area(left);

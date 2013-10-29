@@ -210,13 +210,13 @@ namespace openstudio{
   std::vector<Point3d> removeSpikes(const Point3dVector& points, double tol)
   {
     unsigned N = points.size();
-    if (N < 2){
+    if (N < 1){
       return points;
     }
 
     std::vector<Point3d> result;
 
-    for(unsigned i = 0; i < N-1; ++i){
+    for(unsigned i = 0; i < N; ++i){
 
       Point3d lastPoint = points[N-1];
       if (i > 0){
@@ -225,7 +225,7 @@ namespace openstudio{
 
       Point3d currentPoint = points[i];
 
-      Point3d nextPoint = points[1];
+      Point3d nextPoint = points[0];
       if (i < N-1){
         nextPoint = points[i+1];
       }
@@ -236,6 +236,7 @@ namespace openstudio{
       // if these fail to normalize we have zero length vectors (e.g. adjacent points)
       if (a.normalize()){
         if (b.normalize()){
+
           // see if dot product is near -1
           double d = a.dot(b);
           if (d <= -1.0 + tol){
