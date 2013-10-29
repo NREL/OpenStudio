@@ -861,7 +861,7 @@ namespace detail {
     std::reverse(faceVertices.begin(), faceVertices.end());
     //std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
 
-    LOG(Info, "Trying intersection of '" << this->name().get() << "' with '" << otherSurface.name().get());
+    //LOG(Info, "Trying intersection of '" << this->name().get() << "' with '" << otherSurface.name().get());
 
     boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
     if (!intersection){
@@ -875,9 +875,9 @@ namespace detail {
     std::vector<Surface> newSurfaces;
     std::vector<Surface> newOtherSurfaces;
 
-    LOG(Debug, "Before intersection");
-    LOG(Debug, surface);
-    LOG(Debug, otherSurface);
+    //LOG(Debug, "Before intersection");
+    //LOG(Debug, surface);
+    //LOG(Debug, otherSurface);
 
     // goes from building coordinates to local system 
     Transformation spaceTransformationInverse = spaceTransformation.inverse();
@@ -891,20 +891,20 @@ namespace detail {
     }else{
       // new surfaces are created
 
-      // new vertices in this space
+      // modify vertices for surface in this space
       std::vector<Point3d> newBuildingVertices = faceTransformation * intersection->polygon1();
       std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
       std::reverse(newVertices.begin(), newVertices.end());
       newVertices = reorderULC(newVertices);
       this->setVertices(newVertices);
 
-      // new vertices in other space
+      // modify vertices for surface in other space
       std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersection->polygon2();
       std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
       newOtherVertices = reorderULC(newOtherVertices);
       otherSurface.setVertices(newOtherVertices);
 
-      // create surface for each difference
+      // create new surfaces in this space
       for (unsigned i = 0; i < newPolygons1.size(); ++i){
 
         // new surface in this space
@@ -917,10 +917,10 @@ namespace detail {
         newSurfaces.push_back(newSurface);
       }
 
-      // create surface for each difference
+      // create new surfaces in other space
       for (unsigned i = 0; i < newPolygons2.size(); ++i){
 
-        // new surface in this space
+        // new surface in other space
         newOtherBuildingVertices = faceTransformation * newPolygons2[i];
         newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
         newOtherVertices = reorderULC(newOtherVertices);
@@ -934,15 +934,15 @@ namespace detail {
 
     LOG(Info, "Intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' results in " << result);
 
-    LOG(Debug, "After intersection");
-    LOG(Debug, surface);
-    LOG(Debug, otherSurface);
-    BOOST_FOREACH(const Surface& s, newSurfaces){
-      LOG(Debug, s);
-    }
-    BOOST_FOREACH(const Surface& s, newOtherSurfaces){
-      LOG(Debug, s);
-    }
+    //LOG(Debug, "After intersection");
+    //LOG(Debug, surface);
+    //LOG(Debug, otherSurface);
+    //BOOST_FOREACH(const Surface& s, newSurfaces){
+    //  LOG(Debug, s);
+    //}
+    //BOOST_FOREACH(const Surface& s, newOtherSurfaces){
+    //  LOG(Debug, s);
+    //}
 
     return result;
   }

@@ -318,6 +318,8 @@ namespace openstudio{
       return boost::none;
     }
 
+    // DLM: might want to remove holes in any intersections here 
+
     // check for multiple intersections
     if (intersectionResult.size() > 1){
       LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection has " << intersectionResult.size() << " elements");
