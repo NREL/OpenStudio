@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
 
 PROJECT(OpenStudio)
 
@@ -6,12 +6,30 @@ SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 1)
 SET(CMAKE_VERSION_PATCH 1)
 
-SET(SUBVERSION_REVISION "Unknown")
-SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # svn revision
+SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
+FIND_PACKAGE(Git)
+IF(GIT_FOUND AND CMAKE_VERSION_BUILD STREQUAL "Unknown")
+  EXECUTE_PROCESS(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  TIMEOUT 10
+                  RESULT_VARIABLE RESULT
+                  OUTPUT_VARIABLE GIT_VERSION
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  IF(${RESULT} EQUAL 0)
+    SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
+  ENDIF()
+ENDIF()
+
+# EnergyPlus Idd version
+SET(ENERGYPLUS_VERSION "8.0" CACHE INTERNAL "EnergyPlus Version")
+
 
 OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )
 
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
+
+# Search for modules in the openstudiocore dir first to override cmake ones 
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore")
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
@@ -45,11 +63,33 @@ OPTION( BUILD_PACKAGE "Build package" OFF )
 # This is a convenience for Visual Studio users
 OPTION( ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF )
 
-# Build with OpenSSL support
-OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
-
 # Build SimXML
 OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
+
+# Build with OpenSSL support
+SET( BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections" )
+FIND_PACKAGE( OpenSSL )
+MARK_AS_ADVANCED(LIB_EAY_DEBUG)
+MARK_AS_ADVANCED(LIB_EAY_RELEASE)
+MARK_AS_ADVANCED(SSL_EAY_DEBUG)
+MARK_AS_ADVANCED(SSL_EAY_RELEASE)
+
+IF( NOT ${OPENSSL_FOUND} )
+  MESSAGE(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
+  IF ( WIN32 )
+    MESSAGE(SEND_ERROR "You can install OpenSSL for windows by visiting http://www.slproweb.com/products/Win32OpenSSL.html and installing the latest recommended full installation package")
+  ELSE()
+    MESSAGE(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+  ENDIF()
+ENDIF()
+
+# EnergyPlus
+FIND_PACKAGE(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+MARK_AS_ADVANCED(
+  ENERGYPLUS_EXE
+  ENERGYPLUS_IDD
+  ENERGYPLUS_WEATHER_DIR
+)
 
 # Package Radiance and EnergyPlus for convenience 
 OPTION( PACKAGE_RADIANCE_AND_ENERGYPLUS "Package Radiance and EnergyPlus" OFF )
@@ -115,12 +155,14 @@ MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 IF(MSVC)
   # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
   OPTION( MSVC_IS_EXPRESS "using the Express editions of Visual Studio, must install both C++ and C# versions" FALSE )
+  
+  MARK_AS_ADVANCED(CMAKE_CONFIGURATION_TYPES)
 ENDIF()
 
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
 
-FIND_PACKAGE (Qt4 4.6.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns )
+FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns )
 
   # Build Qt
 IF(QT_QMAKE_EXECUTABLE)
@@ -610,6 +652,7 @@ ExternalProject_Add( OpenStudioCore
     -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
     -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
     -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+    -DENERGYPLUS_VERSION:STRING=${ENERGYPLUS_VERSION}
     -DBUILD_DOCUMENTATION:BOOL=${BUILD_DOCUMENTATION}
     -DBUILD_CSHARP_BINDINGS:BOOL=${BUILD_CSHARP_BINDINGS}
     -DBUILD_V8_BINDINGS:BOOL=${BUILD_V8_BINDINGS}
@@ -735,9 +778,6 @@ if (BUILD_SIMXML)
     -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
      )
 endif()
-
-# Search for modules in the root dir first to override cmake ones 
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
 
 ###############################################################################
 # Use CPack

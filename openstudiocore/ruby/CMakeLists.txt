@@ -225,5 +225,4 @@ ENDIF()
 # install the openstudio resources (html, gif, etc.)
 INSTALL( DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/sketchup_plugin"
         DESTINATION "${RUBY_MODULE_DIR}/openstudio"
-        PATTERN ".svn" EXCLUDE
         PATTERN "*.rb" EXCLUDE )
