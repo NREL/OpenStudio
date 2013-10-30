@@ -3440,6 +3440,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
   if( hirfPLRCrv )
   {
     boiler.setNormalizedBoilerEfficiencyCurve(hirfPLRCrv.get());
+
+    if( hirfPLRCrv->optionalCast<model::CurveBiquadratic>() )
+    {
+      boiler.setEfficiencyCurveTemperatureEvaluationVariable("EnteringBoiler");
+    }
+    else
+    {
+      boiler.setEfficiencyCurveTemperatureEvaluationVariable("LeavingBoiler");
+    }
   }
 
   // FuelSrc
