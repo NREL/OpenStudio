@@ -3841,9 +3841,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
   waterHeaterMixed.setAmbientTemperatureSchedule(scheduleRuleset);
 
-  // WtrHtrStorCap
+  // StorCap
 
-  QDomElement wtrHtrStorCapElement = element.firstChildElement("WtrHtrStorCap");
+  QDomElement wtrHtrStorCapElement = element.firstChildElement("StorCap");
 
   double wtrHtrStorCap = wtrHtrStorCapElement.text().toDouble(&ok);
 
@@ -3851,14 +3851,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   {
     waterHeaterMixed.setTankVolume(unitToUnit(wtrHtrStorCap,"gal","m^3").get());
   }
-  //else
-  //{
-  //  waterHeaterMixed.autosizeTankVolume();
-  //}
 
-  // WtrHtrMaxCap
+  // CapRtd
   
-  QDomElement wtrHtrMaxCapElement = element.firstChildElement("WtrHtrMaxCap");
+  QDomElement wtrHtrMaxCapElement = element.firstChildElement("CapRtd");
 
   double wtrHtrMaxCap = wtrHtrMaxCapElement.text().toDouble(&ok);
 
@@ -3866,10 +3862,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   {
     waterHeaterMixed.setHeaterMaximumCapacity(unitToUnit(wtrHtrMaxCap,"Btu/h","W").get());
   }
-  //else
-  //{
-  //  waterHeaterMixed.autosizeHeaterMaximumCapacity();
-  //}
 
   // MinCap
 
@@ -3881,6 +3873,30 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   {
     waterHeaterMixed.setHeaterMinimumCapacity(unitToUnit(minCap,"Btu/h","W").get());
   }
+
+  // OffCyclePrstcLoss
+
+  QDomElement offCyclePrstcLossElement = element.firstChildElement("OffCyclePrstcLoss");
+
+  double offCyclePrstcLoss = offCyclePrstcLossElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    waterHeaterMixed.setOffCycleParasiticFuelConsumptionRate(offCyclePrstcLoss);
+  }
+
+  // OnCyclePrstcLoss
+
+  QDomElement onCyclePrstcLossElement = element.firstChildElement("OnCyclePrstcLoss");
+
+  double onCyclePrstcLoss = onCyclePrstcLossElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    waterHeaterMixed.setOnCycleParasiticFuelConsumptionRate(onCyclePrstcLoss);
+  }
+
+  // Setpoint schedule
 
   model::Schedule setpointTempSchedule = serviceHotWaterSetpointSchedule(model);
 
