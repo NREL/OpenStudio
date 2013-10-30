@@ -75,7 +75,7 @@ public:
   bool translate(const openstudio::model::Model& model,bool translateHVAC=true,ProgressBar *progressBar=0);
   std::string toString();
   bool toPrj(const openstudio::path& path);
-  
+
   //bool translate(const openstudio::model::Model& model, double leakageRate=27.1, bool translateHVAC=true, 
   //  ProgressBar *progressBar=0);
   
@@ -154,6 +154,19 @@ private:
   StringStreamLogSink m_logSink;
 
   REGISTER_LOGGER("openstudio.contam.ForwardTranslator");
+};
+
+class CONTAM_API InfiltrationTranslator : public ForwardTranslator
+{
+public:
+  InfiltrationTranslator();
+
+  bool translate(const openstudio::model::Model& model,openstudio::path epwPath,openstudio::path wthPath,
+    ProgressBar *progressBar=0);
+
+  bool calculate(openstudio::path simPath);
+  //ForwardTranslator(std::string leakageDescriptor);
+  //ForwardTranslator(double flow,double n=0.65,double deltaP=75.0);
 };
 
 } // contam

@@ -94,6 +94,14 @@ TARGET_LINK_LIBRARIES( epw2wth
   openstudio_contam
 )
 
+add_executable(compinf compinf.cpp)
+
+TARGET_LINK_LIBRARIES( compinf 
+  ${${target_name}_depends}
+  openstudio_osversion
+  openstudio_contam
+)
+
 add_executable(FitInfiltration FitInfiltration.cpp)
 
 TARGET_LINK_LIBRARIES( FitInfiltration
