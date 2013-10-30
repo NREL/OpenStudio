@@ -43,6 +43,7 @@
 #include <model/Timestep.hpp>
 #include <model/Timestep_Impl.hpp>
 #include <model/Meter.hpp>
+#include <model/OutputVariable.hpp>
 #include <model/SimulationControl.hpp>
 #include <model/SimulationControl_Impl.hpp>
 #include <model/RunPeriod.hpp>
@@ -51,6 +52,12 @@
 #include <model/YearDescription_Impl.hpp>
 #include <model/OutputControlReportingTolerances.hpp>
 #include <model/OutputControlReportingTolerances_Impl.hpp>
+#include <model/ChillerElectricEIR.hpp>
+#include <model/ChillerElectricEIR_Impl.hpp>
+#include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerSingleSpeed_Impl.hpp>
+#include <model/BoilerHotWater.hpp>
+#include <model/BoilerHotWater_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -630,6 +637,33 @@ namespace sdd {
       meter.setSpecificEndUse("NonReg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
+
+      if( ! result->getModelObjects<model::PlantLoop>().empty() )
+      {
+        model::OutputVariable var("Plant Supply Side Cooling Demand Rate",*result);
+        var.setReportingFrequency("hourly");
+
+        model::OutputVariable var2("Plant Supply Side Heating Demand Rate",*result);
+        var2.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::ChillerElectricEIR>().empty() )
+      {
+        model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::CoolingTowerSingleSpeed>().empty() )
+      {
+        model::OutputVariable var("Cooling Tower Heat Transfer Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::BoilerHotWater>().empty() )
+      {
+        model::OutputVariable var("Boiler Heating Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
 
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
       rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
