@@ -3259,12 +3259,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
     else
     {
+      double flowRate = 0.0;
+
       constantPumps = plantLoop.supplyComponents(plantLoop.supplySplitter(),
                                          plantLoop.supplyMixer(),
                                          model::PumpConstantSpeed::iddObjectType());
       if( constantPumps.size() > 0 )
       {
-        double flowRate = 0.0;
         for( std::vector<model::ModelObject>::iterator it = constantPumps.begin();
              it != constantPumps.end();
              it++ )
@@ -3274,6 +3275,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
             flowRate = flowRate + ratedFlowRate.get();
           }
         }
+      }
+
+      variablePumps = plantLoop.supplyComponents(plantLoop.supplySplitter(),
+                                                 plantLoop.supplyMixer(),
+                                                 model::PumpVariableSpeed::iddObjectType());
+      if( variablePumps.size() > 0 )
+      {
+        for( std::vector<model::ModelObject>::iterator it = variablePumps.begin();
+             it != variablePumps.end();
+             it++ )
+        {
+          if( boost::optional<double> ratedFlowRate = it->cast<model::PumpVariableSpeed>().ratedFlowRate() )
+          {
+            flowRate = flowRate + ratedFlowRate.get();
+          }
+        }
+      }
+
+      if( ! equal<double>(flowRate,0.0) )
+      {
         plantLoop.setMaximumLoopFlowRate(flowRate);
       }
     }
