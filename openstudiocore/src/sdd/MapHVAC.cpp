@@ -2673,6 +2673,8 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     // If not primaryAirFlowMin, make sure we have non zero values for minimum air flow
     if( ! primaryAirFlowMin )
     {
+      LOG(Warn,terminal.name().get() << " using default minimum air flow fraction.");
+
       if( istringEqual(terminal.damperHeatingAction(),"Reverse") )
       {
         terminal.setZoneMinimumAirFlowMethod("Constant");
