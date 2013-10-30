@@ -293,7 +293,6 @@ public:
     int cfd_capp() const;
     void setCfd_capp(const int cfd_capp);
 
-
 private:
     QExplicitlySharedDataPointer<PathPrivate> d;
 };

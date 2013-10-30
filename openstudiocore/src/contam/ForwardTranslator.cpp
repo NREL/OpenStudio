@@ -20,6 +20,7 @@
 
 #include <contam/ForwardTranslator.hpp>
 #include <contam/WindPressure.hpp>
+#include <contam/SimTxt.hpp>
 
 #include <model/Model.hpp>
 #include <model/Building.hpp>
@@ -1187,6 +1188,86 @@ std::string ForwardTranslator::toString()
   if(ready())
     return prj::Model::toString();
   return std::string();
+}
+
+boost::optional<std::vector<TimeSeries> > ForwardTranslator::zoneInfiltration(openstudio::path simPath)
+{
+  std::vector<TimeSeries> results;
+
+  // Collect results - eventually this should use the SQLite results
+  openstudio::contam::sim::LinkFlow lfr;
+  openstudio::path lfrPath = simPath.replace_extension(openstudio::toPath("lfr").string());
+  if(!lfr.read(lfrPath))
+  {
+    LOG(Error,"Failed to read link flow results.");
+    return boost::optional<std::vector<TimeSeries> >();
+  }
+
+  // Do some error checking
+  std::vector<std::vector<double> > flow0 = lfr.F0();
+  if(flow0.size() != paths().size())
+  {
+    LOG(Error,"Mismatch between lfr data and model path count.");
+    return boost::optional<std::vector<TimeSeries> >();
+  }
+  unsigned int ntimes = flow0[0].size();
+  for(unsigned int i=1;i<flow0.size();i++)
+  {
+    if(flow0[i].size() != ntimes)
+    {
+      LOG(Error,"Missing or additional data for path " << i+1 << ".");
+      return boost::optional<std::vector<TimeSeries> >();
+    }
+  }
+
+  // Collect a vector of the exterior paths
+  std::vector<openstudio::contam::prj::Path> extPaths;
+  BOOST_FOREACH(openstudio::contam::prj::Path path, paths())
+  {
+    if(path.flags() == 0 || path.flags() == 1) // These should be it... hopefully... maybe collect this during translation?
+    {
+      if(path.pzm() == -1 || path.pzn() == -1)
+      {
+        extPaths.push_back(path);
+      }
+    }
+  }
+
+  std::vector<DateTime> dateTimes = lfr.dateTimes();
+
+  // Initialize storage
+  std::vector<Vector> values;
+  for(unsigned int j=0; j<zones().size(); j++)
+  {
+    values.push_back(Vector(ntimes));
+  }
+
+  // Collect up infiltration on a zone-by-zone basis
+  for(unsigned int i=0; i<ntimes; i++)
+  {
+    for(unsigned int j=0; j<paths().size(); j++)
+    {
+      double flow = flow0[j][i];
+      int pzn = paths()[j].pzn();
+      int pzm = paths()[j].pzm();
+      if(pzn == -1 && flow < 0)
+      {
+        values[pzm-1][i]-= flow;
+      }
+      else if(pzm == -1 && flow > 0)
+      {
+        values[pzn-1][i] += flow;
+      }
+    }
+  }
+
+  // Create TimeSeries objects
+  for(unsigned int j=0; j<zones().size(); j++)
+  {
+    results.push_back(TimeSeries(dateTimes,values[j],"kg/s"));
+  }
+
+  return boost::optional<std::vector<TimeSeries> >(results);
 }
 
 bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)

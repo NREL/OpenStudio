@@ -119,6 +119,9 @@ public:
   }
   */
 
+  // Postprocessing Functions
+  boost::optional<std::vector<TimeSeries> > zoneInfiltration(openstudio::path simPath);
+
   // We may need more functions like this that modify the CONTAM model
   bool setSteadyWeather(double windSpeed, double windDirection);
   int addNewAirflowElement(std::string name,double flow,double n=0.65,double deltaP=75.0);
