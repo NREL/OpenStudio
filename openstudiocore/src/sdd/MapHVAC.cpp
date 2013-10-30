@@ -2670,7 +2670,22 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setDamperHeatingAction("Normal");
     }
 
-    // terminal.setConstantMinimumAirFlowFraction(0.0);
+    // If not primaryAirFlowMin, make sure we have non zero values for minimum air flow
+    if( ! primaryAirFlowMin )
+    {
+      if( istringEqual(terminal.damperHeatingAction(),"Reverse") )
+      {
+        terminal.setZoneMinimumAirFlowMethod("Constant");
+
+        terminal.setConstantMinimumAirFlowFraction(0.5);
+      }
+      else
+      {
+        terminal.setZoneMinimumAirFlowMethod("Constant");
+
+        terminal.setConstantMinimumAirFlowFraction(0.2);
+      }
+    }
 
     QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
     value = htgAirFlowMaxElement.text().toDouble(&ok);
