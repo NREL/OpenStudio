@@ -42,10 +42,220 @@ typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 
 #include <list>
 
+// adapted from Boost Geometry \algorithms\remove_spikes.hpp Revision: 86523
+namespace boost { 
+namespace geometry {
+namespace detail { 
+
+template <typename Point1, typename Point2, typename Point3>
+static inline bool point_is_spike_or_equal(Point1 const& last_point, Point2 const& segment_a, Point3 const& segment_b)
+{
+  // adapted from point_is_spike_or_equal to include tolerance checking
+
+  // segment_a is at the begining
+  // segment_b is in the middle
+  // last_point is at the end
+
+  // segment_b is being considered for deletion
+
+  double normTol = 0.001; // 1 mm
+  double tol = 0.001; // relative to 1
+    
+  double diff1_x = last_point.x()-segment_b.x();
+  double diff1_y = last_point.y()-segment_b.y();
+  double norm1 = sqrt(pow(diff1_x, 2) + pow(diff1_y, 2)); 
+  if (norm1 > normTol){
+    diff1_x = diff1_x/norm1;
+    diff1_y = diff1_y/norm1;
+  }else{
+    // last point is too close to segement b
+    return true;
+  }
+
+  double diff2_x = segment_b.x()-segment_a.x();
+  double diff2_y = segment_b.y()-segment_a.y();
+  double norm2 = sqrt(pow(diff2_x, 2) + pow(diff2_y, 2));
+  if (norm2 > normTol){
+    diff2_x = diff2_x/norm2;
+    diff2_y = diff2_y/norm2;
+  }else{
+    // segement b is too close to segement a
+    return true;
+  }
+
+  double crossProduct = diff1_x*diff2_y-diff1_y*diff2_x;
+  if (abs(crossProduct) < tol){
+    double dotProduct = diff1_x*diff2_x+diff1_y*diff2_y;
+    if (dotProduct <= -1.0 + tol){
+      // reversal
+      return true;
+    }
+  }
+
+  return false;
+}
+
+namespace remove_spikes {
+
+template <typename Range>
+struct range_remove_spikes
+{
+    typedef typename strategy::side::services::default_strategy
+    <
+        typename cs_tag<Range>::type
+    >::type side_strategy;
+
+    typedef typename coordinate_type<Range>::type coordinate_type;
+    typedef typename point_type<Range>::type point_type;
+
+    static inline void apply(Range& range)
+    {
+        std::size_t n = boost::size(range);
+        std::size_t const min_num_points = core_detail::closure::minimum_ring_size
+            <
+                geometry::closure<Range>::value
+            >::value;
+        if (n < min_num_points)
+        {
+            return;
+        }
+
+        typedef typename boost::range_iterator<Range>::type iterator;
+
+        std::deque<point_type> cleaned;
+        for (typename boost::range_iterator<Range const>::type it = boost::begin(range); 
+            it != boost::end(range); ++it)
+        {
+            // Add point
+            cleaned.push_back(*it);
+
+            while(cleaned.size() >= 3
+                    && detail::point_is_spike_or_equal(cleaned.back(), *(cleaned.end() - 3), *(cleaned.end() - 2)))
+            {
+                // Remove pen-ultimate point causing the spike (or which was equal)
+                cleaned.erase(cleaned.end() - 2);
+            }
+        }
+
+        // For a closed-polygon, remove closing point, this makes checking first point(s) easier and consistent
+        if (geometry::closure<Range>::value == geometry::closed)
+        {
+            cleaned.pop_back();
+        }
+
+        bool found = false;
+        do
+        {
+            found = false;
+            // Check for spike in first point
+            int const penultimate = 2;
+            while(cleaned.size() > 3 && detail::point_is_spike_or_equal(cleaned.front(), *(cleaned.end() - penultimate), cleaned.back()))
+            {
+                cleaned.pop_back();
+                found = true;
+            }
+            // Check for spike in second point
+            while(cleaned.size() > 3 && detail::point_is_spike_or_equal(*(cleaned.begin() + 1), cleaned.back(), cleaned.front()))
+            {
+                cleaned.pop_front();
+                found = true;
+            }
+        }
+        while (found);
+
+        // Close if necessary
+        if (geometry::closure<Range>::value == geometry::closed)
+        {
+            cleaned.push_back(cleaned.front());
+        }
+
+        // Copy output
+        geometry::clear(range);
+        std::copy(cleaned.begin(), cleaned.end(), std::back_inserter(range));
+    }
+};
+
+
+template <typename Polygon>
+struct polygon_remove_spikes
+{
+    static inline void apply(Polygon& polygon)
+    {
+        typedef typename geometry::ring_type<Polygon>::type ring_type;
+
+        typedef range_remove_spikes<ring_type> per_range;
+        per_range::apply(exterior_ring(polygon));
+
+        typename interior_return_type<Polygon>::type rings
+                    = interior_rings(polygon);
+        for (BOOST_AUTO_TPL(it, boost::begin(rings)); it != boost::end(rings); ++it)
+        {
+            per_range::apply(*it);
+        }
+    }
+};
+
+
+}} // namespace detail::remove_spikes
+
+namespace dispatch
+{
+
+
+template
+<
+    typename Geometry,
+    typename Tag = typename tag<Geometry>::type
+>
+struct remove_spikes
+{
+    static inline void apply(Geometry&)
+    {}
+};
+
+
+template <typename Ring>
+struct remove_spikes<Ring, ring_tag>
+    : detail::remove_spikes::range_remove_spikes<Ring>
+{};
+
+
+
+template <typename Polygon>
+struct remove_spikes<Polygon, polygon_tag>
+    : detail::remove_spikes::polygon_remove_spikes<Polygon>
+{};
+
+
+
+} // namespace dispatch
+
+template <typename Geometry>
+inline void remove_spikes(Geometry& geometry)
+{
+    concept::check<Geometry>();
+
+    dispatch::remove_spikes<Geometry>::apply(geometry);
+}
+
+
+}} // namespace boost::geometry
+
 
 namespace openstudio{
 
   // Private implementation functions
+
+  std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons)
+  {
+    std::vector<BoostPolygon> result;
+    BOOST_FOREACH(const BoostPolygon& polygon, polygons){
+      BoostPolygon temp(polygon);
+      boost::geometry::remove_spikes(temp);
+      result.push_back(temp);
+    }
+    return result;
+  }
 
   std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon)
   {
@@ -209,8 +419,6 @@ namespace openstudio{
 
     OS_ASSERT(polygon.inners().empty());
 
-    result = removeSpikes(result);
-
     result = removeColinear(result);
 
     if (result.size() < 3){
@@ -318,7 +526,8 @@ namespace openstudio{
       return boost::none;
     }
 
-    // DLM: might want to remove holes in any intersections here 
+    intersectionResult = removeSpikes(intersectionResult);
+    //intersectionResult = removeHoles(intersectionResult);
 
     // check for multiple intersections
     if (intersectionResult.size() > 1){
@@ -382,6 +591,7 @@ namespace openstudio{
     // polygon1 minus polygon2
     std::vector<BoostPolygon> differenceResult1;
     boost::geometry::difference(*boostPolygon1, *boostPolygon2, differenceResult1);
+    differenceResult1 = removeSpikes(differenceResult1);
     differenceResult1 = removeHoles(differenceResult1);
     
     // create new polygon for each difference
@@ -410,6 +620,7 @@ namespace openstudio{
     // polygon2 minus polygon1
     std::vector<BoostPolygon> differenceResult2;
     boost::geometry::difference(*boostPolygon2, *boostPolygon1, differenceResult2);
+    differenceResult2 = removeSpikes(differenceResult2);
     differenceResult2 = removeHoles(differenceResult2);
 
     // create new polygon for each difference

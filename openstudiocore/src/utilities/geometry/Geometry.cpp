@@ -206,7 +206,7 @@ namespace openstudio{
 
     return result;
   }
-
+/*
   std::vector<Point3d> removeSpikes(const Point3dVector& points, double tol)
   {
     unsigned N = points.size();
@@ -252,7 +252,7 @@ namespace openstudio{
 
     return result;
   }
-
+*/
   double getDistance(const Point3d& point1, const Point3d& point2) {
     double dx = point1.x() - point2.x();
     double dy = point1.y() - point2.y();
