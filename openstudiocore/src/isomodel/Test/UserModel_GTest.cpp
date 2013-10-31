@@ -164,136 +164,136 @@ TEST_F(ISOModelFixture, UserModel)
   userModel.setCoolingPumpControl(0.0184589116025784);
   userModel.setHeatGainPerPerson(0.976673863929532);
 
-  EXPECT_EQ(0.366569597990189, userModel.terrainClass());
-  EXPECT_EQ(0.13797878192703, userModel.floorArea());
-  EXPECT_EQ(0.425419263581922, userModel.buildingHeight());
-  EXPECT_EQ(0.665995505182317, userModel.buildingOccupancyFrom());
-  EXPECT_EQ(0.400372234106352, userModel.buildingOccupancyTo());
-  EXPECT_EQ(0.254850243633116, userModel.equivFullLoadOccupancyFrom());
-  EXPECT_EQ(0.713362082549865, userModel.equivFullLoadOccupancyTo());
-  EXPECT_EQ(0.0453028919599623, userModel.peopleDensityOccupied());
-  EXPECT_EQ(0.374398515315959, userModel.peopleDensityUnoccupied());
-  EXPECT_EQ(0.308476836073534, userModel.heatingOccupiedSetpoint());
-  EXPECT_EQ(0.96115521837837, userModel.heatingUnoccupiedSetpoint());
-  EXPECT_EQ(0.0182141291000549, userModel.coolingOccupiedSetpoint());
-  EXPECT_EQ(0.47279017381788, userModel.coolingUnoccupiedSetpoint());
-  EXPECT_EQ(0.0159043563230605, userModel.elecPowerAppliancesOccupied());
-  EXPECT_EQ(0.877197046873451, userModel.elecPowerAppliancesUnoccupied());
-  EXPECT_EQ(0.413231779700794, userModel.gasPowerAppliancesOccupied());
-  EXPECT_EQ(0.735954395099727, userModel.gasPowerAppliancesUnoccupied());
-  EXPECT_EQ(0.827607402688993, userModel.lightingPowerIntensityOccupied());
-  EXPECT_EQ(0.210627783574828, userModel.lightingPowerIntensityUnoccupied());
-  EXPECT_EQ(0.688613300586997, userModel.exteriorLightingPower());
-  EXPECT_EQ(0.952066322499152, userModel.daylightSensorSystem());
-  EXPECT_EQ(0.191200546809349, userModel.lightingOccupancySensorSystem());
-  EXPECT_EQ(0.295905191092175, userModel.constantIlluminationControl());
-  EXPECT_EQ(0.977647331541828, userModel.coolingSystemCOP());
-  EXPECT_EQ(0.86953551426846, userModel.coolingSystemIPLVToCOPRatio());
-  EXPECT_EQ(0.263002176275548, userModel.heatingEnergyCarrier());
-  EXPECT_EQ(0.710454137223511, userModel.heatingSystemEfficiency());
-  EXPECT_EQ(0.0841726806995226, userModel.ventilationType());
-  EXPECT_EQ(0.903704085971796, userModel.freshAirFlowRate());
-  EXPECT_EQ(0.724248760195895, userModel.supplyExhaustRate());
-  EXPECT_EQ(0.49985550202677, userModel.heatRecovery());
-  EXPECT_EQ(0.846564029275989, userModel.exhaustAirRecirculation());
-  EXPECT_EQ(0.863462404238138, userModel.buildingAirLeakage());
-  EXPECT_EQ(0.881916031629701, userModel.dhwDemand());
-  EXPECT_EQ(0.105230439331114, userModel.dhwEfficiency());
-  EXPECT_EQ(0.791092991177229, userModel.dhwDistributionSystem());
-  EXPECT_EQ(0.789220796023767, userModel.dhwEnergyCarrier());
-  EXPECT_EQ(0.293374792126407, userModel.bemType());
-  EXPECT_EQ(0.590020871911987, userModel.interiorHeatCapacity());
-  EXPECT_EQ(0.256509943938684, userModel.specificFanPower());
-  EXPECT_EQ(0.171213718831364, userModel.fanFlowControlFactor());
-  EXPECT_EQ(0.577629926945883, userModel.roofSHGC());
-  EXPECT_EQ(0.351700449083525, userModel.wallAreaS());
-  EXPECT_EQ(0.638796629077831, userModel.wallAreaSE());
-  EXPECT_EQ(0.713877579934114, userModel.wallAreaE());
-  EXPECT_EQ(0.0544635225207429, userModel.wallAreaNE());
-  EXPECT_EQ(0.713312047950444, userModel.wallAreaN());
-  EXPECT_EQ(0.316883353660591, userModel.wallAreaNW());
-  EXPECT_EQ(0.963602582100428, userModel.wallAreaW());
-  EXPECT_EQ(0.950016805325306, userModel.wallAreaSW());
-  EXPECT_EQ(0.401348851386038, userModel.roofArea());
-  EXPECT_EQ(0.479173557940235, userModel.wallUvalueS());
-  EXPECT_EQ(0.598665235979741, userModel.wallUvalueSE());
-  EXPECT_EQ(0.592537203218594, userModel.wallUvalueE());
-  EXPECT_EQ(0.317076189922438, userModel.wallUvalueNE());
-  EXPECT_EQ(0.857610736439619, userModel.wallUvalueN());
-  EXPECT_EQ(0.494959077705813, userModel.wallUvalueNW());
-  EXPECT_EQ(0.710302412967452, userModel.wallUvalueW());
-  EXPECT_EQ(0.755347362509827, userModel.wallUvalueSW());
-  EXPECT_EQ(0.508937055452772, userModel.roofUValue());
-  EXPECT_EQ(0.91461449925898, userModel.wallSolarAbsorptionS());
-  EXPECT_EQ(0.928931093579599, userModel.wallSolarAbsorptionSE());
-  EXPECT_EQ(0.435542934183637, userModel.wallSolarAbsorptionE());
-  EXPECT_EQ(0.793609339380358, userModel.wallSolarAbsorptionNE());
-  EXPECT_EQ(0.902389688647158, userModel.wallSolarAbsorptionN());
-  EXPECT_EQ(0.336318028981842, userModel.wallSolarAbsorptionNW());
-  EXPECT_EQ(0.37153202026125, userModel.wallSolarAbsorptionW());
-  EXPECT_EQ(0.418783890513947, userModel.wallSolarAbsorptionSW());
-  EXPECT_EQ(0.223964378497134, userModel.roofSolarAbsorption());
-  EXPECT_EQ(0.583098358149272, userModel.wallThermalEmissivityS());
-  EXPECT_EQ(0.141381800284656, userModel.wallThermalEmissivitySE());
-  EXPECT_EQ(0.837222292557137, userModel.wallThermalEmissivityE());
-  EXPECT_EQ(0.49538931179426, userModel.wallThermalEmissivityNE());
-  EXPECT_EQ(0.871379477772421, userModel.wallThermalEmissivityN());
-  EXPECT_EQ(0.170422643070764, userModel.wallThermalEmissivityNW());
-  EXPECT_EQ(0.761063022176878, userModel.wallThermalEmissivityW());
-  EXPECT_EQ(0.186495812844654, userModel.wallThermalEmissivitySW());
-  EXPECT_EQ(0.907924653508436, userModel.roofThermalEmissivity());
-  EXPECT_EQ(0.606074602940241, userModel.windowAreaS());
-  EXPECT_EQ(0.404342798081098, userModel.windowAreaSE());
-  EXPECT_EQ(0.0612029472801275, userModel.windowAreaE());
-  EXPECT_EQ(0.289843899154198, userModel.windowAreaNE());
-  EXPECT_EQ(0.540818859803666, userModel.windowAreaN());
-  EXPECT_EQ(0.41253025448177, userModel.windowAreaNW());
-  EXPECT_EQ(0.014956739105872, userModel.windowAreaW());
-  EXPECT_EQ(0.899839246505665, userModel.windowAreaSW());
-  EXPECT_EQ(0.135269594888848, userModel.skylightArea());
-  EXPECT_EQ(0.232560858068808, userModel.windowUvalueS());
-  EXPECT_EQ(0.431164085960324, userModel.windowUvalueSE());
-  EXPECT_EQ(0.00477022329159593, userModel.windowUvalueE());
-  EXPECT_EQ(0.71516207439754, userModel.windowUvalueNE());
-  EXPECT_EQ(0.280649559810701, userModel.windowUvalueN());
-  EXPECT_EQ(0.355908313708148, userModel.windowUvalueNW());
-  EXPECT_EQ(0.112872065367925, userModel.windowUvalueW());
-  EXPECT_EQ(0.398611796542468, userModel.windowUvalueSW());
-  EXPECT_EQ(0.712266965230007, userModel.skylightUvalue());
-  EXPECT_EQ(0.255902968619523, userModel.windowSHGCS());
-  EXPECT_EQ(0.401818741289806, userModel.windowSHGCSE());
-  EXPECT_EQ(0.536223533889905, userModel.windowSHGCE());
-  EXPECT_EQ(0.251096592939623, userModel.windowSHGCNE());
-  EXPECT_EQ(0.931256342309665, userModel.windowSHGCN());
-  EXPECT_EQ(0.896808057579816, userModel.windowSHGCNW());
-  EXPECT_EQ(0.981291583238567, userModel.windowSHGCW());
-  EXPECT_EQ(0.148339469077549, userModel.windowSHGCSW());
-  EXPECT_EQ(0.531228639942613, userModel.skylightSHGC());
-  EXPECT_EQ(0.719753126248692, userModel.windowSCFS());
-  EXPECT_EQ(0.719295130996734, userModel.windowSCFSE());
-  EXPECT_EQ(0.62587251635714, userModel.windowSCFE());
-  EXPECT_EQ(0.789338364373816, userModel.windowSCFNE());
-  EXPECT_EQ(0.620542267432122, userModel.windowSCFN());
-  EXPECT_EQ(0.300503015955268, userModel.windowSCFNW());
-  EXPECT_EQ(0.128976467360588, userModel.windowSCFW());
-  EXPECT_EQ(0.947178709804832, userModel.windowSCFSW());
-  EXPECT_EQ(0.902216926946315, userModel.windowSDFS());
-  EXPECT_EQ(0.632486442302954, userModel.windowSDFSE());
-  EXPECT_EQ(0.719004834647601, userModel.windowSDFE());
-  EXPECT_EQ(0.504956302525102, userModel.windowSDFNE());
-  EXPECT_EQ(0.212427137938556, userModel.windowSDFN());
-  EXPECT_EQ(0.0746662195816253, userModel.windowSDFNW());
-  EXPECT_EQ(0.970579615803331, userModel.windowSDFW());
-  EXPECT_EQ(0.617489329894299, userModel.windowSDFSW());
-  EXPECT_EQ(0.523964673586454, userModel.exteriorHeatCapacity());
-  EXPECT_EQ(0.139585598177502, userModel.infiltration());
-  EXPECT_EQ(0.287554068015519, userModel.hvacWasteFactor());
-  EXPECT_EQ(0.801121347575538, userModel.hvacHeatingLossFactor());
-  EXPECT_EQ(0.919509843310335, userModel.hvacCoolingLossFactor());
-  EXPECT_EQ(0.33038965168355, userModel.dhwDistributionEfficiency());
-  EXPECT_EQ(0.625403806654488, userModel.heatingPumpControl());
-  EXPECT_EQ(0.0184589116025784, userModel.coolingPumpControl());
-  EXPECT_EQ(0.976673863929532, userModel.heatGainPerPerson());
+  EXPECT_DOUBLE_EQ(0.366569597990189, userModel.terrainClass());
+  EXPECT_DOUBLE_EQ(0.13797878192703, userModel.floorArea());
+  EXPECT_DOUBLE_EQ(0.425419263581922, userModel.buildingHeight());
+  EXPECT_DOUBLE_EQ(0.665995505182317, userModel.buildingOccupancyFrom());
+  EXPECT_DOUBLE_EQ(0.400372234106352, userModel.buildingOccupancyTo());
+  EXPECT_DOUBLE_EQ(0.254850243633116, userModel.equivFullLoadOccupancyFrom());
+  EXPECT_DOUBLE_EQ(0.713362082549865, userModel.equivFullLoadOccupancyTo());
+  EXPECT_DOUBLE_EQ(0.0453028919599623, userModel.peopleDensityOccupied());
+  EXPECT_DOUBLE_EQ(0.374398515315959, userModel.peopleDensityUnoccupied());
+  EXPECT_DOUBLE_EQ(0.308476836073534, userModel.heatingOccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(0.96115521837837, userModel.heatingUnoccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(0.0182141291000549, userModel.coolingOccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(0.47279017381788, userModel.coolingUnoccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(0.0159043563230605, userModel.elecPowerAppliancesOccupied());
+  EXPECT_DOUBLE_EQ(0.877197046873451, userModel.elecPowerAppliancesUnoccupied());
+  EXPECT_DOUBLE_EQ(0.413231779700794, userModel.gasPowerAppliancesOccupied());
+  EXPECT_DOUBLE_EQ(0.735954395099727, userModel.gasPowerAppliancesUnoccupied());
+  EXPECT_DOUBLE_EQ(0.827607402688993, userModel.lightingPowerIntensityOccupied());
+  EXPECT_DOUBLE_EQ(0.210627783574828, userModel.lightingPowerIntensityUnoccupied());
+  EXPECT_DOUBLE_EQ(0.688613300586997, userModel.exteriorLightingPower());
+  EXPECT_DOUBLE_EQ(0.952066322499152, userModel.daylightSensorSystem());
+  EXPECT_DOUBLE_EQ(0.191200546809349, userModel.lightingOccupancySensorSystem());
+  EXPECT_DOUBLE_EQ(0.295905191092175, userModel.constantIlluminationControl());
+  EXPECT_DOUBLE_EQ(0.977647331541828, userModel.coolingSystemCOP());
+  EXPECT_DOUBLE_EQ(0.86953551426846, userModel.coolingSystemIPLVToCOPRatio());
+  EXPECT_DOUBLE_EQ(0.263002176275548, userModel.heatingEnergyCarrier());
+  EXPECT_DOUBLE_EQ(0.710454137223511, userModel.heatingSystemEfficiency());
+  EXPECT_DOUBLE_EQ(0.0841726806995226, userModel.ventilationType());
+  EXPECT_DOUBLE_EQ(0.903704085971796, userModel.freshAirFlowRate());
+  EXPECT_DOUBLE_EQ(0.724248760195895, userModel.supplyExhaustRate());
+  EXPECT_DOUBLE_EQ(0.49985550202677, userModel.heatRecovery());
+  EXPECT_DOUBLE_EQ(0.846564029275989, userModel.exhaustAirRecirculation());
+  EXPECT_DOUBLE_EQ(0.863462404238138, userModel.buildingAirLeakage());
+  EXPECT_DOUBLE_EQ(0.881916031629701, userModel.dhwDemand());
+  EXPECT_DOUBLE_EQ(0.105230439331114, userModel.dhwEfficiency());
+  EXPECT_DOUBLE_EQ(0.791092991177229, userModel.dhwDistributionSystem());
+  EXPECT_DOUBLE_EQ(0.789220796023767, userModel.dhwEnergyCarrier());
+  EXPECT_DOUBLE_EQ(0.293374792126407, userModel.bemType());
+  EXPECT_DOUBLE_EQ(0.590020871911987, userModel.interiorHeatCapacity());
+  EXPECT_DOUBLE_EQ(0.256509943938684, userModel.specificFanPower());
+  EXPECT_DOUBLE_EQ(0.171213718831364, userModel.fanFlowControlFactor());
+  EXPECT_DOUBLE_EQ(0.577629926945883, userModel.roofSHGC());
+  EXPECT_DOUBLE_EQ(0.351700449083525, userModel.wallAreaS());
+  EXPECT_DOUBLE_EQ(0.638796629077831, userModel.wallAreaSE());
+  EXPECT_DOUBLE_EQ(0.713877579934114, userModel.wallAreaE());
+  EXPECT_DOUBLE_EQ(0.0544635225207429, userModel.wallAreaNE());
+  EXPECT_DOUBLE_EQ(0.713312047950444, userModel.wallAreaN());
+  EXPECT_DOUBLE_EQ(0.316883353660591, userModel.wallAreaNW());
+  EXPECT_DOUBLE_EQ(0.963602582100428, userModel.wallAreaW());
+  EXPECT_DOUBLE_EQ(0.950016805325306, userModel.wallAreaSW());
+  EXPECT_DOUBLE_EQ(0.401348851386038, userModel.roofArea());
+  EXPECT_DOUBLE_EQ(0.479173557940235, userModel.wallUvalueS());
+  EXPECT_DOUBLE_EQ(0.598665235979741, userModel.wallUvalueSE());
+  EXPECT_DOUBLE_EQ(0.592537203218594, userModel.wallUvalueE());
+  EXPECT_DOUBLE_EQ(0.317076189922438, userModel.wallUvalueNE());
+  EXPECT_DOUBLE_EQ(0.857610736439619, userModel.wallUvalueN());
+  EXPECT_DOUBLE_EQ(0.494959077705813, userModel.wallUvalueNW());
+  EXPECT_DOUBLE_EQ(0.710302412967452, userModel.wallUvalueW());
+  EXPECT_DOUBLE_EQ(0.755347362509827, userModel.wallUvalueSW());
+  EXPECT_DOUBLE_EQ(0.508937055452772, userModel.roofUValue());
+  EXPECT_DOUBLE_EQ(0.91461449925898, userModel.wallSolarAbsorptionS());
+  EXPECT_DOUBLE_EQ(0.928931093579599, userModel.wallSolarAbsorptionSE());
+  EXPECT_DOUBLE_EQ(0.435542934183637, userModel.wallSolarAbsorptionE());
+  EXPECT_DOUBLE_EQ(0.793609339380358, userModel.wallSolarAbsorptionNE());
+  EXPECT_DOUBLE_EQ(0.902389688647158, userModel.wallSolarAbsorptionN());
+  EXPECT_DOUBLE_EQ(0.336318028981842, userModel.wallSolarAbsorptionNW());
+  EXPECT_DOUBLE_EQ(0.37153202026125, userModel.wallSolarAbsorptionW());
+  EXPECT_DOUBLE_EQ(0.418783890513947, userModel.wallSolarAbsorptionSW());
+  EXPECT_DOUBLE_EQ(0.223964378497134, userModel.roofSolarAbsorption());
+  EXPECT_DOUBLE_EQ(0.583098358149272, userModel.wallThermalEmissivityS());
+  EXPECT_DOUBLE_EQ(0.141381800284656, userModel.wallThermalEmissivitySE());
+  EXPECT_DOUBLE_EQ(0.837222292557137, userModel.wallThermalEmissivityE());
+  EXPECT_DOUBLE_EQ(0.49538931179426, userModel.wallThermalEmissivityNE());
+  EXPECT_DOUBLE_EQ(0.871379477772421, userModel.wallThermalEmissivityN());
+  EXPECT_DOUBLE_EQ(0.170422643070764, userModel.wallThermalEmissivityNW());
+  EXPECT_DOUBLE_EQ(0.761063022176878, userModel.wallThermalEmissivityW());
+  EXPECT_DOUBLE_EQ(0.186495812844654, userModel.wallThermalEmissivitySW());
+  EXPECT_DOUBLE_EQ(0.907924653508436, userModel.roofThermalEmissivity());
+  EXPECT_DOUBLE_EQ(0.606074602940241, userModel.windowAreaS());
+  EXPECT_DOUBLE_EQ(0.404342798081098, userModel.windowAreaSE());
+  EXPECT_DOUBLE_EQ(0.0612029472801275, userModel.windowAreaE());
+  EXPECT_DOUBLE_EQ(0.289843899154198, userModel.windowAreaNE());
+  EXPECT_DOUBLE_EQ(0.540818859803666, userModel.windowAreaN());
+  EXPECT_DOUBLE_EQ(0.41253025448177, userModel.windowAreaNW());
+  EXPECT_DOUBLE_EQ(0.014956739105872, userModel.windowAreaW());
+  EXPECT_DOUBLE_EQ(0.899839246505665, userModel.windowAreaSW());
+  EXPECT_DOUBLE_EQ(0.135269594888848, userModel.skylightArea());
+  EXPECT_DOUBLE_EQ(0.232560858068808, userModel.windowUvalueS());
+  EXPECT_DOUBLE_EQ(0.431164085960324, userModel.windowUvalueSE());
+  EXPECT_DOUBLE_EQ(0.00477022329159593, userModel.windowUvalueE());
+  EXPECT_DOUBLE_EQ(0.71516207439754, userModel.windowUvalueNE());
+  EXPECT_DOUBLE_EQ(0.280649559810701, userModel.windowUvalueN());
+  EXPECT_DOUBLE_EQ(0.355908313708148, userModel.windowUvalueNW());
+  EXPECT_DOUBLE_EQ(0.112872065367925, userModel.windowUvalueW());
+  EXPECT_DOUBLE_EQ(0.398611796542468, userModel.windowUvalueSW());
+  EXPECT_DOUBLE_EQ(0.712266965230007, userModel.skylightUvalue());
+  EXPECT_DOUBLE_EQ(0.255902968619523, userModel.windowSHGCS());
+  EXPECT_DOUBLE_EQ(0.401818741289806, userModel.windowSHGCSE());
+  EXPECT_DOUBLE_EQ(0.536223533889905, userModel.windowSHGCE());
+  EXPECT_DOUBLE_EQ(0.251096592939623, userModel.windowSHGCNE());
+  EXPECT_DOUBLE_EQ(0.931256342309665, userModel.windowSHGCN());
+  EXPECT_DOUBLE_EQ(0.896808057579816, userModel.windowSHGCNW());
+  EXPECT_DOUBLE_EQ(0.981291583238567, userModel.windowSHGCW());
+  EXPECT_DOUBLE_EQ(0.148339469077549, userModel.windowSHGCSW());
+  EXPECT_DOUBLE_EQ(0.531228639942613, userModel.skylightSHGC());
+  EXPECT_DOUBLE_EQ(0.719753126248692, userModel.windowSCFS());
+  EXPECT_DOUBLE_EQ(0.719295130996734, userModel.windowSCFSE());
+  EXPECT_DOUBLE_EQ(0.62587251635714, userModel.windowSCFE());
+  EXPECT_DOUBLE_EQ(0.789338364373816, userModel.windowSCFNE());
+  EXPECT_DOUBLE_EQ(0.620542267432122, userModel.windowSCFN());
+  EXPECT_DOUBLE_EQ(0.300503015955268, userModel.windowSCFNW());
+  EXPECT_DOUBLE_EQ(0.128976467360588, userModel.windowSCFW());
+  EXPECT_DOUBLE_EQ(0.947178709804832, userModel.windowSCFSW());
+  EXPECT_DOUBLE_EQ(0.902216926946315, userModel.windowSDFS());
+  EXPECT_DOUBLE_EQ(0.632486442302954, userModel.windowSDFSE());
+  EXPECT_DOUBLE_EQ(0.719004834647601, userModel.windowSDFE());
+  EXPECT_DOUBLE_EQ(0.504956302525102, userModel.windowSDFNE());
+  EXPECT_DOUBLE_EQ(0.212427137938556, userModel.windowSDFN());
+  EXPECT_DOUBLE_EQ(0.0746662195816253, userModel.windowSDFNW());
+  EXPECT_DOUBLE_EQ(0.970579615803331, userModel.windowSDFW());
+  EXPECT_DOUBLE_EQ(0.617489329894299, userModel.windowSDFSW());
+  EXPECT_DOUBLE_EQ(0.523964673586454, userModel.exteriorHeatCapacity());
+  EXPECT_DOUBLE_EQ(0.139585598177502, userModel.infiltration());
+  EXPECT_DOUBLE_EQ(0.287554068015519, userModel.hvacWasteFactor());
+  EXPECT_DOUBLE_EQ(0.801121347575538, userModel.hvacHeatingLossFactor());
+  EXPECT_DOUBLE_EQ(0.919509843310335, userModel.hvacCoolingLossFactor());
+  EXPECT_DOUBLE_EQ(0.33038965168355, userModel.dhwDistributionEfficiency());
+  EXPECT_DOUBLE_EQ(0.625403806654488, userModel.heatingPumpControl());
+  EXPECT_DOUBLE_EQ(0.0184589116025784, userModel.coolingPumpControl());
+  EXPECT_DOUBLE_EQ(0.976673863929532, userModel.heatGainPerPerson());
 
   std::string wpath = "test";
   userModel.load(wpath);
@@ -306,136 +306,136 @@ TEST_F(ISOModelFixture, UserModel)
   path p = resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO");
   userModel.load(openstudio::toString(p));
 
-  EXPECT_EQ(0.9, userModel.terrainClass());
-  EXPECT_EQ(10000.0, userModel.floorArea());
-  EXPECT_EQ(8.0, userModel.buildingHeight());
-  EXPECT_EQ(1.0, userModel.buildingOccupancyFrom());
-  EXPECT_EQ(5.0, userModel.buildingOccupancyTo());
-  EXPECT_EQ(7.0, userModel.equivFullLoadOccupancyFrom());
-  EXPECT_EQ(18.0, userModel.equivFullLoadOccupancyTo());
-  EXPECT_EQ(22.386274698794701, userModel.peopleDensityOccupied());
-  EXPECT_EQ(171.87446672181500, userModel.peopleDensityUnoccupied());
-  EXPECT_EQ(24.0, userModel.heatingOccupiedSetpoint());
-  EXPECT_EQ(24.0, userModel.heatingUnoccupiedSetpoint());
-  EXPECT_EQ(28.0, userModel.coolingOccupiedSetpoint());
-  EXPECT_EQ(28.0, userModel.coolingUnoccupiedSetpoint());
-  EXPECT_EQ(8.9340456458692508, userModel.elecPowerAppliancesOccupied());
-  EXPECT_EQ(1.1636399740730901, userModel.elecPowerAppliancesUnoccupied());
-  EXPECT_EQ(26.183103184023899, userModel.gasPowerAppliancesOccupied());
-  EXPECT_EQ(3.4102921249677900, userModel.gasPowerAppliancesUnoccupied());
-  EXPECT_EQ(8.9340456458692508, userModel.lightingPowerIntensityOccupied());
-  EXPECT_EQ(1.1636399740730901, userModel.lightingPowerIntensityUnoccupied());
-  EXPECT_EQ(0.0, userModel.exteriorLightingPower());
-  EXPECT_EQ(1.0, userModel.daylightSensorSystem());
-  EXPECT_EQ(1.0, userModel.lightingOccupancySensorSystem());
-  EXPECT_EQ(1.0, userModel.constantIlluminationControl());
-  EXPECT_EQ(3.0, userModel.coolingSystemCOP());
-  EXPECT_EQ(1.0, userModel.coolingSystemIPLVToCOPRatio());
-  EXPECT_EQ(2.0, userModel.heatingEnergyCarrier());
-  EXPECT_EQ(0.80000000000000004, userModel.heatingSystemEfficiency());
-  EXPECT_EQ(1.0, userModel.ventilationType());
-  EXPECT_EQ(5080, userModel.freshAirFlowRate());
-  EXPECT_EQ(5080, userModel.supplyExhaustRate());
-  EXPECT_EQ(0.0, userModel.heatRecovery());
-  EXPECT_EQ(0.0, userModel.exhaustAirRecirculation());
-  EXPECT_EQ(2.4610800585487800, userModel.buildingAirLeakage());
-  EXPECT_EQ(0.0, userModel.dhwDemand());
-  EXPECT_EQ(0.9, userModel.dhwEfficiency());
-  EXPECT_EQ(0.791092991177229, userModel.dhwDistributionSystem());//unmodified by load
-  EXPECT_EQ(1.0, userModel.dhwEnergyCarrier());
-  EXPECT_EQ(1.0, userModel.bemType());
-  EXPECT_EQ(224141.05370757400, userModel.interiorHeatCapacity());
-  EXPECT_EQ(2.5, userModel.specificFanPower());
-  EXPECT_EQ(1.0, userModel.fanFlowControlFactor());
-  EXPECT_EQ(0.577629926945883, userModel.roofSHGC());//unmodified by load
-  EXPECT_EQ(480.0, userModel.wallAreaS());
-  EXPECT_EQ(0.0, userModel.wallAreaSE());
-  EXPECT_EQ(240, userModel.wallAreaE());
-  EXPECT_EQ(0.0, userModel.wallAreaNE());
-  EXPECT_EQ(480.0, userModel.wallAreaN());
-  EXPECT_EQ(0.0, userModel.wallAreaNW());
-  EXPECT_EQ(240.0, userModel.wallAreaW());
-  EXPECT_EQ(0.0, userModel.wallAreaSW());
-  EXPECT_EQ(10000.0, userModel.roofArea());
-  EXPECT_EQ(0.30930199989518098, userModel.wallUvalueS());
-  EXPECT_EQ(0.29999999999999999, userModel.wallUvalueSE());
-  EXPECT_EQ(0.30930199989518098, userModel.wallUvalueE());
-  EXPECT_EQ(0.29999999999999999, userModel.wallUvalueNE());
-  EXPECT_EQ(0.30930199989518098, userModel.wallUvalueN());
-  EXPECT_EQ(0.29999999999999999, userModel.wallUvalueNW());
-  EXPECT_EQ(0.30930199989518098, userModel.wallUvalueW());
-  EXPECT_EQ(0.29999999999999999, userModel.wallUvalueSW());
-  EXPECT_EQ(0.22146791744515701, userModel.roofUValue());
-  EXPECT_EQ(0.69999999999999996, userModel.wallSolarAbsorptionS());
-  EXPECT_EQ(0.5, userModel.wallSolarAbsorptionSE());
-  EXPECT_EQ(0.69999999999999996, userModel.wallSolarAbsorptionE());
-  EXPECT_EQ(0.5, userModel.wallSolarAbsorptionNE());
-  EXPECT_EQ(0.69999999999999996, userModel.wallSolarAbsorptionN());
-  EXPECT_EQ(0.5, userModel.wallSolarAbsorptionNW());
-  EXPECT_EQ(0.69999999999999996, userModel.wallSolarAbsorptionW());
-  EXPECT_EQ(0.5, userModel.wallSolarAbsorptionSW());
-  EXPECT_EQ(0.69999999999999996, userModel.roofSolarAbsorption());
-  EXPECT_EQ(0.90000000000000002, userModel.wallThermalEmissivityS());
-  EXPECT_EQ(0.5, userModel.wallThermalEmissivitySE());
-  EXPECT_EQ(0.90000000000000002, userModel.wallThermalEmissivityE());
-  EXPECT_EQ(0.5, userModel.wallThermalEmissivityNE());
-  EXPECT_EQ(0.90000000000000002, userModel.wallThermalEmissivityN());
-  EXPECT_EQ(0.5, userModel.wallThermalEmissivityNW());
-  EXPECT_EQ(0.90000000000000002, userModel.wallThermalEmissivityW());
-  EXPECT_EQ(0.5, userModel.wallThermalEmissivitySW());
-  EXPECT_EQ(0.90000000000000002, userModel.roofThermalEmissivity());
-  EXPECT_EQ(320.0, userModel.windowAreaS());
-  EXPECT_EQ(0.0, userModel.windowAreaSE());
-  EXPECT_EQ(160.0, userModel.windowAreaE());
-  EXPECT_EQ(0.0, userModel.windowAreaNE());
-  EXPECT_EQ(320.0, userModel.windowAreaN());
-  EXPECT_EQ(0.0, userModel.windowAreaNW());
-  EXPECT_EQ(160.0, userModel.windowAreaW());
-  EXPECT_EQ(0.0, userModel.windowAreaSW());
-  EXPECT_EQ(0.0, userModel.skylightArea());
-  EXPECT_EQ(3.8904056162246499, userModel.windowUvalueS());
-  EXPECT_EQ(3.0, userModel.windowUvalueSE());
-  EXPECT_EQ(3.8904056162246601, userModel.windowUvalueE());
-  EXPECT_EQ(3.0, userModel.windowUvalueNE());
-  EXPECT_EQ(3.8904056162246499, userModel.windowUvalueN());
-  EXPECT_EQ(3.0, userModel.windowUvalueNW());
-  EXPECT_EQ(3.8904056162246601, userModel.windowUvalueW());
-  EXPECT_EQ(3.0, userModel.windowUvalueSW());
-  EXPECT_EQ(3.0, userModel.skylightUvalue());
-  EXPECT_EQ(0.49665000000000098, userModel.windowSHGCS());
-  EXPECT_EQ(0.5, userModel.windowSHGCSE());
-  EXPECT_EQ(0.49665000000000098, userModel.windowSHGCE());
-  EXPECT_EQ(0.5, userModel.windowSHGCNE());
-  EXPECT_EQ(0.49665000000000098, userModel.windowSHGCN());
-  EXPECT_EQ(0.5, userModel.windowSHGCNW());
-  EXPECT_EQ(0.49665000000000098, userModel.windowSHGCW());
-  EXPECT_EQ(0.5, userModel.windowSHGCSW());
-  EXPECT_EQ(0.5, userModel.skylightSHGC());
-  EXPECT_EQ(1.0, userModel.windowSCFS());
-  EXPECT_EQ(1.0, userModel.windowSCFSE());
-  EXPECT_EQ(1.0, userModel.windowSCFE());
-  EXPECT_EQ(1.0, userModel.windowSCFNE());
-  EXPECT_EQ(1.0, userModel.windowSCFN());
-  EXPECT_EQ(1.0, userModel.windowSCFNW());
-  EXPECT_EQ(1.0, userModel.windowSCFW());
-  EXPECT_EQ(1.0, userModel.windowSCFSW());
-  EXPECT_EQ(1.0, userModel.windowSDFS());
-  EXPECT_EQ(1.0, userModel.windowSDFSE());
-  EXPECT_EQ(1.0, userModel.windowSDFE());
-  EXPECT_EQ(1.0, userModel.windowSDFNE());
-  EXPECT_EQ(1.0, userModel.windowSDFN());
-  EXPECT_EQ(1.0, userModel.windowSDFNW());
-  EXPECT_EQ(1.0, userModel.windowSDFW());
-  EXPECT_EQ(1.0, userModel.windowSDFSW());
-  EXPECT_EQ(58083.259716774199, userModel.exteriorHeatCapacity());
-  EXPECT_EQ(0.139585598177502, userModel.infiltration());//unmodified by load
-  EXPECT_EQ(0.0, userModel.hvacWasteFactor());
-  EXPECT_EQ(0.25, userModel.hvacHeatingLossFactor());
-  EXPECT_EQ(0.0, userModel.hvacCoolingLossFactor());
-  EXPECT_EQ(0.59999999999999998, userModel.dhwDistributionEfficiency());
-  EXPECT_EQ(1.0, userModel.heatingPumpControl());
-  EXPECT_EQ(1.0, userModel.coolingPumpControl());
-  EXPECT_EQ(120.0, userModel.heatGainPerPerson());
+  EXPECT_DOUBLE_EQ(0.9, userModel.terrainClass());
+  EXPECT_DOUBLE_EQ(10000.0, userModel.floorArea());
+  EXPECT_DOUBLE_EQ(8.0, userModel.buildingHeight());
+  EXPECT_DOUBLE_EQ(1.0, userModel.buildingOccupancyFrom());
+  EXPECT_DOUBLE_EQ(5.0, userModel.buildingOccupancyTo());
+  EXPECT_DOUBLE_EQ(7.0, userModel.equivFullLoadOccupancyFrom());
+  EXPECT_DOUBLE_EQ(18.0, userModel.equivFullLoadOccupancyTo());
+  EXPECT_DOUBLE_EQ(22.386274698794701, userModel.peopleDensityOccupied());
+  EXPECT_DOUBLE_EQ(171.87446672181500, userModel.peopleDensityUnoccupied());
+  EXPECT_DOUBLE_EQ(24.0, userModel.heatingOccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(24.0, userModel.heatingUnoccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(28.0, userModel.coolingOccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(28.0, userModel.coolingUnoccupiedSetpoint());
+  EXPECT_DOUBLE_EQ(8.9340456458692508, userModel.elecPowerAppliancesOccupied());
+  EXPECT_DOUBLE_EQ(1.1636399740730901, userModel.elecPowerAppliancesUnoccupied());
+  EXPECT_DOUBLE_EQ(26.183103184023899, userModel.gasPowerAppliancesOccupied());
+  EXPECT_DOUBLE_EQ(3.4102921249677900, userModel.gasPowerAppliancesUnoccupied());
+  EXPECT_DOUBLE_EQ(8.9340456458692508, userModel.lightingPowerIntensityOccupied());
+  EXPECT_DOUBLE_EQ(1.1636399740730901, userModel.lightingPowerIntensityUnoccupied());
+  EXPECT_DOUBLE_EQ(0.0, userModel.exteriorLightingPower());
+  EXPECT_DOUBLE_EQ(1.0, userModel.daylightSensorSystem());
+  EXPECT_DOUBLE_EQ(1.0, userModel.lightingOccupancySensorSystem());
+  EXPECT_DOUBLE_EQ(1.0, userModel.constantIlluminationControl());
+  EXPECT_DOUBLE_EQ(3.0, userModel.coolingSystemCOP());
+  EXPECT_DOUBLE_EQ(1.0, userModel.coolingSystemIPLVToCOPRatio());
+  EXPECT_DOUBLE_EQ(2.0, userModel.heatingEnergyCarrier());
+  EXPECT_DOUBLE_EQ(0.80000000000000004, userModel.heatingSystemEfficiency());
+  EXPECT_DOUBLE_EQ(1.0, userModel.ventilationType());
+  EXPECT_DOUBLE_EQ(5080, userModel.freshAirFlowRate());
+  EXPECT_DOUBLE_EQ(5080, userModel.supplyExhaustRate());
+  EXPECT_DOUBLE_EQ(0.0, userModel.heatRecovery());
+  EXPECT_DOUBLE_EQ(0.0, userModel.exhaustAirRecirculation());
+  EXPECT_DOUBLE_EQ(2.4610800585487800, userModel.buildingAirLeakage());
+  EXPECT_DOUBLE_EQ(0.0, userModel.dhwDemand());
+  EXPECT_DOUBLE_EQ(0.9, userModel.dhwEfficiency());
+  EXPECT_DOUBLE_EQ(0.791092991177229, userModel.dhwDistributionSystem());//unmodified by load
+  EXPECT_DOUBLE_EQ(1.0, userModel.dhwEnergyCarrier());
+  EXPECT_DOUBLE_EQ(1.0, userModel.bemType());
+  EXPECT_DOUBLE_EQ(224141.05370757400, userModel.interiorHeatCapacity());
+  EXPECT_DOUBLE_EQ(2.5, userModel.specificFanPower());
+  EXPECT_DOUBLE_EQ(1.0, userModel.fanFlowControlFactor());
+  EXPECT_DOUBLE_EQ(0.577629926945883, userModel.roofSHGC());//unmodified by load
+  EXPECT_DOUBLE_EQ(480.0, userModel.wallAreaS());
+  EXPECT_DOUBLE_EQ(0.0, userModel.wallAreaSE());
+  EXPECT_DOUBLE_EQ(240, userModel.wallAreaE());
+  EXPECT_DOUBLE_EQ(0.0, userModel.wallAreaNE());
+  EXPECT_DOUBLE_EQ(480.0, userModel.wallAreaN());
+  EXPECT_DOUBLE_EQ(0.0, userModel.wallAreaNW());
+  EXPECT_DOUBLE_EQ(240.0, userModel.wallAreaW());
+  EXPECT_DOUBLE_EQ(0.0, userModel.wallAreaSW());
+  EXPECT_DOUBLE_EQ(10000.0, userModel.roofArea());
+  EXPECT_DOUBLE_EQ(0.30930199989518098, userModel.wallUvalueS());
+  EXPECT_DOUBLE_EQ(0.29999999999999999, userModel.wallUvalueSE());
+  EXPECT_DOUBLE_EQ(0.30930199989518098, userModel.wallUvalueE());
+  EXPECT_DOUBLE_EQ(0.29999999999999999, userModel.wallUvalueNE());
+  EXPECT_DOUBLE_EQ(0.30930199989518098, userModel.wallUvalueN());
+  EXPECT_DOUBLE_EQ(0.29999999999999999, userModel.wallUvalueNW());
+  EXPECT_DOUBLE_EQ(0.30930199989518098, userModel.wallUvalueW());
+  EXPECT_DOUBLE_EQ(0.29999999999999999, userModel.wallUvalueSW());
+  EXPECT_DOUBLE_EQ(0.22146791744515701, userModel.roofUValue());
+  EXPECT_DOUBLE_EQ(0.69999999999999996, userModel.wallSolarAbsorptionS());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallSolarAbsorptionSE());
+  EXPECT_DOUBLE_EQ(0.69999999999999996, userModel.wallSolarAbsorptionE());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallSolarAbsorptionNE());
+  EXPECT_DOUBLE_EQ(0.69999999999999996, userModel.wallSolarAbsorptionN());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallSolarAbsorptionNW());
+  EXPECT_DOUBLE_EQ(0.69999999999999996, userModel.wallSolarAbsorptionW());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallSolarAbsorptionSW());
+  EXPECT_DOUBLE_EQ(0.69999999999999996, userModel.roofSolarAbsorption());
+  EXPECT_DOUBLE_EQ(0.90000000000000002, userModel.wallThermalEmissivityS());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallThermalEmissivitySE());
+  EXPECT_DOUBLE_EQ(0.90000000000000002, userModel.wallThermalEmissivityE());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallThermalEmissivityNE());
+  EXPECT_DOUBLE_EQ(0.90000000000000002, userModel.wallThermalEmissivityN());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallThermalEmissivityNW());
+  EXPECT_DOUBLE_EQ(0.90000000000000002, userModel.wallThermalEmissivityW());
+  EXPECT_DOUBLE_EQ(0.5, userModel.wallThermalEmissivitySW());
+  EXPECT_DOUBLE_EQ(0.90000000000000002, userModel.roofThermalEmissivity());
+  EXPECT_DOUBLE_EQ(320.0, userModel.windowAreaS());
+  EXPECT_DOUBLE_EQ(0.0, userModel.windowAreaSE());
+  EXPECT_DOUBLE_EQ(160.0, userModel.windowAreaE());
+  EXPECT_DOUBLE_EQ(0.0, userModel.windowAreaNE());
+  EXPECT_DOUBLE_EQ(320.0, userModel.windowAreaN());
+  EXPECT_DOUBLE_EQ(0.0, userModel.windowAreaNW());
+  EXPECT_DOUBLE_EQ(160.0, userModel.windowAreaW());
+  EXPECT_DOUBLE_EQ(0.0, userModel.windowAreaSW());
+  EXPECT_DOUBLE_EQ(0.0, userModel.skylightArea());
+  EXPECT_DOUBLE_EQ(3.8904056162246499, userModel.windowUvalueS());
+  EXPECT_DOUBLE_EQ(3.0, userModel.windowUvalueSE());
+  EXPECT_DOUBLE_EQ(3.8904056162246601, userModel.windowUvalueE());
+  EXPECT_DOUBLE_EQ(3.0, userModel.windowUvalueNE());
+  EXPECT_DOUBLE_EQ(3.8904056162246499, userModel.windowUvalueN());
+  EXPECT_DOUBLE_EQ(3.0, userModel.windowUvalueNW());
+  EXPECT_DOUBLE_EQ(3.8904056162246601, userModel.windowUvalueW());
+  EXPECT_DOUBLE_EQ(3.0, userModel.windowUvalueSW());
+  EXPECT_DOUBLE_EQ(3.0, userModel.skylightUvalue());
+  EXPECT_DOUBLE_EQ(0.49665000000000098, userModel.windowSHGCS());
+  EXPECT_DOUBLE_EQ(0.5, userModel.windowSHGCSE());
+  EXPECT_DOUBLE_EQ(0.49665000000000098, userModel.windowSHGCE());
+  EXPECT_DOUBLE_EQ(0.5, userModel.windowSHGCNE());
+  EXPECT_DOUBLE_EQ(0.49665000000000098, userModel.windowSHGCN());
+  EXPECT_DOUBLE_EQ(0.5, userModel.windowSHGCNW());
+  EXPECT_DOUBLE_EQ(0.49665000000000098, userModel.windowSHGCW());
+  EXPECT_DOUBLE_EQ(0.5, userModel.windowSHGCSW());
+  EXPECT_DOUBLE_EQ(0.5, userModel.skylightSHGC());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFS());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFSE());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFE());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFNE());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFN());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFNW());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFW());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSCFSW());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFS());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFSE());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFE());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFNE());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFN());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFNW());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFW());
+  EXPECT_DOUBLE_EQ(1.0, userModel.windowSDFSW());
+  EXPECT_DOUBLE_EQ(58083.259716774199, userModel.exteriorHeatCapacity());
+  EXPECT_DOUBLE_EQ(0.139585598177502, userModel.infiltration());//unmodified by load
+  EXPECT_DOUBLE_EQ(0.0, userModel.hvacWasteFactor());
+  EXPECT_DOUBLE_EQ(0.25, userModel.hvacHeatingLossFactor());
+  EXPECT_DOUBLE_EQ(0.0, userModel.hvacCoolingLossFactor());
+  EXPECT_DOUBLE_EQ(0.59999999999999998, userModel.dhwDistributionEfficiency());
+  EXPECT_DOUBLE_EQ(1.0, userModel.heatingPumpControl());
+  EXPECT_DOUBLE_EQ(1.0, userModel.coolingPumpControl());
+  EXPECT_DOUBLE_EQ(120.0, userModel.heatGainPerPerson());
   EXPECT_EQ(userModel.weatherFilePath(), openstudio::toPath("weather.epw"));
   WeatherData wd = *userModel.loadWeather();
 
@@ -447,18 +447,20 @@ TEST_F(ISOModelFixture, UserModel)
   Vector mwind = wd.mwind();
 
   double msolarExp[] = {
-          144.545,144.529,144.488,144.423,144.371,144.451,144.506,144.538,
-          174.11,174.09,174.042,173.965,173.908,174.001,174.065,174.102,
-          197.025,197.005,196.954,196.872,196.804,196.905,196.976,197.016,
-          213.837,213.813,213.758,213.671,213.615,213.718,213.789,213.829,
-          260.515,260.487,260.42,260.317,260.253,260.375,260.459,260.506,
-          265.371,265.343,265.278,265.175,265.106,265.228,265.314,265.361,
-          259.414,259.384,259.318,259.216,259.17,259.285,259.364,259.407,
-          237.662,237.636,237.576,237.482,237.422,237.533,237.61,237.653,
-          225.103,225.08,225.021,224.929,224.85,224.966,225.046,225.092,
-          193.282,193.262,193.211,193.128,193.051,193.156,193.229,193.271,
-          132.18,132.166,132.131,132.074,132.022,132.094,132.144,132.173,
-          132.474,132.459,132.423,132.364,132.307,132.382,132.435,132.465};
+    143.143, 114.826, 68.5932, 36.5529, 23.6122, 47.7316, 87.7043, 125.353,
+    162.738, 136.726, 92.1182, 49.4007, 36.7843, 62.9737, 112.115, 151.165,
+    175.78, 152.404, 113.367, 76.7316, 54.8865, 84.7022, 130.615, 166.447,
+    169.894, 154.736, 119.309, 93.4857, 76.6873, 111.126, 143.697, 169.722,
+    195.219, 175.511, 149.978, 128.742, 102.795, 144.828, 172.892, 190.644,
+    186.435, 173.884, 159.496, 136.855, 111.513, 159.576, 176.093, 183.596,
+    186.492, 169.866, 153.147, 129.343, 111.871, 155.07, 179.62, 188.631,
+    187.277, 165.97, 135.435, 113.328, 94.7958, 132.532, 155.876, 181.96,
+    186.079, 167.568, 125.038, 85.8757, 64.9801, 101.173, 142.755, 180.655,
+    178.49, 155.954, 100.738, 62.4556, 41.5875, 74.2186, 116.97, 165.18,
+    128.999, 109.767, 73.0751, 40.9882, 26.1181, 49.7361, 81.9441, 118.711,
+    132.108, 108.162, 67.2965, 34.6429, 19.3871, 38.4037, 75.6457, 116.484};
+
+
   double mhdbtExp[] = {
           -6.28387,-6.18065,-6.0871,-6.27419,-6.52258,-6.80645,-6.78065,-6.55806,-5.55161,-4.36129,-3.54516,-2.79032,-2.02903,-1.68387,-1.59677,-1.86129,-2.9129,-3.82581,-4.54516,-4.50968,-4.70968,-4.97742,-5.23871,-5.88387,
           -3.65714,-3.92857,-4.14643,-4.46429,-4.90714,-5.12143,-5.26429,-4.625,-3.29286,-2.09643,-1.02143,-0.242857,0.257143,0.396429,0.496429,0.260714,-0.464286,-1.425,-2.34643,-2.58214,-2.85,-2.925,-3.15,-3.38571,
@@ -492,35 +494,35 @@ TEST_F(ISOModelFixture, UserModel)
   int v=0;
   for(size_t r = 0;r<msolar.size1();r++){
     for(size_t c = 0;c<msolar.size2();c++,v++){
-      EXPECT_EQ(msolarExp[v], msolar(r,c));
+      EXPECT_DOUBLE_EQ(msolarExp[v], msolar(r,c));
     }
   }
   v=0;
   for(size_t r = 0;r<mhdbt.size1();r++){
     for(size_t c = 0;c<mhdbt.size2();c++,v++){
-      EXPECT_EQ(mhdbtExp[v], mhdbt(r,c));
+      EXPECT_DOUBLE_EQ(mhdbtExp[v], mhdbt(r,c));
     }
   }
   v=0;
   for(size_t r = 0;r<mhEgh.size1();r++){
     for(size_t c = 0;c<mhEgh.size2();c++,v++){
-      EXPECT_EQ(mhEghExp[v], mhEgh(r,c));
+      EXPECT_DOUBLE_EQ(mhEghExp[v], mhEgh(r,c));
     }
   }
   v=0;
   for(int r = 0;r < 12; r++,v++)
   {
-    EXPECT_EQ(mEghExp[v], mEgh[r]);
+    EXPECT_DOUBLE_EQ(mEghExp[v], mEgh[r]);
   }
   v=0;
   for(int r = 0;r < 12; r++,v++)
   {
-    EXPECT_EQ(mdbtExp[v], mdbt[r]);
+    EXPECT_DOUBLE_EQ(mdbtExp[v], mdbt[r]);
   }
   v=0;
   for(int r = 0;r < 12; r++,v++)
   {
-    EXPECT_EQ(mwindExp[v], mwind[r]);
+    EXPECT_DOUBLE_EQ(mwindExp[v], mwind[r]);
   }
 
 
