@@ -45,4 +45,38 @@ TEST_F(ISOModelFixture, ForwardTranslator)
   SimModel simModel = userModel.toSimModel();
   ISOResults results = simModel.simulate();
 
+
+
+  std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
+
+
+  double gas = 0;
+  double elec = 0;
+
+  for (std::vector<EndUseFuelType>::const_iterator itr = fuelTypes.begin();
+      itr != fuelTypes.end();
+      ++itr)
+  {
+    double value = 0;
+    for (std::vector<EndUses>::const_iterator itr2 = results.monthlyResults.begin();
+        itr2 != results.monthlyResults.end();
+        ++itr2)
+    {
+      value += itr2->getEndUseByFuelType(*itr);
+    }
+
+    LOG(Debug, "Read fuel use of " << value << " kWh/m2 For " << itr->valueName() << " which is " << value * 3600000 * userModel.floorArea() << " Joules");
+    if (itr->valueName() == "Gas")
+    {
+      gas = value * 3600000 * userModel.floorArea();
+    } else if (itr->valueName() == "Electricity") {
+      elec = value * 3600000 * userModel.floorArea();
+    }
+  }
+
+  EXPECT_GT(elec, 0);
+  EXPECT_GT(gas, 0);
+  EXPECT_NEAR(1.1856e11, elec, 0.1e11);
+  EXPECT_NEAR(4.7223e10, gas, 0.1e10);
 }
+
