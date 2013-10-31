@@ -22,50 +22,87 @@
 
 namespace openstudio {
 
+const int RefrigerationSystemItem::verticalSpacing = 50;
+
 RefrigerationSystemItem::RefrigerationSystemItem()
   : QGraphicsObject()
 {
   // Condenser Item
 
-  RefrigerationCondenserItem * condenserItem = new RefrigerationCondenserItem();
-  condenserItem->setParentItem(this);
-  condenserItem->setPos(centerXPos() - condenserItem->boundingRect().width() / 2, yPos1() - condenserItem->boundingRect().height() / 2);
+  refrigerationCondenserItem = new RefrigerationCondenserItem();
+  refrigerationCondenserItem->setParentItem(this);
 
   // Sub Cooler Item
 
-  RefrigerationSubCoolerItem * subCoolerItem = new RefrigerationSubCoolerItem();
-  subCoolerItem->setParentItem(this);
-  subCoolerItem->setPos(leftXPos() - subCoolerItem->boundingRect().width() / 2, yPos2() - subCoolerItem->boundingRect().height() / 2);
+  refrigerationSubCoolerItem = new RefrigerationSubCoolerItem();
+  refrigerationSubCoolerItem->setParentItem(this);
 
   // Heat Reclaim Item
 
-  RefrigerationHeatReclaimItem * reclaimItem = new RefrigerationHeatReclaimItem();
-  reclaimItem->setParentItem(this);
-  reclaimItem->setPos(rightXPos() - reclaimItem->boundingRect().width() / 2, yPos2() - reclaimItem->boundingRect().height() / 2);
+  refrigerationHeatReclaimItem = new RefrigerationHeatReclaimItem();
+  refrigerationHeatReclaimItem->setParentItem(this);
 
   // Compressor Item
 
-  RefrigerationCompressorItem * compressorItem = new RefrigerationCompressorItem();
-  compressorItem->setParentItem(this);
-  compressorItem->setPos(rightXPos() - compressorItem->boundingRect().width() / 2, yPos3() - compressorItem->boundingRect().height() / 2);
+  refrigerationCompressorItem = new RefrigerationCompressorItem();
+  refrigerationCompressorItem->setParentItem(this);
 
   // Liquid Suction HX Item
 
-  RefrigerationSHXItem * shxItem = new RefrigerationSHXItem();
-  shxItem->setParentItem(this);
-  shxItem->setPos(leftXPos() - shxItem->boundingRect().width() / 2, yPos4() - shxItem->boundingRect().height() / 2);
+  refrigerationSHXItem = new RefrigerationSHXItem();
+  refrigerationSHXItem->setParentItem(this);
 
   // Cases Item
 
-  RefrigerationCasesItem * casesItem = new RefrigerationCasesItem();
-  casesItem->setParentItem(this);
-  casesItem->setPos(centerXPos() - casesItem->boundingRect().width() / 2, yPos6() - casesItem->boundingRect().height() / 2);
+  refrigerationCasesItem = new RefrigerationCasesItem();
+  refrigerationCasesItem->setParentItem(this);
 
   // Secondary Item
 
-  RefrigerationSecondaryItem * secondaryItem = new RefrigerationSecondaryItem();
-  secondaryItem->setParentItem(this);
-  secondaryItem->setPos(centerXPos() - secondaryItem->boundingRect().width() / 2, yPos7() - secondaryItem->boundingRect().height() / 2);
+  refrigerationSecondaryItem = new RefrigerationSecondaryItem();
+  refrigerationSecondaryItem->setParentItem(this);
+
+  adjustLayout();
+}
+
+void RefrigerationSystemItem::adjustLayout()
+{
+  prepareGeometryChange();
+
+  // Condenser
+
+  refrigerationCondenserItem->setPos(centerXPos() - refrigerationCondenserItem->boundingRect().width() / 2, 
+                                     verticalSpacing);
+
+  // Mechanical Sub Cooler
+
+  refrigerationSubCoolerItem->setPos(leftXPos() - refrigerationSubCoolerItem->boundingRect().width() / 2, 
+                                     refrigerationCondenserItem->y() + refrigerationCondenserItem->boundingRect().height() + verticalSpacing);
+
+  // Heat Reclaim
+
+  refrigerationHeatReclaimItem->setPos(rightXPos() - refrigerationHeatReclaimItem->boundingRect().width() / 2, 
+                                       refrigerationCondenserItem->y() + refrigerationCondenserItem->boundingRect().height() + verticalSpacing);
+  
+  // Compressor
+
+  refrigerationCompressorItem->setPos(rightXPos() - refrigerationCompressorItem->boundingRect().width() / 2, 
+                                      refrigerationHeatReclaimItem->y() + refrigerationHeatReclaimItem->boundingRect().height() + verticalSpacing / 2);
+
+  // SHX
+
+  refrigerationSHXItem->setPos(leftXPos() - refrigerationSHXItem->boundingRect().width() / 2, 
+                               refrigerationSubCoolerItem->y() + refrigerationSubCoolerItem->boundingRect().height() + verticalSpacing);
+
+  // Cases
+
+  refrigerationCasesItem->setPos(centerXPos() - refrigerationCasesItem->boundingRect().width() / 2, 
+                                 refrigerationSHXItem->y() + refrigerationSHXItem->boundingRect().height() + verticalSpacing);
+
+  // Cascade or Secondary
+
+  refrigerationSecondaryItem->setPos(centerXPos() - refrigerationSecondaryItem->boundingRect().width() / 2, 
+                                 refrigerationCasesItem->y() + refrigerationCasesItem->boundingRect().height() + verticalSpacing);
 }
 
 void RefrigerationSystemItem::paint( QPainter *painter, 
@@ -83,7 +120,7 @@ void RefrigerationSystemItem::paint( QPainter *painter,
 
 QRectF RefrigerationSystemItem::boundingRect() const
 {
-  return QRectF(0,0,800,800);
+  return QRectF(0,0,800,refrigerationSecondaryItem->y() + refrigerationSecondaryItem->boundingRect().height() + verticalSpacing);
 }
 
 int RefrigerationSystemItem::leftXPos() const
@@ -99,49 +136,6 @@ int RefrigerationSystemItem::centerXPos() const
 int RefrigerationSystemItem::rightXPos() const
 {
   return boundingRect().width() * 3 / 4;
-}
-
-int RefrigerationSystemItem::yPos1() const
-{
-  return boundingRect().height() * 1 / 6;
-}
-
-// Mechanical Sub Cooler, Heat Reclaim
-int RefrigerationSystemItem::yPos2() const
-{
-  return boundingRect().height() * 2 / 6;
-}
-
-// Compressor, SHX Outlet
-int RefrigerationSystemItem::yPos3() const
-{
-  // Halfway between position 2 and 4
-  return (boundingRect().height() * 3 / 6) - 50;
-}
-
-// SHX Center
-int RefrigerationSystemItem::yPos4() const
-{
-  return boundingRect().height() * 3 / 6;
-}
-
-// SHX Inlet
-int RefrigerationSystemItem::yPos5() const
-{
-  // Halfway between position 4 and 6
-  return (boundingRect().height() * 3 / 6) + 50;
-}
-
-// Cases
-int RefrigerationSystemItem::yPos6() const
-{
-  return boundingRect().height() * 4 / 6;
-}
-
-// Cascade or Secondary
-int RefrigerationSystemItem::yPos7() const
-{
-  return boundingRect().height() * 5 / 6;
 }
 
 RefrigerationCasesItem::RefrigerationCasesItem()

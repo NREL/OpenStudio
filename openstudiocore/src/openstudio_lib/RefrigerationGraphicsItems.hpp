@@ -24,6 +24,14 @@
 
 namespace openstudio {
 
+class RefrigerationCondenserItem;
+class RefrigerationSubCoolerItem;
+class RefrigerationHeatReclaimItem;
+class RefrigerationCompressorItem;
+class RefrigerationSHXItem;
+class RefrigerationCasesItem;
+class RefrigerationSecondaryItem;
+
 class RefrigerationSystemItem : public QGraphicsObject
 {
   Q_OBJECT;
@@ -31,6 +39,24 @@ class RefrigerationSystemItem : public QGraphicsObject
   public:
 
   RefrigerationSystemItem();
+
+  static const int verticalSpacing; 
+
+  RefrigerationCondenserItem * refrigerationCondenserItem;
+
+  RefrigerationSubCoolerItem * refrigerationSubCoolerItem;
+
+  RefrigerationHeatReclaimItem * refrigerationHeatReclaimItem;
+
+  RefrigerationCompressorItem * refrigerationCompressorItem;
+
+  RefrigerationSHXItem * refrigerationSHXItem;
+
+  RefrigerationCasesItem * refrigerationCasesItem;
+
+  RefrigerationSecondaryItem * refrigerationSecondaryItem;
+
+  void adjustLayout();
 
   // RefrigerationSystemItem is divided into three main colums.
   // These are the x coordinates of the left, center, and right center lines
@@ -40,29 +66,6 @@ class RefrigerationSystemItem : public QGraphicsObject
   int centerXPos() const;
 
   int rightXPos() const;
-
-  // RefrigerationSystemItem is divided into seven horitzontal center lines
-
-  // Condenser
-  int yPos1() const;
-
-  // Mechanical Sub Cooler, Heat Reclaim
-  int yPos2() const;
-
-  // Compressor, SHX Outlet
-  int yPos3() const;
-
-  // SHX Center
-  int yPos4() const;
-
-  // SHX Inlet
-  int yPos5() const;
-
-  // Cases
-  int yPos6() const;
-
-  // Cascade or Secondary
-  int yPos7() const;
 
   QRectF boundingRect() const;
 
