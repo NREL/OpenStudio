@@ -330,6 +330,7 @@ namespace openstudio{
     std::vector<BoostPolygon> result;
     BOOST_FOREACH(const BoostPolygon polygon, polygons){
       if (polygon.inners().empty()){
+        // DLM: might also want to partition if this polygon is self intersecting?
         result.push_back(polygon);
       }else{
         std::vector<BoostPolygon> temp = removeHoles(polygon); 
