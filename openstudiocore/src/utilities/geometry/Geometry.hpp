@@ -55,9 +55,6 @@ namespace openstudio{
   /// removes colinear points, tolerance is for length of cross product after normalizing each line segment
   UTILITIES_API std::vector<Point3d> removeColinear(const Point3dVector& points, double tol = 0.001);
 
-  /// removes points which cause sudden reversal of lines, tolerance is for length of dot product after normalizing each line segment
-  //UTILITIES_API std::vector<Point3d> removeSpikes(const Point3dVector& points, double tol = 0.001);
-
   /// return distance between two points
   UTILITIES_API double getDistance(const Point3d& point1, const Point3d& point2);
 
