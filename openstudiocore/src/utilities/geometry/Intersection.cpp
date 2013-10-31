@@ -421,12 +421,13 @@ namespace openstudio{
 
     result = removeColinear(result);
 
-    if (result.size() < 3){
-      return std::vector<Point3d>();
-    }
-
+    // don't keep repeated vertices
     if (result.front() == result.back()){
       result.pop_back();
+    }
+
+    if (result.size() < 3){
+      return std::vector<Point3d>();
     }
 
     return result;
@@ -495,7 +496,7 @@ namespace openstudio{
     try{
       boost::geometry::detail::overlay::has_self_intersections(*boostPolygon1);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "Cannot intersect self intersecting polygon");
+      LOG_FREE(Error, "utilities.geometry.intersect", "Cannot intersect self intersecting polygon");
       return boost::none;
     }
 
@@ -507,7 +508,7 @@ namespace openstudio{
     try{
       boost::geometry::detail::overlay::has_self_intersections(*boostPolygon2);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "Cannot intersect self intersecting polygon");
+      LOG_FREE(Error, "utilities.geometry.intersect", "Cannot intersect self intersecting polygon");
       return boost::none;
     }
 
@@ -516,22 +517,22 @@ namespace openstudio{
     try{
       boost::geometry::intersection(*boostPolygon1, *boostPolygon2, intersectionResult);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "overlay_invalid_input_exception");
+      LOG_FREE(Error, "utilities.geometry.intersect", "overlay_invalid_input_exception");
       return boost::none;
     }
 
     // check if intersection is empty
     if (intersectionResult.empty()){
-      //LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection is empty");
+      //LOG_FREE(Info, "utilities.geometry.intersect", "Intersection is empty");
       return boost::none;
     }
 
     intersectionResult = removeSpikes(intersectionResult);
-    //intersectionResult = removeHoles(intersectionResult);
+    intersectionResult = removeHoles(intersectionResult);
 
     // check for multiple intersections
     if (intersectionResult.size() > 1){
-      LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection has " << intersectionResult.size() << " elements");
+      LOG_FREE(Info, "utilities.geometry.intersect", "Intersection has " << intersectionResult.size() << " elements");
       std::sort(intersectionResult.begin(), intersectionResult.end(), BoostPolygonAreaGreater());
     }
     
@@ -539,20 +540,20 @@ namespace openstudio{
     std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0], allPoints, tol);
     boost::optional<double> testArea = boost::geometry::area(intersectionResult[0]);
     if (!testArea || intersectionVertices.empty()){
-      LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of largest intersection");
+      LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of largest intersection");
       return boost::none;
     }else if (*testArea < tol*tol){
-      LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Largest intersection has very small area of " << *testArea << "m^2");
+      LOG_FREE(Info, "utilities.geometry.intersect", "Largest intersection has very small area of " << *testArea << "m^2");
       return boost::none;
     }
     try{
       boost::geometry::detail::overlay::has_self_intersections(intersectionResult[0]);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Largest intersection is self intersecting");
+      LOG_FREE(Error, "utilities.geometry.intersect", "Largest intersection is self intersecting");
       return boost::none;
     }
     if (!intersectionResult[0].inners().empty()){
-      LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Largest intersection has inner loops");
+      LOG_FREE(Error, "utilities.geometry.intersect", "Largest intersection has inner loops");
       return boost::none;
     };
 
@@ -567,20 +568,20 @@ namespace openstudio{
 
       testArea = boost::geometry::area(intersectionResult[i]);
       if (!testArea || newPolygon.empty()){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of intersection, result will not include this polygon, " << newPolygon);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of intersection, result will not include this polygon, " << newPolygon);
         continue;
       }else if (*testArea < tol*tol){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Intersection has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon);
         continue;
       }
       try{
         boost::geometry::detail::overlay::has_self_intersections(intersectionResult[i]);
       }catch(const boost::geometry::overlay_invalid_input_exception&){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection is self intersecting, result will not include this polygon, " << newPolygon);
+        LOG_FREE(Error, "utilities.geometry.intersect", "Intersection is self intersecting, result will not include this polygon, " << newPolygon);
         continue;
       }
       if (!intersectionResult[i].inners().empty()){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Intersection has inner loops, result will not include this polygon, " << newPolygon);
+        LOG_FREE(Error, "utilities.geometry.intersect", "Intersection has inner loops, result will not include this polygon, " << newPolygon);
         continue;
       };
 
@@ -601,16 +602,16 @@ namespace openstudio{
 
       testArea = boost::geometry::area(differenceResult1[i]);
       if (!testArea || newPolygon1.empty()){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon1);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon1);
         continue;
       }else if (*testArea < tol*tol){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Face difference has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon1);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Face difference has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon1);
         continue;
       }
       try{
         boost::geometry::detail::overlay::has_self_intersections(differenceResult1[i]);
       }catch(const boost::geometry::overlay_invalid_input_exception&){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Face difference is self intersecting, result will not include this polygon, " << newPolygon1);
+        LOG_FREE(Error, "utilities.geometry.intersect", "Face difference is self intersecting, result will not include this polygon, " << newPolygon1);
         continue;
       }
 
@@ -630,16 +631,16 @@ namespace openstudio{
 
       testArea = boost::geometry::area(differenceResult2[i]);
       if (!testArea || newPolygon2.empty()){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon2);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon2);
         continue;
       }else if (*testArea < tol*tol){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Face difference has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon2);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Face difference has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon2);
         continue;
       }
       try{
         boost::geometry::detail::overlay::has_self_intersections(differenceResult2[i]);
       }catch(const boost::geometry::overlay_invalid_input_exception&){
-        LOG_FREE(Info, "utilities.geometry.boostPolygonFromVertices", "Face difference is self intersecting, result will not include this polygon, " << newPolygon2);
+        LOG_FREE(Error, "utilities.geometry.intersect", "Face difference is self intersecting, result will not include this polygon, " << newPolygon2);
         continue;
       }
 
