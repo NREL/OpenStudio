@@ -296,15 +296,15 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_DOUBLE_EQ(0.976673863929532, userModel.heatGainPerPerson());
 
   std::string wpath = "test";
-  userModel.load(wpath);
+  userModel.load(openstudio::toPath(wpath));
   EXPECT_FALSE(userModel.valid());
-  userModel.setWeatherFilePath(wpath);
+  userModel.setWeatherFilePath(openstudio::toPath(wpath));
   EXPECT_EQ(userModel.weatherFilePath(), openstudio::toPath(wpath));
   userModel.loadWeather();
   EXPECT_FALSE(userModel.valid());
 
   path p = resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO");
-  userModel.load(openstudio::toString(p));
+  userModel.load(p);
 
   EXPECT_DOUBLE_EQ(0.9, userModel.terrainClass());
   EXPECT_DOUBLE_EQ(10000.0, userModel.floorArea());

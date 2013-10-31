@@ -33,10 +33,9 @@ namespace isomodel {
 class SolarRadiation
 {
   public:
-    SolarRadiation(const TimeFrame &frame, const EpwData &wdata, double tilt=PI);
+    SolarRadiation(const TimeFrame &frame, const EpwData &wdata, double tilt=3.141592653589);
     ~SolarRadiation(void);
 
-    static const double PI = 3.141592653589;//3.1415926535897932384626433832795028841971693993751058209 
     static const int NUM_SURFACES = 8;
     static const int MONTHS = 12;
     static const int HOURS = 24;

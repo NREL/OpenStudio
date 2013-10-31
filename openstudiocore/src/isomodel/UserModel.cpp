@@ -554,7 +554,7 @@ namespace isomodel {
     } else if(attributeName == "heatingunoccupiedsetpoint"){//weatherFilePath
       setHeatingUnoccupiedSetpoint(atof(attributeValue));
     } else if(attributeName == "weatherfilepath"){//weatherFilePath
-      setWeatherFilePath(linesplit[1]);
+      setWeatherFilePath(openstudio::toPath(linesplit[1]));
     } else if(boost::starts_with(attributeName.c_str(),"window") || 
               boost::starts_with(attributeName.c_str(),"wall") ) {
       parseStructure(attributeName,attributeValue);//avoid max nested ifs.  Might be better to change to a map eventually

@@ -1,5 +1,7 @@
 #include <isomodel/SolarRadiation.hpp>
 
+#define PI 3.141592653589
+
 namespace openstudio {
 namespace isomodel {
   /**

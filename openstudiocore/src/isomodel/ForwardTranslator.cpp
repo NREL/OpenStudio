@@ -148,6 +148,7 @@
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 
+#include <math.h>
 
 namespace openstudio {
 namespace isomodel {
@@ -1230,7 +1231,11 @@ namespace isomodel {
           // if the U value is !NaN add in the U value and area for weighting;
           // keep a separate area sum for wall U in case there are some segments with undefined U values
           // we don't want them to be averaged in
+#ifdef _MSC_VER
+          if (!_isnan(wallU)) {
+#else
           if (!isnan(wallU)) {
+#endif
             wall_U_area[i] += s.netArea();
             wall_U_sum[i] += wallU * s.netArea();
           }
@@ -1238,7 +1243,11 @@ namespace isomodel {
           BOOST_FOREACH(const openstudio::model::SubSurface &ss, subsurface) {
             double windowU = const_U[ss.construction().get().name().get()];
             double windowSHGC = const_SHGC[ss.construction().get().name().get()];
+#ifdef _MSC_VER
+            if (!_isnan(windowU)) {
+#else
             if (!isnan(windowU)) {
+#endif
               window_U_area[i] += ss.surface().get().netArea();
               window_U_sum[i] += windowU * ss.surface().get().netArea();
               window_SHGC_sum[i] += windowSHGC * ss.surface().get().netArea();

@@ -36,111 +36,111 @@ void testGenericFunctions() {
     vTest2[i] = 11-i;
   }
   for(unsigned int i = 0;i<12;i++){
-    EXPECT_FLOAT_EQ(i, test[i]);
-    EXPECT_FLOAT_EQ(i, vTest[i]);
-    EXPECT_FLOAT_EQ(11 - i, vTest2[i]);
+    EXPECT_DOUBLE_EQ(i, test[i]);
+    EXPECT_DOUBLE_EQ(i, vTest[i]);
+    EXPECT_DOUBLE_EQ(11 - i, vTest2[i]);
   }
 
 
   Vector results = mult(test,scalar,12);
   for(unsigned int i = 0;i<12;i++){
-    EXPECT_FLOAT_EQ(i*scalar, results[i]);
+    EXPECT_DOUBLE_EQ(i*scalar, results[i]);
   }
 
   results = mult(vTest, scalar);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i * scalar, results[i]);
+    EXPECT_DOUBLE_EQ(i * scalar, results[i]);
   }
 
   results = mult(vTest, test);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i * i, results[i]);
+    EXPECT_DOUBLE_EQ(i * i, results[i]);
   }
 
   results = mult(vTest, vTest);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i * i, results[i]);
+    EXPECT_DOUBLE_EQ(i * i, results[i]);
   }
 
   results = div(vTest, scalar);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i / scalar, results[i]);
+    EXPECT_DOUBLE_EQ(i / scalar, results[i]);
   }
 
   results = div(scalar, vTest);
-  EXPECT_FLOAT_EQ(std::numeric_limits<double>::max(), results[0]);
+  EXPECT_DOUBLE_EQ(std::numeric_limits<double>::max(), results[0]);
   for(unsigned int i = 1;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(scalar / i, results[i]);
+    EXPECT_DOUBLE_EQ(scalar / i, results[i]);
   }
 
   results = div(vTest, vTest);
-  EXPECT_FLOAT_EQ(std::numeric_limits<double>::max(), results[0]);  //0 / 0
+  EXPECT_DOUBLE_EQ(std::numeric_limits<double>::max(), results[0]);  //0 / 0
   for(unsigned int i = 1;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(1, results[i]);
+    EXPECT_DOUBLE_EQ(1, results[i]);
   }
 
   results = sum(vTest, vTest);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i + i, results[i]);
+    EXPECT_DOUBLE_EQ(i + i, results[i]);
   }
 
   results = sum(vTest, scalar);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i + scalar, results[i]);
+    EXPECT_DOUBLE_EQ(i + scalar, results[i]);
   }
 
   results = dif(vTest, vTest);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(0, results[i]);
+    EXPECT_DOUBLE_EQ(0, results[i]);
   }
 
   results = dif(vTest, scalar);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i - scalar, results[i]);
+    EXPECT_DOUBLE_EQ(i - scalar, results[i]);
   }
 
   results = dif(scalar, vTest);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(scalar - i, results[i]);
+    EXPECT_DOUBLE_EQ(scalar - i, results[i]);
   }
 
-  EXPECT_FLOAT_EQ(11, openstudio::isomodel::maximum(vTest));
+  EXPECT_DOUBLE_EQ(11, openstudio::isomodel::maximum(vTest));
 
   results = maximum(vTest,vTest2);
-  EXPECT_FLOAT_EQ(11, results[0]);
-  EXPECT_FLOAT_EQ(10, results[1]);
-  EXPECT_FLOAT_EQ(9, results[2]);
-  EXPECT_FLOAT_EQ(8, results[3]);
-  EXPECT_FLOAT_EQ(7, results[4]);
-  EXPECT_FLOAT_EQ(6, results[5]);
-  EXPECT_FLOAT_EQ(6, results[6]);
-  EXPECT_FLOAT_EQ(7, results[7]);
-  EXPECT_FLOAT_EQ(8, results[8]);
-  EXPECT_FLOAT_EQ(9, results[9]);
-  EXPECT_FLOAT_EQ(10, results[10]);
-  EXPECT_FLOAT_EQ(11, results[11]);
+  EXPECT_DOUBLE_EQ(11, results[0]);
+  EXPECT_DOUBLE_EQ(10, results[1]);
+  EXPECT_DOUBLE_EQ(9, results[2]);
+  EXPECT_DOUBLE_EQ(8, results[3]);
+  EXPECT_DOUBLE_EQ(7, results[4]);
+  EXPECT_DOUBLE_EQ(6, results[5]);
+  EXPECT_DOUBLE_EQ(6, results[6]);
+  EXPECT_DOUBLE_EQ(7, results[7]);
+  EXPECT_DOUBLE_EQ(8, results[8]);
+  EXPECT_DOUBLE_EQ(9, results[9]);
+  EXPECT_DOUBLE_EQ(10, results[10]);
+  EXPECT_DOUBLE_EQ(11, results[11]);
 
   for(unsigned int i = 0;i<12;i++){
-    EXPECT_FLOAT_EQ(11-i, vTest2[i]);
+    EXPECT_DOUBLE_EQ(11-i, vTest2[i]);
   }
 
   results = maximum(vTest2,10);
-  EXPECT_FLOAT_EQ(11, results[0]);  
+  EXPECT_DOUBLE_EQ(11, results[0]);  
   for(unsigned int i = 1;i<vTest2.size();i++){
-    EXPECT_FLOAT_EQ(10, results[i]);
+    EXPECT_DOUBLE_EQ(10, results[i]);
   }
   
-  EXPECT_FLOAT_EQ(0, openstudio::isomodel::minimum(vTest));
+  EXPECT_DOUBLE_EQ(0, openstudio::isomodel::minimum(vTest));
 
   results = minimum(vTest,1);
-  EXPECT_FLOAT_EQ(0, results[0]);  
+  EXPECT_DOUBLE_EQ(0, results[0]);  
   for(unsigned int i = 1;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(1, results[i]);
+    EXPECT_DOUBLE_EQ(1, results[i]);
   }
   
   results = pow(vTest, 3);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i*i*i, results[i]);
+    EXPECT_DOUBLE_EQ(i*i*i, results[i]);
   }
   for(unsigned int i = 0;i<vTest.size();i++){
     if(i%2==0){
@@ -149,7 +149,7 @@ void testGenericFunctions() {
   }
   results = abs(vTest);
   for(unsigned int i = 0;i<vTest.size();i++){
-    EXPECT_FLOAT_EQ(i, results[i]);
+    EXPECT_DOUBLE_EQ(i, results[i]);
   }
   
 }
@@ -157,167 +157,167 @@ TEST_F(ISOModelFixture, SimModel)
 {
   //testGenericFunctions();
   UserModel userModel;
-  userModel.load(openstudio::toString(resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO")));
+  userModel.load(resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO"));
   ASSERT_TRUE(userModel.valid());
   SimModel simModel = userModel.toSimModel();    
   ISOResults results = simModel.simulate();
 
 
 
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating) );
 
-  EXPECT_FLOAT_EQ(0.36744371, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0.51868165, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(1.4083508, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(2.53188, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(3.871367, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(4.72489, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(5.4349747, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(4.9080629, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(4.0284138, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(2.6423416, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(1.2818958, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0.42217639, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0.36744371, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0.51868165, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(1.4083508, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(2.53188, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(3.871367, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(4.72489, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(5.4349747, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(4.9080629, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(4.0284138, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(2.6423416, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(1.2818958, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0.42217639, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Cooling) );
 
-  EXPECT_FLOAT_EQ(3.0435906070795506, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(2.7490495805879811, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(3.0435906070795506, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(2.9454102649156932, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(3.0435906070795506, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(2.9454102649156932, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(3.0435906070795506, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(3.0435906070795506, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(2.9454102649156932, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(3.0435906070795506, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(2.9454102649156932, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
-  EXPECT_FLOAT_EQ(3.0435906070795506, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(3.0435906070795506, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(2.7490495805879811, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(3.0435906070795506, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(2.9454102649156932, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(3.0435906070795506, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(2.9454102649156932, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(3.0435906070795506, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(3.0435906070795506, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(2.9454102649156932, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(3.0435906070795506, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(2.9454102649156932, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
+  EXPECT_DOUBLE_EQ(3.0435906070795506, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorLights) );
 
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::ExteriorLights) );
 
-  EXPECT_FLOAT_EQ(0.64119232, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(0.607613, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(1.2356, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(2.1882925, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(3.3453131, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(4.0828538, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(4.69645, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(4.241137, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(3.4810178, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(2.2835732, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(1.1244149, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
-  EXPECT_FLOAT_EQ(0.612102, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(0.64119232, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(0.607613, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(1.2356, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(2.1882925, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(3.3453131, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(4.0828538, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(4.69645, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(4.241137, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(3.4810178, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(2.2835732, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(1.1244149, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
+  EXPECT_DOUBLE_EQ(0.612102, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Fans) );
 
-  EXPECT_FLOAT_EQ(0.098404549, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.093251117, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.189629, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.33584, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.513409, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.62660044, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.72077, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.65089232, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.534236, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.35046268, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.1725653, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
-  EXPECT_FLOAT_EQ(0.09394, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.098404549, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.093251117, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.189629, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.33584, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.513409, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.62660044, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.72077, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.65089232, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.534236, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.35046268, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.1725653, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
+  EXPECT_DOUBLE_EQ(0.09394, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Pumps) );
 
-  EXPECT_FLOAT_EQ(2.7583969507693009, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.4914553103722721, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.7583969507693009, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.6694164039702915, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.7583969507693009, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.6694164039702915, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.7583969507693009, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.7583969507693009, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.6694164039702915, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.7583969507693009, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.6694164039702915, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(2.7583969507693009, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.7583969507693009, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.4914553103722721, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.7583969507693009, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.6694164039702915, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.7583969507693009, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.6694164039702915, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.7583969507693009, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.7583969507693009, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.6694164039702915, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.7583969507693009, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.6694164039702915, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(2.7583969507693009, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::InteriorEquipment) );
 
-  EXPECT_FLOAT_EQ(1.7558308, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0.864749, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0.1010109, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0.0024648751, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(1.1604937e-05, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(1.8852372e-10, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(-1.97373e-17, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(1.1834168e-11, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(2.6549264e-07, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0.0015348007, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(0.090634234, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
-  EXPECT_FLOAT_EQ(1.3414676, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(1.7558308, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0.864749, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0.1010109, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0.0024648751, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(1.1604937e-05, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(1.8852372e-10, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(-1.97373e-17, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(1.1834168e-11, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(2.6549264e-07, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0.0015348007, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(0.090634234, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
+  EXPECT_DOUBLE_EQ(1.3414676, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
 
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
 
 
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );
 
-  EXPECT_FLOAT_EQ(8.0840634632175608, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(7.3017347409706996, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(8.0840634632175608, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(7.8232872224686067, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(8.0840634632175608, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(7.8232872224686067, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(8.0840634632175608, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(8.0840634632175608, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(7.8232872224686067, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(8.0840634632175608, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(7.8232872224686067, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
-  EXPECT_FLOAT_EQ(8.0840634632175608, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(8.0840634632175608, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(7.3017347409706996, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(8.0840634632175608, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(7.8232872224686067, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(8.0840634632175608, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(7.8232872224686067, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(8.0840634632175608, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(8.0840634632175608, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(7.8232872224686067, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(8.0840634632175608, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(7.8232872224686067, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
+  EXPECT_DOUBLE_EQ(8.0840634632175608, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::InteriorEquipment) );
 
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
-  EXPECT_FLOAT_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[1].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[2].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[3].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[4].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[5].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[6].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[7].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[8].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[9].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
+  EXPECT_DOUBLE_EQ(0, results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::WaterSystems) );
 }

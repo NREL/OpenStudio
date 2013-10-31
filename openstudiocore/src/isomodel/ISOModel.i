@@ -30,6 +30,7 @@
 
 // #endif
 
+%ignore openstudio::isomodel::mult;
 
 %rename("terrainClass=") openstudio::isomodel::UserModel::setTerrainClass(double value);
 %rename("floorArea=") openstudio::isomodel::UserModel::setFloorArea(double value);
