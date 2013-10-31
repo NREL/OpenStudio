@@ -809,11 +809,6 @@ namespace detail {
       metadata["project_dir"] = toQString(options.projectDir);
     }
 
-    if (options.osServerView && hasProblem()) {
-      // this data is not read upon deserialization
-      metadata.unite(toServerDataPointsVariant().toMap());
-    }
-
     // create top-level of final file
     QVariantMap result;
     result["metadata"] = metadata;
@@ -957,38 +952,11 @@ namespace detail {
                      outputAttributes);
   }
 
-  QVariant DataPoint_Impl::toServerDataPointsVariant() const {
-    QVariantMap map;
-
-    map["uuid"] = toQString(removeBraces(uuid()));
-    map["version_uuid"] = toQString(removeBraces(uuid()));
-    map["name"] = toQString(name());
-    map["display_name"] = toQString(displayName());
-
-    QVariantList valuesList;
-    std::vector<QVariant> values = variableValues();
-    InputVariableVector variables = problem().variables();
-    unsigned n = values.size();
-    OS_ASSERT(variables.size() == n);
-    for (unsigned i = 0; i < n; ++i) {
-      QVariantMap valueMap;
-      valueMap["variable_index"] = i;
-      valueMap["variable_uuid"] = toQString(removeBraces(variables[i].uuid()));
-      valueMap["value"] = values[i];
-      valuesList.push_back(valueMap);
-    }
-    map["values"] = valuesList;
-
-    return QVariant(map);
-  }
-
 } // detail
 
 DataPointSerializationOptions::DataPointSerializationOptions(
-    const openstudio::path& t_projectDir,
-    bool t_osServerView)
-  : projectDir(t_projectDir),
-    osServerView(t_osServerView)
+    const openstudio::path& t_projectDir)
+  : projectDir(t_projectDir)
 {}
 
 DataPoint::DataPoint(const Problem& problem,
