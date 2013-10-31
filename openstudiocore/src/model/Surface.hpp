@@ -35,6 +35,8 @@ namespace detail {
 
 } // detail
 
+class SurfaceIntersection;
+
 /** Surface is a PlanarSurface that wraps the OpenStudio IDD object 'OS_Surface'. */
 class MODEL_API Surface : public PlanarSurface {
  public:
@@ -149,6 +151,7 @@ class MODEL_API Surface : public PlanarSurface {
    *  If the surfaces are the same, returns true but no new geometry is created.
    *  Returns true if an intersection occurred. Does not set surface adjacency. */
   bool intersect(Surface& otherSurface);
+  boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
 
   /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.  
       Returns the new Surface if created. */
@@ -205,6 +208,7 @@ class MODEL_API Surface : public PlanarSurface {
   friend class Model;
   friend class openstudio::detail::IdfObject_Impl;
   friend class openstudio::IdfObject;
+  friend class openstudio::model::detail::Surface_Impl;
 
   explicit Surface(boost::shared_ptr<detail::Surface_Impl> impl);
 
@@ -219,6 +223,36 @@ typedef boost::optional<Surface> OptionalSurface;
 
 /** \relates Surface*/
 typedef std::vector<Surface> SurfaceVector;
+
+/** SurfaceIntersection contains detailed information about a surface intersection. */
+class MODEL_API SurfaceIntersection {
+public:
+  SurfaceIntersection(const Surface& surface1, 
+                      const Surface& surface2,
+                      const std::vector<Surface>& newSurfaces1, 
+                      const std::vector<Surface>& newSurfaces2);
+
+  // first surface post intersection
+  Surface surface1() const;
+
+  // second surface post intersection
+  Surface surface2() const;
+
+  // new surfaces generated in the first surface's space
+  std::vector<Surface> newSurfaces1() const;
+
+  // new surfaces generated in the second surface's space
+  std::vector<Surface> newSurfaces2() const;
+
+private:
+  model::Surface m_surface1;
+  model::Surface m_surface2;
+  std::vector<Surface> m_newSurfaces1;
+  std::vector<Surface> m_newSurfaces2;
+};
+
+/** \relates SurfaceIntersection */
+MODEL_API std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceIntersection);
 
 } // model
 } // openstudio
