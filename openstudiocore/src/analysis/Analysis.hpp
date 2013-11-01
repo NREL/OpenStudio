@@ -73,11 +73,9 @@ OPENSTUDIO_ENUM(AnalysisSerializationScope,
 struct ANALYSIS_API AnalysisSerializationOptions {
   openstudio::path projectDir;
   AnalysisSerializationScope scope;
-  bool osServerView;
 
   AnalysisSerializationOptions(const openstudio::path& t_projectDir=openstudio::path(),
-                               const AnalysisSerializationScope& t_scope=AnalysisSerializationScope::ProblemFormulation,
-                               bool t_osServerView=true);
+                               const AnalysisSerializationScope& t_scope=AnalysisSerializationScope::ProblemFormulation);
 };
 
 /** Analysis is a AnalysisObject that contains an entire analysis. It is constructed from a
