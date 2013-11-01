@@ -75,7 +75,7 @@ namespace isomodel {
       std::stringstream ss;
       for(int s = 0;s<NUM_SURFACES;s++)
       {
-        double SurfaceSolarAzimuth = abs(SolarAzimuth - (SurfaceAzimuths[s]*(PI/180.0)));//surface - solar azimuth in degrees, >pi/2 means surface is in shade
+        double SurfaceSolarAzimuth = ::fabs(SolarAzimuth - (SurfaceAzimuths[s]*(PI/180.0)));//surface - solar azimuth in degrees, >pi/2 means surface is in shade
 
         double AngleOfIncidence = acos(cos(SolarAltitudeAngles) * cos(SurfaceSolarAzimuth) * sin(m_surfaceTilt) + sin(SolarAltitudeAngles) * cos(m_surfaceTilt)); //ancle of incidence of sun's rays on surface in rad
         
@@ -86,7 +86,7 @@ namespace isomodel {
         double DiffuseComponent= (m_surfaceTilt>PI/2) ? vecED[i] * DiffuseRadiation * sin(m_surfaceTilt) : vecED[i] * (DiffuseRadiation * sin(m_surfaceTilt)+cos(m_surfaceTilt));
 
         vecEGI[s] = DirectBeam + DiffuseComponent + GroundReflected;  // add up all the components
-        ss << s << " " << vecEB[i] << SurfaceSolarAzimuth << " " << AngleOfIncidence << " " << DirectBeam << " " << DiffuseRadiation << " " << DiffuseComponent << vecEGI[s] << " ";
+        ss << s << " " << vecEB[i] << " " << SurfaceSolarAzimuth << " " << AngleOfIncidence << " " << DirectBeam << " " << DiffuseRadiation << " " << DiffuseComponent << vecEGI[s] << " ";
       }
 
       LOG(Trace, "SurfaceRadDetail " << ss.str());
