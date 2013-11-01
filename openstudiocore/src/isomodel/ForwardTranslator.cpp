@@ -805,14 +805,15 @@ namespace isomodel {
     double unoccupied_hours = 8760-occupied_hours;
 
     // gets all the schedule for each day of the year in one array
-    std::vector<openstudio::model::ScheduleDay> daySchedules = schedule.getDaySchedules(startDate, endDate);
-
+    
     BOOST_FOREACH(const openstudio::model::ScheduleRuleset &schedule, schedule_rulesets) {
       double occupied_sum=0;
       double unoccupied_sum=0;
 
       // get the day of the week of the starting day of the schedule and subtract 1 from it because we increment before we compare
       int day_of_week = startDate.dayOfWeek().value() - 1;
+
+      std::vector<openstudio::model::ScheduleDay> daySchedules = schedule.getDaySchedules(startDate, endDate);
 
       // loop over the schedule for each day of the year
       BOOST_FOREACH(const openstudio::model::ScheduleDay &daySchedule, daySchedules) {
