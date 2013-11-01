@@ -615,10 +615,8 @@ namespace isomodel {
         return boost::shared_ptr<WeatherData>();
       }
     }
-    string line;
     EpwData edata(weatherFilename);
 
-    int state = 0, row=0;
     Matrix _msolar(12,8,0);
     Matrix _mhdbt(12,24,0);
     Matrix _mhEgh(12,24,0);
@@ -626,50 +624,7 @@ namespace isomodel {
     Vector _mdbt(12);
     Vector _mwind(12);
 
-    std::stringstream inputFile(edata.toISOData());
-
-    while (inputFile.good()) {
-      getline (inputFile,line);
-      if(line.size() > 0 && line[0] == '#')
-        continue;
-      linesplit = stringSplit(line, ',', true);
-      if(linesplit.size() == 0) {
-        continue;
-      } else if(linesplit.size() == 1) {
-        state = weatherState(linesplit[0]);
-        row=0;
-      } else if(row<12) {
-        switch(state){
-          case 1://solar = [12 x 8] mean monthly total solar radiation (W/m2) on a vertical surface for each of the 8 cardinal directions
-            for(unsigned int c = 1;c<linesplit.size() && c<9;c++) {
-              _msolar(row,c-1) = atof(linesplit[c].c_str());
-            }
-            break;
-          case 2://hdbt = [12 x 24] mean monthly dry bulb temp for each of the 24 hours of the day (C)
-            for(unsigned int c = 1;c<linesplit.size() && c<25;c++) {
-              _mhdbt(row,c-1) = atof(linesplit[c].c_str());
-            }
-            break;
-          case 3://hEgh =[12 x 24] mean monthly Global Horizontal Radiation for each of the 24 hours of the day (W/m2)
-            for(unsigned int c = 1;c<linesplit.size() && c<25;c++) {
-              _mhEgh(row,c-1) = atof(linesplit[c].c_str());
-            }
-            break;
-          case 4://megh = [12 x 1] mean monthly Global Horizontal Radiation (W/m2)
-            _mEgh[row] = atof(linesplit[1].c_str());
-            break;
-          case 5://mdbt = [12 x 1] mean monthly dry bulb temp (C)
-            _mdbt[row] = atof(linesplit[1].c_str());
-            break;
-          case 6://mwind = [12 x 1] mean monthly wind speed; (m/s) 
-            _mwind[row] = atof(linesplit[1].c_str());
-            break;
-          default:
-            break;
-        }
-        row++;
-      }
-    }
+    edata.toISOData(_msolar, _mhdbt, _mhEgh, _mEgh, _mdbt, _mwind);
 
     boost::shared_ptr<WeatherData> wdata(new WeatherData);
     wdata->setMdbt(_mdbt);

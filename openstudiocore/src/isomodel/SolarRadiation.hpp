@@ -24,7 +24,7 @@
 #include <vector>
 #include <isomodel/TimeFrame.hpp>
 #include <isomodel/EpwData.hpp>
-
+#include <utilities/core/Logger.hpp>
 
 namespace openstudio {
 namespace isomodel {
@@ -83,6 +83,8 @@ class SolarRadiation
     std::vector<std::vector<double> > m_hourlyDewPointTemp;
     std::vector<std::vector<double> > m_hourlyGlobalHorizontalRadiation;
 
+  private:
+    REGISTER_LOGGER("openstudio.isomodel.SolarRadiation");
 
 };
 
