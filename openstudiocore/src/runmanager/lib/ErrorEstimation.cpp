@@ -34,6 +34,20 @@ namespace openstudio {
       return sum / m_uses.size();
     }
 
+    double FuelUses::sum() const
+    {
+      double s = 0;
+      for (std::map<openstudio::FuelType, double>::const_iterator itr = m_uses.begin();
+          itr != m_uses.end();
+          ++itr)
+      {
+        s += itr->second;
+      }
+
+      return s;
+    }
+
+
     double FuelUses::absoluteAverage() const
     {
       double sum = 0;
@@ -191,6 +205,17 @@ namespace openstudio {
       m_confidences[t_sourceName] = t_confidence;
     }
 
+
+    FuelUses ErrorEstimation::add(const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_isoResults, const std::string &t_sourceName, const std::vector<double> &t_variables)
+    {
+      return add(getUses(t_sourceName, t_userModel, t_isoResults), t_sourceName, t_variables);
+    }
+
+    FuelUses ErrorEstimation::add(const SqlFile &t_sql, const std::string &t_sourceName, const std::vector<double> &t_variables)
+    {
+      return add(getUses(t_sourceName, t_sql), t_sourceName, t_variables);
+    }
+
     /// adds the data of an SqlFile simulation result into the ErrorEstimation and returns the error corrected values
     /// 
     /// \param[in] t_sql The SqlFile to pull the year end summary data from
@@ -200,11 +225,9 @@ namespace openstudio {
     /// \param[in] t_singleVariableChange Did only one variable change for this data?
     ///
     /// \returns The error corrected values, or the input values if error correction was not possible
-    FuelUses ErrorEstimation::add(const SqlFile &t_sql, const std::string &t_sourceName, const std::vector<double> &t_variables)
+    FuelUses ErrorEstimation::add(FuelUses t_origUses, const std::string &t_sourceName, const std::vector<double> &t_variables)
     {
-      FuelUses origUses = getUses(t_sourceName, t_sql);
-
-      std::map<openstudio::FuelType, double> data = origUses.data();
+      std::map<openstudio::FuelType, double> data = t_origUses.data();
 
       for (std::map<openstudio::FuelType, double>::const_iterator itr = data.begin();
            itr != data.end();
@@ -218,9 +241,9 @@ namespace openstudio {
       FuelUses error = getError(t_sourceName, t_variables);
 
       double avgerror = error.absoluteAverage();
-      double avgorig = origUses.average();
+      double avgorig = t_origUses.average();
 
-      double newConfidence = avgorig>0?std::min(1.0, std::max(1.0  - (avgerror / avgorig), 0.0)):origUses.confidence();
+      double newConfidence = avgorig>0?std::min(1.0, std::max(1.0  - (avgerror / avgorig), 0.0)):t_origUses.confidence();
 
 
       // new confidence reflect how much error is being applied. 1 means no error, 0 means 100% error (that's bad);
@@ -232,17 +255,17 @@ namespace openstudio {
       {
         // don't let it sink to 0, that really hurts our averages
         LOG(Debug, "Updating source confidence " << t_sourceName << " from: " << m_confidences[t_sourceName] << " to " << newConfidence);
-        LOG(Trace, "Updating source confidence " << t_sourceName << " avgorig " << avgorig << " avgerror " << avgerror << " origUses.confidence " << origUses.confidence());
+        LOG(Trace, "Updating source confidence " << t_sourceName << " avgorig " << avgorig << " avgerror " << avgerror << " origUses.confidence " << t_origUses.confidence());
         m_confidences[t_sourceName] = newConfidence;
       }
 
-      origUses += error;
+      t_origUses += error;
 
       // Now that the error has been applied, we're going to average the confidence we've calculated with the 
       // confidence from the error
-      origUses.setConfidence((newConfidence + error.confidence()) / 2);
+      t_origUses.setConfidence((newConfidence + error.confidence()) / 2);
 
-      return origUses;
+      return t_origUses;
     }
 
     std::set<std::pair<double, std::string> > ErrorEstimation::getConfidences() const 
@@ -434,6 +457,46 @@ namespace openstudio {
       }
 
       return itr->second;
+    }
+
+    FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results) const
+    {
+      std::map<std::string, double>::const_iterator itr = m_confidences.find(t_sourceName);
+
+      if (itr == m_confidences.end())
+      {
+        throw std::runtime_error("Unknown source name, no registered confidence level");
+      }
+
+      FuelUses retval(itr->second);
+
+
+      std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
+
+
+      for (std::vector<EndUseFuelType>::const_iterator itr = fuelTypes.begin();
+           itr != fuelTypes.end();
+           ++itr)
+      {
+        double value = 0;
+        for (std::vector<EndUses>::const_iterator itr2 = t_results.monthlyResults.begin();
+             itr2 != t_results.monthlyResults.end();
+             ++itr2)
+        {
+          value += itr2->getEndUseByFuelType(*itr);
+        }
+        LOG(Debug, "Read fuel use of " << value << " For " << itr->valueName());
+
+        try {
+          // the fuel uses in this case seem to be stored in kWh/m2
+          FuelUse fuse(openstudio::FuelType(itr->valueName()), value * 3600000 * t_userModel.floorArea(), *openstudio::createUnit("J"));
+          retval += fuse;
+        } catch (const std::exception &e) {
+          LOG(Error, "Unmatched fuel type " << e.what());
+        }
+      }
+
+      return retval;
     }
 
     FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const SqlFile &t_sql) const
