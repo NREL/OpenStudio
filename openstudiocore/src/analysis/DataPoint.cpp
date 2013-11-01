@@ -801,12 +801,9 @@ namespace detail {
   }
 
   QVariant DataPoint_Impl::toTopLevelVariant(const DataPointSerializationOptions& options) const {
-    QVariant dataPointData = this->toVariant();
+    QVariantMap dataPointData = this->toVariant().toMap();
 
-    // optional project_dir to be extracted by AnalysisObject loader
-    if (!options.projectDir.empty()) {
-      dataPointData["project_dir"] = toQString(options.projectDir);
-    }
+    dataPointData["run_priority"] = options.runPriority;
 
     // create top-level of final file
     QVariantMap result = jsonMetadata().toMap(); // openstudio_version
@@ -952,9 +949,10 @@ namespace detail {
 
 } // detail
 
-DataPointSerializationOptions::DataPointSerializationOptions(
-    const openstudio::path& t_projectDir)
-  : projectDir(t_projectDir)
+DataPointSerializationOptions::DataPointSerializationOptions(int t_runPriority,
+                                                             bool t_incrementRunPriority)
+  : runPriority(t_runPriority),
+    incrementRunPriority(t_incrementRunPriority)
 {}
 
 DataPoint::DataPoint(const Problem& problem,
@@ -1287,6 +1285,69 @@ void DataPoint::setResponseValues(const std::vector<double> values) {
 
 void DataPoint::setProblem(const Problem& problem) {
   getImpl<detail::DataPoint_Impl>()->setProblem(problem);
+}
+
+bool saveJSON(const std::vector<DataPoint>& dataPoints,
+              const openstudio::path& p,
+              const DataPointSerializationOptions& options,
+              bool overwrite)
+{
+  QVariant json = detail::toTopLevelVariant(dataPoints,options);
+  return openstudio::saveJSON(json,p,overwrite);
+}
+
+std::string toJSON(const std::vector<DataPoint>& dataPoints,
+                   const DataPointSerializationOptions& options) 
+{
+  QVariant json = detail::toTopLevelVariant(dataPoints,options);
+  return openstudio::toJSON(json);
+}
+
+std::ostream& toJSON(const std::vector<DataPoint>& dataPoints,
+                     std::ostream& os,
+                     const DataPointSerializationOptions& options)
+{
+  os << toJSON(dataPoints,options);
+  return os;
+}
+
+std::vector<DataPoint> toDataPointVector(const openstudio::path& jsonFilepath) {
+  // HERE
+}
+
+std::vector<DataPoint> toDataPointVector(const std::string& json) {
+  // HERE
+}
+
+std::vector<DataPoint> toDataPointVector(std::istream& json) {
+  // istream -> string code from
+  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
+  std::string contents;
+  json.seekg(0, std::ios::end);
+  contents.resize(json.tellg());
+  json.seekg(0, std::ios::beg);
+  json.read(&contents[0], contents.size());
+  return loadJSON(contents);
+}
+
+namespace detail {
+  QVariant toTopLevelVariant(const std::vector<DataPoint>& dataPoints,
+                             const DataPointSerializationOptions& options) 
+  {
+    QVariantList list;
+    int runPriority = options.runPriority;
+    BOOST_FOREACH(const DataPoint& dataPoint, dataPoints) {
+      QVariantMap dpm = dataPoint.toVariant().toMap();
+      dpm["run_priority"] = runPriority;
+      if (options.incrementRunPriority) {
+        ++runPriority;
+      }
+      list.push_back(dpm);
+    }
+    QVariantMap json = jsonMetadata().toMap();
+    json["data_points"] = QVariant(list);
+    return QVariant(json);
+  }
 }
 
 } // analysis

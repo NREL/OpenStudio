@@ -366,8 +366,8 @@ AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
     QVariantMap map = variant.toMap();
     QVariantMap objectMap;
     if (map.contains("data_point")) {
-      objectMap = map["data_point"].toMap();
-      result = detail::DataPoint_Impl::factoryFromVariant(objectMap,version,boost::none);
+      // leave objectMap blank, because it cannot contain project_dir
+      result = detail::DataPoint_Impl::factoryFromVariant(map["data_point"],version,boost::none);
     }
     else if (map.contains("analysis")) {
       objectMap = map["analysis"].toMap();
@@ -429,8 +429,8 @@ AnalysisJSONLoadResult loadJSON(const std::string& json) {
     QVariantMap map = variant.toMap();
     QVariantMap objectMap;
     if (map.contains("data_point")) {
-      objectMap = map["data_point"].toMap();
-      result = detail::DataPoint_Impl::factoryFromVariant(objectMap,version,boost::none);
+      // leave objectMap blank, because it cannot contain project_dir
+      result = detail::DataPoint_Impl::factoryFromVariant(map["data_point"],version,boost::none);
     }
     else if (map.contains("analysis")) {
       objectMap = map["analysis"].toMap();
