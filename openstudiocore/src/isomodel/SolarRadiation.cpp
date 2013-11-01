@@ -17,32 +17,18 @@ namespace isomodel {
       m_longitude(wdata.longitude()),
       m_latitude(wdata.latitude() * PI / 180.0), //convert latitute to radians
 
-      m_eglobe(TimeFrame::TIMESLICES),
+      m_eglobe(TimeFrame::TIMESLICES, std::vector<double>(NUM_SURFACES, 0)),
 
-      m_monthlyDryBulbTemp(MONTHS),
-      m_monthlyDewPointTemp(MONTHS),
-      m_monthlyRelativeHumidity(MONTHS),
-      m_monthlyWindspeed(MONTHS),
-      m_monthlyGlobalHorizontalRadiation(MONTHS),
-      m_monthlySolarRadiation(MONTHS),
-      m_hourlyDryBulbTemp(MONTHS),
-      m_hourlyDewPointTemp(MONTHS),
-      m_hourlyGlobalHorizontalRadiation(MONTHS)
+      m_monthlyDryBulbTemp(MONTHS, 0),
+      m_monthlyDewPointTemp(MONTHS, 0),
+      m_monthlyRelativeHumidity(MONTHS, 0),
+      m_monthlyWindspeed(MONTHS, 0),
+      m_monthlyGlobalHorizontalRadiation(MONTHS, 0),
+      m_monthlySolarRadiation(MONTHS, std::vector<double>(NUM_SURFACES,0)),
+      m_hourlyDryBulbTemp(MONTHS, std::vector<double>(HOURS, 0)),
+      m_hourlyDewPointTemp(MONTHS, std::vector<double>(HOURS, 0)),
+      m_hourlyGlobalHorizontalRadiation(MONTHS, std::vector<double>(HOURS, 0))
   {
-
-    for(int i = 0;i<MONTHS;i++){      
-      m_hourlyDryBulbTemp[i].resize(HOURS);
-      m_hourlyDewPointTemp[i].resize(HOURS);
-      m_hourlyGlobalHorizontalRadiation[i].resize(HOURS);
-    }
-
-    for(int i = 0;i<MONTHS;i++){      
-      m_monthlySolarRadiation[i].resize(NUM_SURFACES);
-    }
-
-    for(int i = 0;i<TimeFrame::TIMESLICES;i++){      
-      m_eglobe[i].resize(NUM_SURFACES);
-    }
 
   }
 
@@ -85,6 +71,7 @@ namespace isomodel {
 
       GroundReflected = (vecEB[i] * sin(SolarAltitudeAngles)+vecED[i]) * rhog * (1-cos(m_surfaceTilt))/2;  // ground reflected component
 
+      LOG(Trace, i << " " << Revolution << " " << EquationOfTime << " " << ApparentSolarTime << " " << SolarDeclination << " " << SolarHourAngles << " " << SolarAltitudeAngles << " " << SolarAzimuthSin << " " << SolarAzimuthCos << " " << SolarAzimuth << " " << GroundReflected);
       std::vector<double> &vecEGI = m_eglobe[i];
       //then compute the hourly radiation on each vertical surface given the solar azimuth for each hour
       for(int s = 0;s<NUM_SURFACES;s++)

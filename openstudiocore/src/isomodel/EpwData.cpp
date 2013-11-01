@@ -75,6 +75,39 @@ void EpwData::parseData(const std::string &line, size_t row)
   }	
 }
 
+void EpwData::toISOData(Matrix &_msolar, Matrix &_mhdbt, Matrix &_mhEgh, Vector &_mEgh, Vector &_mdbt, Vector &_mwind) const
+{
+  struct MakeMatrix {
+    static Matrix makeMatrix(const std::vector<std::vector<double> > &t_matrix)
+    {
+      size_t height = t_matrix.size();
+      size_t width = t_matrix.at(0).size();
+
+      Matrix ret(t_matrix.size(), t_matrix.at(0).size());
+
+      for (size_t i = 0; i < height; ++i)
+      {
+        for (size_t j = 0; j < width; ++j)
+        {
+          ret(i, j) = t_matrix.at(i).at(j);
+        }
+      }
+
+      return ret;
+    }
+  };
+
+  TimeFrame frames;
+  SolarRadiation pos(frames, *this);
+  pos.Calculate();
+  _msolar = MakeMatrix::makeMatrix(pos.monthlySolarRadiation());
+  _mhdbt = MakeMatrix::makeMatrix(pos.hourlyDryBulbTemp());
+  _mhEgh = MakeMatrix::makeMatrix(pos.hourlyGlobalHorizontalRadiation());
+  _mEgh = openstudio::createVector(pos.monthlyGlobalHorizontalRadiation());
+  _mdbt = openstudio::createVector(pos.monthlyDryBulbTemp());
+  _mwind = openstudio::createVector(pos.monthlyWindspeed());
+}
+
 std::string EpwData::toISOData() const {
   TimeFrame frames;
   SolarRadiation pos(frames, *this);

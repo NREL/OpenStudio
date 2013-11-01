@@ -26,6 +26,8 @@
 #include <sstream>
 #include "TimeFrame.hpp"
 #include <utilities/core/Path.hpp>
+#include <utilities/data/Matrix.hpp>
+#include <utilities/data/Vector.hpp>
 
 namespace openstudio {
 namespace isomodel {
@@ -52,6 +54,7 @@ class EpwData
     std::vector< std::vector<double> > data() const {return m_data;}
 
     std::string toISOData() const;
+    void toISOData(Matrix &_msolar, Matrix &_mhdbt, Matrix &_mhEgh, Vector &_mEgh, Vector &_mdbt, Vector &_mwind) const;
 
   protected:
     void loadData(const openstudio::path &t_path);
