@@ -803,14 +803,13 @@ namespace detail {
   QVariant DataPoint_Impl::toTopLevelVariant(const DataPointSerializationOptions& options) const {
     QVariant dataPointData = this->toVariant();
 
-    QVariantMap metadata = jsonMetadata().toMap();
-
+    // optional project_dir to be extracted by AnalysisObject loader
     if (!options.projectDir.empty()) {
-      metadata["project_dir"] = toQString(options.projectDir);
+      dataPointData["project_dir"] = toQString(options.projectDir);
     }
 
     // create top-level of final file
-    QVariantMap result = metadata;
+    QVariantMap result = jsonMetadata().toMap(); // openstudio_version
     result["data_point"] = dataPointData;
 
     return result;

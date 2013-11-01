@@ -364,11 +364,14 @@ AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
     QVariant variant = openstudio::loadJSON(p);
     VersionString version = extractOpenStudioVersion(variant);
     QVariantMap map = variant.toMap();
+    QVariantMap objectMap;
     if (map.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(map["data_point"],version,boost::none);
+      objectMap = map["data_point"].toMap();
+      result = detail::DataPoint_Impl::factoryFromVariant(objectMap,version,boost::none);
     }
     else if (map.contains("analysis")) {
-      result = detail::Analysis_Impl::fromVariant(map["analysis"],version);
+      objectMap = map["analysis"].toMap();
+      result = detail::Analysis_Impl::fromVariant(objectMap,version);
     }
     else {
       LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
@@ -377,14 +380,16 @@ AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
     }
     OS_ASSERT(result);
     openstudio::path projectDir;
-    if (map.contains("metadata")) {
-      OS_ASSERT(version < VersionString("1.1.3"));
-      map = map["metadata"].toMap();
+    if (version < VersionString("1.1.2")) {
+      OS_ASSERT(map.contains("metadata"));
+      if (map["metadata"].toMap().contains("project_dir")) {
+        projectDir = toPath(map["metadata"].toMap()["project_dir"].toString());
+      }
     }
-    // HERE -- Go ahead and hide project_dir in analysis, data_point.
-    // Maybe do not populate data_point project_dirs by default? -- Look at SDP.rb
-    if (map.contains("project_dir")) {
-      projectDir = toPath(metadata["project_dir"].toString());
+    else {
+      if (objectMap.contains("project_dir")) {
+        projectDir = toPath(objectMap["project_dir"].toString());
+      }
     }
     return AnalysisJSONLoadResult(*result,projectDir,version);
   }
@@ -422,11 +427,14 @@ AnalysisJSONLoadResult loadJSON(const std::string& json) {
     QVariant variant = openstudio::loadJSON(json);
     VersionString version = extractOpenStudioVersion(variant);
     QVariantMap map = variant.toMap();
+    QVariantMap objectMap;
     if (map.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(map["data_point"],version,boost::none);
+      objectMap = map["data_point"].toMap();
+      result = detail::DataPoint_Impl::factoryFromVariant(objectMap,version,boost::none);
     }
     else if (map.contains("analysis")) {
-      result = detail::Analysis_Impl::fromVariant(map["analysis"],version);
+      objectMap = map["analysis"].toMap();
+      result = detail::Analysis_Impl::fromVariant(objectMap,version);
     }
     else {
       LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
@@ -434,12 +442,16 @@ AnalysisJSONLoadResult loadJSON(const std::string& json) {
     }
     OS_ASSERT(result);
     openstudio::path projectDir;
-    if (map.contains("metadata")) {
-      OS_ASSERT(version < VersionString("1.1.3"));
-      map = map["metadata"].toMap();
+    if (version < VersionString("1.1.2")) {
+      OS_ASSERT(map.contains("metadata"));
+      if (map["metadata"].toMap().contains("project_dir")) {
+        projectDir = toPath(map["metadata"].toMap()["project_dir"].toString());
+      }
     }
-    if (map.contains("project_dir")) {
-      projectDir = toPath(metadata["project_dir"].toString());
+    else {
+      if (objectMap.contains("project_dir")) {
+        projectDir = toPath(objectMap["project_dir"].toString());
+      }
     }
     return AnalysisJSONLoadResult(*result,projectDir,version);
   }

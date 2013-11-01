@@ -800,18 +800,17 @@ namespace detail {
       analysisData["data_points"] = QVariant(dataPointList);
     }
 
-    QVariantMap metadata = jsonMetadata().toMap();
-
-    if (!options.projectDir.empty()) {
-      metadata["project_dir"] = toQString(options.projectDir);
-    }
-
     // this data is not read upon deserialization
     QVariantMap serverView = problem().toServerFormulationVariant().toMap();
-    metadata.unite(serverView);
+    analysisData.unite(serverView);
+
+    // optional project_dir to be extracted by AnalysisObject loader
+    if (!options.projectDir.empty()) {
+      analysisData["project_dir"] = toQString(options.projectDir);
+    }
 
     // create top-level of final file
-    QVariantMap result = metadata;
+    QVariantMap result = jsonMetadata().toMap(); // openstudio_version
     result["analysis"] = QVariant(analysisData);
 
     return result;

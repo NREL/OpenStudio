@@ -127,10 +127,10 @@ VersionString extractOpenStudioVersion(const QVariant& variant) {
   
   OptionalVersionString version;
   if (topLevel.contains("openstudio_version")) {
-    version = VersionString(metadata["openstudio_version"].toString().toStdString());
+    version = VersionString(topLevel["openstudio_version"].toString().toStdString());
   }
   else if (topLevel.contains("version")) {
-    version = VersionString(metadata["version"].toString().toStdString());
+    version = VersionString(topLevel["version"].toString().toStdString());
   }
   else {
     LOG_FREE_AND_THROW("openstudio.core.Json","No version identifier found in QJSON variant.");
