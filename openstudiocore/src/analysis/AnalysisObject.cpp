@@ -377,8 +377,13 @@ AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
     }
     OS_ASSERT(result);
     openstudio::path projectDir;
-    QVariantMap metadata = map["metadata"].toMap();
-    if (metadata.contains("project_dir")) {
+    if (map.contains("metadata")) {
+      OS_ASSERT(version < VersionString("1.1.3"));
+      map = map["metadata"].toMap();
+    }
+    // HERE -- Go ahead and hide project_dir in analysis, data_point.
+    // Maybe do not populate data_point project_dirs by default? -- Look at SDP.rb
+    if (map.contains("project_dir")) {
       projectDir = toPath(metadata["project_dir"].toString());
     }
     return AnalysisJSONLoadResult(*result,projectDir,version);
@@ -429,8 +434,11 @@ AnalysisJSONLoadResult loadJSON(const std::string& json) {
     }
     OS_ASSERT(result);
     openstudio::path projectDir;
-    QVariantMap metadata = map["metadata"].toMap();
-    if (metadata.contains("project_dir")) {
+    if (map.contains("metadata")) {
+      OS_ASSERT(version < VersionString("1.1.3"));
+      map = map["metadata"].toMap();
+    }
+    if (map.contains("project_dir")) {
       projectDir = toPath(metadata["project_dir"].toString());
     }
     return AnalysisJSONLoadResult(*result,projectDir,version);

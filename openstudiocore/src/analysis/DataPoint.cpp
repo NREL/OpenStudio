@@ -815,8 +815,7 @@ namespace detail {
     }
 
     // create top-level of final file
-    QVariantMap result;
-    result["metadata"] = metadata;
+    QVariantMap result = metadata;
     result["data_point"] = dataPointData;
 
     return result;

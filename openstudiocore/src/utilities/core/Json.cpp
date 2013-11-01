@@ -120,14 +120,20 @@ QVariant loadJSON(const std::string& json) {
 }
 
 VersionString extractOpenStudioVersion(const QVariant& variant) {
-  QVariantMap metadata = variant.toMap()["metadata"].toMap();
+  QVariantMap topLevel = variant.toMap();
+  if (topLevel.contains("metadata")) {
+    topLevel = topLevel["metadata"].toMap();
+  }
   
   OptionalVersionString version;
-  if (metadata.contains("openstudio_version")) {
+  if (topLevel.contains("openstudio_version")) {
     version = VersionString(metadata["openstudio_version"].toString().toStdString());
   }
-  else {
+  else if (topLevel.contains("version")) {
     version = VersionString(metadata["version"].toString().toStdString());
+  }
+  else {
+    LOG_FREE_AND_THROW("openstudio.core.Json","No version identifier found in QJSON variant.");
   }
   OS_ASSERT(version);
   if (version.get() > VersionString(openStudioVersion())) {
