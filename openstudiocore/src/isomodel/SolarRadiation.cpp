@@ -46,10 +46,6 @@ namespace isomodel {
   void SolarRadiation::calculateSurfaceSolarRadiation()
   {
     double rhog = 0.14;//ground reflectivity coefficient
-    double GroundReflected=0,SolarAzimuthSin=0,SolarAzimuthCos=0,SolarAzimuth=0,
-           Revolution,EquationOfTime,ApparentSolarTime,SolarDeclination,SolarHourAngles,SolarAltitudeAngles;
-
-    double AngleOfIncidence,SurfaceSolarAzimuth,DirectBeam,DiffuseRadiation,DiffuseComponent;
 
     const std::vector< std::vector<double> > &data = m_weatherData.data();
     const std::vector<double> &vecEB = data[EB];
@@ -57,39 +53,43 @@ namespace isomodel {
     for(int i = 0;i< TimeFrame::TIMESLICES;i++)
     {
       // First compute the solar azimuth for each hour of the year for our location
-      Revolution = 2.0 * PI * (static_cast<double>(m_frame.YTD[i])-1.0) / 365.0;//should be .25? //calculation revolution angle around sun in radians
-      EquationOfTime = 2.2918 * (0.0075 + 0.1868 * cos(Revolution) - 3.2077 * sin(Revolution) - 1.4615 * cos(2 * Revolution) - 4.089 * sin(2 * Revolution));//equation of time??
-      ApparentSolarTime = m_frame.Hour[i] + EquationOfTime  / 60.0 + (m_longitude-m_localMeridian) / 15.0;  // Apparent Solar Time in hours
+      double Revolution = 2.0 * PI * (static_cast<double>(m_frame.YTD[i])-1.0) / 365.0;//should be .25? //calculation revolution angle around sun in radians
+      double EquationOfTime = 2.2918 * (0.0075 + 0.1868 * cos(Revolution) - 3.2077 * sin(Revolution) - 1.4615 * cos(2 * Revolution) - 4.089 * sin(2 * Revolution));//equation of time??
+      double ApparentSolarTime = m_frame.Hour[i] + EquationOfTime  / 60.0 + (m_longitude-m_localMeridian) / 15.0;  // Apparent Solar Time in hours
 
       //the following is a more accurate formula for declination as taken from - Duffie and Beckman P. 14
-      SolarDeclination =  0.006918-0.399913 * cos(Revolution) + 0.070257 * sin(Revolution) - 0.006758 * cos(2.0 * Revolution) + 0.00907 * sin(2.0 * Revolution)
+      double SolarDeclination =  0.006918-0.399913 * cos(Revolution) + 0.070257 * sin(Revolution) - 0.006758 * cos(2.0 * Revolution) + 0.00907 * sin(2.0 * Revolution)
         - 0.002679 * cos(3.0 * Revolution) + 0.00148 * sin(3.0 * Revolution);//solar declination in radians
-      SolarHourAngles = 15 * (ApparentSolarTime - 12) * PI / 180.0;//solar hour angle in radians
-      SolarAltitudeAngles = asin(cos(m_latitude) * cos(SolarDeclination) * cos(SolarHourAngles) + sin(m_latitude) * sin(SolarDeclination));//solar altitude angle in radians
+      double SolarHourAngles = 15 * (ApparentSolarTime - 12) * PI / 180.0;//solar hour angle in radians
+      double SolarAltitudeAngles = asin(cos(m_latitude) * cos(SolarDeclination) * cos(SolarHourAngles) + sin(m_latitude) * sin(SolarDeclination));//solar altitude angle in radians
 
-      SolarAzimuthSin = sin(SolarHourAngles) * cos(SolarDeclination) / cos(SolarAltitudeAngles);//sin of the solar azimuth
-      SolarAzimuthCos = (cos(SolarHourAngles) * cos(SolarDeclination) * sin(m_latitude) - sin(SolarDeclination) * cos(m_latitude)) / cos(SolarAltitudeAngles);//cosine of solar azimuth
-      SolarAzimuth = atan2(SolarAzimuthSin,SolarAzimuthCos);//compute solar azimuth in radians
+      double SolarAzimuthSin = sin(SolarHourAngles) * cos(SolarDeclination) / cos(SolarAltitudeAngles);//sin of the solar azimuth
+      double SolarAzimuthCos = (cos(SolarHourAngles) * cos(SolarDeclination) * sin(m_latitude) - sin(SolarDeclination) * cos(m_latitude)) / cos(SolarAltitudeAngles);//cosine of solar azimuth
+      double SolarAzimuth = atan2(SolarAzimuthSin,SolarAzimuthCos);//compute solar azimuth in radians
 
-      GroundReflected = (vecEB[i] * sin(SolarAltitudeAngles)+vecED[i]) * rhog * (1-cos(m_surfaceTilt))/2;  // ground reflected component
+      double GroundReflected = (vecEB[i] * sin(SolarAltitudeAngles)+vecED[i]) * rhog * (1-cos(m_surfaceTilt))/2;  // ground reflected component
 
-      LOG(Trace, i << " " << Revolution << " " << EquationOfTime << " " << ApparentSolarTime << " " << SolarDeclination << " " << SolarHourAngles << " " << SolarAltitudeAngles << " " << SolarAzimuthSin << " " << SolarAzimuthCos << " " << SolarAzimuth << " " << GroundReflected);
+      LOG(Trace, "surfaceRad " << i << " " << Revolution << " " << EquationOfTime << " " << ApparentSolarTime << " " << SolarDeclination << " " << SolarHourAngles << " " << SolarAltitudeAngles << " " << SolarAzimuthSin << " " << SolarAzimuthCos << " " << SolarAzimuth << " " << GroundReflected);
       std::vector<double> &vecEGI = m_eglobe[i];
       //then compute the hourly radiation on each vertical surface given the solar azimuth for each hour
+      std::stringstream ss;
       for(int s = 0;s<NUM_SURFACES;s++)
       {
-        SurfaceSolarAzimuth = abs(SolarAzimuth - (SurfaceAzimuths[s]*(PI/180.0)));//surface - solar azimuth in degrees, >pi/2 means surface is in shade
+        double SurfaceSolarAzimuth = abs(SolarAzimuth - (SurfaceAzimuths[s]*(PI/180.0)));//surface - solar azimuth in degrees, >pi/2 means surface is in shade
 
-        AngleOfIncidence = acos(cos(SolarAltitudeAngles) * cos(SurfaceSolarAzimuth) * sin(m_surfaceTilt) + sin(SolarAltitudeAngles) * cos(m_surfaceTilt)); //ancle of incidence of sun's rays on surface in rad
+        double AngleOfIncidence = acos(cos(SolarAltitudeAngles) * cos(SurfaceSolarAzimuth) * sin(m_surfaceTilt) + sin(SolarAltitudeAngles) * cos(m_surfaceTilt)); //ancle of incidence of sun's rays on surface in rad
+        
+        double DirectBeam = vecEB[i] * std::max(cos(AngleOfIncidence), 0.0);//Beam component of radiation
 
-        DirectBeam = vecEB[i] * std::max(cos(AngleOfIncidence), 0.0);//Beam component of radiation
-
-        DiffuseRadiation = std::max(0.45, 0.55 + 0.437 * cos(AngleOfIncidence) + 0.313 * pow(cos(AngleOfIncidence), 2.0)); //Diffuse component of radiation 
+        double DiffuseRadiation = std::max(0.45, 0.55 + 0.437 * cos(AngleOfIncidence) + 0.313 * pow(cos(AngleOfIncidence), 2.0)); //Diffuse component of radiation 
         //diffuse component for sigma> pi/2 meaning it is a wall tilted outward, for sigma<= pi/2 meaning wall vertical or tilted inward
-        DiffuseComponent= (m_surfaceTilt>PI/2) ? vecED[i] * DiffuseRadiation * sin(m_surfaceTilt) : vecED[i] * (DiffuseRadiation * sin(m_surfaceTilt)+cos(m_surfaceTilt));
+        double DiffuseComponent= (m_surfaceTilt>PI/2) ? vecED[i] * DiffuseRadiation * sin(m_surfaceTilt) : vecED[i] * (DiffuseRadiation * sin(m_surfaceTilt)+cos(m_surfaceTilt));
 
         vecEGI[s] = DirectBeam + DiffuseComponent + GroundReflected;  // add up all the components
+        ss << s << " " << vecEB[i] << SurfaceSolarAzimuth << " " << AngleOfIncidence << " " << DirectBeam << " " << DiffuseRadiation << " " << DiffuseComponent << vecEGI[s] << " ";
       }
+
+      LOG(Trace, "SurfaceRadDetail " << ss.str());
     }
   }
   //average the data in the bins over the count or days
@@ -172,10 +172,13 @@ namespace isomodel {
       m_monthlyRelativeHumidity[midx]  += vecRH[i];
       m_monthlyGlobalHorizontalRadiation[midx] += vecEGH[i];
       m_monthlyWindspeed[midx]+= vecWSPD[i];
-
+      
+      std::stringstream ss;
       for(int s = 0;s<NUM_SURFACES;s++) {
         m_monthlySolarRadiation[midx][s] += m_eglobe[i][s];
+        ss << s << " " << m_monthlySolarRadiation[midx][s] << " " << m_eglobe[i][s] << " ";
       }
+      LOG(Trace, "solarRad / eglobe " << ss.str());
 
       h = m_frame.Hour[i]-1;
       m_hourlyDryBulbTemp[midx][h] += vecDBT[i];
