@@ -2565,13 +2565,13 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     {
       primaryAirFlow = unitToUnit(value,"cfm","m^3/s").get();
     }
+  }
 
-    value = priAirFlowMinElement.text().toDouble(&ok);
+  value = priAirFlowMinElement.text().toDouble(&ok);
 
-    if( ok )
-    {
-      primaryAirFlowMin = unitToUnit(value,"cfm","m^3/s").get();
-    }
+  if( ok )
+  {
+    primaryAirFlowMin = unitToUnit(value,"cfm","m^3/s").get();
   }
 
   QDomElement airSysElement = trmlUnitElement.parentNode().toElement();
@@ -2679,19 +2679,23 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       {
         terminal.setZoneMinimumAirFlowMethod("Constant");
 
-        terminal.setConstantMinimumAirFlowFraction(0.5);
+        terminal.setConstantMinimumAirFlowFraction(0.2);
+
+        terminal.setMaximumFlowFractionDuringReheat(0.5);
       }
       else
       {
         terminal.setZoneMinimumAirFlowMethod("Constant");
 
         terminal.setConstantMinimumAirFlowFraction(0.2);
+
+        terminal.setMaximumFlowFractionDuringReheat(0.2);
       }
     }
 
     QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
     value = htgAirFlowMaxElement.text().toDouble(&ok);
-    if( ok && primaryAirFlow )
+    if( ok && primaryAirFlow && primaryAirFlowMin )
     {
        value = unitToUnit(value,"cfm","m^3/s").get();
        double fraction = value / primaryAirFlow.get();
