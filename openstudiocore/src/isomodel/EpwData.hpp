@@ -51,7 +51,7 @@ class EpwData
     int timezone() const {return m_timezone;}
     double latitude() const {return m_latitude;}
     double longitude() const {return m_longitude;}
-    std::vector< std::vector<double> > data() const {return m_data;}
+    const std::vector< std::vector<double> > &data()  const {return m_data;}
 
     std::string toISOData() const;
     void toISOData(Matrix &_msolar, Matrix &_mhdbt, Matrix &_mhEgh, Vector &_mEgh, Vector &_mdbt, Vector &_mwind) const;

@@ -27,15 +27,15 @@ class Structure
   {
   public:
     double floorArea() const {return _floorArea;}
-    Vector wallArea() const {return _wallArea;}
-    Vector windowArea() const {return _windowArea;}
-    Vector wallUniform() const {return _wallUniform;}
-    Vector windowUniform() const {return _windowUniform;}
-    Vector wallThermalEmissivity() const {return _wallThermalEmissivity;}
-    Vector wallSolarAbsorbtion() const {return _wallSolarAbsorbtion;}
+    const Vector &wallArea() const {return _wallArea;}
+    const Vector &windowArea() const {return _windowArea;}
+    const Vector &wallUniform() const {return _wallUniform;}
+    const Vector &windowUniform() const {return _windowUniform;}
+    const Vector &wallThermalEmissivity() const {return _wallThermalEmissivity;}
+    const Vector &wallSolarAbsorbtion() const {return _wallSolarAbsorbtion;}
     double windowShadingDevice() const {return _windowShadingDevice;}
-    Vector windowNormalIncidenceSolarEnergyTransmittance() const {return _windowNormalIncidenceSolarEnergyTransmittance;}
-    Vector windowShadingCorrectionFactor() const {return _windowShadingCorrectionFactor;}
+    const Vector &windowNormalIncidenceSolarEnergyTransmittance() const {return _windowNormalIncidenceSolarEnergyTransmittance;}
+    const Vector &windowShadingCorrectionFactor() const {return _windowShadingCorrectionFactor;}
     double interiorHeatCapacity() const {return _interiorHeatCapacity;}
     double wallHeatCapacity() const {return _wallHeatCapacity;}
     double buildingHeight() const {return _buildingHeight;}

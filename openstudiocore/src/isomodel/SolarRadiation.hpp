@@ -43,17 +43,17 @@ class SolarRadiation
     void Calculate();
 
     //outputs
-    std::vector<std::vector<double> > eglobe() const {return m_eglobe;}//total solar radiation from direct beam, ground reflect and diffuse
+    const std::vector<std::vector<double> > &eglobe() const {return m_eglobe;}//total solar radiation from direct beam, ground reflect and diffuse
     //averages
-    std::vector<double> monthlyDryBulbTemp() const {return m_monthlyDryBulbTemp;}
-    std::vector<double> monthlyDewPointTemp() const {return m_monthlyDewPointTemp;}
-    std::vector<double> monthlyRelativeHumidity() const {return m_monthlyRelativeHumidity;}
-    std::vector<double> monthlyWindspeed() const {return m_monthlyWindspeed;}
-    std::vector<double> monthlyGlobalHorizontalRadiation() const {return m_monthlyGlobalHorizontalRadiation;}
-    std::vector<std::vector<double> > monthlySolarRadiation() const {return m_monthlySolarRadiation;}
-    std::vector<std::vector<double> > hourlyDryBulbTemp() const {return m_hourlyDryBulbTemp;}
-    std::vector<std::vector<double> > hourlyDewPointTemp() const {return m_hourlyDewPointTemp;}
-    std::vector<std::vector<double> > hourlyGlobalHorizontalRadiation() const {return m_hourlyGlobalHorizontalRadiation;}
+    const std::vector<double> &monthlyDryBulbTemp() const {return m_monthlyDryBulbTemp;}
+    const std::vector<double> &monthlyDewPointTemp() const {return m_monthlyDewPointTemp;}
+    const std::vector<double> &monthlyRelativeHumidity() const {return m_monthlyRelativeHumidity;}
+    const std::vector<double> &monthlyWindspeed() const {return m_monthlyWindspeed;}
+    const std::vector<double> &monthlyGlobalHorizontalRadiation() const {return m_monthlyGlobalHorizontalRadiation;}
+    const std::vector<std::vector<double> > &monthlySolarRadiation() const {return m_monthlySolarRadiation;}
+    const std::vector<std::vector<double> > &hourlyDryBulbTemp() const {return m_hourlyDryBulbTemp;}
+    const std::vector<std::vector<double> > &hourlyDewPointTemp() const {return m_hourlyDewPointTemp;}
+    const std::vector<std::vector<double> > &hourlyGlobalHorizontalRadiation() const {return m_hourlyGlobalHorizontalRadiation;}
 
   protected:
     openstudio::isomodel::TimeFrame m_frame;

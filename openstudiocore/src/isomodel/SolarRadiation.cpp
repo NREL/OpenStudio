@@ -69,10 +69,10 @@ namespace isomodel {
 
       double GroundReflected = (vecEB[i] * sin(SolarAltitudeAngles)+vecED[i]) * rhog * (1-cos(m_surfaceTilt))/2;  // ground reflected component
 
-      LOG(Trace, "surfaceRad " << i << " " << Revolution << " " << EquationOfTime << " " << ApparentSolarTime << " " << SolarDeclination << " " << SolarHourAngles << " " << SolarAltitudeAngles << " " << SolarAzimuthSin << " " << SolarAzimuthCos << " " << SolarAzimuth << " " << GroundReflected);
+      //LOG(Trace, "surfaceRad " << i << " " << Revolution << " " << EquationOfTime << " " << ApparentSolarTime << " " << SolarDeclination << " " << SolarHourAngles << " " << SolarAltitudeAngles << " " << SolarAzimuthSin << " " << SolarAzimuthCos << " " << SolarAzimuth << " " << GroundReflected);
       std::vector<double> &vecEGI = m_eglobe[i];
       //then compute the hourly radiation on each vertical surface given the solar azimuth for each hour
-      std::stringstream ss;
+      //std::stringstream ss;
       for(int s = 0;s<NUM_SURFACES;s++)
       {
         double SurfaceSolarAzimuth = ::fabs(SolarAzimuth - (SurfaceAzimuths[s]*(PI/180.0)));//surface - solar azimuth in degrees, >pi/2 means surface is in shade
@@ -86,10 +86,10 @@ namespace isomodel {
         double DiffuseComponent= (m_surfaceTilt>PI/2) ? vecED[i] * DiffuseRadiation * sin(m_surfaceTilt) : vecED[i] * (DiffuseRadiation * sin(m_surfaceTilt)+cos(m_surfaceTilt));
 
         vecEGI[s] = DirectBeam + DiffuseComponent + GroundReflected;  // add up all the components
-        ss << s << " " << vecEB[i] << " " << SurfaceSolarAzimuth << " " << AngleOfIncidence << " " << DirectBeam << " " << DiffuseRadiation << " " << DiffuseComponent << vecEGI[s] << " ";
+        //ss << s << " " << vecEB[i] << " " << SurfaceSolarAzimuth << " " << AngleOfIncidence << " " << DirectBeam << " " << DiffuseRadiation << " " << DiffuseComponent << vecEGI[s] << " ";
       }
 
-      LOG(Trace, "SurfaceRadDetail " << ss.str());
+      //LOG(Trace, "SurfaceRadDetail " << ss.str());
     }
   }
   //average the data in the bins over the count or days
@@ -173,12 +173,12 @@ namespace isomodel {
       m_monthlyGlobalHorizontalRadiation[midx] += vecEGH[i];
       m_monthlyWindspeed[midx]+= vecWSPD[i];
       
-      std::stringstream ss;
+      //std::stringstream ss;
       for(int s = 0;s<NUM_SURFACES;s++) {
         m_monthlySolarRadiation[midx][s] += m_eglobe[i][s];
-        ss << s << " " << m_monthlySolarRadiation[midx][s] << " " << m_eglobe[i][s] << " ";
+        //ss << s << " " << m_monthlySolarRadiation[midx][s] << " " << m_eglobe[i][s] << " ";
       }
-      LOG(Trace, "solarRad / eglobe " << ss.str());
+      //LOG(Trace, "solarRad / eglobe " << ss.str());
 
       h = m_frame.Hour[i]-1;
       m_hourlyDryBulbTemp[midx][h] += vecDBT[i];

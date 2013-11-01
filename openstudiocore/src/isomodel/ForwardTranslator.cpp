@@ -148,6 +148,8 @@
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 
+#include <QElapsedTimer>
+
 #include <math.h>
 
 namespace openstudio {
@@ -169,6 +171,10 @@ namespace isomodel {
 
     /// \todo this should probably be a clone in case the uniqueModelObject calls manipulate the model?
     openstudio::model::Model model = t_model;
+
+    QElapsedTimer et;
+    et.start();
+
 
     LOG(Debug, "...Setting() Defaults");
     LOG(Debug, "*****************************");
@@ -324,6 +330,9 @@ namespace isomodel {
 
 
     LOG(Debug, "...Parsing() Model");
+
+    LOG(Debug, et.restart() << "ms setting defaults");
+
     LOG(Debug, "*****************************");
     LOG(Debug, "  Parsing Model");
     LOG(Debug, "*****************************");
@@ -392,6 +401,7 @@ namespace isomodel {
     // get the total nominal population;
     LOG(Debug, "Nominal Number of people = " << number_of_people);
 
+    LOG(Debug, et.restart() << "ms parsing model");
     LOG(Debug, "*****************************");
     LOG(Debug, "  Analyzing Construction");
     LOG(Debug, "*****************************");
@@ -774,6 +784,8 @@ namespace isomodel {
 
     }
 
+    LOG(Debug, et.restart() << "ms analyzing construction");
+
     LOG(Debug, "*******************************");
     LOG(Debug, " Calculating Schedule Averages");
     LOG(Debug, "*******************************");
@@ -792,12 +804,12 @@ namespace isomodel {
     double occupied_hours = number_days_occupied_per_year*(occupancy_hour_end - occupancy_hour_start+1);
     double unoccupied_hours = 8760-occupied_hours;
 
+    // gets all the schedule for each day of the year in one array
+    std::vector<openstudio::model::ScheduleDay> daySchedules = schedule.getDaySchedules(startDate, endDate);
+
     BOOST_FOREACH(const openstudio::model::ScheduleRuleset &schedule, schedule_rulesets) {
       double occupied_sum=0;
       double unoccupied_sum=0;
-
-      // gets all the schedule for each day of the year in one array
-      std::vector<openstudio::model::ScheduleDay> daySchedules = schedule.getDaySchedules(startDate, endDate);
 
       // get the day of the week of the starting day of the schedule and subtract 1 from it because we increment before we compare
       int day_of_week = startDate.dayOfWeek().value() - 1;
@@ -847,6 +859,7 @@ namespace isomodel {
     double frac_year_unocc = unoccupied_hours/8760.0;
 
     LOG(Debug, "Fraction of year occupied = " << frac_year_occ << " and Fraction of year unoccupied = " << frac_year_unocc);
+    LOG(Debug, et.restart() << "ms calculating scheule averages");
 
     LOG(Debug, "...Calculating() Electric and Gas Loads");
     LOG(Debug, "*****************************");
@@ -1032,6 +1045,7 @@ namespace isomodel {
     }
 
 
+    LOG(Debug, et.restart() << "ms calculating gas and electric loads");
     LOG(Debug, "...Calculating() Thermostats");
     LOG(Debug, "*****************************");
     LOG(Debug, "  Calculating Thermostats");
@@ -1135,6 +1149,7 @@ namespace isomodel {
       daylight_sensors=1;
     }
 
+    LOG(Debug, et.restart() << "ms calculating thermostats");
     LOG(Debug, "...Parsing() Geometry");
 
     LOG(Debug, "*****************************");
@@ -1409,6 +1424,7 @@ namespace isomodel {
     double interior_heat_capacity = (interior_HC_sum +internal_mass_HC_sum)/building.floorArea();
     LOG(Debug, "Interior  Heat Capacity = " << interior_heat_capacity << " J/K/m2 based on floor area");
 
+    LOG(Debug, et.restart() << "ms parsing geometry");
     LOG(Debug, "...Calculating() Infiltration");
     LOG(Debug, "*****************************");
     LOG(Debug, "   Calculating Infiltration");
@@ -1530,6 +1546,7 @@ namespace isomodel {
     }
 
     LOG(Debug, "Infiltration rate set to " << infiltration_rate << " m3/h/m2 @ 75 Pa");
+    LOG(Debug, et.restart() << "ms calculating infiltration");
 
     LOG(Debug, "...Parsing() HVAC Info");
     LOG(Debug, "*****************************");
@@ -2056,6 +2073,7 @@ namespace isomodel {
 
     // create output file and start writing out;
 
+    LOG(Debug, et.restart() << "ms analyzing HVAC");
 
     // get the current system clock time;
     openstudio::Time time;
