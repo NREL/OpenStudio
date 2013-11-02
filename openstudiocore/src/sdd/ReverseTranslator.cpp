@@ -58,6 +58,8 @@
 #include <model/CoolingTowerSingleSpeed_Impl.hpp>
 #include <model/BoilerHotWater.hpp>
 #include <model/BoilerHotWater_Impl.hpp>
+#include <model/SizingParameters.hpp>
+#include <model/SizingParameters_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -209,6 +211,10 @@ namespace sdd {
       {
         m_autosize = false;
       }
+
+      model::SizingParameters sp = result->getUniqueModelObject<model::SizingParameters>();
+      sp.setHeatingSizingFactor(1.0);
+      sp.setCoolingSizingFactor(1.0);
 
       // do materials before constructions
       QDomNodeList materialElements = projectElement.elementsByTagName("Mat");
