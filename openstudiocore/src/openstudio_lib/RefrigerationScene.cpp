@@ -25,9 +25,6 @@ namespace openstudio {
 RefrigerationScene::RefrigerationScene()
   : QGraphicsScene()
 {
-  RefrigerationSystemItem * item = new RefrigerationSystemItem();
-
-  addItem(item);
 }
 
 void RefrigerationScene::layout()

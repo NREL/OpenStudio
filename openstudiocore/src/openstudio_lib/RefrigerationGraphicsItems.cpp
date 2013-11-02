@@ -18,11 +18,199 @@
  **********************************************************************/
 
 #include "RefrigerationGraphicsItems.hpp"
+#include "../shared_gui_components/OSListController.hpp"
 #include <QPainter>
 
 namespace openstudio {
 
 const int RefrigerationSystemItem::verticalSpacing = 50;
+
+RefrigerationSystemItemDelegate::RefrigerationSystemItemDelegate()
+{
+}
+
+QGraphicsItem * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
+  RefrigerationSystemItem * item = new RefrigerationSystemItem();
+
+  return item;
+}
+
+RefrigerationSystemGridItem::RefrigerationSystemGridItem()
+{
+}
+
+QRectF RefrigerationSystemGridItem::boundingRect() const
+{
+  int x = columns() * (cellSize().width() + spacing()) - spacing();
+  int y = rows() * (cellSize().height() + spacing()) - spacing();
+
+  return QRectF(0,0,x,y);
+}
+
+void RefrigerationSystemGridItem::setDelegate(QSharedPointer<RefrigerationSystemItemDelegate> delegate)
+{
+  if( delegate )
+  { 
+    m_delegate = delegate;
+
+    refreshAllItemViews();
+  }
+}
+
+void RefrigerationSystemGridItem::setListController(QSharedPointer<OSListController> listController)
+{
+  if( m_listController )
+  {
+    m_listController->disconnect(this);
+  }
+
+  m_listController = listController;
+
+  connect(m_listController.data(),SIGNAL(itemInserted(int)),this,SLOT(insertItemView(int)));
+  connect(m_listController.data(),SIGNAL(itemRemoved(int)),this,SLOT(removeItemView(int)));
+  connect(m_listController.data(),SIGNAL(itemChanged(int)),this,SLOT(refreshItemView(int)));
+  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllViews()));
+
+  refreshAllItemViews();
+}
+
+QSharedPointer<OSListController> RefrigerationSystemGridItem::listController() const
+{
+  return m_listController;
+}
+
+void RefrigerationSystemGridItem::refreshAllItemViews()
+{
+  prepareGeometryChange();
+
+  QList<QGraphicsItem *> itemList = childItems();
+  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
+       it < itemList.end(); 
+       it++ )
+  {
+    delete *it;
+  }
+
+  if( m_listController && m_delegate )
+  {
+    for( int i = 0;
+         i != m_listController->count();
+         i++ )
+    {
+      QGraphicsItem * item = m_delegate->view(m_listController->itemAt(i));
+
+      item->setParentItem(this);
+
+      item->setTransform(QTransform(cellSize().width() / item->boundingRect().width(),
+                                    0,0,
+                                    cellSize().height() / item->boundingRect().height(),
+                                    0,0));
+
+      std::pair<int,int> coordinates = gridLocation(i);
+
+      int x = coordinates.second * (cellSize().width() + spacing());
+      int y = coordinates.first * (cellSize().height() + spacing());
+
+      item->setPos(x,y);
+    }
+  }
+}
+
+void RefrigerationSystemGridItem::insertItemView(int i)
+{
+}
+
+void RefrigerationSystemGridItem::removeItemView(int i)
+{
+}
+
+void RefrigerationSystemGridItem::removePair(QObject * object)
+{
+}
+
+void RefrigerationSystemGridItem::refreshItemView(int i)
+{
+}
+
+int RefrigerationSystemGridItem::spacing() const
+{
+  return 25;
+}
+
+int RefrigerationSystemGridItem::rows() const
+{
+  int result = 0;
+
+  if( m_listController )
+  {
+    int count = m_listController->count();
+
+    int _columns = columns();
+
+    result = count / _columns;
+
+    if( (count % _columns) != 0 )
+    {
+      result++;
+    }
+  }
+
+  return result;
+}
+
+int RefrigerationSystemGridItem::columns() const
+{
+  return 2;
+}
+
+QSize RefrigerationSystemGridItem::cellSize() const
+{
+  return QSize(500,500);
+}
+
+std::pair<int,int> RefrigerationSystemGridItem::gridLocation(int index) 
+{
+  int row = 0;
+  int column = 0;
+
+  if( m_listController )
+  {
+    int _columns = columns();
+
+    row = index / _columns;
+
+    column = index % _columns;  
+  }
+
+  return std::pair<int,int>(row,column);
+}
+
+QGraphicsItem * RefrigerationSystemGridItem::viewFromGridLocation(std::pair<int,int> location)
+{
+  QGraphicsItem * result = NULL;
+
+  int x = location.second * (cellSize().width() + spacing()) + cellSize().width() / 2;
+  int y = location.first * (cellSize().height() + spacing()) + cellSize().height() / 2;
+
+  QPoint point(x,y);
+
+  QList<QGraphicsItem *>  items = childItems();
+
+  for(QList<QGraphicsItem *>::iterator it = items.begin();
+      it != items.end();
+      it++)
+  {
+    QRect rect((*it)->pos().x(),(*it)->pos().y(),cellSize().width(),cellSize().height());
+
+    if( (*it)->contains(point) )
+    {
+      result = *it;
+    }
+  }
+
+  return result;
+}
 
 RefrigerationSystemItem::RefrigerationSystemItem()
   : QGraphicsObject()

@@ -31,6 +31,78 @@ class RefrigerationCompressorItem;
 class RefrigerationSHXItem;
 class RefrigerationCasesItem;
 class RefrigerationSecondaryItem;
+class OSListItem;
+class OSListController;
+
+class RefrigerationSystemItemDelegate : public QObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSystemItemDelegate();
+
+  virtual ~RefrigerationSystemItemDelegate() {}
+
+  virtual QGraphicsItem * view(QSharedPointer<OSListItem> dataSource);
+};
+
+class RefrigerationSystemGridItem : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSystemGridItem();
+
+  virtual ~RefrigerationSystemGridItem() {};
+
+  void setDelegate(QSharedPointer<RefrigerationSystemItemDelegate> delegate);
+
+  void setListController(QSharedPointer<OSListController> listController);
+
+  QSharedPointer<OSListController> listController() const;
+
+  QRectF boundingRect() const;
+
+  public slots:
+
+  void refreshAllItemViews();
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 ) {}
+
+  private slots:
+
+  void insertItemView(int i);
+
+  void removeItemView(int i);
+
+  void removePair(QObject * object);
+
+  void refreshItemView(int i);
+
+  private:
+
+  int spacing() const;
+
+  int rows() const;
+
+  int columns() const;
+
+  QSize cellSize() const;
+
+  std::pair<int,int> gridLocation(int index); 
+
+  QGraphicsItem * viewFromGridLocation(std::pair<int,int>);
+
+  QSharedPointer<RefrigerationSystemItemDelegate> m_delegate;
+
+  QSharedPointer<OSListController> m_listController;
+};
 
 class RefrigerationSystemItem : public QGraphicsObject
 {
@@ -39,6 +111,8 @@ class RefrigerationSystemItem : public QGraphicsObject
   public:
 
   RefrigerationSystemItem();
+
+  virtual ~RefrigerationSystemItem() {}
 
   static const int verticalSpacing; 
 
@@ -83,6 +157,8 @@ class RefrigerationCasesItem : public QGraphicsObject
   public:
 
   RefrigerationCasesItem();
+
+  virtual ~RefrigerationCasesItem() {}
 
   QRectF boundingRect() const;
 

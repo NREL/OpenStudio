@@ -218,6 +218,8 @@ SET( ${target_name}_SRC
   PlanarSurfaceWidget.hpp
   RadianceDialog.cpp
   RadianceDialog.hpp
+  RefrigerationController.cpp
+  RefrigerationController.hpp
   RefrigerationGraphicsItems.cpp
   RefrigerationGraphicsItems.hpp
   RefrigerationScene.cpp
@@ -540,6 +542,7 @@ SET( ${target_name}_moc
   PeopleInspectorView.hpp
   PlanarSurfaceWidget.hpp
   RadianceDialog.hpp
+  RefrigerationController.hpp
   RefrigerationGraphicsItems.hpp
   RefrigerationScene.hpp
   RenderingColorWidget.hpp

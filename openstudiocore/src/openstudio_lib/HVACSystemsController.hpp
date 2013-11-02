@@ -62,6 +62,7 @@ class FollowOATempSPMView;
 class OAResetSPMView;
 class AirLoopHVACUnitaryHeatPumpAirToAirControlView;
 class NoControlsView;
+class RefrigerationController;
 
 class HVACSystemsController : public QObject
 {
@@ -241,6 +242,8 @@ class HVACLayoutController : public QObject
   QPointer<HVACGraphicsView> m_hvacGraphicsView;
 
   QPointer<HVACSystemsController> m_hvacSystemsController;
+
+  boost::shared_ptr<RefrigerationController> m_refrigerationController;
 
   bool m_dirty;
 };

@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "HVACSystemsController.hpp"
+#include "RefrigerationController.hpp"
 #include "LoopLibraryDialog.hpp"
 #include "HVACSystemsView.hpp"
 #include "LoopScene.hpp"
@@ -1223,6 +1224,8 @@ HVACLayoutController::HVACLayoutController(HVACSystemsController * hvacSystemsCo
 {
   m_hvacGraphicsView = new HVACGraphicsView();
 
+  m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
+
   bool bingo;
 
   bingo = connect(m_hvacSystemsController->hvacSystemsView()->hvacToolbarView->zoomOutButton,SIGNAL(clicked()),
@@ -1354,9 +1357,9 @@ void HVACLayoutController::update()
     }
     else if(handle == REFRIGERATION)
     {
-      RefrigerationScene * refrigerationScene = new RefrigerationScene();
+      //RefrigerationScene * refrigerationScene = new RefrigerationScene();
 
-      m_hvacGraphicsView->setScene(refrigerationScene);
+      m_hvacGraphicsView->setScene(m_refrigerationController->refrigerationScene().data());
     }
     else
     { 
