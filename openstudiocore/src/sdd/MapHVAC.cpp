@@ -3048,8 +3048,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
           {
             pump->addToNode(inletNode);
-
-            LOG(Warn,"Variable speed branch pumps are unsupported");
           }
           else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
           {
@@ -3087,8 +3085,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
           {
             pump->addToNode(inletNode);
-
-            LOG(Warn,"Variable speed branch pumps are unsupported");
           }
           else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
           {
@@ -3133,8 +3129,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
           {
             pump->addToNode(inletNode);
-
-            LOG(Warn,"Variable speed branch pumps are unsupported");
           }
           else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
           {
