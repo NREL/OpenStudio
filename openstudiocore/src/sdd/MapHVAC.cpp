@@ -2647,8 +2647,6 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     model::AirTerminalSingleDuctVAVReheat terminal(model,schedule,coil.get());
 
-    terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
-
     if( primaryAirFlow )
     {
       terminal.setMaximumAirFlowRate(primaryAirFlow.get());
@@ -2656,7 +2654,15 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     if( primaryAirFlowMin )
     {
+      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
+    }
+    else
+    {
+      terminal.setZoneMinimumAirFlowMethod("Constant");
+
+      terminal.setConstantMinimumAirFlowFraction(0.2);
     }
 
     // ReheatCtrlMthd
@@ -2670,36 +2676,56 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setDamperHeatingAction("Normal");
     }
 
-    // If not primaryAirFlowMin, make sure we have non zero values for minimum air flow
-    if( ! primaryAirFlowMin )
-    {
-      LOG(Warn,terminal.name().get() << " using default minimum air flow fraction.");
-
-      if( istringEqual(terminal.damperHeatingAction(),"Reverse") )
-      {
-        terminal.setZoneMinimumAirFlowMethod("Constant");
-
-        terminal.setConstantMinimumAirFlowFraction(0.2);
-
-        terminal.setMaximumFlowFractionDuringReheat(0.5);
-      }
-      else
-      {
-        terminal.setZoneMinimumAirFlowMethod("Constant");
-
-        terminal.setConstantMinimumAirFlowFraction(0.2);
-
-        terminal.setMaximumFlowFractionDuringReheat(0.2);
-      }
-    }
-
     QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
     value = htgAirFlowMaxElement.text().toDouble(&ok);
-    if( ok && primaryAirFlow && primaryAirFlowMin )
+    if( ok && primaryAirFlow )
     {
        value = unitToUnit(value,"cfm","m^3/s").get();
        double fraction = value / primaryAirFlow.get();
        terminal.setMaximumFlowFractionDuringReheat(fraction);
+    }
+    else
+    {
+      bool found = false;
+
+      QDomElement zoneServedElement = trmlUnitElement.firstChildElement("ZnServedRef");
+
+      QDomNodeList thrmlZnElements = trmlUnitElement.parentNode().parentNode().parentNode().toElement().elementsByTagName("ThrmlZn");
+
+      for( int j = 0; j < thrmlZnElements.count(); j++ )
+      {
+        QDomElement thrmlZnElement = thrmlZnElements.at(j).toElement();
+
+        QDomElement thrmlZnNameElement = thrmlZnElement.firstChildElement("Name");
+
+        if(istringEqual(thrmlZnNameElement.text().toStdString(),zoneServedElement.text().toStdString()))
+        {
+          QDomElement htgDsgnMaxFlowFracElement = thrmlZnElement.firstChildElement("HtgDsgnMaxFlowFrac");
+
+          value = htgDsgnMaxFlowFracElement.text().toDouble(&ok);
+
+          if( ok )
+          {
+            terminal.setMaximumFlowFractionDuringReheat(value);
+
+            found = true;
+          }
+
+          break;
+        }
+      }
+
+      if( ! found )
+      {
+        if( istringEqual(terminal.damperHeatingAction(),"Reverse") )
+        {
+          terminal.setMaximumFlowFractionDuringReheat(0.5);
+        }
+        else
+        {
+          terminal.setMaximumFlowFractionDuringReheat(0.2);
+        }
+      }
     }
 
     result = terminal;
