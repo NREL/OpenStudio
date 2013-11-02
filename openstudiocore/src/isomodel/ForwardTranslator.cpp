@@ -1250,7 +1250,7 @@ namespace isomodel {
 #ifdef _MSC_VER
           if (!_isnan(wallU)) {
 #else
-          if (!isnan(wallU)) {
+          if (!std::isnan(wallU)) {
 #endif
             wall_U_area[i] += s.netArea();
             wall_U_sum[i] += wallU * s.netArea();
@@ -1262,7 +1262,7 @@ namespace isomodel {
 #ifdef _MSC_VER
             if (!_isnan(windowU)) {
 #else
-            if (!isnan(windowU)) {
+            if (!std::isnan(windowU)) {
 #endif
               window_U_area[i] += ss.surface().get().netArea();
               window_U_sum[i] += windowU * ss.surface().get().netArea();
