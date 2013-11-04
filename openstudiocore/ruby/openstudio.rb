@@ -67,6 +67,7 @@ require 'openstudiomodelsimulation'
 require 'openstudiomodelresources'
 require 'openstudiomodelgeometry'
 require 'openstudiomodelhvac'
+require 'openstudiomodelrefrigeration'
 require 'openstudioosversion'
 require 'openstudioruleset'
 require 'openstudiorunmanager'
@@ -76,6 +77,7 @@ require 'openstudiomodeleditor'
 require 'openstudioanalysis'
 require 'openstudiolib'
 require 'openstudioplugin'
+require 'openstudioisomodel'
 
 # optional extensions
 begin

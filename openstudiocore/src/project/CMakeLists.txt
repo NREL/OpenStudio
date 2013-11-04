@@ -26,6 +26,12 @@ SET( ${target_name}_src
   AttributeRecord.hpp
   AttributeRecord_Impl.hpp
   AttributeRecord.cpp
+  AWSSessionRecord.hpp
+  AWSSessionRecord_Impl.hpp
+  AWSSessionRecord.cpp
+  AWSSettingsRecord.hpp
+  AWSSettingsRecord_Impl.hpp
+  AWSSettingsRecord.cpp
   CloudSessionRecord.hpp
   CloudSessionRecord_Impl.hpp
   CloudSessionRecord.cpp
@@ -189,6 +195,8 @@ SET( ${target_name}_test_src
   Test/AlgorithmRecord_GTest.cpp
   Test/AnalysisRecord_GTest.cpp
   Test/AttributeRecord_GTest.cpp
+  Test/CloudSessionRecord_GTest.cpp
+  Test/CloudSettingsRecord_GTest.cpp
   Test/DataPointRecord_GTest.cpp
   Test/MeasureGroupRecord_GTest.cpp
   Test/FileReferenceRecord_GTest.cpp
@@ -219,3 +227,4 @@ IF( BUILD_TESTING )
       openstudio_runmanager_resources
       openstudio_project_resources)
 ENDIF()
+

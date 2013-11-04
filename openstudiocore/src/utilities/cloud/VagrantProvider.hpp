@@ -51,7 +51,9 @@ namespace openstudio{
                     const openstudio::path& workerPath,
                     const openstudio::Url& workerUrl,
                     bool haltOnStop,
-                    const std::string& username);
+                    const std::string& username,
+                    bool terminationDelayEnabled, 
+                    unsigned terminationDelay);
 
     //@}
     /** @name Destructors */
@@ -95,6 +97,14 @@ namespace openstudio{
     std::string password() const;
 
     void setPassword(const std::string& password);
+
+    bool terminationDelayEnabled();
+
+    void setTerminationDelayEnabled(bool enabled);
+
+    unsigned terminationDelay();
+
+    void setTerminationDelay(const unsigned delay);
 
     //@}
 
@@ -184,9 +194,6 @@ namespace openstudio{
     friend class CloudProvider;
 
   private:
-
-    // no body on purpose, do not want this generated
-    VagrantProvider(const VagrantProvider& other);
 
   };
 

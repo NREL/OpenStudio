@@ -225,8 +225,7 @@ void PatVerticalTabWidget::refreshIcons()
       imagePath = m_unSelectedPixmaps[i];
     }
     else if(!button->isEnabled() && button->isChecked()){
-      // you should not be here
-      OS_ASSERT(false);
+      imagePath = m_selectedPixmaps[i];
     }
     else if(!button->isEnabled() && !button->isChecked()){
       imagePath = m_disabledPixmaps[i];

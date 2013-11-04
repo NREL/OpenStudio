@@ -11,6 +11,7 @@ from openstudiomodelsimulation import *
 from openstudiomodelresources import *
 from openstudiomodelgeometry import *
 from openstudiomodelhvac import *
+from openstudiomodelrefrigeration import *
 
 %}
 
@@ -24,5 +25,6 @@ from openstudiomodelhvac import *
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelRefrigeration.i>
 
 #endif //MODEL_I 

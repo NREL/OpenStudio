@@ -39,6 +39,7 @@ class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
 class AirLoopHVACZoneSplitter;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
+class AirTerminalSingleDuctConstantVolumeReheat;
 class AirTerminalSingleDuctParallelPIUReheat;
 class AirTerminalSingleDuctUncontrolled;
 class AirTerminalSingleDuctVAVReheat;
@@ -130,6 +131,10 @@ class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
 class RefractionExtinctionGlazing;
+class RefrigerationCase;
+class RefrigerationCompressor;
+class RefrigerationCondenserAirCooled;
+class RefrigerationSystem;
 class RoofVegetation;
 class RunPeriod;
 class RunPeriodControlDaylightSavingTime;
@@ -196,7 +201,7 @@ class ZoneHVACPackagedTerminalAirConditioner;
 class ZoneHVACWaterToAirHeatPump;
 class ZoneHVACEquipmentList;
 class ZoneHVACUnitHeater;
-
+class AirTerminalSingleDuctVAVNoReheat;
 }
 
 namespace energyplus {
@@ -270,6 +275,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeCooledBeam ( model::AirTerminalSingleDuctConstantVolumeCooledBeam & modelObject );
   
+  boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeReheat( model::AirTerminalSingleDuctConstantVolumeReheat & modelObject );
+
   boost::optional<IdfObject> translateAirTerminalSingleDuctParallelPIUReheat( model::AirTerminalSingleDuctParallelPIUReheat & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctUncontrolled( model::AirTerminalSingleDuctUncontrolled & modelObject );
@@ -454,6 +461,14 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateRefractionExtinctionGlazing( model::RefractionExtinctionGlazing & modelObject );
 
+  boost::optional<IdfObject> translateRefrigerationCase( model::RefrigerationCase & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCompressor( model::RefrigerationCompressor & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCondenserAirCooled( model::RefrigerationCondenserAirCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationSystem( model::RefrigerationSystem & modelObject );
+
   boost::optional<IdfObject> translateRoofVegetation( model::RoofVegetation & modelObject );
 
   boost::optional<IdfObject> translateRunPeriod( model::RunPeriod & modelObject );
@@ -587,9 +602,12 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
 
   boost::optional<IdfObject> createAirLoopHVACReturnPath( model::AirLoopHVAC & airLoopHVAC );
+  
+  boost::optional<IdfObject> translateAirTerminalSingleDuctVAVNoReheat( model::AirTerminalSingleDuctVAVNoReheat & modelObject );
+
 
   // helper method used by ForwardTranslatePlantLoop
-  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects,	model::PlantLoop & plantLoop);
+  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::PlantLoop & plantLoop);
 
   // translate all constructions
   void translateConstructions(const model::Model & model);
@@ -626,7 +644,35 @@ class ENERGYPLUS_API ForwardTranslator {
   static std::vector<IddObjectType> iddObjectsToTranslate();
   static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
 
+  /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
+   *  IdfFile if successful. */
+  boost::optional<IdfFile> findIdfFile(const std::string& path);
+
+  /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
+   *  fluidType. Returns an uninitialized object if unsuccessful for any reason. If successful, returns
+   *  the FluidProperties:Name IdfObject. If the fluidType already exists in m_idfObjects, it will not
+   *  add new IdfObjects and will return the existing FluidProperties:Name IdfObject. Valid choices for 
+   *  fluidType are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
+  boost::optional<IdfObject> createFluidProperties(const std::string& fluidType);
+
+  /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
+   *  glycolType adn glycolConcentration. Returns an uninitialized object if unsuccessful for any reason. 
+   *  If successful, returns the FluidProperties:Name IdfObject with a FluidName of 
+   *  glycolType + "_" + glycolConcentration ie. PropyleneGlycol_30. If the fluidType already 
+   *  exists in m_idfObjects, it will not add new IdfObjects and will return the existing 
+   *  FluidProperties:Name IdfObject. Valid choices for glycolType are: PropyleneGlycol, EthyleneGlycol
+   *   */
+  boost::optional<IdfObject> createFluidProperties(const std::string& glycolType, int glycolConcentration);
+
+  /** Initializes m_fluidPropertiesMap with refrigerant names and path to refrigerant resource files.
+   *  Valid refrigerants are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
+  void createFluidPropertiesMap();
+
   typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;
+
+  typedef std::map<const std::string, const std::string> FluidPropertiesMap;
+
+  FluidPropertiesMap m_fluidPropertiesMap;
 
   ModelObjectMap m_map;
 

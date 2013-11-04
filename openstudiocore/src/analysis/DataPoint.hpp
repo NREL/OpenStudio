@@ -59,10 +59,8 @@ namespace detail {
 
 struct ANALYSIS_API DataPointSerializationOptions {
   openstudio::path projectDir;
-  bool osServerView;
 
-  DataPointSerializationOptions(const openstudio::path& t_projectDir = openstudio::path(),
-                                bool t_osServerView=true);
+  DataPointSerializationOptions(const openstudio::path& t_projectDir = openstudio::path());
 };
 
 /** \class DataPointRunType
@@ -284,6 +282,15 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   std::ostream& toJSON(std::ostream& os,const DataPointSerializationOptions& options) const;
 
   std::string toJSON(const DataPointSerializationOptions& options) const;
+
+  static boost::optional<DataPoint> loadJSON(const openstudio::path& p,
+                                             const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<DataPoint> loadJSON(std::istream& json,
+                                             const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<DataPoint> loadJSON(const std::string& json,
+                                             const openstudio::path& newProjectDir=openstudio::path());
 
   //@}
  protected:

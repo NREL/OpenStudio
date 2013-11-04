@@ -41,10 +41,7 @@ using namespace openstudio::runmanager;
 using namespace openstudio::ruleset;
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
-  // Right now, round-tripping only works with no server view attached.
-  // Should be able to relax this once Analysis has a method to update its
-  // DataPoints from JSON.
-  DataPointSerializationOptions options(openstudio::path(),false);
+  DataPointSerializationOptions options;
 
   Analysis analysis = analysis1(PreRun);
 
@@ -76,10 +73,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
 }
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
-  // Right now, round-tripping only works with no server view attached.
-  // Should be able to relax this once Analysis has a method to update its
-  // DataPoints from JSON.
-  DataPointSerializationOptions options(openstudio::path(),false);
+  DataPointSerializationOptions options;
 
   // Create analysis
   Analysis analysis = analysis1(PostRun);

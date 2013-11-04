@@ -112,6 +112,9 @@ namespace detail{
     std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec);
     std::vector<UUID> lastCompleteDataPointUUIDs() const;
 
+    std::vector<UUID> downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec);
+    std::vector<UUID> lastDownloadReadyDataPointUUIDs() const;
+
     std::string dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec);
     std::string lastDataPointJSON() const;
 
@@ -161,6 +164,8 @@ namespace detail{
     bool requestQueuedDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestCompleteDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
 
@@ -222,6 +227,8 @@ namespace detail{
 
     void processCompleteDataPointUUIDs();
 
+    void processDownloadReadyDataPointUUIDs();
+
     void processDataPointJSON();
 
     void processDownloadDataPointComplete();
@@ -250,6 +257,7 @@ namespace detail{
     std::vector<UUID> m_lastQueuedDataPointUUIDs;
     std::vector<UUID> m_lastRunningDataPointUUIDs;
     std::vector<UUID> m_lastCompleteDataPointUUIDs;
+    std::vector<UUID> m_lastDownloadReadyDataPointUUIDs;
     std::string m_lastDataPointJSON;
     bool m_lastDownloadDataPointSuccess;
     path m_lastDownloadDataPointPath;

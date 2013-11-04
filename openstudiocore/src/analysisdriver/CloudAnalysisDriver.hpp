@@ -21,6 +21,7 @@
 #define ANALYSISDRIVER_CLOUDANALYSISDRIVER_HPP
 
 #include <analysisdriver/AnalysisDriverAPI.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -67,6 +68,33 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
 
   SimpleProject project() const;
 
+  AnalysisStatus status() const;
+
+  /** Returns the number of data points the CloudAnalysisDriver has been asked to process
+   *  since the last time all the queues were cleared. */
+  unsigned numDataPointsInIteration() const;
+
+  /** Returns the number of data points in all of the processing queues. */
+  unsigned numIncompleteDataPoints() const;
+
+  /** Returns the number of data points in this iteration that are no longer being processed. */
+  unsigned numCompleteDataPoints() const;
+
+  /** Returns the number of complete data points that are marked as .failed(). */
+  unsigned numFailedDataPoints() const;
+  
+  /** Returns the DataPoints whose json files failed to download. Note that these are counted
+   *  as 'complete' by CloudAnalysisDriver, but not by Analysis. */
+  std::vector<analysis::DataPoint> failedJsonDownloads() const;
+
+  /** Returns the DataPoints whose details failed to download. Note that these are counted as
+   *  'complete' by CloudAnalysisDriver and by Analysis, but their .directory() is .empty(). */
+  std::vector<analysis::DataPoint> failedDetailedDownloads() const;
+
+  /** Returns true if dataPoint is associated with session(), that is, if its last run request
+   *  was with session() (not local, and not another CloudSession). */
+  bool inSession(const analysis::DataPoint& dataPoint) const;
+
   //@}
   /** @name Blocking Class Members */
   //@{
@@ -96,9 +124,10 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   /** @name Non-blocking class members */
   //@{
 
-  /** Request the project() to run on session(). Returns false if isRunning().
-   *  Otherwise returns true and emits runRequestComplete(bool success) when either the
-   *  analysis has stopped running on the server or the process has failed. The ultimate
+  /** Request the project() to run on session(). Returns false if isRunning() or 
+   *  isStopping() or isDownloading(). Also returns false if there are no data points to 
+   *  queue. Otherwise returns true and emits runRequestComplete(bool success) when either 
+   *  the analysis has stopped running on the server or the process has failed. The ultimate
    *  value of success will also be available from lastRunSuccess(). This method will try
    *  to pick up where a previous run left off. */
   bool requestRun();

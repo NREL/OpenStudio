@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# AWS Worker Bootstrap File
+
+# Change Host File Entries
+ENTRY="SERVER_IP SERVER_HOSTNAME SERVER_ALIAS"
+FILE=/etc/hosts
+if grep -q "$ENTRY" $FILE; then
+  echo "entry already exists"
+else
+  sudo sh -c "echo $ENTRY >> /etc/hosts"
+fi
+
+# copy all the setup scripts to the appropriate home directory
+cp /data/launch-instance/setup* /home/ubuntu/
+chmod 775 /home/ubuntu/setup*
+chown ubuntu:ubuntu /home/ubuntu/setup*
+
+# Force the generation of various directories that are in the EBS mnt
+sudo rm -rf /mnt/openstudio
+sudo mkdir -p /mnt/openstudio
+sudo chmod -R 777 /mnt/openstudio
+
+# Copy worker node files to the run directory location
+cp -rf /data/worker-nodes/* /mnt/openstudio/
+
+# Unzip the rails-models
+cd /mnt/openstudio/rails-models && unzip -o rails-models.zip
+
+# Run this once more to make sure all files have world writable permissions (for now)
+sudo chmod -R 777 /mnt/openstudio
+
+#turn off hyperthreading
+for cpunum in $(
+  cat /sys/devices/system/cpu/cpu*/topology/thread_siblings_list | 
+  cut -s -d, -f2- | tr ',' '\n' | sort -un); do
+    echo 0 > /sys/devices/system/cpu/cpu$cpunum/online
+done
+
+#file flag the user_data has completed
+cat /dev/null > /home/ubuntu/user_data_done

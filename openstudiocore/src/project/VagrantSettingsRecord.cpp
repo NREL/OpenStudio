@@ -123,7 +123,9 @@ namespace detail {
                            m_workerPath,
                            workerUrlRecord().url(),
                            m_haltOnStop,
-                           m_username);
+                           m_username,
+                           false,
+                           0);
   }
 
   void VagrantSettingsRecord_Impl::revertToLastRecordIds() {
@@ -349,10 +351,12 @@ void VagrantSettingsRecord::constructRelatedRecords(const VagrantSettings& vagra
   }
 
   if (isNew || (getImpl<detail::VagrantSettingsRecord_Impl>()->lastUuidLast() != vagrantSettings.versionUUID())) {
-    // remove any existing UrlRecords that have this object as its parent
-    ObjectRecordVector childUrls = children();
-    BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
-      database.removeRecord(childUrl);
+    if (!isNew) {
+      // remove any existing UrlRecords that have this object as its parent
+      ObjectRecordVector childUrls = children();
+      BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
+        database.removeRecord(childUrl);
+      }
     }
     // create new UrlRecords 
     UrlRecord serverUrlRecord(vagrantSettings.serverUrl(),copyOfThis);

@@ -64,6 +64,17 @@ namespace openstudio{
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
+
+      if (m_url.scheme().isEmpty()){
+        //LOG(Debug, "Url before: " << toString(m_url.toString()));
+        //LOG(Debug, "Url valid: " << m_url.isValid());
+        //LOG(Debug, "Url relative: " << m_url.isRelative());
+        //m_url.setScheme("http"); // DLM: this was not adding //
+        m_url.setUrl("http://" + m_url.toString());
+        //LOG(Debug, "Url after: " << toString(m_url.toString()));
+        //LOG(Debug, "Url valid: " << m_url.isValid());
+        //LOG(Debug, "Url relative: " << m_url.isRelative());
+      }
     }
 
     OSServer_Impl::~OSServer_Impl()
@@ -328,6 +339,21 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::lastCompleteDataPointUUIDs() const
     {
       return m_lastCompleteDataPointUUIDs;
+    }
+
+    std::vector<UUID> OSServer_Impl::downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec)
+    {
+      if (requestDownloadReadyDataPointUUIDs(analysisUUID)){
+        if (waitForFinished(msec)){
+          return lastDownloadReadyDataPointUUIDs();
+        }
+      }
+      return std::vector<UUID>();
+    }
+
+    std::vector<UUID> OSServer_Impl::lastDownloadReadyDataPointUUIDs() const
+    {
+      return m_lastDownloadReadyDataPointUUIDs;
     }
 
     std::string OSServer_Impl::dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec)
@@ -866,6 +892,27 @@ namespace openstudio{
       m_networkReply = m_networkAccessManager->get(request);
 
       bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCompleteDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
+    bool OSServer_Impl::requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID)
+    {
+      clearErrorsAndWarnings();
+
+      m_lastDownloadReadyDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+   
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/download_status.json?downloads=completed"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDownloadReadyDataPointUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -1482,6 +1529,51 @@ namespace openstudio{
       emit requestProcessed(success);
     }
 
+    void OSServer_Impl::processDownloadReadyDataPointUUIDs()
+    {
+      bool success = false;
+
+      logNetworkReply("processDownloadReadyDataPointUUIDs");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastDownloadReadyDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
     void OSServer_Impl::processDataPointJSON()
     {
       bool success = false;
@@ -1889,6 +1981,16 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastCompleteDataPointUUIDs();
   }
 
+  std::vector<UUID> OSServer::downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec)
+  {
+    return getImpl<detail::OSServer_Impl>()->downloadReadyDataPointUUIDs(analysisUUID, msec);
+  }
+
+  std::vector<UUID> OSServer::lastDownloadReadyDataPointUUIDs() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastDownloadReadyDataPointUUIDs();
+  }
+
   std::string OSServer::dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec) 
   {
     return getImpl<detail::OSServer_Impl>()->dataPointJSON(analysisUUID, dataPointUUID, msec);
@@ -2007,6 +2109,11 @@ namespace openstudio{
   bool OSServer::requestCompleteDataPointUUIDs(const UUID& analysisUUID) 
   {
     return getImpl<detail::OSServer_Impl>()->requestCompleteDataPointUUIDs(analysisUUID);
+  }
+
+  bool OSServer::requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestDownloadReadyDataPointUUIDs(analysisUUID);
   }
 
   bool OSServer::requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID) 

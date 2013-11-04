@@ -71,10 +71,10 @@ namespace detail {
   }
 
   bool PSUADEDaceAlgorithmOptions_Impl::setSeed(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set PSUADEDaceAlgorithmOptions seed to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
     if ((option = getOption("seed"))) {
       option->setValue(value);
@@ -87,10 +87,10 @@ namespace detail {
   }
 
   bool PSUADEDaceAlgorithmOptions_Impl::setSamples(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set PSUADEDaceAlgorithmOptions samples to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
     if ((option = getOption("samples"))) {
       option->setValue(value);
@@ -103,10 +103,10 @@ namespace detail {
   }
 
   bool PSUADEDaceAlgorithmOptions_Impl::setPartitions(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set PSUADEDaceAlgorithmOptions partitions to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
     if ((option = getOption("partitions"))) {
       option->setValue(value);

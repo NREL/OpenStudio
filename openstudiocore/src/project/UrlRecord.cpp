@@ -113,7 +113,7 @@ namespace detail {
 
     query.bindValue(UrlRecord::ColumnsType::parentDatabaseTableName,toQString(m_parentDatabaseTableName));
     query.bindValue(UrlRecord::ColumnsType::parentRecordId,m_parentRecordId);
-    query.bindValue(UrlRecord::ColumnsType::url,m_url.toString());
+    query.bindValue(UrlRecord::ColumnsType::url,m_url.isEmpty() ? QString("") : m_url.toString());
   }
 
   void UrlRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {

@@ -47,7 +47,8 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   ZoneHVACLowTempRadiantConstFlow(const Model& model, 
                                   Schedule& availabilitySchedule,
                                   HVACComponent& heatingCoil,
-                                  HVACComponent& coolingCoil);
+                                  HVACComponent& coolingCoil,
+                                  double hydronicTubingLength);
 
   virtual ~ZoneHVACLowTempRadiantConstFlow() {}
 

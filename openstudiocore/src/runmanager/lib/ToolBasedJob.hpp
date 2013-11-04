@@ -263,9 +263,6 @@ namespace detail {
       /// List of files that are known about
       FileSet m_outfiles;
 
-      /// Collected output from the process
-      std::string m_output;
-
       mutable bool m_last_out_of_date;
 
 

@@ -14,7 +14,7 @@ namespace openstudio {
   }
   
   namespace model {
-	class Model;
+    class Model;
   }
 
   class BaseApp
@@ -37,7 +37,7 @@ namespace openstudio {
 
       virtual void chooseHorizontalEditTab() = 0;
       virtual QSharedPointer<openstudio::EditController> editController() = 0;
-	  virtual boost::optional<openstudio::model::Model> currentModel() = 0;
+      virtual boost::optional<openstudio::model::Model> currentModel() = 0;
   };
 
 }

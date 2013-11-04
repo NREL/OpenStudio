@@ -65,7 +65,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
   bool isMaximumColdWaterFlowDefaulted() const;
 
   bool isMaximumColdWaterFlowAutosized() const;
-	
+
   double coolingControlThrottlingRange() const;
 
   bool isCoolingControlThrottlingRangeDefaulted() const;

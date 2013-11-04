@@ -1575,7 +1575,7 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
 
   EXPECT_TRUE(surface1.intersect(surface2));
 
-  EXPECT_EQ(2u, space1.surfaces().size());
+  EXPECT_EQ(5u, space1.surfaces().size());
   EXPECT_EQ(4u, surface1.vertices().size());
   EXPECT_EQ(1u, space2.surfaces().size());
   EXPECT_EQ(4u, surface2.vertices().size());
@@ -1590,19 +1590,37 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
   
   BOOST_FOREACH(const Surface& surface, space1.surfaces()){
     if (surface.handle() != surface1.handle()){
+      bool test = false;
+
       points.clear();
       points.push_back(Point3d(0,  0, 0));
-      points.push_back(Point3d(4,  6, 0));
-      points.push_back(Point3d(6,  6, 0));
+      points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(6,  4, 0));
       points.push_back(Point3d(4,  4, 0));
-      points.push_back(Point3d(4,  6, 0));
-      points.push_back(Point3d(0,  0, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      points.clear();
       points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(10, 10, 0));
+      points.push_back(Point3d(6,  6, 0));
+      points.push_back(Point3d(6,  4, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      points.clear();
+      points.push_back(Point3d(10, 10, 0));
       points.push_back(Point3d(0,  10, 0));
-      EXPECT_TRUE(circularEqual(surface.vertices(), points));
-      EXPECT_DOUBLE_EQ(surface1Area, surface1.grossArea() + surface.grossArea());
+      points.push_back(Point3d(4,  6, 0));
+      points.push_back(Point3d(6,  6, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      points.clear();
+      points.push_back(Point3d(0, 10, 0));
+      points.push_back(Point3d(0, 0, 0));
+      points.push_back(Point3d(4, 4, 0));
+      points.push_back(Point3d(4, 6, 0));
+      test = (test || circularEqual(surface.vertices(), points));
+
+      EXPECT_TRUE(test) << surface.vertices();
       break;
     }
   }
@@ -1961,7 +1979,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameSize){
   EXPECT_EQ(1u, space2.surfaces().size());
   EXPECT_EQ(4u, surface2.vertices().size());
 
-  EXPECT_FALSE(surface1.intersect(surface2));
+  EXPECT_TRUE(surface1.intersect(surface2));
 
   EXPECT_EQ(1u, space1.surfaces().size());
   EXPECT_EQ(4u, surface1.vertices().size());
@@ -2000,6 +2018,7 @@ TEST_F(ModelFixture, Surface_Intersect_CutIntoTwo){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(3, 10, 0));
@@ -2272,6 +2291,7 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(5, 15, 0));
@@ -2285,6 +2305,7 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   Plane plane1(points1);
   Plane plane2(points2);
@@ -2398,11 +2419,12 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(2, 15, 0));
-  points2.push_back(Point3d(8, 15, 0));
-  points2.push_back(Point3d(8,  8, 0));
+  points2.push_back(Point3d(7, 15, 0));
+  points2.push_back(Point3d(7,  8, 0));
   points2.push_back(Point3d(6,  8, 0));
   points2.push_back(Point3d(6, 12, 0));
   points2.push_back(Point3d(4, 12, 0));
@@ -2411,6 +2433,7 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   Plane plane1(points1);
   Plane plane2(points2);
@@ -2438,12 +2461,13 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
     points.push_back(Point3d(4,  8, 0));
     points.push_back(Point3d(4, 10, 0));
     points.push_back(Point3d(2, 10, 0));
+    EXPECT_TRUE(circularEqual(surface1.vertices(), points));
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
     points.push_back(Point3d(6,  8, 0));
-    points.push_back(Point3d(8,  8, 0));
-    points.push_back(Point3d(8, 10, 0));
+    points.push_back(Point3d(7,  8, 0));
+    points.push_back(Point3d(7, 10, 0));
     points.push_back(Point3d(6, 10, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
@@ -2451,8 +2475,8 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
     points.push_back(Point3d(0,  0, 0));
     points.push_back(Point3d(10, 0, 0));
     points.push_back(Point3d(10,10, 0));
-    points.push_back(Point3d(8, 10, 0));
-    points.push_back(Point3d(8,  8, 0));
+    points.push_back(Point3d(7, 10, 0));
+    points.push_back(Point3d(7,  8, 0));
     points.push_back(Point3d(6,  8, 0));
     points.push_back(Point3d(6, 10, 0));
     points.push_back(Point3d(4, 10, 0));
@@ -2473,19 +2497,20 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
     points.push_back(Point3d(4, 10, 0));
     points.push_back(Point3d(4,  8, 0));
     points.push_back(Point3d(2,  8, 0));
+    EXPECT_TRUE(circularEqual(surface2.vertices(), points));
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
     points.push_back(Point3d(6, 10, 0));
-    points.push_back(Point3d(8, 10, 0));
-    points.push_back(Point3d(8,  8, 0));
+    points.push_back(Point3d(7, 10, 0));
+    points.push_back(Point3d(7,  8, 0));
     points.push_back(Point3d(6,  8, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
     points.clear();
     points.push_back(Point3d(2, 15, 0));
-    points.push_back(Point3d(8, 15, 0));
-    points.push_back(Point3d(8, 10, 0));
+    points.push_back(Point3d(7, 15, 0));
+    points.push_back(Point3d(7, 10, 0));
     points.push_back(Point3d(6, 10, 0));
     points.push_back(Point3d(6, 12, 0));
     points.push_back(Point3d(4, 12, 0));
@@ -2512,6 +2537,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(0,  10, 0));
@@ -2521,6 +2547,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   EXPECT_FALSE(surface1.adjacentSurface());
 
@@ -2565,6 +2592,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(0,  10, 0));
@@ -2574,6 +2602,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   EXPECT_FALSE(surface1.adjacentSurface());
 
@@ -2601,6 +2630,398 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
 
   ASSERT_TRUE(surface1.adjacentSurface());
   EXPECT_EQ(surface2.handle(), surface1.adjacentSurface()->handle());
+}
+
+TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+  Space space3(model);
+  Space space4(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(33.5280021336, -29.717998476, 91.44));
+  points1.push_back(Point3d(33.5280021336, -29.717998476, 86.868));
+  points1.push_back(Point3d(33.5280021336, 29.718001524, 86.868));
+  points1.push_back(Point3d(33.5280021336, 29.718001524, 91.44));
+  Surface surface1(points1, model);
+  surface1.setName("Surface 1292");
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
+  EXPECT_EQ("Wall", surface1.surfaceType());
+  EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface1.sunExposure());
+  EXPECT_EQ("WindExposed", surface1.windExposure());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(33.5280021336, -29.717998476, 96.012));
+  points2.push_back(Point3d(33.5280021336, -29.717998476, 91.44));
+  points2.push_back(Point3d(33.5280021336, 29.718001524, 91.44));
+  points2.push_back(Point3d(33.5280021336, 29.718001524, 96.012));
+  Surface surface2(points2, model);
+  surface2.setName("Surface 1358");
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
+  EXPECT_EQ("Wall", surface2.surfaceType());
+  EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface2.sunExposure());
+  EXPECT_EQ("WindExposed", surface2.windExposure());
+
+  Point3dVector points3;
+  points3.push_back(Point3d(33.5280021336, -29.717998476, 100.584));
+  points3.push_back(Point3d(33.5280021336, -29.717998476, 96.012));
+  points3.push_back(Point3d(33.5280021336, 29.718001524, 96.012));
+  points3.push_back(Point3d(33.5280021336, 29.718001524, 100.584));
+  Surface surface3(points3, model);
+  surface3.setName("Surface 1424");
+  surface3.setSpace(space3);
+  double surface3Area = surface3.grossArea();
+  EXPECT_GT(surface3Area,0.0);
+  EXPECT_EQ("Wall", surface3.surfaceType());
+  EXPECT_EQ("Outdoors", surface3.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface3.sunExposure());
+  EXPECT_EQ("WindExposed", surface3.windExposure());
+
+  Point3dVector points4;
+  points4.push_back(Point3d(28.9560021336, -25.145998476, 96.012));
+  points4.push_back(Point3d(28.9560021336, -25.145998476, 91.44));
+  points4.push_back(Point3d(28.9560021336, 25.146001524, 91.44));
+  points4.push_back(Point3d(28.9560021336, 25.146001524, 96.012));
+  Surface surface4(points4, model);
+  surface4.setName("Surface 1384");
+  surface4.setSpace(space4);
+  double surface4Area = surface4.grossArea();
+  EXPECT_GT(surface4Area,0.0);
+  EXPECT_EQ("Wall", surface4.surfaceType());
+  EXPECT_EQ("Outdoors", surface4.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface3.sunExposure());
+  EXPECT_EQ("WindExposed", surface4.windExposure());
+
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_FALSE(surface1.intersect(surface2));
+  EXPECT_FALSE(surface1.intersect(surface3));
+  EXPECT_FALSE(surface1.intersect(surface4));
+  EXPECT_FALSE(surface2.intersect(surface3));
+  EXPECT_FALSE(surface2.intersect(surface4));
+  EXPECT_FALSE(surface3.intersect(surface4));
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+}
+
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1){
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+  Space space3(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  points1.push_back(Point3d(17.0306990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  Surface surface1(points1, model);
+  surface1.setName("Surface 36");
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface1.surfaceType());
+  EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface1.sunExposure());
+  EXPECT_EQ("WindExposed", surface1.windExposure());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(17.0306987808, 5.3339993904, 3.6576));
+  points2.push_back(Point3d(17.0306987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 5.3339993904, 3.6576));
+  Surface surface2(points2, model);
+  surface2.setName("Surface 42");
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface2.surfaceType());
+  EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface2.sunExposure());
+  EXPECT_EQ("WindExposed", surface2.windExposure());
+
+  Point3dVector points3;
+  points3.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  points3.push_back(Point3d(3.3146990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  Surface surface3(points3, model);
+  surface3.setName("Surface 31");
+  surface3.setSpace(space3);
+  double surface3Area = surface3.grossArea();
+  EXPECT_GT(surface3Area,0.0);
+  EXPECT_EQ("Floor", surface3.surfaceType());
+  EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", surface3.sunExposure());
+  EXPECT_EQ("NoWind", surface3.windExposure());
+
+  EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
+
+  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  boost::optional<SurfaceIntersection> intersect;
+  intersect = surface1.computeIntersection(surface2);
+  EXPECT_FALSE(intersect);
+  intersect = surface1.computeIntersection(surface3);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(0u, intersect->newSurfaces1().size());
+  ASSERT_EQ(1u, intersect->newSurfaces2().size());
+  Surface surface4 = intersect->newSurfaces2()[0];
+  intersect = surface2.computeIntersection(surface3);
+  EXPECT_FALSE(intersect);
+  intersect = surface2.computeIntersection(surface4);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(0u, intersect->newSurfaces1().size());
+  EXPECT_EQ(0u, intersect->newSurfaces2().size());
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+
+  space1.matchSurfaces(space3);
+  space2.matchSurfaces(space3);
+  ASSERT_TRUE(surface1.adjacentSurface());
+  EXPECT_EQ(surface3.handle(), surface1.adjacentSurface()->handle());
+  ASSERT_TRUE(surface2.adjacentSurface());
+  EXPECT_EQ(surface4.handle(), surface2.adjacentSurface()->handle());
+
+}
+
+
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+  Space space3(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  points1.push_back(Point3d(17.0306990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  Surface surface1(points1, model);
+  surface1.setName("Surface 36");
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface1.surfaceType());
+  EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface1.sunExposure());
+  EXPECT_EQ("WindExposed", surface1.windExposure());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(17.0306987808, 5.3339993904, 3.6576));
+  points2.push_back(Point3d(17.0306987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 5.3339993904, 3.6576));
+  Surface surface2(points2, model);
+  surface2.setName("Surface 42");
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface2.surfaceType());
+  EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface2.sunExposure());
+  EXPECT_EQ("WindExposed", surface2.windExposure());
+
+  Point3dVector points3;
+  points3.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  points3.push_back(Point3d(3.3146990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  Surface surface3(points3, model);
+  surface3.setName("Surface 31");
+  surface3.setSpace(space3);
+  double surface3Area = surface3.grossArea();
+  EXPECT_GT(surface3Area,0.0);
+  EXPECT_EQ("Floor", surface3.surfaceType());
+  EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", surface3.sunExposure());
+  EXPECT_EQ("NoWind", surface3.windExposure());
+
+  EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
+
+  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  boost::optional<SurfaceIntersection> intersect;
+  intersect = surface1.computeIntersection(surface2);
+  EXPECT_FALSE(intersect);
+  intersect = surface2.computeIntersection(surface3);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(0u, intersect->newSurfaces1().size());
+  ASSERT_EQ(1u, intersect->newSurfaces2().size());
+  Surface surface4 = intersect->newSurfaces2()[0];
+  intersect = surface1.computeIntersection(surface3);
+  EXPECT_FALSE(intersect);
+  intersect = surface1.computeIntersection(surface4);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(0u, intersect->newSurfaces1().size());
+  EXPECT_EQ(0u, intersect->newSurfaces2().size());
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+
+  space1.matchSurfaces(space3);
+  space2.matchSurfaces(space3);
+  ASSERT_TRUE(surface1.adjacentSurface());
+  EXPECT_EQ(surface4.handle(), surface1.adjacentSurface()->handle());
+  ASSERT_TRUE(surface2.adjacentSurface());
+  EXPECT_EQ(surface3.handle(), surface2.adjacentSurface()->handle());
+}
+
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3){
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+  Space space3(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  points1.push_back(Point3d(17.0306990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  Surface surface1(points1, model);
+  surface1.setName("Surface 36");
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface1.surfaceType());
+  EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface1.sunExposure());
+  EXPECT_EQ("WindExposed", surface1.windExposure());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(17.0306987808, 5.3339993904, 3.6576));
+  points2.push_back(Point3d(17.0306987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 5.3339993904, 3.6576));
+  Surface surface2(points2, model);
+  surface2.setName("Surface 42");
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface2.surfaceType());
+  EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface2.sunExposure());
+  EXPECT_EQ("WindExposed", surface2.windExposure());
+
+  Point3dVector points3;
+  points3.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  points3.push_back(Point3d(3.3146990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  Surface surface3(points3, model);
+  surface3.setName("Surface 31");
+  surface3.setSpace(space3);
+  double surface3Area = surface3.grossArea();
+  EXPECT_GT(surface3Area,0.0);
+  EXPECT_EQ("Floor", surface3.surfaceType());
+  EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", surface3.sunExposure());
+  EXPECT_EQ("NoWind", surface3.windExposure());
+
+  EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
+
+  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  boost::optional<SurfaceIntersection> intersect;
+  intersect = surface3.computeIntersection(surface1);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(1u, intersect->newSurfaces1().size());
+  ASSERT_EQ(0u, intersect->newSurfaces2().size());
+  Surface surface4 = intersect->newSurfaces1()[0];
+  intersect = surface3.computeIntersection(surface2);
+  EXPECT_FALSE(intersect);
+  intersect = surface4.computeIntersection(surface2);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(0u, intersect->newSurfaces1().size());
+  EXPECT_EQ(0u, intersect->newSurfaces2().size());
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+
+  space1.matchSurfaces(space3);
+  space2.matchSurfaces(space3);
+  ASSERT_TRUE(surface1.adjacentSurface());
+  EXPECT_EQ(surface3.handle(), surface1.adjacentSurface()->handle());
+  ASSERT_TRUE(surface2.adjacentSurface());
+  EXPECT_EQ(surface4.handle(), surface2.adjacentSurface()->handle());
+}
+
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4){
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+  Space space3(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  points1.push_back(Point3d(17.0306990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, 5.3339981712, 3.6576));
+  points1.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  Surface surface1(points1, model);
+  surface1.setName("Surface 36");
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface1.surfaceType());
+  EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface1.sunExposure());
+  EXPECT_EQ("WindExposed", surface1.windExposure());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(17.0306987808, 5.3339993904, 3.6576));
+  points2.push_back(Point3d(17.0306987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 15.6971993904, 3.6576));
+  points2.push_back(Point3d(3.3146987808, 5.3339993904, 3.6576));
+  Surface surface2(points2, model);
+  surface2.setName("Surface 42");
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
+  EXPECT_EQ("RoofCeiling", surface2.surfaceType());
+  EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", surface2.sunExposure());
+  EXPECT_EQ("WindExposed", surface2.windExposure());
+
+  Point3dVector points3;
+  points3.push_back(Point3d(3.3146990856, -17.8308018288, 3.6576));
+  points3.push_back(Point3d(3.3146990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, 15.6971981712, 3.6576));
+  points3.push_back(Point3d(17.0306990856, -25.1460018288, 3.6576));
+  Surface surface3(points3, model);
+  surface3.setName("Surface 31");
+  surface3.setSpace(space3);
+  double surface3Area = surface3.grossArea();
+  EXPECT_GT(surface3Area,0.0);
+  EXPECT_EQ("Floor", surface3.surfaceType());
+  EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", surface3.sunExposure());
+  EXPECT_EQ("NoWind", surface3.windExposure());
+
+  EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
+
+  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  boost::optional<SurfaceIntersection> intersect;
+  intersect = surface3.computeIntersection(surface2);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(1u, intersect->newSurfaces1().size());
+  ASSERT_EQ(0u, intersect->newSurfaces2().size());
+  Surface surface4 = intersect->newSurfaces1()[0];
+  intersect = surface3.computeIntersection(surface1);
+  EXPECT_FALSE(intersect);
+  intersect = surface4.computeIntersection(surface1);
+  ASSERT_TRUE(intersect);
+  EXPECT_EQ(0u, intersect->newSurfaces1().size());
+  EXPECT_EQ(0u, intersect->newSurfaces2().size());
+  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+
+  space1.matchSurfaces(space3);
+  space2.matchSurfaces(space3);
+  ASSERT_TRUE(surface1.adjacentSurface());
+  EXPECT_EQ(surface4.handle(), surface1.adjacentSurface()->handle());
+  ASSERT_TRUE(surface2.adjacentSurface());
+  EXPECT_EQ(surface3.handle(), surface2.adjacentSurface()->handle());
 }
 
 TEST_F(ModelFixture, Surface_Figure8_SameSense){

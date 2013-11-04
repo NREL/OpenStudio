@@ -241,7 +241,9 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
+
           ); // OpenStudioPostProcess
 
     Job jobLast = job;
@@ -279,7 +281,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // EnergyPlus
     job.addChild(jobLast);
 
@@ -311,7 +314,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // EnergyPlusPreProcess
     job.addChild(jobLast);
 
@@ -345,7 +349,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // ModelToIdf
     job.addChild(jobLast);
 
@@ -370,7 +375,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // Variables 2 & 3
     job.addChild(jobLast);
 
@@ -397,7 +403,8 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus())
+            AdvancedStatus(),
+            openstudio::path())
           ); // Variable 1
     job.addChild(jobLast);
 
@@ -424,6 +431,50 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
                         attributes);
     EXPECT_TRUE(analysis.addDataPoint(dataPoint));
   }
+
+  return analysis;
+}
+
+openstudio::analysis::Analysis AnalysisFixture::analysis2(bool simulate) {
+  // Create problem and analysis
+  Problem problem("My Problem");
+
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  RubyMeasure measure(bclMeasure);
+  StringVector choices;
+  choices.push_back("North");
+  choices.push_back("South");
+  choices.push_back("East");
+  choices.push_back("West");
+  OSArgument facade = OSArgument::makeChoiceArgument("facade",choices);
+  OSArgument wwr = OSArgument::makeDoubleArgument("wwr");
+
+  // RubyContinuousVariable for South Facade
+  measure = measure.clone().cast<RubyMeasure>();
+  OSArgument arg = facade.clone();
+  arg.setValue("South");  
+  measure.setArgument(arg);
+  arg = wwr.clone();
+  RubyContinuousVariable southWWR("South Window to Wall Ratio",arg,measure);
+  problem.push(southWWR);
+
+  // RubyContinuousVariable for North Facade
+  measure = measure.clone().cast<RubyMeasure>();
+  arg = facade.clone();
+  arg.setValue("North");
+  measure.setArgument(arg);
+  arg = wwr.clone();
+  RubyContinuousVariable northWWR("North Window to Wall Ratio",arg,measure);
+  problem.push(northWWR);
+
+  if (simulate) {
+    problem.push(WorkItem(JobType::ModelToIdf));
+    problem.push(WorkItem(JobType::EnergyPlusPreProcess));
+    problem.push(WorkItem(JobType::EnergyPlus));
+    problem.push(WorkItem(JobType::OpenStudioPostProcess));
+  }
+
+  Analysis analysis("My Analysis",problem,FileReferenceType::OSM);
 
   return analysis;
 }

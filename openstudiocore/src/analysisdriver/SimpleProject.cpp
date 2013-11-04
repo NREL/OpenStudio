@@ -22,6 +22,8 @@
 
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include <analysisdriver/AnalysisDriver_Impl.hpp>
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
@@ -98,9 +100,14 @@ namespace detail {
       m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+    OS_ASSERT(test);
+
     if (m_analysis) {
-      m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      test = m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      OS_ASSERT(test);
     }
+
     m_logFile.setLogLevel(options.logLevel());
     OS_ASSERT(runManager().paused());
     if (!options.pauseRunManagerQueue()) {
@@ -115,6 +122,10 @@ namespace detail {
     if (!m_zipFileForCloud.empty()) {
       boost::filesystem::remove(m_zipFileForCloud);
     }
+  }
+
+  SimpleProject SimpleProject_Impl::simpleProject() const {
+    return SimpleProject(boost::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
   }
 
   openstudio::path SimpleProject_Impl::projectDir() const {
@@ -316,7 +327,42 @@ namespace detail {
   }
 
   bool SimpleProject_Impl::isRunning() const {
-    return analysisDriver().isRunning();
+    //DLM: Elaine does this look right?  Should we or these?
+    bool result = false;
+    if (m_cloudAnalysisDriver){
+      //result = m_cloudAnalysisDriver->isRunning();
+      result = m_cloudAnalysisDriver->isRunning() || m_cloudAnalysisDriver->isDownloading() ||  m_cloudAnalysisDriver->isStopping() || m_cloudAnalysisDriver->lastRunSuccess();
+      // DLM: should we be checking connected to cloud here too?
+    }else{
+      result = m_analysisDriver.isRunning();
+    }
+
+    return result;
+  }
+
+  AnalysisStatus SimpleProject_Impl::status() const
+  {
+    if (m_cloudAnalysisDriver){
+      return m_cloudAnalysisDriver->status();
+    }
+    return analysisDriver().status();
+  }
+
+  boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const{
+    if (!m_cloudAnalysisDriver) {
+      if (boost::optional<CloudSession> session = cloudSession()) {
+        bool test = disconnect(m_analysisDriver.getImpl().get(), SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+        OS_ASSERT(test);
+
+        m_cloudAnalysisDriver = CloudAnalysisDriver(*session,simpleProject());
+        
+        test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+        OS_ASSERT(test);
+
+        emit analysisStatusChanged(m_cloudAnalysisDriver->status());
+      }
+    }
+    return m_cloudAnalysisDriver;
   }
 
   boost::optional<CloudSession> SimpleProject_Impl::cloudSession() const {
@@ -858,24 +904,49 @@ namespace detail {
     return result;
   }
 
-  void SimpleProject_Impl::setCloudSession(const CloudSession& session) {
-    m_cloudSession = session;
-    m_cloudSessionSettingsDirty = true;
+  void SimpleProject_Impl::clearCloudAnalysisDriver() {
+    m_cloudAnalysisDriver.reset();
+
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+    OS_ASSERT(test);
+
+    emit analysisStatusChanged(m_analysisDriver.status());
   }
 
-  void SimpleProject_Impl::clearCloudSession() {
-    m_cloudSession.reset();
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::setCloudSession(const CloudSession& session) {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSession = session;
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
-  void SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
-    m_cloudSettings = settings;
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::clearCloudSession() {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSession.reset();
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
-  void SimpleProject_Impl::clearCloudSettings() {
-    m_cloudSettings.reset();
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSettings = settings;
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
+  }
+
+  bool SimpleProject_Impl::clearCloudSettings() {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSettings.reset();
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
   openstudio::path SimpleProject_Impl::zipFileForCloud() const {
@@ -1288,6 +1359,7 @@ namespace detail {
   void SimpleProject_Impl::onSeedChanged() const {
     m_seedModel.reset();
     m_seedIdf.reset();
+    m_measureArguments.clear(); // need to re-load arguments
   }
 
   openstudio::path SimpleProject_Impl::alternateModelsDir() const {
@@ -1931,6 +2003,14 @@ bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
 }
 
+AnalysisStatus SimpleProject::status() const {
+  return getImpl()->status();
+}
+
+boost::optional<CloudAnalysisDriver> SimpleProject::cloudAnalysisDriver() const {
+  return getImpl()->cloudAnalysisDriver();
+}
+
 boost::optional<CloudSession> SimpleProject::cloudSession() const {
   return getImpl()->cloudSession();
 }
@@ -1990,19 +2070,23 @@ bool SimpleProject::removeAllDataPoints() {
   return getImpl()->removeAllDataPoints();
 }
 
-void SimpleProject::setCloudSession(const CloudSession& session) {
+void SimpleProject::clearCloudAnalysisDriver() {
+  getImpl()->clearCloudAnalysisDriver();
+}
+
+bool SimpleProject::setCloudSession(const CloudSession& session) {
   return getImpl()->setCloudSession(session);
 }
 
-void SimpleProject::clearCloudSession() {
+bool SimpleProject::clearCloudSession() {
   return getImpl()->clearCloudSession();
 }
 
-void SimpleProject::setCloudSettings(const CloudSettings& settings) {
+bool SimpleProject::setCloudSettings(const CloudSettings& settings) {
   return getImpl()->setCloudSettings(settings);
 }
 
-void SimpleProject::clearCloudSettings() {
+bool SimpleProject::clearCloudSettings() {
   return getImpl()->clearCloudSettings();
 }
 
@@ -2194,16 +2278,15 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
     runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
   }
 
-  // ETH@20130306 - Is this the best option?
-  // DLM: for now we will let run manager manage the number of jobs running at a time
-  //      even though this does result in long time to queue initially
-  // DLM: i did confirm that the data points in the run list update correctly if this is set
-  //runOptions.setQueueSize(configOpts.getMaxLocalJobs());
+  // limits the AnalysisDriver queue to 24. this way, not all data points are made and queued 
+  // in the RunManager at the same time.
+  runOptions.setQueueSize(24);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
   // however there seem to be intermittant failures when this is done (bug 1077)
   // for now keep this setting, should also be a user option for debugging
-  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::none);
+  // ETH: changing back to standard, i think the bugs have been squashed
+  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::standard);
 
   return runOptions;
 }

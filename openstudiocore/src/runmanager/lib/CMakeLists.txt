@@ -93,6 +93,7 @@ SET( runmanager_src
   RubyJobUtils.cpp
   NormalizeURLs.hpp
   NormalizeURLs.cpp
+  TreeStatus.hpp
   ToolFinder.hpp
   ToolFinder.cpp
   ModelInModelOutJob.hpp
@@ -278,7 +279,7 @@ AddPCH(openstudio_runmanager)
 #ADD_DEPENDENCIES( openstudio_runmanager openstudio_energyplus openstudio_model )
 
 IF( OPENSSL_FOUND AND BUILD_WITH_OPENSSL )
-  TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset libssh_static ${OPENSSL_LIBRARIES}) 
+  TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel libssh_static ${OPENSSL_LIBRARIES}) 
    
   IF(MSVC)
     TARGET_LINK_LIBRARIES(${target_name} delayimp)
@@ -288,7 +289,7 @@ IF( OPENSSL_FOUND AND BUILD_WITH_OPENSSL )
   
   ADD_DEFINITIONS(-DRUNMANAGER_HAVE_OPENSSL)
 ELSE()
-  TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset )
+  TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel)
 ENDIF()
 
 IF( NOT APPLE )

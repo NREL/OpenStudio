@@ -456,38 +456,47 @@ namespace detail {
     if (loadResult.analysisObject) {
       if (OptionalDataPoint loaded = loadResult.analysisObject->optionalCast<DataPoint>()) {
         if (loaded->uuid() == uuid()) {
-          // generally require the variableValues to be the same, the loaded point to be complete
-          if ((variableValues() != loaded->variableValues()) || (!loaded->complete())) {
-            LOG(Info,"Cannot update DataPoint with a JSON version that is not complete or has different variable values.");
+          // require the variableValues to be the same
+          if ((variableValues() != loaded->variableValues())) {
+            LOG(Warn,"Cannot update DataPoint with a JSON version that has different variable values.");
             return false;
           }
           m_complete = loaded->complete();
-          OS_ASSERT(m_complete);
           m_failed = loaded->failed();
           m_responseValues = loaded->responseValues();
+
           // do not pull file references over since they are not generally available for loading
           // do pull job data over because it contains errors and warnings
-          m_topLevelJob = loaded->topLevelJob();
+
+          boost::optional<runmanager::Job> loadedTopLevelJob = loaded->topLevelJob();
+          OS_ASSERT(loadedTopLevelJob);
           if (runManager) {
-            // HERE -- job not in runManager yet, directory().empty(), no local copy of files yet
-            runManager->updateJob(*m_topLevelJob);
+            if (m_topLevelJob){
+              // HERE -- job is in runManager
+              runManager->updateJob(m_topLevelJob->uuid(), *loadedTopLevelJob);
+            }else{
+              // HERE -- job not in runManager yet
+              runManager->updateJob(*loadedTopLevelJob);
+              m_topLevelJob = runManager->getJob(loadedTopLevelJob->uuid());
+            }
+            LOG(Info, "Datapoint '" << toString(this->uuid()) << "' topLevelJob = '" << toString(m_topLevelJob->uuid()) << "'");
           }
-          OS_ASSERT(m_topLevelJob);
+
           m_tags = loaded->tags();
           m_outputAttributes = loaded->outputAttributes();
           onChange(AnalysisObject_Impl::Benign);
           return true;
         }
         else {
-          LOG(Info,"Cannot update DataPoint because the DataPoint loaded from JSON has a different UUID.");
+          LOG(Warn,"Cannot update DataPoint because the DataPoint loaded from JSON has a different UUID.");
         }
       }
       else {
-        LOG(Info,"Cannot update DataPoint because the AnalysisObject loaded from JSON is not a DataPoint.");
+        LOG(Warn,"Cannot update DataPoint because the AnalysisObject loaded from JSON is not a DataPoint.");
       }
     }
     else {
-      LOG(Info,"Cannot update DataPoint from JSON because the JSON string could not be loaded.");
+      LOG(Warn,"Cannot update DataPoint from JSON because the JSON string could not be loaded.");
     }
 
     return false;
@@ -505,17 +514,23 @@ namespace detail {
       return false;
     }
 
-    // unzip 
-    UnzipFile unzip(zipPath);
-    unzip.extractAllFiles(directory());
-    // TODO: Delete zip file once extracted. Leave for now for debugging.
+    try{
+      // unzip 
+      UnzipFile unzip(zipPath);
+      unzip.extractAllFiles(directory());
+      // TODO: Delete zip file once extracted. Leave for now for debugging.
+    }catch(const std::exception&){
+      LOG(Info,"Could not unzip dataPoint.zip file in directory '" << toString(directory()) << "'.");
+      return false;
+    }
 
     // fix up topLevelJob
     OS_ASSERT(m_topLevelJob);
     if (runManager) {
-      // HERE -- files are now in directory(), need to update paths
+      // files are now in directory(), need to update paths
       runManager->updateJob(*m_topLevelJob, directory());
     }
+
 
     // get file references for
     //   m_osmInputData
@@ -528,27 +543,71 @@ namespace detail {
     runmanager::Files allFiles = topLevelJob()->treeAllFiles();
     try {
       openstudio::path osmInputDataPath = allFiles.getLastByExtension("osm").fullPath;
+      if (!boost::filesystem::exists(osmInputDataPath)) {
+        // check to see if this was the seed model
+        if (toString(osmInputDataPath.parent_path().stem()) == "seed") {
+          LOG(Debug,"Last OSM is the seed model. Point this local DataPoint to the local "
+              << "seed model.");
+          OS_ASSERT(parent());
+          osmInputDataPath = parent()->cast<Analysis>().seed().path();
+        }
+        else {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(osmInputDataPath) << "' as the last OSM file path, even though "
+              << "that location does not exist.");
+        }
+      }
       setOsmInputData(FileReference(osmInputDataPath));
     }
     catch (...) {}
     try {
       openstudio::path idfInputDataPath = allFiles.getLastByExtension("idf").fullPath;
+      if (!boost::filesystem::exists(idfInputDataPath)) {
+                // check to see if this was the seed model
+        if (toString(idfInputDataPath.parent_path().stem()) == "seed") {
+          LOG(Debug,"Last IDF is the seed model. Point this local DataPoint to the local "
+              << "seed model.");
+          OS_ASSERT(parent());
+          idfInputDataPath = parent()->cast<Analysis>().seed().path();
+        }
+        else {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(idfInputDataPath) << "' as the last IDF file path, even though "
+              << "that location does not exist.");
+        }
+      }
       setIdfInputData(FileReference(idfInputDataPath));
     }
     catch (...) {}
     try {
       openstudio::path sqlOutputDataPath = allFiles.getLastByExtension("sql").fullPath;
+      if (!boost::filesystem::exists(sqlOutputDataPath)) {
+        LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+            << "with the directory information, RunManager is reporting '" 
+            << toString(sqlOutputDataPath) << "' as the last SQL file path, even though "
+            << "that location does not exist.");
+      }
       setSqlOutputData(FileReference(sqlOutputDataPath));
     }
     catch (...) {}
     try {
       FileReferenceVector xmlOutputData;
       Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+        if (!boost::filesystem::exists(file.fullPath)) {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(file.fullPath) << "' as an XML file path, even though that "
+              << "location does not exist.");
+        }
         xmlOutputData.push_back(FileReference(file.fullPath));
       }
       setXmlOutputData(xmlOutputData);
     }
     catch (...) {}
+
+    onChange(AnalysisObject_Impl::Benign);
 
     return true;
   }
@@ -647,6 +706,7 @@ namespace detail {
 
   void DataPoint_Impl::setProblem(const Problem& problem) {
     m_problem = problem;
+    m_problemUUID = problem.uuid();
   }
 
   QVariant DataPoint_Impl::toVariant() const {
@@ -747,11 +807,6 @@ namespace detail {
 
     if (!options.projectDir.empty()) {
       metadata["project_dir"] = toQString(options.projectDir);
-    }
-
-    if (options.osServerView && hasProblem()) {
-      // this data is not read upon deserialization
-      metadata.unite(toServerDataPointsVariant().toMap());
     }
 
     // create top-level of final file
@@ -897,38 +952,11 @@ namespace detail {
                      outputAttributes);
   }
 
-  QVariant DataPoint_Impl::toServerDataPointsVariant() const {
-    QVariantMap map;
-
-    map["uuid"] = toQString(removeBraces(uuid()));
-    map["version_uuid"] = toQString(removeBraces(uuid()));
-    map["name"] = toQString(name());
-    map["display_name"] = toQString(displayName());
-
-    QVariantList valuesList;
-    std::vector<QVariant> values = variableValues();
-    InputVariableVector variables = problem().variables();
-    unsigned n = values.size();
-    OS_ASSERT(variables.size() == n);
-    for (unsigned i = 0; i < n; ++i) {
-      QVariantMap valueMap;
-      valueMap["variable_index"] = i;
-      valueMap["variable_uuid"] = toQString(removeBraces(variables[i].uuid()));
-      valueMap["value"] = values[i];
-      valuesList.push_back(valueMap);
-    }
-    map["values"] = valuesList;
-
-    return QVariant(map);
-  }
-
 } // detail
 
 DataPointSerializationOptions::DataPointSerializationOptions(
-    const openstudio::path& t_projectDir,
-    bool t_osServerView)
-  : projectDir(t_projectDir),
-    osServerView(t_osServerView)
+    const openstudio::path& t_projectDir)
+  : projectDir(t_projectDir)
 {}
 
 DataPoint::DataPoint(const Problem& problem,
@@ -1190,6 +1218,39 @@ std::ostream& DataPoint::toJSON(std::ostream& os,
 
 std::string DataPoint::toJSON(const DataPointSerializationOptions& options) const {
   return getImpl<detail::DataPoint_Impl>()->toJSON(options);
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(const openstudio::path& p,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(p);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(std::istream& json,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(const std::string& json,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
 }
 
 /// @cond

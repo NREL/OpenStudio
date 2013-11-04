@@ -158,7 +158,7 @@ ShadingControl::ShadingControl(const Construction& construction)
   }
 
   std::string position;
-  if (i == layers.size() - 1){
+  if (i == int(layers.size()) - 1){
     position = "Interior";
   }else if (i == 0){
     position = "Exterior";

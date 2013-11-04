@@ -22,13 +22,15 @@
 
 #include <QDialog>
 
-class QBoxLayout;
-
 class QMargins;
+
+class QPoint;
 
 class QPushButton;
 
 class QSize;
+
+class QVBoxLayout;
 
 namespace openstudio {
 
@@ -43,15 +45,17 @@ public:
 
   virtual ~OSDialog() {}
 
-  QSize sizeHint() const;
+  //QSize sizeHint() const;
 
-  void setSizeHint(const QSize & sizeHint);
+  //void setSizeHint(const QSize & sizeHint);
 
   QMargins layoutContentsMargins() const;
 
   void setLayoutContentsMargins(const QMargins & layoutContentsMargins);
 
-  QBoxLayout * upperLayout();
+  QVBoxLayout * upperLayout();
+
+  QPushButton * backButton();
 
   QPushButton * cancelButton();
 
@@ -61,11 +65,19 @@ protected:
 
   void setOkButtonAsDefault(bool isDefault);
 
+  void mouseMoveEvent(QMouseEvent *event);
+
+  void mouseReleaseEvent(QMouseEvent *event);
+  
+  void mousePressEvent(QMouseEvent *event);
+
   void resizeEvent(QResizeEvent * event);
 
   void paintEvent(QPaintEvent *event);
 
   bool m_isIP;
+
+  QPushButton * m_backButton;
 
   QPushButton * m_cancelButton;
 
@@ -75,13 +87,19 @@ private:
 
   virtual void createLayout();
 
-  QBoxLayout * m_upperLayout;
+  QVBoxLayout * m_upperLayout;
 
   QSize m_sizeHint;
 
   QMargins m_layoutContentsMargins;
 
+  QPoint dragPosition;
+
+  bool _move;
+
 signals:
+
+  void backButtonClicked(bool checked);
 
   void cancelButtonClicked(bool checked);
 
@@ -91,6 +109,8 @@ signals:
 
 protected slots:
 
+  virtual void on_backButton(bool checked); 
+  
   virtual void on_cancelButton(bool checked);
 
   virtual void on_okButton(bool checked);

@@ -88,6 +88,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    boost::optional<int> variableRecordId() const;
+
     /// get the variable record
     boost::optional<MeasureGroupRecord> measureGroupRecord() const;
 

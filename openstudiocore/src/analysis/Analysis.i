@@ -112,6 +112,14 @@
   }  
 %enddef
 
+%template(OptionalFSUDaceCvtTrialType) boost::optional<openstudio::analysis::FSUDaceCvtTrialType>;
+%template(OptionalSamplingAlgorithmRNGType) boost::optional<openstudio::analysis::SamplingAlgorithmRNGType>;
+%template(OptionalSamplingAlgorithmSampleType) boost::optional<openstudio::analysis::SamplingAlgorithmSampleType>;
+%template(UncertaintyDescriptionTypeVector) std::vector<openstudio::analysis::UncertaintyDescriptionType>;
+%template(UncertaintyDescriptionTypeIntVectorMap) std::map<openstudio::analysis::UncertaintyDescriptionType, std::vector<int> >;
+%include <analysis/AnalysisEnums.hpp>
+
+
 // base class
 SWIG_ANALYSISOBJECT(AnalysisObject);
 

@@ -728,6 +728,10 @@ namespace detail {
       update_1_0_4_to_1_0_5(dbv);
     }
 
+    if (dbv < VersionString("1.0.7")) {
+      update_1_0_6_to_1_0_7(dbv);
+    }
+
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
@@ -1801,7 +1805,7 @@ namespace detail {
     query.clear();
 
     save();
-  	bool test = this->commitTransaction();
+    bool test = this->commitTransaction();
     OS_ASSERT(test);
 
     LOG(Info,"Removing all standards rule and ruleset information.");
@@ -1815,7 +1819,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1827,7 +1831,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1842,7 +1846,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1860,7 +1864,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
   }
 
@@ -2275,6 +2279,144 @@ namespace detail {
     save();
     test = this->commitTransaction();
     OS_ASSERT(test);    
+  }
+
+  void ProjectDatabase_Impl::update_1_0_6_to_1_0_7(const VersionString& startVersion) {
+
+    if (startVersion > VersionString("1.0.4")) {
+
+      bool didStartTransaction = startTransaction();
+      OS_ASSERT(didStartTransaction);
+
+      LOG(Info,"Adding columns to " << CloudSettingsRecord::databaseTableName()
+          << " to support AWSSettings.");
+
+      ProjectDatabase database(this->shared_from_this());
+      QSqlQuery query(*(database.qSqlDatabase()));
+
+      CloudSettingsRecordColumns numWorkersColumn("numWorkers");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      numWorkersColumn.valueName() + " " + numWorkersColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns terminationDelayEnabledColumn("terminationDelayEnabled");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      terminationDelayEnabledColumn.valueName() + " " + terminationDelayEnabledColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns terminationDelayColumn("terminationDelay");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      terminationDelayColumn.valueName() + " " + terminationDelayColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns regionColumn("region");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      regionColumn.valueName() + " " + regionColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns serverInstanceTypeColumn("serverInstanceType");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      serverInstanceTypeColumn.valueName() + " " + serverInstanceTypeColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns workerInstanceTypeColumn("workerInstanceType");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      workerInstanceTypeColumn.valueName() + " " + workerInstanceTypeColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      save();
+      bool test = this->commitTransaction();
+      OS_ASSERT(test);
+      didStartTransaction = startTransaction();
+      OS_ASSERT(didStartTransaction);
+
+      // Set all VagrantSettings to have terminationDelayEnabled==false and terminationDelay==0.
+      query.prepare(QString::fromStdString("UPDATE " + CloudSettingsRecord::databaseTableName() +
+                                           " SET terminationDelayEnabled=:terminationDelayEnabled AND " +
+                                           "terminationDelay=:terminationDelay"));
+      query.bindValue(":terminationDelayEnabled",false);
+      query.bindValue(":terminationDelay",0);
+      assertExec(query);
+      query.clear();
+
+      save();
+      test = this->commitTransaction();
+      OS_ASSERT(test);
+
+      didStartTransaction = startTransaction();
+      OS_ASSERT(didStartTransaction);
+
+      LOG(Info,"Adding columns to " << CloudSessionRecord::databaseTableName()
+          << " to support AWSSession.");
+
+      CloudSessionRecordColumns numServerProcessorsColumn("numServerProcessors");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
+                      numServerProcessorsColumn.valueName() + " " + numServerProcessorsColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSessionRecordColumns numWorkerProcessorsColumn("numWorkerProcessors");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
+                      numWorkerProcessorsColumn.valueName() + " " + numWorkerProcessorsColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSessionRecordColumns privateKeyColumn("privateKey");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
+                      privateKeyColumn.valueName() + " " + privateKeyColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSessionRecordColumns timestampColumn("timestamp");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
+                      timestampColumn.valueName() + " " + timestampColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSessionRecordColumns sessionRegionColumn("region");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
+                      sessionRegionColumn.valueName() + " " + sessionRegionColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSessionRecordColumns sessionServerInstanceTypeColumn("serverInstanceType");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
+                      sessionServerInstanceTypeColumn.valueName() + " " + sessionServerInstanceTypeColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSessionRecordColumns sessionWorkerInstanceTypeColumn("workerInstanceType");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
+                      sessionWorkerInstanceTypeColumn.valueName() + " " + sessionWorkerInstanceTypeColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      save();
+      test = this->commitTransaction();
+      OS_ASSERT(test);
+    }
+
+    // Otherwise, the tables affected by this code (CloudSessionRecord and CloudSettingsRecord) will have already
+    // been created correctly by the 1.0.4 to 1.0.5 update method.
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)

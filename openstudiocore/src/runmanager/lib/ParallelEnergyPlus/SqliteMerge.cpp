@@ -56,8 +56,8 @@ void SqliteMerge::mergeFiles()
     // Otherwise, there are more files..
     sqlite3 *main_db = openDatabase(m_files[0]);
 
-    //	summary(main_db);
-    //   m_primaryKeyBase = sqlite3_last_insert_rowid(main_db);  
+    //summary(main_db);
+    //m_primaryKeyBase = sqlite3_last_insert_rowid(main_db);  
     //std::sort(m_files.begin(),m_files.end()); 
 
     for (size_t i = 1; i < m_files.size(); ++i)
@@ -425,7 +425,7 @@ void SqliteMerge::loadFile(const openstudio::path &file)
 void SqliteMerge::summary(sqlite3 *db)
 {
   //printNumberRows(db, "Time");
-  //	printNumberRows(db, "ReportMeterData");
+  //printNumberRows(db, "ReportMeterData");
   printNumberRows(db, "Time");  
   //ReturnNumberRows(db, "Time");  
   //printNumberRows(db, "ReportMeterDataDictionary");
@@ -491,12 +491,12 @@ void SqliteMerge::mergeDatabases(sqlite3 *dest, const openstudio::path &source)
   begin(dest);
 
   //------------------------------------------------------------
-  /*	Meter Data
+  /*  Meter Data
    *
    *  Uses 4 tables
    *  1. Time: append
    *  2. Report Meter Data Dictionary: no change
-   * 	3. Report Meter Data: append
+   *  3. Report Meter Data: append
    *  4. Report Meter Extended Data: modify, has summary stats
    */
 
@@ -516,9 +516,9 @@ void SqliteMerge::tableReportVariableData(sqlite3 *db)
   std::stringstream cmd;
 
   cmd << "insert into reportVariableData ";
-  //	cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";  
+  //cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";  
   cmd << "select TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1 as TimeIndex, ";
-  //	cmd << "ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) ";
+  //cmd << "ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) ";
   cmd << "ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(ReportVariableExtendedDataIndex)from reportVariableData)-(select Min(ReportVariableExtendedDataIndex) from merger.reportVariableData)+1 ";
   cmd << "from merger.reportVariableData ";
 
@@ -531,7 +531,7 @@ void SqliteMerge::tableReportVariableExtendedData(sqlite3 *db)
   std::stringstream cmd;
 
   cmd << "insert into reportVariableExtendedData ";
-  //	cmd << "select ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) as ReportVariableExtendedDataIndex, "; 
+  //cmd << "select ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) as ReportVariableExtendedDataIndex, "; 
   cmd << "select ReportVariableExtendedDataIndex+(select Max(ReportVariableExtendedDataIndex)from reportVariableExtendedData)-(select Min(ReportVariableExtendedDataIndex) from merger.reportVariableExtendedData)+1 as ReportVariableExtendedDataIndex, ";
   cmd << "MaxValue, MaxMonth, MaxDay, MaxHour, MaxStartMinute, MaxMinute, MinValue, MinMonth, MinDay, MinHour, ";
   cmd << "MinStartMinute, MinMinute ";
@@ -545,9 +545,9 @@ void SqliteMerge::tableReportMeterData(sqlite3 *db)
   std::stringstream cmd;
 
   cmd << "insert into reportMeterData ";
-  //	cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";  
+  //cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";  
   cmd << "select TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1 as TimeIndex, ";
-  //	cmd << "ReportMeterDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) ";
+  //cmd << "ReportMeterDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) ";
   cmd << "ReportMeterDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(ReportVariableExtendedDataIndex)from reportMeterData)-(select Min(ReportVariableExtendedDataIndex) from merger.reportMeterData)+1 ";
   cmd << "from merger.reportMeterData ";
 
@@ -560,15 +560,15 @@ void SqliteMerge::tableTime(sqlite3 *db)
   std::stringstream cmd;
 
   cmd << "insert into time ";
-  //	cmd << "select NULL, ";
-  //	cmd << "select TimeIndex+" << m_primaryKeyBase << ", ";
-  //	cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";
+  //cmd << "select NULL, ";
+  //cmd << "select TimeIndex+" << m_primaryKeyBase << ", ";
+  //cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";
   cmd << "select TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1 as TimeIndex, ";
   cmd << "Month, Day, Hour, Minute, Dst, Interval, IntervalType, ";
   cmd << "SimulationDays+(select Max(SimulationDays)from time)-(select Min(SimulationDays) from merger.Time)+1 as SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag ";
-  //	cmd << "SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag ";
+  //cmd << "SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag ";
   cmd << "from merger.time ";
-  //	cmd << "where merger.time.TimeIndex > 6";  6 = 3*2, 3 days of offset in test
+  //cmd << "where merger.time.TimeIndex > 6";  6 = 3*2, 3 days of offset in test
 
   executeCommand(db, cmd.str().c_str());
   //insert into time select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag from Time2
@@ -580,7 +580,7 @@ void SqliteMerge::tableReportMeterExtendedData(sqlite3 *db)
   std::stringstream cmd;
 
   cmd << "insert into reportMeterExtendedData ";
-  //	cmd << "select ReportMeterExtendedDataIndex+(select Max(TimeIndex)from time) as ReportMeterExtendedDataIndex, "; 
+  //cmd << "select ReportMeterExtendedDataIndex+(select Max(TimeIndex)from time) as ReportMeterExtendedDataIndex, "; 
   cmd << "select ReportMeterExtendedDataIndex+(select Max(ReportMeterExtendedDataIndex)from reportMeterExtendedData)-(select Min(ReportMeterExtendedDataIndex) from merger.reportMeterExtendedData)+1 as ReportMeterExtendedDataIndex, ";
   cmd << "MaxValue, MaxMonth, MaxDay, MaxHour, MaxStartMinute, MaxMinute, MinValue, MinMonth, MinDay, MinHour, ";
   cmd << "MinStartMinute, MinMinute ";
@@ -647,7 +647,7 @@ void SqliteMerge::detachDatabases(sqlite3 *destination)
 bool SqliteMerge::executeCommand(sqlite3 *destination, const std::string &cmd)
 {
   char *zErrMsg = 0;
-  int rc = sqlite3_exec(destination, cmd.c_str(), callback, 0,	&zErrMsg);
+  int rc = sqlite3_exec(destination, cmd.c_str(), callback, 0, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);
