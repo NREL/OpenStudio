@@ -34,7 +34,6 @@ namespace detail {
 
   class MODEL_API ShadingMaterial_Impl : public FenestrationMaterial_Impl
   {
-    Q_OBJECT;
    public:
 
     // Construct completely new object.
