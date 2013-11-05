@@ -31,7 +31,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API ScheduleInterval_Impl : public Schedule_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

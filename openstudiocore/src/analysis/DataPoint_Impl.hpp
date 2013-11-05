@@ -51,7 +51,6 @@ namespace detail {
 
   /** DataPoint_Impl is a AnalysisObject_Impl that is the implementation class for DataPoint.*/
   class ANALYSIS_API DataPoint_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
