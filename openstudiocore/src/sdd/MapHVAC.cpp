@@ -3358,6 +3358,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
 
   bool ok;
 
+  boost::optional<double> mtrEff;
+
+  QDomElement mtrEffElement = pumpElement.firstChildElement("MtrEff");
+  value = mtrEffElement.text().toDouble(&ok);
+  if( ok )
+  {
+    mtrEff = value;
+  }
+
   if( ! istringEqual(pumpElement.tagName().toStdString(),"Pump") )
   {
     return result;
@@ -3370,6 +3379,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
     model::PumpConstantSpeed pump(model);
 
     pump.setRatedPumpHead(149453.0);
+
+    if( mtrEff )
+    {
+      pump.setMotorEfficiency(mtrEff.get());
+    }
 
     if( ! autosize() )
     {
@@ -3413,6 +3427,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
     model::PumpVariableSpeed pump(model);
 
     pump.setRatedPumpHead(149453.0);
+
+    if( mtrEff )
+    {
+      pump.setMotorEfficiency(mtrEff.get());
+    }
 
     if( ! autosize() )
     {
