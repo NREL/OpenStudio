@@ -533,24 +533,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             hvacComponent.addToNode(supplyInletNode);
 
-            if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
+            if( ! autosize() )
             {
-              boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
-
-              OS_ASSERT(controller);
-
-              controller->setControllerConvergenceTolerance(0.1);
-
-              if( ! autosize() )
+              if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
               {
+                boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
+
+                OS_ASSERT(controller);
+
+                controller->setControllerConvergenceTolerance(0.1);
+
                 boost::optional<double> maxFlow = coilCoolingWater->designWaterFlowRate();
 
                 OS_ASSERT(maxFlow);
 
                 controller->setMaximumActuatedFlow(maxFlow.get() * 1.25);
               }
-
-              controller->setMinimumActuatedFlow(0.0);
             }
           }
         }
@@ -577,8 +575,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             controller->setControllerConvergenceTolerance(0.1);
 
-            controller->setMinimumActuatedFlow(0.0);
-
             if( ! autosize() )
             {
               boost::optional<double> capacity = coilHeatingWater->ratedCapacity();
@@ -600,6 +596,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               double maxFlow = capacity.get() / ( density * cp * std::abs(inletTemp.get() - outletTemp.get()));
 
               controller->setMaximumActuatedFlow(maxFlow * 1.25);
+
+              controller->setMinimumActuatedFlow(maxFlow * 1.25 * 0.05);
+            }
+            else
+            {
+              controller->setMinimumActuatedFlow(0.000001);
             }
           }
         }
