@@ -3944,6 +3944,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     waterHeaterMixed.setOnCycleParasiticFuelConsumptionRate(onCyclePrstcLoss);
   }
 
+  // TankOffCycleLossCoef
+
+  QDomElement tankOffCycleLossCoefElement = element.firstChildElement("TankOffCycleLossCoef");
+
+  double tankOffCycleLossCoef = tankOffCycleLossCoefElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    // Convert Btu/h-F to W/K
+    waterHeaterMixed.setOffCycleLossCoefficienttoAmbientTemperature(tankOffCycleLossCoef * 0.5275);
+  }
+
   // Setpoint schedule
 
   model::Schedule setpointTempSchedule = serviceHotWaterSetpointSchedule(model);
