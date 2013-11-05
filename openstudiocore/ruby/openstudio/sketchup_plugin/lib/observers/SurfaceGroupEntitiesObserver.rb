@@ -82,7 +82,7 @@ module OpenStudio
             #  This is a brand new surface or a copy that had to be cleaned.
             if (@drawing_interface.class == Space)
             
-              base_face = DrawingUtils.detect_base_face(entity, true)
+              base_face = DrawingUtils.detect_base_face(entity)
             
               if (base_face.nil?)
                 Plugin.log(OpenStudio::Info, "New Surface in Space")  
@@ -172,9 +172,9 @@ module OpenStudio
             base_face = nil
             if (@drawing_interface.class == Space)
               if (swapped)
-                base_face = DrawingUtils.detect_base_face(entity.drawing_interface.entity, true)
+                base_face = DrawingUtils.detect_base_face(entity.drawing_interface.entity)
               else
-                base_face = DrawingUtils.detect_base_face(entity, true)
+                base_face = DrawingUtils.detect_base_face(entity)
               end
             end
 
@@ -235,6 +235,8 @@ module OpenStudio
                 original_surface.add_observers
 
                 new_surface = SubSurface.new_from_entity(original_entity)
+                #puts "new_surface = #{new_surface}, #{new_surface.model_object.name}, #{new_surface.entity}"
+                #puts "new_surface.parent = #{new_surface.parent}, #{new_surface.parent.model_object.name}, #{new_surface.parent.entity}"
                 
                 # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                 original_surface.on_change_entity
@@ -244,8 +246,10 @@ module OpenStudio
                 Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  new sub surface no swap") 
                 original_surface = entity.drawing_interface
 
-                SubSurface.new_from_entity(entity)
-
+                new_surface = SubSurface.new_from_entity(entity)
+                #puts "new_surface = #{new_surface}, #{new_surface.model_object.name}, #{new_surface.entity}"
+                #puts "new_surface.parent = #{new_surface.parent}, #{new_surface.parent.model_object.name}, #{new_surface.parent.entity}"
+                
                 # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                 original_surface.on_change_entity
 
