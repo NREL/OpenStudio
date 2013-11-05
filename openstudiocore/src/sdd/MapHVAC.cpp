@@ -3255,7 +3255,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
-  // Translate PlantLoop::MaximumLoopFlowRate
+  // Translate PlantLoop::MaximumLoopFlowRate and MinimumLoopFlowRate
   if( ! autosize() )
   {
     std::vector<model::ModelObject> constantPumps;
@@ -3273,6 +3273,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       if( boost::optional<double> value = pump.ratedFlowRate() )
       {
         plantLoop.setMaximumLoopFlowRate(value.get());
+        //plantLoop.setMinimumLoopFlowRate(value.get());
       }
     }
     else if( variablePumps.size() > 0 )
@@ -3282,9 +3283,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       {
         plantLoop.setMaximumLoopFlowRate(value.get());
       }
+      //if( boost::optional<double> value = pump.minimumFlowRate() )
+      //{
+      //  plantLoop.setMinimumLoopFlowRate(value.get());
+      //}
     }
     else
     {
+      std::vector<double> minimums;
+
       double flowRate = 0.0;
 
       constantPumps = plantLoop.supplyComponents(plantLoop.supplySplitter(),
@@ -3299,6 +3306,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           if( boost::optional<double> ratedFlowRate = it->cast<model::PumpConstantSpeed>().ratedFlowRate() )
           {
             flowRate = flowRate + ratedFlowRate.get();
+
+            minimums.push_back(ratedFlowRate.get());
           }
         }
       }
@@ -3316,6 +3325,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           {
             flowRate = flowRate + ratedFlowRate.get();
           }
+          if( boost::optional<double> minimumFlowRate = it->cast<model::PumpVariableSpeed>().minimumFlowRate() )
+          {
+            minimums.push_back(minimumFlowRate.get());
+          }
         }
       }
 
@@ -3323,6 +3336,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       {
         plantLoop.setMaximumLoopFlowRate(flowRate);
       }
+      
+      //if( ! minimums.empty() )
+      //{
+      //  plantLoop.setMinimumLoopFlowRate(minimum(createVector(minimums)));
+      //}
     }
   }
 
@@ -3410,7 +3428,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       }
 
       QDomElement flowMinElement = pumpElement.firstChildElement("FlowMin");
-      value = flowCapElement.text().toDouble(&ok);
+      value = flowMinElement.text().toDouble(&ok);
       if( ok )
       {
         flowMin = unitToUnit(value, "gal/min", "m^3/s");
@@ -3439,6 +3457,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
         }
       }
     }
+
+    // TODO Figure out a way to set a more realistic minimum
+    LOG(Warn,pump.name().get() << " ignores minimum flow specification form SDD, defaulting to 0.");
+    pump.setMinimumFlowRate(0.0);
 
     result = pump;
   }
