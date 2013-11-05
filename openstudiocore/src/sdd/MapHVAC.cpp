@@ -3458,8 +3458,27 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       }
     }
 
+    // Pwr_fPLRCrvRef
+
+    boost::optional<model::CurveCubic> pwr_fPLRCrv;
+    QDomElement pwr_fPLRCrvRefElement = pumpElement.firstChildElement("Pwr_fPLRCrvRef");
+    pwr_fPLRCrv = model.getModelObjectByName<model::CurveCubic>(pwr_fPLRCrvRefElement.text().toStdString());
+
+    if( pwr_fPLRCrv )
+    {
+      double c1 = pwr_fPLRCrv->coefficient1Constant();
+      double c2 = pwr_fPLRCrv->coefficient2x();
+      double c3 = pwr_fPLRCrv->coefficient3xPOW2();
+      double c4 = pwr_fPLRCrv->coefficient4xPOW3();
+
+      pump.setCoefficient1ofthePartLoadPerformanceCurve(c1);
+      pump.setCoefficient2ofthePartLoadPerformanceCurve(c2);
+      pump.setCoefficient3ofthePartLoadPerformanceCurve(c3);
+      pump.setCoefficient4ofthePartLoadPerformanceCurve(c4);
+    }
+
     // TODO Figure out a way to set a more realistic minimum
-    LOG(Warn,pump.name().get() << " ignores minimum flow specification form SDD, defaulting to 0.");
+    LOG(Warn,pump.name().get() << " ignores minimum flow specification from SDD, defaulting to 0.");
     pump.setMinimumFlowRate(0.0);
 
     result = pump;
