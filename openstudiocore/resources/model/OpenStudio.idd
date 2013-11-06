@@ -6308,7 +6308,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
   A35, \field Condenser Type
        \type choice
        \key AirCooled
-       \key EvaporativelyCooled
+       ! \key EvaporativelyCooled
        \key WaterCooled
        \required-field
   A36, \field Condenser Inlet Node
@@ -8405,7 +8405,6 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type object-list
        \object-list ScheduleNames
 
-<<<<<<< HEAD
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   A1, \field Handle
        \type handle
