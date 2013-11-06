@@ -65,7 +65,7 @@ namespace analysisdriver {
 namespace detail {
 
   AnalysisDriver_Impl::AnalysisDriver_Impl(project::ProjectDatabase& database)
-    : m_running(false), m_database(database)
+    : m_running(false), m_status(AnalysisStatus::Idle), m_database(database)
   {
     // connect signals and slots
     bool connected = connect(SIGNAL(analysisComplete(const openstudio::UUID&)),
@@ -121,6 +121,14 @@ namespace detail {
       LOG(Info,"Analysis '" << analysis.name() << "' is already running.");
       return *currentAnalysis;
     }
+    
+    if (m_status == AnalysisStatus::Idle){
+      setStatus(AnalysisStatus::Starting);
+
+      // DLM: this allows GUIs to update before rest of function completes
+      // this could cause problems if one of these events was a stop button request...
+      Application::instance().processEvents();
+    }
 
     cleanOutIncompleteJobs(analysis);
 
@@ -132,6 +140,7 @@ namespace detail {
     // set running flag as appropriate
     if (runOptions.queuePausingBehavior() != QueuePausingBehavior::FullPauseManualUnpause) {
       m_running = true;
+      setStatus(AnalysisStatus::Running);
     }
 
     // create working directory
@@ -173,6 +182,11 @@ namespace detail {
     return m_running;
   }
 
+  AnalysisStatus AnalysisDriver_Impl::status() const
+  {
+    return m_status;
+  }
+
   bool AnalysisDriver_Impl::waitForFinished(int m_secs) {
 
     if (m_secs > 0) {
@@ -199,11 +213,13 @@ namespace detail {
   void AnalysisDriver_Impl::unpauseQueue() {
     if (!m_currentAnalyses.empty()) {
       m_running = true;
+      setStatus(AnalysisStatus::Running);
     }
     m_database.runManager().setPaused(false);
   }
 
   void AnalysisDriver_Impl::stop(CurrentAnalysis& currentAnalysis) {
+
     // pause RunManager while stopping an analysis
     runmanager::RunManager runManager = database().runManager();
     bool wasPaused = runManager.paused();
@@ -232,6 +248,8 @@ namespace detail {
       LOG(Debug,"Analysis " << toString(analysisUUID) << " stopped.");
       UUIDVector::iterator it = std::find(m_stopping.begin(),m_stopping.end(),analysisUUID);
       m_stopping.erase(it);
+
+      // this will be caught by catchAnalysisCompleteOrStopped which will set status
       emit analysisStopped(analysisUUID);
     }
     else {
@@ -469,6 +487,8 @@ namespace detail {
         openstudio::UUID analysisUUID = currentAnalysis->analysis().uuid();
         m_currentAnalyses.erase(currentAnalysis);
         LOG(Debug,"Analysis " << toString(analysisUUID) << "complete. The Dakota job has completed.");
+        
+        // this will be caught by catchAnalysisCompleteOrStopped which will set status
         emit analysisComplete(analysisUUID);
       }
     }
@@ -478,6 +498,14 @@ namespace detail {
     if (m_currentAnalyses.empty()) {
       LOG(Debug, "AnalysisDriver no longer runnning.");
       m_running = false;
+      setStatus(AnalysisStatus::Idle);
+    }
+  }
+
+  void AnalysisDriver_Impl::setStatus(AnalysisStatus status) {
+    if (m_status != status){
+      m_status = status;
+      emit analysisStatusChanged(m_status);
     }
   }
 
@@ -542,6 +570,8 @@ namespace detail {
       if (analysisCompleteFlag) {
         m_currentAnalyses.erase(currentAnalysis);
         LOG(Debug, "Analysis " << toString(analysis.uuid()) << " complete. There are no more data points to run.");
+        
+        // this will be caught by catchAnalysisCompleteOrStopped which will set status
         emit analysisComplete(analysis.uuid());
       }
       return;
@@ -910,7 +940,7 @@ namespace detail {
         (status == openstudio::runmanager::TreeStatusEnum::Failed))
     {
       openstudio::runmanager::Job parentJob = *job;
-      while (job = parentJob.parent()) {
+      while ((job = parentJob.parent())) {
         parentJob = *job;
       }
       return parentJob;
@@ -987,6 +1017,11 @@ CurrentAnalysis AnalysisDriver::run(analysis::Analysis& analysis, const Analysis
 
 bool AnalysisDriver::isRunning() const {
   return getImpl()->isRunning();
+}
+
+AnalysisStatus AnalysisDriver::status() const
+{
+  return getImpl()->status();
 }
 
 bool AnalysisDriver::waitForFinished(int m_secs) {

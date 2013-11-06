@@ -37,32 +37,32 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveLinear(
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_LinearFields::Coefficient1Constant)) {
+  if ((d = workspaceObject.getDouble(Curve_LinearFields::Coefficient1Constant))) {
     curve.setCoefficient1Constant(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_LinearFields::Coefficient2x)) {
+  if ((d = workspaceObject.getDouble(Curve_LinearFields::Coefficient2x))) {
     curve.setCoefficient2x(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_LinearFields::MinimumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_LinearFields::MinimumValueofx))) {
     curve.setMinimumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_LinearFields::MaximumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_LinearFields::MaximumValueofx))) {
     curve.setMaximumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_LinearFields::MinimumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_LinearFields::MinimumCurveOutput))) {
     curve.setMinimumCurveOutput(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_LinearFields::MaximumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_LinearFields::MaximumCurveOutput))) {
     curve.setMaximumCurveOutput(*d);
   }
-  if (s = workspaceObject.getString(Curve_LinearFields::InputUnitTypeforX,false,true)) {
+  if ((s = workspaceObject.getString(Curve_LinearFields::InputUnitTypeforX,false,true))) {
     curve.setInputUnitTypeforX(*s);
   }
-  if (s = workspaceObject.getString(Curve_LinearFields::OutputUnitType,false,true)) {
+  if ((s = workspaceObject.getString(Curve_LinearFields::OutputUnitType,false,true))) {
     curve.setOutputUnitType(*s);
   }
 

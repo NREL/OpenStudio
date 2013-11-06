@@ -1530,8 +1530,8 @@ namespace detail {
   QVariant toVariant(const Attribute& attribute) {
     QVariantMap attributeData;
 
-    attributeData["uuid"] = attribute.uuid().toString();
-    attributeData["version_uuid"] = attribute.versionUUID().toString();
+    attributeData["uuid"] = toQString(removeBraces(attribute.uuid()));
+    attributeData["version_uuid"] = toQString(removeBraces(attribute.versionUUID()));
     attributeData["name"] = toQString(attribute.name());
     if (attribute.displayName()) {
       attributeData["display_name"] = toQString(attribute.displayName().get());
@@ -1558,7 +1558,13 @@ namespace detail {
     }
     else {
       // use QVariant directly
-      attributeData["value"] = attribute.valueAsQVariant();
+      QVariant val = attribute.valueAsQVariant();
+      if (std::string(val.typeName()) == std::string("std::string")) {
+        // in some cases a std::string gets shoved in
+        // convert it to QString
+        val = toQString(val.value<std::string>());
+      }
+      attributeData["value"] = val;
       if (attribute.units()) {
         attributeData["units"] = toQString(attribute.units().get());
       }
@@ -1570,8 +1576,8 @@ namespace detail {
   Attribute toAttribute(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
 
-    openstudio::UUID uuid(map["uuid"].toString());
-    openstudio::UUID versionUUID(map["version_uuid"].toString());
+    openstudio::UUID uuid = toUUID(map["uuid"].toString().toStdString());
+    openstudio::UUID versionUUID = toUUID(map["version_uuid"].toString().toStdString());
     std::string name = map["name"].toString().toStdString();
     OptionalString displayName;
     if (map.contains("display_name")) {

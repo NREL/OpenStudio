@@ -352,7 +352,7 @@ namespace detail{
 
   double AirTerminalSingleDuctVAVReheat_Impl::fixedMinimumAirFlowRate()
   {
-    return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction).get();
+    return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate).get();
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::setFixedMinimumAirFlowRate( double value )

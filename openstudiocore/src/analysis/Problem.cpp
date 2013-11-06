@@ -895,7 +895,7 @@ namespace detail {
         // see if should clear
         bool clearCompound = false;
         if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
-          if (rcv->measure() == compoundRubyMeasure.get()) {
+          if (!(rcv->measure() == compoundRubyMeasure.get())) {
             clearCompound = true;
           }
         }
@@ -1470,8 +1470,11 @@ namespace detail {
     catch (...) {}
 
     try {
-      openstudio::path xmlOutputDataPath = allFiles.getLastByExtension("xml").fullPath;
-      dataPoint.setXmlOutputData(FileReference(xmlOutputDataPath));
+      FileReferenceVector xmlOutputData;
+      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+        xmlOutputData.push_back(FileReference(file.fullPath));
+      }
+      dataPoint.setXmlOutputData(xmlOutputData);
     }
     catch (...) {}
 
@@ -1775,6 +1778,14 @@ namespace detail {
 
       ++index;
     }
+    if (compoundRubyMeasure) {
+      // save out last RubyMeasure step
+      stepMap["variables"] = QVariant(variablesList);
+      workflowList.push_back(stepMap);
+      variablesList.clear();
+      variableIndex = 0;
+      compoundRubyMeasure.reset();
+    }
     problemData["workflow"] = QVariant(workflowList);
 
     if (!responses().empty()) {
@@ -1858,13 +1869,53 @@ namespace detail {
             boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
     }
 
-    return Problem(openstudio::UUID(map["uuid"].toString()),
-                   openstudio::UUID(map["version_uuid"].toString()),
+    return Problem(toUUID(map["uuid"].toString().toStdString()),
+                   toUUID(map["version_uuid"].toString().toStdString()),
                    map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                    map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                    map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                    workflow,
                    responses);
+  }
+
+  void Problem_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                         const openstudio::path& newBase)
+  {
+    // workflow steps
+    WorkflowStepVector steps = workflow();
+    BOOST_FOREACH(WorkflowStep& step,steps) {
+      step.getImpl<detail::WorkflowStep_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+
+    // responses
+    //
+    // currently does nothing, because the only variables that have path data are
+    // input variables, and any of those used by a response should also be in workflow().
+    //
+    FunctionVector functions = responses();
+    BOOST_FOREACH(Function& func,functions) {
+      func.getImpl<detail::Function_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+  }
+
+  QVariant Problem_Impl::toServerFormulationVariant() const {
+    QVariantMap map;
+
+    InputVariableVector vars = variables();
+    unsigned mgCnt(0), rcvCnt(0);
+    for (unsigned i = 0, n = vars.size(); i < n; ++i) {
+      if (vars[i].optionalCast<MeasureGroup>()) {
+        ++mgCnt;
+        continue;
+      }
+      if (vars[i].optionalCast<RubyContinuousVariable>()) {
+        ++rcvCnt;
+      }
+    }
+    map["num_measure_groups"] = QVariant(mgCnt);
+    map["num_ruby_continuous_variables"] = QVariant(rcvCnt);
+
+    return QVariant(map);
   }
 
   std::vector<WorkflowStep> Problem_Impl::convertVariablesAndWorkflowToWorkflowSteps(
@@ -1887,6 +1938,9 @@ namespace detail {
   bool Problem_Impl::checkWorkflow(const std::vector<WorkflowStep>& workflow) const {
     OptionalFileReferenceType currentType; // main-line energy model format
     std::set<FileReferenceType> allTypes;  // all types seen so far
+
+    // DLM: add the unknown type here, note this is treating unknown more like none
+    allTypes.insert(FileReferenceType::Unknown);
 
     if (OptionalAnalysisObject parent = this->parent()) {
       currentType = parent->cast<Analysis>().seed().fileType();

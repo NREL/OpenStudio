@@ -43,12 +43,23 @@
 #include <model/Timestep.hpp>
 #include <model/Timestep_Impl.hpp>
 #include <model/Meter.hpp>
+#include <model/OutputVariable.hpp>
 #include <model/SimulationControl.hpp>
 #include <model/SimulationControl_Impl.hpp>
 #include <model/RunPeriod.hpp>
 #include <model/RunPeriod_Impl.hpp>
 #include <model/YearDescription.hpp>
 #include <model/YearDescription_Impl.hpp>
+#include <model/OutputControlReportingTolerances.hpp>
+#include <model/OutputControlReportingTolerances_Impl.hpp>
+#include <model/ChillerElectricEIR.hpp>
+#include <model/ChillerElectricEIR_Impl.hpp>
+#include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerSingleSpeed_Impl.hpp>
+#include <model/BoilerHotWater.hpp>
+#include <model/BoilerHotWater_Impl.hpp>
+#include <model/SizingParameters.hpp>
+#include <model/SizingParameters_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -74,6 +85,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
+#include <QFileInfo>
 
 namespace openstudio {
 namespace sdd {
@@ -188,7 +200,10 @@ namespace sdd {
 
       // do site after design days and weather file
       boost::optional<model::ModelObject> site = translateSite(projectElement, doc, *result);
-      OS_ASSERT(site); // what type of error handling do we want?
+      //OS_ASSERT(site); // what type of error handling do we want?
+      if (!site){
+        LOG(Error, "Could not find site information in SDD");
+      }
 
       // HVACAutoSizing
       QDomElement hvacAutoSizingElement = projectElement.firstChildElement("HVACAutoSizing");
@@ -196,6 +211,10 @@ namespace sdd {
       {
         m_autosize = false;
       }
+
+      model::SizingParameters sp = result->getUniqueModelObject<model::SizingParameters>();
+      sp.setHeatingSizingFactor(1.0);
+      sp.setCoolingSizingFactor(1.0);
 
       // do materials before constructions
       QDomNodeList materialElements = projectElement.elementsByTagName("Mat");
@@ -598,34 +617,65 @@ namespace sdd {
 
       // Lights - Reg Ltg, NonReg Ltg
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
       meter.setSpecificEndUse("Reg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
       meter.setSpecificEndUse("NonReg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::ExteriorLights);
       meter.setSpecificEndUse("Reg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::ExteriorLights);
       meter.setSpecificEndUse("NonReg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
+
+      if( ! result->getModelObjects<model::PlantLoop>().empty() )
+      {
+        model::OutputVariable var("Plant Supply Side Cooling Demand Rate",*result);
+        var.setReportingFrequency("hourly");
+
+        model::OutputVariable var2("Plant Supply Side Heating Demand Rate",*result);
+        var2.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::ChillerElectricEIR>().empty() )
+      {
+        model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::CoolingTowerSingleSpeed>().empty() )
+      {
+        model::OutputVariable var("Cooling Tower Heat Transfer Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::BoilerHotWater>().empty() )
+      {
+        model::OutputVariable var("Boiler Heating Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
+      model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
+      rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
+      rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
     }
-
+    
     return result;
   }
 
@@ -685,6 +735,8 @@ namespace sdd {
     }
 
     model::SimulationControl simulationControl = model.getUniqueModelObject<model::SimulationControl>();
+
+    simulationControl.setMaximumNumberofWarmupDays(50);
     
     //if ((hvacAutoSizingElement.text().toInt() == 0) && (runDesignDaysElement.text().toInt() == 0)){
     //  simulationControl.setRunSimulationforSizingPeriods(false);
@@ -710,7 +762,15 @@ namespace sdd {
       model::YearDescription yearDescription = model.getUniqueModelObject<model::YearDescription>();
       yearDescription.setCalendarYear(yearElement.text().toInt());
 
+      std::string runPeriodName = "Run Period";
+      QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
+      if (!annualWeatherFileElement.isNull()){
+        QFileInfo annualWeatherFile(annualWeatherFileElement.text());
+        runPeriodName = toString(annualWeatherFile.baseName());
+      }
+
       model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();
+      runPeriod.setName(runPeriodName);
       runPeriod.setBeginMonth(beginMonthElement.text().toInt());
       runPeriod.setBeginDayOfMonth(beginDayElement.text().toInt());
       runPeriod.setEndMonth(endMonthElement.text().toInt());

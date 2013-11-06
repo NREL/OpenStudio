@@ -42,6 +42,7 @@
 
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/Assert.hpp>
 
 #include <boost/filesystem.hpp>
@@ -388,6 +389,16 @@ void RunView::runFinished(const openstudio::path &t_sqlFile, const openstudio::p
   {
     m_statusLabel->setText("Canceled");
   }
+
+  // DLM: should we attach the sql file to the model here?
+  // DLM: if model is re-opened with results they will not be added here, better to do this on results tab
+  //if (exists(t_sqlFile)){
+  //  SqlFile sqlFile(t_sqlFile);
+  //  if (sqlFile.connectionOpen()){
+  //    boost::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  //    osdocument->model().setSqlFile(sqlFile);
+  //  }
+  //}
   
   m_canceling = false;
   LOG(Debug, "Emitting results generated for sqlfile: " << openstudio::toString(t_sqlFile) << " and radiance file " << openstudio::toString(t_radianceOutputPath));
@@ -549,6 +560,9 @@ void RunView::playButtonClicked(bool t_checked)
 
     m_canceling = false;
     m_outputWindow->clear();
+
+    // reset the model's sqlFile
+    osdocument->model().resetSqlFile();
 
     // we are starting the simulations
     openstudio::runmanager::RunManager rm = runManager();

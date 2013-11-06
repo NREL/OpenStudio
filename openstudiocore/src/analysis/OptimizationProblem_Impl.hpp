@@ -34,7 +34,6 @@ namespace detail {
 
   /** OptimizationProblem_Impl is a Problem_Impl that is the implementation class for OptimizationProblem.*/
   class ANALYSIS_API OptimizationProblem_Impl : public Problem_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -134,12 +133,16 @@ namespace detail {
     void clearObjectiveFunctions();
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual QVariant toVariant() const;
 
     static OptimizationProblem fromVariant(const QVariant& variant, const VersionString& version);
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    protected:

@@ -4,6 +4,12 @@
 #see your EnergyPlus installation or the URL below for information on EnergyPlus objects
 # http://apps1.eere.energy.gov/buildings/energyplus/pdfs/inputoutputreference.pdf
 
+#see the URL below for information on using life cycle cost objects in OpenStudio
+# http://openstudio.nrel.gov/openstudio-life-cycle-examples
+
+#see the URL below for access to C++ documentation on workspace objects (click on "workspace" in the main window to view workspace objects)
+# http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/utilities/html/idf_page.html
+
 #start the measure
 class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
   
@@ -27,6 +33,7 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
     add_zone.setDisplayName("Add a zone to your model?")
     add_zone.setDefaultValue(true)
     args << add_zone
+    
     
     return args
   end #end the arguments method

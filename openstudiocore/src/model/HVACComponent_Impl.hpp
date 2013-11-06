@@ -88,6 +88,8 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   virtual boost::optional<HVACComponent> containingHVACComponent() const;
 
   virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+  
+  virtual boost::optional<StraightComponent> containingStraightComponent() const;
 
  protected:
 

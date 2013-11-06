@@ -79,10 +79,11 @@ namespace openstudio{
 
     useRemoteProductionUrl();
 
-    // DLM: this assert was failing for me, wait until SSL is required dependency to try this again
-    //bool isConnected = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
-    //  this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    //OS_ASSERT(isConnected);
+#ifndef QT_NO_OPENSSL
+    bool isConnected = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
+      this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
+    OS_ASSERT(isConnected);
+#endif
   }
 
   RemoteBCL::~RemoteBCL()
@@ -229,9 +230,11 @@ namespace openstudio{
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
       OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
+#endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -269,9 +272,12 @@ namespace openstudio{
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
       OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
       OS_ASSERT(test);
+#endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -448,7 +454,9 @@ namespace openstudio{
 
   int RemoteBCL::numResultPages() const
   {
-    return std::ceil(static_cast<double>(m_lastTotalResults)/static_cast<double>(m_numResultsPerQuery));
+    double numerator(lastTotalResults());
+    double denominator(resultsPerQuery());
+    return int(std::ceil(numerator/denominator));
   }
 
   bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& remoteUrl)
@@ -490,9 +498,12 @@ namespace openstudio{
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
       OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
       OS_ASSERT(test);
+#endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -595,9 +606,12 @@ namespace openstudio{
     // when the reply is finished call onDownloadComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
     OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
     OS_ASSERT(test);
+#endif
 
     m_downloadReply = m_networkManager->post(request, data);
         
@@ -631,9 +645,12 @@ namespace openstudio{
     // when the reply is finished call onOnDemandGeneratorResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onOnDemandGeneratorResponseComplete(QNetworkReply*)));
     OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
     OS_ASSERT(test);
+#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -707,9 +724,12 @@ namespace openstudio{
     // when the reply is finished call onDownloadComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
     OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
     OS_ASSERT(test);
+#endif
 
     m_downloadReply = m_networkManager->get(request);
 
@@ -749,9 +769,12 @@ namespace openstudio{
     // when the reply is finished call onMetaSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
     OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
     OS_ASSERT(test);
+#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -791,9 +814,12 @@ namespace openstudio{
     // when the reply is finished call onMetaSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
     OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
     OS_ASSERT(test);
+#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -834,9 +860,12 @@ namespace openstudio{
     // when the reply is finished call onSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
     OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
     OS_ASSERT(test);
+#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -877,9 +906,12 @@ namespace openstudio{
     // when the reply is finished call onSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
     OS_ASSERT(test);
+
+#ifndef QT_NO_OPENSSL
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
     OS_ASSERT(test);
+#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -990,7 +1022,7 @@ namespace openstudio{
   {
     QDomElement root = remoteQueryResponse.domDocument().documentElement();
 
-    if (!root.isNull() && (root.tagName() == "results")){
+    if (!root.isNull() && (root.tagName().startsWith("result"))){
       QDomElement numResultsElement = root.firstChildElement("result_count");
       if (!numResultsElement.isNull()){
         return BCLMetaSearchResult(root);
@@ -1133,22 +1165,28 @@ namespace openstudio{
           } else if (componentType == "measure") {
             path measureXmlPath = dest / toPath("measure.xml");
             // open the measure to figure out uid and vid
-            BCLMeasure measure(measureXmlPath.parent_path());
-            std::string uid = measure.uid();
-            std::string versionId = measure.versionId();
+            boost::optional<BCLMeasure> measure;
+            try{
+              measure = BCLMeasure(measureXmlPath.parent_path());
 
-            // check if component has proper uid and vid
-            if (!uid.empty() && !versionId.empty()){
+              std::string uid = measure->uid();
+              std::string versionId = measure->versionId();
 
-              dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/"+uid+"/"+versionId)));
+              // check if component has proper uid and vid
+              if (!uid.empty() && !versionId.empty()){
 
-              removeDirectory(dest);
-              if (copyDirectory(measureXmlPath.parent_path(), dest))
-              {
-                // Add to LocalBCL
-                m_lastMeasureDownload = BCLMeasure(dest);
-                LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
+                dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/"+uid+"/"+versionId)));
+
+                removeDirectory(dest);
+                if (copyDirectory(measureXmlPath.parent_path(), dest))
+                {
+                  // Add to LocalBCL
+                  m_lastMeasureDownload = BCLMeasure(dest);
+                  LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
+                }
               }
+            }catch(const std::exception&){
+              LOG(Error, "Unable to create measure from download: " + toString(measureXmlPath.parent_path()));
             }
           }
         }else{

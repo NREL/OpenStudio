@@ -66,7 +66,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
   {
     idfObject.setString(Sizing_SystemFields::DesignOutdoorAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.designOutdoorAirFlowRate() )
+  else if( (value = modelObject.designOutdoorAirFlowRate()) )
   {
     idfObject.setDouble(Sizing_SystemFields::DesignOutdoorAirFlowRate,value.get());
   }

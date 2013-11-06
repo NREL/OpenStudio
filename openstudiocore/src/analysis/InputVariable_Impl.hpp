@@ -44,7 +44,6 @@ namespace detail {
   /** InputVariable_Impl is a Variable_Impl that is the implementation class for
    *  InputVariable */
   class ANALYSIS_API InputVariable_Impl : public Variable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -101,7 +100,7 @@ namespace detail {
                                                 const openstudio::path& rubyIncludeDirectory) const = 0;
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual QVariant toVariant() const;

@@ -37,7 +37,7 @@ namespace openstudio{
     // test that normal has length 1
     double length = m_a*m_a + m_b*m_b + m_c*m_c;
     double tol = 0.0001;
-    OS_ASSERT(abs(1.0-length) < tol);
+    OS_ASSERT(fabs(1.0-length) < tol);
   }
 
   Plane::Plane(const Point3d& point, const Vector3d& outwardNormal)
@@ -89,10 +89,13 @@ namespace openstudio{
 
     }else{
 
-      bool test = false;
+      bool foundSolution = false;
       double tol = 1e-8; // 0.0001 was too big for the determinant tolerance, 1e-12 was too small
+      double maxDet = tol;
 
-      if (!test){
+      // solve the equation ax+by+cz+d=0 in a few different ways, keep the best one
+
+      {
         // Ax = b, x = [a/c; b/c; d/c]
         Matrix A(N,3);
         Matrix At(3,N);
@@ -108,9 +111,11 @@ namespace openstudio{
         }
       
         Matrix AtA = prod(At, A);
-        if (det3x3(AtA) >= tol){
+        double det = det3x3(AtA); // always positive for A'*A
+        if (det > maxDet){
+          maxDet = det;
           Matrix AtAInv(3,3);
-          test = invert(AtA, AtAInv);
+          bool test = invert(AtA, AtAInv);
           if (test){
             Vector x = prod(prod(AtAInv, At), b);
             double a_c = x[0];
@@ -127,11 +132,12 @@ namespace openstudio{
             m_a = a_c*m_c;
             m_b = b_c*m_c;
             m_d = d_c*m_c;
+            foundSolution = true;
           }
         }
       }
 
-      if (!test){
+      {
         // Ax = b, x = [a/b; c/b; d/b]
         Matrix A(N,3);
         Matrix At(3,N);
@@ -147,9 +153,11 @@ namespace openstudio{
         }
       
         Matrix AtA = prod(At, A);
-        if (det3x3(AtA) >= tol){
+        double det = det3x3(AtA); // always positive for A'*A
+        if (det > maxDet){
+          maxDet = det;
           Matrix AtAInv(3,3);
-          test = invert(AtA, AtAInv);
+          bool test = invert(AtA, AtAInv);
           if (test){
             Vector x = prod(prod(AtAInv, At), b);
             double a_b = x[0];
@@ -166,11 +174,12 @@ namespace openstudio{
             m_a = a_b*m_b;
             m_c = c_b*m_b;
             m_d = d_b*m_b;
+            foundSolution = true;
           }
         }
       }
 
-      if (!test){
+      {
         // Ax = b, x = [b/a; c/a; d/a]
         Matrix A(N,3);
         Matrix At(3,N);
@@ -186,9 +195,11 @@ namespace openstudio{
         }
       
         Matrix AtA = prod(At, A);
-        if (det3x3(AtA) >= tol){
+        double det = det3x3(AtA); // always positive for A'*A
+        if (det > maxDet){
+          maxDet = det;
           Matrix AtAInv(3,3);
-          test = invert(AtA, AtAInv);
+          bool test = invert(AtA, AtAInv);
           if (test){
             Vector x = prod(prod(AtAInv, At), b);
             double b_a = x[0];
@@ -205,11 +216,12 @@ namespace openstudio{
             m_b = b_a*m_a;
             m_c = c_a*m_a;
             m_d = d_a*m_a;
+            foundSolution = true;
           }
         }
       }
 
-      if (!test){
+      if (!foundSolution){
         LOG_AND_THROW("Cannot compute plane for points " << points);
       }
 
@@ -229,7 +241,7 @@ namespace openstudio{
       // test that normal has length 1
       double length = m_a*m_a + m_b*m_b + m_c*m_c;
       tol = 0.0001;
-      OS_ASSERT(abs(1.0-length) <= tol);
+      OS_ASSERT(fabs(1.0-length) <= tol);
     }
   }
 
@@ -239,7 +251,7 @@ namespace openstudio{
     // test that normal has length 1
     double length = m_a*m_a + m_b*m_b + m_c*m_c;
     double tol = 0.0001;
-    OS_ASSERT(abs(1.0-length) <= tol);
+    OS_ASSERT(fabs(1.0-length) <= tol);
   }
 
   Plane::~Plane()
@@ -255,7 +267,7 @@ namespace openstudio{
   {
     // dot product of outward normals should be 1 or negative 1
     double dot = (m_a*other.a() + m_b*other.b() + m_c*other.c());
-    bool result = (abs(dot) >= 1.0-tol);
+    bool result = (fabs(dot) >= 1.0-tol);
     return result;
   }
 
@@ -265,7 +277,7 @@ namespace openstudio{
   {
     double dot = (m_a*other.a() + m_b*other.b() + m_c*other.c());
     double dist = m_d - other.d();
-    bool result = (dot >= 1-tol) && (abs(dist) <= tol);
+    bool result = (dot >= 1-tol) && (fabs(dist) <= tol);
     return result;
   }
 
@@ -275,7 +287,7 @@ namespace openstudio{
   {
     double dot = (m_a*other.a() + m_b*other.b() + m_c*other.c());
     double dist = m_d + other.d();
-    bool result = (dot <= -1+tol) && (abs(dist) <= tol);
+    bool result = (dot <= -1+tol) && (fabs(dist) <= tol);
     return result;
   }
 

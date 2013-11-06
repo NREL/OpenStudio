@@ -31,6 +31,7 @@ class QStringList;
 class QTableWidget;
 class QTimer;
 class QPaintEvent;
+class QStackedWidget;
 
 namespace openstudio{
 
@@ -54,21 +55,52 @@ class ResultsView : public PatMainTabView
 
     OSListView* dataPointResultsListView;
 
+    OSListView* dataPointCalibrationListView;
+
+    double calibrationMaxNMBE() const;
+
+    double calibrationMaxCVRMSE() const;
+
   signals: 
 
     void openButtonClicked(bool clicked);
 
     void openDirButtonClicked(bool clicked);
 
+    void downloadResultsButtonClicked(bool clicked);
+
+    void calibrationThresholdsChanged(double maxNMBE, double maxCVRMSE);
+
   public slots:
+
+    void updateReportButtons();
+
+    void selectView(int index);
 
     void enableViewFileButton(bool enable);
 
     void enableOpenDirectoryButton(bool enable);
 
+    void enableDownloadResultsButton(bool enable, bool sameSession);
+
+    void selectCalibrationMethod(const QString &);
+
   private:
 
+    void downloadResultsButtonEnabled(bool enabled);
+
+    void openButtonEnabled(bool enabled);
+  
+    QStackedWidget * m_stackedWidget;
+
+    QPushButton * m_standardResultsBtn;
+    QPushButton * m_calibrationResultsBtn;
     QPushButton* m_viewFileButton;
+    QPushButton* m_downloadResultsButton;
+
+    QLabel* m_calibrationMethodLabel;
+    double m_calibrationMaxNMBE;
+    double m_calibrationMaxCVRMSE;
 
     OpenDirectoryButton* m_openDirButton;
 };
@@ -162,6 +194,51 @@ private:
   openstudio::analysis::DataPoint m_dataPoint;
   openstudio::analysis::DataPoint m_baselineDataPoint;
   bool m_alternateRow;
+};
+
+class DataPointCalibrationHeaderView : public QWidget
+{
+  Q_OBJECT
+
+public:
+  
+  DataPointCalibrationHeaderView();
+
+private:
+
+};
+
+class DataPointCalibrationView : public QAbstractButton
+{
+  Q_OBJECT
+
+public:
+
+  DataPointCalibrationView(const openstudio::analysis::DataPoint& dataPoint,
+                           const openstudio::analysis::DataPoint& baselineDataPoint,
+                           bool alternateRow, double maxNMBE, double maxCVRMSE);
+
+  virtual ~DataPointCalibrationView() {}
+
+public slots:
+  
+  void update();
+
+  void setHasEmphasis(bool hasEmphasis);
+
+protected:
+
+  void paintEvent(QPaintEvent * e);
+
+private:
+
+  QLabel* m_nameLabel;
+
+  openstudio::analysis::DataPoint m_dataPoint;
+  openstudio::analysis::DataPoint m_baselineDataPoint;
+  bool m_alternateRow;
+  double m_calibrationMaxNMBE;
+  double m_calibrationMaxCVRMSE;
 };
 
 }

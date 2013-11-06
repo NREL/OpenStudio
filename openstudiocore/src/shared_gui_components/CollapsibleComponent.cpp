@@ -40,6 +40,7 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
     m_componentList(componentList),
     m_mainLayout(NULL)
 {
+
   OS_ASSERT(m_collapsibleComponentHeader);
   OS_ASSERT(m_componentList);
 

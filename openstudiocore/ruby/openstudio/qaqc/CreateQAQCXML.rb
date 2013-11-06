@@ -63,6 +63,7 @@ report_save_path = OpenStudio::Path.new("#{report_save_dir}qaqc.xml")
 # report_save_path = 'C:/Users/aparker/Desktop/PAT Project Examples/Tabs 3 and 4/QAQC.xml'
 
 #load the project
+OpenStudio::Application::instance().application()
 proj = OpenStudio::AnalysisDriver::SimpleProject::open(path_to_osp)
 
 #fail if the project didn't load correctly

@@ -48,7 +48,7 @@ class ReplaceModel_Test < Test::Unit::TestCase
     argument_map = OpenStudio::Ruleset::OSArgumentMap.new
     
     alternativeModelPath = arguments[0].clone
-	path = OpenStudio::Path.new(File.dirname(__FILE__) + "/EnvelopeAndLoadTestModel_01.osm")
+    path = OpenStudio::Path.new(File.dirname(__FILE__) + "/EnvelopeAndLoadTestModel_01.osm")
     assert(alternativeModelPath.setValue(path))
     argument_map["alternativeModelPath"] = alternativeModelPath
     

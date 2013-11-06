@@ -33,7 +33,6 @@ namespace detail {
   /** OutputAttributeVariable_Impl is an OutputVariable_Impl that is the implementation
    *  class for OutputAttributeVariable.*/
   class ANALYSIS_API OutputAttributeVariable_Impl : public OutputVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

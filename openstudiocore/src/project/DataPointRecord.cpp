@@ -44,16 +44,18 @@
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 
 #include <utilities/data/Attribute.hpp>
-
 #include <utilities/data/Tag.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/Finder.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
 #include <boost/bind.hpp>
+
+using namespace openstudio::analysis;
 
 // DLM: I believe this will work cross-platform, I don't think ';' is allowed in a path on any system?
 const char pathSep = ';';
@@ -78,6 +80,8 @@ namespace detail {
       m_dataPointRecordType(dataPointRecordType),
       m_complete(dataPoint.isComplete()),
       m_failed(dataPoint.failed()),
+      m_selected(dataPoint.selected()),
+      m_runType(dataPoint.runType()),
       m_directory(dataPoint.directory()),
       m_dakotaParametersFiles(dataPoint.dakotaParametersFiles())
   {
@@ -116,6 +120,14 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_failed = value.toBool();
 
+    value = query.value(DataPointRecordColumns::selected);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_selected = value.toBool();
+
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_runType = DataPointRunType(value.toInt());
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_directory = toPath(value.toString());
@@ -133,11 +145,6 @@ namespace detail {
     value = query.value(DataPointRecordColumns::sqlOutputDataRecordId);
     if (value.isValid() && !value.isNull()) {
        m_sqlOutputDataRecordId = value.toInt();
-    }
-
-    value = query.value(DataPointRecordColumns::xmlOutputDataRecordId);
-    if (value.isValid() && !value.isNull()) {
-       m_xmlOutputDataRecordId = value.toInt();
     }
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
@@ -180,10 +187,8 @@ namespace detail {
     if (ofrr) {
       result.push_back(*ofrr);
     }
-    ofrr = xmlOutputDataRecord();
-    if (ofrr) {
-      result.push_back(*ofrr);
-    }
+    FileReferenceRecordVector frrs = xmlOutputDataRecords();
+    result.insert(result.end(),frrs.begin(),frrs.end());
     DataPointValueRecordVector rvrs = responseValueRecords();
     result.insert(result.end(),rvrs.begin(),rvrs.end());
     return result;
@@ -198,9 +203,9 @@ namespace detail {
   std::vector<JoinRecord> DataPointRecord_Impl::joinRecords() const {
     JoinRecordVector result;
 
-    DataPoint_Measure_JoinRecordVector discretePerturbationJoins =
+    DataPoint_Measure_JoinRecordVector measureJoins =
       JoinRecord::getJoinRecordsForLeftId<DataPoint_Measure_JoinRecord>(id(),projectDatabase());
-    result.insert(result.end(),discretePerturbationJoins.begin(),discretePerturbationJoins.end());
+    result.insert(result.end(),measureJoins.begin(),measureJoins.end());
 
     return result;
   }
@@ -233,6 +238,10 @@ namespace detail {
   }
 
   bool DataPointRecord_Impl::isComplete() const {
+    return complete();
+  }
+
+  bool DataPointRecord_Impl::complete() const {
     return m_complete;
   }
 
@@ -240,40 +249,155 @@ namespace detail {
     return m_failed;
   }
 
+  bool DataPointRecord_Impl::selected() const {
+    return m_selected;
+  }
+
+  analysis::DataPointRunType DataPointRecord_Impl::runType() const {
+    return m_runType;
+  }
+
   openstudio::path DataPointRecord_Impl::directory() const {
     return m_directory;
   }
 
+  std::vector<QVariant> DataPointRecord_Impl::variableValues() const {
+    std::vector<QVariant> result;
+
+    // variables, in order
+    InputVariableRecordVector ivrs = problemRecord().inputVariableRecords();
+
+    // measure records and continuous variable value records, not in order   
+    MeasureRecordVector measureRecords;
+    ProjectDatabase database = projectDatabase();
+    QSqlQuery query(*(database.qSqlDatabase()));
+    query.prepare(toQString("SELECT o.* FROM " + MeasureRecord::databaseTableName() + " o , " +
+        DataPoint_Measure_JoinRecord::databaseTableName() + " j " +
+        " WHERE o.variableRecordId NOT NULL AND j.leftId=:leftId AND o.id=j.rightId "));
+    query.bindValue(":leftId",id());
+    assertExec(query);
+    while(query.next()) {
+      // by asking for whole record, measureVectorIndex() will be correct even if
+      // record is dirty
+      OptionalMeasureRecord dpr = MeasureRecord::factoryFromQuery(query,database);
+      OS_ASSERT(dpr);
+      measureRecords.push_back(*dpr);
+    }
+    query.clear();
+    
+    DataPointValueRecordVector cvValueRecords;
+    query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
+                            " WHERE dataPointRecordId=:dataPointRecordId AND " +
+                            "continuousVariableRecordId NOT NULL"));
+    query.bindValue(":dataPointRecordId",id());
+    assertExec(query);
+    while (query.next()) {
+      DataPointValueRecord continuousVariableValueRecord(query, database);
+      cvValueRecords.push_back(continuousVariableValueRecord);
+    }
+    query.clear();    
+    
+    // order them
+    BOOST_FOREACH(const InputVariableRecord& ivr,ivrs) {
+      if (ivr.optionalCast<MeasureGroupRecord>()) {
+        MeasureRecordVector::iterator it = std::find_if(
+            measureRecords.begin(),
+            measureRecords.end(),
+            boost::bind(variableRecordIdEquals,_1,ivr.id()));
+        OS_ASSERT(it != measureRecords.end());
+        OS_ASSERT(it->measureVectorIndex());
+        result.push_back(QVariant(it->measureVectorIndex().get()));
+        measureRecords.erase(it);
+      }
+      else {
+        DataPointValueRecordVector::iterator it = std::find_if(
+            cvValueRecords.begin(),
+            cvValueRecords.end(),
+            boost::bind(continuousVariableRecordIdEquals,_1,ivr.id()));
+        OS_ASSERT(it != cvValueRecords.end());
+        result.push_back(QVariant(it->dataPointValue()));
+        cvValueRecords.erase(it);
+      }
+    }
+    OS_ASSERT(measureRecords.empty());
+    OS_ASSERT(cvValueRecords.empty());
+    OS_ASSERT(result.size() == ivrs.size());
+
+    return result;
+  }
+
+  std::vector<MeasureRecord> DataPointRecord_Impl::measureRecords() const {
+    MeasureRecordVector result, temp;
+
+    // get variable records in order
+    InputVariableRecordVector ivrs = problemRecord().inputVariableRecords();
+    MeasureGroupRecordVector mgrs = subsetCastVector<MeasureGroupRecord>(ivrs);
+
+    // get measure records
+    ProjectDatabase database = projectDatabase();
+    QSqlQuery query(*(database.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() + " o , " +
+        DataPoint_Measure_JoinRecord::databaseTableName() + " j " +
+        " WHERE o.variableRecordId NOT NULL AND j.leftId=:leftId AND o.id=j.rightId "));
+    query.bindValue(":leftId",id());
+    assertExec(query);
+    if (query.next()) {
+      // by asking for whole record, measureVectorIndex() will be correct even if
+      // record is dirty
+      OptionalMeasureRecord dpr = MeasureRecord::factoryFromQuery(query,database);
+      OS_ASSERT(dpr);
+      temp.push_back(*dpr);
+    }
+    query.clear();
+
+    // order them
+    BOOST_FOREACH(const MeasureGroupRecord& mgr,mgrs) {
+      MeasureRecordVector::iterator it = std::find_if(
+          temp.begin(),
+          temp.end(),
+          boost::bind(variableRecordIdEquals,_1,mgr.id()));
+      OS_ASSERT(it != temp.end());
+      result.push_back(*it);
+      temp.erase(it);
+    }
+    OS_ASSERT(temp.empty());
+
+    return result;
+  }
+
   std::vector<DataPointValueRecord> DataPointRecord_Impl::continuousVariableValueRecords() const {
-    DataPointValueRecordVector result;
+    DataPointValueRecordVector result, temp;
 
     // get variable records in order
     InputVariableRecordVector ivrs = problemRecord().inputVariableRecords();
     // cast to continuous variable records--order will be preserved
     ContinuousVariableRecordVector cvrs = subsetCastVector<ContinuousVariableRecord>(ivrs);
 
+    // get all relevant ContinuousVariableRecords
     ProjectDatabase database = projectDatabase();
     QSqlQuery query(*(database.qSqlDatabase()));
-    OptionalInt lastVectorIndex;
-    BOOST_FOREACH(const ContinuousVariableRecord& cvr,cvrs) {
-      // double-check ordering
-      int vectorIndex = cvr.variableVectorIndex();
-      if (lastVectorIndex) {
-        OS_ASSERT(lastVectorIndex.get() < vectorIndex);
-      }
-      lastVectorIndex = vectorIndex;
-      query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
-                              " WHERE dataPointRecordId=:dataPointRecordId AND " +
-                              "continuousVariableRecordId=:continuousVariableRecordId"));
-      query.bindValue(":dataPointRecordId",id());
-      query.bindValue(":continuousVariableRecordId",cvr.id());
-      assertExec(query);
-      if (query.first()) {
-        DataPointValueRecord continuousVariableValueRecord(query, database);
-        result.push_back(continuousVariableValueRecord);
-      }
-      query.clear();
+    query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
+                            " WHERE dataPointRecordId=:dataPointRecordId AND " +
+                            "continuousVariableRecordId NOT NULL"));
+    query.bindValue(":dataPointRecordId",id());
+    assertExec(query);
+    while (query.next()) {
+      DataPointValueRecord continuousVariableValueRecord(query, database);
+      temp.push_back(continuousVariableValueRecord);
     }
+    query.clear();
+
+    // order them
+    BOOST_FOREACH(const ContinuousVariableRecord& cvr,cvrs) {
+      DataPointValueRecordVector::iterator it = std::find_if(
+          temp.begin(),
+          temp.end(),
+          boost::bind(continuousVariableRecordIdEquals,_1,cvr.id()));
+      OS_ASSERT(it != temp.end());
+      result.push_back(*it);
+      temp.erase(it);
+    }
+    OS_ASSERT(temp.empty());
 
     return result;
   }
@@ -332,11 +456,21 @@ namespace detail {
     return result;
   }
 
-  boost::optional<FileReferenceRecord> DataPointRecord_Impl::xmlOutputDataRecord() const {
-    OptionalFileReferenceRecord result;
-    if (m_xmlOutputDataRecordId) {
-      ProjectDatabase database = projectDatabase();
-      result = FileReferenceRecord::getFileReferenceRecord(*m_xmlOutputDataRecordId,database);
+  std::vector<FileReferenceRecord> DataPointRecord_Impl::xmlOutputDataRecords() const {
+    FileReferenceRecordVector result;
+
+    ProjectDatabase database = projectDatabase();
+    QSqlQuery query(*(database.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + FileReferenceRecord::databaseTableName() +
+                            " WHERE parentDatabaseTableName=:parentDatabaseTableName AND " +
+                            "parentRecordId=:parentRecordId AND " +
+                            "fileReferenceType=:fileReferenceType"));
+    query.bindValue(":parentDatabaseTableName",toQString(databaseTableName()));
+    query.bindValue(":parentRecordId",id());
+    query.bindValue(":fileReferenceType",int(FileReferenceType::XML));
+    assertExec(query);
+    while (query.next()) {
+      result.push_back(FileReferenceRecord(query, database));
     }
     return result;
   }
@@ -361,54 +495,26 @@ namespace detail {
     return result;
   }
 
+  std::vector<AttributeRecord> DataPointRecord_Impl::attributeRecords() const {
+    AttributeRecordVector result;
+    Q_FOREACH(const FileReferenceRecord& fr,xmlOutputDataRecords()) {
+      AttributeRecordVector additions = fr.attributeRecords();
+      result.insert(result.end(),additions.begin(),additions.end());
+    }
+    return result;
+  }
+
   analysis::DataPoint DataPointRecord_Impl::dataPoint() const {
     ProblemRecord problemRecord = this->problemRecord();
 
     // get variable values
-    std::vector<QVariant> variableValues;
-    ProjectDatabase database = projectDatabase();
-    // returned in order
-    InputVariableRecordVector inputVariableRecords = problemRecord.inputVariableRecords();
-    BOOST_FOREACH(const InputVariableRecord& inputVariableRecord,inputVariableRecords) {
-      if (inputVariableRecord.optionalCast<DiscreteVariableRecord>()) {
-        QSqlQuery query(*(database.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() + " o , " +
-            DataPoint_Measure_JoinRecord::databaseTableName() + " j " +
-            " WHERE o.variableRecordId=:variableRecordId AND j.leftId=:leftId AND o.id=j.rightId "));
-        query.bindValue(":variableRecordId",inputVariableRecord.id());
-        query.bindValue(":leftId",id());
-        assertExec(query);
-        if (query.first()) {
-          // by asking for whole record, measureVectorIndex() will be correct even if
-          // record is dirty
-          OptionalMeasureRecord dpr = MeasureRecord::factoryFromQuery(query,database);
-          if (dpr && dpr->measureVectorIndex()) {
-            variableValues.push_back(dpr->measureVectorIndex().get());
-          }
-        }
-      }
-      else {
-        OS_ASSERT(inputVariableRecord.optionalCast<ContinuousVariableRecord>());
-        QSqlQuery query(*(database.qSqlDatabase()));
-        query.prepare(toQString("SELECT dataPointValue FROM " + DataPointValueRecord::databaseTableName() +
-            " WHERE dataPointRecordId=:dataPointRecordId AND continuousVariableRecordId=:continuousVariableRecordId"));
-        query.bindValue(":dataPointRecordId",id());
-        query.bindValue(":continuousVariableRecordId",inputVariableRecord.id());
-        assertExec(query);
-        if (query.first()) {
-          QVariant value = query.value(0);
-          OS_ASSERT(value.isValid() && !value.isNull());
-          variableValues.push_back(value.toDouble());
-        }
-      }
-    }
-    OS_ASSERT(variableValues.size() == inputVariableRecords.size());
+    std::vector<QVariant> variableValues = this->variableValues();
 
     OptionalFileReferenceRecord ofrr;
     OptionalFileReference oOsmInputData;
     OptionalFileReference oIdfInputData;
     OptionalFileReference oSqlOutputData;
-    OptionalFileReference oXmlOutputData;
+    FileReferenceVector xmlOutputData;
     AttributeVector attributes;
     ofrr = osmInputDataRecord();
     if (ofrr) {
@@ -422,12 +528,15 @@ namespace detail {
     if (ofrr) {
       oSqlOutputData = ofrr->fileReference();
     }
-    ofrr = xmlOutputDataRecord();
-    if (ofrr) {
-      oXmlOutputData = ofrr->fileReference();
-      Q_FOREACH(const AttributeRecord& attributeRecord, ofrr->attributeRecords()) {
-        attributes.push_back(attributeRecord.attribute());
+    FileReferenceRecordVector frrs = xmlOutputDataRecords();
+    Q_FOREACH(const FileReferenceRecord& frr,frrs) {
+      if (frr.name() != "fake.xml") {
+        xmlOutputData.push_back(frr.fileReference());
       }
+    }
+    AttributeRecordVector ars = attributeRecords();
+    Q_FOREACH(const AttributeRecord& ar,ars) {
+      attributes.push_back(ar.attribute());
     }
 
     TagRecordVector tagRecords = this->tagRecords();
@@ -452,16 +561,19 @@ namespace detail {
                                name(),
                                displayName(),
                                description(),
-                               problemRecord.problem(),
+                               problemRecord.handle(),
+                               analysisRecord().handle(),
                                m_complete,
                                m_failed,
+                               m_selected,
+                               m_runType,
                                variableValues,
                                responseValues(),
                                m_directory,
                                oOsmInputData,
                                oIdfInputData,
                                oSqlOutputData,
-                               oXmlOutputData,
+                               xmlOutputData,
                                topLevelJob,
                                m_dakotaParametersFiles,
                                tags,
@@ -490,9 +602,9 @@ namespace detail {
     if (ofrr) {
       database.removeRecord(*ofrr);
     }
-    ofrr = xmlOutputDataRecord();
-    if (ofrr) {
-      database.removeRecord(*ofrr);
+    FileReferenceRecordVector frrs = xmlOutputDataRecords();
+    BOOST_FOREACH(FileReferenceRecord& frr,frrs) {
+      database.removeRecord(frr);
     }
     DataPointValueRecordVector rvrs = responseValueRecords();
     BOOST_FOREACH(DataPointValueRecord& rvr,rvrs) {
@@ -508,7 +620,6 @@ namespace detail {
     m_osmInputDataRecordId = m_lastOsmInputDataRecordId;
     m_idfInputDataRecordId = m_lastIdfInputDataRecordId;
     m_sqlOutputDataRecordId = m_lastSqlOutputDataRecordId;
-    m_xmlOutputDataRecordId = m_lastXmlOutputDataRecordId;
   }
 
   void DataPointRecord_Impl::setOsmInputDataRecordId(int id) {
@@ -547,18 +658,6 @@ namespace detail {
     }
   }
 
-  void DataPointRecord_Impl::setXmlOutputDataRecordId(int id) {
-    m_xmlOutputDataRecordId = id;
-    this->onChange(false);
-  }
-
-  void DataPointRecord_Impl::clearXmlOutputDataRecordId() {
-    if (m_xmlOutputDataRecordId) {
-      m_xmlOutputDataRecordId.reset();
-      this->onChange(false);
-    }
-  }
-
   void DataPointRecord_Impl::bindValues(QSqlQuery& query) const {
     ObjectRecord_Impl::bindValues(query);
 
@@ -567,6 +666,8 @@ namespace detail {
     query.bindValue(DataPointRecordColumns::dataPointRecordType, m_dataPointRecordType.value());
     query.bindValue(DataPointRecordColumns::complete, m_complete);
     query.bindValue(DataPointRecordColumns::failed, m_failed);
+    query.bindValue(DataPointRecordColumns::selected, m_selected);
+    query.bindValue(DataPointRecordColumns::runType, m_runType.value());
     query.bindValue(DataPointRecordColumns::directory, toQString(m_directory));
     if (m_osmInputDataRecordId) {
       query.bindValue(DataPointRecordColumns::inputDataRecordId, *m_osmInputDataRecordId);
@@ -585,12 +686,6 @@ namespace detail {
     }
     else {
       query.bindValue(DataPointRecordColumns::sqlOutputDataRecordId, QVariant(QVariant::Int));
-    }
-    if (m_xmlOutputDataRecordId) {
-      query.bindValue(DataPointRecordColumns::xmlOutputDataRecordId, *m_xmlOutputDataRecordId);
-    }
-    else {
-      query.bindValue(DataPointRecordColumns::xmlOutputDataRecordId, QVariant(QVariant::Int));
     }
     if (m_topLevelJobUUID) {
       query.bindValue(DataPointRecordColumns::topLevelJobUUID, m_topLevelJobUUID->toString());
@@ -638,6 +733,14 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFailed = value.toBool();
 
+    value = query.value(DataPointRecordColumns::selected);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastSelected = value.toBool();
+
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastRunType = DataPointRunType(value.toInt());
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDirectory = toPath(value.toString());
@@ -664,14 +767,6 @@ namespace detail {
     }
     else {
       m_lastSqlOutputDataRecordId.reset();
-    }
-
-    value = query.value(DataPointRecordColumns::xmlOutputDataRecordId);
-    if (value.isValid() && !value.isNull()) {
-      m_lastXmlOutputDataRecordId = value.toInt();
-    }
-    else {
-      m_lastXmlOutputDataRecordId.reset();
     }
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
@@ -720,6 +815,14 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_failed == value.toBool());
 
+    value = query.value(DataPointRecordColumns::selected);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_selected == value.toBool());
+
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_runType == DataPointRunType(value.toInt()));
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_directory == toPath(value.toString()));
@@ -743,13 +846,6 @@ namespace detail {
       result = result && m_sqlOutputDataRecordId && (*m_sqlOutputDataRecordId == value.toInt());
     }else{
       result = result && !m_sqlOutputDataRecordId;
-    }
-
-    value = query.value(DataPointRecordColumns::xmlOutputDataRecordId);
-    if (value.isValid() && !value.isNull()) {
-      result = result && m_xmlOutputDataRecordId && (*m_xmlOutputDataRecordId == value.toInt());
-    }else{
-      result = result && !m_xmlOutputDataRecordId;
     }
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
@@ -782,11 +878,12 @@ namespace detail {
     m_lastDataPointRecordType = m_dataPointRecordType;
     m_lastComplete = m_complete;
     m_lastFailed = m_failed;
+    m_lastSelected = m_selected;
+    m_lastRunType = m_runType;
     m_lastDirectory = m_directory;
     m_lastOsmInputDataRecordId = m_osmInputDataRecordId;
     m_lastIdfInputDataRecordId = m_idfInputDataRecordId;
     m_lastSqlOutputDataRecordId = m_sqlOutputDataRecordId;
-    m_lastXmlOutputDataRecordId = m_xmlOutputDataRecordId;
     m_lastTopLevelJobUUID = m_topLevelJobUUID;
     m_lastDakotaParametersFiles = m_dakotaParametersFiles;
   }
@@ -799,11 +896,12 @@ namespace detail {
     m_dataPointRecordType = m_lastDataPointRecordType;
     m_complete = m_lastComplete;
     m_failed = m_lastFailed;
+    m_selected = m_lastSelected;
+    m_runType = m_lastRunType;
     m_directory = m_lastDirectory;
     m_osmInputDataRecordId = m_lastOsmInputDataRecordId;
     m_idfInputDataRecordId = m_lastIdfInputDataRecordId;
     m_sqlOutputDataRecordId = m_lastSqlOutputDataRecordId;
-    m_xmlOutputDataRecordId = m_lastXmlOutputDataRecordId;
     m_topLevelJobUUID = m_lastTopLevelJobUUID;
     m_dakotaParametersFiles = m_lastDakotaParametersFiles;
   }
@@ -1003,12 +1101,32 @@ bool DataPointRecord::isComplete() const {
   return getImpl<detail::DataPointRecord_Impl>()->isComplete();
 }
 
+bool DataPointRecord::complete() const {
+  return getImpl<detail::DataPointRecord_Impl>()->complete();
+}
+
 bool DataPointRecord::failed() const {
   return getImpl<detail::DataPointRecord_Impl>()->failed();
 }
 
+bool DataPointRecord::selected() const {
+  return getImpl<detail::DataPointRecord_Impl>()->selected();
+}
+
+analysis::DataPointRunType DataPointRecord::runType() const {
+  return getImpl<detail::DataPointRecord_Impl>()->runType();
+}
+
 openstudio::path DataPointRecord::directory() const {
   return getImpl<detail::DataPointRecord_Impl>()->directory();
+}
+
+std::vector<QVariant> DataPointRecord::variableValues() const {
+  return getImpl<detail::DataPointRecord_Impl>()->variableValues();
+}
+
+std::vector<MeasureRecord> DataPointRecord::measureRecords() const {
+  return getImpl<detail::DataPointRecord_Impl>()->measureRecords();
 }
 
 std::vector<DataPointValueRecord> DataPointRecord::continuousVariableValueRecords() const {
@@ -1035,8 +1153,8 @@ boost::optional<FileReferenceRecord> DataPointRecord::sqlOutputDataRecord() cons
   return getImpl<detail::DataPointRecord_Impl>()->sqlOutputDataRecord();
 }
 
-boost::optional<FileReferenceRecord> DataPointRecord::xmlOutputDataRecord() const {
-  return getImpl<detail::DataPointRecord_Impl>()->xmlOutputDataRecord();
+std::vector<FileReferenceRecord> DataPointRecord::xmlOutputDataRecords() const {
+  return getImpl<detail::DataPointRecord_Impl>()->xmlOutputDataRecords();
 }
 
 boost::optional<openstudio::UUID> DataPointRecord::topLevelJobUUID() const {
@@ -1045,6 +1163,10 @@ boost::optional<openstudio::UUID> DataPointRecord::topLevelJobUUID() const {
 
 std::vector<TagRecord> DataPointRecord::tagRecords() const {
   return getImpl<detail::DataPointRecord_Impl>()->tagRecords();
+}
+
+std::vector<AttributeRecord> DataPointRecord::attributeRecords() const {
+  return getImpl<detail::DataPointRecord_Impl>()->attributeRecords();
 }
 
 analysis::DataPoint DataPointRecord::dataPoint() const {
@@ -1178,26 +1300,13 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     OS_ASSERT(!newSqlOutputDataRecord);
     getImpl<detail::DataPointRecord_Impl>()->clearSqlOutputDataRecordId();
   }
-  OptionalFileReference xmlOutputData = dataPoint.xmlOutputData();
-  OptionalFileReferenceRecord newXmlOutputDataRecord =
-      saveChildFileReference(xmlOutputData,
-                             xmlOutputDataRecord(),
+  FileReferenceVector xmlOutputData = dataPoint.xmlOutputData();
+  saveChildXmlFileReferences(xmlOutputData,
+                             xmlOutputDataRecords(),
+                             dataPoint.outputAttributes(),
                              copyOfThis,
                              database,
                              isNew);
-  if (newXmlOutputDataRecord) {
-    getImpl<detail::DataPointRecord_Impl>()->setXmlOutputDataRecordId(newXmlOutputDataRecord->id());
-    // save output attributes to database for quick access
-    // (old attributes will have been deleted by call to remove xmlOutputDataRecord())
-    AttributeVector attributes = dataPoint.outputAttributes();
-    BOOST_FOREACH(const Attribute& attribute,attributes) {
-      AttributeRecord attributeRecord(attribute,*newXmlOutputDataRecord);
-    }
-  }
-  if (!xmlOutputData) {
-    OS_ASSERT(!newXmlOutputDataRecord);
-    getImpl<detail::DataPointRecord_Impl>()->clearXmlOutputDataRecordId();
-  }
 
   // Remove old response function values
   if (!isNew) {
@@ -1265,6 +1374,96 @@ boost::optional<FileReferenceRecord> DataPointRecord::saveChildFileReference(
     LOG(Debug,"DataPoint " << id() << ", directory " << toString(directory()) << ", child FileReference "
       << toString(childFileReference->path()) << ".");
   }
+  return result;
+}
+
+std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
+    std::vector<FileReference> childFileReferences,
+    std::vector<FileReferenceRecord> oldFileReferenceRecords,
+    std::vector<Attribute> outputAttributes,
+    DataPointRecord& copyOfThis,
+    ProjectDatabase& database,
+    bool isNew)
+{
+  if (childFileReferences.empty() && !outputAttributes.empty()) {
+    // CloudSlim DataPoint. Make or re-use fake FileReference for attribute storage.
+    NameFinder<FileReferenceRecord> finder("fake.xml",true);
+    FileReferenceRecordVector::iterator it = std::find_if(
+        oldFileReferenceRecords.begin(),
+        oldFileReferenceRecords.end(),
+        finder);
+    if (it != oldFileReferenceRecords.end()) {
+      childFileReferences.push_back(FileReference(it->handle(),
+                                                  createUUID(),
+                                                  it->name(),
+                                                  it->displayName(),
+                                                  it->description(),
+                                                  it->path(),
+                                                  it->fileType(),
+                                                  it->timestampCreate(),
+                                                  it->timestampLast(),
+                                                  it->checksumCreate(),
+                                                  it->checksumLast()));
+    }
+    else {
+      childFileReferences.push_back(FileReference(toPath("fake.xml")));
+    }
+  }
+
+  FileReferenceRecordVector result;
+  Q_FOREACH(const FileReference& childFileReference, childFileReferences) {
+    bool save(true);
+    if (!isNew) {
+      // see if there is already a record
+      FileReferenceRecordVector::iterator it = std::find_if(
+            oldFileReferenceRecords.begin(),
+            oldFileReferenceRecords.end(),
+            boost::bind(handleEquals<ObjectRecord,UUID>,_1,childFileReference.uuid()));
+      if (it != oldFileReferenceRecords.end()) {
+        // found, see if has changed
+        if (it->uuidLast() == childFileReference.versionUUID()) {
+          save = false;
+        }
+        else {
+          // will save. clear out AttributeRecords associated with the old one.
+          AttributeRecordVector oldAttributes = it->attributeRecords();
+          BOOST_FOREACH(AttributeRecord& oldAttribute, oldAttributes) {
+            database.removeRecord(oldAttribute);
+          }
+        }
+        oldFileReferenceRecords.erase(it); // do not remove this existing record
+      }
+      database.unloadUnusedCleanRecords();
+    }
+    if (save || isNew) {
+      result.push_back(FileReferenceRecord(childFileReference,copyOfThis));
+      // save attributes
+      AttributeVector attsToSave;
+      if (childFileReference.name() == "fake.xml") {
+        attsToSave = outputAttributes;
+      }
+      else {
+        OptionalAttribute wrapperAttribute = Attribute::loadFromXml(childFileReference.path());
+        if (wrapperAttribute &&
+            (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
+        {
+          attsToSave = wrapperAttribute->valueAsAttributeVector();
+        }
+      }
+      Q_FOREACH(const Attribute& attribute,attsToSave) {
+        AttributeRecord attributeRecord(attribute,result.back());
+        Q_UNUSED(attributeRecord);
+      }
+    }
+  }
+
+  // remove remaining oldFileReferenceRecords
+  if (!isNew) {
+    BOOST_FOREACH(FileReferenceRecord& oldFileReferenceRecord,oldFileReferenceRecords) {
+      database.removeRecord(oldFileReferenceRecord);
+    }
+  }
+
   return result;
 }
 

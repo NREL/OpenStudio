@@ -22,6 +22,7 @@
 
 #include <project/JoinRecord.hpp>
 #include <project/ProblemRecord.hpp>
+#include <project/ProblemRecord_Impl.hpp>
 #include <project/AlgorithmRecord.hpp>
 #include <project/DataPointRecord.hpp>
 #include <project/DataPointRecord_Impl.hpp>
@@ -699,8 +700,21 @@ AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDataba
       if (!problemRecord) {
         problemRecord = this->problemRecord();
       }
-      DataPointRecord dataPointRecord =
-          DataPointRecord::factoryFromDataPoint(dataPoint,copyOfThis,*problemRecord);
+      if (dataPoint.problemUUID() == problemRecord->handle()) {
+        DataPointRecord dataPointRecord =
+            DataPointRecord::factoryFromDataPoint(dataPoint,copyOfThis,*problemRecord);
+      }
+      else {
+        OptionalProblemRecord opr = database.getObjectRecordByHandle<ProblemRecord>(dataPoint.problemUUID());
+        if (opr) {
+          DataPointRecord dataPointRecord =
+              DataPointRecord::factoryFromDataPoint(dataPoint,copyOfThis,*opr);
+        }
+        else {
+          LOG(Debug,"Not saving DataPoint '" << dataPoint.name() << "' to OSP, because it was made with a "
+              << "Problem that is no longer in the database.");
+        }
+      }
     }
   }
   if (!isNew) {

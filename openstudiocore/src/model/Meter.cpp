@@ -406,6 +406,10 @@ namespace detail {
       std::string frequency = this->reportingFrequency();
       if (openstudio::istringEqual(frequency, "RunPeriod")){
           frequency = "Run Period";
+      }else if (openstudio::istringEqual(frequency, "Timestep")){
+          frequency = "Zone Timestep";
+      }else if (openstudio::istringEqual(frequency, "Detailed")){
+          frequency = "HVAC System Timestep"; 
       }
 
       // currently the key value is not associated with the meter, it is part of the name

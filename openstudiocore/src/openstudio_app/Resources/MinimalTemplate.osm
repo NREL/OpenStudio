@@ -2296,3 +2296,171 @@ OS:ScheduleTypeLimits,
 OS:YearDescription,
   {809b5ab2-87e8-4866-bec9-d980e49142d1}; !- Handle
 
+OS:Material,
+  {ae84d7dc-c27d-4742-aea7-15400ff8c606}, !- Handle
+  Built-up Roofing - 3/8 in.,             ! Name
+  Rough,                                  ! Roughness
+  0.009525,                               ! Thickness {m}
+  0.16,                                   ! Conductivity {W/m-K}
+  1120,                                   ! Density {kg/m3}
+  1460;                                   ! Specific Heat {J/kg-K}
+
+OS:Material,
+  {c6ccf8f9-aa91-43e4-b89c-f857095b4b63}, !- Handle
+  Poured Concrete - Sand And Gravel or Stone Aggregate Concrete - 2 in. - 130 lb/ft3, ! Name
+  MediumRough,                            ! Roughness
+  0.0508,                                 ! Thickness {m}
+  1.45,                                   ! Conductivity {W/m-K}
+  2082.40023861482,                       ! Density {kg/m3}
+  900;                                    ! Specific Heat {J/kg-K}
+
+OS:Material,
+  {69e48ad5-8a4c-435b-a489-80f0461d6eeb}, !- Handle
+  Poured Concrete - Sand And Gravel or Stone Aggregate Concrete - 1 in. - 130 lb/ft3, ! Name
+  MediumRough,                            ! Roughness
+  0.0254,                                 ! Thickness {m}
+  1.45,                                   ! Conductivity {W/m-K}
+  2082.40023861482,                       ! Density {kg/m3}
+  900;                                    ! Specific Heat {J/kg-K}
+
+OS:Material,
+  {8c8e3570-2a8a-421b-af89-99ac70286e0e}, !- Handle
+  Poured Concrete - Sand And Gravel or Stone Aggregate Concrete - 4 in. - 130 lb/ft3, ! Name
+  MediumRough,                            ! Roughness
+  0.1016,                                 ! Thickness {m}
+  1.45,                                   ! Conductivity {W/m-K}
+  2082.40023861482,                       ! Density {kg/m3}
+  900;                                    ! Specific Heat {J/kg-K}
+
+OS:Material,
+  {6f6e5ebe-6565-4b6c-8dff-42e26947497a}, !- Handle
+  Expanded Polystyrene - Molded Beads - 2 in., ! Name
+  VeryRough,                              ! Roughness
+  0.0508,                                 ! Thickness {m}
+  0.0352,                                 ! Conductivity {W/m-K}
+  24,                                     ! Density {kg/m3}
+  1210;                                   ! Specific Heat {J/kg-K}
+
+OS:Material,
+  {0c32195a-274a-48b3-80d5-905c66b646e0}, !- Handle
+  Gypsum Board - 1/2 in.,                 ! Name
+  MediumSmooth,                           ! Roughness
+  0.0127,                                 ! Thickness {m}
+  0.16,                                   ! Conductivity {W/m-K}
+  800,                                    ! Density {kg/m3}
+  1090;                                   ! Specific Heat {J/kg-K}
+
+OS:Material,
+  {cc209750-2334-49d9-95e1-62ebbb2e2631}, !- Handle
+  Gypsum Board - 3/4 in.,                 ! Name
+  MediumSmooth,                           ! Roughness
+  0.01905,                                ! Thickness {m}
+  0.16,                                   ! Conductivity {W/m-K}
+  800,                                    ! Density {kg/m3}
+  1090;                                   ! Specific Heat {J/kg-K}  
+  
+OS:Construction:InternalSource,
+  {864d79c3-9f2d-4202-b9a3-96d2b346e91f}, !- Handle
+  Radiant Interior Wall,                  !- Name
+  2,                                      !- Source Present After Layer Number
+  2,                                      !- Temperature Calculation Requested After Layer Number
+  1,                                      !- Dimensions for the CTF Calculation
+  0.1524,                                 !- Tube Spacing {m}
+  ,                                       !- Surface Rendering Name
+  {cc209750-2334-49d9-95e1-62ebbb2e2631}, !- Layer 1
+  {69e48ad5-8a4c-435b-a489-80f0461d6eeb}, !- Layer 2
+  {69e48ad5-8a4c-435b-a489-80f0461d6eeb}, !- Layer 3
+  {cc209750-2334-49d9-95e1-62ebbb2e2631}; !- Layer 4
+  
+OS:Construction:InternalSource,
+  {a12b582b-bd81-46bd-955d-dc60877461f0}, !- Handle
+  Radiant Slab Floor,                     !- Name
+  4,                                      !- Source Present After Layer Number
+  4,                                      !- Temperature Calculation Requested After Layer Number
+  1,                                      !- Dimensions for the CTF Calculation
+  0.1524,                                 !- Tube Spacing {m}
+  ,                                       !- Surface Rendering Name
+  {8c8e3570-2a8a-421b-af89-99ac70286e0e}, !- Layer 1
+  {6f6e5ebe-6565-4b6c-8dff-42e26947497a}, !- Layer 2
+  {0c32195a-274a-48b3-80d5-905c66b646e0}, !- Layer 3
+  {cc209750-2334-49d9-95e1-62ebbb2e2631}, !- Layer 4
+  {cc209750-2334-49d9-95e1-62ebbb2e2631}; !- Layer 5
+
+OS:Construction:InternalSource,
+  {4bd65efb-52d4-423b-b67c-2b199bc79a48}, !- Handle
+  Radiant Slab Roof,                      !- Name
+  2,                                      !- Source Present After Layer Number
+  2,                                      !- Temperature Calculation Requested After Layer Number
+  1,                                      !- Dimensions for the CTF Calculation
+  0.1524,                                 !- Tube Spacing {m}
+  ,                                       !- Surface Rendering Name
+  {ae84d7dc-c27d-4742-aea7-15400ff8c606}, !- Layer 1
+  {6f6e5ebe-6565-4b6c-8dff-42e26947497a}, !- Layer 2
+  {c6ccf8f9-aa91-43e4-b89c-f857095b4b63}; !- Layer 3
+  
+OS:WindowMaterial:Blind,
+  {485fdea5-2d01-4162-aea6-a4ee900899fe}, !- Handle
+  BLIND WITH MEDIUM REFLECTIVITY SLATS,  !- Name
+  Horizontal,              !- Slat Orientation
+  0.025,                   !- Slat Width {m}
+  0.01875,                 !- Slat Separation {m}
+  0.001,                   !- Slat Thickness {m}
+  45.0,                    !- Slat Angle {deg}
+  0.9,                     !- Slat Conductivity {W/m-K}
+  0.0,                     !- Slat Beam Solar Transmittance
+  0.5,                     !- Front Side Slat Beam Solar Reflectance
+  0.5,                     !- Back Side Slat Beam Solar Reflectance
+  0.0,                     !- Slat Diffuse Solar Transmittance
+  0.5,                     !- Front Side Slat Diffuse Solar Reflectance
+  0.5,                     !- Back Side Slat Diffuse Solar Reflectance
+  0.0,                     !- Slat Beam Visible Transmittance
+  0.5,                     !- Front Side Slat Beam Visible Reflectance
+  0.5,                     !- Back Side Slat Beam Visible Reflectance
+  0.0,                     !- Slat Diffuse Visible Transmittance
+  0.5,                     !- Front Side Slat Diffuse Visible Reflectance
+  0.5,                     !- Back Side Slat Diffuse Visible Reflectance
+  0.0,                     !- Slat Infrared Hemispherical Transmittance
+  0.9,                     !- Front Side Slat Infrared Hemispherical Emissivity
+  0.9,                     !- Back Side Slat Infrared Hemispherical Emissivity
+  0.050,                   !- Blind to Glass Distance {m}
+  0.5,                     !- Blind Top Opening Multiplier
+  0.5,                     !- Blind Bottom Opening Multiplier
+  0.5,                     !- Blind Left Side Opening Multiplier
+  0.5,                     !- Blind Right Side Opening Multiplier
+  ,                        !- Minimum Slat Angle {deg}
+  ;                        !- Maximum Slat Angle {deg}
+
+OS:WindowMaterial:Screen,
+  {b4cf65bb-70a3-45c5-9052-2046a4c8c048}, !- Handle
+  CHARCOAL FIBERGLASS SCREEN 1,  !- Name
+  ModelAsDiffuse,          !- Reflected Beam Transmittance Accounting Method
+  0.08,                    !- Diffuse Solar Reflectance {dimensionless}
+  0.08,                    !- Diffuse Visible Reflectance {dimensionless}
+  0.9,                     !- Thermal Hemispherical Emissivity {dimensionless}
+  0.04,                    !- Conductivity {W/m-K}
+  0.00157,                 !- Screen Material Spacing {m}
+  0.000381,                !- Screen Material Diameter {m}
+  0.025,                   !- Screen to Glass Distance {m}
+  0.0,                     !- Top Opening Multiplier {dimensionless}
+  0.0,                     !- Bottom Opening Multiplier {dimensionless}
+  0.0,                     !- Left Side Opening Multiplier {dimensionless}
+  0.0,                     !- Right Side Opening Multiplier {dimensionless}
+  0;                       !- Angle of Resolution for Screen Transmittance Output Map {deg}
+
+OS:WindowMaterial:Shade,
+  {d9cbe7da-8c54-4d9f-b9f7-973333133aa5}, !- Handle
+  MEDIUM REFLECT - MEDIUM TRANS SHADE,  !- Name
+  0.4,                     !- Solar Transmittance {dimensionless}
+  0.5,                     !- Solar Reflectance {dimensionless}
+  0.4,                     !- Visible Transmittance {dimensionless}
+  0.5,                     !- Visible Reflectance {dimensionless}
+  0.9,                     !- Infrared Hemispherical Emissivity {dimensionless}
+  0.0,                     !- Infrared Transmittance {dimensionless}
+  0.005,                   !- Thickness {m}
+  0.1,                     !- Conductivity {W/m-K}
+  0.05,                    !- Shade to Glass Distance {m}
+  0.5,                     !- Top Opening Multiplier
+  0.5,                     !- Bottom Opening Multiplier
+  0.5,                     !- Left-Side Opening Multiplier
+  0.5,                     !- Right-Side Opening Multiplier
+  0.0;                     !- Airflow Permeability {dimensionless}

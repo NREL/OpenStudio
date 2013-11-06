@@ -35,7 +35,6 @@ namespace detail {
   /** MeasureGroup_Impl is an DiscreteVariable_Impl that is the implementation class
    *  for MeasureGroup.*/
   class ANALYSIS_API MeasureGroup_Impl : public DiscreteVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -120,7 +119,7 @@ namespace detail {
     void clearMeasures();
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     bool fileTypesAreCompatible(const Measure& childMeasure,
@@ -130,6 +129,10 @@ namespace detail {
     virtual QVariant toVariant() const;
 
     static MeasureGroup fromVariant(const QVariant& variant, const VersionString& version);
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    protected:

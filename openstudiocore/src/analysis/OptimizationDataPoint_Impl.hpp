@@ -33,7 +33,6 @@ namespace detail {
 
   /** OptimizationDataPoint_Impl is a DataPoint_Impl that is the implementation class for OptimizationDataPoint.*/
   class ANALYSIS_API OptimizationDataPoint_Impl : public DataPoint_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -52,6 +51,8 @@ namespace detail {
                                const OptimizationProblem& optimizationProblem,
                                bool complete,
                                bool failed,
+                               bool selected,
+                               DataPointRunType runType,
                                const std::vector<QVariant>& variableValues,
                                const std::vector<double>& responseValues,
                                const std::vector<double>& objectiveValues,
@@ -59,7 +60,7 @@ namespace detail {
                                const boost::optional<FileReference>& osmInputData,
                                const boost::optional<FileReference>& idfInputData,
                                const boost::optional<FileReference>& sqlOutputData,
-                               const boost::optional<FileReference>& xmlOutputData,
+                               const std::vector<FileReference>& xmlOutputData,
                                const boost::optional<runmanager::Job>& topLevelJob,
                                const std::vector<openstudio::path>& dakotaParametersFiles,
                                const std::vector<Tag>& tags,
@@ -75,6 +76,8 @@ namespace detail {
                                const boost::optional<UUID>& analysisUUID,
                                bool complete,
                                bool failed,
+                               bool selected,
+                               DataPointRunType runType,
                                const std::vector<QVariant>& variableValues,
                                const std::vector<double>& responseValues,
                                const std::vector<double>& objectiveValues,
@@ -82,7 +85,7 @@ namespace detail {
                                const boost::optional<FileReference>& osmInputData,
                                const boost::optional<FileReference>& idfInputData,
                                const boost::optional<FileReference>& sqlOutputData,
-                               const boost::optional<FileReference>& xmlOutputData,
+                               const std::vector<FileReference>& xmlOutputData,
                                const boost::optional<runmanager::Job>& topLevelJob,
                                const std::vector<openstudio::path>& dakotaParametersFiles,
                                const std::vector<Tag>& tags,
@@ -108,6 +111,14 @@ namespace detail {
     //@{
 
     virtual void clearResults();
+
+    //@}
+    /** @name Actions */
+    //@{
+
+    /** Update high level results from json. */
+    virtual bool updateFromJSON(const AnalysisJSONLoadResult& loadResult, 
+                                boost::optional<runmanager::RunManager>& runManager);
 
     //@}
     /** @name Protected in or Absent from Public Class */

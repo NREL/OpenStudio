@@ -1,7 +1,7 @@
 
 #make some units that we'll use
-$GJ_unit = OpenStudio::createUnit("GJ", "Celcius".to_UnitSystem).get
-$m2_unit = OpenStudio::createUnit("m^2", "Celcius".to_UnitSystem).get
+$GJ_unit = OpenStudio::createUnit("GJ", "Celsius".to_UnitSystem).get
+$m2_unit = OpenStudio::createUnit("m^2", "Celsius".to_UnitSystem).get
 $kBtu_unit = OpenStudio::createUnit("kBtu", "BTU".to_UnitSystem).get
 $ft2_unit = OpenStudio::createUnit("ft^2", "BTU".to_UnitSystem).get
 

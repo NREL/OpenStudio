@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <QCoreApplication>
 #include <sstream>
@@ -29,6 +30,26 @@
 #else
 #include <dlfcn.h>
 #endif
+
+
+  bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer)
+  {
+    openstudio::path::const_iterator begin1 = t_shorter.begin();
+    openstudio::path::const_iterator end1 = t_shorter.end();
+
+    openstudio::path::const_iterator begin2 = t_longer.begin();
+    openstudio::path::const_iterator end2 = t_longer.end();
+
+    if (std::distance(begin1, end1) > std::distance(begin2, end2))
+    {
+      return false; // the run dir has fewer elements than the build dir - cannot be running from builddir
+    }
+
+    // if the rundir begins with the builddir, we know it's running from the builddir
+    return std::equal(begin1, end1, begin2);
+    
+  }
+
 
 namespace openstudio {
 
@@ -54,7 +75,7 @@ namespace openstudio {
     {
       openstudio::path candidate;
 #if defined(Q_OS_MAC)
-      candidate = getApplicationRunDirectory() / openstudio::toPath("../../../sharedresources");
+      candidate = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources");
 #else
       candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio");
 #endif
@@ -66,6 +87,38 @@ namespace openstudio {
           candidate = alternate;
         }
       }
+      return candidate;
+    }
+  }
+
+  openstudio::path getOpenStudioAWSRubyPath() 
+  {
+    openstudio::path expectedPath = openstudio::toPath("${AWS_RUBY_DESTINATION}")/openstudio::toPath("${AWS_RUBY_PATH}");
+    openstudio::path buildPath = getApplicationBuildDirectory() / openstudio::toPath("${AWS_RUBY_PATH}");
+
+    if (applicationIsRunningFromBuildDirectory())
+    {
+      return buildPath;
+    } 
+    else 
+    {
+      openstudio::path candidate;
+#if defined(Q_OS_MAC)
+      candidate = getApplicationRunDirectory().parent_path().parent_path().parent_path() / expectedPath;
+#else
+      candidate = getApplicationRunDirectory().parent_path() / expectedPath;
+#endif
+      std::cout << "candidate: " << openstudio::toString(candidate) << std::endl;
+      std::cout << "expectedPath: " << openstudio::toString(expectedPath) << std::endl;
+      std::cout << "buildPath: " << openstudio::toString(buildPath) << std::endl;
+      // revert to build directory location for regression tests and other external projects 
+      // that link to a developer build of OpenStudio
+      if (!boost::filesystem::exists(candidate)) {
+        if (boost::filesystem::exists(buildPath)) {
+          return buildPath;
+        }
+      }
+
       return candidate;
     }
   }
@@ -88,12 +141,12 @@ namespace openstudio {
         rundir = rundir.parent_path().parent_path() / openstudio::toPath("bin");
       }
       
-      return rundir;
+      return completeAndNormalize(rundir);
 #else
       Dl_info rInfo; 
       memset( &rInfo, 0, sizeof(rInfo) ); 
       if ( !dladdr((void*)(&getApplicationRunDirectory), &rInfo)  || !rInfo.dli_fname ) { 
-        return openstudio::toPath(QCoreApplication::applicationDirPath());
+        return completeAndNormalize(openstudio::toPath(QCoreApplication::applicationDirPath()));
       } 
 
 
@@ -111,9 +164,12 @@ namespace openstudio {
         rundir = openstudio::toPath(std::string(&buf.front(), pathlen));
       }
 
-#ifdef Q_OS_MAC
-      if (rundir.filename() != "MacOS" && rundir.filename() != "openstudio")
+#ifdef Q_OS_MAC 
+      if (pathBeginsWith(getApplicationBuildDirectory(), rundir))
       {
+        // we are definitely running from the build dir, let's reset the path to a known place
+        rundir = getApplicationBuildDirectory() / openstudio::toPath("Products/OpenStudio.app/Contents/MacOS");
+      } else if (rundir.filename() != "MacOS" && rundir.filename() != "openstudio") {
         // We are not running from a regular run directory, try Qt method instead
         openstudio::path p = openstudio::toPath(QCoreApplication::applicationDirPath());
         if (!p.empty())
@@ -155,7 +211,7 @@ namespace openstudio {
 //      std::cout << "Rundir: " << openstudio::toString(rundir) << std::endl; 
 
 
-      return rundir;
+      return completeAndNormalize(rundir);
 #endif    
   }
 
@@ -172,11 +228,11 @@ namespace openstudio {
 #endif
     } else {
 #ifdef Q_OS_LINUX
-      return getApplicationRunDirectory() / openstudio::toPath("../${RUBY_MODULE_ARCH_DIR}");
+      return getApplicationRunDirectory().parent_path() / openstudio::toPath("${RUBY_MODULE_ARCH_DIR}");
 #elif defined(Q_OS_MAC)
       return getApplicationRunDirectory(); // get the fixed up ones in the application path
 #else
-      return getApplicationRunDirectory() / openstudio::toPath("../Ruby/openstudio"); 
+      return getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby/openstudio"); 
 #endif
     }
   }
@@ -250,21 +306,8 @@ namespace openstudio {
     openstudio::path runDir = getApplicationRunDirectory();
 #endif
 
-    openstudio::path::const_iterator begin1 = buildDir.begin();
-    openstudio::path::const_iterator end1 = buildDir.end();
-
-    openstudio::path::const_iterator begin2 = runDir.begin();
-    openstudio::path::const_iterator end2 = runDir.end();
-
-    if (std::distance(begin1, end1) > std::distance(begin2, end2))
-    {
-      return false; // the run dir has fewer elements than the build dir - cannot be running from builddir
-    }
-
-    // if the rundir begins with the builddir, we know it's running from the builddir
-    return std::equal(begin1, end1, begin2);
+    return pathBeginsWith(buildDir, runDir);
   }
-
 
 
 openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
@@ -315,9 +358,9 @@ openstudio::path getOpenStudioRubyScriptsPath() {
 #ifdef Q_OS_LINUX
     return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby");
 #elif defined(Q_OS_MAC)
-    return getApplicationRunDirectory() / openstudio::toPath("../../../Ruby");
+    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby");
 #else
-    return getApplicationRunDirectory() / openstudio::toPath("../Ruby");
+    return getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby");
 #endif
   }
 }

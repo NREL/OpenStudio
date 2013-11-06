@@ -30,10 +30,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API CurrencyType_Impl : public ParentObject_Impl{
-  
-  Q_OBJECT;
-
-public:
+ public:
   // constructor
   CurrencyType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 

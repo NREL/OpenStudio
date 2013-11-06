@@ -29,6 +29,7 @@ namespace model {
 class Space;
 class SubSurface;
 class Surface;
+class SurfaceIntersection;
 
 namespace detail {
 
@@ -228,14 +229,14 @@ namespace detail {
     /** Resets the adjacent Surface. */
     void resetAdjacentSurface();
 
-    /** Intersect with other Surface in other Space.
+     /** Intersect with other Surface in other Space.
      *  Returns false if either surface has child windows.
      *  Returns false if either surface has an adjacent surface.
      *  Returns false if surfaces are not on the same plane with opposing outward normals.
-     *  If the surfaces are the same, sets adjacency and returns false as no new geometry is created.
-     *  If an intersection occurs the newly intersected surfaces are matched together.
-     *  Returns true if an intersection occurred. */
+     *  If the surfaces are the same, returns true but no new geometry is created.
+     *  Returns true if an intersection occurred. Does not set surface adjacency. */
     bool intersect(Surface& otherSurface);
+    boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
 
     /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.  
         Returns the new Surface if created. */
@@ -300,6 +301,7 @@ namespace detail {
 
     bool setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setAdjacentSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
+
   };
 
 } // detail

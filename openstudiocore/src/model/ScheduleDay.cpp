@@ -51,6 +51,10 @@ namespace detail {
     : ScheduleBase_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ScheduleDay::iddObjectType());
+
+    // connect signals
+    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
+    OS_ASSERT(connected);
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -59,13 +63,21 @@ namespace detail {
     : ScheduleBase_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ScheduleDay::iddObjectType());
+
+    // connect signals
+    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
+    OS_ASSERT(connected);
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const ScheduleDay_Impl& other,
                                      Model_Impl* model,
                                      bool keepHandle)
     : ScheduleBase_Impl(other,model,keepHandle)
-  {}
+  {
+    // connect signals
+    bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
+    OS_ASSERT(connected);
+  }
 
   std::vector<IdfObject> ScheduleDay_Impl::remove() {
     if (OptionalParentObject parent = this->parent()) {
@@ -143,41 +155,51 @@ namespace detail {
   }
 
   std::vector<openstudio::Time> ScheduleDay_Impl::times() const {
-    std::vector<openstudio::Time> result;
+    if (!m_cachedTimes){
 
-    BOOST_FOREACH(const IdfExtensibleGroup& group, extensibleGroups()) {
-      OptionalInt hour = group.getInt(OS_Schedule_DayExtensibleFields::Hour, true);
-      OptionalInt minute = group.getInt(OS_Schedule_DayExtensibleFields::Minute, true);
+      std::vector<openstudio::Time> result;
 
-      if (hour && minute){
-        openstudio::Time time(0, *hour, *minute);
-        if (time.totalDays() <= 0.0 || time.totalDays() > 1.0){
-          LOG(Error, "Time " << time << " in " << briefDescription() << " is out of range." );
+      BOOST_FOREACH(const IdfExtensibleGroup& group, extensibleGroups()) {
+        OptionalInt hour = group.getInt(OS_Schedule_DayExtensibleFields::Hour, true);
+        OptionalInt minute = group.getInt(OS_Schedule_DayExtensibleFields::Minute, true);
+
+        if (hour && minute){
+          openstudio::Time time(0, *hour, *minute);
+          if (time.totalDays() <= 0.0 || time.totalDays() > 1.0){
+            LOG(Error, "Time " << time << " in " << briefDescription() << " is out of range." );
+          }else{
+            result.push_back(time);
+          }
         }else{
-          result.push_back(time);
+          LOG(Error, "Could not read time " << group.groupIndex() << " in " << briefDescription() << "." );
         }
-      }else{
-        LOG(Error, "Could not read time " << group.groupIndex() << " in " << briefDescription() << "." );
       }
+
+      m_cachedTimes = result;
     }
 
-    return result;
+    return m_cachedTimes.get();
   }
 
   std::vector<double> ScheduleDay_Impl::values() const {
-    std::vector<double> result;
+    if (!m_cachedValues){
 
-    BOOST_FOREACH(const IdfExtensibleGroup& group, extensibleGroups()) {
-      OptionalDouble value = group.getDouble(OS_Schedule_DayExtensibleFields::ValueUntilTime, true);
+      std::vector<double> result;
 
-      if (value){
-        result.push_back(*value);
-      }else{
-        LOG(Error, "Could not read value " << group.groupIndex() << " in " << briefDescription() << "." );
+      BOOST_FOREACH(const IdfExtensibleGroup& group, extensibleGroups()) {
+        OptionalDouble value = group.getDouble(OS_Schedule_DayExtensibleFields::ValueUntilTime, true);
+
+        if (value){
+          result.push_back(*value);
+        }else{
+          LOG(Error, "Could not read value " << group.groupIndex() << " in " << briefDescription() << "." );
+        }
       }
+
+      m_cachedValues = result;
     }
 
-    return result;
+    return m_cachedValues.get();
   }
 
   double ScheduleDay_Impl::getValue(const openstudio::Time& time) const
@@ -307,6 +329,41 @@ namespace detail {
     return false;
   }
 
+
+  boost::optional<double> ScheduleDay_Impl::removeValue(const openstudio::Time& time){
+    
+    boost::optional<unsigned> timeIndex;
+
+    std::vector<openstudio::Time> times = this->times();
+    for (unsigned i = 0; i < times.size(); ++i){
+      if (times[i] == time){
+        timeIndex = i;
+        break;
+      }
+    }
+
+    if (!timeIndex){
+      return boost::none; 
+    }
+
+    boost::optional<double> result;
+
+    std::vector<double> values = this->values();
+    OS_ASSERT(values.size() == times.size());
+
+    clearValues();
+    for (unsigned i = 0; i < times.size(); ++i){
+      if (i == *timeIndex){
+        result = values[i];
+      }else{
+        addValue(times[i], values[i]);
+      }
+    }
+
+    return result;
+  }
+
+
   void ScheduleDay_Impl::clearValues()
   {
     this->clearExtensibleGroups();
@@ -345,6 +402,12 @@ namespace detail {
       }
     }
     return true;
+  }
+
+  void ScheduleDay_Impl::clearCachedVariables()
+  {
+    m_cachedTimes.reset();
+    m_cachedValues.reset();
   }
 
 } // detail
@@ -410,6 +473,10 @@ bool ScheduleDay::addValue(const openstudio::Time& untilTime, double value) {
 
 bool ScheduleDay::addValue(const openstudio::Time& untilTime, const Quantity& value) {
   return getImpl<detail::ScheduleDay_Impl>()->addValue(untilTime,value);
+}
+
+boost::optional<double> ScheduleDay::removeValue(const openstudio::Time& time){
+  return getImpl<detail::ScheduleDay_Impl>()->removeValue(time);
 }
 
 void ScheduleDay::clearValues()

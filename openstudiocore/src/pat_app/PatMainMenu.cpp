@@ -19,6 +19,9 @@
 
 #include <pat_app/PatMainMenu.hpp>
 
+#include <pat_app/PatApp.hpp>
+#include <pat_app/CloudMonitor.hpp>
+
 #include <utilities/core/Assert.hpp>
 
 #include <QMenu>
@@ -119,6 +122,24 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
 
   m_windowMenu->addAction(m_openBclDlgAction);
   
+  // Cloud menu
+  m_cloudMenu = new QMenu(tr("&Cloud"),this);
+  addMenu(m_cloudMenu);
+
+  m_openCloudDlgAction = new QAction(tr("&Cloud Settings"),this);
+
+  isConnected = connect(m_openCloudDlgAction, SIGNAL(triggered()),this,SIGNAL(openCloudDlgClicked()));
+  OS_ASSERT(isConnected);
+
+  m_cloudMenu->addAction(m_openCloudDlgAction);
+
+  m_openMonitorUseDlgAction = new QAction(tr("&Monitor Use"),this);
+
+  isConnected = connect(m_openMonitorUseDlgAction, SIGNAL(triggered()),this,SIGNAL(openMonitorUseDlgClicked()));
+  OS_ASSERT(isConnected);
+
+  m_cloudMenu->addAction(m_openMonitorUseDlgAction);
+  
   // Help menu
   m_helpMenu = new QMenu(tr("&Help"),this);
   addMenu(m_helpMenu);
@@ -158,8 +179,6 @@ void PatMainMenu::configure(bool haveCurrentProject)
 
   }
 }
-
-/**************************** SLOTS ****************************/
 
 }
 

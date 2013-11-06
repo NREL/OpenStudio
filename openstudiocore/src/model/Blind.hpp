@@ -43,13 +43,13 @@ class MODEL_API Blind : public ShadingMaterial {
   //@{
 
   explicit Blind(const Model& model,
-                 double slatWidth = 0.1,
-                 double slatSeparation = 0.1,
-                 double frontSideSlatBeamSolarReflectance = 0.1,
-                 double backSideSlatBeamSolarReflectance = 0.1,
-                 double frontSideSlatDiffuseSolarReflectance = 0.1,
-                 double backSideSlatDiffuseSolarReflectance = 0.1,
-                 double slatBeamVisibleTransmittance = 0.1);
+                 double slatWidth = 0.025,
+                 double slatSeparation = 0.01875,
+                 double frontSideSlatBeamSolarReflectance = 0.5,
+                 double backSideSlatBeamSolarReflectance = 0.5,
+                 double frontSideSlatDiffuseSolarReflectance = 0.5,
+                 double backSideSlatDiffuseSolarReflectance = 0.5,
+                 double slatBeamVisibleTransmittance = 0.0);
 
   virtual ~Blind() {}
 

@@ -179,7 +179,7 @@ namespace detail {
 
     value = query.value(FunctionRecord::ColumnsType::functionType);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_lastFunctionType == FunctionType(value.toInt());
+    m_lastFunctionType = FunctionType(value.toInt());
 
     value = query.value(FunctionRecord::ColumnsType::functionVectorIndex);
     OS_ASSERT(value.isValid() && !value.isNull());

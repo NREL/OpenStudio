@@ -29,8 +29,6 @@ namespace detail {
 
 class MODEL_API Mixer_Impl : public HVACComponent_Impl
 {
-  Q_OBJECT;
-
   public:
 
   Mixer_Impl(IddObjectType type, Model_Impl* model);

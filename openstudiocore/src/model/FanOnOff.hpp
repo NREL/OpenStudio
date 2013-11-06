@@ -44,10 +44,10 @@ class MODEL_API FanOnOff : public StraightComponent {
   //@{
 
   explicit FanOnOff(const Model& model,
-																										Schedule& schedule,
-																										Curve& fanPowerRatioFunctionofSpeedRatioCurve,
-																										Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
-																			 );
+                          Schedule& schedule,
+                          Curve& fanPowerRatioFunctionofSpeedRatioCurve,
+                          Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
+                    );
 
   virtual ~FanOnOff() {}
 
@@ -79,7 +79,7 @@ class MODEL_API FanOnOff : public StraightComponent {
   std::string endUseSubcategory() const;
 
   bool isEndUseSubcategoryDefaulted() const;
-  
+
 
   /** @name Setters */
 

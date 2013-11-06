@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWater( CoilHea
   {
     idfObject.setString(Coil_Heating_WaterFields::UFactorTimesAreaValue,"Autosize");
   }
-  else if( value = modelObject.uFactorTimesAreaValue() )
+  else if( (value = modelObject.uFactorTimesAreaValue()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::UFactorTimesAreaValue,value.get());
   }
@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWater( CoilHea
   {
     idfObject.setString(Coil_Heating_WaterFields::MaximumWaterFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumWaterFlowRate() )
+  else if( (value = modelObject.maximumWaterFlowRate()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::MaximumWaterFlowRate,value.get());
   }
@@ -138,42 +138,42 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWater( CoilHea
   {
     idfObject.setString(Coil_Heating_WaterFields::RatedCapacity,"Autosize");
   }
-  else if( value = modelObject.ratedCapacity() )
+  else if( (value = modelObject.ratedCapacity()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::RatedCapacity,value.get());
   }
 
   // RatedInletWaterTemperature
 
-  if( value = modelObject.ratedInletWaterTemperature() )
+  if( (value = modelObject.ratedInletWaterTemperature()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::RatedInletWaterTemperature,value.get());
   }
 
   // RatedInletAirTemperature
 
-  if( value = modelObject.ratedInletAirTemperature() )
+  if( (value = modelObject.ratedInletAirTemperature()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::RatedInletAirTemperature,value.get());
   }
 
   // RatedOutletWaterTemperature
 
-  if( value = modelObject.ratedOutletWaterTemperature() )
+  if( (value = modelObject.ratedOutletWaterTemperature()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::RatedOutletWaterTemperature,value.get());
   }
 
   // RatedOutletAirTemperature
 
-  if( value = modelObject.ratedOutletAirTemperature() )
+  if( (value = modelObject.ratedOutletAirTemperature()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::RatedOutletAirTemperature,value.get());
   }
 
   // RatedRatioforAirandWaterConvection
 
-  if( value = modelObject.ratedRatioForAirAndWaterConvection() )
+  if( (value = modelObject.ratedRatioForAirAndWaterConvection()) )
   {
     idfObject.setDouble(Coil_Heating_WaterFields::RatedRatioforAirandWaterConvection,value.get());
   }

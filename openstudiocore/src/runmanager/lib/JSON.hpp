@@ -21,11 +21,11 @@ namespace openstudio {
 
     class WorkItem;
     class JobType;
-    class FileInfo;
-    class ToolInfo;
-    class JobParam;
+    struct FileInfo;
+    struct ToolInfo;
+    struct JobParam;
     class ErrorType;
-    class JobErrors;
+    struct JobErrors;
 
     namespace detail
     {
@@ -42,10 +42,20 @@ namespace openstudio {
           /// Updates the given job tree with the new values from the jsonString
           //  void updateFromJSON(Job &t_jobTree, const std::string &t_jsonString);
 
-          static Job toJob(const QVariant &t_variant, const VersionString& version);
+          static Job toJob(const QVariant &t_variant, const VersionString& t_version, bool t_externallyManaged);
 
           /// \returns a job tree created from the passed in json string
-          static Job toJob(const std::string &t_jsonString);
+          static Job toJob(const std::string &t_jsonString, bool t_externallyManaged);
+
+          //@}
+          /** @name std::vector<Job> High-Level Methods */
+          //@{
+
+          static std::vector<Job> toVectorOfJob(const QVariant &t_variant, const VersionString& t_version, bool t_externallyManaged);
+
+          static QVariant toVariant(const std::vector<Job> &t_jobs);
+
+          static std::string toJSON(const std::vector<Job> &t_jobs);
 
           //@}
           /** @name WorkItem High-Level Methods */
@@ -55,9 +65,28 @@ namespace openstudio {
 
           static std::string toJSON(const WorkItem &t_workItem);
 
-          static WorkItem toWorkItem(const QVariant &t_variant, const VersionString& version);
+          static WorkItem toWorkItem(const QVariant &t_variant, const VersionString& t_version);
 
           static WorkItem toWorkItem(const std::string &t_json);
+
+          //@}
+          /** @name std::vector<WorkItem> High-Level Methods */
+          //@{
+
+          static QVariant toVariant(const std::vector<WorkItem> &t_workItems);
+
+          static bool saveJSON(const std::vector<WorkItem> &t_workItems,
+                               const openstudio::path &t_p,
+                               bool t_overwrite=false);
+
+          static std::string toJSON(const std::vector<WorkItem> &t_workItems);
+
+          static std::vector<WorkItem> toVectorOfWorkItem(const QVariant &t_variant,
+                                                          const VersionString& version);
+
+          static std::vector<WorkItem> toVectorOfWorkItem(const openstudio::path &t_pathToJson);
+
+          static std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_json);
 
           //@}
         private:
@@ -70,7 +99,6 @@ namespace openstudio {
           //@{
 
           static QVariant toVariant(const JobType &t_jobType);
-          static QVariant toVariant(const std::vector<Job> &t_jobs);
           static QVariant toVariant(const FileInfo &t_file);
           static QVariant toVariant(const std::vector<std::pair<QUrl, openstudio::path> > &t_requiredFiles);
           static QVariant toVariant(const std::vector<FileInfo> &t_files);
@@ -79,25 +107,30 @@ namespace openstudio {
           static QVariant toVariant(const ToolInfo &t_tool);
           static QVariant toVariant(const std::vector<ToolInfo> &t_tools);
           static QVariant toVariant(const JobErrors &t_errors);
+          static QVariant toVariant(const AdvancedStatus &t_status);
           static QVariant toVariant(const std::vector<std::pair<ErrorType, std::string> > &t_errors);
 
           //@}
           /** @name Deserialization from QVariants */
           //@{
 
-          static JobType toJobType(const QVariant &t_variant, const VersionString& version);
-          static std::vector<Job> toVectorOfJob(const QVariant &t_variant, const VersionString& version);
-          static FileInfo toFileInfo(const QVariant &t_variant, const VersionString& version);
-          static std::vector<std::pair<QUrl, openstudio::path> > toRequiredFiles(const QVariant &t_variant, const VersionString& version);
-          static std::vector<FileInfo> toVectorOfFileInfo(const QVariant &t_variant, const VersionString& version);
-          static JobParam toJobParam(const QVariant &t_variant, const VersionString& version);
-          static std::vector<JobParam> toVectorOfJobParam(const QVariant &t_variant, const VersionString& version);
-          static ToolInfo toToolInfo(const QVariant &t_variant, const VersionString& version);
-          static std::vector<ToolInfo> toVectorOfToolInfo(const QVariant &t_variant, const VersionString& version);
-          static JobErrors toJobErrors(const QVariant &t_variant, const VersionString& version);
-          static std::vector<std::pair<ErrorType, std::string> > toVectorOfError(const QVariant &t_variant, const VersionString& version);
+          static AdvancedStatus toAdvancedStatus(const QVariant &t_variant, const VersionString &t_version);
+          static JobType toJobType(const QVariant &t_variant, const VersionString& t_version);
+          static FileInfo toFileInfo(const QVariant &t_variant, const VersionString& t_version);
+          static std::vector<std::pair<QUrl, openstudio::path> > toRequiredFiles(const QVariant &t_variant, const VersionString& t_version);
+          static std::vector<FileInfo> toVectorOfFileInfo(const QVariant &t_variant, const VersionString& t_version);
+          static JobParam toJobParam(const QVariant &t_variant, const VersionString& t_version);
+          static std::vector<JobParam> toVectorOfJobParam(const QVariant &t_variant, const VersionString& t_version);
+          static ToolInfo toToolInfo(const QVariant &t_variant, const VersionString& t_version);
+          static std::vector<ToolInfo> toVectorOfToolInfo(const QVariant &t_variant, const VersionString& t_version);
+          static JobErrors toJobErrors(const QVariant &t_variant, const VersionString& t_version);
+          static std::vector<std::pair<ErrorType, std::string> > toVectorOfError(const QVariant &t_variant, const VersionString& t_version);
 
           //@}
+          
+          /// \returns JobParams with job state management params (jobExternallyManaged) removed. Similar 
+          ///          work is performed when savings Jobs to the RunManager database
+          static JobParams cleanupParams(JobParams t_params, const openstudio::path &t_baseDir);
       };
     }
   }

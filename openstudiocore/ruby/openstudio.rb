@@ -51,6 +51,7 @@ require 'openstudioutilitiesplot'
 require 'openstudioutilitiesgeometry'
 require 'openstudioutilitiessql'
 require 'openstudioutilitiesbcl'
+require 'openstudioutilitiescloud'
 require 'openstudioutilitiesunits'
 require 'openstudioutilitiesdocument'
 require 'openstudioutilitiesidd'
@@ -66,6 +67,7 @@ require 'openstudiomodelsimulation'
 require 'openstudiomodelresources'
 require 'openstudiomodelgeometry'
 require 'openstudiomodelhvac'
+require 'openstudiomodelrefrigeration'
 require 'openstudioosversion'
 require 'openstudioruleset'
 require 'openstudiorunmanager'
@@ -75,6 +77,7 @@ require 'openstudiomodeleditor'
 require 'openstudioanalysis'
 require 'openstudiolib'
 require 'openstudioplugin'
+require 'openstudioisomodel'
 
 # optional extensions
 begin
@@ -108,7 +111,7 @@ begin
   # may not be defined, e.g for SketchUp plug-in
   require 'rbconfig'  
   
-  $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
+  $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
   $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
 
 rescue Exception=>e

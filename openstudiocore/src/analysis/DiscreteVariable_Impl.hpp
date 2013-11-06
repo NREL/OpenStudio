@@ -33,7 +33,6 @@ namespace detail {
   /** DiscreteVariable_Impl is an InputVariable_Impl that is the implementation class
    *  for DiscreteVariable. */
   class ANALYSIS_API DiscreteVariable_Impl : public InputVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -73,6 +72,12 @@ namespace detail {
     virtual std::vector<int> validValues(bool selectedOnly) const = 0;
 
     int numValidValues(bool selectedOnly) const;
+
+    //@}
+    /** @name Serialization */
+    //@{
+
+    virtual QVariant toServerFormulationVariant() const;
 
     //@}
    protected:

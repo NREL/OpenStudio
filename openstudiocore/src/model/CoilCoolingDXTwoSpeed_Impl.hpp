@@ -33,8 +33,7 @@ namespace detail {
 
   // derive CoilCoolingDXTwoSpeed_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API CoilCoolingDXTwoSpeed_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
-  public:
+   public:
     /** @name Constructors and Destructors */
     //@{
 

@@ -80,7 +80,7 @@ namespace detail {
     return result;
   }
 
-  IddObjectType FanOnOff_Impl::iddObjectType() const 
+  IddObjectType FanOnOff_Impl::iddObjectType() const
   {
     return FanOnOff::iddObjectType();
   }
@@ -91,9 +91,9 @@ namespace detail {
   }
 
 
- 
- // Inlet and Outlet nodes
-  
+
+  // Inlet and Outlet nodes
+
   unsigned FanOnOff_Impl::inletPort()
   {
     return OS_Fan_OnOffFields::AirInletNodeName;
@@ -103,7 +103,7 @@ namespace detail {
   {
     return OS_Fan_OnOffFields::AirOutletNodeName;
   }
-  
+
   std::vector<ScheduleTypeKey> FanOnOff_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
@@ -116,10 +116,10 @@ namespace detail {
     return result;
   }
 
-  Schedule FanOnOff_Impl::availabilitySchedule() const 
+  Schedule FanOnOff_Impl::availabilitySchedule() const
   {
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value) 
+    if (!value)
     {
       // it is an error if we get here, however we don't want to crash
       // so we hook up to global always on schedule
@@ -132,8 +132,8 @@ namespace detail {
     OS_ASSERT(value);
     return value.get();
   }
-  
-  bool FanOnOff_Impl::setAvailabilitySchedule(Schedule& schedule) 
+
+  bool FanOnOff_Impl::setAvailabilitySchedule(Schedule& schedule)
   {
     bool result = setSchedule(OS_Fan_OnOffFields::AvailabilityScheduleName,
                               "FanOnOff",
@@ -142,96 +142,96 @@ namespace detail {
     return result;
   }
 
-  double FanOnOff_Impl::fanEfficiency() const 
+  double FanOnOff_Impl::fanEfficiency() const
   {
     boost::optional<double> value = getDouble(OS_Fan_OnOffFields::FanEfficiency,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool FanOnOff_Impl::isFanEfficiencyDefaulted() const 
+  bool FanOnOff_Impl::isFanEfficiencyDefaulted() const
   {
     return isEmpty(OS_Fan_OnOffFields::FanEfficiency);
   }
 
-  double FanOnOff_Impl::pressureRise() const 
+  double FanOnOff_Impl::pressureRise() const
   {
     boost::optional<double> value = getDouble(OS_Fan_OnOffFields::PressureRise,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  boost::optional<double> FanOnOff_Impl::maximumFlowRate() const 
+  boost::optional<double> FanOnOff_Impl::maximumFlowRate() const
   {
     return getDouble(OS_Fan_OnOffFields::MaximumFlowRate,true);
   }
 
-  bool FanOnOff_Impl::isMaximumFlowRateAutosized() const 
+  bool FanOnOff_Impl::isMaximumFlowRateAutosized() const
   {
     bool result = false;
     boost::optional<std::string> value = getString(OS_Fan_OnOffFields::MaximumFlowRate, true);
-    if (value) 
+    if (value)
     {
       result = openstudio::istringEqual(value.get(), "autosize");
     }
     return result;
   }
 
-  double FanOnOff_Impl::motorEfficiency() const 
+  double FanOnOff_Impl::motorEfficiency() const
   {
     boost::optional<double> value = getDouble(OS_Fan_OnOffFields::MotorEfficiency,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool FanOnOff_Impl::isMotorEfficiencyDefaulted() const 
+  bool FanOnOff_Impl::isMotorEfficiencyDefaulted() const
   {
     return isEmpty(OS_Fan_OnOffFields::MotorEfficiency);
   }
 
-  boost::optional<double> FanOnOff_Impl::motorInAirstreamFraction() const 
+  boost::optional<double> FanOnOff_Impl::motorInAirstreamFraction() const
   {
     return getDouble(OS_Fan_OnOffFields::MotorInAirstreamFraction,true);
   }
 
-  std::string FanOnOff_Impl::endUseSubcategory() const 
+  std::string FanOnOff_Impl::endUseSubcategory() const
   {
     boost::optional<std::string> value = getString(OS_Fan_OnOffFields::EndUseSubcategory,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool FanOnOff_Impl::isEndUseSubcategoryDefaulted() const 
+  bool FanOnOff_Impl::isEndUseSubcategoryDefaulted() const
   {
     return isEmpty(OS_Fan_OnOffFields::EndUseSubcategory);
   }
 
-  bool FanOnOff_Impl::setFanEfficiency(double fanEfficiency) 
+  bool FanOnOff_Impl::setFanEfficiency(double fanEfficiency)
   {
     bool result = setDouble(OS_Fan_OnOffFields::FanEfficiency, fanEfficiency);
     return result;
   }
-  
-  void FanOnOff_Impl::resetFanEfficiency() 
+
+  void FanOnOff_Impl::resetFanEfficiency()
   {
     bool result = setString(OS_Fan_OnOffFields::FanEfficiency, "");
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setPressureRise(double pressureRise) 
+  void FanOnOff_Impl::setPressureRise(double pressureRise)
   {
     bool result = setDouble(OS_Fan_OnOffFields::PressureRise, pressureRise);
     OS_ASSERT(result);
   }
 
-  bool FanOnOff_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate) 
+  bool FanOnOff_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate)
   {
     bool result(false);
-    if (maximumFlowRate) 
+    if (maximumFlowRate)
     {
       result = setDouble(OS_Fan_OnOffFields::MaximumFlowRate, maximumFlowRate.get());
     }
-    else 
+    else
     {
       resetMaximumFlowRate();
       result = true;
@@ -239,38 +239,38 @@ namespace detail {
     return result;
   }
 
-  void FanOnOff_Impl::resetMaximumFlowRate() 
+  void FanOnOff_Impl::resetMaximumFlowRate()
   {
     bool result = setString(OS_Fan_OnOffFields::MaximumFlowRate, "");
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::autosizeMaximumFlowRate() 
+  void FanOnOff_Impl::autosizeMaximumFlowRate()
   {
     bool result = setString(OS_Fan_OnOffFields::MaximumFlowRate, "autosize");
     OS_ASSERT(result);
   }
 
-  bool FanOnOff_Impl::setMotorEfficiency(double motorEfficiency) 
+  bool FanOnOff_Impl::setMotorEfficiency(double motorEfficiency)
   {
     bool result = setDouble(OS_Fan_OnOffFields::MotorEfficiency, motorEfficiency);
     return result;
   }
 
-  void FanOnOff_Impl::resetMotorEfficiency() 
+  void FanOnOff_Impl::resetMotorEfficiency()
   {
     bool result = setString(OS_Fan_OnOffFields::MotorEfficiency, "");
     OS_ASSERT(result);
   }
 
-  bool FanOnOff_Impl::setMotorInAirstreamFraction(boost::optional<double> motorInAirstreamFraction) 
+  bool FanOnOff_Impl::setMotorInAirstreamFraction(boost::optional<double> motorInAirstreamFraction)
   {
     bool result(false);
-    if (motorInAirstreamFraction) 
+    if (motorInAirstreamFraction)
     {
       result = setDouble(OS_Fan_OnOffFields::MotorInAirstreamFraction, motorInAirstreamFraction.get());
     }
-    else 
+    else
     {
       resetMotorInAirstreamFraction();
       result = true;
@@ -278,37 +278,37 @@ namespace detail {
     return result;
   }
 
-  void FanOnOff_Impl::resetMotorInAirstreamFraction() 
+  void FanOnOff_Impl::resetMotorInAirstreamFraction()
   {
     bool result = setString(OS_Fan_OnOffFields::MotorInAirstreamFraction, "");
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory) 
+  void FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
   {
     bool result = setString(OS_Fan_OnOffFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::resetEndUseSubcategory() 
+  void FanOnOff_Impl::resetEndUseSubcategory()
   {
     bool result = setString(OS_Fan_OnOffFields::EndUseSubcategory, "");
     OS_ASSERT(result);
   }
 
-  boost::optional<Schedule> FanOnOff_Impl::optionalAvailabilitySchedule() const 
+  boost::optional<Schedule> FanOnOff_Impl::optionalAvailabilitySchedule() const
   {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Fan_OnOffFields::AvailabilityScheduleName);
   }
 
-  boost::optional<ModelObject> FanOnOff_Impl::availabilityScheduleAsModelObject() const 
+  boost::optional<ModelObject> FanOnOff_Impl::availabilityScheduleAsModelObject() const
   {
     OptionalModelObject result = availabilitySchedule();
     return result;
    }
 
   // Curves
-  
+
   Curve FanOnOff_Impl::fanPowerRatioFunctionofSpeedRatioCurve() const
   {
     boost::optional<Curve> curve;
@@ -319,9 +319,9 @@ namespace detail {
 
     return curve.get();
   }
-  
+
   bool FanOnOff_Impl::setFanPowerRatioFunctionofSpeedRatioCurve(const Curve& curve )
-  {    
+  {
     bool accepted = false;
 
     if( model() != curve.model() )
@@ -338,8 +338,8 @@ namespace detail {
 
     return accepted;
   }
-  
-  
+
+
   Curve FanOnOff_Impl::fanEfficiencyRatioFunctionofSpeedRatioCurve() const
   {
     boost::optional<Curve> curve;
@@ -350,7 +350,7 @@ namespace detail {
 
     return curve.get();
   }
-  
+
   bool FanOnOff_Impl::setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve )
   {
     bool accepted = false;
@@ -373,23 +373,23 @@ namespace detail {
 
     return accepted;
   }
-  
+
   ModelObject FanOnOff_Impl::clone(Model model) const
   {
     FanOnOff newFan = ModelObject_Impl::clone(model).cast<FanOnOff>();
-    
+
     Curve curve1 = fanPowerRatioFunctionofSpeedRatioCurve();
     newFan.setFanPowerRatioFunctionofSpeedRatioCurve(curve1.clone(model).cast<Curve>());
-    
+
     Curve curve2 = fanEfficiencyRatioFunctionofSpeedRatioCurve();
     newFan.setFanEfficiencyRatioFunctionofSpeedRatioCurve(curve2.clone(model).cast<Curve>());
-    
+
     return newFan;
   }
-  
+
   boost::optional<ZoneHVACComponent> FanOnOff_Impl::containingZoneHVACComponent() const
   {
-	// ZoneHVACWaterToAirHeatPump
+    // ZoneHVACWaterToAirHeatPump
 
     std::vector<ZoneHVACWaterToAirHeatPump> zoneHVACWaterToAirHeatPump;
 
@@ -406,156 +406,156 @@ namespace detail {
           return *it;
         }
       }
-    }	
+    }
     return boost::none;
   }
-	
+
 } // detail
 
 FanOnOff::FanOnOff(const Model& model,
-																				Schedule& schedule,
-																				Curve& fanPowerRatioFunctionofSpeedRatioCurve,
-																				Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
-																			)
-																				
+                   Schedule& schedule,
+                   Curve& fanPowerRatioFunctionofSpeedRatioCurve,
+                   Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
+                  )
+
   : StraightComponent(FanOnOff::iddObjectType(),model)
   {
-				OS_ASSERT(getImpl<detail::FanOnOff_Impl>());
-				  
-				bool ok = setAvailabilitySchedule(schedule);
-        				  
-				if (!ok) 
-				{
-						remove();
-						LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to " << schedule.briefDescription() << ".");
-				}
-				  
-				setEndUseSubcategory("");
-				ok = setFanEfficiency(0.6045);
-				OS_ASSERT(ok);
-				setPressureRise(250);
-				autosizeMaximumFlowRate();
-				ok = setMotorEfficiency(0.8);
-				OS_ASSERT(ok);
-				ok = setMotorInAirstreamFraction(1.0);
-				OS_ASSERT(ok);
-        
-        CurveExponent fanPowerFtSpeedCurve(model);
+    OS_ASSERT(getImpl<detail::FanOnOff_Impl>());
 
-        fanPowerFtSpeedCurve.setCoefficient1Constant(0.0);
-        fanPowerFtSpeedCurve.setCoefficient2Constant(1.0);
-        fanPowerFtSpeedCurve.setCoefficient3Constant(3.0);
-        fanPowerFtSpeedCurve.setMinimumValueofx(0.0);
-        fanPowerFtSpeedCurve.setMaximumValueofx(1.5);
-        fanPowerFtSpeedCurve.setMinimumCurveOutput(0.01);
-        fanPowerFtSpeedCurve.setMaximumCurveOutput(1.5);
-        ok = setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFtSpeedCurve);
-				OS_ASSERT(ok);
+    bool ok = setAvailabilitySchedule(schedule);
 
-        CurveCubic fanEfficiencyFtSpeedCurve(model);
-        fanEfficiencyFtSpeedCurve.setCoefficient1Constant(0.33856828);
-        fanEfficiencyFtSpeedCurve.setCoefficient2x(1.72644131);
-        fanEfficiencyFtSpeedCurve.setCoefficient3xPOW2(-1.49280132);
-        fanEfficiencyFtSpeedCurve.setCoefficient4xPOW3(0.42776208);
-        fanEfficiencyFtSpeedCurve.setMinimumValueofx(0.5);
-        fanEfficiencyFtSpeedCurve.setMaximumValueofx(1.5);
-        fanEfficiencyFtSpeedCurve.setMinimumCurveOutput(0.3);
-        fanEfficiencyFtSpeedCurve.setMaximumCurveOutput(1.0);
-        ok = setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFtSpeedCurve);
-				OS_ASSERT(ok);
+    if (!ok)
+    {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to " << schedule.briefDescription() << ".");
+    }
+
+    setEndUseSubcategory("");
+    ok = setFanEfficiency(0.6045);
+    OS_ASSERT(ok);
+    setPressureRise(250);
+    autosizeMaximumFlowRate();
+    ok = setMotorEfficiency(0.8);
+    OS_ASSERT(ok);
+    ok = setMotorInAirstreamFraction(1.0);
+    OS_ASSERT(ok);
+
+    CurveExponent fanPowerFtSpeedCurve(model);
+
+    fanPowerFtSpeedCurve.setCoefficient1Constant(0.0);
+    fanPowerFtSpeedCurve.setCoefficient2Constant(1.0);
+    fanPowerFtSpeedCurve.setCoefficient3Constant(3.0);
+    fanPowerFtSpeedCurve.setMinimumValueofx(0.0);
+    fanPowerFtSpeedCurve.setMaximumValueofx(1.5);
+    fanPowerFtSpeedCurve.setMinimumCurveOutput(0.01);
+    fanPowerFtSpeedCurve.setMaximumCurveOutput(1.5);
+    ok = setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFtSpeedCurve);
+    OS_ASSERT(ok);
+
+    CurveCubic fanEfficiencyFtSpeedCurve(model);
+    fanEfficiencyFtSpeedCurve.setCoefficient1Constant(0.33856828);
+    fanEfficiencyFtSpeedCurve.setCoefficient2x(1.72644131);
+    fanEfficiencyFtSpeedCurve.setCoefficient3xPOW2(-1.49280132);
+    fanEfficiencyFtSpeedCurve.setCoefficient4xPOW3(0.42776208);
+    fanEfficiencyFtSpeedCurve.setMinimumValueofx(0.5);
+    fanEfficiencyFtSpeedCurve.setMaximumValueofx(1.5);
+    fanEfficiencyFtSpeedCurve.setMinimumCurveOutput(0.3);
+    fanEfficiencyFtSpeedCurve.setMaximumCurveOutput(1.0);
+    ok = setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFtSpeedCurve);
+    OS_ASSERT(ok);
   }
 
-IddObjectType FanOnOff::iddObjectType() 
+IddObjectType FanOnOff::iddObjectType()
 {
   return IddObjectType(IddObjectType::OS_Fan_OnOff);
 }
 
 // Field Availability Schedule Name
 
-Schedule FanOnOff::availabilitySchedule() const 
+Schedule FanOnOff::availabilitySchedule() const
 {
   return getImpl<detail::FanOnOff_Impl>()->availabilitySchedule();
 }
 
-bool FanOnOff::setAvailabilitySchedule(Schedule& schedule) 
+bool FanOnOff::setAvailabilitySchedule(Schedule& schedule)
 {
   return getImpl<detail::FanOnOff_Impl>()->setAvailabilitySchedule(schedule);
 }
 
 // Field Fan Efficiency
 
-double FanOnOff::fanEfficiency() const 
+double FanOnOff::fanEfficiency() const
 {
   return getImpl<detail::FanOnOff_Impl>()->fanEfficiency();
 }
 
-bool FanOnOff::isFanEfficiencyDefaulted() const 
+bool FanOnOff::isFanEfficiencyDefaulted() const
 {
   return getImpl<detail::FanOnOff_Impl>()->isFanEfficiencyDefaulted();
 }
 
-bool FanOnOff::setFanEfficiency(double fanEfficiency) 
+bool FanOnOff::setFanEfficiency(double fanEfficiency)
 {
   return getImpl<detail::FanOnOff_Impl>()->setFanEfficiency(fanEfficiency);
 }
 
-void FanOnOff::resetFanEfficiency() 
+void FanOnOff::resetFanEfficiency()
 {
   getImpl<detail::FanOnOff_Impl>()->resetFanEfficiency();
 }
 
 // Field Pressure Rise
 
-double FanOnOff::pressureRise() const 
+double FanOnOff::pressureRise() const
 {
   return getImpl<detail::FanOnOff_Impl>()->pressureRise();
 }
 
-void FanOnOff::setPressureRise(double pressureRise) 
+void FanOnOff::setPressureRise(double pressureRise)
 {
   getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
 }
 
 // Field Maximum Flow Rate
 
-boost::optional<double> FanOnOff::maximumFlowRate() const 
+boost::optional<double> FanOnOff::maximumFlowRate() const
 {
   return getImpl<detail::FanOnOff_Impl>()->maximumFlowRate();
 }
 
-bool FanOnOff::isMaximumFlowRateAutosized() const 
+bool FanOnOff::isMaximumFlowRateAutosized() const
 {
   return getImpl<detail::FanOnOff_Impl>()->isMaximumFlowRateAutosized();
 }
 
-bool FanOnOff::setMaximumFlowRate(double maximumFlowRate) 
+bool FanOnOff::setMaximumFlowRate(double maximumFlowRate)
 {
   return getImpl<detail::FanOnOff_Impl>()->setMaximumFlowRate(maximumFlowRate);
 }
 
-void FanOnOff::resetMaximumFlowRate() 
+void FanOnOff::resetMaximumFlowRate()
 {
   getImpl<detail::FanOnOff_Impl>()->resetMaximumFlowRate();
 }
 
-void FanOnOff::autosizeMaximumFlowRate() 
+void FanOnOff::autosizeMaximumFlowRate()
 {
   getImpl<detail::FanOnOff_Impl>()->autosizeMaximumFlowRate();
 }
 
 // Field Motor Efficiency
 
-double FanOnOff::motorEfficiency() const 
+double FanOnOff::motorEfficiency() const
 {
   return getImpl<detail::FanOnOff_Impl>()->motorEfficiency();
 }
 
-bool FanOnOff::isMotorEfficiencyDefaulted() const 
+bool FanOnOff::isMotorEfficiencyDefaulted() const
 {
   return getImpl<detail::FanOnOff_Impl>()->isMotorEfficiencyDefaulted();
 }
 
-bool FanOnOff::setMotorEfficiency(double motorEfficiency) 
+bool FanOnOff::setMotorEfficiency(double motorEfficiency)
 {
   return getImpl<detail::FanOnOff_Impl>()->setMotorEfficiency(motorEfficiency);
 }
@@ -567,17 +567,17 @@ void FanOnOff::resetMotorEfficiency()
 
 // Field Motor In Airstream Fraction
 
-boost::optional<double> FanOnOff::motorInAirstreamFraction() const 
+boost::optional<double> FanOnOff::motorInAirstreamFraction() const
 {
   return getImpl<detail::FanOnOff_Impl>()->motorInAirstreamFraction();
 }
 
-bool FanOnOff::setMotorInAirstreamFraction(double motorInAirstreamFraction) 
+bool FanOnOff::setMotorInAirstreamFraction(double motorInAirstreamFraction)
 {
   return getImpl<detail::FanOnOff_Impl>()->setMotorInAirstreamFraction(motorInAirstreamFraction);
 }
 
-void FanOnOff::resetMotorInAirstreamFraction() 
+void FanOnOff::resetMotorInAirstreamFraction()
 {
   getImpl<detail::FanOnOff_Impl>()->resetMotorInAirstreamFraction();
 }
@@ -606,24 +606,24 @@ bool FanOnOff::setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curv
   return getImpl<detail::FanOnOff_Impl>()->setFanEfficiencyRatioFunctionofSpeedRatioCurve( curve );
 }
 
-std::string FanOnOff::endUseSubcategory() const 
+std::string FanOnOff::endUseSubcategory() const
 {
   return getImpl<detail::FanOnOff_Impl>()->endUseSubcategory();
 }
 
-bool FanOnOff::isEndUseSubcategoryDefaulted() const 
+bool FanOnOff::isEndUseSubcategoryDefaulted() const
 {
   return getImpl<detail::FanOnOff_Impl>()->isEndUseSubcategoryDefaulted();
 }
 
 // Field End-Use Subcategory
 
-void FanOnOff::setEndUseSubcategory(std::string endUseSubcategory) 
+void FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
 {
   getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
-void FanOnOff::resetEndUseSubcategory() 
+void FanOnOff::resetEndUseSubcategory()
 {
   getImpl<detail::FanOnOff_Impl>()->resetEndUseSubcategory();
 }

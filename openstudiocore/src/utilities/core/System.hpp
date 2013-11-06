@@ -38,6 +38,13 @@ namespace openstudio {
 
     /// Returns the number of processors on this computer
     static unsigned numberOfProcessors();
+
+    /// Utility for testing exception handling within the system
+    static void testExceptions1();
+    static void testExceptions2();
+    static void testExceptions3();
+    static void testExceptions4();
+    static void testExceptions5();
   };
 
 } // openstudio

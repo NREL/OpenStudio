@@ -36,7 +36,6 @@ namespace detail {
   /** ContinuousVariableRecord_Impl is an InputVariableRecord_Impl that is the
    *  implementation class for ContinuousVariableRecord.*/
   class PROJECT_API ContinuousVariableRecord_Impl : public InputVariableRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

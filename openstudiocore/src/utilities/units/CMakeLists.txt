@@ -37,9 +37,9 @@ SET( units_src
   units/TemperatureUnit.hpp
   units/TemperatureUnit_Impl.hpp
   units/TemperatureUnit.cpp
-  units/CelciusUnit.hpp
-  units/CelciusUnit_Impl.hpp
-  units/CelciusUnit.cpp
+  units/CelsiusUnit.hpp
+  units/CelsiusUnit_Impl.hpp
+  units/CelsiusUnit.cpp
   units/FahrenheitUnit.hpp
   units/FahrenheitUnit_Impl.hpp
   units/FahrenheitUnit.cpp

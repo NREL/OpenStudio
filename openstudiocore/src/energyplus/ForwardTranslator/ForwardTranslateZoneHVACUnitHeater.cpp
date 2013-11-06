@@ -52,7 +52,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
 
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_UnitHeater,modelObject);
   
-	
+  
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<Node> node;
@@ -74,7 +74,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   
   if(s)
   {
-	idfObject.setString(ZoneHVAC_UnitHeaterFields::AvailabilityScheduleName,*s);
+    idfObject.setString(ZoneHVAC_UnitHeaterFields::AvailabilityScheduleName,*s);
   }
 
   // Field: Air Inlet Node Name
@@ -111,7 +111,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
 
   if(boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan)) 
   {
-	  idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name());
+    idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name());
   }
 
   // Field: Supply Air Fan Name
@@ -132,33 +132,33 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   if(boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan))
   {
   
-	  if(node)
-		{
-		s = node->name();
+    if(node)
+    {
+      s = node->name();
 
-		if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume)
-			{
-			  _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,*s);
-			  _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
-			}
-		else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
-			{
-			  _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,*s);
-			  _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName);
-			}
-		}
+      if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume)
+      {
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,*s);
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
+      {
+        _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,*s);
+        _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName);
+      }
+    }
   }
 
   // Field Maximum Supply Air Flow Rate
 
   if( modelObject.isMaximumSupplyAirFlowRateAutosized())
   {
-	idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,"Autosize");
+    idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,"Autosize");
   }
 
-  else if ( value = modelObject.maximumSupplyAirFlowRate())
+  else if ( (value = modelObject.maximumSupplyAirFlowRate()) )
   {
-     idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,*value);
+    idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,*value);
   }
 
   // Field: Fan Control Type
@@ -171,7 +171,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
 
   if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil))
   {
-	  idfObject.setString(ZoneHVAC_UnitHeaterFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
+    idfObject.setString(ZoneHVAC_UnitHeaterFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
   }
 
    // Field: Heating Coil Name
@@ -189,37 +189,37 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
   
   if(boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil))
   {
-	  if(node)
-	  {
-		s = node->name();
+    if(node)
+    {
+      s = node->name();
 
-		if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric)
-		{
-		  _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,fanOutletNodeName);
-		  _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,*s);
-		}
-		else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
-		{
-		  _heatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,fanOutletNodeName);
-		  _heatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,*s);
-		}
-		else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
-		{
-		  _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,fanOutletNodeName);
-		  _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,*s);
-		}
-	  }
-	}
+      if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric)
+      {
+        _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,fanOutletNodeName);
+        _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,*s);
+      }
+      else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+      {
+        _heatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,fanOutletNodeName);
+        _heatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,*s);
+      }
+      else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+      {
+        _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,fanOutletNodeName);
+        _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,*s);
+      }
+    }
+  }
 
   // Field Maximum Hot Water [or Steam] Flow Rate
 
   if( modelObject.isMaximumHotWaterFlowRateAutosized())
   
   {
-	idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,"Autosize");
+    idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,"Autosize");
   }
 
-  else if ( value = modelObject.maximumHotWaterFlowRate())
+  else if ( (value = modelObject.maximumHotWaterFlowRate()) )
   {
      idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,*value);
   }

@@ -38,7 +38,6 @@ namespace detail {
 
   /** RubyMeasure_Impl is a Measure_Impl that is the implementation class for RubyMeasure.*/
   class ANALYSIS_API RubyMeasure_Impl : public Measure_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -174,12 +173,16 @@ namespace detail {
     void clearArguments();
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual QVariant toVariant() const;
 
     static RubyMeasure fromVariant(const QVariant& variant, const VersionString& version);
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    protected:

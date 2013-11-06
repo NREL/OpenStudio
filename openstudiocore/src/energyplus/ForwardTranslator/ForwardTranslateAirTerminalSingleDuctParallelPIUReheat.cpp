@@ -203,7 +203,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   {
     idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumPrimaryAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumPrimaryAirFlowRate() )
+  else if( (value = modelObject.maximumPrimaryAirFlowRate()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumPrimaryAirFlowRate,value.get());
   }
@@ -213,7 +213,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   {
     idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumSecondaryAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumSecondaryAirFlowRate() )
+  else if( (value = modelObject.maximumSecondaryAirFlowRate()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumSecondaryAirFlowRate,value.get());
   }
@@ -223,7 +223,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   {
     idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumPrimaryAirFlowFraction,"Autosize");
   }
-  else if( value = modelObject.minimumPrimaryAirFlowFraction() )
+  else if( (value = modelObject.minimumPrimaryAirFlowFraction()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumPrimaryAirFlowFraction,value.get());
   }
@@ -233,7 +233,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   {
     idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanOnFlowFraction,"Autosize");
   }
-  else if( value = modelObject.fanOnFlowFraction() )
+  else if( (value = modelObject.fanOnFlowFraction()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanOnFlowFraction,value.get());
   }
@@ -243,13 +243,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   {
     idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumHotWaterorSteamFlowRate,"Autosize");
   }
-  else if( value = modelObject.maximumHotWaterorSteamFlowRate() )
+  else if( (value = modelObject.maximumHotWaterorSteamFlowRate()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MaximumHotWaterorSteamFlowRate,value.get());
   }
 
   // MinimumHotWaterorSteamFlowRate
-  if( value = modelObject.minimumHotWaterorSteamFlowRate() )
+  if( (value = modelObject.minimumHotWaterorSteamFlowRate()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumHotWaterorSteamFlowRate,value.get());
   }
@@ -267,7 +267,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   }
 
   // ConvergenceTolerance
-  if( value = modelObject.convergenceTolerance() )
+  if( (value = modelObject.convergenceTolerance()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ConvergenceTolerance,value.get());
   }

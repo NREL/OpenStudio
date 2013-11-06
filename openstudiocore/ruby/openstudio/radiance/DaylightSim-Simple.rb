@@ -186,17 +186,17 @@ File.open("#{outPath}/options/treg.opt", "r") do |file|
   options.klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
   options.skyvecDensity = tempSettings[3].split(":")[1]
   options.tregVars = tempSettings[2..-1].join(" ")
-end	  
+end
 
 File.open("#{outPath}/options/dmx.opt", "r") do |file|
   tempIO = file.read
   options.dmx = tempIO
-end	  
+end
 
 File.open("#{outPath}/options/vmx.opt", "r") do |file|
   tempIO = file.read
   options.vmx = tempIO
-end	  
+end
 
 
 
@@ -343,21 +343,23 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   # "single phase" method
   if t_options.x == true
     rtrace_args = "#{t_options.vmx}"
+    puts "#{Time.now.getutc}: creating model_dc.oct"
     system("oconv #{t_outPath}/materials/materials.rad model.rad #{t_outPath}/skies/dc.sky > model_dc.oct")
+    puts "#{Time.now.getutc}: creating model_dc_skyonly.oct"
     system("oconv #{t_outPath}/skies/dc.sky > model_dc_skyonly.oct")
     #compute illuminance map(s)
-    if t_options.verbose == 'v'
-      puts "computing daylight coefficients..."
-      puts "computing daylight matrix ONLY (single phase)."
-    end
+#    if t_options.verbose == 'v'
+      puts "#{Time.now.getutc}: computing daylight coefficients..."
+      puts "#{Time.now.getutc}: computing daylight matrix ONLY (single phase)."
+#    end
 
     # do map
     exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} \
-	-I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
+      -I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
 
-    if t_options.verbose == 'v'	
-      puts "daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
-    end
+#    if t_options.verbose == 'v'
+      puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
+#    end
 
     # do control point views, if requested
     # NOTE: this needs work. RPG 2012.02.18
@@ -368,19 +370,19 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
         binDir="#{t_outPath}/output/dc/#{space_name}/views"
         Dir.mkdir("#{binDir}") unless File.exists?("#{binDir}")
 
-        if t_options.verbose == 'v'
-          puts "computing daylight coefficients for #{space_name}"
-        end
+#        if t_options.verbose == 'v'
+          puts "#{Time.now.getutc}: computing daylight coefficients for #{space_name}"
+#        end
         view_def = ""
         dims = t_options.dims
         view_def ="-x #{dims} -y #{dims} -vf #{Dir.pwd}/numeric/#{space_name}.sns"
         if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
           vwrays_out = `vwrays -d #{view_def}`.strip
           exec_statement("vwrays -ff #{view_def} | rcontrib #{rtrace_args = "#{t_options.vmx}"} -V- -fo -ffc #{vwrays_out} \
-		-f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
+            -f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
         else
           exec_statement("vwrays -ff #{view_def} | rcontrib #{t_options.vmx} -n #{t_simCores} -V- -fo -ffc \
-		$(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
+            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
           # create "contact sheet" of DC images for reference/troubleshooting
           if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
             hdrs = Dir.glob("#{binDir}/*.hdr")
@@ -391,6 +393,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
             exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - #{binDir}/#{space_name}contact-sheet.tif")
           end
         end
+        puts "#{Time.now.getutc}: done computing daylight coefficients for #{space_name}"
       end
     end
   end
@@ -399,9 +402,9 @@ end
 
 def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
   #if t_verbose == 'v'
-    puts "simulation command: #{t_cmd}"
+    puts "#{Time.now.getutc}: simulation command: #{t_cmd}"
   #end        
-  puts "Executing simulation"
+  puts "#{Time.now.getutc}: Executing simulation"
   tempIO = IO.popen(t_cmd)
 
 
@@ -410,35 +413,16 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
 
   linenum = 0
 
-  puts "Parsing result"
+  puts "#{Time.now.getutc}: Parsing result"
   values = []
   temp.split(/\n/).each do |val|
-    ++linenum
-    line = []
-    val.strip!
-    hournum = 0
-    val.split(/\t/).each do |triplet|
-      ++hournum
-      # each triplet (hour) for this line
-      hour = []
-      triplet.split(/ /).each do |rgb|
-        # each value of the triplet
-        hour << [rgb.to_f, 0].max
-      end
-
-      if hour.size != 3
-        abort "Unable to parse hour, 3 color values not found (line: #{linenum} hour: #{hournum} triplet: #{triplet}) #{hour}"
-      end
-
-      # need to apply vLambda to calculations
-      illum = 179*((hour[0] * 0.265) + (hour[1] * 0.67) + (hour[2] * 0.065))
-      line << illum
-
-    end
-
+    line = OpenStudio::Radiance::parseGenDayMtxLine(val)
     if line.size != 8760
-      abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}"
+      abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
+#    else
+#      puts "Line Parsed: #{line}"
     end
+    linenum = linenum + 1
     values << line;
   end
 
@@ -446,6 +430,7 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
     puts "ERROR: simulation command generated no results: #{t_cmd}"
   end
 
+  puts "#{Time.now.getutc}: writing output"
 
   allhours = []
 
@@ -715,6 +700,8 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
                                          OpenStudio::DateTime::now(),
                                          OpenStudio::Calendar.new(firstReportDateTime.date().year()));
 
+    puts "#{Time.now.getutc}: removing indexes"
+    sqlOutFile.removeIndexes
 
     t_space_names_to_calculate.each do |space_name|
       illuminanceMatrixMaps = OpenStudio::MatrixVector.new();
@@ -724,7 +711,7 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
       meanDGP = []
       maxDGP = []
 
-      puts "Processing Space: #{space_name}"
+      puts "#{Time.now.getutc}: Processing Space: #{space_name}"
 
       timeSeriesIllum =[]
       timeSeriesGlare =[]
@@ -869,19 +856,19 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
           f.close
         end
 
-        puts "writing Radiance illuminance results database..."
+        puts "#{Time.now.getutc}: writing Radiance illuminance results database..."
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
-        puts "done writing Radiance illuminance results database..."
+        puts "#{Time.now.getutc}: done writing Radiance illuminance results database..."
 
         if t_radGlareSensorViews[space_name]
-          puts "writing Radiance glare results database..."
+          puts "#{Time.now.getutc}: writing Radiance glare results database..."
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
-          puts "done writing Radiance glare results database..."
+          puts "#{Time.now.getutc}: done writing Radiance glare results database..."
         end
 
         # I really have no idea how to populate these fields
@@ -916,15 +903,17 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         ny.times do |n|
           ys << ymin + (n * ySpacing)
         end
-
+        puts "#{Time.now.getutc}: writing illuminance map"
         sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
                                         simDateTimes, xs, ys, map.originZCoordinate, 
                                         illuminanceMatrixMaps)
-
+        puts "#{Time.now.getutc}: done writing illuminance map"
       end
     end
 
+    puts "#{Time.now.getutc}: creating indexes"
     sqlOutFile.createIndexes
+    puts "#{Time.now.getutc}: done creating indexes"
 
   end
 end
@@ -1016,7 +1005,18 @@ if (!epwFile.empty?)
   epwFilePath = epwFile.get().path()
   weaPath = outPath / OpenStudio::Path.new("in.wea")
 
-  epw2weapath = OpenStudio::getApplicationRunDirectory() / OpenStudio::Path.new("epw2wea")
+  epw2weapath = nil
+
+  if (/darwin/.match(RUBY_PLATFORM))
+    if (OpenStudio::applicationIsRunningFromBuildDirectory())
+      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("epw2wea")
+    else
+      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("bin") / OpenStudio::Path.new("epw2wea")
+    end
+  else
+    epw2weapath = OpenStudio::getApplicationRunDirectory() / OpenStudio::Path.new("epw2wea")
+  end
+  puts "Executing epw2wea: #{epw2weapath}"
   exec_statement("\"#{epw2weapath.to_s}\" \"#{epwFilePath.to_s}\" \"#{weaPath.to_s}\"")
 end
 
@@ -1091,13 +1091,13 @@ end
 
 space_names_to_calculate = Array.new
 if not options.simSpaces.nil?
-  puts "calculating user-specified spaces:"
+  puts "#{Time.now.getutc}: calculating user-specified spaces:"
   options.simSpaces.each do |space_name|
     space_names_to_calculate << space_name.gsub(' ', '_').gsub(':', '_')
   end
 else
   space_names_to_calculate = space_names
-  puts "no spaces specified, calculating all spaces (could take a while):"
+  puts "#{Time.now.getutc}: no spaces specified, calculating all spaces (could take a while):"
 end
 
 filtered_space_names_to_calculate = Array.new
@@ -1111,11 +1111,15 @@ space_names_to_calculate = filtered_space_names_to_calculate
 
 # run radiance
 # check for Radiance installation
+#
+
+puts "#{Time.now.getutc}: checking for radiance"
+
 if not system("rtrace -version")
-  puts "Cannot find required Radiance executables in the current path"
+  puts "#{Time.now.getutc}: Cannot find required Radiance executables in the current path"
   exit
 else
-  puts "Radiance... OK."
+  puts "#{Time.now.getutc}: radiance... ok."
 end
 
 # setup some directories
@@ -1129,7 +1133,7 @@ opts_img = ""
 if not ARGV[2].nil?
   opts = '@' + ARGV[1]
 else
-  puts "no options file provided, reading from model"
+  puts "#{Time.now.getutc}: no options file provided, reading from model"
   opts_map = "@#{outPath}/options/maps.opt"
   opts_img = "@#{outPath}/options/images.opt"
   opts_vmx = "@#{outPath}/options/vmx.opt"

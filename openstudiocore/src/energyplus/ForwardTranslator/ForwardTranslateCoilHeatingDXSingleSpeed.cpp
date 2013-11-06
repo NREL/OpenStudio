@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   {
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
-      if( s = node->name() )
+      if( (s = node->name()) )
       {
         airInletNodeName = s;
 
@@ -94,7 +94,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   {
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
-      if( s = node->name() )
+      if( (s = node->name()) )
       {
         airOutletNodeName = s;
 
@@ -109,14 +109,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   {
     idfObject.setString(Coil_Heating_DX_SingleSpeedFields::RatedTotalHeatingCapacity,"Autosize");
   }
-  else if( value = modelObject.ratedTotalHeatingCapacity() )
+  else if( (value = modelObject.ratedTotalHeatingCapacity()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedTotalHeatingCapacity,value.get());
   }
 
   // RatedCOP
   
-  if( value = modelObject.ratedCOP() )
+  if( (value = modelObject.ratedCOP()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedCOP,value.get());
   }
@@ -127,7 +127,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   {
     idfObject.setString(Coil_Heating_DX_SingleSpeedFields::RatedAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.ratedAirFlowRate() )
+  else if( (value = modelObject.ratedAirFlowRate()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedAirFlowRate,value.get());
   }
@@ -189,49 +189,49 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
 
   // MinimumOutdoorDryBulbTemperatureforCompressorOperation
 
-  if( value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation() )
+  if( (value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value.get());
   }
 
   // MaximumOutdoorDryBulbTemperatureforDefrostOperation
 
-  if( value = modelObject.maximumOutdoorDryBulbTemperatureforDefrostOperation() )
+  if( (value = modelObject.maximumOutdoorDryBulbTemperatureforDefrostOperation()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation,value.get());
   }
 
   // CrankcaseHeaterCapacity
   
-  if( value = modelObject.crankcaseHeaterCapacity() )
+  if( (value = modelObject.crankcaseHeaterCapacity()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacity,value.get());
   }
 
   // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
   
-  if( value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() )
+  if( (value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,value.get());
   }
 
   // DefrostStrategy
 
-  if( s = modelObject.defrostStrategy() )
+  if( (s = modelObject.defrostStrategy()) )
   {
     idfObject.setString(Coil_Heating_DX_SingleSpeedFields::DefrostStrategy,s.get());
   }
 
   // DefrostControl
   
-  if( s = modelObject.defrostControl() )
+  if( (s = modelObject.defrostControl()) )
   {
     idfObject.setString(Coil_Heating_DX_SingleSpeedFields::DefrostControl,s.get());
   }
 
   // DefrostTimePeriodFraction
 
-  if( value = modelObject.defrostTimePeriodFraction() )
+  if( (value = modelObject.defrostTimePeriodFraction()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::DefrostTimePeriodFraction,value.get());
   }
@@ -242,7 +242,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
   {
     idfObject.setString(Coil_Heating_DX_SingleSpeedFields::ResistiveDefrostHeaterCapacity,"Autosize");
   }
-  else if( value = modelObject.resistiveDefrostHeaterCapacity() )
+  else if( (value = modelObject.resistiveDefrostHeaterCapacity()) )
   {
     idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::ResistiveDefrostHeaterCapacity,value.get());
   }

@@ -34,6 +34,7 @@
 %include <utilities/core/Serialization.i>
 %include <utilities/core/Logger.i>
 %include <utilities/core/UpdateManager.i>
+%include <utilities/core/Url.i>
 %include <utilities/core/UUID.i>
 %include <utilities/core/Checksum.i>
 %include <utilities/core/Optional.hpp>
@@ -53,6 +54,8 @@
 %template(FileReferenceVector) std::vector<openstudio::FileReference>;
 %template(OptionalFileReference) boost::optional<openstudio::FileReference>;
 %template(OptionalQUrl) boost::optional<QUrl>;
+%template(OptionalQVariant) boost::optional<QVariant>;
+%template(OptionalVersionString) boost::optional<openstudio::VersionString>;
 
 %include <utilities/core/FileReference.hpp>
 

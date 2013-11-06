@@ -248,12 +248,12 @@ namespace model {
  *    Building buildingObject = model.getUniqueModelObject<Building>();
  *    // now all of these asserts will pass, because every copy of the model public object provides
  *    // access to the same Building object
- *    BOOST_ASSERT(model.numObjects() == 1u);
- *    BOOST_ASSERT(model.numObjects() == anotherCopy.numObjects());
- *    BOOST_ASSERT(model.numObjects() == oModel->numObjects());
+ *    OS_ASSERT(model.numObjects() == 1u);
+ *    OS_ASSERT(model.numObjects() == anotherCopy.numObjects());
+ *    OS_ASSERT(model.numObjects() == oModel->numObjects());
  *    // the equality operator tests for whether two public objects point to the exact same
  *    // implementation object
- *    BOOST_ASSERT(buildingObject == anotherCopy.getUniqueModelObject<Building>());
+ *    OS_ASSERT(buildingObject == anotherCopy.getUniqueModelObject<Building>());
  *  }
  *  \endcode
  *
@@ -288,10 +288,10 @@ namespace model {
  *  Model model;
  *  Building building = model.getUniqueModelObject<Building>();
  *  OptionalString oName = building.name();
- *  BOOST_ASSERT(oName); // passes, because Building has a name
+ *  OS_ASSERT(oName); // passes, because Building has a name
  *  Version version = model.getUniqueModelObject<Version>();
  *  oName = version.name();
- *  BOOST_ASSERT(!oName); // passes, because Version does not have (and does not need) a name
+ *  OS_ASSERT(!oName); // passes, because Version does not have (and does not need) a name
  *  \endcode
  *
  *  ModelObjects of different types can share a name as long as they are not be in the same IDD
@@ -362,7 +362,7 @@ namespace model {
  *  Lights lights(model); // by default, sets lightingLevel to 0 W
  *  // OptionalDouble is typedef for boost::optional<double> provided in utilities/core/Optional.hpp
  *  OptionalDouble oLightingLevel = lights.lightingLevel();
- *  BOOST_ASSERT(oLightingLevel);
+ *  OS_ASSERT(oLightingLevel);
  *  double lightingLevel = *oLightingLevel; // or oLightingLevel.get()
  *  std::cout << "Default lighting level for a new Lights object is " << lightingLevel << " W.";
  *  \endcode
@@ -493,15 +493,15 @@ namespace model {
  *                                plf);
  *
  *  Schedule s = cool.getAvailabilitySchedule();
- *  BOOST_ASSERT(s == scheduleCompact)
+ *  OS_ASSERT(s == scheduleCompact)
  *  OptionalDouble od;
  *  cool.setRatedTotalCoolingCapacity(od); // set to "AutoCalculate"
  *
  *  // this passes because the constructor set it to "AirCooled"for you.
- *  BOOST_ASSERT(cool.getCondenserType() == "AiRCoolEd")
+ *  OS_ASSERT(cool.getCondenserType() == "AiRCoolEd")
  *
  *  OptionalSchedule s2 = cool.getBasinHeaterOperatingSchedule();
- *  BOOST_ASSERT(!s2)
+ *  OS_ASSERT(!s2)
  *  // s2 evaluates to false because this schedule is not required and not set
  *  \endcode
  *
@@ -958,10 +958,10 @@ namespace model {
  *
  *  \code
  *  Model model;
- *  BOOST_ASSERT(model.versionObject());
- *  BOOST_ASSERT(model.numObjects() == 0u);
- *  BOOST_ASSERT(model.iddFileType() == IddFileType::OpenStudio);
- *  BOOST_ASSERT(model.strictnessLevel() == StrictnessLevel::Draft);
+ *  OS_ASSERT(model.versionObject());
+ *  OS_ASSERT(model.numObjects() == 0u);
+ *  OS_ASSERT(model.iddFileType() == IddFileType::OpenStudio);
+ *  OS_ASSERT(model.strictnessLevel() == StrictnessLevel::Draft);
  *  \endcode
  *
  *  The preferred method for creating a Model from an OSM file is
@@ -1021,18 +1021,18 @@ namespace model {
  *  // getOptionalUniqueModelObject only returns an object if it is already in the Model.
  *  // It constructs any new objects.
  *  OptionalBuilding oBuilding = model.getOptionalUniqueModelObject<Building>();
- *  BOOST_ASSERT(!oBuilding);
- *  BOOST_ASSERT(model.numObjects() == 0u);
+ *  OS_ASSERT(!oBuilding);
+ *  OS_ASSERT(model.numObjects() == 0u);
  *
  *  // getUniqueModelObject constructs the object if it is not yet present.
  *  Building building = model.getUniqueModelObject<Building>();
- *  BOOST_ASSERT(model.numObjects() == 1u);
+ *  OS_ASSERT(model.numObjects() == 1u);
  *
  *  // now getOptionalUniqueModelObject can return the object that was just created
  *  oBuilding = model.getOptionalUniqueModelObject<Building>();
- *  BOOST_ASSERT(oBuilding);
- *  BOOST_ASSERT(model.numObjects() == 1u);
- *  BOOST_ASSERT(oBuilding.get() == building);
+ *  OS_ASSERT(oBuilding);
+ *  OS_ASSERT(model.numObjects() == 1u);
+ *  OS_ASSERT(oBuilding.get() == building);
  *  \endcode
  *
  *  For non-unique objects, all public constructors will ensure that required fields, children,
@@ -1077,18 +1077,18 @@ namespace model {
  *  LightsVector originalLights = space.lights();
  *  clonedSpace= space.clone(space.model());
  *  LightsVector clonedLights = clonedSpace.lights();
- *  BOOST_ASSERT(originalLights.size() == clonedLights.size())
+ *  OS_ASSERT(originalLights.size() == clonedLights.size())
  *
  *  if (originalLights.size() > 0) {
  *    LightVector::iterator i = std::find(originalLights.begin(),originalLights.end(),clonedLights[0]);
- *    BOOST_ASSERT(i == originalLights.end()); // clonedLights[0] not found in originalLights
+ *    OS_ASSERT(i == originalLights.end()); // clonedLights[0] not found in originalLights
  *                                             // (std::find uses ==, which for ModelObjects checks
  *                                             // to see if the objects point to the exact same
  *                                             // implementation object)
  *  }
  *  \endcode
  *
- *  The following code would also pass its BOOST_ASSERTs. Because we cloned into the same model, the
+ *  The following code would also pass its OS_ASSERTs. Because we cloned into the same model, the
  *  schedule (a ResourceObject) was NOT cloned.
  *
  *  \code
@@ -1097,11 +1097,11 @@ namespace model {
  *  if (originalLights.size() > 0) {
  *    // originalLights[0] and clonedLights[0] share the exact same schedule ...
  *    // ... == verifies it.
- *    BOOST_ASSERT(originalLights[0].schedule() == clonedLights[0].schedule());
+ *    OS_ASSERT(originalLights[0].schedule() == clonedLights[0].schedule());
  *    // ... as does making a change in clonedLights[0].schedule()
  *    clonedLights[0].schedule().setName("Some Cool Name")
  *    // ... and then looking for the change in originalLights[0].schedule().
- *    BOOST_ASSERT(originalLights[0].schedule().name().get() == "Some Cool Name")
+ *    OS_ASSERT(originalLights[0].schedule().name().get() == "Some Cool Name")
  *  }
  *  \endcode
  *
@@ -1134,10 +1134,10 @@ namespace model {
  *  \code
  *  Space spaceA(model);
  *  spaceA.setName("Space A");
- *  BOOST_ASSERT(spaceA.name().get() == "Space A");
+ *  OS_ASSERT(spaceA.name().get() == "Space A");
  *  Space spaceB = spaceA;
  *  spaceB.setName("Space B");
- *  BOOST_ASSERT(spaceA.name().get() == "Space B"); // may not be the intended behavior ...
+ *  OS_ASSERT(spaceA.name().get() == "Space B"); // may not be the intended behavior ...
  *                                                  // use clone() to get a deep copy
  *
  *  // Sharing also happens just by passing objects around as aruguments.
@@ -1150,7 +1150,7 @@ namespace model {
  *  // function looks like all changes are local to it ...
  *  changeName(spaceC);
  *  // ... but they are not because of pImpl.
- *  BOOST_ASSERT(spaceC.name().get() == "New Name");
+ *  OS_ASSERT(spaceC.name().get() == "New Name");
  *  \endcode
  *
  *  The pointer to the implementation is managed by a reference counting pointer, so the
@@ -1200,7 +1200,7 @@ namespace model {
  *  }  // model goes out of scope
  *
  *  // modelObjects now contains invalid ModelObjects
- *  BOOST_ASSERT(!modelObjects[0].initialized()); // Model_Impl destructor disconnects objects
+ *  OS_ASSERT(!modelObjects[0].initialized()); // Model_Impl destructor disconnects objects
  *
  *  \endcode
  *
@@ -1223,7 +1223,7 @@ namespace model {
  *  \code
  *  Space space(model);
  *  boost::optional<Attribute> floorAreaAttribute = space.getAttribute(“floorArea”)
- *  BOOST_ASSERT(floorAreaAttribute);
+ *  OS_ASSERT(floorAreaAttribute);
  *  double floorArea = floorAreaAttribute.valueAsDouble();
  *  \endcode
  *
@@ -1257,16 +1257,16 @@ namespace model {
  *  A component creation example follows:
  *  \code
  *  OptionalModel oModel = Model::load(osmFilepath);
- *  BOOST_ASSERT(oModel);
+ *  OS_ASSERT(oModel);
  *  model = *oModel;
  *  ConstructionVector constructions = model.getModelObjects<Construction>();
  *  if (constructions.size() > 0) {
  *    Component constructionComponent = constructions[0].createComponent();
  *    ModelObject primary = constructionComponent.primaryObject();
- *    BOOST_ASSERT(primary.optionalCast<Construction>());
- *    BOOST_ASSERT(primary.cast<Construction>().layers().size() == constructions[0].layers().size());
- *    BOOST_ASSERT(primary.cast<Construction>() != constructions[0]);
- *    BOOST_ASSERT(primary.model() != constructions[0].model());
+ *    OS_ASSERT(primary.optionalCast<Construction>());
+ *    OS_ASSERT(primary.cast<Construction>().layers().size() == constructions[0].layers().size());
+ *    OS_ASSERT(primary.cast<Construction>() != constructions[0]);
+ *    OS_ASSERT(primary.model() != constructions[0].model());
  *  }
  *  \endcode
  *
@@ -1298,20 +1298,20 @@ namespace model {
  *  if (constructions.size() > 0) {
  *    Model newModel;
  *    OptionalComponentData ocd = newModel.insertComponent(constructionComponent);
- *    BOOST_ASSERT(ocd);
+ *    OS_ASSERT(ocd);
  *    unsigned n = newModel.numObjects();
  *    ComponentData cd = *ocd;
  *    Construction clonedConstruction = cd.primaryComponentObject().cast<Construction>();
  *    // now I can make some geometry and assign the construction to a planar surface
  *    // ... or I can remove the new construction, thereby "destroying" the component:
  *    clonedConstruction.remove();
- *    BOOST_ASSERT(clonedConstruction.handle().isNull()); // clonedConstruction removed from model
- *    BOOST_ASSERT(cd.handle().isNull());                 // ComponentData object also removed
- *    BOOST_ASSERT(newModel.numObjects() < n);
- *    BOOST_ASSERT(newModel.getModelObjects<Construction>().empty());
+ *    OS_ASSERT(clonedConstruction.handle().isNull()); // clonedConstruction removed from model
+ *    OS_ASSERT(cd.handle().isNull());                 // ComponentData object also removed
+ *    OS_ASSERT(newModel.numObjects() < n);
+ *    OS_ASSERT(newModel.getModelObjects<Construction>().empty());
  *    // there may be some orphaned resources (Materials) still hanging around …
  *    newModel.purgeUnusedResources();
- *    BOOST_ASSERT(newModel.numObjects() == 0u);
+ *    OS_ASSERT(newModel.numObjects() == 0u);
  *  }
  *  \endcode
  */

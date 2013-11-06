@@ -203,8 +203,8 @@ namespace detail {
                              FileReferenceType::Unknown);
 
     return RubyContinuousVariable(
-          openstudio::UUID(map["uuid"].toString()),
-          openstudio::UUID(map["version_uuid"].toString()),
+          toUUID(map["uuid"].toString().toStdString()),
+          toUUID(map["version_uuid"].toString().toStdString()),
           map.contains("name") ? map["name"].toString().toStdString() : std::string(),
           map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
           map.contains("description") ? map["description"].toString().toStdString() : std::string(),
@@ -226,8 +226,8 @@ namespace detail {
     OS_ASSERT(measure.optionalCast<RubyMeasure>());
 
     return RubyContinuousVariable(
-          openstudio::UUID(map["uuid"].toString()),
-          openstudio::UUID(map["version_uuid"].toString()),
+          toUUID(map["uuid"].toString().toStdString()),
+          toUUID(map["version_uuid"].toString().toStdString()),
           map.contains("name") ? map["name"].toString().toStdString() : std::string(),
           map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
           map.contains("description") ? map["description"].toString().toStdString() : std::string(),
@@ -238,6 +238,12 @@ namespace detail {
           map.contains("n_steps") ? map["n_steps"].toInt() : OptionalInt(),
           ruleset::detail::toOSArgument(map["argument"],version),
           measure.cast<RubyMeasure>());
+  }
+
+  void RubyContinuousVariable_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                                        const openstudio::path& newBase)
+  {
+    m_measure.getImpl<detail::RubyMeasure_Impl>()->updateInputPathData(originalBase,newBase);
   }
 
 } // detail

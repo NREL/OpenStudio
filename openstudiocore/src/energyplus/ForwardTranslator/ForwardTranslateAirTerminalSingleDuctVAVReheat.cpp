@@ -207,7 +207,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVR
   }
 
   // MaximumFlowFractionDuringReheat
-  value = modelObject.maximumFlowPerZoneFloorAreaDuringReheat();
+  value = modelObject.maximumFlowFractionDuringReheat();
 
   if( value )
   {

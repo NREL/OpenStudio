@@ -30,6 +30,10 @@
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/CurveCubic.hpp>
+#include <model/CurveCubic_Impl.hpp>
+#include <model/CurveQuadratic.hpp>
+#include <model/CurveQuadratic_Impl.hpp>
 #include <utilities/idd/OS_Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
@@ -315,6 +319,57 @@ namespace detail{
     OS_ASSERT(result);
   }
 
+  boost::optional<Curve> CoilHeatingGas_Impl::partLoadFractionCorrelationCurve() const
+  {
+    boost::optional<Curve> curve;
+
+    curve = getObject<ModelObject>().getModelObjectTarget<Curve>(
+              OS_Coil_Heating_GasFields::PartLoadFractionCorrelationCurveName);
+
+    return curve;
+  }
+
+  bool CoilHeatingGas_Impl::setPartLoadFractionCorrelationCurve( const Curve& curve )
+  {
+    bool accepted = false;
+
+    if( curve.optionalCast<CurveQuadratic>() || curve.optionalCast<CurveCubic>() )
+    {
+      accepted = setPointer(OS_Coil_Heating_GasFields::PartLoadFractionCorrelationCurveName,curve.handle());
+    }
+
+    return accepted;
+  }
+
+  void CoilHeatingGas_Impl::resetPartLoadFractionCorrelationCurve()
+  {
+    setString(OS_Coil_Heating_GasFields::PartLoadFractionCorrelationCurveName,"");
+  }
+
+  std::vector<ModelObject> CoilHeatingGas_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    if( boost::optional<Curve> curve = partLoadFractionCorrelationCurve() )
+    {
+      result.push_back(curve.get());
+    }
+
+    return result;
+  }
+
+  ModelObject CoilHeatingGas_Impl::clone(Model model) const
+  {
+    CoilHeatingGas newCoil = ModelObject_Impl::clone(model).cast<CoilHeatingGas>();
+
+    if( boost::optional<Curve> curve1 = partLoadFractionCorrelationCurve() )
+    {
+      newCoil.setPartLoadFractionCorrelationCurve(curve1->clone(model).cast<Curve>());
+    }
+
+    return newCoil;
+  }
+
 }// detail
 
 // create a new CoilHeatingGas object in the model's workspace
@@ -412,6 +467,21 @@ void CoilHeatingGas::resetNominalCapacity() {
 
 void CoilHeatingGas::autosizeNominalCapacity() {
   getImpl<detail::CoilHeatingGas_Impl>()->autosizeNominalCapacity();
+}
+
+boost::optional<Curve> CoilHeatingGas::partLoadFractionCorrelationCurve() const
+{
+  return getImpl<detail::CoilHeatingGas_Impl>()->partLoadFractionCorrelationCurve();
+}
+
+bool CoilHeatingGas::setPartLoadFractionCorrelationCurve( const Curve& curve )
+{
+  return getImpl<detail::CoilHeatingGas_Impl>()->setPartLoadFractionCorrelationCurve(curve);
+}
+
+void CoilHeatingGas::resetPartLoadFractionCorrelationCurve()
+{
+  getImpl<detail::CoilHeatingGas_Impl>()->resetPartLoadFractionCorrelationCurve();
 }
 
 IddObjectType CoilHeatingGas::iddObjectType() {

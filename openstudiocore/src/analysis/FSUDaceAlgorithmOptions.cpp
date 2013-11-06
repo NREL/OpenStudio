@@ -149,10 +149,10 @@ namespace detail {
   }
 
   bool FSUDaceAlgorithmOptions_Impl::setSamples(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set FSUDaceAlgorithmOptions samples to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option = getOption("samples");
     OS_ASSERT(option);
     option->setValue(value);
@@ -164,7 +164,7 @@ namespace detail {
     if (minValue < 0) {
       LOG(Warn,"Cannot set FSUDaceAlgorithmOptions sequence start to a value less than zero.");
       return false;
-	}
+    }
     Attribute option = createAttributeFromVector("sequenceStart",value);
     if (OptionalAttribute currentOption = getOption("sequenceStart")) {
       currentOption->setValue(option.valueAsAttributeVector());
@@ -180,7 +180,7 @@ namespace detail {
     if (minValue < 1) {
       LOG(Warn,"Cannot set FSUDaceAlgorithmOptions sequence leap to a value less than one.");
       return false;
-	}
+    }
     Attribute option = createAttributeFromVector("sequenceLeap",value);
     if (OptionalAttribute currentOption = getOption("sequenceLeap")) {
       currentOption->setValue(option.valueAsAttributeVector());
@@ -216,12 +216,12 @@ namespace detail {
   }
 
   bool FSUDaceAlgorithmOptions_Impl::setSeed(int value) {
-	if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set FSUDaceAlgorithmOptions seed to a value less than one.");
       return false;
-	}
+    }
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {
@@ -232,12 +232,12 @@ namespace detail {
   }
 
   bool FSUDaceAlgorithmOptions_Impl::setNumTrials(int value) {
-	if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set FSUDaceAlgorithmOptions number of trials to a value less than one.");
-	return false;
-	  }
+      return false;
+    }
     OptionalAttribute option;
-    if (option = getOption("numTrials")) {
+    if ((option = getOption("numTrials"))) {
       option->setValue(value);
     }
     else {

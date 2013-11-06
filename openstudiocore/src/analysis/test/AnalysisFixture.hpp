@@ -52,7 +52,15 @@ class AnalysisFixture : public ::testing::Test {
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  static openstudio::analysis::Analysis analysis1();
+  enum AnalysisState { PreRun, PostRun };
+
+  // Test case with one MeasureGroup and two RubyContinuousVariables that use
+  // the same measure. In the PostRun state, a complete DataPoint is included.
+  static openstudio::analysis::Analysis analysis1(AnalysisState state);
+
+  // Test case with two RubyContinousVariables attached to two different 
+  // measures, with or without a simulation workflow.
+  static openstudio::analysis::Analysis analysis2(bool simulate);
 };
 
 #endif // ANALYSIS_TEST_ANALYSISFIXTURE_HPP

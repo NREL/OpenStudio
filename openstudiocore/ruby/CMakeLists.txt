@@ -14,7 +14,7 @@ ENDIF()
 INCLUDE(GetPrerequisites)
 
 # find all source
-file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb")
+file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb" "cloud/*.template" "cloud/*.sh")
 
 # find all tests
 file(GLOB_RECURSE RUBY_TEST_SRC "openstudio/*_Test.rb")
@@ -43,7 +43,7 @@ FOREACH( f ${RUBY_TEST_SRC} )
         # $<CONFIGURATION> may resolve to 'Release' on Mac or Linux but directory will not exist
         ADD_TEST(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
-          "$<TARGET_FILE:ruby_cpp>" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
+          "${RUBY_EXECUTABLE}" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       ENDIF()
       SET_TESTS_PROPERTIES("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources)
@@ -57,6 +57,17 @@ FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/Win32API.so" DESTINATION "${CMAKE_CURRENT_B
 CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_test.rb" )
 CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup.in" "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/Startup.rb" )
 FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins" )
+
+CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/cloud/aws.rb.in" "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" )
+IF (WIN32 OR APPLE)
+  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "Ruby/cloud" )
+ELSE() #Linux
+  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "${RUBY_MODULE_DIR}/cloud" )
+  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "share/openstudio/Ruby/cloud" )
+ENDIF()
+FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/mongoid.yml.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
+FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/server_script.sh" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
+FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/worker_script.sh.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
 
 # install qt plugins and fixup for apple
 
@@ -181,7 +192,7 @@ ENDIF()
 # run all the unit tests
 IF( ENABLE_TEST_RUNNER_TARGETS )
   ADD_CUSTOM_TARGET( ruby_run_tests
-    ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_CPP_EXE}" -I. -I"${RUBY_RUBY_LIB_DIR}" "openstudio_test.rb"
+    ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I. -I"${RUBY_RUBY_LIB_DIR}" "openstudio_test.rb"
     DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
   )
 ENDIF()

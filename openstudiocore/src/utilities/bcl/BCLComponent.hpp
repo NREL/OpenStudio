@@ -89,6 +89,9 @@ namespace openstudio{
     /// Equality test - Compares the uids and versionIds of two separate components
     bool operator==(const BCLComponent& other) const;
 
+    /// Negation of ==.
+    bool operator!=(const BCLComponent& other) const;
+
 //@}
   private:
     std::string m_directory;
@@ -100,6 +103,12 @@ namespace openstudio{
     std::vector<std::string> m_filetypes;
     std::vector<Attribute> m_attributes;
   };
+
+  /** \relates BCLComponent */
+  typedef boost::optional<BCLComponent> OptionalBCLComponent;
+
+  /** \relates BCLComponent */
+  typedef std::vector<BCLComponent> BCLComponentVector;
 
 } // openstudio
 

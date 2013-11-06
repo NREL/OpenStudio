@@ -58,6 +58,8 @@
 #include <openstudio_lib/VariablesTabController.hpp>
 #include <openstudio_lib/YearSettingsWidget.hpp>
 
+#include <analysis/Analysis.hpp>
+
 #include <model/Component.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/WeatherFile.hpp>
@@ -220,9 +222,37 @@ OSDocument::OSDocument( openstudio::model::Model library,
       }
     
     }
-  } else {
+    else {
+      // save copy of databases about to be overwritten
+      openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
+      boost::filesystem::copy_file(projectDir / toPath("run.db"),
+                                   projectDir / toPath("bad-run.db"),
+                                   boost::filesystem::copy_option::overwrite_if_exists);
+      boost::filesystem::copy_file(projectDir / toPath("project.osp"),
+                                   projectDir / toPath("bad-project.osp"),
+                                   boost::filesystem::copy_option::overwrite_if_exists);
+      // throw up warning message
+      std::stringstream ss;
+      ss << "The project.osp and run.db associated with this model could not be opened. ";
+      ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
+      ss << "will be created. Compared to the original, the model will no longer contain any ";
+      ss << "measures or run data. If that data was present and is critical, it can be mined ";
+      ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
+      ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
+      ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
+      ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
+      ss << "you, and sorry for the inconvenience.";
+      LOG(Warn,ss.str());
+      QMessageBox::warning(0, 
+                           QString("Error opening measure and run data."),
+                           toQString(ss.str()),
+                           QMessageBox::Ok);
+    }
+  }
+  if (!m_simpleProject) {
     LOG(Debug, "Creating new project");
-    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
+    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
+        openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
         options,
         true);
 
@@ -239,6 +269,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
     problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
     problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
   }
+
+  OS_ASSERT(m_simpleProject);
   
   // make sure project has baseline stuff setup
   analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
@@ -522,6 +554,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
                                 ":images/off_run_tab.png" );
   connect(m_runTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForRunSimulationSubTab(int)));
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(modelSaving(const openstudio::path &)), 
           m_runTabController.get(), SLOT(saveDatabase(const openstudio::path &)));
   connect(m_runTabController.get(), SIGNAL(useRadianceStateChanged(bool)),
@@ -549,9 +582,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_scriptsTabController.get(), SIGNAL(toolsUpdated()),
       this, SLOT(markAsModified()));
 
@@ -561,6 +596,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(this, SIGNAL(toolsUpdated()),
           this, SLOT(markAsModified()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 

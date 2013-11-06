@@ -22,11 +22,13 @@
 
 #include <analysis/Analysis.hpp>
 #include <analysis/Analysis_Impl.hpp>
+#include <analysis/InputVariable.hpp>
 #include <analysis/OptimizationDataPoint.hpp>
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/JSON.hpp>
+#include <runmanager/lib/RunManager.hpp>
 
 #include <utilities/math/FloatCompare.hpp>
 
@@ -35,6 +37,7 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Json.hpp>
+#include <utilities/core/UnzipFile.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/function.hpp>
@@ -48,8 +51,13 @@ namespace detail {
   DataPoint_Impl::DataPoint_Impl(const Problem& problem,
                                  const std::vector<QVariant>& variableValues)
     : AnalysisObject_Impl(std::string()),
-      m_problem(problem), m_problemUUID(problem.uuid()),
-      m_complete(false), m_failed(false), m_variableValues(variableValues)
+      m_problem(problem),
+      m_problemUUID(problem.uuid()),
+      m_complete(false),
+      m_failed(false),
+      m_selected(true),
+      m_runType(DataPointRunType::Local),
+      m_variableValues(variableValues)
   {}
 
   DataPoint_Impl::DataPoint_Impl(const UUID& uuid,
@@ -60,13 +68,15 @@ namespace detail {
                                  const Problem& problem,
                                  bool complete,
                                  bool failed,
+                                 bool selected,
+                                 DataPointRunType runType,
                                  const std::vector<QVariant>& variableValues,
                                  const std::vector<double>& responseValues,
                                  const openstudio::path& directory,
                                  const boost::optional<FileReference>& osmInputData,
                                  const boost::optional<FileReference>& idfInputData,
                                  const boost::optional<FileReference>& sqlOutputData,
-                                 const boost::optional<FileReference>& xmlOutputData,
+                                 const std::vector<FileReference>& xmlOutputData,
                                  const boost::optional<runmanager::Job>& topLevelJob,
                                  const std::vector<openstudio::path>& dakotaParametersFiles,
                                  const std::vector<Tag>& tags,
@@ -76,6 +86,8 @@ namespace detail {
       m_problemUUID(problem.uuid()),
       m_complete(complete),
       m_failed(failed),
+      m_selected(selected),
+      m_runType(runType),
       m_variableValues(variableValues),
       m_responseValues(responseValues),
       m_directory(directory),
@@ -98,13 +110,15 @@ namespace detail {
                                  const boost::optional<UUID>& analysisUUID,
                                  bool complete,
                                  bool failed,
+                                 bool selected,
+                                 DataPointRunType runType,
                                  const std::vector<QVariant>& variableValues,
                                  const std::vector<double>& responseValues,
                                  const openstudio::path& directory,
                                  const boost::optional<FileReference>& osmInputData,
                                  const boost::optional<FileReference>& idfInputData,
                                  const boost::optional<FileReference>& sqlOutputData,
-                                 const boost::optional<FileReference>& xmlOutputData,
+                                 const std::vector<FileReference>& xmlOutputData,
                                  const boost::optional<runmanager::Job>& topLevelJob,
                                  const std::vector<openstudio::path>& dakotaParametersFiles,
                                  const std::vector<Tag>& tags,
@@ -114,6 +128,8 @@ namespace detail {
       m_analysisUUID(analysisUUID),
       m_complete(complete),
       m_failed(failed),
+      m_selected(selected),
+      m_runType(runType),
       m_variableValues(variableValues),
       m_responseValues(responseValues),
       m_directory(directory),
@@ -134,6 +150,8 @@ namespace detail {
       m_analysisUUID(other.analysisUUID()),
       m_complete(other.isComplete()),
       m_failed(other.failed()),
+      m_selected(other.selected()),
+      m_runType(other.runType()),
       m_variableValues(other.variableValues()),
       m_responseValues(other.responseValues()),
       m_directory(other.directory()),
@@ -148,8 +166,8 @@ namespace detail {
     if (other.sqlOutputData()) {
       m_sqlOutputData = other.sqlOutputData().get().clone();
     }
-    if (other.xmlOutputData()) {
-      m_xmlOutputData = other.xmlOutputData().get().clone();
+    BOOST_FOREACH(const FileReference& fref, other.xmlOutputData()) {
+      m_xmlOutputData.push_back(fref.clone());
     }
     Q_FOREACH(const Tag& tag, other.tags()) {
       m_tags.push_back(tag.clone());
@@ -203,11 +221,23 @@ namespace detail {
   }
 
   bool DataPoint_Impl::isComplete() const {
+    return complete();
+  }
+
+  bool DataPoint_Impl::complete() const {
     return m_complete;
   }
 
   bool DataPoint_Impl::failed() const {
     return m_failed;
+  }
+
+  bool DataPoint_Impl::selected() const {
+    return m_selected;
+  }
+
+  DataPointRunType DataPoint_Impl::runType() const {
+    return m_runType;
   }
 
   std::vector<QVariant> DataPoint_Impl::variableValues() const {
@@ -234,7 +264,7 @@ namespace detail {
     return m_sqlOutputData;
   }
 
-  boost::optional<FileReference> DataPoint_Impl::xmlOutputData() const {
+  std::vector<FileReference> DataPoint_Impl::xmlOutputData() const {
     return m_xmlOutputData;
   }
 
@@ -295,17 +325,18 @@ namespace detail {
     if (!m_outputAttributes.empty()) {
       return m_outputAttributes;
     }
-    if (m_xmlOutputData) {
-      OptionalAttribute wrapperAttribute = Attribute::loadFromXml(m_xmlOutputData->path());
-      if (wrapperAttribute) {
-        m_outputAttributes = wrapperAttribute->valueAsAttributeVector();
+    BOOST_FOREACH(const FileReference& attributeFile,m_xmlOutputData) {
+      OptionalAttribute wrapperAttribute = Attribute::loadFromXml(attributeFile.path());
+      if (wrapperAttribute &&
+          (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
+      {
+        AttributeVector toAdd = wrapperAttribute->valueAsAttributeVector();
+        m_outputAttributes.insert(m_outputAttributes.end(),toAdd.begin(),toAdd.end());
       }
       else {
-        LOG(Warn,"Unable to load attribute xml from " << toString(m_xmlOutputData->path()));
+        LOG(Warn,"Unable to load attribute xml from " << toString(attributeFile.path()));
       }
-      return m_outputAttributes;
     }
-    LOG(Info,"No Xml output file is set for this DataPoint.");
     return m_outputAttributes;
   }
 
@@ -367,6 +398,16 @@ namespace detail {
     return true;
   }
 
+  void DataPoint_Impl::setSelected(bool selected) {
+    m_selected = selected;
+    onChange(AnalysisObject_Impl::Benign);
+  }
+
+  void DataPoint_Impl::setRunType(const DataPointRunType& runType) {
+    m_runType = runType;
+    onChange(AnalysisObject_Impl::Benign);
+  }
+
   void DataPoint_Impl::setDirectory(const openstudio::path& directory) {
     m_directory = directory;
     onChange(AnalysisObject_Impl::Benign);
@@ -398,6 +439,179 @@ namespace detail {
     }
   }
 
+  bool DataPoint_Impl::updateFromJSON(const std::string& json, boost::optional<runmanager::RunManager>& runManager) {
+
+    if (complete() || !directory().empty()) {
+      LOG(Info,"Cannot update this DataPoint from JSON because it appears to have results already. "
+          << "Clear the old results before importing new ones.");
+      return false;
+    }
+
+    return this->updateFromJSON(loadJSON(json),runManager);
+  }
+
+  bool DataPoint_Impl::updateFromJSON(const AnalysisJSONLoadResult& loadResult, 
+                                      boost::optional<runmanager::RunManager>& runManager) 
+  {
+    if (loadResult.analysisObject) {
+      if (OptionalDataPoint loaded = loadResult.analysisObject->optionalCast<DataPoint>()) {
+        if (loaded->uuid() == uuid()) {
+          // require the variableValues to be the same
+          if ((variableValues() != loaded->variableValues())) {
+            LOG(Warn,"Cannot update DataPoint with a JSON version that has different variable values.");
+            return false;
+          }
+          m_complete = loaded->complete();
+          m_failed = loaded->failed();
+          m_responseValues = loaded->responseValues();
+
+          // do not pull file references over since they are not generally available for loading
+          // do pull job data over because it contains errors and warnings
+
+          boost::optional<runmanager::Job> loadedTopLevelJob = loaded->topLevelJob();
+          OS_ASSERT(loadedTopLevelJob);
+          if (runManager) {
+            if (m_topLevelJob){
+              // HERE -- job is in runManager
+              runManager->updateJob(m_topLevelJob->uuid(), *loadedTopLevelJob);
+            }else{
+              // HERE -- job not in runManager yet
+              runManager->updateJob(*loadedTopLevelJob);
+              m_topLevelJob = runManager->getJob(loadedTopLevelJob->uuid());
+            }
+            LOG(Info, "Datapoint '" << toString(this->uuid()) << "' topLevelJob = '" << toString(m_topLevelJob->uuid()) << "'");
+          }
+
+          m_tags = loaded->tags();
+          m_outputAttributes = loaded->outputAttributes();
+          onChange(AnalysisObject_Impl::Benign);
+          return true;
+        }
+        else {
+          LOG(Warn,"Cannot update DataPoint because the DataPoint loaded from JSON has a different UUID.");
+        }
+      }
+      else {
+        LOG(Warn,"Cannot update DataPoint because the AnalysisObject loaded from JSON is not a DataPoint.");
+      }
+    }
+    else {
+      LOG(Warn,"Cannot update DataPoint from JSON because the JSON string could not be loaded.");
+    }
+
+    return false;
+  }
+
+  bool DataPoint_Impl::updateDetails(boost::optional<runmanager::RunManager>& runManager) {
+    if (directory().empty()) {
+      LOG(Info,"No directory set for this DataPoint.");
+      return false;
+    }
+
+    openstudio::path zipPath = directory() / toPath("dataPoint.zip");
+    if (!boost::filesystem::exists(zipPath)) {
+      LOG(Info,"No dataPoint.zip file in directory '" << toString(directory()) << "'.");
+      return false;
+    }
+
+    try{
+      // unzip 
+      UnzipFile unzip(zipPath);
+      unzip.extractAllFiles(directory());
+      boost::filesystem::remove(zipPath);
+    }catch(const std::exception&){
+      LOG(Info,"Could not unzip dataPoint.zip file in directory '" << toString(directory()) << "'.");
+      return false;
+    }
+
+    // fix up topLevelJob
+    OS_ASSERT(m_topLevelJob);
+    if (runManager) {
+      // files are now in directory(), need to update paths
+      runManager->updateJob(*m_topLevelJob, directory());
+    }
+
+
+    // get file references for
+    //   m_osmInputData
+    //   m_idfInputData
+    //   m_sqlOutputData
+    //   m_xmlOutputData (vector)
+    // if had json now, could transform those, but use topLevelJob instead,
+    // since not preserving the json file references makes it clear that 
+    // there is no model, idf, sql without downloading details.
+    runmanager::Files allFiles = topLevelJob()->treeAllFiles();
+    try {
+      openstudio::path osmInputDataPath = allFiles.getLastByExtension("osm").fullPath;
+      if (!boost::filesystem::exists(osmInputDataPath)) {
+        // check to see if this was the seed model
+        if (toString(osmInputDataPath.parent_path().stem()) == "seed") {
+          LOG(Debug,"Last OSM is the seed model. Point this local DataPoint to the local "
+              << "seed model.");
+          OS_ASSERT(parent());
+          osmInputDataPath = parent()->cast<Analysis>().seed().path();
+        }
+        else {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(osmInputDataPath) << "' as the last OSM file path, even though "
+              << "that location does not exist.");
+        }
+      }
+      setOsmInputData(FileReference(osmInputDataPath));
+    }
+    catch (...) {}
+    try {
+      openstudio::path idfInputDataPath = allFiles.getLastByExtension("idf").fullPath;
+      if (!boost::filesystem::exists(idfInputDataPath)) {
+                // check to see if this was the seed model
+        if (toString(idfInputDataPath.parent_path().stem()) == "seed") {
+          LOG(Debug,"Last IDF is the seed model. Point this local DataPoint to the local "
+              << "seed model.");
+          OS_ASSERT(parent());
+          idfInputDataPath = parent()->cast<Analysis>().seed().path();
+        }
+        else {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(idfInputDataPath) << "' as the last IDF file path, even though "
+              << "that location does not exist.");
+        }
+      }
+      setIdfInputData(FileReference(idfInputDataPath));
+    }
+    catch (...) {}
+    try {
+      openstudio::path sqlOutputDataPath = allFiles.getLastByExtension("sql").fullPath;
+      if (!boost::filesystem::exists(sqlOutputDataPath)) {
+        LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+            << "with the directory information, RunManager is reporting '" 
+            << toString(sqlOutputDataPath) << "' as the last SQL file path, even though "
+            << "that location does not exist.");
+      }
+      setSqlOutputData(FileReference(sqlOutputDataPath));
+    }
+    catch (...) {}
+    try {
+      FileReferenceVector xmlOutputData;
+      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+        if (!boost::filesystem::exists(file.fullPath)) {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(file.fullPath) << "' as an XML file path, even though that "
+              << "location does not exist.");
+        }
+        xmlOutputData.push_back(FileReference(file.fullPath));
+      }
+      setXmlOutputData(xmlOutputData);
+    }
+    catch (...) {}
+
+    onChange(AnalysisObject_Impl::Benign);
+
+    return true;
+  }
+
   void DataPoint_Impl::clearFileDataFromCache() const {
     m_model = boost::none;
     m_workspace = boost::none;
@@ -417,7 +631,7 @@ namespace detail {
     m_osmInputData.reset();
     m_idfInputData.reset();
     m_sqlOutputData.reset();
-    m_xmlOutputData.reset();
+    m_xmlOutputData.clear();
     m_topLevelJob.reset(); // this should happen here because if results are cleared want to run with a new job
     m_dakotaParametersFiles.clear(); // DLM: should this really happen here?
     clearAllDataFromCache();
@@ -425,19 +639,22 @@ namespace detail {
   }
 
   bool DataPoint_Impl::saveJSON(const openstudio::path& p,
+                                const DataPointSerializationOptions& options,
                                 bool overwrite) const
   {
-    QVariant json = toTopLevelVariant();
+    QVariant json = toTopLevelVariant(options);
     return openstudio::saveJSON(json,p,overwrite);
   }
 
-  std::ostream& DataPoint_Impl::toJSON(std::ostream& os) const {
-    os << toJSON();
+  std::ostream& DataPoint_Impl::toJSON(std::ostream& os,
+                                       const DataPointSerializationOptions& options) const
+  {
+    os << toJSON(options);
     return os;
   }
 
-  std::string DataPoint_Impl::toJSON() const {
-    QVariant json = toTopLevelVariant();
+  std::string DataPoint_Impl::toJSON(const DataPointSerializationOptions& options) const {
+    QVariant json = toTopLevelVariant(options);
     return openstudio::toJSON(json);
   }
 
@@ -463,9 +680,11 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
-  void DataPoint_Impl::setXmlOutputData(const FileReference& file) {
-    OS_ASSERT(file.fileType() == FileReferenceType::XML);
-    m_xmlOutputData = file;
+  void DataPoint_Impl::setXmlOutputData(const std::vector<FileReference>& files) {
+    BOOST_FOREACH(const FileReference& fref,files) {
+      OS_ASSERT(fref.fileType() == FileReferenceType::XML);
+    }
+    m_xmlOutputData = files;
     m_outputAttributes.clear();
     onChange(AnalysisObject_Impl::Benign);
   }
@@ -487,19 +706,22 @@ namespace detail {
 
   void DataPoint_Impl::setProblem(const Problem& problem) {
     m_problem = problem;
+    m_problemUUID = problem.uuid();
   }
 
   QVariant DataPoint_Impl::toVariant() const {
     QVariantMap dataPointData = AnalysisObject_Impl::toVariant().toMap();
 
     dataPointData["data_point_type"] = QString("DataPoint");
-    dataPointData["problem_uuid"] = problemUUID().toString();
+    dataPointData["problem_uuid"] = toQString(removeBraces(problemUUID()));
     if (analysisUUID()) {
-      dataPointData["analysis_uuid"] = analysisUUID().get().toString();
+      dataPointData["analysis_uuid"] = toQString(removeBraces(analysisUUID().get()));
     }
 
     dataPointData["complete"] = isComplete();
     dataPointData["failed"] = failed();
+    dataPointData["selected"] = selected();
+    dataPointData["run_type"] = toQString(runType().valueName());
 
     QVariantList variableValuesList;
     int index(0);
@@ -539,8 +761,12 @@ namespace detail {
     if (sqlOutputData()) {
       dataPointData["sql_output_data"] = openstudio::detail::toVariant(sqlOutputData().get());
     }
-    if (xmlOutputData()) {
-      dataPointData["xml_output_data"] = openstudio::detail::toVariant(xmlOutputData().get());
+    if (!xmlOutputData().empty()) {
+      QVariantList xmlOutputDataList;
+      Q_FOREACH(const FileReference& fref,xmlOutputData()) {
+        xmlOutputDataList.push_back(openstudio::detail::toVariant(fref));
+      }
+      dataPointData["xml_output_data"] = xmlOutputDataList;
     }
 
     if (topLevelJob()) {
@@ -574,19 +800,26 @@ namespace detail {
     return QVariant(dataPointData);
   }
 
-  QVariant DataPoint_Impl::toTopLevelVariant() const {
+  QVariant DataPoint_Impl::toTopLevelVariant(const DataPointSerializationOptions& options) const {
     QVariant dataPointData = this->toVariant();
+
+    QVariantMap metadata = jsonMetadata().toMap();
+
+    if (!options.projectDir.empty()) {
+      metadata["project_dir"] = toQString(options.projectDir);
+    }
 
     // create top-level of final file
     QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    result["metadata"] = metadata;
     result["data_point"] = dataPointData;
 
     return result;
   }
 
   DataPoint DataPoint_Impl::factoryFromVariant(const QVariant& variant,
-                                               const VersionString& version)
+                                               const VersionString& version,
+                                               const boost::optional<Problem>& problem)
   {
     QVariantMap map = variant.toMap();
 
@@ -594,15 +827,29 @@ namespace detail {
       LOG_AND_THROW("Unable to find DataPoint in expected location.");
     }
 
+    OptionalDataPoint result;
     std::string dataPointType = map["data_point_type"].toString().toStdString();
     if (dataPointType == "DataPoint") {
-      return DataPoint_Impl::fromVariant(variant,version);
+      result = DataPoint_Impl::fromVariant(variant,version);
     }
-    if (dataPointType == "OptimizationDataPoint") {
-      return OptimizationDataPoint_Impl::fromVariant(variant,version);
+    else if (dataPointType == "OptimizationDataPoint") {
+      result = OptimizationDataPoint_Impl::fromVariant(variant,version);
+    }
+    else {
+      LOG_AND_THROW("Unexpected data_point_type " << dataPointType << ".");
     }
 
-    LOG_AND_THROW("Unexpected data_point_type " << dataPointType << ".");
+    OS_ASSERT(result);
+    if (problem) {
+      if (result->problemUUID() != problem->uuid()) {
+        LOG_AND_THROW("Problem UUID stored for this DataPoint, " << toString(result->problemUUID())
+                      << " does not match the UUID of Problem " << problem->name() << ", which is "
+                      << toString(problem->uuid()) << ".");
+      }
+      result->setProblem(*problem);
+    }
+
+    return result.get();
   }
 
   DataPoint DataPoint_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
@@ -660,6 +907,18 @@ namespace detail {
             boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
     }
 
+    FileReferenceVector xmlOutputData;
+    if (map.contains("xml_output_data")) {
+      if (version < VersionString("1.0.4")) {
+        xmlOutputData = FileReferenceVector(1u,openstudio::detail::toFileReference(map["xml_output_data"],version));
+      }
+      else {
+        xmlOutputData = deserializeUnorderedVector<FileReference>(
+              map["xml_output_data"].toList(),
+              boost::function<FileReference (const QVariant&)>(boost::bind(openstudio::detail::toFileReference,_1,version)));
+      }
+    }
+
     // dakota parameters files
     std::vector<openstudio::path> dakotaParametersFiles;
     if (map.contains("dakota_parameters_files")) {
@@ -669,29 +928,36 @@ namespace detail {
             boost::function<openstudio::path (QVariant*)>(boost::bind(fToPath,boost::bind(&QVariant::toString,_1))));
     }
 
-    return DataPoint(openstudio::UUID(map["uuid"].toString()),
-                     openstudio::UUID(map["version_uuid"].toString()),
+    return DataPoint(toUUID(map["uuid"].toString().toStdString()),
+                     toUUID(map["version_uuid"].toString().toStdString()),
                      map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                      map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                      map.contains("description") ? map["description"].toString().toStdString() : std::string(),
-                     openstudio::UUID(map["problem_uuid"].toString()),
-                     map.contains("analysis_uuid") ? openstudio::UUID(map["analysis_uuid"].toString()) : boost::optional<openstudio::UUID>(),
+                     toUUID(map["problem_uuid"].toString().toStdString()),
+                     map.contains("analysis_uuid") ? toUUID(map["analysis_uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),
                      map["complete"].toBool(),
                      map["failed"].toBool(),
+                     version < VersionString("1.0.4") ? true : map["selected"].toBool(),
+                     version < VersionString("1.0.5") ? DataPointRunType(DataPointRunType::Local) : DataPointRunType(map["run_type"].toString().toStdString()),
                      variableValues,
                      responseValues,
                      map.contains("directory") ? toPath(map["directory"].toString()) : openstudio::path(),
                      map.contains("osm_input_data") ? openstudio::detail::toFileReference(map["osm_input_data"],version) : OptionalFileReference(),
                      map.contains("idf_input_data") ? openstudio::detail::toFileReference(map["idf_input_data"],version) : OptionalFileReference(),
                      map.contains("sql_output_data") ? openstudio::detail::toFileReference(map["sql_output_data"],version) : OptionalFileReference(),
-                     map.contains("xml_output_data") ? openstudio::detail::toFileReference(map["xml_output_data"],version) : OptionalFileReference(),
-                     map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"],version) : boost::optional<runmanager::Job>(),
+                     xmlOutputData,
+                     map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"],version, true) : boost::optional<runmanager::Job>(),
                      dakotaParametersFiles,
                      tags,
                      outputAttributes);
   }
 
 } // detail
+
+DataPointSerializationOptions::DataPointSerializationOptions(
+    const openstudio::path& t_projectDir)
+  : projectDir(t_projectDir)
+{}
 
 DataPoint::DataPoint(const Problem& problem,
                      const std::vector<QVariant>& variableValues)
@@ -707,13 +973,15 @@ DataPoint::DataPoint(const UUID& uuid,
                      const Problem& problem,
                      bool complete,
                      bool failed,
+                     bool selected,
+                     DataPointRunType runType,
                      const std::vector<QVariant>& variableValues,
                      const std::vector<double>& responseValues,
                      const openstudio::path& directory,
                      const boost::optional<FileReference>& osmInputData,
                      const boost::optional<FileReference>& idfInputData,
                      const boost::optional<FileReference>& sqlOutputData,
-                     const boost::optional<FileReference>& xmlOutputData,
+                     const std::vector<FileReference>& xmlOutputData,
                      const boost::optional<runmanager::Job>& topLevelJob,
                      const std::vector<openstudio::path>& dakotaParametersFiles,
                      const std::vector<Tag>& tags,
@@ -727,6 +995,8 @@ DataPoint::DataPoint(const UUID& uuid,
                                    problem,
                                    complete,
                                    failed,
+                                   selected,
+                                   runType,
                                    variableValues,
                                    responseValues,
                                    directory,
@@ -749,13 +1019,15 @@ DataPoint::DataPoint(const UUID& uuid,
                      const boost::optional<UUID>& analysisUUID,
                      bool complete,
                      bool failed,
+                     bool selected,
+                     DataPointRunType runType,
                      const std::vector<QVariant>& variableValues,
                      const std::vector<double>& responseValues,
                      const openstudio::path& directory,
                      const boost::optional<FileReference>& osmInputData,
                      const boost::optional<FileReference>& idfInputData,
                      const boost::optional<FileReference>& sqlOutputData,
-                     const boost::optional<FileReference>& xmlOutputData,
+                     const std::vector<FileReference>& xmlOutputData,
                      const boost::optional<runmanager::Job>& topLevelJob,
                      const std::vector<openstudio::path>& dakotaParametersFiles,
                      const std::vector<Tag>& tags,
@@ -770,6 +1042,8 @@ DataPoint::DataPoint(const UUID& uuid,
                                    analysisUUID,
                                    complete,
                                    failed,
+                                   selected,
+                                   runType,
                                    variableValues,
                                    responseValues,
                                    directory,
@@ -803,8 +1077,20 @@ bool DataPoint::isComplete() const {
   return getImpl<detail::DataPoint_Impl>()->isComplete();
 }
 
+bool DataPoint::complete() const {
+  return getImpl<detail::DataPoint_Impl>()->complete();
+}
+
 bool DataPoint::failed() const {
   return getImpl<detail::DataPoint_Impl>()->failed();
+}
+
+bool DataPoint::selected() const {
+  return getImpl<detail::DataPoint_Impl>()->selected();
+}
+
+DataPointRunType DataPoint::runType() const {
+  return getImpl<detail::DataPoint_Impl>()->runType();
 }
 
 std::vector<QVariant> DataPoint::variableValues() const {
@@ -831,7 +1117,7 @@ boost::optional<FileReference> DataPoint::sqlOutputData() const {
   return getImpl<detail::DataPoint_Impl>()->sqlOutputData();
 }
 
-boost::optional<FileReference> DataPoint::xmlOutputData() const {
+std::vector<FileReference> DataPoint::xmlOutputData() const {
   return getImpl<detail::DataPoint_Impl>()->xmlOutputData();
 }
 
@@ -877,6 +1163,14 @@ bool DataPoint::matches(const std::vector<QVariant>& testVariableValues) const {
   return getImpl<detail::DataPoint_Impl>()->matches(testVariableValues);
 }
 
+void DataPoint::setSelected(bool selected) {
+  getImpl<detail::DataPoint_Impl>()->setSelected(selected);
+}
+
+void DataPoint::setRunType(const DataPointRunType& runType) {
+  getImpl<detail::DataPoint_Impl>()->setRunType(runType);
+}
+
 void DataPoint::setDirectory(const openstudio::path& directory) {
   getImpl<detail::DataPoint_Impl>()->setDirectory(directory);
 }
@@ -887,6 +1181,14 @@ void DataPoint::addTag(const std::string& tagName) {
 
 void DataPoint::deleteTag(const std::string& tagName) {
   getImpl<detail::DataPoint_Impl>()->deleteTag(tagName);
+}
+
+bool DataPoint::updateFromJSON(const std::string& json, boost::optional<runmanager::RunManager>& runManager) {
+  return getImpl<detail::DataPoint_Impl>()->updateFromJSON(json,runManager);
+}
+
+bool DataPoint::updateDetails(boost::optional<runmanager::RunManager>& runManager) {
+  return getImpl<detail::DataPoint_Impl>()->updateDetails(runManager);
 }
 
 void DataPoint::clearFileDataFromCache() const {
@@ -901,16 +1203,54 @@ void DataPoint::clearResults() {
   getImpl<detail::DataPoint_Impl>()->clearResults();
 }
 
-bool DataPoint::saveJSON(const openstudio::path& p,bool overwrite) const {
-  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,overwrite);
+bool DataPoint::saveJSON(const openstudio::path& p,
+                         const DataPointSerializationOptions& options,
+                         bool overwrite) const
+{
+  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,options,overwrite);
 }
 
-std::ostream& DataPoint::toJSON(std::ostream& os) const {
-  return getImpl<detail::DataPoint_Impl>()->toJSON(os);
+std::ostream& DataPoint::toJSON(std::ostream& os,
+                                const DataPointSerializationOptions& options) const
+{
+  return getImpl<detail::DataPoint_Impl>()->toJSON(os,options);
 }
 
-std::string DataPoint::toJSON() const {
-  return getImpl<detail::DataPoint_Impl>()->toJSON();
+std::string DataPoint::toJSON(const DataPointSerializationOptions& options) const {
+  return getImpl<detail::DataPoint_Impl>()->toJSON(options);
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(const openstudio::path& p,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(p);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(std::istream& json,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(const std::string& json,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
 }
 
 /// @cond
@@ -931,8 +1271,8 @@ void DataPoint::setSqlOutputData(const FileReference& file) {
   getImpl<detail::DataPoint_Impl>()->setSqlOutputData(file);
 }
 
-void DataPoint::setXmlOutputData(const FileReference& file) {
-  getImpl<detail::DataPoint_Impl>()->setXmlOutputData(file);
+void DataPoint::setXmlOutputData(const std::vector<FileReference>& files) {
+  getImpl<detail::DataPoint_Impl>()->setXmlOutputData(files);
 }
 
 void DataPoint::markComplete() {

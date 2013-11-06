@@ -34,6 +34,7 @@ namespace runmanager {
   class RUNMANAGER_API AdvancedStatus
   {
     public:
+      /** Default constructor sets status to Idle. */
       AdvancedStatus();
       AdvancedStatus(const AdvancedStatusEnum &t_enum);
       AdvancedStatus(const AdvancedStatusEnum &t_enum, const std::string &description);

@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <!-- edited with XMLSpy v2008 (http://www.altova.com) by Daniel Macumber (NREL) -->
 <ROOT>
+	<POLICY IddObjectType="OS_ShadingControl">
+	    <rule IddField="Shading Type" Access="LOCKED"/>
+		<rule IddField="Construction with Shading Name" Access="LOCKED"/>
+		<rule IddField="Shading Device Material Name" Access="LOCKED"/>
+		<rule IddField="Setpoint" Access="HIDDEN"/>
+		<rule IddField="Shading Control Is Scheduled" Access="HIDDEN"/>
+		<rule IddField="Glare Control Is Active" Access="HIDDEN"/>
+		<rule IddField="Type of Slat Angle Control for Blinds" Access="HIDDEN"/>
+		<rule IddField="Slat Angle Schedule Name" Access="HIDDEN"/>
+		<rule IddField="Setpoint 2" Access="HIDDEN"/>
+	</POLICY>
 	<POLICY IddObjectType="OS_InteriorPartitionSurface">
 		<rule IddField="Interior Partition Surface Group Name" Access="LOCKED"/>
 		<rule IddField="Number of Vertices" Access="HIDDEN"/>

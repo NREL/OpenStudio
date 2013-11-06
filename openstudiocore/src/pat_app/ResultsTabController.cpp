@@ -18,22 +18,29 @@
 **********************************************************************/
 
 #include <pat_app/ResultsTabController.hpp>
-#include <pat_app/ResultsView.hpp>
+
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/PatApp.hpp>
+#include <pat_app/ResultsView.hpp>
 
 #include <analysis/DataPoint.hpp>
 
-#include <runmanager/lib/Job.hpp>
+#include <analysisdriver/CloudAnalysisDriver.hpp>
+#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+
+#include <model/UtilityBill.hpp>
+
 #include <runmanager/lib/FileInfo.hpp>
+#include <runmanager/lib/Job.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 
 #include <QDesktopServices>
+#include <QDir>
 #include <QMessageBox>
 #include <QRegExp>
-#include <QDir>
 
 namespace openstudio {
 
@@ -50,6 +57,9 @@ ResultsTabController::ResultsTabController()
   OS_ASSERT(test);
 
   test = connect(resultsView, SIGNAL(openDirButtonClicked(bool)), this, SLOT(openDirectory()));
+  OS_ASSERT(test); 
+  
+  test = connect(resultsView, SIGNAL(downloadResultsButtonClicked(bool)), this, SLOT(downloadResults()));
   OS_ASSERT(test);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
@@ -62,6 +72,8 @@ ResultsTabController::ResultsTabController()
     m_baselineDataPointResultListController = QSharedPointer<BaselineDataPointResultListController>(new BaselineDataPointResultListController(analysis));
     m_dataPointResultsListController = QSharedPointer<DataPointResultsListController>(new DataPointResultsListController(analysis));
     m_dataPointResultItemDelegate = QSharedPointer<DataPointResultItemDelegate>(new DataPointResultItemDelegate());
+    m_dataPointCalibrationListController = QSharedPointer<DataPointCalibrationListController>(new DataPointCalibrationListController(analysis));
+    m_dataPointCalibrationItemDelegate = QSharedPointer<DataPointCalibrationItemDelegate>(new DataPointCalibrationItemDelegate(resultsView->calibrationMaxNMBE(), resultsView->calibrationMaxCVRMSE()));
 
     // can only select one item between both lists
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
@@ -71,7 +83,17 @@ ResultsTabController::ResultsTabController()
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
     OS_ASSERT(bingo);
 
+    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
+    OS_ASSERT(bingo);
+
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    OS_ASSERT(bingo);
+
+    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
+    OS_ASSERT(bingo);
+
+    // want to reset the list after changing the delegate
+    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),resultsView->dataPointCalibrationListView,SLOT(refreshAllViews()));
     OS_ASSERT(bingo);
 
     resultsView->baselineDataPointResultListView->setListController(m_baselineDataPointResultListController);
@@ -79,6 +101,9 @@ ResultsTabController::ResultsTabController()
 
     resultsView->dataPointResultsListView->setListController(m_dataPointResultsListController);
     resultsView->dataPointResultsListView->setDelegate(m_dataPointResultItemDelegate);
+
+    resultsView->dataPointCalibrationListView->setListController(m_dataPointCalibrationListController);
+    resultsView->dataPointCalibrationListView->setDelegate(m_dataPointCalibrationItemDelegate);
    }
 }
 
@@ -187,42 +212,136 @@ void ResultsTabController::openDirectory()
 
 }
 
-void ResultsTabController::enableViewFileButton()
+void ResultsTabController::downloadResults()
 {
-  if( resultsView ) {
-    if (!m_baselineDataPointResultListController->selectionController()->selectedItems().empty()){
-      resultsView->enableViewFileButton(true);
-    } else {
-      resultsView->enableViewFileButton(false);
+  if( resultsView ){
+
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+        
+        boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+        if(project){
+          boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+          if(cloudAnalysisDriver){
+
+            bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
+            if (sameSession){
+
+              bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+              if (!success){
+                // could not request this datapoint's results right now, set this for later?
+                dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
+              }
+
+            }else{
+              QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");
+            }
+
+            // prevent people from clicking this over and over again? should there be another state?
+            resultsView->enableDownloadResultsButton(false, sameSession);
+          }
+        }
+      }
     }
   }
 }
 
-void ResultsTabController::disableViewFileButton()
+void ResultsTabController::enableDownloadResultsButton()
 {
-  if( resultsView ) { resultsView->enableViewFileButton(false); }
+  if( resultsView ){
+
+    bool enabled = false;
+    bool sameSession = true; // default to true for nothing selected case
+
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+    CloudStatus status = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
+    if(project && (status == CLOUD_RUNNING)){
+
+      std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+      if (!selectedItems.empty()){
+
+        DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+        if (dataPointResultListItem){
+
+          analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+
+          // check if data point is running or has run in the current cloud session
+          boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+          if (cloudAnalysisDriver){
+            sameSession = cloudAnalysisDriver->inSession(dataPoint);
+          }
+
+          // Determine if datapoint has already has detailed data
+          bool hasDetailedResults = !dataPoint.directory().empty();
+          if(!hasDetailedResults){
+            enabled = true;
+          }else{
+            enabled = false;
+            sameSession = true; // already have results, doesn't matter
+          }
+        }
+      }
+    }
+
+    resultsView->enableDownloadResultsButton(enabled, sameSession);
+  }
+}
+
+void ResultsTabController::enableViewFileButton()
+{
+  if( resultsView ) {
+
+    bool enabled = false;
+
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+
+        // Determine if datapoint has detailed data
+        if(dataPoint.complete() && !dataPoint.directory().empty()){
+          enabled = true;
+        }
+      }
+    }
+
+    resultsView->enableViewFileButton(enabled);
+  }
 }
 
 void ResultsTabController::enableOpenDirectoryButton()
 {
   if( resultsView ) {
-    if (!m_baselineDataPointResultListController->selectionController()->selectedItems().empty()){
-      resultsView->enableOpenDirectoryButton(true);
-    } else {
-     resultsView->enableOpenDirectoryButton(false);
-    }
-  }
-}
 
-void ResultsTabController::disableOpenDirectoryButton()
-{
-  if( resultsView ) { resultsView->enableOpenDirectoryButton(false); }
+    bool enabled = false;
+
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
+
+        // Determine if datapoint has already has detailed data
+        bool hasDetailedResults = !dataPoint.directory().empty();
+
+        if(hasDetailedResults){
+          enabled = true;
+        }
+      }
+    }
+    resultsView->enableOpenDirectoryButton(enabled);
+  }
 }
 
 DataPointResultListItem::DataPointResultListItem(const openstudio::analysis::DataPoint& dataPoint,
                                                  const openstudio::analysis::DataPoint& baselineDataPoint,
-                                                 bool aleternateRow)
-  : m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_aleternateRow(aleternateRow)
+                                                 bool alternateRow)
+  : m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
 {
 }
 
@@ -236,9 +355,31 @@ openstudio::analysis::DataPoint DataPointResultListItem::baselineDataPoint() con
   return m_baselineDataPoint;
 }
 
-bool DataPointResultListItem::aleternateRow() const
+bool DataPointResultListItem::alternateRow() const
 {
-  return m_aleternateRow;
+  return m_alternateRow;
+}
+
+DataPointCalibrationListItem::DataPointCalibrationListItem(const openstudio::analysis::DataPoint& dataPoint,
+                                                           const openstudio::analysis::DataPoint& baselineDataPoint,
+                                                           bool alternateRow)
+  : m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
+{
+}
+
+openstudio::analysis::DataPoint DataPointCalibrationListItem::dataPoint() const
+{
+  return m_dataPoint;
+}
+
+openstudio::analysis::DataPoint DataPointCalibrationListItem::baselineDataPoint() const
+{
+  return m_baselineDataPoint;
+}
+
+bool DataPointCalibrationListItem::alternateRow() const
+{
+  return m_alternateRow;
 }
 
 QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSource)
@@ -246,7 +387,7 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   QSharedPointer<DataPointResultListItem> dataPointResultListItem = dataSource.dynamicCast<DataPointResultListItem>();
   openstudio::analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
   openstudio::analysis::DataPoint baselineDataPoint = dataPointResultListItem->baselineDataPoint();
-  bool alternateRow = dataPointResultListItem->aleternateRow();
+  bool alternateRow = dataPointResultListItem->alternateRow();
 
   DataPointResultsView* result = new DataPointResultsView(dataPoint, baselineDataPoint, alternateRow);
   result->setHasEmphasis(dataPointResultListItem->isSelected());
@@ -258,6 +399,37 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   OS_ASSERT(test);
 
   return result;
+}
+
+DataPointCalibrationItemDelegate::DataPointCalibrationItemDelegate(double maxNMBE, double maxCVRMSE)
+ : m_calibrationMaxNMBE(maxNMBE), m_calibrationMaxCVRMSE(maxCVRMSE)
+{}
+
+QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
+  QSharedPointer<DataPointCalibrationListItem> dataPointCalibrationListItem = dataSource.dynamicCast<DataPointCalibrationListItem>();
+  OS_ASSERT(dataPointCalibrationListItem);
+
+  openstudio::analysis::DataPoint dataPoint = dataPointCalibrationListItem->dataPoint();
+  openstudio::analysis::DataPoint baselineDataPoint = dataPointCalibrationListItem->baselineDataPoint();
+  bool alternateRow = dataPointCalibrationListItem->alternateRow();
+
+  DataPointCalibrationView* result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
+  result->setHasEmphasis(dataPointCalibrationListItem->isSelected());
+
+  bool test = connect(result,SIGNAL(clicked()),dataPointCalibrationListItem.data(),SLOT(toggleSelected()));
+  OS_ASSERT(test);
+
+  test = connect(dataPointCalibrationListItem.data(),SIGNAL(selectedChanged(bool)),result,SLOT(setHasEmphasis(bool)));
+  OS_ASSERT(test);
+
+  return result;
+}
+
+void DataPointCalibrationItemDelegate::setCalibrationThresholds(double maxNMBE, double maxCVRMSE)
+{
+  m_calibrationMaxNMBE = maxNMBE;
+  m_calibrationMaxCVRMSE = maxCVRMSE;
 }
 
 BaselineDataPointResultListController::BaselineDataPointResultListController(const openstudio::analysis::Analysis& analysis)
@@ -326,7 +498,7 @@ std::vector<openstudio::analysis::DataPoint> DataPointResultsListController::dat
   }
 
   analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
-  BOOST_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
     if (dataPoint.uuid() != baselineDataPoint.uuid()){
       result.push_back(dataPoint);
     }
@@ -335,6 +507,48 @@ std::vector<openstudio::analysis::DataPoint> DataPointResultsListController::dat
   return result;
 }
 
+DataPointCalibrationListController::DataPointCalibrationListController(const openstudio::analysis::Analysis& analysis)
+  : m_analysis(analysis)
+{
+}
+
+QSharedPointer<OSListItem> DataPointCalibrationListController::itemAt(int i)
+{
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if(project){
+    analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
+    std::vector<openstudio::analysis::DataPoint> dataPoints = this->dataPoints();
+    if (i >= 0 && i < (int)dataPoints.size()){
+      bool alternateRow = ((i % 2) == 1);
+      QSharedPointer<OSListItem> item = QSharedPointer<OSListItem>(new DataPointCalibrationListItem(dataPoints[i], baselineDataPoint, alternateRow));
+      item->setController(this);
+      return item;
+    }
+  }
+  return QSharedPointer<OSListItem>();
+}
+
+int DataPointCalibrationListController::count()
+{
+  return (int)this->dataPoints().size();
+}
+
+std::vector<openstudio::analysis::DataPoint> DataPointCalibrationListController::dataPoints()
+{
+  std::vector<openstudio::analysis::DataPoint> result;
+
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if(!project){
+    return result;
+  }
+
+  analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
+  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+    result.push_back(dataPoint);
+  }
+
+  return result;
+}
 
 }
 

@@ -23,6 +23,7 @@
 #include <analysisdriver/SimpleProject.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
 
+#include <analysis/Analysis.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 
@@ -550,7 +551,7 @@ namespace openstudio {
         openstudio::runmanager::ConfigOptions co(true);
 
         analysis::Problem prob = p->analysis().problem();
-        analysisdriver::AnalysisRunOptions runOptions = p->standardRunOptions();
+        analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
         if (useRadianceForDaylightingCalculations)

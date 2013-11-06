@@ -42,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveQuartic(
   OptionalString s;
   OptionalDouble d;
 
-  if (s = modelObject.name()) {
+  if ((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
@@ -53,10 +53,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveQuartic(
   idfObject.setDouble(Curve_QuarticFields::Coefficient5x_POW_4,modelObject.coefficient5xPOW4());
   idfObject.setDouble(Curve_QuarticFields::MinimumValueofx,modelObject.minimumValueofx());
   idfObject.setDouble(Curve_QuarticFields::MaximumValueofx,modelObject.maximumValueofx());
-  if (d = modelObject.minimumCurveOutput()) {
+  if ((d = modelObject.minimumCurveOutput())) {
     idfObject.setDouble(Curve_QuarticFields::MinimumCurveOutput,*d);
   }
-  if (d = modelObject.maximumCurveOutput()) {
+  if ((d = modelObject.maximumCurveOutput())) {
     idfObject.setDouble(Curve_QuarticFields::MaximumCurveOutput,*d);
   }
   if (!modelObject.isInputUnitTypeforXDefaulted()) {

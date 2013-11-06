@@ -22,11 +22,13 @@
 
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
+#include "PatConstants.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/Measure.hpp>
 #include <analysis/Problem.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <runmanager/lib/Job.hpp>
 
@@ -35,6 +37,9 @@
 #include <QSharedPointer>
 
 namespace openstudio {
+
+class VagrantProvider;
+
 namespace pat {
 
 class RunView;
@@ -56,11 +61,15 @@ class RunTabController : public QObject
 
   public slots:
 
-    void onPlayButtonClicked(bool clicked);
+    void onPlayButtonClicked();
 
     void onIterationProgress();
 
-    void reqestRefresh();
+    void onDataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
+    void onDataPointResultsCleared(const openstudio::UUID& dataPoint);
+
+    void requestRefresh();
 
     void refresh();
 
@@ -69,9 +78,13 @@ class RunTabController : public QObject
     bool m_refreshScheduled;
 
     QSharedPointer<DataPointRunListController> m_dataPointRunListController;
+
     QSharedPointer<DataPointRunItemDelegate> m_dataPointRunItemDelegate;
 
     REGISTER_LOGGER("openstudio.pat.RunTabController");
+
+    // converts UUID to index i and emits signal to get DataPoint job details to refresh
+    void emitDataPointChanged(const openstudio::UUID& dataPoint);
 };
 
 /// Controller class for the list of data points on the run tab
@@ -89,6 +102,8 @@ class DataPointRunListController : public OSListController
   QSharedPointer<OSListItem> itemAt(int i);
 
   int count();
+
+  void emitItemChanged(int i);
 
  private:
 
@@ -120,12 +135,16 @@ class DataPointRunItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
-  public:
+ public:
 
   virtual ~DataPointRunItemDelegate() {}
 
   /// Widget returned will be a DataPointRunListItem
   QWidget * view(QSharedPointer<OSListItem> dataSource);
+
+ signals:
+
+  void dataPointResultsCleared(const openstudio::UUID& dataPoint);
 };
 
 /// Controller class for the list jobs for a data points on the run tab
