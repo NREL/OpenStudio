@@ -29,7 +29,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 class Reader
 {
@@ -191,7 +190,6 @@ template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILE
     return vector;
 }
 
-} // prj
 } // contam
 } // openstudio
 

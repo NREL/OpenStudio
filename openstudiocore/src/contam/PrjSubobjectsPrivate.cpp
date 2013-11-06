@@ -2,7 +2,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 WeatherDataPrivate::WeatherDataPrivate(RX Tambt,RX barpres,RX windspd,RX winddir,RX relhum,int daytyp,int uTa,int ubP,int uws,int uwd):Tambt(Tambt),barpres(barpres),windspd(windspd),winddir(winddir),relhum(relhum),daytyp(daytyp),uTa(uTa),ubP(ubP),uws(uws),uwd(uwd){}
 
@@ -45,6 +44,5 @@ STRING IconPrivate::write()
     return string;
 }
 
-} // prj
 } // contam
 } // openstudio

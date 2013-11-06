@@ -8,6 +8,8 @@ SET( ${target_name}_src
   InfiltrationCalculator.cpp
   PrjReader.hpp
   PrjReader.cpp
+  SimFile.hpp
+  SimFile.cpp
   SimTxt.hpp
   SimTxt.cpp
   WindPressure.hpp
@@ -97,6 +99,14 @@ TARGET_LINK_LIBRARIES( epw2wth
 add_executable(FitInfiltration FitInfiltration.cpp)
 
 TARGET_LINK_LIBRARIES( FitInfiltration
+  ${${target_name}_depends}
+  openstudio_osversion
+  openstudio_contam
+)
+
+add_executable(compinf compinf.cpp)
+
+TARGET_LINK_LIBRARIES( compinf
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam

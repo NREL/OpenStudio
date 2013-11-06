@@ -7,8 +7,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj
-{
 
 class CONTAM_API WeatherData
 {
@@ -153,7 +151,6 @@ private:
     RX m_ctrl;  // corresponding control value (R4) [-]
 };
 
-} // prj
 } // contam
 } // openstudio
 

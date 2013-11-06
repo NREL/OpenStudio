@@ -20,7 +20,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,RX relHt,RX Vol,RX T0,RX P0,STRING name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,STRING cfdname,RX X1,RX Y1,RX H1,RX X2,RX Y2,RX H2,RX celldx,RX axialD,int u_aD,int u_L)
 {
@@ -8376,6 +8375,5 @@ void AfeSup::setSubelements(const std::vector<AirflowSubelementData> subelements
     d->subelements = subelements;
 }
 
-} // prj
 } // contam
 } // openstudio

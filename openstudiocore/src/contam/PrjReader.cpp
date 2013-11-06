@@ -23,7 +23,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 Reader::Reader(QTextStream *stream):stream(stream),m_lineNumber(0),allocated(false)
 {
@@ -405,6 +404,5 @@ template <> std::string Reader::readNumber<std::string>(DECFILELINE)
     return string.toStdString();
 }
 
-} // prj
 } // contam
 } // openstudio

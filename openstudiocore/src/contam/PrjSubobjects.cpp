@@ -2,7 +2,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 WeatherData::WeatherData(RX Tambt,RX barpres,RX windspd,RX winddir,RX relhum,int daytyp,int uTa,int ubP,int uws,int uwd)
 {
@@ -447,6 +446,5 @@ void SchedulePoint::setCtrl(const RX ctrl)
     m_ctrl = ctrl;
 }
 
-} // prj
 } // contam
 } // openstudio

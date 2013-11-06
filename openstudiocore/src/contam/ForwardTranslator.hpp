@@ -60,7 +60,7 @@ private:
   Date m_end;
 };
 
-class CONTAM_API ForwardTranslator : public prj::Model
+class CONTAM_API ForwardTranslator : public Model
 {
 public:
   ForwardTranslator(const openstudio::model::Model& model, bool translateHVAC=true, ProgressBar* progressBar=NULL);

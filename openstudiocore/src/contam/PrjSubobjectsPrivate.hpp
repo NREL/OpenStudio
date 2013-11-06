@@ -9,7 +9,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 class WeatherDataPrivate : public QSharedData
 {
@@ -42,7 +41,6 @@ public:
     int nr;  // zone, path, duct, etc., number (I2) {W}
 };
 
-} // prj
 } // contam
 } // openstudio
 

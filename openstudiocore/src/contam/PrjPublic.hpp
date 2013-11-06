@@ -26,7 +26,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 class CONTAM_API Zone
 {
@@ -2335,7 +2334,6 @@ private:
     QExplicitlySharedDataPointer<AfeSupPrivate> d;
 };
 
-} // prj
 } // contam
 } // openstudio
 

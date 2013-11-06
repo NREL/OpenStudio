@@ -26,7 +26,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 class ZonePrivate : public QSharedData
 {
@@ -1170,7 +1169,6 @@ public:
     std::vector<AirflowSubelementData> subelements;  // Subelement data (AirflowSubelementData)
 };
 
-} // prj
 } // contam
 } // openstudio
 

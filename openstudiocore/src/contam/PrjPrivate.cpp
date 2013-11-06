@@ -20,7 +20,6 @@
 
 namespace openstudio {
 namespace contam {
-namespace prj {
 
 ZonePrivate::ZonePrivate(int nr,unsigned int flags,int ps,int pc,int pk,int pl,RX relHt,RX Vol,RX T0,RX P0,STRING name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,STRING cfdname,RX X1,RX Y1,RX H1,RX X2,RX Y2,RX H2,RX celldx,RX axialD,int u_aD,int u_L):nr(nr),flags(flags),ps(ps),pc(pc),pk(pk),pl(pl),relHt(relHt),Vol(Vol),T0(T0),P0(P0),name(name),color(color),u_Ht(u_Ht),u_V(u_V),u_T(u_T),u_P(u_P),cdaxis(cdaxis),cfd(cfd),cfdname(cfdname),X1(X1),Y1(Y1),H1(H1),X2(X2),Y2(Y2),H2(H2),celldx(celldx),axialD(axialD),u_aD(u_aD),u_L(u_L)
 {}
@@ -2028,6 +2027,5 @@ void AfeSupPrivate::readDetails(Reader &input)
 
 }
 
-} // prj
 } // contam
 } // openstudio
