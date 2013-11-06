@@ -205,12 +205,12 @@ namespace detail {
           ++itr)
       {
         std::stringstream ssfilename;
-        if (!rjb.mergedJobs().empty())
+        if (!rjb.mergedJobs().empty() && pairs->first != 0)
         {
           ssfilename << pairs->first << "/";
         }
 
-        ssfilename << pairs->second.second.empty()?itr->filename:pairs->second.second;
+        ssfilename << (pairs->second.second.empty()?itr->filename:pairs->second.second);
         std::string outfilename = ssfilename.str();
 
         int namecount = ++filenames[outfilename];

@@ -290,6 +290,33 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     originalosm = ss.str();
   }
 
+
+  { 
+    openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged.db"), true, true);
+    openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged");
+
+    boost::filesystem::remove_all(outdir); // Clean up test dir before starting
+
+    openstudio::runmanager::Job j = buildScriptMergingWorkflow(outdir);
+
+    ASSERT_EQ(1u, j.children().size());
+    ASSERT_EQ(1u, j.children()[0].children().size());
+    ASSERT_TRUE(j.children()[0].children()[0].children().empty());
+
+    rm.enqueue(j, true);
+    EXPECT_EQ(3u, rm.getJobs().size());
+    rm.setPaused(false);
+    rm.waitForFinished();
+
+    ASSERT_TRUE(j.treeErrors().succeeded());
+    openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
+    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
+    ASSERT_TRUE(m);
+    std::stringstream ss;
+    m->toIdfFile().print(ss);
+    unmergedosm = ss.str();
+  }
+
   { 
     openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeMerged.db"), true, true);
     openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeMerged");
@@ -318,32 +345,6 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     std::stringstream ss;
     m->toIdfFile().print(ss);
     mergedosm = ss.str();
-  }
-
-  { 
-    openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged.db"), true, true);
-    openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged");
-
-    boost::filesystem::remove_all(outdir); // Clean up test dir before starting
-
-    openstudio::runmanager::Job j = buildScriptMergingWorkflow(outdir);
-
-    ASSERT_EQ(1u, j.children().size());
-    ASSERT_EQ(1u, j.children()[0].children().size());
-    ASSERT_TRUE(j.children()[0].children()[0].children().empty());
-
-    rm.enqueue(j, true);
-    EXPECT_EQ(3u, rm.getJobs().size());
-    rm.setPaused(false);
-    rm.waitForFinished();
-
-    ASSERT_TRUE(j.treeErrors().succeeded());
-    openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
-    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
-    ASSERT_TRUE(m);
-    std::stringstream ss;
-    m->toIdfFile().print(ss);
-    unmergedosm = ss.str();
   }
 
   EXPECT_FALSE(originalosm.empty());
