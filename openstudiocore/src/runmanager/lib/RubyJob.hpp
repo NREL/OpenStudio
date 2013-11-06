@@ -77,13 +77,16 @@ namespace detail {
 
       virtual void basePathChanged();
 
+      virtual void mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+
     private:
       REGISTER_LOGGER("openstudio.runmanager.RubyJob");
 
       void getFiles(const RubyJobBuilder &t_rjb);
 
-      std::vector<std::pair<Files, std::string> > m_inputfiles;
+      std::vector<std::pair<int, std::pair<Files, std::string> > > m_inputfiles;
       std::string m_description;
+      std::vector<JobParams> m_mergedJobs;
    }; 
 
 }

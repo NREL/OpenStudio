@@ -22,10 +22,12 @@
 #include <iterator>
 #include <algorithm>
 
+#include "UserScriptJob.hpp"
 #include "RubyJob.hpp"
 #include "RubyJobUtils.hpp"
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
+#include "MergeJobError.hpp"
 
 #include <utilities/time/DateTime.hpp>
 
@@ -92,6 +94,89 @@ namespace detail {
   {
   }
 
+  void RubyJob::mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job) 
+  {
+
+    // only work on UserScriptJobs
+    boost::shared_ptr<UserScriptJob> usjob = boost::dynamic_pointer_cast<UserScriptJob>(t_job);
+    boost::shared_ptr<UserScriptJob> usparentjob = boost::dynamic_pointer_cast<UserScriptJob>(t_parent);
+
+    if (!usjob || !usparentjob)
+    {
+      throw MergeJobError("Mismatched job types");
+    }
+
+    if (usjob->jobType() != usparentjob->jobType())
+    {
+      throw MergeJobError("Mismatched job types");
+    }
+
+    if (t_parent->finishedJob() == t_job)
+    {
+      throw MergeJobError("RHS is finished job - refusing to merge");
+    }
+
+    RubyJobBuilder rjbparent(usparentjob->params());
+    RubyJobBuilder rjbthis(usjob->params());
+
+    if (rjbparent.requiredFiles() != rjbthis.requiredFiles())
+    {
+      throw MergeJobError("Cannot merge user script jobs, the required files do not match.");
+    }
+
+
+    LOG(Info, "Merging Job " << openstudio::toString(t_job->uuid()) << " into " << openstudio::toString(uuid()));
+    
+    removeChild(t_job);
+    std::vector<boost::shared_ptr<Job_Impl> > children = t_job->children();
+    std::for_each(children.begin(), children.end(), boost::bind(&Job_Impl::addChild, t_parent, _1));
+
+    std::vector<JobParams> existing_merged_jobs = usjob->m_mergedJobs;
+    JobParams job_to_merge = usjob->params();
+    if (job_to_merge.has("merged_ruby_jobs"))
+    {
+      job_to_merge.remove("merged_ruby_jobs");
+    }
+
+    existing_merged_jobs.insert(existing_merged_jobs.begin(), job_to_merge);
+    usjob->m_mergedJobs.clear();
+    m_mergedJobs.insert(m_mergedJobs.end(), existing_merged_jobs.begin(), existing_merged_jobs.end());
+
+    JobParams myParams = params();
+    if (myParams.has("merged_ruby_jobs"))
+    {
+      myParams.remove("merged_ruby_jobs");
+    }
+
+    JobParams merged;
+    for (size_t i = 0; i < m_mergedJobs.size(); ++i)
+    {
+      std::stringstream ss;
+      ss << i;
+      // update the jobParams of this job
+      merged.append(ss.str(), m_mergedJobs[i]);
+    }
+
+    myParams.append("merged_ruby_jobs", merged);
+
+    setParams(myParams);
+
+    Files files = rawInputFiles();
+
+    Files usjobfiles = usjob->rawInputFiles();
+
+    std::vector<FileInfo> fis = usjobfiles.files();
+
+    for (std::vector<FileInfo>::const_iterator itr = fis.begin();
+         itr != fis.end();
+         ++itr)
+    {
+      files.append(*itr);
+    }
+
+    setFiles(files);
+
+  }
   void RubyJob::startHandlerImpl()
   {
     LOG(Info, "Starting job");
@@ -110,16 +195,23 @@ namespace detail {
 
     std::map<std::string, int> filenames;
 
-    for (std::vector<std::pair<Files, std::string> >::const_iterator pairs = m_inputfiles.begin();
-         pairs != m_inputfiles.end();
-         ++pairs)
+    for (std::vector<std::pair<int, std::pair<Files, std::string> > >::const_iterator pairs = m_inputfiles.begin();
+        pairs != m_inputfiles.end();
+        ++pairs)
     {
-      std::vector<FileInfo> files = pairs->first.files();
+      std::vector<FileInfo> files = pairs->second.first.files();
       for (std::vector<FileInfo>::const_iterator itr = files.begin();
           itr != files.end();
           ++itr)
       {
-        std::string outfilename = pairs->second.empty()?itr->filename:pairs->second;
+        std::stringstream ssfilename;
+        if (!rjb.mergedJobs().empty())
+        {
+          ssfilename << pairs->first << "/";
+        }
+
+        ssfilename << pairs->second.second.empty()?itr->filename:pairs->second.second;
+        std::string outfilename = ssfilename.str();
 
         int namecount = ++filenames[outfilename];
 
@@ -227,53 +319,61 @@ namespace detail {
     }
 
 
-    typedef std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > FileReqs;
-    FileReqs inputFiles = t_rjb.inputFiles();
-
-    struct PickFileSource
+    for (size_t i = 0; i <= t_rjb.mergedJobs().size(); ++i)
     {
-      static const Files& pick(const FileSource &t_filesource, const Files &t_all, const Files &t_mine,
-          const Files &t_parent)
+      typedef std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > FileReqs;
+
+      FileReqs inputFiles;
+      if (i == 0) { 
+        inputFiles = t_rjb.inputFiles();
+      } else {
+        inputFiles = t_rjb.mergedJobs()[i-1].inputFiles();
+      }
+
+      struct PickFileSource
       {
-        switch (t_filesource.value())
+        static const Files& pick(const FileSource &t_filesource, const Files &t_all, const Files &t_mine,
+            const Files &t_parent)
         {
-          case FileSource::Parent:
-            return t_parent;
-            break;
-          case FileSource::All:
-            return t_all;
-            break;
-          case FileSource::Self:
-            return t_mine;
-            break;
+          switch (t_filesource.value())
+          {
+            case FileSource::Parent:
+              return t_parent;
+              break;
+            case FileSource::All:
+              return t_all;
+              break;
+            case FileSource::Self:
+              return t_mine;
+              break;
+          }
+
+          throw std::domain_error("Unknown filesource type");
         }
+      };
 
-        throw std::domain_error("Unknown filesource type");
-      }
-    };
+      for (FileReqs::const_iterator itr = inputFiles.begin();
+          itr != inputFiles.end();
+          ++itr)
+      {
+        try {
+          const Files &source = PickFileSource::pick(itr->get<1>(), allinputfiles, myInputFiles, parentInputFiles);
 
-    for (FileReqs::const_iterator itr = inputFiles.begin();
-         itr != inputFiles.end();
-         ++itr)
-    {
-      try {
-        const Files &source = PickFileSource::pick(itr->get<1>(), allinputfiles, myInputFiles, parentInputFiles);
+          Files found;
+          switch (itr->get<0>().value())
+          {
+            case FileSelection::Last:
+              found.append(source.getLastByRegex(itr->get<2>()));
+              break;
+            case FileSelection::All:
+              found.append(source.getAllByRegex(itr->get<2>()));
+              break;
+          }
 
-        Files found;
-        switch (itr->get<0>().value())
-        {
-          case FileSelection::Last:
-            found.append(source.getLastByRegex(itr->get<2>()));
-            break;
-          case FileSelection::All:
-            found.append(source.getAllByRegex(itr->get<2>()));
-            break;
+          m_inputfiles.push_back(std::make_pair(i, std::make_pair(found, itr->get<3>())));
+        } catch (const std::exception &) {
         }
-
-        m_inputfiles.push_back(std::make_pair(found, itr->get<3>()));
-      } catch (const std::exception &) {
       }
-
     }
 
   }

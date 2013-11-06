@@ -368,6 +368,12 @@ namespace detail {
       /// \returns a default description for this job
       std::string buildDescription(const std::string &extension) const;
 
+      /// Sets a new set of JobParams for this Job
+      void setParams(const openstudio::runmanager::JobParams &t_newParams);
+
+      /// Sets a new set of Files for this Job
+      void setFiles(const openstudio::runmanager::Files &t_newFiles);
+
       virtual void standardCleanImpl() = 0;
 
       struct FileTrack

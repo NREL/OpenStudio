@@ -202,6 +202,9 @@ namespace runmanager {
       /// Returns the collection of required files to copy for this job
       std::vector<boost::tuple<std::string, std::string, std::string> > copyRequiredFiles() const;
 
+      const std::vector<RubyJobBuilder> &mergedJobs() const;
+
+
       static JobParams toJobParams(const std::vector<ruleset::OSArgument> &t_args,
           const openstudio::path &t_basePath=openstudio::path());
 
@@ -240,6 +243,8 @@ namespace runmanager {
       std::vector<std::string> m_params;
       std::vector<std::string> m_toolparams;
       openstudio::path m_script;
+      std::vector<RubyJobBuilder> m_mergedJobs;
+
       bool m_userScriptJob;
 
       static bool stringToBool(const std::string &t_val);

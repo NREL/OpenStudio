@@ -224,7 +224,135 @@ TEST_F(RunManagerTestFixture, UserScript_WorkItemWithArg)
 
 }
 
+openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t_outdir)
+{
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path osm = resourcesPath() / toPath("/runmanager/SimpleModel.osm");
+  openstudio::path epw = resourcesPath() / toPath("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
 
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
+
+  openstudio::runmanager::Workflow wf;
+
+  std::vector<openstudio::ruleset::OSArgument> args;
+  args.push_back(openstudio::ruleset::OSArgument::makeDoubleArgument("wwr"));
+  args.push_back(openstudio::ruleset::OSArgument::makeDoubleArgument("sillHeight"));
+  args.push_back(openstudio::ruleset::OSArgument::makeStringArgument("facade"));
+
+  args[0].setValue(0.1);
+  args[1].setValue(0.2);
+  args[2].setValue("North");
+
+  // Add job one
+  openstudio::runmanager::RubyJobBuilder rubyjobbuilder(*measure, args);
+  rubyjobbuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+  wf.addJob(rubyjobbuilder.toWorkItem());
+
+  // add job two
+  args[2].setValue("East");
+  openstudio::runmanager::RubyJobBuilder rubyjobbuilder2(*measure, args);
+  rubyjobbuilder2.setIncludeDir(getOpenStudioRubyIncludePath());
+  wf.addJob(rubyjobbuilder2.toWorkItem());
+  
+  // add job three, applying a new value for the "east" to make sure that the jobs
+  // are applied in the proper order
+  args[2].setValue("East");
+  args[1].setValue(0.3);
+  openstudio::runmanager::RubyJobBuilder rubyjobbuilder3(*measure, args);
+  rubyjobbuilder3.setIncludeDir(getOpenStudioRubyIncludePath());
+  wf.addJob(rubyjobbuilder3.toWorkItem());
+
+
+
+  openstudio::runmanager::Tools tools 
+    = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
+        rubyExePath().parent_path(), openstudio::path(),
+        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+
+  wf.add(tools);
+
+  openstudio::runmanager::Job j = wf.create(t_outdir, osm, epw);
+
+  return j;
+}
+
+TEST_F(RunManagerTestFixture, UserScriptJobMerging)
+{
+  std::string originalosm;
+  std::string mergedosm;
+  std::string unmergedosm;
+
+  {
+    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(resourcesPath() / toPath("/runmanager/SimpleModel.osm"));
+    ASSERT_TRUE(m);
+    std::stringstream ss;
+    m->toIdfFile().print(ss);
+    originalosm = ss.str();
+  }
+
+  { 
+    openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeMerged.db"), true, true);
+    openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeMerged");
+
+    boost::filesystem::remove_all(outdir); // Clean up test dir before starting
+
+    openstudio::runmanager::Job j = buildScriptMergingWorkflow(outdir);
+
+    ASSERT_EQ(1u, j.children().size());
+    ASSERT_EQ(1u, j.children()[0].children().size());
+    ASSERT_TRUE(j.children()[0].children()[0].children().empty());
+
+    openstudio::runmanager::JobFactory::optimizeJobTree(j);
+
+    EXPECT_TRUE(j.children().empty());
+
+    rm.enqueue(j, true);
+    EXPECT_EQ(1u, rm.getJobs().size());
+    rm.setPaused(false);
+    rm.waitForFinished();
+
+    ASSERT_TRUE(j.treeErrors().succeeded());
+    openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
+    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
+    ASSERT_TRUE(m);
+    std::stringstream ss;
+    m->toIdfFile().print(ss);
+    mergedosm = ss.str();
+  }
+
+  { 
+    openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged.db"), true, true);
+    openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged");
+
+    boost::filesystem::remove_all(outdir); // Clean up test dir before starting
+
+    openstudio::runmanager::Job j = buildScriptMergingWorkflow(outdir);
+
+    ASSERT_EQ(1u, j.children().size());
+    ASSERT_EQ(1u, j.children()[0].children().size());
+    ASSERT_TRUE(j.children()[0].children()[0].children().empty());
+
+    rm.enqueue(j, true);
+    EXPECT_EQ(3u, rm.getJobs().size());
+    rm.setPaused(false);
+    rm.waitForFinished();
+
+    ASSERT_TRUE(j.treeErrors().succeeded());
+    openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
+    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
+    ASSERT_TRUE(m);
+    std::stringstream ss;
+    m->toIdfFile().print(ss);
+    unmergedosm = ss.str();
+  }
+
+  EXPECT_FALSE(originalosm.empty());
+  EXPECT_FALSE(mergedosm.empty());
+  EXPECT_FALSE(unmergedosm.empty());
+
+  EXPECT_EQ(mergedosm, unmergedosm);
+  EXPECT_NE(originalosm, mergedosm);
+}
 
 TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
 {

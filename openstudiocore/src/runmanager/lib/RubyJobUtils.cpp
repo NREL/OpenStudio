@@ -101,9 +101,26 @@ RubyJobBuilder::RubyJobBuilder(const openstudio::BCLMeasure &t_measure,
   constructFromBCLMeasure(t_measure,argVector,t_relativeTo,t_copyFileTrue);
 }
 
+const std::vector<RubyJobBuilder> &RubyJobBuilder::mergedJobs() const
+{
+  return m_mergedJobs;
+}
 
 void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
 {
+
+  if (t_params.has("merged_ruby_jobs"))
+  {
+    size_t i = 0;
+
+    JobParams merged(t_params.get("merged_ruby_jobs").children);
+    while (merged.has(boost::lexical_cast<std::string>(i)))
+    {
+      JobParams job(merged.get(boost::lexical_cast<std::string>(i)).children);
+      m_mergedJobs.push_back(RubyJobBuilder(job));
+      ++i;
+    }
+  }
 
   try {
     JobParam inputfiles = t_params.get("ruby_inputfiles");

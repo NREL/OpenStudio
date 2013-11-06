@@ -724,10 +724,31 @@ namespace detail {
     return ret.complete(m_basePath);
   }
 
+  void Job_Impl::setParams(const JobParams &t_newParams)
+  {
+    QWriteLocker l(&m_mutex);
+    m_params = t_newParams;
+    m_allTools.reset();
+    m_allParams.reset();
+    m_allInputFiles.reset();
+    m_outdir.reset();
+  }
+
+  void Job_Impl::setFiles(const Files &t_newFiles)
+  {
+    QWriteLocker l(&m_mutex);
+    m_inputFiles = t_newFiles;
+    m_allTools.reset();
+    m_allParams.reset();
+    m_allInputFiles.reset();
+    m_outdir.reset();
+  }
+
+
   Files Job_Impl::rawInputFiles() const
   {
     QReadLocker l(&m_mutex);
-    return m_inputFiles.complete(m_basePath);
+    return m_inputFiles;
   }
 
 
