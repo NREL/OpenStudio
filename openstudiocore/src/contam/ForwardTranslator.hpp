@@ -120,7 +120,7 @@ public:
   */
 
   // Postprocessing Functions
-  boost::optional<std::vector<TimeSeries> > zoneInfiltration(openstudio::path simPath);
+  //boost::optional<std::vector<TimeSeries> > zoneInfiltration(openstudio::path simPath);
 
   // We may need more functions like this that modify the CONTAM model
   bool setSteadyWeather(double windSpeed, double windDirection);

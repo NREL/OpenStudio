@@ -271,6 +271,7 @@ int main(int argc, char *argv[])
   // Read in the results
   //
   openstudio::contam::SimFile sim(simPath);
+  /*
   std::cout << sim.F0().size() << std::endl;
   std::cout << sim.F1().size() << std::endl;
   std::vector<std::vector<int> > extPaths = translator->zoneExteriorFlowPaths();
@@ -283,7 +284,17 @@ int main(int argc, char *argv[])
     }
     std::cout << std::endl;
   }
-  //std::vector<openstudio::TimeSeries> infiltration = translator->zoneInfiltration(&sim);
+  */
+  std::vector<openstudio::TimeSeries> infiltration = translator->zoneInfiltration(&sim);
+  /*
+  std::cout << infiltration.size() << std::endl;
+  openstudio::Vector values = infiltration[0].values();
+  openstudio::Vector daysFrom = infiltration[0].daysFromFirstReport();
+  for(unsigned int i=0;i<values.size();i++)
+  {
+    std::cout << i << '\t' << daysFrom[i] << '\t' << values[i] << std::endl;
+  }
+  */
   // The details on what we should do with these maps are still unclear
   // openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
   // translator.writeMaps(mapPath);

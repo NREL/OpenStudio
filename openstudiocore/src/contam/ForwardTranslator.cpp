@@ -1189,6 +1189,7 @@ std::string ForwardTranslator::toString()
   return std::string();
 }
 
+/*
 boost::optional<std::vector<TimeSeries> > ForwardTranslator::zoneInfiltration(openstudio::path simPath)
 {
   std::vector<TimeSeries> results;
@@ -1268,6 +1269,7 @@ boost::optional<std::vector<TimeSeries> > ForwardTranslator::zoneInfiltration(op
 
   return boost::optional<std::vector<TimeSeries> >(results);
 }
+*/
 
 bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
 {

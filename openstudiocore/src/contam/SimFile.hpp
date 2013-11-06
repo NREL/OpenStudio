@@ -33,7 +33,6 @@ namespace contam {
 
 class CONTAM_API SimFile {
 public:
-  SimFile(){}
   explicit SimFile(openstudio::path path);
 
   std::vector<std::vector<double> > dP() const
