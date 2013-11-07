@@ -240,3 +240,24 @@ IF( APPLE )
     fixup_bundle(\"${APPS}\" \"\${FIXUPPLUGINS}\" \"${DIRS}\")
   " )
 ENDIF()
+
+
+SET( ${target_name}_test_src
+  test/OpenStudioAppFixture.hpp
+  test/OpenStudioAppFixture.cpp
+  test/Resources_GTest.cpp
+)
+
+SET (${target_name}_test_depends
+  ${${target_name}_depends} 
+)
+
+CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}" )
+CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
+IF( BUILD_TESTING )
+
+  #ADD_DEPENDENCIES("${target_name}_tests" 
+  #  openstudio_app_resources 
+  #)
+  
+ENDIF()

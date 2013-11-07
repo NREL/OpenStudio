@@ -38,9 +38,24 @@ macro( CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES )
     ADD_EXECUTABLE( ${BASE_NAME}_tests ${SRC} )
 
     CREATE_SRC_GROUPS( "${SRC}" )
-
+    
+    get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
+    
+    SET(LINK_BASE_NAME true)
+    IF ($BASE_NAME_TYPE EQUAL EXECUTABLE)
+      SET(LINK_BASE_NAME false)
+    ENDIF()
+    message("${BASE_NAME}, ${LINK_BASE_NAME}, ${BASE_NAME_TYPE}")
+    IF(${LINK_BASE_NAME})
+      message("linking")
+    ELSEIF()
+      message("not linking")
+    ENDIF()
+      
     TARGET_LINK_LIBRARIES( ${BASE_NAME}_tests 
-      ${BASE_NAME}
+      IF(${LINK_BASE_NAME})
+        ${BASE_NAME}
+      ENDIF()
       ${DEPENDENCIES} 
       gtest 
       gtest_main
