@@ -831,8 +831,6 @@ SET( ${target_name}_moc
   Component_Impl.hpp
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
-  GenericModelObject_Impl.hpp
-  ModelObjectList_Impl.hpp
 
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
