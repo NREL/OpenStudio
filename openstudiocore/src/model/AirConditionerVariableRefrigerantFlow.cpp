@@ -994,11 +994,7 @@ namespace detail {
   }
 
   void AirConditionerVariableRefrigerantFlow_Impl::setHeatPumpWasteHeatRecovery(bool heatPumpWasteHeatRecovery) {
-    if (heatPumpWasteHeatRecovery) {
-      setBooleanFieldValue(OS_AirConditioner_VariableRefrigerantFlowFields::HeatPumpWasteHeatRecovery, "Yes");
-    } else {
-      setBooleanFieldValue(OS_AirConditioner_VariableRefrigerantFlowFields::HeatPumpWasteHeatRecovery, "No");
-    }
+    setBooleanFieldValue(OS_AirConditioner_VariableRefrigerantFlowFields::HeatPumpWasteHeatRecovery, heatPumpWasteHeatRecovery);
   }
 
   void AirConditionerVariableRefrigerantFlow_Impl::setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode) {
@@ -1428,7 +1424,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
 
   setMasterThermostatPriorityControlType("LoadPriority");
 
-  setHeatPumpWasteHeatRecovery("No");
+  setHeatPumpWasteHeatRecovery(false);
 
   setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(30.0);
 
