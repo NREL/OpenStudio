@@ -23,6 +23,7 @@
 
 #include <model/Model.hpp>
 #include <model/WeatherFile.hpp>
+#include <model/ScheduleFixedInterval.hpp>
 #include <osversion/VersionTranslator.hpp>
 #include <utilities/core/CommandLine.hpp>
 #include <utilities/core/Path.hpp>
@@ -69,6 +70,7 @@ static boost::optional<openstudio::path> findFile(openstudio::path base, std::st
 int main(int argc, char *argv[])
 {
   std::string inputPathString;
+  std::string outputPathString = "scheduled-infiltration.osm";
   std::string leakageDescriptorString="Average";
   double flow=27.1;
   double returnSupplyRatio=1.0;
@@ -286,6 +288,14 @@ int main(int argc, char *argv[])
   }
   */
   std::vector<openstudio::TimeSeries> infiltration = translator->zoneInfiltration(&sim);
+  openstudio::model::ScheduleFixedInterval schedule(*model);
+  schedule.setTimeSeries(infiltration[0]);
+  openstudio::path outPath = openstudio::toPath(outputPathString);
+  if(!model->save(outPath,true))
+  {
+    std::cout << "Failed to write OSM file." << std::endl;
+    return EXIT_FAILURE;
+  }
   /*
   std::cout << infiltration.size() << std::endl;
   openstudio::Vector values = infiltration[0].values();
