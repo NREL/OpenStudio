@@ -66,7 +66,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   s = modelObject.name();
   if( s )
   {
-    idfObject.setName(*s);
+    idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatPumpName,*s);
   }
 
   // AvailabilityScheduleName
@@ -283,11 +283,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
 
   // HeatingEnergyInputRatioModifierFunctionofLowTemperatureCurveName
   
-  if( boost::optional<model::CurveCubic> curve = modelObject.heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() )
+  if( boost::optional<model::CurveBiquadratic> curve = modelObject.heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurveName,_curve->name().get());
+      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatingEnergyInputRatioModifierFunctionofLowTemperatureCurveName,_curve->name().get());
     }
   }
 
@@ -734,10 +734,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingEnergyTimeConstant,value.get());
   }
 
+  // Terminal Unit List
   
   IdfObject _zoneTerminalUnitList(IddObjectType::ZoneTerminalUnitList);
 
-  _zoneTerminalUnitList.setString(ZoneTerminalUnitListFields::ZoneTerminalUnitListName,modelObject.name().get() + " Terminal List");
+  std::string terminalUnitListName = modelObject.name().get() + " Terminal List";
+
+  _zoneTerminalUnitList.setString(ZoneTerminalUnitListFields::ZoneTerminalUnitListName,terminalUnitListName);
+
+  idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::ZoneTerminalUnitListName,terminalUnitListName);
 
   m_idfObjects.push_back(_zoneTerminalUnitList);
 
@@ -751,7 +756,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
 
     OS_ASSERT(_terminal);
      
-    IdfExtensibleGroup eg = _terminal->pushExtensibleGroup();
+    IdfExtensibleGroup eg = _zoneTerminalUnitList.pushExtensibleGroup();
 
     eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName,_terminal->name().get());
   }

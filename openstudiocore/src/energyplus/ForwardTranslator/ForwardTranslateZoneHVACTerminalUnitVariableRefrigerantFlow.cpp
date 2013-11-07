@@ -61,7 +61,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   boost::optional<std::string> s;
   boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::AirConditioner_VariableRefrigerantFlow);
+  IdfObject idfObject(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
 
   m_idfObjects.push_back(idfObject);
 
@@ -80,26 +80,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
     {
       idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAvailabilityschedule,_schedule->name().get());
-    }
-  }
-
-  // TerminalUnitAirInletNodeName
-
-  if( boost::optional<model::Node> node = modelObject.inletNode() )
-  {
-    boost::optional<IdfObject> _node = translateAndMapModelObject(node.get());
-    {
-      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNodeName,_node->name().get());
-    }
-  }
-
-  // TerminalUnitAirOutletNodeName
-
-  if( boost::optional<model::Node> node = modelObject.outletNode() )
-  {
-    if( boost::optional<IdfObject> _node = translateAndMapModelObject(node.get()) )
-    {
-      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName,_node->name().get());
     }
   }
 
@@ -207,18 +187,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   if( boost::optional<model::Node> node = modelObject.inletNode() )
   {
-    if( boost::optional<IdfObject> _node = translateAndMapModelObject(node.get()) )
-    {
-      inletNodeName = _node->name().get();      
-    }
+    inletNodeName = node->name().get();      
   } 
 
   if( boost::optional<model::Node> node = modelObject.outletNode() )
   {
-    if( boost::optional<IdfObject> _node = translateAndMapModelObject(node.get()) )
-    {
-      outletNodeName = _node->name().get();
-    }
+    outletNodeName = node->name().get();
   }
 
   mixerOutletNodeName = modelObject.name().get() + " Mixer Outlet Node";
@@ -228,6 +202,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   heatOutletNodeName = modelObject.name().get() + " Heating Coil Outlet Node";
 
   oaNodeName = modelObject.name().get() + " Outdoor Air Node";
+
+  // TerminalUnitAirInletNodeName
+
+  idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNodeName,inletNodeName);
+
+  // TerminalUnitAirOutletNodeName
+
+  idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName,outletNodeName);
 
   if( boost::optional<IdfObject> _fan = translateAndMapModelObject(fan) )
   {
@@ -239,7 +221,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
     idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName,_fan->name().get());
 
-    if( _fan->iddObject().type() == model::FanOnOff::iddObjectType() )
+    if( fan.iddObject().type() == model::FanOnOff::iddObjectType() )
     {
       _fan->setString(Fan_OnOffFields::AirInletNodeName,heatOutletNodeName);
 
@@ -259,7 +241,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   _outdoorAirMixer.setString(OutdoorAir_MixerFields::MixedAirNodeName,mixerOutletNodeName);
 
-  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,mixerOutletNodeName);
+  _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,inletNodeName);
 
   IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
   _oaNodeList.setString(0,oaNodeName);
@@ -294,9 +276,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
     _coolingCoil->setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode,coolOutletNodeName);
   }
 
-  model::ModelObject heatingCoil = modelObject.coolingCoil();
+  model::ModelObject heatingCoil = modelObject.heatingCoil();
   
-  if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(coolingCoil) )
+  if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil) )
   {
     // HeatingCoilObjectType
 

@@ -1420,7 +1420,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
 
   setMinimumOutdoorTemperatureinHeatingMode(-20.0);
 
-  setMaximumOutdoorTemperatureinHeatingMode(20.0);
+  setMaximumOutdoorTemperatureinHeatingMode(30.0);
 
   setHeatingPerformanceCurveOutdoorTemperatureType("WetBulbTemperature");
 
@@ -1493,7 +1493,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   setHeatRecoveryHeatingEnergyTimeConstant(0.0);
 
   CurveBiquadratic vrfCoolCapFT(model);
-  vrfCoolCapFT.setName(" VRFCoolCapFT");
+  vrfCoolCapFT.setName(name().get() + " VRFCoolCapFT");
   vrfCoolCapFT.setCoefficient1Constant(0.576882692);
   vrfCoolCapFT.setCoefficient2x(0.017447952);
   vrfCoolCapFT.setCoefficient3xPOW2(0.000583269);
@@ -1507,7 +1507,7 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve(vrfCoolCapFT);
 
   CurveCubic vrfCoolCapFTBoundary(model);
-  vrfCoolCapFTBoundary.setName(" VRFCoolCapFTBoundary");
+  vrfCoolCapFTBoundary.setName(name().get() + " VRFCoolCapFTBoundary");
   vrfCoolCapFTBoundary.setCoefficient1Constant(25.73);
   vrfCoolCapFTBoundary.setCoefficient2x(-0.03150043);
   vrfCoolCapFTBoundary.setCoefficient3xPOW2(-0.01416595);

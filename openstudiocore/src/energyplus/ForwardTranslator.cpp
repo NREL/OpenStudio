@@ -300,6 +300,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(airLoop);
   }
 
+  // get AirConditionerVariableRefrigerantFlow objects in sorted order
+  std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getModelObjects<AirConditionerVariableRefrigerantFlow>();
+  std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
+  BOOST_FOREACH(AirConditionerVariableRefrigerantFlow vrf, vrfs){
+    translateAndMapModelObject(vrf);
+  }
+
   // get plant loops in sorted order
   std::vector<PlantLoop> plantLoops = model.getModelObjects<PlantLoop>();
   std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
@@ -587,6 +594,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       // no-op
       return retVal;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow :
+    {
+      model::CoilHeatingDXVariableRefrigerantFlow coil = modelObject.cast<CoilHeatingDXVariableRefrigerantFlow>();
+      retVal = translateCoilHeatingDXVariableRefrigerantFlow(coil);
+      break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Water :
     {

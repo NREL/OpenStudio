@@ -6113,24 +6113,24 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A4 , \field Cooling Capacity Ratio Modifier Function of Low Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A5 , \field Cooling Capacity Ratio Boundary Curve
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
   A6 , \field Cooling Capacity Ratio Modifier Function of High Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A7 , \field Cooling Energy Input Ratio Modifier Function of Low Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A8 , \field Cooling Energy Input Ratio Boundary Curve
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
   A9 , \field Cooling Energy Input Ratio Modifier Function of High Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A10 , \field Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve
        \type object-list
        \object-list LinearCurves
@@ -6171,24 +6171,24 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A14, \field Heating Capacity Ratio Modifier Function of Low Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A15, \field Heating Capacity Ratio Boundary Curve
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
   A16, \field Heating Capacity Ratio Modifier Function of High Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A17, \field Heating Energy Input Ratio Modifier Function of Low Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A18, \field Heating Energy Input Ratio Boundary Curve
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
   A19, \field Heating Energy Input Ratio Modifier Function of High Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   A20, \field Heating Performance Curve Outdoor Temperature Type
        \type choice
        \key DryBulbTemperature
@@ -6247,7 +6247,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N13, \field Piping Correction Factor for Height in Cooling Mode Coefficient
        \type real
        \required-field
@@ -6259,7 +6259,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N15, \field Piping Correction Factor for Height in Heating Mode Coefficient
        \type real
        \required-field
@@ -6289,7 +6289,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A34, \field Defrost Energy Input Ratio Modifier Function of Temperature Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N20, \field Defrost Time Period Fraction
        \type real
        \minimum 0.0
@@ -6378,7 +6378,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A41, \field Heat Recovery Cooling Capacity Modifier Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N31, \field Initial Heat Recovery Cooling Capacity Fraction
        \type real
        \required-field
@@ -6388,7 +6388,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A42, \field Heat Recovery Cooling Energy Modifier Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N33, \field Initial Heat Recovery Cooling Energy Fraction
        \type real
        \required-field
@@ -6398,7 +6398,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A43, \field Heat Recovery Heating Capacity Modifier Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N35, \field Initial Heat Recovery Heating Capacity Fraction
        \type real
        \required-field
@@ -6408,7 +6408,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A44, \field Heat Recovery Heating Energy Modifier Curve
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
   N37, \field Initial Heat Recovery Heating Energy Fraction
        \type real
        \required-field

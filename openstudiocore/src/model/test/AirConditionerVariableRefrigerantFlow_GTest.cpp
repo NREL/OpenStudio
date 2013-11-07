@@ -21,6 +21,10 @@
 #include <model/test/ModelFixture.hpp>
 #include <model/AirConditionerVariableRefrigerantFlow.hpp>
 #include <model/AirConditionerVariableRefrigerantFlow_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -39,6 +43,21 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
   } ,
     ::testing::ExitedWithCode(0), "" );
 
-  ASSERT_TRUE(true);
+   model::Model m; 
+
+   model::AirConditionerVariableRefrigerantFlow vrf(m); 
+
+  for( int i = 0; i != 5; i++ )
+  {
+    model::ThermalZone zone(m);
+
+    model::ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(m);
+
+    ASSERT_TRUE(vrfTerminal.addToThermalZone(zone));
+
+    vrf.addTerminal(vrfTerminal);
+  }
+
+  ASSERT_EQ(5u,vrf.terminals().size());
 }
 
