@@ -1,4 +1,3 @@
-
 OS:Version,
   {20f3f746-1e23-4344-80d1-b7a5b25aaf78}, !- Handle
   0.11.5;                                 !- Version Identifier
@@ -6978,11 +6977,6 @@ OS:People,
   ASHRAE 189.1-2009 ClimateZone 4-8 Retail Core PeopInst, ! Name
   {1111d9eb-3621-426e-afc4-66c67ac72e8d}, ! People Definition Name
   {f4e383c2-6509-43b2-93f3-ed4e76ffc08d}; ! Space or SpaceType Name
-
-OS:People,
-  {7bdc9a46-1b3f-4c70-bf74-87f6f9061228}, ! Handle
-  ASHRAE 189.1-2009 ClimateZone 4-8 Retail Entry PeopInst, ! Name
-  {af446a8f-1c92-471a-afe4-c8249c1f747e}; ! People Definition Name
 
 OS:People,
   {532da15d-cc92-45e4-8e28-7dfe46054180}, ! Handle
