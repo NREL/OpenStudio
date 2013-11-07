@@ -605,6 +605,8 @@ SET(analysis_resources_src
   analysis/version/data_point_1-0-3.json
   analysis/version/analysis_1-0-4.json
   analysis/version/data_point_1-0-4.json
+  analysis/version/analysis_1-1-1.json
+  analysis/version/data_point_1-1-1.json  
 )
 
 # update the resources
