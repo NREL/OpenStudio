@@ -13,6 +13,7 @@
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
 %import <ruleset/Ruleset.i>
+%import <isomodel/ISOModel.i>
 %import <utilities/core/Qt.i>
 
 %{
@@ -67,8 +68,8 @@
   #include <utilities/units/UnitFactory.hpp>
   #include <utilities/units/OSOptionalQuantity.hpp>
   #include <utilities/units/Unit.hpp>
-
-
+  
+  #include <isomodel/SimModel.hpp>
 
   #include <utilities/data/DataEnums.hpp>
   #include <utilities/sql/SqlFileEnums.hpp>

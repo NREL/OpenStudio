@@ -29,7 +29,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API RunPeriod_Impl : public ParentObject_Impl {
-    Q_OBJECT;
    public:
 
     // constructor

@@ -29,8 +29,6 @@ namespace detail {
 
 class MODEL_API Splitter_Impl : public HVACComponent_Impl
 {
-  Q_OBJECT;
-  
   public:
 
   Splitter_Impl(IddObjectType type, Model_Impl* model);

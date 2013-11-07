@@ -31,7 +31,6 @@ class ThermalZone;
 namespace detail {
 
 class MODEL_API ZoneHVACComponent_Impl : public ParentObject_Impl {
-  Q_OBJECT;
 
   public:
 

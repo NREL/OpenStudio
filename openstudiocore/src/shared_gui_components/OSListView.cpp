@@ -157,7 +157,7 @@ void OSListView::refreshAllViews()
 
   if( m_listController )
   {
-    for( int i = 0; i < m_listController->count(); i++ )
+    for( int i = 0, n = m_listController->count(); i < n; i++ )
     {
       insertItemView(i);
     }

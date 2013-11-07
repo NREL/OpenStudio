@@ -516,7 +516,7 @@ namespace detail {
       // unzip 
       UnzipFile unzip(zipPath);
       unzip.extractAllFiles(directory());
-      // TODO: Delete zip file once extracted. Leave for now for debugging.
+      boost::filesystem::remove(zipPath);
     }catch(const std::exception&){
       LOG(Info,"Could not unzip dataPoint.zip file in directory '" << toString(directory()) << "'.");
       return false;

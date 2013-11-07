@@ -33,7 +33,6 @@ namespace detail {
   /** DiscreteVariable_Impl is an InputVariable_Impl that is the implementation class
    *  for DiscreteVariable. */
   class ANALYSIS_API DiscreteVariable_Impl : public InputVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
