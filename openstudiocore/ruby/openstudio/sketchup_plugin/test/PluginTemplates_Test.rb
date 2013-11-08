@@ -42,11 +42,11 @@ class PluginTemplates_Test < Test::Unit::TestCase
       spaceLoads.each do |spaceLoad|
         assert((not spaceLoad.spaceType.empty?))
       end
+      
+      # uncomment this to save the version translated file to the original path
+      # DO NOT leave this in the test execution when you commit!
+      #model.save(path, true)      
     end
-    
-    # uncomment this to save the version translated file to the original path
-    # DO NOT leave this in the test execution when you commit!
-    #model.save(path, true)
   end
 
 end
