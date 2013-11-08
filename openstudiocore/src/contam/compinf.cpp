@@ -22,12 +22,20 @@
 #include <contam/SimFile.hpp>
 
 #include <model/Model.hpp>
+#include <model/Space.hpp>
+#include <model/Space_Impl.hpp>
+#include <model/ThermalZone.hpp>
 #include <model/WeatherFile.hpp>
 #include <model/ScheduleFixedInterval.hpp>
 #include <osversion/VersionTranslator.hpp>
 #include <utilities/core/CommandLine.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/sql/SqlFile.hpp>
+
+#include <model/SpaceInfiltrationDesignFlowRate.hpp>
+#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
+#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
+#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
 
 #include <QProcess>
 
@@ -150,6 +158,12 @@ int main(int argc, char *argv[])
   openstudio::path wthPath = inputPath.replace_extension(openstudio::toPath("wth").string());
   openstudio::path simPath = inputPath.replace_extension(openstudio::toPath("sim").string());
 
+  bool needWth = true;
+  if(boost::filesystem::exists(wthPath))
+  {
+    needWth = false;
+  }
+
   openstudio::contam::ForwardTranslator *translator=0;
   if(setLevel)
   {
@@ -172,6 +186,13 @@ int main(int argc, char *argv[])
      delete translator;
      return EXIT_FAILURE;
   }
+  // Since we really need this to be a transient case, bail out now if it is not
+  if(!translator->startDateTime() || !translator->endDateTime())
+  {
+    std::cout << "The translated model is a steady-state model, bailing out" << std::endl;
+    return EXIT_FAILURE;
+  }
+  boost::optional<openstudio::EpwFile> epwFile;
   QFile file(openstudio::toQString(prjPath));
   if(file.open(QFile::WriteOnly))
   {
@@ -186,7 +207,19 @@ int main(int argc, char *argv[])
         boost::optional<openstudio::path> epwPath = findFile(dir,openstudio::toString(path->string()));
         if(epwPath)
         {
-          if(translator->translateEpw(*epwPath,wthPath))
+          if(!needWth)
+          {
+            try
+            {
+              epwFile = boost::optional<openstudio::EpwFile>(openstudio::EpwFile(epwPath.get(),true));
+            }
+            catch(...)
+            {
+              std::cout << "Failed to correctly load EPW file, weather will be steady state" << std::endl;
+            }
+            translator->rc().setWTHpath(openstudio::toString(wthPath));
+          }
+          else if(epwFile = translator->translateEpw(*epwPath,wthPath))
           {
             translator->rc().setWTHpath(openstudio::toString(wthPath));
           }
@@ -287,9 +320,123 @@ int main(int argc, char *argv[])
     std::cout << std::endl;
   }
   */
-  std::vector<openstudio::TimeSeries> infiltration = translator->zoneInfiltration(&sim);
-  openstudio::model::ScheduleFixedInterval schedule(*model);
-  schedule.setTimeSeries(infiltration[0]);
+  // Remove previous infiltration objects
+  std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> dfrInf = model->getConcreteModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
+  BOOST_FOREACH(openstudio::model::SpaceInfiltrationDesignFlowRate inf, dfrInf)
+  {
+    inf.remove();
+  }
+  std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> elaInf = model->getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
+  BOOST_FOREACH(openstudio::model::SpaceInfiltrationEffectiveLeakageArea inf, elaInf)
+  {
+    inf.remove();
+  }
+  // Set the default here in case the EpwFile route fails
+  openstudio::Time diff = translator->endDateTime().get()-translator->startDateTime().get();
+  //std::cout << diff.days()*24 << std::endl;
+  double ssP = QString().fromStdString(translator->rc().ssWeather().Tambt()).toDouble(); // There's a better way to do this
+  double ssT = QString().fromStdString(translator->rc().ssWeather().barpres()).toDouble(); // There's a better way to do this
+  //std::cout << ssP << " " << ssT << std::endl;
+  //std::vector<double> values(diff.days()*24,287.058*T/P);
+  //openstudio::Vector oneOverDensity = openstudio::createVector(std::vector<double>(diff.days()*24,287.058*T/P));
+  // Try to get the outdoor conditions
+  openstudio::TimeSeries seriesP;
+  openstudio::TimeSeries seriesT;
+  bool variableWeather = false;
+  if(epwFile)
+  {
+    boost::optional<openstudio::TimeSeries> optP = epwFile->timeSeries("Atmospheric Station Pressure");
+    boost::optional<openstudio::TimeSeries> optT = epwFile->timeSeries("Dry Bulb Temperature");
+    if(optP && optT)
+    {
+      variableWeather = true;
+      seriesP = optP.get();
+      seriesT = optT.get();
+    }
+    //std::vector<double>
+    /*
+    if(optP && optT)
+    {
+      // For maximum safety, use interpolation to paper over any missing data
+      openstudio::Time delta(0,1); // Do an hourly schedule
+      std::vector<double> values;
+      for(openstudio::DateTime current=translator->startDateTime().get()+delta; current <= translator->endDateTime().get(); current += delta)
+      {
+        P = optP.get().value(current);
+        T = optT.get().value(current) + 273.15;
+        values.push_back(287.058*T/P);
+      }
+      oneOverDensity = openstudio::createVector(values);
+    }
+    */
+  }
+  std::vector<openstudio::TimeSeries> infiltration = translator->zoneInfiltration(&sim); // These are in kg/s
+  // Create a schedule for each zone
+  std::map<openstudio::Handle,int> map = translator->zoneMap();
+  // This approach implicitly requires that each space is a zone. There should be a way to distibute the infiltration so that when it 
+  // is all put together it adds up to the right thing. That would allow for more than one sapce in a zone - which needs to happen at
+  // some point.
+  std::vector<openstudio::model::Space> spaces = model->getConcreteModelObjects<openstudio::model::Space>();
+  BOOST_FOREACH(openstudio::model::Space space, spaces)
+  {
+    boost::optional<openstudio::model::ThermalZone> zone = space.thermalZone();
+    if(!zone)
+    {
+      std::cout << "Space '" << openstudio::toString(space.handle()) << "' has no attached thermal zone." << std::endl;
+      continue;
+    }
+    if(map.count(zone->handle()) == 0)
+    {
+      std::cout << "Zone '" << openstudio::toString(zone->handle()) << "' has no associated CONTAM zone." << std::endl;
+      continue;
+    }
+    openstudio::TimeSeries zoneInfiltration = infiltration[map[zone->handle()]-1];
+    /*
+    std::cout << zoneInfiltration.value(0) << std::endl;
+    openstudio::DateTime dt(openstudio::Date(1,1),openstudio::Time(0,2));
+    std::cout << dt.toString() << " " << zoneInfiltration.value(dt) << std::endl;
+    std::cout << zoneInfiltration.firstReportDateTime().toString() << std::endl;
+    for(unsigned i=0;i<zoneInfiltration.values().size();i++)
+    {
+      std::cout << zoneInfiltration.values()[i] << std::endl;
+      //if(i==20)exit(0);
+    }
+    */
+    openstudio::Time delta(0,1); // Do an hourly schedule
+    std::vector<double> values;
+    for(openstudio::DateTime current=translator->startDateTime().get()+delta; current <= translator->endDateTime().get(); current += delta)
+    {
+      double inf = zoneInfiltration.value(current); // This will be in kg/s
+      double P = ssP;
+      double T = ssT;
+      if(variableWeather)
+      {
+        P = seriesP.value(current);
+        T = seriesT.value(current) + 273.15;
+        //std::cout << current.toString() << " " << inf << " " << P << " " << T << std::endl;
+      }
+      values.push_back(inf*287.058*T/P); // Compute m^3/s
+    }
+    // Make the time series
+    openstudio::TimeSeries infiltrationTimeSeries(translator->startDateTime()->date(),delta,openstudio::createVector(values),"");
+    //std::cout << infiltrationTimeSeries.firstReportDateTime().toString() << std::endl;
+    // Make the schedule
+    openstudio::model::ScheduleFixedInterval schedule(*model);
+    schedule.setTimeSeries(infiltrationTimeSeries);
+
+    openstudio::model::SpaceInfiltrationDesignFlowRate infObj(*model);
+    infObj.setDesignFlowRate(1.0);
+    infObj.setConstantTermCoefficient(1.0);
+    infObj.setSpace(space);
+    infObj.setSchedule(schedule);
+  }
+
+  //std::cout << seriesP.firstReportDateTime().toString() << std::endl;
+  //std::cout << seriesT.firstReportDateTime().toString() << std::endl;
+  //std::cout << translator->startDateTime().get().toString() << std::endl;
+
+  //openstudio::model::ScheduleFixedInterval schedule(*model);
+  //schedule.setTimeSeries(infiltration[0]);
   openstudio::path outPath = openstudio::toPath(outputPathString);
   if(!model->save(outPath,true))
   {

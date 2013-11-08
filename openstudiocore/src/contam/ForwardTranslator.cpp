@@ -47,7 +47,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/geometry/Geometry.hpp>
 #include <utilities/plot/ProgressBar.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -527,6 +526,8 @@ bool ForwardTranslator::translate(bool translateHVAC)
       startString = start.monthOfYear().valueName() + QString().sprintf("%02d",start.dayOfMonth()).toStdString();
       openstudio::Date end(rp->getEndMonth(),rp->getEndDayOfMonth());
       endString = end.monthOfYear().valueName() + QString().sprintf("%02d",end.dayOfMonth()).toStdString();
+      m_startDateTime = boost::optional<DateTime>(DateTime(start,Time(0)));
+      m_endDateTime = boost::optional<DateTime>(DateTime(end,Time(0,24)));
     }
     catch(...)
     {
@@ -1159,8 +1160,9 @@ bool ForwardTranslator::translate(bool translateHVAC)
 
 }
 
-bool ForwardTranslator::translateEpw(openstudio::path epwpath, openstudio::path outpath)
+boost::optional<EpwFile> ForwardTranslator::translateEpw(openstudio::path epwpath, openstudio::path outpath)
 {
+  boost::optional<EpwFile> epw;
   try
   {
     EpwFile epwFile(epwpath,true);
@@ -1173,13 +1175,14 @@ bool ForwardTranslator::translateEpw(openstudio::path epwpath, openstudio::path 
       LOG(Error,"Translation of EPW file failed, weather will be steady state");
       return false;
     }
+    epw = boost::optional<EpwFile>(epwFile);
   }
   catch(...)
   {
     LOG(Error,"Failed to correctly load EPW file, weather will be steady state");
     return false;
   }
-  return true;
+  return epw;
 }
 
 std::string ForwardTranslator::toString()

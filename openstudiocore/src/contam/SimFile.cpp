@@ -58,7 +58,7 @@ bool SimFile::computeDateTimes(QVector<QString> day, QVector<QString> time)
     {
       return false;
     }
-    m_dateTimes.push_back(DateTime(Date(monthOfYear(month),dayOfMonth,2013),Time(time[i].toStdString())));
+    m_dateTimes.push_back(DateTime(Date(monthOfYear(month),dayOfMonth),Time(time[i].toStdString())));
   }
   return true;
 }

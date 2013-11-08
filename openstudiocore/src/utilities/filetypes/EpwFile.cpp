@@ -468,7 +468,7 @@ std::string EpwDataPoint::toWthString()
 
 Date EpwDataPoint::date() const
 {
-  return Date(MonthOfYear(m_month),m_day,m_year);
+  return Date(MonthOfYear(m_month),m_day);//,m_year);
 }
 
 void EpwDataPoint::setDate(Date date)
@@ -1651,7 +1651,6 @@ boost::optional<TimeSeries> EpwFile::timeSeries(std::string name)
   if(m_data.size())
   {
     std::string units = EpwDataPoint::units(id);
-    std::cout << units << std::endl;
     DateTimeVector dates;
     std::vector<double> values;
     for(unsigned int i=0;i<m_data.size();i++)
@@ -1661,7 +1660,6 @@ boost::optional<TimeSeries> EpwFile::timeSeries(std::string name)
       boost::optional<double> value = m_data[i].field(id);
       if(value)
       {
-        std::cout<<value.get()<<std::endl;
         dates.push_back(DateTime(date,time));
         values.push_back(value.get());
       }

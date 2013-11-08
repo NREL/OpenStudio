@@ -33,7 +33,7 @@
 #include <utilities/core/StringStreamLogSink.hpp>
 #include <utilities/data/TimeSeries.hpp>
 #include <utilities/time/Date.hpp>
-
+#include <utilities/filetypes/EpwFile.hpp>
 
 namespace openstudio{
 class ProgressBar;
@@ -83,7 +83,7 @@ public:
     bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=NULL);
 
   // Secondary translation functions - need to add more of these by chopping out parts of the main translation function
-  bool translateEpw(openstudio::path epwpath, openstudio::path outpath);
+  boost::optional<EpwFile> translateEpw(openstudio::path epwpath, openstudio::path outpath);
 
   bool ready() const {return m_ready && valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
@@ -119,6 +119,20 @@ public:
   }
   */
 
+  //boost::optional<EpwFile> epwFile() const
+  //{
+  //  return m_epwFile;
+  //}
+
+  boost::optional<DateTime> startDateTime() const
+  {
+    return m_startDateTime;
+  }
+
+  boost::optional<DateTime> endDateTime() const
+  {
+    return m_endDateTime;
+  }
   // Postprocessing Functions
   //boost::optional<std::vector<TimeSeries> > zoneInfiltration(openstudio::path simPath);
 
@@ -160,7 +174,9 @@ private:
 
   openstudio::model::Model m_model;
   CvFile m_cvf;
-
+  //boost::optional<EpwFile> m_epwFile;
+  boost::optional<DateTime> m_startDateTime;
+  boost::optional<DateTime> m_endDateTime;
   bool m_ready;
   boost::optional<std::string> m_leakageDescriptor;
   double m_returnSupplyRatio;
