@@ -33,7 +33,6 @@ class ControllerMechanicalVentilation;
 namespace detail {
 
 class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
-  Q_OBJECT;
  public:
 
   // constructor

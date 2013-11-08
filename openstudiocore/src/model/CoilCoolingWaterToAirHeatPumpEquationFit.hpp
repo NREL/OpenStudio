@@ -30,20 +30,20 @@ namespace model {
 //class ControllerWaterCoil;
 
 
-namespace detail 
-		{
-				class CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
-		} // detail
+namespace detail
+{
+  class CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
+} // detail
 
 /** CoilCoolingWaterToAirHeatPumpEquationFit is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:WaterToAirHeatPump:EquationFit'. */
-class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit : public WaterToAirComponent 
+class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit : public WaterToAirComponent
 {
  public:
-		/** @name Constructors and Destructors */
-		
-		/** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside			the model.  The coil is fully initialized with all companion objects. */  
-				
-	 CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
+  /** @name Constructors and Destructors */
+
+  /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */
+
+  CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
 
   virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() {}
 
@@ -116,7 +116,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit : public WaterToAirComp
   bool isNominalTimeforCondensateRemovaltoBeginDefaulted() const;
 
   double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
-  
+
   bool isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const;
 
   /** @name Setters */
@@ -168,7 +168,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit : public WaterToAirComp
   void setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
 
   void setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
-  
+
   void setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
 
   void setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);

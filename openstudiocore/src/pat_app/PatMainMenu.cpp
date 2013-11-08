@@ -126,14 +126,14 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_cloudMenu = new QMenu(tr("&Cloud"),this);
   addMenu(m_cloudMenu);
 
-  m_openCloudDlgAction = new QAction(tr("Cloud Settings"),this);
+  m_openCloudDlgAction = new QAction(tr("&Cloud Settings"),this);
 
   isConnected = connect(m_openCloudDlgAction, SIGNAL(triggered()),this,SIGNAL(openCloudDlgClicked()));
   OS_ASSERT(isConnected);
 
   m_cloudMenu->addAction(m_openCloudDlgAction);
 
-  m_openMonitorUseDlgAction = new QAction(tr("Monitor Use"),this);
+  m_openMonitorUseDlgAction = new QAction(tr("&Monitor Use"),this);
 
   isConnected = connect(m_openMonitorUseDlgAction, SIGNAL(triggered()),this,SIGNAL(openMonitorUseDlgClicked()));
   OS_ASSERT(isConnected);

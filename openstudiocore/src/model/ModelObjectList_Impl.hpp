@@ -31,7 +31,6 @@ namespace detail {
 
   /** ModelObjectList_Impl is a ModelObject_Impl that is the implementation class for ModelObjectList.*/
   class MODEL_API ModelObjectList_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -53,7 +53,7 @@ class ANALYSIS_API PoissonDistribution : public UncertaintyDescription {
   /** @name Setters */
   //@{
 
-	/** Lambda must be a positive value. */
+  /** Lambda must be a positive value. */
   bool setLambda(double value);
 
   //@}

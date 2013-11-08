@@ -558,7 +558,8 @@ namespace detail {
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model, 
                                                                  Schedule& availabilitySchedule,
                                                                  HVACComponent& heatingCoil,
-                                                                 HVACComponent& coolingCoil)
+                                                                 HVACComponent& coolingCoil,
+                                                                 double hydronicTubingLength)
   : ZoneHVACComponent(ZoneHVACLowTempRadiantConstFlow::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>());
@@ -573,6 +574,9 @@ ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& mo
   BOOST_ASSERT(ok);
 
   ok = setCoolingCoil(coolingCoil);
+  BOOST_ASSERT(ok);
+
+  ok = setHydronicTubingLength(hydronicTubingLength);
   BOOST_ASSERT(ok);
 
 }

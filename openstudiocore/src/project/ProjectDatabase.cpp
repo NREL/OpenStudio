@@ -1805,7 +1805,7 @@ namespace detail {
     query.clear();
 
     save();
-  	bool test = this->commitTransaction();
+    bool test = this->commitTransaction();
     OS_ASSERT(test);
 
     LOG(Info,"Removing all standards rule and ruleset information.");
@@ -1819,7 +1819,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1831,7 +1831,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1846,7 +1846,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1864,7 +1864,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
   }
 

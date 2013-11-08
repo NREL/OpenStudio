@@ -55,9 +55,9 @@ namespace openstudio{
         m_numWorkers(2),
         m_terminationDelayEnabled(false),
         m_terminationDelay(0),
-        m_region(AWSProvider::defaultRegion()),
-        m_serverInstanceType(AWSProvider::defaultServerInstanceType()),
-        m_workerInstanceType(AWSProvider::defaultWorkerInstanceType())
+        m_region(AWSProvider_Impl::defaultRegion()),
+        m_serverInstanceType(AWSProvider_Impl::defaultServerInstanceType()),
+        m_workerInstanceType(AWSProvider_Impl::defaultWorkerInstanceType())
     {
       loadSettings(true);
     }
@@ -78,9 +78,9 @@ namespace openstudio{
         m_numWorkers(2),
         m_terminationDelayEnabled(false),
         m_terminationDelay(0),
-        m_region(AWSProvider::defaultRegion()),
-        m_serverInstanceType(AWSProvider::defaultServerInstanceType()),
-        m_workerInstanceType(AWSProvider::defaultWorkerInstanceType())
+        m_region(AWSProvider_Impl::defaultRegion()),
+        m_serverInstanceType(AWSProvider_Impl::defaultServerInstanceType()),
+        m_workerInstanceType(AWSProvider_Impl::defaultWorkerInstanceType())
     {
       loadSettings(true);
       m_userAgreementSigned = userAgreementSigned;
@@ -297,7 +297,7 @@ namespace openstudio{
     }
 
     void AWSSettings_Impl::setRegion(const std::string& region) {
-      std::vector<std::string> regions = AWSProvider::availableRegions();
+      std::vector<std::string> regions = AWSProvider_Impl::availableRegions();
       if (std::find(regions.begin(), regions.end(), region) != regions.end() && m_region != region) {
         m_region = region;
         onChange();
@@ -309,7 +309,7 @@ namespace openstudio{
     }
 
     void AWSSettings_Impl::setServerInstanceType(const std::string& instanceType) {
-      std::vector<std::string> instanceTypes = AWSProvider::serverInstanceTypes();
+      std::vector<std::string> instanceTypes = AWSProvider_Impl::serverInstanceTypes();
       if (std::find(instanceTypes.begin(), instanceTypes.end(), instanceType) != instanceTypes.end() && m_serverInstanceType != instanceType) {
         m_serverInstanceType = instanceType;
         onChange();
@@ -321,7 +321,7 @@ namespace openstudio{
     }
 
     void AWSSettings_Impl::setWorkerInstanceType(const std::string& instanceType) {
-      std::vector<std::string> instanceTypes = AWSProvider::workerInstanceTypes();
+      std::vector<std::string> instanceTypes = AWSProvider_Impl::workerInstanceTypes();
       if (std::find(instanceTypes.begin(), instanceTypes.end(), instanceType) != instanceTypes.end() && m_workerInstanceType != instanceType) {
         m_workerInstanceType = instanceType;
         onChange();
@@ -543,6 +543,211 @@ namespace openstudio{
       m_privateKey.setAutoRemove(false);
     }
 
+    // DLM: we should deal with running processes in the AWSProvider_Impl destructor
+
+    std::vector<std::string> AWSProvider_Impl::availableRegions() {
+      static std::vector<std::string> regions;
+      if (!regions.size()) {
+        regions.push_back("us-east-1");
+      }
+      return regions;
+    }
+
+    std::string AWSProvider_Impl::defaultRegion() {
+      return "us-east-1";
+    }
+
+    std::vector<std::string> AWSProvider_Impl::serverInstanceTypes() {
+      static std::vector<std::string> instanceTypes;
+      if (!instanceTypes.size()) {
+        std::vector<AWSComputerInformation> info = serverInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          instanceTypes.push_back(awsComputerInformation.instanceType);
+        }
+      }
+      return instanceTypes;
+    }
+
+    std::string AWSProvider_Impl::defaultServerInstanceType() {
+      return "m2.xlarge";
+    }
+
+    std::vector<std::string> AWSProvider_Impl::workerInstanceTypes() {
+      static std::vector<std::string> instanceTypes;
+      if (!instanceTypes.size()) {
+        std::vector<AWSComputerInformation> info = workerInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          instanceTypes.push_back(awsComputerInformation.instanceType);
+        }
+      }
+      return instanceTypes;
+    }
+
+    std::string AWSProvider_Impl::defaultWorkerInstanceType() {
+      return "cc2.8xlarge";
+    }
+
+    std::vector<unsigned> AWSProvider_Impl::serverProcessorCounts() {
+      static std::vector<unsigned> processorCounts;
+      if (!processorCounts.size()) {
+        std::vector<AWSComputerInformation> info = serverInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          processorCounts.push_back(awsComputerInformation.processorCount);
+        }
+      }
+      return processorCounts;
+    }
+
+    std::vector<unsigned> AWSProvider_Impl::workerProcessorCounts() {
+      static std::vector<unsigned> processorCounts;
+      if (!processorCounts.size()) {
+        std::vector<AWSComputerInformation> info = workerInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          processorCounts.push_back(awsComputerInformation.processorCount);
+        }
+      }
+      return processorCounts;
+    }
+
+    std::vector<std::string> AWSProvider_Impl::serverPrettyNames() {
+      static std::vector<std::string> prettyNames;
+      if (!prettyNames.size()) {
+        std::vector<AWSComputerInformation> info = serverInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          prettyNames.push_back(awsComputerInformation.prettyName);
+        }
+      }
+      return prettyNames;
+    }
+
+    std::vector<std::string> AWSProvider_Impl::workerPrettyNames() {
+      static std::vector<std::string> prettyNames;
+      if (!prettyNames.size()) {
+        std::vector<AWSComputerInformation> info = workerInformation();
+        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+          prettyNames.push_back(awsComputerInformation.prettyName);
+        }
+      }
+      return prettyNames;
+    }
+
+    std::string AWSProvider_Impl::getServerPrettyName(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = serverInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<std::string> prettyNames = serverPrettyNames();
+      return prettyNames.at(index);
+    }
+
+    std::string AWSProvider_Impl::getWorkerPrettyName(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = workerInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<std::string> prettyNames = workerPrettyNames();
+      return prettyNames.at(index);
+    }
+
+    unsigned AWSProvider_Impl::getServerProcessorCount(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = serverInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<unsigned> processorCounts = serverProcessorCounts();
+      return processorCounts.at(index);
+    }
+
+    unsigned AWSProvider_Impl::getWorkerProcessorCount(const std::string & instanceType) {
+      static std::vector<std::string> instanceTypes = workerInstanceTypes();
+      std::vector<std::string>::iterator it;
+      it = std::find(instanceTypes.begin(), instanceTypes.end(), instanceType);
+      unsigned index = it - instanceTypes.begin();
+      OS_ASSERT(index < instanceTypes.size());
+
+      static std::vector<unsigned> processorCounts = workerProcessorCounts();
+      return processorCounts.at(index);
+    }
+
+    std::vector<AWSComputerInformation> AWSProvider_Impl::serverInformation(){
+      static std::vector<AWSComputerInformation> info;
+      if (!info.size()) {
+        AWSComputerInformation awsComputerInformation;
+
+        // micro is currently insufficient to run server
+        //awsComputerInformation.instanceType = "t1.micro";
+        //awsComputerInformation.prettyName = "Micro";
+        //awsComputerInformation.processorCount = 1;
+        //info.push_back(awsComputerInformation);
+
+        //awsComputerInformation.instanceType = "m1.large";
+        //awsComputerInformation.prettyName = "M1 Large";
+        //awsComputerInformation.processorCount = 2;
+        //info.push_back(awsComputerInformation);
+
+        //awsComputerInformation.instanceType = "m1.xlarge";
+        //awsComputerInformation.prettyName = "M1 Extra Large";
+        //awsComputerInformation.processorCount = 4;
+        //info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m2.xlarge";
+        awsComputerInformation.prettyName = "M2 Extra Large";
+        awsComputerInformation.processorCount = 2;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m2.2xlarge";
+        awsComputerInformation.prettyName = "High-Memory Double Extra Large";
+        awsComputerInformation.processorCount = 4;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "m2.4xlarge";
+        awsComputerInformation.prettyName = "High-Memory Quadruple Extra Large";
+        awsComputerInformation.processorCount = 8;
+        info.push_back(awsComputerInformation);
+
+        //awsComputerInformation.instanceType = "m3.xlarge";
+        //awsComputerInformation.prettyName = "M3 Extra Large";
+        //awsComputerInformation.processorCount = 2; // Hyperthreading disabled
+        //info.push_back(awsComputerInformation);
+
+        //awsComputerInformation.instanceType = "m3.2xlarge";
+        //awsComputerInformation.prettyName = "M3 Double Extra Large";
+        //awsComputerInformation.processorCount = 4; // Hyperthreading disabled
+        //info.push_back(awsComputerInformation);
+      }
+      return info;
+    }
+
+    std::vector<AWSComputerInformation> AWSProvider_Impl::workerInformation(){
+      static std::vector<AWSComputerInformation> info;
+      if (!info.size()) {
+        AWSComputerInformation awsComputerInformation;
+
+        // micro is currently insufficient to run worker
+        //awsComputerInformation.instanceType = "t1.micro";
+        //awsComputerInformation.prettyName = "Micro";
+        //awsComputerInformation.processorCount = 1;
+        //info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "c1.xlarge";
+        awsComputerInformation.prettyName = "High-CPU Extra Large";
+        awsComputerInformation.processorCount = 8;
+        info.push_back(awsComputerInformation);
+
+        awsComputerInformation.instanceType = "cc2.8xlarge";
+        awsComputerInformation.prettyName = "Cluster Compute Eight Extra Large";
+        awsComputerInformation.processorCount = 16; // Hyperthreading disabled
+        info.push_back(awsComputerInformation);
+      }
+      return info;
+    }
+
     std::string AWSProvider_Impl::type() const
     {
       return AWSProvider_Impl::cloudProviderType();
@@ -706,6 +911,11 @@ namespace openstudio{
           return lastInternetAvailable();
         }
       }
+      if (m_checkInternetProcess){
+        m_checkInternetProcess->disconnect(this, 0);
+        m_checkInternetProcess->kill();
+        m_checkInternetProcess = 0;
+      }
       return false;
     }
 
@@ -715,6 +925,11 @@ namespace openstudio{
         if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
+      }
+      if (m_checkServiceProcess){
+        m_checkServiceProcess->disconnect(this, 0);
+        m_checkServiceProcess->kill();
+        m_checkServiceProcess = 0;
       }
       return false;
     }
@@ -726,6 +941,11 @@ namespace openstudio{
           return lastValidateCredentials();
         }
       }
+      if (m_checkValidateProcess){
+        m_checkValidateProcess->disconnect(this, 0);
+        m_checkValidateProcess->kill();
+        m_checkValidateProcess = 0;
+      }
       return false;
     }
 
@@ -736,6 +956,11 @@ namespace openstudio{
           return lastResourcesAvailableToStart();
         }
       }
+      if (m_checkResourcesProcess){
+        m_checkResourcesProcess->disconnect(this, 0);
+        m_checkResourcesProcess->kill();
+        m_checkResourcesProcess = 0;
+      }
       return false;
     }
 
@@ -744,6 +969,11 @@ namespace openstudio{
       if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
         return serverStarted();
       }
+      if (m_startServerProcess){
+        m_startServerProcess->disconnect(this, 0);
+        m_startServerProcess->kill();
+        m_startServerProcess = 0;
+      }
       return false;
     }
 
@@ -751,6 +981,11 @@ namespace openstudio{
     {
       if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
         return workersStarted();
+      }
+      if (m_startWorkerProcess){
+        m_startWorkerProcess->disconnect(this, 0);
+        m_startWorkerProcess->kill();
+        m_startWorkerProcess = 0;
       }
       return false;
     }
@@ -762,6 +997,11 @@ namespace openstudio{
           return lastServerRunning();
         }
       }
+      if (m_checkServerRunningProcess){
+        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkServerRunningProcess->kill();
+        m_checkServerRunningProcess = 0;
+      }
       return false;
     }
 
@@ -772,6 +1012,11 @@ namespace openstudio{
           return lastWorkersRunning();
         }
       }
+      if (m_checkWorkerRunningProcess){
+        m_checkWorkerRunningProcess->disconnect(this, 0);
+        m_checkWorkerRunningProcess->kill();
+        m_checkWorkerRunningProcess = 0;
+      }
       return false;
     }
 
@@ -779,6 +1024,11 @@ namespace openstudio{
     {
       if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
         return m_instancesStopped;
+      }
+      if (m_stopInstancesProcess){
+        m_stopInstancesProcess->disconnect(this, 0);
+        m_stopInstancesProcess->kill();
+        m_stopInstancesProcess = 0;
       }
       return false;
     }
@@ -790,6 +1040,11 @@ namespace openstudio{
           return lastTerminateCompleted();
         }
       }
+      if (m_checkTerminatedProcess){
+        m_checkTerminatedProcess->disconnect(this, 0);
+        m_checkTerminatedProcess->kill();
+        m_checkTerminatedProcess = 0;
+      }
       return false;
     }
 
@@ -800,6 +1055,11 @@ namespace openstudio{
           return lastEstimatedCharges();
         }
       }
+      if (m_checkEstimatedChargesProcess){
+        m_checkEstimatedChargesProcess->disconnect(this, 0);
+        m_checkEstimatedChargesProcess->kill();
+        m_checkEstimatedChargesProcess = 0;
+      }
       return 0.0;
     }
 
@@ -809,6 +1069,11 @@ namespace openstudio{
         if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
           return lastTotalInstances();
         }
+      }
+      if (m_checkTotalInstancesProcess){
+        m_checkTotalInstancesProcess->disconnect(this, 0);
+        m_checkTotalInstancesProcess->kill();
+        m_checkTotalInstancesProcess = 0;
       }
       return 0;
     }
@@ -1460,7 +1725,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseServiceAvailableResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ServiceAvailable process failed to return output");
         return false;
       }
       
@@ -1482,7 +1747,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseValidateCredentialsResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ValidateCredentials process failed to return output");
         return false;
       }
       
@@ -1508,7 +1773,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseResourcesAvailableToStartResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ResourcesAvailableToStart process failed to return output");
         return false;
       }
       
@@ -1532,7 +1797,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("ServerStarted process failed to return output");
         return false;
       }
       
@@ -1564,7 +1829,7 @@ namespace openstudio{
     {
       m_privateKey.remove();
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("WorkerStarted process failed to return output");
         return false;
       }
       
@@ -1599,7 +1864,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseCheckServerRunningResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckServerRunning process failed to return output");
         return false;
       }
       
@@ -1624,7 +1889,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseCheckWorkerRunningResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckWorkerRunning process failed to return output");
         return false;
       }
       
@@ -1659,7 +1924,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseInstancesStoppedResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("InstancesStopped process failed to return output");
         return false;
       }
       
@@ -1686,7 +1951,7 @@ namespace openstudio{
     bool AWSProvider_Impl::parseCheckTerminatedResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckTerminated process failed to return output");
         return false;
       }
       
@@ -1713,7 +1978,7 @@ namespace openstudio{
     double AWSProvider_Impl::parseCheckEstimatedChargesResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckEstimatedCharges process failed to return output");
         return 0.0;
       }
       
@@ -1743,7 +2008,7 @@ namespace openstudio{
     unsigned AWSProvider_Impl::parseCheckTotalInstancesResults(const ProcessResults &t_results)
     {
       if (t_results.output.isEmpty()) {
-        logError("Process failed to return output");
+        logError("CheckTotalInstances process failed to return output");
         return 0;
       }
       
@@ -2156,48 +2421,67 @@ namespace openstudio{
   }
   
   std::vector<std::string> AWSProvider::availableRegions() {
-    static std::vector<std::string> regions;
-    if (!regions.size()) {
-      regions.push_back("us-east-1");
-    }
-    return regions;
+    return detail::AWSProvider_Impl::availableRegions();
   }
 
   std::string AWSProvider::defaultRegion() {
-    return "us-east-1";
+    return detail::AWSProvider_Impl::defaultRegion();
   }
 
   std::vector<std::string> AWSProvider::serverInstanceTypes() {
-    static std::vector<std::string> serverInstanceTypes;
-    if (!serverInstanceTypes.size()) {
-      //serverInstanceTypes.push_back("t1.micro"); // DLM: insufficient memory for testing
-      serverInstanceTypes.push_back("m1.large");
-      serverInstanceTypes.push_back("m1.xlarge");
-      serverInstanceTypes.push_back("m2.xlarge");
-      serverInstanceTypes.push_back("m2.2xlarge");
-      serverInstanceTypes.push_back("m2.4xlarge");
-      serverInstanceTypes.push_back("m3.xlarge");
-      serverInstanceTypes.push_back("m3.2xlarge");
-    }
-    return serverInstanceTypes;
+    return detail::AWSProvider_Impl::serverInstanceTypes();
   }
 
   std::string AWSProvider::defaultServerInstanceType() {
-    return "m1.large";
+    return detail::AWSProvider_Impl::defaultServerInstanceType();
   }
 
   std::vector<std::string> AWSProvider::workerInstanceTypes() {
-    static std::vector<std::string> workerInstanceTypes;
-    if (!workerInstanceTypes.size()) {
-      workerInstanceTypes.push_back("t1.micro");
-      workerInstanceTypes.push_back("c1.xlarge");
-      workerInstanceTypes.push_back("cc2.8xlarge");
-    }
-    return workerInstanceTypes;
+    return detail::AWSProvider_Impl::workerInstanceTypes();
   }
 
   std::string AWSProvider::defaultWorkerInstanceType() {
-    return "c1.xlarge";
+    return detail::AWSProvider_Impl::defaultWorkerInstanceType();
+  }
+
+  std::vector<unsigned> AWSProvider::serverProcessorCounts() {
+    return detail::AWSProvider_Impl::serverProcessorCounts();
+  }
+
+  std::vector<unsigned> AWSProvider::workerProcessorCounts() {
+    return detail::AWSProvider_Impl::workerProcessorCounts();
+  }
+
+  std::vector<std::string> AWSProvider::serverPrettyNames() {
+    return detail::AWSProvider_Impl::serverPrettyNames();
+  }
+
+  std::vector<std::string> AWSProvider::workerPrettyNames() {
+    return detail::AWSProvider_Impl::workerPrettyNames();
+  }
+
+  std::string AWSProvider::getServerPrettyName(const std::string & instanceType) {
+    return detail::AWSProvider_Impl::getServerPrettyName(instanceType);
+  }
+
+  std::string AWSProvider::getWorkerPrettyName(const std::string & instanceType) {
+    return detail::AWSProvider_Impl::getWorkerPrettyName(instanceType);
+  }
+
+  unsigned AWSProvider::getServerProcessorCount(const std::string & instanceType) {
+    return detail::AWSProvider_Impl::getServerProcessorCount(instanceType);
+  }
+
+  unsigned AWSProvider::getWorkerProcessorCount(const std::string & instanceType) {
+    return detail::AWSProvider_Impl::getWorkerProcessorCount(instanceType);
+  }
+
+  std::vector<AWSComputerInformation> AWSProvider::serverInformation() {
+    return detail::AWSProvider_Impl::serverInformation();
+  }
+
+  std::vector<AWSComputerInformation> AWSProvider::workerInformation() {
+    return detail::AWSProvider_Impl::workerInformation();
   }
 
   bool AWSProvider::requestEstimatedCharges() {

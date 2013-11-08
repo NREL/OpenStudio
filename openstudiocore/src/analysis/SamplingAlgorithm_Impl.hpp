@@ -34,7 +34,6 @@ namespace detail {
 
   /** SamplingAlgorithm_Impl is a DakotaAlgorithm_Impl that is the implementation class for SamplingAlgorithm.*/
   class ANALYSIS_API SamplingAlgorithm_Impl : public DakotaAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -159,7 +159,7 @@ namespace sdd {
     projectClimateZoneElement.appendChild( doc.createTextNode( "unknown"));
 
     // set lat, lon, elev
-    // DLM: do not translate forward,  Issue 242: 	Forward Translator - Remove Proj:Lat/Lon/Elevation translation
+    // DLM: do not translate forward,  Issue 242: Forward Translator - Remove Proj:Lat/Lon/Elevation translation
     /*
     boost::optional<model::Site> site = model.getOptionalUniqueModelObject<model::Site>();
     if (site){

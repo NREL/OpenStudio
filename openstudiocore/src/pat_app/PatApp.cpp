@@ -284,6 +284,25 @@ void PatApp::save()
 
 void PatApp::saveAs()
 {
+  CloudStatus status = cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING || status == CLOUD_RUNNING) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Save Copy", 
+      "PAT cannot save a copy of the current project while the cloud is starting, running, or stopping.  Once the cloud connection is terminated this operation will become available.", 
+      QMessageBox::Ok);
+
+    return;
+
+  } else if (status == CLOUD_ERROR) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Save Copy", 
+      "PAT cannot save a copy of the current project while the cloud is in an error state.  Once the cloud connection is established or the session is terminated this operation will become available.", 
+      QMessageBox::Ok);
+
+    return;
+  }
+
   userInteractiveSaveAsProject();
 }
 
@@ -337,8 +356,7 @@ void PatApp::quit(bool fromCloseEvent)
         if(result == QMessageBox::Cancel) return;
       }
 
-    } else if (status == CLOUD_RUNNING) {
-
+    } else if (status == CLOUD_STOPPED) {
     // DLM: check if running locally?
 
     } else if (status == CLOUD_ERROR) {
@@ -378,6 +396,54 @@ void PatApp::quit(bool fromCloseEvent)
 
 void PatApp::open()
 {
+  CloudStatus status = cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Open Project", 
+      "Projects cannot be opened while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    return;
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // if project is running we can open, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't open
+    // if project is stopping we can open, 90% sure we should turn cloud off
+    // if project is error we can open, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(mainWindow, 
+        "Cannot Open Project", 
+        "Projects cannot be opened while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+      return;
+    }else{
+      int result = QMessageBox::warning(mainWindow, 
+                      "Open Project?", 
+                      "The cloud is currently running and charges are accruing.  Are you sure you want to open a different project?", 
+                      QMessageBox::Ok, 
+                      QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    }
+
+  } else if (status == CLOUD_STOPPED) {
+
+  // DLM: check if running locally?
+
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(mainWindow, 
+                    "Open Project?", 
+                    "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to open a different project?", 
+                    QMessageBox::Ok, 
+                    QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) return;
+  }
+
   QString fileName = QFileDialog::getOpenFileName( mainWindow,
                                                    tr("Open Project"),
                                                    QDir::homePath(),
@@ -389,6 +455,54 @@ void PatApp::open()
 
 void PatApp::create()
 {
+  CloudStatus status = cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Create New Project", 
+      "Projects cannot be created while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    return;
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // if project is running we can create, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't create
+    // if project is stopping we can create, 90% sure we should turn cloud off
+    // if project is error we can create, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(mainWindow, 
+        "Cannot Create New Project", 
+        "Projects cannot be created while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+      return;
+    }else{
+      int result = QMessageBox::warning(mainWindow, 
+                      "Create Project?", 
+                      "The cloud is currently running and charges are accruing.  Are you sure you want to create and open a new project?", 
+                      QMessageBox::Ok, 
+                      QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) return;
+    }
+
+  } else if (status == CLOUD_STOPPED) {
+
+  // DLM: check if running locally?
+
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(mainWindow, 
+                    "Create Project?", 
+                    "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to create and open a new project?", 
+                    QMessageBox::Ok, 
+                    QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) return;
+  }
+
   NewProjectDialog * dialog = new NewProjectDialog();
 
   QString projectName;
@@ -506,6 +620,16 @@ void PatApp::on_closeBclDlg()
 
 void PatApp::openCloudDlg()
 {
+  if( ! (m_cloudMonitor->status() == CLOUD_STOPPED) )
+  {
+    QMessageBox::warning(mainWindow, 
+      "Cannot Access Cloud Settings", 
+      "The cloud settings are not available while the cloud is running.  Please turn off the cloud to change settings.", 
+      QMessageBox::Ok);
+
+    return;
+  }
+
   if(!m_cloudDialog){
     m_cloudDialog = new CloudDialog();
 
@@ -1159,7 +1283,16 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     mainWindow->mainMenu->configure(true);
 
     // show the right tab
-    showVerticalTab(PatApp::MEASURES);
+    if( m_cloudMonitor->status() != CLOUD_STOPPED )
+    {
+      showVerticalTab(PatApp::RUN);
+    }
+    else
+    {
+      showVerticalTab(PatApp::MEASURES);
+    }
+
+    updateAppState();
 
   }else{
 
@@ -1170,7 +1303,6 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // show the right tab
     showStartupView();
-
   }
 }
 
@@ -1526,35 +1658,6 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
   m_projectNameLineEdit->setFocus();
 
   vertLayout->addStretch();
-}
-
-void NewProjectDialog::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() == Qt::LeftButton)
-  {
-    if( event->y() < 50 )
-    {
-        dragPosition = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
-        _move = true;
-    }
-    else
-    {
-      _move = false;
-    }
-  }
-}
-
-void NewProjectDialog::mouseMoveEvent(QMouseEvent *event)
-{
-  if(event->buttons() & Qt::LeftButton)
-  {
-    if( _move )
-    {
-      move(event->globalPos() - dragPosition);
-      event->accept();
-    }
-  }
 }
 
 void NewProjectDialog::enableOkButton()

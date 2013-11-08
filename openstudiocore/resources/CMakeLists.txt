@@ -236,6 +236,12 @@ SET(osversion_resources_src
   osversion/1_0_7/OpenStudio.idd
   osversion/1_0_7/example.osm
   osversion/1_0_7/example.osc
+  osversion/1_1_0/OpenStudio.idd
+  osversion/1_1_0/example.osm
+  osversion/1_1_0/example.osc
+  osversion/1_1_1/OpenStudio.idd
+  osversion/1_1_1/example.osm
+  osversion/1_1_1/example.osc
   osversion/unknown.osc
 )
 
@@ -614,3 +620,25 @@ ADD_CUSTOM_TARGET( openstudio_analysis_resources
 )
 
 CREATE_SRC_GROUPS( "${analysis_resources_src}" )
+
+
+########################################################
+# isomodel resources
+# clear runs, calls to RUN_ENERGYPLUS will populate this
+SET(ENERGYPLUS_OUTPUTS "")
+
+SET(isomodel_resources_src
+  isomodel/exampleModel.ISO
+  isomodel/weather.epw
+)
+
+# update the resources
+UPDATE_RESOURCES("${isomodel_resources_src}")
+
+# add target
+ADD_CUSTOM_TARGET( openstudio_isomodel_resources
+  DEPENDS ${isomodel_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${isomodel_resources_src}
+)
+
+CREATE_SRC_GROUPS( "${isomodel_resources_src}" )

@@ -80,6 +80,8 @@ find_package(QJSON REQUIRED)
 INCLUDE_DIRECTORIES( ${QJSON_INCLUDE_DIR} )
 LINK_DIRECTORIES( ${QJSON_LIBRARY_DIRS} )
 
+# include after other boost include directories for cases where boost version < 1.47
+INCLUDE_DIRECTORIES( SYSTEM ${CMAKE_SOURCE_DIR}/../dependencies/boost_geometry )
 
 
 

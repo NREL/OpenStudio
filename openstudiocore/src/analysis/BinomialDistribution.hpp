@@ -55,10 +55,10 @@ class ANALYSIS_API BinomialDistribution : public UncertaintyDescription {
   /** @name Setters */
   //@{
 
-	/** Value needs to be between 0 and 1. */
+  /** Value needs to be between 0 and 1. */
   bool setProbabilityPerTrial(double value);
 
-	/** Value must be positive. */
+  /** Value must be positive. */
   bool setNumTrials(int value);
 
   //@}

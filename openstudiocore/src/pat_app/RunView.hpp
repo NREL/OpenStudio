@@ -78,7 +78,7 @@ class RunStatusView : public QWidget
 {
   Q_OBJECT
 
- public:
+  public:
 
    RunStatusView();
 
@@ -103,6 +103,10 @@ class RunStatusView : public QWidget
    CloudLostConnectionButton * cloudLostConnectionButton;
 
    void paintEvent(QPaintEvent * e);
+
+ signals:
+
+   void dataPointResultsCleared(const openstudio::UUID& dataPoint);
 
  public slots:
    
@@ -147,9 +151,15 @@ class DataPointRunHeaderView : public OSHeader
 
   virtual ~DataPointRunHeaderView() {}
 
+ signals:
+
+  void dataPointResultsCleared(const openstudio::UUID& dataPoint);
+
  public slots:
 
   void update();
+
+  void requestUpdate();
 
  private slots:
 
@@ -172,6 +182,8 @@ class DataPointRunHeaderView : public OSHeader
 
   QPushButton* m_download;
   QPushButton* m_clear;
+
+  bool m_updateRequested;
 };
 
 class DataPointRunContentView : public OSListView
@@ -190,7 +202,7 @@ class DataPointRunItemView : public OSCollapsibleView
 {
   Q_OBJECT
 
-  public:
+ public:
 
   DataPointRunItemView(const openstudio::analysis::DataPoint& dataPoint);
 
@@ -199,6 +211,19 @@ class DataPointRunItemView : public OSCollapsibleView
   DataPointRunHeaderView * dataPointRunHeaderView;
 
   DataPointRunContentView * dataPointRunContentView;
+ 
+ signals:
+
+  void dataPointResultsCleared(const openstudio::UUID& dataPoint);
+
+ public slots:
+
+  void checkForUpdate();
+
+ private:
+
+  openstudio::analysis::DataPoint m_dataPoint;
+  UUID m_topLevelJobUUID;
 };
 
 class DataPointJobHeaderView : public OSHeader
@@ -285,9 +310,13 @@ public slots:
 
   void update();
 
+  void requestUpdate();
+
 private:
 
   analysis::WorkflowStepJob m_workflowStepJob;
+
+  bool m_updateRequested;
 
 };
 

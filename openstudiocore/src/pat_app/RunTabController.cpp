@@ -75,6 +75,10 @@ RunTabController::RunTabController()
                   PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
   OS_ASSERT(bingo);
 
+  bingo = connect(runView->runStatusView,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
+                  this,SLOT(onDataPointResultsCleared(const openstudio::UUID&)));
+  OS_ASSERT(bingo);
+
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
 
@@ -88,7 +92,7 @@ RunTabController::RunTabController()
 
     // refresh this tab when data points are queued
     if (cloudAnalysisDriver){
-      bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+      bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onDataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), Qt::QueuedConnection);
       OS_ASSERT(bingo);
 
       // connect cloudAnalysisDriver to update progress on this
@@ -97,7 +101,7 @@ RunTabController::RunTabController()
 
       // currentAnalyses is empty for cloudAnalysisDriver
     }else{
-      bool bingo = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+      bool bingo = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onDataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), Qt::QueuedConnection);
       OS_ASSERT(bingo);
 
       currentAnalyses = analysisDriver.currentAnalyses();
@@ -115,6 +119,12 @@ RunTabController::RunTabController()
 
     m_dataPointRunListController = QSharedPointer<DataPointRunListController>(new DataPointRunListController(analysis));
     m_dataPointRunItemDelegate = QSharedPointer<DataPointRunItemDelegate>(new DataPointRunItemDelegate());
+    
+    // ETH: Is the following the right way to connect to a signal emanating from a QSharedPointer?
+    // (Suprisinging hard to google and get a good answer.)
+    bingo = connect(m_dataPointRunItemDelegate.data(),SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
+                    this,SLOT(onDataPointResultsCleared(const openstudio::UUID&)));
+    OS_ASSERT(bingo);
 
     runView->dataPointRunListView->setListController(m_dataPointRunListController);
     runView->dataPointRunListView->setDelegate(m_dataPointRunItemDelegate);
@@ -239,14 +249,15 @@ void RunTabController::onPlayButtonClicked()
           return;
         }
 
-        reqestRefresh();
+        // force refresh after clearing results
+        refresh();
         PatApp::instance()->processEvents();
       }
 
       if (cloudAnalysisDriver){
 
         // refresh this tab when data points are queued
-        bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+        bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onDataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), Qt::QueuedConnection);
         OS_ASSERT(bingo);
 
         // connect cloudAnalysisDriver to update progress on this
@@ -261,12 +272,12 @@ void RunTabController::onPlayButtonClicked()
         analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*project);
         analysisdriver::CurrentAnalysis currentAnalysis = analysisDriver.run(analysis, runOptions);
 
-        // start the run
-        analysisDriver.unpauseQueue();
-
         // connect currentAnalysis to update progress on this
         bool isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
+
+        // start the run
+        analysisDriver.unpauseQueue();
       }
 
       // update progress
@@ -304,9 +315,14 @@ void RunTabController::onPlayButtonClicked()
         }
 
       }else{
-        // request stop
-        project->runManager().setPaused(true);
-        project->stop();
+            
+        // check if we already have current analysis
+        std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
+        if (!currentAnalyses.empty()){
+          analysisDriver.stop(currentAnalyses[0]);
+        }else{
+          // should not get here, nothing to stop
+        }
       }
     }
 
@@ -350,7 +366,19 @@ void RunTabController::onIterationProgress()
   runView->runStatusView->setProgress(numCompletedJobs, numFailedJobs, totalNumJobs);
 }
 
-void RunTabController::reqestRefresh()
+// ETH: Could replace this and next slot with single slot if analysis emitted
+// dataPointChanged(const openstudio::UUID& dataPoint) whenever a child DataPoint
+// emits changed. Not sure if that is desirable or not.
+void RunTabController::onDataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint)
+{
+  emitDataPointChanged(dataPoint);
+}
+
+void RunTabController::onDataPointResultsCleared(const openstudio::UUID& dataPoint) {
+  emitDataPointChanged(dataPoint);
+}
+
+void RunTabController::requestRefresh()
 {
   if (!m_refreshScheduled){
     m_refreshScheduled = true;
@@ -373,6 +401,22 @@ void RunTabController::refresh()
   QTimer::singleShot(0, runView->dataPointRunListView, SLOT(refreshAllViews()));
 }
 
+void RunTabController::emitDataPointChanged(const openstudio::UUID& dataPoint) {
+  QSharedPointer<DataPointRunListController> listController = runView->dataPointRunListView->listController().dynamicCast<DataPointRunListController>();
+  int N = listController->count();
+  for (int i = 0; i < N; ++i){
+    QSharedPointer<OSListItem> item = listController->itemAt(i);
+    if (item){
+      QSharedPointer<DataPointRunListItem> dataPointItem = item.dynamicCast<DataPointRunListItem>();
+      if (dataPointItem){
+        if (dataPointItem->dataPoint().uuid() == dataPoint){
+          listController->emitItemChanged(i);
+        }
+      }
+    }
+  }
+}
+
 DataPointRunListController::DataPointRunListController(const openstudio::analysis::Analysis& analysis)
   : OSListController(), m_analysis(analysis)
 {
@@ -390,6 +434,11 @@ int DataPointRunListController::count()
   return (int)dataPoints.size();
 }
 
+void DataPointRunListController::emitItemChanged(int i)
+{
+  emit itemChanged(i);
+}
+
 DataPointRunListItem::DataPointRunListItem(const openstudio::analysis::DataPoint& dataPoint)
   : OSListItem(), m_dataPoint(dataPoint)
 {
@@ -402,17 +451,31 @@ openstudio::analysis::DataPoint DataPointRunListItem::dataPoint() const
 
 QWidget * DataPointRunItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+
   QSharedPointer<DataPointRunListItem> dataPointRunListItem = dataSource.dynamicCast<DataPointRunListItem>();
   openstudio::analysis::DataPoint dataPoint = dataPointRunListItem->dataPoint();
 
+  // connect signals to DataPointRunItemView 
   DataPointRunItemView* result = new DataPointRunItemView(dataPoint);
   bool test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
-                      result, SLOT(update()));
+                      result, SLOT(checkForUpdate()));
+  OS_ASSERT(test);
+  test = connect(result,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)),
+                 this,SIGNAL(dataPointResultsCleared(const openstudio::UUID&)));
+  OS_ASSERT(test);
+
+  // connect signals to header
+  test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
+                      result->dataPointRunHeaderView, SLOT(requestUpdate()));
+  OS_ASSERT(test);
+  
+  test = connect(cloudMonitor.data(), SIGNAL(cloudStatusChanged(const CloudStatus&)), result->dataPointRunHeaderView, SLOT(requestUpdate()));
   OS_ASSERT(test);
 
   if (dataPoint.topLevelJob()){
     test = dataPoint.topLevelJob()->connect(SIGNAL(treeChanged(const openstudio::UUID&)),
-                                            result->dataPointRunHeaderView, SLOT(update()));
+                                            result->dataPointRunHeaderView, SLOT(requestUpdate()));
     OS_ASSERT(test);
   }
 
@@ -475,7 +538,7 @@ QWidget * DataPointJobItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   DataPointJobItemView* result = new DataPointJobItemView(workflowStepJob);
 
   OS_ASSERT(workflowStepJob.job);
-  bool test = workflowStepJob.job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), result, SLOT(update()));
+  bool test = workflowStepJob.job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), result, SLOT(requestUpdate()));
   OS_ASSERT(test);
 
   return result;

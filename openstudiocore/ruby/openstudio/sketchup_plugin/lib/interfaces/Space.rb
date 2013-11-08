@@ -95,12 +95,12 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       super
-	  
-	  if @entity.deleted?
-		# how did this happen?
-	    return nil
-	  end
-	  
+      
+      if @entity.deleted?
+        # how did this happen?
+        return nil
+      end
+      
       faces = @entity.entities.find_all { |this_entity| this_entity.class == Sketchup::Face }
 
       for face in faces

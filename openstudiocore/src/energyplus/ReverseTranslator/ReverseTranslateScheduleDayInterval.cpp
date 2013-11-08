@@ -93,7 +93,7 @@ OptionalModelObject ReverseTranslator::translateScheduleDayInterval(const Worksp
       catch (std::exception& e) {
         LOG(Warn,"Could not add value (" << *timeString << ", " << *valueUntilTime
             << ") to ScheduleDay being created from " << workspaceObject.briefDescription()
-			<< ", because " << e.what() << ".");
+            << ", because " << e.what() << ".");
       }
     }
     else {

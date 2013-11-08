@@ -52,7 +52,6 @@ namespace detail {
 
   /** Problem_Impl is a AnalysisObject_Impl that is the implementation class for Problem.*/
   class ANALYSIS_API Problem_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
