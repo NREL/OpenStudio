@@ -83,6 +83,7 @@ namespace detail {
       REGISTER_LOGGER("openstudio.runmanager.RubyJob");
 
       void getFiles(const RubyJobBuilder &t_rjb);
+      static std::vector<JobParams> getMergedJobs(const JobParams &t_params);
 
       std::vector<std::pair<int, std::pair<Files, std::string> > > m_inputfiles;
       std::string m_description;

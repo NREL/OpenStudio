@@ -202,6 +202,7 @@ namespace runmanager {
       /// Returns the collection of required files to copy for this job
       std::vector<boost::tuple<std::string, std::string, std::string> > copyRequiredFiles() const;
 
+
       const std::vector<RubyJobBuilder> &mergedJobs() const;
 
 

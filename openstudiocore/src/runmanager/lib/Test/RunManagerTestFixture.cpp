@@ -25,7 +25,7 @@ using openstudio::toPath;
 void RunManagerTestFixture::SetUpTestCase() {
   // set up logging
   logFile = FileLogSink(toPath("./RunManagerTestFixture.log"));
-  logFile->setLogLevel(Debug);
+  logFile->setLogLevel(Trace);
   openstudio::Logger::instance().standardOutLogger().disable();
 }
 

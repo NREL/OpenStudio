@@ -31,7 +31,6 @@
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
-
 #include <QDir>
 
 namespace openstudio {
@@ -183,6 +182,18 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
   } catch (const std::exception &) {}
 
   try {
+    JobParam parameters = t_params.get("ruby_requiredfiles");
+
+    for (std::vector<JobParam>::const_iterator itr = parameters.children.begin();
+         itr != parameters.children.end();
+         ++itr)
+    {
+      m_requiredFiles.push_back(std::make_pair(openstudio::toPath(itr->value), openstudio::toPath(itr->children.at(0).value)));
+    }
+  } catch (const std::exception &) {}
+
+
+  try {
     JobParam parameters = t_params.get("ruby_isuserscriptjob");
 
     std::string value = parameters.children.at(0).value;
@@ -192,6 +203,13 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
       m_userScriptJob = true;
     }
   } catch (const std::exception &) {}
+
+  try {
+    JobParam parameters = t_params.get("ruby_scriptfile");
+    m_script = openstudio::toPath(parameters.children.at(0).value);
+  } catch (const std::exception &) {}
+
+
 }
 
 
@@ -222,7 +240,9 @@ bool RubyJobBuilder::addRequiredFile(const openstudio::path& currentPath,
     p = boost::filesystem::complete(currentPath, relativeTo);
   }
 
+  LOG(Trace, "addRequiredFile: " << openstudio::toString(currentPath) << " to " << openstudio::toString(copyPath) << " relative to: " << openstudio::toString(relativeTo));
   if (boost::filesystem::exists(p)) {
+    LOG(Trace, "addRequiredFile: file exists " << openstudio::toString(p));
     m_requiredFiles.push_back(openstudio::PathPair(currentPath,copyPath));
     return true;
   }
@@ -379,18 +399,36 @@ JobParams RubyJobBuilder::toParams() const
     toolparams.children.push_back(p);
   }
 
+  JobParam requiredFiles("ruby_requiredfiles");
+
+  for (std::vector<std::pair<openstudio::path, openstudio::path> >::const_iterator itr = m_requiredFiles.begin();
+       itr != m_requiredFiles.end();
+       ++itr)
+  {
+    JobParam p(openstudio::toString(itr->first));
+    p.children.push_back(JobParam(openstudio::toString(itr->second)));
+    requiredFiles.children.push_back(p);
+  }
+
 
   JobParams params;
   params.append(scriptparams);
   params.append(inputfilelist);
   params.append(toolparams);
   params.append(copyrequiredfileslist);
+  params.append(requiredFiles);
+
 
   if (m_userScriptJob)
   {
     params.append("ruby_isuserscriptjob", "true");
   } else {
     params.append("ruby_isuserscriptjob", "false");
+  }
+
+  if (!m_script.empty())
+  {
+    params.append("ruby_scriptfile", openstudio::toString(m_script));
   }
 
   return params;

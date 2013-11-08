@@ -28,6 +28,7 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 #include "MergeJobError.hpp"
+#include "WorkItem.hpp"
 
 #include <utilities/time/DateTime.hpp>
 
@@ -35,6 +36,7 @@
 #include <QDateTime>
 
 #include <boost/bind.hpp>
+#include <boost/tuple/tuple_comparison.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -45,7 +47,8 @@ namespace detail {
       const JobParams &t_params,
       const Files &t_files,
       const JobState &t_restoreData)
-    : ToolBasedJob(t_uuid, JobType::Ruby, t_tools, "ruby", t_params, t_files, false, t_restoreData)
+    : ToolBasedJob(t_uuid, JobType::Ruby, t_tools, "ruby", t_params, t_files, false, t_restoreData),
+      m_mergedJobs(getMergedJobs(t_params))
   {
     LOG(Debug, "Creating a RubyJob");
 
@@ -60,7 +63,8 @@ namespace detail {
       const JobParams &t_params,
       const Files &t_files,
       const JobState &t_restoreData)
-    : ToolBasedJob(t_uuid, t_jobType, t_tools, "ruby", t_params, t_files, false, t_restoreData)
+    : ToolBasedJob(t_uuid, t_jobType, t_tools, "ruby", t_params, t_files, false, t_restoreData),
+      m_mergedJobs(getMergedJobs(t_params))
   {
     LOG(Debug, "Creating a RubyJob");
 
@@ -74,6 +78,21 @@ namespace detail {
   { 
     assert(QThread::currentThread() != this);
     shutdownJob();
+  }
+
+  std::vector<JobParams> RubyJob::getMergedJobs(const JobParams &t_params)
+  {
+    std::vector<RubyJobBuilder> jobs = RubyJobBuilder(t_params).mergedJobs();
+
+    std::vector<JobParams> jp;
+    for (std::vector<RubyJobBuilder>::const_iterator itr = jobs.begin();
+         itr != jobs.end();
+         ++itr)
+    {
+      jp.push_back(itr->toParams());
+    }
+
+    return jp;
   }
 
   ToolVersion RubyJob::getToolVersionImpl(const std::string &t_toolName) const
@@ -118,8 +137,8 @@ namespace detail {
 
     RubyJobBuilder rjbparent(usparentjob->params());
     RubyJobBuilder rjbthis(usjob->params());
-
-    if (rjbparent.requiredFiles() != rjbthis.requiredFiles())
+   
+    if (rjbparent.copyRequiredFiles() != rjbthis.copyRequiredFiles())
     {
       throw MergeJobError("Cannot merge user script jobs, the required files do not match.");
     }
@@ -174,9 +193,10 @@ namespace detail {
       files.append(*itr);
     }
 
-    setFiles(files);
-
+    std::set<FileInfo> filteredfis(files.files().begin(), files.files().end()); // get the unique set of files
+    setFiles(Files(std::vector<FileInfo>(filteredfis.begin(), filteredfis.end())));
   }
+
   void RubyJob::startHandlerImpl()
   {
     LOG(Info, "Starting job");
@@ -233,6 +253,7 @@ namespace detail {
       }
     }
 
+
     // Add tool parameters that go straight to ruby
     std::vector<std::string> toolparams = rjb.getToolParameters();
 
@@ -260,10 +281,22 @@ namespace detail {
       }
     }
 
+
     // Add ruby script file name
     try {
-      addRequiredFile(inputfiles.getLastByExtension("rb"), toPath("in.rb"));
+      addRequiredFile(rjb.toWorkItem().files.getLastByExtension("rb"), toPath("in.rb"));
+//      addRequiredFile(inputfiles.getLastByExtension("rb"), toPath("in.rb"));
       addParameter("ruby", toString("in.rb"));
+
+      for (size_t i = 0; i < rjb.mergedJobs().size(); ++i)
+      {
+        openstudio::path p = openstudio::toPath(boost::lexical_cast<std::string>(i+1));
+
+        FileInfo fi = rjb.mergedJobs()[i].toWorkItem().files.getLastByExtension("rb");
+        fi.prependRequiredFilePath(p);
+
+        addRequiredFile(fi, p / openstudio::toPath("in.rb"));
+      }
     } catch (const std::exception &) {
       throw std::runtime_error("No rb file found in input files");
     }
