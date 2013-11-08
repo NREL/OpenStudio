@@ -33,6 +33,8 @@ SimFile::SimFile(openstudio::path path)
   // This means that simread has to have been run for this to work
   openstudio::path lfrPath = path.replace_extension(openstudio::toPath("lfr").string());
   m_hasLfr = readLfr(openstudio::toQString(lfrPath));
+  openstudio::path nfrPath = path.replace_extension(openstudio::toPath("nfr").string());
+  m_hasNfr = readNfr(openstudio::toQString(nfrPath));
 }
 
 bool SimFile::computeDateTimes(QVector<QString> day, QVector<QString> time)
@@ -175,26 +177,282 @@ bool SimFile::readLfr(QString fileName)
   if(!computeDateTimes(day,time))
   {
     clearLfr();
-    LOG(Error,"Failed to compute date and time objects");
+    m_dateTimes.clear();
+    LOG(Error,"Failed to compute date and time objects from LFR input");
     return false;
   }
   return true;
 }
 
-openstudio::TimeSeries SimFile::deltaP(int nr) const
+void SimFile::clearNfr()
 {
-  return openstudio::TimeSeries(m_dateTimes,createVector(m_dP[nr]),"Pa");
+  m_T.clear();
+  m_P.clear();
+  m_D.clear();
 }
 
-openstudio::TimeSeries SimFile::flow0(int nr) const
+bool SimFile::readNfr(QString fileName)
 {
-  return openstudio::TimeSeries(m_dateTimes,createVector(m_F0[nr]),"kg/s");
+  clearNfr();
+  QVector<QString> day;
+  QVector<QString> time;
+  QFile file(fileName);
+  if(!file.open(QFile::ReadOnly))
+  {
+    LOG(Error,"Failed to open NFR file '" << fileName.toStdString() << "'");
+    return false;
+  }
+  QTextStream textStream(&file);
+  QMap<int,int> nrMap;
+  // Read the header
+  QString header = textStream.readLine();
+  if(header.isNull())
+  {
+    LOG(Error,"No data in LFR file '" << fileName.toStdString() << "'");
+    return false;
+  }
+  QStringList row = header.split('\t');
+  int ncols = 6;
+  if(row.size() != ncols && row.size() != ncols+2)
+  {
+    LOG(Error,"NFR file has " << row.size() << " columns, not the expected " << ncols);
+    return false;
+  }
+  // Read the data
+  QString line;
+  while(!(line=textStream.readLine()).isNull())
+  {
+    QStringList row = line.split('\t');
+    if(row.size() != ncols && row.size() != ncols+2)
+    {
+      clearNfr();
+      LOG(Error,"NFR data line has " << row.size() << " columns, not the expected " << ncols);
+      return false;
+    }
+    if(time.size())
+    {
+      if(time[time.size()-1] != row[1])
+      {
+        day << row[0];
+        time << row[1];
+      }
+    }
+    else
+    {
+      day << row[0];
+      time << row[1];
+    }
+    bool convOk;
+    int nr = row[2].toInt(&convOk);
+    if(!convOk)
+    {
+      clearNfr();
+      LOG(Error,"Invalid node number '" << row[2].toStdString() << "'");
+      return false;
+    }
+    if(!nrMap.contains(nr))
+    {
+      int sz = nrMap.size();
+      nrMap[nr] = sz;
+      m_T.resize(sz+1);
+      m_P.resize(sz+1);
+      m_D.resize(sz+1);
+    }
+    double T = row[3].toDouble(&convOk);
+    if(!convOk)
+    {
+      clearNfr();
+      LOG(Error,"Invalid temperature '" << row[3].toStdString() << "'");
+      return false;
+    }
+    double P = row[4].toDouble(&convOk);
+    if(!convOk)
+    {
+      clearNfr();
+      LOG(Error,"Invalid pressure '" << row[4].toStdString() << "'");
+      return false;
+    }
+    double D = row[5].toDouble(&convOk);
+    if(!convOk)
+    {
+      if(nr==0)
+      {
+        D=0.0;
+      }
+      else
+      {
+        clearNfr();
+        LOG(Error,"Invalid density '" << row[5].toStdString() << "'");
+        return false;
+      }
+    }
+    m_T[nrMap[nr]].push_back(T);
+    m_P[nrMap[nr]].push_back(P);
+    m_D[nrMap[nr]].push_back(D);
+
+  }
+  // Unwind the zone number map;
+  QList<int> keys = nrMap.keys();
+  m_nodeNr.resize(keys.size());
+  for(int i=0;i<keys.size();i++)
+  {
+    m_nodeNr[nrMap[keys[i]]] = keys[i];
+  }
+  file.close();
+  // Something should probably be done here to make sure that the times here match up with what we
+  // already have. For now, if nothing is known about the dates, then try to compute it
+  if(m_dateTimes.size() == 0)
+  {
+    if(!computeDateTimes(day,time))
+    {
+      clearLfr();
+      m_dateTimes.clear();
+      LOG(Error,"Failed to compute date and time objects from NFR input");
+      return false;
+    }
+  }
+  return true;
 }
 
-openstudio::TimeSeries SimFile::flow1(int nr) const
+boost::optional<openstudio::TimeSeries> SimFile::pathDeltaP(int nr) const
 {
-  return openstudio::TimeSeries(m_dateTimes,createVector(m_F1[nr]),"kg/s");
+  int index = m_pathNr.indexOf(nr);
+  if(index == -1)
+  {
+    return boost::optional<openstudio::TimeSeries>();
+  }
+  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_dP[index]),"Pa"));
 }
+
+boost::optional<openstudio::TimeSeries> SimFile::pathFlow0(int nr) const
+{
+  int index = m_pathNr.indexOf(nr);
+  if(index == -1)
+  {
+    return boost::optional<openstudio::TimeSeries>();
+  }
+  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_F0[index]),"kg/s"));
+}
+
+boost::optional<openstudio::TimeSeries> SimFile::pathFlow1(int nr) const
+{
+  int index = m_pathNr.indexOf(nr);
+  if(index == -1)
+  {
+    return boost::optional<openstudio::TimeSeries>();
+  }
+  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_F1[index]),"kg/s"));
+}
+
+boost::optional<openstudio::TimeSeries> SimFile::pathFlow(int nr) const
+{
+  int index = m_pathNr.indexOf(nr);
+  if(index == -1)
+  {
+    return boost::optional<openstudio::TimeSeries>();
+  }
+  openstudio::Vector f0 = openstudio::createVector(m_F0[index]);
+  openstudio::Vector f1 = openstudio::createVector(m_F1[index]);
+  // Need to confirm that the total flow is f0+f1, since it also could be f0-f1
+  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,f0+f1,"kg/s"));
+}
+
+boost::optional<openstudio::TimeSeries> SimFile::nodeTemperature(int nr) const
+{
+  int index = m_nodeNr.indexOf(nr);
+  if(index == -1)
+  {
+    return boost::optional<openstudio::TimeSeries>();
+  }
+  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_T[index]),"K"));
+}
+
+boost::optional<openstudio::TimeSeries> SimFile::nodePressure(int nr) const
+{
+  int index = m_nodeNr.indexOf(nr);
+  if(index == -1)
+  {
+    return boost::optional<openstudio::TimeSeries>();
+  }
+  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_P[index]),"Pa"));
+}
+
+boost::optional<openstudio::TimeSeries> SimFile::nodeDensity(int nr) const
+{
+  int index = m_nodeNr.indexOf(nr);
+  if(index == -1)
+  {
+    return boost::optional<openstudio::TimeSeries>();
+  }
+  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_T[index]),"kg/m^3"));
+}
+
+/*
+
+This code is a holdover from earlier versions that also read in contaminants. Hopefully, this text-based
+version will not ever be needed. Also, the current OpenStudio implementation only supports airflow and
+no contaminant transport.
+
+bool Contaminants::read(QString fileName)
+{
+  bool ok=false;
+  clear();
+  QFile file(fileName);
+  if(file.open(QFile::ReadOnly))
+  {
+    QTextStream textStream(&file);
+    QString line;
+    QString header = textStream.readLine();
+    if(header.isNull())
+      return false;
+    QStringList headerList = header.split('\t');
+    int ncols = headerList.size();
+    for(int i=3;i<ncols;i++)
+    {
+      m_nr.push_back(headerList[i].toInt(&ok));
+      if(!ok)return false;
+    }
+    // The number of zones is ncols - 3 (date,time,ctm) - 1 (ambient)
+    m_mf.resize(ncols-3);
+    while(!(line=textStream.readLine()).isNull())
+    {
+      QStringList row = line.split('\t');
+      if(row.size() != ncols)
+      {
+        clear();
+        return false;
+      }
+      m_day << row[0];
+      m_time << row[1];
+      for(int i=3;i<ncols;i++)
+        m_mf[i-3] << row[i].toDouble();
+    }
+    file.close();
+    if(!computeSeconds())
+      m_s.clear();
+    ok=true;
+  }
+  return ok;
+}
+
+QVector<double> Contaminants::integrate()
+{
+  QVector<double> value(m_mf.size());
+  int n = m_mf[0].size();
+  for(int i=1;i<m_mf.size();i++)
+    n = qMin(n,m_mf[i].size());
+  n = qMin(n,m_s.size());
+  for(int i=0;i<m_mf.size();i++)
+  {
+    value[i]=0.0;
+    for(int j=1;j<n;j++)
+    {
+      value[i] += 0.5*(m_mf[i][j-1]+m_mf[i][j])*(m_s[j]-m_s[j-1]);
+    }
+  }
+  return value;
+}
+*/
 
 } // contam
 } // openstudio

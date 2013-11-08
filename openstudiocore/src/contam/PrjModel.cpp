@@ -226,8 +226,7 @@ std::vector<TimeSeries> Model::zoneInfiltration(SimFile *sim)
   // somewhat strange way to avoid taking too much advantage of the specifics 
   // of the text form outputs.
   std::vector<TimeSeries> results;
-  // For now, assume one-way flow
-  std::vector<std::vector<double> > flow0 = sim->F0();
+  //std::vector<std::vector<double> > flow0 = sim->F0();
   std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
   unsigned int ntimes = sim->dateTimes().size();
   for(unsigned int i=0; i<m_zones.size(); i++)
@@ -238,24 +237,42 @@ std::vector<TimeSeries> Model::zoneInfiltration(SimFile *sim)
     {
       if(paths[i][j] > 0) // Positive values are infiltration
       {
-        Vector flow0 = sim->flow0(paths[i][j]-1).values();
-        for(unsigned int k=0; k<ntimes; k++)
+        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(paths[i][j]);
+        if(optFlow)
         {
-          if(flow0[k] > 0)
+          Vector flow = optFlow.get().values();
+          for(unsigned int k=0; k<ntimes; k++)
           {
-            inf[k] += flow0[k];
+            if(flow[k] > 0)
+            {
+              inf[k] += flow[k];
+            }
           }
+        }
+        else
+        {
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // results file for some reason - which unlikely to be accidental. So there must be a good reason
+          // for getting here, and for now we won't issue a warning.
         }
       }
       else // Negative values are infiltration
       {
-        Vector flow0 = sim->flow0(-paths[i][j]-1).values();
-        for(unsigned int k=0; k<ntimes; k++)
+        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(paths[i][j]);
+        if(optFlow)
         {
-          if(flow0[k] < 0)
+          Vector flow = optFlow.get().values();
+          for(unsigned int k=0; k<ntimes; k++)
           {
-            inf[k] -= flow0[k];
+            if(flow[k] < 0)
+            {
+              inf[k] -= flow[k];
+            }
           }
+        }
+        else
+        {
+          // See above comment
         }
       }
     }
