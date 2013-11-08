@@ -107,6 +107,9 @@ namespace runmanager {
     public:
       RubyJobBuilder(bool t_userScriptJob = false);
 
+      /// Construct a RubyJobBuilder from a json file
+      RubyJobBuilder(const openstudio::path &t_json);
+
       /// Construct a RubyJobBuilder from an existing set of JobParams (useful when loading from
       /// the database).
       RubyJobBuilder(const JobParams &t_params);

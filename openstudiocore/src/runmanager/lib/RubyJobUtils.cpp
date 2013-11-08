@@ -20,6 +20,7 @@
 #include "RubyJobUtils.hpp"
 #include "RunManager.hpp"
 #include "WorkItem.hpp"
+#include "JSON.hpp"
 
 #include <ruleset/OSArgument.hpp>
 
@@ -62,6 +63,13 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem)
 
 
   initializeFromParams(t_workItem.params);
+}
+
+/// Construct a RubyJobBuilder from a json file
+RubyJobBuilder::RubyJobBuilder(const openstudio::path &t_json)
+  : m_userScriptJob(false)
+{
+  initializeFromParams(openstudio::runmanager::detail::JSON::toVectorOfJobParam(t_json));
 }
 
 RubyJobBuilder::RubyJobBuilder(const JobParams &t_params)

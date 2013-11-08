@@ -18,6 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+
+#include <QElapsedTimer>
+
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 #include <runmanager/lib/JobFactory.hpp>
@@ -263,6 +266,7 @@ openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t
   wf.addJob(rubyjobbuilder3.toWorkItem());
 
 
+  wf.addJob(openstudio::runmanager::JobType::ModelToIdf);
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
@@ -282,6 +286,9 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
   std::string mergedosm;
   std::string unmergedosm;
 
+  std::string mergedidf;
+  std::string unmergedidf;
+
   {
     boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(resourcesPath() / toPath("/runmanager/SimpleModel.osm"));
     ASSERT_TRUE(m);
@@ -290,6 +297,9 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     originalosm = ss.str();
   }
 
+
+  QElapsedTimer timer;
+  timer.start();
 
   { 
     openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged.db"), true, true);
@@ -301,10 +311,11 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
 
     ASSERT_EQ(1u, j.children().size());
     ASSERT_EQ(1u, j.children()[0].children().size());
-    ASSERT_TRUE(j.children()[0].children()[0].children().empty());
+    ASSERT_EQ(1u, j.children()[0].children()[0].children().size());
+    ASSERT_TRUE(j.children()[0].children()[0].children()[0].children().empty());
 
     rm.enqueue(j, true);
-    EXPECT_EQ(3u, rm.getJobs().size());
+    EXPECT_EQ(4u, rm.getJobs().size());
     rm.setPaused(false);
     rm.waitForFinished();
 
@@ -315,7 +326,16 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     std::stringstream ss;
     m->toIdfFile().print(ss);
     unmergedosm = ss.str();
+
+    openstudio::runmanager::FileInfo idf = j.treeOutputFiles().getLastByExtension("idf");
+    boost::optional<openstudio::IdfFile> f = openstudio::IdfFile::load(idf.fullPath);
+    ASSERT_TRUE(f);
+    ss.str("");
+    f->print(ss);
+    unmergedidf = ss.str();
   }
+
+  qint64 unmergedtime = timer.restart();
 
   { 
     openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeMerged.db"), true, true);
@@ -327,14 +347,16 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
 
     ASSERT_EQ(1u, j.children().size());
     ASSERT_EQ(1u, j.children()[0].children().size());
-    ASSERT_TRUE(j.children()[0].children()[0].children().empty());
+    ASSERT_EQ(1u, j.children()[0].children()[0].children().size());
+    ASSERT_TRUE(j.children()[0].children()[0].children()[0].children().empty());
 
     openstudio::runmanager::JobFactory::optimizeJobTree(j);
 
-    EXPECT_TRUE(j.children().empty());
+    EXPECT_EQ(1u, j.children().size());
+    EXPECT_TRUE(j.children()[0].children().empty());
 
     rm.enqueue(j, true);
-    EXPECT_EQ(1u, rm.getJobs().size());
+    EXPECT_EQ(2u, rm.getJobs().size());
     rm.setPaused(false);
     rm.waitForFinished();
 
@@ -345,14 +367,31 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     std::stringstream ss;
     m->toIdfFile().print(ss);
     mergedosm = ss.str();
+
+    openstudio::runmanager::FileInfo idf = j.treeOutputFiles().getLastByExtension("idf");
+    boost::optional<openstudio::IdfFile> f = openstudio::IdfFile::load(idf.fullPath);
+    ASSERT_TRUE(f);
+    ss.str("");
+    f->print(ss);
+    mergedidf = ss.str();
   }
+
+  qint64 mergedtime = timer.restart();
 
   EXPECT_FALSE(originalosm.empty());
   EXPECT_FALSE(mergedosm.empty());
   EXPECT_FALSE(unmergedosm.empty());
 
-  EXPECT_EQ(mergedosm, unmergedosm);
+  EXPECT_NE(originalosm, unmergedosm);
   EXPECT_NE(originalosm, mergedosm);
+
+  EXPECT_FALSE(mergedidf.empty());
+  EXPECT_FALSE(unmergedidf.empty());
+
+  // expected a merged run to be at least 2x faster than an unmerged run
+  EXPECT_LT(2*mergedtime, unmergedtime);
+
+  std::cout << "MergedTime: " << mergedtime << " UnmergedTime " << unmergedtime << std::endl;
 }
 
 TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)

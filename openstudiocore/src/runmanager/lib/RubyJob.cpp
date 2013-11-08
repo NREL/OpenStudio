@@ -29,6 +29,7 @@
 #include "JobOutputCleanup.hpp"
 #include "MergeJobError.hpp"
 #include "WorkItem.hpp"
+#include "JSON.hpp"
 
 #include <utilities/time/DateTime.hpp>
 
@@ -287,6 +288,7 @@ namespace detail {
       addRequiredFile(rjb.toWorkItem().files.getLastByExtension("rb"), toPath("in.rb"));
 //      addRequiredFile(inputfiles.getLastByExtension("rb"), toPath("in.rb"));
       addParameter("ruby", toString("in.rb"));
+      runmanager::detail::JSON::saveJSON(rjb.toParams().params(), outdir()/openstudio::toPath("params.json"));
 
       for (size_t i = 0; i < rjb.mergedJobs().size(); ++i)
       {
@@ -296,6 +298,8 @@ namespace detail {
         fi.prependRequiredFilePath(p);
 
         addRequiredFile(fi, p / openstudio::toPath("in.rb"));
+        boost::filesystem::create_directory(outdir()/p);
+        runmanager::detail::JSON::saveJSON(rjb.mergedJobs()[i].toParams().params(), outdir()/p/openstudio::toPath("params.json"));
       }
     } catch (const std::exception &) {
       throw std::runtime_error("No rb file found in input files");
