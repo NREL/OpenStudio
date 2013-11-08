@@ -30,7 +30,6 @@ namespace detail {
 
   /** RefrigerationSubcoolerLiquidSuction_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSubcoolerLiquidSuction.*/
   class MODEL_API RefrigerationSubcoolerLiquidSuction_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

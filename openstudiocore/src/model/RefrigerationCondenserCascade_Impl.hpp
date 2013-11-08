@@ -30,7 +30,6 @@ namespace detail {
 
   /** RefrigerationCondenserCascade_Impl is a ModelObject_Impl that is the implementation class for RefrigerationCondenserCascade.*/
   class MODEL_API RefrigerationCondenserCascade_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

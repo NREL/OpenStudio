@@ -33,7 +33,6 @@ namespace detail {
 
   /** RefrigerationWalkInZoneBoundary_Impl is a ModelObject_Impl that is the implementation class for RefrigerationWalkInZoneBoundary.*/
   class MODEL_API RefrigerationWalkInZoneBoundary_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

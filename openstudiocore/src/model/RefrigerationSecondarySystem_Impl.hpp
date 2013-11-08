@@ -37,7 +37,6 @@ namespace detail {
 
   /** RefrigerationSecondarySystem_Impl is a ParentObject_Impl that is the implementation class for RefrigerationSecondarySystem.*/
   class MODEL_API RefrigerationSecondarySystem_Impl : public ParentObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
