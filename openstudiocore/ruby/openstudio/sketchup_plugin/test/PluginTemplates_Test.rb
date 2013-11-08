@@ -37,10 +37,10 @@ class PluginTemplates_Test < Test::Unit::TestCase
       assert((not model.empty?))
       model = model.get
       
-      # check that all space load instances have a space or spacetype
+      # check that all space load instances are associated with a space type
       spaceLoads = model.getSpaceLoads
       spaceLoads.each do |spaceLoad|
-        assert((not (spaceLoad.space.empty? and spaceLoad.spaceType.empty?) ))
+        assert((not spaceLoad.spaceType.empty?))
       end
     end
   end
