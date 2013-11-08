@@ -104,7 +104,13 @@ ResultsTabController::ResultsTabController()
 
     resultsView->dataPointCalibrationListView->setListController(m_dataPointCalibrationListController);
     resultsView->dataPointCalibrationListView->setDelegate(m_dataPointCalibrationItemDelegate);
-   }
+   
+    boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
+    if(cloudAnalysisDriver){
+      bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointDetailsComplete(const openstudio::UUID&, const openstudio::UUID&)),this,SLOT(dataPointDetailsComplete(const openstudio::UUID&, const openstudio::UUID&)));
+      OS_ASSERT(bingo);
+    }
+  }
 }
 
 ResultsTabController::~ResultsTabController()
@@ -231,10 +237,6 @@ void ResultsTabController::downloadResults()
             if (sameSession){
 
               bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
-              if (!success){
-                // could not request this datapoint's results right now, set this for later?
-                dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
-              }
 
             }else{
               QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");
@@ -243,6 +245,24 @@ void ResultsTabController::downloadResults()
             // prevent people from clicking this over and over again? should there be another state?
             resultsView->enableDownloadResultsButton(false, sameSession);
           }
+        }
+      }
+    }
+  }
+}
+
+void ResultsTabController::dataPointDetailsComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint)
+{
+  if( resultsView ){
+    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    if (!selectedItems.empty()){
+      DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
+      if (dataPointResultListItem){
+        analysis::DataPoint selectedDataPoint = dataPointResultListItem->dataPoint();
+        if (selectedDataPoint.uuid() == dataPoint){
+          enableDownloadResultsButton();
+          enableViewFileButton();
+          enableOpenDirectoryButton();
         }
       }
     }
