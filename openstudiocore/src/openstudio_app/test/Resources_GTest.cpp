@@ -63,6 +63,10 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
     BOOST_FOREACH(const model::SpaceLoad& spaceLoad, spaceLoads){
       EXPECT_TRUE(spaceLoad.spaceType());
     }
+
+    // uncomment this to save the version translated file to the original path
+    // DO NOT leave this in the test execution when you commit!
+    //model->save(path, true);
   }
 }
 
@@ -75,4 +79,8 @@ TEST_F(OpenStudioAppFixture, Resources_HVACLibrary)
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(hvacPath);
   ASSERT_TRUE(model);
+
+  // uncomment this to save the version translated file to the original path
+  // DO NOT leave this in the test execution when you commit!
+  //model->save(hvacPath, true);
 }

@@ -30,10 +30,10 @@ class PluginTemplates_Test < Test::Unit::TestCase
     templates = Dir.glob(templates_path + "/*.osm")
     assert((not templates.empty?))
     templates.each do |template|
-      puts template
+      path = OpenStudio::Path.new(template)
       
       vt = OpenStudio::OSVersion::VersionTranslator.new
-      model = vt.loadModel(OpenStudio::Path.new(template))
+      model = vt.loadModel(path)
       assert((not model.empty?))
       model = model.get
       
@@ -43,6 +43,10 @@ class PluginTemplates_Test < Test::Unit::TestCase
         assert((not spaceLoad.spaceType.empty?))
       end
     end
+    
+    # uncomment this to save the version translated file to the original path
+    # DO NOT leave this in the test execution when you commit!
+    #model.save(path, true)
   end
 
 end
