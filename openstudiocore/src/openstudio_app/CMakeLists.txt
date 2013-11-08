@@ -249,7 +249,7 @@ SET( ${target_name}_test_src
 )
 
 SET (${target_name}_test_depends
-  ${${target_name}_depends} 
+  ${depends} 
 )
 
 CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}" )
