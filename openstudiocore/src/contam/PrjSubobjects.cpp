@@ -1,3 +1,21 @@
+/**********************************************************************
+*  Copyright (c) 2013, The Pennsylvania State University.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
 #include "PrjSubobjects.hpp"
 
 namespace openstudio {
@@ -5,210 +23,210 @@ namespace contam {
 
 WeatherData::WeatherData(RX Tambt,RX barpres,RX windspd,RX winddir,RX relhum,int daytyp,int uTa,int ubP,int uws,int uwd)
 {
-    d = new WeatherDataPrivate(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
+  d = new WeatherDataPrivate(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
 }
 
 STRING WeatherData::write()
 {
-    return d->write();
+  return d->write();
 }
 
 void WeatherData::read(Reader &input)
 {
-    d->read(input);
+  d->read(input);
 }
 
 RX WeatherData::Tambt() const
 {
-    return d->Tambt;
+  return d->Tambt;
 }
 
 void WeatherData::setTambt(const RX Tambt)
 {
-    d->Tambt = Tambt;
+  d->Tambt = Tambt;
 }
 
 RX WeatherData::barpres() const
 {
-    return d->barpres;
+  return d->barpres;
 }
 
 void WeatherData::setBarpres(const RX barpres)
 {
-    d->barpres = barpres;
+  d->barpres = barpres;
 }
 
 RX WeatherData::windspd() const
 {
-    return d->windspd;
+  return d->windspd;
 }
 
 void WeatherData::setWindspd(const RX windspd)
 {
-    d->windspd = windspd;
+  d->windspd = windspd;
 }
 
 RX WeatherData::winddir() const
 {
-    return d->winddir;
+  return d->winddir;
 }
 
 void WeatherData::setWinddir(const RX winddir)
 {
-    d->winddir = winddir;
+  d->winddir = winddir;
 }
 
 RX WeatherData::relhum() const
 {
-    return d->relhum;
+  return d->relhum;
 }
 
 void WeatherData::setRelhum(const RX relhum)
 {
-    d->relhum = relhum;
+  d->relhum = relhum;
 }
 
 int WeatherData::daytyp() const
 {
-    return d->daytyp;
+  return d->daytyp;
 }
 
 void WeatherData::setDaytyp(const int daytyp)
 {
-    d->daytyp = daytyp;
+  d->daytyp = daytyp;
 }
 
 int WeatherData::uTa() const
 {
-    return d->uTa;
+  return d->uTa;
 }
 
 void WeatherData::setUTa(const int uTa)
 {
-    d->uTa = uTa;
+  d->uTa = uTa;
 }
 
 int WeatherData::ubP() const
 {
-    return d->ubP;
+  return d->ubP;
 }
 
 void WeatherData::setUbP(const int ubP)
 {
-    d->ubP = ubP;
+  d->ubP = ubP;
 }
 
 int WeatherData::uws() const
 {
-    return d->uws;
+  return d->uws;
 }
 
 void WeatherData::setUws(const int uws)
 {
-    d->uws = uws;
+  d->uws = uws;
 }
 
 int WeatherData::uwd() const
 {
-    return d->uwd;
+  return d->uwd;
 }
 
 void WeatherData::setUwd(const int uwd)
 {
-    d->uwd = uwd;
+  d->uwd = uwd;
 }
 
 Icon::Icon(int icon,int col,int row,int nr)
 {
-    d = new IconPrivate(icon,col,row,nr);
+  d = new IconPrivate(icon,col,row,nr);
 }
 
 STRING Icon::write()
 {
-    return d->write();
+  return d->write();
 }
 
 void Icon::read(Reader &input)
 {
-    d->read(input);
+  d->read(input);
 }
 
 int Icon::icon() const
 {
-    return d->icon;
+  return d->icon;
 }
 
 void Icon::setIcon(const int icon)
 {
-    d->icon = icon;
+  d->icon = icon;
 }
 
 int Icon::col() const
 {
-    return d->col;
+  return d->col;
 }
 
 void Icon::setCol(const int col)
 {
-    d->col = col;
+  d->col = col;
 }
 
 int Icon::row() const
 {
-    return d->row;
+  return d->row;
 }
 
 void Icon::setRow(const int row)
 {
-    d->row = row;
+  d->row = row;
 }
 
 int Icon::nr() const
 {
-    return d->nr;
+  return d->nr;
 }
 
 void Icon::setNr(const int nr)
 {
-    d->nr = nr;
+  d->nr = nr;
 }
 
 
 
 bool Icon::isWall()
 {
-    return (d->icon >= WL_EW) && (d->icon <= WL_NESW);
+  return (d->icon >= WL_EW) && (d->icon <= WL_NESW);
 }
 
 uint Icon::bits()
 {
-    if(isWall())
-        switch(d->icon)
-        {
-        case WL_EW:
-            return BIT_EW;
-        case WL_NS:
-            return BIT_NS;
-        case WL_ES:
-            return BIT_ES;
-        case WL_SW:
-            return BIT_SW;
-        case WL_NW:
-            return BIT_NW;
-        case WL_NE:
-            return BIT_NE;
-        case WL_NES:
-            return BIT_NES;
-        case WL_ESW:
-            return BIT_ESW;
-        case WL_NSW:
-            return BIT_NSW;
-        case WL_NEW:
-            return BIT_NEW;
-        case WL_NESW:
-            return BIT_NESW;
-        }
-    return 0;
+  if(isWall())
+    switch(d->icon)
+  {
+    case WL_EW:
+      return BIT_EW;
+    case WL_NS:
+      return BIT_NS;
+    case WL_ES:
+      return BIT_ES;
+    case WL_SW:
+      return BIT_SW;
+    case WL_NW:
+      return BIT_NW;
+    case WL_NE:
+      return BIT_NE;
+    case WL_NES:
+      return BIT_NES;
+    case WL_ESW:
+      return BIT_ESW;
+    case WL_NSW:
+      return BIT_NSW;
+    case WL_NEW:
+      return BIT_NEW;
+    case WL_NESW:
+      return BIT_NESW;
+  }
+  return 0;
 }
 
 FanDataPoint::FanDataPoint(RX mF,int u_mF,RX dP,int u_dP,RX rP,int u_rP):m_mF(mF),m_u_mF(u_mF),m_dP(dP),m_u_dP(u_dP),m_rP(rP),m_u_rP(u_rP)
@@ -216,79 +234,79 @@ FanDataPoint::FanDataPoint(RX mF,int u_mF,RX dP,int u_dP,RX rP,int u_rP):m_mF(mF
 
 void FanDataPoint::read(Reader &input)
 {
-    m_mF = input.readNumber<RX>(FILELINE);
-    m_u_mF = input.read<int>(FILELINE);
-    m_dP = input.readNumber<RX>(FILELINE);
-    m_u_dP = input.read<int>(FILELINE);
-    m_rP = input.readNumber<RX>(FILELINE);
-    m_u_rP = input.read<int>(FILELINE);
+  m_mF = input.readNumber<RX>(FILELINE);
+  m_u_mF = input.read<int>(FILELINE);
+  m_dP = input.readNumber<RX>(FILELINE);
+  m_u_dP = input.read<int>(FILELINE);
+  m_rP = input.readNumber<RX>(FILELINE);
+  m_u_rP = input.read<int>(FILELINE);
 }
 
 STRING FanDataPoint::write()
 {
-    STRING string;
-    string += TO_STRING(m_mF) + ' ' + TO_STRING(m_u_mF) + ' ' + TO_STRING(m_dP) + ' ' + TO_STRING(m_u_dP) + ' ' + TO_STRING(m_rP) + ' ' + TO_STRING(m_u_rP) + '\n';
-    return string;
+  STRING string;
+  string += TO_STRING(m_mF) + ' ' + TO_STRING(m_u_mF) + ' ' + TO_STRING(m_dP) + ' ' + TO_STRING(m_u_dP) + ' ' + TO_STRING(m_rP) + ' ' + TO_STRING(m_u_rP) + '\n';
+  return string;
 }
 
 RX FanDataPoint::mF() const
 {
-    return m_mF;
+  return m_mF;
 }
 
 void FanDataPoint::setMF(const RX mF)
 {
-    m_mF = mF;
+  m_mF = mF;
 }
 
 int FanDataPoint::u_mF() const
 {
-    return m_u_mF;
+  return m_u_mF;
 }
 
 void FanDataPoint::setU_mF(const int u_mF)
 {
-    m_u_mF = u_mF;
+  m_u_mF = u_mF;
 }
 
 RX FanDataPoint::dP() const
 {
-    return m_dP;
+  return m_dP;
 }
 
 void FanDataPoint::setDP(const RX dP)
 {
-    m_dP = dP;
+  m_dP = dP;
 }
 
 int FanDataPoint::u_dP() const
 {
-    return m_u_dP;
+  return m_u_dP;
 }
 
 void FanDataPoint::setU_dP(const int u_dP)
 {
-    m_u_dP = u_dP;
+  m_u_dP = u_dP;
 }
 
 RX FanDataPoint::rP() const
 {
-    return m_rP;
+  return m_rP;
 }
 
 void FanDataPoint::setRP(const RX rP)
 {
-    m_rP = rP;
+  m_rP = rP;
 }
 
 int FanDataPoint::u_rP() const
 {
-    return m_u_rP;
+  return m_u_rP;
 }
 
 void FanDataPoint::setU_rP(const int u_rP)
 {
-    m_u_rP = u_rP;
+  m_u_rP = u_rP;
 }
 
 DataPoint::DataPoint(RX x,RX y):m_x(x),m_y(y)
@@ -296,35 +314,35 @@ DataPoint::DataPoint(RX x,RX y):m_x(x),m_y(y)
 
 void DataPoint::read(Reader &input)
 {
-    m_x = input.readNumber<RX>(FILELINE);
-    m_y = input.readNumber<RX>(FILELINE);
+  m_x = input.readNumber<RX>(FILELINE);
+  m_y = input.readNumber<RX>(FILELINE);
 }
 
 STRING DataPoint::write()
 {
-    STRING string;
-    string += TO_STRING(m_x) + ' ' + TO_STRING(m_y) + '\n';
-    return string;
+  STRING string;
+  string += TO_STRING(m_x) + ' ' + TO_STRING(m_y) + '\n';
+  return string;
 }
 
 RX DataPoint::x() const
 {
-    return m_x;
+  return m_x;
 }
 
 void DataPoint::setX(const RX x)
 {
-    m_x = x;
+  m_x = x;
 }
 
 RX DataPoint::y() const
 {
-    return m_y;
+  return m_y;
 }
 
 void DataPoint::setY(const RX y)
 {
-    m_y = y;
+  m_y = y;
 }
 
 AirflowSubelementData::AirflowSubelementData(int nr,RX relHt,int filt):m_nr(nr),m_relHt(relHt),m_filt(filt)
@@ -332,46 +350,46 @@ AirflowSubelementData::AirflowSubelementData(int nr,RX relHt,int filt):m_nr(nr),
 
 void AirflowSubelementData::read(Reader &input)
 {
-    m_nr = input.read<int>(FILELINE);
-    m_relHt = input.readNumber<RX>(FILELINE);
-    m_filt = input.read<int>(FILELINE);
+  m_nr = input.read<int>(FILELINE);
+  m_relHt = input.readNumber<RX>(FILELINE);
+  m_filt = input.read<int>(FILELINE);
 }
 
 STRING AirflowSubelementData::write()
 {
-    STRING string;
-    string += TO_STRING(m_nr) + ' ' + TO_STRING(m_relHt) + ' ' + TO_STRING(m_filt) + '\n';
-    return string;
+  STRING string;
+  string += TO_STRING(m_nr) + ' ' + TO_STRING(m_relHt) + ' ' + TO_STRING(m_filt) + '\n';
+  return string;
 }
 
 int AirflowSubelementData::nr() const
 {
-    return m_nr;
+  return m_nr;
 }
 
 void AirflowSubelementData::setNr(const int nr)
 {
-    m_nr = nr;
+  m_nr = nr;
 }
 
 RX AirflowSubelementData::relHt() const
 {
-    return m_relHt;
+  return m_relHt;
 }
 
 void AirflowSubelementData::setRelHt(const RX relHt)
 {
-    m_relHt = relHt;
+  m_relHt = relHt;
 }
 
 int AirflowSubelementData::filt() const
 {
-    return m_filt;
+  return m_filt;
 }
 
 void AirflowSubelementData::setFilt(const int filt)
 {
-    m_filt = filt;
+  m_filt = filt;
 }
 
 PressureCoefficientPoint::PressureCoefficientPoint(RX azm,RX coef):m_azm(azm),m_coef(coef)
@@ -379,35 +397,35 @@ PressureCoefficientPoint::PressureCoefficientPoint(RX azm,RX coef):m_azm(azm),m_
 
 void PressureCoefficientPoint::read(Reader &input)
 {
-    m_azm = input.readNumber<RX>(FILELINE);
-    m_coef = input.readNumber<RX>(FILELINE);
+  m_azm = input.readNumber<RX>(FILELINE);
+  m_coef = input.readNumber<RX>(FILELINE);
 }
 
 STRING PressureCoefficientPoint::write()
 {
-    STRING string;
-    string += TO_STRING(m_azm) + ' ' + TO_STRING(m_coef) + '\n';
-    return string;
+  STRING string;
+  string += TO_STRING(m_azm) + ' ' + TO_STRING(m_coef) + '\n';
+  return string;
 }
 
 RX PressureCoefficientPoint::azm() const
 {
-    return m_azm;
+  return m_azm;
 }
 
 void PressureCoefficientPoint::setAzm(const RX azm)
 {
-    m_azm = azm;
+  m_azm = azm;
 }
 
 RX PressureCoefficientPoint::coef() const
 {
-    return m_coef;
+  return m_coef;
 }
 
 void PressureCoefficientPoint::setCoef(const RX coef)
 {
-    m_coef = coef;
+  m_coef = coef;
 }
 
 SchedulePoint::SchedulePoint(STRING time,RX ctrl):m_time(time),m_ctrl(ctrl)
@@ -415,35 +433,35 @@ SchedulePoint::SchedulePoint(STRING time,RX ctrl):m_time(time),m_ctrl(ctrl)
 
 void SchedulePoint::read(Reader &input)
 {
-    m_time = input.readString(FILELINE);
-    m_ctrl = input.readNumber<RX>(FILELINE);
+  m_time = input.readString(FILELINE);
+  m_ctrl = input.readNumber<RX>(FILELINE);
 }
 
 STRING SchedulePoint::write()
 {
-    STRING string;
-    string += m_time + ' ' + TO_STRING(m_ctrl) + '\n';
-    return string;
+  STRING string;
+  string += m_time + ' ' + TO_STRING(m_ctrl) + '\n';
+  return string;
 }
 
 STRING SchedulePoint::time() const
 {
-    return m_time;
+  return m_time;
 }
 
 void SchedulePoint::setTime(const STRING time)
 {
-    m_time = time;
+  m_time = time;
 }
 
 RX SchedulePoint::ctrl() const
 {
-    return m_ctrl;
+  return m_ctrl;
 }
 
 void SchedulePoint::setCtrl(const RX ctrl)
 {
-    m_ctrl = ctrl;
+  m_ctrl = ctrl;
 }
 
 } // contam
