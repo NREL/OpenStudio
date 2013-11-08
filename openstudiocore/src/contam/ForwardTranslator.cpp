@@ -20,7 +20,6 @@
 
 #include <contam/ForwardTranslator.hpp>
 #include <contam/WindPressure.hpp>
-#include <contam/SimTxt.hpp>
 
 #include <model/Model.hpp>
 #include <model/Building.hpp>

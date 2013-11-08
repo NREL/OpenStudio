@@ -8,8 +8,6 @@ SET( ${target_name}_src
   PrjReader.cpp
   SimFile.hpp
   SimFile.cpp
-  SimTxt.hpp
-  SimTxt.cpp
   WindPressure.hpp
   WindPressure.cpp
   PrjDefines.hpp
