@@ -41,14 +41,15 @@ macro( CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES )
     
     GET_TARGET_PROPERTY(BASE_NAME_TYPE ${BASE_NAME} TYPE)
     IF ("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
-      # nothing
+      # don't link base name
+      SET(ALL_DEPENDENCIES ${DEPENDENCIES} )
     ELSE()
       # also link base name
-      LIST(INSERT DEPENDENCIES 0 ${BASE_NAME})
+      SET(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES} )
     ENDIF()
       
     TARGET_LINK_LIBRARIES( ${BASE_NAME}_tests 
-      ${DEPENDENCIES} 
+      ${ALL_DEPENDENCIES} 
       gtest 
       gtest_main
     )
