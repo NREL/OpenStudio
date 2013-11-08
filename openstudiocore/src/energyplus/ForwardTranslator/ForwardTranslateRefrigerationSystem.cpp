@@ -65,7 +65,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   if( !cases.empty() || !walkins.empty() )
   {
-<<<<<<< HEAD
   	// Name
   	name = " Case and Walkin List";
   	refrigerationSystem.setString(Refrigeration_SystemFields::RefrigeratedCaseorWalkinorCaseAndWalkInListName, refrigerationSystem.name().get() + name);
@@ -103,45 +102,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
   		}
   	}
-=======
-    // Name
-    name = " Case List";
-    refrigerationSystem.setString(Refrigeration_SystemFields::RefrigeratedCaseorWalkinorCaseAndWalkInListName, refrigerationSystem.name().get() + name);
-
-    IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
-
-    m_idfObjects.push_back(_caseAndWalkinList);
-
-    _caseAndWalkinList.setName(refrigerationSystem.name().get() + name);
-
-    for( std::vector<RefrigerationCase>::iterator it = cases.begin();
-       it != cases.end();
-       it++ )
-    {
-      boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
-
-      if( _case )
-      {
-        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
-
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_case->name().get()); 
-      }
-    }
-
-    /*for( std::vector<RefrigerationWalkin>::iterator it = walkins.begin();
-       it != walkins.end();
-       it++ )
-    {
-      boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
-
-      if( _walkin )
-      {
-        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
-
-        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
-      }
-    }*/
->>>>>>> develop
   }
 
 //Refrigeration Transfer Load or TransferLoad List Name

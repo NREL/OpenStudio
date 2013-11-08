@@ -113,7 +113,6 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
-<<<<<<< HEAD
   ForwardTranslator/ForwardTranslateRefrigerationCondenserCascade.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserEvaporativeCooled.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserWaterCooled.cpp
@@ -122,9 +121,6 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationSecondarySystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationWalkIn.cpp
-=======
-  ForwardTranslator/ForwardTranslateRefrigerationSystem.cpp
->>>>>>> develop
   ForwardTranslator/ForwardTranslateRoofVegetation.cpp
   ForwardTranslator/ForwardTranslateRunPeriod.cpp
   ForwardTranslator/ForwardTranslateRunPeriodControlDaylightSavingTime.cpp
