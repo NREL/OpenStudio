@@ -20,6 +20,11 @@
 #include "RefrigerationController.hpp"
 #include "RefrigerationScene.hpp"
 #include "RefrigerationGraphicsItems.hpp"
+#include "OSAppBase.hpp"
+#include "../model/Model.hpp"
+#include "../model/RefrigerationSystem.hpp"
+#include "../model/RefrigerationSystem_Impl.hpp"
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 
@@ -44,6 +49,11 @@ QSharedPointer<RefrigerationScene> RefrigerationController::refrigerationScene()
   return m_refrigerationScene;
 }
 
+QSharedPointer<RefrigerationSystemListController> RefrigerationController::refrigerationSystemListController() const
+{
+  return m_refrigerationSystemListController;
+}
+
 QSharedPointer<OSListItem> RefrigerationSystemListController::itemAt(int i)
 {
   return QSharedPointer<RefrigerationSystemListItem>(new RefrigerationSystemListItem(this));
@@ -51,12 +61,52 @@ QSharedPointer<OSListItem> RefrigerationSystemListController::itemAt(int i)
 
 int RefrigerationSystemListController::count()
 {
-  return 6;
+  return systems().size();
 }
 
 RefrigerationSystemListItem::RefrigerationSystemListItem(OSListController * listController)
   : OSListItem(listController)
 {
+}
+
+void RefrigerationSystemListController::createNewSystem()
+{
+  if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
+  {
+    model::RefrigerationSystem system(model.get());
+
+    std::vector<model::RefrigerationSystem> _systems = systems();
+
+    int i = 0;
+
+    for( std::vector<model::RefrigerationSystem>::const_iterator it = _systems.begin();
+         it != _systems.end();
+         it++ )
+    {
+      if( *it == system )
+      {
+        break;
+      }
+
+      i++;
+    }
+
+    emit itemInserted(i);
+  }
+}
+
+std::vector<model::RefrigerationSystem> RefrigerationSystemListController::systems() const
+{
+  std::vector<model::RefrigerationSystem> result;
+
+  if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
+  {
+    result = model->getModelObjects<model::RefrigerationSystem>();
+  }
+
+  std::sort(result.begin(), result.end(), WorkspaceObjectNameLess());
+
+  return result;
 }
 
 } // openstudio

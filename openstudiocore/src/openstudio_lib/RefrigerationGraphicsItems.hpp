@@ -95,9 +95,13 @@ class RefrigerationSystemGridItem : public QGraphicsObject
 
   QSize cellSize() const;
 
-  std::pair<int,int> gridLocation(int index); 
+  std::pair<int,int> gridPos(int i); 
 
-  QGraphicsItem * viewFromGridLocation(std::pair<int,int>);
+  QGraphicsItem * createNewItemView(int i);
+
+  void setItemViewGridPos(QGraphicsItem * item,std::pair<int,int> gridPos);
+
+  QGraphicsItem * viewFromGridPos(std::pair<int,int> gridPos);
 
   QSharedPointer<RefrigerationSystemItemDelegate> m_delegate;
 

@@ -19,6 +19,7 @@
 
 #include "RefrigerationGraphicsItems.hpp"
 #include "../shared_gui_components/OSListController.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <QPainter>
 
 namespace openstudio {
@@ -70,7 +71,7 @@ void RefrigerationSystemGridItem::setListController(QSharedPointer<OSListControl
   connect(m_listController.data(),SIGNAL(itemInserted(int)),this,SLOT(insertItemView(int)));
   connect(m_listController.data(),SIGNAL(itemRemoved(int)),this,SLOT(removeItemView(int)));
   connect(m_listController.data(),SIGNAL(itemChanged(int)),this,SLOT(refreshItemView(int)));
-  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllViews()));
+  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllItemViews()));
 
   refreshAllItemViews();
 }
@@ -98,27 +99,69 @@ void RefrigerationSystemGridItem::refreshAllItemViews()
          i != m_listController->count();
          i++ )
     {
-      QGraphicsItem * item = m_delegate->view(m_listController->itemAt(i));
+      QGraphicsItem * item = createNewItemView(i);
 
-      item->setParentItem(this);
+      OS_ASSERT(item);
 
-      item->setTransform(QTransform(cellSize().width() / item->boundingRect().width(),
-                                    0,0,
-                                    cellSize().height() / item->boundingRect().height(),
-                                    0,0));
+      std::pair<int,int> coordinates = gridPos(i);
 
-      std::pair<int,int> coordinates = gridLocation(i);
-
-      int x = coordinates.second * (cellSize().width() + spacing());
-      int y = coordinates.first * (cellSize().height() + spacing());
-
-      item->setPos(x,y);
+      setItemViewGridPos(item,coordinates);
     }
   }
 }
 
-void RefrigerationSystemGridItem::insertItemView(int i)
+QGraphicsItem * RefrigerationSystemGridItem::createNewItemView(int i)
 {
+  if( m_listController && m_delegate )
+  {
+    QGraphicsItem * item = m_delegate->view(m_listController->itemAt(i));
+
+    item->setParentItem(this);
+
+    item->setTransform(QTransform(cellSize().width() / item->boundingRect().width(),
+                                  0,0,
+                                  cellSize().height() / item->boundingRect().height(),
+                                  0,0));
+    return item;
+  }
+  else
+  {
+    return NULL;
+  }
+}
+
+void RefrigerationSystemGridItem::setItemViewGridPos(QGraphicsItem * item,std::pair<int,int> gridPos)
+{
+  int x = gridPos.second * (cellSize().width() + spacing());
+  int y = gridPos.first * (cellSize().height() + spacing());
+
+  item->setPos(x,y);
+}
+
+void RefrigerationSystemGridItem::insertItemView(int index)
+{
+  if( m_listController )
+  {
+    // Move Everything after index forward one grid position
+    for( int i = index + 1; i < m_listController->count(); i++ )
+    {
+      std::pair<int,int> oldPos = gridPos(i - 1);
+
+      QGraphicsItem * item = viewFromGridPos(oldPos);
+
+      std::pair<int,int> newPos = gridPos(i);
+
+      setItemViewGridPos(item,newPos);
+    }
+
+    // Create new item and position it at index grid position
+    if( QGraphicsItem * item = createNewItemView(index) )
+    {
+      std::pair<int,int> pos = gridPos(index);
+
+      setItemViewGridPos(item,pos);
+    }
+  }
 }
 
 void RefrigerationSystemGridItem::removeItemView(int i)
@@ -169,7 +212,7 @@ QSize RefrigerationSystemGridItem::cellSize() const
   return QSize(500,500);
 }
 
-std::pair<int,int> RefrigerationSystemGridItem::gridLocation(int index) 
+std::pair<int,int> RefrigerationSystemGridItem::gridPos(int index) 
 {
   int row = 0;
   int column = 0;
@@ -186,7 +229,7 @@ std::pair<int,int> RefrigerationSystemGridItem::gridLocation(int index)
   return std::pair<int,int>(row,column);
 }
 
-QGraphicsItem * RefrigerationSystemGridItem::viewFromGridLocation(std::pair<int,int> location)
+QGraphicsItem * RefrigerationSystemGridItem::viewFromGridPos(std::pair<int,int> location)
 {
   QGraphicsItem * result = NULL;
 

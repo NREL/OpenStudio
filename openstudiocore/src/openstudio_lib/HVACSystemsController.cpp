@@ -694,14 +694,17 @@ void HVACSystemsController::onShowControlsClicked()
 
 void HVACSystemsController::onAddSystemClicked()
 {
-  LoopLibraryDialog loopLibraryDialog(m_hvacSystemsView);
+  //LoopLibraryDialog loopLibraryDialog(m_hvacSystemsView);
 
-  loopLibraryDialog.exec();
+  //loopLibraryDialog.exec();
 
-  if( loopLibraryDialog.result() == QDialog::Accepted )
-  {
-    addToModel(loopLibraryDialog.addToModelEnum().get());    
-  }
+  //if( loopLibraryDialog.result() == QDialog::Accepted )
+  //{
+  //  addToModel(loopLibraryDialog.addToModelEnum().get());    
+  //}
+
+  // Temporary hack to test refrigeration grid view
+  m_refrigerationController->refrigerationSystemListController()->createNewSystem();
 }
 
 void HVACSystemsController::onSystemComboBoxIndexChanged(int i)

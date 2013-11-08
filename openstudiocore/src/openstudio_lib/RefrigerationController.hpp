@@ -25,6 +25,10 @@
 
 namespace openstudio {
 
+namespace model {
+  class RefrigerationSystem;
+}
+
 class RefrigerationSystemGridItem;
 class RefrigerationSystemListController;
 class RefrigerationScene;
@@ -36,6 +40,8 @@ class RefrigerationController : public QObject
   public:
 
   RefrigerationController();
+
+  QSharedPointer<RefrigerationSystemListController> refrigerationSystemListController() const;
 
   QSharedPointer<RefrigerationScene> refrigerationScene() const;
 
@@ -57,6 +63,14 @@ class RefrigerationSystemListController : public OSListController
   QSharedPointer<OSListItem> itemAt(int i);
 
   int count();
+
+  public slots:
+
+  void createNewSystem();
+
+  private:
+
+  std::vector<model::RefrigerationSystem> systems() const;
 };
 
 class RefrigerationSystemListItem : public OSListItem
