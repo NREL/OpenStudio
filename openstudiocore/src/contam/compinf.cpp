@@ -244,7 +244,6 @@ int main(int argc, char *argv[])
     }
 
     // Write out a CVF if needed
-    //std::cout << translator.rc().CVFpath() << std::endl;
     if(translator->writeCvFile(cvfPath))
     {
       // Need to set the CVF file in the PRJ, this path may need to be made relative. Not too sure
