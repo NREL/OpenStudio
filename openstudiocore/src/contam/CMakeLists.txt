@@ -78,9 +78,9 @@ ENDIF()
 
 #MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} "${target_name}" )
 
-add_executable(OsmToPrj OsmToPrj.cpp)
+add_executable(osm2prj osm2prj.cpp)
 
-TARGET_LINK_LIBRARIES( OsmToPrj
+TARGET_LINK_LIBRARIES( osm2prj
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam
