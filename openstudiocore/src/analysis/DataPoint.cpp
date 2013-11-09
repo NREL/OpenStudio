@@ -514,10 +514,15 @@ namespace detail {
       return false;
     }
 
-    // unzip 
-    UnzipFile unzip(zipPath);
-    unzip.extractAllFiles(directory());
-    // TODO: Delete zip file once extracted. Leave for now for debugging.
+    try{
+      // unzip 
+      UnzipFile unzip(zipPath);
+      unzip.extractAllFiles(directory());
+      boost::filesystem::remove(zipPath);
+    }catch(const std::exception&){
+      LOG(Info,"Could not unzip dataPoint.zip file in directory '" << toString(directory()) << "'.");
+      return false;
+    }
 
     // fix up topLevelJob
     OS_ASSERT(m_topLevelJob);
@@ -525,6 +530,7 @@ namespace detail {
       // files are now in directory(), need to update paths
       runManager->updateJob(*m_topLevelJob, directory());
     }
+
 
     // get file references for
     //   m_osmInputData
@@ -700,6 +706,7 @@ namespace detail {
 
   void DataPoint_Impl::setProblem(const Problem& problem) {
     m_problem = problem;
+    m_problemUUID = problem.uuid();
   }
 
   QVariant DataPoint_Impl::toVariant() const {
@@ -800,11 +807,6 @@ namespace detail {
 
     if (!options.projectDir.empty()) {
       metadata["project_dir"] = toQString(options.projectDir);
-    }
-
-    if (options.osServerView && hasProblem()) {
-      // this data is not read upon deserialization
-      metadata.unite(toServerDataPointsVariant().toMap());
     }
 
     // create top-level of final file
@@ -950,38 +952,11 @@ namespace detail {
                      outputAttributes);
   }
 
-  QVariant DataPoint_Impl::toServerDataPointsVariant() const {
-    QVariantMap map;
-
-    map["uuid"] = toQString(removeBraces(uuid()));
-    map["version_uuid"] = toQString(removeBraces(uuid()));
-    map["name"] = toQString(name());
-    map["display_name"] = toQString(displayName());
-
-    QVariantList valuesList;
-    std::vector<QVariant> values = variableValues();
-    InputVariableVector variables = problem().variables();
-    unsigned n = values.size();
-    OS_ASSERT(variables.size() == n);
-    for (unsigned i = 0; i < n; ++i) {
-      QVariantMap valueMap;
-      valueMap["variable_index"] = i;
-      valueMap["variable_uuid"] = toQString(removeBraces(variables[i].uuid()));
-      valueMap["value"] = values[i];
-      valuesList.push_back(valueMap);
-    }
-    map["values"] = valuesList;
-
-    return QVariant(map);
-  }
-
 } // detail
 
 DataPointSerializationOptions::DataPointSerializationOptions(
-    const openstudio::path& t_projectDir,
-    bool t_osServerView)
-  : projectDir(t_projectDir),
-    osServerView(t_osServerView)
+    const openstudio::path& t_projectDir)
+  : projectDir(t_projectDir)
 {}
 
 DataPoint::DataPoint(const Problem& problem,

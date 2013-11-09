@@ -28,7 +28,6 @@ namespace detail {
 
   class MODEL_API WindowDataFile_Impl : public ConstructionBase_Impl 
   {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

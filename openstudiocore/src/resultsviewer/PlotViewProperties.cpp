@@ -274,7 +274,7 @@ void PlotViewProperties::updateCurves()
     }
   }
 
-  if (m_curveVec.size() > 0) 	slotCurveChanged(0);
+  if (m_curveVec.size() > 0) slotCurveChanged(0);
 }
 
 

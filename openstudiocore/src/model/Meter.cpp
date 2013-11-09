@@ -410,7 +410,7 @@ namespace detail {
           frequency = "Zone Timestep";
       }else if (openstudio::istringEqual(frequency, "Detailed")){
           frequency = "HVAC System Timestep"; 
-	  }
+      }
 
       // currently the key value is not associated with the meter, it is part of the name
       result = sqlFile->timeSeries(envPeriod, frequency, name, "");

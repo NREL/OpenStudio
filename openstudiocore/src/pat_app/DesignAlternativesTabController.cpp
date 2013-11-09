@@ -113,7 +113,7 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
 
     bool measuresSelected = false;
     for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); it != items.end(); it++ ) {
-      if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) ){
+      if( qobject_cast<measuretab::MeasureItem *>(*it) ){
         measuresSelected = true;
         break;
       }

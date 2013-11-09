@@ -62,13 +62,13 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Construct
   EXPECT_EQ(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam,cooledBeam.iddObjectType().value());
   
   // Test cloning the Cooled Beam
-		AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam = cooledBeam.clone(model).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
-		ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam.supplyAirVolumetricFlowRate());
-		Model model2;
-		AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam2 = cooledBeam.clone(model2).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
-		ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam2.supplyAirVolumetricFlowRate());
-		
-		// test set and get availibility schedule
+  AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam = cooledBeam.clone(model).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
+  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam.supplyAirVolumetricFlowRate());
+  Model model2;
+  AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam2 = cooledBeam.clone(model2).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
+  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam2.supplyAirVolumetricFlowRate());
+  
+  // test set and get availibility schedule
   ScheduleConstant schedule1(model);
   schedule1.setValue(1.0);
   EXPECT_TRUE(cooledBeam.setAvailabilitySchedule(schedule1));
@@ -83,27 +83,27 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Construct
  
  TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_AddandRemove) {
  
-		Model model;
+  Model model;
   ScheduleConstant schedule(model);
   schedule.setValue(1.0); // Always on
   CoilCoolingCooledBeam coilCoolingCooledBeam(model);
   CoilHeatingWater coil(model,schedule);
-		AirTerminalSingleDuctConstantVolumeCooledBeam cooledBeam(model,schedule,coilCoolingCooledBeam);
-		AirTerminalSingleDuctVAVReheat VAVreheat(model,schedule,coil);
-		AirLoopHVAC airLoop(model);
-		
-		// Test addToNode
-		//Attach to outlet node
-		//Node outletNode = airLoop.supplyOutletNode();
-		//cooledBeam.addToNode(outletNode);
-		//ASSERT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
-		
-		//ASSERT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
-		//Node outletNode = airLoop.supplyOutletNode();
-		//VAVreheat.addToNode(outletNode);
-		//ASSERT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
-		
-		
+  AirTerminalSingleDuctConstantVolumeCooledBeam cooledBeam(model,schedule,coilCoolingCooledBeam);
+  AirTerminalSingleDuctVAVReheat VAVreheat(model,schedule,coil);
+  AirLoopHVAC airLoop(model);
+  
+  // Test addToNode
+  //Attach to outlet node
+  //Node outletNode = airLoop.supplyOutletNode();
+  //cooledBeam.addToNode(outletNode);
+  //ASSERT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  
+  //ASSERT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  //Node outletNode = airLoop.supplyOutletNode();
+  //VAVreheat.addToNode(outletNode);
+  //ASSERT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  
+  
  } 
  
  TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Fields) {
@@ -200,4 +200,3 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Construct
   EXPECT_TRUE(cooledBeam.isCoefficientofInductionKinAutocalculated());
   
   }
-  

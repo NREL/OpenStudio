@@ -89,8 +89,8 @@ class WWRScript < OpenStudio::Ruleset::ModelUserScript
       any_in_selection = true
 
       next if not s.outsideBoundaryCondition == "Outdoors"
-	  
-	  next if not s.surfaceType == "Wall"
+      
+      next if not s.surfaceType == "Wall"
 
       new_window = s.setWindowToWallRatio(wwr, offset, heightOffsetFromFloor)
       

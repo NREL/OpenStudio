@@ -68,7 +68,7 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithDefaultDat
 
   std::vector<CurveLinear> refrigerationCondenserCurves = model.getModelObjects<CurveLinear>();
   for(std::vector<CurveLinear>::iterator it = refrigerationCondenserCurves.begin(); it != refrigerationCondenserCurves.end(); ++it) {
-  	EXPECT_TRUE(it->parent());
+    EXPECT_TRUE(it->parent());
   }
 
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ratedSubcoolingTemperatureDifference());
@@ -129,11 +129,11 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultDa
   EXPECT_EQ(1, refrigerationCondenserCurves2.size());
 
   for(std::vector<CurveLinear>::iterator it = refrigerationCondenserCurves.begin(); it != refrigerationCondenserCurves.end(); ++it) {
-  	EXPECT_TRUE(it->parent());
+    EXPECT_TRUE(it->parent());
   }
 
   for(std::vector<CurveLinear>::iterator it = refrigerationCondenserCurves2.begin(); it != refrigerationCondenserCurves2.end(); ++it) {
-  	EXPECT_TRUE(it->parent());
+    EXPECT_TRUE(it->parent());
   }
 
   EXPECT_DOUBLE_EQ(0.0, testObjectClone2.ratedSubcoolingTemperatureDifference());

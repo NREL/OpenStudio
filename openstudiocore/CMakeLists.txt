@@ -105,6 +105,9 @@ IF (BUILD_V8_BINDINGS)
   OPTION( BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON )
 ENDIF()
 
+# Configure vagrant 
+SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
+
 # Require that DAKOTA_FOUND
 #
 # Some code (certain analysisdriver tests) are conditionally compiled depending on 
@@ -141,6 +144,7 @@ SET( project_directories
   energyplus
   radiance
   gbxml
+  isomodel
   osversion
   ruleset
   runmanager/lib
@@ -194,7 +198,11 @@ ENDIF( BUILD_TESTING )
 IF(UNIX)
   # all warnings
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch")
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=256")
+  IF(APPLE)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=1024")
+  ELSE()
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
+  ENDIF()
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing --std=c99")
   # effective c++
   #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
@@ -866,6 +874,7 @@ export(TARGETS openstudio_runmanager
                openstudio_analysis
                openstudio_radiance
                openstudio_gbxml
+               openstudio_isomodel
                openstudio_lib
                openstudio_plugin
                openstudio_sdd
@@ -902,7 +911,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_0_0_20130628.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_1_0_20131018.pdf" DESTINATION . )
 
 ###############################################################################
 

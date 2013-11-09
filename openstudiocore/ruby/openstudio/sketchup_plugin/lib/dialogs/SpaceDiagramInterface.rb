@@ -59,23 +59,23 @@ module OpenStudio
       end
     end
   end
-  
+
   if status == 1
     UI.messagebox("Not all selected surfaces are horizontal, please limit selection to horizontal surfaces")
     valid_diagram = false
   end
-  
+
   # sort SketchUp selection and pass this to OpenStudio
   # later add more complex sort that gives preference to adjacent surfaces if same "y" before looking to "x"
   # it woudl be nice to let use selection order do this but that would require a custom tool.
   sel_sort = Sketchup.active_model.selection.to_a
   sel_sort.delete_if {|e| not e.is_a?(Sketchup::Face) }
   sel_sort.sort! {|a,b|
-	([a.vertices.min{|v1,v2| v1.position.y <=> v2.position.y }.position.y,
-	  a.vertices.min{|v1,v2| v1.position.x <=> v2.position.x }.position.x] <=>
-	 [b.vertices.min{|v1,v2| v1.position.y <=> v2.position.y }.position.y,
-	  b.vertices.min{|v1,v2| v1.position.x <=> v2.position.x }.position.x] )
-	}
+    ([a.vertices.min{|v1,v2| v1.position.y <=> v2.position.y }.position.y,
+      a.vertices.min{|v1,v2| v1.position.x <=> v2.position.x }.position.x] <=>
+     [b.vertices.min{|v1,v2| v1.position.y <=> v2.position.y }.position.y,
+      b.vertices.min{|v1,v2| v1.position.x <=> v2.position.x }.position.x] )
+  }
 
   if valid_diagram # skip over if not valid selection for space diagram
 
@@ -104,17 +104,17 @@ module OpenStudio
     end
 
     if valid_input # skip over if not valid user input
-    
+
       begin
-    
+
         # pause event processing
         event_processing_stopped = Plugin.stop_event_processing
-        
+
         # store starting render mode
         starting_rendermode = model_interface.materials_interface.rendering_mode
 
         # switch render mode to speed things up
-        model_interface.materials_interface.rendering_mode = RenderWaiting	
+        model_interface.materials_interface.rendering_mode = RenderWaiting
 
         # create a progress bar
         progress_dialog = ProgressDialog.new("Creating Spaces from Floorprint")
@@ -133,9 +133,9 @@ module OpenStudio
           story.setNominalZCoordinate(height*(floor-1.0))
           story.setNominalFloortoFloorHeight(height)
 
-		  # rest room counter
-		  rm = 0
-		  
+          # rest room counter
+          rm = 0
+
           # loop through faces in the selection
           faces.each do |face|
 
@@ -164,21 +164,21 @@ module OpenStudio
               space.setYOrigin(verticies_pre_t[0].position.y.to_m)
               space.setZOrigin(verticies_pre_t[0].position.z.to_m + height*(floor-1))
               space.setBuildingStory(story)
-			  
-			  rm = rm + 1
-			  # set space name
-			  if faces.length < 100
-				  padded_room_number = "Space " + floor.to_s + "%02d" % rm
-			  else
-				  padded_room_number = "Space " + floor.to_s + "%03d" % rm
-			  end
-			  space.setName(padded_room_number)
+
+              rm = rm + 1
+              # set space name
+              if faces.length < 100
+                padded_room_number = "Space " + floor.to_s + "%02d" % rm
+              else
+                padded_room_number = "Space " + floor.to_s + "%03d" % rm
+              end
+              space.setName(padded_room_number)
 
 
               if Plugin.read_pref("New Zone for Space")
                 thermal_zone = OpenStudio::Model::ThermalZone.new(model_interface.openstudio_model)
                 space.setThermalZone(thermal_zone)
-              end    
+              end
 
             end
 
@@ -190,37 +190,37 @@ module OpenStudio
         end # end of floor loop
 
       ensure
-      
+
         progress_dialog.destroy
-        
+
       end
-	  
-	  # add surface matching here, maybe with its own progress bar
+
+      # add surface matching here, maybe with its own progress bar
 
       # create or confirm layer called "OpenStudio - Space Diagrams" exists
       layers = skp_model.layers
       new_layer = layers.add("OpenStudio - Space Diagrams")
-      
+
       # turn off layer visibility
       new_layer.visible  = false
-      
+
       # make group out of selection and put onto OS Loose Geometry Layer
       thermal_diagram = Sketchup.active_model.entities.add_group(saved_selection)
       thermal_diagram.layer = new_layer
-      
+
       # switch render mode back to original
       proc = Proc.new { model_interface.materials_interface.rendering_mode = starting_rendermode }
       Plugin.add_event( proc )
-    
+
       # resume event processing
       Plugin.start_event_processing if event_processing_stopped
 
     else
-    
+
        puts "User clicked Cancel - do nothing"
-       
+
     end # valid_input
 
   end # valid_diagram
-  
+
 end

@@ -40,7 +40,7 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_EQ(1999, yearDescription.calendarYear().get());
   EXPECT_EQ(1999, yearDescription.assumedYear());
   EXPECT_EQ("Friday", yearDescription.dayofWeekforStartDay());
-  EXPECT_EQ(false, yearDescription.isLeapYear());
+  EXPECT_FALSE(yearDescription.isLeapYear());
 
   UtilityBill utilityBill(FuelType::Electricity, model);
   EXPECT_EQ(FuelType::Electricity, utilityBill.fuelType().value());

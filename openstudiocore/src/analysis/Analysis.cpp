@@ -190,6 +190,14 @@ namespace detail {
       connectChild(*m_algorithm,false);
     }
     BOOST_FOREACH(DataPoint& dataPoint,m_dataPoints) {
+      if (!dataPoint.hasProblem()) {
+        if (dataPoint.problemUUID() == m_problem.uuid()) {
+          dataPoint.setProblem(m_problem);
+        }
+        else {
+          OS_ASSERT(m_dataPointsAreInvalid);
+        }
+      }
       connectChild(dataPoint,false);
     }
   }
@@ -798,23 +806,9 @@ namespace detail {
       metadata["project_dir"] = toQString(options.projectDir);
     }
 
-    if (options.osServerView) {
-
-      // this data is not read upon deserialization
-      QVariantMap serverView = problem().toServerFormulationVariant().toMap();
-
-      if (options.scope == AnalysisSerializationScope::Full) {
-        QVariantList dataPointList;
-        Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
-          if (dataPoint.hasProblem()) {
-            dataPointList.push_back(dataPoint.toServerDataPointsVariant());
-          }
-        }
-        serverView["data_points"] = QVariant(dataPointList);
-      }
-
-      metadata.unite(serverView);
-    }
+    // this data is not read upon deserialization
+    QVariantMap serverView = problem().toServerFormulationVariant().toMap();
+    metadata.unite(serverView);
 
     // create top-level of final file
     QVariantMap result;
@@ -870,11 +864,9 @@ namespace detail {
 
 AnalysisSerializationOptions::AnalysisSerializationOptions(
     const openstudio::path& t_projectDir,
-    const AnalysisSerializationScope& t_scope,
-    bool t_osServerView)
+    const AnalysisSerializationScope& t_scope)
   : projectDir(t_projectDir),
-    scope(t_scope),
-    osServerView(t_osServerView)
+    scope(t_scope)
 {}
 
 Analysis::Analysis(const std::string& name,

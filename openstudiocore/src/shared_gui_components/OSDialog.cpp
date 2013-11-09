@@ -22,6 +22,7 @@
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPushButton>
@@ -35,11 +36,13 @@ OSDialog::OSDialog(bool isIP,
                    QWidget * parent)
   : QDialog(parent),
   m_isIP(isIP),
+  m_backButton(NULL),
   m_cancelButton(NULL),
   m_okButton(NULL),
   m_upperLayout(NULL),
   m_sizeHint(QSize(800,500)),
-  m_layoutContentsMargins(QMargins(20,70,20,20))
+  m_layoutContentsMargins(QMargins(20,70,20,20)),
+  _move(false)
 {
   setStyleSheet("openstudio--OSDialog { background: #E6E6E6; }");
   
@@ -62,14 +65,15 @@ void OSDialog::createLayout()
 
   bool isConnected = false;
 
-  m_cancelButton = new QPushButton("Cancel",this);
-  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
-                        this, SLOT(on_cancelButton(bool))) ;
+  m_backButton = new QPushButton("Back",this);
+  isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
+                        this, SLOT(on_backButton(bool))) ;
   OS_ASSERT(isConnected);
-  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
-                        this, SIGNAL(cancelButtonClicked(bool))) ;
+  isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
+                        this, SIGNAL(backButtonClicked(bool))) ;
   OS_ASSERT(isConnected);
-  lowerLayout->addWidget(m_cancelButton);
+  lowerLayout->addWidget(m_backButton);
+  m_backButton->hide();
 
   m_okButton = new QPushButton("OK",this);
   m_okButton->setDefault(true);
@@ -80,6 +84,15 @@ void OSDialog::createLayout()
                         this, SIGNAL(okButtonClicked(bool))) ;
   OS_ASSERT(isConnected);
   lowerLayout->addWidget(m_okButton);
+
+  m_cancelButton = new QPushButton("Cancel",this);
+  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
+                        this, SLOT(on_cancelButton(bool))) ;
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
+                        this, SIGNAL(cancelButtonClicked(bool))) ;
+  OS_ASSERT(isConnected);
+  lowerLayout->addWidget(m_cancelButton);
 
   QVBoxLayout * mainLayout = new QVBoxLayout();
   mainLayout->setContentsMargins(m_layoutContentsMargins);
@@ -99,9 +112,14 @@ void OSDialog::setOkButtonAsDefault(bool isDefault)
   }
 }
 
-QBoxLayout * OSDialog::upperLayout()
+QVBoxLayout * OSDialog::upperLayout()
 {
   return m_upperLayout;
+}
+
+QPushButton * OSDialog::backButton()
+{
+  return m_backButton;
 }
 
 QPushButton * OSDialog::cancelButton()
@@ -113,6 +131,36 @@ QPushButton * OSDialog::okButton()
 {
   return m_okButton;
 }
+
+void OSDialog::mousePressEvent(QMouseEvent *event)
+{
+  if(event->button() == Qt::LeftButton){
+    if(event->y() < 50){
+      dragPosition = event->globalPos() - frameGeometry().topLeft();
+      event->accept();
+      _move = true;
+    }
+    else{
+      _move = false;
+    }
+  }
+}
+
+void OSDialog::mouseReleaseEvent(QMouseEvent *event)
+{
+  _move = false;
+}
+
+void OSDialog::mouseMoveEvent(QMouseEvent *event)
+{
+  if(event->buttons() & Qt::LeftButton) {
+    if(_move){
+      move(event->globalPos() - dragPosition);
+      event->accept();
+    }
+  }
+}
+
 
 void OSDialog::resizeEvent(QResizeEvent * event)
 {
@@ -141,15 +189,15 @@ void OSDialog::paintEvent(QPaintEvent *event)
   }
 }
 
-void OSDialog::setSizeHint(const QSize & sizeHint)
-{
-  m_sizeHint = sizeHint;
-}
+//void OSDialog::setSizeHint(const QSize & sizeHint)
+//{
+//  m_sizeHint = sizeHint;
+//}
 
-QSize OSDialog::sizeHint() const
-{
-  return m_sizeHint;
-}
+//QSize OSDialog::sizeHint() const
+//{
+//  return m_sizeHint;
+//}
 
 QMargins OSDialog::layoutContentsMargins() const
 {
@@ -163,6 +211,10 @@ void OSDialog::setLayoutContentsMargins(const QMargins & layoutContentsMargins)
 }
 
 // ***** SLOTS *****
+
+void OSDialog::on_backButton(bool checked)
+{
+}
 
 void OSDialog::on_cancelButton(bool checked)
 {

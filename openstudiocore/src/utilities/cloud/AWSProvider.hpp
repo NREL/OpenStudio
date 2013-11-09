@@ -90,6 +90,9 @@ namespace detail {
     // returns the result of the last validSecretKey validation of the current secretKey
     bool validSecretKey() const;
 
+    // resets the AWS access key and deletes the secret key file
+    void clearKeys();
+
     // returns the saved default number of workers
     unsigned numWorkers() const;
 
@@ -263,6 +266,13 @@ namespace detail {
 
   };
 
+  struct UTILITIES_API AWSComputerInformation {
+    public:
+      std::string instanceType;
+      std::string prettyName;
+      unsigned processorCount;
+  };
+
   /// \relates AWSSession
   typedef boost::optional<AWSSession> OptionalAWSSession;
 
@@ -305,12 +315,43 @@ namespace detail {
     // returns the recommended default worker instance type
     static std::string defaultWorkerInstanceType();
 
+    static std::vector<unsigned> serverProcessorCounts();
+
+    static std::vector<unsigned> workerProcessorCounts();
+
+    static std::vector<std::string> serverPrettyNames();
+
+    static std::vector<std::string> workerPrettyNames();
+
+    static std::string getServerPrettyName(const std::string & instanceType);
+
+    static std::string getWorkerPrettyName(const std::string & instanceType);
+
+    static unsigned getServerProcessorCount(const std::string & instanceType);
+
+    static unsigned getWorkerProcessorCount(const std::string & instanceType);
+
+    static std::vector<AWSComputerInformation> serverInformation();  
+
+    static std::vector<AWSComputerInformation> workerInformation();
+
+    // returns true if the cloud server successfully requests the estimated charges
+    bool requestEstimatedCharges();
+
+    // returns true if the cloud server successfully requests the total number of instances
+    bool requestTotalInstances();
+
     // returns the EC2 estimated charges from CloudWatch in USD
     double estimatedCharges(int msec=30000);
 
     // returns the total number of instances running on EC2 in the current region
     unsigned totalInstances(int msec=30000);
 
+    // returns the last value of the estimated charges check
+    double lastEstimatedCharges() const;
+
+    // returns the last value of the total instances check
+    unsigned lastTotalInstances() const;
 
     //@}
   protected:
@@ -320,8 +361,6 @@ namespace detail {
     typedef detail::AWSProvider_Impl ImplType;
 
     friend class CloudProvider;
-
-  private:
 
   };
 

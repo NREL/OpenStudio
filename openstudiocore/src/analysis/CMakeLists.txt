@@ -169,36 +169,8 @@ SET( ${target_name}_src
 )
 
 SET( ${target_name}_moc
-  Algorithm_Impl.hpp
   Analysis_Impl.hpp
   AnalysisObject_Impl.hpp
-  ContinuousVariable_Impl.hpp
-  DakotaAlgorithm_Impl.hpp
-  DataPoint_Impl.hpp
-  DDACEAlgorithm_Impl.hpp
-  DesignOfExperiments_Impl.hpp
-  DiscreteVariable_Impl.hpp
-  FSUDaceAlgorithm_Impl.hpp
-  Function_Impl.hpp
-  InputVariable_Impl.hpp
-  LinearFunction_Impl.hpp
-  Measure_Impl.hpp
-  MeasureGroup_Impl.hpp
-  NullMeasure_Impl.hpp
-  OpenStudioAlgorithm_Impl.hpp
-  OptimizationDataPoint_Impl.hpp
-  OptimizationProblem_Impl.hpp
-  OutputAttributeVariable_Impl.hpp
-  OutputVariable_Impl.hpp
-  ParameterStudyAlgorithm_Impl.hpp
-  Problem_Impl.hpp
-  PSUADEDaceAlgorithm_Impl.hpp
-  RubyContinuousVariable_Impl.hpp
-  RubyMeasure_Impl.hpp
-  SamplingAlgorithm_Impl.hpp
-  SequentialSearch_Impl.hpp
-  Variable_Impl.hpp
-  WorkflowStep_Impl.hpp
 )
 
 SET( ${target_name}_test_src

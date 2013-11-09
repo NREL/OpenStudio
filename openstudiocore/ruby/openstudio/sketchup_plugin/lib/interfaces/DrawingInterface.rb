@@ -86,7 +86,7 @@ module OpenStudio
     # Redefine this method so that only a comparison of the same instance of the object will return true.
     # Similar to matching "this.object_id == other.object_id".
     # This is helpful for finding an instance in an array, for example.
-    # DLM: This should be '	Checks if the value of two operands are equal or not, if yes then condition becomes true.'
+    # DLM: This should be 'Checks if the value of two operands are equal or not, if yes then condition becomes true.'
     def ==(this_object)
       #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       

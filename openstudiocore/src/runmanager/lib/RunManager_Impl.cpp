@@ -550,6 +550,7 @@ namespace detail {
         persistJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>(t_job);
         persistJobTools(t_job);
         persistJobParams(t_job);
+        persistJobStatusInternal(t_job);
       }
 
 
@@ -605,12 +606,19 @@ namespace detail {
         }
       }
 
-
       void persistJobStatus(const openstudio::UUID &t_uuid, const JobErrors &t_errors, const boost::optional<openstudio::DateTime> &t_lastRun,
           const Files &t_files)
       {
-        LOG(Debug, "(" << openstudio::toString(m_dbPath) << ") Persisting job status for " << openstudio::toString(t_uuid));
         m_db.begin();
+        persistJobStatusInternal(t_uuid, t_errors, t_lastRun, t_files);
+        m_db.commit();
+      }
+
+
+      void persistJobStatusInternal(const openstudio::UUID &t_uuid, const JobErrors &t_errors, const boost::optional<openstudio::DateTime> &t_lastRun,
+          const Files &t_files)
+      {
+        LOG(Debug, "(" << openstudio::toString(m_dbPath) << ") Persisting job status for " << openstudio::toString(t_uuid));
         deleteJobStatus(t_uuid);
         deleteJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>(t_uuid);
 
@@ -622,7 +630,6 @@ namespace detail {
         {
           LOG(Debug, "Not persisting, job has not actually finished " << openstudio::toString(t_uuid));
           // Job has not been run, nothing to persist besides deleting the old one
-          m_db.commit();
           return;
         }
 
@@ -652,7 +659,11 @@ namespace detail {
         }
 
         LOG(Debug, "Done persisting job, committing " << openstudio::toString(t_uuid));
-        m_db.commit();
+      }
+
+      void persistJobStatusInternal(const openstudio::runmanager::Job &t_job)
+      {
+        persistJobStatusInternal(t_job.uuid(), t_job.errors(), t_job.lastRun(), openstudio::runmanager::Files(t_job.outputFiles()));
       }
 
       void persistJobStatus(const openstudio::runmanager::Job &t_job)
@@ -1124,7 +1135,7 @@ namespace detail {
             try {
               f.addRequiredFile(QUrl::fromUserInput(toQString(itr2->from)), toPath(itr2->to));
             } catch (const std::runtime_error &) {
-              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict");
+              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict: '" << openstudio::toString(itr2->from) << "' to '" << openstudio::toString(itr2->to));
               throw;
             }
           }
@@ -1614,17 +1625,31 @@ namespace detail {
     }
   }
 
-  bool RunManager_Impl::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &t_basePath)
+  bool RunManager_Impl::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &basePath)
   {
-    if (enqueueImpl(job, force, t_basePath))
+    boost::optional<openstudio::runmanager::Job> result = enqueueImpl(job,force,basePath);
+    if (!result)
     {
       m_dbholder->persistJobTree(job);
 
       processQueue();
       return true;
-    } else {
-      return false;
     }
+
+    return false;
+  }
+
+  boost::optional<openstudio::runmanager::Job> RunManager_Impl::enqueueOrReturnExisting(
+      const openstudio::runmanager::Job &job,
+      bool force,
+      const openstudio::path &path)
+  {
+    boost::optional<Job> result = enqueueImpl(job,force,path);
+    if (!result) {
+      m_dbholder->persistJobTree(job);
+      processQueue();
+    }
+    return result;
   }
 
   bool RunManager_Impl::enqueue(const std::vector<openstudio::runmanager::Job> &t_jobs, bool force, const openstudio::path &t_basePath)
@@ -1648,8 +1673,10 @@ namespace detail {
   }
 
 
-  bool RunManager_Impl::enqueueImpl(openstudio::runmanager::Job job, bool force, const openstudio::path &t_basePath)
+  boost::optional<openstudio::runmanager::Job> RunManager_Impl::enqueueImpl(openstudio::runmanager::Job job, bool force, const openstudio::path &t_basePath)
   {
+    boost::optional<Job> result;
+
     UUID uuid = job.uuid();
     LOG(Info, "Enqueing Job: " << toString(uuid) << " " << job.description());
 
@@ -1689,7 +1716,8 @@ namespace detail {
                 LOG(Info, "An existing job with the workflowkey of " << key << " exists in the queue, not adding new job, restarting existing job");
                 itr->setTreeRunnable(false);
                 itr->setRunnable(force);
-                return false;
+                result = *itr;
+                return result;
               }
 
             }
@@ -1770,7 +1798,7 @@ namespace detail {
       enqueueImpl(*finishedjob, force, t_basePath);
     }
 
-    return true;
+    return result;
   }
 
   void RunManager_Impl::jobFinished(const openstudio::UUID &t_uuid, const openstudio::runmanager::JobErrors &t_errors, 
@@ -2407,7 +2435,7 @@ namespace detail {
     try {
       Job j = getJob(t_job.uuid());
       m_dbholder->deleteJobTree(t_job);
-      j.updateJob(t_job, false);
+      j.updateJob(t_job, false);      
       m_dbholder->persistJobTree(t_job);
       j.setBasePathRecursive(t_path);
     } catch (const std::out_of_range &) {

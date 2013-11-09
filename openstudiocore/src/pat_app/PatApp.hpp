@@ -20,30 +20,34 @@
 #ifndef OPENSTUDIO_PATAPP_HPP
 #define OPENSTUDIO_PATAPP_HPP
 
-#include <QObject>
-#include <QWidget>
 #include <QApplication>
+#include <QObject>
 #include <QPoint>
 #include <QPointer>
 #include <QSharedPointer>
+#include <QWidget>
 
 #include <analysisdriver/SimpleProject.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <model/Model.hpp>
 
-#include "../shared_gui_components/BuildingComponentDialog.hpp"
-#include "../shared_gui_components/OSDialog.hpp"
 #include "../shared_gui_components/BaseApp.hpp"
+#include "../shared_gui_components/BuildingComponentDialog.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/OSDialog.hpp"
+#include "PatConstants.hpp"
+#include "CloudDialog.hpp"
+#include "MonitorUseDialog.hpp"
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Path.hpp>
+#include <utilities/core/Url.hpp>
 #include <utilities/core/UUID.hpp>
 #include <utilities/plot/ProgressBar.hpp>
 
-#include <vector>
 #include <map>
-
-#include "../shared_gui_components/MeasureManager.hpp"
+#include <vector>
 
 class QEvent;
 
@@ -51,6 +55,7 @@ namespace openstudio {
 
 class BCLMeasure;
 class LocalLibraryController;
+class CloudProvider;
 
 namespace osversion {
 
@@ -62,21 +67,26 @@ namespace ruleset {
   class RubyUserScriptArgumentGetter;
 }
 
+namespace analysisdriver {
+  class AnalysisStatus;
+}
+
 namespace pat {
 
+class AddToModelView;
+class CloudMonitor;
 class DesignAlternativesTabController;
 class InspectorController;
 class LibraryTabWidget;
 class MainRightColumnController;
-class PatMainWindow;
+class MainWindow;
 class MeasuresTabController;
 class OSItemId;
+class PatMainWindow;
 class ResultsTabController;
 class RunTabController;
-class SystemComponent;
-class MainWindow;
-class AddToModelView;
 class StartupView;
+class SystemComponent;
 
 class PatApp : public QApplication, public BaseApp
 {
@@ -96,6 +106,8 @@ class PatApp : public QApplication, public BaseApp
   virtual bool notify(QObject* receiver, QEvent* event);
 
   boost::optional<analysisdriver::SimpleProject> project() {return m_project;}
+
+  QSharedPointer<CloudMonitor> cloudMonitor() const;
 
   // ensure that we set the seed on this project not a copy, will also cached the seed models
   bool setSeed(const FileReference& currentSeedLocation);
@@ -124,6 +136,14 @@ class PatApp : public QApplication, public BaseApp
 
   QSharedPointer<MainRightColumnController> mainRightColumnController() const;
 
+  QSharedPointer<DesignAlternativesTabController> designAlternativesTabController() const;
+
+  QSharedPointer<MeasuresTabController> measuresTabController() const;
+
+  QSharedPointer<ResultsTabController> resultsTabController() const;
+
+  QSharedPointer<RunTabController> runTabController() const;
+
   MeasureManager &measureManager();
 
   const MeasureManager &measureManager() const;
@@ -134,6 +154,11 @@ class PatApp : public QApplication, public BaseApp
   }
 
   virtual void updateSelectedMeasureState();
+
+  // The settings associated with the current user
+  // independent of a particular project.
+  // These settings will be used for new cloud instances
+  static CloudSettings cloudSettings();
 
   enum VerticalTabID
   {
@@ -164,7 +189,7 @@ class PatApp : public QApplication, public BaseApp
 
   void saveAs();
 
-  void quit();
+  void quit(bool fromCloseEvent = false);
 
   void open();
 
@@ -177,6 +202,14 @@ class PatApp : public QApplication, public BaseApp
   void openBclDlg();
 
   void on_closeBclDlg();
+
+  void openCloudDlg();
+
+  void on_closeCloudDlg();
+
+  void openMonitorUseDlg();
+
+  void on_closeMonitorUseDlg();
 
   void showHelp();
 
@@ -192,9 +225,19 @@ class PatApp : public QApplication, public BaseApp
 
   void downloadUpdatedBCLMeasures();
 
+  // Consider removing this in favor of setAppState()
   void disableTabsDuringRun();
 
  private slots:
+
+  void setAppState(const CloudStatus & cloudStatus, const analysisdriver::AnalysisStatus & analysisStatus);
+
+  // Calls setAppState with current cloud and analysis status
+  void updateAppState();
+
+  void onCloudStatusChanged(const CloudStatus & newStatus);
+
+  void onAnalysisStatusChanged(analysisdriver::AnalysisStatus newAnalysisStatus);
 
   void showVerticalTab(int id); 
 
@@ -226,6 +269,8 @@ class PatApp : public QApplication, public BaseApp
 
   QPointer<StartupView> m_startupView;
   QPointer<BuildingComponentDialog> m_onlineBclDialog;
+  QPointer<CloudDialog> m_cloudDialog;
+  QPointer<MonitorUseDialog> m_monitorUseDialog;
 
   QSharedPointer<DesignAlternativesTabController> m_designAlternativesTabController;
   QSharedPointer<MainRightColumnController> m_mainRightColumnController;
@@ -234,6 +279,8 @@ class PatApp : public QApplication, public BaseApp
   QSharedPointer<RunTabController> m_runTabController;
 
   boost::optional<analysisdriver::SimpleProject> m_project;
+
+  QSharedPointer<CloudMonitor> m_cloudMonitor;
 
   MeasureManager m_measureManager;
 
@@ -250,21 +297,9 @@ public:
 
   QLineEdit * m_projectNameLineEdit;
 
-protected:
-
-  void mouseMoveEvent(QMouseEvent *event);
-
-  void mousePressEvent(QMouseEvent *event);
-
 private slots:
 
   void enableOkButton();
-
-private:
-
-  QPoint dragPosition;
-
-  bool _move;
 
 };
 

@@ -153,7 +153,7 @@ namespace detail {
 
     void analysisStopped(const openstudio::UUID& analysis);
 
-    void analysisStatusChanged(AnalysisStatus newStatus);
+    void analysisStatusChanged(analysisdriver::AnalysisStatus newStatus);
 
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.AnalysisDriver");

@@ -42,7 +42,7 @@ class MODEL_API CoilHeatingLowTempRadiantVarFlow : public StraightComponent {
   //@{
 
   explicit CoilHeatingLowTempRadiantVarFlow(const Model& model,
-																																												Schedule& heatingControlTemperature);
+                                            Schedule& heatingControlTemperature);
 
   virtual ~CoilHeatingLowTempRadiantVarFlow() {}
 

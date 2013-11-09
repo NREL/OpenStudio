@@ -38,6 +38,9 @@
 #include <deque>
 
 namespace openstudio {
+
+class Tag;
+
 namespace analysisdriver {
 
 namespace detail {
@@ -62,6 +65,8 @@ namespace detail {
 
     SimpleProject project() const;
 
+    AnalysisStatus status() const;
+
     /** Returns the number of data points the CloudAnalysisDriver has been asked to process
      *  since the last time all the queues were cleared. */
     unsigned numDataPointsInIteration() const;
@@ -71,8 +76,21 @@ namespace detail {
 
     /** Returns the number of data points in this iteration that are no longer being processed. */
     unsigned numCompleteDataPoints() const;
+
+    /** Returns the number of complete data points that are marked as .failed(). */
+    unsigned numFailedDataPoints() const;
     
-    AnalysisStatus status() const;
+    /** Returns the DataPoints whose json files failed to download. Note that these are counted
+     *  as 'complete' by CloudAnalysisDriver, but not by Analysis. */
+    std::vector<analysis::DataPoint> failedJsonDownloads() const;
+
+    /** Returns the DataPoints whose details failed to download. Note that these are counted as
+     *  'complete' by CloudAnalysisDriver and by Analysis, but their .directory() is .empty(). */
+    std::vector<analysis::DataPoint> failedDetailedDownloads() const;
+
+    /** Returns true if dataPoint is associated with session(), that is, if its last run request
+     *  was with session() (not local, and not another CloudSession). */
+    bool inSession(const analysis::DataPoint& dataPoint) const;
 
     //@}
     /** @name Blocking Class Members */
@@ -155,8 +173,6 @@ namespace detail {
 
     void stopRequestComplete(bool success);
 
-    void jsonDownloadRequestsComplete(bool success);
-
     void detailedDownloadRequestsComplete(bool success);
 
     //@}
@@ -170,6 +186,9 @@ namespace detail {
     // emitted when data point posted to server
     void dataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
+    // emitted when data point reported as running
+    void dataPointRunning(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
     // emitted when data point slim results downloaded and incorporated into project
     void dataPointComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
@@ -181,7 +200,7 @@ namespace detail {
 
     void analysisStopped(const openstudio::UUID& analysis);
     
-    void analysisStatusChanged(AnalysisStatus newStatus);
+    void analysisStatusChanged(analysisdriver::AnalysisStatus newStatus);
 
     //@}
    protected slots:
@@ -222,33 +241,55 @@ namespace detail {
      // 10. If not, kick it off.
      void analysisStarted(bool success);
 
-     // 11. Wait up to 10 + 2 per data point tries (w/ 1s of sleep) for the server to 
+     // 11. Wait for the server to
      //     report that the analysis is running.
      void waitingForAnalysisToStart(bool success);
 
-     // 12. Start the monitoring process (if already running or just kicked off).
+     void askAgainIfAnalysisRunning();
+
+     // 12. Wait for the server to report that
+     //     at least one DataPoint is running.
+     void waitingForADataPointToStart(bool success);
+
+     void askAgainForRunningDataPoints();
+
+     // 13. Start the monitoring process (if already running or just kicked off).
 
      // MONITORING =============================================================
 
      // watch for complete data points
      void completeDataPointUUIDsReturned(bool success);
 
-     // make sure analysis is still running (try to avoid spinning when nothing is happening)
-     void analysisStillRunning(bool success);
+     void askIfAnalysisIsRunning();
 
-     // see if data points are still running (optional part of the stopping process)
-     void dataPointsStillRunning(bool success);
+     // make sure analysis is still running
+     // (try to avoid spinning when nothing is happening)
+     void analysisRunningReturned(bool success);
+
+     void askForRunningDataPointUUIDs();
+
+     // see if data points are still running
+     // (mark DataPoints that are running, and also make sure something is happening.)
+     void runningDataPointUUIDsReturned(bool success);
+
+     void askForCompleteDataPointUUIDs();
 
      // DOWNLOADING ============================================================
 
      // slim results received
      void jsonDownloadComplete(bool success);
 
+     void requestJsonRetry();
+
      // pause between slim and detailed results
      void readyForDownloadDataPointUUIDsReturned(bool success);
 
+     void askForReadyForDownloadDataPointUUIDs();
+
      // detailed results received
      void detailsDownloadComplete(bool success);
+
+     void requestDetailsRetry();
 
      // STOPPING ===============================================================
 
@@ -275,37 +316,49 @@ namespace detail {
     std::vector<std::string> m_errors;
     std::vector<std::string> m_warnings;
 
-    // request run process
-    boost::optional<OSServer> m_requestRun;
     std::vector<analysis::DataPoint> m_iteration; // DataPoints in this iteration
     bool m_processingQueuesInitialized; // if false, processing queues empty just because
                                         // still spinning up process
+
+    // request run process
+    boost::optional<OSServer> m_requestRun;
     std::deque<analysis::DataPoint> m_postQueue;
     unsigned m_analysisNotRunningCount;
     unsigned m_maxAnalysisNotRunningCount;
+    // the following are used in starting the run and in monitoring
+    unsigned m_dataPointsNotRunningCount;
+    unsigned m_maxDataPointsNotRunningCount;
 
     // watch for complete data points
     boost::optional<OSServer> m_monitorDataPoints;
     std::vector<analysis::DataPoint> m_waitingQueue;
-    bool m_checkDataPointsRunningInsteadOfAnalysis;
-    bool m_lastGetRunningDataPointsSuccess;
+    std::vector<analysis::DataPoint> m_runningQueue;
 
     // download slim data points
     boost::optional<OSServer> m_requestJson;
     std::deque<analysis::DataPoint> m_jsonQueue;
+    unsigned m_numJsonTries;
+    std::vector<analysis::DataPoint> m_jsonFailures;
 
     // check to see if details can be downloaded
     boost::optional<OSServer> m_checkForResultsToDownload;
     std::vector<analysis::DataPoint> m_preDetailsQueue;
+    bool m_onlyProcessingDownloadRequests; // to distinguish between main request being
+                                           // run or download of details
+    unsigned m_noNewReadyDataPointsCount;
 
     // download detailed results
     boost::optional<OSServer> m_requestDetails;
     std::deque<analysis::DataPoint> m_detailsQueue;
+    unsigned m_numDetailsTries;
+    std::vector<analysis::DataPoint> m_detailsFailures;
 
     // stop analysis
     boost::optional<OSServer> m_requestStop;
+    bool m_waitForAlreadyRunningDataPoints;
 
-    void clearErrorsAndWarnings();
+    void resetState();
+
     void logError(const std::string& error);
     void logWarning(const std::string& warning);
     void appendErrorsAndWarnings(const OSServer& server);
@@ -328,13 +381,14 @@ namespace detail {
 
     void registerStopRequestFailure();
 
-    void registerDownloadDetailsRequestFailure();
-
     void checkForRunCompleteOrStopped();
 
     bool inIteration(const analysis::DataPoint& dataPoint) const;
-
     bool inProcessingQueues(const analysis::DataPoint& dataPoint) const;
+
+    std::string sessionTag() const;
+    void clearSessionTags(analysis::DataPoint& dataPoint) const;
+
   };
 
 } // detail

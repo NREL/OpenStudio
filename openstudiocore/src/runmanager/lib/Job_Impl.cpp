@@ -1853,6 +1853,10 @@ namespace detail {
     m_tools = newtools;
     m_params = newparams;
     m_id = newUUID;
+    m_outdir = boost::none;
+    m_allTools = boost::none;
+    m_allParams = boost::none;
+    m_allInputFiles = boost::none;
     l.unlock();
 
     sendSignals(oldState, newState, oldUUID, newUUID);
@@ -1880,12 +1884,8 @@ namespace detail {
 
   void Job_Impl::sendSignals(JobState oldState, JobState newState, const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID)
   {
-    bool sendStatus = false;
-    if (oldState.status != newState.status)
-    {
-      sendStatus = true;
-    }
-
+    // always send the status
+    bool sendStatus = true;
     bool sendFinished = false;
     bool sendStarted = false;
 

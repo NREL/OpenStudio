@@ -35,7 +35,7 @@
 #
 ######################################################################
 
-require 'aws'
+require 'aws-sdk'
 require 'json'
 require 'logger'
 require 'net/http'
@@ -91,11 +91,19 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-cbbdeca2'
-if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-0dbdec64'
+resp = Net::HTTP.get_response('developer.nrel.gov','/downloads/buildings/openstudio/rsrc/amis.json')
+if resp.code == '200'
+  result = JSON.parse(resp.body)
+  version = result.has_key?(OPENSTUDIO_VERSION) ? OPENSTUDIO_VERSION : 'default'
+
+  @server_image_id = result[version]['server']
+  if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
+    @worker_image_id = result[version]['cc2worker']
+  else
+    @worker_image_id = result[version]['worker']
+  end
 else
-  @worker_image_id = 'ami-23bdec4a'
+  error(resp.code, 'Unable to download AMI IDs')
 end
 
 def create_struct(instance, procs)
@@ -107,7 +115,7 @@ def find_processors(instance)
   processors = 1
   case instance
     when 'cc2.8xlarge'
-      processors = 32
+      processors = 16
     when 'c1.xlarge'
       processors = 8
     when 'm2.4xlarge'
@@ -115,15 +123,15 @@ def find_processors(instance)
     when 'm2.2xlarge'
       processors = 4
     when 'm2.xlarge'
-      processors = 4
+      processors = 2
     when 'm1.xlarge'
       processors = 4
     when 'm1.large'
       processors = 2
     when 'm3.xlarge'
-      processors = 4
+      processors = 2
     when 'm3.2xlarge'
-      processors = 8
+      processors = 4
   end
 
   return processors
@@ -534,12 +542,13 @@ begin
       error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
   end
     #puts \"Status: #{resp.http_response.status}\"
+rescue SystemExit => e
 rescue Exception => e
   if e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')
   elsif defined? e.http_response
     error(e.http_response.status, e.code)
-  elsif e != 'exit'
+  else
     error(-1, "#{e}: #{e.backtrace}")
   end
 

@@ -11,6 +11,7 @@
   #include <utilities/geometry/Geometry.hpp>
   #include <utilities/geometry/Transformation.hpp>
   #include <utilities/geometry/BoundingBox.hpp>
+  #include <utilities/geometry/Intersection.hpp>
   
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -53,5 +54,6 @@
 %include <utilities/geometry/Geometry.hpp>
 %include <utilities/geometry/Transformation.hpp>
 %include <utilities/geometry/BoundingBox.hpp>
+%include <utilities/geometry/Intersection.hpp>
 
 #endif //UTILITIES_GEOMETRY_GEOMETRY_I 
