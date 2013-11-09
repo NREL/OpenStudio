@@ -37,8 +37,10 @@ class CONTAM_API Model
 {
 public:
   Model(){m_valid=false;}
+  explicit Model(openstudio::path path);
   explicit Model(std::string filename);
   explicit Model(Reader &input);
+  bool read(openstudio::path path);
   bool read(std::string filename);
   bool read(Reader &input);
   std::string toString();
@@ -245,9 +247,11 @@ private:
   void readZoneIc(Reader &input);
   std::string writeZoneIc(int start=0);
   template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
-  template <class T, template <class T> class U> std::string writeSectionVector(U<QSharedPointer<T> > vector,
-    std::string label=std::string(),
-    int start=0);
+  // SWIG has some problems with this template for some reason. Comment out for now, delete if it doesn't
+  // get uncommented soon.
+  //  template <class T, template <class T> class U> std::string writeSectionVector(U<QSharedPointer<T> > vector,
+  //    std::string label=std::string(), int start=0);
+  template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
 
   bool m_valid;
@@ -288,7 +292,30 @@ template <class T> std::string Model::writeSectionVector(std::vector<T> vector, 
   return string;
 }
 
-template <class T, template <class T> class U> std::string Model::writeSectionVector(U<QSharedPointer<T> > vector,
+/*
+template <class T, template <class T> class U> STRING Model::writeSectionVector(U<QSharedPointer<T> > vector,
+STRING label, int start)
+{
+std::string string;
+int number = vector.size()-start;
+if(label.empty())
+{
+string += openstudio::toString(number) + '\n';
+}
+else
+{
+string += openstudio::toString(number) + " ! " + label + '\n';
+}
+for(int i=start;i<vector.size();i++)
+{
+string += vector[i]->write();
+}
+string += "-999\n";
+return string;
+}
+*/
+
+template <class T> std::string Model::writeSectionVector(QVector<QSharedPointer<T> > vector,
   std::string label, int start)
 {
   std::string string;

@@ -38,6 +38,7 @@ SET( ${target_name}_test_src
 )
 
 SET( ${target_name}_swig_src
+  Contam.i
 )
 
 SET( ${target_name}_depends
@@ -74,7 +75,7 @@ IF(BUILD_TESTING)
   ADD_DEPENDENCIES(${target_name}_tests openstudio_contam_resources)
 ENDIF()
 
-#MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} "${target_name}" )
+MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 
 add_executable(osm2prj osm2prj.cpp)
 

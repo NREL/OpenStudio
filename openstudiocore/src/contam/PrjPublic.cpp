@@ -3198,7 +3198,7 @@ ControlNode* ControlNode::readElement(Reader &input)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
 #endif
-    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg);
+    LOG_FREE_AND_THROW("openstudio.contam.Reader",mesg);
   }
   return out;
 }
@@ -5447,7 +5447,7 @@ AirflowElement* AirflowElement::readElement(Reader &input)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
 #endif
-    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg);
+    LOG_FREE_AND_THROW("openstudio.contam.Reader",mesg);
   }
   return out;
 }

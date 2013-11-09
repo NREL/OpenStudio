@@ -702,7 +702,7 @@ private:
   QExplicitlySharedDataPointer<WindPressureProfilePrivate> d;
 };
 
-class ControlNode
+class CONTAM_API ControlNode
 {
 public:
   enum Type {CT_SNS=0,CT_SCH=1,CT_SET=2,CT_CVF=3,CT_DVF=4,CT_LOG=5,CT_PAS=6,CT_MOD=7,CT_HYS=8,CT_ABS=9,CT_BIN=10,CT_DLS=11,CT_DLX=12,CT_INT=13,CT_RAV=14,CT_INV=15,CT_AND=16,CT_OR=17,CT_XOR=18,CT_ADD=19,CT_SUB=20,CT_MUL=21,CT_DIV=22,CT_SUM=23,CT_AVG=24,CT_MAX=25,CT_MIN=26,CT_LLS=27,CT_ULS=28,CT_LBS=29,CT_UBS=30,CT_LLC=31,CT_ULC=32,CT_PC1=33,CT_PI1=34,CT_SUP=35,CT_SPH=37,UNKNOWN};
@@ -730,7 +730,7 @@ public:
   virtual void setDesc(const std::string desc) = 0;
 };
 
-class CtrlDat : public ControlNode
+class CONTAM_API CtrlDat : public ControlNode
 {
 public:
   CtrlDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string());
@@ -1332,7 +1332,7 @@ public:
   std::string dataType() const {return "min";}
 };
 
-class BanDat : public ControlNode
+class CONTAM_API BanDat : public ControlNode
 {
 public:
   BanDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX band=RX_INIT(0));
@@ -1482,7 +1482,7 @@ private:
   QExplicitlySharedDataPointer<SupDatPrivate> d;
 };
 
-class AirflowElement
+class CONTAM_API AirflowElement
 {
 public:
   enum Type {PL_ORFC=0,PL_LEAK1=1,PL_LEAK2=2,PL_LEAK3=3,PL_CONN=4,PL_QCN=5,PL_FCN=6,PL_TEST1=7,PL_TEST2=8,PL_CRACK=9,PL_STAIR=10,PL_SHAFT=11,PL_BDQ=12,PL_BDF=13,QFR_QAB=14,QFR_QAF=15,QFR_CRACK=16,QFR_TEST2=17,DR_DOOR=18,DR_PL2=19,FN_CMF=20,FN_CVF=21,FN_FAN=22,CS_FSP=23,CS_QSP=24,CS_PSF=25,CS_PSQ=26,AF_SUP=27,UNKNOWN};
@@ -2246,7 +2246,7 @@ private:
   QExplicitlySharedDataPointer<AfeFanPrivate> d;
 };
 
-class AfeCsf : public AirflowElement
+class CONTAM_API AfeCsf : public AirflowElement
 {
 public:
   AfeCsf(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),int u_x=0,int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>());

@@ -40,7 +40,7 @@ class ProgressBar;
 
 namespace contam{
 
-class CvFile
+class CONTAM_API CvFile
 {
 public:
   CvFile();

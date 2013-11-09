@@ -24,6 +24,11 @@
 namespace openstudio {
 namespace contam {
 
+Model::Model(openstudio::path path)
+{
+  read(path);
+}
+
 Model::Model(std::string filename)
 {
   read(filename);
@@ -32,6 +37,11 @@ Model::Model(std::string filename)
 Model::Model(Reader &input)
 {
   read(input);
+}
+
+bool Model::read(openstudio::path path)
+{
+  return read(openstudio::toString(path));
 }
 
 bool Model::read(std::string filename)
@@ -276,26 +286,26 @@ std::vector<TimeSeries> Model::zoneInfiltration(SimFile *sim)
     // Run through the times and compute the infiltration
     for(unsigned int j=0; j<ntimes; j++)
     {
-      for(unsigned int k=0; k<extPaths.size(); k++)
-      {
-        int nr = paths[i][k];
-        if(nr > 0) // Positive value is infiltration
-        {
-          nr -= 1;
-          if(flow0[nr][j] > 0)
-          {
-            inf[j] += flow0[nr][j];
-          }
-        }
-        else // Negative value is infiltration
-        {
-          nr = -nr - 1;
-          if(flow0[nr][j] < 0)
-          {
-            inf[j] -= flow0[nr][j];
-          }
-        }
-      }
+    for(unsigned int k=0; k<extPaths.size(); k++)
+    {
+    int nr = paths[i][k];
+    if(nr > 0) // Positive value is infiltration
+    {
+    nr -= 1;
+    if(flow0[nr][j] > 0)
+    {
+    inf[j] += flow0[nr][j];
+    }
+    }
+    else // Negative value is infiltration
+    {
+    nr = -nr - 1;
+    if(flow0[nr][j] < 0)
+    {
+    inf[j] -= flow0[nr][j];
+    }
+    }
+    }
     }*/
     results.push_back(openstudio::TimeSeries(sim->dateTimes(),inf,"kg/s"));
   }
