@@ -338,8 +338,24 @@ namespace detail {
 
   LocalProcess::FileSet LocalProcess::dirFiles(const QString &dir) const
   {
+    QFileInfoList fil;
+
+    
+    QDir subdirs(dir, "mergedjob-*", QDir::Name, QDir::Dirs);
+    QFileInfoList mergedjobdirs = subdirs.entryInfoList();
+
+    for (QFileInfoList::const_iterator itr = mergedjobdirs.begin();
+         itr != mergedjobdirs.end();
+         ++itr)
+    {
+
+      QDir mergeddir(itr->absoluteFilePath(), "", QDir::Name, QDir::Files);
+      fil.append(mergeddir.entryInfoList());
+    }
+  
+
     QDir d(dir, "", QDir::Name, QDir::Files);
-    QFileInfoList fil = d.entryInfoList();
+    fil.append(d.entryInfoList());
 
     QFileInfoList filtered;
 

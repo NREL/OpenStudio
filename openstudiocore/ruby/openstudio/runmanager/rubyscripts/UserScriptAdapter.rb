@@ -32,7 +32,7 @@ require 'openstudio'
 require 'optparse'
 
 scriptfolder = File.expand_path(File.dirname(File.dirname(__FILE__)))
-
+originalwd = Dir.pwd()
 puts "Script executing from: " + scriptfolder
 
 options = Hash.new
@@ -195,11 +195,11 @@ end
 ##### Begin section to loop for merged user scripts
 scriptindex = 0
 
-while (scriptindex == 0 || File.directory?(scriptfolder + "/" + scriptindex.to_s))
+while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + scriptindex.to_s))
   # GET THE ARGUMENTS
 
   if (scriptindex != 0)
-    user_script_path = OpenStudio::Path.new("#{scriptfolder}/#{scriptindex}/user_script.rb")
+    user_script_path = OpenStudio::Path.new("#{scriptfolder}/mergedjob-#{scriptindex}/user_script.rb")
 
     # The 0th case is already set up, it was the script loaded and parsed up above
     require user_script_path.to_s
@@ -232,7 +232,8 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/" + scriptindex.to_s
 
     options[:arguments] = []
 
-    paramspath = OpenStudio::Path.new("#{scriptfolder}/#{scriptindex}/params.json");
+    paramspath = OpenStudio::Path.new("#{scriptfolder}/mergedjob-#{scriptindex}/params.json")
+    Dir.chdir("#{scriptfolder}/mergedjob-#{scriptindex}")
 
     optparse.parse(OpenStudio::Runmanager::RubyJobBuilder.new(paramspath).getScriptParameters())
   end
@@ -308,8 +309,15 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/" + scriptindex.to_s
   end
 
   scriptindex += 1
+  # SAVE SCRIPT RESULT
+
+  runner.result.save(OpenStudio::Path.new("result.ossr"),true)
+
 end
+
 ### end looping code
+
+Dir.chdir(originalwd)
 
 puts "Processed 1 base script and #{scriptindex - 1} merged scripts"
 
@@ -331,9 +339,6 @@ elsif save_workspace
   workspace.save(output_path,true)
 end
 
-# SAVE SCRIPT RESULT
-
-runner.result.save(OpenStudio::Path.new("result.ossr"),true)
 
 # make doubly sure RunManager flags this job as failed
 raise "Error encountered. See result.ossr." if not result

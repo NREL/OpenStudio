@@ -292,7 +292,7 @@ namespace detail {
 
       for (size_t i = 0; i < rjb.mergedJobs().size(); ++i)
       {
-        openstudio::path p = openstudio::toPath(boost::lexical_cast<std::string>(i+1));
+        openstudio::path p = openstudio::toPath("mergedjob-" + boost::lexical_cast<std::string>(i+1));
 
         FileInfo fi = rjb.mergedJobs()[i].toWorkItem().files.getLastByExtension("rb");
         fi.prependRequiredFilePath(p);

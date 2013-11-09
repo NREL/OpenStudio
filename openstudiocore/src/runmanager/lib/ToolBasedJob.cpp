@@ -74,6 +74,94 @@ namespace detail {
     m_osresult = r;
   }
 
+  void ToolBasedJob::ErrorInfo::osResult(const std::vector<openstudio::ruleset::OSResult> &r)
+  {
+    if (r.size() > 1)
+    {
+      boost::optional<LogMessage> initialCondition;
+      boost::optional<LogMessage> finalCondition;
+
+      std::vector<LogMessage> errors;
+      std::vector<LogMessage> warnings;
+      std::vector<LogMessage> info;
+
+
+      openstudio::ruleset::OSResultValue value = openstudio::ruleset::OSResultValue::NA;
+
+      openstudio::ruleset::OSResult result;
+
+      for (size_t i = 0; i < r.size(); ++i)
+      {
+        boost::optional<LogMessage> rinitialCondition = r[i].initialCondition();
+        boost::optional<LogMessage> rfinalCondition = r[i].finalCondition();
+
+        std::vector<LogMessage> rerrors = r[i].errors();
+        std::vector<LogMessage> rwarnings = r[i].warnings();
+        std::vector<LogMessage> rinfo = r[i].info();
+
+        openstudio::ruleset::OSResultValue rvalue = r[i].value();
+
+
+        if (initialCondition && rinitialCondition)
+        {
+          initialCondition = LogMessage(initialCondition->logLevel(), initialCondition->logChannel(), initialCondition->logMessage() + " Script: " + boost::lexical_cast<std::string>(i+1) + " " + rinitialCondition->logMessage());
+        } else if (rinitialCondition) {
+          initialCondition = LogMessage(rinitialCondition->logLevel(), rinitialCondition->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + rinitialCondition->logMessage());
+        }
+
+        if (finalCondition && rfinalCondition)
+        {
+          finalCondition = LogMessage(finalCondition->logLevel(), finalCondition->logChannel(), finalCondition->logMessage() + " Script: " + boost::lexical_cast<std::string>(i+1) + " " + rfinalCondition->logMessage());
+        } else if (rfinalCondition) {
+          finalCondition = LogMessage(rfinalCondition->logLevel(), rfinalCondition->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + rfinalCondition->logMessage());
+        }
+
+        for (std::vector<LogMessage>::const_iterator itr = rerrors.begin();
+             itr != rerrors.end();
+             ++itr)
+        {
+          result.addError(itr->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + itr->logMessage());
+        }
+
+        for (std::vector<LogMessage>::const_iterator itr = rwarnings.begin();
+             itr != rwarnings.end();
+             ++itr)
+        {
+          result.addWarning(itr->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + itr->logMessage());
+        }
+
+        for (std::vector<LogMessage>::const_iterator itr = rinfo.begin();
+             itr != rinfo.end();
+             ++itr)
+        {
+          result.addInfo(itr->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + itr->logMessage());
+        }
+
+        if (value == openstudio::ruleset::OSResultValue::Fail || rvalue == openstudio::ruleset::OSResultValue::Fail)
+        {
+          value = openstudio::ruleset::OSResultValue::Fail;
+        } else if (value == openstudio::ruleset::OSResultValue::Success|| rvalue == openstudio::ruleset::OSResultValue::Success) {
+          value = openstudio::ruleset::OSResultValue::Success;
+        }
+      }
+
+      result.setValue(value);
+
+      if (initialCondition)
+      {
+        result.setInitialCondition(initialCondition->logChannel(), initialCondition->logMessage());
+      }
+
+      if (finalCondition)
+      {
+        result.setFinalCondition(finalCondition->logChannel(), finalCondition->logMessage());
+      }
+    } else if (r.size() == 1) {
+      m_osresult = r.front();
+    }
+  }
+
+
   void ToolBasedJob::ErrorInfo::addLogMessages(openstudio::runmanager::ErrorType t_type, 
       const std::vector<openstudio::LogMessage> &t_msgs, std::vector<std::pair<ErrorType, std::string> > &t_errors)
   {
@@ -964,20 +1052,46 @@ namespace detail {
       m_error_info.errorFile(openstudio::energyplus::ErrorFile(errpath));
     }
 
-    openstudio::path resultpath = outpath / toPath("result.ossr");
-    if (boost::filesystem::exists(resultpath))
+    std::vector<FileInfo> resultpaths = outfiles.getAllByFilename("result.ossr").files();
+    if (!resultpaths.empty())
     {
-      LOG(Debug, "Setting osresult file: " << openstudio::toString(resultpath));
-      boost::optional<openstudio::ruleset::OSResult> osresult = openstudio::ruleset::OSResult::load(resultpath);
-
-      if (osresult)
+      std::vector<openstudio::ruleset::OSResult> results;
+      for (std::vector<FileInfo>::const_iterator itr = resultpaths.begin();
+           itr != resultpaths.end();
+           ++itr)
       {
-        m_error_info.osResult(*osresult);
-      } else {
-        LOG(Error, "Error loading osresult file: " << openstudio::toString(resultpath));
+        openstudio::path p = itr->fullPath;
+        std::string parent_path = openstudio::toString(p.parent_path().filename());
+        size_t numpos = parent_path.find("mergedjob-");
+        int num = 0;
+        if (numpos == 0)
+        {
+          num = atoi(parent_path.substr(std::string("mergedjob-").size()).c_str());
+        }
+
+
+        if (results.size() < static_cast<size_t>(num+1))
+        {
+          results.resize(num+1);
+        }
+
+        LOG(Debug, "Attempting to load results for merged job: " << num);
+
+        boost::optional<openstudio::ruleset::OSResult> osresult = openstudio::ruleset::OSResult::load(p);
+
+        if (osresult)
+        {
+          results[num] = *osresult;
+        } else {
+          LOG(Error, "Error loading osresult file: " << openstudio::toString(p));
+        }
       }
+
+      LOG(Debug, "Setting osresult files: " << results.size());
+      m_error_info.osResult(results);
+
     } else {
-      LOG(Debug, "No osresult file found at: " << openstudio::toString(resultpath));
+      LOG(Debug, "No osresult file found at: " << openstudio::toString(outpath));
     }
 
     JobErrors e = m_error_info.errors();

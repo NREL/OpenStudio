@@ -333,6 +333,8 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     ss.str("");
     f->print(ss);
     unmergedidf = ss.str();
+
+    EXPECT_EQ(3u, j.treeOutputFiles().getAllByFilename("result.ossr").files().size());
   }
 
   qint64 unmergedtime = timer.restart();
@@ -374,6 +376,8 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     ss.str("");
     f->print(ss);
     mergedidf = ss.str();
+
+    EXPECT_EQ(3u, j.treeOutputFiles().getAllByFilename("result.ossr").files().size());
   }
 
   qint64 mergedtime = timer.restart();

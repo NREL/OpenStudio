@@ -78,8 +78,8 @@ FileInfo FileInfo::complete(const openstudio::path &t_basePath) const
 
 bool FileInfo::operator<(const FileInfo &fi) const
 {
-  return (filename < fi.filename)
-         || (filename == fi.filename && lastModified < fi.lastModified);
+  return (fullPath < fi.fullPath)
+         || (fullPath == fi.fullPath && lastModified < fi.lastModified);
 }
 
 bool FileInfo::operator==(const FileInfo &t_rhs) const

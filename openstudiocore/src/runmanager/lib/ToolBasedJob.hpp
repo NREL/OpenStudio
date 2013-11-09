@@ -192,6 +192,7 @@ namespace detail {
           void processError(QProcess::ProcessError, const std::string &t_description);
           void errorFile(const openstudio::energyplus::ErrorFile &);
           void osResult(const openstudio::ruleset::OSResult &);
+          void osResult(const std::vector<openstudio::ruleset::OSResult> &);
 
           /// Return a JobErrors object that represents all currently collected error information
           JobErrors errors();
