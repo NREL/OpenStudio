@@ -37,11 +37,11 @@ class CONTAM_API Model
 {
 public:
   Model(){m_valid=false;}
-  explicit Model(STRING filename);
+  explicit Model(std::string filename);
   explicit Model(Reader &input);
-  bool read(STRING filename);
+  bool read(std::string filename);
   bool read(Reader &input);
-  STRING toString();
+  std::string toString();
 
   std::vector<std::vector<int> > zoneExteriorFlowPaths();
   std::vector<TimeSeries> zoneInfiltration(SimFile *sim);
@@ -55,26 +55,26 @@ public:
     m_rc = rc;
   }
 
-  VECTOR_TYPE<int> contaminants() const
+  std::vector<int> contaminants() const
   {
     return m_contaminants;
   }
 
-  VECTOR_TYPE <Species> species() const
+  std::vector <Species> species() const
   {
     return m_species;
   }
-  void setSpecies(const VECTOR_TYPE<Species> species)
+  void setSpecies(const std::vector<Species> species)
   {
     m_species = species;
     rebuildContaminants();
   }
 
-  VECTOR_TYPE <Level> levels() const
+  std::vector <Level> levels() const
   {
     return m_levels;
   }
-  void setLevels(const VECTOR_TYPE<Level> levels)
+  void setLevels(const std::vector<Level> levels)
   {
     m_levels = levels;
   }
@@ -84,36 +84,36 @@ public:
     m_levels.push_back(level);
   }
 
-  VECTOR_TYPE <DaySchedule> daySchedules() const
+  std::vector <DaySchedule> daySchedules() const
   {
     return m_daySchedules;
   }
-  void setDaySchedules(const VECTOR_TYPE<DaySchedule> daySchedules)
+  void setDaySchedules(const std::vector<DaySchedule> daySchedules)
   {
     m_daySchedules = daySchedules;
   }
 
-  VECTOR_TYPE <WeekSchedule> weekSchedules() const
+  std::vector <WeekSchedule> weekSchedules() const
   {
     return m_weekSchedules;
   }
-  void setWeekSchedules(const VECTOR_TYPE<WeekSchedule> weekSchedules)
+  void setWeekSchedules(const std::vector<WeekSchedule> weekSchedules)
   {
     m_weekSchedules = weekSchedules;
   }
 
-  VECTOR_TYPE <WindPressureProfile> windPressureProfiles() const
+  std::vector <WindPressureProfile> windPressureProfiles() const
   {
     return m_windPressureProfiles;
   }
-  void setWindPressureProfiles(const VECTOR_TYPE<WindPressureProfile> windPressureProfiles)
+  void setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles)
   {
     m_windPressureProfiles = windPressureProfiles;
   }
 
-  VECTOR_TYPE<PlrTest1> getPlrTest1() const
+  std::vector<PlrTest1> getPlrTest1() const
   {
-    VECTOR_TYPE<PlrTest1> afe;
+    std::vector<PlrTest1> afe;
     for(int i=0;i<m_airflowElements.size();i++)
     {
       if(m_airflowElements[i]->dataType() == "plr_test1")
@@ -144,7 +144,7 @@ public:
     }
   }
 
-  int airflowElementNrByName(STRING name) const;
+  int airflowElementNrByName(std::string name) const;
 
   template <class T> bool replaceAirflowElement(int nr, T element)
   {
@@ -163,9 +163,9 @@ public:
     return false;
   }
 
-  VECTOR_TYPE<CvfDat> getCvfDat()
+  std::vector<CvfDat> getCvfDat()
   {
-    VECTOR_TYPE<CvfDat> ctrl;
+    std::vector<CvfDat> ctrl;
     for(int i=0;i<m_controlNodes.size();i++)
     {
       QSharedPointer<CvfDat> cast = m_controlNodes[i].dynamicCast<CvfDat>();
@@ -193,11 +193,11 @@ public:
     }
   }
 
-  VECTOR_TYPE <Ahs> ahs() const
+  std::vector <Ahs> ahs() const
   {
     return m_ahs;
   }
-  void setAhs(const VECTOR_TYPE<Ahs> ahs)
+  void setAhs(const std::vector<Ahs> ahs)
   {
     m_ahs = ahs;
   }
@@ -207,11 +207,11 @@ public:
     m_ahs.push_back(ahs);
   }
 
-  VECTOR_TYPE<Zone> zones() const
+  std::vector<Zone> zones() const
   {
     return m_zones;
   }
-  void setZones(const VECTOR_TYPE<Zone> zones)
+  void setZones(const std::vector<Zone> zones)
   {
     m_zones = zones;
   }
@@ -221,11 +221,11 @@ public:
     m_zones.push_back(zone);
   }
 
-  VECTOR_TYPE<Path> paths() const
+  std::vector<Path> paths() const
   {
     return m_paths;
   }
-  void setPaths(const VECTOR_TYPE<Path> paths)
+  void setPaths(const std::vector<Path> paths)
   {
     m_paths = paths;
   }
@@ -243,42 +243,42 @@ public:
 private:
   void rebuildContaminants();
   void readZoneIc(Reader &input);
-  STRING writeZoneIc(int start=0);
-  template <class T> STRING writeSectionVector(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
-  template <class T, template <class T> class U> STRING writeSectionVector(U<QSharedPointer<T> > vector,
-    STRING label=STRING_INIT,
+  std::string writeZoneIc(int start=0);
+  template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
+  template <class T, template <class T> class U> std::string writeSectionVector(U<QSharedPointer<T> > vector,
+    std::string label=std::string(),
     int start=0);
-  template <class T> STRING writeArray(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
+  template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
 
   bool m_valid;
 
-  MAP_TYPE<STRING,STRING> m_unsupported;
+  std::map<std::string,std::string> m_unsupported;
 
   RunControl m_rc;
-  VECTOR_TYPE<int> m_contaminants;
-  VECTOR_TYPE<Species> m_species;
-  VECTOR_TYPE<Level> m_levels;
-  VECTOR_TYPE<DaySchedule> m_daySchedules;
-  VECTOR_TYPE<WeekSchedule> m_weekSchedules;
-  VECTOR_TYPE<WindPressureProfile> m_windPressureProfiles;
+  std::vector<int> m_contaminants;
+  std::vector<Species> m_species;
+  std::vector<Level> m_levels;
+  std::vector<DaySchedule> m_daySchedules;
+  std::vector<WeekSchedule> m_weekSchedules;
+  std::vector<WindPressureProfile> m_windPressureProfiles;
   QVector<QSharedPointer<AirflowElement> > m_airflowElements;
   QVector<QSharedPointer<ControlNode> > m_controlNodes;
-  VECTOR_TYPE<Ahs> m_ahs;
-  VECTOR_TYPE<Zone> m_zones;
-  VECTOR_TYPE<Path> m_paths;
+  std::vector<Ahs> m_ahs;
+  std::vector<Zone> m_zones;
+  std::vector<Path> m_paths;
 };
 
-template <class T> STRING Model::writeSectionVector(VECTOR_TYPE<T> vector, STRING label, int start)
+template <class T> std::string Model::writeSectionVector(std::vector<T> vector, std::string label, int start)
 {
-  STRING string;
+  std::string string;
   int number = vector.size()-start;
-  if(IS_NULL(label))
+  if(label.empty())
   {
-    string += TO_STRING(number) + '\n';
+    string += openstudio::toString(number) + '\n';
   }
   else
   {
-    string += TO_STRING(number) + " ! " + label + '\n';
+    string += openstudio::toString(number) + " ! " + label + '\n';
   }
   for(unsigned int i=start;i<vector.size();i++)
   {
@@ -288,18 +288,18 @@ template <class T> STRING Model::writeSectionVector(VECTOR_TYPE<T> vector, STRIN
   return string;
 }
 
-template <class T, template <class T> class U> STRING Model::writeSectionVector(U<QSharedPointer<T> > vector,
-  STRING label, int start)
+template <class T, template <class T> class U> std::string Model::writeSectionVector(U<QSharedPointer<T> > vector,
+  std::string label, int start)
 {
-  STRING string;
+  std::string string;
   int number = vector.size()-start;
-  if(IS_NULL(label))
+  if(label.empty())
   {
-    string += TO_STRING(number) + '\n';
+    string += openstudio::toString(number) + '\n';
   }
   else
   {
-    string += TO_STRING(number) + " ! " + label + '\n';
+    string += openstudio::toString(number) + " ! " + label + '\n';
   }
   for(int i=start;i<vector.size();i++)
   {
@@ -309,21 +309,21 @@ template <class T, template <class T> class U> STRING Model::writeSectionVector(
   return string;
 }
 
-template <class T> STRING Model::writeArray(VECTOR_TYPE<T> vector, STRING label, int start)
+template <class T> std::string Model::writeArray(std::vector<T> vector, std::string label, int start)
 {
-  STRING string;
+  std::string string;
   int number = vector.size()-start;
-  if(IS_NULL(label))
+  if(label.empty())
   {
-    string += TO_STRING(number) + '\n';
+    string += openstudio::toString(number) + '\n';
   }
   else
   {
-    string += TO_STRING(number) + " ! " + label + '\n';
+    string += openstudio::toString(number) + " ! " + label + '\n';
   }
   for(unsigned int i=start;i<vector.size();i++)
   {
-    string += ' ' + TO_STRING(vector[i]);
+    string += ' ' + openstudio::toString(vector[i]);
   }
   return string +'\n';
 }

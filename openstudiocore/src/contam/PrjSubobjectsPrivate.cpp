@@ -19,10 +19,10 @@ void WeatherDataPrivate::read(Reader &input)
     uwd = input.read<int>(FILELINE);
 }
 
-STRING WeatherDataPrivate::write()
+std::string WeatherDataPrivate::write()
 {
-    STRING string;
-    string += TO_STRING(Tambt) + ' ' + TO_STRING(barpres) + ' ' + TO_STRING(windspd) + ' ' + TO_STRING(winddir) + ' ' + TO_STRING(relhum) + ' ' + TO_STRING(daytyp) + ' ' + TO_STRING(uTa) + ' ' + TO_STRING(ubP) + ' ' + TO_STRING(uws) + ' ' + TO_STRING(uwd) + '\n';
+    std::string string;
+    string += openstudio::toString(Tambt) + ' ' + openstudio::toString(barpres) + ' ' + openstudio::toString(windspd) + ' ' + openstudio::toString(winddir) + ' ' + openstudio::toString(relhum) + ' ' + openstudio::toString(daytyp) + ' ' + openstudio::toString(uTa) + ' ' + openstudio::toString(ubP) + ' ' + openstudio::toString(uws) + ' ' + openstudio::toString(uwd) + '\n';
     return string;
 }
 
@@ -37,10 +37,10 @@ void IconPrivate::read(Reader &input)
     nr = input.read<int>(FILELINE);
 }
 
-STRING IconPrivate::write()
+std::string IconPrivate::write()
 {
-    STRING string;
-    string += TO_STRING(icon) + ' ' + TO_STRING(col) + ' ' + TO_STRING(row) + ' ' + TO_STRING(nr) + '\n';
+    std::string string;
+    string += openstudio::toString(icon) + ' ' + openstudio::toString(col) + ' ' + openstudio::toString(row) + ' ' + openstudio::toString(nr) + '\n';
     return string;
 }
 

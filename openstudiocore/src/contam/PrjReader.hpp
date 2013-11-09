@@ -39,29 +39,29 @@ public:
 
   float readFloat(DECFILELINE);
   double readDouble(DECFILELINE);
-  STRING readString(DECFILELINE);
+  std::string readString(DECFILELINE);
   int readInt(DECFILELINE);
   unsigned int readUInt(DECFILELINE);
 
-  STRING readLine(DECFILELINE);
+  std::string readLine(DECFILELINE);
   void read999(DECFILELINE);
-  void read999(STRING mesg DECCFILELINE);
+  void read999(std::string mesg DECCFILELINE);
   void readEnd(DECFILELINE);
 
   void skipSection(DECFILELINE);
-  STRING readSection(DECFILELINE);
+  std::string readSection(DECFILELINE);
   int lineNumber(){return m_lineNumber;}
 
-  template <class T> VECTOR_TYPE<T> readSectionVector(DECFILELINEC STRING name=STRING_INIT);
+  template <class T> std::vector<T> readSectionVector(DECFILELINEC std::string name=std::string());
 
-  VECTOR_TYPE<int> readIntVector(DECFILELINEC bool terminated=false);
+  std::vector<int> readIntVector(DECFILELINEC bool terminated=false);
   //    std::vector<int> readIntStdVector(DECFILELINEC bool terminated=false);
-  //    template <class T> QList<T*> readSectionPointers(DECFILELINEC STRING name=STRING_INIT);
+  //    template <class T> QList<T*> readSectionPointers(DECFILELINEC std::string name=STRING_INIT);
   //    template <class T> QList<T> readSectionList(DECFILELINEC STRING name=STRING_INIT);
   //    template <class T, template <class T> class V> V<T> readSectionVector(DECFILELINEC STRING name);
   //    template <class T> QVector<T> readSectionQVector(DECFILELINEC STRING name=STRING_INIT);
   //    template <class T> std::vector<T> readSectionStdVector(DECFILELINEC STRING name=STRING_INIT);
-  template <class T> QVector<QSharedPointer<T> > readElementVector(DECFILELINEC STRING name=STRING_INIT);
+  template <class T> QVector<QSharedPointer<T> > readElementVector(DECFILELINEC std::string name=std::string());
 
   template <class T> T read(DECFILELINE);
   template <class T> T readNumber(DECFILELINE);
@@ -77,24 +77,24 @@ private:
   QStringList entries;
 };
 
-template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING name)
+template <class T> std::vector<T> Reader::readSectionVector(DECFILELINEC std::string name)
 {
   int n = readInt(ARGFILELINE);
-  VECTOR_TYPE<T> vector;
+  std::vector<T> vector;
   for(int i=0;i<n;i++)
   {
     T value;
     value.read(*this);
     vector.push_back(value);
   }
-  if(IS_NULL(name))
+  if(name.empty())
     read999("Failed to find section termination" ARGCFILELINE);
   else
     read999("Failed to find "+name+" section termination" ARGCFILELINE);
   return vector;
 }
 
-//template <class T> QList<T*> Reader::readSectionPointers(DECFILELINEC STRING name)
+//template <class T> QList<T*> Reader::readSectionPointers(DECFILELINEC std::string name)
 //{
 //    QList<T*> list;
 //    T *object;
@@ -112,7 +112,7 @@ template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING 
 //    return list;
 //}
 
-//template <class T> QList<T> Reader::readSectionList(DECFILELINEC STRING name)
+//template <class T> QList<T> Reader::readSectionList(DECFILELINEC std::string name)
 //{
 //    QList<T> list;
 //    int n = readInt(ARGFILELINE);
@@ -129,7 +129,7 @@ template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING 
 //    return list;
 //}
 
-//template <class T, template <class T> class V> V<T> Reader::readSectionVector(DECFILELINEC STRING name)
+//template <class T, template <class T> class V> V<T> Reader::readSectionVector(DECFILELINEC std::string name)
 //{
 //    int n = readInt(ARGFILELINE);
 //    V<T> vector(n);
@@ -142,7 +142,7 @@ template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING 
 //    return vector;
 //}
 
-//template <class T> QVector<T> Reader::readSectionQVector(DECFILELINEC STRING name)
+//template <class T> QVector<T> Reader::readSectionQVector(DECFILELINEC std::string name)
 //{
 //    int n = readInt(ARGFILELINE);
 //    QVector<T> vector(n);
@@ -155,7 +155,7 @@ template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING 
 //    return vector;
 //}
 
-//template <class T> std::vector<T> Reader::readSectionStdVector(DECFILELINEC STRING name)
+//template <class T> std::vector<T> Reader::readSectionStdVector(DECFILELINEC std::string name)
 //{
 //    int n = readInt(ARGFILELINE);
 //    std::vector<T> vector;
@@ -172,7 +172,7 @@ template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING 
 //    return vector;
 //}
 
-template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILELINEC STRING name)
+template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILELINEC std::string name)
 {
   int n = readInt(ARGFILELINE);
   QVector<QSharedPointer<T> > vector(n);
@@ -183,7 +183,7 @@ template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILE
     vector[i].swap(element);
     //vector[i].reset(T::readElement(this));
   }
-  if(IS_NULL(name))
+  if(name.empty())
     read999("Failed to find section termination" ARGCFILELINE);
   else
     read999("Failed to find "+name+" section termination" ARGCFILELINE);

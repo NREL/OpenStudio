@@ -21,7 +21,7 @@
 namespace openstudio {
 namespace contam {
 
-ZonePrivate::ZonePrivate(int nr,unsigned int flags,int ps,int pc,int pk,int pl,RX relHt,RX Vol,RX T0,RX P0,STRING name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,STRING cfdname,RX X1,RX Y1,RX H1,RX X2,RX Y2,RX H2,RX celldx,RX axialD,int u_aD,int u_L):nr(nr),flags(flags),ps(ps),pc(pc),pk(pk),pl(pl),relHt(relHt),Vol(Vol),T0(T0),P0(P0),name(name),color(color),u_Ht(u_Ht),u_V(u_V),u_T(u_T),u_P(u_P),cdaxis(cdaxis),cfd(cfd),cfdname(cfdname),X1(X1),Y1(Y1),H1(H1),X2(X2),Y2(Y2),H2(H2),celldx(celldx),axialD(axialD),u_aD(u_aD),u_L(u_L)
+ZonePrivate::ZonePrivate(int nr,unsigned int flags,int ps,int pc,int pk,int pl,RX relHt,RX Vol,RX T0,RX P0,std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,RX X1,RX Y1,RX H1,RX X2,RX Y2,RX H2,RX celldx,RX axialD,int u_aD,int u_L):nr(nr),flags(flags),ps(ps),pc(pc),pk(pk),pl(pl),relHt(relHt),Vol(Vol),T0(T0),P0(P0),name(name),color(color),u_Ht(u_Ht),u_V(u_V),u_T(u_T),u_P(u_P),cdaxis(cdaxis),cfd(cfd),cfdname(cfdname),X1(X1),Y1(Y1),H1(H1),X2(X2),Y2(Y2),H2(H2),celldx(celldx),axialD(axialD),u_aD(u_aD),u_L(u_L)
 {}
 
 void ZonePrivate::read(Reader &input)
@@ -62,25 +62,25 @@ void ZonePrivate::read(Reader &input)
   }
 }
 
-STRING ZonePrivate::write()
+std::string ZonePrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(ps) + ' ' + TO_STRING(pc) + ' '
-    + TO_STRING(pk) + ' ' + TO_STRING(pl) + ' ' + TO_STRING(relHt) + ' '
-    + TO_STRING(Vol) + ' ' + TO_STRING(T0) + ' ' + TO_STRING(P0) + ' ' + name + ' '
-    + TO_STRING(color) + ' ' + TO_STRING(u_Ht) + ' ' + TO_STRING(u_V) + ' ' + TO_STRING(u_T) + ' '
-    + TO_STRING(u_P) + ' ' + TO_STRING(cdaxis) + ' ' + TO_STRING(cfd);
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(ps) + ' ' + openstudio::toString(pc) + ' '
+    + openstudio::toString(pk) + ' ' + openstudio::toString(pl) + ' ' + openstudio::toString(relHt) + ' '
+    + openstudio::toString(Vol) + ' ' + openstudio::toString(T0) + ' ' + openstudio::toString(P0) + ' ' + name + ' '
+    + openstudio::toString(color) + ' ' + openstudio::toString(u_Ht) + ' ' + openstudio::toString(u_V) + ' ' + openstudio::toString(u_T) + ' '
+    + openstudio::toString(u_P) + ' ' + openstudio::toString(cdaxis) + ' ' + openstudio::toString(cfd);
   if(cfd)
     string += ' ' + cfdname;
   else if(cdaxis)
-    string += TO_STRING(X1) + ' ' + TO_STRING(Y1) + ' ' + TO_STRING(H1) + ' '
-    + TO_STRING(X2) + ' ' + TO_STRING(Y2) + ' ' + TO_STRING(H2) + ' '
-    + TO_STRING(celldx) + ' ' + TO_STRING(axialD) + ' ' + TO_STRING(u_aD) + ' '
-    + TO_STRING(u_L);
+    string += openstudio::toString(X1) + ' ' + openstudio::toString(Y1) + ' ' + openstudio::toString(H1) + ' '
+    + openstudio::toString(X2) + ' ' + openstudio::toString(Y2) + ' ' + openstudio::toString(H2) + ' '
+    + openstudio::toString(celldx) + ' ' + openstudio::toString(axialD) + ' ' + openstudio::toString(u_aD) + ' '
+    + openstudio::toString(u_L);
   return string+'\n';
 }
 
-SpeciesPrivate::SpeciesPrivate(int nr,int sflag,int ntflag,RX molwt,RX mdiam,RX edens,RX decay,RX Dm,RX ccdef,RX Cp,int ucc,int umd,int ued,int udm,int ucp,STRING name,STRING desc):nr(nr),sflag(sflag),ntflag(ntflag),molwt(molwt),mdiam(mdiam),edens(edens),decay(decay),Dm(Dm),ccdef(ccdef),Cp(Cp),ucc(ucc),umd(umd),ued(ued),udm(udm),ucp(ucp),name(name),desc(desc)
+SpeciesPrivate::SpeciesPrivate(int nr,int sflag,int ntflag,RX molwt,RX mdiam,RX edens,RX decay,RX Dm,RX ccdef,RX Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc):nr(nr),sflag(sflag),ntflag(ntflag),molwt(molwt),mdiam(mdiam),edens(edens),decay(decay),Dm(Dm),ccdef(ccdef),Cp(Cp),ucc(ucc),umd(umd),ued(ued),udm(udm),ucp(ucp),name(name),desc(desc)
 {}
 
 void SpeciesPrivate::read(Reader &input)
@@ -104,15 +104,15 @@ void SpeciesPrivate::read(Reader &input)
   desc = input.readLine(FILELINE);
 }
 
-STRING SpeciesPrivate::write()
+std::string SpeciesPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(sflag) + ' ' + TO_STRING(ntflag) + ' ' + TO_STRING(molwt) + ' ' + TO_STRING(mdiam) + ' ' + TO_STRING(edens) + ' ' + TO_STRING(decay) + ' ' + TO_STRING(Dm) + ' ' + TO_STRING(ccdef) + ' ' + TO_STRING(Cp) + ' ' + TO_STRING(ucc) + ' ' + TO_STRING(umd) + ' ' + TO_STRING(ued) + ' ' + TO_STRING(udm) + ' ' + TO_STRING(ucp) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(sflag) + ' ' + openstudio::toString(ntflag) + ' ' + openstudio::toString(molwt) + ' ' + openstudio::toString(mdiam) + ' ' + openstudio::toString(edens) + ' ' + openstudio::toString(decay) + ' ' + openstudio::toString(Dm) + ' ' + openstudio::toString(ccdef) + ' ' + openstudio::toString(Cp) + ' ' + openstudio::toString(ucc) + ' ' + openstudio::toString(umd) + ' ' + openstudio::toString(ued) + ' ' + openstudio::toString(udm) + ' ' + openstudio::toString(ucp) + ' ' + name + '\n';
   string += desc + '\n';
   return string;
 }
 
-AhsPrivate::AhsPrivate(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,STRING name,STRING desc):nr(nr),zone_r(zone_r),zone_s(zone_s),path_r(path_r),path_s(path_s),path_x(path_x),name(name),desc(desc)
+AhsPrivate::AhsPrivate(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,std::string name,std::string desc):nr(nr),zone_r(zone_r),zone_s(zone_s),path_r(path_r),path_s(path_s),path_x(path_x),name(name),desc(desc)
 {}
 
 void AhsPrivate::read(Reader &input)
@@ -127,15 +127,15 @@ void AhsPrivate::read(Reader &input)
   desc = input.readLine(FILELINE);
 }
 
-STRING AhsPrivate::write()
+std::string AhsPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(zone_r) + ' ' + TO_STRING(zone_s) + ' ' + TO_STRING(path_r) + ' ' + TO_STRING(path_s) + ' ' + TO_STRING(path_x) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(zone_r) + ' ' + openstudio::toString(zone_s) + ' ' + openstudio::toString(path_r) + ' ' + openstudio::toString(path_s) + ' ' + openstudio::toString(path_x) + ' ' + name + '\n';
   string += desc + '\n';
   return string;
 }
 
-PathPrivate::PathPrivate(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,RX X,RX Y,RX relHt,RX mult,RX wPset,RX wPmod,RX wazm,RX Fahs,RX Xmax,RX Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,STRING cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp):nr(nr),flags(flags),pzn(pzn),pzm(pzm),pe(pe),pf(pf),pw(pw),pa(pa),ps(ps),pc(pc),pld(pld),X(X),Y(Y),relHt(relHt),mult(mult),wPset(wPset),wPmod(wPmod),wazm(wazm),Fahs(Fahs),Xmax(Xmax),Xmin(Xmin),icon(icon),dir(dir),u_Ht(u_Ht),u_XY(u_XY),u_dP(u_dP),u_F(u_F),cfd(cfd),cfd_name(cfd_name),cfd_ptype(cfd_ptype),cfd_btype(cfd_btype),cfd_capp(cfd_capp)
+PathPrivate::PathPrivate(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,RX X,RX Y,RX relHt,RX mult,RX wPset,RX wPmod,RX wazm,RX Fahs,RX Xmax,RX Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp):nr(nr),flags(flags),pzn(pzn),pzm(pzm),pe(pe),pf(pf),pw(pw),pa(pa),ps(ps),pc(pc),pld(pld),X(X),Y(Y),relHt(relHt),mult(mult),wPset(wPset),wPmod(wPmod),wazm(wazm),Fahs(Fahs),Xmax(Xmax),Xmin(Xmin),icon(icon),dir(dir),u_Ht(u_Ht),u_XY(u_XY),u_dP(u_dP),u_F(u_F),cfd(cfd),cfd_name(cfd_name),cfd_ptype(cfd_ptype),cfd_btype(cfd_btype),cfd_capp(cfd_capp)
 {}
 
 void PathPrivate::read(Reader &input)
@@ -177,25 +177,25 @@ void PathPrivate::read(Reader &input)
   }
 }
 
-STRING PathPrivate::write()
+std::string PathPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(pzn) + ' ' + TO_STRING(pzm) + ' '
-    + TO_STRING(pe) + ' ' + TO_STRING(pf) + ' ' + TO_STRING(pw) + ' ' + TO_STRING(pa) + ' '
-    + TO_STRING(ps) + ' ' + TO_STRING(pc) + ' ' + TO_STRING(pld) + ' ' + TO_STRING(X) + ' '
-    + TO_STRING(Y) + ' ' + TO_STRING(relHt) + ' ' + TO_STRING(mult) + ' ' + TO_STRING(wPset) + ' '
-    + TO_STRING(wPmod) + ' ' + TO_STRING(wazm) + ' ' + TO_STRING(Fahs) + ' ' + TO_STRING(Xmax) + ' '
-    + TO_STRING(Xmin) + ' ' + TO_STRING(icon) + ' ' + TO_STRING(dir) + ' ' + TO_STRING(u_Ht) + ' '
-    + TO_STRING(u_XY) + ' ' + TO_STRING(u_dP) + ' ' + TO_STRING(u_F) + ' ' + TO_STRING(cfd);
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(pzn) + ' ' + openstudio::toString(pzm) + ' '
+    + openstudio::toString(pe) + ' ' + openstudio::toString(pf) + ' ' + openstudio::toString(pw) + ' ' + openstudio::toString(pa) + ' '
+    + openstudio::toString(ps) + ' ' + openstudio::toString(pc) + ' ' + openstudio::toString(pld) + ' ' + openstudio::toString(X) + ' '
+    + openstudio::toString(Y) + ' ' + openstudio::toString(relHt) + ' ' + openstudio::toString(mult) + ' ' + openstudio::toString(wPset) + ' '
+    + openstudio::toString(wPmod) + ' ' + openstudio::toString(wazm) + ' ' + openstudio::toString(Fahs) + ' ' + openstudio::toString(Xmax) + ' '
+    + openstudio::toString(Xmin) + ' ' + openstudio::toString(icon) + ' ' + openstudio::toString(dir) + ' ' + openstudio::toString(u_Ht) + ' '
+    + openstudio::toString(u_XY) + ' ' + openstudio::toString(u_dP) + ' ' + openstudio::toString(u_F) + ' ' + openstudio::toString(cfd);
   if(cfd)
   {
-    string += ' ' + cfd_name + ' ' + TO_STRING(cfd_ptype) + ' ' + TO_STRING(cfd_btype) + ' '
-      + TO_STRING(cfd_capp);
+    string += ' ' + cfd_name + ' ' + openstudio::toString(cfd_ptype) + ' ' + openstudio::toString(cfd_btype) + ' '
+      + openstudio::toString(cfd_capp);
   }
   return string + '\n';
 }
 
-RunControlPrivate::RunControlPrivate(STRING name,STRING version,int echo,STRING prjdesc,int skheight,int skwidth,int def_units,int def_flows,RX def_T,int udefT,RX rel_N,RX wind_H,int uwH,RX wind_Ao,RX wind_a,RX scale,int uScale,int orgRow,int orgCol,int invYaxis,int showGeom,WeatherData ssWeather,WeatherData wptWeather,STRING WTHpath,STRING CTMpath,STRING CVFpath,STRING DVFpath,STRING WPCfile,STRING EWCfile,STRING WPCdesc,RX X0,RX Y0,RX Z0,RX angle,int u_XYZ,RX epsPath,RX epsSpcs,STRING tShift,STRING dStart,STRING dEnd,int useWPCwp,int useWPCmf,int wpctrig,RX latd,RX lgtd,RX Tznr,RX altd,RX Tgrnd,int utg,int u_a,int sim_af,int afcalc,int afmaxi,RX afrcnvg,RX afacnvg,RX afrelax,int uac2,RX Pres,int uPres,int afslae,int afrseq,int aflmaxi,RX aflcnvg,int aflinit,int Tadj,int sim_mf,int ccmaxi,RX ccrcnvg,RX ccacnvg,RX ccrelax,int uccc,int mfnmthd,int mfnrseq,int mfnmaxi,RX mfnrcnvg,RX mfnacnvg,RX mfnrelax,RX mfngamma,int uccn,int mftmthd,int mftrseq,int mftmaxi,RX mftrcnvg,RX mftacnvg,RX mftrelax,RX mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,RX mfvrcnvg,RX mfvacnvg,RX mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,RX celldx,int sim_vjt,int udx,int cvode_mth,RX cvode_rcnvg,RX cvode_acnvg,RX cvode_dtmax,int tsdens,RX tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,STRING date_st,STRING time_st,STRING date_0,STRING time_0,STRING date_1,STRING time_1,STRING time_step,STRING time_list,STRING time_scrn,int restart,STRING rstdate,STRING rsttime,int list,int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<RX> rvals,int BldgFlowZ,int BldgFlowD,int BldgFlowC,int cfd_ctype,RX cfd_convcpl,int cfd_var,int cfd_zref,int cfd_imax,int cfd_dtcmo):name(name),version(version),echo(echo),prjdesc(prjdesc),skheight(skheight),skwidth(skwidth),def_units(def_units),def_flows(def_flows),def_T(def_T),udefT(udefT),rel_N(rel_N),wind_H(wind_H),uwH(uwH),wind_Ao(wind_Ao),wind_a(wind_a),scale(scale),uScale(uScale),orgRow(orgRow),orgCol(orgCol),invYaxis(invYaxis),showGeom(showGeom),ssWeather(ssWeather),wptWeather(wptWeather),WTHpath(WTHpath),CTMpath(CTMpath),CVFpath(CVFpath),DVFpath(DVFpath),WPCfile(WPCfile),EWCfile(EWCfile),WPCdesc(WPCdesc),X0(X0),Y0(Y0),Z0(Z0),angle(angle),u_XYZ(u_XYZ),epsPath(epsPath),epsSpcs(epsSpcs),tShift(tShift),dStart(dStart),dEnd(dEnd),useWPCwp(useWPCwp),useWPCmf(useWPCmf),wpctrig(wpctrig),latd(latd),lgtd(lgtd),Tznr(Tznr),altd(altd),Tgrnd(Tgrnd),utg(utg),u_a(u_a),sim_af(sim_af),afcalc(afcalc),afmaxi(afmaxi),afrcnvg(afrcnvg),afacnvg(afacnvg),afrelax(afrelax),uac2(uac2),Pres(Pres),uPres(uPres),afslae(afslae),afrseq(afrseq),aflmaxi(aflmaxi),aflcnvg(aflcnvg),aflinit(aflinit),Tadj(Tadj),sim_mf(sim_mf),ccmaxi(ccmaxi),ccrcnvg(ccrcnvg),ccacnvg(ccacnvg),ccrelax(ccrelax),uccc(uccc),mfnmthd(mfnmthd),mfnrseq(mfnrseq),mfnmaxi(mfnmaxi),mfnrcnvg(mfnrcnvg),mfnacnvg(mfnacnvg),mfnrelax(mfnrelax),mfngamma(mfngamma),uccn(uccn),mftmthd(mftmthd),mftrseq(mftrseq),mftmaxi(mftmaxi),mftrcnvg(mftrcnvg),mftacnvg(mftacnvg),mftrelax(mftrelax),mftgamma(mftgamma),ucct(ucct),mfvmthd(mfvmthd),mfvrseq(mfvrseq),mfvmaxi(mfvmaxi),mfvrcnvg(mfvrcnvg),mfvacnvg(mfvacnvg),mfvrelax(mfvrelax),uccv(uccv),mf_solver(mf_solver),sim_1dz(sim_1dz),sim_1dd(sim_1dd),celldx(celldx),sim_vjt(sim_vjt),udx(udx),cvode_mth(cvode_mth),cvode_rcnvg(cvode_rcnvg),cvode_acnvg(cvode_acnvg),cvode_dtmax(cvode_dtmax),tsdens(tsdens),tsrelax(tsrelax),tsmaxi(tsmaxi),cnvgSS(cnvgSS),densZP(densZP),stackD(stackD),dodMdt(dodMdt),date_st(date_st),time_st(time_st),date_0(date_0),time_0(time_0),date_1(date_1),time_1(time_1),time_step(time_step),time_list(time_list),time_scrn(time_scrn),restart(restart),rstdate(rstdate),rsttime(rsttime),list(list),doDlg(doDlg),pfsave(pfsave),zfsave(zfsave),zcsave(zcsave),achvol(achvol),achsave(achsave),abwsave(abwsave),cbwsave(cbwsave),expsave(expsave),ebwsave(ebwsave),zaasave(zaasave),zbwsave(zbwsave),rzfsave(rzfsave),rzmsave(rzmsave),rz1save(rz1save),csmsave(csmsave),srfsave(srfsave),logsave(logsave),save(save),rvals(rvals),BldgFlowZ(BldgFlowZ),BldgFlowD(BldgFlowD),BldgFlowC(BldgFlowC),cfd_ctype(cfd_ctype),cfd_convcpl(cfd_convcpl),cfd_var(cfd_var),cfd_zref(cfd_zref),cfd_imax(cfd_imax),cfd_dtcmo(cfd_dtcmo)
+RunControlPrivate::RunControlPrivate(std::string name,std::string version,int echo,std::string prjdesc,int skheight,int skwidth,int def_units,int def_flows,RX def_T,int udefT,RX rel_N,RX wind_H,int uwH,RX wind_Ao,RX wind_a,RX scale,int uScale,int orgRow,int orgCol,int invYaxis,int showGeom,WeatherData ssWeather,WeatherData wptWeather,std::string WTHpath,std::string CTMpath,std::string CVFpath,std::string DVFpath,std::string WPCfile,std::string EWCfile,std::string WPCdesc,RX X0,RX Y0,RX Z0,RX angle,int u_XYZ,RX epsPath,RX epsSpcs,std::string tShift,std::string dStart,std::string dEnd,int useWPCwp,int useWPCmf,int wpctrig,RX latd,RX lgtd,RX Tznr,RX altd,RX Tgrnd,int utg,int u_a,int sim_af,int afcalc,int afmaxi,RX afrcnvg,RX afacnvg,RX afrelax,int uac2,RX Pres,int uPres,int afslae,int afrseq,int aflmaxi,RX aflcnvg,int aflinit,int Tadj,int sim_mf,int ccmaxi,RX ccrcnvg,RX ccacnvg,RX ccrelax,int uccc,int mfnmthd,int mfnrseq,int mfnmaxi,RX mfnrcnvg,RX mfnacnvg,RX mfnrelax,RX mfngamma,int uccn,int mftmthd,int mftrseq,int mftmaxi,RX mftrcnvg,RX mftacnvg,RX mftrelax,RX mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,RX mfvrcnvg,RX mfvacnvg,RX mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,RX celldx,int sim_vjt,int udx,int cvode_mth,RX cvode_rcnvg,RX cvode_acnvg,RX cvode_dtmax,int tsdens,RX tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,std::string date_st,std::string time_st,std::string date_0,std::string time_0,std::string date_1,std::string time_1,std::string time_step,std::string time_list,std::string time_scrn,int restart,std::string rstdate,std::string rsttime,int list,int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<RX> rvals,int BldgFlowZ,int BldgFlowD,int BldgFlowC,int cfd_ctype,RX cfd_convcpl,int cfd_var,int cfd_zref,int cfd_imax,int cfd_dtcmo):name(name),version(version),echo(echo),prjdesc(prjdesc),skheight(skheight),skwidth(skwidth),def_units(def_units),def_flows(def_flows),def_T(def_T),udefT(udefT),rel_N(rel_N),wind_H(wind_H),uwH(uwH),wind_Ao(wind_Ao),wind_a(wind_a),scale(scale),uScale(uScale),orgRow(orgRow),orgCol(orgCol),invYaxis(invYaxis),showGeom(showGeom),ssWeather(ssWeather),wptWeather(wptWeather),WTHpath(WTHpath),CTMpath(CTMpath),CVFpath(CVFpath),DVFpath(DVFpath),WPCfile(WPCfile),EWCfile(EWCfile),WPCdesc(WPCdesc),X0(X0),Y0(Y0),Z0(Z0),angle(angle),u_XYZ(u_XYZ),epsPath(epsPath),epsSpcs(epsSpcs),tShift(tShift),dStart(dStart),dEnd(dEnd),useWPCwp(useWPCwp),useWPCmf(useWPCmf),wpctrig(wpctrig),latd(latd),lgtd(lgtd),Tznr(Tznr),altd(altd),Tgrnd(Tgrnd),utg(utg),u_a(u_a),sim_af(sim_af),afcalc(afcalc),afmaxi(afmaxi),afrcnvg(afrcnvg),afacnvg(afacnvg),afrelax(afrelax),uac2(uac2),Pres(Pres),uPres(uPres),afslae(afslae),afrseq(afrseq),aflmaxi(aflmaxi),aflcnvg(aflcnvg),aflinit(aflinit),Tadj(Tadj),sim_mf(sim_mf),ccmaxi(ccmaxi),ccrcnvg(ccrcnvg),ccacnvg(ccacnvg),ccrelax(ccrelax),uccc(uccc),mfnmthd(mfnmthd),mfnrseq(mfnrseq),mfnmaxi(mfnmaxi),mfnrcnvg(mfnrcnvg),mfnacnvg(mfnacnvg),mfnrelax(mfnrelax),mfngamma(mfngamma),uccn(uccn),mftmthd(mftmthd),mftrseq(mftrseq),mftmaxi(mftmaxi),mftrcnvg(mftrcnvg),mftacnvg(mftacnvg),mftrelax(mftrelax),mftgamma(mftgamma),ucct(ucct),mfvmthd(mfvmthd),mfvrseq(mfvrseq),mfvmaxi(mfvmaxi),mfvrcnvg(mfvrcnvg),mfvacnvg(mfvacnvg),mfvrelax(mfvrelax),uccv(uccv),mf_solver(mf_solver),sim_1dz(sim_1dz),sim_1dd(sim_1dd),celldx(celldx),sim_vjt(sim_vjt),udx(udx),cvode_mth(cvode_mth),cvode_rcnvg(cvode_rcnvg),cvode_acnvg(cvode_acnvg),cvode_dtmax(cvode_dtmax),tsdens(tsdens),tsrelax(tsrelax),tsmaxi(tsmaxi),cnvgSS(cnvgSS),densZP(densZP),stackD(stackD),dodMdt(dodMdt),date_st(date_st),time_st(time_st),date_0(date_0),time_0(time_0),date_1(date_1),time_1(time_1),time_step(time_step),time_list(time_list),time_scrn(time_scrn),restart(restart),rstdate(rstdate),rsttime(rsttime),list(list),doDlg(doDlg),pfsave(pfsave),zfsave(zfsave),zcsave(zcsave),achvol(achvol),achsave(achsave),abwsave(abwsave),cbwsave(cbwsave),expsave(expsave),ebwsave(ebwsave),zaasave(zaasave),zbwsave(zbwsave),rzfsave(rzfsave),rzmsave(rzmsave),rz1save(rz1save),csmsave(csmsave),srfsave(srfsave),logsave(logsave),save(save),rvals(rvals),BldgFlowZ(BldgFlowZ),BldgFlowD(BldgFlowD),BldgFlowC(BldgFlowC),cfd_ctype(cfd_ctype),cfd_convcpl(cfd_convcpl),cfd_var(cfd_var),cfd_zref(cfd_zref),cfd_imax(cfd_imax),cfd_dtcmo(cfd_dtcmo)
 {}
 
 void RunControlPrivate::read(Reader &input)
@@ -358,13 +358,13 @@ void RunControlPrivate::read(Reader &input)
   cfd_dtcmo = input.read<int>(FILELINE);
 }
 
-STRING RunControlPrivate::write()
+std::string RunControlPrivate::write()
 {
-  STRING string;
-  string += name + ' ' + version + ' ' + TO_STRING(echo) + '\n';
+  std::string string;
+  string += name + ' ' + version + ' ' + openstudio::toString(echo) + '\n';
   string += prjdesc + '\n';
-  string += TO_STRING(skheight) + ' ' + TO_STRING(skwidth) + ' ' + TO_STRING(def_units) + ' ' + TO_STRING(def_flows) + ' ' + TO_STRING(def_T) + ' ' + TO_STRING(udefT) + ' ' + TO_STRING(rel_N) + ' ' + TO_STRING(wind_H) + ' ' + TO_STRING(uwH) + ' ' + TO_STRING(wind_Ao) + ' ' + TO_STRING(wind_a) + '\n';
-  string += TO_STRING(scale) + ' ' + TO_STRING(uScale) + ' ' + TO_STRING(orgRow) + ' ' + TO_STRING(orgCol) + ' ' + TO_STRING(invYaxis) + ' ' + TO_STRING(showGeom) + '\n';
+  string += openstudio::toString(skheight) + ' ' + openstudio::toString(skwidth) + ' ' + openstudio::toString(def_units) + ' ' + openstudio::toString(def_flows) + ' ' + openstudio::toString(def_T) + ' ' + openstudio::toString(udefT) + ' ' + openstudio::toString(rel_N) + ' ' + openstudio::toString(wind_H) + ' ' + openstudio::toString(uwH) + ' ' + openstudio::toString(wind_Ao) + ' ' + openstudio::toString(wind_a) + '\n';
+  string += openstudio::toString(scale) + ' ' + openstudio::toString(uScale) + ' ' + openstudio::toString(orgRow) + ' ' + openstudio::toString(orgCol) + ' ' + openstudio::toString(invYaxis) + ' ' + openstudio::toString(showGeom) + '\n';
   string += ssWeather.write();
   string += wptWeather.write();
   string += WTHpath + '\n';
@@ -374,36 +374,36 @@ STRING RunControlPrivate::write()
   string += WPCfile + '\n';
   string += EWCfile + '\n';
   string += WPCdesc + '\n';
-  string += TO_STRING(X0) + ' ' + TO_STRING(Y0) + ' ' + TO_STRING(Z0) + ' ' + TO_STRING(angle) + ' ' + TO_STRING(u_XYZ) + '\n';
-  string += TO_STRING(epsPath) + ' ' + TO_STRING(epsSpcs) + ' ' + tShift + ' ' + dStart + ' ' + dEnd + ' ' + TO_STRING(useWPCwp) + ' ' + TO_STRING(useWPCmf) + ' ' + TO_STRING(wpctrig) + '\n';
-  string += TO_STRING(latd) + ' ' + TO_STRING(lgtd) + ' ' + TO_STRING(Tznr) + ' ' + TO_STRING(altd) + ' ' + TO_STRING(Tgrnd) + ' ' + TO_STRING(utg) + ' ' + TO_STRING(u_a) + '\n';
-  string += TO_STRING(sim_af) + ' ' + TO_STRING(afcalc) + ' ' + TO_STRING(afmaxi) + ' ' + TO_STRING(afrcnvg) + ' ' + TO_STRING(afacnvg) + ' ' + TO_STRING(afrelax) + ' ' + TO_STRING(uac2) + ' ' + TO_STRING(Pres) + ' ' + TO_STRING(uPres) + '\n';
-  string += TO_STRING(afslae) + ' ' + TO_STRING(afrseq) + ' ' + TO_STRING(aflmaxi) + ' ' + TO_STRING(aflcnvg) + ' ' + TO_STRING(aflinit) + ' ' + TO_STRING(Tadj) + '\n';
-  string += TO_STRING(sim_mf) + ' ' + TO_STRING(ccmaxi) + ' ' + TO_STRING(ccrcnvg) + ' ' + TO_STRING(ccacnvg) + ' ' + TO_STRING(ccrelax) + ' ' + TO_STRING(uccc) + '\n';
-  string += TO_STRING(mfnmthd) + ' ' + TO_STRING(mfnrseq) + ' ' + TO_STRING(mfnmaxi) + ' ' + TO_STRING(mfnrcnvg) + ' ' + TO_STRING(mfnacnvg) + ' ' + TO_STRING(mfnrelax) + ' ' + TO_STRING(mfngamma) + ' ' + TO_STRING(uccn) + '\n';
-  string += TO_STRING(mftmthd) + ' ' + TO_STRING(mftrseq) + ' ' + TO_STRING(mftmaxi) + ' ' + TO_STRING(mftrcnvg) + ' ' + TO_STRING(mftacnvg) + ' ' + TO_STRING(mftrelax) + ' ' + TO_STRING(mftgamma) + ' ' + TO_STRING(ucct) + '\n';
-  string += TO_STRING(mfvmthd) + ' ' + TO_STRING(mfvrseq) + ' ' + TO_STRING(mfvmaxi) + ' ' + TO_STRING(mfvrcnvg) + ' ' + TO_STRING(mfvacnvg) + ' ' + TO_STRING(mfvrelax) + ' ' + TO_STRING(uccv) + '\n';
-  string += TO_STRING(mf_solver) + ' ' + TO_STRING(sim_1dz) + ' ' + TO_STRING(sim_1dd) + ' ' + TO_STRING(celldx) + ' ' + TO_STRING(sim_vjt) + ' ' + TO_STRING(udx) + '\n';
-  string += TO_STRING(cvode_mth) + ' ' + TO_STRING(cvode_rcnvg) + ' ' + TO_STRING(cvode_acnvg) + ' ' + TO_STRING(cvode_dtmax) + '\n';
-  string += TO_STRING(tsdens) + ' ' + TO_STRING(tsrelax) + ' ' + TO_STRING(tsmaxi) + ' ' + TO_STRING(cnvgSS) + ' ' + TO_STRING(densZP) + ' ' + TO_STRING(stackD) + ' ' + TO_STRING(dodMdt) + '\n';
+  string += openstudio::toString(X0) + ' ' + openstudio::toString(Y0) + ' ' + openstudio::toString(Z0) + ' ' + openstudio::toString(angle) + ' ' + openstudio::toString(u_XYZ) + '\n';
+  string += openstudio::toString(epsPath) + ' ' + openstudio::toString(epsSpcs) + ' ' + tShift + ' ' + dStart + ' ' + dEnd + ' ' + openstudio::toString(useWPCwp) + ' ' + openstudio::toString(useWPCmf) + ' ' + openstudio::toString(wpctrig) + '\n';
+  string += openstudio::toString(latd) + ' ' + openstudio::toString(lgtd) + ' ' + openstudio::toString(Tznr) + ' ' + openstudio::toString(altd) + ' ' + openstudio::toString(Tgrnd) + ' ' + openstudio::toString(utg) + ' ' + openstudio::toString(u_a) + '\n';
+  string += openstudio::toString(sim_af) + ' ' + openstudio::toString(afcalc) + ' ' + openstudio::toString(afmaxi) + ' ' + openstudio::toString(afrcnvg) + ' ' + openstudio::toString(afacnvg) + ' ' + openstudio::toString(afrelax) + ' ' + openstudio::toString(uac2) + ' ' + openstudio::toString(Pres) + ' ' + openstudio::toString(uPres) + '\n';
+  string += openstudio::toString(afslae) + ' ' + openstudio::toString(afrseq) + ' ' + openstudio::toString(aflmaxi) + ' ' + openstudio::toString(aflcnvg) + ' ' + openstudio::toString(aflinit) + ' ' + openstudio::toString(Tadj) + '\n';
+  string += openstudio::toString(sim_mf) + ' ' + openstudio::toString(ccmaxi) + ' ' + openstudio::toString(ccrcnvg) + ' ' + openstudio::toString(ccacnvg) + ' ' + openstudio::toString(ccrelax) + ' ' + openstudio::toString(uccc) + '\n';
+  string += openstudio::toString(mfnmthd) + ' ' + openstudio::toString(mfnrseq) + ' ' + openstudio::toString(mfnmaxi) + ' ' + openstudio::toString(mfnrcnvg) + ' ' + openstudio::toString(mfnacnvg) + ' ' + openstudio::toString(mfnrelax) + ' ' + openstudio::toString(mfngamma) + ' ' + openstudio::toString(uccn) + '\n';
+  string += openstudio::toString(mftmthd) + ' ' + openstudio::toString(mftrseq) + ' ' + openstudio::toString(mftmaxi) + ' ' + openstudio::toString(mftrcnvg) + ' ' + openstudio::toString(mftacnvg) + ' ' + openstudio::toString(mftrelax) + ' ' + openstudio::toString(mftgamma) + ' ' + openstudio::toString(ucct) + '\n';
+  string += openstudio::toString(mfvmthd) + ' ' + openstudio::toString(mfvrseq) + ' ' + openstudio::toString(mfvmaxi) + ' ' + openstudio::toString(mfvrcnvg) + ' ' + openstudio::toString(mfvacnvg) + ' ' + openstudio::toString(mfvrelax) + ' ' + openstudio::toString(uccv) + '\n';
+  string += openstudio::toString(mf_solver) + ' ' + openstudio::toString(sim_1dz) + ' ' + openstudio::toString(sim_1dd) + ' ' + openstudio::toString(celldx) + ' ' + openstudio::toString(sim_vjt) + ' ' + openstudio::toString(udx) + '\n';
+  string += openstudio::toString(cvode_mth) + ' ' + openstudio::toString(cvode_rcnvg) + ' ' + openstudio::toString(cvode_acnvg) + ' ' + openstudio::toString(cvode_dtmax) + '\n';
+  string += openstudio::toString(tsdens) + ' ' + openstudio::toString(tsrelax) + ' ' + openstudio::toString(tsmaxi) + ' ' + openstudio::toString(cnvgSS) + ' ' + openstudio::toString(densZP) + ' ' + openstudio::toString(stackD) + ' ' + openstudio::toString(dodMdt) + '\n';
   string += date_st + ' ' + time_st + ' ' + date_0 + ' ' + time_0 + ' ' + date_1 + ' ' + time_1 + ' ' + time_step + ' ' + time_list + ' ' + time_scrn + '\n';
-  string += TO_STRING(restart) + ' ' + rstdate + ' ' + rsttime + '\n';
-  string += TO_STRING(list) + ' ' + TO_STRING(doDlg) + ' ' + TO_STRING(pfsave) + ' ' + TO_STRING(zfsave) + ' ' + TO_STRING(zcsave) + '\n';
-  string += TO_STRING(achvol) + ' ' + TO_STRING(achsave) + ' ' + TO_STRING(abwsave) + ' ' + TO_STRING(cbwsave) + ' ' + TO_STRING(expsave) + ' ' + TO_STRING(ebwsave) + ' ' + TO_STRING(zaasave) + ' ' + TO_STRING(zbwsave) + '\n';
-  string += TO_STRING(rzfsave) + ' ' + TO_STRING(rzmsave) + ' ' + TO_STRING(rz1save) + ' ' + TO_STRING(csmsave) + ' ' + TO_STRING(srfsave) + ' ' + TO_STRING(logsave) + '\n';
+  string += openstudio::toString(restart) + ' ' + rstdate + ' ' + rsttime + '\n';
+  string += openstudio::toString(list) + ' ' + openstudio::toString(doDlg) + ' ' + openstudio::toString(pfsave) + ' ' + openstudio::toString(zfsave) + ' ' + openstudio::toString(zcsave) + '\n';
+  string += openstudio::toString(achvol) + ' ' + openstudio::toString(achsave) + ' ' + openstudio::toString(abwsave) + ' ' + openstudio::toString(cbwsave) + ' ' + openstudio::toString(expsave) + ' ' + openstudio::toString(ebwsave) + ' ' + openstudio::toString(zaasave) + ' ' + openstudio::toString(zbwsave) + '\n';
+  string += openstudio::toString(rzfsave) + ' ' + openstudio::toString(rzmsave) + ' ' + openstudio::toString(rz1save) + ' ' + openstudio::toString(csmsave) + ' ' + openstudio::toString(srfsave) + ' ' + openstudio::toString(logsave) + '\n';
   for(int i=0;i<16;i++)
-    string += TO_STRING(save[i]) + ' ';
+    string += openstudio::toString(save[i]) + ' ';
   string += '\n';
-  string += TO_STRING(rvals.size()) + '\n';
+  string += openstudio::toString(rvals.size()) + '\n';
   for(unsigned int i=0;i<rvals.size();i++)
-    string += TO_STRING(rvals[i]) + ' ';
+    string += openstudio::toString(rvals[i]) + ' ';
   string += '\n';
-  string += TO_STRING(BldgFlowZ) + ' ' + TO_STRING(BldgFlowD) + ' ' + TO_STRING(BldgFlowC) + '\n';
-  string += TO_STRING(cfd_ctype) + ' ' + TO_STRING(cfd_convcpl) + ' ' + TO_STRING(cfd_var) + ' ' + TO_STRING(cfd_zref) + ' ' + TO_STRING(cfd_imax) + ' ' + TO_STRING(cfd_dtcmo) + '\n';
+  string += openstudio::toString(BldgFlowZ) + ' ' + openstudio::toString(BldgFlowD) + ' ' + openstudio::toString(BldgFlowC) + '\n';
+  string += openstudio::toString(cfd_ctype) + ' ' + openstudio::toString(cfd_convcpl) + ' ' + openstudio::toString(cfd_var) + ' ' + openstudio::toString(cfd_zref) + ' ' + openstudio::toString(cfd_imax) + ' ' + openstudio::toString(cfd_dtcmo) + '\n';
   return string;
 }
 
-LevelPrivate::LevelPrivate(int nr,RX refht,RX delht,int u_rfht,int u_dlht,STRING name,std::vector<Icon> icons):nr(nr),refht(refht),delht(delht),u_rfht(u_rfht),u_dlht(u_dlht),name(name),icons(icons)
+LevelPrivate::LevelPrivate(int nr,RX refht,RX delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons):nr(nr),refht(refht),delht(delht),u_rfht(u_rfht),u_dlht(u_dlht),name(name),icons(icons)
 {}
 
 void LevelPrivate::read(Reader &input)
@@ -424,10 +424,10 @@ void LevelPrivate::read(Reader &input)
 
 }
 
-STRING LevelPrivate::write()
+std::string LevelPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(refht) + ' ' + TO_STRING(delht) + ' ' + TO_STRING(icons.size()) + ' ' + TO_STRING(u_rfht) + ' ' + TO_STRING(u_dlht) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(refht) + ' ' + openstudio::toString(delht) + ' ' + openstudio::toString(icons.size()) + ' ' + openstudio::toString(u_rfht) + ' ' + openstudio::toString(u_dlht) + ' ' + name + '\n';
   for(unsigned int i=0;i<icons.size();i++)
   {
     string += icons[i].write();
@@ -435,7 +435,7 @@ STRING LevelPrivate::write()
   return string;
 }
 
-DaySchedulePrivate::DaySchedulePrivate(int nr,int shape,int utyp,int ucnv,STRING name,STRING desc,std::vector<SchedulePoint> points):nr(nr),shape(shape),utyp(utyp),ucnv(ucnv),name(name),desc(desc),points(points)
+DaySchedulePrivate::DaySchedulePrivate(int nr,int shape,int utyp,int ucnv,std::string name,std::string desc,std::vector<SchedulePoint> points):nr(nr),shape(shape),utyp(utyp),ucnv(ucnv),name(name),desc(desc),points(points)
 {}
 
 void DaySchedulePrivate::read(Reader &input)
@@ -456,10 +456,10 @@ void DaySchedulePrivate::read(Reader &input)
 
 }
 
-STRING DaySchedulePrivate::write()
+std::string DaySchedulePrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(points.size()) + ' ' + TO_STRING(shape) + ' ' + TO_STRING(utyp) + ' ' + TO_STRING(ucnv) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(points.size()) + ' ' + openstudio::toString(shape) + ' ' + openstudio::toString(utyp) + ' ' + openstudio::toString(ucnv) + ' ' + name + '\n';
   string += desc + '\n';
   for(unsigned int i=0;i<points.size();i++)
   {
@@ -468,7 +468,7 @@ STRING DaySchedulePrivate::write()
   return string;
 }
 
-WeekSchedulePrivate::WeekSchedulePrivate(int nr,int utyp,int ucnv,STRING name,STRING desc,std::vector<int> j):nr(nr),utyp(utyp),ucnv(ucnv),name(name),desc(desc),j(j)
+WeekSchedulePrivate::WeekSchedulePrivate(int nr,int utyp,int ucnv,std::string name,std::string desc,std::vector<int> j):nr(nr),utyp(utyp),ucnv(ucnv),name(name),desc(desc),j(j)
 {}
 
 void WeekSchedulePrivate::read(Reader &input)
@@ -482,18 +482,18 @@ void WeekSchedulePrivate::read(Reader &input)
     j.push_back(input.read<int>(FILELINE));
 }
 
-STRING WeekSchedulePrivate::write()
+std::string WeekSchedulePrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(utyp) + ' ' + TO_STRING(ucnv) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(utyp) + ' ' + openstudio::toString(ucnv) + ' ' + name + '\n';
   string += desc + '\n';
   for(int i=0;i<12;i++)
-    string += TO_STRING(j[i]) + ' ';
+    string += openstudio::toString(j[i]) + ' ';
   string += '\n';
   return string;
 }
 
-WindPressureProfilePrivate::WindPressureProfilePrivate(int nr,int type,STRING name,STRING desc,std::vector<PressureCoefficientPoint> coeffs):nr(nr),type(type),name(name),desc(desc),coeffs(coeffs)
+WindPressureProfilePrivate::WindPressureProfilePrivate(int nr,int type,std::string name,std::string desc,std::vector<PressureCoefficientPoint> coeffs):nr(nr),type(type),name(name),desc(desc),coeffs(coeffs)
 {}
 
 void WindPressureProfilePrivate::read(Reader &input)
@@ -512,10 +512,10 @@ void WindPressureProfilePrivate::read(Reader &input)
 
 }
 
-STRING WindPressureProfilePrivate::write()
+std::string WindPressureProfilePrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(coeffs.size()) + ' ' + TO_STRING(type) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(coeffs.size()) + ' ' + openstudio::toString(type) + ' ' + name + '\n';
   string += desc + '\n';
   for(unsigned int i=0;i<coeffs.size();i++)
   {
@@ -525,13 +525,13 @@ STRING WindPressureProfilePrivate::write()
 }
 
 
-CtrlDatPrivate::CtrlDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc)
+CtrlDatPrivate::CtrlDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc)
 {}
 
 void CtrlDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -541,22 +541,22 @@ void CtrlDatPrivate::read(Reader &input)
   desc = input.readLine(FILELINE);
 }
 
-std::string CtrlDatPrivate::write(STRING datatype)
+std::string CtrlDatPrivate::write(std::string datatype)
 {
   std::string string;
-  string += TO_STRING(nr) + ' ' + datatype + '\n';
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  string += openstudio::toString(nr) + ' ' + datatype + '\n';
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
   return string;
 }
 
-SnsDatPrivate::SnsDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,STRING units,STRING species):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),tau(tau),oldsig(oldsig),source(source),type(type),measure(measure),X(X),Y(Y),relHt(relHt),units(units),species(species)
+SnsDatPrivate::SnsDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,std::string units,std::string species):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),tau(tau),oldsig(oldsig),source(source),type(type),measure(measure),X(X),Y(Y),relHt(relHt),units(units),species(species)
 {}
 
 void SnsDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -578,13 +578,13 @@ void SnsDatPrivate::read(Reader &input)
   species = input.readString(FILELINE);
 }
 
-STRING SnsDatPrivate::write()
+std::string SnsDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " sns\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " sns\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(offset) + ' ' + TO_STRING(scale) + ' ' + TO_STRING(tau) + ' ' + TO_STRING(oldsig) + ' ' + TO_STRING(source) + ' ' + TO_STRING(type) + ' ' + TO_STRING(measure) + ' ' + TO_STRING(X) + ' ' + TO_STRING(Y) + ' ' + TO_STRING(relHt) + ' ' + units + ' ' + species + '\n';
+  string += openstudio::toString(offset) + ' ' + openstudio::toString(scale) + ' ' + openstudio::toString(tau) + ' ' + openstudio::toString(oldsig) + ' ' + openstudio::toString(source) + ' ' + openstudio::toString(type) + ' ' + openstudio::toString(measure) + ' ' + openstudio::toString(X) + ' ' + openstudio::toString(Y) + ' ' + openstudio::toString(relHt) + ' ' + units + ' ' + species + '\n';
   return string;
 }
 
@@ -604,13 +604,13 @@ void SnsDatPrivate::readDetails(Reader &input)
   species = input.readString(FILELINE);
 }
 
-SchDatPrivate::SchDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int ps):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),ps(ps)
+SchDatPrivate::SchDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int ps):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),ps(ps)
 {}
 
 void SchDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -621,13 +621,13 @@ void SchDatPrivate::read(Reader &input)
   ps = input.read<int>(FILELINE);
 }
 
-STRING SchDatPrivate::write()
+std::string SchDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " sch\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " sch\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(ps) + '\n';
+  string += openstudio::toString(ps) + '\n';
   return string;
 }
 
@@ -636,13 +636,13 @@ void SchDatPrivate::readDetails(Reader &input)
   ps = input.read<int>(FILELINE);
 }
 
-SetDatPrivate::SetDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX value):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),value(value)
+SetDatPrivate::SetDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX value):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),value(value)
 {}
 
 void SetDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -653,13 +653,13 @@ void SetDatPrivate::read(Reader &input)
   value = input.readNumber<RX>(FILELINE);
 }
 
-STRING SetDatPrivate::write()
+std::string SetDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " set\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " set\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(value) + '\n';
+  string += openstudio::toString(value) + '\n';
   return string;
 }
 
@@ -668,13 +668,13 @@ void SetDatPrivate::readDetails(Reader &input)
   value = input.readNumber<RX>(FILELINE);
 }
 
-CdvDatPrivate::CdvDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,STRING valuename):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),valuename(valuename)
+CdvDatPrivate::CdvDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,std::string valuename):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),valuename(valuename)
 {}
 
 void CdvDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -685,11 +685,11 @@ void CdvDatPrivate::read(Reader &input)
   valuename = input.readLine(FILELINE);
 }
 
-STRING CdvDatPrivate::write(STRING datatype)
+std::string CdvDatPrivate::write(std::string datatype)
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + datatype + '\n';
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + datatype + '\n';
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
   string += valuename + '\n';
   return string;
@@ -700,13 +700,13 @@ void CdvDatPrivate::readDetails(Reader &input)
   valuename = input.readLine(FILELINE);
 }
 
-LogDatPrivate::LogDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,int udef,STRING header,STRING units):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),udef(udef),header(header),units(units)
+LogDatPrivate::LogDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX offset,RX scale,int udef,std::string header,std::string units):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),udef(udef),header(header),units(units)
 {}
 
 void LogDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -721,13 +721,13 @@ void LogDatPrivate::read(Reader &input)
   units = input.readString(FILELINE);
 }
 
-STRING LogDatPrivate::write()
+std::string LogDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " log\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " log\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(offset) + ' ' + TO_STRING(scale) + ' ' + TO_STRING(udef) + ' ' + header + ' ' + units + '\n';
+  string += openstudio::toString(offset) + ' ' + openstudio::toString(scale) + ' ' + openstudio::toString(udef) + ' ' + header + ' ' + units + '\n';
   return string;
 }
 
@@ -740,13 +740,13 @@ void LogDatPrivate::readDetails(Reader &input)
   units = input.readString(FILELINE);
 }
 
-ModDatPrivate::ModDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale)
+ModDatPrivate::ModDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX offset,RX scale):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale)
 {}
 
 void ModDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -758,13 +758,13 @@ void ModDatPrivate::read(Reader &input)
   scale = input.readNumber<RX>(FILELINE);
 }
 
-STRING ModDatPrivate::write()
+std::string ModDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " mod\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " mod\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(offset) + ' ' + TO_STRING(scale) + '\n';
+  string += openstudio::toString(offset) + ' ' + openstudio::toString(scale) + '\n';
   return string;
 }
 
@@ -774,13 +774,13 @@ void ModDatPrivate::readDetails(Reader &input)
   scale = input.readNumber<RX>(FILELINE);
 }
 
-HysDatPrivate::HysDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX slack,RX slope,RX oldsig):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),slack(slack),slope(slope),oldsig(oldsig)
+HysDatPrivate::HysDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX slack,RX slope,RX oldsig):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),slack(slack),slope(slope),oldsig(oldsig)
 {}
 
 void HysDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -793,13 +793,13 @@ void HysDatPrivate::read(Reader &input)
   oldsig = input.readNumber<RX>(FILELINE);
 }
 
-STRING HysDatPrivate::write()
+std::string HysDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " hys\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " hys\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(slack) + ' ' + TO_STRING(slope) + ' ' + TO_STRING(oldsig) + '\n';
+  string += openstudio::toString(slack) + ' ' + openstudio::toString(slope) + ' ' + openstudio::toString(oldsig) + '\n';
   return string;
 }
 
@@ -810,13 +810,13 @@ void HysDatPrivate::readDetails(Reader &input)
   oldsig = input.readNumber<RX>(FILELINE);
 }
 
-DlsDatPrivate::DlsDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int dsincr,int dsdecr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),dsincr(dsincr),dsdecr(dsdecr)
+DlsDatPrivate::DlsDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int dsincr,int dsdecr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),dsincr(dsincr),dsdecr(dsdecr)
 {}
 
 void DlsDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -828,13 +828,13 @@ void DlsDatPrivate::read(Reader &input)
   dsdecr = input.read<int>(FILELINE);
 }
 
-STRING DlsDatPrivate::write()
+std::string DlsDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " dls\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " dls\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(dsincr) + ' ' + TO_STRING(dsdecr) + '\n';
+  string += openstudio::toString(dsincr) + ' ' + openstudio::toString(dsdecr) + '\n';
   return string;
 }
 
@@ -844,13 +844,13 @@ void DlsDatPrivate::readDetails(Reader &input)
   dsdecr = input.read<int>(FILELINE);
 }
 
-DlxDatPrivate::DlxDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tauincr,int taudecr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tauincr(tauincr),taudecr(taudecr)
+DlxDatPrivate::DlxDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int tauincr,int taudecr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tauincr(tauincr),taudecr(taudecr)
 {}
 
 void DlxDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -862,13 +862,13 @@ void DlxDatPrivate::read(Reader &input)
   taudecr = input.read<int>(FILELINE);
 }
 
-STRING DlxDatPrivate::write()
+std::string DlxDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " dlx\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " dlx\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(tauincr) + ' ' + TO_STRING(taudecr) + '\n';
+  string += openstudio::toString(tauincr) + ' ' + openstudio::toString(taudecr) + '\n';
   return string;
 }
 
@@ -878,13 +878,13 @@ void DlxDatPrivate::readDetails(Reader &input)
   taudecr = input.read<int>(FILELINE);
 }
 
-RavDatPrivate::RavDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tspan):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tspan(tspan)
+RavDatPrivate::RavDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int tspan):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tspan(tspan)
 {}
 
 void RavDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -895,13 +895,13 @@ void RavDatPrivate::read(Reader &input)
   tspan = input.read<int>(FILELINE);
 }
 
-STRING RavDatPrivate::write()
+std::string RavDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " rav\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " rav\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(tspan) + '\n';
+  string += openstudio::toString(tspan) + '\n';
   return string;
 }
 
@@ -910,13 +910,13 @@ void RavDatPrivate::readDetails(Reader &input)
   tspan = input.read<int>(FILELINE);
 }
 
-SumAvgPrivate::SumAvgPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,std::vector<int> pc):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),pc(pc)
+SumAvgPrivate::SumAvgPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,std::vector<int> pc):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),pc(pc)
 {}
 
 void SumAvgPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -929,15 +929,15 @@ void SumAvgPrivate::read(Reader &input)
     pc.push_back(input.read<int>(FILELINE));
 }
 
-STRING SumAvgPrivate::write(STRING datatype)
+std::string SumAvgPrivate::write(std::string datatype)
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + datatype + '\n';
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + datatype + '\n';
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(pc.size()) + '\n';
-  for(VECTOR_SIZE_T i=0;i<pc.size();i++)
-    string += TO_STRING(pc[i]) + ' ';
+  string += openstudio::toString(pc.size()) + '\n';
+  for(unsigned int i=0;i<pc.size();i++)
+    string += openstudio::toString(pc[i]) + ' ';
   string += '\n';
   return string;
 }
@@ -949,13 +949,13 @@ void SumAvgPrivate::readDetails(Reader &input)
     pc.push_back(input.read<int>(FILELINE));
 }
 
-BanDatPrivate::BanDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX band):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),band(band)
+BanDatPrivate::BanDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX band):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),band(band)
 {}
 
 void BanDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -966,13 +966,13 @@ void BanDatPrivate::read(Reader &input)
   band = input.readNumber<RX>(FILELINE);
 }
 
-STRING BanDatPrivate::write(STRING datatype)
+std::string BanDatPrivate::write(std::string datatype)
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + datatype + '\n';
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + datatype + '\n';
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(band) + '\n';
+  string += openstudio::toString(band) + '\n';
   return string;
 }
 
@@ -981,13 +981,13 @@ void BanDatPrivate::readDetails(Reader &input)
   band = input.readNumber<RX>(FILELINE);
 }
 
-PcDatPrivate::PcDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp)
+PcDatPrivate::PcDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX kp):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp)
 {}
 
 void PcDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -998,13 +998,13 @@ void PcDatPrivate::read(Reader &input)
   kp = input.readNumber<RX>(FILELINE);
 }
 
-STRING PcDatPrivate::write()
+std::string PcDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " pc1\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " pc1\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(kp) + '\n';
+  string += openstudio::toString(kp) + '\n';
   return string;
 }
 
@@ -1013,13 +1013,13 @@ void PcDatPrivate::readDetails(Reader &input)
   kp = input.readNumber<RX>(FILELINE);
 }
 
-PicDatPrivate::PicDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp,RX ki,RX oldsig,RX olderr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp),ki(ki),oldsig(oldsig),olderr(olderr)
+PicDatPrivate::PicDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX kp,RX ki,RX oldsig,RX olderr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp),ki(ki),oldsig(oldsig),olderr(olderr)
 {}
 
 void PicDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -1033,13 +1033,13 @@ void PicDatPrivate::read(Reader &input)
   olderr = input.readNumber<RX>(FILELINE);
 }
 
-STRING PicDatPrivate::write()
+std::string PicDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " pi1\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " pi1\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(kp) + ' ' + TO_STRING(ki) + ' ' + TO_STRING(oldsig) + ' ' + TO_STRING(olderr) + '\n';
+  string += openstudio::toString(kp) + ' ' + openstudio::toString(ki) + ' ' + openstudio::toString(oldsig) + ' ' + openstudio::toString(olderr) + '\n';
   return string;
 }
 
@@ -1051,13 +1051,13 @@ void PicDatPrivate::readDetails(Reader &input)
   olderr = input.readNumber<RX>(FILELINE);
 }
 
-SupDatPrivate::SupDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int def,int se,int in,int out):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),def(def),se(se),in(in),out(out)
+SupDatPrivate::SupDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int def,int se,int in,int out):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),def(def),se(se),in(in),out(out)
 {}
 
 void SupDatPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE); // Should really check this
+  std::string dataType = input.readString(FILELINE); // Should really check this
   seqnr = input.read<int>(FILELINE);
   flags = input.read<unsigned int>(FILELINE);
   inreq = input.read<int>(FILELINE);
@@ -1071,13 +1071,13 @@ void SupDatPrivate::read(Reader &input)
   out = input.read<int>(FILELINE);
 }
 
-STRING SupDatPrivate::write()
+std::string SupDatPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + " sup\n";
-  string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + " sup\n";
+  string += openstudio::toString(seqnr) + ' ' + openstudio::toString(flags) + ' ' + openstudio::toString(inreq) + ' ' + openstudio::toString(n1) + ' ' + openstudio::toString(n2) + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(def) + ' ' + TO_STRING(se) + ' ' + TO_STRING(in) + ' ' + TO_STRING(out) + '\n';
+  string += openstudio::toString(def) + ' ' + openstudio::toString(se) + ' ' + openstudio::toString(in) + ' ' + openstudio::toString(out) + '\n';
   return string;
 }
 
@@ -1090,14 +1090,14 @@ void SupDatPrivate::readDetails(Reader &input)
 }
 
 
-PlrOrfPrivate::PlrOrfPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),dia(dia),coef(coef),Re(Re),u_A(u_A),u_D(u_D)
+PlrOrfPrivate::PlrOrfPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),dia(dia),coef(coef),Re(Re),u_A(u_A),u_D(u_D)
 {}
 
 void PlrOrfPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1111,12 +1111,12 @@ void PlrOrfPrivate::read(Reader &input)
   u_D = input.read<int>(FILELINE);
 }
 
-STRING PlrOrfPrivate::write()
+std::string PlrOrfPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_orfc " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_orfc " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(area) + ' ' + TO_STRING(dia) + ' ' + TO_STRING(coef) + ' ' + TO_STRING(Re) + ' ' + TO_STRING(u_A) + ' ' + TO_STRING(u_D) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(area) + ' ' + openstudio::toString(dia) + ' ' + openstudio::toString(coef) + ' ' + openstudio::toString(Re) + ' ' + openstudio::toString(u_A) + ' ' + openstudio::toString(u_D) + '\n';
   return string;
 }
 
@@ -1133,14 +1133,14 @@ void PlrOrfPrivate::readDetails(Reader &input)
   u_D = input.read<int>(FILELINE);
 }
 
-PlrLeakPrivate::PlrLeakPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),coef(coef),pres(pres),area1(area1),area2(area2),area3(area3),u_A1(u_A1),u_A2(u_A2),u_A3(u_A3),u_dP(u_dP)
+PlrLeakPrivate::PlrLeakPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),coef(coef),pres(pres),area1(area1),area2(area2),area3(area3),u_A1(u_A1),u_A2(u_A2),u_A3(u_A3),u_dP(u_dP)
 {}
 
 void PlrLeakPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1157,12 +1157,12 @@ void PlrLeakPrivate::read(Reader &input)
   u_dP = input.read<int>(FILELINE);
 }
 
-STRING PlrLeakPrivate::write(STRING datatype)
+std::string PlrLeakPrivate::write(std::string datatype)
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + datatype + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + ' ' + datatype + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(coef) + ' ' + TO_STRING(pres) + ' ' + TO_STRING(area1) + ' ' + TO_STRING(area2) + ' ' + TO_STRING(area3) + ' ' + TO_STRING(u_A1) + ' ' + TO_STRING(u_A2) + ' ' + TO_STRING(u_A3) + ' ' + TO_STRING(u_dP) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(coef) + ' ' + openstudio::toString(pres) + ' ' + openstudio::toString(area1) + ' ' + openstudio::toString(area2) + ' ' + openstudio::toString(area3) + ' ' + openstudio::toString(u_A1) + ' ' + openstudio::toString(u_A2) + ' ' + openstudio::toString(u_A3) + ' ' + openstudio::toString(u_dP) + '\n';
   return string;
 }
 
@@ -1182,14 +1182,14 @@ void PlrLeakPrivate::readDetails(Reader &input)
   u_dP = input.read<int>(FILELINE);
 }
 
-PlrConnPrivate::PlrConnPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),coef(coef),u_A(u_A)
+PlrConnPrivate::PlrConnPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),coef(coef),u_A(u_A)
 {}
 
 void PlrConnPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1200,12 +1200,12 @@ void PlrConnPrivate::read(Reader &input)
   u_A = input.read<int>(FILELINE);
 }
 
-STRING PlrConnPrivate::write()
+std::string PlrConnPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_conn " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_conn " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(area) + ' ' + TO_STRING(coef) + ' ' + TO_STRING(u_A) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(area) + ' ' + openstudio::toString(coef) + ' ' + openstudio::toString(u_A) + '\n';
   return string;
 }
 
@@ -1219,14 +1219,14 @@ void PlrConnPrivate::readDetails(Reader &input)
   u_A = input.read<int>(FILELINE);
 }
 
-PlrQcnPrivate::PlrQcnPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
+PlrQcnPrivate::PlrQcnPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
 {}
 
 void PlrQcnPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1234,12 +1234,12 @@ void PlrQcnPrivate::read(Reader &input)
   expt = input.readNumber<RX>(FILELINE);
 }
 
-STRING PlrQcnPrivate::write()
+std::string PlrQcnPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_qcn " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_qcn " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + '\n';
   return string;
 }
 
@@ -1250,14 +1250,14 @@ void PlrQcnPrivate::readDetails(Reader &input)
   expt = input.readNumber<RX>(FILELINE);
 }
 
-PlrFcnPrivate::PlrFcnPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
+PlrFcnPrivate::PlrFcnPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
 {}
 
 void PlrFcnPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1265,12 +1265,12 @@ void PlrFcnPrivate::read(Reader &input)
   expt = input.readNumber<RX>(FILELINE);
 }
 
-STRING PlrFcnPrivate::write()
+std::string PlrFcnPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_fcn " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_fcn " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + '\n';
   return string;
 }
 
@@ -1281,14 +1281,14 @@ void PlrFcnPrivate::readDetails(Reader &input)
   expt = input.readNumber<RX>(FILELINE);
 }
 
-PlrTest1Private::PlrTest1Private(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP(dP),Flow(Flow),u_P(u_P),u_F(u_F)
+PlrTest1Private::PlrTest1Private(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP(dP),Flow(Flow),u_P(u_P),u_F(u_F)
 {}
 
 void PlrTest1Private::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1300,12 +1300,12 @@ void PlrTest1Private::read(Reader &input)
   u_F = input.read<int>(FILELINE);
 }
 
-STRING PlrTest1Private::write()
+std::string PlrTest1Private::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_test1 " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_test1 " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dP) + ' ' + TO_STRING(Flow) + ' ' + TO_STRING(u_P) + ' ' + TO_STRING(u_F) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dP) + ' ' + openstudio::toString(Flow) + ' ' + openstudio::toString(u_P) + ' ' + openstudio::toString(u_F) + '\n';
   return string;
 }
 
@@ -1320,14 +1320,14 @@ void PlrTest1Private::readDetails(Reader &input)
   u_F = input.read<int>(FILELINE);
 }
 
-PlrTest2Private::PlrTest2Private(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
+PlrTest2Private::PlrTest2Private(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
 {}
 
 void PlrTest2Private::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1343,12 +1343,12 @@ void PlrTest2Private::read(Reader &input)
   u_F2 = input.read<int>(FILELINE);
 }
 
-STRING PlrTest2Private::write()
+std::string PlrTest2Private::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_test2 " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_test2 " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dP1) + ' ' + TO_STRING(F1) + ' ' + TO_STRING(dP2) + ' ' + TO_STRING(F2) + ' ' + TO_STRING(u_P1) + ' ' + TO_STRING(u_F1) + ' ' + TO_STRING(u_P2) + ' ' + TO_STRING(u_F2) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dP1) + ' ' + openstudio::toString(F1) + ' ' + openstudio::toString(dP2) + ' ' + openstudio::toString(F2) + ' ' + openstudio::toString(u_P1) + ' ' + openstudio::toString(u_F1) + ' ' + openstudio::toString(u_P2) + ' ' + openstudio::toString(u_F2) + '\n';
   return string;
 }
 
@@ -1367,14 +1367,14 @@ void PlrTest2Private::readDetails(Reader &input)
   u_F2 = input.read<int>(FILELINE);
 }
 
-PlrCrackPrivate::PlrCrackPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),length(length),width(width),u_L(u_L),u_W(u_W)
+PlrCrackPrivate::PlrCrackPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),length(length),width(width),u_L(u_L),u_W(u_W)
 {}
 
 void PlrCrackPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1386,12 +1386,12 @@ void PlrCrackPrivate::read(Reader &input)
   u_W = input.read<int>(FILELINE);
 }
 
-STRING PlrCrackPrivate::write()
+std::string PlrCrackPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_crack " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_crack " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(length) + ' ' + TO_STRING(width) + ' ' + TO_STRING(u_L) + ' ' + TO_STRING(u_W) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(length) + ' ' + openstudio::toString(width) + ' ' + openstudio::toString(u_L) + ' ' + openstudio::toString(u_W) + '\n';
   return string;
 }
 
@@ -1406,14 +1406,14 @@ void PlrCrackPrivate::readDetails(Reader &input)
   u_W = input.read<int>(FILELINE);
 }
 
-PlrStairPrivate::PlrStairPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),Area(Area),peo(peo),tread(tread),u_A(u_A),u_D(u_D)
+PlrStairPrivate::PlrStairPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),Area(Area),peo(peo),tread(tread),u_A(u_A),u_D(u_D)
 {}
 
 void PlrStairPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1427,12 +1427,12 @@ void PlrStairPrivate::read(Reader &input)
   u_D = input.read<int>(FILELINE);
 }
 
-STRING PlrStairPrivate::write()
+std::string PlrStairPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_stair " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_stair " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(Ht) + ' ' + TO_STRING(Area) + ' ' + TO_STRING(peo) + ' ' + TO_STRING(tread) + ' ' + TO_STRING(u_A) + ' ' + TO_STRING(u_D) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(Ht) + ' ' + openstudio::toString(Area) + ' ' + openstudio::toString(peo) + ' ' + openstudio::toString(tread) + ' ' + openstudio::toString(u_A) + ' ' + openstudio::toString(u_D) + '\n';
   return string;
 }
 
@@ -1449,14 +1449,14 @@ void PlrStairPrivate::readDetails(Reader &input)
   u_D = input.read<int>(FILELINE);
 }
 
-PlrShaftPrivate::PlrShaftPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),area(area),perim(perim),rough(rough),u_A(u_A),u_D(u_D),u_P(u_P),u_R(u_R)
+PlrShaftPrivate::PlrShaftPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),area(area),perim(perim),rough(rough),u_A(u_A),u_D(u_D),u_P(u_P),u_R(u_R)
 {}
 
 void PlrShaftPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1472,12 +1472,12 @@ void PlrShaftPrivate::read(Reader &input)
   u_R = input.read<int>(FILELINE);
 }
 
-STRING PlrShaftPrivate::write()
+std::string PlrShaftPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_shaft " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_shaft " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(Ht) + ' ' + TO_STRING(area) + ' ' + TO_STRING(perim) + ' ' + TO_STRING(rough) + ' ' + TO_STRING(u_A) + ' ' + TO_STRING(u_D) + ' ' + TO_STRING(u_P) + ' ' + TO_STRING(u_R) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(Ht) + ' ' + openstudio::toString(area) + ' ' + openstudio::toString(perim) + ' ' + openstudio::toString(rough) + ' ' + openstudio::toString(u_A) + ' ' + openstudio::toString(u_D) + ' ' + openstudio::toString(u_P) + ' ' + openstudio::toString(u_R) + '\n';
   return string;
 }
 
@@ -1496,14 +1496,14 @@ void PlrShaftPrivate::readDetails(Reader &input)
   u_R = input.read<int>(FILELINE);
 }
 
-PlrBdqPrivate::PlrBdqPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
+PlrBdqPrivate::PlrBdqPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
 {}
 
 void PlrBdqPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1513,12 +1513,12 @@ void PlrBdqPrivate::read(Reader &input)
   xn = input.readNumber<RX>(FILELINE);
 }
 
-STRING PlrBdqPrivate::write()
+std::string PlrBdqPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_bdq " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_bdq " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(Cp) + ' ' + TO_STRING(xp) + ' ' + TO_STRING(Cn) + ' ' + TO_STRING(xn) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(Cp) + ' ' + openstudio::toString(xp) + ' ' + openstudio::toString(Cn) + ' ' + openstudio::toString(xn) + '\n';
   return string;
 }
 
@@ -1531,14 +1531,14 @@ void PlrBdqPrivate::readDetails(Reader &input)
   xn = input.readNumber<RX>(FILELINE);
 }
 
-PlrBdfPrivate::PlrBdfPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
+PlrBdfPrivate::PlrBdfPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
 {}
 
 void PlrBdfPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1548,12 +1548,12 @@ void PlrBdfPrivate::read(Reader &input)
   xn = input.readNumber<RX>(FILELINE);
 }
 
-STRING PlrBdfPrivate::write()
+std::string PlrBdfPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_bdf " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_bdf " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(Cp) + ' ' + TO_STRING(xp) + ' ' + TO_STRING(Cn) + ' ' + TO_STRING(xn) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(Cp) + ' ' + openstudio::toString(xp) + ' ' + openstudio::toString(Cn) + ' ' + openstudio::toString(xn) + '\n';
   return string;
 }
 
@@ -1566,26 +1566,26 @@ void PlrBdfPrivate::readDetails(Reader &input)
   xn = input.readNumber<RX>(FILELINE);
 }
 
-QfrQabPrivate::QfrQabPrivate(int nr,int icon,STRING name,STRING desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
+QfrQabPrivate::QfrQabPrivate(int nr,int icon,std::string name,std::string desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
 {}
 
 void QfrQabPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   a = input.readNumber<RX>(FILELINE);
   b = input.readNumber<RX>(FILELINE);
 }
 
-STRING QfrQabPrivate::write()
+std::string QfrQabPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_qab " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_qab " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(a) + ' ' + TO_STRING(b) + '\n';
+  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + '\n';
   return string;
 }
 
@@ -1595,26 +1595,26 @@ void QfrQabPrivate::readDetails(Reader &input)
   b = input.readNumber<RX>(FILELINE);
 }
 
-QfrFabPrivate::QfrFabPrivate(int nr,int icon,STRING name,STRING desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
+QfrFabPrivate::QfrFabPrivate(int nr,int icon,std::string name,std::string desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
 {}
 
 void QfrFabPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   a = input.readNumber<RX>(FILELINE);
   b = input.readNumber<RX>(FILELINE);
 }
 
-STRING QfrFabPrivate::write()
+std::string QfrFabPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_fab " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_fab " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(a) + ' ' + TO_STRING(b) + '\n';
+  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + '\n';
   return string;
 }
 
@@ -1624,14 +1624,14 @@ void QfrFabPrivate::readDetails(Reader &input)
   b = input.readNumber<RX>(FILELINE);
 }
 
-QfrCrackPrivate::QfrCrackPrivate(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),length(length),width(width),depth(depth),nB(nB),u_L(u_L),u_W(u_W),u_D(u_D)
+QfrCrackPrivate::QfrCrackPrivate(int nr,int icon,std::string name,std::string desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),length(length),width(width),depth(depth),nB(nB),u_L(u_L),u_W(u_W),u_D(u_D)
 {}
 
 void QfrCrackPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   a = input.readNumber<RX>(FILELINE);
@@ -1645,12 +1645,12 @@ void QfrCrackPrivate::read(Reader &input)
   u_D = input.read<int>(FILELINE);
 }
 
-STRING QfrCrackPrivate::write()
+std::string QfrCrackPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_crack " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_crack " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(a) + ' ' + TO_STRING(b) + ' ' + TO_STRING(length) + ' ' + TO_STRING(width) + ' ' + TO_STRING(depth) + ' ' + TO_STRING(nB) + ' ' + TO_STRING(u_L) + ' ' + TO_STRING(u_W) + ' ' + TO_STRING(u_D) + '\n';
+  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + ' ' + openstudio::toString(length) + ' ' + openstudio::toString(width) + ' ' + openstudio::toString(depth) + ' ' + openstudio::toString(nB) + ' ' + openstudio::toString(u_L) + ' ' + openstudio::toString(u_W) + ' ' + openstudio::toString(u_D) + '\n';
   return string;
 }
 
@@ -1667,7 +1667,7 @@ void QfrCrackPrivate::readDetails(Reader &input)
   u_D = input.read<int>(FILELINE);
 }
 
-QfrTest2Private::QfrTest2Private(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
+QfrTest2Private::QfrTest2Private(int nr,int icon,std::string name,std::string desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
 {}
 
 void QfrTest2Private::read(Reader &input)
@@ -1689,12 +1689,12 @@ void QfrTest2Private::read(Reader &input)
   u_F2 = input.read<int>(FILELINE);
 }
 
-STRING QfrTest2Private::write()
+std::string QfrTest2Private::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_test2 " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_test2 " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(a) + ' ' + TO_STRING(b) + ' ' + TO_STRING(dP1) + ' ' + TO_STRING(F1) + ' ' + TO_STRING(dP2) + ' ' + TO_STRING(F2) + ' ' + TO_STRING(u_P1) + ' ' + TO_STRING(u_F1) + ' ' + TO_STRING(u_P2) + ' ' + TO_STRING(u_F2) + '\n';
+  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + ' ' + openstudio::toString(dP1) + ' ' + openstudio::toString(F1) + ' ' + openstudio::toString(dP2) + ' ' + openstudio::toString(F2) + ' ' + openstudio::toString(u_P1) + ' ' + openstudio::toString(u_F1) + ' ' + openstudio::toString(u_P2) + ' ' + openstudio::toString(u_F2) + '\n';
   return string;
 }
 
@@ -1712,14 +1712,14 @@ void QfrTest2Private::readDetails(Reader &input)
   u_F2 = input.read<int>(FILELINE);
 }
 
-AfeDorPrivate::AfeDorPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dTmin(dTmin),ht(ht),wd(wd),cd(cd),u_T(u_T),u_H(u_H),u_W(u_W)
+AfeDorPrivate::AfeDorPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dTmin(dTmin),ht(ht),wd(wd),cd(cd),u_T(u_T),u_H(u_H),u_W(u_W)
 {}
 
 void AfeDorPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1734,12 +1734,12 @@ void AfeDorPrivate::read(Reader &input)
   u_W = input.read<int>(FILELINE);
 }
 
-STRING AfeDorPrivate::write()
+std::string AfeDorPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " dor_door " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " dor_door " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dTmin) + ' ' + TO_STRING(ht) + ' ' + TO_STRING(wd) + ' ' + TO_STRING(cd) + ' ' + TO_STRING(u_T) + ' ' + TO_STRING(u_H) + ' ' + TO_STRING(u_W) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dTmin) + ' ' + openstudio::toString(ht) + ' ' + openstudio::toString(wd) + ' ' + openstudio::toString(cd) + ' ' + openstudio::toString(u_T) + ' ' + openstudio::toString(u_H) + ' ' + openstudio::toString(u_W) + '\n';
   return string;
 }
 
@@ -1757,14 +1757,14 @@ void AfeDorPrivate::readDetails(Reader &input)
   u_W = input.read<int>(FILELINE);
 }
 
-DrPl2Private::DrPl2Private(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dH(dH),ht(ht),wd(wd),cd(cd),u_H(u_H),u_W(u_W)
+DrPl2Private::DrPl2Private(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dH(dH),ht(ht),wd(wd),cd(cd),u_H(u_H),u_W(u_W)
 {}
 
 void DrPl2Private::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1778,12 +1778,12 @@ void DrPl2Private::read(Reader &input)
   u_W = input.read<int>(FILELINE);
 }
 
-STRING DrPl2Private::write()
+std::string DrPl2Private::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " dor_pl2 " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " dor_pl2 " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dH) + ' ' + TO_STRING(ht) + ' ' + TO_STRING(wd) + ' ' + TO_STRING(cd) + ' ' + TO_STRING(u_H) + ' ' + TO_STRING(u_W) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dH) + ' ' + openstudio::toString(ht) + ' ' + openstudio::toString(wd) + ' ' + openstudio::toString(cd) + ' ' + openstudio::toString(u_H) + ' ' + openstudio::toString(u_W) + '\n';
   return string;
 }
 
@@ -1800,26 +1800,26 @@ void DrPl2Private::readDetails(Reader &input)
   u_W = input.read<int>(FILELINE);
 }
 
-AfeCmfPrivate::AfeCmfPrivate(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
+AfeCmfPrivate::AfeCmfPrivate(int nr,int icon,std::string name,std::string desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
 {}
 
 void AfeCmfPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   Flow = input.readNumber<RX>(FILELINE);
   u_F = input.read<int>(FILELINE);
 }
 
-STRING AfeCmfPrivate::write()
+std::string AfeCmfPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " fan_cmf " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " fan_cmf " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(Flow) + ' ' + TO_STRING(u_F) + '\n';
+  string += openstudio::toString(Flow) + ' ' + openstudio::toString(u_F) + '\n';
   return string;
 }
 
@@ -1829,26 +1829,26 @@ void AfeCmfPrivate::readDetails(Reader &input)
   u_F = input.read<int>(FILELINE);
 }
 
-AfeCvfPrivate::AfeCvfPrivate(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
+AfeCvfPrivate::AfeCvfPrivate(int nr,int icon,std::string name,std::string desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
 {}
 
 void AfeCvfPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   Flow = input.readNumber<RX>(FILELINE);
   u_F = input.read<int>(FILELINE);
 }
 
-STRING AfeCvfPrivate::write()
+std::string AfeCvfPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " fan_cvf " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " fan_cvf " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(Flow) + ' ' + TO_STRING(u_F) + '\n';
+  string += openstudio::toString(Flow) + ' ' + openstudio::toString(u_F) + '\n';
   return string;
 }
 
@@ -1858,14 +1858,14 @@ void AfeCvfPrivate::readDetails(Reader &input)
   u_F = input.read<int>(FILELINE);
 }
 
-AfeFanPrivate::AfeFanPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),rdens(rdens),fdf(fdf),sop(sop),off(off),fpc(fpc),Sarea(Sarea),u_Sa(u_Sa),data(data)
+AfeFanPrivate::AfeFanPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),rdens(rdens),fdf(fdf),sop(sop),off(off),fpc(fpc),Sarea(Sarea),u_Sa(u_Sa),data(data)
 {}
 
 void AfeFanPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   lam = input.readNumber<RX>(FILELINE);
@@ -1889,16 +1889,16 @@ void AfeFanPrivate::read(Reader &input)
 
 }
 
-STRING AfeFanPrivate::write()
+std::string AfeFanPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " fan_fan " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " fan_fan " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(rdens) + ' ' + TO_STRING(fdf) + ' ' + TO_STRING(sop) + ' ' + TO_STRING(off) + '\n';
+  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(rdens) + ' ' + openstudio::toString(fdf) + ' ' + openstudio::toString(sop) + ' ' + openstudio::toString(off) + '\n';
   for(int i=0;i<4;i++)
-    string += TO_STRING(fpc[i]) + ' ';
+    string += openstudio::toString(fpc[i]) + ' ';
   string += '\n';
-  string += TO_STRING(data.size()) + ' ' + TO_STRING(Sarea) + ' ' + TO_STRING(u_Sa) + '\n';
+  string += openstudio::toString(data.size()) + ' ' + openstudio::toString(Sarea) + ' ' + openstudio::toString(u_Sa) + '\n';
   for(unsigned int i=0;i<data.size();i++)
   {
     string += data[i].write();
@@ -1929,14 +1929,14 @@ void AfeFanPrivate::readDetails(Reader &input)
 
 }
 
-AfeCsfPrivate::AfeCsfPrivate(int nr,int icon,STRING name,STRING desc,int u_x,int u_y,std::vector<DataPoint> data):nr(nr),icon(icon),name(name),desc(desc),u_x(u_x),u_y(u_y),data(data)
+AfeCsfPrivate::AfeCsfPrivate(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data):nr(nr),icon(icon),name(name),desc(desc),u_x(u_x),u_y(u_y),data(data)
 {}
 
 void AfeCsfPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   int npts = input.read<int>(FILELINE);
@@ -1951,12 +1951,12 @@ void AfeCsfPrivate::read(Reader &input)
 
 }
 
-STRING AfeCsfPrivate::write(STRING datatype)
+std::string AfeCsfPrivate::write(std::string datatype)
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + datatype + ' ' + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + ' ' + datatype + ' ' + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(data.size()) + ' ' + TO_STRING(u_x) + ' ' + TO_STRING(u_y) + '\n';
+  string += openstudio::toString(data.size()) + ' ' + openstudio::toString(u_x) + ' ' + openstudio::toString(u_y) + '\n';
   for(unsigned int i=0;i<data.size();i++)
   {
     string += data[i].write();
@@ -1978,14 +1978,14 @@ void AfeCsfPrivate::readDetails(Reader &input)
 
 }
 
-AfeSupPrivate::AfeSupPrivate(int nr,int icon,STRING name,STRING desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements):nr(nr),icon(icon),name(name),desc(desc),sched(sched),u_H(u_H),subelements(subelements)
+AfeSupPrivate::AfeSupPrivate(int nr,int icon,std::string name,std::string desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements):nr(nr),icon(icon),name(name),desc(desc),sched(sched),u_H(u_H),subelements(subelements)
 {}
 
 void AfeSupPrivate::read(Reader &input)
 {
   nr = input.read<int>(FILELINE);
   icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   name = input.readString(FILELINE);
   desc = input.readLine(FILELINE);
   int nse = input.read<int>(FILELINE);
@@ -2000,12 +2000,12 @@ void AfeSupPrivate::read(Reader &input)
 
 }
 
-STRING AfeSupPrivate::write()
+std::string AfeSupPrivate::write()
 {
-  STRING string;
-  string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " sup_afe " + name + '\n';
+  std::string string;
+  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " sup_afe " + name + '\n';
   string += desc + '\n';
-  string += TO_STRING(subelements.size()) + ' ' + TO_STRING(sched) + ' ' + TO_STRING(u_H) + '\n';
+  string += openstudio::toString(subelements.size()) + ' ' + openstudio::toString(sched) + ' ' + openstudio::toString(u_H) + '\n';
   for(unsigned int i=0;i<subelements.size();i++)
   {
     string += subelements[i].write();

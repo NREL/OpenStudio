@@ -26,7 +26,7 @@ WeatherData::WeatherData(RX Tambt,RX barpres,RX windspd,RX winddir,RX relhum,int
   d = new WeatherDataPrivate(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
 }
 
-STRING WeatherData::write()
+std::string WeatherData::write()
 {
   return d->write();
 }
@@ -141,7 +141,7 @@ Icon::Icon(int icon,int col,int row,int nr)
   d = new IconPrivate(icon,col,row,nr);
 }
 
-STRING Icon::write()
+std::string Icon::write()
 {
   return d->write();
 }
@@ -242,10 +242,10 @@ void FanDataPoint::read(Reader &input)
   m_u_rP = input.read<int>(FILELINE);
 }
 
-STRING FanDataPoint::write()
+std::string FanDataPoint::write()
 {
-  STRING string;
-  string += TO_STRING(m_mF) + ' ' + TO_STRING(m_u_mF) + ' ' + TO_STRING(m_dP) + ' ' + TO_STRING(m_u_dP) + ' ' + TO_STRING(m_rP) + ' ' + TO_STRING(m_u_rP) + '\n';
+  std::string string;
+  string += openstudio::toString(m_mF) + ' ' + openstudio::toString(m_u_mF) + ' ' + openstudio::toString(m_dP) + ' ' + openstudio::toString(m_u_dP) + ' ' + openstudio::toString(m_rP) + ' ' + openstudio::toString(m_u_rP) + '\n';
   return string;
 }
 
@@ -318,10 +318,10 @@ void DataPoint::read(Reader &input)
   m_y = input.readNumber<RX>(FILELINE);
 }
 
-STRING DataPoint::write()
+std::string DataPoint::write()
 {
-  STRING string;
-  string += TO_STRING(m_x) + ' ' + TO_STRING(m_y) + '\n';
+  std::string string;
+  string += openstudio::toString(m_x) + ' ' + openstudio::toString(m_y) + '\n';
   return string;
 }
 
@@ -355,10 +355,10 @@ void AirflowSubelementData::read(Reader &input)
   m_filt = input.read<int>(FILELINE);
 }
 
-STRING AirflowSubelementData::write()
+std::string AirflowSubelementData::write()
 {
-  STRING string;
-  string += TO_STRING(m_nr) + ' ' + TO_STRING(m_relHt) + ' ' + TO_STRING(m_filt) + '\n';
+  std::string string;
+  string += openstudio::toString(m_nr) + ' ' + openstudio::toString(m_relHt) + ' ' + openstudio::toString(m_filt) + '\n';
   return string;
 }
 
@@ -401,10 +401,10 @@ void PressureCoefficientPoint::read(Reader &input)
   m_coef = input.readNumber<RX>(FILELINE);
 }
 
-STRING PressureCoefficientPoint::write()
+std::string PressureCoefficientPoint::write()
 {
-  STRING string;
-  string += TO_STRING(m_azm) + ' ' + TO_STRING(m_coef) + '\n';
+  std::string string;
+  string += openstudio::toString(m_azm) + ' ' + openstudio::toString(m_coef) + '\n';
   return string;
 }
 
@@ -428,7 +428,7 @@ void PressureCoefficientPoint::setCoef(const RX coef)
   m_coef = coef;
 }
 
-SchedulePoint::SchedulePoint(STRING time,RX ctrl):m_time(time),m_ctrl(ctrl)
+SchedulePoint::SchedulePoint(std::string time,RX ctrl):m_time(time),m_ctrl(ctrl)
 {}
 
 void SchedulePoint::read(Reader &input)
@@ -437,19 +437,19 @@ void SchedulePoint::read(Reader &input)
   m_ctrl = input.readNumber<RX>(FILELINE);
 }
 
-STRING SchedulePoint::write()
+std::string SchedulePoint::write()
 {
-  STRING string;
-  string += m_time + ' ' + TO_STRING(m_ctrl) + '\n';
+  std::string string;
+  string += m_time + ' ' + openstudio::toString(m_ctrl) + '\n';
   return string;
 }
 
-STRING SchedulePoint::time() const
+std::string SchedulePoint::time() const
 {
   return m_time;
 }
 
-void SchedulePoint::setTime(const STRING time)
+void SchedulePoint::setTime(const std::string time)
 {
   m_time = time;
 }

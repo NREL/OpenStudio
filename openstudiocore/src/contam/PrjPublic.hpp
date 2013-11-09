@@ -47,9 +47,9 @@ public:
     NCFDZN=0xFFDF,   // flags & NCFDZN to unset CFD zone
     FLAG_N=0x003F};   // all zone flag bits, used in PrjRead()
 
-    Zone(int nr=0,unsigned int flags=0,int ps=0,int pc=0,int pk=0,int pl=0,RX relHt=RX_INIT(0),RX Vol=RX_INIT(0),RX T0=RX_INIT(0),RX P0=RX_INIT(0),STRING name=STRING_INIT,int color=0,int u_Ht=0,int u_V=0,int u_T=0,int u_P=0,int cdaxis=0,int cfd=0,STRING cfdname=STRING_INIT,RX X1=RX_INIT(0),RX Y1=RX_INIT(0),RX H1=RX_INIT(0),RX X2=RX_INIT(0),RX Y2=RX_INIT(0),RX H2=RX_INIT(0),RX celldx=RX_INIT(0),RX axialD=RX_INIT(0),int u_aD=0,int u_L=0);
+    Zone(int nr=0,unsigned int flags=0,int ps=0,int pc=0,int pk=0,int pl=0,RX relHt=RX_INIT(0),RX Vol=RX_INIT(0),RX T0=RX_INIT(0),RX P0=RX_INIT(0),std::string name=std::string(),int color=0,int u_Ht=0,int u_V=0,int u_T=0,int u_P=0,int cdaxis=0,int cfd=0,std::string cfdname=std::string(),RX X1=RX_INIT(0),RX Y1=RX_INIT(0),RX H1=RX_INIT(0),RX X2=RX_INIT(0),RX Y2=RX_INIT(0),RX H2=RX_INIT(0),RX celldx=RX_INIT(0),RX axialD=RX_INIT(0),int u_aD=0,int u_L=0);
     void read(Reader &input);
-    STRING write();
+    std::string write();
     int nr() const;
     void setNr(const int nr);
     unsigned int flags() const;
@@ -70,8 +70,8 @@ public:
     void setT0(const RX T0);
     RX P0() const;
     void setP0(const RX P0);
-    STRING name() const;
-    void setName(const STRING name);
+    std::string name() const;
+    void setName(const std::string name);
     int color() const;
     void setColor(const int color);
     int u_Ht() const;
@@ -86,8 +86,8 @@ public:
     void setCdaxis(const int cdaxis);
     int cfd() const;
     void setCfd(const int cfd);
-    STRING cfdname() const;
-    void setCfdname(const STRING cfdname);
+    std::string cfdname() const;
+    void setCfdname(const std::string cfdname);
     RX X1() const;
     void setX1(const RX X1);
     RX Y1() const;
@@ -128,9 +128,9 @@ private:
 class CONTAM_API Species
 {
 public:
-  Species(int nr=0,int sflag=0,int ntflag=0,RX molwt=RX_INIT(0),RX mdiam=RX_INIT(0),RX edens=RX_INIT(0),RX decay=RX_INIT(0),RX Dm=RX_INIT(0),RX ccdef=RX_INIT(0),RX Cp=RX_INIT(0),int ucc=0,int umd=0,int ued=0,int udm=0,int ucp=0,STRING name=STRING_INIT,STRING desc=STRING_INIT);
+  Species(int nr=0,int sflag=0,int ntflag=0,RX molwt=RX_INIT(0),RX mdiam=RX_INIT(0),RX edens=RX_INIT(0),RX decay=RX_INIT(0),RX Dm=RX_INIT(0),RX ccdef=RX_INIT(0),RX Cp=RX_INIT(0),int ucc=0,int umd=0,int ued=0,int udm=0,int ucp=0,std::string name=std::string(),std::string desc=std::string());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   int nr() const;
   void setNr(const int nr);
   int sflag() const;
@@ -161,10 +161,10 @@ public:
   void setUdm(const int udm);
   int ucp() const;
   void setUcp(const int ucp);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
 private:
   QExplicitlySharedDataPointer<SpeciesPrivate> d;
 };
@@ -172,9 +172,9 @@ private:
 class CONTAM_API Ahs
 {
 public:
-  Ahs(int nr=0,int zone_r=0,int zone_s=0,int path_r=0,int path_s=0,int path_x=0,STRING name=STRING_INIT,STRING desc=STRING_INIT);
+  Ahs(int nr=0,int zone_r=0,int zone_s=0,int path_r=0,int path_s=0,int path_x=0,std::string name=std::string(),std::string desc=std::string());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   int nr() const;
   void setNr(const int nr);
   int zone_r() const;
@@ -187,10 +187,10 @@ public:
   void setPath_s(const int path_s);
   int path_x() const;
   void setPath_x(const int path_x);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
 private:
   QExplicitlySharedDataPointer<AhsPrivate> d;
 };
@@ -212,10 +212,10 @@ public:
     LIM_F=0x0100, // Path is flow limited
     FAN_F=0x0200}; // Path is a constant flow fan element
 
-    Path(int nr=0,int flags=0,int pzn=0,int pzm=0,int pe=0,int pf=0,int pw=0,int pa=0,int ps=0,int pc=0,int pld=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),RX mult=RX_INIT(0),RX wPset=RX_INIT(0),RX wPmod=RX_INIT(0),RX wazm=RX_INIT(0),RX Fahs=RX_INIT(0),RX Xmax=RX_INIT(0),RX Xmin=RX_INIT(0),unsigned int icon=0,unsigned int dir=0,int u_Ht=0,int u_XY=0,int u_dP=0,int u_F=0,int cfd=0,STRING cfd_name=STRING_INIT,int cfd_ptype=0,int cfd_btype=0,int cfd_capp=0);
+    Path(int nr=0,int flags=0,int pzn=0,int pzm=0,int pe=0,int pf=0,int pw=0,int pa=0,int ps=0,int pc=0,int pld=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),RX mult=RX_INIT(0),RX wPset=RX_INIT(0),RX wPmod=RX_INIT(0),RX wazm=RX_INIT(0),RX Fahs=RX_INIT(0),RX Xmax=RX_INIT(0),RX Xmin=RX_INIT(0),unsigned int icon=0,unsigned int dir=0,int u_Ht=0,int u_XY=0,int u_dP=0,int u_F=0,int cfd=0,std::string cfd_name=std::string(),int cfd_ptype=0,int cfd_btype=0,int cfd_capp=0);
 
     void read(Reader &input);
-    STRING write();
+    std::string write();
     void setWindPressure(bool b);
     bool windPressure();
     void setSystem(bool b);
@@ -283,8 +283,8 @@ public:
     void setU_F(const int u_F);
     int cfd() const;
     void setCfd(const int cfd);
-    STRING cfd_name() const;
-    void setCfd_name(const STRING cfd_name);
+    std::string cfd_name() const;
+    void setCfd_name(const std::string cfd_name);
     int cfd_ptype() const;
     void setCfd_ptype(const int cfd_ptype);
     int cfd_btype() const;
@@ -299,17 +299,17 @@ private:
 class CONTAM_API RunControl
 {
 public:
-  RunControl(STRING name=STRING_INIT,STRING version=STRING_INIT,int echo=0,STRING prjdesc=STRING_INIT,int skheight=0,int skwidth=0,int def_units=0,int def_flows=0,RX def_T=RX_INIT(0),int udefT=0,RX rel_N=RX_INIT(0),RX wind_H=RX_INIT(0),int uwH=0,RX wind_Ao=RX_INIT(0),RX wind_a=RX_INIT(0),RX scale=RX_INIT(0),int uScale=0,int orgRow=0,int orgCol=0,int invYaxis=0,int showGeom=0,WeatherData ssWeather=WeatherData(),WeatherData wptWeather=WeatherData(),STRING WTHpath=STRING_INIT,STRING CTMpath=STRING_INIT,STRING CVFpath=STRING_INIT,STRING DVFpath=STRING_INIT,STRING WPCfile=STRING_INIT,STRING EWCfile=STRING_INIT,STRING WPCdesc=STRING_INIT,RX X0=RX_INIT(0),RX Y0=RX_INIT(0),RX Z0=RX_INIT(0),RX angle=RX_INIT(0),int u_XYZ=0,RX epsPath=RX_INIT(0),RX epsSpcs=RX_INIT(0),STRING tShift=STRING_INIT,STRING dStart=STRING_INIT,STRING dEnd=STRING_INIT,int useWPCwp=0,int useWPCmf=0,int wpctrig=0,RX latd=RX_INIT(0),RX lgtd=RX_INIT(0),RX Tznr=RX_INIT(0),RX altd=RX_INIT(0),RX Tgrnd=RX_INIT(0),int utg=0,int u_a=0,int sim_af=0,int afcalc=0,int afmaxi=0,RX afrcnvg=RX_INIT(0),RX afacnvg=RX_INIT(0),RX afrelax=RX_INIT(0),int uac2=0,RX Pres=RX_INIT(0),int uPres=0,int afslae=0,int afrseq=0,int aflmaxi=0,RX aflcnvg=RX_INIT(0),int aflinit=0,int Tadj=0,int sim_mf=0,int ccmaxi=0,RX ccrcnvg=RX_INIT(0),RX ccacnvg=RX_INIT(0),RX ccrelax=RX_INIT(0),int uccc=0,int mfnmthd=0,int mfnrseq=0,int mfnmaxi=0,RX mfnrcnvg=RX_INIT(0),RX mfnacnvg=RX_INIT(0),RX mfnrelax=RX_INIT(0),RX mfngamma=RX_INIT(0),int uccn=0,int mftmthd=0,int mftrseq=0,int mftmaxi=0,RX mftrcnvg=RX_INIT(0),RX mftacnvg=RX_INIT(0),RX mftrelax=RX_INIT(0),RX mftgamma=RX_INIT(0),int ucct=0,int mfvmthd=0,int mfvrseq=0,int mfvmaxi=0,RX mfvrcnvg=RX_INIT(0),RX mfvacnvg=RX_INIT(0),RX mfvrelax=RX_INIT(0),int uccv=0,int mf_solver=0,int sim_1dz=0,int sim_1dd=0,RX celldx=RX_INIT(0),int sim_vjt=0,int udx=0,int cvode_mth=0,RX cvode_rcnvg=RX_INIT(0),RX cvode_acnvg=RX_INIT(0),RX cvode_dtmax=RX_INIT(0),int tsdens=0,RX tsrelax=RX_INIT(0),int tsmaxi=0,int cnvgSS=0,int densZP=0,int stackD=0,int dodMdt=0,STRING date_st=STRING_INIT,STRING time_st=STRING_INIT,STRING date_0=STRING_INIT,STRING time_0=STRING_INIT,STRING date_1=STRING_INIT,STRING time_1=STRING_INIT,STRING time_step=STRING_INIT,STRING time_list=STRING_INIT,STRING time_scrn=STRING_INIT,int restart=0,STRING rstdate=STRING_INIT,STRING rsttime=STRING_INIT,int list=0,int doDlg=0,int pfsave=0,int zfsave=0,int zcsave=0,int achvol=0,int achsave=0,int abwsave=0,int cbwsave=0,int expsave=0,int ebwsave=0,int zaasave=0,int zbwsave=0,int rzfsave=0,int rzmsave=0,int rz1save=0,int csmsave=0,int srfsave=0,int logsave=0,std::vector<int> save=std::vector<int>(),std::vector<RX> rvals=std::vector<RX>(),int BldgFlowZ=0,int BldgFlowD=0,int BldgFlowC=0,int cfd_ctype=0,RX cfd_convcpl=RX_INIT(0),int cfd_var=0,int cfd_zref=0,int cfd_imax=0,int cfd_dtcmo=0);
+  RunControl(std::string name=std::string(),std::string version=std::string(),int echo=0,std::string prjdesc=std::string(),int skheight=0,int skwidth=0,int def_units=0,int def_flows=0,RX def_T=RX_INIT(0),int udefT=0,RX rel_N=RX_INIT(0),RX wind_H=RX_INIT(0),int uwH=0,RX wind_Ao=RX_INIT(0),RX wind_a=RX_INIT(0),RX scale=RX_INIT(0),int uScale=0,int orgRow=0,int orgCol=0,int invYaxis=0,int showGeom=0,WeatherData ssWeather=WeatherData(),WeatherData wptWeather=WeatherData(),std::string WTHpath=std::string(),std::string CTMpath=std::string(),std::string CVFpath=std::string(),std::string DVFpath=std::string(),std::string WPCfile=std::string(),std::string EWCfile=std::string(),std::string WPCdesc=std::string(),RX X0=RX_INIT(0),RX Y0=RX_INIT(0),RX Z0=RX_INIT(0),RX angle=RX_INIT(0),int u_XYZ=0,RX epsPath=RX_INIT(0),RX epsSpcs=RX_INIT(0),std::string tShift=std::string(),std::string dStart=std::string(),std::string dEnd=std::string(),int useWPCwp=0,int useWPCmf=0,int wpctrig=0,RX latd=RX_INIT(0),RX lgtd=RX_INIT(0),RX Tznr=RX_INIT(0),RX altd=RX_INIT(0),RX Tgrnd=RX_INIT(0),int utg=0,int u_a=0,int sim_af=0,int afcalc=0,int afmaxi=0,RX afrcnvg=RX_INIT(0),RX afacnvg=RX_INIT(0),RX afrelax=RX_INIT(0),int uac2=0,RX Pres=RX_INIT(0),int uPres=0,int afslae=0,int afrseq=0,int aflmaxi=0,RX aflcnvg=RX_INIT(0),int aflinit=0,int Tadj=0,int sim_mf=0,int ccmaxi=0,RX ccrcnvg=RX_INIT(0),RX ccacnvg=RX_INIT(0),RX ccrelax=RX_INIT(0),int uccc=0,int mfnmthd=0,int mfnrseq=0,int mfnmaxi=0,RX mfnrcnvg=RX_INIT(0),RX mfnacnvg=RX_INIT(0),RX mfnrelax=RX_INIT(0),RX mfngamma=RX_INIT(0),int uccn=0,int mftmthd=0,int mftrseq=0,int mftmaxi=0,RX mftrcnvg=RX_INIT(0),RX mftacnvg=RX_INIT(0),RX mftrelax=RX_INIT(0),RX mftgamma=RX_INIT(0),int ucct=0,int mfvmthd=0,int mfvrseq=0,int mfvmaxi=0,RX mfvrcnvg=RX_INIT(0),RX mfvacnvg=RX_INIT(0),RX mfvrelax=RX_INIT(0),int uccv=0,int mf_solver=0,int sim_1dz=0,int sim_1dd=0,RX celldx=RX_INIT(0),int sim_vjt=0,int udx=0,int cvode_mth=0,RX cvode_rcnvg=RX_INIT(0),RX cvode_acnvg=RX_INIT(0),RX cvode_dtmax=RX_INIT(0),int tsdens=0,RX tsrelax=RX_INIT(0),int tsmaxi=0,int cnvgSS=0,int densZP=0,int stackD=0,int dodMdt=0,std::string date_st=std::string(),std::string time_st=std::string(),std::string date_0=std::string(),std::string time_0=std::string(),std::string date_1=std::string(),std::string time_1=std::string(),std::string time_step=std::string(),std::string time_list=std::string(),std::string time_scrn=std::string(),int restart=0,std::string rstdate=std::string(),std::string rsttime=std::string(),int list=0,int doDlg=0,int pfsave=0,int zfsave=0,int zcsave=0,int achvol=0,int achsave=0,int abwsave=0,int cbwsave=0,int expsave=0,int ebwsave=0,int zaasave=0,int zbwsave=0,int rzfsave=0,int rzmsave=0,int rz1save=0,int csmsave=0,int srfsave=0,int logsave=0,std::vector<int> save=std::vector<int>(),std::vector<RX> rvals=std::vector<RX>(),int BldgFlowZ=0,int BldgFlowD=0,int BldgFlowC=0,int cfd_ctype=0,RX cfd_convcpl=RX_INIT(0),int cfd_var=0,int cfd_zref=0,int cfd_imax=0,int cfd_dtcmo=0);
   void read(Reader &input);
-  STRING write();
-  STRING name() const;
-  void setName(const STRING name);
-  STRING version() const;
-  void setVersion(const STRING version);
+  std::string write();
+  std::string name() const;
+  void setName(const std::string name);
+  std::string version() const;
+  void setVersion(const std::string version);
   int echo() const;
   void setEcho(const int echo);
-  STRING prjdesc() const;
-  void setPrjdesc(const STRING prjdesc);
+  std::string prjdesc() const;
+  void setPrjdesc(const std::string prjdesc);
   int skheight() const;
   void setSkheight(const int skheight);
   int skwidth() const;
@@ -348,20 +348,20 @@ public:
   void setSsWeather(const WeatherData ssWeather);
   WeatherData wptWeather() const;
   void setWptWeather(const WeatherData wptWeather);
-  STRING WTHpath() const;
-  void setWTHpath(const STRING WTHpath);
-  STRING CTMpath() const;
-  void setCTMpath(const STRING CTMpath);
-  STRING CVFpath() const;
-  void setCVFpath(const STRING CVFpath);
-  STRING DVFpath() const;
-  void setDVFpath(const STRING DVFpath);
-  STRING WPCfile() const;
-  void setWPCfile(const STRING WPCfile);
-  STRING EWCfile() const;
-  void setEWCfile(const STRING EWCfile);
-  STRING WPCdesc() const;
-  void setWPCdesc(const STRING WPCdesc);
+  std::string WTHpath() const;
+  void setWTHpath(const std::string WTHpath);
+  std::string CTMpath() const;
+  void setCTMpath(const std::string CTMpath);
+  std::string CVFpath() const;
+  void setCVFpath(const std::string CVFpath);
+  std::string DVFpath() const;
+  void setDVFpath(const std::string DVFpath);
+  std::string WPCfile() const;
+  void setWPCfile(const std::string WPCfile);
+  std::string EWCfile() const;
+  void setEWCfile(const std::string EWCfile);
+  std::string WPCdesc() const;
+  void setWPCdesc(const std::string WPCdesc);
   RX X0() const;
   void setX0(const RX X0);
   RX Y0() const;
@@ -376,12 +376,12 @@ public:
   void setEpsPath(const RX epsPath);
   RX epsSpcs() const;
   void setEpsSpcs(const RX epsSpcs);
-  STRING tShift() const;
-  void setTShift(const STRING tShift);
-  STRING dStart() const;
-  void setDStart(const STRING dStart);
-  STRING dEnd() const;
-  void setDEnd(const STRING dEnd);
+  std::string tShift() const;
+  void setTShift(const std::string tShift);
+  std::string dStart() const;
+  void setDStart(const std::string dStart);
+  std::string dEnd() const;
+  void setDEnd(const std::string dEnd);
   int useWPCwp() const;
   void setUseWPCwp(const int useWPCwp);
   int useWPCmf() const;
@@ -524,30 +524,30 @@ public:
   void setStackD(const int stackD);
   int dodMdt() const;
   void setDodMdt(const int dodMdt);
-  STRING date_st() const;
-  void setDate_st(const STRING date_st);
-  STRING time_st() const;
-  void setTime_st(const STRING time_st);
-  STRING date_0() const;
-  void setDate_0(const STRING date_0);
-  STRING time_0() const;
-  void setTime_0(const STRING time_0);
-  STRING date_1() const;
-  void setDate_1(const STRING date_1);
-  STRING time_1() const;
-  void setTime_1(const STRING time_1);
-  STRING time_step() const;
-  void setTime_step(const STRING time_step);
-  STRING time_list() const;
-  void setTime_list(const STRING time_list);
-  STRING time_scrn() const;
-  void setTime_scrn(const STRING time_scrn);
+  std::string date_st() const;
+  void setDate_st(const std::string date_st);
+  std::string time_st() const;
+  void setTime_st(const std::string time_st);
+  std::string date_0() const;
+  void setDate_0(const std::string date_0);
+  std::string time_0() const;
+  void setTime_0(const std::string time_0);
+  std::string date_1() const;
+  void setDate_1(const std::string date_1);
+  std::string time_1() const;
+  void setTime_1(const std::string time_1);
+  std::string time_step() const;
+  void setTime_step(const std::string time_step);
+  std::string time_list() const;
+  void setTime_list(const std::string time_list);
+  std::string time_scrn() const;
+  void setTime_scrn(const std::string time_scrn);
   int restart() const;
   void setRestart(const int restart);
-  STRING rstdate() const;
-  void setRstdate(const STRING rstdate);
-  STRING rsttime() const;
-  void setRsttime(const STRING rsttime);
+  std::string rstdate() const;
+  void setRstdate(const std::string rstdate);
+  std::string rsttime() const;
+  void setRsttime(const std::string rsttime);
   int list() const;
   void setList(const int list);
   int doDlg() const;
@@ -615,9 +615,9 @@ private:
 class CONTAM_API Level
 {
 public:
-  Level(int nr=0,RX refht=RX_INIT(0),RX delht=RX_INIT(0),int u_rfht=0,int u_dlht=0,STRING name=STRING_INIT,std::vector<Icon> icons=std::vector<Icon>());
+  Level(int nr=0,RX refht=RX_INIT(0),RX delht=RX_INIT(0),int u_rfht=0,int u_dlht=0,std::string name=std::string(),std::vector<Icon> icons=std::vector<Icon>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   int nr() const;
   void setNr(const int nr);
   RX refht() const;
@@ -628,8 +628,8 @@ public:
   void setU_rfht(const int u_rfht);
   int u_dlht() const;
   void setU_dlht(const int u_dlht);
-  STRING name() const;
-  void setName(const STRING name);
+  std::string name() const;
+  void setName(const std::string name);
   std::vector<Icon> icons() const;
   void setIcons(const std::vector<Icon> icons);
 private:
@@ -639,9 +639,9 @@ private:
 class CONTAM_API DaySchedule
 {
 public:
-  DaySchedule(int nr=0,int shape=0,int utyp=0,int ucnv=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<SchedulePoint> points=std::vector<SchedulePoint>());
+  DaySchedule(int nr=0,int shape=0,int utyp=0,int ucnv=0,std::string name=std::string(),std::string desc=std::string(),std::vector<SchedulePoint> points=std::vector<SchedulePoint>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   int nr() const;
   void setNr(const int nr);
   int shape() const;
@@ -650,10 +650,10 @@ public:
   void setUtyp(const int utyp);
   int ucnv() const;
   void setUcnv(const int ucnv);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   std::vector<SchedulePoint> points() const;
   void setPoints(const std::vector<SchedulePoint> points);
 private:
@@ -663,19 +663,19 @@ private:
 class CONTAM_API WeekSchedule
 {
 public:
-  WeekSchedule(int nr=0,int utyp=0,int ucnv=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<int> j=std::vector<int>());
+  WeekSchedule(int nr=0,int utyp=0,int ucnv=0,std::string name=std::string(),std::string desc=std::string(),std::vector<int> j=std::vector<int>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   int nr() const;
   void setNr(const int nr);
   int utyp() const;
   void setUtyp(const int utyp);
   int ucnv() const;
   void setUcnv(const int ucnv);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   std::vector<int> j() const;
   void setJ(const std::vector<int> j);
 private:
@@ -685,17 +685,17 @@ private:
 class CONTAM_API WindPressureProfile
 {
 public:
-  WindPressureProfile(int nr=0,int type=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<PressureCoefficientPoint> coeffs=std::vector<PressureCoefficientPoint>());
+  WindPressureProfile(int nr=0,int type=0,std::string name=std::string(),std::string desc=std::string(),std::vector<PressureCoefficientPoint> coeffs=std::vector<PressureCoefficientPoint>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   int nr() const;
   void setNr(const int nr);
   int type() const;
   void setType(const int type);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   std::vector<PressureCoefficientPoint> coeffs() const;
   void setCoeffs(const std::vector<PressureCoefficientPoint> coeffs);
 private:
@@ -707,13 +707,13 @@ class ControlNode
 public:
   enum Type {CT_SNS=0,CT_SCH=1,CT_SET=2,CT_CVF=3,CT_DVF=4,CT_LOG=5,CT_PAS=6,CT_MOD=7,CT_HYS=8,CT_ABS=9,CT_BIN=10,CT_DLS=11,CT_DLX=12,CT_INT=13,CT_RAV=14,CT_INV=15,CT_AND=16,CT_OR=17,CT_XOR=18,CT_ADD=19,CT_SUB=20,CT_MUL=21,CT_DIV=22,CT_SUM=23,CT_AVG=24,CT_MAX=25,CT_MIN=26,CT_LLS=27,CT_ULS=28,CT_LBS=29,CT_UBS=30,CT_LLC=31,CT_ULC=32,CT_PC1=33,CT_PI1=34,CT_SUP=35,CT_SPH=37,UNKNOWN};
   virtual ~ControlNode(){}
-  virtual STRING write()=0;
-  static Type convertTag(STRING string);
+  virtual std::string write()=0;
+  static Type convertTag(std::string string);
   static ControlNode* readElement(Reader &input);
   virtual void recompute(){}
   virtual int nr() const = 0;
   virtual void setNr(const int nr) = 0;
-  virtual STRING dataType() const = 0;
+  virtual std::string dataType() const = 0;
   virtual int seqnr() const = 0;
   virtual void setSeqnr(const int seqnr) = 0;
   virtual unsigned int flags() const = 0;
@@ -724,21 +724,21 @@ public:
   virtual void setN1(const int n1) = 0;
   virtual int n2() const = 0;
   virtual void setN2(const int n2) = 0;
-  virtual STRING name() const = 0;
-  virtual void setName(const STRING name) = 0;
-  virtual STRING desc() const = 0;
-  virtual void setDesc(const STRING desc) = 0;
+  virtual std::string name() const = 0;
+  virtual void setName(const std::string name) = 0;
+  virtual std::string desc() const = 0;
+  virtual void setDesc(const std::string desc) = 0;
 };
 
 class CtrlDat : public ControlNode
 {
 public:
-  CtrlDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT);
+  CtrlDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string());
   void read(Reader &input);
   std::string write();
   int nr() const;
   void setNr(const int nr);
-  virtual STRING dataType() const=0;
+  virtual std::string dataType() const=0;
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -749,10 +749,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
 private:
   QExplicitlySharedDataPointer<CtrlDatPrivate> d;
 };
@@ -760,166 +760,166 @@ private:
 class CONTAM_API PasDat : public CtrlDat
 {
 public:
-  PasDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  PasDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "pas";}
+  std::string dataType() const {return "pas";}
 };
 
 class CONTAM_API AbsDat : public CtrlDat
 {
 public:
-  AbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  AbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "abs";}
+  std::string dataType() const {return "abs";}
 };
 
 class CONTAM_API BinDat : public CtrlDat
 {
 public:
-  BinDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  BinDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "bin";}
+  std::string dataType() const {return "bin";}
 };
 
 class CONTAM_API IntDat : public CtrlDat
 {
 public:
-  IntDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  IntDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "int";}
+  std::string dataType() const {return "int";}
 };
 
 class CONTAM_API InvDat : public CtrlDat
 {
 public:
-  InvDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  InvDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "inv";}
+  std::string dataType() const {return "inv";}
 };
 
 class CONTAM_API AndDat : public CtrlDat
 {
 public:
-  AndDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  AndDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "and";}
+  std::string dataType() const {return "and";}
 };
 
 class CONTAM_API OrDat : public CtrlDat
 {
 public:
-  OrDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  OrDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "od";}
+  std::string dataType() const {return "od";}
 };
 
 class CONTAM_API XorDat : public CtrlDat
 {
 public:
-  XorDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  XorDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "xor";}
+  std::string dataType() const {return "xor";}
 };
 
 class CONTAM_API AddDat : public CtrlDat
 {
 public:
-  AddDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  AddDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "add";}
+  std::string dataType() const {return "add";}
 };
 
 class CONTAM_API SubDat : public CtrlDat
 {
 public:
-  SubDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  SubDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "sub";}
+  std::string dataType() const {return "sub";}
 };
 
 class CONTAM_API MulDat : public CtrlDat
 {
 public:
-  MulDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  MulDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "mul";}
+  std::string dataType() const {return "mul";}
 };
 
 class CONTAM_API DivDat : public CtrlDat
 {
 public:
-  DivDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  DivDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "div";}
+  std::string dataType() const {return "div";}
 };
 
 class CONTAM_API LlsDat : public CtrlDat
 {
 public:
-  LlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  LlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "lls";}
+  std::string dataType() const {return "lls";}
 };
 
 class CONTAM_API UlsDat : public CtrlDat
 {
 public:
-  UlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  UlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "uls";}
+  std::string dataType() const {return "uls";}
 };
 
 class CONTAM_API LlcDat : public CtrlDat
 {
 public:
-  LlcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  LlcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "llc";}
+  std::string dataType() const {return "llc";}
 };
 
 class CONTAM_API UlcDat : public CtrlDat
 {
 public:
-  UlcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  UlcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "ulc";}
+  std::string dataType() const {return "ulc";}
 };
 
 class CONTAM_API SphDat : public CtrlDat
 {
 public:
-  SphDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+  SphDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string()) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
   {}
-  STRING dataType() const {return "sph";}
+  std::string dataType() const {return "sph";}
 };
 
 class CONTAM_API SnsDat : public ControlNode
 {
 public:
-  SnsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),RX tau=RX_INIT(0),RX oldsig=RX_INIT(0),int source=0,int type=0,int measure=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),STRING units=STRING_INIT,STRING species=STRING_INIT);
+  SnsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX offset=RX_INIT(0),RX scale=RX_INIT(0),RX tau=RX_INIT(0),RX oldsig=RX_INIT(0),int source=0,int type=0,int measure=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),std::string units=std::string(),std::string species=std::string());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "sns";}
+  std::string dataType() const {return "sns";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -930,10 +930,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX offset() const;
   void setOffset(const RX offset);
   RX scale() const;
@@ -954,10 +954,10 @@ public:
   void setY(const RX Y);
   RX relHt() const;
   void setRelHt(const RX relHt);
-  STRING units() const;
-  void setUnits(const STRING units);
-  STRING species() const;
-  void setSpecies(const STRING species);
+  std::string units() const;
+  void setUnits(const std::string units);
+  std::string species() const;
+  void setSpecies(const std::string species);
 private:
   QExplicitlySharedDataPointer<SnsDatPrivate> d;
 };
@@ -965,13 +965,13 @@ private:
 class CONTAM_API SchDat : public ControlNode
 {
 public:
-  SchDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int ps=0);
+  SchDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),int ps=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "sch";}
+  std::string dataType() const {return "sch";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -982,10 +982,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   int ps() const;
   void setPs(const int ps);
 private:
@@ -995,13 +995,13 @@ private:
 class CONTAM_API SetDat : public ControlNode
 {
 public:
-  SetDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX value=RX_INIT(0));
+  SetDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX value=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "set";}
+  std::string dataType() const {return "set";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1012,10 +1012,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX value() const;
   void setValue(const RX value);
 private:
@@ -1025,13 +1025,13 @@ private:
 class CONTAM_API CdvDat : public ControlNode
 {
 public:
-  CdvDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,STRING valuename=STRING_INIT);
+  CdvDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),std::string valuename=std::string());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  virtual STRING dataType() const=0;
+  virtual std::string dataType() const=0;
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1042,12 +1042,12 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
-  STRING valuename() const;
-  void setValuename(const STRING valuename);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
+  std::string valuename() const;
+  void setValuename(const std::string valuename);
 private:
   QExplicitlySharedDataPointer<CdvDatPrivate> d;
 };
@@ -1055,35 +1055,35 @@ private:
 class CONTAM_API CvfDat : public CdvDat
 {
 public:
-  CvfDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT,STRING valuename=STRING_INIT) : CdvDat(nr,seqnr,flags,inreq,n1,n2,name,
+  CvfDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string(),std::string valuename=std::string()) : CdvDat(nr,seqnr,flags,inreq,n1,n2,name,
     desc,valuename)
   {}
-  STRING dataType() const {return "cvf";}
+  std::string dataType() const {return "cvf";}
 
 };
 
 class CONTAM_API DvfDat : public CdvDat
 {
 public:
-  DvfDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT,STRING valuename=STRING_INIT) : CdvDat(nr,seqnr,flags,inreq,n1,n2,name,
+  DvfDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string(),std::string valuename=std::string()) : CdvDat(nr,seqnr,flags,inreq,n1,n2,name,
     desc,valuename)
   {}
-  STRING dataType() const {return "dvf";}
+  std::string dataType() const {return "dvf";}
 
 };
 
 class CONTAM_API LogDat : public ControlNode
 {
 public:
-  LogDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),int udef=0,STRING header=STRING_INIT,STRING units=STRING_INIT);
+  LogDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX offset=RX_INIT(0),RX scale=RX_INIT(0),int udef=0,std::string header=std::string(),std::string units=std::string());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "log";}
+  std::string dataType() const {return "log";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1094,20 +1094,20 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX offset() const;
   void setOffset(const RX offset);
   RX scale() const;
   void setScale(const RX scale);
   int udef() const;
   void setUdef(const int udef);
-  STRING header() const;
-  void setHeader(const STRING header);
-  STRING units() const;
-  void setUnits(const STRING units);
+  std::string header() const;
+  void setHeader(const std::string header);
+  std::string units() const;
+  void setUnits(const std::string units);
 private:
   QExplicitlySharedDataPointer<LogDatPrivate> d;
 };
@@ -1115,13 +1115,13 @@ private:
 class CONTAM_API ModDat : public ControlNode
 {
 public:
-  ModDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0));
+  ModDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX offset=RX_INIT(0),RX scale=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "mod";}
+  std::string dataType() const {return "mod";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1132,10 +1132,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX offset() const;
   void setOffset(const RX offset);
   RX scale() const;
@@ -1147,13 +1147,13 @@ private:
 class CONTAM_API HysDat : public ControlNode
 {
 public:
-  HysDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX slack=RX_INIT(0),RX slope=RX_INIT(0),RX oldsig=RX_INIT(0));
+  HysDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX slack=RX_INIT(0),RX slope=RX_INIT(0),RX oldsig=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "hys";}
+  std::string dataType() const {return "hys";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1164,10 +1164,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX slack() const;
   void setSlack(const RX slack);
   RX slope() const;
@@ -1181,13 +1181,13 @@ private:
 class CONTAM_API DlsDat : public ControlNode
 {
 public:
-  DlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int dsincr=0,int dsdecr=0);
+  DlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),int dsincr=0,int dsdecr=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "dls";}
+  std::string dataType() const {return "dls";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1198,10 +1198,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   int dsincr() const;
   void setDsincr(const int dsincr);
   int dsdecr() const;
@@ -1213,13 +1213,13 @@ private:
 class CONTAM_API DlxDat : public ControlNode
 {
 public:
-  DlxDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tauincr=0,int taudecr=0);
+  DlxDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),int tauincr=0,int taudecr=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const{return "dlx";}
+  std::string dataType() const{return "dlx";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1230,10 +1230,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   int tauincr() const;
   void setTauincr(const int tauincr);
   int taudecr() const;
@@ -1245,13 +1245,13 @@ private:
 class CONTAM_API RavDat : public ControlNode
 {
 public:
-  RavDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tspan=0);
+  RavDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),int tspan=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "rav";}
+  std::string dataType() const {return "rav";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1262,10 +1262,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   int tspan() const;
   void setTspan(const int tspan);
 private:
@@ -1275,13 +1275,13 @@ private:
 class CONTAM_API SumAvg : public ControlNode
 {
 public:
-  SumAvg(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>());
+  SumAvg(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),std::vector<int> pc=std::vector<int>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  virtual STRING dataType() const {return "sum";}
+  virtual std::string dataType() const {return "sum";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1292,10 +1292,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   std::vector<int> pc() const;
   void setPc(const std::vector<int> pc);
 private:
@@ -1305,43 +1305,43 @@ private:
 class CONTAM_API AvgDat : public SumAvg
 {
 public:
-  AvgDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
+  AvgDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string(),std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
     n2,name,desc,pc)
   {}
-  STRING dataType() const {return "avg";}
+  std::string dataType() const {return "avg";}
 };
 
 class CONTAM_API MaxDat : public SumAvg
 {
 public:
-  MaxDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
+  MaxDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string(),std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
     n2,name,desc,pc)
   {}
-  STRING dataType() const {return "max";}
+  std::string dataType() const {return "max";}
 };
 
 class CONTAM_API MinDat : public SumAvg
 {
 public:
-  MinDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
+  MinDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string(),std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
     n2,name,desc,pc)
   {}
-  STRING dataType() const {return "min";}
+  std::string dataType() const {return "min";}
 };
 
 class BanDat : public ControlNode
 {
 public:
-  BanDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX band=RX_INIT(0));
+  BanDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX band=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  virtual STRING dataType() const=0;
+  virtual std::string dataType() const=0;
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1352,10 +1352,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX band() const;
   void setBand(const RX band);
 private:
@@ -1365,31 +1365,31 @@ private:
 class CONTAM_API LbsDat : public BanDat
 {
 public:
-  LbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT,RX band=RX_INIT(0)) : BanDat(nr,seqnr,flags,inreq,n1,n2,name,desc,band)
+  LbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string(),RX band=RX_INIT(0)) : BanDat(nr,seqnr,flags,inreq,n1,n2,name,desc,band)
   {}
-  STRING dataType() const {return "lbs";}
+  std::string dataType() const {return "lbs";}
 };
 
 class CONTAM_API UbsDat : public BanDat
 {
 public:
-  UbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
-    STRING desc=STRING_INIT,RX band=RX_INIT(0)) : BanDat(nr,seqnr,flags,inreq,n1,n2,name,desc,band)
+  UbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),
+    std::string desc=std::string(),RX band=RX_INIT(0)) : BanDat(nr,seqnr,flags,inreq,n1,n2,name,desc,band)
   {}
-  virtual STRING dataType() const {return "ubs";}
+  virtual std::string dataType() const {return "ubs";}
 };
 
 class CONTAM_API PcDat : public ControlNode
 {
 public:
-  PcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0));
+  PcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX kp=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "pc1";}
+  std::string dataType() const {return "pc1";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1400,10 +1400,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX kp() const;
   void setKp(const RX kp);
 private:
@@ -1413,13 +1413,13 @@ private:
 class CONTAM_API PicDat : public ControlNode
 {
 public:
-  PicDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0),RX ki=RX_INIT(0),RX oldsig=RX_INIT(0),RX olderr=RX_INIT(0));
+  PicDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),RX kp=RX_INIT(0),RX ki=RX_INIT(0),RX oldsig=RX_INIT(0),RX olderr=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "pi1";}
+  std::string dataType() const {return "pi1";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1430,10 +1430,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX kp() const;
   void setKp(const RX kp);
   RX ki() const;
@@ -1449,13 +1449,13 @@ private:
 class CONTAM_API SupDat : public ControlNode
 {
 public:
-  SupDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int def=0,int se=0,int in=0,int out=0);
+  SupDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,std::string name=std::string(),std::string desc=std::string(),int def=0,int se=0,int in=0,int out=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
-  STRING dataType() const {return "sup";}
+  std::string dataType() const {return "sup";}
   int seqnr() const;
   void setSeqnr(const int seqnr);
   unsigned int flags() const;
@@ -1466,10 +1466,10 @@ public:
   void setN1(const int n1);
   int n2() const;
   void setN2(const int n2);
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   int def() const;
   void setDef(const int def);
   int se() const;
@@ -1487,38 +1487,38 @@ class AirflowElement
 public:
   enum Type {PL_ORFC=0,PL_LEAK1=1,PL_LEAK2=2,PL_LEAK3=3,PL_CONN=4,PL_QCN=5,PL_FCN=6,PL_TEST1=7,PL_TEST2=8,PL_CRACK=9,PL_STAIR=10,PL_SHAFT=11,PL_BDQ=12,PL_BDF=13,QFR_QAB=14,QFR_QAF=15,QFR_CRACK=16,QFR_TEST2=17,DR_DOOR=18,DR_PL2=19,FN_CMF=20,FN_CVF=21,FN_FAN=22,CS_FSP=23,CS_QSP=24,CS_PSF=25,CS_PSQ=26,AF_SUP=27,UNKNOWN};
   virtual ~AirflowElement(){}
-  virtual STRING write()=0;
-  static Type convertTag(STRING string);
+  virtual std::string write()=0;
+  static Type convertTag(std::string string);
   static AirflowElement* readElement(Reader &input);
   virtual void recompute(){}
   virtual int nr() const = 0;
   virtual void setNr(const int nr) = 0;
   virtual int icon() const = 0;
   virtual void setIcon(const int icon) = 0;
-  virtual STRING dataType() const = 0;
-  //    virtual void setDataType(const STRING dataType) = 0;
-  virtual STRING name() const = 0;
-  virtual void setName(const STRING name) = 0;
-  virtual STRING desc() const = 0;
-  virtual void setDesc(const STRING desc) = 0;
+  virtual std::string dataType() const = 0;
+  //    virtual void setDataType(const std::string dataType) = 0;
+  virtual std::string name() const = 0;
+  virtual void setName(const std::string name) = 0;
+  virtual std::string desc() const = 0;
+  virtual void setDesc(const std::string desc) = 0;
 };
 
 class CONTAM_API PlrOrf : public AirflowElement
 {
 public:
-  PlrOrf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX dia=RX_INIT(0),RX coef=RX_INIT(0),RX Re=RX_INIT(0),int u_A=0,int u_D=0);
+  PlrOrf(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX dia=RX_INIT(0),RX coef=RX_INIT(0),RX Re=RX_INIT(0),int u_A=0,int u_D=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_orfc";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_orfc";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1544,19 +1544,19 @@ private:
 class CONTAM_API PlrLeak : public AirflowElement
 {
 public:
-  PlrLeak(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0);
+  PlrLeak(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0);
   void read(Reader &input);
-  virtual STRING write();
+  virtual std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  virtual STRING dataType() const = 0;
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  virtual std::string dataType() const = 0;
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1588,52 +1588,52 @@ private:
 class CONTAM_API PlrLeak1 : public PlrLeak
 {
 public:
-  PlrLeak1(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),
+  PlrLeak1(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),
     RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),
     int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0) : PlrLeak(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,
     area3,u_A1,u_A2,u_A3,u_dP)
   {}
-  STRING dataType() const {return "plr_leak1";}
+  std::string dataType() const {return "plr_leak1";}
 };
 
 class CONTAM_API PlrLeak2 : public PlrLeak
 {
 public:
-  PlrLeak2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),
+  PlrLeak2(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),
     RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),
     int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0) : PlrLeak(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,
     area3,u_A1,u_A2,u_A3,u_dP)
   {}
-  STRING dataType() const {return "plr_leak2";}
+  std::string dataType() const {return "plr_leak2";}
 };
 
 class CONTAM_API PlrLeak3 : public PlrLeak
 {
 public:
-  PlrLeak3(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),
+  PlrLeak3(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),
     RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),
     int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0) : PlrLeak(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,
     area3,u_A1,u_A2,u_A3,u_dP)
   {}
-  STRING dataType() const {return "plr_leak3";}
+  std::string dataType() const {return "plr_leak3";}
 };
 
 class CONTAM_API PlrConn : public AirflowElement
 {
 public:
-  PlrConn(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX coef=RX_INIT(0),int u_A=0);
+  PlrConn(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX coef=RX_INIT(0),int u_A=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_conn";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_conn";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1653,19 +1653,19 @@ private:
 class CONTAM_API PlrQcn : public AirflowElement
 {
 public:
-  PlrQcn(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
+  PlrQcn(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_qcn";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_qcn";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1679,19 +1679,19 @@ private:
 class CONTAM_API PlrFcn : public AirflowElement
 {
 public:
-  PlrFcn(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
+  PlrFcn(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_fcn";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_fcn";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1705,19 +1705,19 @@ private:
 class CONTAM_API PlrTest1 : public AirflowElement
 {
 public:
-  PlrTest1(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP=RX_INIT(0),RX Flow=RX_INIT(0),int u_P=0,int u_F=0);
+  PlrTest1(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP=RX_INIT(0),RX Flow=RX_INIT(0),int u_P=0,int u_F=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_test1";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_test1";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1739,19 +1739,19 @@ private:
 class CONTAM_API PlrTest2 : public AirflowElement
 {
 public:
-  PlrTest2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
+  PlrTest2(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_test2";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_test2";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1781,19 +1781,19 @@ private:
 class CONTAM_API PlrCrack : public AirflowElement
 {
 public:
-  PlrCrack(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),int u_L=0,int u_W=0);
+  PlrCrack(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),int u_L=0,int u_W=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_crack";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_crack";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1815,19 +1815,19 @@ private:
 class CONTAM_API PlrStair : public AirflowElement
 {
 public:
-  PlrStair(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX Area=RX_INIT(0),RX peo=RX_INIT(0),int tread=0,int u_A=0,int u_D=0);
+  PlrStair(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX Area=RX_INIT(0),RX peo=RX_INIT(0),int tread=0,int u_A=0,int u_D=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_stair";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_stair";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1853,19 +1853,19 @@ private:
 class CONTAM_API PlrShaft : public AirflowElement
 {
 public:
-  PlrShaft(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX area=RX_INIT(0),RX perim=RX_INIT(0),RX rough=RX_INIT(0),int u_A=0,int u_D=0,int u_P=0,int u_R=0);
+  PlrShaft(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX area=RX_INIT(0),RX perim=RX_INIT(0),RX rough=RX_INIT(0),int u_A=0,int u_D=0,int u_P=0,int u_R=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_shaft";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_shaft";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -1895,19 +1895,19 @@ private:
 class CONTAM_API PlrBdq : public AirflowElement
 {
 public:
-  PlrBdq(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
+  PlrBdq(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_bdq";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_bdq";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX Cp() const;
@@ -1925,19 +1925,19 @@ private:
 class CONTAM_API PlrBdf : public AirflowElement
 {
 public:
-  PlrBdf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
+  PlrBdf(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "plr_bdf";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "plr_bdf";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX Cp() const;
@@ -1955,19 +1955,19 @@ private:
 class CONTAM_API QfrQab : public AirflowElement
 {
 public:
-  QfrQab(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
+  QfrQab(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX a=RX_INIT(0),RX b=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "qfr_qab";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "qfr_qab";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX a() const;
   void setA(const RX a);
   RX b() const;
@@ -1979,19 +1979,19 @@ private:
 class CONTAM_API QfrFab : public AirflowElement
 {
 public:
-  QfrFab(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
+  QfrFab(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX a=RX_INIT(0),RX b=RX_INIT(0));
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "qfr_fab";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "qfr_fab";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX a() const;
   void setA(const RX a);
   RX b() const;
@@ -2003,19 +2003,19 @@ private:
 class CONTAM_API QfrCrack : public AirflowElement
 {
 public:
-  QfrCrack(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),RX depth=RX_INIT(0),int nB=0,int u_L=0,int u_W=0,int u_D=0);
+  QfrCrack(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX a=RX_INIT(0),RX b=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),RX depth=RX_INIT(0),int nB=0,int u_L=0,int u_W=0,int u_D=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "qfr_crack";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "qfr_crack";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX a() const;
   void setA(const RX a);
   RX b() const;
@@ -2041,19 +2041,19 @@ private:
 class CONTAM_API QfrTest2 : public AirflowElement
 {
 public:
-  QfrTest2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
+  QfrTest2(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX a=RX_INIT(0),RX b=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "qfr_test2";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "qfr_test2";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX a() const;
   void setA(const RX a);
   RX b() const;
@@ -2081,19 +2081,19 @@ private:
 class CONTAM_API AfeDor : public AirflowElement
 {
 public:
-  AfeDor(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dTmin=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_T=0,int u_H=0,int u_W=0);
+  AfeDor(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dTmin=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_T=0,int u_H=0,int u_W=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "dor_door";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "dor_door";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -2121,19 +2121,19 @@ private:
 class CONTAM_API DrPl2 : public AirflowElement
 {
 public:
-  DrPl2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dH=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_H=0,int u_W=0);
+  DrPl2(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dH=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_H=0,int u_W=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "dor_pl2";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "dor_pl2";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -2159,19 +2159,19 @@ private:
 class CONTAM_API AfeCmf : public AirflowElement
 {
 public:
-  AfeCmf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
+  AfeCmf(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX Flow=RX_INIT(0),int u_F=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "fan_cmf";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "fan_cmf";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX Flow() const;
   void setFlow(const RX Flow);
   int u_F() const;
@@ -2183,19 +2183,19 @@ private:
 class CONTAM_API AfeCvf : public AirflowElement
 {
 public:
-  AfeCvf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
+  AfeCvf(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX Flow=RX_INIT(0),int u_F=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "fan_cvf";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "fan_cvf";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX Flow() const;
   void setFlow(const RX Flow);
   int u_F() const;
@@ -2207,19 +2207,19 @@ private:
 class CONTAM_API AfeFan : public AirflowElement
 {
 public:
-  AfeFan(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX rdens=RX_INIT(0),RX fdf=RX_INIT(0),RX sop=RX_INIT(0),RX off=RX_INIT(0),std::vector<RX> fpc=std::vector<RX>(),RX Sarea=RX_INIT(0),int u_Sa=0,std::vector<FanDataPoint> data=std::vector<FanDataPoint>());
+  AfeFan(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX rdens=RX_INIT(0),RX fdf=RX_INIT(0),RX sop=RX_INIT(0),RX off=RX_INIT(0),std::vector<RX> fpc=std::vector<RX>(),RX Sarea=RX_INIT(0),int u_Sa=0,std::vector<FanDataPoint> data=std::vector<FanDataPoint>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "fan_fan";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "fan_fan";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   RX lam() const;
   void setLam(const RX lam);
   RX turb() const;
@@ -2249,19 +2249,19 @@ private:
 class AfeCsf : public AirflowElement
 {
 public:
-  AfeCsf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>());
+  AfeCsf(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),int u_x=0,int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const = 0;
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const = 0;
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   int u_x() const;
   void setU_x(const int u_x);
   int u_y() const;
@@ -2275,55 +2275,55 @@ private:
 class CONTAM_API AfeFsp : public AfeCsf
 {
 public:
-  AfeFsp(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+  AfeFsp(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),int u_x=0,
     int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
   {}
-  STRING dataType() const {return "csf_fsp";}
+  std::string dataType() const {return "csf_fsp";}
 };
 
 class CONTAM_API AfeQsp : public AfeCsf
 {
 public:
-  AfeQsp(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+  AfeQsp(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),int u_x=0,
     int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
   {}
-  STRING dataType() const {return "csf_qsp";}
+  std::string dataType() const {return "csf_qsp";}
 };
 
 class CONTAM_API AfePsf : public AfeCsf
 {
 public:
-  AfePsf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+  AfePsf(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),int u_x=0,
     int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
   {}
-  STRING dataType() const {return "csf_psf";}
+  std::string dataType() const {return "csf_psf";}
 };
 
 class CONTAM_API AfePsq : public AfeCsf
 {
 public:
-  AfePsq(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+  AfePsq(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),int u_x=0,
     int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
   {}
-  STRING dataType() const {return "csf_psq";}
+  std::string dataType() const {return "csf_psq";}
 };
 
 class CONTAM_API AfeSup : public AirflowElement
 {
 public:
-  AfeSup(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int sched=0,int u_H=0,std::vector<AirflowSubelementData> subelements=std::vector<AirflowSubelementData>());
+  AfeSup(int nr=0,int icon=0,std::string name=std::string(),std::string desc=std::string(),int sched=0,int u_H=0,std::vector<AirflowSubelementData> subelements=std::vector<AirflowSubelementData>());
   void read(Reader &input);
-  STRING write();
+  std::string write();
   void readDetails(Reader &input);
   int nr() const;
   void setNr(const int nr);
   int icon() const;
   void setIcon(const int icon);
-  STRING dataType() const {return "sup_afe";}
-  STRING name() const;
-  void setName(const STRING name);
-  STRING desc() const;
-  void setDesc(const STRING desc);
+  std::string dataType() const {return "sup_afe";}
+  std::string name() const;
+  void setName(const std::string name);
+  std::string desc() const;
+  void setDesc(const std::string desc);
   int sched() const;
   void setSched(const int sched);
   int u_H() const;

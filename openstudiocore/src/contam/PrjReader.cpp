@@ -21,6 +21,8 @@
 #include <iostream>
 #include <stdlib.h>
 
+#include <utilities/core/Logger.hpp>
+
 namespace openstudio {
 namespace contam {
 
@@ -52,7 +54,7 @@ float Reader::readFloat(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
   return value;
 }
@@ -69,7 +71,7 @@ double Reader::readDouble(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
   return value;
 }
@@ -90,7 +92,7 @@ QString Reader::readQString(DECFILELINE)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-        ERROR(mesg.toStdString());
+        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
       }
       m_lineNumber++;
       while(input[0]=='!')
@@ -105,7 +107,7 @@ QString Reader::readQString(DECFILELINE)
 #ifndef NOFILELINE
           mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-          ERROR(mesg.toStdString());
+          LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
         }
         m_lineNumber++;
       }
@@ -131,13 +133,9 @@ std::string Reader::readStdString(DECFILELINE)
   return readQString(ARGFILELINE).toStdString();
 }
 
-STRING Reader::readString(DECFILELINE)
+std::string Reader::readString(DECFILELINE)
 {
-#ifdef STD_STRING
   return readQString(ARGFILELINE).toStdString();
-#else
-  return readQString(ARGFILELINE);
-#endif
 }
 
 int Reader::readInt(DECFILELINE)
@@ -151,7 +149,7 @@ int Reader::readInt(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
   return value;
 }
@@ -167,18 +165,14 @@ unsigned int Reader::readUInt(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
   return value;
 }
 
-STRING Reader::readLine(DECFILELINE)
+std::string Reader::readLine(DECFILELINE)
 {
-#ifdef STD_STRING
   return readLineQString(ARGFILELINE).toStdString();
-#else
-  return readLineQString(ARGFILELINE);
-#endif
 }
 
 QString Reader::readLineQString(DECFILELINE)
@@ -198,7 +192,7 @@ QString Reader::readLineQString(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
   m_lineNumber++;
   while(input[0]=='!')
@@ -213,7 +207,7 @@ QString Reader::readLineQString(DECFILELINE)
 #ifndef NOFILELINE
       mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-      ERROR(mesg.toStdString());
+      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
     }
     m_lineNumber++;
   }
@@ -229,25 +223,21 @@ void Reader::read999(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
 }
 
-void Reader::read999(STRING mesg DECCFILELINE)
+void Reader::read999(std::string mesg DECCFILELINE)
 {
   QString input = readLineQString(ARGFILELINE);
   QString qmesg;
   if(!input.startsWith(QString("-999")))
   {
-#ifdef STD_STRING
     qmesg = QString().fromStdString(mesg) + QString(" at line %1").arg(m_lineNumber);
-#else
-    qmesg = mesg + QString(" at line %1").arg(m_lineNumber);
-#endif
 #ifndef NOFILELINE
     qmesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(qmesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",qmesg.toStdString());
   }
 }
 
@@ -260,7 +250,7 @@ void Reader::readEnd(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
 }
 
@@ -269,7 +259,7 @@ void Reader::skipSection(DECFILELINE)
   readSection(ARGFILELINE);
 }
 
-STRING Reader::readSection(DECFILELINE)
+std::string Reader::readSection(DECFILELINE)
 {
   QString section;
   while(1)
@@ -281,18 +271,14 @@ STRING Reader::readSection(DECFILELINE)
 #ifndef NOFILELINE
       mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-      ERROR(mesg.toStdString());
+      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
     }
     m_lineNumber++;
     section += input + '\n';
     if(input.startsWith(QString("-999")))
       break;
   }
-#ifdef STD_STRING
   return section.toStdString();
-#else
-  return section;
-#endif
 }
 
 //QList<int> PrjReader::readIntArray(const char *file, int line, bool terminated)
@@ -306,10 +292,10 @@ STRING Reader::readSection(DECFILELINE)
 //    return list;
 //}
 
-VECTOR_TYPE<int> Reader::readIntVector(DECFILELINEC bool terminated)
+std::vector<int> Reader::readIntVector(DECFILELINEC bool terminated)
 {
   int n = readInt(ARGFILELINE);
-  VECTOR_TYPE<int> vector;
+  std::vector<int> vector;
   for(int i=0;i<n;i++)
   {
     vector.push_back(readInt(ARGFILELINE));
@@ -383,7 +369,7 @@ template <> QString Reader::readNumber<QString>(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
   return string;
 }
@@ -399,7 +385,7 @@ template <> std::string Reader::readNumber<std::string>(DECFILELINE)
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(file).arg(line);
 #endif
-    ERROR(mesg.toStdString());
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
   }
   return string.toStdString();
 }

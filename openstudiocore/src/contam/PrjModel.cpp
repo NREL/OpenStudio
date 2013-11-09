@@ -24,7 +24,7 @@
 namespace openstudio {
 namespace contam {
 
-Model::Model(STRING filename)
+Model::Model(std::string filename)
 {
   read(filename);
 }
@@ -34,13 +34,9 @@ Model::Model(Reader &input)
   read(input);
 }
 
-bool Model::read(STRING filename)
+bool Model::read(std::string filename)
 {
-#ifdef STD_STRING
   QFile fp(QString().fromStdString(filename));
-#else
-  QFile fp(filename);
-#endif
 
   m_valid = false;
   if (fp.open(QFile::ReadOnly))
@@ -71,27 +67,27 @@ bool Model::read(Reader &input)
   // Section 6: Wind Pressure Profiles
   m_windPressureProfiles = input.readSectionVector<WindPressureProfile>(FILELINEC "wind pressure profiles");
   // Section 7: Kinetic Reactions
-  STRING kinr = input.readSection(FILELINE); // Skip it
+  std::string kinr = input.readSection(FILELINE); // Skip it
   m_unsupported["KineticReaction"] = kinr;
   // Section 8a: Filter Elements
-  STRING flte = input.readSection(FILELINE); // Skip it
+  std::string flte = input.readSection(FILELINE); // Skip it
   m_unsupported["FilterElement"] = flte;
   // Section 8b: Filters
-  STRING filt = input.readSection(FILELINE); // Skip it
+  std::string filt = input.readSection(FILELINE); // Skip it
   m_unsupported["Filter"] = filt;
   // Section 9: Source/Sink Elements
-  STRING cse = input.readSection(FILELINE); // Skip it
+  std::string cse = input.readSection(FILELINE); // Skip it
   m_unsupported["SourceSink"] = cse;
   // Section 10: Airflow Elements
   m_airflowElements = input.readElementVector<AirflowElement>(FILELINEC "airflow element");
   // Section 11: Duct Elements
-  STRING dfe = input.readSection(FILELINE); // Skip it
+  std::string dfe = input.readSection(FILELINE); // Skip it
   m_unsupported["DuctElement"] = dfe;
   // Section 12a: Control Super Elements
-  STRING selmt = input.readSection(FILELINE); // Skip it
+  std::string selmt = input.readSection(FILELINE); // Skip it
   m_unsupported["ControlSuperElements"] = selmt;
   // Section 12b: Control Nodes
-  //STRING ctrl = input.readSection(FILELINE); // Skip it
+  //std::string ctrl = input.readSection(FILELINE); // Skip it
   //m_unsupported["ControlNode"] = ctrl;
   m_controlNodes = input.readElementVector<ControlNode>(FILELINEC "control node");
   // Section 13: Simple Air Handling System (AHS)
@@ -103,35 +99,35 @@ bool Model::read(Reader &input)
   // Section 16: Airflow Paths
   m_paths = input.readSectionVector<Path>(FILELINEC "path");
   // Section 17: Duct Junctions
-  STRING jct = input.readSection(FILELINE); // Skip it
+  std::string jct = input.readSection(FILELINE); // Skip it
   m_unsupported["DuctJunction"] = jct;
   // Section 18: Initial Junction Concentrations
-  STRING jctic = input.readSection(FILELINE); // Skip it
+  std::string jctic = input.readSection(FILELINE); // Skip it
   m_unsupported["JunctionIC"] = jctic;
   // Section 19: Duct Segments
-  STRING dct = input.readSection(FILELINE); // Skip it
+  std::string dct = input.readSection(FILELINE); // Skip it
   m_unsupported["DuctSegment"] = dct;
   // Section 20: Source/Sinks
   //m_sourceSinks = input.readSectionVector<SourceSink>(FILELINEC QString("source/sink"));
-  STRING css = input.readSection(FILELINE); // Skip it
+  std::string css = input.readSection(FILELINE); // Skip it
   m_unsupported["SourceSink"] = css;
   // Section 21: Occupancy Schedules
-  STRING osch = input.readSection(FILELINE); // Skip it
+  std::string osch = input.readSection(FILELINE); // Skip it
   m_unsupported["OccupancySchedule"] = osch;
   // Section 22: Exposures
-  STRING pexp = input.readSection(FILELINE); // Skip it
+  std::string pexp = input.readSection(FILELINE); // Skip it
   m_unsupported["Exposure"] = pexp;
   // Section 23: Annotations
-  STRING note = input.readSection(FILELINE); // Skip it
+  std::string note = input.readSection(FILELINE); // Skip it
   m_unsupported["Annotation"] = note;
   input.readEnd(FILELINE);
   m_valid = true;
   return true;
 }
 
-STRING Model::toString()
+std::string Model::toString()
 {
-  STRING output;
+  std::string output;
   if(!m_valid)
   {
     return output;
@@ -331,7 +327,7 @@ void Model::readZoneIc(Reader &input)
 #ifndef NOFILELINE
       mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
 #endif
-      ERROR(mesg.toStdString());
+      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
     }
     for(unsigned int i=0;i<m_zones.size();i++)
     {
@@ -343,9 +339,9 @@ void Model::readZoneIc(Reader &input)
 #ifndef NOFILELINE
         mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
 #endif
-        ERROR(mesg.toStdString());
+        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
       }
-      VECTOR_TYPE<RX> ic;
+      std::vector<RX> ic;
       for(unsigned int j=0;j<nctm;j++)
       {
         ic.push_back(input.readNumber<RX>(FILELINE));
@@ -356,7 +352,7 @@ void Model::readZoneIc(Reader &input)
   input.read999("Failed to find zone IC section termination" CFILELINE);
 }
 
-STRING Model::writeZoneIc(int start)
+std::string Model::writeZoneIc(int start)
 {
   int offset = 1;
   if(start != 0)
@@ -364,15 +360,15 @@ STRING Model::writeZoneIc(int start)
     offset = 1-start;
   }
   int nctm = m_contaminants.size()*(m_zones.size()-start);
-  STRING string = TO_STRING(nctm) + " ! initial zone concentrations:\n";
+  std::string string = openstudio::toString(nctm) + " ! initial zone concentrations:\n";
   if(nctm)
   {
     for(unsigned int i=start;i<m_zones.size();i++)
     {
-      string += TO_STRING(i+offset);
+      string += openstudio::toString(i+offset);
       for(unsigned int j=0;j<m_contaminants.size();j++)
       {
-        string += ' ' + TO_STRING(m_zones[i].ic(j));
+        string += ' ' + openstudio::toString(m_zones[i].ic(j));
       }
       string += '\n';
     }
@@ -390,7 +386,7 @@ STRING Model::writeZoneIc(int start)
 
 //template void Model::addAirflowElement(PlrTest1);
 
-int Model::airflowElementNrByName(STRING name) const
+int Model::airflowElementNrByName(std::string name) const
 {
   for(int i=0;i<m_airflowElements.size();i++)
   {

@@ -1,70 +1,26 @@
 /**********************************************************************
- *  Copyright (c) 2013, The Pennsylvania State University.
- *  All rights reserved.
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- *  02110-1301  USA
- **********************************************************************/
+*  Copyright (c) 2013, The Pennsylvania State University.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
 #ifndef PRJDEFINES_H
 #define PRJDEFINES_H
 
-#include <iostream>
-
-//#define DEBUG
-
-#define ERROR(mesg) std::cout << (mesg) << std::endl; exit(EXIT_FAILURE)
-
 #define STD_STRING
-#define STD_VECTOR
-#define STD_MAP
 #define RX_IS_STRING
-#define NEED_TO_STRING
-
-//#ifdef NEED_TO_STRING
-//#include "prjtostring.h"
-//#define TO_STRING(v) prj::to_string(v)
-#include <utilities/core/String.hpp>
-#define TO_STRING(v) openstudio::toString(v)
-//#else
-//#define TO_STRING(v) std::to_string(v)
-//#endif
-
-#ifndef STD_STRING
-#define STRING QString
-#define STRING_INIT QString()
-#define IS_NULL(v) v.isNull()
-#else
-#define STRING std::string
-#define STRING_INIT std::string()
-#define IS_NULL(v) v.empty()
-#endif
-
-#ifndef STD_VECTOR
-#define VECTOR_TYPE QVector
-#define VECTOR_SIZE_T int
-#else
-#define VECTOR_TYPE std::vector
-#define VECTOR_SIZE_T unsigned int
-#endif
-
-#ifndef STD_MAP
-#define MAP_TYPE QMap
-#else
-#include <map>
-#define MAP_TYPE std::map
-#endif
 
 #ifdef RX_IS_STRING
 #ifndef STD_STRING

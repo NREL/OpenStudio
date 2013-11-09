@@ -32,7 +32,7 @@ public:
   WeatherData(RX Tambt=RX_INIT(0),RX barpres=RX_INIT(0),RX windspd=RX_INIT(0),RX winddir=RX_INIT(0),
     RX relhum=RX_INIT(0),int daytyp=0,int uTa=0,int ubP=0,int uws=0,int uwd=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   RX Tambt() const;
   void setTambt(const RX Tambt);
   RX barpres() const;
@@ -62,7 +62,7 @@ class CONTAM_API Icon
 public:
   Icon(int icon=0,int col=0,int row=0,int nr=0);
   void read(Reader &input);
-  STRING write();
+  std::string write();
   bool isWall();
   uint bits();
   int icon() const;
@@ -84,7 +84,7 @@ class CONTAM_API FanDataPoint
 public:
   FanDataPoint(RX mF=RX_INIT(0),int u_mF=0,RX dP=RX_INIT(0),int u_dP=0,RX rP=RX_INIT(0),int u_rP=0);
   void read(Reader &reader);
-  STRING write();
+  std::string write();
   RX mF() const;
   void setMF(const RX mF);
   int u_mF() const;
@@ -111,7 +111,7 @@ class CONTAM_API DataPoint
 public:
   DataPoint(RX x=RX_INIT(0),RX y=RX_INIT(0));
   void read(Reader &reader);
-  STRING write();
+  std::string write();
   RX x() const;
   void setX(const RX x);
   RX y() const;
@@ -126,7 +126,7 @@ class CONTAM_API AirflowSubelementData
 public:
   AirflowSubelementData(int nr=0,RX relHt=RX_INIT(0),int filt=0);
   void read(Reader &reader);
-  STRING write();
+  std::string write();
   int nr() const;
   void setNr(const int nr);
   RX relHt() const;
@@ -144,7 +144,7 @@ class CONTAM_API PressureCoefficientPoint
 public:
   PressureCoefficientPoint(RX azm=RX_INIT(0),RX coef=RX_INIT(0));
   void read(Reader &reader);
-  STRING write();
+  std::string write();
   RX azm() const;
   void setAzm(const RX azm);
   RX coef() const;
@@ -157,15 +157,15 @@ private:
 class CONTAM_API SchedulePoint
 {
 public:
-  SchedulePoint(STRING time=STRING_INIT,RX ctrl=RX_INIT(0));
+  SchedulePoint(std::string time=std::string(),RX ctrl=RX_INIT(0));
   void read(Reader &reader);
-  STRING write();
-  STRING time() const;
-  void setTime(const STRING time);
+  std::string write();
+  std::string time() const;
+  void setTime(const std::string time);
   RX ctrl() const;
   void setCtrl(const RX ctrl);
 private:
-  STRING m_time;  // time-of-day [s] (hh:mm:ss)
+  std::string m_time;  // time-of-day [s] (hh:mm:ss)
   RX m_ctrl;  // corresponding control value (R4) [-]
 };
 

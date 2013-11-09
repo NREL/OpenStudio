@@ -18,10 +18,12 @@
 **********************************************************************/
 #include "PrjPublic.hpp"
 
+#include <utilities/core/Logger.hpp>
+
 namespace openstudio {
 namespace contam {
 
-Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,RX relHt,RX Vol,RX T0,RX P0,STRING name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,STRING cfdname,RX X1,RX Y1,RX H1,RX X2,RX Y2,RX H2,RX celldx,RX axialD,int u_aD,int u_L)
+Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,RX relHt,RX Vol,RX T0,RX P0,std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,RX X1,RX Y1,RX H1,RX X2,RX Y2,RX H2,RX celldx,RX axialD,int u_aD,int u_L)
 {
   d = new ZonePrivate(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,Y1,H1,X2,Y2,H2,celldx,axialD,u_aD,u_L);
 }
@@ -126,12 +128,12 @@ void Zone::setP0(const RX P0)
   d->P0 = P0;
 }
 
-STRING Zone::name() const
+std::string Zone::name() const
 {
   return d->name;
 }
 
-void Zone::setName(const STRING name)
+void Zone::setName(const std::string name)
 {
   d->name = name;
 }
@@ -206,12 +208,12 @@ void Zone::setCfd(const int cfd)
   d->cfd = cfd;
 }
 
-STRING Zone::cfdname() const
+std::string Zone::cfdname() const
 {
   return d->cfdname;
 }
 
-void Zone::setCfdname(const STRING cfdname)
+void Zone::setCfdname(const std::string cfdname)
 {
   d->cfdname = cfdname;
 }
@@ -316,7 +318,7 @@ void Zone::setU_L(const int u_L)
   d->u_L = u_L;
 }
 
-STRING Zone::write()
+std::string Zone::write()
 {
   return d->write();
 }
@@ -385,12 +387,12 @@ void Zone::setIc(std::vector<RX> ic)
   d->ic = ic;
 }
 
-Species::Species(int nr,int sflag,int ntflag,RX molwt,RX mdiam,RX edens,RX decay,RX Dm,RX ccdef,RX Cp,int ucc,int umd,int ued,int udm,int ucp,STRING name,STRING desc)
+Species::Species(int nr,int sflag,int ntflag,RX molwt,RX mdiam,RX edens,RX decay,RX Dm,RX ccdef,RX Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc)
 {
   d = new SpeciesPrivate(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc);
 }
 
-STRING Species::write()
+std::string Species::write()
 {
   return d->write();
 }
@@ -550,32 +552,32 @@ void Species::setUcp(const int ucp)
   d->ucp = ucp;
 }
 
-STRING Species::name() const
+std::string Species::name() const
 {
   return d->name;
 }
 
-void Species::setName(const STRING name)
+void Species::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING Species::desc() const
+std::string Species::desc() const
 {
   return d->desc;
 }
 
-void Species::setDesc(const STRING desc)
+void Species::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
 
-Ahs::Ahs(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,STRING name,STRING desc)
+Ahs::Ahs(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,std::string name,std::string desc)
 {
   d = new AhsPrivate(nr,zone_r,zone_s,path_r,path_s,path_x,name,desc);
 }
 
-STRING Ahs::write()
+std::string Ahs::write()
 {
   return d->write();
 }
@@ -645,27 +647,27 @@ void Ahs::setPath_x(const int path_x)
   d->path_x = path_x;
 }
 
-STRING Ahs::name() const
+std::string Ahs::name() const
 {
   return d->name;
 }
 
-void Ahs::setName(const STRING name)
+void Ahs::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING Ahs::desc() const
+std::string Ahs::desc() const
 {
   return d->desc;
 }
 
-void Ahs::setDesc(const STRING desc)
+void Ahs::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
 
-Path::Path(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,RX X,RX Y,RX relHt,RX mult,RX wPset,RX wPmod,RX wazm,RX Fahs,RX Xmax,RX Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,STRING cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp)
+Path::Path(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,RX X,RX Y,RX relHt,RX mult,RX wPset,RX wPmod,RX wazm,RX Fahs,RX Xmax,RX Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp)
 {
   d = new PathPrivate(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,Xmax,Xmin,icon,dir,u_Ht,u_XY,u_dP,u_F,cfd,cfd_name,cfd_ptype,cfd_btype,cfd_capp);
 }
@@ -675,7 +677,7 @@ void Path::read(Reader &input)
   d->read(input);
 }
 
-STRING Path::write()
+std::string Path::write()
 {
   return d->write();
 }
@@ -960,12 +962,12 @@ void Path::setCfd(const int cfd)
   d->cfd = cfd;
 }
 
-STRING Path::cfd_name() const
+std::string Path::cfd_name() const
 {
   return d->cfd_name;
 }
 
-void Path::setCfd_name(const STRING cfd_name)
+void Path::setCfd_name(const std::string cfd_name)
 {
   d->cfd_name = cfd_name;
 }
@@ -1068,12 +1070,12 @@ bool Path::outsideAir()
   return d->flags & AHS_O;
 }
 
-RunControl::RunControl(STRING name,STRING version,int echo,STRING prjdesc,int skheight,int skwidth,int def_units,int def_flows,RX def_T,int udefT,RX rel_N,RX wind_H,int uwH,RX wind_Ao,RX wind_a,RX scale,int uScale,int orgRow,int orgCol,int invYaxis,int showGeom,WeatherData ssWeather,WeatherData wptWeather,STRING WTHpath,STRING CTMpath,STRING CVFpath,STRING DVFpath,STRING WPCfile,STRING EWCfile,STRING WPCdesc,RX X0,RX Y0,RX Z0,RX angle,int u_XYZ,RX epsPath,RX epsSpcs,STRING tShift,STRING dStart,STRING dEnd,int useWPCwp,int useWPCmf,int wpctrig,RX latd,RX lgtd,RX Tznr,RX altd,RX Tgrnd,int utg,int u_a,int sim_af,int afcalc,int afmaxi,RX afrcnvg,RX afacnvg,RX afrelax,int uac2,RX Pres,int uPres,int afslae,int afrseq,int aflmaxi,RX aflcnvg,int aflinit,int Tadj,int sim_mf,int ccmaxi,RX ccrcnvg,RX ccacnvg,RX ccrelax,int uccc,int mfnmthd,int mfnrseq,int mfnmaxi,RX mfnrcnvg,RX mfnacnvg,RX mfnrelax,RX mfngamma,int uccn,int mftmthd,int mftrseq,int mftmaxi,RX mftrcnvg,RX mftacnvg,RX mftrelax,RX mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,RX mfvrcnvg,RX mfvacnvg,RX mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,RX celldx,int sim_vjt,int udx,int cvode_mth,RX cvode_rcnvg,RX cvode_acnvg,RX cvode_dtmax,int tsdens,RX tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,STRING date_st,STRING time_st,STRING date_0,STRING time_0,STRING date_1,STRING time_1,STRING time_step,STRING time_list,STRING time_scrn,int restart,STRING rstdate,STRING rsttime,int list,int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<RX> rvals,int BldgFlowZ,int BldgFlowD,int BldgFlowC,int cfd_ctype,RX cfd_convcpl,int cfd_var,int cfd_zref,int cfd_imax,int cfd_dtcmo)
+RunControl::RunControl(std::string name,std::string version,int echo,std::string prjdesc,int skheight,int skwidth,int def_units,int def_flows,RX def_T,int udefT,RX rel_N,RX wind_H,int uwH,RX wind_Ao,RX wind_a,RX scale,int uScale,int orgRow,int orgCol,int invYaxis,int showGeom,WeatherData ssWeather,WeatherData wptWeather,std::string WTHpath,std::string CTMpath,std::string CVFpath,std::string DVFpath,std::string WPCfile,std::string EWCfile,std::string WPCdesc,RX X0,RX Y0,RX Z0,RX angle,int u_XYZ,RX epsPath,RX epsSpcs,std::string tShift,std::string dStart,std::string dEnd,int useWPCwp,int useWPCmf,int wpctrig,RX latd,RX lgtd,RX Tznr,RX altd,RX Tgrnd,int utg,int u_a,int sim_af,int afcalc,int afmaxi,RX afrcnvg,RX afacnvg,RX afrelax,int uac2,RX Pres,int uPres,int afslae,int afrseq,int aflmaxi,RX aflcnvg,int aflinit,int Tadj,int sim_mf,int ccmaxi,RX ccrcnvg,RX ccacnvg,RX ccrelax,int uccc,int mfnmthd,int mfnrseq,int mfnmaxi,RX mfnrcnvg,RX mfnacnvg,RX mfnrelax,RX mfngamma,int uccn,int mftmthd,int mftrseq,int mftmaxi,RX mftrcnvg,RX mftacnvg,RX mftrelax,RX mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,RX mfvrcnvg,RX mfvacnvg,RX mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,RX celldx,int sim_vjt,int udx,int cvode_mth,RX cvode_rcnvg,RX cvode_acnvg,RX cvode_dtmax,int tsdens,RX tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,std::string date_st,std::string time_st,std::string date_0,std::string time_0,std::string date_1,std::string time_1,std::string time_step,std::string time_list,std::string time_scrn,int restart,std::string rstdate,std::string rsttime,int list,int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<RX> rvals,int BldgFlowZ,int BldgFlowD,int BldgFlowC,int cfd_ctype,RX cfd_convcpl,int cfd_var,int cfd_zref,int cfd_imax,int cfd_dtcmo)
 {
   d = new RunControlPrivate(name,version,echo,prjdesc,skheight,skwidth,def_units,def_flows,def_T,udefT,rel_N,wind_H,uwH,wind_Ao,wind_a,scale,uScale,orgRow,orgCol,invYaxis,showGeom,ssWeather,wptWeather,WTHpath,CTMpath,CVFpath,DVFpath,WPCfile,EWCfile,WPCdesc,X0,Y0,Z0,angle,u_XYZ,epsPath,epsSpcs,tShift,dStart,dEnd,useWPCwp,useWPCmf,wpctrig,latd,lgtd,Tznr,altd,Tgrnd,utg,u_a,sim_af,afcalc,afmaxi,afrcnvg,afacnvg,afrelax,uac2,Pres,uPres,afslae,afrseq,aflmaxi,aflcnvg,aflinit,Tadj,sim_mf,ccmaxi,ccrcnvg,ccacnvg,ccrelax,uccc,mfnmthd,mfnrseq,mfnmaxi,mfnrcnvg,mfnacnvg,mfnrelax,mfngamma,uccn,mftmthd,mftrseq,mftmaxi,mftrcnvg,mftacnvg,mftrelax,mftgamma,ucct,mfvmthd,mfvrseq,mfvmaxi,mfvrcnvg,mfvacnvg,mfvrelax,uccv,mf_solver,sim_1dz,sim_1dd,celldx,sim_vjt,udx,cvode_mth,cvode_rcnvg,cvode_acnvg,cvode_dtmax,tsdens,tsrelax,tsmaxi,cnvgSS,densZP,stackD,dodMdt,date_st,time_st,date_0,time_0,date_1,time_1,time_step,time_list,time_scrn,restart,rstdate,rsttime,list,doDlg,pfsave,zfsave,zcsave,achvol,achsave,abwsave,cbwsave,expsave,ebwsave,zaasave,zbwsave,rzfsave,rzmsave,rz1save,csmsave,srfsave,logsave,save,rvals,BldgFlowZ,BldgFlowD,BldgFlowC,cfd_ctype,cfd_convcpl,cfd_var,cfd_zref,cfd_imax,cfd_dtcmo);
 }
 
-STRING RunControl::write()
+std::string RunControl::write()
 {
   return d->write();
 }
@@ -1083,22 +1085,22 @@ void RunControl::read(Reader &input)
   d->read(input);
 }
 
-STRING RunControl::name() const
+std::string RunControl::name() const
 {
   return d->name;
 }
 
-void RunControl::setName(const STRING name)
+void RunControl::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING RunControl::version() const
+std::string RunControl::version() const
 {
   return d->version;
 }
 
-void RunControl::setVersion(const STRING version)
+void RunControl::setVersion(const std::string version)
 {
   d->version = version;
 }
@@ -1113,12 +1115,12 @@ void RunControl::setEcho(const int echo)
   d->echo = echo;
 }
 
-STRING RunControl::prjdesc() const
+std::string RunControl::prjdesc() const
 {
   return d->prjdesc;
 }
 
-void RunControl::setPrjdesc(const STRING prjdesc)
+void RunControl::setPrjdesc(const std::string prjdesc)
 {
   d->prjdesc = prjdesc;
 }
@@ -1313,72 +1315,72 @@ void RunControl::setWptWeather(const WeatherData wptWeather)
   d->wptWeather = wptWeather;
 }
 
-STRING RunControl::WTHpath() const
+std::string RunControl::WTHpath() const
 {
   return d->WTHpath;
 }
 
-void RunControl::setWTHpath(const STRING WTHpath)
+void RunControl::setWTHpath(const std::string WTHpath)
 {
   d->WTHpath = WTHpath;
 }
 
-STRING RunControl::CTMpath() const
+std::string RunControl::CTMpath() const
 {
   return d->CTMpath;
 }
 
-void RunControl::setCTMpath(const STRING CTMpath)
+void RunControl::setCTMpath(const std::string CTMpath)
 {
   d->CTMpath = CTMpath;
 }
 
-STRING RunControl::CVFpath() const
+std::string RunControl::CVFpath() const
 {
   return d->CVFpath;
 }
 
-void RunControl::setCVFpath(const STRING CVFpath)
+void RunControl::setCVFpath(const std::string CVFpath)
 {
   d->CVFpath = CVFpath;
 }
 
-STRING RunControl::DVFpath() const
+std::string RunControl::DVFpath() const
 {
   return d->DVFpath;
 }
 
-void RunControl::setDVFpath(const STRING DVFpath)
+void RunControl::setDVFpath(const std::string DVFpath)
 {
   d->DVFpath = DVFpath;
 }
 
-STRING RunControl::WPCfile() const
+std::string RunControl::WPCfile() const
 {
   return d->WPCfile;
 }
 
-void RunControl::setWPCfile(const STRING WPCfile)
+void RunControl::setWPCfile(const std::string WPCfile)
 {
   d->WPCfile = WPCfile;
 }
 
-STRING RunControl::EWCfile() const
+std::string RunControl::EWCfile() const
 {
   return d->EWCfile;
 }
 
-void RunControl::setEWCfile(const STRING EWCfile)
+void RunControl::setEWCfile(const std::string EWCfile)
 {
   d->EWCfile = EWCfile;
 }
 
-STRING RunControl::WPCdesc() const
+std::string RunControl::WPCdesc() const
 {
   return d->WPCdesc;
 }
 
-void RunControl::setWPCdesc(const STRING WPCdesc)
+void RunControl::setWPCdesc(const std::string WPCdesc)
 {
   d->WPCdesc = WPCdesc;
 }
@@ -1453,32 +1455,32 @@ void RunControl::setEpsSpcs(const RX epsSpcs)
   d->epsSpcs = epsSpcs;
 }
 
-STRING RunControl::tShift() const
+std::string RunControl::tShift() const
 {
   return d->tShift;
 }
 
-void RunControl::setTShift(const STRING tShift)
+void RunControl::setTShift(const std::string tShift)
 {
   d->tShift = tShift;
 }
 
-STRING RunControl::dStart() const
+std::string RunControl::dStart() const
 {
   return d->dStart;
 }
 
-void RunControl::setDStart(const STRING dStart)
+void RunControl::setDStart(const std::string dStart)
 {
   d->dStart = dStart;
 }
 
-STRING RunControl::dEnd() const
+std::string RunControl::dEnd() const
 {
   return d->dEnd;
 }
 
-void RunControl::setDEnd(const STRING dEnd)
+void RunControl::setDEnd(const std::string dEnd)
 {
   d->dEnd = dEnd;
 }
@@ -2193,92 +2195,92 @@ void RunControl::setDodMdt(const int dodMdt)
   d->dodMdt = dodMdt;
 }
 
-STRING RunControl::date_st() const
+std::string RunControl::date_st() const
 {
   return d->date_st;
 }
 
-void RunControl::setDate_st(const STRING date_st)
+void RunControl::setDate_st(const std::string date_st)
 {
   d->date_st = date_st;
 }
 
-STRING RunControl::time_st() const
+std::string RunControl::time_st() const
 {
   return d->time_st;
 }
 
-void RunControl::setTime_st(const STRING time_st)
+void RunControl::setTime_st(const std::string time_st)
 {
   d->time_st = time_st;
 }
 
-STRING RunControl::date_0() const
+std::string RunControl::date_0() const
 {
   return d->date_0;
 }
 
-void RunControl::setDate_0(const STRING date_0)
+void RunControl::setDate_0(const std::string date_0)
 {
   d->date_0 = date_0;
 }
 
-STRING RunControl::time_0() const
+std::string RunControl::time_0() const
 {
   return d->time_0;
 }
 
-void RunControl::setTime_0(const STRING time_0)
+void RunControl::setTime_0(const std::string time_0)
 {
   d->time_0 = time_0;
 }
 
-STRING RunControl::date_1() const
+std::string RunControl::date_1() const
 {
   return d->date_1;
 }
 
-void RunControl::setDate_1(const STRING date_1)
+void RunControl::setDate_1(const std::string date_1)
 {
   d->date_1 = date_1;
 }
 
-STRING RunControl::time_1() const
+std::string RunControl::time_1() const
 {
   return d->time_1;
 }
 
-void RunControl::setTime_1(const STRING time_1)
+void RunControl::setTime_1(const std::string time_1)
 {
   d->time_1 = time_1;
 }
 
-STRING RunControl::time_step() const
+std::string RunControl::time_step() const
 {
   return d->time_step;
 }
 
-void RunControl::setTime_step(const STRING time_step)
+void RunControl::setTime_step(const std::string time_step)
 {
   d->time_step = time_step;
 }
 
-STRING RunControl::time_list() const
+std::string RunControl::time_list() const
 {
   return d->time_list;
 }
 
-void RunControl::setTime_list(const STRING time_list)
+void RunControl::setTime_list(const std::string time_list)
 {
   d->time_list = time_list;
 }
 
-STRING RunControl::time_scrn() const
+std::string RunControl::time_scrn() const
 {
   return d->time_scrn;
 }
 
-void RunControl::setTime_scrn(const STRING time_scrn)
+void RunControl::setTime_scrn(const std::string time_scrn)
 {
   d->time_scrn = time_scrn;
 }
@@ -2293,22 +2295,22 @@ void RunControl::setRestart(const int restart)
   d->restart = restart;
 }
 
-STRING RunControl::rstdate() const
+std::string RunControl::rstdate() const
 {
   return d->rstdate;
 }
 
-void RunControl::setRstdate(const STRING rstdate)
+void RunControl::setRstdate(const std::string rstdate)
 {
   d->rstdate = rstdate;
 }
 
-STRING RunControl::rsttime() const
+std::string RunControl::rsttime() const
 {
   return d->rsttime;
 }
 
-void RunControl::setRsttime(const STRING rsttime)
+void RunControl::setRsttime(const std::string rsttime)
 {
   d->rsttime = rsttime;
 }
@@ -2613,12 +2615,12 @@ void RunControl::setCfd_dtcmo(const int cfd_dtcmo)
   d->cfd_dtcmo = cfd_dtcmo;
 }
 
-Level::Level(int nr,RX refht,RX delht,int u_rfht,int u_dlht,STRING name,std::vector<Icon> icons)
+Level::Level(int nr,RX refht,RX delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
 {
   d = new LevelPrivate(nr,refht,delht,u_rfht,u_dlht,name,icons);
 }
 
-STRING Level::write()
+std::string Level::write()
 {
   return d->write();
 }
@@ -2678,12 +2680,12 @@ void Level::setU_dlht(const int u_dlht)
   d->u_dlht = u_dlht;
 }
 
-STRING Level::name() const
+std::string Level::name() const
 {
   return d->name;
 }
 
-void Level::setName(const STRING name)
+void Level::setName(const std::string name)
 {
   d->name = name;
 }
@@ -2698,12 +2700,12 @@ void Level::setIcons(const std::vector<Icon> icons)
   d->icons = icons;
 }
 
-DaySchedule::DaySchedule(int nr,int shape,int utyp,int ucnv,STRING name,STRING desc,std::vector<SchedulePoint> points)
+DaySchedule::DaySchedule(int nr,int shape,int utyp,int ucnv,std::string name,std::string desc,std::vector<SchedulePoint> points)
 {
   d = new DaySchedulePrivate(nr,shape,utyp,ucnv,name,desc,points);
 }
 
-STRING DaySchedule::write()
+std::string DaySchedule::write()
 {
   return d->write();
 }
@@ -2753,22 +2755,22 @@ void DaySchedule::setUcnv(const int ucnv)
   d->ucnv = ucnv;
 }
 
-STRING DaySchedule::name() const
+std::string DaySchedule::name() const
 {
   return d->name;
 }
 
-void DaySchedule::setName(const STRING name)
+void DaySchedule::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING DaySchedule::desc() const
+std::string DaySchedule::desc() const
 {
   return d->desc;
 }
 
-void DaySchedule::setDesc(const STRING desc)
+void DaySchedule::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -2783,12 +2785,12 @@ void DaySchedule::setPoints(const std::vector<SchedulePoint> points)
   d->points = points;
 }
 
-WeekSchedule::WeekSchedule(int nr,int utyp,int ucnv,STRING name,STRING desc,std::vector<int> j)
+WeekSchedule::WeekSchedule(int nr,int utyp,int ucnv,std::string name,std::string desc,std::vector<int> j)
 {
   d = new WeekSchedulePrivate(nr,utyp,ucnv,name,desc,j);
 }
 
-STRING WeekSchedule::write()
+std::string WeekSchedule::write()
 {
   return d->write();
 }
@@ -2828,22 +2830,22 @@ void WeekSchedule::setUcnv(const int ucnv)
   d->ucnv = ucnv;
 }
 
-STRING WeekSchedule::name() const
+std::string WeekSchedule::name() const
 {
   return d->name;
 }
 
-void WeekSchedule::setName(const STRING name)
+void WeekSchedule::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING WeekSchedule::desc() const
+std::string WeekSchedule::desc() const
 {
   return d->desc;
 }
 
-void WeekSchedule::setDesc(const STRING desc)
+void WeekSchedule::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -2858,12 +2860,12 @@ void WeekSchedule::setJ(const std::vector<int> j)
   d->j = j;
 }
 
-WindPressureProfile::WindPressureProfile(int nr,int type,STRING name,STRING desc,std::vector<PressureCoefficientPoint> coeffs)
+WindPressureProfile::WindPressureProfile(int nr,int type,std::string name,std::string desc,std::vector<PressureCoefficientPoint> coeffs)
 {
   d = new WindPressureProfilePrivate(nr,type,name,desc,coeffs);
 }
 
-STRING WindPressureProfile::write()
+std::string WindPressureProfile::write()
 {
   return d->write();
 }
@@ -2893,22 +2895,22 @@ void WindPressureProfile::setType(const int type)
   d->type = type;
 }
 
-STRING WindPressureProfile::name() const
+std::string WindPressureProfile::name() const
 {
   return d->name;
 }
 
-void WindPressureProfile::setName(const STRING name)
+void WindPressureProfile::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING WindPressureProfile::desc() const
+std::string WindPressureProfile::desc() const
 {
   return d->desc;
 }
 
-void WindPressureProfile::setDesc(const STRING desc)
+void WindPressureProfile::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -2923,9 +2925,9 @@ void WindPressureProfile::setCoeffs(const std::vector<PressureCoefficientPoint> 
   d->coeffs = coeffs;
 }
 
-ControlNode::Type ControlNode::convertTag(STRING string)
+ControlNode::Type ControlNode::convertTag(std::string string)
 {
-  STRING tags[37] = {STRING("sns"),STRING("sch"),STRING("set"),STRING("cvf"),STRING("dvf"),STRING("log"),STRING("pas"),STRING("mod"),STRING("hys"),STRING("abs"),STRING("bin"),STRING("dls"),STRING("dlx"),STRING("int"),STRING("rav"),STRING("inv"),STRING("and"),STRING("od"),STRING("xor"),STRING("add"),STRING("sub"),STRING("mul"),STRING("div"),STRING("sum"),STRING("avg"),STRING("max"),STRING("min"),STRING("lls"),STRING("uls"),STRING("lbs"),STRING("ubs"),STRING("llc"),STRING("ulc"),STRING("pc1"),STRING("pi1"),STRING("sup"),STRING("sph")};
+  std::string tags[37] = {std::string("sns"),std::string("sch"),std::string("set"),std::string("cvf"),std::string("dvf"),std::string("log"),std::string("pas"),std::string("mod"),std::string("hys"),std::string("abs"),std::string("bin"),std::string("dls"),std::string("dlx"),std::string("int"),std::string("rav"),std::string("inv"),std::string("and"),std::string("od"),std::string("xor"),std::string("add"),std::string("sub"),std::string("mul"),std::string("div"),std::string("sum"),std::string("avg"),std::string("max"),std::string("min"),std::string("lls"),std::string("uls"),std::string("lbs"),std::string("ubs"),std::string("llc"),std::string("ulc"),std::string("pc1"),std::string("pi1"),std::string("sup"),std::string("sph")};
   ControlNode::Type type[37] = {CT_SNS,CT_SCH,CT_SET,CT_CVF,CT_DVF,CT_LOG,CT_PAS,CT_MOD,CT_HYS,CT_ABS,CT_BIN,CT_DLS,CT_DLX,CT_INT,CT_RAV,CT_INV,CT_AND,CT_OR,CT_XOR,CT_ADD,CT_SUB,CT_MUL,CT_DIV,CT_SUM,CT_AVG,CT_MAX,CT_MIN,CT_LLS,CT_ULS,CT_LBS,CT_UBS,CT_LLC,CT_ULC,CT_PC1,CT_PI1,CT_SUP,CT_SPH};
   for(int i=0;i<37;i++)
     if(string==tags[i])
@@ -2937,14 +2939,14 @@ ControlNode* ControlNode::readElement(Reader &input)
 {
   ControlNode *out=NULL;
   int nr = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
+  std::string dataType = input.readString(FILELINE);
   int seqnr = input.read<int>(FILELINE);
   unsigned int flags = input.read<unsigned int>(FILELINE);
   int inreq = input.read<int>(FILELINE);
   int n1 = input.read<int>(FILELINE);
   int n2 = input.read<int>(FILELINE);
-  STRING name = input.readString(FILELINE);
-  STRING desc = input.readLine(FILELINE);
+  std::string name = input.readString(FILELINE);
+  std::string desc = input.readLine(FILELINE);
   int kind = convertTag(dataType);
   switch(kind)
   {
@@ -3192,20 +3194,16 @@ ControlNode* ControlNode::readElement(Reader &input)
     }
   case ControlNode::UNKNOWN:
   default:
-#ifdef STD_STRING
-    STRING mesg = "Unknown control node type '" + dataType + "' at line " + TO_STRING(input.lineNumber());
-#else
-    QString mesg = "Unknown control node type '" + dataType + "' at line " + TO_STRING(input.lineNumber());
-#endif
+    std::string mesg = "Unknown control node type '" + dataType + "' at line " + openstudio::toString(input.lineNumber());
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
 #endif
-    ERROR(mesg);
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg);
   }
   return out;
 }
 
-CtrlDat::CtrlDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc)
+CtrlDat::CtrlDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc)
 {
   d = new CtrlDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc);
 }
@@ -3280,33 +3278,33 @@ void CtrlDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING CtrlDat::name() const
+std::string CtrlDat::name() const
 {
   return d->name;
 }
 
-void CtrlDat::setName(const STRING name)
+void CtrlDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING CtrlDat::desc() const
+std::string CtrlDat::desc() const
 {
   return d->desc;
 }
 
-void CtrlDat::setDesc(const STRING desc)
+void CtrlDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
 
 
-SnsDat::SnsDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,STRING units,STRING species)
+SnsDat::SnsDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,std::string units,std::string species)
 {
   d = new SnsDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,offset,scale,tau,oldsig,source,type,measure,X,Y,relHt,units,species);
 }
 
-STRING SnsDat::write()
+std::string SnsDat::write()
 {
   return d->write();
 }
@@ -3381,22 +3379,22 @@ void SnsDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING SnsDat::name() const
+std::string SnsDat::name() const
 {
   return d->name;
 }
 
-void SnsDat::setName(const STRING name)
+void SnsDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING SnsDat::desc() const
+std::string SnsDat::desc() const
 {
   return d->desc;
 }
 
-void SnsDat::setDesc(const STRING desc)
+void SnsDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3501,33 +3499,33 @@ void SnsDat::setRelHt(const RX relHt)
   d->relHt = relHt;
 }
 
-STRING SnsDat::units() const
+std::string SnsDat::units() const
 {
   return d->units;
 }
 
-void SnsDat::setUnits(const STRING units)
+void SnsDat::setUnits(const std::string units)
 {
   d->units = units;
 }
 
-STRING SnsDat::species() const
+std::string SnsDat::species() const
 {
   return d->species;
 }
 
-void SnsDat::setSpecies(const STRING species)
+void SnsDat::setSpecies(const std::string species)
 {
   d->species = species;
 }
 
 
-SchDat::SchDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int ps)
+SchDat::SchDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int ps)
 {
   d = new SchDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,ps);
 }
 
-STRING SchDat::write()
+std::string SchDat::write()
 {
   return d->write();
 }
@@ -3602,22 +3600,22 @@ void SchDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING SchDat::name() const
+std::string SchDat::name() const
 {
   return d->name;
 }
 
-void SchDat::setName(const STRING name)
+void SchDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING SchDat::desc() const
+std::string SchDat::desc() const
 {
   return d->desc;
 }
 
-void SchDat::setDesc(const STRING desc)
+void SchDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3633,12 +3631,12 @@ void SchDat::setPs(const int ps)
 }
 
 
-SetDat::SetDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX value)
+SetDat::SetDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX value)
 {
   d = new SetDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,value);
 }
 
-STRING SetDat::write()
+std::string SetDat::write()
 {
   return d->write();
 }
@@ -3713,22 +3711,22 @@ void SetDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING SetDat::name() const
+std::string SetDat::name() const
 {
   return d->name;
 }
 
-void SetDat::setName(const STRING name)
+void SetDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING SetDat::desc() const
+std::string SetDat::desc() const
 {
   return d->desc;
 }
 
-void SetDat::setDesc(const STRING desc)
+void SetDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3744,12 +3742,12 @@ void SetDat::setValue(const RX value)
 }
 
 
-CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,STRING valuename)
+CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,std::string valuename)
 {
   d = new CdvDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,valuename);
 }
 
-STRING CdvDat::write()
+std::string CdvDat::write()
 {
   return d->write(dataType());
 }
@@ -3824,43 +3822,43 @@ void CdvDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING CdvDat::name() const
+std::string CdvDat::name() const
 {
   return d->name;
 }
 
-void CdvDat::setName(const STRING name)
+void CdvDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING CdvDat::desc() const
+std::string CdvDat::desc() const
 {
   return d->desc;
 }
 
-void CdvDat::setDesc(const STRING desc)
+void CdvDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
 
-STRING CdvDat::valuename() const
+std::string CdvDat::valuename() const
 {
   return d->valuename;
 }
 
-void CdvDat::setValuename(const STRING valuename)
+void CdvDat::setValuename(const std::string valuename)
 {
   d->valuename = valuename;
 }
 
 
-LogDat::LogDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,int udef,STRING header,STRING units)
+LogDat::LogDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX offset,RX scale,int udef,std::string header,std::string units)
 {
   d = new LogDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,offset,scale,udef,header,units);
 }
 
-STRING LogDat::write()
+std::string LogDat::write()
 {
   return d->write();
 }
@@ -3935,22 +3933,22 @@ void LogDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING LogDat::name() const
+std::string LogDat::name() const
 {
   return d->name;
 }
 
-void LogDat::setName(const STRING name)
+void LogDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING LogDat::desc() const
+std::string LogDat::desc() const
 {
   return d->desc;
 }
 
-void LogDat::setDesc(const STRING desc)
+void LogDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3985,33 +3983,33 @@ void LogDat::setUdef(const int udef)
   d->udef = udef;
 }
 
-STRING LogDat::header() const
+std::string LogDat::header() const
 {
   return d->header;
 }
 
-void LogDat::setHeader(const STRING header)
+void LogDat::setHeader(const std::string header)
 {
   d->header = header;
 }
 
-STRING LogDat::units() const
+std::string LogDat::units() const
 {
   return d->units;
 }
 
-void LogDat::setUnits(const STRING units)
+void LogDat::setUnits(const std::string units)
 {
   d->units = units;
 }
 
 
-ModDat::ModDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale)
+ModDat::ModDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX offset,RX scale)
 {
   d = new ModDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,offset,scale);
 }
 
-STRING ModDat::write()
+std::string ModDat::write()
 {
   return d->write();
 }
@@ -4086,22 +4084,22 @@ void ModDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING ModDat::name() const
+std::string ModDat::name() const
 {
   return d->name;
 }
 
-void ModDat::setName(const STRING name)
+void ModDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING ModDat::desc() const
+std::string ModDat::desc() const
 {
   return d->desc;
 }
 
-void ModDat::setDesc(const STRING desc)
+void ModDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4127,12 +4125,12 @@ void ModDat::setScale(const RX scale)
 }
 
 
-HysDat::HysDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX slack,RX slope,RX oldsig)
+HysDat::HysDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX slack,RX slope,RX oldsig)
 {
   d = new HysDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,slack,slope,oldsig);
 }
 
-STRING HysDat::write()
+std::string HysDat::write()
 {
   return d->write();
 }
@@ -4207,22 +4205,22 @@ void HysDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING HysDat::name() const
+std::string HysDat::name() const
 {
   return d->name;
 }
 
-void HysDat::setName(const STRING name)
+void HysDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING HysDat::desc() const
+std::string HysDat::desc() const
 {
   return d->desc;
 }
 
-void HysDat::setDesc(const STRING desc)
+void HysDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4258,12 +4256,12 @@ void HysDat::setOldsig(const RX oldsig)
 }
 
 
-DlsDat::DlsDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int dsincr,int dsdecr)
+DlsDat::DlsDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int dsincr,int dsdecr)
 {
   d = new DlsDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,dsincr,dsdecr);
 }
 
-STRING DlsDat::write()
+std::string DlsDat::write()
 {
   return d->write();
 }
@@ -4338,22 +4336,22 @@ void DlsDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING DlsDat::name() const
+std::string DlsDat::name() const
 {
   return d->name;
 }
 
-void DlsDat::setName(const STRING name)
+void DlsDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING DlsDat::desc() const
+std::string DlsDat::desc() const
 {
   return d->desc;
 }
 
-void DlsDat::setDesc(const STRING desc)
+void DlsDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4379,12 +4377,12 @@ void DlsDat::setDsdecr(const int dsdecr)
 }
 
 
-DlxDat::DlxDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tauincr,int taudecr)
+DlxDat::DlxDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int tauincr,int taudecr)
 {
   d = new DlxDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,tauincr,taudecr);
 }
 
-STRING DlxDat::write()
+std::string DlxDat::write()
 {
   return d->write();
 }
@@ -4459,22 +4457,22 @@ void DlxDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING DlxDat::name() const
+std::string DlxDat::name() const
 {
   return d->name;
 }
 
-void DlxDat::setName(const STRING name)
+void DlxDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING DlxDat::desc() const
+std::string DlxDat::desc() const
 {
   return d->desc;
 }
 
-void DlxDat::setDesc(const STRING desc)
+void DlxDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4500,12 +4498,12 @@ void DlxDat::setTaudecr(const int taudecr)
 }
 
 
-RavDat::RavDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tspan)
+RavDat::RavDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int tspan)
 {
   d = new RavDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,tspan);
 }
 
-STRING RavDat::write()
+std::string RavDat::write()
 {
   return d->write();
 }
@@ -4580,22 +4578,22 @@ void RavDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING RavDat::name() const
+std::string RavDat::name() const
 {
   return d->name;
 }
 
-void RavDat::setName(const STRING name)
+void RavDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING RavDat::desc() const
+std::string RavDat::desc() const
 {
   return d->desc;
 }
 
-void RavDat::setDesc(const STRING desc)
+void RavDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4611,12 +4609,12 @@ void RavDat::setTspan(const int tspan)
 }
 
 
-SumAvg::SumAvg(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,std::vector<int> pc)
+SumAvg::SumAvg(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,std::vector<int> pc)
 {
   d = new SumAvgPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,pc);
 }
 
-STRING SumAvg::write()
+std::string SumAvg::write()
 {
   return d->write(dataType());
 }
@@ -4691,22 +4689,22 @@ void SumAvg::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING SumAvg::name() const
+std::string SumAvg::name() const
 {
   return d->name;
 }
 
-void SumAvg::setName(const STRING name)
+void SumAvg::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING SumAvg::desc() const
+std::string SumAvg::desc() const
 {
   return d->desc;
 }
 
-void SumAvg::setDesc(const STRING desc)
+void SumAvg::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4722,12 +4720,12 @@ void SumAvg::setPc(const std::vector<int> pc)
 }
 
 
-BanDat::BanDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX band)
+BanDat::BanDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX band)
 {
   d = new BanDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,band);
 }
 
-STRING BanDat::write()
+std::string BanDat::write()
 {
   return d->write(dataType());
 }
@@ -4802,22 +4800,22 @@ void BanDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING BanDat::name() const
+std::string BanDat::name() const
 {
   return d->name;
 }
 
-void BanDat::setName(const STRING name)
+void BanDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING BanDat::desc() const
+std::string BanDat::desc() const
 {
   return d->desc;
 }
 
-void BanDat::setDesc(const STRING desc)
+void BanDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4833,12 +4831,12 @@ void BanDat::setBand(const RX band)
 }
 
 
-PcDat::PcDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp)
+PcDat::PcDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX kp)
 {
   d = new PcDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,kp);
 }
 
-STRING PcDat::write()
+std::string PcDat::write()
 {
   return d->write();
 }
@@ -4913,22 +4911,22 @@ void PcDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING PcDat::name() const
+std::string PcDat::name() const
 {
   return d->name;
 }
 
-void PcDat::setName(const STRING name)
+void PcDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PcDat::desc() const
+std::string PcDat::desc() const
 {
   return d->desc;
 }
 
-void PcDat::setDesc(const STRING desc)
+void PcDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4944,12 +4942,12 @@ void PcDat::setKp(const RX kp)
 }
 
 
-PicDat::PicDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp,RX ki,RX oldsig,RX olderr)
+PicDat::PicDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,RX kp,RX ki,RX oldsig,RX olderr)
 {
   d = new PicDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,kp,ki,oldsig,olderr);
 }
 
-STRING PicDat::write()
+std::string PicDat::write()
 {
   return d->write();
 }
@@ -5024,22 +5022,22 @@ void PicDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING PicDat::name() const
+std::string PicDat::name() const
 {
   return d->name;
 }
 
-void PicDat::setName(const STRING name)
+void PicDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PicDat::desc() const
+std::string PicDat::desc() const
 {
   return d->desc;
 }
 
-void PicDat::setDesc(const STRING desc)
+void PicDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5085,12 +5083,12 @@ void PicDat::setOlderr(const RX olderr)
 }
 
 
-SupDat::SupDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int def,int se,int in,int out)
+SupDat::SupDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,int def,int se,int in,int out)
 {
   d = new SupDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,def,se,in,out);
 }
 
-STRING SupDat::write()
+std::string SupDat::write()
 {
   return d->write();
 }
@@ -5165,22 +5163,22 @@ void SupDat::setN2(const int n2)
   d->n2 = n2;
 }
 
-STRING SupDat::name() const
+std::string SupDat::name() const
 {
   return d->name;
 }
 
-void SupDat::setName(const STRING name)
+void SupDat::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING SupDat::desc() const
+std::string SupDat::desc() const
 {
   return d->desc;
 }
 
-void SupDat::setDesc(const STRING desc)
+void SupDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5226,9 +5224,9 @@ void SupDat::setOut(const int out)
 }
 
 
-AirflowElement::Type AirflowElement::convertTag(STRING string)
+AirflowElement::Type AirflowElement::convertTag(std::string string)
 {
-  STRING tags[28] = {STRING("plr_orfc"),STRING("plr_leak1"),STRING("plr_leak2"),STRING("plr_leak3"),STRING("plr_conn"),STRING("plr_qcn"),STRING("plr_fcn"),STRING("plr_test1"),STRING("plr_test2"),STRING("plr_crack"),STRING("plr_stair"),STRING("plr_shaft"),STRING("plr_bdq"),STRING("plr_bdf"),STRING("qfr_qab"),STRING("qfr_fab"),STRING("qfr_crack"),STRING("qfr_test2"),STRING("dor_door"),STRING("dor_pl2"),STRING("fan_cmf"),STRING("fan_cvf"),STRING("fan_fan"),STRING("csf_fsp"),STRING("csf_qsp"),STRING("csf_psf"),STRING("csf_psq"),STRING("sup_afe")};
+  std::string tags[28] = {std::string("plr_orfc"),std::string("plr_leak1"),std::string("plr_leak2"),std::string("plr_leak3"),std::string("plr_conn"),std::string("plr_qcn"),std::string("plr_fcn"),std::string("plr_test1"),std::string("plr_test2"),std::string("plr_crack"),std::string("plr_stair"),std::string("plr_shaft"),std::string("plr_bdq"),std::string("plr_bdf"),std::string("qfr_qab"),std::string("qfr_fab"),std::string("qfr_crack"),std::string("qfr_test2"),std::string("dor_door"),std::string("dor_pl2"),std::string("fan_cmf"),std::string("fan_cvf"),std::string("fan_fan"),std::string("csf_fsp"),std::string("csf_qsp"),std::string("csf_psf"),std::string("csf_psq"),std::string("sup_afe")};
   AirflowElement::Type type[28] = {PL_ORFC,PL_LEAK1,PL_LEAK2,PL_LEAK3,PL_CONN,PL_QCN,PL_FCN,PL_TEST1,PL_TEST2,PL_CRACK,PL_STAIR,PL_SHAFT,PL_BDQ,PL_BDF,QFR_QAB,QFR_QAF,QFR_CRACK,QFR_TEST2,DR_DOOR,DR_PL2,FN_CMF,FN_CVF,FN_FAN,CS_FSP,CS_QSP,CS_PSF,CS_PSQ,AF_SUP};
   for(int i=0;i<28;i++)
     if(string==tags[i])
@@ -5241,9 +5239,9 @@ AirflowElement* AirflowElement::readElement(Reader &input)
   AirflowElement *out=NULL;
   int nr = input.read<int>(FILELINE);
   int icon = input.read<int>(FILELINE);
-  STRING dataType = input.readString(FILELINE);
-  STRING name = input.readString(FILELINE);
-  STRING desc = input.readLine(FILELINE);
+  std::string dataType = input.readString(FILELINE);
+  std::string name = input.readString(FILELINE);
+  std::string desc = input.readLine(FILELINE);
   int kind = convertTag(dataType);
   switch(kind)
   {
@@ -5445,25 +5443,21 @@ AirflowElement* AirflowElement::readElement(Reader &input)
     }
   case AirflowElement::UNKNOWN:
   default:
-#ifdef STD_STRING
-    STRING mesg = "Unknown airflow element type '" + dataType + "' at line " + TO_STRING(input.lineNumber());
-#else
-    QString mesg = "Unknown airflow element type '" + dataType + "' at line " + TO_STRING(input.lineNumber());
-#endif
+    std::string mesg = "Unknown airflow element type '" + dataType + "' at line " + openstudio::toString(input.lineNumber());
 #ifndef NOFILELINE
     mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
 #endif
-    ERROR(mesg);
+    LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg);
   }
   return out;
 }
 
-PlrOrf::PlrOrf(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D)
+PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D)
 {
   d = new PlrOrfPrivate(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D);
 }
 
-STRING PlrOrf::write()
+std::string PlrOrf::write()
 {
   return d->write();
 }
@@ -5498,22 +5492,22 @@ void PlrOrf::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrOrf::name() const
+std::string PlrOrf::name() const
 {
   return d->name;
 }
 
-void PlrOrf::setName(const STRING name)
+void PlrOrf::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrOrf::desc() const
+std::string PlrOrf::desc() const
 {
   return d->desc;
 }
 
-void PlrOrf::setDesc(const STRING desc)
+void PlrOrf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5609,12 +5603,12 @@ void PlrOrf::setU_D(const int u_D)
 }
 
 
-PlrLeak::PlrLeak(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP)
+PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP)
 {
   d = new PlrLeakPrivate(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP);
 }
 
-STRING PlrLeak::write()
+std::string PlrLeak::write()
 {
   return d->write(dataType());
 }
@@ -5649,27 +5643,27 @@ void PlrLeak::setIcon(const int icon)
   d->icon = icon;
 }
 
-//STRING PlrLeak::dataType() const
+//std::string PlrLeak::dataType() const
 //{
 //    return d->dataType;
 //}
 
-STRING PlrLeak::name() const
+std::string PlrLeak::name() const
 {
   return d->name;
 }
 
-void PlrLeak::setName(const STRING name)
+void PlrLeak::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrLeak::desc() const
+std::string PlrLeak::desc() const
 {
   return d->desc;
 }
 
-void PlrLeak::setDesc(const STRING desc)
+void PlrLeak::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5795,12 +5789,12 @@ void PlrLeak::setU_dP(const int u_dP)
 }
 
 
-PlrConn::PlrConn(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A)
+PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A)
 {
   d = new PlrConnPrivate(nr,icon,name,desc,lam,turb,expt,area,coef,u_A);
 }
 
-STRING PlrConn::write()
+std::string PlrConn::write()
 {
   return d->write();
 }
@@ -5835,22 +5829,22 @@ void PlrConn::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrConn::name() const
+std::string PlrConn::name() const
 {
   return d->name;
 }
 
-void PlrConn::setName(const STRING name)
+void PlrConn::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrConn::desc() const
+std::string PlrConn::desc() const
 {
   return d->desc;
 }
 
-void PlrConn::setDesc(const STRING desc)
+void PlrConn::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5916,12 +5910,12 @@ void PlrConn::setU_A(const int u_A)
 }
 
 
-PlrQcn::PlrQcn(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt)
+PlrQcn::PlrQcn(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt)
 {
   d = new PlrQcnPrivate(nr,icon,name,desc,lam,turb,expt);
 }
 
-STRING PlrQcn::write()
+std::string PlrQcn::write()
 {
   return d->write();
 }
@@ -5956,22 +5950,22 @@ void PlrQcn::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrQcn::name() const
+std::string PlrQcn::name() const
 {
   return d->name;
 }
 
-void PlrQcn::setName(const STRING name)
+void PlrQcn::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrQcn::desc() const
+std::string PlrQcn::desc() const
 {
   return d->desc;
 }
 
-void PlrQcn::setDesc(const STRING desc)
+void PlrQcn::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6007,12 +6001,12 @@ void PlrQcn::setExpt(const RX expt)
 }
 
 
-PlrFcn::PlrFcn(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt)
+PlrFcn::PlrFcn(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt)
 {
   d = new PlrFcnPrivate(nr,icon,name,desc,lam,turb,expt);
 }
 
-STRING PlrFcn::write()
+std::string PlrFcn::write()
 {
   return d->write();
 }
@@ -6047,22 +6041,22 @@ void PlrFcn::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrFcn::name() const
+std::string PlrFcn::name() const
 {
   return d->name;
 }
 
-void PlrFcn::setName(const STRING name)
+void PlrFcn::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrFcn::desc() const
+std::string PlrFcn::desc() const
 {
   return d->desc;
 }
 
-void PlrFcn::setDesc(const STRING desc)
+void PlrFcn::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6098,12 +6092,12 @@ void PlrFcn::setExpt(const RX expt)
 }
 
 
-PlrTest1::PlrTest1(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F)
+PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F)
 {
   d = new PlrTest1Private(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F);
 }
 
-STRING PlrTest1::write()
+std::string PlrTest1::write()
 {
   return d->write();
 }
@@ -6138,22 +6132,22 @@ void PlrTest1::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrTest1::name() const
+std::string PlrTest1::name() const
 {
   return d->name;
 }
 
-void PlrTest1::setName(const STRING name)
+void PlrTest1::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrTest1::desc() const
+std::string PlrTest1::desc() const
 {
   return d->desc;
 }
 
-void PlrTest1::setDesc(const STRING desc)
+void PlrTest1::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6229,12 +6223,12 @@ void PlrTest1::setU_F(const int u_F)
 }
 
 
-PlrTest2::PlrTest2(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
+PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
   d = new PlrTest2Private(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
-STRING PlrTest2::write()
+std::string PlrTest2::write()
 {
   return d->write();
 }
@@ -6269,22 +6263,22 @@ void PlrTest2::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrTest2::name() const
+std::string PlrTest2::name() const
 {
   return d->name;
 }
 
-void PlrTest2::setName(const STRING name)
+void PlrTest2::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrTest2::desc() const
+std::string PlrTest2::desc() const
 {
   return d->desc;
 }
 
-void PlrTest2::setDesc(const STRING desc)
+void PlrTest2::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6400,12 +6394,12 @@ void PlrTest2::setU_F2(const int u_F2)
 }
 
 
-PlrCrack::PlrCrack(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W)
+PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W)
 {
   d = new PlrCrackPrivate(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W);
 }
 
-STRING PlrCrack::write()
+std::string PlrCrack::write()
 {
   return d->write();
 }
@@ -6440,22 +6434,22 @@ void PlrCrack::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrCrack::name() const
+std::string PlrCrack::name() const
 {
   return d->name;
 }
 
-void PlrCrack::setName(const STRING name)
+void PlrCrack::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrCrack::desc() const
+std::string PlrCrack::desc() const
 {
   return d->desc;
 }
 
-void PlrCrack::setDesc(const STRING desc)
+void PlrCrack::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6531,12 +6525,12 @@ void PlrCrack::setU_W(const int u_W)
 }
 
 
-PlrStair::PlrStair(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D)
+PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D)
 {
   d = new PlrStairPrivate(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D);
 }
 
-STRING PlrStair::write()
+std::string PlrStair::write()
 {
   return d->write();
 }
@@ -6571,22 +6565,22 @@ void PlrStair::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrStair::name() const
+std::string PlrStair::name() const
 {
   return d->name;
 }
 
-void PlrStair::setName(const STRING name)
+void PlrStair::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrStair::desc() const
+std::string PlrStair::desc() const
 {
   return d->desc;
 }
 
-void PlrStair::setDesc(const STRING desc)
+void PlrStair::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6682,12 +6676,12 @@ void PlrStair::setU_D(const int u_D)
 }
 
 
-PlrShaft::PlrShaft(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R)
+PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R)
 {
   d = new PlrShaftPrivate(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R);
 }
 
-STRING PlrShaft::write()
+std::string PlrShaft::write()
 {
   return d->write();
 }
@@ -6722,22 +6716,22 @@ void PlrShaft::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrShaft::name() const
+std::string PlrShaft::name() const
 {
   return d->name;
 }
 
-void PlrShaft::setName(const STRING name)
+void PlrShaft::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrShaft::desc() const
+std::string PlrShaft::desc() const
 {
   return d->desc;
 }
 
-void PlrShaft::setDesc(const STRING desc)
+void PlrShaft::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6853,12 +6847,12 @@ void PlrShaft::setU_R(const int u_R)
 }
 
 
-PlrBdq::PlrBdq(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
+PlrBdq::PlrBdq(int nr,int icon,std::string name,std::string desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
 {
   d = new PlrBdqPrivate(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
 }
 
-STRING PlrBdq::write()
+std::string PlrBdq::write()
 {
   return d->write();
 }
@@ -6893,22 +6887,22 @@ void PlrBdq::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrBdq::name() const
+std::string PlrBdq::name() const
 {
   return d->name;
 }
 
-void PlrBdq::setName(const STRING name)
+void PlrBdq::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrBdq::desc() const
+std::string PlrBdq::desc() const
 {
   return d->desc;
 }
 
-void PlrBdq::setDesc(const STRING desc)
+void PlrBdq::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6964,12 +6958,12 @@ void PlrBdq::setXn(const RX xn)
 }
 
 
-PlrBdf::PlrBdf(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
+PlrBdf::PlrBdf(int nr,int icon,std::string name,std::string desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
 {
   d = new PlrBdfPrivate(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
 }
 
-STRING PlrBdf::write()
+std::string PlrBdf::write()
 {
   return d->write();
 }
@@ -7004,22 +6998,22 @@ void PlrBdf::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING PlrBdf::name() const
+std::string PlrBdf::name() const
 {
   return d->name;
 }
 
-void PlrBdf::setName(const STRING name)
+void PlrBdf::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING PlrBdf::desc() const
+std::string PlrBdf::desc() const
 {
   return d->desc;
 }
 
-void PlrBdf::setDesc(const STRING desc)
+void PlrBdf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7075,12 +7069,12 @@ void PlrBdf::setXn(const RX xn)
 }
 
 
-QfrQab::QfrQab(int nr,int icon,STRING name,STRING desc,RX a,RX b)
+QfrQab::QfrQab(int nr,int icon,std::string name,std::string desc,RX a,RX b)
 {
   d = new QfrQabPrivate(nr,icon,name,desc,a,b);
 }
 
-STRING QfrQab::write()
+std::string QfrQab::write()
 {
   return d->write();
 }
@@ -7115,22 +7109,22 @@ void QfrQab::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING QfrQab::name() const
+std::string QfrQab::name() const
 {
   return d->name;
 }
 
-void QfrQab::setName(const STRING name)
+void QfrQab::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING QfrQab::desc() const
+std::string QfrQab::desc() const
 {
   return d->desc;
 }
 
-void QfrQab::setDesc(const STRING desc)
+void QfrQab::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7156,12 +7150,12 @@ void QfrQab::setB(const RX b)
 }
 
 
-QfrFab::QfrFab(int nr,int icon,STRING name,STRING desc,RX a,RX b)
+QfrFab::QfrFab(int nr,int icon,std::string name,std::string desc,RX a,RX b)
 {
   d = new QfrFabPrivate(nr,icon,name,desc,a,b);
 }
 
-STRING QfrFab::write()
+std::string QfrFab::write()
 {
   return d->write();
 }
@@ -7196,22 +7190,22 @@ void QfrFab::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING QfrFab::name() const
+std::string QfrFab::name() const
 {
   return d->name;
 }
 
-void QfrFab::setName(const STRING name)
+void QfrFab::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING QfrFab::desc() const
+std::string QfrFab::desc() const
 {
   return d->desc;
 }
 
-void QfrFab::setDesc(const STRING desc)
+void QfrFab::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7237,12 +7231,12 @@ void QfrFab::setB(const RX b)
 }
 
 
-QfrCrack::QfrCrack(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D)
+QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D)
 {
   d = new QfrCrackPrivate(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D);
 }
 
-STRING QfrCrack::write()
+std::string QfrCrack::write()
 {
   return d->write();
 }
@@ -7277,22 +7271,22 @@ void QfrCrack::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING QfrCrack::name() const
+std::string QfrCrack::name() const
 {
   return d->name;
 }
 
-void QfrCrack::setName(const STRING name)
+void QfrCrack::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING QfrCrack::desc() const
+std::string QfrCrack::desc() const
 {
   return d->desc;
 }
 
-void QfrCrack::setDesc(const STRING desc)
+void QfrCrack::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7388,12 +7382,12 @@ void QfrCrack::setU_D(const int u_D)
 }
 
 
-QfrTest2::QfrTest2(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
+QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
   d = new QfrTest2Private(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
-STRING QfrTest2::write()
+std::string QfrTest2::write()
 {
   return d->write();
 }
@@ -7428,22 +7422,22 @@ void QfrTest2::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING QfrTest2::name() const
+std::string QfrTest2::name() const
 {
   return d->name;
 }
 
-void QfrTest2::setName(const STRING name)
+void QfrTest2::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING QfrTest2::desc() const
+std::string QfrTest2::desc() const
 {
   return d->desc;
 }
 
-void QfrTest2::setDesc(const STRING desc)
+void QfrTest2::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7549,12 +7543,12 @@ void QfrTest2::setU_F2(const int u_F2)
 }
 
 
-AfeDor::AfeDor(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W)
+AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W)
 {
   d = new AfeDorPrivate(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W);
 }
 
-STRING AfeDor::write()
+std::string AfeDor::write()
 {
   return d->write();
 }
@@ -7589,22 +7583,22 @@ void AfeDor::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING AfeDor::name() const
+std::string AfeDor::name() const
 {
   return d->name;
 }
 
-void AfeDor::setName(const STRING name)
+void AfeDor::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING AfeDor::desc() const
+std::string AfeDor::desc() const
 {
   return d->desc;
 }
 
-void AfeDor::setDesc(const STRING desc)
+void AfeDor::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7710,12 +7704,12 @@ void AfeDor::setU_W(const int u_W)
 }
 
 
-DrPl2::DrPl2(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W)
+DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W)
 {
   d = new DrPl2Private(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W);
 }
 
-STRING DrPl2::write()
+std::string DrPl2::write()
 {
   return d->write();
 }
@@ -7750,22 +7744,22 @@ void DrPl2::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING DrPl2::name() const
+std::string DrPl2::name() const
 {
   return d->name;
 }
 
-void DrPl2::setName(const STRING name)
+void DrPl2::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING DrPl2::desc() const
+std::string DrPl2::desc() const
 {
   return d->desc;
 }
 
-void DrPl2::setDesc(const STRING desc)
+void DrPl2::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7861,12 +7855,12 @@ void DrPl2::setU_W(const int u_W)
 }
 
 
-AfeCmf::AfeCmf(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F)
+AfeCmf::AfeCmf(int nr,int icon,std::string name,std::string desc,RX Flow,int u_F)
 {
   d = new AfeCmfPrivate(nr,icon,name,desc,Flow,u_F);
 }
 
-STRING AfeCmf::write()
+std::string AfeCmf::write()
 {
   return d->write();
 }
@@ -7901,22 +7895,22 @@ void AfeCmf::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING AfeCmf::name() const
+std::string AfeCmf::name() const
 {
   return d->name;
 }
 
-void AfeCmf::setName(const STRING name)
+void AfeCmf::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING AfeCmf::desc() const
+std::string AfeCmf::desc() const
 {
   return d->desc;
 }
 
-void AfeCmf::setDesc(const STRING desc)
+void AfeCmf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7942,12 +7936,12 @@ void AfeCmf::setU_F(const int u_F)
 }
 
 
-AfeCvf::AfeCvf(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F)
+AfeCvf::AfeCvf(int nr,int icon,std::string name,std::string desc,RX Flow,int u_F)
 {
   d = new AfeCvfPrivate(nr,icon,name,desc,Flow,u_F);
 }
 
-STRING AfeCvf::write()
+std::string AfeCvf::write()
 {
   return d->write();
 }
@@ -7982,22 +7976,22 @@ void AfeCvf::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING AfeCvf::name() const
+std::string AfeCvf::name() const
 {
   return d->name;
 }
 
-void AfeCvf::setName(const STRING name)
+void AfeCvf::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING AfeCvf::desc() const
+std::string AfeCvf::desc() const
 {
   return d->desc;
 }
 
-void AfeCvf::setDesc(const STRING desc)
+void AfeCvf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -8023,12 +8017,12 @@ void AfeCvf::setU_F(const int u_F)
 }
 
 
-AfeFan::AfeFan(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data)
+AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data)
 {
   d = new AfeFanPrivate(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data);
 }
 
-STRING AfeFan::write()
+std::string AfeFan::write()
 {
   return d->write();
 }
@@ -8063,22 +8057,22 @@ void AfeFan::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING AfeFan::name() const
+std::string AfeFan::name() const
 {
   return d->name;
 }
 
-void AfeFan::setName(const STRING name)
+void AfeFan::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING AfeFan::desc() const
+std::string AfeFan::desc() const
 {
   return d->desc;
 }
 
-void AfeFan::setDesc(const STRING desc)
+void AfeFan::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -8194,12 +8188,12 @@ void AfeFan::setData(const std::vector<FanDataPoint> data)
 }
 
 
-AfeCsf::AfeCsf(int nr,int icon,STRING name,STRING desc,int u_x,int u_y,std::vector<DataPoint> data)
+AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data)
 {
   d = new AfeCsfPrivate(nr,icon,name,desc,u_x,u_y,data);
 }
 
-STRING AfeCsf::write()
+std::string AfeCsf::write()
 {
   return d->write(dataType());
 }
@@ -8234,22 +8228,22 @@ void AfeCsf::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING AfeCsf::name() const
+std::string AfeCsf::name() const
 {
   return d->name;
 }
 
-void AfeCsf::setName(const STRING name)
+void AfeCsf::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING AfeCsf::desc() const
+std::string AfeCsf::desc() const
 {
   return d->desc;
 }
 
-void AfeCsf::setDesc(const STRING desc)
+void AfeCsf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -8285,12 +8279,12 @@ void AfeCsf::setData(const std::vector<DataPoint> data)
 }
 
 
-AfeSup::AfeSup(int nr,int icon,STRING name,STRING desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements)
+AfeSup::AfeSup(int nr,int icon,std::string name,std::string desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements)
 {
   d = new AfeSupPrivate(nr,icon,name,desc,sched,u_H,subelements);
 }
 
-STRING AfeSup::write()
+std::string AfeSup::write()
 {
   return d->write();
 }
@@ -8325,22 +8319,22 @@ void AfeSup::setIcon(const int icon)
   d->icon = icon;
 }
 
-STRING AfeSup::name() const
+std::string AfeSup::name() const
 {
   return d->name;
 }
 
-void AfeSup::setName(const STRING name)
+void AfeSup::setName(const std::string name)
 {
   d->name = name;
 }
 
-STRING AfeSup::desc() const
+std::string AfeSup::desc() const
 {
   return d->desc;
 }
 
-void AfeSup::setDesc(const STRING desc)
+void AfeSup::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
