@@ -27,7 +27,7 @@
 #include <utilities/time/Time.hpp>
 #include <utilities/time/Date.hpp>
 #include <utilities/time/DateTime.hpp>
-#include <Utilities/data/TimeSeries.hpp>
+#include <utilities/data/TimeSeries.hpp>
 
 namespace openstudio{
 
