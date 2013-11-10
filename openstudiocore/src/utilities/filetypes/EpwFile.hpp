@@ -27,13 +27,46 @@
 #include <utilities/time/Time.hpp>
 #include <utilities/time/Date.hpp>
 #include <utilities/time/DateTime.hpp>
+#include <utilities/data/TimeSeries.hpp>
 
 namespace openstudio{
 
 // forward declaration
 class IdfObject;
 
-/** WeatherStringData is one line from the EPW file. All floating point numbers are stored as strings,
+OPENSTUDIO_ENUM(EpwDataField,
+  ((DryBulbTemperature)(Dry Bulb Temperature)(6))
+  ((DewPointTemperature)(Dew Point Temperature))
+  ((RelativeHumidity)(Relative Humidity))
+  ((AtmosphericStationPressure)(Atmospheric Station Pressure))
+  ((ExtraterrestrialHorizontalRadiation)(Extraterrestrial Horizontal Radiation))
+  ((ExtraterrestrialDirectNormalRadiation)(Extraterrestrial Direct Normal Radiation))
+  ((HorizontalInfraredRadiationIntensity)(Horizontal Infrared Radiation Intensity))
+  ((GlobalHorizontalRadiation)(Global Horizontal Radiation))
+  ((DirectNormalRadiation)(Direct Normal Radiation))
+  ((DiffuseHorizontalRadiation)(Diffuse Horizontal Radiation))
+  ((GlobalHorizontalIlluminance)(Global Horizontal Illuminance))
+  ((DirectNormalIlluminance)(Direct Normal Illuminance))
+  ((DiffuseHorizontalIlluminance)(Diffuse Horizontal Illuminance))
+  ((ZenithLuminance)(Zenith Luminance))
+  ((WindDirection)(Wind Direction))
+  ((WindSpeed)(Wind Speed))
+  ((TotalSkyCover)(Total Sky Cover))
+  ((OpaqueSkyCover)(Opaque Sky Cover))
+  ((Visibility))
+  ((CeilingHeight)(Ceiling Height))
+  ((PresentWeatherObservation)(Present Weather Observation))
+  ((PresentWeatherCodes)(Present Weather Codes))
+  ((PrecipitableWater)(Precipitable Water))
+  ((AerosolOpticalDepth)(Aerosol Optical Depth))
+  ((SnowDepth)(Snow Depth))
+  ((DaysSinceLastSnowfall)(Days Since Last Snowfall))
+  ((Albedo))
+  ((LiquidPrecipitationDepth)(Liquid Precipitation Depth))
+  ((LiquidPrecipitationQuantity)(Liquid Precipitation Quantity))
+);
+
+/** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
 * but are checked as numbers.
 */
 class UTILITIES_API EpwDataPoint
@@ -50,6 +83,12 @@ public:
     double visibility=9999,double ceilingHeight=99999,int presentWeatherObservation=0,int presentWeatherCodes=0,
     double precipitableWater=999,double aerosolOpticalDepth=.999,double snowDepth=999,double daysSinceLastSnowfall=99,
     double albedo=999,double liquidPrecipitationDepth=999,double liquidPrecipitationQuantity=99);
+  // Static
+  static std::string unitsByName(std::string name);
+  static std::string units(EpwDataField field);
+  // Data retrieval
+  boost::optional<double> fieldByName(std::string name);
+  boost::optional<double> field(EpwDataField id);
   // Conversion
   std::string toWthString();
   // One billion getters and setters
@@ -265,6 +304,10 @@ public:
 
   /// get the weather data
   std::vector<EpwDataPoint> data() const;
+
+  /// get a time series of a particular weather field
+  // This will probably need to include the period at some point, but for now just dump everything into a time series
+  boost::optional<TimeSeries> timeSeries(std::string field);
 
   /// export to CONTAM WTH file
   bool translateToWth(openstudio::path path,std::string description=std::string()) const;

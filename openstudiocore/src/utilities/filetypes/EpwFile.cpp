@@ -31,6 +31,8 @@
 #include <QFile>
 #include <QTextStream>
 
+#include <cmath>
+
 namespace openstudio{
 
 EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
@@ -135,6 +137,248 @@ EpwDataPoint::EpwDataPoint(std::string line)
   setLiquidPrecipitationQuantity(list[34].toStdString());
 }
 
+std::string EpwDataPoint::unitsByName(std::string name)
+{
+  EpwDataField id;
+  try
+  {
+    id = EpwDataField(name);
+  }
+  catch(...)
+  {
+    // Could do a warning message here
+    return std::string();
+  }
+  return units(id);
+}
+
+std::string EpwDataPoint::units(EpwDataField field)
+{
+  std::string string;
+  switch(field.value())
+  {
+  case EpwDataField::DryBulbTemperature:
+    string = "C";
+    break;
+  case EpwDataField::DewPointTemperature:
+    string = "C";
+    break;
+  case EpwDataField::RelativeHumidity:
+    //string = "None";
+    break;
+  case EpwDataField::AtmosphericStationPressure:
+    string = "Pa";
+    break;
+  case EpwDataField::ExtraterrestrialHorizontalRadiation:
+    string = "Wh/m2";
+    break;
+  case EpwDataField::ExtraterrestrialDirectNormalRadiation:
+    string = "Wh/m2";
+    break;
+  case EpwDataField::HorizontalInfraredRadiationIntensity:
+    string = "Wh/m2";
+    break;
+  case EpwDataField::GlobalHorizontalRadiation:
+    string = "Wh/m2";
+    break;
+  case EpwDataField::DirectNormalRadiation:
+    string = "Wh/m2";
+    break;
+  case EpwDataField::DiffuseHorizontalRadiation:
+    string = "Wh/m2";
+    break;
+  case EpwDataField::GlobalHorizontalIlluminance:
+    string = "lux";
+    break;
+  case EpwDataField::DirectNormalIlluminance:
+    string = "lux";
+    break;
+  case EpwDataField::DiffuseHorizontalIlluminance:
+    string = "lux";
+    break;
+  case EpwDataField::ZenithLuminance:
+    string = "Cd/m2";
+    break;
+  case EpwDataField::WindDirection:
+    string = "degrees";
+    break;
+  case EpwDataField::WindSpeed:
+    string = "m/s";
+    break;
+  case EpwDataField::TotalSkyCover:
+    //string = "None";
+    break;
+  case EpwDataField::OpaqueSkyCover:
+    //string = "None";
+    break;
+  case EpwDataField::Visibility:
+    string = "km";
+    break;
+  case EpwDataField::CeilingHeight:
+    string = "m";
+    break;
+  case EpwDataField::PresentWeatherObservation:
+    //string = "None";
+    break;
+  case EpwDataField::PresentWeatherCodes:
+    //string = "None";
+    break;
+  case EpwDataField::PrecipitableWater:
+    string = "mm";
+    break;
+  case EpwDataField::AerosolOpticalDepth:
+    string = "thousandths";
+    break;
+  case EpwDataField::SnowDepth:
+    string = "cm";
+    break;
+  case EpwDataField::DaysSinceLastSnowfall:
+    //string = "None";
+    break;
+  case EpwDataField::Albedo:
+    //string = "None";
+    break;
+  case EpwDataField::LiquidPrecipitationDepth:
+    string = "mm";
+    break;
+  case EpwDataField::LiquidPrecipitationQuantity:
+    string = "hr";
+    break;
+  }
+  return string;
+}
+
+boost::optional<double> EpwDataPoint::fieldByName(std::string name)
+{
+  EpwDataField id;
+  try
+  {
+    id = EpwDataField(name);
+  }
+  catch(...)
+  {
+    // Could do a warning message here
+    return boost::optional<double>();
+  }
+  return field(id);
+}
+
+boost::optional<double> EpwDataPoint::field(EpwDataField id)
+{
+  boost::optional<int> ivalue;
+  switch(id.value())
+  {
+  case EpwDataField::DryBulbTemperature:
+    return dryBulbTemperature();
+    break;
+  case EpwDataField::DewPointTemperature:
+    return dewPointTemperature();
+    break;
+  case EpwDataField::RelativeHumidity:
+    return relativeHumidity();
+    break;
+  case EpwDataField::AtmosphericStationPressure:
+    return atmosphericStationPressure();
+    break;
+  case EpwDataField::ExtraterrestrialHorizontalRadiation:
+    return extraterrestrialHorizontalRadiation();
+    break;
+  case EpwDataField::ExtraterrestrialDirectNormalRadiation:
+    return extraterrestrialDirectNormalRadiation();
+    break;
+  case EpwDataField::HorizontalInfraredRadiationIntensity:
+    return horizontalInfraredRadiationIntensity();
+    break;
+  case EpwDataField::GlobalHorizontalRadiation:
+    return globalHorizontalRadiation();
+    break;
+  case EpwDataField::DirectNormalRadiation:
+    return directNormalRadiation();
+    break;
+  case EpwDataField::DiffuseHorizontalRadiation:
+    return diffuseHorizontalRadiation();
+    break;
+  case EpwDataField::GlobalHorizontalIlluminance:
+    return globalHorizontalIlluminance();
+    break;
+  case EpwDataField::DirectNormalIlluminance:
+    return directNormalIlluminance();
+    break;
+  case EpwDataField::DiffuseHorizontalIlluminance:
+    return diffuseHorizontalIlluminance();
+    break;
+  case EpwDataField::ZenithLuminance:
+    return zenithLuminance();
+    break;
+  case EpwDataField::WindDirection:
+    return windDirection();
+    break;
+  case EpwDataField::WindSpeed:
+    return windSpeed();
+    break;
+  case EpwDataField::TotalSkyCover:
+    ivalue = totalSkyCover();
+    if(ivalue)
+    {
+      return boost::optional<double>((double)ivalue.get());
+    }
+    break;
+  case EpwDataField::OpaqueSkyCover:
+    ivalue = opaqueSkyCover();
+    if(ivalue)
+    {
+      return boost::optional<double>((double)ivalue.get());
+    }
+    break;
+  case EpwDataField::Visibility:
+    return visibility();
+    break;
+  case EpwDataField::CeilingHeight:
+    return ceilingHeight();
+    break;
+  case EpwDataField::PresentWeatherObservation:
+    ivalue = presentWeatherObservation();
+    if(ivalue)
+    {
+      return boost::optional<double>((double)ivalue.get());
+    }
+    break;
+  case EpwDataField::PresentWeatherCodes:
+    ivalue = presentWeatherCodes();
+    if(ivalue)
+    {
+      return boost::optional<double>((double)ivalue.get());
+    }
+    break;
+  case EpwDataField::PrecipitableWater:
+    return precipitableWater();
+    break;
+  case EpwDataField::AerosolOpticalDepth:
+    return aerosolOpticalDepth();
+    break;
+  case EpwDataField::SnowDepth:
+    return snowDepth();
+    break;
+  case EpwDataField::DaysSinceLastSnowfall:
+    return daysSinceLastSnowfall();
+    break;
+  case EpwDataField::Albedo:
+    return albedo();
+    break;
+  case EpwDataField::LiquidPrecipitationDepth:
+    return liquidPrecipitationDepth();
+    break;
+  case EpwDataField::LiquidPrecipitationQuantity:
+    return liquidPrecipitationQuantity();
+    break;
+  default:
+    // Could do a warning message here
+    return boost::optional<double>();
+    break;
+  }
+  return boost::optional<double>();
+}
+
 static double psat(double T)
 {
   // Compute water vapor saturation pressure, eqns 5 and 6 from ASHRAE Fundamentals 2009 Ch. 1
@@ -154,12 +398,11 @@ static double psat(double T)
   double rhs;
   if(T<273.15)
   {
-    rhs = C1/T + C2 + T*(C3 + T*(C4 + T*(C5 + T*C6))) + C7*log(T);
+    rhs = C1/T + C2 + T*(C3 + T*(C4 + T*(C5 + T*C6))) + C7*std::log(T);
   }
   else
   {
-    rhs = C8/T + C9 + T*(C10 + T*(C11 + T*C12)) + C13*log(T);
-    rhs = C8/T + C9 + T*C10 + T*T*C11 + T*T*T*C12 + C13*log(T);
+    rhs = C8/T + C9 + T*(C10 + T*(C11 + T*C12)) + C13*std::log(T);
   }
   return exp(rhs);
 }
@@ -225,7 +468,7 @@ std::string EpwDataPoint::toWthString()
 
 Date EpwDataPoint::date() const
 {
-  return Date(MonthOfYear(m_month),m_day,m_year);
+  return Date(MonthOfYear(m_month),m_day);//,m_year);
 }
 
 void EpwDataPoint::setDate(Date date)
@@ -1391,6 +1634,42 @@ boost::optional<int> EpwFile::endDateActualYear() const
 std::vector<EpwDataPoint> EpwFile::data() const
 {
   return m_data;
+}
+
+boost::optional<TimeSeries> EpwFile::timeSeries(std::string name)
+{
+  EpwDataField id;
+  try
+  {
+    id = EpwDataField(name);
+  }
+  catch(...)
+  {
+    // Could do a warning message here
+    return boost::optional<TimeSeries>();
+  }
+  if(m_data.size())
+  {
+    std::string units = EpwDataPoint::units(id);
+    DateTimeVector dates;
+    std::vector<double> values;
+    for(unsigned int i=0;i<m_data.size();i++)
+    {
+      Date date=m_data[i].date();
+      Time time=m_data[i].time();
+      boost::optional<double> value = m_data[i].field(id);
+      if(value)
+      {
+        dates.push_back(DateTime(date,time));
+        values.push_back(value.get());
+      }
+    }
+    if(dates.size())
+    {
+      return boost::optional<TimeSeries>(TimeSeries(dates,openstudio::createVector(values),units));
+    }
+  }
+  return boost::optional<TimeSeries>();
 }
 
 bool EpwFile::translateToWth(openstudio::path path, std::string description) const

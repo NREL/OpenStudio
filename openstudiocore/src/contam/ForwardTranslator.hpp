@@ -25,6 +25,7 @@
 
 #include <contam/PrjModel.hpp>
 
+#include <model/Model.hpp>
 #include <utilities/idf/Handle.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Optional.hpp>
@@ -32,16 +33,14 @@
 #include <utilities/core/StringStreamLogSink.hpp>
 #include <utilities/data/TimeSeries.hpp>
 #include <utilities/time/Date.hpp>
+#include <utilities/filetypes/EpwFile.hpp>
 
 namespace openstudio{
 class ProgressBar;
-namespace model{
-class Model;
-}
 
 namespace contam{
 
-class CvFile
+class CONTAM_API CvFile
 {
 public:
   CvFile();
@@ -61,37 +60,42 @@ private:
   Date m_end;
 };
 
-class CONTAM_API ForwardTranslator : public prj::Model
+class CONTAM_API ForwardTranslator : public Model
 {
 public:
-  ForwardTranslator();
-  ForwardTranslator(std::string leakageDescriptor);
-  ForwardTranslator(double flow,double n=0.65,double deltaP=75.0);
-  boost::optional<std::string> translateToString(const openstudio::model::Model& model,
-    bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"));
-  //bool translate(const openstudio::model::Model& model,bool translateHVAC=true,
-  //  std::string leakageDescriptor=std::string("Average"),ProgressBar *progressBar=0);
+  ForwardTranslator(const openstudio::model::Model& model, bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, std::string leakageDescriptor, bool translateHVAC=true,
+    ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double flow, double n, double deltaP,
+    bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, bool translateHVAC=true, 
+    ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, std::string leakageDescriptor,
+    bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, double flow, double n, 
+    double deltaP, bool translateHVAC=true, ProgressBar* progressBar=NULL);
 
-  bool translate(const openstudio::model::Model& model,bool translateHVAC=true,ProgressBar *progressBar=0);
   std::string toString();
   bool toPrj(const openstudio::path& path);
   
-  //bool translate(const openstudio::model::Model& model, double leakageRate=27.1, bool translateHVAC=true, 
-  //  ProgressBar *progressBar=0);
-  
+  // Static translation function
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
-    bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"), ProgressBar* progressBar=NULL);
+    bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=NULL);
 
-  // Translation functions - need to add more of these by chopping out parts of the main translation function
-  // Some will probably need to be private, but these are not so paths can be handled correctly
-  bool translateEpw(const openstudio::model::Model& model, openstudio::path outpath);
-  bool translateEpw(openstudio::path epwpath, openstudio::path outpath);
+  // Secondary translation functions - need to add more of these by chopping out parts of the main translation function
+  boost::optional<EpwFile> translateEpw(openstudio::path epwpath, openstudio::path outpath);
 
   bool ready() const {return m_ready && valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
+  // Getters and setters - the setters modify how translation is done or modify the model after translation (eventually). 
+  // Setters that could fail return a boolean
+  boost::optional<std::string> airtightnessLevel() const;
   bool setAirtightnessLevel(std::string level);
+  double exteriorFlowRate() const;
+  double exteriorExponent() const;
+  double exteriorDeltaP() const;
   bool setExteriorFlowRate(double flow,double n=0.65,double deltaP=75.0);
 
   // Getters and setters
@@ -103,14 +107,34 @@ public:
   {
     m_returnSupplyRatio = fabs(returnSupplyRatio);
   }
+
   bool ratioOverride() const
   {
     return m_ratioOverride;
   }
+  /*
   void setRatioOverride(bool ratioOverride)
   {
     m_ratioOverride = ratioOverride;
   }
+  */
+
+  //boost::optional<EpwFile> epwFile() const
+  //{
+  //  return m_epwFile;
+  //}
+
+  boost::optional<DateTime> startDateTime() const
+  {
+    return m_startDateTime;
+  }
+
+  boost::optional<DateTime> endDateTime() const
+  {
+    return m_endDateTime;
+  }
+  // Postprocessing Functions
+  //boost::optional<std::vector<TimeSeries> > zoneInfiltration(openstudio::path simPath);
 
   // We may need more functions like this that modify the CONTAM model
   bool setSteadyWeather(double windSpeed, double windDirection);
@@ -126,12 +150,17 @@ public:
   std::vector<LogMessage> errors() const;
 
 private:
+  // Translators
+  bool translate(bool translateHVAC=true);
+
   // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
   int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
   int tableLookup(std::map<Handle,int> map, Handle handle, const char *name);
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
+
+  void init();
 
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
@@ -143,9 +172,13 @@ private:
   std::map <Handle, int> m_surfaceMap;    // Surface paths stored by handle
   QMap <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
 
+  openstudio::model::Model m_model;
   CvFile m_cvf;
-
+  //boost::optional<EpwFile> m_epwFile;
+  boost::optional<DateTime> m_startDateTime;
+  boost::optional<DateTime> m_endDateTime;
   bool m_ready;
+  boost::optional<std::string> m_leakageDescriptor;
   double m_returnSupplyRatio;
   bool m_ratioOverride;
 

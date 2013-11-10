@@ -1,21 +1,21 @@
 /**********************************************************************
- *  Copyright (c) 2013, The Pennsylvania State University.
- *  All rights reserved.
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+*  Copyright (c) 2013, The Pennsylvania State University.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
 #ifndef PRJMODEL_H
 #define PRJMODEL_H
 
@@ -23,288 +23,338 @@
 #include "PrjReader.hpp"
 #include "PrjPublic.hpp"
 
+#include <utilities/core/Path.hpp>
+#include <utilities/data/TimeSeries.hpp>
+
 #include "ContamAPI.hpp"
 
 namespace openstudio {
 namespace contam {
-namespace prj {
+
+class SimFile;
 
 class CONTAM_API Model
 {
 public:
-    Model(){m_valid=false;}
-    explicit Model(STRING filename);
-    explicit Model(Reader &input);
-    bool read(STRING filename);
-    bool read(Reader &input);
-    STRING toString();
+  Model(){m_valid=false;}
+  explicit Model(openstudio::path path);
+  explicit Model(std::string filename);
+  explicit Model(Reader &input);
+  bool read(openstudio::path path);
+  bool read(std::string filename);
+  bool read(Reader &input);
+  std::string toString();
 
-    RunControl rc() const
-    {
-        return m_rc;
-    }
-    void setRc(const RunControl rc)
-    {
-        m_rc = rc;
-    }
+  std::vector<std::vector<int> > zoneExteriorFlowPaths();
+  std::vector<TimeSeries> zoneInfiltration(SimFile *sim);
 
-    VECTOR_TYPE<int> contaminants() const
-    {
-        return m_contaminants;
-    }
+  RunControl rc() const
+  {
+    return m_rc;
+  }
+  void setRc(const RunControl rc)
+  {
+    m_rc = rc;
+  }
 
-    VECTOR_TYPE <Species> species() const
-    {
-        return m_species;
-    }
-    void setSpecies(const VECTOR_TYPE<Species> species)
-    {
-        m_species = species;
-        rebuildContaminants();
-    }
+  std::vector<int> contaminants() const
+  {
+    return m_contaminants;
+  }
 
-    VECTOR_TYPE <Level> levels() const
-    {
-        return m_levels;
-    }
-    void setLevels(const VECTOR_TYPE<Level> levels)
-    {
-        m_levels = levels;
-    }
-    void addLevel(Level level)
-    {
-        level.setNr(m_levels.size()+1);
-        m_levels.push_back(level);
-    }
+  std::vector <Species> species() const
+  {
+    return m_species;
+  }
+  void setSpecies(const std::vector<Species> species)
+  {
+    m_species = species;
+    rebuildContaminants();
+  }
 
-    VECTOR_TYPE <DaySchedule> daySchedules() const
-    {
-        return m_daySchedules;
-    }
-    void setDaySchedules(const VECTOR_TYPE<DaySchedule> daySchedules)
-    {
-        m_daySchedules = daySchedules;
-    }
+  std::vector <Level> levels() const
+  {
+    return m_levels;
+  }
+  void setLevels(const std::vector<Level> levels)
+  {
+    m_levels = levels;
+  }
+  void addLevel(Level level)
+  {
+    level.setNr(m_levels.size()+1);
+    m_levels.push_back(level);
+  }
 
-    VECTOR_TYPE <WeekSchedule> weekSchedules() const
-    {
-        return m_weekSchedules;
-    }
-    void setWeekSchedules(const VECTOR_TYPE<WeekSchedule> weekSchedules)
-    {
-        m_weekSchedules = weekSchedules;
-    }
+  std::vector <DaySchedule> daySchedules() const
+  {
+    return m_daySchedules;
+  }
+  void setDaySchedules(const std::vector<DaySchedule> daySchedules)
+  {
+    m_daySchedules = daySchedules;
+  }
 
-    VECTOR_TYPE <WindPressureProfile> windPressureProfiles() const
-    {
-        return m_windPressureProfiles;
-    }
-    void setWindPressureProfiles(const VECTOR_TYPE<WindPressureProfile> windPressureProfiles)
-    {
-        m_windPressureProfiles = windPressureProfiles;
-    }
+  std::vector <WeekSchedule> weekSchedules() const
+  {
+    return m_weekSchedules;
+  }
+  void setWeekSchedules(const std::vector<WeekSchedule> weekSchedules)
+  {
+    m_weekSchedules = weekSchedules;
+  }
 
-    VECTOR_TYPE<PlrTest1> getPlrTest1()
-    {
-        VECTOR_TYPE<PlrTest1> afe;
-        for(int i=0;i<m_airflowElements.size();i++)
-        {
-          if(m_airflowElements[i]->dataType() == "plr_test1")
-            {
-                afe.push_back(*(m_airflowElements[i].dynamicCast<PlrTest1>().data()));
-            }
-        }
-        return afe;
-    }
+  std::vector <WindPressureProfile> windPressureProfiles() const
+  {
+    return m_windPressureProfiles;
+  }
+  void setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles)
+  {
+    m_windPressureProfiles = windPressureProfiles;
+  }
 
-//    template <class T> void addAirflowElement(T element);
-//    {
-//        T *copy = new T;
-//        *copy = element;
-//        copy->setNr(m_airflowElements.size()+1);
-//        m_airflowElements.push_back(QSharedPointer<AirflowElement>((AirflowElement*)copy));
-//    }
+  std::vector<PlrTest1> getPlrTest1() const
+  {
+    std::vector<PlrTest1> afe;
+    for(int i=0;i<m_airflowElements.size();i++)
+    {
+      if(m_airflowElements[i]->dataType() == "plr_test1")
+      {
+        afe.push_back(*(m_airflowElements[i].dynamicCast<PlrTest1>().data()));
+      }
+    }
+    return afe;
+  }
 
-    template <class T> void addAirflowElement(T element)
-    {
-        T *copy = new T;
-        *copy = element;
-        AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
-        if(pointer)
-        {
-            copy->setNr(m_airflowElements.size()+1);
-            m_airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
-        }
-    }
+  //    template <class T> void addAirflowElement(T element);
+  //    {
+  //        T *copy = new T;
+  //        *copy = element;
+  //        copy->setNr(m_airflowElements.size()+1);
+  //        m_airflowElements.push_back(QSharedPointer<AirflowElement>((AirflowElement*)copy));
+  //    }
 
-    int airflowElementNrByName(STRING name) const;
+  template <class T> void addAirflowElement(T element)
+  {
+    T *copy = new T;
+    *copy = element;
+    AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
+    if(pointer)
+    {
+      copy->setNr(m_airflowElements.size()+1);
+      m_airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
+    }
+  }
 
-    VECTOR_TYPE<CvfDat> getCvfDat()
-    {
-        VECTOR_TYPE<CvfDat> ctrl;
-        for(int i=0;i<m_controlNodes.size();i++)
-        {
-            QSharedPointer<CvfDat> cast = m_controlNodes[i].dynamicCast<CvfDat>();
-            if(!cast.isNull())
-            {
-                ctrl.push_back(*(cast.data()));
-            }
-        }
-        return ctrl;
-    }
+  int airflowElementNrByName(std::string name) const;
 
-    template <class T> void addControlNode(T element, bool sequence=true)
+  template <class T> bool replaceAirflowElement(int nr, T element)
+  {
+    if(nr>0 && nr<=m_airflowElements.size())
     {
-        T *copy = new T;
-        *copy = element;
-        ControlNode *pointer = dynamic_cast<ControlNode*>(copy);
-        if(pointer)
-        {
-            copy->setNr(m_controlNodes.size()+1);
-            if(sequence)
-            {
-              copy->setSeqnr(copy->nr());
-            }
-            m_controlNodes.push_back(QSharedPointer<ControlNode>(pointer));
-        }
+      T *copy = new T;
+      *copy = element;
+      AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
+      if(pointer)
+      {
+        copy->setNr(nr);
+        m_airflowElements.replace(nr-1,QSharedPointer<AirflowElement>(pointer));
+        return true;
+      }
     }
+    return false;
+  }
 
-    VECTOR_TYPE <Ahs> ahs() const
+  std::vector<CvfDat> getCvfDat()
+  {
+    std::vector<CvfDat> ctrl;
+    for(int i=0;i<m_controlNodes.size();i++)
     {
-        return m_ahs;
+      QSharedPointer<CvfDat> cast = m_controlNodes[i].dynamicCast<CvfDat>();
+      if(!cast.isNull())
+      {
+        ctrl.push_back(*(cast.data()));
+      }
     }
-    void setAhs(const VECTOR_TYPE<Ahs> ahs)
-    {
-        m_ahs = ahs;
-    }
-    void addAhs(Ahs ahs)
-    {
-        ahs.setNr(m_ahs.size()+1);
-        m_ahs.push_back(ahs);
-    }
+    return ctrl;
+  }
 
-    VECTOR_TYPE<Zone> zones() const
+  template <class T> void addControlNode(T element, bool sequence=true)
+  {
+    T *copy = new T;
+    *copy = element;
+    ControlNode *pointer = dynamic_cast<ControlNode*>(copy);
+    if(pointer)
     {
-        return m_zones;
+      copy->setNr(m_controlNodes.size()+1);
+      if(sequence)
+      {
+        copy->setSeqnr(copy->nr());
+      }
+      m_controlNodes.push_back(QSharedPointer<ControlNode>(pointer));
     }
-    void setZones(const VECTOR_TYPE<Zone> zones)
-    {
-        m_zones = zones;
-    }
-    void addZone(Zone zone)
-    {
-        zone.setNr(m_zones.size()+1);
-        m_zones.push_back(zone);
-    }
+  }
 
-    VECTOR_TYPE<Path> paths() const
-    {
-        return m_paths;
-    }
-    void setPaths(const VECTOR_TYPE<Path> paths)
-    {
-        m_paths = paths;
-    }
-    void addPath(Path path)
-    {
-        path.setNr(m_paths.size()+1);
-        m_paths.push_back(path);
-    }
+  std::vector <Ahs> ahs() const
+  {
+    return m_ahs;
+  }
+  void setAhs(const std::vector<Ahs> ahs)
+  {
+    m_ahs = ahs;
+  }
+  void addAhs(Ahs ahs)
+  {
+    ahs.setNr(m_ahs.size()+1);
+    m_ahs.push_back(ahs);
+  }
 
-    bool valid() const
-    {
-      return m_valid;
-    }
+  std::vector<Zone> zones() const
+  {
+    return m_zones;
+  }
+  void setZones(const std::vector<Zone> zones)
+  {
+    m_zones = zones;
+  }
+  void addZone(Zone zone)
+  {
+    zone.setNr(m_zones.size()+1);
+    m_zones.push_back(zone);
+  }
+
+  std::vector<Path> paths() const
+  {
+    return m_paths;
+  }
+  void setPaths(const std::vector<Path> paths)
+  {
+    m_paths = paths;
+  }
+  void addPath(Path path)
+  {
+    path.setNr(m_paths.size()+1);
+    m_paths.push_back(path);
+  }
+
+  bool valid() const
+  {
+    return m_valid;
+  }
 
 private:
-    void rebuildContaminants();
-    void readZoneIc(Reader &input);
-    STRING writeZoneIc(int start=0);
-    template <class T> STRING writeSectionVector(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
-    template <class T, template <class T> class U> STRING writeSectionVector(U<QSharedPointer<T> > vector,
-                                                                             STRING label=STRING_INIT,
-                                                                             int start=0);
-template <class T> STRING writeArray(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
+  void rebuildContaminants();
+  void readZoneIc(Reader &input);
+  std::string writeZoneIc(int start=0);
+  template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
+  // SWIG has some problems with this template for some reason. Comment out for now, delete if it doesn't
+  // get uncommented soon.
+  //  template <class T, template <class T> class U> std::string writeSectionVector(U<QSharedPointer<T> > vector,
+  //    std::string label=std::string(), int start=0);
+  template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
+  template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
 
-    bool m_valid;
+  bool m_valid;
 
-    MAP_TYPE<STRING,STRING> m_unsupported;
+  std::map<std::string,std::string> m_unsupported;
 
-    RunControl m_rc;
-    VECTOR_TYPE<int> m_contaminants;
-    VECTOR_TYPE<Species> m_species;
-    VECTOR_TYPE<Level> m_levels;
-    VECTOR_TYPE<DaySchedule> m_daySchedules;
-    VECTOR_TYPE<WeekSchedule> m_weekSchedules;
-    VECTOR_TYPE<WindPressureProfile> m_windPressureProfiles;
-    QVector<QSharedPointer<AirflowElement> > m_airflowElements;
-    QVector<QSharedPointer<ControlNode> > m_controlNodes;
-    VECTOR_TYPE<Ahs> m_ahs;
-    VECTOR_TYPE<Zone> m_zones;
-    VECTOR_TYPE<Path> m_paths;
+  RunControl m_rc;
+  std::vector<int> m_contaminants;
+  std::vector<Species> m_species;
+  std::vector<Level> m_levels;
+  std::vector<DaySchedule> m_daySchedules;
+  std::vector<WeekSchedule> m_weekSchedules;
+  std::vector<WindPressureProfile> m_windPressureProfiles;
+  QVector<QSharedPointer<AirflowElement> > m_airflowElements;
+  QVector<QSharedPointer<ControlNode> > m_controlNodes;
+  std::vector<Ahs> m_ahs;
+  std::vector<Zone> m_zones;
+  std::vector<Path> m_paths;
 };
 
-template <class T> STRING Model::writeSectionVector(VECTOR_TYPE<T> vector, STRING label, int start)
+template <class T> std::string Model::writeSectionVector(std::vector<T> vector, std::string label, int start)
 {
-    STRING string;
-    int number = vector.size()-start;
-    if(IS_NULL(label))
-    {
-        string += TO_STRING(number) + '\n';
-    }
-    else
-    {
-        string += TO_STRING(number) + " ! " + label + '\n';
-    }
-    for(unsigned int i=start;i<vector.size();i++)
-    {
-        string += vector[i].write();
-    }
-    string += "-999\n";
-    return string;
+  std::string string;
+  int number = vector.size()-start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  }
+  else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(unsigned int i=start;i<vector.size();i++)
+  {
+    string += vector[i].write();
+  }
+  string += "-999\n";
+  return string;
 }
 
+/*
 template <class T, template <class T> class U> STRING Model::writeSectionVector(U<QSharedPointer<T> > vector,
-                                                                                STRING label, int start)
+STRING label, int start)
 {
-    STRING string;
-    int number = vector.size()-start;
-    if(IS_NULL(label))
-    {
-        string += TO_STRING(number) + '\n';
-    }
-    else
-    {
-        string += TO_STRING(number) + " ! " + label + '\n';
-    }
-    for(int i=start;i<vector.size();i++)
-    {
-        string += vector[i]->write();
-    }
-    string += "-999\n";
-    return string;
+std::string string;
+int number = vector.size()-start;
+if(label.empty())
+{
+string += openstudio::toString(number) + '\n';
+}
+else
+{
+string += openstudio::toString(number) + " ! " + label + '\n';
+}
+for(int i=start;i<vector.size();i++)
+{
+string += vector[i]->write();
+}
+string += "-999\n";
+return string;
+}
+*/
+
+template <class T> std::string Model::writeSectionVector(QVector<QSharedPointer<T> > vector,
+  std::string label, int start)
+{
+  std::string string;
+  int number = vector.size()-start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  }
+  else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(int i=start;i<vector.size();i++)
+  {
+    string += vector[i]->write();
+  }
+  string += "-999\n";
+  return string;
 }
 
-template <class T> STRING Model::writeArray(VECTOR_TYPE<T> vector, STRING label, int start)
+template <class T> std::string Model::writeArray(std::vector<T> vector, std::string label, int start)
 {
-    STRING string;
-    int number = vector.size()-start;
-    if(IS_NULL(label))
-    {
-        string += TO_STRING(number) + '\n';
-    }
-    else
-    {
-        string += TO_STRING(number) + " ! " + label + '\n';
-    }
-    for(unsigned int i=start;i<vector.size();i++)
-    {
-        string += ' ' + TO_STRING(vector[i]);
-    }
-    return string +'\n';
+  std::string string;
+  int number = vector.size()-start;
+  if(label.empty())
+  {
+    string += openstudio::toString(number) + '\n';
+  }
+  else
+  {
+    string += openstudio::toString(number) + " ! " + label + '\n';
+  }
+  for(unsigned int i=start;i<vector.size();i++)
+  {
+    string += ' ' + openstudio::toString(vector[i]);
+  }
+  return string +'\n';
 }
 
-} // prj
 } // contam
 } // openstudio
 

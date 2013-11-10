@@ -4,12 +4,10 @@ SET( ${target_name}_src
   ContamAPI.hpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
-  InfiltrationCalculator.hpp
-  InfiltrationCalculator.cpp
   PrjReader.hpp
   PrjReader.cpp
-  SimTxt.hpp
-  SimTxt.cpp
+  SimFile.hpp
+  SimFile.cpp
   WindPressure.hpp
   WindPressure.cpp
   PrjDefines.hpp
@@ -40,6 +38,7 @@ SET( ${target_name}_test_src
 )
 
 SET( ${target_name}_swig_src
+  Contam.i
 )
 
 SET( ${target_name}_depends
@@ -76,11 +75,11 @@ IF(BUILD_TESTING)
   ADD_DEPENDENCIES(${target_name}_tests openstudio_contam_resources)
 ENDIF()
 
-#MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} "${target_name}" )
+MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 
-add_executable(OsmToPrj OsmToPrj.cpp)
+add_executable(osm2prj osm2prj.cpp)
 
-TARGET_LINK_LIBRARIES( OsmToPrj
+TARGET_LINK_LIBRARIES( osm2prj
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam
@@ -94,9 +93,9 @@ TARGET_LINK_LIBRARIES( epw2wth
   openstudio_contam
 )
 
-add_executable(FitInfiltration FitInfiltration.cpp)
+add_executable(compinf compinf.cpp)
 
-TARGET_LINK_LIBRARIES( FitInfiltration
+TARGET_LINK_LIBRARIES( compinf
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam
