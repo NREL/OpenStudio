@@ -1300,7 +1300,7 @@ std::vector<DataPoint> toDataPointVector(const openstudio::path& jsonFilepath) {
     if (map.contains("data_points")) {
       result = deserializeOrderedVector<DataPoint>(
                    map["data_points"].toList(),
-                   "data_point_index",
+                   "data_point_batch_index",
                    boost::function<DataPoint (const QVariant&)>(boost::bind(detail::DataPoint_Impl::factoryFromVariant,_1,version,boost::none)));
     }
     else {
@@ -1333,7 +1333,7 @@ std::vector<DataPoint> toDataPointVector(const std::string& json) {
     if (map.contains("data_points")) {
       result = deserializeOrderedVector<DataPoint>(
                    map["data_points"].toList(),
-                   "data_point_index",
+                   "data_point_batch_index",
                    boost::function<DataPoint (const QVariant&)>(boost::bind(detail::DataPoint_Impl::factoryFromVariant,_1,version,boost::none)));
     }
     else {
@@ -1372,7 +1372,7 @@ namespace detail {
     unsigned i(0);
     BOOST_FOREACH(const DataPoint& dataPoint, dataPoints) {
       QVariantMap dpm = dataPoint.toVariant().toMap();
-      dpm["data_point_index"] = i;
+      dpm["data_point_batch_index"] = i;
       list.push_back(dpm);
       ++i;
     }
