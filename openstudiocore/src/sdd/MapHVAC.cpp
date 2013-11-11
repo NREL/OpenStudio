@@ -786,6 +786,36 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
   }
 
+  // Adjust Sizing:System Object
+
+  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
+
+  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
+
+  bool ok;
+
+  value = clgSupAirTempElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+  }
+  else
+  {
+    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+  }
+
+  value = htgSupAirTempElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+  }
+  else
+  {
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+  }
+
   // Add Setpoint managers
   std::vector<model::ModelObject> supplyNodes = airLoopHVAC.supplyComponents(IddObjectType::OS_Node);
 
@@ -807,11 +837,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   QDomElement clgCtrlElement = airSystemElement.firstChildElement("ClgCtrl");
 
-  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
-
-  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
-
-  bool ok;
+  // Establish deck temperature
 
   if( istringEqual(clgCtrlElement.text().toStdString(),"Fixed") )
   {
@@ -822,28 +848,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       model::SetpointManagerSingleZoneReheat spm(model);
 
       supplyOutletNode.addSetpointManager(spm);
-
-      value = clgSupAirTempElement.text().toDouble(&ok);
-
-      if( ok )
-      {
-        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
-      }
-      else
-      {
-        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
-      }
-
-      value = htgSupAirTempElement.text().toDouble(&ok);
-
-      if( ok )
-      {
-        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
-      }
-      else
-      {
-        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
-      }
     }
     else
     {
@@ -860,20 +864,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         value = unitToUnit(value,"F","C").get();
 
         scheduleDay.addValue(Time(1.0),value);
-
-        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(value);
-
-        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(value);
       }
       else
       {
         model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
 
         scheduleDay.addValue(Time(1.0),12.8);
-
-        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(12.8);
-
-        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
       }
 
       model::SetpointManagerScheduled spm(model,schedule);
@@ -909,8 +905,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         value = unitToUnit(value,"F","C").get();
 
         spm.setMaximumSetpointTemperature(value);
-
-        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(value);
       }
     }
 
@@ -923,8 +917,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       value = unitToUnit(value,"F","C").get();
 
       spm.setMinimumSetpointTemperature(value);
-
-      airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(value);
     }
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"Scheduled") )
@@ -947,10 +939,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     model::SetpointManagerScheduled spm(model,schedule.get());
 
     supplyOutletNode.addSetpointManager(spm);
-
-    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
-
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(12.8);
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"OutsideAirReset") )
   {
@@ -999,9 +987,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         spm.setSetpointatOutdoorHighTemperature(rstSupHi.get());
         spm.setOutdoorLowTemperature(rstOutdrLow.get());
         spm.setSetpointatOutdoorLowTemperature(rstSupLow.get());
-
-        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(rstSupHi.get());
-        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(rstSupLow.get());
       }
       else
       {
@@ -1009,9 +994,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         spm.setSetpointatOutdoorHighTemperature(rstSupLow.get());
         spm.setOutdoorLowTemperature(rstOutdrHi.get());
         spm.setSetpointatOutdoorLowTemperature(rstSupHi.get());
-
-        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(rstSupLow.get());
-        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(rstSupHi.get());
       }
     }
     else
@@ -1023,9 +1005,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       spm.setSetpointatOutdoorLowTemperature(22.0);
       spm.setOutdoorHighTemperature(24.0);
       spm.setSetpointatOutdoorHighTemperature(10.0);
-
-      airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(10.0);
-      airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(22.0);
     }
   }
 
