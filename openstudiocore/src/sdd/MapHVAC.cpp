@@ -881,48 +881,46 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       supplyOutletNode.addSetpointManager(spm);
     }
   }
-  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") ||
+           istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
   {
+    if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
+    {
+      LOG(Warn,nameElement.text().toStdString() << " defines WarmestReset control option, but this option is not yet supported");
+    }
+
     model::SetpointManagerWarmest spm(model);
 
     supplyOutletNode.addSetpointManagerWarmest(spm);
 
-    QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHiElement");
-
-    value = clRstSupHiElement.text().toDouble(&ok);
-
-    if( ok )
+    if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+        istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
     {
-      value = unitToUnit(value,"F","C").get();
-
-      spm.setMaximumSetpointTemperature(value);
-
-      airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(value);
+      spm.setMaximumSetpointTemperature(15.56);
     }
     else
     {
-      value = 15.6;
+      QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHi");
 
-      spm.setMaximumSetpointTemperature(value);
+      value = clRstSupHiElement.text().toDouble(&ok);
 
-      airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(value);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+
+        spm.setMaximumSetpointTemperature(value);
+
+        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(value);
+      }
     }
 
-    QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLowElement");
+    QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLow");
 
     value = clRstSupLowElement.text().toDouble(&ok);
 
     if( ok )
     {
       value = unitToUnit(value,"F","C").get();
-
-      spm.setMinimumSetpointTemperature(value);
-
-      airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(value);
-    }
-    else
-    {
-      value = 12.2;
 
       spm.setMinimumSetpointTemperature(value);
 
@@ -1542,6 +1540,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
     else
     {
       fan.setMotorInAirstreamFraction(0.0);
+    }
+
+    QDomElement flowMinSimElement = fanElement.firstChildElement("FlowMinSim");
+
+    value = flowMinSimElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      value = unitToUnit(value,"cfm","m^3/s").get();
+      
+      fan.setFanPowerMinimumAirFlowRate(value);
     }
 
     result = fan;
@@ -2726,6 +2735,45 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
         else
         {
           terminal.setMaximumFlowFractionDuringReheat(0.2);
+        }
+      }
+    }
+
+    if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+        istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) )
+    {
+      QDomElement clRstSupHiElement;
+      boost::optional<model::AirLoopHVAC> airLoopHVAC;
+
+      if( ! airSysElement.isNull() )
+      {
+        clRstSupHiElement = airSysElement.firstChildElement("ClRstSupHi");
+
+        airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(airSysElement.firstChildElement("Name").text().toStdString());
+      }
+
+      value = clRstSupHiElement.text().toDouble(&ok);
+
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        terminal.setMaximumReheatAirTemperature(value);
+      }
+
+      terminal.setDamperHeatingAction("Reverse");
+
+      if( airLoopHVAC )
+      {
+        std::vector<model::ModelObject> fans = airLoopHVAC->supplyComponents(model::FanVariableVolume::iddObjectType());
+
+        if( ! fans.empty() )
+        {
+          if( boost::optional<double> minflow = fans.front().cast<model::FanVariableVolume>().fanPowerMinimumAirFlowRate() )
+          {
+            terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+
+            terminal.setFixedMinimumAirFlowRate(minflow.get());
+          }
         }
       }
     }
