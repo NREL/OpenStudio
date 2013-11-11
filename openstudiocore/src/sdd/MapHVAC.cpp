@@ -807,9 +807,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   QDomElement clgCtrlElement = airSystemElement.firstChildElement("ClgCtrl");
 
-  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgSupAirTemp");
+  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
 
-  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgSupAirTemp");
+  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
 
   bool ok;
 
