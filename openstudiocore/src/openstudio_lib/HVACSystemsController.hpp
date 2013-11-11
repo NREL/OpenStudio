@@ -213,6 +213,8 @@ class HVACLayoutController : public QObject
 
   virtual ~HVACLayoutController();
 
+  boost::shared_ptr<RefrigerationController> refrigerationController() const;
+
   HVACGraphicsView * hvacGraphicsView() const;
 
   void clearSceneSelection();

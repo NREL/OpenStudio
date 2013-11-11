@@ -704,7 +704,7 @@ void HVACSystemsController::onAddSystemClicked()
   //}
 
   // Temporary hack to test refrigeration grid view
-  m_refrigerationController->refrigerationSystemListController()->createNewSystem();
+  m_hvacLayoutController->refrigerationController()->refrigerationSystemListController()->createNewSystem();
 }
 
 void HVACSystemsController::onSystemComboBoxIndexChanged(int i)
@@ -1248,6 +1248,11 @@ HVACLayoutController::~HVACLayoutController()
   {
     delete m_hvacGraphicsView;
   }
+}
+
+boost::shared_ptr<RefrigerationController> HVACLayoutController::refrigerationController() const
+{
+  return m_refrigerationController;
 }
 
 HVACGraphicsView * HVACLayoutController::hvacGraphicsView() const

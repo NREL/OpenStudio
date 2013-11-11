@@ -32,7 +32,7 @@ RefrigerationSystemItemDelegate::RefrigerationSystemItemDelegate()
 
 QGraphicsItem * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  RefrigerationSystemItem * item = new RefrigerationSystemItem();
+  RefrigerationSystemGridCellItem * item = new RefrigerationSystemGridCellItem();
 
   return item;
 }
@@ -118,10 +118,10 @@ QGraphicsItem * RefrigerationSystemGridItem::createNewItemView(int i)
 
     item->setParentItem(this);
 
-    item->setTransform(QTransform(cellSize().width() / item->boundingRect().width(),
-                                  0,0,
-                                  cellSize().height() / item->boundingRect().height(),
-                                  0,0));
+    //item->setTransform(QTransform(cellSize().width() / item->boundingRect().width(),
+    //                              0,0,
+    //                              cellSize().height() / item->boundingRect().height(),
+    //                              0,0));
     return item;
   }
   else
@@ -207,7 +207,7 @@ int RefrigerationSystemGridItem::columns() const
   return 2;
 }
 
-QSize RefrigerationSystemGridItem::cellSize() const
+QSize RefrigerationSystemGridItem::cellSize()
 {
   return QSize(500,500);
 }
@@ -253,6 +253,37 @@ QGraphicsItem * RefrigerationSystemGridItem::viewFromGridPos(std::pair<int,int> 
   }
 
   return result;
+}
+
+RefrigerationSystemGridCellItem::RefrigerationSystemGridCellItem()
+{
+  refrigerationSystemItem = new RefrigerationSystemItem();
+  refrigerationSystemItem->setParentItem(this);
+
+  refrigerationSystemItem->setTransform(QTransform((RefrigerationSystemGridItem::cellSize().width() - 20) / refrigerationSystemItem->boundingRect().width(),
+                                        0,0,
+                                        (RefrigerationSystemGridItem::cellSize().height() - 20)  / refrigerationSystemItem->boundingRect().height(),
+                                        0,0));
+
+  refrigerationSystemItem->setPos(10,10);
+}
+
+QRectF RefrigerationSystemGridCellItem::boundingRect() const
+{
+  return QRectF(QPoint(0,0),RefrigerationSystemGridItem::cellSize());
+}
+
+void RefrigerationSystemGridCellItem::paint( QPainter *painter, 
+                                             const QStyleOptionGraphicsItem *option, 
+                                             QWidget *widget )
+{
+  // Background and Border
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::green);
+  painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawRect(boundingRect());
 }
 
 RefrigerationSystemItem::RefrigerationSystemItem()

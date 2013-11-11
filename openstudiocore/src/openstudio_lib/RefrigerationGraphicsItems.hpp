@@ -30,10 +30,12 @@ class RefrigerationHeatReclaimItem;
 class RefrigerationCompressorItem;
 class RefrigerationSHXItem;
 class RefrigerationCasesItem;
+class RefrigerationSystemItem;
 class RefrigerationSecondaryItem;
 class OSListItem;
 class OSListController;
 
+// A delegate to provide cells of the refigeration system grid
 class RefrigerationSystemItemDelegate : public QObject
 {
   Q_OBJECT;
@@ -47,6 +49,7 @@ class RefrigerationSystemItemDelegate : public QObject
   virtual QGraphicsItem * view(QSharedPointer<OSListItem> dataSource);
 };
 
+// A grid layout of refrigeration systems
 class RefrigerationSystemGridItem : public QGraphicsObject
 {
   Q_OBJECT;
@@ -68,6 +71,8 @@ class RefrigerationSystemGridItem : public QGraphicsObject
   public slots:
 
   void refreshAllItemViews();
+
+  static QSize cellSize();
 
   protected:
 
@@ -93,8 +98,6 @@ class RefrigerationSystemGridItem : public QGraphicsObject
 
   int columns() const;
 
-  QSize cellSize() const;
-
   std::pair<int,int> gridPos(int i); 
 
   QGraphicsItem * createNewItemView(int i);
@@ -106,6 +109,31 @@ class RefrigerationSystemGridItem : public QGraphicsObject
   QSharedPointer<RefrigerationSystemItemDelegate> m_delegate;
 
   QSharedPointer<OSListController> m_listController;
+};
+
+// A cell of the refrigeration system grid
+// This is an item that contains a RefrigerationSystemItem plus some overlays
+class RefrigerationSystemGridCellItem : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSystemGridCellItem();
+
+  virtual ~RefrigerationSystemGridCellItem() {}
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  private:
+
+  RefrigerationSystemItem * refrigerationSystemItem;
 };
 
 class RefrigerationSystemItem : public QGraphicsObject
