@@ -20,7 +20,9 @@
     <file>images/divider_dots.png</file>
     <file>images/download_detailed_results_button.png</file>
     <file>images/download_detailed_results_disabled.png</file>
+    <file>images/download_detailed_results_downloaded.png</file>
     <file>images/download_detailed_results_na_button.png</file>
+    <file>images/download_detailed_results_queued.png</file>
     <file>images/download_icon_results_page.png</file>
     <file>images/edit_button_disabled.png</file>
     <file>images/edit_button_on.png</file>
