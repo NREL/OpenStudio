@@ -290,8 +290,16 @@ void CloudMonitor::onStartCloudWorkerComplete()
   else if( ! m_startCloudWorker->validCredentials() )
   {
     setStatus(CLOUD_ERROR);
-    
-    QString error("Invalid cloud credentials.  Verify settings from Cloud menu.");
+
+    QString error;
+    if( m_startCloudWorker->errors().size() )
+    {
+      error = toQString(m_startCloudWorker->errors()[0]) + ".  Verify settings from Cloud menu.";
+    }
+    else
+    {
+      error = "Invalid cloud credentials.  Verify settings from Cloud menu.";
+    }
 
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
 
@@ -675,18 +683,22 @@ void StartCloudWorker::startWorking()
     m_error = true;
   }
 
-  m_validCredentials = provider->validateCredentials();
-
-  if( ! m_error && ! m_validCredentials )
+  if( ! m_error )
   {
-    m_error = true;
+    m_validCredentials = provider->validateCredentials();
+    if( ! m_validCredentials )
+    {
+      m_error = true;
+    }
   }
 
-  m_resourcesAvailableToStart = provider->resourcesAvailableToStart();
-
-  if( ! m_error && ! m_resourcesAvailableToStart )
+  if( ! m_error)
   {
-    m_error = true;
+    m_resourcesAvailableToStart = provider->resourcesAvailableToStart();
+    if( ! m_resourcesAvailableToStart )
+    {
+      m_error = true;
+    }
   }
 
   if( ! m_error )
@@ -709,6 +721,7 @@ void StartCloudWorker::startWorking()
     }
   }
 
+  std::vector<std::string> serverErrors;
   if( ! m_error )
   {
     m_error = true;
@@ -729,7 +742,11 @@ void StartCloudWorker::startWorking()
         }
         else
         {
-          System::msleep(3000);
+          if (i < 14) {
+            System::msleep(3000);
+          } else {
+            serverErrors = server.errors();
+          }
         }
       } 
     }
@@ -744,6 +761,10 @@ void StartCloudWorker::startWorking()
   {
     m_errors = provider->errors();
     m_warnings = provider->warnings();
+
+    if (!m_errors.size() && serverErrors.size()) {
+      m_errors = serverErrors;
+    }
 
     if( provider->requestTerminate() )
     {
