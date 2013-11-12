@@ -21,13 +21,14 @@
 #define OPENSTUDIO_REFRIGERATIONCONTROLLER_H
 
 #include <QObject>
+#include <boost/optional.hpp>
 #include "../shared_gui_components/OSListController.hpp"
+#include "model/RefrigerationSystem.hpp"
+
+class QGraphicsScene;
+class QGraphicsView;
 
 namespace openstudio {
-
-namespace model {
-  class RefrigerationSystem;
-}
 
 class RefrigerationSystemGridItem;
 class RefrigerationSystemListController;
@@ -41,17 +42,21 @@ class RefrigerationController : public QObject
 
   RefrigerationController();
 
+  virtual ~RefrigerationController();
+
+  QGraphicsView * refrigerationGraphicsView() const;
+
   QSharedPointer<RefrigerationSystemListController> refrigerationSystemListController() const;
 
-  QSharedPointer<RefrigerationScene> refrigerationScene() const;
-
   private:
+
+  QPointer<QGraphicsView> m_refrigerationGraphicsView;
 
   QSharedPointer<RefrigerationSystemGridItem> m_refrigerationSystemGridItem;
 
   QSharedPointer<RefrigerationSystemListController> m_refrigerationSystemListController;
 
-  QSharedPointer<RefrigerationScene> m_refrigerationScene;
+  QSharedPointer<QGraphicsScene> m_refrigerationScene;
 };
 
 class RefrigerationSystemListController : public OSListController
@@ -68,9 +73,13 @@ class RefrigerationSystemListController : public OSListController
 
   void createNewSystem();
 
+  void removeSystem(model::RefrigerationSystem & refrigerationSystem);
+
   private:
 
   std::vector<model::RefrigerationSystem> systems() const;
+
+  int systemIndex(const model::RefrigerationSystem & system) const;
 };
 
 class RefrigerationSystemListItem : public OSListItem
@@ -79,9 +88,17 @@ class RefrigerationSystemListItem : public OSListItem
 
   public:
 
-  RefrigerationSystemListItem(OSListController * listController = 0);
+  RefrigerationSystemListItem(const model::RefrigerationSystem & refrigerationSystem, OSListController * listController = 0);
 
   virtual ~RefrigerationSystemListItem() {}
+
+  public slots:
+
+  void remove();
+
+  private:
+
+  model::RefrigerationSystem m_refrigerationSystem;
 };
 
 } // openstudio

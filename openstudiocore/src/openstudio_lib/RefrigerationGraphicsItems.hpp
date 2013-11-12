@@ -34,6 +34,7 @@ class RefrigerationSystemItem;
 class RefrigerationSecondaryItem;
 class OSListItem;
 class OSListController;
+class RemoveButtonItem;
 
 // A delegate to provide cells of the refigeration system grid
 class RefrigerationSystemItemDelegate : public QObject
@@ -46,7 +47,7 @@ class RefrigerationSystemItemDelegate : public QObject
 
   virtual ~RefrigerationSystemItemDelegate() {}
 
-  virtual QGraphicsItem * view(QSharedPointer<OSListItem> dataSource);
+  virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource);
 };
 
 // A grid layout of refrigeration systems
@@ -71,8 +72,6 @@ class RefrigerationSystemGridItem : public QGraphicsObject
   public slots:
 
   void refreshAllItemViews();
-
-  static QSize cellSize();
 
   protected:
 
@@ -109,6 +108,9 @@ class RefrigerationSystemGridItem : public QGraphicsObject
   QSharedPointer<RefrigerationSystemItemDelegate> m_delegate;
 
   QSharedPointer<OSListController> m_listController;
+
+  // Use this to keep the OSListItem classes around for the life of the widget
+  std::map<QObject *,QSharedPointer<OSListItem> > m_widgetItemPairs;
 };
 
 // A cell of the refrigeration system grid
@@ -123,7 +125,13 @@ class RefrigerationSystemGridCellItem : public QGraphicsObject
 
   virtual ~RefrigerationSystemGridCellItem() {}
 
+  RefrigerationSystemItem * refrigerationSystemItem;
+
+  RemoveButtonItem * removeButtonItem;
+
   QRectF boundingRect() const;
+
+  static QSize cellSize();
 
   protected:
 
@@ -133,7 +141,13 @@ class RefrigerationSystemGridCellItem : public QGraphicsObject
 
   private:
 
-  RefrigerationSystemItem * refrigerationSystemItem;
+  QRectF contentRect() const;
+
+  QRectF headerRect() const;
+
+  static int cellWidth();
+
+  static int headerHeight();
 };
 
 class RefrigerationSystemItem : public QGraphicsObject

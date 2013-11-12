@@ -18,20 +18,24 @@
 **********************************************************************/
 
 #include "RefrigerationController.hpp"
-#include "RefrigerationScene.hpp"
+//#include "RefrigerationScene.hpp"
 #include "RefrigerationGraphicsItems.hpp"
 #include "OSAppBase.hpp"
 #include "../model/Model.hpp"
 #include "../model/RefrigerationSystem.hpp"
 #include "../model/RefrigerationSystem_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 namespace openstudio {
 
 RefrigerationController::RefrigerationController()
   : QObject()
 {
-  m_refrigerationScene = QSharedPointer<RefrigerationScene>(new RefrigerationScene());
+  m_refrigerationScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
+
+  m_refrigerationGraphicsView = new QGraphicsView();
 
   m_refrigerationSystemGridItem = QSharedPointer<RefrigerationSystemGridItem>(new RefrigerationSystemGridItem());
 
@@ -42,11 +46,21 @@ RefrigerationController::RefrigerationController()
   m_refrigerationSystemGridItem->setDelegate(QSharedPointer<RefrigerationSystemItemDelegate>(new RefrigerationSystemItemDelegate()));
 
   m_refrigerationScene->addItem(m_refrigerationSystemGridItem.data());
+
+  m_refrigerationGraphicsView->setScene(m_refrigerationScene.data());
 }
 
-QSharedPointer<RefrigerationScene> RefrigerationController::refrigerationScene() const
+RefrigerationController::~RefrigerationController()
 {
-  return m_refrigerationScene;
+  if( m_refrigerationGraphicsView )
+  {
+    delete m_refrigerationGraphicsView;
+  }
+}
+
+QGraphicsView * RefrigerationController::refrigerationGraphicsView() const
+{
+  return m_refrigerationGraphicsView;
 }
 
 QSharedPointer<RefrigerationSystemListController> RefrigerationController::refrigerationSystemListController() const
@@ -56,7 +70,14 @@ QSharedPointer<RefrigerationSystemListController> RefrigerationController::refri
 
 QSharedPointer<OSListItem> RefrigerationSystemListController::itemAt(int i)
 {
-  return QSharedPointer<RefrigerationSystemListItem>(new RefrigerationSystemListItem(this));
+  QSharedPointer<RefrigerationSystemListItem> item;
+
+  if( i >= 0 && i < count() )
+  {
+    item = QSharedPointer<RefrigerationSystemListItem>(new RefrigerationSystemListItem(systems()[i],this));
+  }
+
+  return item;
 }
 
 int RefrigerationSystemListController::count()
@@ -64,9 +85,25 @@ int RefrigerationSystemListController::count()
   return systems().size();
 }
 
-RefrigerationSystemListItem::RefrigerationSystemListItem(OSListController * listController)
-  : OSListItem(listController)
+int RefrigerationSystemListController::systemIndex(const model::RefrigerationSystem & system) const
 {
+  std::vector<model::RefrigerationSystem> _systems = systems();
+
+  int i = 0;
+
+  for( std::vector<model::RefrigerationSystem>::const_iterator it = _systems.begin();
+       it != _systems.end();
+       it++ )
+  {
+    if( *it == system )
+    {
+      break;
+    }
+
+    i++;
+  }
+
+  return i;
 }
 
 void RefrigerationSystemListController::createNewSystem()
@@ -75,24 +112,17 @@ void RefrigerationSystemListController::createNewSystem()
   {
     model::RefrigerationSystem system(model.get());
 
-    std::vector<model::RefrigerationSystem> _systems = systems();
-
-    int i = 0;
-
-    for( std::vector<model::RefrigerationSystem>::const_iterator it = _systems.begin();
-         it != _systems.end();
-         it++ )
-    {
-      if( *it == system )
-      {
-        break;
-      }
-
-      i++;
-    }
-
-    emit itemInserted(i);
+    emit itemInserted(systemIndex(system));
   }
+}
+
+void RefrigerationSystemListController::removeSystem(model::RefrigerationSystem & refrigerationSystem)
+{
+  //int i = systemIndex(refrigerationSystem);
+
+  //refrigerationSystem.remove();
+
+  //emit itemRemoved(i);
 }
 
 std::vector<model::RefrigerationSystem> RefrigerationSystemListController::systems() const
@@ -107,6 +137,17 @@ std::vector<model::RefrigerationSystem> RefrigerationSystemListController::syste
   std::sort(result.begin(), result.end(), WorkspaceObjectNameLess());
 
   return result;
+}
+
+RefrigerationSystemListItem::RefrigerationSystemListItem(const model::RefrigerationSystem & refrigerationSystem,OSListController * listController)
+  : OSListItem(listController),
+    m_refrigerationSystem(refrigerationSystem)
+{
+}
+
+void RefrigerationSystemListItem::remove()
+{
+  qobject_cast<RefrigerationSystemListController *>(controller())->removeSystem(m_refrigerationSystem);
 }
 
 } // openstudio

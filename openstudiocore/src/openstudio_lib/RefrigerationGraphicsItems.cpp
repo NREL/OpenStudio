@@ -19,8 +19,10 @@
 
 #include "RefrigerationGraphicsItems.hpp"
 #include "../shared_gui_components/OSListController.hpp"
+#include "../shared_gui_components/GraphicsItems.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <QPainter>
+#include <utility>
 
 namespace openstudio {
 
@@ -30,9 +32,18 @@ RefrigerationSystemItemDelegate::RefrigerationSystemItemDelegate()
 {
 }
 
-QGraphicsItem * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  RefrigerationSystemGridCellItem * item = new RefrigerationSystemGridCellItem();
+  RefrigerationSystemGridCellItem * item = NULL;
+
+  if( dataSource )
+  {
+    item = new RefrigerationSystemGridCellItem();
+
+    bool bingo;
+    bingo = connect(item->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
+    OS_ASSERT(bingo);
+  }
 
   return item;
 }
@@ -43,8 +54,8 @@ RefrigerationSystemGridItem::RefrigerationSystemGridItem()
 
 QRectF RefrigerationSystemGridItem::boundingRect() const
 {
-  int x = columns() * (cellSize().width() + spacing()) - spacing();
-  int y = rows() * (cellSize().height() + spacing()) - spacing();
+  int x = columns() * (RefrigerationSystemGridCellItem::cellSize().width() + spacing()) - spacing();
+  int y = rows() * (RefrigerationSystemGridCellItem::cellSize().height() + spacing()) - spacing();
 
   return QRectF(0,0,x,y);
 }
@@ -93,19 +104,11 @@ void RefrigerationSystemGridItem::refreshAllItemViews()
     delete *it;
   }
 
-  if( m_listController && m_delegate )
+  if( m_listController )
   {
-    for( int i = 0;
-         i != m_listController->count();
-         i++ )
+    for( int i = 0; i < m_listController->count(); i++ )
     {
-      QGraphicsItem * item = createNewItemView(i);
-
-      OS_ASSERT(item);
-
-      std::pair<int,int> coordinates = gridPos(i);
-
-      setItemViewGridPos(item,coordinates);
+      insertItemView(i);
     }
   }
 }
@@ -114,15 +117,23 @@ QGraphicsItem * RefrigerationSystemGridItem::createNewItemView(int i)
 {
   if( m_listController && m_delegate )
   {
-    QGraphicsItem * item = m_delegate->view(m_listController->itemAt(i));
+    QSharedPointer<OSListItem> itemData = m_listController->itemAt(i);
 
-    item->setParentItem(this);
+    OS_ASSERT(itemData);
 
-    //item->setTransform(QTransform(cellSize().width() / item->boundingRect().width(),
-    //                              0,0,
-    //                              cellSize().height() / item->boundingRect().height(),
-    //                              0,0));
-    return item;
+    QGraphicsObject * graphicsItem = m_delegate->view(itemData);
+
+    OS_ASSERT(graphicsItem);
+
+    graphicsItem->setParentItem(this);
+
+    //m_widgetItemPairs.insert( std::make_pair<QGraphicsObject *,QSharedPointer<OSListItem> >(graphicsItem,itemData) );
+
+    //bool bingo = connect(graphicsItem,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
+
+    //OS_ASSERT(bingo);
+
+    return graphicsItem;
   }
   else
   {
@@ -132,10 +143,13 @@ QGraphicsItem * RefrigerationSystemGridItem::createNewItemView(int i)
 
 void RefrigerationSystemGridItem::setItemViewGridPos(QGraphicsItem * item,std::pair<int,int> gridPos)
 {
-  int x = gridPos.second * (cellSize().width() + spacing());
-  int y = gridPos.first * (cellSize().height() + spacing());
+  if( item )
+  {
+    int x = gridPos.second * (RefrigerationSystemGridCellItem::cellSize().width() + spacing());
+    int y = gridPos.first * (RefrigerationSystemGridCellItem::cellSize().height() + spacing());
 
-  item->setPos(x,y);
+    item->setPos(x,y);
+  }
 }
 
 void RefrigerationSystemGridItem::insertItemView(int index)
@@ -164,12 +178,43 @@ void RefrigerationSystemGridItem::insertItemView(int index)
   }
 }
 
-void RefrigerationSystemGridItem::removeItemView(int i)
+void RefrigerationSystemGridItem::removeItemView(int index)
 {
+  if( m_listController )
+  {
+    prepareGeometryChange();
+
+    // Remove Item
+    if(QGraphicsItem * item = viewFromGridPos(gridPos(index)))
+    {
+      delete item;
+    }
+
+    // Move Everything after index back one grid position
+    for( int i = index + 1; i < m_listController->count() + 1; i++ )
+    {
+      std::pair<int,int> oldPos = gridPos(i);
+
+      QGraphicsItem * item = viewFromGridPos(oldPos);
+
+      std::pair<int,int> newPos = gridPos(i - 1);
+
+      setItemViewGridPos(item,newPos);
+    }
+  }
 }
 
 void RefrigerationSystemGridItem::removePair(QObject * object)
 {
+  //if( object )
+  //{
+  //  std::map<QObject *,QSharedPointer<OSListItem> >::iterator it = m_widgetItemPairs.find(object);
+
+  //  if( it != m_widgetItemPairs.end() )
+  //  {
+  //    m_widgetItemPairs.erase(it);
+  //  }
+  //}
 }
 
 void RefrigerationSystemGridItem::refreshItemView(int i)
@@ -207,11 +252,6 @@ int RefrigerationSystemGridItem::columns() const
   return 2;
 }
 
-QSize RefrigerationSystemGridItem::cellSize()
-{
-  return QSize(500,500);
-}
-
 std::pair<int,int> RefrigerationSystemGridItem::gridPos(int index) 
 {
   int row = 0;
@@ -233,8 +273,8 @@ QGraphicsItem * RefrigerationSystemGridItem::viewFromGridPos(std::pair<int,int> 
 {
   QGraphicsItem * result = NULL;
 
-  int x = location.second * (cellSize().width() + spacing()) + cellSize().width() / 2;
-  int y = location.first * (cellSize().height() + spacing()) + cellSize().height() / 2;
+  int x = location.second * (RefrigerationSystemGridCellItem::cellSize().width() + spacing()) + RefrigerationSystemGridCellItem::cellSize().width() / 2;
+  int y = location.first * (RefrigerationSystemGridCellItem::cellSize().height() + spacing()) + RefrigerationSystemGridCellItem::cellSize().height() / 2;
 
   QPoint point(x,y);
 
@@ -244,7 +284,7 @@ QGraphicsItem * RefrigerationSystemGridItem::viewFromGridPos(std::pair<int,int> 
       it != items.end();
       it++)
   {
-    QRect rect((*it)->pos().x(),(*it)->pos().y(),cellSize().width(),cellSize().height());
+    QRect rect((*it)->pos().x(),(*it)->pos().y(),RefrigerationSystemGridCellItem::cellSize().width(),RefrigerationSystemGridCellItem::cellSize().height());
 
     if( (*it)->contains(point) )
     {
@@ -260,17 +300,46 @@ RefrigerationSystemGridCellItem::RefrigerationSystemGridCellItem()
   refrigerationSystemItem = new RefrigerationSystemItem();
   refrigerationSystemItem->setParentItem(this);
 
-  refrigerationSystemItem->setTransform(QTransform((RefrigerationSystemGridItem::cellSize().width() - 20) / refrigerationSystemItem->boundingRect().width(),
+  refrigerationSystemItem->setTransform(QTransform((contentRect().width() - 20) / refrigerationSystemItem->boundingRect().width(),
                                         0,0,
-                                        (RefrigerationSystemGridItem::cellSize().height() - 20)  / refrigerationSystemItem->boundingRect().height(),
+                                        (contentRect().height() - 20)  / refrigerationSystemItem->boundingRect().height(),
                                         0,0));
 
-  refrigerationSystemItem->setPos(10,10);
+  refrigerationSystemItem->setPos(contentRect().x() + 10,contentRect().y() + 10);
+
+  removeButtonItem = new RemoveButtonItem();
+  removeButtonItem->setParentItem(this);
+  removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,10);
 }
 
 QRectF RefrigerationSystemGridCellItem::boundingRect() const
 {
-  return QRectF(QPoint(0,0),RefrigerationSystemGridItem::cellSize());
+  return QRectF(QPoint(0,0),cellSize());
+}
+
+int RefrigerationSystemGridCellItem::cellWidth()
+{
+  return 450;
+}
+
+int RefrigerationSystemGridCellItem::headerHeight()
+{
+  return 75;
+}
+
+QSize RefrigerationSystemGridCellItem::cellSize()
+{
+  return QSize(cellWidth(),cellWidth() + headerHeight());
+}
+
+QRectF RefrigerationSystemGridCellItem::contentRect() const
+{
+  return QRectF(0,headerHeight(),cellWidth(),cellWidth());
+}
+
+QRectF RefrigerationSystemGridCellItem::headerRect() const
+{
+  return QRectF(0,0,cellWidth(),headerHeight());
 }
 
 void RefrigerationSystemGridCellItem::paint( QPainter *painter, 
@@ -280,10 +349,13 @@ void RefrigerationSystemGridCellItem::paint( QPainter *painter,
   // Background and Border
 
   painter->setRenderHint(QPainter::Antialiasing, true);
-  painter->setBrush(Qt::green);
-  painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+  painter->setBrush(Qt::NoBrush);
 
+  painter->setPen(QPen(Qt::black,1,Qt::SolidLine, Qt::RoundCap));
   painter->drawRect(boundingRect());
+
+  painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+  painter->drawRect(headerRect());
 }
 
 RefrigerationSystemItem::RefrigerationSystemItem()
