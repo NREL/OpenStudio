@@ -39,7 +39,7 @@
 #include <QSslError>
 #include <QTextStream>
 
-#define REMOTE_PRODUCTION_SERVER "http://bcl.nrel.gov"
+#define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
 
 namespace openstudio{
@@ -955,10 +955,10 @@ namespace openstudio{
       LOG(Error, "Error: Empty reply");
     }else{
       //Print response headers
-      /*for(int i=0; i<reply->rawHeaderList().size(); ++i){
+      for(int i=0; i<reply->rawHeaderList().size(); ++i){
         QString str(reply->rawHeaderList()[i].constData());
         std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
-      }*/
+      }
       if (reply->error() == QNetworkReply::NoError){
         QDomDocument document;
         QString error;
@@ -996,7 +996,7 @@ namespace openstudio{
         LOG(Error, "Network Error: Host " << remoteUrl() << " not found");
       }else if (reply->error() == QNetworkReply::UnknownNetworkError && reply->errorString().startsWith("Error creating SSL context")){
         LOG(Error, "Network Error: Unable to create SSL connection.  Verify that SSL libraries are in the system path.");
-        //QMessageBox::warning(0, "Unable to Create SSL Connection", QString("Verify that SSL libraries are in the system path"));
+        //QMessageBox::warning(0, "Unable to Create SSL Connection", "Verify that SSL libraries are in the system path");
       }else{
         LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
       }
