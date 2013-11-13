@@ -27,10 +27,11 @@
 
 class QGraphicsScene;
 class QGraphicsView;
+class QGraphicsObject;
 
 namespace openstudio {
 
-class RefrigerationSystemGridItem;
+class RefrigerationSystemGridView;
 class RefrigerationSystemListController;
 class RefrigerationScene;
 
@@ -52,7 +53,7 @@ class RefrigerationController : public QObject
 
   QPointer<QGraphicsView> m_refrigerationGraphicsView;
 
-  QSharedPointer<RefrigerationSystemGridItem> m_refrigerationSystemGridItem;
+  QSharedPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
 
   QSharedPointer<RefrigerationSystemListController> m_refrigerationSystemListController;
 
@@ -80,6 +81,29 @@ class RefrigerationSystemListController : public OSListController
   std::vector<model::RefrigerationSystem> systems() const;
 
   int systemIndex(const model::RefrigerationSystem & system) const;
+};
+
+// A delegate to provide cells of the refigeration system grid
+class RefrigerationSystemItemDelegate : public OSGraphicsItemDelegate
+{
+  Q_OBJECT;
+
+  public:
+
+  virtual ~RefrigerationSystemItemDelegate() {}
+
+  virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource);
+};
+
+class RefrigerationSystemListDropZoneItem : public OSListItem
+{
+  Q_OBJECT
+
+  public:
+
+  RefrigerationSystemListDropZoneItem(OSListController * listController = 0);
+
+  ~RefrigerationSystemListDropZoneItem() {}
 };
 
 class RefrigerationSystemListItem : public OSListItem

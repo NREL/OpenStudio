@@ -24,44 +24,32 @@
 
 namespace openstudio {
 
-class RefrigerationCondenserItem;
-class RefrigerationSubCoolerItem;
-class RefrigerationHeatReclaimItem;
-class RefrigerationCompressorItem;
-class RefrigerationSHXItem;
-class RefrigerationCasesItem;
-class RefrigerationSystemItem;
-class RefrigerationSecondaryItem;
+class RefrigerationCondenserView;
+class RefrigerationSubCoolerView;
+class RefrigerationHeatReclaimView;
+class RefrigerationCompressorView;
+class RefrigerationSHXView;
+class RefrigerationCasesView;
+class RefrigerationSystemView;
+class RefrigerationSecondaryView;
 class OSListItem;
 class OSListController;
+class ButtonItem;
 class RemoveButtonItem;
-
-// A delegate to provide cells of the refigeration system grid
-class RefrigerationSystemItemDelegate : public QObject
-{
-  Q_OBJECT;
-
-  public:
-
-  RefrigerationSystemItemDelegate();
-
-  virtual ~RefrigerationSystemItemDelegate() {}
-
-  virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource);
-};
+class OSGraphicsItemDelegate;
 
 // A grid layout of refrigeration systems
-class RefrigerationSystemGridItem : public QGraphicsObject
+class RefrigerationSystemGridView : public QGraphicsObject
 {
   Q_OBJECT;
 
   public:
 
-  RefrigerationSystemGridItem();
+  RefrigerationSystemGridView();
 
-  virtual ~RefrigerationSystemGridItem() {};
+  virtual ~RefrigerationSystemGridView() {};
 
-  void setDelegate(QSharedPointer<RefrigerationSystemItemDelegate> delegate);
+  void setDelegate(QSharedPointer<OSGraphicsItemDelegate> delegate);
 
   void setListController(QSharedPointer<OSListController> listController);
 
@@ -105,7 +93,7 @@ class RefrigerationSystemGridItem : public QGraphicsObject
 
   QGraphicsItem * viewFromGridPos(std::pair<int,int> gridPos);
 
-  QSharedPointer<RefrigerationSystemItemDelegate> m_delegate;
+  QSharedPointer<OSGraphicsItemDelegate> m_delegate;
 
   QSharedPointer<OSListController> m_listController;
 
@@ -115,17 +103,17 @@ class RefrigerationSystemGridItem : public QGraphicsObject
 
 // A cell of the refrigeration system grid
 // This is an item that contains a RefrigerationSystemItem plus some overlays
-class RefrigerationSystemGridCellItem : public QGraphicsObject
+class RefrigerationSystemMiniView : public QGraphicsObject
 {
   Q_OBJECT;
 
   public:
 
-  RefrigerationSystemGridCellItem();
+  RefrigerationSystemMiniView();
 
-  virtual ~RefrigerationSystemGridCellItem() {}
+  virtual ~RefrigerationSystemMiniView() {}
 
-  RefrigerationSystemItem * refrigerationSystemItem;
+  RefrigerationSystemView * refrigerationSystemView;
 
   RemoveButtonItem * removeButtonItem;
 
@@ -150,31 +138,52 @@ class RefrigerationSystemGridCellItem : public QGraphicsObject
   static int headerHeight();
 };
 
-class RefrigerationSystemItem : public QGraphicsObject
+class RefrigerationSystemDropZoneView : public QGraphicsObject
 {
   Q_OBJECT;
 
   public:
 
-  RefrigerationSystemItem();
+  RefrigerationSystemDropZoneView();
 
-  virtual ~RefrigerationSystemItem() {}
+  virtual ~RefrigerationSystemDropZoneView() {}
+
+  ButtonItem * buttonItem;
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+};
+
+class RefrigerationSystemView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSystemView();
+
+  virtual ~RefrigerationSystemView() {}
 
   static const int verticalSpacing; 
 
-  RefrigerationCondenserItem * refrigerationCondenserItem;
+  RefrigerationCondenserView * refrigerationCondenserView;
 
-  RefrigerationSubCoolerItem * refrigerationSubCoolerItem;
+  RefrigerationSubCoolerView * refrigerationSubCoolerView;
 
-  RefrigerationHeatReclaimItem * refrigerationHeatReclaimItem;
+  RefrigerationHeatReclaimView * refrigerationHeatReclaimView;
 
-  RefrigerationCompressorItem * refrigerationCompressorItem;
+  RefrigerationCompressorView * refrigerationCompressorView;
 
-  RefrigerationSHXItem * refrigerationSHXItem;
+  RefrigerationSHXView * refrigerationSHXView;
 
-  RefrigerationCasesItem * refrigerationCasesItem;
+  RefrigerationCasesView * refrigerationCasesView;
 
-  RefrigerationSecondaryItem * refrigerationSecondaryItem;
+  RefrigerationSecondaryView * refrigerationSecondaryView;
 
   void adjustLayout();
 
@@ -196,15 +205,15 @@ class RefrigerationSystemItem : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationCasesItem : public QGraphicsObject
+class RefrigerationCasesView : public QGraphicsObject
 {
   Q_OBJECT;
 
   public:
 
-  RefrigerationCasesItem();
+  RefrigerationCasesView();
 
-  virtual ~RefrigerationCasesItem() {}
+  virtual ~RefrigerationCasesView() {}
 
   QRectF boundingRect() const;
 
@@ -215,22 +224,7 @@ class RefrigerationCasesItem : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationCondenserItem : public QGraphicsObject
-{
-  Q_OBJECT;
-
-  public:
-
-  QRectF boundingRect() const;
-
-  protected:
-
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
-              QWidget *widget = 0 );
-};
-
-class RefrigerationCompressorItem : public QGraphicsObject
+class RefrigerationCondenserView : public QGraphicsObject
 {
   Q_OBJECT;
 
@@ -245,7 +239,7 @@ class RefrigerationCompressorItem : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationSubCoolerItem : public QGraphicsObject
+class RefrigerationCompressorView : public QGraphicsObject
 {
   Q_OBJECT;
 
@@ -260,7 +254,7 @@ class RefrigerationSubCoolerItem : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationHeatReclaimItem : public QGraphicsObject
+class RefrigerationSubCoolerView : public QGraphicsObject
 {
   Q_OBJECT;
 
@@ -275,7 +269,7 @@ class RefrigerationHeatReclaimItem : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationSHXItem : public QGraphicsObject
+class RefrigerationHeatReclaimView : public QGraphicsObject
 {
   Q_OBJECT;
 
@@ -290,7 +284,22 @@ class RefrigerationSHXItem : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationSecondaryItem : public QGraphicsObject
+class RefrigerationSHXView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 );
+};
+
+class RefrigerationSecondaryView : public QGraphicsObject
 {
   Q_OBJECT;
 
