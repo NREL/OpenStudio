@@ -232,15 +232,24 @@ void ResultsTabController::downloadResults()
           boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
           if(cloudAnalysisDriver){
 
-            bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
-            if (sameSession){
-              bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
-              resultsView->enableDownloadResultsButton(RUNNING_DETAILED);
+            if (cloudAnalysisDriver->status() == analysisdriver::AnalysisStatus::Running){
+
+              bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
+              if (sameSession){
+                bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+              }else{
+                // DLM: should not get here
+                QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");
+                resultsView->enableDownloadResultsButton(RESULTS_UNAVAILABLE);
+              }
+
             }else{
-              // DLM: should not get here
-              QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");
-              resultsView->enableDownloadResultsButton(RESULTS_UNAVAILABLE);
+              if (dataPoint.runType() == analysis::DataPointRunType::CloudSlim){
+                dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
+              }
             }
+
+            enableDownloadResultsButton();
           }
         }
       }
