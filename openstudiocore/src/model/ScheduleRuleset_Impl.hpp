@@ -36,7 +36,6 @@ namespace detail {
 
   /** ScheduleRuleset_Impl is a Schedule_Impl that is the implementation class for ScheduleRuleset.*/
   class MODEL_API ScheduleRuleset_Impl : public Schedule_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

@@ -33,10 +33,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API ComponentCostAdjustments_Impl : public ParentObject_Impl{
-
-  Q_OBJECT;
-
-public:
+ public:
   // constructor
   ComponentCostAdjustments_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 

@@ -30,9 +30,7 @@ namespace detail {
 
 class MODEL_API ConnectorMixer_Impl : public Mixer_Impl 
 {
-  Q_OBJECT;
-
-  public:
+ public:
 
   ConnectorMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 

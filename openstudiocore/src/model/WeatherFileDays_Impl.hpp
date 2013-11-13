@@ -28,7 +28,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API WeatherFileDays_Impl : public SizingPeriod_Impl {
-    Q_OBJECT;
    public:
 
     // constructor

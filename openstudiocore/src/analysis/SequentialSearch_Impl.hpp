@@ -38,7 +38,6 @@ namespace detail {
 
   /** SequentialSearch_Impl is a Algorithm_Impl that is the implementation class for SequentialSearch.*/
   class ANALYSIS_API SequentialSearch_Impl : public OpenStudioAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

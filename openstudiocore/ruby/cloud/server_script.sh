@@ -18,6 +18,11 @@ chown ubuntu:ubuntu /home/ubuntu/setup*
 sudo rm -rf /mnt/openstudio
 sudo mkdir -p /mnt/openstudio
 sudo chmod 777 /var/www/rails/openstudio/public
+sudo rm -rf /mnt/mongodb/data
+sudo mkdir -p /mnt/mongodb/data
+sudo chown mongodb:nogroup /mnt/mongodb/data
+sudo service mongodb restart
+sudo service delayed_job restart
 
 # save some files into the right directory
 cp -rf /data/worker-nodes/* /mnt/openstudio/

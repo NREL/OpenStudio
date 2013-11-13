@@ -31,7 +31,6 @@ class ClimateZone;
 namespace detail {
 
   class MODEL_API ClimateZones_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

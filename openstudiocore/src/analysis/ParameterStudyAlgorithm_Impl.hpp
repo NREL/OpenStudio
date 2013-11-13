@@ -34,7 +34,6 @@ namespace detail {
   /** ParameterStudyAlgorithm_Impl is a DakotaAlgorithm_Impl that is the implementation class for ParameterStudyAlgorithm.*/
 
   class ANALYSIS_API ParameterStudyAlgorithm_Impl : public DakotaAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

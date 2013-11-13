@@ -26,6 +26,8 @@
 
 #include <project/ProjectDatabase.hpp>
 #include <analysisdriver/CloudAnalysisDriver.hpp>
+#include <analysisdriver/SimpleProject.hpp>
+#include <analysis/DataPoint.hpp>
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
@@ -238,9 +240,21 @@ void CloudMonitor::startCloud()
   {
     bool preCheckPassed = true;
 
-    CloudSettings settings = PatApp::instance()->cloudSettings();
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if( preCheckPassed && project )
+    {
+      // check for baseline
+      analysis::DataPoint baseline = project->baselineDataPoint();
+      if ( !baseline.complete() ||  baseline.failed() ){
+        QString error("The baseline model must be run before starting the cloud.");
+        QMessageBox::critical(PatApp::instance()->mainWindow, "Baseline Not Run", error);
+        preCheckPassed = false;
+      }
+    }
 
-    if( boost::optional<AWSSettings> awsSettings = settings.optionalCast<AWSSettings>() )
+    CloudSettings settings = PatApp::instance()->cloudSettings();
+    boost::optional<AWSSettings> awsSettings = settings.optionalCast<AWSSettings>();
+    if( preCheckPassed && awsSettings )
     {
       if( !awsSettings->validAccessKey() ) {
         QString error("Invalid Access Key.  Verify settings from Cloud menu.");
@@ -256,7 +270,6 @@ void CloudMonitor::startCloud()
         QString error("The user agreement must be reviewed and signed before continuing.  Verify settings from Cloud menu.");
         QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
         preCheckPassed = false;
-
       }
     }
 

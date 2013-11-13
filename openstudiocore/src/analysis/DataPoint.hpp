@@ -59,10 +59,8 @@ namespace detail {
 
 struct ANALYSIS_API DataPointSerializationOptions {
   openstudio::path projectDir;
-  bool osServerView;
 
-  DataPointSerializationOptions(const openstudio::path& t_projectDir = openstudio::path(),
-                                bool t_osServerView=true);
+  DataPointSerializationOptions(const openstudio::path& t_projectDir = openstudio::path());
 };
 
 /** \class DataPointRunType
