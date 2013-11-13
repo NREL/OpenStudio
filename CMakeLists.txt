@@ -211,7 +211,14 @@ IF (UNIX)
 ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
+  OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 ruby 2.0" OFF)
+  
+  IF(WIN32 AND MSVC AND CMAKE_CL_64)
+    MESSAGE(ERROR "Cannot use 32bit mingw build of ruby 2.0 with 64bit build of openstudio") 
+  ENDIF() 
+  
   MARK_AS_ADVANCED(BUILD_RUBY)
+  MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
 ENDIF()
 
 IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
@@ -283,17 +290,31 @@ IF(BUILD_RUBY)
       set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
       set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
     ELSE()
-      # And windows requires mingw to build ruby, so we just unpackage it locally
-      ExternalProject_Add(Ruby
-        URL ${CMAKE_SOURCE_DIR}/dependencies/ruby-1.8.6-msvc.zip
-        URL_MD5 4ddb09388d9bc2c6dfdc47b01e0e8bb9
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        )
-      SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
-      set(RUBY_DLL msvcrt-ruby18.dll)
-      set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+      IF (BUILD_RUBY_MINGW32_2_0)
+        # And windows requires mingw to build ruby, so we just unpackage it locally
+        ExternalProject_Add(Ruby
+          URL https://dl.dropboxusercontent.com/u/11211990/ruby-2.0.0-p247-i386-mingw32-msvc.zip
+          URL_MD5 0a56d7f617985b0da7bc0551a6f5088a
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+        SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
+        set(RUBY_DLL msvcrt-ruby200.dll)
+        set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+      ELSE()
+        # And windows requires mingw to build ruby, so we just unpackage it locally
+        ExternalProject_Add(Ruby
+          URL ${CMAKE_SOURCE_DIR}/dependencies/ruby-1.8.6-msvc.zip
+          URL_MD5 4ddb09388d9bc2c6dfdc47b01e0e8bb9
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+        SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
+        set(RUBY_DLL msvcrt-ruby18.dll)
+        set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+      ENDIF()
     ENDIF()
     
     
