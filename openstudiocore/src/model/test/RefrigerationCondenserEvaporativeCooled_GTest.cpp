@@ -23,8 +23,8 @@
 
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+//#include <model/ThermalZone.hpp>
+//#include <model/ThermalZone_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
@@ -515,7 +515,7 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithDe
 TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCustomData)
 {
   Model model;
-  ThermalZone thermalZone(model);
+  // ThermalZone thermalZone(model);
   Schedule evaporativeCondenserSchedule = model.alwaysOnDiscreteSchedule();
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
@@ -530,7 +530,7 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCu
   testObject.setApproachTemperatureCoefficient4(9.0);
   testObject.setMinimumCapacityFactor(0.9);
   testObject.setMaximumCapacityFactor(9.0);
-  testObject.setAirInletNode(thermalZone);
+  // testObject.setAirInletNode(thermalZone);
   testObject.autocalculateRatedAirFlowRate();
   testObject.setBasinHeaterCapacity(999.0);
   testObject.setBasinHeaterSetpointTemperature(999.0);
@@ -563,7 +563,7 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCu
   EXPECT_DOUBLE_EQ(testObjectClone.condensateReceiverRefrigerantInventory(),999.0);
   EXPECT_DOUBLE_EQ(testObjectClone.condensatePipingRefrigerantInventory(),999.0);
 
-  EXPECT_FALSE(testObjectClone.airInletNode());
+  // EXPECT_FALSE(testObjectClone.airInletNode());
   EXPECT_EQ(testObject.evaporativeCondenserAvailabilitySchedule().get().handle(), testObjectClone.evaporativeCondenserAvailabilitySchedule().get().handle());
   EXPECT_EQ(evaporativeCondenserSchedule.handle(), testObjectClone.evaporativeCondenserAvailabilitySchedule().get().handle());
 }

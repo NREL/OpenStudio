@@ -5983,8 +5983,7 @@ OS:Refrigeration:Condenser:EvaporativeCooled,
         \default 5.0
         \note Taken from manufacturer's Heat Rejection Capacity Factor Table
   A4,   \field Air Inlet Node Name
-        \type object-list
-        \object-list ThermalZoneNames
+        \type alpha
         \note If field is left blank,
         \note then the model assumes that the inlet air
         \note conditions are the outdoor air conditions for the current timestep

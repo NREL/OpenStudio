@@ -27,7 +27,7 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class ThermalZone;
+//class ThermalZone;
 // WaterStorageTank object not used
 //class WaterStorageTank;
 class Schedule;
@@ -110,8 +110,8 @@ namespace detail {
 
     bool isMaximumCapacityFactorDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-    boost::optional<ThermalZone> airInletNode() const;
+    // TODO: Check return type. From object lists, some candidates are: std::string.
+    //std::string airInletNode() const;
 
     boost::optional<double> ratedAirFlowRate() const;
 
@@ -199,8 +199,8 @@ namespace detail {
 
     void resetMaximumCapacityFactor();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-    bool setAirInletNode(const boost::optional<ThermalZone>& thermalZone);
+    // TODO: Check argument type. From object lists, some candidates are: std::string.
+    //bool setAirInletNode(std::string airInletNode);
 
     void resetAirInletNode();
 
