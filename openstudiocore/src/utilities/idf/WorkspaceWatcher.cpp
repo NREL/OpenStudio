@@ -35,20 +35,20 @@ WorkspaceWatcher::WorkspaceWatcher(const Workspace& work)
 
   detail::Workspace_ImplPtr wsImpl = work.getImpl<detail::Workspace_Impl>();
   bool connected = connect(wsImpl.get(), SIGNAL(onChange()), SLOT(change()));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 
   // ideally this would be a queued connection so objects can be initialized before signal is processed
   // However, WorkspaceObject is not a QObject.  Instead we use QTimer to give a delay.
   connected = connected && connect(wsImpl.get(),
       SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
       SLOT(objectAdd(const WorkspaceObject&)));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 
   // this signal happens immediately
   connected = connected && connect(wsImpl.get(),
       SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
       SLOT(objectRemove(const WorkspaceObject&)));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 }
 
 WorkspaceWatcher::~WorkspaceWatcher()
@@ -115,14 +115,14 @@ void WorkspaceWatcher::onBecomeClean()
 
 void WorkspaceWatcher::onObjectAdd(const WorkspaceObject& addedObject)
 {
-  BOOST_ASSERT(addedObject.initialized());
-  BOOST_ASSERT(addedObject.workspace().isMember(addedObject.handle()));
+  OS_ASSERT(addedObject.initialized());
+  OS_ASSERT(addedObject.workspace().isMember(addedObject.handle()));
 }
 
 void WorkspaceWatcher::onObjectRemove(const WorkspaceObject& removedObject)
 {
-  BOOST_ASSERT(removedObject.initialized());
-  BOOST_ASSERT(removedObject.workspace().isMember(removedObject.handle()));
+  OS_ASSERT(removedObject.initialized());
+  OS_ASSERT(removedObject.workspace().isMember(removedObject.handle()));
 }
 
 void WorkspaceWatcher::change()
@@ -153,7 +153,7 @@ void WorkspaceWatcher::processAddedObjects()
 {
   std::vector<WorkspaceObject> addedObjects;
   std::swap(m_addedObjects, addedObjects);
-  BOOST_ASSERT(m_addedObjects.empty());
+  OS_ASSERT(m_addedObjects.empty());
 
   BOOST_FOREACH(const WorkspaceObject& addedObject, addedObjects){
     // check for the case where object has been removed before the add was processed

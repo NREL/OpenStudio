@@ -221,6 +221,27 @@ SET(osversion_resources_src
   osversion/1_0_2/OpenStudio.idd
   osversion/1_0_2/example.osm
   osversion/1_0_2/example.osc
+  osversion/1_0_3/OpenStudio.idd
+  osversion/1_0_3/example.osm
+  osversion/1_0_3/example.osc
+  osversion/1_0_4/OpenStudio.idd
+  osversion/1_0_4/example.osm
+  osversion/1_0_4/example.osc
+  osversion/1_0_5/OpenStudio.idd
+  osversion/1_0_5/example.osm
+  osversion/1_0_5/example.osc
+  osversion/1_0_6/OpenStudio.idd
+  osversion/1_0_6/example.osm
+  osversion/1_0_6/example.osc
+  osversion/1_0_7/OpenStudio.idd
+  osversion/1_0_7/example.osm
+  osversion/1_0_7/example.osc
+  osversion/1_1_0/OpenStudio.idd
+  osversion/1_1_0/example.osm
+  osversion/1_1_0/example.osc
+  osversion/1_1_1/OpenStudio.idd
+  osversion/1_1_1/example.osm
+  osversion/1_1_1/example.osc
   osversion/unknown.osc
 )
 
@@ -312,6 +333,14 @@ SET(project_resources_src
   project/version/project_0_10_4.db
   project/version/project_0_11_5.osp
   project/version/project_0_11_5.db
+  project/version/project_1_0_2.osp
+  project/version/project_1_0_2.db
+  project/version/project_1_0_3.osp
+  project/version/project_1_0_3.db  
+  project/version/project_1_0_4.osp
+  project/version/project_1_0_4.db  
+  project/version/project_1_0_6.osp
+  project/version/project_1_0_6.db  
 )
 
 # update the resources
@@ -331,7 +360,7 @@ CREATE_SRC_GROUPS( "${project_resources_src}" )
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(analysisdriver_resources_src
-  analysisdriver/PostProcessAppendToReportXML.rb
+  analysisdriver/PostProcessSecondXML.rb
 )
 
 # update the resources
@@ -575,6 +604,10 @@ ENDIF(BUILD_SDD)
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(analysis_resources_src
+  analysis/version/analysis_1-0-3.json
+  analysis/version/data_point_1-0-3.json
+  analysis/version/analysis_1-0-4.json
+  analysis/version/data_point_1-0-4.json
 )
 
 # update the resources
@@ -587,3 +620,25 @@ ADD_CUSTOM_TARGET( openstudio_analysis_resources
 )
 
 CREATE_SRC_GROUPS( "${analysis_resources_src}" )
+
+
+########################################################
+# isomodel resources
+# clear runs, calls to RUN_ENERGYPLUS will populate this
+SET(ENERGYPLUS_OUTPUTS "")
+
+SET(isomodel_resources_src
+  isomodel/exampleModel.ISO
+  isomodel/weather.epw
+)
+
+# update the resources
+UPDATE_RESOURCES("${isomodel_resources_src}")
+
+# add target
+ADD_CUSTOM_TARGET( openstudio_isomodel_resources
+  DEPENDS ${isomodel_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${isomodel_resources_src}
+)
+
+CREATE_SRC_GROUPS( "${isomodel_resources_src}" )

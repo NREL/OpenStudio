@@ -60,6 +60,13 @@ void SqlFile::createIndexes()
   }
 }
 
+void SqlFile::removeIndexes()
+{
+  if (m_impl){
+    m_impl->removeIndexes();
+  }
+}
+
 bool SqlFile::connectionOpen() const
 {
   bool result = false;

@@ -44,7 +44,7 @@ namespace detail {
       bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneHVACPackagedTerminalAirConditioner::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACPackagedTerminalAirConditioner::iddObjectType());
   }
 
   ZoneHVACPackagedTerminalAirConditioner_Impl::ZoneHVACPackagedTerminalAirConditioner_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -52,7 +52,7 @@ namespace detail {
                                                                                            bool keepHandle)
     : ZoneHVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ZoneHVACPackagedTerminalAirConditioner::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneHVACPackagedTerminalAirConditioner::iddObjectType());
   }
 
   ZoneHVACPackagedTerminalAirConditioner_Impl::ZoneHVACPackagedTerminalAirConditioner_Impl(const ZoneHVACPackagedTerminalAirConditioner_Impl& other,
@@ -155,23 +155,23 @@ namespace detail {
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<ZoneHVACPackagedTerminalAirConditioner_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string ZoneHVACPackagedTerminalAirConditioner_Impl::outdoorAirMixerObjectType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerObjectType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string ZoneHVACPackagedTerminalAirConditioner_Impl::outdoorAirMixerName() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -256,27 +256,27 @@ namespace detail {
   HVACComponent ZoneHVACPackagedTerminalAirConditioner_Impl::supplyAirFan() const
   {
     boost::optional<HVACComponent> fan = optionalSupplyAirFan();
-    BOOST_ASSERT(fan);
+    OS_ASSERT(fan);
     return fan.get();
   }
 
   HVACComponent ZoneHVACPackagedTerminalAirConditioner_Impl::heatingCoil() const
   {
     boost::optional<HVACComponent> coil = optionalHeatingCoil();
-    BOOST_ASSERT(coil);
+    OS_ASSERT(coil);
     return coil.get();
   }
 
   HVACComponent ZoneHVACPackagedTerminalAirConditioner_Impl::coolingCoil() const
   {
     boost::optional<HVACComponent> coil = optionalCoolingCoil();
-    BOOST_ASSERT(coil);
+    OS_ASSERT(coil);
     return coil.get();
   }
 
   std::string ZoneHVACPackagedTerminalAirConditioner_Impl::fanPlacement() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::FanPlacement,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -307,7 +307,7 @@ namespace detail {
   void ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = false;
     result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName, outdoorAirMixerName);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation) {
@@ -322,7 +322,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::autosizeSupplyAirFlowRateDuringCoolingOperation() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFlowRateDuringHeatingOperation(boost::optional<double> supplyAirFlowRateDuringHeatingOperation) {
@@ -337,7 +337,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::autosizeSupplyAirFlowRateDuringHeatingOperation() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
@@ -352,12 +352,12 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirFlowRateDuringCoolingOperation(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation) {
@@ -372,7 +372,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::autosizeOutdoorAirFlowRateDuringCoolingOperation() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateDuringCoolingOperation, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirFlowRateDuringHeatingOperation(boost::optional<double> outdoorAirFlowRateDuringHeatingOperation) {
@@ -387,7 +387,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::autosizeOutdoorAirFlowRateDuringHeatingOperation() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateDuringHeatingOperation, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
@@ -402,12 +402,12 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFan( HVACComponent & fan )
@@ -471,7 +471,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::resetFanPlacement() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::FanPlacement, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
@@ -484,7 +484,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalAirConditioner_Impl::resetSupplyAirFanOperatingModeSchedule() {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanOperatingModeScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ZoneHVACPackagedTerminalAirConditioner_Impl::optionalAvailabilitySchedule() const {
@@ -599,7 +599,7 @@ ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner( 
                                                                                 HVACComponent & coolingCoil )
   : ZoneHVACComponent(ZoneHVACPackagedTerminalAirConditioner::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>());
 
   bool ok = setAvailabilitySchedule(availabilitySchedule);
   if (!ok) {

@@ -31,6 +31,8 @@
 #include <utilities/geometry/Vector3d.hpp>
 #include <utilities/geometry/EulerAngles.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -41,7 +43,7 @@ namespace detail {
   {
     // connect signals
     bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    BOOST_ASSERT(connected);
+    OS_ASSERT(connected);
   }
 
   PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +53,7 @@ namespace detail {
   {
     // connect signals
     bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    BOOST_ASSERT(connected);
+    OS_ASSERT(connected);
   }
 
   PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const PlanarSurfaceGroup_Impl& other,
@@ -61,7 +63,7 @@ namespace detail {
   {
     // connect signals
     bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-    BOOST_ASSERT(connected);
+    OS_ASSERT(connected);
   }
 
   openstudio::Transformation PlanarSurfaceGroup_Impl::transformation() const
@@ -127,7 +129,7 @@ namespace detail {
 PlanarSurfaceGroup::PlanarSurfaceGroup(IddObjectType iddObjectType, const Model& model)
   : ParentObject(iddObjectType,model)
 {
-  BOOST_ASSERT(getImpl<detail::PlanarSurfaceGroup_Impl>());
+  OS_ASSERT(getImpl<detail::PlanarSurfaceGroup_Impl>());
 }
 
 

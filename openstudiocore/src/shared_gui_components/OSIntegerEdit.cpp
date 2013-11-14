@@ -21,6 +21,7 @@
 
 #include <model/ModelObject_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/data/Attribute.hpp>
 
@@ -83,6 +84,54 @@ void OSIntegerEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
+void OSIntegerEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+                          IntGetter get,
+                          boost::optional<IntSetter> set,
+                          boost::optional<NoFailAction> reset,
+                          boost::optional<NoFailAction> autosize,
+                          boost::optional<NoFailAction> autocalculate,
+                          boost::optional<BasicQuery> isDefaulted,
+                          boost::optional<BasicQuery> isAutosized,
+                          boost::optional<BasicQuery> isAutocalculated)
+{
+  m_modelExtensibleGroup = modelExtensibleGroup;
+  m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
+  m_get = get;
+  m_set = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  completeBind();
+}
+
+void OSIntegerEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+                          OptionalIntGetter get,
+                          boost::optional<IntSetter> set,
+                          boost::optional<NoFailAction> reset,
+                          boost::optional<NoFailAction> autosize,
+                          boost::optional<NoFailAction> autocalculate,
+                          boost::optional<BasicQuery> isDefaulted,
+                          boost::optional<BasicQuery> isAutosized,
+                          boost::optional<BasicQuery> isAutocalculated)
+{
+  m_modelExtensibleGroup = modelExtensibleGroup;
+  m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
+  m_getOptional = get;
+  m_set = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  completeBind();
+}
+
 void OSIntegerEdit2::completeBind() {
 
   // only let one of autosize/autocalculate
@@ -97,15 +146,15 @@ void OSIntegerEdit2::completeBind() {
 
   bool isConnected = false;
   isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   refreshTextAndLabel();
 }
@@ -114,6 +163,7 @@ void OSIntegerEdit2::unbind() {
   if (m_modelObject){
     this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
     m_modelObject.reset();
+    m_modelExtensibleGroup.reset();
     m_get.reset();
     m_getOptional.reset();
     m_set.reset();
@@ -170,6 +220,13 @@ void OSIntegerEdit2::onEditingFinished() {
 }
 
 void OSIntegerEdit2::onModelObjectChange() {
+  if (m_modelExtensibleGroup){
+    if (m_modelExtensibleGroup->empty()){
+      // this is equivalent to onModelObjectRemove for the extensible group
+      unbind();
+      return;
+    }
+  }
   refreshTextAndLabel();
 }
 
@@ -196,7 +253,7 @@ void OSIntegerEdit2::refreshTextAndLabel() {
       oi = (*m_get)();
     }
     else {
-      Q_ASSERT(m_getOptional);
+      OS_ASSERT(m_getOptional);
       oi = (*m_getOptional)();
     }
     if (oi) {
@@ -284,30 +341,30 @@ void OSIntegerEdit::bind(model::ModelObject& modelObject,
   // check for attribute existence
   StringVector attributeNames = modelObject.attributeNames();
   StringVector::const_iterator anb(attributeNames.begin()),ane(attributeNames.end());
-  BOOST_ASSERT(std::find(anb,ane,m_property) != ane);
+  OS_ASSERT(std::find(anb,ane,m_property) != ane);
   if (m_isDefaultedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
+    OS_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
   }
   if (m_isAutosizedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
+    OS_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
   }
   if (m_isAutocalculatedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
+    OS_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
   }
 
   setEnabled(true);
 
   bool isConnected = false;
   isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   refreshTextAndLabel();
 }

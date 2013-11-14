@@ -78,51 +78,27 @@ RubyJobBuilder::RubyJobBuilder(const JobParams &t_params)
 ///   Calling addInputFile for appropriate t_measure.inputFileType()
 ///   Calling copyRequiredFiles for t_measure.inputFileType to t_measure.outputFileType()
 RubyJobBuilder::RubyJobBuilder(const openstudio::BCLMeasure &t_measure,
-    const std::vector<ruleset::OSArgument>& t_args,
-      const openstudio::path &t_relativeTo,
-      bool t_copyFileArguments)
+                               const std::vector<ruleset::OSArgument>& t_args,
+                               const openstudio::path &t_relativeTo,
+                               bool t_copyFileTrue)
   : m_userScriptJob(true)
 {
-  boost::optional<openstudio::path> script = t_measure.primaryRubyScriptPath();
-  if (!script)
+  constructFromBCLMeasure(t_measure,t_args,t_relativeTo,t_copyFileTrue);
+}
+
+RubyJobBuilder::RubyJobBuilder(const openstudio::BCLMeasure &t_measure,
+                               const std::map<std::string,ruleset::OSArgument>& t_args,
+                               const openstudio::path &t_relativeTo,
+                               bool t_copyFileTrue)
+  : m_userScriptJob(true)
+{
+  ruleset::OSArgumentVector argVector;
+  for (std::map<std::string,ruleset::OSArgument>::const_iterator it = t_args.begin(),
+       itEnd = t_args.end(); it != itEnd; ++it)
   {
-    throw std::runtime_error("Passed in measure does not have a primaryRubyScriptPath set, which is required for RubyJobBuilder");
+    argVector.push_back(it->second);
   }
-
-  setAsUserScriptRubyJob(*script, t_args, t_relativeTo, t_copyFileArguments);
-
-  std::vector<BCLFileReference> files = t_measure.files();
-
-  for (std::vector<BCLFileReference>::const_iterator itr = files.begin();
-       itr != files.end();
-       ++itr)
-  {
-    addRequiredFile(itr->path(), itr->path().filename());
-  }
-
-  FileReferenceType infile = t_measure.inputFileType();
-
-  if (infile != FileReferenceType::Unknown)
-  {
-    std::string outputname = "in." + infile.valueDescription();
-    LOG(Info, "Adding input file of type: " + infile.valueName() + " to be copied to " + outputname);
-    addInputFile(FileSelection::Last, FileSource::All, ".*\\." + infile.valueDescription(),  outputname);
-
-
-    FileReferenceType outfile = t_measure.outputFileType();
-
-    if (outfile != FileReferenceType::Unknown)
-    {
-      copyRequiredFiles(infile.valueDescription(), outfile.valueDescription(), std::string() );
-      LOG(Info, "Copying all required files from " + infile.valueName() + " to " + outfile.valueName());
-    } else {
-      LOG(Error, "Output file type is \"Unknown\" unable to  copy required files from in to out.");
-    }
-  } else {
-    LOG(Error, "Input file type is \"Unknown\" unable to add it.");
-  }
-
-
+  constructFromBCLMeasure(t_measure,argVector,t_relativeTo,t_copyFileTrue);
 }
 
 
@@ -204,6 +180,10 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
 
 openstudio::path RubyJobBuilder::script() const {
   return m_script;
+}
+
+bool RubyJobBuilder::userScriptJob() const {
+  return m_userScriptJob;
 }
 
 void RubyJobBuilder::setScriptFile(const openstudio::path &t_script)
@@ -946,7 +926,71 @@ runmanager::ScriptInfo RubyJobBuilder::refreshArgumentsFromScript(runmanager::Ru
   }
 }
 
+void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_measure,
+                                             const std::vector<ruleset::OSArgument>& t_args,
+                                             const openstudio::path &t_relativeTo,
+                                             bool t_copyFileTrue)
+{
+  boost::optional<openstudio::path> script = t_measure.primaryRubyScriptPath();
+  if (!script)
+  {
+    throw std::runtime_error("Passed in measure does not have a primaryRubyScriptPath set, which is required for RubyJobBuilder");
+  }
 
+  setAsUserScriptRubyJob(*script, t_args, t_relativeTo, t_copyFileTrue);
+
+  std::vector<BCLFileReference> files = t_measure.files();
+
+  for (std::vector<BCLFileReference>::const_iterator itr = files.begin();
+       itr != files.end();
+       ++itr)
+  {
+    openstudio::path relativePath = openstudio::relativePath(itr->path(), t_measure.directory());
+
+    bool isTestPath = false;
+    for (openstudio::path::const_iterator pathitr = relativePath.begin();
+         pathitr != relativePath.end();
+         ++pathitr)
+    {
+      if (boost::iequals(openstudio::toString(*pathitr), "tests"))
+      {
+        isTestPath = true;
+        break;
+      }
+    }
+
+    if (!isTestPath)
+    {
+      LOG(Trace, "Adding required file from measure: " << openstudio::toString(itr->path()) << " to: " << openstudio::toString(itr->path().filename()));
+    } else {
+      LOG(Trace, "Skipping test file from measure: " << openstudio::toString(itr->path()));
+    }
+
+    addRequiredFile(itr->path(), itr->path().filename());
+  }
+
+  FileReferenceType infile = t_measure.inputFileType();
+
+  if (infile != FileReferenceType::Unknown)
+  {
+    std::string outputname = "in." + infile.valueDescription();
+    LOG(Info, "Adding input file of type: " + infile.valueName() + " to be copied to " + outputname);
+    addInputFile(FileSelection::Last, FileSource::All, ".*\\." + infile.valueDescription(),  outputname);
+
+
+    FileReferenceType outfile = t_measure.outputFileType();
+
+    if (outfile != FileReferenceType::Unknown)
+    {
+      copyRequiredFiles(infile.valueDescription(), outfile.valueDescription(), std::string() );
+      LOG(Info, "Copying all required files from " + infile.valueName() + " to " + outfile.valueName());
+    } else {
+      LOG(Error, "Output file type is \"Unknown\" unable to  copy required files from in to out.");
+    }
+  } else {
+    LOG(Error, "Input file type is \"Unknown\" unable to add it.");
+  }
+}
 
 }
 }

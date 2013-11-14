@@ -12,7 +12,7 @@ static int callback(void *r, int argc, char **argv, char **azColName)
 
   Results * m_results = (Results*)r;
 
-  //	std::cout << "callback = " << argc << std::endl;
+  //std::cout << "callback = " << argc << std::endl;
 
   if( m_results->header.size() == 0 ){
     for (int i = 0; i < argc; i++){
@@ -23,7 +23,7 @@ static int callback(void *r, int argc, char **argv, char **azColName)
 
   std::vector<std::string> row;
   for (int i = 0; i < argc; i++){
-    //	std::cout << argv[i] << std::endl;
+    //std::cout << argv[i] << std::endl;
     row.push_back(argv[i] ? argv[i] : "NULL");
   }
 
@@ -70,7 +70,7 @@ SqliteObject::SqliteObject(const openstudio::path &file)
 
 SqliteObject::~SqliteObject(){
 
-  //	std::cout << "closing database" << std::endl;
+  //std::cout << "closing database" << std::endl;
   sqlite3_close(m_db);
 
   if( m_results != 0) {
@@ -114,30 +114,30 @@ int SqliteObject::findHeaderIndex(const std::string& name){
 bool SqliteObject::execute(const std::string& cmd){
 
   m_results->clear();
-  //	char * zErrMsg = 0;
-  //	sqlite3_stmt *stmt = NULL;
+  //  char * zErrMsg = 0;
+  //  sqlite3_stmt *stmt = NULL;
   //
-  //	int rc = sqlite3_prepare_v2(m_db, const_cast<char *>(cmd.c_str()), cmd.length(), &stmt, NULL);
-  //	if( rc!=SQLITE_OK ){
-  //		fprintf(stderr, "SQL error: %s\n", zErrMsg);
-  //		sqlite3_free(zErrMsg);
-  //	}
+  //  int rc = sqlite3_prepare_v2(m_db, const_cast<char *>(cmd.c_str()), cmd.length(), &stmt, NULL);
+  //  if( rc!=SQLITE_OK ){
+  //    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+  //    sqlite3_free(zErrMsg);
+  //  }
 
-  //	 sqlite_compile(m_db, query, &query_tail, &vm, NULL);
-  //	do
-  //	{
-  //		result = sqlite_step(vm, &numCols, &m_results, &columnNames);
-  //		if (result == SQLITE_ROW)
-  //		{
-  //			for (i = 0; i < numCols; i++)
-  //			{
-  //				/* Do something with this field in the m_results; I guess we'll print it.*/
-  //				printf("%s\t", m_results[i]);
-  //			}
-  //			printf("\n");
-  //		}
-  //	} while (result == SQLITE_ROW);
-  //	sqlite_finalize(vm, NULL);
+  //   sqlite_compile(m_db, query, &query_tail, &vm, NULL);
+  //  do
+  //  {
+  //    result = sqlite_step(vm, &numCols, &m_results, &columnNames);
+  //    if (result == SQLITE_ROW)
+  //    {
+  //      for (i = 0; i < numCols; i++)
+  //      {
+  //        /* Do something with this field in the m_results; I guess we'll print it.*/
+  //        printf("%s\t", m_results[i]);
+  //      }
+  //      printf("\n");
+  //    }
+  //  } while (result == SQLITE_ROW);
+  //  sqlite_finalize(vm, NULL);
 
   //std::cout << " Execute: " << m_results->header.size() << std::endl;
 
@@ -319,7 +319,7 @@ bool SqliteObject::removeDesignDay()
   std::stringstream cmd3;
   std::vector<int> RVEDV_index(0);
   for(size_t s=0; s<time_index.size(); ++s){
-    //		cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s];
+    //cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s];
     cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s] << " and ReportVariableExtendedDataIndex != 'NULL'";
     execute(cmd3.str());
 
@@ -416,7 +416,7 @@ bool SqliteObject::deleteDay(const boost::gregorian::date &d)
   ssm << gm.as_number();
   std::string d_month = ssm.str();
 
-  //	std::cout << " " << d_month << " " << d_day << std::endl;
+  //std::cout << " " << d_month << " " << d_day << std::endl;
 
   // What are the timeindex values to delete
   std::stringstream cmd1;
@@ -445,7 +445,7 @@ bool SqliteObject::deleteDay(const boost::gregorian::date &d)
   std::stringstream cmd3;
   std::vector<int> RVEDV_index(0);
   for(size_t s=0; s<time_index.size(); ++s){
-    //		cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s];
+    //cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s];
     cmd3 << "select ReportVariableExtendedDataIndex from reportVariabledata where timeindex =" << time_index[s] << " and ReportVariableExtendedDataIndex != 'NULL'";
     execute(cmd3.str());
 

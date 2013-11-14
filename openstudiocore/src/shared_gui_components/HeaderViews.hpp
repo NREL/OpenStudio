@@ -26,7 +26,9 @@
 class QLabel;
 
 namespace openstudio{
-  
+
+class MeasureType;
+
 class LightHeaderToggleButton : public QPushButton
 {
   public:
@@ -68,10 +70,12 @@ class LightGradientHeader : public OSHeader
   QLabel * label;
 
   LightGradientHeader(QWidget * parent = 0);
+  void setMeasureType(MeasureType measureType);
   virtual ~LightGradientHeader() {}
 
   private:
 
+  QLabel * m_measureTypeBadge;
   HeaderToggleButton * m_arrow;
 };
 

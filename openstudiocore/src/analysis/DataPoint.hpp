@@ -23,6 +23,7 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject.hpp>
 
+#include <utilities/core/Enum.hpp>
 #include <utilities/core/Path.hpp>
 
 #include <QVariant>
@@ -38,6 +39,7 @@ class Tag;
 
 namespace runmanager {
   class Job;
+  class RunManager;
 }
 
 namespace model {
@@ -54,6 +56,29 @@ namespace detail {
   class Problem_Impl;
   class Analysis_Impl;
 } // detail
+
+struct ANALYSIS_API DataPointSerializationOptions {
+  openstudio::path projectDir;
+
+  DataPointSerializationOptions(const openstudio::path& t_projectDir = openstudio::path());
+};
+
+/** \class DataPointRunType
+ *  \brief List of DataPoint run types.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(DataPointRunType,
+    ((Local))
+    ((CloudSlim))
+    ((CloudDetailed))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(DataPointRunType,
+    ((Local))
+    ((CloudSlim))
+    ((CloudDetailed))
+);
 
 /** DataPoint is an AnalysisObject that describes a single simulation run/to be run for a given
  *  Analysis. New \link DataPoint DataPoints \endlink are constructed using
@@ -74,19 +99,46 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             const std::string& name,
             const std::string& displayName,
             const std::string& description,
+            const Problem& problem,
             bool complete,
             bool failed,
-            const Problem& problem,
+            bool selected,
+            DataPointRunType runType,
             const std::vector<QVariant>& variableValues,
             const std::vector<double>& responseValues,
             const openstudio::path& directory,
             const boost::optional<FileReference>& osmInputData,
             const boost::optional<FileReference>& idfInputData,
             const boost::optional<FileReference>& sqlOutputData,
-            const boost::optional<FileReference>& xmlOutputData,
-            const std::vector<Tag>& tags,
+            const std::vector<FileReference>& xmlOutputData,
             const boost::optional<runmanager::Job>& topLevelJob,
-            const std::vector<openstudio::path>& dakotaParametersFiles);
+            const std::vector<openstudio::path>& dakotaParametersFiles,
+            const std::vector<Tag>& tags,
+            const std::vector<Attribute>& outputAttributes);
+
+  /** Constructor provided for deserialization; not for general use. */
+  DataPoint(const UUID& uuid,
+            const UUID& versionUUID,
+            const std::string& name,
+            const std::string& displayName,
+            const std::string& description,
+            const UUID& problemUUID,
+            const boost::optional<UUID>& analysisUUID,
+            bool complete,
+            bool failed,
+            bool selected,
+            DataPointRunType runType,
+            const std::vector<QVariant>& variableValues,
+            const std::vector<double>& responseValues,
+            const openstudio::path& directory,
+            const boost::optional<FileReference>& osmInputData,
+            const boost::optional<FileReference>& idfInputData,
+            const boost::optional<FileReference>& sqlOutputData,
+            const std::vector<FileReference>& xmlOutputData,
+            const boost::optional<runmanager::Job>& topLevelJob,
+            const std::vector<openstudio::path>& dakotaParametersFiles,
+            const std::vector<Tag>& tags,
+            const std::vector<Attribute>& outputAttributes);
 
   virtual ~DataPoint() {}
 
@@ -94,15 +146,34 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** @name Getters and Queries */
   //@{
 
-  /** Returns true if the DataPoint has been simulated. */
+  /** Returns true if DataPoint has access to the Problem that created it. Should be true
+   *  unless DataPoint was deserialized from JSON and has not yet been assimilated back
+   *  into its parent Analysis. */
+  bool hasProblem() const;
+
+  /** Returns the Problem used to create/associated with this DataPoint. */
+  Problem problem() const;
+
+  /** Returns the UUID of the Problem that created this DataPoint. */
+  UUID problemUUID() const;
+
+  /** Returns the UUID of the Analysis that parents this DataPoint. */
+  boost::optional<UUID> analysisUUID() const;
+
+  /** Returns true if the DataPoint has been simulated. \deprecated */
   bool isComplete() const;
+
+  /** Returns true if the DataPoint has been simulated. */
+  bool complete() const;
 
   /** Returns true if the DataPoint was simulated, but the simulation failed, or output results
    *  could not be retrieved for some other reason. */
   bool failed() const;
 
-  /** Returns the Problem used to create/associated with this DataPoint. */
-  Problem problem() const;
+  /** Returns true if the DataPoint is selected (to be simulated in the next batch). */
+  bool selected() const;
+
+  DataPointRunType runType() const;
 
   /** Returns the variableValues to be applied in simulating this DataPoint. (That is, inputData
    *  will be the result of applying variableValues to the Analysis seed file.) */
@@ -127,9 +198,10 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
    *  and said file was located by problem(). */
   boost::optional<FileReference> sqlOutputData() const;
 
-  /** Returns the openstudio::Attribute XML file created by the last post-process job, if the
-   *  DataPoint isComplete() but not failed(), and said file was located by problem(). */
-  boost::optional<FileReference> xmlOutputData() const;
+  /** Returns the openstudio::Attribute XML files created by any reporting measures, if
+   *  complete() and not failed(), and problem() located such files during the update process.
+   *  Otherwise, the return value is .empty(). */
+  std::vector<FileReference> xmlOutputData() const;
 
   /** If osmInputData() exists, returns the corresponding model::Model. Also caches the Model
    *  for future use. */
@@ -168,6 +240,10 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** @name Setters */
   //@{
 
+  void setSelected(bool selected);
+
+  void setRunType(const DataPointRunType& runType);
+
   /** Sets the run directory for this DataPoint. Generally called by
    *  analysisdriver::AnalysisDriver. */
   void setDirectory(const openstudio::path& directory);
@@ -180,6 +256,13 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** @name Actions */
   //@{
 
+  /** Update high level results from json. */
+  bool updateFromJSON(const std::string& json, boost::optional<runmanager::RunManager>& runManager);
+
+  /** Whoever downloaded the zip file should have setDirectory(), and had the file placed in
+   *  directory() / toPath("dataPoint.zip"). */
+  bool updateDetails(boost::optional<runmanager::RunManager>& runManager);
+
   /** Clear model, workspace, and sqlFile from cache. */
   void clearFileDataFromCache() const;
 
@@ -187,6 +270,27 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   void clearAllDataFromCache() const;
 
   void clearResults();
+
+  //@}
+  /** @name Serialization */
+  //@{
+
+  bool saveJSON(const openstudio::path& p,
+                const DataPointSerializationOptions& options,
+                bool overwrite=false) const;
+
+  std::ostream& toJSON(std::ostream& os,const DataPointSerializationOptions& options) const;
+
+  std::string toJSON(const DataPointSerializationOptions& options) const;
+
+  static boost::optional<DataPoint> loadJSON(const openstudio::path& p,
+                                             const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<DataPoint> loadJSON(std::istream& json,
+                                             const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<DataPoint> loadJSON(const std::string& json,
+                                             const openstudio::path& newProjectDir=openstudio::path());
 
   //@}
  protected:
@@ -203,7 +307,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   friend class detail::Problem_Impl;
 
   /** Constructor from variableValues. Called by Problem::createDataPoint. After construction
-   *  isComplete() == false. */
+   *  complete() == false and selected() == true. */
   DataPoint(const Problem& problem,
             const std::vector<QVariant>& variableValues);
 
@@ -213,7 +317,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
 
   void setSqlOutputData(const FileReference& file);
 
-  void setXmlOutputData(const FileReference& file);
+  void setXmlOutputData(const std::vector<FileReference>& files);
 
   void markComplete();
 

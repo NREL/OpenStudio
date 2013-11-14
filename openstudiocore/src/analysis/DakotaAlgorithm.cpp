@@ -26,6 +26,9 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/DakotaParametersFile.hpp>
 
+#include <utilities/core/Assert.hpp>
+#include <runmanager/lib/JSON.hpp>
+
 #include <sstream>
 
 namespace openstudio {
@@ -88,7 +91,7 @@ namespace detail {
   boost::optional<DataPoint> DakotaAlgorithm_Impl::createNextDataPoint(
       Analysis& analysis,const DakotaParametersFile& params)
   {
-    BOOST_ASSERT(analysis.algorithm().get() == getPublicObject<DakotaAlgorithm>());
+    OS_ASSERT(analysis.algorithm().get() == getPublicObject<DakotaAlgorithm>());
 
     // TODO: Update iteration counter.
     OptionalDataPoint result = analysis.problem().createDataPoint(params,
@@ -98,7 +101,7 @@ namespace detail {
       if (!added) {
         // get equivalent point already in analysis
         DataPointVector candidates = analysis.getDataPoints(result->variableValues());
-        BOOST_ASSERT(candidates.size() == 1u);
+        OS_ASSERT(candidates.size() == 1u);
         result = candidates[0];
       }
       std::stringstream ss;
@@ -130,6 +133,22 @@ namespace detail {
     m_outFileReference.reset();
     m_job.reset();
     onChange(AnalysisObject_Impl::Benign);
+  }
+
+  QVariant DakotaAlgorithm_Impl::toVariant() const {
+    QVariantMap map = Algorithm_Impl::toVariant().toMap();
+
+    if (OptionalFileReference restartFile = restartFileReference()) {
+      map["restart_file"] = openstudio::detail::toVariant(*restartFile);
+    }
+    if (OptionalFileReference outFile = outFileReference()) {
+      map["out_file"] = openstudio::detail::toVariant(*outFile);
+    }
+    if (boost::optional<runmanager::Job> j = job()) {
+      map["job"] = runmanager::detail::JSON::toVariant(j.get());
+    }
+
+    return QVariant(map);
   }
 
 } // detail

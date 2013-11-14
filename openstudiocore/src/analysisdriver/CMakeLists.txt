@@ -6,6 +6,10 @@ SET( ${target_name}_src
   AnalysisDriver.hpp
   AnalysisDriver_Impl.hpp
   AnalysisDriver.cpp
+  AnalysisDriverEnums.hpp
+  CloudAnalysisDriver.hpp
+  CloudAnalysisDriver_Impl.hpp
+  CloudAnalysisDriver.cpp
   AnalysisRunOptions.hpp
   AnalysisRunOptions.cpp
   CurrentAnalysis.hpp
@@ -14,14 +18,16 @@ SET( ${target_name}_src
   AnalysisDriverWatcher.hpp
   AnalysisDriverWatcher.cpp
   SimpleProject.hpp
+  SimpleProject_Impl.hpp
   SimpleProject.cpp
 )
 
 SET( ${target_name}_moc
   AnalysisDriver_Impl.hpp
+  CloudAnalysisDriver_Impl.hpp
   CurrentAnalysis_Impl.hpp
   AnalysisDriverWatcher.hpp
-  SimpleProject.hpp
+  SimpleProject_Impl.hpp
 )
 
 SET( ${target_name}_test_src

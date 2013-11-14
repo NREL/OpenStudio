@@ -152,7 +152,7 @@ namespace detail {
         while (tmp_date < start_date)
         {
           sql.deleteDay(tmp_date);  //BLBtest
-          //	std::cout << boost::gregorian::to_simple_string(tmp_date) << std::endl;
+          //std::cout << boost::gregorian::to_simple_string(tmp_date) << std::endl;
           tmp_date = tmp_date + boost::gregorian::date_duration(1);
         }
       }

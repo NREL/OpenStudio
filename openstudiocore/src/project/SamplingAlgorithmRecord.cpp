@@ -50,9 +50,9 @@ namespace detail {
                                                            ProjectDatabase& database)
     : DakotaAlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
@@ -94,13 +94,9 @@ namespace detail {
   }
 
   analysis::SamplingAlgorithm SamplingAlgorithmRecord_Impl::samplingAlgorithm() const {
-    analysis::SamplingAlgorithmOptions opts(options());
-    if (m_sampleType) {
-      opts.setSampleType(*m_sampleType);
-    }
-    if (m_rngType) {
-      opts.setRNGType(*m_rngType);
-    }
+    analysis::SamplingAlgorithmOptions opts(m_sampleType,
+                                            m_rngType,
+                                            options());
     OptionalFileReference restartFile, outFile;
     OptionalFileReferenceRecord ofr = restartFileReferenceRecord();
     if (ofr) {
@@ -155,9 +151,9 @@ namespace detail {
 
   void SamplingAlgorithmRecord_Impl::setLastValues(const QSqlQuery& query,
                           ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     DakotaAlgorithmRecord_Impl::setLastValues(query,projectDatabase);
 
@@ -181,9 +177,9 @@ namespace detail {
   }
 
   bool SamplingAlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = DakotaAlgorithmRecord_Impl::compareValues(query);
 
@@ -231,7 +227,7 @@ SamplingAlgorithmRecord::SamplingAlgorithmRecord(const analysis::SamplingAlgorit
         analysisRecord.projectDatabase(),
         samplingAlgorithm)
 {
-  BOOST_ASSERT(getImpl<detail::SamplingAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::SamplingAlgorithmRecord_Impl>());
 
   constructRelatedRecords(samplingAlgorithm);
 }
@@ -242,7 +238,7 @@ SamplingAlgorithmRecord::SamplingAlgorithmRecord(const QSqlQuery& query, Project
         database,
         boost::none)
 {
-  BOOST_ASSERT(getImpl<detail::SamplingAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::SamplingAlgorithmRecord_Impl>());
 }
 
 SamplingAlgorithmRecord::SamplingAlgorithmRecord(
@@ -250,7 +246,7 @@ SamplingAlgorithmRecord::SamplingAlgorithmRecord(
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
-  BOOST_ASSERT(getImpl<detail::SamplingAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::SamplingAlgorithmRecord_Impl>());
 }
 
 boost::optional<SamplingAlgorithmRecord> SamplingAlgorithmRecord::factoryFromQuery(

@@ -20,6 +20,8 @@
 #include <analysis/NegativeBinomialDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -73,7 +75,7 @@ bool NegativeBinomialDistribution::setNumTrials(int value) {
 NegativeBinomialDistribution::NegativeBinomialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == NegativeBinomialDistribution::type());
+  OS_ASSERT(type() == NegativeBinomialDistribution::type());
 }
 
 } // analysis

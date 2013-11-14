@@ -20,6 +20,8 @@
 #include <utilities/units/WhUnit.hpp>
 #include <utilities/units/WhUnit_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace detail {
 
@@ -60,7 +62,7 @@ namespace detail {
   }
 
   Unit WhUnit_Impl::clone() const {
-    BOOST_ASSERT(system() == UnitSystem::Wh);
+    OS_ASSERT(system() == UnitSystem::Wh);
     boost::shared_ptr<WhUnit_Impl> impl(new WhUnit_Impl(*this));
     return WhUnit(impl).cast<Unit>();
   }

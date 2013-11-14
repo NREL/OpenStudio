@@ -78,7 +78,7 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
 
   m_directionofRelativeNorthEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_directionofRelativeNorthEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_directionofRelativeNorthEdit);
 
   mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
@@ -93,7 +93,7 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
 
   m_xOriginEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xOriginEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_xOriginEdit);
 
   mainGridLayout->addLayout(vLayout,2,0, Qt::AlignTop|Qt::AlignLeft);
@@ -107,7 +107,7 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
 
   m_yOriginEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yOriginEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_yOriginEdit);
 
   mainGridLayout->addLayout(vLayout,2,1, Qt::AlignTop|Qt::AlignLeft);
@@ -121,7 +121,7 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
 
   m_zOriginEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_zOriginEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_zOriginEdit);
 
   mainGridLayout->addLayout(vLayout,2,2, Qt::AlignTop|Qt::AlignLeft);

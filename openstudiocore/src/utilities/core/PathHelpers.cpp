@@ -173,9 +173,14 @@ path relativePath(const path& p,const path& base) {
     path completeP = boost::filesystem::complete(p);
     path completeBase = boost::filesystem::complete(base);
     if ((completeP != wp) || (completeBase != wBase)) { 
+      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p) 
+        << "' does not extend base '" << toString(base) 
+        << "'. Try again after completing both paths.");
       return relativePath(completeP,completeBase);
     }
     else {
+      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p) 
+        << "' does not extend base '" << toString(base) << "'.");
       return path(); 
     }
   }
@@ -219,8 +224,11 @@ path relocatePath(const path& originalPath,
 {
   path result;
   path temp = relativePath(originalPath,originalBase);
+  LOG_FREE(Debug,"openstudio.utilities.core","Original path '" << toString(originalPath) 
+      << "', relative to '" << toString(originalBase) << "' is '" << toString(temp) << "'.");
   if (!temp.empty()) {
     result = newBase / temp;
+    LOG_FREE(Debug,"openstudio.utilities.core","Reloacting path to '" << toString(result) << "'.");
   }
   return result;
 }

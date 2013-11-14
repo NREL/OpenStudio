@@ -45,14 +45,14 @@ namespace detail{
   CoilCoolingDXTwoSpeed_Impl::CoilCoolingDXTwoSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilCoolingDXTwoSpeed::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXTwoSpeed::iddObjectType());
   }
 
   CoilCoolingDXTwoSpeed_Impl::CoilCoolingDXTwoSpeed_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilCoolingDXTwoSpeed::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilCoolingDXTwoSpeed::iddObjectType());
   }
 
   CoilCoolingDXTwoSpeed_Impl::CoilCoolingDXTwoSpeed_Impl(
@@ -164,11 +164,11 @@ namespace detail{
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<CoilCoolingDXTwoSpeed_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -248,7 +248,7 @@ namespace detail{
   Curve CoilCoolingDXTwoSpeed_Impl::totalCoolingCapacityFunctionOfTemperatureCurve()const
   {
     OptionalCurve result = optionalTotalCoolingCapacityFunctionOfTemperatureCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
   bool CoilCoolingDXTwoSpeed_Impl::setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve )
@@ -265,7 +265,7 @@ namespace detail{
       accepted = true;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
 
     return accepted;
   }
@@ -275,7 +275,7 @@ namespace detail{
   Curve CoilCoolingDXTwoSpeed_Impl::totalCoolingCapacityFunctionOfFlowFractionCurve()const
   {
     OptionalCurve result = optionalTotalCoolingCapacityFunctionOfFlowFractionCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
   bool CoilCoolingDXTwoSpeed_Impl::setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve )
@@ -296,7 +296,7 @@ namespace detail{
       accepted = true;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle()));
 
     return accepted;
   }
@@ -306,7 +306,7 @@ namespace detail{
   Curve CoilCoolingDXTwoSpeed_Impl::energyInputRatioFunctionOfTemperatureCurve()const
   {
     OptionalCurve result = optionalEnergyInputRatioFunctionOfTemperatureCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
   bool CoilCoolingDXTwoSpeed_Impl::setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve )
@@ -323,7 +323,7 @@ namespace detail{
       accepted = true;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
 
     return accepted;
   }
@@ -333,7 +333,7 @@ namespace detail{
   Curve CoilCoolingDXTwoSpeed_Impl::energyInputRatioFunctionOfFlowFractionCurve()const
   {
     OptionalCurve result = optionalEnergyInputRatioFunctionOfFlowFractionCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
   bool CoilCoolingDXTwoSpeed_Impl::setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve )
@@ -354,7 +354,7 @@ namespace detail{
       accepted = true;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle()));
 
     return accepted;
   }
@@ -364,7 +364,7 @@ namespace detail{
   Curve CoilCoolingDXTwoSpeed_Impl::partLoadFractionCorrelationCurve() const
   {
     OptionalCurve result = optionalPartLoadFractionCorrelationCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
   bool CoilCoolingDXTwoSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve )
@@ -384,7 +384,7 @@ namespace detail{
       accepted = true;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle()));
 
     return accepted;
   }
@@ -455,7 +455,7 @@ namespace detail{
   Curve CoilCoolingDXTwoSpeed_Impl::lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve()const
   {
     OptionalCurve result = optionalLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
   bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve )
@@ -472,7 +472,7 @@ namespace detail{
       accepted = true;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedTotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedTotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
 
     return accepted;
   }
@@ -482,7 +482,7 @@ namespace detail{
   Curve CoilCoolingDXTwoSpeed_Impl::lowSpeedEnergyInputRatioFunctionOfTemperatureCurve()const
   {
     OptionalCurve result = optionalLowSpeedEnergyInputRatioFunctionOfTemperatureCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
   bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve )
@@ -499,7 +499,7 @@ namespace detail{
       accepted = true;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
 
     return accepted;
   }
@@ -641,7 +641,7 @@ namespace detail{
 
   void CoilCoolingDXTwoSpeed_Impl::resetBasinHeaterOperatingSchedule() {
     bool result = setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   // A3 , \field Air Inlet Node Name
@@ -763,7 +763,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
                                              const Curve& lowSpeedEnergyInputRatioFofTemp)
   : StraightComponent(CoilCoolingDXTwoSpeed::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilCoolingDXTwoSpeed_Impl>());
+  OS_ASSERT(getImpl<detail::CoilCoolingDXTwoSpeed_Impl>());
   //  A2 , \field Availability Schedule Name
   bool ok = setAvailabilitySchedule(availabilitySchedule);
   if (!ok) {

@@ -25,6 +25,7 @@
 #include <utilities/idd/ConvergenceLimits_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>
 
 using namespace openstudio::model;
@@ -35,25 +36,25 @@ namespace energyplus {
 boost::optional<model::ModelObject> ReverseTranslator::translateConvergenceLimits(
     const WorkspaceObject& workspaceObject)
 {
-  BOOST_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ConvergenceLimits);
+  OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ConvergenceLimits);
 
   OptionalInt i;
 
   ConvergenceLimits convergenceLimits = m_model.getUniqueModelObject<ConvergenceLimits>();
 
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumSystemTimestep)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumSystemTimestep))) {
     convergenceLimits.setMinimumSystemTimestep(*i);
   }
 
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumHVACIterations)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumHVACIterations))) {
     convergenceLimits.setMaximumHVACIterations(*i);
   }
   
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumPlantIterations)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumPlantIterations))) {
     convergenceLimits.setMinimumPlantIterations(*i);
   }
 
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumPlantIterations)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumPlantIterations))) {
     convergenceLimits.setMaximumPlantIterations(*i);
   }
 

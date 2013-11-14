@@ -37,7 +37,7 @@ namespace detail {
                          bool keepHandle)
     : ShadingMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Blind::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Blind::iddObjectType());
   }
 
   Blind_Impl::Blind_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                          bool keepHandle)
     : ShadingMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Blind::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Blind::iddObjectType());
   }
 
   Blind_Impl::Blind_Impl(const Blind_Impl& other,
@@ -86,7 +86,7 @@ namespace detail {
 
   std::string Blind_Impl::slatOrientation() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_BlindFields::SlatOrientation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -96,40 +96,40 @@ namespace detail {
 
   double Blind_Impl::slatWidth() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatWidth,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatWidth(bool returnIP) const {
     OptionalDouble value = slatWidth();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatWidth, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Blind_Impl::slatSeparation() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatSeparation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatSeparation(bool returnIP) const {
     OptionalDouble value = slatSeparation();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatSeparation, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Blind_Impl::slatThickness() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatThickness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatThickness(bool returnIP) const {
     OptionalDouble value = slatThickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatThickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -139,14 +139,14 @@ namespace detail {
 
   double Blind_Impl::slatAngle() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatAngle,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatAngle(bool returnIP) const {
     OptionalDouble value = slatAngle();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatAngle, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -156,14 +156,14 @@ namespace detail {
 
   double Blind_Impl::slatConductivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatConductivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatConductivity(bool returnIP) const {
     OptionalDouble value = slatConductivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatConductivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -173,14 +173,14 @@ namespace detail {
 
   double Blind_Impl::slatBeamSolarTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatBeamSolarTransmittance(bool returnIP) const {
     OptionalDouble value = slatBeamSolarTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -190,40 +190,40 @@ namespace detail {
 
   double Blind_Impl::frontSideSlatBeamSolarReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getFrontSideSlatBeamSolarReflectance(bool returnIP) const {
     OptionalDouble value = frontSideSlatBeamSolarReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Blind_Impl::backSideSlatBeamSolarReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBackSideSlatBeamSolarReflectance(bool returnIP) const {
     OptionalDouble value = backSideSlatBeamSolarReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Blind_Impl::slatDiffuseSolarTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatDiffuseSolarTransmittance(bool returnIP) const {
     OptionalDouble value = slatDiffuseSolarTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -233,40 +233,40 @@ namespace detail {
 
   double Blind_Impl::frontSideSlatDiffuseSolarReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getFrontSideSlatDiffuseSolarReflectance(bool returnIP) const {
     OptionalDouble value = frontSideSlatDiffuseSolarReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Blind_Impl::backSideSlatDiffuseSolarReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBackSideSlatDiffuseSolarReflectance(bool returnIP) const {
     OptionalDouble value = backSideSlatDiffuseSolarReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Blind_Impl::slatBeamVisibleTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatBeamVisibleTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatBeamVisibleTransmittance(bool returnIP) const {
     OptionalDouble value = slatBeamVisibleTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -290,14 +290,14 @@ namespace detail {
 
   double Blind_Impl::slatDiffuseVisibleTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatDiffuseVisibleTransmittance(bool returnIP) const {
     OptionalDouble value = slatDiffuseVisibleTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -325,14 +325,14 @@ namespace detail {
 
   double Blind_Impl::slatInfraredHemisphericalTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getSlatInfraredHemisphericalTransmittance(bool returnIP) const {
     OptionalDouble value = slatInfraredHemisphericalTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -342,14 +342,14 @@ namespace detail {
 
   double Blind_Impl::frontSideSlatInfraredHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getFrontSideSlatInfraredHemisphericalEmissivity(bool returnIP) const {
     OptionalDouble value = frontSideSlatInfraredHemisphericalEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -359,14 +359,14 @@ namespace detail {
 
   double Blind_Impl::backSideSlatInfraredHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBackSideSlatInfraredHemisphericalEmissivity(bool returnIP) const {
     OptionalDouble value = backSideSlatInfraredHemisphericalEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -376,14 +376,14 @@ namespace detail {
 
   double Blind_Impl::blindtoGlassDistance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BlindtoGlassDistance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBlindtoGlassDistance(bool returnIP) const {
     OptionalDouble value = blindtoGlassDistance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindtoGlassDistance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -393,14 +393,14 @@ namespace detail {
 
   double Blind_Impl::blindTopOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBlindTopOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = blindTopOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -410,14 +410,14 @@ namespace detail {
 
   double Blind_Impl::blindBottomOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBlindBottomOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = blindBottomOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -427,14 +427,14 @@ namespace detail {
 
   double Blind_Impl::blindLeftSideOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBlindLeftSideOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = blindLeftSideOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -444,14 +444,14 @@ namespace detail {
 
   double Blind_Impl::blindRightSideOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getBlindRightSideOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = blindRightSideOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -461,14 +461,14 @@ namespace detail {
 
   double Blind_Impl::minimumSlatAngle() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::MinimumSlatAngle,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getMinimumSlatAngle(bool returnIP) const {
     OptionalDouble value = minimumSlatAngle();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::MinimumSlatAngle, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -478,14 +478,14 @@ namespace detail {
 
   double Blind_Impl::maximumSlatAngle() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::MaximumSlatAngle,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Blind_Impl::getMaximumSlatAngle(bool returnIP) const {
     OptionalDouble value = maximumSlatAngle();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::MaximumSlatAngle, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -500,7 +500,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatOrientation() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatOrientation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setSlatWidth(double slatWidth) {
@@ -544,7 +544,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatThickness() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatThickness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setSlatAngle(double slatAngle) {
@@ -562,7 +562,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatAngle() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatAngle, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setSlatConductivity(double slatConductivity) {
@@ -580,7 +580,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatConductivity() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatConductivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setSlatBeamSolarTransmittance(double slatBeamSolarTransmittance) {
@@ -598,7 +598,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatBeamSolarTransmittance() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setFrontSideSlatBeamSolarReflectance(double frontSideSlatBeamSolarReflectance) {
@@ -642,7 +642,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatDiffuseSolarTransmittance() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setFrontSideSlatDiffuseSolarReflectance(double frontSideSlatDiffuseSolarReflectance) {
@@ -713,7 +713,7 @@ namespace detail {
 
   void Blind_Impl::resetFrontSideSlatBeamVisibleReflectance() {
     bool result = setString(OS_WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBackSideSlatBeamVisibleReflectance(boost::optional<double> backSideSlatBeamVisibleReflectance) {
@@ -745,7 +745,7 @@ namespace detail {
 
   void Blind_Impl::resetBackSideSlatBeamVisibleReflectance() {
     bool result = setString(OS_WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setSlatDiffuseVisibleTransmittance(double slatDiffuseVisibleTransmittance) {
@@ -763,7 +763,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatDiffuseVisibleTransmittance() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setFrontSideSlatDiffuseVisibleReflectance(boost::optional<double> frontSideSlatDiffuseVisibleReflectance) {
@@ -795,7 +795,7 @@ namespace detail {
 
   void Blind_Impl::resetFrontSideSlatDiffuseVisibleReflectance() {
     bool result = setString(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBackSideSlatDiffuseVisibleReflectance(boost::optional<double> backSideSlatDiffuseVisibleReflectance) {
@@ -827,7 +827,7 @@ namespace detail {
 
   void Blind_Impl::resetBackSideSlatDiffuseVisibleReflectance() {
     bool result = setString(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setSlatInfraredHemisphericalTransmittance(double slatInfraredHemisphericalTransmittance) {
@@ -845,7 +845,7 @@ namespace detail {
 
   void Blind_Impl::resetSlatInfraredHemisphericalTransmittance() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setFrontSideSlatInfraredHemisphericalEmissivity(double frontSideSlatInfraredHemisphericalEmissivity) {
@@ -863,7 +863,7 @@ namespace detail {
 
   void Blind_Impl::resetFrontSideSlatInfraredHemisphericalEmissivity() {
     bool result = setString(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBackSideSlatInfraredHemisphericalEmissivity(double backSideSlatInfraredHemisphericalEmissivity) {
@@ -881,7 +881,7 @@ namespace detail {
 
   void Blind_Impl::resetBackSideSlatInfraredHemisphericalEmissivity() {
     bool result = setString(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBlindtoGlassDistance(double blindtoGlassDistance) {
@@ -899,7 +899,7 @@ namespace detail {
 
   void Blind_Impl::resetBlindtoGlassDistance() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindtoGlassDistance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBlindTopOpeningMultiplier(double blindTopOpeningMultiplier) {
@@ -917,7 +917,7 @@ namespace detail {
 
   void Blind_Impl::resetBlindTopOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBlindBottomOpeningMultiplier(double blindBottomOpeningMultiplier) {
@@ -935,7 +935,7 @@ namespace detail {
 
   void Blind_Impl::resetBlindBottomOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBlindLeftSideOpeningMultiplier(double blindLeftSideOpeningMultiplier) {
@@ -953,7 +953,7 @@ namespace detail {
 
   void Blind_Impl::resetBlindLeftSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setBlindRightSideOpeningMultiplier(double blindRightSideOpeningMultiplier) {
@@ -971,7 +971,7 @@ namespace detail {
 
   void Blind_Impl::resetBlindRightSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setMinimumSlatAngle(double minimumSlatAngle) {
@@ -989,7 +989,7 @@ namespace detail {
 
   void Blind_Impl::resetMinimumSlatAngle() {
     bool result = setString(OS_WindowMaterial_BlindFields::MinimumSlatAngle, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Blind_Impl::setMaximumSlatAngle(double maximumSlatAngle) {
@@ -1007,7 +1007,7 @@ namespace detail {
 
   void Blind_Impl::resetMaximumSlatAngle() {
     bool result = setString(OS_WindowMaterial_BlindFields::MaximumSlatAngle, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> Blind_Impl::slatOrientationValues() const {
@@ -1242,26 +1242,26 @@ Blind::Blind(const Model& model,
              double slatBeamVisibleTransmittance)
   : ShadingMaterial(Blind::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Blind_Impl>());
+  OS_ASSERT(getImpl<detail::Blind_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSlatWidth(slatWidth);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSlatSeparation(slatSeparation);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setFrontSideSlatBeamSolarReflectance(frontSideSlatBeamSolarReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setBackSideSlatBeamSolarReflectance(backSideSlatBeamSolarReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setFrontSideSlatDiffuseSolarReflectance(frontSideSlatDiffuseSolarReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setBackSideSlatDiffuseSolarReflectance(backSideSlatDiffuseSolarReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSlatBeamVisibleTransmittance(slatBeamVisibleTransmittance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType Blind::iddObjectType() {

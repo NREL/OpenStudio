@@ -53,8 +53,8 @@ ExternalPlugin::ExternalPlugin()
   //LOG(Trace, "ExternalPlugin, currentThread = " << ct);
   //QThread* thread = this->thread();
   //LOG(Trace, "ExternalPlugin, thread = " << thread);
-  //BOOST_ASSERT(thread);
-  //BOOST_ASSERT(ct == thread);
+  //OS_ASSERT(thread);
+  //OS_ASSERT(ct == thread);
 
   //QAbstractEventDispatcher* eventDispatcher = NULL;
   
@@ -151,22 +151,22 @@ void ExternalPlugin::start()
 
   bool test;
   test = QObject::connect(this, SIGNAL(startupRequested(const std::string&)), osPlugin, SLOT(startupPrompt(const std::string&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = QObject::connect(this, SIGNAL(showRequested(const std::string&)), osPlugin, SLOT(showDocument(const std::string&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = QObject::connect(this, SIGNAL(hideRequested(const std::string&)), osPlugin, SLOT(hideDocument(const std::string&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = QObject::connect(this, SIGNAL(quitting()), osPlugin, SLOT(quit()), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   test = QObject::connect(osPlugin, SIGNAL(newModel(const std::string&, openstudio::model::detail::Model_Impl*)), this, SLOT(newModel(const std::string&, openstudio::model::detail::Model_Impl*)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = QObject::connect(osPlugin, SIGNAL(modelClosed(const std::string&)), this, SLOT(modelClosed(const std::string&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = QObject::connect(osPlugin, SIGNAL(documentShown(const std::string&)), this, SLOT(documentShown(const std::string&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = QObject::connect(osPlugin, SIGNAL(documentHidden(const std::string&)), this, SLOT(documentHidden(const std::string&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   m_started = true;
 }

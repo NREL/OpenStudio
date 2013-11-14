@@ -33,9 +33,11 @@
 #include <QWheelEvent>
 #include <QApplication>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio{
   
-EditRubyPerturbationView::EditRubyPerturbationView()
+EditRubyMeasureView::EditRubyMeasureView()
   : QWidget()
 {
   QVBoxLayout * layout = new QVBoxLayout();
@@ -103,7 +105,7 @@ EditRubyPerturbationView::EditRubyPerturbationView()
   m_mainVLayout->addStretch();
 }
 
-void EditRubyPerturbationView::paintEvent(QPaintEvent *)
+void EditRubyMeasureView::paintEvent(QPaintEvent *)
 {
   QStyleOption opt;
   opt.init(this);
@@ -111,12 +113,12 @@ void EditRubyPerturbationView::paintEvent(QPaintEvent *)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void EditRubyPerturbationView::addInputView(QWidget * widget)
+void EditRubyMeasureView::addInputView(QWidget * widget)
 {
   m_inputsVLayout->addWidget(widget);
 }
 
-void EditRubyPerturbationView::clear()
+void EditRubyMeasureView::clear()
 {
  QLayoutItem * child;
 
@@ -124,7 +126,7 @@ void EditRubyPerturbationView::clear()
  {
    QWidget * widget = child->widget();
 
-   Q_ASSERT(widget);
+   OS_ASSERT(widget);
 
    delete widget;
 

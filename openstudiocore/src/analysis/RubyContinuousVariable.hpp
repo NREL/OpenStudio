@@ -31,12 +31,12 @@ namespace ruleset {
 
 namespace analysis {
 
-class RubyPerturbation;
+class RubyMeasure;
 
 namespace detail {
 
   class RubyContinuousVariable_Impl;
-  class RubyPerturbation_Impl;
+  class RubyMeasure_Impl;
 
 } // detail
 
@@ -46,11 +46,11 @@ class ANALYSIS_API RubyContinuousVariable : public ContinuousVariable {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Construct from argument and perturbation. The RubyPerturbation should not yet have argument
+  /** Construct from argument and measure. The RubyMeasure should not yet have argument
    *  set. It should have all fixed (non-variable) arguments set. */
   RubyContinuousVariable(const std::string& name,
                          const ruleset::OSArgument& argument,
-                         const RubyPerturbation& perturbation);
+                         const RubyMeasure& measure);
 
   /** Constructor provided for deserialization; not for general use. */
   RubyContinuousVariable(const UUID& uuid,
@@ -64,7 +64,7 @@ class ANALYSIS_API RubyContinuousVariable : public ContinuousVariable {
                          boost::optional<double> increment,
                          boost::optional<int> nSteps,
                          const ruleset::OSArgument& argument,
-                         const RubyPerturbation& perturbation);
+                         const RubyMeasure& measure);
 
   virtual ~RubyContinuousVariable() {}
 
@@ -74,7 +74,10 @@ class ANALYSIS_API RubyContinuousVariable : public ContinuousVariable {
 
   ruleset::OSArgument argument() const;
 
-  RubyPerturbation perturbation() const;
+  RubyMeasure measure() const;
+
+  /** \deprecated */
+  RubyMeasure perturbation() const;
 
   //@}
   /** @name Setters */
@@ -82,7 +85,10 @@ class ANALYSIS_API RubyContinuousVariable : public ContinuousVariable {
 
   void setArgument(const ruleset::OSArgument& argument);
 
-  bool setRubyPerturbation(const RubyPerturbation& perturbation);
+  bool setRubyMeasure(const RubyMeasure& measure);
+
+  /** \deprecated */
+  bool setRubyPerturbation(const RubyMeasure& measure);
 
   //@}
  protected:
@@ -95,9 +101,9 @@ class ANALYSIS_API RubyContinuousVariable : public ContinuousVariable {
 
   explicit RubyContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl> impl);
 
-  friend class detail::RubyPerturbation_Impl;
+  friend class detail::RubyMeasure_Impl;
 
-  bool fileTypesAreCompatible(const RubyPerturbation& childRubyPerturbation,
+  bool fileTypesAreCompatible(const RubyMeasure& childRubyMeasure,
                               const boost::optional<FileReferenceType>& proposedInputFileType,
                               const boost::optional<FileReferenceType>& proposedOutputFileType) const;
 

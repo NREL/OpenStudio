@@ -29,13 +29,13 @@ namespace openstudio {
 namespace analysis {
 
 class DataPoint;
+class Variable;
 
 namespace detail {
 
   /** Variable_Impl is a AnalysisObject_Impl that is the implementation class for
    *  Variable.*/
   class ANALYSIS_API Variable_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -60,6 +60,12 @@ namespace detail {
     /** Get the variable value from a dataPoint. Throws an openstudio::Exception if the Variable
      *  cannot be evaluated for dataPoint. */
     virtual double getValue(const DataPoint& dataPoint) const = 0;
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    static Variable factoryFromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

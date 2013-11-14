@@ -35,7 +35,7 @@ namespace detail {
 UtilityCost_Qualify_Impl::UtilityCost_Qualify_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == UtilityCost_Qualify::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == UtilityCost_Qualify::iddObjectType());
 }
 
 UtilityCost_Qualify_Impl::UtilityCost_Qualify_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ UtilityCost_Qualify_Impl::UtilityCost_Qualify_Impl(const openstudio::detail::Wor
                                            bool keepHandle)
   : ParentObject_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == UtilityCost_Qualify::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == UtilityCost_Qualify::iddObjectType());
 }
 
 UtilityCost_Qualify_Impl::UtilityCost_Qualify_Impl(const UtilityCost_Qualify_Impl& other,Model_Impl* model,bool keepHandle)
@@ -163,7 +163,7 @@ const std::vector<std::string>& UtilityCost_Qualify_Impl::outputVariableNames() 
 UtilityCost_Qualify::UtilityCost_Qualify(const Model& model)
   : ParentObject(UtilityCost_Qualify::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::UtilityCost_Qualify_Impl>());
+  OS_ASSERT(getImpl<detail::UtilityCost_Qualify_Impl>());
 }
 
 // constructor

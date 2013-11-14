@@ -37,7 +37,7 @@ namespace detail {
   CurveExponentialDecay_Impl::CurveExponentialDecay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveExponentialDecay::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveExponentialDecay::iddObjectType());
   }
 
   CurveExponentialDecay_Impl::CurveExponentialDecay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                                          bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveExponentialDecay::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveExponentialDecay::iddObjectType());
   }
 
   CurveExponentialDecay_Impl::CurveExponentialDecay_Impl(const CurveExponentialDecay_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveExponentialDecay_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 1u);
+    OS_ASSERT(x.size() == 1u);
     double result = coefficient1C1();
     result += coefficient2C2() * exp(coefficient3C3() * x[0]);
     return result;
@@ -79,31 +79,31 @@ namespace detail {
 
   double CurveExponentialDecay_Impl::coefficient1C1() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentialDecayFields::Coefficient1C1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponentialDecay_Impl::coefficient2C2() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentialDecayFields::Coefficient2C2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponentialDecay_Impl::coefficient3C3() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentialDecayFields::Coefficient3C3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponentialDecay_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentialDecayFields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponentialDecay_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentialDecayFields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -117,7 +117,7 @@ namespace detail {
 
   std::string CurveExponentialDecay_Impl::inputUnitTypeforx() const {
     boost::optional<std::string> value = getString(OS_Curve_ExponentialDecayFields::InputUnitTypeforx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -127,7 +127,7 @@ namespace detail {
 
   std::string CurveExponentialDecay_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_ExponentialDecayFields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -138,31 +138,31 @@ namespace detail {
   void CurveExponentialDecay_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient1C1, coefficient1C1);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient2C2, coefficient2C2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient3C3, coefficient3C3);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentialDecayFields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentialDecayFields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -172,12 +172,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_ExponentialDecayFields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -187,12 +187,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentialDecayFields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_ExponentialDecayFields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveExponentialDecay_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
@@ -203,7 +203,7 @@ namespace detail {
 
   void CurveExponentialDecay_Impl::resetInputUnitTypeforx() {
     bool result = setString(OS_Curve_ExponentialDecayFields::InputUnitTypeforx, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveExponentialDecay_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -214,7 +214,7 @@ namespace detail {
 
   void CurveExponentialDecay_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_ExponentialDecayFields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -222,7 +222,7 @@ namespace detail {
 CurveExponentialDecay::CurveExponentialDecay(const Model& model)
   : Curve(CurveExponentialDecay::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveExponentialDecay_Impl>());
+  OS_ASSERT(getImpl<detail::CurveExponentialDecay_Impl>());
   setDouble(OS_Curve_ExponentialDecayFields::Coefficient1C1,0.0);
   setDouble(OS_Curve_ExponentialDecayFields::Coefficient2C2,1.0);
   setDouble(OS_Curve_ExponentialDecayFields::Coefficient3C3,-1.0);

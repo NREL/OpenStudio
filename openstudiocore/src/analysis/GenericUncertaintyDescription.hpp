@@ -26,7 +26,7 @@
 namespace openstudio {
 
 class Attribute;
-class AttributeDescription;
+struct AttributeDescription;
 
 namespace analysis {
 
@@ -48,10 +48,16 @@ class ANALYSIS_API GenericUncertaintyDescription : public UncertaintyDescription
 
   //@}
 
+  /** Returns the interface UncertaintyDescriptionType, that is,
+   *  UncertaintyDescriptionType::Generic */
   static UncertaintyDescriptionType type();
 
   /** @name Getters and Queries */
   //@{
+
+  /** Returns the UncertaintyDescriptionType that was used to construct this object, that
+   *  is, the underlying, actual, type. */
+  UncertaintyDescriptionType actualType() const;
 
   /** Returns all options that are set. */
   std::vector<Attribute> attributes() const;

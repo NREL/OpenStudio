@@ -166,7 +166,7 @@ namespace detail {
       return result;
     }
     QMetaProperty metaproperty = metaobject->property(index);
-    BOOST_ASSERT(metaproperty.isValid());
+    OS_ASSERT(metaproperty.isValid());
     std::string typeName = metaproperty.typeName();
 
     // if it is a model object it should be a relationship rather than an attribute
@@ -195,7 +195,7 @@ namespace detail {
       return result;
     }
     QMetaProperty metaproperty = metaobject->property(index);
-    BOOST_ASSERT(metaproperty.isValid());
+    OS_ASSERT(metaproperty.isValid());
     std::string typeName = metaproperty.typeName();
 
     // if it is a model object it should be a relationship rather than an attribute
@@ -220,7 +220,7 @@ namespace detail {
       return result;
     }
     QMetaProperty metaproperty = metaobject->property(index);
-    BOOST_ASSERT(metaproperty.isValid());
+    OS_ASSERT(metaproperty.isValid());
 
     std::string typeName = metaproperty.typeName();
 
@@ -280,7 +280,7 @@ namespace detail {
       return result;
     }
     QMetaProperty metaproperty = metaobject->property(index);
-    BOOST_ASSERT(metaproperty.isValid());
+    OS_ASSERT(metaproperty.isValid());
 
     if (!metaproperty.isWritable()){
       return result;
@@ -358,7 +358,7 @@ namespace detail {
       return result;
     }
     QMetaProperty metaproperty = metaobject->property(index);
-    BOOST_ASSERT(metaproperty.isValid());
+    OS_ASSERT(metaproperty.isValid());
 
     if (!metaproperty.isWritable()){
       return result;
@@ -462,7 +462,7 @@ namespace detail {
       return result;
     }
     QMetaProperty metaproperty = metaobject->property(index);
-    BOOST_ASSERT(metaproperty.isValid());
+    OS_ASSERT(metaproperty.isValid());
     std::string typeName = metaproperty.typeName();
 
     // if it is a model object it should be a relationship rather than an attribute
@@ -842,11 +842,11 @@ namespace detail {
       WorkspaceObjectVector toInsert = castVector<WorkspaceObject>(resources);
       result = m.addAndInsertObjects(toAdd,toInsert);
       // adding this better have worked
-      BOOST_ASSERT(result.size() == 1u + lifeCycleCosts.size() + resources.size());
+      OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + resources.size());
       // inserting resources better have worked
       unsigned i = 1 + lifeCycleCosts.size();
       BOOST_FOREACH(const ResourceObject& resource,resources) {
-        BOOST_ASSERT(result[i] == resource);
+        OS_ASSERT(result[i] == resource);
         ++i;
       }
       return result[0].cast<ModelObject>();
@@ -857,7 +857,7 @@ namespace detail {
         toAdd,
         castArray<WorkspaceObject>(getRecursiveResourceSubTrees(getObject<ModelObject>(), true)));
     // Operation should work.
-    BOOST_ASSERT(result.size() > 0u);
+    OS_ASSERT(result.size() > 0u);
     return result[0].cast<ModelObject>();
   }
 
@@ -879,7 +879,7 @@ namespace detail {
     ModelObject cloneOfThis = this->clone(temp);
     // ensure that the first object in contents is cloneOfThis (the primary object).
     ModelObjectVector contents = castVector<ModelObject>(temp.objects(true));
-    BOOST_ASSERT(contents[0] == cloneOfThis);
+    OS_ASSERT(contents[0] == cloneOfThis);
     return Component(contents);
   }
 
@@ -905,7 +905,7 @@ namespace detail {
 
   bool ModelObject_Impl::getBooleanFieldValue(unsigned index) const {
     OptionalString oStr = getString(index,true);
-    BOOST_ASSERT(oStr);
+    OS_ASSERT(oStr);
     std::string temp = *oStr;
     boost::to_lower(temp);
     if (temp == "yes") { return true; }
@@ -960,7 +960,7 @@ namespace detail {
           // resources). also, this fits the notion of Draft, versus Final, strictness.
           if (limits && (!isCompatible(keys[i].first,keys[i].second,*limits))) {
             UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-            BOOST_ASSERT(!fieldIndices.empty());
+            OS_ASSERT(!fieldIndices.empty());
             if (fieldIndices.size() != unsigned(n)) {
               LOG(Warn,"Number of ScheduleTypeKeys for " << schedule.briefDescription()
                   << " and number of source indices from " << briefDescription()
@@ -1188,8 +1188,8 @@ ModelObject::ModelObject(IddObjectType type, const Model& model)
   : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type),false))
 {
   // create object of correct type
-  BOOST_ASSERT(getImpl<detail::ModelObject_Impl>());
-  BOOST_ASSERT(!getImpl<detail::ModelObject_Impl>()->initialized());
+  OS_ASSERT(getImpl<detail::ModelObject_Impl>());
+  OS_ASSERT(!getImpl<detail::ModelObject_Impl>()->initialized());
   // add to Workspace
   openstudio::detail::WorkspaceObject_ImplPtrVector impls;
   impls.push_back(getImpl<openstudio::detail::WorkspaceObject_Impl>());

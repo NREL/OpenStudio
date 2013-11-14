@@ -37,7 +37,7 @@ namespace detail {
   CurveCubic_Impl::CurveCubic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveCubic::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveCubic::iddObjectType());
   }
 
   CurveCubic_Impl::CurveCubic_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                    bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveCubic::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveCubic::iddObjectType());
   }
 
   CurveCubic_Impl::CurveCubic_Impl(const CurveCubic_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveCubic_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 1u);
+    OS_ASSERT(x.size() == 1u);
     double result = coefficient1Constant();
     result += coefficient2x() * x[0];
     result += coefficient3xPOW2() * pow(x[0],2);
@@ -81,37 +81,37 @@ namespace detail {
 
   double CurveCubic_Impl::coefficient1Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_CubicFields::Coefficient1Constant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveCubic_Impl::coefficient2x() const {
     boost::optional<double> value = getDouble(OS_Curve_CubicFields::Coefficient2x,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveCubic_Impl::coefficient3xPOW2() const {
     boost::optional<double> value = getDouble(OS_Curve_CubicFields::Coefficient3x_POW_2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveCubic_Impl::coefficient4xPOW3() const {
     boost::optional<double> value = getDouble(OS_Curve_CubicFields::Coefficient4x_POW_3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveCubic_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_CubicFields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveCubic_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_CubicFields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -125,7 +125,7 @@ namespace detail {
 
   std::string CurveCubic_Impl::inputUnitTypeforX() const {
     boost::optional<std::string> value = getString(OS_Curve_CubicFields::InputUnitTypeforX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -135,7 +135,7 @@ namespace detail {
 
   std::string CurveCubic_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_CubicFields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -146,37 +146,37 @@ namespace detail {
   void CurveCubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = false;
     result = setDouble(OS_Curve_CubicFields::Coefficient1Constant, coefficient1Constant);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = false;
     result = setDouble(OS_Curve_CubicFields::Coefficient2x, coefficient2x);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = false;
     result = setDouble(OS_Curve_CubicFields::Coefficient3x_POW_2, coefficient3xPOW2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
     bool result = false;
     result = setDouble(OS_Curve_CubicFields::Coefficient4x_POW_3, coefficient4xPOW3);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_CubicFields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_CubicFields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -186,12 +186,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_CubicFields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_CubicFields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -201,12 +201,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_CubicFields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_CubicFields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveCubic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
@@ -217,7 +217,7 @@ namespace detail {
 
   void CurveCubic_Impl::resetInputUnitTypeforX() {
     bool result = setString(OS_Curve_CubicFields::InputUnitTypeforX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveCubic_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -228,7 +228,7 @@ namespace detail {
 
   void CurveCubic_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_CubicFields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -236,7 +236,7 @@ namespace detail {
 CurveCubic::CurveCubic(const Model& model)
   : Curve(CurveCubic::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveCubic_Impl>());
+  OS_ASSERT(getImpl<detail::CurveCubic_Impl>());
   setDouble(OS_Curve_CubicFields::Coefficient1Constant,0.0);
   setDouble(OS_Curve_CubicFields::Coefficient2x,0.0);
   setDouble(OS_Curve_CubicFields::Coefficient3x_POW_2,0.0);

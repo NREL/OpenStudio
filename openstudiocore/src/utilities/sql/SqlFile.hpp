@@ -80,6 +80,9 @@ class UTILITIES_API SqlFile {
   // virtual destructor
   virtual ~SqlFile();
 
+  // Remove indexes that exist, useful for performance reasons.
+  void removeIndexes();
+
   // create indexes on the sql file if they do not exist
   void createIndexes();
 

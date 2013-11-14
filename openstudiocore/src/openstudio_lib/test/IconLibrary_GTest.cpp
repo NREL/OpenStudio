@@ -89,9 +89,9 @@ TEST_F(OpenStudioLibFixture, IconLibrary_Icon)
   //iddObjectTypes.push_back(IddObjectType::OS_Schedule_FixedInterval);
   //iddObjectTypes.push_back(IddObjectType::OS_Schedule_Ruleset);
   //iddObjectTypes.push_back(IddObjectType::OS_Schedule_VariableInterval);
-  iddObjectTypes.push_back(IddObjectType::OS_SetpointManager_MixedAir);
-  iddObjectTypes.push_back(IddObjectType::OS_SetpointManager_Scheduled);
-  iddObjectTypes.push_back(IddObjectType::OS_SetpointManager_SingleZone_Reheat);
+  //iddObjectTypes.push_back(IddObjectType::OS_SetpointManager_MixedAir);
+  //iddObjectTypes.push_back(IddObjectType::OS_SetpointManager_Scheduled);
+  //iddObjectTypes.push_back(IddObjectType::OS_SetpointManager_SingleZone_Reheat);
   //iddObjectTypes.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   //iddObjectTypes.push_back(IddObjectType::OS_ShadingSurface);
   //iddObjectTypes.push_back(IddObjectType::OS_Space);

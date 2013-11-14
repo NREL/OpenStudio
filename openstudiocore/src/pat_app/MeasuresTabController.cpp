@@ -27,16 +27,19 @@
 #include <pat_app/PatApp.hpp>
 #include <pat_app/PatMainWindow.hpp>
 
+#include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
+
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/RubyException.hpp>
 
@@ -65,23 +68,11 @@ MeasuresTabController::MeasuresTabController()
   m_variableGroupListController = QSharedPointer<openstudio::measuretab::VariableGroupListController>(new openstudio::measuretab::VariableGroupListController(false, PatApp::instance()));
   m_variableGroupItemDelegate = QSharedPointer<openstudio::measuretab::VariableGroupItemDelegate>(new openstudio::measuretab::VariableGroupItemDelegate(false));
 
-  //m_groups[MeasureType::ModelMeasure] = QString("OpenStudio Measures");
-  ////m_groups[MeasureType::EnergyPlusMeasure] = QString("EnergyPlus Measures");
-
-  //for( std::map<MeasureType,QString>::const_iterator it = m_groups.begin();
-  //     it != m_groups.end();
-  //     it++ )
-  //{
-  //  QSharedPointer<VariableGroupItem> variableGroupItem;
-  //  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(it->first,it->second));
-  //  m_variableGroupListController->addItem(variableGroupItem);
-  //}
-
   measuresTabView->variableGroupListView->setListController(m_variableGroupListController);
   measuresTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
 
   bool bingo = connect(measuresTabView->selectBaselineButton,SIGNAL(clicked()),this,SLOT(selectBaseline()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){

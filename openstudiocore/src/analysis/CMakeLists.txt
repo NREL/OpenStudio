@@ -48,9 +48,6 @@ SET( ${target_name}_src
   DesignOfExperimentsOptions.hpp
   DesignOfExperimentsOptions_Impl.hpp
   DesignOfExperimentsOptions.cpp
-  DiscretePerturbation.hpp
-  DiscretePerturbation_Impl.hpp
-  DiscretePerturbation.cpp
   DiscreteVariable.hpp
   DiscreteVariable_Impl.hpp
   DiscreteVariable.cpp
@@ -91,27 +88,27 @@ SET( ${target_name}_src
   LognormalDistribution.cpp
   LoguniformDistribution.hpp
   LoguniformDistribution.cpp
+  Measure.hpp
+  Measure_Impl.hpp
+  Measure.cpp
+  MeasureGroup.hpp
+  MeasureGroup_Impl.hpp
+  MeasureGroup.cpp
   NegativeBinomialDistribution.hpp${${target_name}_moc_src}
   NegativeBinomialDistribution.cpp
   NormalDistribution.hpp
   NormalDistribution.cpp
-  NullPerturbation.hpp
-  NullPerturbation_Impl.hpp
-  NullPerturbation.cpp
+  NullMeasure.hpp
+  NullMeasure_Impl.hpp
+  NullMeasure.cpp
   PoissonDistribution.hpp
   PoissonDistribution.cpp
   RubyContinuousVariable.hpp
   RubyContinuousVariable_Impl.hpp
   RubyContinuousVariable.cpp
-  RubyPerturbation.hpp
-  RubyPerturbation_Impl.hpp
-  RubyPerturbation.cpp
-  ModelRulesetContinuousVariable.hpp
-  ModelRulesetContinuousVariable_Impl.hpp
-  ModelRulesetContinuousVariable.cpp
-  ModelRulesetPerturbation.hpp
-  ModelRulesetPerturbation_Impl.hpp
-  ModelRulesetPerturbation.cpp
+  RubyMeasure.hpp
+  RubyMeasure_Impl.hpp
+  RubyMeasure.cpp
   OpenStudioAlgorithm.hpp
   OpenStudioAlgorithm_Impl.hpp
   OpenStudioAlgorithm.cpp
@@ -172,37 +169,8 @@ SET( ${target_name}_src
 )
 
 SET( ${target_name}_moc
-  Algorithm_Impl.hpp
   Analysis_Impl.hpp
   AnalysisObject_Impl.hpp
-  ContinuousVariable_Impl.hpp
-  DakotaAlgorithm_Impl.hpp
-  DataPoint_Impl.hpp
-  DDACEAlgorithm_Impl.hpp
-  DesignOfExperiments_Impl.hpp
-  DiscretePerturbation_Impl.hpp
-  DiscreteVariable_Impl.hpp
-  FSUDaceAlgorithm_Impl.hpp
-  Function_Impl.hpp
-  InputVariable_Impl.hpp
-  LinearFunction_Impl.hpp
-  ModelRulesetContinuousVariable_Impl.hpp
-  ModelRulesetPerturbation_Impl.hpp
-  NullPerturbation_Impl.hpp
-  OpenStudioAlgorithm_Impl.hpp
-  OptimizationDataPoint_Impl.hpp
-  OptimizationProblem_Impl.hpp
-  OutputAttributeVariable_Impl.hpp
-  OutputVariable_Impl.hpp
-  ParameterStudyAlgorithm_Impl.hpp
-  Problem_Impl.hpp
-  PSUADEDaceAlgorithm_Impl.hpp
-  RubyContinuousVariable_Impl.hpp
-  RubyPerturbation_Impl.hpp
-  SamplingAlgorithm_Impl.hpp
-  SequentialSearch_Impl.hpp
-  Variable_Impl.hpp
-  WorkflowStep_Impl.hpp
 )
 
 SET( ${target_name}_test_src
@@ -221,7 +189,7 @@ SET( ${target_name}_test_src
   test/FSUDaceAlgorithm_GTest.cpp
   test/ParameterStudyAlgorithm_GTest.cpp
   test/PSUADEDaceAlgorithm_GTest.cpp
-  test/RubyPerturbation_GTest.cpp
+  test/RubyMeasure_GTest.cpp
   test/SamplingAlgorithm_GTest.cpp
   test/UncertaintyDescription_GTest.cpp
 )

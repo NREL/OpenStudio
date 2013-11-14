@@ -58,6 +58,8 @@
 #include <openstudio_lib/VariablesTabController.hpp>
 #include <openstudio_lib/YearSettingsWidget.hpp>
 
+#include <analysis/Analysis.hpp>
+
 #include <model/Component.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/WeatherFile.hpp>
@@ -67,6 +69,7 @@
 #include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/bcl/RemoteBCL.hpp>
 #include <utilities/core/Application.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/data/Attribute.hpp>
 #include <utilities/idf/IdfFile.hpp>
@@ -77,8 +80,8 @@
 
 #include <analysis/DataPoint.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/NullMeasure.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
 
@@ -153,9 +156,9 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   m_mainWindow = new MainWindow(m_isPlugin);
   isConnected = connect(m_mainWindow, SIGNAL(openBclDlgClicked()), this, SLOT(openBclDlg()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   addQObject(m_mainWindow);
 
@@ -219,16 +222,44 @@ OSDocument::OSDocument( openstudio::model::Model library,
       }
     
     }
-  } else {
+    else {
+      // save copy of databases about to be overwritten
+      openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
+      boost::filesystem::copy_file(projectDir / toPath("run.db"),
+                                   projectDir / toPath("bad-run.db"),
+                                   boost::filesystem::copy_option::overwrite_if_exists);
+      boost::filesystem::copy_file(projectDir / toPath("project.osp"),
+                                   projectDir / toPath("bad-project.osp"),
+                                   boost::filesystem::copy_option::overwrite_if_exists);
+      // throw up warning message
+      std::stringstream ss;
+      ss << "The project.osp and run.db associated with this model could not be opened. ";
+      ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
+      ss << "will be created. Compared to the original, the model will no longer contain any ";
+      ss << "measures or run data. If that data was present and is critical, it can be mined ";
+      ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
+      ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
+      ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
+      ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
+      ss << "you, and sorry for the inconvenience.";
+      LOG(Warn,ss.str());
+      QMessageBox::warning(0, 
+                           QString("Error opening measure and run data."),
+                           toQString(ss.str()),
+                           QMessageBox::Ok);
+    }
+  }
+  if (!m_simpleProject) {
     LOG(Debug, "Creating new project");
-    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
+    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
+        openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
         options,
         true);
 
     openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
 
     // add swap variable
-    openstudio::analysis::DiscreteVariable dvar("Alternative Model",openstudio::analysis::DiscretePerturbationVector(1u,openstudio::analysis::NullPerturbation()));
+    openstudio::analysis::MeasureGroup dvar("Alternative Model",openstudio::analysis::MeasureVector(1u,openstudio::analysis::NullMeasure()));
     problem.push(dvar);
 
     // set up simulation workflow
@@ -238,6 +269,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
     problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
     problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
   }
+
+  OS_ASSERT(m_simpleProject);
   
   // make sure project has baseline stuff setup
   analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
@@ -247,7 +280,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   m_simpleProject->runManager().setConfigOptions(co);
 
   isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
 
   // Main Right Column
@@ -256,7 +289,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
     boost::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_mainRightColumnController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_mainWindow->setMainRightColumnView(m_mainRightColumnController->mainRightColumnView());
 
@@ -286,15 +319,15 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_schedulesTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_schedulesTabController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_schedulesTabController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Constructions
 
@@ -309,15 +342,15 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_constructionsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_constructionsTabController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_constructionsTabController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Loads
 
@@ -332,15 +365,15 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_loadsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_loadsTabController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_loadsTabController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Space Types
 
@@ -360,11 +393,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = QObject::connect(m_spaceTypesTabController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_spaceTypesTabController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Building Stories
 
@@ -379,11 +412,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
   
   isConnected = QObject::connect(m_buildingStoriesTabController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_buildingStoriesTabController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Facility
 
@@ -398,7 +431,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_facilityTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   connect( m_facilityTabController.get(),
            SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
@@ -407,11 +440,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = QObject::connect(m_facilityTabController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_facilityTabController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Thermal Zones 
 
@@ -431,7 +464,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_thermalZonesTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // HVAC Systems
 
@@ -485,7 +518,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_simSettingsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Scripts
 
@@ -503,11 +536,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   //isConnected = QObject::connect(m_scriptsTabController.get(), SIGNAL(openBclDlgClicked()),
   //                               this, SIGNAL(openBclDlgClicked()));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
 
   //isConnected = QObject::connect(m_scriptsTabController.get(), SIGNAL(openLibDlgClicked()),
   //                               this, SIGNAL(openLibDlgClicked()));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
 
   // Run
 
@@ -521,6 +554,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
                                 ":images/off_run_tab.png" );
   connect(m_runTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForRunSimulationSubTab(int)));
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(modelSaving(const openstudio::path &)), 
           m_runTabController.get(), SLOT(saveDatabase(const openstudio::path &)));
   connect(m_runTabController.get(), SIGNAL(useRadianceStateChanged(bool)),
@@ -548,9 +582,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_scriptsTabController.get(), SIGNAL(toolsUpdated()),
       this, SLOT(markAsModified()));
 
@@ -560,6 +596,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(this, SIGNAL(toolsUpdated()),
           this, SLOT(markAsModified()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 
@@ -572,58 +609,58 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
 
   isConnected = connect( m_mainWindow, SIGNAL(closeClicked()), this, SIGNAL(closeClicked()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), SIGNAL(onChange()), this, SLOT(markAsModified()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_hvacSystemsTabController.get(),
            SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
            this,
            SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_mainWindow,SIGNAL(verticalTabSelected(int)),this,SLOT(onVerticalTabSelected(int)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_mainWindow, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(loadLibraryClicked()), this, SIGNAL(loadLibraryClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(osmDropped(QString)),this,SIGNAL(osmDropped(QString)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(exportClicked()), this, SLOT(exportIdf()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(showRunManagerPreferencesClicked()), this, SLOT(showRunManagerPreferences()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(toggleUnitsClicked(bool)), this, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(this, SIGNAL(openBclDlgClicked()),
                                  this, SLOT(openBclDlg()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()),
                                  this, SLOT(openLibDlg()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QTimer::singleShot(0, this, SLOT(showFirstTab())); 
 
@@ -1103,7 +1140,7 @@ boost::optional<model::Component> OSDocument::getComponent(const OSItemId& itemI
 
 #endif
 
-        //BOOST_ASSERT(boost::filesystem::exists(oscPath));
+        //OS_ASSERT(boost::filesystem::exists(oscPath));
 
         osversion::VersionTranslator translator;
 
@@ -1158,7 +1195,7 @@ void OSDocument::openBclDlg()
       }
       else{
         // should never get here
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
       }
     }
   }
@@ -1171,7 +1208,7 @@ void OSDocument::openBclDlg()
 
     isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeBclDlg()));
-    BOOST_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
   }
   if(m_onlineBclDialog && !m_onlineBclDialog->isVisible()){
     m_onlineBclDialog->setGeometry(m_mainWindow->geometry());
@@ -1235,7 +1272,7 @@ void OSDocument::openMeasuresBclDlg()
       }
       else{
         // should never get here
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
       }
     }
   }
@@ -1248,7 +1285,7 @@ void OSDocument::openMeasuresBclDlg()
 
     isConnected = connect(m_onlineMeasuresBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeMeasuresBclDlg()));
-    BOOST_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
   }
   if(m_onlineMeasuresBclDialog && !m_onlineMeasuresBclDialog->isVisible()){
     m_onlineMeasuresBclDialog->setGeometry(m_mainWindow->geometry());

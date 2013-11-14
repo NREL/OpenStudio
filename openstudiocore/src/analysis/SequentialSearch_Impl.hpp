@@ -29,6 +29,7 @@ class Table;
 
 namespace analysis {
 
+class SequentialSearch;
 class SequentialSearchOptions;
 class DataPoint;
 class OptimizationDataPoint;
@@ -37,7 +38,6 @@ namespace detail {
 
   /** SequentialSearch_Impl is a Algorithm_Impl that is the implementation class for SequentialSearch.*/
   class ANALYSIS_API SequentialSearch_Impl : public OpenStudioAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -96,6 +96,14 @@ namespace detail {
     Table getSummaryTable(Analysis& analysis) const;
 
     std::vector< std::vector<QVariant> > getCandidateCombinations(const DataPoint& dataPoint) const;
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static SequentialSearch fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

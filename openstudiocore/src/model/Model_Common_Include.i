@@ -38,7 +38,7 @@
   #include <utilities/units/CFMUnit.hpp>
   #include <utilities/units/ThermUnit.hpp>
   #include <utilities/units/WhUnit.hpp>
-  #include <utilities/units/CelciusUnit.hpp>
+  #include <utilities/units/CelsiusUnit.hpp>
   #include <utilities/units/FahrenheitUnit.hpp>
 
   using namespace openstudio;

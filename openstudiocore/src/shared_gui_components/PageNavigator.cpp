@@ -21,8 +21,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QPushButton>
@@ -64,7 +62,7 @@ void PageNavigator::createLayout()
   m_buttonGroup = new QButtonGroup(this);
   isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(QAbstractButton *)), 
                         this, SLOT(on_buttonClicked(QAbstractButton *)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QPushButton * button = NULL;
 
@@ -74,7 +72,7 @@ void PageNavigator::createLayout()
   button->setFixedSize(40,20);
   button->setCheckable(false);
   isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_firstPage(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   layout->addWidget(button);
 
   ///! button previous page
@@ -83,7 +81,7 @@ void PageNavigator::createLayout()
   button->setFixedSize(40,20);
   button->setCheckable(false);
   isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_previousPage(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   layout->addWidget(button);
 
   ///! buttons for pages listed
@@ -99,7 +97,7 @@ void PageNavigator::createLayout()
   button->setFixedSize(40,20);
   button->setCheckable(false);
   isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_nextPage(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   layout->addWidget(button);
 
   ///! button last page
@@ -108,14 +106,14 @@ void PageNavigator::createLayout()
   button->setFixedSize(40,20);
   button->setCheckable(false);
   isConnected = connect(button, SIGNAL(clicked(bool)), this, SLOT(on_lastPage(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   layout->addWidget(button);
 
 }
 
 void PageNavigator::makeNumberedButtons()
 {
-  BOOST_FOREACH(QAbstractButton * button, m_buttonGroup->buttons().toVector().toStdVector()){
+  Q_FOREACH(QAbstractButton * button, m_buttonGroup->buttons().toVector().toStdVector()){
     m_buttonGroup->removeButton(button);
     if(button){
       delete button;
@@ -139,12 +137,12 @@ void PageNavigator::makeNumberedButtons()
   if(m_buttonGroup->button(0)){
     m_buttonGroup->button(0)->setChecked(true);
   }
-  BOOST_ASSERT(m_numPagesListed == m_buttonGroup->buttons().size());
+  OS_ASSERT(m_numPagesListed == m_buttonGroup->buttons().size());
 }
 
 void PageNavigator::setButtonPageNumbers(int lowestPageNum)
 {
-  BOOST_ASSERT(lowestPageNum > 0 && lowestPageNum <= m_numPages);
+  OS_ASSERT(lowestPageNum > 0 && lowestPageNum <= m_numPages);
   QString num;
   QAbstractButton * button = NULL;
   for(int i = 0; i < m_numPagesListed; i++){
@@ -243,7 +241,7 @@ void PageNavigator::on_previousPage(bool checked)
   }
 
   /// You should never get here
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return;
 }
 
@@ -276,7 +274,7 @@ void PageNavigator::on_nextPage(bool checked)
   }
 
   /// You should never get here
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return;
 }
 

@@ -16632,7 +16632,7 @@ ZoneHVAC:FourPipeFanCoil,
         \note For ConstantFanVariableFlow a Fan:OnOff or Fan:ConstantVolume is valid.
         \note For CyclingFan, a Fan:OnOff is valid.
         \note For VariableFanVariableFlow or VariableFanConstantFlow a Fan:VariableVolume is valid.
-        \note The fan’s inlet node should be the same as the outdoor air mixer’s mixed air node.
+        \note The fan's inlet node should be the same as the outdoor air mixer's mixed air node.
    A10, \field Supply Air Fan Name
         \required-field
         \type object-list
@@ -26891,7 +26891,7 @@ AirLoopHVAC:UnitaryHeatPump:AirToAir,
         \units m3/s
         \minimum 0.0
         \autosizable
-        \note Must be less than or equal to the fan’s maximum flow rate.
+        \note Must be less than or equal to the fan's maximum flow rate.
         \note Only used when fan operating mode is continuous (disregarded for cycling fan mode).
         \note This air flow rate is used when no heating or cooling is required (i.e., the DX coil
         \note compressor and supplemental heating coil are off). If this field is left blank or zero,
@@ -27631,7 +27631,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note Cooling is disabled above this temperature.
   A3 , \field Cooling Capacity Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter a curve name that represents full load cooling capacity ratio as a
        \note function of outdoor dry-bulb temperature and indoor wet-bulb temperature.
        \note Up to two curves are allowed if the performance cannot be represented by a single curve.
@@ -27647,7 +27647,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note leave this field blank.
   A5 , \field Cooling Capacity Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note This curve object is used to describe the high outdoor temperature
        \note performance curve used to describe cooling capacity ratio.
        \note This curve is used when a single performance curve does not accurately describe
@@ -27655,7 +27655,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A6 , \field Cooling Energy Input Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter a curve name that represents cooling energy ratio as a function of
        \note outdoor dry-bulb temperature and indoor wet-bulb temperature
   A7 , \field Cooling Energy Input Ratio Boundary Curve Name
@@ -27669,7 +27669,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note leave this field blank.
   A8 , \field Cooling Energy Input Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note This curve object is used to describe the high outdoor temperature
        \note performance curve used to describe cooling energy ratio.
        \note This curve is used when a single performance curve does not accurately describe
@@ -27737,7 +27737,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note Enter the maximum outdoor temperature allowed for heating operation.
   A13, \field Heating Capacity Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter a curve name that represents full load heating capacity ratio as a
        \note function of outdoor wet-bulb temperature and indoor dry-bulb temperature.
        \note Outdoor dry-bulb temperature may be used if wet-bulb temperature data is unavailable.
@@ -27757,7 +27757,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A15, \field Heating Capacity Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note This curve object is used to describe the high outdoor temperature
        \note performance curve used to describe heating capacity ratio.
        \note This curve is used when a single performance curve does not accurately describe
@@ -27765,7 +27765,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A16, \field Heating Energy Input Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter a curve name that represents heating energy ratio as a function of
        \note outdoor wet-bulb temperature and indoor dry-bulb temperature
        \note Outdoor dry-bulb temperature may be used if wet-bulb temperature data is unavailable.
@@ -27783,7 +27783,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A18, \field Heating Energy Input Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note This curve object is used to allow separate performance curves for heating energy.
        \note If a single performance curve is used, leave this field blank.
   A19, \field Heating Performance Curve Outdoor Temperature Type
@@ -27866,7 +27866,7 @@ AirConditioner:VariableRefrigerantFlow,
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note PCF = a0 + a1*L + a2*L^2 + a3*L^3 + a4*H
        \note specifies coefficients for a0, a1, a2, and a3 in the PCF equation
        \note PCF = a0 + a1*L + a2*L^2 + a3*CR + a4*CR^2 + a5*(L)(CR)
@@ -27886,7 +27886,7 @@ AirConditioner:VariableRefrigerantFlow,
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note PCF = a0 + a1*L + a2*L^2 + a3*L^3 + a4*H
        \note PCF = a0 + a1*L + a2*L^2 + a3*CR + a4*CR^2 + a5*(L)(CR) + a6*H
        \note where L = length and CR = combination ratio
@@ -27937,7 +27937,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note OnDemand to defrost only when necessary.
   A33, \field Defrost Energy Input Ratio Modifier Function of Temperature Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note A valid performance curve must be used if reversecycle defrost strategy is selected.
   N20, \field Defrost Time Period Fraction
        \type real
@@ -28056,7 +28056,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note recovery mode will not operate.
   A40, \field Heat Recovery Cooling Capacity Modifier Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter the name of a performance curve which represents
        \note the change in cooling capacity when heat recovery is active
        \note A default constant of 0.9 is used if this input is blank
@@ -28076,7 +28076,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note from cooling only mode to heat recovery mode
   A41, \field Heat Recovery Cooling Energy Modifier Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter the name of a performance curve which represents
        \note the change in cooling energy when heat recovery is active
        \note A default constant of 1.1 is used if this input is blank
@@ -28096,7 +28096,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note from cooling only mode to heat recovery mode
   A42, \field Heat Recovery Heating Capacity Modifier Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter the name of a performance curve which represents
        \note the change in heating capacity when heat recovery is active
        \note A default constant of 1.1 is used if this input is blank
@@ -28116,7 +28116,7 @@ AirConditioner:VariableRefrigerantFlow,
        \note from cooling only mode to heat recovery mode
   A43, \field Heat Recovery Heating Energy Modifier Curve Name
        \type object-list
-       \object-list BiQuadraticCurves
+       \object-list BiquadraticCurves
        \note Enter the name of a performance curve which represents
        \note the change in heating electric consumption rate when heat recovery is active
        \note A default constant of 1.1 is used if this input is blank
@@ -33714,7 +33714,7 @@ EvaporativeFluidCooler:SingleSpeed,
        \default 0.008
        \units percent
        \note Rate of drift loss as a percentage of circulating spray water flow rate
-       \note Default value for this field in under investigation. For now Cooling tower’s drift loss
+       \note Default value for this field in under investigation. For now Cooling tower's drift loss
        \note percent default value is taken here.
   A8 , \field Blowdown Calculation Mode
        \type choice
@@ -33729,7 +33729,7 @@ EvaporativeFluidCooler:SingleSpeed,
        \note Blowdown is water intentionally drained from the basin in order to offset the build
        \note up of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
-       \note Default value for this field in under investigation. For now Cooling tower’s
+       \note Default value for this field in under investigation. For now Cooling tower's
        \note Blowdown Concentration Ratio percent default value is taken here.
   A9 , \field Blowdown Makeup Water Usage Schedule Name
        \type object-list
@@ -33920,7 +33920,7 @@ EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units percent
        \default 0.008
-       \note Default value is under investigation. For now cooling tower’s default value is taken.
+       \note Default value is under investigation. For now cooling tower's default value is taken.
   A7 , \field Blowdown Calculation Mode
        \type choice
        \key ConcentrationRatio
@@ -33934,7 +33934,7 @@ EvaporativeFluidCooler:TwoSpeed,
        \note Blowdown is water intentionally drained from the Evaporative Fluid Cooler in order to offset the
        \note build up of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
-       \note Default value is under investigation. For now cooling tower’s default value is taken.
+       \note Default value is under investigation. For now cooling tower's default value is taken.
   A8 , \field Blowdown Makeup Water Usage Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -38349,7 +38349,7 @@ SetpointManager:CondenserEnteringReset,
        \object-list ScheduleNames
        \required-field
        \note This scheduled setpoint value is only used in a given timestep if the
-       \note “Optimized” Condenser Entering Temperature does not fall within the prescribed
+       \note "Optimized" Condenser Entering Temperature does not fall within the prescribed
        \note boundary conditions.
   A4 , \field Minimum Design Wetbulb Temperature Curve Name
        \required-field
@@ -40021,14 +40021,14 @@ Refrigeration:AirChiller,
         \minimum 0.0
         \maximum 20.
         \note The rated difference between the air entering the refrigeration chiller and the
-        \note cooling source temperature in °C.
+        \note cooling source temperature in degrees Celsius.
   N6 ,  \field Maximum Temperature Difference Between Inlet Air and Evaporating Temperature
         \type real
         \units deltaC
         \minimum 0.0
         \maximum 25.
         \note The maximum difference between the air entering the refrigeration chiller and the
-        \note cooling source temperature in °C used to limit capacity during pull-down.
+        \note cooling source temperature in degrees Celsius used to limit capacity during pull-down.
         \note defaults to 1.3 times the Rated Temperature Difference DT1
   N7 ,  \field Coil Material Correction Factor
         \type real
@@ -41572,7 +41572,7 @@ Generator:FuelCell:Inverter,
 
 Generator:MicroCHP,
       \memo Small-scale combined heat and power (micro CHP) electric generator using the model
-      \memo developed by IEA/ECBCS Annex 42 Ð see www.cogen-sim.net. The model was developed
+      \memo developed by IEA/ECBCS Annex 42 - see www.cogen-sim.net. The model was developed
       \memo for both internal combustion and Stirling cycle
       \memo engines, but might be used for other types of residential CHP devices.
       \min-fields 1
@@ -42100,7 +42100,7 @@ ElectricLoadCenter:Storage:Battery,
         \minimum 0
         \units Ah
         \note The capacity is for each module.
-        \note A model parameter from manufacture’s data or test data.
+        \note A model parameter from manufacture's data or test data.
    N5,  \field Initial Fractional State of Charge
         \type real
         \minimum 0

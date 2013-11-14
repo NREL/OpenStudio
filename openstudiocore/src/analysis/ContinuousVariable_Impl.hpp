@@ -33,7 +33,6 @@ namespace detail {
   /** ContinuousVariable_Impl is an InputVariable_Impl that is the implementation class
    *  for ContinuousVariable.*/
   class ANALYSIS_API ContinuousVariable_Impl : public InputVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -106,6 +105,14 @@ namespace detail {
 
     /** Truncates value to [minimum,maximum]. If minimum > maximum, returns boost::none. */
     boost::optional<double> truncate(double value) const;
+
+    //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    virtual QVariant toServerFormulationVariant() const;
 
     //@}
    protected:

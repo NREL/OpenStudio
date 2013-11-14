@@ -38,6 +38,7 @@
 #include <utilities/math/FloatCompare.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Url.hpp>
 #include <utilities/core/UUID.hpp>
 
 #include <utilities/units/Quantity.hpp>
@@ -72,13 +73,13 @@ namespace detail {
       m_fieldComments(other.fieldComments())
   {
     if (keepHandle){
-      BOOST_ASSERT(!other.handle().isNull());
+      OS_ASSERT(!other.handle().isNull());
       m_handle = other.handle();
     }else{
       m_handle = openstudio::createUUID();
       if (iddObject().hasHandleField()) {
         bool ok = setString(0,toString(m_handle));
-        BOOST_ASSERT(ok);
+        OS_ASSERT(ok);
       }
     }
   }
@@ -87,11 +88,11 @@ namespace detail {
     : m_handle(openstudio::createUUID())
   {
     OptionalIddObject candidate = IddFactory::instance().getObject(type);
-    BOOST_ASSERT(candidate);
+    OS_ASSERT(candidate);
     m_iddObject = *candidate;
     if (iddObject().hasHandleField()) {
       bool ok = setString(0,toString(m_handle));
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
     resizeToMinFields();
   }
@@ -102,7 +103,7 @@ namespace detail {
   {
     if (this->iddObject().hasHandleField()) {
       bool ok = setString(0,toString(m_handle));
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
     resizeToMinFields();
   }
@@ -110,7 +111,7 @@ namespace detail {
   IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject, bool minimal)
     : m_iddObject(iddObject)
   {
-    BOOST_ASSERT(minimal);
+    OS_ASSERT(minimal);
   }
 
   IdfObject_Impl::IdfObject_Impl(const Handle& handle,
@@ -389,9 +390,9 @@ namespace detail {
       // if so, change the name, or create it
       unsigned n = numFields();
       unsigned i = *index;
-      BOOST_ASSERT(i < 2u);
+      OS_ASSERT(i < 2u);
       if (n == 0 && i == 1) {
-        BOOST_ASSERT(!m_handle.isNull());
+        OS_ASSERT(!m_handle.isNull());
         m_fields.push_back(toString(m_handle));
         m_diffs.push_back(IdfObjectDiff(0u,boost::none,m_fields.back()));
       }
@@ -477,7 +478,7 @@ namespace detail {
         return false;
       }
 
-      BOOST_ASSERT(index < m_fields.size());
+      OS_ASSERT(index < m_fields.size());
 
       m_fields[index] = value;
       m_diffs.push_back(IdfObjectDiff(index, oldValue, value));
@@ -638,12 +639,12 @@ namespace detail {
     }
 
     n = numFields();
-    BOOST_ASSERT(n >= iddn);
+    OS_ASSERT(n >= iddn);
     
     // needs to be extensible, have all non-extensible fields defined, and not violate maxFields.
     if ((groupSize > 0) && (!mf || (n + groupSize <= *mf))) {
 
-      BOOST_ASSERT(m_iddObject.properties().extensible);
+      OS_ASSERT(m_iddObject.properties().extensible);
 
       if (wValues.empty()) { 
         wValues.resize(groupSize); 
@@ -668,8 +669,8 @@ namespace detail {
       }
 
       result = getExtensibleGroup(numExtensibleGroups()-1);
-      BOOST_ASSERT(!result.empty());
-      BOOST_ASSERT(result.groupIndex() == iddObject().extensibleIndex(n).group);
+      OS_ASSERT(!result.empty());
+      OS_ASSERT(result.groupIndex() == iddObject().extensibleIndex(n).group);
     }
 
     return result;
@@ -714,7 +715,7 @@ namespace detail {
     OptionalUnsigned mf = maxFields();  
     // needs to have all non-extensible fields defined, and not violate maxFields.
     if ((n >= m_iddObject.numFields()) && (!mf || (n + groupSize <= *mf))) {
-      BOOST_ASSERT(m_iddObject.properties().extensible);
+      OS_ASSERT(m_iddObject.properties().extensible);
 
       StringVector wValues = values;
       if (wValues.empty()) { 
@@ -724,11 +725,11 @@ namespace detail {
       // push a new group on the end
       unsigned i = numExtensibleGroups()-1;
       IdfExtensibleGroup eg = getExtensibleGroup(i);
-      BOOST_ASSERT(!eg.empty());
+      OS_ASSERT(!eg.empty());
       IdfExtensibleGroup temp = pushExtensibleGroup(eg.fields(),checkValidity);
       if (temp.empty()) { 
-        BOOST_ASSERT(numFields() == n);
-        BOOST_ASSERT(m_diffs.size() == diffSize);
+        OS_ASSERT(numFields() == n);
+        OS_ASSERT(m_diffs.size() == diffSize);
 
         return result; 
       }
@@ -738,16 +739,16 @@ namespace detail {
       while (i > groupIndex) {
         --i;
         IdfExtensibleGroup peg = getExtensibleGroup(i);
-        BOOST_ASSERT(!peg.empty());
+        OS_ASSERT(!peg.empty());
         ok = eg.setFields(peg.fields(),false);
         if (!ok) {
           // roll back
           i += 2;
           while (i < numExtensibleGroups()-1) {
             peg = getExtensibleGroup(i);
-            BOOST_ASSERT(!peg.empty());
+            OS_ASSERT(!peg.empty());
             eg = getExtensibleGroup(i+1);
-            BOOST_ASSERT(!eg.empty());
+            OS_ASSERT(!eg.empty());
             peg.setFields(eg.fields(),false);
             ++i;
           }
@@ -767,11 +768,11 @@ namespace detail {
       if (!ok) {
         i = groupIndex+1;
         IdfExtensibleGroup peg = getExtensibleGroup(i);
-        BOOST_ASSERT(!peg.empty());
+        OS_ASSERT(!peg.empty());
         while (i < numExtensibleGroups()-1) {
           ++i;
           eg = getExtensibleGroup(i);
-          BOOST_ASSERT(!eg.empty());
+          OS_ASSERT(!eg.empty());
           peg.setFields(eg.fields(),false);
           peg = eg;
         }
@@ -784,8 +785,8 @@ namespace detail {
       }
 
       result = eg;
-      BOOST_ASSERT(!result.empty());
-      BOOST_ASSERT(numFields() == n + groupSize);
+      OS_ASSERT(!result.empty());
+      OS_ASSERT(numFields() == n + groupSize);
     }
 
     return result;
@@ -810,10 +811,10 @@ namespace detail {
     // must be extensible object, with some extensible fields
     if ((groupSize > 0) && (numAfterPop >= m_iddObject.numFields())) {
       IdfExtensibleGroup egToPop = getExtensibleGroup(numExtensibleGroups()-1);
-      BOOST_ASSERT(!egToPop.empty());
+      OS_ASSERT(!egToPop.empty());
       UnsignedVector indices = egToPop.mf_indices();
       result = egToPop.fields();
-      BOOST_ASSERT(result.size() == groupSize);
+      OS_ASSERT(result.size() == groupSize);
 
       // record diffs for each field going backwards
       for (unsigned i = 0; i < groupSize; ++i){
@@ -824,7 +825,7 @@ namespace detail {
       if (m_fieldComments.size() > m_fields.size()) {
         m_fieldComments.resize(numAfterPop);
       }
-      BOOST_ASSERT(egToPop.empty());
+      OS_ASSERT(egToPop.empty());
     }
 
     return result;
@@ -862,21 +863,21 @@ namespace detail {
     for (int i = numExtensibleGroups()-1; i >= static_cast<int>(groupIndex); --i) {
       StringVector temp = result;
       IdfExtensibleGroup eg = getExtensibleGroup(i);
-      BOOST_ASSERT(!eg.empty());
+      OS_ASSERT(!eg.empty());
       result = eg.fields();
       ok = eg.setFields(temp,checkValidity);
       if (!ok) {
         // roll back changes and return
         for (unsigned j = i+1, n = numExtensibleGroups(); j < n; ++j) {
           eg = getExtensibleGroup(j);
-          BOOST_ASSERT(!eg.empty());
+          OS_ASSERT(!eg.empty());
           result = eg.fields();
-          BOOST_ASSERT(result.size() == temp.size());
+          OS_ASSERT(result.size() == temp.size());
           eg.setFields(temp,false);
           temp = result;
         }
         eg = pushExtensibleGroup(temp,false);
-        BOOST_ASSERT(!eg.empty());
+        OS_ASSERT(!eg.empty());
 
         // remove the diffs
         m_diffs.resize(diffSize);
@@ -885,7 +886,7 @@ namespace detail {
       }
     }
     
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     return result;
   }
 
@@ -916,7 +917,7 @@ namespace detail {
     while (gn > 0) {
       // get this group's data
       IdfExtensibleGroup eg = getExtensibleGroup(gn-1);
-      BOOST_ASSERT(!eg.empty());
+      OS_ASSERT(!eg.empty());
       if (indices.empty()) { indices = eg.mf_indices(); }
       rollbackValues.push_back(eg.fields());
       rollbackComments.push_back(eg.fieldComments());
@@ -926,7 +927,7 @@ namespace detail {
         // unsuccessful--restore cleared data
         rollbackValues.pop_back();
         rollbackComments.pop_back();
-        BOOST_ASSERT(gn == numExtensibleGroups());
+        OS_ASSERT(gn == numExtensibleGroups());
         // add back groups already popped
         while (!rollbackValues.empty()) {
           IdfExtensibleGroup pushed = pushExtensibleGroup(rollbackValues.back(),false);
@@ -945,11 +946,11 @@ namespace detail {
         return rollbackValues;
       }
       --gn;
-      BOOST_ASSERT(gn == numExtensibleGroups());
+      OS_ASSERT(gn == numExtensibleGroups());
     }
 
-    BOOST_ASSERT(!rollbackValues.empty());
-    BOOST_ASSERT(!indices.empty());
+    OS_ASSERT(!rollbackValues.empty());
+    OS_ASSERT(!indices.empty());
 
     return rollbackValues;
   }    
@@ -989,9 +990,9 @@ namespace detail {
   unsigned IdfObject_Impl::numExtensibleGroups() const {
     unsigned nExtFields = numFields() - numNonextensibleFields();
     if (nExtFields == 0) { return 0; }
-    BOOST_ASSERT(m_iddObject.properties().extensible);
+    OS_ASSERT(m_iddObject.properties().extensible);
     unsigned groupSize = m_iddObject.properties().numExtensible;
-    BOOST_ASSERT(nExtFields % groupSize == 0);
+    OS_ASSERT(nExtFields % groupSize == 0);
     return nExtFields/groupSize;
   }
 
@@ -1006,8 +1007,8 @@ namespace detail {
     if (!mf) { return boost::none; }
     unsigned groupSize = m_iddObject.properties().numExtensible;
     unsigned maxExtFields = *mf - m_iddObject.numFields();
-    BOOST_ASSERT(maxExtFields % groupSize == 0);
-    BOOST_ASSERT(groupSize > 0);
+    OS_ASSERT(maxExtFields % groupSize == 0);
+    OS_ASSERT(groupSize > 0);
     result = maxExtFields/groupSize;
     return result;
   }
@@ -1109,8 +1110,8 @@ namespace detail {
 
       // urls
       if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
-        OptionalURL oMyUrlValue = getURL(i);
-        OptionalURL oOtherUrlValue = other.getURL(i);
+        OptionalUrl oMyUrlValue = getURL(i);
+        OptionalUrl oOtherUrlValue = other.getURL(i);
         if (oMyUrlValue || oOtherUrlValue) { 
           if (!(oMyUrlValue && oOtherUrlValue)) { return false; }
           if (oMyUrlValue.get() != oOtherUrlValue.get()) { return false; }
@@ -1122,8 +1123,8 @@ namespace detail {
       if (compareStrings) {
         OptionalString oMyStringValue = getString(i);
         OptionalString oOtherStringValue = other.getString(i);
-        BOOST_ASSERT(oMyStringValue);
-        BOOST_ASSERT(oOtherStringValue);
+        OS_ASSERT(oMyStringValue);
+        OS_ASSERT(oOtherStringValue);
         if (!istringEqual(*oMyStringValue,*oOtherStringValue)) { 
           if (iName && (i == iName.get()) && (handle() == other.handle())) {
             continue;
@@ -1147,8 +1148,8 @@ namespace detail {
       // in idf, just comparing strings
       OptionalString oMyStringValue = getString(i);
       OptionalString oOtherStringValue = other.getString(i);
-      BOOST_ASSERT(oMyStringValue);
-      BOOST_ASSERT(oOtherStringValue);
+      OS_ASSERT(oMyStringValue);
+      OS_ASSERT(oOtherStringValue);
       if (!istringEqual(*oMyStringValue,*oOtherStringValue)) { return false; }
     }
 
@@ -1166,12 +1167,12 @@ namespace detail {
     BOOST_FOREACH(unsigned i,myFields) {
       // in idf, just comparing strings
       OptionalString oMyStringValue = getString(i);
-      BOOST_ASSERT(oMyStringValue);
+      OS_ASSERT(oMyStringValue);
       // empty() == null pointer == ok
       if (oMyStringValue->empty()) { continue; }
 
       OptionalString oOtherStringValue = other.getString(i);
-      BOOST_ASSERT(oOtherStringValue);
+      OS_ASSERT(oOtherStringValue);
       // empty() == null pointer == ok
       if (oOtherStringValue->empty()) { continue; }
       if (!istringEqual(*oMyStringValue,*oOtherStringValue)) { return false; }
@@ -1421,7 +1422,7 @@ namespace detail {
         else { 
           LOG(Warn, "IddObject type '" << objectType << "' not found in IddFactory. "
               << "Reverting to default Catchall object."); 
-          BOOST_ASSERT(m_iddObject.name() == "Catchall");
+          OS_ASSERT(m_iddObject.name() == "Catchall");
           m_fields.push_back(objectType);
           objectType = "Catchall";
         }
@@ -1717,7 +1718,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     
     IddField iddField = *oIddField;
     IddFieldType fieldType = iddField.properties().type;
-    BOOST_ASSERT(m_fields.size() > index);
+    OS_ASSERT(m_fields.size() > index);
 
     if ((fieldType == IddFieldType::IntegerType) && (!m_fields[index].empty())) {
       OptionalInt value = getInt(index);
@@ -1794,7 +1795,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
     IddField iddField = *oIddField;
     IddFieldType fieldType = iddField.properties().type;
-    BOOST_ASSERT(m_fields.size() > index);
+    OS_ASSERT(m_fields.size() > index);
 
     if (fieldType == IddFieldType::IntegerType) {
       OptionalInt value = getInt(index);
@@ -1818,7 +1819,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     if (!oIddField) { return true; } // default to true
 
     IddField iddField = *oIddField;
-    BOOST_ASSERT(m_fields.size() > index);
+    OS_ASSERT(m_fields.size() > index);
 
     if (iddField.properties().required && (!iddField.isObjectListField()) && 
         m_fields[index].empty()) {
@@ -1833,7 +1834,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     OptionalDouble boundValue = iddField.properties().minBoundValue; 
     IddFieldProperties::BoundTypes boundType = iddField.properties().minBoundType;
     if (boundType != IddFieldProperties::Unbounded) {
-      BOOST_ASSERT(boundValue);
+      OS_ASSERT(boundValue);
       // check min bound
       if (boundType == IddFieldProperties::InclusiveBound) {
         if (fieldValue < *boundValue) { return false; }
@@ -1845,7 +1846,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     boundValue = iddField.properties().maxBoundValue;
     boundType = iddField.properties().maxBoundType;
     if (boundType != IddFieldProperties::Unbounded) {
-      BOOST_ASSERT(boundValue);
+      OS_ASSERT(boundValue);
       if (boundType == IddFieldProperties::InclusiveBound) {
         if (fieldValue > *boundValue) { return false; }
       }
@@ -1874,7 +1875,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
       LOG_AND_THROW("Unable to construct a unit for field " << index << " for IdfObject with "
                     << "Idd:\n" << iddObject());
     }
-    BOOST_ASSERT(siUnit);
+    OS_ASSERT(siUnit);
 
     if (value) {
       Quantity result(*value,*siUnit);
@@ -1920,7 +1921,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     }
     wq = *candidate;
 
-    BOOST_ASSERT(wq.units() == *unit);
+    OS_ASSERT(wq.units() == *unit);
 
     LOG(Trace,"Converted " << q << " to " << wq << "to set field with units " << *unit << ".");
 
@@ -1945,25 +1946,25 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 IdfObject::IdfObject(IddObjectType type) 
 {
   m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type));
-  BOOST_ASSERT(m_impl);
+  OS_ASSERT(m_impl);
 }
 
 IdfObject::IdfObject(const IddObject& iddObject)
 {
   m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject));
-  BOOST_ASSERT(m_impl);
+  OS_ASSERT(m_impl);
 }
 
 IdfObject::IdfObject(boost::shared_ptr<detail::IdfObject_Impl> impl):
   m_impl(impl) 
 {
-  BOOST_ASSERT(m_impl);
+  OS_ASSERT(m_impl);
 }
 
 IdfObject::IdfObject(const IdfObject& other): 
   m_impl(other.m_impl)
 {
-  BOOST_ASSERT(m_impl);
+  OS_ASSERT(m_impl);
 }
 
 IdfObject IdfObject::clone(bool keepHandle) const

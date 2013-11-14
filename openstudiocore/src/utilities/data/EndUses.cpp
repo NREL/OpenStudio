@@ -183,7 +183,7 @@ namespace openstudio {
       m_attribute.setValue(QVariant::fromValue(fuelTypeAttributes));
       fuelTypeAttribute = m_attribute.findChildByName(fuelType.valueName());
     }
-    BOOST_ASSERT(fuelTypeAttribute);
+    OS_ASSERT(fuelTypeAttribute);
 
     boost::optional<Attribute> categoryAttribute = fuelTypeAttribute->findChildByName(category.valueName());
     if(!categoryAttribute){
@@ -193,14 +193,14 @@ namespace openstudio {
       fuelTypeAttribute->setValue(QVariant::fromValue(categoryAttributes));
       categoryAttribute = fuelTypeAttribute->findChildByName(category.valueName());
     }
-    BOOST_ASSERT(categoryAttribute);
+    OS_ASSERT(categoryAttribute);
 
     bool found = false;
     std::vector<Attribute> subCategories = categoryAttribute->valueAsAttributeVector();
     std::vector<Attribute> newSubCategories = subCategories;
     for(unsigned i = 0; i < subCategories.size(); ++i){
       if (subCategories[i].name() == subCategory){
-        BOOST_ASSERT(!found);
+        OS_ASSERT(!found);
         newSubCategories[i] = Attribute(subCategory, subCategories[i].valueAsDouble() + value, subCategories[i].units());
         found = true;
       }
@@ -214,7 +214,7 @@ namespace openstudio {
     categoryAttribute->setValue(QVariant::fromValue(newSubCategories));
   }
 
-  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory)
+  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory) const
   {
     double result = 0;
 
@@ -235,7 +235,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category)
+  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category) const
   {
     double result = 0;
 
@@ -253,7 +253,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory)
+  double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory) const
   {
     double result = 0;
     std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
@@ -267,7 +267,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUseByCategory(const EndUseCategoryType& category)
+  double EndUses::getEndUseByCategory(const EndUseCategoryType& category) const
   {
     double result = 0;
     std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
@@ -281,7 +281,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUseByFuelType(const EndUseFuelType& fuelType)
+  double EndUses::getEndUseByFuelType(const EndUseFuelType& fuelType) const
   {
     double result = 0;
     std::map<int, std::string> endUseCategoryTypes = EndUseCategoryType::getNames();

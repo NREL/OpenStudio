@@ -35,198 +35,209 @@ class QSqlQuery;
 
 namespace openstudio {
 namespace project {
-  namespace detail{
-    class JoinRecord_Impl;
+
+namespace detail{
+  class JoinRecord_Impl;
+}
+
+class ProjectDatabase;
+
+/** \class JoinRecordColumns
+   *  \brief There is no JoinRecords table, however all JoinRecords have only these members.
+   * For general information, see the
+   *  OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+   *  call is:
+   *  \code
+OPENSTUDIO_ENUM(JoinRecordColumns,
+                ((id)(INTEGER PRIMARY KEY)(0))
+                ((handle)(TEXT)(1))
+                ((leftId)(INTEGER)(2))
+                ((leftHandle)(TEXT)(3))
+                ((rightId)(INTEGER)(4))
+                ((rightHandle)(TEXT)(5))
+                );
+   *  \endcode */
+OPENSTUDIO_ENUM(JoinRecordColumns,
+                ((id)(INTEGER PRIMARY KEY)(0))
+                ((handle)(TEXT)(1))
+                ((leftId)(INTEGER)(2))
+                ((leftHandle)(TEXT)(3))
+                ((rightId)(INTEGER)(4))
+                ((rightHandle)(TEXT)(5))
+                );
+
+/**  JoinRecord is the base class for join objects that can be saved to a ProjectDatabase.
+ *    JoinRecords are named (LeftClass)_(RightClass)_JoinRecord, e.g. Variable_ParameterSpace_JoinRecord.
+ **/
+class PROJECT_API JoinRecord : public Record{
+ public:
+
+  // create indices for the table
+  static void createIndices(QSqlDatabase& qSqlDatabase, const std::string& databaseTableName);
+
+  virtual ~JoinRecord() {}
+
+  /// get join
+  template<typename T>
+  static boost::optional<T> getJoinRecord(int leftId, int rightId, ProjectDatabase projectDatabase)
+  {
+    boost::optional<T> result;
+
+    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId AND rightId=:rightId"));
+    query.bindValue(":leftId", leftId);
+    query.bindValue(":rightId", rightId);
+    assertExec(query);
+    if(query.first()){
+      result = T(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+    }
+
+    return result;
   }
 
-  class ProjectDatabase;
+  /// get joins for left
+  template<typename T>
+  static std::vector<T> getJoinRecordsForLeftId(int leftId, ProjectDatabase projectDatabase)
+  {
+    std::vector<T> result;
 
-  /** \class JoinRecordColumns
-   *  \brief There is no JoinRecords table, however all JoinRecords have only these members.
-   *
-   *  \relates JoinRecord */
-  OPENSTUDIO_ENUM(JoinRecordColumns,
-    ((id)(INTEGER PRIMARY KEY)(0))
-    ((handle)(TEXT)(1))
-    ((leftId)(INTEGER)(2))
-    ((leftHandle)(TEXT)(3))
-    ((rightId)(INTEGER)(4))
-    ((rightHandle)(TEXT)(5))
-  );
+    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId"));
+    query.bindValue(":leftId", leftId);
+    assertExec(query);
+    while(query.next()){
+      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      result.push_back(object);
+    }
 
-  /**  JoinRecord is the base class for join objects that can be saved to a ProjectDatabase.
-  *    JoinRecords are named (LeftClass)_(RightClass)_JoinRecord, e.g. Variable_ParameterSpace_JoinRecord.
-  **/
-  class PROJECT_API JoinRecord : public Record{
-    public:
+    return result;
+  }
 
-      // create indices for the table
-      static void createIndices(QSqlDatabase& qSqlDatabase, const std::string& databaseTableName);
+  /// get joins for right
+  template<typename T>
+  static std::vector<T> getJoinRecordsForRightId(int rightId, ProjectDatabase projectDatabase)
+  {
+    std::vector<T> result;
 
-      virtual ~JoinRecord() {}
-      
-      /// get join
-      template<typename T>
-      static boost::optional<T> getJoinRecord(int leftId, int rightId, ProjectDatabase projectDatabase)
-      {
-        boost::optional<T> result;
-        
-        QSqlQuery query(*(projectDatabase.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId AND rightId=:rightId"));
-        query.bindValue(":leftId", leftId);
-        query.bindValue(":rightId", rightId);
-        assertExec(query);
-        if(query.first()){
-          result = T(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
-        }
+    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE rightId=:rightId"));
+    query.bindValue(":rightId", rightId);
+    assertExec(query);
+    while(query.next()){
+      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      result.push_back(object);
+    }
 
-        return result;
-      }
+    return result;
+  }
 
-      /// get joins for left
-      template<typename T>
-      static std::vector<T> getJoinRecordsForLeftId(int leftId, ProjectDatabase projectDatabase)
-      {
-        std::vector<T> result;
-        
-        QSqlQuery query(*(projectDatabase.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId"));
-        query.bindValue(":leftId", leftId);
-        assertExec(query);
-        while(query.next()){
-          T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
-          result.push_back(object);
-        }
+  /// unlink
+  template<typename T>
+  static bool unlink(int leftId, int rightId, ProjectDatabase projectDatabase)
+  {
+    bool result = false;
 
-        return result;
-      }
+    std::vector<T> toRemove;
 
-      /// get joins for right
-      template<typename T>
-      static std::vector<T> getJoinRecordsForRightId(int rightId, ProjectDatabase projectDatabase)
-      {
-        std::vector<T> result;
-        
-        QSqlQuery query(*(projectDatabase.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE rightId=:rightId"));
-        query.bindValue(":rightId", rightId);
-        assertExec(query);
-        while(query.next()){
-          T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
-          result.push_back(object);
-        }
+    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId AND rightId=:rightId"));
+    query.bindValue(":leftId", leftId);
+    query.bindValue(":rightId", rightId);
+    assertExec(query);
+    if (query.first()){
+      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      result = projectDatabase.removeRecord(object);
+    }
 
-        return result;
-      }
+    return result;
+  }
 
-      /// unlink
-      template<typename T>
-      static bool unlink(int leftId, int rightId, ProjectDatabase projectDatabase)
-      {
-        bool result = false;
+  /// unlink left
+  template<typename T>
+  static bool unlinkLeft(int leftId, ProjectDatabase projectDatabase)
+  {
+    bool result = false;
 
-        std::vector<T> toRemove;
-        
-        QSqlQuery query(*(projectDatabase.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId AND rightId=:rightId"));
-        query.bindValue(":leftId", leftId);
-        query.bindValue(":rightId", rightId);
-        assertExec(query);
-        if (query.first()){
-          T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
-          result = projectDatabase.removeRecord(object);
-        }
+    std::vector<T> toRemove;
 
-        return result;
-      }
+    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId"));
+    query.bindValue(":leftId", leftId);
+    assertExec(query);
+    while(query.next()){
+      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      toRemove.push_back(object);
+    }
 
-      /// unlink left
-      template<typename T>
-      static bool unlinkLeft(int leftId, ProjectDatabase projectDatabase)
-      {
-        bool result = false;
+    BOOST_FOREACH(T object, toRemove){
+      result = projectDatabase.removeRecord(object);
+    }
 
-        std::vector<T> toRemove;
-        
-        QSqlQuery query(*(projectDatabase.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId"));
-        query.bindValue(":leftId", leftId);
-        assertExec(query);
-        while(query.next()){
-          T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
-          toRemove.push_back(object);
-        }
+    return result;
+  }
 
-        BOOST_FOREACH(T object, toRemove){
-          result = projectDatabase.removeRecord(object);
-        }
+  /// unlink right
+  template<typename T>
+  static bool unlinkRight(int rightId, ProjectDatabase projectDatabase)
+  {
+    bool result = false;
 
-        return result;
-      }
+    std::vector<T> toRemove;
 
-      /// unlink right
-      template<typename T>
-      static bool unlinkRight(int rightId, ProjectDatabase projectDatabase)
-      {
-        bool result = false;
+    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE rightId=:rightId"));
+    query.bindValue(":rightId", rightId);
+    assertExec(query);
+    while(query.next()){
+      T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
+      toRemove.push_back(object);
+    }
 
-        std::vector<T> toRemove;
-        
-        QSqlQuery query(*(projectDatabase.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE rightId=:rightId"));
-        query.bindValue(":rightId", rightId);
-        assertExec(query);
-        while(query.next()){
-          T object(boost::shared_ptr<typename T::ImplType>(new typename T::ImplType(query, projectDatabase)), projectDatabase);
-          toRemove.push_back(object);
-        }
+    BOOST_FOREACH(T object, toRemove){
+      result = projectDatabase.removeRecord(object);
+    }
 
-        BOOST_FOREACH(T object, toRemove){
-          result = projectDatabase.removeRecord(object);
-        }
+    return result;
+  }
 
-        return result;
-      }
+  /// get the left id
+  int leftId() const;
 
-      /// get the left id
-      int leftId() const;
+  /// get the left handle
+  UUID leftHandle() const;
 
-      /// get the left handle
-      UUID leftHandle() const;
+  /// get the left object
+  ObjectRecord leftObject() const;
 
-      /// get the left object
-      ObjectRecord leftObject() const;
+  /// get the right id
+  int rightId() const;
 
-      /// get the right id
-      int rightId() const;
+  /// get the right handle
+  UUID rightHandle() const;
 
-      /// get the right handle
-      UUID rightHandle() const;
+  /// get the right object
+  ObjectRecord rightObject() const;
 
-      /// get the right object
-      ObjectRecord rightObject() const;
+ protected:
 
-    protected:
+  typedef detail::JoinRecord_Impl ImplType;
 
-      typedef detail::JoinRecord_Impl ImplType;
+  /// constructor
+  JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase);
 
-      /// constructor
-      JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase);
+  /// constructor
+  JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl);
 
-      /// constructor
-      JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl);
+ private:
+  REGISTER_LOGGER("openstudio.project.JoinRecord");
+};
 
-    private:
+/** \relates JoinRecord */
+typedef boost::optional<JoinRecord> OptionalJoinRecord;
 
-      REGISTER_LOGGER("openstudio.project.JoinRecord");
+/** \relates JoinRecord */
+typedef std::vector<JoinRecord> JoinRecordVector;
 
-  };
-
-  /** \relates JoinRecord */
-  typedef boost::optional<JoinRecord> OptionalJoinRecord;
-
-  /** \relates JoinRecord */
-  typedef std::vector<JoinRecord> JoinRecordVector;
 } // project
 } // openstudio
 

@@ -39,6 +39,8 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/Model.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 namespace model {
@@ -825,7 +827,7 @@ namespace detail {
 Loop::Loop(IddObjectType type,const Model& model)
   : ParentObject(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::Loop_Impl>());
+  OS_ASSERT(getImpl<detail::Loop_Impl>());
 }     
 
 Loop::Loop(boost::shared_ptr<detail::Loop_Impl> p)

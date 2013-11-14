@@ -13,8 +13,8 @@ namespace openstudio {
   {
     public:
       /// Constructs a UnzipFile object, opening the given file name. Throws if file could not be opened
-      /// \param[in] t_filename filename to open
-      UnzipFile(const openstudio::path &t_filename);
+      /// \param[in] filename filename to open
+      UnzipFile(const openstudio::path &filename);
 
       ~UnzipFile();
 
@@ -23,10 +23,10 @@ namespace openstudio {
 
       /// Extracts the given file to the specified path. Relative paths are preserved
       /// Example: extractFile("dir/filename", "outputpath") creates the file "outputpath/dir/filename"
-      openstudio::path extractFile(const openstudio::path &t_filename, const openstudio::path &t_outputPath) const;
+      openstudio::path extractFile(const openstudio::path &filename, const openstudio::path &outputPath) const;
 
       /// Extracts all files in the archive to the given path, preserving relative paths.
-      std::vector<openstudio::path> extractAllFiles(const openstudio::path &t_outputPath) const;
+      std::vector<openstudio::path> extractAllFiles(const openstudio::path &outputPath) const;
 
     private:
       void *m_unzFile;

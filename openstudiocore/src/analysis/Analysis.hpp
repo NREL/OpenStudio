@@ -23,6 +23,7 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject.hpp>
 
+#include <utilities/core/Enum.hpp>
 #include <utilities/core/Path.hpp>
 
 #include <QVariant>
@@ -43,7 +44,7 @@ class Problem;
 class Algorithm;
 class DakotaAlgorithm;
 class DataPoint;
-class DiscretePerturbation;
+class Measure;
 class OpenStudioAlgorithm;
 
 namespace detail {
@@ -51,6 +52,31 @@ namespace detail {
   class Analysis_Impl;
 
 } // detail
+
+/** \class AnalysisSerializationScope
+ *  \brief Enum to indicate how much of the analysis should be written out to JSON.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(AnalysisSerializationScope,
+    ((ProblemFormulation))
+    ((Full))
+);
+ *  \endcode
+ *  ProblemFormulation indicates that DataPoints should not be included in the serialization;
+ *  Full indicates that they should. */
+OPENSTUDIO_ENUM(AnalysisSerializationScope,
+    ((ProblemFormulation))
+    ((Full))
+);
+
+struct ANALYSIS_API AnalysisSerializationOptions {
+  openstudio::path projectDir;
+  AnalysisSerializationScope scope;
+
+  AnalysisSerializationOptions(const openstudio::path& t_projectDir=openstudio::path(),
+                               const AnalysisSerializationScope& t_scope=AnalysisSerializationScope::ProblemFormulation);
+};
 
 /** Analysis is a AnalysisObject that contains an entire analysis. It is constructed from a
  *  Problem, an optional Algorithm, an optional seed FileReference (an OSM or IDF file), and
@@ -134,8 +160,10 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   boost::optional<FileReference> weatherFile() const;
 
+  /** Returns all \link DataPoint DataPoints\endlink in this Analysis. */
   std::vector<DataPoint> dataPoints() const;
 
+  /** Returns all selected, incomplete \link DataPoint DataPoints\endlink. */
   std::vector<DataPoint> dataPointsToQueue() const;
 
   std::vector<DataPoint> completeDataPoints() const;
@@ -144,22 +172,24 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   std::vector<DataPoint> failedDataPoints() const;
 
+  /** Return all complete \link DataPoint DataPoints\endlink with runType() ==
+   *  DataPointRunType::CloudDetailed and an empty directory(). */
+  std::vector<DataPoint> dataPointsNeedingDetails() const;
+
   /** Get the DataPoints with matching variableValues. VariableValues may contain Null QVariants of
    *  the correct type, which means that any value at that position should be returned. */
   std::vector<DataPoint> getDataPoints(const std::vector<QVariant>& variableValues) const;
 
-  /** Get the DataPoints defined by perturbations. Perturbations must be translatable into a valid set
+  /** Get the DataPoints defined by measures. Perturbations must be translatable into a valid set
    *  of variableValues for the problem(). */
-  std::vector<DataPoint> getDataPoints(
-      const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const;
+  std::vector<DataPoint> getDataPoints(const std::vector<boost::optional<Measure> >& measures) const;
 
   std::vector<DataPoint> getDataPoints(const std::string& tag) const;
 
-  /** Get the DataPoint defined by perturbations, if it exists. Similar to getDataPoints, but
+  /** Get the DataPoint defined by measures, if it exists. Similar to getDataPoints, but
    *  without accepting boost::optionals on input (and therefore SWIG-friendlier, but more limited
    *  in use). */
-  boost::optional<DataPoint> getDataPoint(
-      const std::vector<DiscretePerturbation>& perturbations) const;
+  boost::optional<DataPoint> getDataPoint(const std::vector<Measure>& measures) const;
 
   boost::optional<DataPoint> getDataPointByUUID(const UUID& uuid) const;
 
@@ -200,11 +230,11 @@ class ANALYSIS_API Analysis : public AnalysisObject {
    *  openstudio::Exception if dataPoint.variableValues() are not valid for problem(). Should be
    *  called before running a given workflow. Usually called by Algorithm, but may also be called
    *  directly by a user to run custom analyses. */
-  bool addDataPoint(const DataPoint& dataPoint);
+  bool addDataPoint(DataPoint& dataPoint);
 
-  /** Adds a DataPoint to this analysis and returns true if perturbations are valid for problem(),
+  /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
    *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
-  bool addDataPoint(const std::vector<DiscretePerturbation>& perturbations);
+  bool addDataPoint(const std::vector<Measure>& measures);
 
   /** Removes dataPoint from this analysis. Returns false if dataPoint is not in this analysis by
    *  UUID. */
@@ -249,6 +279,35 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   /** Returns a csv summary of all the data points in this analysis. */
   Table summaryTable() const;
+
+  /** Relocate input path data from originalBase to newBase. Only updates file paths used to set
+   *  up an analysis; paths that point to analysis results should be fixed up by a separate import
+   *  process. */
+  void updateInputPathData(const openstudio::path& originalBase,
+                           const openstudio::path& newBase);
+
+  //@}
+  /** @name Serialization
+   *  Methods to save to json format. See AnalysisObject.hpp, openstudio::analysis::loadJSON for
+   *  the de-serialization methods. */
+  //@{
+
+  bool saveJSON(const openstudio::path& p,
+                const AnalysisSerializationOptions& options,
+                bool overwrite=false) const;
+
+  std::ostream& toJSON(std::ostream& os,const AnalysisSerializationOptions& options) const;
+
+  std::string toJSON(const AnalysisSerializationOptions& options) const;
+
+  static boost::optional<Analysis> loadJSON(const openstudio::path& p,
+                                            const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<Analysis> loadJSON(std::istream& json,
+                                            const openstudio::path& newProjectDir=openstudio::path());
+
+  static boost::optional<Analysis> loadJSON(const std::string& json,
+                                            const openstudio::path& newProjectDir=openstudio::path());
 
   //@}
  protected:

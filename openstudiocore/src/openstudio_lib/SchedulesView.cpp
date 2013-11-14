@@ -39,6 +39,8 @@
 #include <utilities/units/OSOptionalQuantity.hpp>
 #include <utilities/units/OSQuantityVector.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QButtonGroup>
 #include <QCalendarWidget>
 #include <QDateTime>
@@ -134,27 +136,27 @@ SchedulesView::SchedulesView(bool isIP,
 
   isConnected = connect(selectorButtons,SIGNAL(itemDropped(const OSItemId &)),
                         this,SIGNAL(itemDropped(const OSItemId &)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(selectorButtons,SIGNAL(addClicked()),
                         this,SIGNAL(addScheduleClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(selectorButtons,SIGNAL(removeClicked()),
                         this,SIGNAL(removeSelectedScheduleClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(selectorButtons,SIGNAL(purgeClicked()),
                         this,SIGNAL(purgeUnusedScheduleRulesetsClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(selectorButtons,SIGNAL(openBclDlgClicked()),
                         this,SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         this, SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   outerLeftVLayout->addWidget(selectorButtons);
 
@@ -481,7 +483,7 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
   
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_contentLayout->addWidget(scheduleView);
 
@@ -516,7 +518,7 @@ void SchedulesView::showDefaultScheduleDay(const model::ScheduleRuleset & schedu
   
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_contentLayout->addWidget(scheduleView);
 
@@ -545,7 +547,7 @@ void SchedulesView::showSummerScheduleDay(model::ScheduleRuleset schedule)
     
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                           scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-    BOOST_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     m_contentLayout->addWidget(scheduleView);
 
@@ -581,7 +583,7 @@ void SchedulesView::showWinterScheduleDay(model::ScheduleRuleset schedule)
     
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                           scheduleView, SIGNAL(toggleUnitsClicked(bool)));
-    BOOST_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     m_contentLayout->addWidget(scheduleView);
 
@@ -835,11 +837,11 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);  
+  OS_ASSERT(isConnected);  
   
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_scheduleDayView, SLOT(onToggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainVLayout->addWidget(m_scheduleDayView);
 
@@ -981,7 +983,7 @@ DefaultScheduleDayView::DefaultScheduleDayView( bool isIP,
   
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainVLayout->addWidget(scheduleDayView);
 
@@ -1040,7 +1042,7 @@ SizingScheduleDayView::SizingScheduleDayView( bool isIP,
   
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
 
       mainVLayout->addWidget(scheduleDayView);
     }
@@ -1061,7 +1063,7 @@ SizingScheduleDayView::SizingScheduleDayView( bool isIP,
   
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
 
       mainVLayout->addWidget(scheduleDayView);
     }
@@ -1106,7 +1108,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   m_lowerLimitSpinBox->setMinimum(-1E10);
   isConnected = connect(m_lowerLimitSpinBox,SIGNAL(valueChanged(double)),
                         this,SLOT(onLowerValueChanged(double)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_upperLimitSpinBox = new QDoubleSpinBox();
   double upperLimitSpinBoxValue = UPPER_LIMIT;
@@ -1125,11 +1127,11 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   m_upperLimitSpinBox->setMaximum(1E10);
   isConnected = connect(m_upperLimitSpinBox,SIGNAL(valueChanged(double)),
                         this,SLOT(onUpperValueChanged(double)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         this,SLOT(onToggleUnitsClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Scene
 
@@ -1197,7 +1199,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_scheduleDayEditor, SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainVLayout->addWidget(m_scheduleDayEditor);
 
@@ -3468,15 +3470,15 @@ DefaultTab::DefaultTab( ScheduleTab * scheduleTab, TabType type  )
 
   isConnected = connect( this,SIGNAL(defaultClicked(model::ScheduleRuleset)),
                          m_scheduleTab->schedulesView(),SLOT(showDefaultScheduleDay(const model::ScheduleRuleset)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( this,SIGNAL(winterClicked(model::ScheduleRuleset)),
                          m_scheduleTab->schedulesView(),SLOT(showWinterScheduleDay(model::ScheduleRuleset)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   
   isConnected = connect( this,SIGNAL(summerClicked(model::ScheduleRuleset)),
                          m_scheduleTab->schedulesView(),SLOT(showSummerScheduleDay(model::ScheduleRuleset)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(10,0,0,0);

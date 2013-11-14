@@ -38,10 +38,18 @@ macro( CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES )
     ADD_EXECUTABLE( ${BASE_NAME}_tests ${SRC} )
 
     CREATE_SRC_GROUPS( "${SRC}" )
-
+    
+    GET_TARGET_PROPERTY(BASE_NAME_TYPE ${BASE_NAME} TYPE)
+    IF ("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
+      # don't link base name
+      SET(ALL_DEPENDENCIES ${DEPENDENCIES} )
+    ELSE()
+      # also link base name
+      SET(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES} )
+    ENDIF()
+      
     TARGET_LINK_LIBRARIES( ${BASE_NAME}_tests 
-      ${BASE_NAME}
-      ${DEPENDENCIES} 
+      ${ALL_DEPENDENCIES} 
       gtest 
       gtest_main
     )
@@ -590,6 +598,7 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
 
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES OUTPUT_NAME ${v8_OUTPUT_NAME} )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES PREFIX "" )
+    SET(_NAME "${v8_OUTPUT_NAME}.node")
     IF(BUILD_NODE_MODULES)
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES SUFFIX ".node" )
     ENDIF()
@@ -611,8 +620,59 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     # add this target to a "global" variable so v8 tests can require these
     LIST( APPEND ALL_V8_BINDING_TARGETS "${swig_target}" )
     SET( ALL_V8_BINDING_TARGETS "${ALL_V8_BINDING_TARGETS}" PARENT_SCOPE )
+
+    IF(BUILD_NODE_MODULES)
+      SET(V8_TYPE "node")
+    ELSE()
+      SET(V8_TYPE "v8")
+    ENDIF()
+
+    IF( WIN32 OR APPLE )
+      INSTALL( TARGETS ${swig_target} DESTINATION "${V8_TYPE}/openstudio/" )
+
+      SET( Prereq_Dirs
+        "${CMAKE_BINARY_DIR}/Products/"
+        "${CMAKE_BINARY_DIR}/Products/Release"
+        "${CMAKE_BINARY_DIR}/Products/Debug"
+        )
+
+      INSTALL(CODE "
+      #MESSAGE( \"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\" )
+      INCLUDE(GetPrerequisites)
+      GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
+      #MESSAGE( \"PREREQUISITES = \${PREREQUISITES}\" )
+
+
+      IF(WIN32)
+        LIST(REVERSE PREREQUISITES)
+      ENDIF(WIN32)
+
+      FOREACH( PREREQ IN LISTS PREREQUISITES )
+        GP_RESOLVE_ITEM( \"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var )
+        #MESSAGE( \"prereq = ${PREREQ}  resolved = ${resolved_item_var} \")
+        EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/\")
+
+        GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
+
+        IF(APPLE)
+          EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/${_NAME}\")
+          FOREACH( PR IN LISTS PREREQUISITES )
+            GP_RESOLVE_ITEM( \"\" \${PR} \"\" \"\" PRPATH )
+            GET_FILENAME_COMPONENT( PRNAME \${PRPATH} NAME)
+            EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/\${PREREQNAME}\")
+          ENDFOREACH()
+        ENDIF()
+      ENDFOREACH( PREREQ IN LISTS PREREQUISITES )
+      IF(APPLE)
+        file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
+          DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/Resources/\")
+      ENDIF()
+      " )
+    ELSE(WIN32 OR APPLE)
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/${V8_TYPE}")
+    ENDIF()
   ENDIF()
-  
+
 
 ENDMACRO( MAKE_SWIG_TARGET NAME I_FILE PARENT_TARGET DEPENDS )
 

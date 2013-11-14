@@ -26,13 +26,13 @@
 namespace openstudio {
 namespace analysis {
 
+class FSUDaceAlgorithm;
 class FSUDaceAlgorithmOptions;
 
 namespace detail {
 
   /** FSUDaceAlgorithm_Impl is a DakotaAlgorithm_Impl that is the implementation class for FSUDaceAlgorithm.*/
   class ANALYSIS_API FSUDaceAlgorithm_Impl : public DakotaAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -78,12 +78,20 @@ namespace detail {
     virtual std::string dakotaInFileDescription() const;
 
     //@}
+    /** @name Getters and Queries */
     //@{
 
     FSUDaceAlgorithmOptions fsudaceAlgorithmOptions() const;
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
 
+    virtual QVariant toVariant() const;
+
+    static FSUDaceAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.FSUDaceAlgorithm");
   };

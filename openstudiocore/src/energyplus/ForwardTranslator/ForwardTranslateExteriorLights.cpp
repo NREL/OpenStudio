@@ -26,6 +26,8 @@
 
 #include <utilities/idd/Exterior_Lights_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace energyplus {
 
@@ -42,7 +44,7 @@ boost::optional<IdfObject> ForwardTranslator::translateExteriorLights(
 
   model::Schedule schedule = modelObject.schedule();
   relatedIdfObject = translateAndMapModelObject(schedule);
-  BOOST_ASSERT(relatedIdfObject);
+  OS_ASSERT(relatedIdfObject);
   idfObject.setString(Exterior_LightsFields::ScheduleName,relatedIdfObject->name().get());
 
   model::ExteriorLightsDefinition definition = modelObject.exteriorLightsDefinition();

@@ -35,7 +35,6 @@ namespace detail {
 
   /** ScheduleYear_Impl is a Schedule_Impl that is the implementation class for ScheduleYear.*/
   class MODEL_API ScheduleYear_Impl : public Schedule_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

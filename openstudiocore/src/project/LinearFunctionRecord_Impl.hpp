@@ -33,7 +33,6 @@ namespace detail {
 
   /** LinearFunctionRecord_Impl is a FunctionRecord_Impl that is the implementation class for LinearFunctionRecord.*/
   class PROJECT_API LinearFunctionRecord_Impl : public FunctionRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

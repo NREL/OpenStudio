@@ -20,6 +20,8 @@
 #include <utilities/units/MPHUnit.hpp>
 #include <utilities/units/MPHUnit_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace detail {
 
@@ -60,7 +62,7 @@ namespace detail {
   }
 
   Unit MPHUnit_Impl::clone() const {
-    BOOST_ASSERT(system() == UnitSystem::MPH);
+    OS_ASSERT(system() == UnitSystem::MPH);
     boost::shared_ptr<MPHUnit_Impl> impl(new MPHUnit_Impl(*this));
     return MPHUnit(impl).cast<Unit>();
   }

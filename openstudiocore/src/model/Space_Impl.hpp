@@ -25,6 +25,9 @@
 
 #include <utilities/units/Quantity.hpp>
 
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/adapted/boost_tuple.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -89,6 +92,7 @@ namespace detail {
 
     Q_PROPERTY(double floorArea READ floorArea);
     Q_PROPERTY(double exteriorArea READ exteriorArea);
+    Q_PROPERTY(double exteriorWallArea READ exteriorWallArea);
     Q_PROPERTY(double volume READ volume);
     Q_PROPERTY(double numberOfPeople READ numberOfPeople WRITE setNumberOfPeople);
     Q_PROPERTY(double peoplePerFloorArea READ peoplePerFloorArea WRITE setPeoplePerFloorArea);
@@ -350,6 +354,8 @@ namespace detail {
 
     double exteriorArea() const;
 
+    double exteriorWallArea() const;
+
     double volume() const;
 
     double numberOfPeople() const;
@@ -465,6 +471,9 @@ namespace detail {
     /** Match surfaces and sub surfaces in this space with those in the other. */
     void matchSurfaces(Space& other);
 
+    /** Intersect surfaces in this space with those in the other. */
+    void intersectSurfaces(Space& other);
+
     /** Find surfaces within angular range, specified in degrees and in the site coordinate system, an unset optional means no limit.
         Values for degrees from North are between 0 and 360 and for degrees tilt they are between 0 and 180.
         Note that maxDegreesFromNorth may be less than minDegreesFromNorth,
@@ -535,6 +544,10 @@ namespace detail {
 
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
+
+    // helper function to get a boost polygon point from a Point3d
+    boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const;
+
   };
 
 } // detail

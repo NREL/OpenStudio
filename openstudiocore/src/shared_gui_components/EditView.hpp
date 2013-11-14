@@ -48,14 +48,14 @@ class EditNullView : public QWidget
   void paintEvent(QPaintEvent *);
 };
 
-class EditRubyPerturbationView : public QWidget
+class EditRubyMeasureView : public QWidget
 {
   Q_OBJECT
 
   public:
 
-  EditRubyPerturbationView();
-  virtual ~EditRubyPerturbationView() {}
+  EditRubyMeasureView();
+  virtual ~EditRubyMeasureView() {}
 
   QLineEdit * nameLineEdit;
 

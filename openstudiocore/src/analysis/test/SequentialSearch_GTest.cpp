@@ -22,10 +22,10 @@
 
 #include <analysis/OptimizationProblem.hpp>
 #include <analysis/Variable.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/LinearFunction.hpp>
 #include <analysis/OutputAttributeVariable.hpp>
 #include <analysis/SequentialSearch.hpp>
@@ -49,7 +49,7 @@ using namespace openstudio::analysis;
 
 // linear problem hand-solved in excel to provide test expectations
 std::vector<double> getObjectiveValues(const std::vector<QVariant>& variableValues) {
-  BOOST_ASSERT(variableValues.size() == 5u);
+  OS_ASSERT(variableValues.size() == 5u);
   DoubleVector result(2u,20.0);
   int val(0);
 
@@ -92,11 +92,11 @@ TEST_F(AnalysisFixture, SequentialSearch) {
   VariableVector variables;
   std::stringstream ss;
   for (int i = 0; i < 5; ++i) {
-    DiscretePerturbationVector perturbations;
-    perturbations.push_back(NullPerturbation());
-    perturbations.push_back(RubyPerturbation(toPath("in.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+    MeasureVector measures;
+    measures.push_back(NullMeasure());
+    measures.push_back(RubyMeasure(toPath("in.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
     ss << "var " << i + 1;
-    variables.push_back(DiscreteVariable(ss.str(),perturbations));
+    variables.push_back(MeasureGroup(ss.str(),measures));
     ss.str("");
   }
   FunctionVector functions;
@@ -209,20 +209,23 @@ TEST_F(AnalysisFixture, SequentialSearch) {
       completeDataPoints.push_back(OptimizationDataPoint(point.uuid(),
                                                          createUUID(),
                                                          "","","",
+                                                         problem,
                                                          true,
                                                          false,
-                                                         problem,
-                                                         objectiveValues,
+                                                         true,
+                                                         DataPointRunType::Local,
                                                          values,
                                                          DoubleVector(),
+                                                         objectiveValues,
                                                          openstudio::path(),
                                                          boost::none,
                                                          boost::none,
                                                          boost::none,
+                                                         FileReferenceVector(),
                                                          boost::none,
+                                                         std::vector<openstudio::path>(),
                                                          point.tags(),
-                                                         boost::none,
-                                                         std::vector<openstudio::path>())); // DLM: Elaine is this ok?
+                                                         point.outputAttributes())); // DLM: Elaine is this ok?
     }
     EXPECT_EQ(static_cast<size_t>(n),completeDataPoints.size());
     analysis = Analysis(analysis.uuid(),

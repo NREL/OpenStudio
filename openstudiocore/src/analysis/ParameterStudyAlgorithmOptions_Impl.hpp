@@ -47,7 +47,7 @@ namespace detail {
      *  <li>multidim_parameter_study requires partitions.
      *  </ul>*/
     ParameterStudyAlgorithmOptions_Impl(const ParameterStudyAlgorithmType& algorithmType);
-	
+
     /** Constructor provided for deserialization; not for general use. */
     ParameterStudyAlgorithmOptions_Impl(const ParameterStudyAlgorithmType& algorithmType,
                                         const std::vector<Attribute>& options);
@@ -131,6 +131,14 @@ namespace detail {
     bool setPartitions(const std::vector<int>& value);
 
     void clearPartitions();
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static ParameterStudyAlgorithmOptions fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    protected:

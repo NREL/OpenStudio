@@ -64,14 +64,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
   {
     idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity,"Autosize");
   }
-  else if( value = modelObject.nominalCapacity() )
+  else if( (value = modelObject.nominalCapacity()) )
   {
     idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity,value.get());
   }
 
   // Efficiency
 
-  if( value = modelObject.efficiency() )
+  if( (value = modelObject.efficiency()) )
   {
     idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency,value.get());
   }

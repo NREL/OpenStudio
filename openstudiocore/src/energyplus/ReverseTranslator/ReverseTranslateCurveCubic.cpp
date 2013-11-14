@@ -37,38 +37,38 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveCubic(
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_CubicFields::Coefficient1Constant)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient1Constant))) {
     curve.setCoefficient1Constant(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_CubicFields::Coefficient2x)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient2x))) {
     curve.setCoefficient2x(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_CubicFields::Coefficient3x_POW_2)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient3x_POW_2))) {
     curve.setCoefficient3xPOW2(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_CubicFields::Coefficient4x_POW_3)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient4x_POW_3))) {
     curve.setCoefficient4xPOW3(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_CubicFields::MinimumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::MinimumValueofx))) {
     curve.setMinimumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_CubicFields::MaximumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::MaximumValueofx))) {
     curve.setMaximumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_CubicFields::MinimumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::MinimumCurveOutput))) {
     curve.setMinimumCurveOutput(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_CubicFields::MaximumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_CubicFields::MaximumCurveOutput))) {
     curve.setMaximumCurveOutput(*d);
   }
-  if (s = workspaceObject.getString(Curve_CubicFields::InputUnitTypeforX,false,true)) {
+  if ((s = workspaceObject.getString(Curve_CubicFields::InputUnitTypeforX,false,true))) {
     curve.setInputUnitTypeforX(*s);
   }
-  if (s = workspaceObject.getString(Curve_CubicFields::OutputUnitType,false,true)) {
+  if ((s = workspaceObject.getString(Curve_CubicFields::OutputUnitType,false,true))) {
     curve.setOutputUnitType(*s);
   }
 

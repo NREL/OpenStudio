@@ -23,6 +23,8 @@
 
 #include <model/Model.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& model)
@@ -35,11 +37,11 @@ BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& m
 
   isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 } // openstudio

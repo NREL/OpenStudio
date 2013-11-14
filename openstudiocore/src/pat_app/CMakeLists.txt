@@ -4,45 +4,33 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # source files
 SET( ${target_name}_SRC
-  main.cpp
-  PatApp.cpp
-  PatApp.hpp
-  
-  ../shared_gui_components/BCLMeasureDialog.cpp
-  ../shared_gui_components/BCLMeasureDialog.hpp
-  ../shared_gui_components/Buttons.cpp
-  ../shared_gui_components/Buttons.hpp
+  CloudDialog.cpp
+  CloudDialog.hpp
+  CloudMonitor.cpp
+  CloudMonitor.hpp
   DesignAlternativesTabController.cpp
   DesignAlternativesTabController.hpp
   DesignAlternativesView.cpp
   DesignAlternativesView.hpp
-  ../shared_gui_components/EditController.cpp
-  ../shared_gui_components/EditController.hpp
-  ../shared_gui_components/EditView.cpp
-  ../shared_gui_components/EditView.hpp
   ExportXML.cpp
-  ExportXML.hpp  
-  ../shared_gui_components/HeaderViews.cpp
-  ../shared_gui_components/HeaderViews.hpp
+  ExportXML.hpp
+  ExportXMLDialog.cpp
+  ExportXMLDialog.hpp
   HorizontalTabWidget.cpp
   HorizontalTabWidget.hpp
-  ../shared_gui_components/LocalLibraryController.cpp
-  ../shared_gui_components/LocalLibraryController.hpp
-  ../shared_gui_components/LocalLibraryView.cpp
-  ../shared_gui_components/LocalLibraryView.hpp
+  main.cpp
   MainRightColumnController.cpp
   MainRightColumnController.hpp
-  ../shared_gui_components/MeasureDragData.cpp
-  ../shared_gui_components/MeasureDragData.hpp
   MeasuresTabController.cpp
   MeasuresTabController.hpp
   MeasuresView.cpp
   MeasuresView.hpp
-  ../shared_gui_components/OSQObjectController.cpp
-  ../shared_gui_components/OSQObjectController.hpp
-  ../shared_gui_components/OSDragableView.cpp
-  ../shared_gui_components/OSDragableView.hpp
+  MonitorUseDialog.cpp
+  MonitorUseDialog.hpp
   PatAPI.hpp
+  PatApp.cpp
+  PatApp.hpp
+  PatConstants.hpp
   PatMainMenu.cpp
   PatMainMenu.hpp
   PatMainTabView.cpp
@@ -61,19 +49,19 @@ SET( ${target_name}_SRC
   RunView.hpp
   StartupView.cpp
   StartupView.hpp
-  ../shared_gui_components/MeasureManager.cpp
-  ../shared_gui_components/MeasureManager.hpp
-  ../shared_gui_components/ProcessEventsProgressBar.cpp
-  ../shared_gui_components/ProcessEventsProgressBar.hpp
+  "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx"
 
-  
   # shared objects
+  ../shared_gui_components/BCLMeasureDialog.cpp
+  ../shared_gui_components/BCLMeasureDialog.hpp
   ../shared_gui_components/BuildingComponentDialog.cpp
   ../shared_gui_components/BuildingComponentDialog.hpp
   ../shared_gui_components/BuildingComponentDialogCentralWidget.cpp
   ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
   ../shared_gui_components/BusyWidget.cpp
   ../shared_gui_components/BusyWidget.hpp
+  ../shared_gui_components/Buttons.cpp
+  ../shared_gui_components/Buttons.hpp
   ../shared_gui_components/CollapsibleComponent.cpp
   ../shared_gui_components/CollapsibleComponent.hpp
   ../shared_gui_components/CollapsibleComponentHeader.cpp
@@ -84,41 +72,60 @@ SET( ${target_name}_SRC
   ../shared_gui_components/Component.hpp
   ../shared_gui_components/ComponentList.cpp
   ../shared_gui_components/ComponentList.hpp
+  ../shared_gui_components/EditController.cpp
+  ../shared_gui_components/EditController.hpp
+  ../shared_gui_components/EditView.cpp
+  ../shared_gui_components/EditView.hpp
+  ../shared_gui_components/HeaderViews.cpp
+  ../shared_gui_components/HeaderViews.hpp
+  ../shared_gui_components/LocalLibraryController.cpp
+  ../shared_gui_components/LocalLibraryController.hpp
+  ../shared_gui_components/LocalLibraryView.cpp
+  ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.cpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
+  ../shared_gui_components/MeasureDragData.cpp
+  ../shared_gui_components/MeasureDragData.hpp
+  ../shared_gui_components/MeasureManager.cpp
+  ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/OSCheckBox.cpp
   ../shared_gui_components/OSCheckBox.hpp
+  ../shared_gui_components/OSCollapsibleView.cpp
+  ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSComboBox.cpp
   ../shared_gui_components/OSComboBox.hpp
   ../shared_gui_components/OSDialog.cpp
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/OSDoubleEdit.cpp
   ../shared_gui_components/OSDoubleEdit.hpp
+  ../shared_gui_components/OSDragableView.cpp
+  ../shared_gui_components/OSDragableView.hpp
   ../shared_gui_components/OSIntegerEdit.cpp
   ../shared_gui_components/OSIntegerEdit.hpp
   ../shared_gui_components/OSLineEdit.cpp
   ../shared_gui_components/OSLineEdit.hpp
-  ../shared_gui_components/OSQuantityEdit.cpp
-  ../shared_gui_components/OSQuantityEdit.hpp
-  ../shared_gui_components/OSSwitch.cpp
-  ../shared_gui_components/OSSwitch.hpp
-  ../shared_gui_components/PageNavigator.cpp
-  ../shared_gui_components/PageNavigator.hpp
-  ../shared_gui_components/TIDItemModel.cpp
-  ../shared_gui_components/TIDItemModel.hpp
-
-  ../shared_gui_components/VariableList.hpp
-  ../shared_gui_components/VariableList.cpp
-
-  ../shared_gui_components/VariableView.hpp
-  ../shared_gui_components/VariableView.cpp
-
-  ../shared_gui_components/OSCollapsibleView.cpp
-  ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSListController.cpp
   ../shared_gui_components/OSListController.hpp
   ../shared_gui_components/OSListView.cpp
   ../shared_gui_components/OSListView.hpp
+  ../shared_gui_components/OSQObjectController.cpp
+  ../shared_gui_components/OSQObjectController.hpp
+  ../shared_gui_components/OSQuantityEdit.cpp
+  ../shared_gui_components/OSQuantityEdit.hpp
+  ../shared_gui_components/OSSwitch.cpp
+  ../shared_gui_components/OSSwitch.hpp
   ../shared_gui_components/OSViewSwitcher.cpp
   ../shared_gui_components/OSViewSwitcher.hpp
+  ../shared_gui_components/PageNavigator.cpp
+  ../shared_gui_components/PageNavigator.hpp
+  ../shared_gui_components/ProcessEventsProgressBar.cpp
+  ../shared_gui_components/ProcessEventsProgressBar.hpp
+  ../shared_gui_components/TIDItemModel.cpp
+  ../shared_gui_components/TIDItemModel.hpp
+  ../shared_gui_components/VariableList.cpp
+  ../shared_gui_components/VariableList.hpp
+  ../shared_gui_components/VariableView.cpp
+  ../shared_gui_components/VariableView.hpp
 )
 
 ## ui files
@@ -127,61 +134,63 @@ SET( ${target_name}_SRC
 
 # moc files
 SET( ${target_name}_moc
-  PatApp.hpp
-
-  ../shared_gui_components/BCLMeasureDialog.hpp
-  ../shared_gui_components/Buttons.hpp
+  CloudDialog.hpp
+  CloudMonitor.hpp
   DesignAlternativesTabController.hpp
   DesignAlternativesView.hpp
-  ../shared_gui_components/EditController.hpp
-  ../shared_gui_components/EditView.hpp
-  ../shared_gui_components/HeaderViews.hpp
+  ExportXMLDialog.hpp
   HorizontalTabWidget.hpp
-  ../shared_gui_components/LocalLibraryController.hpp
-  ../shared_gui_components/LocalLibraryView.hpp
   MainRightColumnController.hpp
-  ../shared_gui_components/MeasureDragData.hpp
   MeasuresTabController.hpp
   MeasuresView.hpp
-  ../shared_gui_components/OSDragableView.hpp
+  MonitorUseDialog.hpp
+  PatApp.hpp
   PatMainMenu.hpp
   PatMainTabView.hpp
   PatMainWindow.hpp
   PatVerticalTabWidget.hpp
-  RunTabController.hpp
-  RunView.hpp
   ResultsTabController.hpp
   ResultsView.hpp
+  RunTabController.hpp
+  RunView.hpp
   StartupView.hpp
-  ../shared_gui_components/MeasureManager.hpp
 
+  ../shared_gui_components/BCLMeasureDialog.hpp
   ../shared_gui_components/BuildingComponentDialog.hpp
   ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
   ../shared_gui_components/BusyWidget.hpp
+  ../shared_gui_components/Buttons.hpp
   ../shared_gui_components/CollapsibleComponent.hpp
   ../shared_gui_components/CollapsibleComponentHeader.hpp
   ../shared_gui_components/CollapsibleComponentList.hpp
   ../shared_gui_components/Component.hpp
   ../shared_gui_components/ComponentList.hpp
+  ../shared_gui_components/EditController.hpp
+  ../shared_gui_components/EditView.hpp
+  ../shared_gui_components/HeaderViews.hpp
+  ../shared_gui_components/LocalLibraryController.hpp
+  ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
+  ../shared_gui_components/MeasureDragData.hpp
+  ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/OSCheckBox.hpp
+  ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSComboBox.hpp
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/OSDoubleEdit.hpp
+  ../shared_gui_components/OSDragableView.hpp
   ../shared_gui_components/OSIntegerEdit.hpp
   ../shared_gui_components/OSLineEdit.hpp
-  ../shared_gui_components/OSQuantityEdit.hpp
-  ../shared_gui_components/OSSwitch.hpp
-  ../shared_gui_components/PageNavigator.hpp
-  ../shared_gui_components/TIDItemModel.hpp
-
-  ../shared_gui_components/VariableList.hpp
-  ../shared_gui_components/VariableView.hpp
-
-  ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSListController.hpp
   ../shared_gui_components/OSListView.hpp
   ../shared_gui_components/OSQObjectController.hpp
+  ../shared_gui_components/OSQuantityEdit.hpp
+  ../shared_gui_components/OSSwitch.hpp
   ../shared_gui_components/OSViewSwitcher.hpp
+  ../shared_gui_components/PageNavigator.hpp
+  ../shared_gui_components/TIDItemModel.hpp
+  ../shared_gui_components/VariableList.hpp
+  ../shared_gui_components/VariableView.hpp
 )
 
 ## resource files
@@ -201,10 +210,14 @@ qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 # this needs to be configured to embed the build number
 CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
+# configure vagrant 
+SET(VAGRANT_SERVER_PATH "" CACHE PATH "Pat to vagrant openstudio server")
+SET(VAGRANT_WORKER_PATH "" CACHE PATH "Pat to vagrant openstudio worker")
+CONFIGURE_FILE(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
 
 IF( WIN32 )
   SET(RC_BUILD_STR "0")
-  IF( NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)" )
+  IF( NOT CMAKE_VERSION_BUILD STREQUAL "" AND NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)" )
     SET(RC_BUILD_STR "${CMAKE_VERSION_BUILD}")
   ENDIF()
   CONFIGURE_FILE(PatApp.rc.in "${CMAKE_CURRENT_BINARY_DIR}/PatApp.rc")

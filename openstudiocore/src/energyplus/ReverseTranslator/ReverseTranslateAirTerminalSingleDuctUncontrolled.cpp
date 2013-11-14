@@ -76,7 +76,7 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctUncontrolle
     {
       airTerminal->autosizeMaximumAirFlowRate();
     }
-    else if( value = workspaceObject.getDouble(AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate) )
+    else if( (value = workspaceObject.getDouble(AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate)) )
     {
       airTerminal->setMaximumAirFlowRate(value.get());
     }

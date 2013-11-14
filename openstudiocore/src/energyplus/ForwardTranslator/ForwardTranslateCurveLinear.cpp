@@ -42,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveLinear(
   OptionalString s;
   OptionalDouble d;
 
-  if (s = modelObject.name()) {
+  if ((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
@@ -50,10 +50,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveLinear(
   idfObject.setDouble(Curve_LinearFields::Coefficient2x,modelObject.coefficient2x());
   idfObject.setDouble(Curve_LinearFields::MinimumValueofx,modelObject.minimumValueofx());
   idfObject.setDouble(Curve_LinearFields::MaximumValueofx,modelObject.maximumValueofx());
-  if (d = modelObject.minimumCurveOutput()) {
+  if ((d = modelObject.minimumCurveOutput())) {
     idfObject.setDouble(Curve_LinearFields::MinimumCurveOutput,*d);
   }
-  if (d = modelObject.maximumCurveOutput()) {
+  if ((d = modelObject.maximumCurveOutput())) {
     idfObject.setDouble(Curve_LinearFields::MaximumCurveOutput,*d);
   }
   if (!modelObject.isInputUnitTypeforXDefaulted()) {

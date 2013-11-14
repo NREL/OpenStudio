@@ -20,6 +20,8 @@
 #include <utilities/idf/WorkspaceObjectDiff.hpp>
 #include <utilities/idf/WorkspaceObjectDiff_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
   namespace detail {
 
@@ -46,13 +48,13 @@ namespace openstudio {
                                            boost::optional<UUID> oldHandle, boost::optional<UUID> newHandle)
     : IdfObjectDiff(boost::shared_ptr<detail::WorkspaceObjectDiff_Impl>(new detail::WorkspaceObjectDiff_Impl(index, oldValue, newValue, oldHandle, newHandle)))
   {
-    BOOST_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());
+    OS_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());
   }
 
   WorkspaceObjectDiff::WorkspaceObjectDiff(const boost::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl)
     : IdfObjectDiff(impl)
   {
-    BOOST_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());
+    OS_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());
   }
 
   boost::optional<UUID> WorkspaceObjectDiff::oldHandle() const

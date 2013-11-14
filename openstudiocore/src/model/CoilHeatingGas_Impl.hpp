@@ -25,6 +25,8 @@
 namespace openstudio {
 namespace model {
 
+class Curve;
+
 namespace detail {
 
   class MODEL_API CoilHeatingGas_Impl : public StraightComponent_Impl {
@@ -115,6 +117,16 @@ namespace detail {
     void resetNominalCapacity();
 
     void autosizeNominalCapacity();
+
+    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+
+    bool setPartLoadFractionCorrelationCurve( const Curve& curve );
+
+    void resetPartLoadFractionCorrelationCurve();
+
+    std::vector<ModelObject> children() const;
+
+    ModelObject clone(Model model) const;
 
     //@}
   private:

@@ -35,7 +35,6 @@ namespace detail {
   /** WorkflowStep_Impl is an AnalysisObject_Impl that is the implementation class for
    *  WorkflowStep. */
   class ANALYSIS_API WorkflowStep_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -97,6 +96,18 @@ namespace detail {
     /** Sets this step to use workItem if such a change is compatible with this
      *  WorkflowStep's current use (in its parent Problem). */
     bool set(const runmanager::WorkItem& workItem);
+
+    //@}
+    /** @name Protected in or Absent from Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static WorkflowStep factoryFromVariant(const QVariant& variant, const VersionString& version);
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    private:

@@ -124,7 +124,15 @@ namespace runmanager {
                      const openstudio::path &t_relativeTo = openstudio::path(),
                      bool t_copyFileTrue = false);
 
+      /** \overload */
+      RubyJobBuilder(const openstudio::BCLMeasure &t_measure,
+                     const std::map<std::string,ruleset::OSArgument>& t_args,
+                     const openstudio::path &t_relativeTo = openstudio::path(),
+                     bool t_copyFileTrue = false);
+
       openstudio::path script() const;
+
+      bool userScriptJob() const;
 
       /// Sets the name of the ruby script file to execute
       void setScriptFile(const openstudio::path &t_script);
@@ -243,6 +251,11 @@ namespace runmanager {
           const std::vector<ruleset::OSArgument>& t_args,
           const openstudio::path &t_relativeTo,
           bool t_copyFileArguments);
+
+      void constructFromBCLMeasure(const openstudio::BCLMeasure &t_measure,
+                                   const std::vector<ruleset::OSArgument>& t_args,
+                                   const openstudio::path &t_relativeTo,
+                                   bool t_copyFileTrue);
   };
 
 } // runmanager
