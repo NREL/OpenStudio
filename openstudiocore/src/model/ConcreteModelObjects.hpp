@@ -20,9 +20,9 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
- #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
- #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
-
+#include <model/AirConditionerVariableRefrigerantFlow.hpp>
+#include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
+#include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
 #include <model/AirGap.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
@@ -51,11 +51,13 @@
 #include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
+#include <model/CoilCoolingDXVariableRefrigerantFlow.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
 #include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
+#include <model/CoilHeatingDXVariableRefrigerantFlow.hpp>
 #include <model/CoilHeatingElectric.hpp>
 #include <model/CoilHeatingGas.hpp>
 #include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
@@ -250,10 +252,12 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 
 // include all concrete ModelObject Impls too
+#include <model/AirConditionerVariableRefrigerantFlow_Impl.hpp>
 #include <model/AirGap_Impl.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
@@ -282,11 +286,13 @@
 #include <model/CoilCoolingCooledBeam_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
+#include <model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
 #include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
+#include <model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp>
 #include <model/CoilHeatingElectric_Impl.hpp>
 #include <model/CoilHeatingGas_Impl.hpp>
 #include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
@@ -482,6 +488,7 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
 
