@@ -69,7 +69,7 @@ require 'openstudioanalysisdriver'
 require 'openstudiomodeleditor'
 require 'openstudioanalysis'
 require 'openstudiolib'
-require 'openstudioplugin'
+#require 'openstudioplugin'
 require 'openstudioosversion'
 require 'openstudioisomodel'
 

@@ -48,7 +48,7 @@ require("openstudio/sketchup_plugin/lib/observers/ModelEntitiesObserver.rb")
 
 require("openstudio/sketchup_plugin/lib/dialogs/ProgressDialog")
 
-require("openstudio/sketchup_plugin/stdruby/set")
+require("set")
 
 module OpenStudio
 

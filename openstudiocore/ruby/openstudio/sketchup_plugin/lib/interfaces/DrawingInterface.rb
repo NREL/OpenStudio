@@ -19,7 +19,7 @@
 
 require("openstudio/sketchup_plugin/lib/watchers/PluginModelObjectWatcher")
 
-require("openstudio/sketchup_plugin/stdruby/set")
+require("set")
 
 module OpenStudio
 
