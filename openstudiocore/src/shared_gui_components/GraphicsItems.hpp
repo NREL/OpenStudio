@@ -82,6 +82,13 @@ class ZoomInButtonItem : public ButtonItem
   ZoomInButtonItem(QGraphicsItem * parent = 0);
 };
 
+class ZoomOutButtonItem : public ButtonItem
+{
+  public:
+
+  ZoomOutButtonItem(QGraphicsItem * parent = 0);
+};
+
 } // openstudio
 
 #endif // OPENSTUDIO_GRAPHICSITEMS_H

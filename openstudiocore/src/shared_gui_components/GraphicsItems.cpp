@@ -118,5 +118,13 @@ ZoomInButtonItem::ZoomInButtonItem(QGraphicsItem * parent)
 {
 }
 
+ZoomOutButtonItem::ZoomOutButtonItem(QGraphicsItem * parent)
+  : ButtonItem(QPixmap(":/images/zoom-out.png"),
+               QPixmap(":/images/zoom-out-press.png"),
+               QPixmap(":/images/zoom-out-over.png"),
+               parent)
+{
+}
+
 } // openstudio
 

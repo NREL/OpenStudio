@@ -34,6 +34,7 @@ namespace openstudio {
 class RefrigerationSystemGridView;
 class RefrigerationSystemListController;
 class RefrigerationScene;
+class RefrigerationSystemDetailView;
 
 class RefrigerationController : public QObject
 {
@@ -53,11 +54,15 @@ class RefrigerationController : public QObject
 
   void zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem);
 
+  void zoomOutToSystemGridView();
+
   private:
 
   QPointer<QGraphicsView> m_refrigerationGraphicsView;
 
   QSharedPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
+
+  QSharedPointer<RefrigerationSystemDetailView> m_detailView;
 
   QSharedPointer<RefrigerationSystemListController> m_refrigerationSystemListController;
 

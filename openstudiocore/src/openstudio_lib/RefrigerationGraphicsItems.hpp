@@ -148,6 +148,41 @@ class RefrigerationSystemMiniView : public QGraphicsObject
   QString m_name;
 };
 
+class RefrigerationSystemDetailView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSystemDetailView();
+
+  virtual ~RefrigerationSystemDetailView() {}
+
+  RefrigerationSystemView * refrigerationSystemView;
+
+  ZoomOutButtonItem * zoomOutButton;
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  private:
+
+  // QRectF contentRect() const;
+
+  // QRectF headerRect() const;
+
+  // static int cellWidth();
+
+  // static int headerHeight();
+
+  // QString m_name;
+};
+
 class RefrigerationSystemDropZoneView : public QGraphicsObject
 {
   Q_OBJECT;

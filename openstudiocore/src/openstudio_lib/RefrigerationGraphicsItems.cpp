@@ -671,5 +671,32 @@ void RefrigerationSystemDropZoneView::mouseReleaseEvent(QGraphicsSceneMouseEvent
   this->update();
 }
 
+RefrigerationSystemDetailView::RefrigerationSystemDetailView()
+  : QGraphicsObject()
+{
+  refrigerationSystemView = new RefrigerationSystemView();
+  refrigerationSystemView->setParentItem(this);
+  refrigerationSystemView->setPos(0,50);
+
+  zoomOutButton = new ZoomOutButtonItem();
+  zoomOutButton->setParentItem(this);
+  zoomOutButton->setPos(800 - zoomOutButton->boundingRect().width() - 10,10);
+}
+
+
+QRectF RefrigerationSystemDetailView::boundingRect() const
+{
+  int width = refrigerationSystemView->boundingRect().width();
+  int height = refrigerationSystemView->boundingRect().height() + 50;
+
+  return QRectF(0,0,width,height);
+}
+
+void RefrigerationSystemDetailView::paint( QPainter *painter, 
+            const QStyleOptionGraphicsItem *option, 
+            QWidget *widget )
+{
+}
+
 } // openstudio
 

@@ -62,9 +62,20 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 {
   m_refrigerationScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
 
-  m_refrigerationScene->addItem(new RefrigerationSystemView());
+  m_detailView = QSharedPointer<RefrigerationSystemDetailView>(new RefrigerationSystemDetailView());
+
+  m_refrigerationScene->addItem(m_detailView.data());
 
   m_refrigerationGraphicsView->setScene(m_refrigerationScene.data());
+
+  bool bingo;
+  bingo = connect(m_detailView->zoomOutButton,SIGNAL(mouseClicked()),this,SLOT(zoomOutToSystemGridView()));
+  OS_ASSERT(bingo);
+}
+
+void RefrigerationController::zoomOutToSystemGridView()
+{
+  m_refrigerationGraphicsView->setScene(m_refrigerationGridScene.data());
 }
 
 QGraphicsView * RefrigerationController::refrigerationGraphicsView() const
