@@ -29,7 +29,7 @@
 #include <sstream>
 
 using namespace openstudio::model;
-using namespace openstudio::contam;
+//using namespace openstudio::contam;
 using namespace openstudio;
 
 TEST_F(ContamFixture, ForwardTranslator_exampleModel)

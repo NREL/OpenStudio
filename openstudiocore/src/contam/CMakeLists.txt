@@ -4,21 +4,23 @@ SET( ${target_name}_src
   ContamAPI.hpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
-  ReverseTranslator.hpp
-  ReverseTranslator.cpp
   PrjReader.hpp
   PrjReader.cpp
-  PrjWriter.hpp
-  PrjWriter.cpp
-  PrjObjects.hpp
-  PrjObjects.cpp
-  PrjDefs.hpp
-  PrjData.hpp
-  PrjData.cpp
-  SimTxt.hpp
-  SimTxt.cpp
+  SimFile.hpp
+  SimFile.cpp
   WindPressure.hpp
   WindPressure.cpp
+  PrjDefines.hpp
+  PrjModel.hpp
+  PrjModel.cpp
+  PrjPublic.hpp
+  PrjPublic.cpp
+  PrjPrivate.hpp
+  PrjPrivate.cpp
+  PrjSubobjects.hpp
+  PrjSubobjects.cpp
+  PrjSubobjectsPrivate.hpp
+  PrjSubobjectsPrivate.cpp
 )
 
 # resource files
@@ -36,6 +38,7 @@ SET( ${target_name}_test_src
 )
 
 SET( ${target_name}_swig_src
+  Contam.i
 )
 
 SET( ${target_name}_depends
@@ -72,33 +75,21 @@ IF(BUILD_TESTING)
   ADD_DEPENDENCIES(${target_name}_tests openstudio_contam_resources)
 ENDIF()
 
-#MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} "${target_name}" )
+MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 
-add_executable(OsmToPrj OsmToPrj.cpp)
+add_executable(osm2prj osm2prj.cpp)
 
-TARGET_LINK_LIBRARIES( OsmToPrj
+TARGET_LINK_LIBRARIES( osm2prj
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam
 )
 
-add_executable(PrjToOsm PrjToOsm.cpp)
+add_executable(epw2wth epw2wth.cpp)
 
-TARGET_LINK_LIBRARIES( PrjToOsm
+TARGET_LINK_LIBRARIES( epw2wth 
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam
 )
 
-add_executable(FitInfiltration FitInfiltration.cpp)
-
-TARGET_LINK_LIBRARIES( FitInfiltration
-  ${${target_name}_depends}
-  openstudio_osversion
-  openstudio_contam
-)
-
-#INSTALL(TARGETS gbXMLToIdf
-#    BUNDLE DESTINATION . 
-#    RUNTIME DESTINATION bin 
-#    )
