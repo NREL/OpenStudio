@@ -235,7 +235,7 @@ ForwardTranslator::ForwardTranslator(const openstudio::model::Model& model, doub
 void ForwardTranslator::init()
 {
   m_ready=false;
-  read(":/templates/template.prj");
+  read(std::string(":/templates/template.prj"));
   if(valid())
   {
     // The template is a legal PRJ file, so it has one level. Not for long.
