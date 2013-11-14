@@ -151,7 +151,6 @@ SET( project_directories
   resultsviewer
   model_editor
   openstudio_lib
-  plugin
   openstudio_app
   pat_app
 )
@@ -861,7 +860,6 @@ export(TARGETS openstudio_runmanager
                openstudio_gbxml
                openstudio_isomodel
                openstudio_lib
-               openstudio_plugin
                openstudio_sdd
                ${LIBSSH_EXPORT}
                ${QTWINMIGRATE_EXPORT}
