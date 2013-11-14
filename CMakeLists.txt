@@ -286,9 +286,9 @@ IF(BUILD_RUBY)
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && nmake install
         )
       SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe )
-      set(RUBY_DLL x64-msvcr100-ruby200.dll)
-      set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
-      set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
+      SET(RUBY_DLL x64-msvcr100-ruby200.dll)
+      SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
+      SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
     ELSE()
       IF (BUILD_RUBY_MINGW32_2_0)
         # And windows requires mingw to build ruby, so we just unpackage it locally
@@ -300,8 +300,9 @@ IF(BUILD_RUBY)
           INSTALL_COMMAND ""
           )
         SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
-        set(RUBY_DLL msvcrt-ruby200.dll)
-        set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_DLL msvcrt-ruby200.dll)
+        SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/msvcrt-ruby200.lib")
       ELSE()
         # And windows requires mingw to build ruby, so we just unpackage it locally
         ExternalProject_Add(Ruby
@@ -312,8 +313,9 @@ IF(BUILD_RUBY)
           INSTALL_COMMAND ""
           )
         SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
-        set(RUBY_DLL msvcrt-ruby18.dll)
-        set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_DLL msvcrt-ruby18.dll)
+        SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/msvcrt-ruby18.lib") 
       ENDIF()
     ENDIF()
     
