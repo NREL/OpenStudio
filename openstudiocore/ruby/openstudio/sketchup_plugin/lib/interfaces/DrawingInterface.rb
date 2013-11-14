@@ -19,7 +19,11 @@
 
 require("openstudio/sketchup_plugin/lib/watchers/PluginModelObjectWatcher")
 
-require("set")
+if Sketchup.version_number > 14000000
+  require("set")
+else
+  require("openstudio/sketchup_plugin/stdruby/set")
+end
 
 module OpenStudio
 

@@ -32,7 +32,11 @@ require("openstudio/sketchup_plugin/sketchup/UI")
 require("openstudio/sketchup_plugin/sketchup/Sketchup")
 require("openstudio/sketchup_plugin/sketchup/Geom")
 
-require("fileutils")
+if Sketchup.version_number > 14000000
+  require("fileutils")
+else
+  require("openstudio/sketchup_plugin/stdruby/fileutils")
+end
 
 $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false # default is false, enable to see developer menu
 $OPENSTUDIO_SKETCHUPPLUGIN_PROGRESS_DIALOGS = true # default is true, disable to speed up
