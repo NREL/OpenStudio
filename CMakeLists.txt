@@ -302,7 +302,7 @@ IF(BUILD_RUBY)
         SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
         SET(RUBY_DLL msvcrt-ruby200.dll)
         SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/msvcrt-ruby200.lib")
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby200.lib")
       ELSE()
         # And windows requires mingw to build ruby, so we just unpackage it locally
         ExternalProject_Add(Ruby
@@ -315,7 +315,7 @@ IF(BUILD_RUBY)
         SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
         SET(RUBY_DLL msvcrt-ruby18.dll)
         SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/msvcrt-ruby18.lib") 
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby18.lib") 
       ENDIF()
     ENDIF()
     
