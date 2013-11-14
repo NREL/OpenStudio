@@ -809,6 +809,11 @@ namespace detail {
       analysisData["project_dir"] = toQString(options.projectDir);
     }
 
+    // throw openstudio_version into the body of "analysis" for 
+    // easy access in the server
+    QVariantMap versionElement = jsonMetadata().toMap();
+    analysisData.unite(versionElement);
+
     // create top-level of final file
     QVariantMap result = jsonMetadata().toMap(); // openstudio_version
     result["analysis"] = QVariant(analysisData);
