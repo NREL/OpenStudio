@@ -18,9 +18,6 @@
  **********************************************************************/
 
 #include "RefrigerationGraphicsItems.hpp"
-#include "../shared_gui_components/OSListController.hpp"
-#include "../shared_gui_components/OSListView.hpp"
-#include "../shared_gui_components/GraphicsItems.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <QPainter>
 #include <utility>

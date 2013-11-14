@@ -21,6 +21,9 @@
 #define OPENSTUDIO_REFRIGERATIONGRAPHICSITEMS_H
 
 #include <QGraphicsObject>
+#include "../shared_gui_components/OSListController.hpp"
+#include "../shared_gui_components/OSListView.hpp"
+#include "../shared_gui_components/GraphicsItems.hpp"
 
 namespace openstudio {
 
@@ -32,12 +35,6 @@ class RefrigerationSHXView;
 class RefrigerationCasesView;
 class RefrigerationSystemView;
 class RefrigerationSecondaryView;
-class OSListItem;
-class OSListController;
-class ButtonItem;
-class RemoveButtonItem;
-class OSGraphicsItemDelegate;
-class ZoomInButtonItem;
 
 // A grid layout of refrigeration systems
 class RefrigerationSystemGridView : public QGraphicsObject
