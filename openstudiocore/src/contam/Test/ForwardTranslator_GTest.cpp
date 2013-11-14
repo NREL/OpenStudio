@@ -29,7 +29,7 @@
 #include <sstream>
 
 using namespace openstudio::model;
-using namespace openstudio::contam;
+//using namespace openstudio::contam;
 using namespace openstudio;
 
 TEST_F(ContamFixture, ForwardTranslator_exampleModel)
@@ -40,6 +40,8 @@ TEST_F(ContamFixture, ForwardTranslator_exampleModel)
   path m = openstudio::toPath("exampleModel.map");
 
   bool test = ForwardTranslator::modelToPrj(model, p);
+
+  //bool test = ForwardTranslator::modelToContam(model, p, m);
 
   EXPECT_TRUE(test);
 }

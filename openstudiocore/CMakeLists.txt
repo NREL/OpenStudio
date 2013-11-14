@@ -144,6 +144,7 @@ SET( project_directories
   energyplus
   radiance
   gbxml
+  contam
   isomodel
   osversion
   ruleset
@@ -163,10 +164,6 @@ SET( project_directories
 IF( BUILD_SDD )
   LIST(APPEND project_directories sdd)
 ENDIF( BUILD_SDD ) 
-
-IF( BUILD_CONTAM )
-  LIST(APPEND project_directories contam)
-ENDIF( BUILD_CONTAM ) 
 
 ###############################################################################
 
@@ -855,12 +852,6 @@ ELSE( WIN32 )
   SET(QTWINMIGRATE_EXPORT "")
 ENDIF( WIN32 )
 
-IF( BUILD_CONTAM )
-  SET(OPENSTUDIO_CONTAM "openstudio_contam")
-ELSE( BUILD_CONTAM )
-  SET(OPENSTUDIO_CONTAM "")
-ENDIF( BUILD_CONTAM )
-
 
 export(TARGETS openstudio_runmanager 
                openstudio_project
@@ -878,7 +869,7 @@ export(TARGETS openstudio_runmanager
                openstudio_lib
                openstudio_plugin
                openstudio_sdd
-               ${OPENSTUDIO_CONTAM}
+               openstudio_contam
                ${LIBSSH_EXPORT}
                ${QTWINMIGRATE_EXPORT}
                zkexpat
