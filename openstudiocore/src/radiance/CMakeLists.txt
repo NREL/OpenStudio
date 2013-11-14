@@ -17,6 +17,8 @@ SET( ${target_name}_src
   Photosensor.cpp
   Renderer.hpp
   Renderer.cpp
+  Utils.hpp
+  Utils.cpp
 )
 
 SET( ${target_name}_test_src

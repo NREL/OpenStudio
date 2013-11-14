@@ -1,0 +1,747 @@
+{
+ "data_point" :  {
+  "analysis_uuid" : "6e7ce81b-6993-4af3-b575-67d91185f218",
+  "complete" : true,
+  "data_point_type" : "DataPoint",
+  "description" : "Demonstrating json serialization of complete DataPoint.",
+  "directory" : "myProject/fakeDataPoint/",
+  "display_name" : "Fake Data Point",
+  "failed" : false,
+  "idf_input_data" :   {
+   "checksum_create" : "00000000",
+   "checksum_last" : "00000000",
+   "display_name" : "out.idf",
+   "file_type" : "IDF",
+   "name" : "myProject/fakeDataPoint/72-ModelToIdf-0/out.idf",
+   "path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/72-ModelToIdf-0/out.idf",
+   "timestamp_create" : "20130830T204229",
+   "timestamp_last" : "20130830T204229",
+   "uuid" : "a39c208b-8fc8-475b-a69c-b66f1959fb7d",
+   "version_uuid" : "f6d0c259-2ccd-4a56-9b17-e8e725feceb6"
+  },
+  "name" : "fakeDataPoint",
+  "osm_input_data" :   {
+   "checksum_create" : "00000000",
+   "checksum_last" : "00000000",
+   "display_name" : "out.osm",
+   "file_type" : "OSM",
+   "name" : "myProject/fakeDataPoint/71-Ruby-0/out.osm",
+   "path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/71-Ruby-0/out.osm",
+   "timestamp_create" : "20130830T204229",
+   "timestamp_last" : "20130830T204229",
+   "uuid" : "88d4ef41-0d40-4fc5-9490-46a81fcc16c9",
+   "version_uuid" : "45c46e42-98da-41e4-844b-ca44b23401b7"
+  },
+  "output_attributes" : [
+   {
+    "name" : "enduses.electric",
+    "uuid" : "136ccf96-92ed-4930-9e73-c3da529f232e",
+    "value" : [
+     {
+      "name" : "electricity.Cooling",
+      "units" : "kWh",
+      "uuid" : "9aea8518-b4b4-4867-819a-1c6334f80e36",
+      "value" : 281.282,
+      "value_type" : "Double",
+      "version_uuid" : "785acbe9-d217-4ba4-a35a-6dcbb70b576e"
+     },
+     {
+      "name" : "electricity.Lighting",
+      "units" : "kWh",
+      "uuid" : "18150c59-a60e-40cc-ac8f-dbcc4b0ec51a",
+      "value" : 19206.3,
+      "value_type" : "Double",
+      "version_uuid" : "5964de09-a122-474f-956e-7757ece39e79"
+     },
+     {
+      "name" : "electricity.Equipment",
+      "units" : "kWh",
+      "uuid" : "8157a77e-a311-4d9f-9508-1bc8607d21f6",
+      "value" : 5112.13,
+      "value_type" : "Double",
+      "version_uuid" : "032c7f82-4b23-4942-ad46-d7bc3325c5cf"
+     }
+    ],
+    "value_type" : "AttributeVector",
+    "version_uuid" : "53a04b2a-4b18-4bac-b7c8-1b85f769b042"
+   },
+   {
+    "name" : "eui",
+    "units" : "kBtu/ft^2",
+    "uuid" : "94e59a22-f7e7-4556-9cdf-2c7fa269d436",
+    "value" : 128.217,
+    "value_type" : "Quantity",
+    "version_uuid" : "93abe283-1fda-472d-8c60-5c9cc1e52d2e"
+   }
+  ],
+  "problem_uuid" : "6c1e9eeb-b747-4c3d-b5b4-8381faa23fa2",
+  "response_values" : [
+   {
+    "response_value_index" : 0,
+    "value" : 58.282
+   },
+   {
+    "response_value_index" : 1,
+    "value" : 718952.0
+   },
+   {
+    "response_value_index" : 2,
+    "value" : 0.3
+   }
+  ],
+  "selected" : true,
+  "sql_output_data" :   {
+   "checksum_create" : "00000000",
+   "checksum_last" : "00000000",
+   "display_name" : "eplusout.sql",
+   "file_type" : "SQL",
+   "name" : "myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql",
+   "path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql",
+   "timestamp_create" : "20130830T204229",
+   "timestamp_last" : "20130830T204229",
+   "uuid" : "b089abae-6858-4c8f-a38a-4c509b671e77",
+   "version_uuid" : "08624d31-761c-4bf6-ac05-65bebd3ba743"
+  },
+  "tags" : [
+   {
+    "name" : "custom",
+    "uuid" : "c29633a1-bc8f-4447-8698-4622cefaa1ba"
+   },
+   {
+    "name" : "faked",
+    "uuid" : "a44c2196-5499-4515-97af-ce0457a74744"
+   }
+  ],
+  "top_level_job" :   {
+   "children" : [
+    {
+     "children" : [
+      {
+       "children" : [
+        {
+         "children" : [
+          {
+           "children" : [
+            {
+             "errors" :              {
+              "all_errors" : [
+               {
+                "description" : "Post-process completed successfully.",
+                "error_type" : "Info"
+               }
+              ],
+              "result" : "Success"
+             },
+             "files" : [
+              {
+               "exists" : true,
+               "file_name" : "eplusout.sql",
+               "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/75-OpenStudioPostProcess-0/eplusout.sql",
+               "key" : "",
+               "last_modified" : "20180321T083332"
+              }
+             ],
+             "job_type" : "OpenStudioPostProcess",
+             "last_run" : "20180321T083421",
+             "output_files" : [
+              {
+               "exists" : true,
+               "file_name" : "report.xml",
+               "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/UserScript/UserScript-0/ModelToIdf-0/EnergyPlusPreProcess-0/EnergyPlus-0/OpenStudioPostProcess-0/myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml",
+               "key" : "",
+               "last_modified" : "20180321T083421"
+              }
+             ],
+             "status" :              {
+              "status" : "Idle"
+             },
+             "uuid" : "1ebd67b2-99dc-41a2-84c8-f144cc86c2f5"
+            }
+           ],
+           "errors" :            {
+            "all_errors" : [
+             {
+              "description" : "ENERGYPLUS WARNING: ...",
+              "error_type" : "Warning"
+             },
+             {
+              "description" : "ENERGYPLUS WARNING: ...",
+              "error_type" : "Warning"
+             },
+             {
+              "description" : "ENERGYPLUS WARNING: ...",
+              "error_type" : "Warning"
+             }
+            ],
+            "result" : "Success"
+           },
+           "files" : [
+            {
+             "exists" : true,
+             "file_name" : "in.idf",
+             "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/74-EnergyPlus-0/in.idf",
+             "key" : "",
+             "last_modified" : "20180321T082305"
+            }
+           ],
+           "job_type" : "EnergyPlus",
+           "last_run" : "20180321T083342",
+           "output_files" : [
+            {
+             "exists" : true,
+             "file_name" : "eplusout.sql",
+             "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/UserScript/UserScript-0/ModelToIdf-0/EnergyPlusPreProcess-0/EnergyPlus-0/myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql",
+             "key" : "",
+             "last_modified" : "20180321T083332"
+            },
+            {
+             "exists" : true,
+             "file_name" : "eplusout.err",
+             "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/UserScript/UserScript-0/ModelToIdf-0/EnergyPlusPreProcess-0/EnergyPlus-0/myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.err",
+             "key" : "",
+             "last_modified" : "20180321T083334"
+            }
+           ],
+           "status" :            {
+            "status" : "Idle"
+           },
+           "uuid" : "6329b3e4-c121-41b4-947e-8010e614c342"
+          }
+         ],
+         "errors" :          {
+          "all_errors" : [
+
+          ],
+          "result" : "Success"
+         },
+         "files" : [
+          {
+           "exists" : true,
+           "file_name" : "in.idf",
+           "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/73-EnergyPlusPreProcess-0/in.idf",
+           "key" : "",
+           "last_modified" : "20180321T082230"
+          }
+         ],
+         "job_type" : "EnergyPlusPreProcess",
+         "last_run" : "20180321T082312",
+         "output_files" : [
+          {
+           "exists" : true,
+           "file_name" : "out.idf",
+           "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/UserScript/UserScript-0/ModelToIdf-0/EnergyPlusPreProcess-0/myProject/fakeDataPoint/73-EnergyPlusPreProcess-0/out.idf",
+           "key" : "",
+           "last_modified" : "20180321T082305"
+          }
+         ],
+         "status" :          {
+          "status" : "Idle"
+         },
+         "uuid" : "d09680dd-499d-409a-9594-c6a751bd0ffd"
+        }
+       ],
+       "errors" :        {
+        "all_errors" : [
+         {
+          "description" : "Did not find ScheduleTypeLimits for Schedule ...",
+          "error_type" : "Info"
+         },
+         {
+          "description" : "Unexpectedly did not find a child object of a certain type, replaced with a default one.",
+          "error_type" : "Warning"
+         }
+        ],
+        "result" : "Success"
+       },
+       "files" : [
+        {
+         "exists" : true,
+         "file_name" : "in.osm",
+         "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/72-ModelToIdf-0/in.osm",
+         "key" : "",
+         "last_modified" : "20180321T082201"
+        }
+       ],
+       "job_type" : "ModelToIdf",
+       "last_run" : "20180321T082232",
+       "output_files" : [
+        {
+         "exists" : true,
+         "file_name" : "out.idf",
+         "full_path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/UserScript/UserScript-0/ModelToIdf-0/myProject/fakeDataPoint/72-ModelToIdf-0/out.idf",
+         "key" : "",
+         "last_modified" : "20180321T082230"
+        }
+       ],
+       "status" :        {
+        "status" : "Idle"
+       },
+       "uuid" : "caf4311a-a71a-4cf7-b6da-5e80151a0ab1"
+      }
+     ],
+     "errors" :      {
+      "all_errors" : [
+       {
+        "description" : "Started with a window to wall ratio of ...",
+        "error_type" : "InitialCondition"
+       },
+       {
+        "description" : "Set the window to wall ratio ...",
+        "error_type" : "FinalCondition"
+       }
+      ],
+      "result" : "Success"
+     },
+     "files" : [
+      {
+       "exists" : true,
+       "file_name" : "UserScriptAdapter.rb",
+       "full_path" : "C:/projects/openstudio-iteration/openstudiocore/ruby/openstudio/runmanager/rubyscripts/UserScriptAdapter.rb",
+       "key" : "rb",
+       "last_modified" : "20130830T202048",
+       "required_files" : [
+        {
+         "path" : "user_script.rb",
+         "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.rb"
+        },
+        {
+         "path" : "ExampleModel_Test.rb",
+         "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/ExampleModel_Test.rb"
+        },
+        {
+         "path" : "SimpleModel.osm",
+         "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SimpleModel.osm"
+        },
+        {
+         "path" : "SimpleModel_Test.rb",
+         "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SimpleModel_Test.rb"
+        }
+       ]
+      }
+     ],
+     "job_type" : "UserScript",
+     "last_run" : "20180321T082152",
+     "params" : [
+      {
+       "param" :        {
+        "children" : [
+         {
+          "param" :           {
+           "value" : "--argumentName=facade"
+          },
+          "param_index" : 0
+         },
+         {
+          "param" :           {
+           "value" : "--argumentValue=North"
+          },
+          "param_index" : 1
+         },
+         {
+          "param" :           {
+           "value" : "--argumentName=wwr"
+          },
+          "param_index" : 2
+         },
+         {
+          "param" :           {
+           "value" : "--argumentValue=0.3"
+          },
+          "param_index" : 3
+         },
+         {
+          "param" :           {
+           "value" : "--argumentName=offset"
+          },
+          "param_index" : 4
+         },
+         {
+          "param" :           {
+           "value" : "--argumentValue=0.9"
+          },
+          "param_index" : 5
+         }
+        ],
+        "value" : "ruby_scriptparameters"
+       },
+       "param_index" : 0
+      },
+      {
+       "param" :        {
+        "children" : [
+         {
+          "param" :           {
+           "children" : [
+            {
+             "param" :              {
+              "children" : [
+               {
+                "param" :                 {
+                 "children" : [
+                  {
+                   "param" :                    {
+                    "value" : "in.osm"
+                   },
+                   "param_index" : 0
+                  }
+                 ],
+                 "value" : ".*\\.osm"
+                },
+                "param_index" : 0
+               }
+              ],
+              "value" : "All"
+             },
+             "param_index" : 0
+            }
+           ],
+           "value" : "Last"
+          },
+          "param_index" : 0
+         }
+        ],
+        "value" : "ruby_inputfiles"
+       },
+       "param_index" : 1
+      },
+      {
+       "param" :        {
+        "children" : [
+         {
+          "param" :           {
+           "value" : "-I"
+          },
+          "param_index" : 0
+         },
+         {
+          "param" :           {
+           "value" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/Debug/"
+          },
+          "param_index" : 1
+         }
+        ],
+        "value" : "ruby_toolparameters"
+       },
+       "param_index" : 2
+      },
+      {
+       "param" :        {
+        "children" : [
+         {
+          "param" :           {
+           "children" : [
+            {
+             "param" :              {
+              "children" : [
+               {
+                "param" :                 {
+                 "value" : ""
+                },
+                "param_index" : 0
+               }
+              ],
+              "value" : "osm"
+             },
+             "param_index" : 0
+            }
+           ],
+           "value" : "osm"
+          },
+          "param_index" : 0
+         }
+        ],
+        "value" : "ruby_copyrequired"
+       },
+       "param_index" : 3
+      },
+      {
+       "param" :        {
+        "children" : [
+         {
+          "param" :           {
+           "value" : "true"
+          },
+          "param_index" : 0
+         }
+        ],
+        "value" : "ruby_isuserscriptjob"
+       },
+       "param_index" : 4
+      },
+      {
+       "param" :        {
+        "children" : [
+         {
+          "param" :           {
+           "value" : "myProject/fakeDataPoint/"
+          },
+          "param_index" : 0
+         }
+        ],
+        "value" : "outdir"
+       },
+       "param_index" : 5
+      }
+     ],
+     "status" :      {
+      "status" : "Idle"
+     },
+     "uuid" : "c549e83f-6eb5-44e1-866a-1a9d9d839756"
+    }
+   ],
+   "errors" :    {
+    "all_errors" : [
+     {
+      "description" : "Started with a window to wall ratio of ...",
+      "error_type" : "InitialCondition"
+     },
+     {
+      "description" : "Set the window to wall ratio ...",
+      "error_type" : "FinalCondition"
+     }
+    ],
+    "result" : "Success"
+   },
+   "files" : [
+    {
+     "exists" : true,
+     "file_name" : "UserScriptAdapter.rb",
+     "full_path" : "C:/projects/openstudio-iteration/openstudiocore/ruby/openstudio/runmanager/rubyscripts/UserScriptAdapter.rb",
+     "key" : "rb",
+     "last_modified" : "20130830T202048",
+     "required_files" : [
+      {
+       "path" : "user_script.rb",
+       "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.rb"
+      },
+      {
+       "path" : "ExampleModel_Test.rb",
+       "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/ExampleModel_Test.rb"
+      },
+      {
+       "path" : "SimpleModel.osm",
+       "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SimpleModel.osm"
+      },
+      {
+       "path" : "SimpleModel_Test.rb",
+       "url" : "file:///C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/resources/utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SimpleModel_Test.rb"
+      }
+     ]
+    }
+   ],
+   "job_type" : "UserScript",
+   "last_run" : "20180321T082110",
+   "params" : [
+    {
+     "param" :      {
+      "children" : [
+       {
+        "param" :         {
+         "value" : "--argumentName=facade"
+        },
+        "param_index" : 0
+       },
+       {
+        "param" :         {
+         "value" : "--argumentValue=South"
+        },
+        "param_index" : 1
+       },
+       {
+        "param" :         {
+         "value" : "--argumentName=wwr"
+        },
+        "param_index" : 2
+       },
+       {
+        "param" :         {
+         "value" : "--argumentValue=0.1"
+        },
+        "param_index" : 3
+       }
+      ],
+      "value" : "ruby_scriptparameters"
+     },
+     "param_index" : 0
+    },
+    {
+     "param" :      {
+      "children" : [
+       {
+        "param" :         {
+         "children" : [
+          {
+           "param" :            {
+            "children" : [
+             {
+              "param" :               {
+               "children" : [
+                {
+                 "param" :                  {
+                  "value" : "in.osm"
+                 },
+                 "param_index" : 0
+                }
+               ],
+               "value" : ".*\\.osm"
+              },
+              "param_index" : 0
+             }
+            ],
+            "value" : "All"
+           },
+           "param_index" : 0
+          }
+         ],
+         "value" : "Last"
+        },
+        "param_index" : 0
+       }
+      ],
+      "value" : "ruby_inputfiles"
+     },
+     "param_index" : 1
+    },
+    {
+     "param" :      {
+      "children" : [
+       {
+        "param" :         {
+         "value" : "-I"
+        },
+        "param_index" : 0
+       },
+       {
+        "param" :         {
+         "value" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/ruby/Debug/"
+        },
+        "param_index" : 1
+       }
+      ],
+      "value" : "ruby_toolparameters"
+     },
+     "param_index" : 2
+    },
+    {
+     "param" :      {
+      "children" : [
+       {
+        "param" :         {
+         "children" : [
+          {
+           "param" :            {
+            "children" : [
+             {
+              "param" :               {
+               "value" : ""
+              },
+              "param_index" : 0
+             }
+            ],
+            "value" : "osm"
+           },
+           "param_index" : 0
+          }
+         ],
+         "value" : "osm"
+        },
+        "param_index" : 0
+       }
+      ],
+      "value" : "ruby_copyrequired"
+     },
+     "param_index" : 3
+    },
+    {
+     "param" :      {
+      "children" : [
+       {
+        "param" :         {
+         "value" : "true"
+        },
+        "param_index" : 0
+       }
+      ],
+      "value" : "ruby_isuserscriptjob"
+     },
+     "param_index" : 4
+    },
+    {
+     "param" :      {
+      "children" : [
+       {
+        "param" :         {
+         "value" : "myProject/fakeDataPoint"
+        },
+        "param_index" : 0
+       }
+      ],
+      "value" : "outdir"
+     },
+     "param_index" : 5
+    }
+   ],
+   "status" :    {
+    "status" : "Idle"
+   },
+   "uuid" : "b55caaef-7738-4e20-b2d8-ffc5a43bfa8f"
+  },
+  "uuid" : "0804be59-facb-4c82-9f66-ffc2486a820c",
+  "variable_values" : [
+   {
+    "value" : 1,
+    "value_type" : "int",
+    "variable_value_index" : 0
+   },
+   {
+    "value" : 0.3,
+    "value_type" : "double",
+    "variable_value_index" : 1
+   },
+   {
+    "value" : 0.9,
+    "value_type" : "double",
+    "variable_value_index" : 2
+   }
+  ],
+  "version_uuid" : "b8939958-d9b0-414e-b6ac-cfd172c6ba5e",
+  "xml_output_data" : [
+   {
+    "checksum_create" : "00000000",
+    "checksum_last" : "00000000",
+    "display_name" : "report.xml",
+    "file_type" : "XML",
+    "name" : "myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml",
+    "path" : "C:/projects/openstudio-iteration/build-debug/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml",
+    "timestamp_create" : "20130830T204229",
+    "timestamp_last" : "20130830T204229",
+    "uuid" : "be07f463-2d5a-4fc6-a171-55490eaa8525",
+    "version_uuid" : "022e6bca-d8ad-434b-aed7-98f18c055b13"
+   }
+  ]
+ },
+ "metadata" :  {
+  "display_name" : "Fake Data Point",
+  "name" : "fakeDataPoint",
+  "openstudio_version" : "1.0.4",
+  "uuid" : "0804be59-facb-4c82-9f66-ffc2486a820c",
+  "values" : [
+   {
+    "value" : 1,
+    "variable_index" : 0,
+    "variable_uuid" : "a0f172d9-f38d-4687-892a-dbd1275b4f23"
+   },
+   {
+    "value" : 0.3,
+    "variable_index" : 1,
+    "variable_uuid" : "6074fa05-b673-41f8-900d-87b6c57853fc"
+   },
+   {
+    "value" : 0.9,
+    "variable_index" : 2,
+    "variable_uuid" : "c9c11f1a-e474-4160-97d6-e6f145265564"
+   }
+  ],
+  "version_uuid" : "0804be59-facb-4c82-9f66-ffc2486a820c"
+ }
+}

@@ -98,19 +98,48 @@ namespace detail {
       /// Load all of the jobs from the given database file into the current RunManager, enqueuing them
       void loadJobs(const openstudio::path &t_db);
 
+      /// Load all of the jobs from the given JSON string, updating job trees
+      void updateJobs(const std::string &t_json, bool t_externallyManaged);
+
+      /// Load all of the jobs from the given JSON structure represented by a QVariant,
+      /// updating job trees
+      void updateJobs(const QVariant &t_variant, const VersionString &t_version, bool t_externallyManaged);
+
+      /// update job trees
+      void updateJobs(const std::vector<Job> &t_jobs);
+
+      /// update job tree
+      void updateJob(const Job &t_job);
+
+      /// update job tree, and be willing to change the UUID in the process
+      void updateJob(const openstudio::UUID &t_uuid, const Job &t_job);
+
+      /// update job tree
+      void updateJob(const Job &t_job, const openstudio::path &t_dir);
+
+      std::string jobsToJson() const;
+
+      std::vector<Job> jobsForExport() const;
+
       /// Queue up a job (and all children) for processing
       /// \param[in] job Job to enqueue
       /// \param[in] force Process job even if it is out of date
       /// \param[in] t_basePath Path by which relative paths in this job should be evaluated. If not provided,
       ///                       the path of the runmanager db is used.
-      void enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &t_basePath = openstudio::path());
+      bool enqueue(const Job &job,
+                   bool force,
+                   const openstudio::path &basePath = openstudio::path());
+
+      boost::optional<Job> enqueueOrReturnExisting(const Job &job,
+                                                   bool force,
+                                                   const openstudio::path &basePath = openstudio::path());
 
       /// Queue up a job (and all children) for processing
       /// \param[in] jobs Vector of Jobs to enqueue
       /// \param[in] force Process job even if it is out of date
       /// \param[in] t_basePath Path by which relative paths in this job should be evaluated. If not provided,
       ///                       the path of the runmanager db is used.
-      void enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath = openstudio::path());
+      bool enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath = openstudio::path());
 
       /// Remove the given job and all child jobs from the queue
       void remove(const openstudio::runmanager::Job &job);
@@ -268,4 +297,5 @@ namespace detail {
 }
 
 #endif
+
 

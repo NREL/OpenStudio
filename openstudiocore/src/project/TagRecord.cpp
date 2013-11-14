@@ -52,9 +52,9 @@ namespace detail {
   TagRecord_Impl::TagRecord_Impl(const QSqlQuery& query, ProjectDatabase& database) 
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
     
     QVariant value;
 
@@ -83,7 +83,7 @@ namespace detail {
     if (dataPointRecord) {
       return dataPointRecord->cast<ObjectRecord>();
     }
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return boost::none;
   }
 
@@ -212,7 +212,7 @@ TagRecord::TagRecord(const std::string& tag, const FileReferenceRecord& fileRefe
                      new detail::TagRecord_Impl(tag, fileReferenceRecord)), 
                  fileReferenceRecord.projectDatabase())
 {
-  BOOST_ASSERT(this->getImpl<detail::TagRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());
 }
 
 TagRecord::TagRecord(const Tag& tag, const DataPointRecord& dataPointRecord)
@@ -220,7 +220,7 @@ TagRecord::TagRecord(const Tag& tag, const DataPointRecord& dataPointRecord)
                      new detail::TagRecord_Impl(tag, dataPointRecord)), 
                  dataPointRecord.projectDatabase())
 {
-  BOOST_ASSERT(this->getImpl<detail::TagRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());
 }
 
 TagRecord::TagRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -228,14 +228,14 @@ TagRecord::TagRecord(const QSqlQuery& query, ProjectDatabase& database)
                      new detail::TagRecord_Impl(query,database)), 
                  database)
 {
-  BOOST_ASSERT(this->getImpl<detail::TagRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());
 }
 
 TagRecord::TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl, 
                      ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(this->getImpl<detail::TagRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());
 }
 
 std::string TagRecord::databaseTableName() {
@@ -256,7 +256,7 @@ UpdateByIdQueryData TagRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -363,7 +363,7 @@ Tag TagRecord::tag() const {
 TagRecord::TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(this->getImpl<detail::TagRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());
 }
 /// @endcond
 } // project

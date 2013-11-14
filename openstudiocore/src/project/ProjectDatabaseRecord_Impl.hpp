@@ -36,7 +36,6 @@ namespace project {
 namespace detail {
 
   class PROJECT_API ProjectDatabaseRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
 
     /// constructors

@@ -54,6 +54,7 @@ namespace detail {
       m_runOptions(runOptions),
       m_numOSJobsInIteration(0),
       m_numOSJobsComplete(0),
+      m_numOSJobsFailed(0),
       m_dakotaStarted(false)
   {}
 
@@ -86,6 +87,10 @@ namespace detail {
     return m_numOSJobsComplete;
   }
 
+  int CurrentAnalysis_Impl::numFailedJobsInOSIteration() const {
+    return m_numOSJobsFailed;
+  }
+
   int CurrentAnalysis_Impl::totalNumJobsInOSIteration() const {
     return m_numOSJobsInIteration;
   }
@@ -103,11 +108,12 @@ namespace detail {
   }
 
   void CurrentAnalysis_Impl::setNumOSJobsInIteration(int numJobs) {
-    BOOST_ASSERT(m_numOSJobsInIteration == m_numOSJobsComplete);
-    BOOST_ASSERT(m_queuedOSDataPoints.size() == 0u);
+    OS_ASSERT(m_numOSJobsInIteration == m_numOSJobsComplete);
+    OS_ASSERT(m_queuedOSDataPoints.size() == 0u);
 
     m_numOSJobsInIteration = numJobs;
     m_numOSJobsComplete = 0;
+    m_numOSJobsFailed = 0;
     emit iterationProgress(numCompletedJobsInOSIteration(),totalNumJobsInOSIteration());
   }
 
@@ -208,10 +214,17 @@ namespace detail {
     analysis::DataPointVector::iterator it = std::find_if(m_queuedOSDataPoints.begin(),
                                                           m_queuedOSDataPoints.end(),
                                                           boost::bind(jobUUIDsEqual,_1,completedJob));
-    BOOST_ASSERT(it != m_queuedOSDataPoints.end());
+    OS_ASSERT(it != m_queuedOSDataPoints.end());
     analysis::DataPoint result = *it;
-    m_queuedOSDataPoints.erase(it);
+    
     ++m_numOSJobsComplete;
+
+    if (it->failed()){
+      ++m_numOSJobsFailed;
+    }
+
+    m_queuedOSDataPoints.erase(it);
+
     emit iterationProgress(numCompletedJobsInOSIteration(),totalNumJobsInOSIteration());
     return result;
   }
@@ -220,7 +233,7 @@ namespace detail {
     analysis::DataPointVector::iterator it = std::find_if(m_queuedDakotaDataPoints.begin(),
                                                           m_queuedDakotaDataPoints.end(),
                                                           boost::bind(jobUUIDsEqual,_1,completedJob));
-    BOOST_ASSERT(it != m_queuedDakotaDataPoints.end());
+    OS_ASSERT(it != m_queuedDakotaDataPoints.end());
     analysis::DataPoint result = *it;
     m_queuedDakotaDataPoints.erase(it);
     return result;
@@ -373,6 +386,11 @@ int CurrentAnalysis::numQueuedDakotaJobs() const {
 int CurrentAnalysis::numCompletedJobsInOSIteration() const {
   return getImpl()->numCompletedJobsInOSIteration();
 }
+
+int CurrentAnalysis::numFailedJobsInOSIteration() const {
+  return getImpl()->numFailedJobsInOSIteration();
+}
+
 
 int CurrentAnalysis::totalNumJobsInOSIteration() const {
   return getImpl()->totalNumJobsInOSIteration();

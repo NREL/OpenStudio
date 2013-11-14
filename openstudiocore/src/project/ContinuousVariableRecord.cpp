@@ -23,11 +23,8 @@
 #include <project/JoinRecord.hpp>
 #include <project/ProblemRecord.hpp>
 #include <project/FunctionRecord.hpp>
-#include <project/ModelRulesetContinuousVariableRecord.hpp>
 #include <project/RubyContinuousVariableRecord.hpp>
 
-#include <analysis/ModelRulesetContinuousVariable.hpp>
-#include <analysis/ModelRulesetContinuousVariable_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>
 
@@ -76,14 +73,14 @@ namespace detail {
   ContinuousVariableRecord_Impl::ContinuousVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : InputVariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(ContinuousVariableRecord::ColumnsType::continuousVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_continuousVariableRecordType = ContinuousVariableRecordType(value.toInt());
 
     value = query.value(ContinuousVariableRecord::ColumnsType::minimum);
@@ -166,16 +163,16 @@ namespace detail {
   void ContinuousVariableRecord_Impl::setLastValues(const QSqlQuery& query,
                                                     ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     InputVariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(ContinuousVariableRecord::ColumnsType::continuousVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastContinuousVariableRecordType = ContinuousVariableRecordType(value.toInt());
 
     value = query.value(ContinuousVariableRecord::ColumnsType::minimum);
@@ -212,16 +209,16 @@ namespace detail {
   }
 
   bool ContinuousVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = InputVariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(ContinuousVariableRecord::ColumnsType::continuousVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_continuousVariableRecordType == ContinuousVariableRecordType(value.toInt()));
 
     value = query.value(ContinuousVariableRecord::ColumnsType::minimum);
@@ -286,7 +283,7 @@ ContinuousVariableRecord::ContinuousVariableRecord(boost::shared_ptr<detail::Con
                                                    const boost::optional<analysis::ContinuousVariable>& variable)
   : InputVariableRecord(impl, database, (variable) ? *variable : analysis::OptionalInputVariable())
 {
-  BOOST_ASSERT(getImpl<detail::ContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ContinuousVariableRecord_Impl>());
 }
 
 boost::optional<ContinuousVariableRecord> ContinuousVariableRecord::factoryFromQuery(
@@ -299,9 +296,6 @@ boost::optional<ContinuousVariableRecord> ContinuousVariableRecord::factoryFromQ
       query.value(VariableRecordColumns::continuousVariableRecordType).toInt();
 
   switch (continuousVariableRecordType){
-    case ContinuousVariableRecordType::ModelRulesetContinuousVariableRecord :
-      result = ModelRulesetContinuousVariableRecord(query,database);
-      break;
     case ContinuousVariableRecordType::RubyContinuousVariableRecord :
       result = RubyContinuousVariableRecord(query,database);
       break;
@@ -317,12 +311,6 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
     ProblemRecord& problemRecord,
     int variableVectorIndex)
 {
-  if (variable.optionalCast<analysis::ModelRulesetContinuousVariable>()) {
-    return ModelRulesetContinuousVariableRecord(
-        variable.cast<analysis::ModelRulesetContinuousVariable>(),
-        problemRecord,
-        variableVectorIndex);
-  }
   if (variable.optionalCast<analysis::RubyContinuousVariable>()) {
     return RubyContinuousVariableRecord(
         variable.cast<analysis::RubyContinuousVariable>(),
@@ -330,7 +318,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
         variableVectorIndex);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 
@@ -340,13 +328,6 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
     int variableVectorIndex,
     boost::optional<double> functionCoefficient)
 {
-  if (variable.optionalCast<analysis::ModelRulesetContinuousVariable>()) {
-    return ModelRulesetContinuousVariableRecord(
-        variable.cast<analysis::ModelRulesetContinuousVariable>(),
-        functionRecord,
-        variableVectorIndex,
-        functionCoefficient);
-  }
   if (variable.optionalCast<analysis::RubyContinuousVariable>()) {
     return RubyContinuousVariableRecord(
         variable.cast<analysis::RubyContinuousVariable>(),
@@ -355,7 +336,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
         functionCoefficient);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 

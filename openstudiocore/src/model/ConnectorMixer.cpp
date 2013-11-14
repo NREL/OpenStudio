@@ -35,14 +35,14 @@ namespace detail{
   ConnectorMixer_Impl::ConnectorMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Mixer_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ConnectorMixer::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ConnectorMixer::iddObjectType());
   }
 
   ConnectorMixer_Impl::ConnectorMixer_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : Mixer_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ConnectorMixer::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ConnectorMixer::iddObjectType());
   }
 
   ConnectorMixer_Impl::ConnectorMixer_Impl(
@@ -112,7 +112,7 @@ namespace detail{
 ConnectorMixer::ConnectorMixer(const Model& model)
   : Mixer(ConnectorMixer::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ConnectorMixer_Impl>());
+  OS_ASSERT(getImpl<detail::ConnectorMixer_Impl>());
 }
 
 ConnectorMixer::ConnectorMixer(

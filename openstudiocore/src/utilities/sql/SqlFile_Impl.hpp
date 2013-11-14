@@ -66,6 +66,9 @@ namespace openstudio{
       // virtual destructor
       virtual ~SqlFile_Impl();
 
+      /// remove useful indexes, good for inserting lots of data
+      void removeIndexes();
+
       /// Create useful indexes
       void createIndexes();
 

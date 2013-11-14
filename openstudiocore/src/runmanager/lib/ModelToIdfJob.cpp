@@ -35,6 +35,7 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/Workspace.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/URLHelpers.hpp>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 #include <osversion/VersionTranslator.hpp>
@@ -98,7 +99,7 @@ namespace detail {
       if (model)
       {
         bool change = filesChanged(m_files, *t_lastrun);
-        return filesChanged(m_files, *t_lastrun);
+        return change;
       } else {
         // if the model file we are using has not been established yet,
         // return outofdate
@@ -154,6 +155,13 @@ namespace detail {
         errors.addError(ErrorType::Error, "Unable to load model: " + toString(m_model->fullPath));
         errors.result = ruleset::OSResultValue::Fail;
       } else {
+
+        // temp code
+        if (allParams().has("keepRunControlSpecialDays"))
+        {
+          ft.setKeepRunControlSpecialDays(true);
+        }
+
         openstudio::Workspace workspace = ft.translateModel(*m);
 
         if (workspace.numObjects() > 0){
@@ -161,7 +169,7 @@ namespace detail {
           workspace.toIdfFile().print(ofs);
           ofs.flush();
           ofs.close();
-          Q_ASSERT(boost::filesystem::exists(outpath / openstudio::toPath("in.idf")));
+          OS_ASSERT(boost::filesystem::exists(outpath / openstudio::toPath("in.idf")));
         } else {
           errors.addError(ErrorType::Error, "Converted OSM didn't create any objects, output idf not created");
         }

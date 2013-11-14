@@ -37,23 +37,23 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveFunctionalPressure
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Diameter)) {
+  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Diameter))) {
     curve.setDiameter(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::MinorLossCoefficient)) {
+  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::MinorLossCoefficient))) {
     curve.setMinorLossCoefficient(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Length)) {
+  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Length))) {
     curve.setLength(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Roughness)) {
+  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Roughness))) {
     curve.setRoughness(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::FixedFrictionFactor)) {
+  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::FixedFrictionFactor))) {
     curve.setFixedFrictionFactor(*d);
   }
 

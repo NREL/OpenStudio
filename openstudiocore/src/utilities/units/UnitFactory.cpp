@@ -39,8 +39,8 @@
 #include <utilities/units/ThermUnit_Impl.hpp>
 #include <utilities/units/Misc1Unit.hpp>
 #include <utilities/units/Misc1Unit_Impl.hpp>
-#include <utilities/units/CelciusUnit.hpp>
-#include <utilities/units/CelciusUnit_Impl.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
+#include <utilities/units/CelsiusUnit_Impl.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/FahrenheitUnit_Impl.hpp>
 
@@ -258,7 +258,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     }
   }
 
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 
   // impose overall scale
   if (scale().exponent != 0) {
@@ -296,7 +296,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
       OptionalUnit temp;
       // try base map
       callbackMap = m_callbackMaps.find(UnitSystem(UnitSystem::Mixed));
-      BOOST_ASSERT(callbackMap != m_callbackMaps.end());
+      OS_ASSERT(callbackMap != m_callbackMaps.end());
       callbackPair = callbackMap->second.find(standardString);
       if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
         temp = callbackPair->second();
@@ -330,7 +330,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
         }
       }
 
-      BOOST_ASSERT(temp);
+      OS_ASSERT(temp);
 
       // decide whether to keep temp
       if (!candidate || (temp->system() == system)) {
@@ -364,8 +364,8 @@ std::string UnitFactorySingleton::lookupPrettyString(const std::string& standard
 
 UnitFactorySingleton::UnitFactorySingleton() {
 
-  // Celcius Base Units ========================================================
-  registerUnit(createCelciusTemperature);
+  // Celsius Base Units ========================================================
+  registerUnit(createCelsiusTemperature);
 
 
   // Fahrenheit Base Units =====================================================
@@ -638,7 +638,7 @@ UnitSystem getSystem(const std::string& unitString) {
     return unit->system();
   }
 
-  unit = createUnit(unitString,UnitSystem::Celcius);
+  unit = createUnit(unitString,UnitSystem::Celsius);
   if (unit && (unit->system() != UnitSystem::Mixed)) {
     return unit->system();
   }
@@ -768,12 +768,12 @@ Unit createDimensionlessUnit(UnitSystem system) {
     return WhUnit();
   case UnitSystem::Misc1:
     return Misc1Unit();
-  case UnitSystem::Celcius:
-    return CelciusUnit();
+  case UnitSystem::Celsius:
+    return CelsiusUnit();
   case UnitSystem::Fahrenheit:
     return FahrenheitUnit();
   default:
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
   return Unit();
 }
@@ -836,7 +836,7 @@ boost::optional<Unit> createUnit(const std::string& unitString) {
     return unit;
   }
 
-  unit = createUnit(unitString,UnitSystem::Celcius);
+  unit = createUnit(unitString,UnitSystem::Celsius);
   if (unit && (unit->system() != UnitSystem::Mixed)) {
     return unit;
   }

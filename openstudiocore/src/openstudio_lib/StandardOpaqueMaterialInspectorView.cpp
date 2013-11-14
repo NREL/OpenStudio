@@ -20,6 +20,9 @@
 #include <openstudio_lib/StandardOpaqueMaterialInspectorView.hpp>
 
 #include <model/Model_Impl.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -75,7 +78,7 @@ void StandardOpaqueMaterialInspectorView::onSelectModelObject(const openstudio::
 void StandardOpaqueMaterialInspectorView::onUpdate()
 {
   boost::optional<openstudio::model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
 
   std::stringstream ss;
   ss << "StandardOpaqueMaterialInspectorView:" << std::endl;

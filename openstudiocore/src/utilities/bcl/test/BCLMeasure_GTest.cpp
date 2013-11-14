@@ -40,8 +40,6 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_EQ("Modeler description needs to be hand-edited.", measure->modelerDescription());
 
   EXPECT_EQ(MeasureType::ModelMeasure, measure->measureType().value());
-  EXPECT_EQ(MeasureFunction::Measure, measure->measureFunction().value());
-  EXPECT_FALSE(measure->requiresEnergyPlusResults());
   EXPECT_FALSE(measure->usesSketchUpAPI());
   EXPECT_TRUE(measure->primaryRubyScriptPath());
   EXPECT_EQ("Envelope", measure->taxonomyTag());
@@ -97,8 +95,7 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_EQ("AnotherMeasure", className);
 
   EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope", 
-                                          MeasureType::ModelMeasure, 
-                                          MeasureFunction::Measure, false, true) );
+                                          MeasureType::ModelMeasure, true) );
   ASSERT_TRUE(measure2);
   ASSERT_TRUE(exists(dir2));
   EXPECT_EQ("Another Measure", measure2->name());
@@ -123,7 +120,7 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 
   try{
     BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration", 
-                       MeasureType::ModelMeasure, MeasureFunction::Measure, false, false);
+                       MeasureType::ModelMeasure, false);
   }catch(std::exception&){
     ASSERT_TRUE(false);
   }
@@ -132,11 +129,3 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
 }
-
-/* Enable on PAT branch
-TEST_F(BCLFixture, BCLMeasure_PatApplicationMeasures)
-{
-  std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  ASSERT_FALSE(patApplicationMeasures.empty());
-}
-*/

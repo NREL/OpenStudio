@@ -21,13 +21,17 @@
 #include <analysis/LinearFunction_Impl.hpp>
 
 #include <analysis/Variable.hpp>
+#include <analysis/Variable_Impl.hpp>
 
 #include <utilities/data/Vector.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
+
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
+#include <utilities/core/Json.hpp>
+#include <utilities/core/Optional.hpp>
 
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -66,7 +70,9 @@ namespace detail {
     LinearFunction result(impl);
     VariableVector variables = result.variables();
     BOOST_FOREACH(Variable& variable,variables) {
-      variable.setParent(result);
+      if (!doNotParent(variable)) {
+        variable.setParent(result);
+      }
     }
     return result;
   }
@@ -89,7 +95,7 @@ namespace detail {
     else {
       result = dot(createVector(coefficients),createVector(variableValues));
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return *result;
   }
 
@@ -102,6 +108,56 @@ namespace detail {
     return false;
   }
 
+  QVariant LinearFunction_Impl::toVariant() const {
+    QVariantMap linearFunctionData = AnalysisObject_Impl::toVariant().toMap();
+
+    linearFunctionData["function_type"] = QString("LinearFunction");
+
+    QVariantList variablesList;
+    DoubleVector coeffs = coefficients();
+    int index(0), coeffsN(coeffs.size());
+    Q_FOREACH(const Variable& var,variables()) {
+      QVariantMap varMap = var.toVariant().toMap();
+      varMap["variable_index"] = index;
+      if (index < coeffsN) {
+        varMap["coefficient"] = coeffs[index];
+      }
+      variablesList.push_back(QVariant(varMap));
+      ++index;
+    }
+    linearFunctionData["variables"] = QVariant(variablesList);
+
+    return QVariant(linearFunctionData);
+  }
+
+  LinearFunction LinearFunction_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    QVariantList variablesList = map["variables"].toList();
+    VariableVector variables = deserializeOrderedVector(
+          variablesList,
+          "variable_index",
+          boost::function<Variable (const QVariant&)>(boost::bind(analysis::detail::Variable_Impl::factoryFromVariant,_1,version)));
+    bool ok(false);
+    DoubleVector coefficients;
+    if (!variablesList.empty() && variablesList[0].toMap().contains("coefficient")) {
+      coefficients = deserializeOrderedVector(
+          variablesList,
+          "coefficient",
+          "variable_index",
+          boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
+    }
+
+    return LinearFunction(toUUID(map["uuid"].toString().toStdString()),
+                          toUUID(map["version_uuid"].toString().toStdString()),
+                          map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                          variables,
+                          coefficients);
+
+  }
+
 } // detail
 
 LinearFunction::LinearFunction(const std::string& name,
@@ -112,7 +168,9 @@ LinearFunction::LinearFunction(const std::string& name,
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
   BOOST_FOREACH(const Variable& variable,variables) {
-    variable.setParent(copyOfThis);
+    if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
+      variable.setParent(copyOfThis);
+    }
   }
 }
 
@@ -134,7 +192,9 @@ LinearFunction::LinearFunction(const UUID& uuid,
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
   BOOST_FOREACH(const Variable& variable,variables) {
-    variable.setParent(copyOfThis);
+    if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
+      variable.setParent(copyOfThis);
+    }
   }
 }
 

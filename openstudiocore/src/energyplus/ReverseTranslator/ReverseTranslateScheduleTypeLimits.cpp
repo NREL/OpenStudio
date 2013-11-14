@@ -26,6 +26,8 @@
 #include <utilities/idd/OS_ScheduleTypeLimits_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -82,22 +84,22 @@ OptionalModelObject ReverseTranslator::translateScheduleTypeLimits( const Worksp
     if (boost::regex_search(name,boost::regex("[Tt][Ee][Mm][Pp]"))) {
       if (boost::regex_search(name,boost::regex("[Dd][Ee][Ll][Tt][Aa]"))) {
         test = scheduleTypeLimits.setUnitType("DeltaTemperature");
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
       }
       else {
         test = scheduleTypeLimits.setUnitType("Temperature");
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
       }
     }
     else if (boost::regex_search(name,boost::regex("[Oo][Nn]")) &&
              boost::regex_search(name,boost::regex("[Oo][Ff][Ff]")))
     {
       test = scheduleTypeLimits.setUnitType("Availability");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
     else if (boost::regex_search(name,boost::regex("[Cc][Oo][Nn][Tt][Rr][Oo][Ll]"))) {
       test = scheduleTypeLimits.setUnitType("ControlMode");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 

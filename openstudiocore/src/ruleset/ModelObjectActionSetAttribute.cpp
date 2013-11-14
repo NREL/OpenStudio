@@ -109,16 +109,16 @@ namespace ruleset {
     ModelObjectActionSetAttribute_Impl::ModelObjectActionSetAttribute_Impl(const QDomElement& element)
       : ModelObjectActionClause_Impl(element)
     {
-      BOOST_ASSERT(!element.isNull());
-      BOOST_ASSERT(element.tagName() == toQString(this->xmlElementName()));
+      OS_ASSERT(!element.isNull());
+      OS_ASSERT(element.tagName() == toQString(this->xmlElementName()));
 
       QDomElement attributeNameElement = element.firstChildElement(QString::fromStdString("AttributeName"));
       QDomElement attributeValueTypeElement = element.firstChildElement(QString::fromStdString("AttributeValueType"));
       QDomElement valueElement = element.firstChildElement(QString::fromStdString("Value"));
 
-      BOOST_ASSERT(!attributeNameElement.isNull());
-      BOOST_ASSERT(!attributeValueTypeElement.isNull());
-      BOOST_ASSERT(!valueElement.isNull());
+      OS_ASSERT(!attributeNameElement.isNull());
+      OS_ASSERT(!attributeValueTypeElement.isNull());
+      OS_ASSERT(!valueElement.isNull());
 
       m_attributeName = attributeNameElement.firstChild().nodeValue().toStdString();
       m_attributeValueType = AttributeValueType(attributeValueTypeElement.firstChild().nodeValue().toStdString());
@@ -144,10 +144,10 @@ namespace ruleset {
           m_value.setValue(valueElement.firstChild().nodeValue().toStdString());
           break;
         case AttributeValueType::AttributeVector:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
           break;
         default:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
           break;
       }
     }
@@ -188,7 +188,7 @@ namespace ruleset {
           result = modelObject.setAttribute(m_attributeName, m_value.value<std::string>());
           break;
         default:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
       }
 
       LOG(Debug, "Setting attribute '" << this->attributeName() << "' for ModelObject of type '"
@@ -242,10 +242,10 @@ namespace ruleset {
           childElement.appendChild(text);
           break;
         case AttributeValueType::AttributeVector:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
           break;
         default:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
           break;
       }
       element.appendChild(childElement);
@@ -267,105 +267,105 @@ namespace ruleset {
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, bool value)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, bool value,
                                                                const UUID& uuid, const UUID& versionUUID)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value, uuid, versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, unsigned value)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, unsigned value,
                                                                const UUID& uuid, const UUID& versionUUID)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value, uuid, versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, int value)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, int value,
                                                                const UUID& uuid, const UUID& versionUUID)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value, uuid, versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, double value)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, double value,
                                                                const UUID& uuid, const UUID& versionUUID)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value, uuid, versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, const std::string& value)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, const std::string& value,
                                                                const UUID& uuid, const UUID& versionUUID)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value, uuid, versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, const char* value)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, const char* value,
                                                                const UUID& uuid, const UUID& versionUUID)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, value, uuid, versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, const openstudio::AttributeValueType& attributeValueType, const QVariant& value)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, attributeValueType, value)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const std::string& attributeName, const openstudio::AttributeValueType& attributeValueType, const QVariant& value,
                                                                const UUID& uuid, const UUID& versionUUID)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(attributeName, attributeValueType, value, uuid, versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const QDomElement& element)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>(new detail::ModelObjectActionSetAttribute_Impl(element)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
 
   /// @cond
   ModelObjectActionSetAttribute::ModelObjectActionSetAttribute(const boost::shared_ptr<detail::ModelObjectActionSetAttribute_Impl>& impl)
     : ModelObjectActionClause(impl)
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetAttribute_Impl>());
   }
   /// @endcond
 

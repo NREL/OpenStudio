@@ -37,14 +37,14 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == InsideSurfaceConvectionAlgorithm::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == InsideSurfaceConvectionAlgorithm::iddObjectType());
   }
 
   InsideSurfaceConvectionAlgorithm_Impl::InsideSurfaceConvectionAlgorithm_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == InsideSurfaceConvectionAlgorithm::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == InsideSurfaceConvectionAlgorithm::iddObjectType());
   }
 
   InsideSurfaceConvectionAlgorithm_Impl::InsideSurfaceConvectionAlgorithm_Impl(
@@ -84,7 +84,7 @@ namespace detail {
 
   std::string InsideSurfaceConvectionAlgorithm_Impl::algorithm() const {
     boost::optional<std::string> value = getString(OS_SurfaceConvectionAlgorithm_InsideFields::Algorithm,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -100,7 +100,7 @@ namespace detail {
 
   void InsideSurfaceConvectionAlgorithm_Impl::resetAlgorithm() {
     bool result = setString(OS_SurfaceConvectionAlgorithm_InsideFields::Algorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -135,7 +135,7 @@ void InsideSurfaceConvectionAlgorithm::resetAlgorithm() {
 InsideSurfaceConvectionAlgorithm::InsideSurfaceConvectionAlgorithm(const Model& model)
   : ModelObject(InsideSurfaceConvectionAlgorithm::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::InsideSurfaceConvectionAlgorithm_Impl>());
+  OS_ASSERT(getImpl<detail::InsideSurfaceConvectionAlgorithm_Impl>());
 
   setAlgorithm("TARP");
 }

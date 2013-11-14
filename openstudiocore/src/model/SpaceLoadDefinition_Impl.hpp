@@ -35,7 +35,6 @@ namespace detail {
 
   class MODEL_API SpaceLoadDefinition_Impl : public ResourceObject_Impl
   {
-    Q_OBJECT;
    public:
 
     // Construct completely new object.

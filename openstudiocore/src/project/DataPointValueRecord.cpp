@@ -56,14 +56,14 @@ namespace detail {
                                                        ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(DataPointValueRecord::ColumnsType::dataPointRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_dataPointRecordId = value.toInt();
 
     value = query.value(DataPointValueRecord::ColumnsType::functionRecordId);
@@ -131,6 +131,10 @@ namespace detail {
     return result;
   }
 
+  boost::optional<int> DataPointValueRecord_Impl::continuousVariableRecordId() const {
+    return m_continuousVariableRecordId;
+  }
+
   boost::optional<ContinuousVariableRecord> 
   DataPointValueRecord_Impl::continuousVariableRecord() const
   {
@@ -146,7 +150,6 @@ namespace detail {
   double DataPointValueRecord_Impl::dataPointValue() const {
     return m_dataPointValue;
   }
-
   void DataPointValueRecord_Impl::bindValues(QSqlQuery& query) const {
     ObjectRecord_Impl::bindValues(query);
 
@@ -169,16 +172,16 @@ namespace detail {
   }
 
   void DataPointValueRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(DataPointValueRecordColumns::dataPointRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDataPointRecordId = value.toInt();
 
     value = query.value(DataPointValueRecordColumns::functionRecordId);
@@ -198,21 +201,21 @@ namespace detail {
     }
 
     value = query.value(DataPointValueRecordColumns::dataPointValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDataPointValue = value.toDouble();
   }
 
   bool DataPointValueRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ObjectRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(DataPointValueRecordColumns::dataPointRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_dataPointRecordId == value.toInt());
 
     value = query.value(DataPointValueRecordColumns::functionRecordId);
@@ -265,7 +268,7 @@ DataPointValueRecord::DataPointValueRecord(double dataPointValue,
         new detail::DataPointValueRecord_Impl(dataPointValue, dataPointRecord, functionRecord)),
         dataPointRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
 }
 
 DataPointValueRecord::DataPointValueRecord(double dataPointValue, 
@@ -277,7 +280,7 @@ DataPointValueRecord::DataPointValueRecord(double dataPointValue,
                                               continuousVariableRecord)),
         dataPointRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
 }
 
 DataPointValueRecord::DataPointValueRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -285,14 +288,14 @@ DataPointValueRecord::DataPointValueRecord(const QSqlQuery& query, ProjectDataba
         new detail::DataPointValueRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
 }
 
 DataPointValueRecord::DataPointValueRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl> impl,
                                            ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
 }
 
 std::string DataPointValueRecord::databaseTableName() {
@@ -313,7 +316,7 @@ UpdateByIdQueryData DataPointValueRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -416,6 +419,10 @@ DataPointRecord DataPointValueRecord::dataPointRecord() const {
 
 boost::optional<FunctionRecord> DataPointValueRecord::functionRecord() const {
   return getImpl<detail::DataPointValueRecord_Impl>()->functionRecord();
+}
+
+boost::optional<int> DataPointValueRecord::continuousVariableRecordId() const {
+  return getImpl<detail::DataPointValueRecord_Impl>()->continuousVariableRecordId();
 }
 
 boost::optional<ContinuousVariableRecord> DataPointValueRecord::continuousVariableRecord() const {

@@ -65,7 +65,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
 
   m_lightingLevelEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_lightingLevelEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_lightingLevelEdit,3,0);
 
   // Energy Per Space Floor Area
@@ -76,7 +76,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
 
   m_wattsPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_wattsPerSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_wattsPerSpaceFloorAreaEdit,3,1);
 
   // Energy Per Person
@@ -87,7 +87,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
 
   m_wattsPerPersonEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_wattsPerPersonEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_wattsPerPersonEdit,3,2);
 
   // Fraction Radiant
@@ -98,7 +98,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
 
   m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionRadiantEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_fractionRadiantEdit,5,0);
 
   // Fraction Visible
@@ -109,7 +109,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
 
   m_fractionVisibleEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionVisibleEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_fractionVisibleEdit,5,1);
 
   // Return Air Fraction
@@ -120,7 +120,7 @@ LightsDefinitionInspectorView::LightsDefinitionInspectorView(bool isIP, const op
 
   m_returnAirFractionEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_returnAirFractionEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_returnAirFractionEdit,7,0);
 
   // Stretch

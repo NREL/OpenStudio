@@ -39,7 +39,7 @@ namespace detail {
   ScheduleFixedInterval_Impl::ScheduleFixedInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ScheduleInterval_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleFixedInterval::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleFixedInterval::iddObjectType());
   }
 
   ScheduleFixedInterval_Impl::ScheduleFixedInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -47,7 +47,7 @@ namespace detail {
                                                          bool keepHandle)
     : ScheduleInterval_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleFixedInterval::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleFixedInterval::iddObjectType());
   }
 
   ScheduleFixedInterval_Impl::ScheduleFixedInterval_Impl(const ScheduleFixedInterval_Impl& other,
@@ -92,7 +92,7 @@ namespace detail {
     BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalDouble x = group.getDouble(0);
-      BOOST_ASSERT(x);
+      OS_ASSERT(x);
       values[i] = *x;
       ++i;
     }
@@ -146,7 +146,7 @@ namespace detail {
       temp.push_back(toString(outOfRangeValue));
 
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
-      BOOST_ASSERT(!group.empty());
+      OS_ASSERT(!group.empty());
     }
 
     // set the values
@@ -156,7 +156,7 @@ namespace detail {
       temp.push_back(toString(values[i]));
 
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
-      BOOST_ASSERT(!group.empty());
+      OS_ASSERT(!group.empty());
     }
 
     this->emitChangeSignals();
@@ -166,7 +166,7 @@ namespace detail {
 
   bool ScheduleFixedInterval_Impl::interpolatetoTimestep() const {
     boost::optional<std::string> value = getString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -176,13 +176,13 @@ namespace detail {
 
   int ScheduleFixedInterval_Impl::startMonth() const {
     boost::optional<int> value = getInt(OS_Schedule_FixedIntervalFields::StartMonth,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   int ScheduleFixedInterval_Impl::startDay() const {
     boost::optional<int> value = getInt(OS_Schedule_FixedIntervalFields::StartDay,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -196,7 +196,7 @@ namespace detail {
 
   double ScheduleFixedInterval_Impl::outOfRangeValue() const {
     boost::optional<double> value = getDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -211,12 +211,12 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ScheduleFixedInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
     bool result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "", driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ScheduleFixedInterval_Impl::setStartMonth(int startMonth, bool driverMethod) {
@@ -240,12 +240,12 @@ namespace detail {
   void ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ScheduleFixedInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
     bool result = setString(OS_Schedule_FixedIntervalFields::OutOfRangeValue, "", driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -253,7 +253,7 @@ namespace detail {
 ScheduleFixedInterval::ScheduleFixedInterval(const Model& model)
   : ScheduleInterval(ScheduleFixedInterval::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleFixedInterval_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleFixedInterval_Impl>());
 }
 
 IddObjectType ScheduleFixedInterval::iddObjectType() {

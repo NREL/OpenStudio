@@ -37,41 +37,41 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveQuartic(
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient1Constant)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient1Constant))) {
     curve.setCoefficient1Constant(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient2x)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient2x))) {
     curve.setCoefficient2x(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient3x_POW_2)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient3x_POW_2))) {
     curve.setCoefficient3xPOW2(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient4x_POW_3)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient4x_POW_3))) {
     curve.setCoefficient4xPOW3(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient5x_POW_4)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::Coefficient5x_POW_4))) {
     curve.setCoefficient5xPOW4(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::MinimumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::MinimumValueofx))) {
     curve.setMinimumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::MaximumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::MaximumValueofx))) {
     curve.setMaximumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::MinimumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::MinimumCurveOutput))) {
     curve.setMinimumCurveOutput(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_QuarticFields::MaximumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_QuarticFields::MaximumCurveOutput))) {
     curve.setMaximumCurveOutput(*d);
   }
-  if (s = workspaceObject.getString(Curve_QuarticFields::InputUnitTypeforX,false,true)) {
+  if ((s = workspaceObject.getString(Curve_QuarticFields::InputUnitTypeforX,false,true))) {
     curve.setInputUnitTypeforX(*s);
   }
-  if (s = workspaceObject.getString(Curve_QuarticFields::OutputUnitType,false,true)) {
+  if ((s = workspaceObject.getString(Curve_QuarticFields::OutputUnitType,false,true))) {
     curve.setOutputUnitType(*s);
   }
 

@@ -41,12 +41,10 @@ namespace detail {
  *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(ContinuousVariableRecordType,
-  ((ModelRulesetContinuousVariableRecord))
   ((RubyContinuousVariableRecord))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(ContinuousVariableRecordType,
-  ((ModelRulesetContinuousVariableRecord))
   ((RubyContinuousVariableRecord))
 );
 

@@ -26,8 +26,8 @@
 
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>
 
@@ -49,12 +49,12 @@ TEST_F(ProjectFixture, RubyContinuousVariableRecord_SaveAndRetrieve)
 {
   openstudio::path perturbScript = openstudio::toPath(rubyLibDir()) /
                                    openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  RubyPerturbation rubyPerturbation(perturbScript,FileReferenceType::OSM,FileReferenceType::OSM);
-  rubyPerturbation.addArgument("objectType","OS:Material");
-  rubyPerturbation.addArgument("nameRegex","Insulation");
-  rubyPerturbation.addArgument("field","2");
+  RubyMeasure rubyMeasure(perturbScript,FileReferenceType::OSM,FileReferenceType::OSM);
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex","Insulation");
+  rubyMeasure.addArgument("field","2");
   ruleset::OSArgument thickness = ruleset::OSArgument::makeDoubleArgument("Thickness");
-  RubyContinuousVariable insulationThickness("Insulation Thickness",thickness,rubyPerturbation);
+  RubyContinuousVariable insulationThickness("Insulation Thickness",thickness,rubyMeasure);
 
   Problem problem("Trivial Problem",VariableVector(1u,insulationThickness),runmanager::Workflow());
 

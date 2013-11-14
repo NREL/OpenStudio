@@ -115,7 +115,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatWidth = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatWidth, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatWidth,row++,0,1,3);
 
   // Slat Separation
@@ -126,7 +126,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatSeparation = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatSeparation, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatSeparation,row++,0,1,3);
 
   // Slat Thickness
@@ -137,7 +137,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatThickness = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatThickness, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatThickness,row++,0,1,3);
 
   // Slat Angle
@@ -148,7 +148,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatAngle = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatAngle, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatAngle,row++,0,1,3);
 
   // Slat Conductivity
@@ -159,7 +159,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatConductivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatConductivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatConductivity,row++,0,1,3);
 
   // Slat Beam Solar Transmittance
@@ -170,7 +170,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatBeamSolarTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatBeamSolarTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatBeamSolarTransmittance,row++,0,1,3);
 
   // Front Side Slat Beam Solar Reflectance
@@ -181,7 +181,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_frontSideSlatBeamSolarReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_frontSideSlatBeamSolarReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_frontSideSlatBeamSolarReflectance,row++,0,1,3);
 
   // Back Side Slat Beam Solar Reflectance
@@ -192,7 +192,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_backSideSlatBeamSolarReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_backSideSlatBeamSolarReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_backSideSlatBeamSolarReflectance,row++,0,1,3);
 
   // Slat Diffuse Solar Transmittance
@@ -203,7 +203,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatDiffuseSolarTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatDiffuseSolarTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatDiffuseSolarTransmittance,row++,0,1,3);
 
   // Front Side Slat Diffuse Solar Reflectance
@@ -214,7 +214,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_frontSideSlatDiffuseSolarReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_frontSideSlatDiffuseSolarReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_frontSideSlatDiffuseSolarReflectance,row++,0,1,3);
 
   // Back Side Slat Diffuse Solar Reflectance
@@ -225,7 +225,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_backSideSlatDiffuseSolarReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_backSideSlatDiffuseSolarReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_backSideSlatDiffuseSolarReflectance,row++,0,1,3);
 
   // Slat Beam Visible Transmittance
@@ -236,7 +236,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatBeamVisibleTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatBeamVisibleTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatBeamVisibleTransmittance,row++,0,1,3);
 
   // Front Side Slat Beam Visible Reflectance
@@ -247,7 +247,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_frontSideSlatBeamVisibleReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_frontSideSlatBeamVisibleReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_frontSideSlatBeamVisibleReflectance,row++,0,1,3);
 
   // Back Side Slat Beam Visible Reflectance
@@ -258,7 +258,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_backSideSlatBeamVisibleReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_frontSideSlatBeamVisibleReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_backSideSlatBeamVisibleReflectance,row++,0,1,3);
 
   // Slat Diffuse Visible Transmittance
@@ -269,7 +269,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatDiffuseVisibleTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatDiffuseVisibleTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatDiffuseVisibleTransmittance,row++,0,1,3);
 
   // Front Side Slat Diffuse Visible Reflectance
@@ -280,7 +280,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_frontSideSlatDiffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_frontSideSlatDiffuseVisibleReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_frontSideSlatDiffuseVisibleReflectance,row++,0,1,3);
 
   // Back Side Slat Diffuse Visible Reflectance
@@ -291,7 +291,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_backSideSlatDiffuseVisibleReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_backSideSlatDiffuseVisibleReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_backSideSlatDiffuseVisibleReflectance,row++,0,1,3);
 
   // Slat Infrared Hemispherical Transmittance
@@ -302,7 +302,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_slatInfraredHemisphericalTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_slatInfraredHemisphericalTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_slatInfraredHemisphericalTransmittance,row++,0,1,3);
 
   // Front Side Slat Infrared Hemispherical Emissivity
@@ -313,7 +313,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_frontSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_frontSideSlatInfraredHemisphericalEmissivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_frontSideSlatInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Back Side Slat Infrared Hemispherical Emissivity
@@ -324,7 +324,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_backSideSlatInfraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_backSideSlatInfraredHemisphericalEmissivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_backSideSlatInfraredHemisphericalEmissivity,row++,0,1,3);
 
   // Blind To Glass Distance
@@ -335,7 +335,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_blindToGlassDistance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_blindToGlassDistance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_blindToGlassDistance,row++,0,1,3);
 
   // Blind Top Opening Multiplier
@@ -346,7 +346,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_blindTopOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_blindTopOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_blindTopOpeningMultiplier,row++,0,1,3);
 
   // Blind Bottom Opening Multiplier
@@ -357,7 +357,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_blindBottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_blindBottomOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_blindBottomOpeningMultiplier,row++,0,1,3);
 
   // Blind Left Side Opening Multiplier
@@ -368,7 +368,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_blindLeftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_blindLeftSideOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_blindLeftSideOpeningMultiplier,row++,0,1,3);
 
   // Blind Right Side Opening Multiplier
@@ -379,7 +379,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_blindRightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_blindRightSideOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_blindRightSideOpeningMultiplier,row++,0,1,3);
 
   // Minimum Slat Angle
@@ -390,7 +390,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_minimumSlatAngle = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_minimumSlatAngle, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_minimumSlatAngle,row++,0,1,3);
 
   // Maximum Slat Angle
@@ -401,7 +401,7 @@ void WindowMaterialBlindInspectorView::createLayout()
 
   m_maximumSlatAngle = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_maximumSlatAngle, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_maximumSlatAngle,row++,0,1,3);  
 
   // Stretch

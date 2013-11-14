@@ -31,6 +31,8 @@
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/ScaleFactory.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -62,7 +64,7 @@ namespace detail {
         result = OSQuantityVector(*siUnits,values());
         if (returnIP) {
           OptionalUnit ipUnits = ScheduleTypeLimits::units(scheduleTypeLimits->unitType(),returnIP);
-          BOOST_ASSERT(ipUnits);
+          OS_ASSERT(ipUnits);
           if (ipUnits.get() != siUnits.get()) {
             result = convert(result,*ipUnits);
           }
@@ -79,7 +81,7 @@ namespace detail {
         result = Quantity(value,*siUnits);
         if (returnIP) {
           OptionalUnit ipUnits = ScheduleTypeLimits::units(scheduleTypeLimits->unitType(),returnIP);
-          BOOST_ASSERT(ipUnits);
+          OS_ASSERT(ipUnits);
           if (ipUnits.get() != siUnits.get()) {
             result = convert(*result,*ipUnits);
           }

@@ -109,6 +109,22 @@ class RULESET_API OSArgument {
              bool isRead,
              const std::string& extension);
 
+  /** Constructor provided for deserialization; not for general use. */
+  OSArgument(const UUID& uuid,
+             const UUID& versionUUID,
+             const std::string& name,
+             const std::string& displayName,
+             const OSArgumentType& type,
+             bool required,
+             const QVariant& value,
+             const QVariant& defaultValue,
+             const OSDomainType& domainType,
+             std::vector<QVariant>& domain,
+             const std::vector<std::string>& choices,
+             const std::vector<std::string>& choiceDisplayNames,
+             bool isRead,
+             const std::string& extension);
+
   /** Creates a copy with new UUIDs. */
   OSArgument clone() const;
 
@@ -392,7 +408,7 @@ class RULESET_API OSArgument {
   // some constructors
 
   friend class std::map<std::string, OSArgument>;
-  friend class std::pair<std::string, OSArgument>;
+  friend struct std::pair<std::string, OSArgument>;
 
 #if _MSC_VER >= 1600
   friend class std::pair<const std::string, OSArgument>;
@@ -479,6 +495,19 @@ RULESET_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
 
 /** Converts a vector of OSArgument to a map of OSArgument using name as the key. \relates OSArgument */
 RULESET_API std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<OSArgument>& arguments);
+
+namespace detail {
+
+  /** Non-member function to convert argument into a QJSON-ready QVariant. */
+  RULESET_API QVariant toVariant(const OSArgument& argument);
+
+  RULESET_API OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
+
+  QVariant toQuantityQVariant(const QVariantMap& map,
+                              const std::string& valueKey,
+                              const std::string& unitsKey);
+
+}
 
 } // ruleset
 } // openstudio

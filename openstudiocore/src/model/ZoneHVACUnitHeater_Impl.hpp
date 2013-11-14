@@ -38,7 +38,6 @@ namespace detail {
 
   class MODEL_API ZoneHVACUnitHeater_Impl : public ZoneHVACComponent_Impl
   {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
 
@@ -70,7 +69,7 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
-	virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const;
 
     virtual unsigned inletPort();
 

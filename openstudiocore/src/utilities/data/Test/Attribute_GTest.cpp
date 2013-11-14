@@ -22,6 +22,8 @@
 
 #include <utilities/data/Attribute.hpp>
 
+#include <utilities/core/Json.hpp>
+
 #include <boost/regex.hpp>
 
 #include <limits>
@@ -31,7 +33,7 @@ using namespace openstudio;
 
 TEST_F(DataFixture, Attribute_BoolTrue)
 {
-  openstudio::path xmlPath = openstudio::toPath("./report.xml");
+  openstudio::path xmlPath = openstudio::toPath("./report_bool_true.xml");
   if(boost::filesystem::exists(xmlPath)){
     boost::filesystem::remove(xmlPath);
   }
@@ -58,7 +60,7 @@ TEST_F(DataFixture, Attribute_BoolTrue)
 
 TEST_F(DataFixture, Attribute_Integer)
 {
-  openstudio::path xmlPath = openstudio::toPath("./report.xml");
+  openstudio::path xmlPath = openstudio::toPath("./report_integer.xml");
   if(boost::filesystem::exists(xmlPath)){
     boost::filesystem::remove(xmlPath);
   }
@@ -83,7 +85,7 @@ TEST_F(DataFixture, Attribute_Integer)
 
 TEST_F(DataFixture, Attribute_Unsigned)
 {
-  openstudio::path xmlPath = openstudio::toPath("./report.xml");
+  openstudio::path xmlPath = openstudio::toPath("./report_unsigned.xml");
   if(boost::filesystem::exists(xmlPath)){
     boost::filesystem::remove(xmlPath);
   }
@@ -108,7 +110,7 @@ TEST_F(DataFixture, Attribute_Unsigned)
 
 TEST_F(DataFixture, Attribute_Double_Small)
 {
-  openstudio::path xmlPath = openstudio::toPath("./report.xml");
+  openstudio::path xmlPath = openstudio::toPath("./report_double_small.xml");
   if(boost::filesystem::exists(xmlPath)){
     boost::filesystem::remove(xmlPath);
   }
@@ -133,7 +135,7 @@ TEST_F(DataFixture, Attribute_Double_Small)
 
 TEST_F(DataFixture, Attribute_Double_Big)
 {
-  openstudio::path xmlPath = openstudio::toPath("./report.xml");
+  openstudio::path xmlPath = openstudio::toPath("./report_double_big.xml");
   if(boost::filesystem::exists(xmlPath)){
     boost::filesystem::remove(xmlPath);
   }
@@ -160,7 +162,7 @@ TEST_F(DataFixture, Attribute_Double_Big)
 TEST_F(DataFixture, Attribute_String)
 {
 
-  openstudio::path xmlPath = openstudio::toPath("./report.xml");
+  openstudio::path xmlPath = openstudio::toPath("./report_string.xml");
   if(boost::filesystem::exists(xmlPath)){
     boost::filesystem::remove(xmlPath);
   }
@@ -186,7 +188,7 @@ TEST_F(DataFixture, Attribute_String)
 TEST_F(DataFixture, Attribute_AttributeVector)
 {
 
-  openstudio::path xmlPath = openstudio::toPath("./report.xml");
+  openstudio::path xmlPath = openstudio::toPath("./report_attribute_vector.xml");
   if(boost::filesystem::exists(xmlPath)){
     boost::filesystem::remove(xmlPath);
   }
@@ -362,4 +364,11 @@ TEST_F(DataFixture, Attribute_NumberFormatting) {
 
   str = QString::number(value,'G',std::numeric_limits<double>::digits10);
   EXPECT_EQ("3.14159E52",boost::regex_replace(toString(str),boost::regex("\\+"),""));
+}
+
+TEST_F(DataFixture, Attribute_JsonSerialization) {
+  // right now, just test string because know that fails
+  Attribute attribute("EnergyPlusVersion","EnergyPlus-Windows-64 8.0.0.008, YMD=2013.10.02 16:22");
+  QVariant variant = detail::toVariant(attribute);
+  EXPECT_NO_THROW(toJSON(variant));
 }

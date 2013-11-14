@@ -31,7 +31,12 @@ FileInfo::FileInfo(const std::string &t_filename,
                    bool t_exists)
   : fullPath(t_fullPath), filename(t_filename), 
     exists(t_exists), lastModified(t_lastModified), key(t_key)
-{}
+{
+  if (fullPath.empty())
+  {
+    fullPath = openstudio::toPath(t_filename);
+  }
+}
 
 FileInfo::FileInfo(const openstudio::path &t_path, const std::string &t_key)
   : fullPath(t_path),
@@ -101,7 +106,9 @@ void FileInfo::addRequiredFile(const QUrl &t_url, const openstudio::path &t_targ
       return;
     }
 
-    if (itr->first == t_url || itr->second == t_target)
+    /// we only actually care if the destinations are the same, not the sources,
+    /// let the user copy the same file to multiple places all day long if required.
+    if (itr->second == t_target)
     {
       throw std::runtime_error("required file conflict from: " + openstudio::toString(itr->first.toString()) + " to: " + openstudio::toString(itr->second));
     }

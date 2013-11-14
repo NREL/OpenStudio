@@ -78,34 +78,34 @@ namespace detail {
   ObjectRecord_Impl::ObjectRecord_Impl(const ProjectDatabase& projectDatabase, const QSqlQuery& query)
     : Record_Impl(projectDatabase, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(ObjectRecordColumns::name);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_name = value.toString().toStdString();
 
     value = query.value(ObjectRecordColumns::displayName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_displayName = value.toString().toStdString();
 
     value = query.value(ObjectRecordColumns::description);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_description = value.toString().toStdString();
 
     value = query.value(ObjectRecordColumns::timestampCreate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_timestampCreate = DateTime(value.toString().toStdString());
 
     value = query.value(ObjectRecordColumns::timestampLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_timestampLast = DateTime(value.toString().toStdString());
 
     value = query.value(ObjectRecordColumns::uuidLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_uuidLast = toUUID(value.toString().toStdString());
   }
 
@@ -170,6 +170,10 @@ namespace detail {
     // default implementation does nothing.
   }
 
+  UUID ObjectRecord_Impl::lastUuidLast() const {
+    return m_lastUUIDLast;
+  }
+
   void ObjectRecord_Impl::bindValues(QSqlQuery& query) const
   {
     Record_Impl::bindValues(query);
@@ -184,36 +188,36 @@ namespace detail {
 
   void ObjectRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     Record_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
 
     value = query.value(ObjectRecordColumns::name);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastName = value.toString().toStdString();
 
     value = query.value(ObjectRecordColumns::displayName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDisplayName = value.toString().toStdString();
 
     value = query.value(ObjectRecordColumns::description);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDescription = value.toString().toStdString();
 
     value = query.value(ObjectRecordColumns::timestampCreate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastTimestampCreate = DateTime(value.toString().toStdString());
 
     value = query.value(ObjectRecordColumns::timestampLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastTimestampLast = DateTime(value.toString().toStdString());
 
     value = query.value(ObjectRecordColumns::uuidLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastUUIDLast = toUUID(value.toString().toStdString());
   }
 
@@ -243,9 +247,9 @@ namespace detail {
 
   bool ObjectRecord_Impl::compareValues(const QSqlQuery& query) const
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = true;
 
@@ -255,32 +259,32 @@ namespace detail {
     QVariant value;
 
     value = query.value(ObjectRecordColumns::name);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_name == value.toString().toStdString());
     if (!result) return result;
 
     value = query.value(ObjectRecordColumns::displayName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_displayName == value.toString().toStdString());
     if (!result) return result;
 
     value = query.value(ObjectRecordColumns::description);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_description == value.toString().toStdString());
     if (!result) return result;
 
     value = query.value(ObjectRecordColumns::timestampCreate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_timestampCreate == DateTime(value.toString().toStdString()));
     if (!result) return result;
 
     value = query.value(ObjectRecordColumns::timestampLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_timestampLast == DateTime(value.toString().toStdString()));
     if (!result) return result;
 
     value = query.value(ObjectRecordColumns::uuidLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_uuidLast == toUUID(value.toString().toStdString()));
 
     return result;
@@ -313,13 +317,13 @@ namespace detail {
 ObjectRecord::ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl, ProjectDatabase projectDatabase)
   : Record(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ObjectRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ObjectRecord_Impl>());
 }
 
 ObjectRecord::ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl)
   : Record(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ObjectRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ObjectRecord_Impl>());
 }
 
 void ObjectRecord::createIndices(QSqlDatabase& qSqlDatabase, const std::string& databaseTableName)

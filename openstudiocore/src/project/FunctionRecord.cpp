@@ -55,26 +55,26 @@ namespace detail {
   FunctionRecord_Impl::FunctionRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(FunctionRecord::ColumnsType::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_problemRecordId = value.toInt();
 
     value = query.value(FunctionRecord::ColumnsType::functionType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_functionType = FunctionType(value.toInt());
 
     value = query.value(FunctionRecord::ColumnsType::functionVectorIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_functionVectorIndex = value.toInt();
 
     value = query.value(FunctionRecord::ColumnsType::functionRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_functionRecordType = FunctionRecordType(value.toInt());
   }
 
@@ -165,54 +165,54 @@ namespace detail {
   }
 
   void FunctionRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(FunctionRecord::ColumnsType::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastProblemRecordId = value.toInt();
 
     value = query.value(FunctionRecord::ColumnsType::functionType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
-    m_lastFunctionType == FunctionType(value.toInt());
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastFunctionType = FunctionType(value.toInt());
 
     value = query.value(FunctionRecord::ColumnsType::functionVectorIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFunctionVectorIndex = value.toInt();
 
     value = query.value(FunctionRecord::ColumnsType::functionRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFunctionRecordType = FunctionRecordType(value.toInt());
   }
 
   bool FunctionRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ObjectRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(FunctionRecord::ColumnsType::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_problemRecordId == value.toInt());
 
     value = query.value(FunctionRecord::ColumnsType::functionType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_functionType == FunctionType(value.toInt()));
 
     value = query.value(FunctionRecord::ColumnsType::functionVectorIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_functionVectorIndex == value.toInt());
 
     value = query.value(FunctionRecord::ColumnsType::functionRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_functionRecordType == FunctionRecordType(value.toInt()));
 
     return result;
@@ -242,7 +242,7 @@ FunctionRecord::FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl> im
                                ProjectDatabase database)
   : ObjectRecord(impl,database)
 {
-  BOOST_ASSERT(getImpl<detail::FunctionRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FunctionRecord_Impl>());
 }
 
 std::string FunctionRecord::databaseTableName() {
@@ -263,7 +263,7 @@ UpdateByIdQueryData FunctionRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -332,7 +332,7 @@ FunctionRecord FunctionRecord::factoryFromFunction(const analysis::Function& fun
                                 functionVectorIndex);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl>());
 }
 

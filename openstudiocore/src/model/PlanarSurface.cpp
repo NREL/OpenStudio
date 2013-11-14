@@ -68,7 +68,7 @@ namespace model {
     {
       // connect signals
       bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     // constructor
@@ -79,7 +79,7 @@ namespace model {
     {
       // connect signals
       bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -89,7 +89,7 @@ namespace model {
     {
       // connect signals
       bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     PlanarSurface_Impl::PlanarSurface_Impl(const PlanarSurface_Impl& other,
@@ -99,7 +99,7 @@ namespace model {
     {
       // connect signals
       bool connected = connect(this, SIGNAL(onChange()), this, SLOT(clearCachedVariables()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     boost::optional<ConstructionBase> PlanarSurface_Impl::construction() const
@@ -192,7 +192,7 @@ namespace model {
         values.push_back(toString(vertex.z()));
 
         ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
-        BOOST_ASSERT(!group.empty());
+        OS_ASSERT(!group.empty());
       }
 
       LOG(Debug, "After setVertices have " << numFields() << " fields.  Size of vertices is "
@@ -205,13 +205,13 @@ namespace model {
 
     bool PlanarSurface_Impl::setUFactor(boost::optional<double> value) {
       // DLM: change interface to take a double?
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       return setUFactor(*value);
     }
 
     bool PlanarSurface_Impl::setThermalConductance(boost::optional<double> value) {
       // DLM: change interface to take a double?
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       return setThermalConductance(*value);
     }
 
@@ -225,7 +225,7 @@ namespace model {
         LayeredConstruction construction = oConstruction->cast<LayeredConstruction>();
         if (construction.numLayers() == 1) {
           MaterialVector layers = construction.layers();
-          BOOST_ASSERT(layers.size() == 1u);
+          OS_ASSERT(layers.size() == 1u);
           result = layers[0].optionalCast<AirWallMaterial>();
         }
         else {
@@ -553,7 +553,7 @@ PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& ver
                              const Model& model)
   : ParentObject(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::PlanarSurface_Impl>());
+  OS_ASSERT(getImpl<detail::PlanarSurface_Impl>());
   bool ok = this->setVertices(vertices);
   if (!ok){
     LOG_AND_THROW("Cannot create a surface with vertices " << vertices);
@@ -837,7 +837,7 @@ double PlanarSurface::filmResistance(const FilmResistanceType& type) {
     default:
       LOG_AND_THROW("Unknown FilmResistanceType.");
   };
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return 0.0;
 }
 

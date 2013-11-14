@@ -28,13 +28,13 @@ namespace sdd {
     QDomElement nameElement = element.firstChildElement("Name");
     QDomElement typeElement = element.firstChildElement("Type");
 
-    BOOST_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
     std::string name = escapeName(nameElement.text());
 
     model::ScheduleDay scheduleDay(model);
     scheduleDay.setName(name);
 
-    BOOST_ASSERT(!typeElement.isNull());
+    OS_ASSERT(!typeElement.isNull());
     std::string type = escapeName(typeElement.text());
     boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
     bool isTemperature = false;
@@ -70,7 +70,7 @@ namespace sdd {
     }
 
     QDomNodeList hrElements = element.elementsByTagName("Hr");
-    BOOST_ASSERT(hrElements.count() == 24);
+    OS_ASSERT(hrElements.count() == 24);
     for (int i = 0; i < hrElements.count(); i++){
       QDomElement hrElement = hrElements.at(i).toElement();
       double value = hrElement.text().toDouble();
@@ -100,13 +100,13 @@ namespace sdd {
     QDomElement schDayClgDDRefElement = element.firstChildElement("SchDayClgDDRef");
     QDomElement schDayHtgDDRefElement = element.firstChildElement("SchDayHtgDDRef");
 
-    BOOST_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
     std::string name = escapeName(nameElement.text());
 
     model::ScheduleWeek scheduleWeek(model);
     scheduleWeek.setName(name);
 
-    BOOST_ASSERT(!typeElement.isNull());
+    OS_ASSERT(!typeElement.isNull());
     std::string type = escapeName(typeElement.text());
     boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
     if (scheduleTypeLimits){
@@ -213,13 +213,13 @@ namespace sdd {
     QDomElement nameElement = element.firstChildElement("Name");
     QDomElement typeElement = element.firstChildElement("Type");
 
-    BOOST_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
     std::string name = escapeName(nameElement.text());
 
     model::ScheduleYear scheduleYear(model);
     scheduleYear.setName(name);
 
-    BOOST_ASSERT(!typeElement.isNull());
+    OS_ASSERT(!typeElement.isNull());
     std::string type = escapeName(typeElement.text());
     boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>(type);
     if (scheduleTypeLimits){
@@ -230,8 +230,8 @@ namespace sdd {
     QDomNodeList endDayElements = element.elementsByTagName("EndDay");
     QDomNodeList schWeekRefElements = element.elementsByTagName("SchWeekRef");
 
-    BOOST_ASSERT(endMonthElements.count() == endDayElements.count());
-    BOOST_ASSERT(endMonthElements.count() == schWeekRefElements.count());
+    OS_ASSERT(endMonthElements.count() == endDayElements.count());
+    OS_ASSERT(endMonthElements.count() == schWeekRefElements.count());
     
     for (int i = 0; i < endMonthElements.count(); i++){
       QDomElement endMonthElement = endMonthElements.at(i).toElement();
@@ -261,28 +261,28 @@ namespace sdd {
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHoliday(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
-		//<Name>Thanksgiving Day</Name>
-		//<SpecMthd>Fourth</SpecMthd>
-		//<DayOfWeek>Thursday</DayOfWeek>
-		//<Month>November</Month>
+    //<Name>Thanksgiving Day</Name>
+    //<SpecMthd>Fourth</SpecMthd>
+    //<DayOfWeek>Thursday</DayOfWeek>
+    //<Month>November</Month>
 
-		//<Name>Christmas Day</Name>
-		//<SpecMthd>Date</SpecMthd>
-		//<Month>December</Month>
-		//<Day>25</Day>
+    //<Name>Christmas Day</Name>
+    //<SpecMthd>Date</SpecMthd>
+    //<Month>December</Month>
+    //<Day>25</Day>
 
     boost::optional<openstudio::model::ModelObject> result;
 
     QDomElement nameElement = element.firstChildElement("Name");
     QDomElement specificationMethodElement = element.firstChildElement("SpecMthd");
-    BOOST_ASSERT(!nameElement.isNull());
-    BOOST_ASSERT(!specificationMethodElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!specificationMethodElement.isNull());
 
     if (specificationMethodElement.text() == "Date"){
       QDomElement monthElement = element.firstChildElement("Month");
       QDomElement dayElement = element.firstChildElement("Day");
-      BOOST_ASSERT(!monthElement.isNull());
-      BOOST_ASSERT(!dayElement.isNull());
+      OS_ASSERT(!monthElement.isNull());
+      OS_ASSERT(!dayElement.isNull());
 
       MonthOfYear monthOfYear(toString(monthElement.text()));
       unsigned day = dayElement.text().toUInt();
@@ -293,8 +293,8 @@ namespace sdd {
     }else{
       QDomElement dayOfWeekElement = element.firstChildElement("DayOfWeek");
       QDomElement monthElement = element.firstChildElement("Month");
-      BOOST_ASSERT(!dayOfWeekElement.isNull());
-      BOOST_ASSERT(!monthElement.isNull());
+      OS_ASSERT(!dayOfWeekElement.isNull());
+      OS_ASSERT(!monthElement.isNull());
 
       // fifth is treated equivalently to last
       std::string specificationMethod = toString(specificationMethodElement.text());

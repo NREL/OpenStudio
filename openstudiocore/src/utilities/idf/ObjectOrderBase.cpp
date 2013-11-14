@@ -141,7 +141,7 @@ bool ObjectOrderBase::less(IddObjectType left, IddObjectType right) const {
     return (left < right);
   }
   else {
-    BOOST_ASSERT(m_iddOrder);
+    OS_ASSERT(m_iddOrder);
     return (getIterator(left) < getIterator(right));
   }
 }
@@ -178,12 +178,12 @@ OptionalUnsigned ObjectOrderBase::indexInOrder(const IddObjectType& type) const 
 
 // assumes that m_iddOrder == true
 IddObjectTypeVector::iterator ObjectOrderBase::getIterator(const IddObjectType& type) {
-  BOOST_ASSERT(m_iddOrder);
+  OS_ASSERT(m_iddOrder);
   return std::find(m_iddOrder->begin(),m_iddOrder->end(),type);
 }
 
 IddObjectTypeVector::const_iterator ObjectOrderBase::getIterator(const IddObjectType& type) const {
-  BOOST_ASSERT(m_iddOrder);
+  OS_ASSERT(m_iddOrder);
   return std::find(m_iddOrder->begin(),m_iddOrder->end(),type);
 }
 

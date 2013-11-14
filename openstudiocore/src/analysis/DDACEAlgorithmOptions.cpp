@@ -24,6 +24,7 @@
 
 #include <utilities/math/Primes.hpp>
 
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
 #include <stdlib.h>
@@ -79,7 +80,7 @@ namespace detail {
 
   void DDACEAlgorithmOptions_Impl::setSeed(int value){
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {
@@ -89,12 +90,12 @@ namespace detail {
   }
 
   bool DDACEAlgorithmOptions_Impl::setSamples(int value) {
-	  if (value < 0) {
+    if (value < 0) {
       LOG(Warn,"Cannot set DDACEAlgorithmOptions samples to a value less than zero.");
       return false;
-	  }
+    }
     OptionalAttribute option;
-    if (option = getOption("samples")) {
+    if ((option = getOption("samples"))) {
       option->setValue(value);
     }
     else {
@@ -106,7 +107,7 @@ namespace detail {
 
   bool DDACEAlgorithmOptions_Impl::setSymbols(int value) {
     OptionalAttribute option;
-    if (option = getOption("symbols")) {
+    if ((option = getOption("symbols"))) {
       option->setValue(value);
     }
     else {
@@ -178,6 +179,25 @@ namespace detail {
 
   void DDACEAlgorithmOptions_Impl::clearSymbols() {
     clearOption("symbols");
+  }
+
+  QVariant DDACEAlgorithmOptions_Impl::toVariant() const {
+    QVariantMap map = AlgorithmOptions_Impl::toVariant().toMap();
+
+    map["ddace_algorithm_type"] = toQString(algorithmType().valueName());
+
+    return QVariant(map);
+  }
+
+  DDACEAlgorithmOptions DDACEAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return DDACEAlgorithmOptions(map["ddace_algorithm_type"].toString().toStdString(),
+                                 attributes);
   }
 
 } // detail

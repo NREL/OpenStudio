@@ -20,6 +20,8 @@
 #include <analysis/HistogramPointDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -89,7 +91,7 @@ bool HistogramPointDistribution::setCounts(const std::vector<double>& value) {
 HistogramPointDistribution::HistogramPointDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == HistogramPointDistribution::type());
+  OS_ASSERT(type() == HistogramPointDistribution::type());
 }
 
 } // analysis

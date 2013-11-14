@@ -249,7 +249,7 @@ void OSItem::createLayout()
   bool isConnected = false;
   isConnected = connect(m_removeButton,SIGNAL(clicked()),
                         this,SLOT(onRemoveClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void OSItem::setAttributes(Type type)
@@ -268,7 +268,7 @@ void OSItem::setAttributes(Type type)
       break;
     default:
       ///! should never get here
-      BOOST_ASSERT(false);
+      OS_ASSERT(false);
       break;
   }
 }
@@ -379,7 +379,7 @@ void OSItem::setLabelPixmap(QLabel * label, const QPixmap & pixmap)
   label->setPixmap(pixmap);
   w = label->pixmap()->size().width();
   h = label->pixmap()->size().height();
-  BOOST_ASSERT(w!=-1 && h!=-1); 
+  OS_ASSERT(w!=-1 && h!=-1); 
   label->setFixedSize(w,h);
 }
 
@@ -571,7 +571,7 @@ void OSItem::mouseMoveEvent(QMouseEvent *event)
   mimeData->setText(mimeDataText);
 
   QWidget* parent = this->parentWidget();
-  BOOST_ASSERT(parent);
+  OS_ASSERT(parent);
 
   // parent the QDrag on this parent instead of this, in case this item is deleted during drag
   QDrag *drag = new QDrag(parent);
@@ -606,7 +606,7 @@ void OSItem::dropEvent(QDropEvent *event)
   event->accept();
   if(event->proposedAction() == Qt::CopyAction){
     const QMimeData* mimeData =event->mimeData();
-    BOOST_ASSERT(mimeData);
+    OS_ASSERT(mimeData);
     OSItemId replacementItemId(mimeData);
     emit itemReplacementDropped(this, replacementItemId);
   }

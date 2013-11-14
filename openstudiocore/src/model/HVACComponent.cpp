@@ -21,6 +21,8 @@
 #include <model/HVACComponent_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
+#include <model/StraightComponent.hpp>
+#include <model/StraightComponent_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/PlantLoop.hpp>
@@ -29,6 +31,8 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+
+#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 namespace model {
@@ -219,6 +223,10 @@ namespace detail {
     {
       return false;
     }
+    else if( containingStraightComponent() )
+    {
+      return false;
+    }    
     else
     {
       return true;
@@ -278,6 +286,11 @@ namespace detail {
   {
     return boost::none;
   }
+  
+  boost::optional<StraightComponent> HVACComponent_Impl::containingStraightComponent() const
+  {
+    return boost::none;
+  }
 
 } // detail
 
@@ -288,7 +301,7 @@ HVACComponent::HVACComponent(boost::shared_ptr<detail::HVACComponent_Impl> p)
 HVACComponent::HVACComponent(IddObjectType type,const Model& model)
   : ParentObject(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::HVACComponent_Impl>());
+  OS_ASSERT(getImpl<detail::HVACComponent_Impl>());
 }     
 
 boost::optional<Loop> HVACComponent::loop() const
@@ -349,6 +362,11 @@ boost::optional<HVACComponent> HVACComponent::containingHVACComponent() const
 boost::optional<ZoneHVACComponent> HVACComponent::containingZoneHVACComponent() const
 {
   return getImpl<detail::HVACComponent_Impl>()->containingZoneHVACComponent();
+}
+
+boost::optional<StraightComponent> HVACComponent::containingStraightComponent() const
+{
+  return getImpl<detail::HVACComponent_Impl>()->containingStraightComponent();
 }
 
 } // model

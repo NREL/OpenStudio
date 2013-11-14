@@ -20,7 +20,12 @@
 #include <analysis/PSUADEDaceAlgorithmOptions.hpp>
 #include <analysis/PSUADEDaceAlgorithmOptions_Impl.hpp>
 
+#include <runmanager/lib/JSON.hpp>
+
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
+
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -66,12 +71,12 @@ namespace detail {
   }
 
   bool PSUADEDaceAlgorithmOptions_Impl::setSeed(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set PSUADEDaceAlgorithmOptions seed to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
-    if (option = getOption("seed")) {
+    if ((option = getOption("seed"))) {
       option->setValue(value);
     }
     else {
@@ -82,12 +87,12 @@ namespace detail {
   }
 
   bool PSUADEDaceAlgorithmOptions_Impl::setSamples(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set PSUADEDaceAlgorithmOptions samples to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
-    if (option = getOption("samples")) {
+    if ((option = getOption("samples"))) {
       option->setValue(value);
     }
     else {
@@ -98,12 +103,12 @@ namespace detail {
   }
 
   bool PSUADEDaceAlgorithmOptions_Impl::setPartitions(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set PSUADEDaceAlgorithmOptions partitions to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
-    if (option = getOption("partitions")) {
+    if ((option = getOption("partitions"))) {
       option->setValue(value);
     }
     else {
@@ -123,6 +128,16 @@ namespace detail {
 
   void PSUADEDaceAlgorithmOptions_Impl::clearPartitions() {
     clearOption("partitions");
+  }
+
+  PSUADEDaceAlgorithmOptions PSUADEDaceAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                          const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return PSUADEDaceAlgorithmOptions(attributes);
   }
 
 } // detail

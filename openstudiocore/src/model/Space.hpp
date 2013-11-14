@@ -239,6 +239,10 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does not include space multiplier in calculation.
   double exteriorArea() const;
 
+  /// Returns the exterior wall area (gross area of surfaces with outdoor boundary condition) (m^2).
+  /// Does not include space multiplier in calculation.
+  double exteriorWallArea() const;
+
   /// Returns the volume (m^3).
   /// Does not include space multiplier in calculation.
   double volume() const;
@@ -495,6 +499,9 @@ class MODEL_API Space : public PlanarSurfaceGroup {
 
   /** Match surfaces and sub surfaces in this space with those in the other. */
   void matchSurfaces(Space& other);
+
+  /** Intersect surfaces in this space with those in the other. */
+  void intersectSurfaces(Space& other);
 
   /** Find surfaces within angular range, specified in degrees and in the site coordinate system, an unset optional means no limit.
       Values for degrees from North are between 0 and 360 and for degrees tilt they are between 0 and 180.

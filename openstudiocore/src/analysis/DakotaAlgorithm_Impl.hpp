@@ -41,7 +41,6 @@ namespace detail {
   /** DakotaAlgorithm_Impl is a Algorithm_Impl that is the implementation class for
    *  DakotaAlgorithm. */
   class ANALYSIS_API DakotaAlgorithm_Impl : public Algorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -103,7 +102,7 @@ namespace detail {
                                                            const DakotaParametersFile& params);
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual void reset();
@@ -116,6 +115,8 @@ namespace detail {
 
     /** Sets the RunManager job. */
     void setJob(const runmanager::Job& job);
+
+    virtual QVariant toVariant() const;
 
     //@}
    private:

@@ -77,7 +77,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
 
   m_opticalDataTemperature = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_opticalDataTemperature, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_opticalDataTemperature,row++,0,1,3);
 
   // Window ThermochromicGlazing Glazing Name

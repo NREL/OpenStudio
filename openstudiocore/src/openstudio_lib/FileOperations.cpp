@@ -23,6 +23,7 @@
 #include <analysisdriver/SimpleProject.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
 
+#include <analysis/Analysis.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 
@@ -237,7 +238,7 @@ namespace openstudio {
       QDir modelTempDir(path);
       LOG_FREE(Info, "createModelTempDir", "Creating directory '" << toString(modelTempDir.path()) << "'");
       bool test = modelTempDir.mkpath(modelTempDir.path());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
 
       result = toPath(path);
 
@@ -246,7 +247,7 @@ namespace openstudio {
 
     delete tempFile;
      
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
 
     return openstudio::path();
   } 
@@ -550,7 +551,7 @@ namespace openstudio {
         openstudio::runmanager::ConfigOptions co(true);
 
         analysis::Problem prob = p->analysis().problem();
-        analysisdriver::AnalysisRunOptions runOptions = p->standardRunOptions();
+        analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
         if (useRadianceForDaylightingCalculations)
@@ -600,7 +601,7 @@ namespace openstudio {
         if (parent){
           bool isConnected = itr->connect(SIGNAL(outputDataAdded(const openstudio::UUID &, const std::string &)), 
                                           parent, SLOT(outputDataAdded(const openstudio::UUID &, const std::string &)));
-          BOOST_ASSERT(isConnected);
+          OS_ASSERT(isConnected);
         }
 
         if (!itr->parent())
@@ -616,7 +617,7 @@ namespace openstudio {
 
           if (parent){         
             bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), parent, SLOT(treeChanged(const openstudio::UUID &)));
-            BOOST_ASSERT(isConnected);
+            OS_ASSERT(isConnected);
           }
         }
       }

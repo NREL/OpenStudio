@@ -17,22 +17,22 @@
 	</tags>
 	<attributes>
 		<attribute>
-			<name>MeasureType</name>
+			<name>Measure Type</name>
 			<value>ModelMeasure</value>
 			<datatype>string</datatype>
 		</attribute>
 		<attribute>
-			<name>MeasureFunction</name>
+			<name>Measure Function</name>
 			<value>Measure</value>
 			<datatype>string</datatype>
 		</attribute>
 		<attribute>
-			<name>RequiresEnergyPlusResults</name>
+			<name>Requires EnergyPlus Results</name>
 			<value>false</value>
 			<datatype>boolean</datatype>
 		</attribute>
 		<attribute>
-			<name>UsesSketchUpAPI</name>
+			<name>Uses SketchUp API</name>
 			<value>false</value>
 			<datatype>boolean</datatype>
 		</attribute>

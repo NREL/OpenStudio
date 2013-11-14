@@ -11,11 +11,12 @@
   #include <utilities/geometry/Geometry.hpp>
   #include <utilities/geometry/Transformation.hpp>
   #include <utilities/geometry/BoundingBox.hpp>
+  #include <utilities/geometry/Intersection.hpp>
   
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
-  #include <utilities/units/CelciusUnit.hpp>
+  #include <utilities/units/CelsiusUnit.hpp>
   #include <utilities/units/CFMUnit.hpp>
   #include <utilities/units/FahrenheitUnit.hpp>
   #include <utilities/units/GPDUnit.hpp>
@@ -53,5 +54,6 @@
 %include <utilities/geometry/Geometry.hpp>
 %include <utilities/geometry/Transformation.hpp>
 %include <utilities/geometry/BoundingBox.hpp>
+%include <utilities/geometry/Intersection.hpp>
 
 #endif //UTILITIES_GEOMETRY_GEOMETRY_I 

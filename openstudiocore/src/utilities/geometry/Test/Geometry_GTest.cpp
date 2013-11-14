@@ -444,3 +444,47 @@ TEST_F(GeometryFixture, RemoveColinear)
   EXPECT_TRUE(pointEqual(Point3d(2,2,0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(0,2,0), testPoints[3]));
 }
+/*
+TEST_F(GeometryFixture, RemoveSpikes)
+{
+  Point3dVector points;
+  Point3dVector resultPoints;
+  Point3dVector testPoints;
+
+  points.clear();
+  points.push_back(Point3d(3,2,0));
+  points.push_back(Point3d(2,2,0));
+  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(3,0,0));
+
+  resultPoints.clear();
+  resultPoints.push_back(Point3d(3,2,0));
+  resultPoints.push_back(Point3d(2,2,0));
+  resultPoints.push_back(Point3d(0,0,0));
+  resultPoints.push_back(Point3d(3,0,0));
+
+  testPoints = removeSpikes(points);
+  ASSERT_EQ(4u, testPoints.size()) << testPoints;
+  EXPECT_TRUE(circularEqual(resultPoints, testPoints));
+
+  points.clear();
+  points.push_back(Point3d(5,0,0)); // spike
+  points.push_back(Point3d(3,2,0));
+  points.push_back(Point3d(2,2,0));
+  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(5,0,0)); // spike
+  points.push_back(Point3d(3,0,0));
+  points.push_back(Point3d(3,2,0));
+
+  resultPoints.clear();
+  resultPoints.push_back(Point3d(3,2,0));
+  resultPoints.push_back(Point3d(2,2,0));
+  resultPoints.push_back(Point3d(0,0,0));
+  resultPoints.push_back(Point3d(3,0,0));
+  resultPoints.push_back(Point3d(3,2,0));
+
+  testPoints = removeSpikes(points);
+  ASSERT_EQ(5u, testPoints.size()) << testPoints;
+  EXPECT_TRUE(circularEqual(resultPoints, testPoints));
+}
+*/

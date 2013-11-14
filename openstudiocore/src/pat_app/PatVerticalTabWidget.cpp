@@ -21,6 +21,8 @@
 
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
+#include <utilities/core/Assert.hpp>
+
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QKeySequence>
@@ -48,7 +50,7 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
 
   isConnected = connect(m_buttonGroup,SIGNAL(buttonClicked(int)),
                         this,SLOT(on_buttonClicked(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * mainLayout = new QHBoxLayout();
 
@@ -76,11 +78,11 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
 
   QShortcut* nextTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Tab), this);
   isConnected = connect(nextTabShortcut, SIGNAL(activated()), this, SLOT(nextTab()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QShortcut* previousTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab), this);
   isConnected = connect(previousTabShortcut, SIGNAL(activated()), this, SLOT(previousTab()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void PatVerticalTabWidget::addTab( int id,
@@ -117,8 +119,8 @@ void PatVerticalTabWidget::addTab( int id,
 
 void PatVerticalTabWidget::enableTab(bool enable, int index)
 {
-  Q_ASSERT(index >= 0);
-  Q_ASSERT(index < (int)m_buttonGroup->buttons().size());
+  OS_ASSERT(index >= 0);
+  OS_ASSERT(index < (int)m_buttonGroup->buttons().size());
 
   // Ignore disabling disabled tabs, and enabling enabled tabs
   if (enable == m_buttonGroup->button(index)->isEnabled())
@@ -223,15 +225,14 @@ void PatVerticalTabWidget::refreshIcons()
       imagePath = m_unSelectedPixmaps[i];
     }
     else if(!button->isEnabled() && button->isChecked()){
-      // you should not be here
-      Q_ASSERT(false);
+      imagePath = m_selectedPixmaps[i];
     }
     else if(!button->isEnabled() && !button->isChecked()){
       imagePath = m_disabledPixmaps[i];
     }
     else{
       // you should not be here
-      Q_ASSERT(false);
+      OS_ASSERT(false);
     }
 
     QString style;

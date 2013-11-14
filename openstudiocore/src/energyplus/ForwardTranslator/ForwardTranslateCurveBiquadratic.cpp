@@ -42,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveBiquadratic(
   OptionalString s;
   OptionalDouble d;
 
-  if (s = modelObject.name()) {
+  if ((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
@@ -56,10 +56,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveBiquadratic(
   idfObject.setDouble(Curve_BiquadraticFields::MaximumValueofx,modelObject.maximumValueofx());
   idfObject.setDouble(Curve_BiquadraticFields::MinimumValueofy,modelObject.minimumValueofy());
   idfObject.setDouble(Curve_BiquadraticFields::MaximumValueofy,modelObject.maximumValueofy());
-  if (d = modelObject.minimumCurveOutput()) {
+  if ((d = modelObject.minimumCurveOutput())) {
     idfObject.setDouble(Curve_BiquadraticFields::MinimumCurveOutput,*d);
   }
-  if (d = modelObject.maximumCurveOutput()) {
+  if ((d = modelObject.maximumCurveOutput())) {
     idfObject.setDouble(Curve_BiquadraticFields::MaximumCurveOutput,*d);
   }
   if (!modelObject.isInputUnitTypeforXDefaulted()) {

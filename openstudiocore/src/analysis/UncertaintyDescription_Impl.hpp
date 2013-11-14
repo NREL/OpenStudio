@@ -57,7 +57,7 @@ namespace detail {
 
     bool isSet(const std::string& attributeName) const;
 
-   std::vector<AttributeDescription> attributeDescriptions() const;
+    std::vector<AttributeDescription> attributeDescriptions() const;
 
     AttributeDescription getAttributeDescription(const std::string& attributeName) const;
 

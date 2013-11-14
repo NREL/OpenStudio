@@ -26,13 +26,13 @@
 namespace openstudio {
 namespace analysis {
 
+class DDACEAlgorithm;
 class DDACEAlgorithmOptions;
 
 namespace detail {
 
   /** DDACEAlgorithm_Impl is a DakotaAlgorithm_Impl that is the implementation class for DDACEAlgorithm.*/
   class ANALYSIS_API DDACEAlgorithm_Impl : public DakotaAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -82,6 +82,14 @@ namespace detail {
     //@{
 
     DDACEAlgorithmOptions ddaceAlgorithmOptions() const;
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static DDACEAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

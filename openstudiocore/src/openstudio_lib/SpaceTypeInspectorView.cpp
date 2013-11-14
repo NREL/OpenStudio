@@ -610,7 +610,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
                         SIGNAL(itemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,3,0,1,2);
 
@@ -635,7 +635,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
                         SIGNAL(itemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,4,0,1,2);
 
@@ -660,7 +660,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
                         SIGNAL(itemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,5,0,1,2);
 

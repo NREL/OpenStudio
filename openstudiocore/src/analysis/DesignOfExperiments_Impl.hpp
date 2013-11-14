@@ -34,7 +34,6 @@ namespace detail {
 
   /** DesignOfExperiments_Impl is a Algorithm_Impl that is the implementation class for DesignOfExperiments.*/
   class ANALYSIS_API DesignOfExperiments_Impl : public OpenStudioAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -76,6 +75,14 @@ namespace detail {
     //@{
 
     DesignOfExperimentsOptions designOfExperimentsOptions() const;
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static DesignOfExperiments fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

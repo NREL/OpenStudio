@@ -26,13 +26,13 @@
 namespace openstudio {
 namespace analysis {
 
+class PSUADEDaceAlgorithm;
 class PSUADEDaceAlgorithmOptions;
 
 namespace detail {
 
   /** PSUADEDaceAlgorithm_Impl is a DakotaAlgorithm_Impl that is the implementation class for PSUADEDaceAlgorithm.*/
   class ANALYSIS_API PSUADEDaceAlgorithm_Impl : public DakotaAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -77,9 +77,18 @@ namespace detail {
     virtual std::string dakotaInFileDescription() const;
 
     //@}
+    /** @name Getters and Setters */
     //@{
 
     PSUADEDaceAlgorithmOptions psuadedaceAlgorithmOptions() const;
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static PSUADEDaceAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

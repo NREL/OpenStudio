@@ -3,6 +3,7 @@ $OpenStudio_MinorVersion = "${CMAKE_VERSION_MINOR}"
 $OpenStudio_PatchVersion = "${CMAKE_VERSION_PATCH}"
 $OpenStudio_BuildVersion = "${CMAKE_VERSION_BUILD}"
 $OpenStudio_EnergyPlusVersion = "${ENERGYPLUS_VERSION}"
+$OpenStudio_RubyExe = "${RUBY_EXECUTABLE}"
 
 $OpenStudio_BinaryDir = "${CMAKE_BINARY_DIR}/Products/"
 $OpenStudio_RubyBinaryDir = "${CMAKE_BINARY_DIR}/Products/ruby/"

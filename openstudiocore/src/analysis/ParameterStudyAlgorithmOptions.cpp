@@ -22,6 +22,8 @@
 
 #include <analysis/Problem.hpp>
 
+#include <utilities/core/Json.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -118,12 +120,12 @@ namespace detail {
   }
 
   bool ParameterStudyAlgorithmOptions_Impl::setNumSteps(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set ParameterStudyAlgorithmOptions numSteps to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
-    if (option = getOption("numSteps")) {
+    if ((option = getOption("numSteps"))) {
       option->setValue(value);
     }
     else {
@@ -148,7 +150,7 @@ namespace detail {
     if (minValue < 0) {
       LOG(Warn,"Cannot set ParameterStudyAlgorithmOptions stepsPerVariable to a value less than zero.");
       return false;
-	  }
+    }
     Attribute option = createAttributeFromVector("stepsPerVariable",value);
     if (OptionalAttribute currentOption = getOption("stepsPerVariable")) {
       currentOption->setValue(option.valueAsAttributeVector());
@@ -164,7 +166,7 @@ namespace detail {
     if (minValue < 0) {
       LOG(Warn,"Cannot set ParameterStudyAlgorithmOptions partitions to a value less than zero.");
       return false;
-	  }
+    }
     Attribute option = createAttributeFromVector("partitions",value);
     if (OptionalAttribute currentOption = getOption("partitions")) {
       currentOption->setValue(option.valueAsAttributeVector());
@@ -197,6 +199,25 @@ namespace detail {
 
   void ParameterStudyAlgorithmOptions_Impl::clearPartitions() {
     clearOption("partitions");
+  }
+
+  QVariant ParameterStudyAlgorithmOptions_Impl::toVariant() const {
+    QVariantMap map = AlgorithmOptions_Impl::toVariant().toMap();
+
+    map["parameter_study_algorithm_type"] = toQString(algorithmType().valueName());
+
+    return QVariant(map);
+  }
+
+  ParameterStudyAlgorithmOptions ParameterStudyAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return ParameterStudyAlgorithmOptions(map["parameter_study_algorithm_type"].toString().toStdString(),
+                                          attributes);
   }
 
 } // detail

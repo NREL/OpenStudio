@@ -20,6 +20,8 @@
 #include <analysis/LoguniformDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -66,7 +68,7 @@ void LoguniformDistribution::setUpperBound(double value) {
 LoguniformDistribution::LoguniformDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == LoguniformDistribution::type());
+  OS_ASSERT(type() == LoguniformDistribution::type());
 }
 
 } // analysis

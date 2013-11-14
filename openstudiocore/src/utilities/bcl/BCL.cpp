@@ -18,9 +18,14 @@
 **********************************************************************/
 
 #include <utilities/bcl/BCL.hpp>
-#include <utilities/data/Attribute.hpp>
+
+#include <utilities/bcl/LocalBCL.hpp>
+#include <utilities/bcl/RemoteBCL.hpp>
+#include <utilities/bcl/BCLComponent.hpp>
+#include <utilities/bcl/BCLMeasure.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/data/Attribute.hpp>
 
 #include <QDomElement>
 
@@ -34,9 +39,9 @@ namespace openstudio{
     QDomElement labelElement = facetElement.firstChildElement("label");
     QDomElement itemElement = facetElement.firstChildElement("item");
 
-    BOOST_ASSERT(!fieldElement.isNull());
-    BOOST_ASSERT(!labelElement.isNull());
-    BOOST_ASSERT(!itemElement.isNull());
+    OS_ASSERT(!fieldElement.isNull());
+    OS_ASSERT(!labelElement.isNull());
+    OS_ASSERT(!itemElement.isNull());
 
     m_field = fieldElement.firstChild().nodeValue().toStdString();
   
@@ -72,9 +77,9 @@ namespace openstudio{
     QDomElement tidElement = taxonomyElement.firstChildElement("tid");
     QDomElement numResultsElement = taxonomyElement.firstChildElement("count");
 
-    BOOST_ASSERT(!nameElement.isNull());
-    BOOST_ASSERT(!tidElement.isNull());
-    BOOST_ASSERT(!numResultsElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!tidElement.isNull());
+    OS_ASSERT(!numResultsElement.isNull());
 
     m_name = nameElement.firstChild().nodeValue().toStdString();
   
@@ -102,7 +107,7 @@ namespace openstudio{
   {
     QDomElement numResultsElement = resultElement.firstChildElement("result_count");
 
-    BOOST_ASSERT(!numResultsElement.isNull());
+    OS_ASSERT(!numResultsElement.isNull());
 
     m_numResults = numResultsElement.firstChild().nodeValue().toUInt();
 
@@ -351,9 +356,9 @@ namespace openstudio{
     QDomElement filesElement = componentElement.firstChildElement("files");
     QDomElement costsElement = componentElement.firstChildElement("costs");
 
-    BOOST_ASSERT(!nameElement.isNull());
-    BOOST_ASSERT(!uidElement.isNull());
-    BOOST_ASSERT(!versionIdElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!uidElement.isNull());
+    OS_ASSERT(!versionIdElement.isNull());
     
     QString name = nameElement.firstChild().nodeValue().replace('_', ' ');
     while (name.indexOf("  ") != -1) {
@@ -583,6 +588,53 @@ namespace openstudio{
 
   BCL::~BCL()
   {
+  }
+
+
+  boost::optional<BCLComponent> getComponent(const std::string& uid,
+                                             const std::string& versionId)
+  {
+    OptionalBCLComponent localComponent = LocalBCL::instance().getComponent(uid,versionId);
+
+    // if versionId specified, done if localComponent exists
+    if (!versionId.empty() && localComponent) {
+      return localComponent;
+    }
+
+    // versionId.empty() or !localComponent
+    RemoteBCL remoteBCL;
+    OptionalBCLComponent remoteComponent = remoteBCL.getComponent(uid,versionId);
+    if (remoteComponent) {
+      // RemoteBCL class handles updating the LocalBCL
+      localComponent = LocalBCL::instance().getComponent(uid,versionId);
+      OS_ASSERT(localComponent);
+      OS_ASSERT(localComponent.get() == remoteComponent.get());
+    }
+
+    return localComponent;
+  }
+
+  boost::optional<BCLMeasure> getMeasure(const std::string& uid,
+                                         const std::string& versionId)
+  {
+    OptionalBCLMeasure localMeasure = LocalBCL::instance().getMeasure(uid,versionId);
+
+    // if versionId specified, done if localMeasure exists
+    if (!versionId.empty() && localMeasure) {
+      return localMeasure;
+    }
+
+    // versionId.empty() or !localMeasure
+    RemoteBCL remoteBCL;
+    OptionalBCLMeasure remoteMeasure = remoteBCL.getMeasure(uid,versionId);
+    if (remoteMeasure) {
+      // RemoteBCL class handles updating the LocalBCL
+      localMeasure = LocalBCL::instance().getMeasure(uid,versionId);
+      OS_ASSERT(localMeasure);
+      OS_ASSERT(localMeasure.get() == remoteMeasure.get());
+    }
+
+    return localMeasure;
   }
 
 } // openstudio

@@ -34,7 +34,6 @@ namespace detail {
 
   class MODEL_API ModelPartitionMaterial_Impl : public Material_Impl
   {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

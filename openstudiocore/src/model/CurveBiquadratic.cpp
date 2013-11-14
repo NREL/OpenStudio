@@ -37,7 +37,7 @@ namespace detail {
   CurveBiquadratic_Impl::CurveBiquadratic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveBiquadratic::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveBiquadratic::iddObjectType());
   }
 
   CurveBiquadratic_Impl::CurveBiquadratic_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                                bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveBiquadratic::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveBiquadratic::iddObjectType());
   }
 
   CurveBiquadratic_Impl::CurveBiquadratic_Impl(const CurveBiquadratic_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveBiquadratic_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 2u);
+    OS_ASSERT(x.size() == 2u);
     double result = coefficient1Constant();
     result += coefficient2x() * x[0];
     result += coefficient3xPOW2() * pow(x[0],2);
@@ -83,61 +83,61 @@ namespace detail {
 
   double CurveBiquadratic_Impl::coefficient1Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::Coefficient1Constant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::coefficient2x() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::Coefficient2x,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::coefficient3xPOW2() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::Coefficient3x_POW_2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::coefficient4y() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::Coefficient4y,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::coefficient5yPOW2() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::Coefficient5y_POW_2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::coefficient6xTIMESY() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::minimumValueofy() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::MinimumValueofy,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveBiquadratic_Impl::maximumValueofy() const {
     boost::optional<double> value = getDouble(OS_Curve_BiquadraticFields::MaximumValueofy,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -151,7 +151,7 @@ namespace detail {
 
   std::string CurveBiquadratic_Impl::inputUnitTypeforX() const {
     boost::optional<std::string> value = getString(OS_Curve_BiquadraticFields::InputUnitTypeforX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -161,7 +161,7 @@ namespace detail {
 
   std::string CurveBiquadratic_Impl::inputUnitTypeforY() const {
     boost::optional<std::string> value = getString(OS_Curve_BiquadraticFields::InputUnitTypeforY,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -171,7 +171,7 @@ namespace detail {
 
   std::string CurveBiquadratic_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_BiquadraticFields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -182,61 +182,61 @@ namespace detail {
   void CurveBiquadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::Coefficient1Constant, coefficient1Constant);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::Coefficient2x, coefficient2x);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient4y(double coefficient4y) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::Coefficient4y, coefficient4y);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::Coefficient5y_POW_2, coefficient5yPOW2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y, coefficient6xTIMESY);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofy, minimumValueofy);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = false;
     result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofy, maximumValueofy);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -246,12 +246,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_BiquadraticFields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_BiquadraticFields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -261,12 +261,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_BiquadraticFields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_BiquadraticFields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveBiquadratic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
@@ -277,7 +277,7 @@ namespace detail {
 
   void CurveBiquadratic_Impl::resetInputUnitTypeforX() {
     bool result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveBiquadratic_Impl::setInputUnitTypeforY(std::string inputUnitTypeforY) {
@@ -288,7 +288,7 @@ namespace detail {
 
   void CurveBiquadratic_Impl::resetInputUnitTypeforY() {
     bool result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforY, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveBiquadratic_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -299,7 +299,7 @@ namespace detail {
 
   void CurveBiquadratic_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_BiquadraticFields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -307,7 +307,7 @@ namespace detail {
 CurveBiquadratic::CurveBiquadratic(const Model& model)
   : Curve(CurveBiquadratic::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveBiquadratic_Impl>());
+  OS_ASSERT(getImpl<detail::CurveBiquadratic_Impl>());
   setDouble(OS_Curve_BiquadraticFields::Coefficient1Constant,0.0);
   setDouble(OS_Curve_BiquadraticFields::Coefficient2x,0.0);
   setDouble(OS_Curve_BiquadraticFields::Coefficient3x_POW_2,0.0);

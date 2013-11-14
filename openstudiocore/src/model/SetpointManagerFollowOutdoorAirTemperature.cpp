@@ -30,6 +30,8 @@
 
 #include <utilities/idd/OS_SetpointManager_FollowOutdoorAirTemperature_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 namespace model {
@@ -40,14 +42,14 @@ namespace detail{
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : HVACComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
   }
 
   SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
     : HVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
   }
 
   SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
@@ -102,6 +104,8 @@ namespace detail{
     node.removeSetpointManagerFollowOutdoorAirTemperature();
 
     node.removeSetpointManagerOutdoorAirReset();
+
+    node.removeSetpointManagerWarmest();
 
     if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
     {
@@ -236,7 +240,7 @@ namespace detail{
 SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(const Model& model)
   : HVACComponent(SetpointManagerFollowOutdoorAirTemperature::iddObjectType(),model) 
 {
-  BOOST_ASSERT(getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>());
+  OS_ASSERT(getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>());
 
   setControlVariable("Temperature");
   setReferenceTemperatureType("OutdoorAirWetBulb");

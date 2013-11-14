@@ -1,0 +1,555 @@
+######################################################################
+#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  All rights reserved.
+#  
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+#  
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#  
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+######################################################################
+
+######################################################################
+# == Synopsis
+#
+#   Uses the aws-sdk gem to communicate with AWS
+#
+# == Usage
+#
+#  ruby aws.rb access_key secret_key us-east-1 EC2 launch_server "{\"instance_type\":\"t1.micro\"}"
+#
+#  ARGV[0] - Access Key
+#  ARGV[1] - Secret Key
+#  ARGV[2] - Region
+#  ARGV[3] - Service (e.g. "EC2" or "CloudWatch")
+#  ARGV[4] - Command (e.g. "launch_server")
+#  ARGV[5] - Optional json with parameters associated with command
+#
+######################################################################
+
+require 'aws-sdk'
+require 'json'
+require 'logger'
+require 'net/http'
+require 'net/scp'
+require 'net/ssh'
+require 'tempfile'
+require 'time'
+
+OPENSTUDIO_VERSION='${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}'
+
+def error(code, msg)
+  puts ({:error => {:code => code, :message => msg},
+         :arguments => ARGV[2..-1]}.to_json)
+  exit(1)
+end
+
+if ARGV.length < 5
+  error(-1, 'Invalid number of args')
+end
+
+if ARGV[0].empty? || ARGV[1].empty?
+  error(401, 'Missing authentication arguments')
+end
+
+if ARGV[2].empty?
+  error(-1, 'Missing region argument')
+end
+
+if ARGV[3].empty?
+  error(-1, 'Missing service argument')
+end
+
+if ARGV[4].empty?
+  error(-1, 'Missing command argument')
+end
+
+AWS.config(
+    :access_key_id => ARGV[0],
+    :secret_access_key => ARGV[1],
+    :region => ARGV[2],
+    :ssl_verify_peer => false
+)
+
+if ARGV[3] == 'EC2'
+  @aws = AWS::EC2.new
+elsif ARGV[3] == 'CloudWatch'
+  @aws = AWS::CloudWatch.new
+else
+  error(-1, "Unrecognized AWS service: #{ARGV[3]}")
+end
+
+if ARGV.length == 6
+  @params = JSON.parse(ARGV[5])
+end
+
+resp = Net::HTTP.get_response('developer.nrel.gov','/downloads/buildings/openstudio/rsrc/amis.json')
+if resp.code == '200'
+  result = JSON.parse(resp.body)
+  version = result.has_key?(OPENSTUDIO_VERSION) ? OPENSTUDIO_VERSION : 'default'
+
+  @server_image_id = result[version]['server']
+  if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
+    @worker_image_id = result[version]['cc2worker']
+  else
+    @worker_image_id = result[version]['worker']
+  end
+else
+  error(resp.code, 'Unable to download AMI IDs')
+end
+
+def create_struct(instance, procs)
+  instance_struct = Struct.new(:instance, :id, :ip, :dns, :procs)
+  return instance_struct.new(instance, instance.instance_id, instance.ip_address, instance.dns_name, procs)
+end
+
+def find_processors(instance)
+  processors = 1
+  case instance
+    when 'cc2.8xlarge'
+      processors = 16
+    when 'c1.xlarge'
+      processors = 8
+    when 'm2.4xlarge'
+      processors = 8
+    when 'm2.2xlarge'
+      processors = 4
+    when 'm2.xlarge'
+      processors = 2
+    when 'm1.xlarge'
+      processors = 4
+    when 'm1.large'
+      processors = 2
+    when 'm3.xlarge'
+      processors = 2
+    when 'm3.2xlarge'
+      processors = 4
+  end
+
+  return processors
+end
+
+def launch_server
+  user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/server_script.sh')
+  @logger.info("server user_data #{user_data.inspect}")
+  @server = @aws.instances.create(:image_id => @server_image_id,
+                                  :key_pair => @key_pair,
+                                  :security_groups => @group,
+                                  :user_data => user_data,
+                                  :instance_type => @server_instance_type)
+  @server.add_tag('Name', :value => "OpenStudio-Server V#{OPENSTUDIO_VERSION}")
+  sleep 5 while @server.status == :pending
+  if @server.status != :running
+    error(-1, "Server status: #{@server.status}")
+  end
+
+  processors = find_processors(@server_instance_type)
+  #processors = send_command(@server.ip_address, 'nproc | tr -d "\n"')
+  #processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
+  @server = create_struct(@server, processors)
+end
+
+def launch_workers(num, server_ip)
+  user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/worker_script.sh.template')
+  user_data.gsub!(/SERVER_IP/, server_ip)
+  user_data.gsub!(/SERVER_HOSTNAME/, 'master')
+  user_data.gsub!(/SERVER_ALIAS/, '')
+  @logger.info("worker user_data #{user_data.inspect}")
+  instances = []
+  num.times do
+    worker = @aws.instances.create(:image_id => @worker_image_id,
+                                   :key_pair => @key_pair,
+                                   :security_groups => @group,
+                                   :user_data => user_data,
+                                   :instance_type => @worker_instance_type)
+    worker.add_tag('Name', :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
+    instances.push(worker)
+  end
+  sleep 5 while instances.any? { |instance| instance.status == :pending }
+  if instances.any? { |instance| instance.status != :running }
+    error(-1, "Worker status: Not running")
+  end
+
+  # todo: fix this - sometimes returns nil
+  processors = find_processors(@worker_instance_type)
+  #processors = send_command(instances[0].ip_address, 'nproc | tr -d "\n"')
+  #processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
+  instances.each { |instance| @workers.push(create_struct(instance, processors)) }
+end
+
+def upload_file(host, local_path, remote_path)
+  retries = 0
+  begin
+    Net::SCP.start(host, 'ubuntu', :key_data => [@private_key]) do |scp|
+      scp.upload! local_path, remote_path
+    end
+  rescue SystemCallError, Timeout::Error => e
+    # port 22 might not be available immediately after the instance finishes launching
+    return if retries == 5
+    retries += 1
+    sleep 1
+    retry
+  rescue
+    # Unknown upload error, retry
+    return if retries == 5
+    retries += 1
+    sleep 1
+    retry
+  end
+end
+
+
+def send_command(host, command)
+  #retries = 0
+  begin
+    output = ''
+    Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+      response = ssh.exec!(command)
+      output += response if !response.nil?
+    end
+    return output
+  rescue Net::SSH::HostKeyMismatch => e
+    e.remember_host!
+    # key mismatch, retry
+    #return if retries == 5
+    #retries += 1
+    sleep 1
+    retry
+  rescue Net::SSH::AuthenticationFailed
+    error(-1, "Incorrect private key")
+  rescue SystemCallError, Timeout::Error => e
+    # port 22 might not be available immediately after the instance finishes launching
+    #return if retries == 5
+    #retries += 1
+    sleep 1
+    retry
+  rescue Exception => e
+    puts e.message
+    puts e.backtrace.inspect
+  end
+end
+
+#======================= send command ======================#
+# Send a command through SSH Shell to an instance.
+# Need to pass instance object and the command as a string.
+def shell_command(host, command)
+  begin
+    @logger.info("ssh_command #{command}")
+    Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+      channel = ssh.open_channel do |ch|
+        ch.exec "#{command}" do |ch, success|
+          raise "could not execute #{command}" unless success
+
+          # "on_data" is called when the process writes something to stdout
+          ch.on_data do |c, data|
+            #$stdout.print data
+            @logger.info("#{data.inspect}")
+          end
+
+          # "on_extended_data" is called when the process writes something to stderr
+          ch.on_extended_data do |c, type, data|
+            #$stderr.print data
+            @logger.info("#{data.inspect}")
+          end
+        end
+      end
+    end
+  rescue Net::SSH::HostKeyMismatch => e
+    e.remember_host!
+    @logger.info("key mismatch, retry")
+    sleep 1
+    retry
+  rescue SystemCallError, Timeout::Error => e
+    # port 22 might not be available immediately after the instance finishes launching
+    sleep 1
+    @logger.info("Not Yet")
+    retry
+  end
+end
+
+def wait_command(host, command)
+  begin
+    flag = 0
+    while flag == 0 do
+      @logger.info("wait_command #{command}")
+      Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+        channel = ssh.open_channel do |ch|
+          ch.exec "#{command}" do |ch, success|
+            raise "could not execute #{command}" unless success
+
+            # "on_data" is called when the process writes something to stdout
+            ch.on_data do |c, data|
+              @logger.info("#{data.inspect}")
+              if data.chomp == "true"
+                @logger.info("wait_command #{command} is true")
+                flag = 1
+              else
+                sleep 5
+              end
+            end
+
+            # "on_extended_data" is called when the process writes something to stderr
+            ch.on_extended_data do |c, type, data|
+              @logger.info("#{data.inspect}")
+              if data == "true"
+                @logger.info("wait_command #{command} is true")
+                flag = 1
+              else
+                sleep 5
+              end
+            end
+          end
+        end
+      end
+    end
+  rescue Net::SSH::HostKeyMismatch => e
+    e.remember_host!
+    @logger.info("key mismatch, retry")
+    sleep 1
+    retry
+  rescue SystemCallError, Timeout::Error => e
+    # port 22 might not be available immediately after the instance finishes launching
+    sleep 1
+    @logger.info("Not Yet")
+    retry
+  end
+end
+
+def download_file(host, remote_path, local_path)
+  retries = 0
+  begin
+    Net::SCP.start(host, 'ubuntu', :key_data => [@private_key]) do |scp|
+      scp.download! remote_path, local_path
+    end
+  rescue SystemCallError, Timeout::Error => e
+    # port 22 might not be available immediately after the instance finishes launching
+    return if retries == 5
+    retries += 1
+    sleep 1
+    retry
+  rescue
+    return if retries == 5
+    retries += 1
+    sleep 1
+    retry
+  end
+end
+
+begin
+  @logger = Logger.new("aws.log")
+  @logger.info("initialized")
+  case ARGV[4]
+    when 'describe_availability_zones'
+      resp = @aws.client.describe_availability_zones
+      puts resp.data.to_json
+      @logger.info("availability_zones #{resp.data.to_json}")
+    when 'total_instances'
+      resp = @aws.client.describe_instance_status
+      puts ({:total_instances => resp.data[:instance_status_set].length,
+             :region => ARGV[2]}.to_json)
+    when 'instance_status'
+      resp = nil
+      if ARGV.length < 6
+        resp = @aws.client.describe_instance_status
+      else
+        resp = @aws.client.describe_instance_status({:instance_ids => [@params['instance_id']]})
+      end
+      output = Hash.new
+      resp.data[:instance_status_set].each { |instance|
+        output[instance[:instance_id]] = instance[:instance_state][:name]
+      }
+      puts output.to_json
+    when 'launch_server'
+      if ARGV.length < 6
+        error(-1, 'Invalid number of args')
+      end
+
+      @timestamp = Time.now.to_i
+
+      # find if an existing openstudio-server-vX security group exists and use that
+      @group = @aws.security_groups.filter('group-name', 'openstudio-server-sg-v1').first
+      if @group.nil?
+        @group = @aws.security_groups.create('openstudio-server-sg-v1')
+        @group.allow_ping() # allow ping
+        @group.authorize_ingress(:tcp, 1..65535) # all traffic
+      end
+      @logger.info("server_group #{@group}")
+      @server_instance_type = @params['instance_type']
+
+      @key_pair = @aws.key_pairs.create("key-pair-#{@timestamp}")
+      @private_key = @key_pair.private_key
+
+      launch_server()
+
+      puts ({:timestamp => @timestamp,
+             :private_key => @private_key,
+             :server => {
+                 :id => @server.id,
+                 :ip => 'http://' + @server.ip,
+                 :dns => @server.dns,
+                 :procs => @server.procs
+             }}.to_json)
+      @logger.info("server info #{({:timestamp => @timestamp, :private_key => @private_key, :server => {:id => @server.id, :ip => @server.ip, :dns => @server.dns, :procs => @server.procs}}.to_json)}")
+    when 'launch_workers'
+      if ARGV.length < 6
+        error(-1, 'Invalid number of args')
+      end
+      if @params['num'] < 1
+        error(-1, 'Invalid number of worker nodes, must be greater than 0')
+      end
+
+      @workers = []
+      @timestamp = @params['timestamp']
+
+      # find if an existing openstudio-server-vX security group exists and use that
+      @group = @aws.security_groups.filter('group-name', 'openstudio-worker-sg-v1').first
+      if @group.nil?
+        @group = @aws.security_groups.create('openstudio-worker-sg-v1')
+        @group.allow_ping() # allow ping
+        @group.authorize_ingress(:tcp, 1..65535) # all traffic
+      end
+      @logger.info("worker_group #{@group}")
+      @key_pair = @aws.key_pairs.filter('key-name', "key-pair-#{@timestamp}").first
+      @private_key = File.read(@params['private_key'])
+      @worker_instance_type = @params['instance_type']
+      @server = @aws.instances[@params['server_id']]
+      error(-1, 'Server node does not exist') unless @server.exists?
+      @server = create_struct(@server, @params['server_procs'])
+
+      launch_workers(@params['num'], @server.ip)
+      #@workers.push(create_struct(@aws.instances['i-xxxxxxxx'], 1))
+      #processors = send_command(@workers[0].ip, 'nproc | tr -d "\n"')
+      #@workers[0].procs = processors
+
+      #wait for user_data to complete execution
+      @logger.info("server user_data")
+      wait_command(@server.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"')
+      @logger.info("worker user_data")
+      @workers.each { |worker| wait_command(worker.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"') }
+      #wait_command(@workers.first.ip, "[ -e /home/ubuntu/user_data_done ] && echo 'true'") 
+
+
+      ips = "master|#{@server.ip}|#{@server.dns}|#{@server.procs}|ubuntu|ubuntu\n"
+      @workers.each { |worker| ips << "worker|#{worker.ip}|#{worker.dns}|#{worker.procs}|ubuntu|ubuntu|true\n" }
+      file = Tempfile.new('ip_addresses')
+      file.write(ips)
+      file.close
+      upload_file(@server.ip, file.path, 'ip_addresses')
+      file.unlink
+      @logger.info("ips #{ips}")
+      shell_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
+      shell_command(@server.ip, '~/setup-ssh-keys.sh')
+      shell_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
+
+      mongoid = File.read(File.expand_path(File.dirname(__FILE__))+'/mongoid.yml.template')
+      mongoid.gsub!(/SERVER_IP/, @server.ip)
+      file = Tempfile.new('mongoid.yml')
+      file.write(mongoid)
+      file.close
+      upload_file(@server.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml')
+      @workers.each { |worker| upload_file(worker.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml') }
+      file.unlink
+
+      # Does this command crash it?
+      shell_command(@server.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml')
+      @workers.each { |worker| shell_command(worker.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml') }
+
+      worker_json = []
+      @workers.each { |worker|
+        worker_json.push({
+                             :id => worker.id,
+                             :ip => 'http://' + worker.ip,
+                             :dns => worker.dns,
+                             :procs => worker.procs
+                         })
+      }
+      puts ({:workers => worker_json}.to_json)
+      @logger.info("workers #{({:workers => worker_json}.to_json)}")
+    when 'terminate_session'
+      if ARGV.length < 6
+        error(-1, 'Invalid number of args')
+      end
+      instances = []
+
+      server = @aws.instances[@params['server_id']]
+      error(-1, "Server node #{@params['server_id']} does not exist") unless server.exists?
+
+      #@timestamp = @aws.client.describe_instances({:instance_ids=>[@params['server_id']]}).data[:instance_index][@params['server_id']][:key_name][9,10]
+      @timestamp = server.key_name[9, 10]
+
+      instances.push(server)
+      @params['worker_ids'].each { |worker_id|
+        worker = @aws.instances[worker_id]
+        error(-1, "Worker node #{worker_id} does not exist") unless worker.exists?
+        instances.push(worker)
+      }
+
+      instances.each { |instance|
+        instance.terminate
+      }
+      sleep 5 while instances.any? { |instance| instance.status != :terminated }
+
+      # When session is fully terminated, then delete the key pair
+      #@aws.client.delete_security_group({:group_name=>'openstudio-server-sg-v1'}"})
+      #@aws.client.delete_security_group({:group_name=>'openstudio-worker-sg-v1'}"})
+      @aws.client.delete_key_pair({:key_name => "key-pair-#{@timestamp}"})
+
+    when 'termination_status'
+      if ARGV.length < 6
+        error(-1, 'Invalid number of args')
+      end
+      notTerminated = 0
+
+      server = @aws.instances[@params['server_id']]
+      notTerminated += 1 if (server.exists? && server.status != :terminated)
+
+      @params['worker_ids'].each { |worker_id|
+        worker = @aws.instances[worker_id]
+        notTerminated += 1 if (worker.exists? && worker.status != :terminated)
+      }
+
+      puts ({:all_instances_terminated => (notTerminated == 0)}.to_json)
+
+    when 'session_uptime'
+      if ARGV.length < 6
+        error(-1, 'Invalid number of args')
+      end
+      server_id = @params['server_id']
+      #No need to call AWS, but we can
+      #minutes = (Time.now.to_i - @aws.client.describe_instances({:instance_ids=>[server_id]}).data[:instance_index][server_id][:launch_time].to_i)/60
+      minutes = (Time.now.to_i - @params['timestamp'].to_i)/60
+      puts ({:session_uptime => minutes}.to_json)
+
+    when 'estimated_charges'
+      endTime = Time.now.utc
+      startTime = endTime - 86400
+      resp = @aws.client.get_metric_statistics({:dimensions => [{:name => 'ServiceName', :value => 'AmazonEC2'}, {:name => 'Currency', :value => 'USD'}], :metric_name => 'EstimatedCharges', :namespace => 'AWS/Billing', :start_time => startTime.iso8601, :end_time => endTime.iso8601, :period => 300, :statistics => ['Maximum']})
+      error(-1, 'No Billing Data') if resp.data[:datapoints].length == 0
+      datapoints = resp.data[:datapoints]
+      datapoints.sort! { |a, b| a[:timestamp] <=> b[:timestamp] }
+      puts ({:estimated_charges => datapoints[-1][:maximum],
+             :timestamp => datapoints[-1][:timestamp].to_i}.to_json)
+
+    else
+      error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
+  end
+    #puts \"Status: #{resp.http_response.status}\"
+rescue SystemExit => e
+rescue Exception => e
+  if e.message == 'getaddrinfo: No such host is known. '
+    error(503, 'Offline')
+  elsif defined? e.http_response
+    error(e.http_response.status, e.code)
+  else
+    error(-1, "#{e}: #{e.backtrace}")
+  end
+
+end

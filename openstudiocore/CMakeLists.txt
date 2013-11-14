@@ -16,6 +16,7 @@ SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # 
 
 # OpenStudio version
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
+SET(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version 
 SET(ENERGYPLUS_VERSION "8.0")
@@ -104,6 +105,9 @@ IF (BUILD_V8_BINDINGS)
   OPTION( BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON )
 ENDIF()
 
+# Configure vagrant 
+SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
+
 # Require that DAKOTA_FOUND
 #
 # Some code (certain analysisdriver tests) are conditionally compiled depending on 
@@ -140,6 +144,7 @@ SET( project_directories
   energyplus
   radiance
   gbxml
+  isomodel
   osversion
   ruleset
   runmanager/lib
@@ -193,7 +198,11 @@ ENDIF( BUILD_TESTING )
 IF(UNIX)
   # all warnings
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch")
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
+  IF(APPLE)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=1024")
+  ELSE()
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
+  ENDIF()
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing --std=c99")
   # effective c++
   #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
@@ -723,6 +732,46 @@ INCLUDE_DIRECTORIES( "${CMAKE_BINARY_DIR}/src/" )
 # Include the resources, should happen after find EnergyPlus
 ADD_SUBDIRECTORY(resources)
 
+
+# Set up embedded ruby for use with 'aws-sdk'
+
+IF (WIN32)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-win32)
+  SET(AWS_RUBY_DESTINATION ".")
+  SET(AWS_RUBY_EXTENSION ".zip")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip)
+  SET(AWS_RUBY_CHECKSUM f30b3eb7d5ed73e99b2b6875a43ab8ea)
+ELSEIF(APPLE)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
+  SET(AWS_RUBY_DESTINATION ".")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM 8bb6739c0babb08b4e2259f9797b31a7)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+ELSEIF(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
+  SET(AWS_RUBY_DESTINATION "lib/openstudio")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM f5a8f11f1b2c854a550a15349df79a60)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+ELSEIF(UNIX)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
+  SET(AWS_RUBY_DESTINATION "lib/openstudio")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-i686.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM be333fe95ef13d4c5f3f449dd9b7c534)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+ENDIF()
+
+FILE(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 ) # EXPECTED_MD5 ${AWS_RUBY_CHECKSUM})
+execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+INSTALL( DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}" DESTINATION "${AWS_RUBY_DESTINATION}" )
+
+# end ruby aws-sdk info
+
 FOREACH( D ${project_directories} )
   ADD_SUBDIRECTORY( src/${D} )
 ENDFOREACH()
@@ -825,6 +874,7 @@ export(TARGETS openstudio_runmanager
                openstudio_analysis
                openstudio_radiance
                openstudio_gbxml
+               openstudio_isomodel
                openstudio_lib
                openstudio_plugin
                openstudio_sdd
@@ -861,7 +911,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_0_0_20130628.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_1_0_20131018.pdf" DESTINATION . )
 
 ###############################################################################
 
@@ -905,3 +955,25 @@ IF (NOT UNIX)
       DESTINATION "Ruby/openstudio")
   ENDIF(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 ENDIF()
+
+
+
+
+IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
+  SET(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+  SET(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+
+  FILE(COPY "${ENERGYPLUS_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/EnergyPlus/")
+  FILE(COPY "${RADIANCE_LOCATION}" DESTINATION "${CMAKE_BINARY_DIR}/Radiance/")
+
+  IF (APPLE)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+  ELSE()
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+  ENDIF()
+
+ENDIF()
+
+

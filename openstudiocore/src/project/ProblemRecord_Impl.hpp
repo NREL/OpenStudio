@@ -38,7 +38,6 @@ namespace detail {
   /** ProblemRecord_Impl is a ObjectRecord_Impl that is the implementation class for
    * ProblemRecord.*/
   class PROJECT_API ProblemRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */
@@ -91,7 +90,7 @@ namespace detail {
     virtual analysis::Problem problem() const;
 
     /** Returns the total number of discrete combinations, if all variables are discrete. */
-    boost::optional<int> combinatorialSize(bool selectedPerturbationsOnly) const;
+    boost::optional<int> combinatorialSize(bool selectedMeasuresOnly) const;
 
     //@}
    protected:

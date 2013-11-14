@@ -8,6 +8,8 @@
 #include <model/Construction_Impl.hpp>
 #include <model/MasslessOpaqueMaterial.hpp>
 #include <model/MasslessOpaqueMaterial_Impl.hpp>
+#include <model/AirGap.hpp>
+#include <model/AirGap_Impl.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
 #include <model/FFactorGroundFloorConstruction.hpp>
@@ -40,10 +42,10 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> result;
 
     QDomElement nameElement = element.firstChildElement("Name");
-    BOOST_ASSERT(!nameElement.isNull()); // what type of error handling do we want?
+    OS_ASSERT(!nameElement.isNull()); // what type of error handling do we want?
 
     QDomElement specificationElement = element.firstChildElement("SpecMthd");
-    BOOST_ASSERT(!specificationElement.isNull()); // what type of error handling do we want?
+    OS_ASSERT(!specificationElement.isNull()); // what type of error handling do we want?
 
     if (specificationElement.text() == "Layers" ||
         specificationElement.text() == "UFactor" ){ // temp code
@@ -57,7 +59,11 @@ namespace sdd {
         QDomElement materialElement = materialElements.at(i).toElement();
         std::string materialName = escapeName(materialElement.text());
         boost::optional<model::Material> material = model.getModelObjectByName<model::Material>(materialName);
-        BOOST_ASSERT(material); // what type of error handling do we want?
+        if( ! material )
+        {
+          LOG(Error,"Construction: " << construction.name().get() << " references material: " << materialName << " that is not defined.");
+        }
+        OS_ASSERT(material); // what type of error handling do we want?
         materials.push_back(*material);
       }
 
@@ -148,7 +154,7 @@ namespace sdd {
       }
 
       bool test = construction.setLayers(materials);
-      BOOST_ASSERT(test); // what type of error handling do we want?
+      OS_ASSERT(test); // what type of error handling do we want?
 
       result = construction;
 
@@ -161,13 +167,13 @@ namespace sdd {
       construction.setName(escapeName(nameElement.text()));
 
       QDomElement cFactorElement = element.firstChildElement("CFactor"); 
-      BOOST_ASSERT(!cFactorElement.isNull());
+      OS_ASSERT(!cFactorElement.isNull());
 
       // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K) 
       Quantity cFactorIP(cFactorElement.text().toDouble(), BTUUnit(BTUExpnt(1,-2,-1,-1)));
       OptionalQuantity cFactorSI = QuantityConverter::instance().convert(cFactorIP, UnitSystem(UnitSystem::Wh));
-      BOOST_ASSERT(cFactorSI);
-      BOOST_ASSERT(cFactorSI->units() == WhUnit(WhExpnt(1,0,-2,-1)));
+      OS_ASSERT(cFactorSI);
+      OS_ASSERT(cFactorSI->units() == WhUnit(WhExpnt(1,0,-2,-1)));
       construction.setCFactor(cFactorSI->value());
 
       result = construction;
@@ -181,13 +187,13 @@ namespace sdd {
       construction.setName(escapeName(nameElement.text()));
 
       QDomElement fFactorElement = element.firstChildElement("FFactor"); 
-      BOOST_ASSERT(!fFactorElement.isNull());
+      OS_ASSERT(!fFactorElement.isNull());
             
       // sdd units = Btu/(hr*ft*F), os units = W/(m*K)
       Quantity fFactorIP(fFactorElement.text().toDouble(), BTUUnit(BTUExpnt(1,-1,-1,-1)));
       OptionalQuantity fFactorSI = QuantityConverter::instance().convert(fFactorIP, UnitSystem(UnitSystem::Wh));
-      BOOST_ASSERT(fFactorSI);
-      BOOST_ASSERT(fFactorSI->units() == WhUnit(WhExpnt(1,0,-1,-1)));
+      OS_ASSERT(fFactorSI);
+      OS_ASSERT(fFactorSI->units() == WhUnit(WhExpnt(1,0,-1,-1)));
       construction.setFFactor(fFactorSI->value());
 
       result = construction;
@@ -219,8 +225,8 @@ namespace sdd {
       // sdd units = Btu/(hr*ft^2*F), os units = W/m^2-K
       Quantity uFactorIP(uFactorElement.text().toDouble(), BTUUnit(BTUExpnt(1,-2,-1,-1)));
       OptionalQuantity uFactorWh = QuantityConverter::instance().convert(uFactorIP, whSys);
-      BOOST_ASSERT(uFactorWh);
-      BOOST_ASSERT(uFactorWh->units() == WhUnit(WhExpnt(1,0,-2,-1)));
+      OS_ASSERT(uFactorWh);
+      OS_ASSERT(uFactorWh->units() == WhUnit(WhExpnt(1,0,-2,-1)));
 
       // m^2-K/W
       double rValueSI = 1.0 / uFactorWh->value();
@@ -271,8 +277,8 @@ namespace sdd {
       // sdd units = Btu/(hr*ft^2*F), os units = W/m^2-K
       Quantity uFactorIP(uFactorElement.text().toDouble(), BTUUnit(BTUExpnt(1,-2,-1,-1)));
       OptionalQuantity uFactorWh = QuantityConverter::instance().convert(uFactorIP, whSys);
-      BOOST_ASSERT(uFactorWh);
-      BOOST_ASSERT(uFactorWh->units() == WhUnit(WhExpnt(1,0,-2,-1)));
+      OS_ASSERT(uFactorWh);
+      OS_ASSERT(uFactorWh->units() == WhUnit(WhExpnt(1,0,-2,-1)));
       material.setUFactor(uFactorWh->value());
 
       openstudio::model::MaterialVector layers;
@@ -339,29 +345,29 @@ namespace sdd {
       double thicknessFeet = thicknessInches/12.0;
       Quantity thicknessIP(thicknessFeet, IPUnit(IPExpnt(0,1,0)));
       OptionalQuantity thicknessSI = QuantityConverter::instance().convert(thicknessIP, siSys);
-      BOOST_ASSERT(thicknessSI);
-      BOOST_ASSERT(thicknessSI->units() == SIUnit(SIExpnt(0,1,0)));
+      OS_ASSERT(thicknessSI);
+      OS_ASSERT(thicknessSI->units() == SIUnit(SIExpnt(0,1,0)));
       material.setThickness(thicknessSI->value());
 
       // sdd units = Btu/(hr*ft*F), os units = W/m-K
       Quantity thermalConductivityIP(thermalConductivityElement.text().toDouble(), BTUUnit(BTUExpnt(1,-1,-1,-1)));
       OptionalQuantity thermalConductivityWh = QuantityConverter::instance().convert(thermalConductivityIP, whSys);
-      BOOST_ASSERT(thermalConductivityWh);
-      BOOST_ASSERT(thermalConductivityWh->units() == WhUnit(WhExpnt(1,0,-1,-1)));
+      OS_ASSERT(thermalConductivityWh);
+      OS_ASSERT(thermalConductivityWh->units() == WhUnit(WhExpnt(1,0,-1,-1)));
       material.setThermalConductivity(thermalConductivityWh->value());
 
       // sdd units = lb/ft^3, os units = kg/m3
       Quantity densityIP(densityElement.text().toDouble(), IPUnit(IPExpnt(1,-3,0)));
       OptionalQuantity densitySI = QuantityConverter::instance().convert(densityIP, siSys);
-      BOOST_ASSERT(densitySI);
-      BOOST_ASSERT(densitySI->units() == SIUnit(SIExpnt(1,-3,0)));
+      OS_ASSERT(densitySI);
+      OS_ASSERT(densitySI->units() == SIUnit(SIExpnt(1,-3,0)));
       material.setDensity(densitySI->value());
 
       // sdd units = Btu/(lb*F), os units = J/kg-K = m^2/(s^2*K)
       Quantity specificHeatIP(specificHeatElement.text().toDouble(), BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
       OptionalQuantity specificHeatSI = QuantityConverter::instance().convert(specificHeatIP, siSys);
-      BOOST_ASSERT(specificHeatSI);
-      BOOST_ASSERT(specificHeatSI->units() == SIUnit(SIExpnt(0,2,-2,-1)));
+      OS_ASSERT(specificHeatSI);
+      OS_ASSERT(specificHeatSI->units() == SIUnit(SIExpnt(0,2,-2,-1)));
       material.setSpecificHeat(specificHeatSI->value());
 
       // DLM: set on construction
@@ -407,8 +413,8 @@ namespace sdd {
       // sdd units = hr*ft2*degF/Btu, os units = m2-K/W
       Quantity rValueIP(rValueElement.text().toDouble(), BTUUnit(BTUExpnt(-1,2,1,1)));
       OptionalQuantity rValueWh = QuantityConverter::instance().convert(rValueIP, whSys);
-      BOOST_ASSERT(rValueWh);
-      BOOST_ASSERT(rValueWh->units() == WhUnit(WhExpnt(-1,0,2,1)));
+      OS_ASSERT(rValueWh);
+      OS_ASSERT(rValueWh->units() == WhUnit(WhExpnt(-1,0,2,1)));
       material.setThermalResistance(rValueWh->value());
 
       // DLM: set on construction
@@ -582,8 +588,8 @@ namespace sdd {
       // sdd units = Btu/(hr*ft*F), os units = W/(m*K)
       Quantity fFactorSI(construction.fFactor(), WhUnit(WhExpnt(1,0,-1,-1)));
       OptionalQuantity fFactorIP = QuantityConverter::instance().convert(fFactorSI, UnitSystem(UnitSystem::BTU));
-      BOOST_ASSERT(fFactorIP);
-      BOOST_ASSERT(fFactorIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
+      OS_ASSERT(fFactorIP);
+      OS_ASSERT(fFactorIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
       fFactorElement.appendChild(doc.createTextNode(QString::number(fFactorIP->value())));
 
       // DLM: cannot write out
@@ -618,8 +624,8 @@ namespace sdd {
       // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K)
       Quantity cFactorSI(construction.cFactor(), WhUnit(WhExpnt(1,0,-2,-1)));
       OptionalQuantity cFactorIP = QuantityConverter::instance().convert(cFactorSI, UnitSystem(UnitSystem::BTU));
-      BOOST_ASSERT(cFactorIP);
-      BOOST_ASSERT(cFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
+      OS_ASSERT(cFactorIP);
+      OS_ASSERT(cFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
       cFactorElement.appendChild(doc.createTextNode(QString::number(cFactorIP->value())));
 
       // DLM: cannot write out
@@ -648,20 +654,6 @@ namespace sdd {
     if (constructionBase.optionalCast<model::Construction>()){
       model::Construction construction = constructionBase.cast<model::Construction>();
 
-      // return empty unless only on layer of MasslessOpaqueMaterial
-      std::vector<model::Material> layers = construction.layers();
-      if (layers.size() != 1){
-        return boost::none;
-      }
-
-      if (!layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
-        return boost::none;
-      }
-
-      // DLM: check if used by any doors?  Can't just use model object sources if inheritance
-
-      model::MasslessOpaqueMaterial material = layers[0].cast<model::MasslessOpaqueMaterial>();
-      
       result = doc.createElement("DrCons");
       
       // name
@@ -670,16 +662,33 @@ namespace sdd {
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
-      // UFactor
-      // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
-      double uFactor = material.thermalConductance();
-      Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
-      OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
-      BOOST_ASSERT(uFactorIP);
-      BOOST_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-      QDomElement uFactorElement = doc.createElement("UFactor");
-      result->appendChild(uFactorElement);
-      uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+      // can only get UFactor for special cases
+      bool foundUFactor = false;
+
+      std::vector<model::Material> layers = construction.layers();
+      if (layers.size() == 1){
+        if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
+
+          model::MasslessOpaqueMaterial material = layers[0].cast<model::MasslessOpaqueMaterial>();
+
+          // UFactor
+          // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
+          double uFactor = material.thermalConductance();
+          Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
+          OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
+          OS_ASSERT(uFactorIP);
+          OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
+          QDomElement uFactorElement = doc.createElement("UFactor");
+          result->appendChild(uFactorElement);
+          uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+
+          foundUFactor = true;
+        }
+      }
+
+      if (!foundUFactor){
+        LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
+      }
 
       // mark the construction as translated, not the material
       m_translatedObjects[construction.handle()] = result.get();
@@ -698,18 +707,6 @@ namespace sdd {
     if (constructionBase.optionalCast<model::Construction>()){
       model::Construction construction = constructionBase.cast<model::Construction>();
 
-      // return empty unless only on layer of SimpleGlazing
-      std::vector<model::Material> layers = construction.layers();
-      if (layers.size() != 1){
-        return boost::none;
-      }
-
-      if (!layers[0].optionalCast<model::SimpleGlazing>()){
-        return boost::none;
-      }
-
-      model::SimpleGlazing simpleGlazing = layers[0].cast<model::SimpleGlazing>();
-      
       result = doc.createElement("FenCons");
       
       // name
@@ -718,29 +715,51 @@ namespace sdd {
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
-      // SHGC
-      double shgc = simpleGlazing.solarHeatGainCoefficient();
-      QDomElement shgcElement = doc.createElement("SHGC"); 
-      result->appendChild(shgcElement);
-      shgcElement.appendChild(doc.createTextNode(QString::number(shgc)));
+      // can only get SHGC, TVis, UFactor for special cases
+      bool foundUFactor = false;
+      bool foundVT = false;
 
-      // UFactor
-      // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
-      double uFactor = simpleGlazing.uFactor();
-      Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
-      OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
-      BOOST_ASSERT(uFactorIP);
-      BOOST_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-      QDomElement uFactorElement = doc.createElement("UFactor");
-      result->appendChild(uFactorElement);
-      uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+      std::vector<model::Material> layers = construction.layers();
+      if (layers.size() == 1){
+        if (layers[0].optionalCast<model::SimpleGlazing>()){
 
-      // VT
-      boost::optional<double> vt = simpleGlazing.visibleTransmittance();
-      if (vt){
-        QDomElement vtElement = doc.createElement("VT"); 
-        result->appendChild(vtElement);
-        vtElement.appendChild(doc.createTextNode(QString::number(*vt)));
+          model::SimpleGlazing simpleGlazing = layers[0].cast<model::SimpleGlazing>();
+          
+          // SHGC
+          double shgc = simpleGlazing.solarHeatGainCoefficient();
+          QDomElement shgcElement = doc.createElement("SHGC"); 
+          result->appendChild(shgcElement);
+          shgcElement.appendChild(doc.createTextNode(QString::number(shgc)));
+
+          // UFactor
+          // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
+          double uFactor = simpleGlazing.uFactor();
+          Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
+          OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
+          OS_ASSERT(uFactorIP);
+          OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
+          QDomElement uFactorElement = doc.createElement("UFactor");
+          result->appendChild(uFactorElement);
+          uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+
+          foundUFactor = true;
+
+          // VT
+          boost::optional<double> vt = simpleGlazing.visibleTransmittance();
+          if (vt){
+            QDomElement vtElement = doc.createElement("VT"); 
+            result->appendChild(vtElement);
+            vtElement.appendChild(doc.createTextNode(QString::number(*vt)));
+
+            foundVT = true;
+          }
+        }
+      }
+
+      if (!foundUFactor){
+        LOG(Error, "Could not calculate SHGC, UFactor, or VT for FenCons '" << name << "'");
+      }else if (!foundVT){
+        LOG(Error, "Could not calculate VT for FenCons '" << name << "'");
       }
 
       // mark the construction as translated, not the material
@@ -812,8 +831,8 @@ namespace sdd {
       double thickness = standardOpaqueMaterial.thickness();
       Quantity thicknessSI(thickness, SIUnit(SIExpnt(0,1,0)));
       OptionalQuantity thicknessIP = QuantityConverter::instance().convert(thicknessSI, ipSys);
-      BOOST_ASSERT(thicknessIP);
-      BOOST_ASSERT(thicknessIP->units() == IPUnit(IPExpnt(0,1,0)));
+      OS_ASSERT(thicknessIP);
+      OS_ASSERT(thicknessIP->units() == IPUnit(IPExpnt(0,1,0)));
       double thicknessInches = thicknessIP->value() * 12.0;
       QDomElement thicknessElement = doc.createElement("Thkns");
       result->appendChild(thicknessElement);
@@ -824,8 +843,8 @@ namespace sdd {
       double conductivity = standardOpaqueMaterial.thermalConductivity();
       Quantity conductivitySI(conductivity, WhUnit(WhExpnt(1,0,-1,-1)));
       OptionalQuantity conductivityIP = QuantityConverter::instance().convert(conductivitySI, btuSys);
-      BOOST_ASSERT(conductivityIP);
-      BOOST_ASSERT(conductivityIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
+      OS_ASSERT(conductivityIP);
+      OS_ASSERT(conductivityIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
       QDomElement conductivityElement = doc.createElement("ThrmlCndct");
       result->appendChild(conductivityElement);
       conductivityElement.appendChild(doc.createTextNode(QString::number(conductivityIP->value())));
@@ -835,8 +854,8 @@ namespace sdd {
       double density = standardOpaqueMaterial.density();
       Quantity densitySI(density, SIUnit(SIExpnt(1,-3,0)));
       OptionalQuantity densityIP = QuantityConverter::instance().convert(densitySI, ipSys);
-      BOOST_ASSERT(densityIP);
-      BOOST_ASSERT(densityIP->units() == IPUnit(IPExpnt(1,-3,0)));
+      OS_ASSERT(densityIP);
+      OS_ASSERT(densityIP->units() == IPUnit(IPExpnt(1,-3,0)));
       QDomElement densityElement = doc.createElement("Dens");
       result->appendChild(densityElement);
       densityElement.appendChild(doc.createTextNode(QString::number(densityIP->value())));
@@ -846,8 +865,8 @@ namespace sdd {
       double specificHeat = standardOpaqueMaterial.specificHeat();
       Quantity specificHeatSI(specificHeat, SIUnit(SIExpnt(0,2,-2,-1)));
       OptionalQuantity specificHeatIP = QuantityConverter::instance().convert(specificHeatSI, BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
-      BOOST_ASSERT(specificHeatIP);
-      BOOST_ASSERT(specificHeatIP->units() == BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
+      OS_ASSERT(specificHeatIP);
+      OS_ASSERT(specificHeatIP->units() == BTUUnit(BTUExpnt(1,0,0,-1))*IPUnit(IPExpnt(-1)));
       QDomElement specificHeatElement = doc.createElement("SpecHt");
       result->appendChild(specificHeatElement);
       specificHeatElement.appendChild(doc.createTextNode(QString::number(specificHeatIP->value())));
@@ -902,11 +921,31 @@ namespace sdd {
       double thermalResistance = masslessOpaqueMaterial.thermalResistance();
       Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
       OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
-      BOOST_ASSERT(rValueIP);
-      BOOST_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
+      OS_ASSERT(rValueIP);
+      OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
       QDomElement rValueElement = doc.createElement("RVal");
       result->appendChild(rValueElement);
       rValueElement.appendChild(doc.createTextNode(QString::number(rValueIP->value())));
+    }else if (material.optionalCast<model::AirGap>()){
+      model::AirGap airGap = material.cast<model::AirGap>();
+      result = doc.createElement("Mat");
+      m_translatedObjects[airGap.handle()] = *result;
+
+      // name
+      std::string name = airGap.name().get();
+      QDomElement nameElement = doc.createElement("Name");
+      result->appendChild(nameElement);
+      nameElement.appendChild(doc.createTextNode(escapeName(name)));
+
+      // thermalResistance
+      // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
+      double thermalResistance = airGap.thermalResistance();
+      Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
+      OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
+      OS_ASSERT(rValueIP);
+      OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
+      QDomElement rValueElement = doc.createElement("RVal");
+      result->appendChild(rValueElement);
     }
 
     return result;
