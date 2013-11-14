@@ -39,6 +39,31 @@ namespace openstudio {
 
 namespace energyplus {
 
+static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
+{
+  QString string = QString().sprintf("Through: %02d/%02d",date.monthOfYear().value(),date.dayOfMonth());
+  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Day input field index is " << fieldIndex);
+  idfObject.setString(fieldIndex, string.toStdString());
+  ++fieldIndex;
+  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Field index is " << fieldIndex);
+  idfObject.setString(fieldIndex, "For: AllDays");
+  ++fieldIndex;
+  return fieldIndex;
+}
+
+static unsigned addUntil(IdfObject &idfObject,unsigned fieldIndex,int hours,int minutes,double value)
+{
+  QString string = QString().sprintf("Until: %02d/%02d",hours,minutes);
+  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Until input field index is " << fieldIndex);
+  idfObject.setString(fieldIndex, string.toStdString());
+  ++fieldIndex;
+  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Field index is " << fieldIndex);
+  idfObject.setDouble(fieldIndex, value);
+  ++fieldIndex;
+  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Until complete");
+  return fieldIndex;
+}
+
 boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( ScheduleFixedInterval & modelObject )
 {
   IdfObject idfObject( openstudio::IddObjectType::Schedule_Compact );
@@ -67,6 +92,124 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     interpolateField = "Interpolate:No";
   }
  
+  Date lastDate = firstReportDateTime.date(); // The last date data was written
+  Time dayDelta = Time(1.0);
+  double lastDay = 0.0; // The day number of the date that data was last written relative to the first date
+  unsigned int start = 0;
+  if(daysFromFirstReport[0] == 0.0)
+  {
+    // Skip the first value if it is at 00:00:00
+    unsigned start=1;
+  }
+
+  // Start the input into the schedule object
+  unsigned fieldIndex = Schedule_CompactFields::ScheduleTypeLimitsName + 1;
+  fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
+  //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
+  //idfObject.setString(fieldIndex, string.toStdString());
+  //++fieldIndex;
+  //idfObject.setString(fieldIndex, "For: AllDays");
+  //++fieldIndex;
+
+  for(unsigned int i=start; i < values.size(); i++)
+  {
+    // We could loop over the entire array and use the fact that the
+    // last entry in the daysFromFirstReport vector should be a round
+    // number to avoid logic. That is probably too tricky and could be
+    // vulnerable to rounding issues. It still might be worth it to allow
+    // for a margin of error (say a half second or something) to avoid
+    // problems in the calculation of the fractional part (hms) below.
+    double today = floor(daysFromFirstReport[i]);
+    double hms = daysFromFirstReport[i]-today;
+    if(hms == 0)
+    {
+      // This value is an end of day value, but we could have skipped multiple days
+      int diff = today-lastDay;
+      for(int j=diff; j>0; j--)
+      {
+        fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
+        //idfObject.setString(fieldIndex, "Until: 24:00");
+        //++fieldIndex;
+        //idfObject.setDouble(fieldIndex, values[i]);
+        //++fieldIndex;
+
+        lastDate += dayDelta;
+        fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
+        //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
+        //idfObject.setString(fieldIndex, string.toStdString());
+        //++fieldIndex;
+        //idfObject.setString(fieldIndex, "For: AllDays");
+        //++fieldIndex;
+      }
+    }
+    else
+    {
+      if(values[i] == values[i+1])
+      {
+        // Bail on values that match the next value
+        continue;
+      }
+      if(today != lastDay)
+      {
+        // We're on a new day, need 24:00:00 value(s), how many days did we miss?
+        int diff = today-lastDay;
+        for(int j=diff; j>0; j--)
+        {
+          fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
+          //idfObject.setString(fieldIndex, "Until: 24:00");
+          //++fieldIndex;
+          //idfObject.setDouble(fieldIndex, values[i]);
+          //++fieldIndex;
+
+          lastDate += dayDelta;
+          fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
+          //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
+          //idfObject.setString(fieldIndex, string.toStdString());
+          //++fieldIndex;
+          //idfObject.setString(fieldIndex, "For: AllDays");
+          //++fieldIndex;
+        }
+      }
+      Time time(hms);
+      int hours = time.hours();
+      int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
+      fieldIndex = addUntil(idfObject,fieldIndex,hours,minutes,values[i]);
+      //QString string = QString().sprintf("Until: %02d/%02d",hours,minutes);
+      //idfObject.setString(fieldIndex, string.toStdString());
+      //++fieldIndex;
+      //idfObject.setDouble(fieldIndex, values[i]);
+      //++fieldIndex;
+    }
+    lastDay = today;
+  }
+  // Handle the last point a little differently to make sure that the schedule ends exactly on the end of a day
+  int i = values.size()-1;
+  double today = floor(daysFromFirstReport[i]); // Could skip this, but better to be safe
+  // Did we miss any days?
+  int diff = today-lastDay;
+  for(int j=diff; j>0; j--)
+  {
+    fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
+    //idfObject.setString(fieldIndex, "Until: 24:00");
+    //++fieldIndex;
+    //idfObject.setDouble(fieldIndex, values[i]);
+    //++fieldIndex;
+
+    lastDate += dayDelta;
+    fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
+    //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
+    //idfObject.setString(fieldIndex, string.toStdString());
+    //++fieldIndex;
+    //idfObject.setString(fieldIndex, "For: AllDays");
+    //++fieldIndex;
+  }
+
+  fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
+  //idfObject.setString(fieldIndex, "Until: 24:00");
+  //++fieldIndex;
+  //idfObject.setDouble(fieldIndex, values[i]);
+  //++fieldIndex;
+  /*
   boost::optional<Date> lastDate;
 
   unsigned fieldIndex = Schedule_CompactFields::ScheduleTypeLimitsName + 1;
@@ -146,6 +289,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
       }    
     }
   }
+  */
 
   return idfObject;
 }
