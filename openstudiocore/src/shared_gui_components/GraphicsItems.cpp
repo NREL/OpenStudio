@@ -110,5 +110,13 @@ RemoveButtonItem::RemoveButtonItem(QGraphicsItem * parent)
 {
 }
 
+ZoomInButtonItem::ZoomInButtonItem(QGraphicsItem * parent)
+  : ButtonItem(QPixmap(":/images/zoom-in.png"),
+               QPixmap(":/images/zoom-in-press.png"),
+               QPixmap(":/images/zoom-in-over.png"),
+               parent)
+{
+}
+
 } // openstudio
 

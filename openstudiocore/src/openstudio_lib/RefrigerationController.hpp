@@ -49,6 +49,10 @@ class RefrigerationController : public QObject
 
   QSharedPointer<RefrigerationSystemListController> refrigerationSystemListController() const;
 
+  public slots:
+
+  void zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem);
+
   private:
 
   QPointer<QGraphicsView> m_refrigerationGraphicsView;
@@ -56,6 +60,8 @@ class RefrigerationController : public QObject
   QSharedPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
 
   QSharedPointer<RefrigerationSystemListController> m_refrigerationSystemListController;
+
+  QSharedPointer<QGraphicsScene> m_refrigerationGridScene;
 
   QSharedPointer<QGraphicsScene> m_refrigerationScene;
 };
@@ -65,6 +71,10 @@ class RefrigerationSystemListController : public OSListController
   Q_OBJECT
 
   public:
+
+  RefrigerationSystemListController(RefrigerationController * refrigerationController);
+
+  RefrigerationController * refrigerationController() const;
 
   QSharedPointer<OSListItem> itemAt(int i);
 
@@ -81,6 +91,8 @@ class RefrigerationSystemListController : public OSListController
   std::vector<model::RefrigerationSystem> systems() const;
 
   int systemIndex(const model::RefrigerationSystem & system) const;
+
+  QPointer<RefrigerationController> m_refrigerationController;
 };
 
 // A delegate to provide cells of the refigeration system grid
@@ -116,9 +128,13 @@ class RefrigerationSystemListItem : public OSListItem
 
   virtual ~RefrigerationSystemListItem() {}
 
+  QString systemName() const;
+
   public slots:
 
   void remove();
+
+  void zoomInOnSystem();
 
   private:
 

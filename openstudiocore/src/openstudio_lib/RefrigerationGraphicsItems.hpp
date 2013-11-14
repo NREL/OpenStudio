@@ -37,6 +37,7 @@ class OSListController;
 class ButtonItem;
 class RemoveButtonItem;
 class OSGraphicsItemDelegate;
+class ZoomInButtonItem;
 
 // A grid layout of refrigeration systems
 class RefrigerationSystemGridView : public QGraphicsObject
@@ -87,11 +88,11 @@ class RefrigerationSystemGridView : public QGraphicsObject
 
   std::pair<int,int> gridPos(int i); 
 
-  QGraphicsItem * createNewItemView(int i);
+  QGraphicsObject * createNewItemView(int i);
 
-  void setItemViewGridPos(QGraphicsItem * item,std::pair<int,int> gridPos);
+  void setItemViewGridPos(QGraphicsObject * item,std::pair<int,int> gridPos);
 
-  QGraphicsItem * viewFromGridPos(std::pair<int,int> gridPos);
+  QGraphicsObject * viewFromGridPos(std::pair<int,int> gridPos);
 
   QSharedPointer<OSGraphicsItemDelegate> m_delegate;
 
@@ -99,6 +100,10 @@ class RefrigerationSystemGridView : public QGraphicsObject
 
   // Use this to keep the OSListItem classes around for the life of the widget
   std::map<QObject *,QSharedPointer<OSListItem> > m_widgetItemPairs;
+
+  std::map<std::pair<int,int>,QObject *> m_gridPosItemViewPairs;
+
+  std::map<QObject *,std::pair<int,int> > m_itemViewGridPosPairs;
 };
 
 // A cell of the refrigeration system grid
@@ -117,9 +122,15 @@ class RefrigerationSystemMiniView : public QGraphicsObject
 
   RemoveButtonItem * removeButtonItem;
 
+  ZoomInButtonItem * zoomInButtonItem;
+
   QRectF boundingRect() const;
 
   static QSize cellSize();
+
+  public slots:
+
+  void setName( const QString & name); 
 
   protected:
 
@@ -136,6 +147,8 @@ class RefrigerationSystemMiniView : public QGraphicsObject
   static int cellWidth();
 
   static int headerHeight();
+
+  QString m_name;
 };
 
 class RefrigerationSystemDropZoneView : public QGraphicsObject
@@ -148,15 +161,25 @@ class RefrigerationSystemDropZoneView : public QGraphicsObject
 
   virtual ~RefrigerationSystemDropZoneView() {}
 
-  ButtonItem * buttonItem;
-
   QRectF boundingRect() const;
+
+  signals:
+
+  void mouseClicked();
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  private:
+
+  bool m_mouseDown;
 };
 
 class RefrigerationSystemView : public QGraphicsObject

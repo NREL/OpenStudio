@@ -24,6 +24,7 @@
 #include "../utilities/core/Assert.hpp"
 #include <QPainter>
 #include <utility>
+#include <QGraphicsSceneMouseEvent>
 
 namespace openstudio {
 
@@ -94,7 +95,7 @@ void RefrigerationSystemGridView::refreshAllItemViews()
   }
 }
 
-QGraphicsItem * RefrigerationSystemGridView::createNewItemView(int i)
+QGraphicsObject * RefrigerationSystemGridView::createNewItemView(int i)
 {
   if( m_listController && m_delegate )
   {
@@ -122,7 +123,7 @@ QGraphicsItem * RefrigerationSystemGridView::createNewItemView(int i)
   }
 }
 
-void RefrigerationSystemGridView::setItemViewGridPos(QGraphicsItem * item,std::pair<int,int> gridPos)
+void RefrigerationSystemGridView::setItemViewGridPos(QGraphicsObject * item,std::pair<int,int> gridPos)
 {
   if( item )
   {
@@ -130,6 +131,26 @@ void RefrigerationSystemGridView::setItemViewGridPos(QGraphicsItem * item,std::p
     int y = gridPos.first * (RefrigerationSystemMiniView::cellSize().height() + spacing());
 
     item->setPos(x,y);
+
+    //std::map<std::pair<int,int>,QObject *>::iterator it = m_gridPosItemViewPairs.find(gridPos)
+    //if( it != m_gridPosItemViewPairs.end() )
+    //{
+    //  m_gridPosItemViewPairs.erase(it); 
+    //}
+
+    //std::map<QObject *,std::pair<int,int>::iterator it2 = m_itemViewGridPosPairs.find(item);
+    //if( it2 != m_itemViewGridPosPairs.end() )
+    //{
+    //  m_itemViewGridPosPairs.erase(it2);
+    //}
+
+    //m_gridPosItemViewPairs.insert( std::make_pair<std::pair<int,int>,QObject *>(std::make_pair<int,int>(x,y),item) );
+
+    //m_itemViewGridPosPairs.insert( std::make_pair<QObject *,std::pair<int,int> >(item,std::make_pair<int,int>(x,y)) );
+
+    m_gridPosItemViewPairs[gridPos] = item;
+
+    m_itemViewGridPosPairs[item] = gridPos;
   }
 }
 
@@ -144,7 +165,7 @@ void RefrigerationSystemGridView::insertItemView(int index)
     {
       std::pair<int,int> oldPos = gridPos(i - 1);
 
-      QGraphicsItem * item = viewFromGridPos(oldPos);
+      QGraphicsObject * item = viewFromGridPos(oldPos);
 
       std::pair<int,int> newPos = gridPos(i);
 
@@ -152,7 +173,7 @@ void RefrigerationSystemGridView::insertItemView(int index)
     }
 
     // Create new item and position it at index grid position
-    if( QGraphicsItem * item = createNewItemView(index) )
+    if( QGraphicsObject * item = createNewItemView(index) )
     {
       std::pair<int,int> pos = gridPos(index);
 
@@ -168,9 +189,9 @@ void RefrigerationSystemGridView::removeItemView(int index)
     prepareGeometryChange();
 
     // Remove Item
-    if(QGraphicsItem * item = viewFromGridPos(gridPos(index)))
+    if(QGraphicsObject * item = viewFromGridPos(gridPos(index)))
     {
-      delete item;
+      item->deleteLater();
     }
 
     // Move Everything after index back one grid position
@@ -178,7 +199,7 @@ void RefrigerationSystemGridView::removeItemView(int index)
     {
       std::pair<int,int> oldPos = gridPos(i);
 
-      QGraphicsItem * item = viewFromGridPos(oldPos);
+      QGraphicsObject * item = viewFromGridPos(oldPos);
 
       std::pair<int,int> newPos = gridPos(i - 1);
 
@@ -196,6 +217,24 @@ void RefrigerationSystemGridView::removePair(QObject * object)
     if( it != m_widgetItemPairs.end() )
     {
       m_widgetItemPairs.erase(it);
+    }
+
+    std::map<QObject *, std::pair<int,int> >::iterator it2 = m_itemViewGridPosPairs.find(object);
+
+    std::pair<int,int> pos;
+
+    if( it2 != m_itemViewGridPosPairs.end() )
+    {
+      m_itemViewGridPosPairs.erase(it2);
+
+      pos = it2->second;
+
+      std::map<std::pair<int,int>,QObject *>::iterator it3 = m_gridPosItemViewPairs.find(pos);
+
+      if( it3 != m_gridPosItemViewPairs.end() )
+      {
+        m_gridPosItemViewPairs.erase(it3);
+      }
     }
   }
 }
@@ -252,27 +291,15 @@ std::pair<int,int> RefrigerationSystemGridView::gridPos(int index)
   return std::pair<int,int>(row,column);
 }
 
-QGraphicsItem * RefrigerationSystemGridView::viewFromGridPos(std::pair<int,int> location)
+QGraphicsObject * RefrigerationSystemGridView::viewFromGridPos(std::pair<int,int> location)
 {
-  QGraphicsItem * result = NULL;
+  QGraphicsObject * result = NULL;
 
-  int x = location.second * (RefrigerationSystemMiniView::cellSize().width() + spacing()) + RefrigerationSystemMiniView::cellSize().width() / 2;
-  int y = location.first * (RefrigerationSystemMiniView::cellSize().height() + spacing()) + RefrigerationSystemMiniView::cellSize().height() / 2;
+  std::map<std::pair<int,int>,QObject *>::iterator it = m_gridPosItemViewPairs.find(location);
 
-  QPoint point(x,y);
-
-  QList<QGraphicsItem *>  items = childItems();
-
-  for(QList<QGraphicsItem *>::iterator it = items.begin();
-      it != items.end();
-      it++)
+  if( it != m_gridPosItemViewPairs.end() )
   {
-    QRect rect((*it)->pos().x(),(*it)->pos().y(),RefrigerationSystemMiniView::cellSize().width(),RefrigerationSystemMiniView::cellSize().height());
-
-    if( (*it)->contains(point) )
-    {
-      result = *it;
-    }
+    result = qobject_cast<QGraphicsObject *>(it->second);
   }
 
   return result;
@@ -293,6 +320,10 @@ RefrigerationSystemMiniView::RefrigerationSystemMiniView()
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
   removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,10);
+
+  zoomInButtonItem = new ZoomInButtonItem();
+  zoomInButtonItem->setParentItem(this);
+  zoomInButtonItem->setPos(removeButtonItem->pos().x() - 10 - zoomInButtonItem->boundingRect().width(),removeButtonItem->pos().y());
 }
 
 QRectF RefrigerationSystemMiniView::boundingRect() const
@@ -325,6 +356,13 @@ QRectF RefrigerationSystemMiniView::headerRect() const
   return QRectF(0,0,cellWidth(),headerHeight());
 }
 
+void RefrigerationSystemMiniView::setName(const QString & name)
+{
+  m_name = name;
+
+  update();
+}
+
 void RefrigerationSystemMiniView::paint( QPainter *painter, 
                                          const QStyleOptionGraphicsItem *option, 
                                          QWidget *widget )
@@ -339,6 +377,8 @@ void RefrigerationSystemMiniView::paint( QPainter *painter,
 
   painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
   painter->drawRect(headerRect());
+
+  painter->drawText(headerRect(),m_name);
 }
 
 RefrigerationSystemView::RefrigerationSystemView()
@@ -587,10 +627,9 @@ QRectF RefrigerationSecondaryView::boundingRect() const
 }
 
 RefrigerationSystemDropZoneView::RefrigerationSystemDropZoneView()
+  : QGraphicsObject(), 
+    m_mouseDown(false)
 {
-  buttonItem = new RemoveButtonItem();
-
-  buttonItem->setParentItem(this);
 }
 
 QRectF RefrigerationSystemDropZoneView::boundingRect() const
@@ -607,6 +646,32 @@ void RefrigerationSystemDropZoneView::paint( QPainter *painter,
   painter->setPen(QPen(Qt::black,2,Qt::DashLine, Qt::RoundCap));
 
   painter->drawRect(boundingRect());
+}
+
+void RefrigerationSystemDropZoneView::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  this->update();
+
+  event->accept();
+}
+
+void RefrigerationSystemDropZoneView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      emit mouseClicked();
+    }
+  }
+
+  m_mouseDown = false;
+
+  this->update();
 }
 
 } // openstudio

@@ -33,21 +33,21 @@ namespace openstudio {
 RefrigerationController::RefrigerationController()
   : QObject()
 {
-  m_refrigerationScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
+  m_refrigerationGridScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
 
   m_refrigerationGraphicsView = new QGraphicsView();
 
   m_refrigerationSystemGridView = QSharedPointer<RefrigerationSystemGridView>(new RefrigerationSystemGridView());
 
-  m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController());
+  m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController(this));
 
   m_refrigerationSystemGridView->setListController(m_refrigerationSystemListController);
 
   m_refrigerationSystemGridView->setDelegate(QSharedPointer<RefrigerationSystemItemDelegate>(new RefrigerationSystemItemDelegate()));
 
-  m_refrigerationScene->addItem(m_refrigerationSystemGridView.data());
+  m_refrigerationGridScene->addItem(m_refrigerationSystemGridView.data());
 
-  m_refrigerationGraphicsView->setScene(m_refrigerationScene.data());
+  m_refrigerationGraphicsView->setScene(m_refrigerationGridScene.data());
 }
 
 RefrigerationController::~RefrigerationController()
@@ -58,6 +58,15 @@ RefrigerationController::~RefrigerationController()
   }
 }
 
+void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem)
+{
+  m_refrigerationScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
+
+  m_refrigerationScene->addItem(new RefrigerationSystemView());
+
+  m_refrigerationGraphicsView->setScene(m_refrigerationScene.data());
+}
+
 QGraphicsView * RefrigerationController::refrigerationGraphicsView() const
 {
   return m_refrigerationGraphicsView;
@@ -66,6 +75,16 @@ QGraphicsView * RefrigerationController::refrigerationGraphicsView() const
 QSharedPointer<RefrigerationSystemListController> RefrigerationController::refrigerationSystemListController() const
 {
   return m_refrigerationSystemListController;
+}
+
+RefrigerationSystemListController::RefrigerationSystemListController(RefrigerationController * refrigerationController)
+  : m_refrigerationController(refrigerationController)
+{
+}
+
+RefrigerationController * RefrigerationSystemListController::refrigerationController() const
+{
+  return m_refrigerationController;
 }
 
 QSharedPointer<OSListItem> RefrigerationSystemListController::itemAt(int i)
@@ -149,9 +168,19 @@ RefrigerationSystemListItem::RefrigerationSystemListItem(const model::Refrigerat
 {
 }
 
+QString RefrigerationSystemListItem::systemName() const
+{
+  return QString::fromStdString(m_refrigerationSystem.name().get());
+}
+
 void RefrigerationSystemListItem::remove()
 {
   qobject_cast<RefrigerationSystemListController *>(controller())->removeSystem(m_refrigerationSystem);
+}
+
+void RefrigerationSystemListItem::zoomInOnSystem()
+{
+  qobject_cast<RefrigerationSystemListController *>(controller())->refrigerationController()->zoomInOnSystem(m_refrigerationSystem);
 }
 
 RefrigerationSystemListDropZoneItem::RefrigerationSystemListDropZoneItem(OSListController * listController)
@@ -161,9 +190,9 @@ RefrigerationSystemListDropZoneItem::RefrigerationSystemListDropZoneItem(OSListC
 
 QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  QGraphicsObject * item = NULL;
+  QGraphicsObject * itemView = NULL;
 
-  if( dataSource.dynamicCast<RefrigerationSystemListItem>() )
+  if( QSharedPointer<RefrigerationSystemListItem> listItem = dataSource.dynamicCast<RefrigerationSystemListItem>() )
   {
     RefrigerationSystemMiniView * refrigerationSystemMiniView = new RefrigerationSystemMiniView();
 
@@ -171,21 +200,26 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
     bingo = connect(refrigerationSystemMiniView->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
     OS_ASSERT(bingo);
 
-    item = refrigerationSystemMiniView;
+    bingo = connect(refrigerationSystemMiniView->zoomInButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(zoomInOnSystem()));
+    OS_ASSERT(bingo);
+
+    refrigerationSystemMiniView->setName(listItem->systemName());
+
+    itemView = refrigerationSystemMiniView;
   }
   else if( dataSource.dynamicCast<RefrigerationSystemListDropZoneItem>() )
   {
     RefrigerationSystemDropZoneView * refrigerationSystemDropZoneView = new RefrigerationSystemDropZoneView();
 
     bool bingo;
-    bingo = connect(refrigerationSystemDropZoneView->buttonItem,SIGNAL(mouseClicked()),
+    bingo = connect(refrigerationSystemDropZoneView,SIGNAL(mouseClicked()),
                     qobject_cast<RefrigerationSystemListController *>(dataSource->controller()),SLOT(createNewSystem()));
     OS_ASSERT(bingo);
 
-    item = refrigerationSystemDropZoneView;
+    itemView = refrigerationSystemDropZoneView;
   }
 
-  return item;
+  return itemView;
 }
 
 } // openstudio

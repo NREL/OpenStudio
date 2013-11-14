@@ -75,6 +75,13 @@ class RemoveButtonItem : public ButtonItem
   RemoveButtonItem(QGraphicsItem * parent = 0);
 };
 
+class ZoomInButtonItem : public ButtonItem
+{
+  public:
+
+  ZoomInButtonItem(QGraphicsItem * parent = 0);
+};
+
 } // openstudio
 
 #endif // OPENSTUDIO_GRAPHICSITEMS_H
