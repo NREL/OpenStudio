@@ -30,7 +30,7 @@ OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
 
 # Search for modules in the openstudiocore dir first to override cmake ones 
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake")
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE_SOURCE_DIR})
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
