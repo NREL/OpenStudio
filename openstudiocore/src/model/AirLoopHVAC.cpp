@@ -721,6 +721,13 @@ namespace detail {
     return addBranchForZone(thermalZone,comp);
   }
 
+  bool AirLoopHVAC_Impl::addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal)
+  {
+    boost::optional<StraightComponent> comp = airTerminal;
+
+    return addBranchForZone(thermalZone, comp);
+  }
+
   bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent airTerminal)
   {
     Model _model = this->model();
@@ -1131,6 +1138,11 @@ IddObjectType AirLoopHVAC::iddObjectType() {
 bool AirLoopHVAC::addBranchForZone(openstudio::model::ThermalZone & thermalZone)
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone);
+}
+
+bool AirLoopHVAC::addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
 }
 
 bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent airTerminal)

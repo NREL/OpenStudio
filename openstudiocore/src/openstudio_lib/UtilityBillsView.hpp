@@ -77,6 +77,10 @@ private:
 
   static std::vector<std::pair<FuelType, std::string> > utilityBillFuelTypesAndNames();
 
+signals:
+
+  void enableAddNewObjectButton(bool enable);
+
 };
 
 class UtilityBillsInspectorView : public ModelObjectInspectorView
@@ -106,7 +110,6 @@ protected slots:
 
 private:
 
-  void setCorrectInspectorView();
   void createWidgets();
   void getSortedBills();
   void showAddButton();
@@ -116,7 +119,6 @@ private:
   void attach(openstudio::model::UtilityBill & utilityBill);
   void detach();
   void refresh();
-  void updateRunPeriodDatesLabel();
 
   void createBillingPeriodHeaderWidget();
   void addBillingPeriodWidget(model::BillingPeriod & billingPeriod);
@@ -170,6 +172,7 @@ private:
   
 signals:
   void showSubTabView(bool showSubTabView);
+  void enableAddNewObjectButton(bool enable);
 
 private slots:
   void addBillingPeriod(bool checked);
