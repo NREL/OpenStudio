@@ -1010,7 +1010,6 @@ SET( ${target_name}_moc
   ThermostatSetpointDualSetpoint_Impl.hpp
   TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
-  Version_Impl.hpp
   WaterHeaterMixed_Impl.hpp
   WaterUseConnections_Impl.hpp
   WaterUseEquipment_Impl.hpp
