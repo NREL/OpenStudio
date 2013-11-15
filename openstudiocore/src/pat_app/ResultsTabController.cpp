@@ -244,9 +244,8 @@ void ResultsTabController::downloadResults()
               }
 
             }else{
-              if (dataPoint.runType() == analysis::DataPointRunType::CloudSlim){
-                dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
-              }
+              // request detailed run type
+              dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
             }
 
             enableDownloadResultsButton();
