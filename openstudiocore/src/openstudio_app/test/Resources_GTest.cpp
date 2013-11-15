@@ -47,7 +47,7 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
 
   QDir resourcesDir(toQString(resourcesPath));
   QStringList filters;
-  filters << toQString("*.osm");
+  filters << QString("*.osm");
   QFileInfoList files = resourcesDir.entryInfoList(filters, QDir::Files, QDir::NoSort);
   EXPECT_FALSE(files.empty());
   Q_FOREACH(QFileInfo file, files){
