@@ -232,7 +232,7 @@ void ResultsTabController::downloadResults()
           boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
           if(cloudAnalysisDriver){
 
-            if (cloudAnalysisDriver->status() == analysisdriver::AnalysisStatus::Running){
+            if (dataPoint.complete() || (cloudAnalysisDriver->status() == analysisdriver::AnalysisStatus::Running)){
 
               bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
               if (sameSession){
@@ -317,6 +317,15 @@ void ResultsTabController::enableDownloadResultsButton()
     }
 
     // data point does not have detailed results
+
+    // check if data point is selected to run
+    if (!dataPoint->selected()){
+      // not selected to run
+      resultsView->enableDownloadResultsButton(RESULTS_DISABLED);
+      return;
+    }
+
+    // selected to run
 
     // check if data point has already requested detailed results
     if (dataPoint->runType() == analysis::DataPointRunType::CloudDetailed){
