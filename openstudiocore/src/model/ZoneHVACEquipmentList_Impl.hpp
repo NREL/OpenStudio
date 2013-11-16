@@ -32,9 +32,7 @@ namespace detail {
 
 /** ZoneHVACEquipmentList_Impl is a ModelObject_Impl that is the implementation class for ZoneHVACEquipmentList.*/
 class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
-  Q_OBJECT;
-
-  public:
+ public:
 
   ZoneHVACEquipmentList_Impl(const IdfObject& idfObject,
                              Model_Impl* model,

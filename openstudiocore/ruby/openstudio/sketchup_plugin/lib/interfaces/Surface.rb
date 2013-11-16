@@ -372,7 +372,7 @@ module OpenStudio
         
         # DLM: detect_base_face can be expensive, do we have to search all_connected?  is there a way to cache the result of detect_base_face?
         for face in @entity.all_connected 
-          if (face.class == Sketchup::Face and @entity == DrawingUtils.detect_base_face(face, false))
+          if (face.class == Sketchup::Face and @entity == DrawingUtils.detect_base_face(face, true))
             #puts "found child face->" + face.to_s
             child_faces << face
           end

@@ -39,7 +39,6 @@ namespace detail {
 
   /** RefrigerationSystem_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSystem.*/
   class MODEL_API RefrigerationSystem_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -29,7 +29,6 @@ class ParentObject;
 namespace detail {
 
   class MODEL_API Version_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

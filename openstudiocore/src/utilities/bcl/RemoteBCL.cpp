@@ -40,7 +40,7 @@
 #include <QTextStream>
 #include <QSslSocket>
 
-#define REMOTE_PRODUCTION_SERVER "http://bcl.nrel.gov"
+#define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
 
 namespace openstudio{
@@ -68,7 +68,7 @@ namespace openstudio{
     m_networkManager(new QNetworkAccessManager()),
     m_mutex(new QMutex()),
     m_numResultsPerQuery(10),
-    m_apiVersion("1.1")
+    m_apiVersion("2.0")
   {
     // make sure application is initialized
     openstudio::Application::instance().application(true);
@@ -242,8 +242,9 @@ namespace openstudio{
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
-      QString url = toQString(remoteUrl() + "/api/search/?filters=ss_uuid:%1&oauth_consumer_key=%2&api_version=%3").arg(
-        toQString(component.uid()), toQString(authKey()), toQString(m_apiVersion)
+      QString url = toQString(remoteUrl() + "/api/search/?fq[]=ss_uuid:%1&api_version=%2").arg(
+        toQString(component.uid()),
+        toQString(m_apiVersion)
       );
       //LOG(Warn, toString(url));
 
@@ -284,8 +285,9 @@ namespace openstudio{
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
-      QString url = toQString(remoteUrl() + "/api/search/?filters=ss_uuid:%1&oauth_consumer_key=%2&api_version=%3").arg(
-        toQString(measure.uid()), toQString(authKey()), toQString(m_apiVersion)
+      QString url = toQString(remoteUrl() + "/api/search/?fq[]=ss_uuid:%1&api_version=%2").arg(
+        toQString(measure.uid()),
+        toQString(m_apiVersion)
       );
       //LOG(Warn, toString(url));
 
@@ -507,8 +509,8 @@ namespace openstudio{
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
-      QString url = toQString(remoteUrl + "/api/search/?oauth_consumer_key=%1&api_version=%2&show_rows=0").arg(
-        toQString(authKey), toQString(m_apiVersion)
+      QString url = toQString(remoteUrl + "/api/search/?api_version=%1&show_rows=0").arg(
+        toQString(m_apiVersion)
       );
       //LOG(Warn, toString(url));
 
@@ -605,13 +607,12 @@ namespace openstudio{
     QUrl url = toQString(remoteUrl() + "/api/component/download");
 
     QByteArray data;
-    url.addQueryItem("oauth_consumer_key", toQString(authKey()));
     url.addQueryItem("uids", toQString(uid));
     url.addQueryItem("api_version", toQString(m_apiVersion));
     data.append(url.encodedQuery());
-    //LOG(Warn, url.toString().toStdString());
+    LOG(Warn, url.toString().toStdString());
 
-    QNetworkRequest request(url);
+    QNetworkRequest request(toQString(remoteUrl() + "/api/component/download"));
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
 
@@ -770,13 +771,17 @@ namespace openstudio{
 
     QString url;
     if (componentType.empty() || componentType == "*"){
-      url = toQString(remoteUrl() + "/api/metasearch/%1?filters=type:%2&oauth_consumer_key=%3&api_version=%4").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), toQString(authKey()), toQString(m_apiVersion)
+      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&api_version=%3").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        toQString(m_apiVersion)
       );
     }else{
-      url = toQString(remoteUrl() + "/api/metasearch/%1?filters=type:%2 sm_component_type:\"%3\""
-        "&oauth_consumer_key=%4&api_version=%5").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), toQString(componentType), toQString(authKey()),
+      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=%3:\"%4\"&api_version=%5").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
+        toQString(componentType),
         toQString(m_apiVersion)
       );
     }
@@ -815,14 +820,17 @@ namespace openstudio{
 
     QString url;
     if (componentTypeTID == 0){
-      url = toQString(remoteUrl() + "/api/metasearch/%1?filters=type:%2&oauth_consumer_key=%3&api_version=%4").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), toQString(authKey()), toQString(m_apiVersion)
+      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&api_version=%3").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        toQString(m_apiVersion)
       );
     }else{
-      url = toQString(remoteUrl() + "/api/metasearch/%1?filters=type:%2 tid:%3"
-        "&oauth_consumer_key=%4&api_version=%5").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), QString::number(componentTypeTID),
-        toQString(authKey()), toQString(m_apiVersion)
+      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        QString::number(componentTypeTID),
+        toQString(m_apiVersion)
       );
     }
     //LOG(Warn, toString(url));
@@ -860,15 +868,23 @@ namespace openstudio{
 
     QString url;
     if (componentType.empty() || componentType == "*"){
-      url = toQString(remoteUrl() + "/api/search/%1?filters=type:%2&oauth_consumer_key=%3&api_version=%4&show_rows=%5&page=%6").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), toQString(authKey()), toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery), QString::number(page)
+      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&api_version=%3&show_rows=%4&page=%5").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        toQString(m_apiVersion),
+        QString::number(m_numResultsPerQuery),
+        QString::number(page)
       );
     }else{
-      url = toQString(remoteUrl() + "/api/search/%1?filters=type:%2 sm_component_type:\"%3\""
-        "&oauth_consumer_key=%4&api_version=%5&show_rows=%6&page=%7").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), toQString(componentType), toQString(authKey()),
-        toQString(m_apiVersion), QString::number(m_numResultsPerQuery), QString::number(page)
+      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=%3:\"%4\""
+        "&api_version=%5&show_rows=%6&page=%7").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
+        toQString(componentType),
+        toQString(m_apiVersion),
+        QString::number(m_numResultsPerQuery),
+        QString::number(page)
       );
     }
     //LOG(Warn, toString(url));
@@ -906,15 +922,21 @@ namespace openstudio{
 
     QString url;
     if (componentTypeTID == 0){
-      url = toQString(remoteUrl() + "/api/search/%1?filters=type:%2&oauth_consumer_key=%3&api_version=%4&show_rows=%5&page=%6").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), toQString(authKey()),
-        toQString(m_apiVersion), QString::number(m_numResultsPerQuery), QString::number(page)
+      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&api_version=%3&show_rows=%4&page=%5").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        toQString(m_apiVersion),
+        QString::number(m_numResultsPerQuery),
+        QString::number(page)
       );
     }else{
-      url = toQString(remoteUrl() + "/api/search/%1?filters=type:%2 tid:%3"
-        "&oauth_consumer_key=%4&api_version=%5&show_rows=%6&page=%7").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"), toQString(filterType), QString::number(componentTypeTID),
-        toQString(authKey()), toQString(m_apiVersion), QString::number(m_numResultsPerQuery), QString::number(page)
+      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4&show_rows=%5&page=%6").arg(
+        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+        toQString(filterType),
+        QString::number(componentTypeTID),
+        toQString(m_apiVersion),
+        QString::number(m_numResultsPerQuery),
+        QString::number(page)
       );
     }
     //LOG(Warn, toString(url));
@@ -1016,7 +1038,7 @@ namespace openstudio{
         LOG(Error, "Network Error: Host " << remoteUrl() << " not found");
       }else if (reply->error() == QNetworkReply::UnknownNetworkError && reply->errorString().startsWith("Error creating SSL context")){
         LOG(Error, "Network Error: Unable to create SSL connection.  Verify that SSL libraries are in the system path.");
-        //QMessageBox::warning(0, "Unable to Create SSL Connection", QString("Verify that SSL libraries are in the system path"));
+        //QMessageBox::warning(0, "Unable to Create SSL Connection", "Verify that SSL libraries are in the system path");
       }else{
         LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
       }
@@ -1072,7 +1094,7 @@ namespace openstudio{
       while (!componentElement.firstChildElement("name").isNull())
       {
         //Skip components without a uid or version_id
-        if (!componentElement.firstChildElement("uid").isNull() && !componentElement.firstChildElement("version_id").isNull())
+        if (!componentElement.firstChildElement("uuid").isNull() && !componentElement.firstChildElement("vuuid").isNull())
         {
           BCLSearchResult searchResult(componentElement);
           searchResults.push_back(searchResult);

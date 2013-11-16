@@ -41,7 +41,6 @@ namespace detail {
 
   /** Measure_Impl is a AnalysisObject_Impl that is the implementation class for Measure.*/
   class ANALYSIS_API Measure_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

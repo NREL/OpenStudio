@@ -44,7 +44,6 @@ namespace detail {
   /** InputVariable_Impl is a Variable_Impl that is the implementation class for
    *  InputVariable */
   class ANALYSIS_API InputVariable_Impl : public Variable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

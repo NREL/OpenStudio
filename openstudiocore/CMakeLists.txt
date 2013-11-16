@@ -118,7 +118,7 @@ ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=2)
 
 IF(MSVC)
   # Build with Multiple Processes
-  OPTION( BUILD_WITH_MULTIPLE_PROCESSES "/MP compiler flag for full processor utilization" ON )
+  SET( BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization" )
   MARK_AS_ADVANCED( BUILD_WITH_MULTIPLE_PROCESSES )
 ENDIF()
 
@@ -135,6 +135,7 @@ SET( project_directories
   energyplus
   radiance
   gbxml
+  isomodel
   osversion
   ruleset
   runmanager/lib
@@ -170,7 +171,7 @@ SET ( LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBR
 INCLUDE(ProjectMacros.cmake)
 
 # Search for modules in the root dir first to override cmake ones 
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # Use CTest
 IF( BUILD_TESTING )
@@ -262,23 +263,6 @@ ENDIF()
   )
 #ENDIF( BUILD_TESTING OR BUILD_PACKAGE )
 
-# OpenSSL / libssh support
-FIND_PACKAGE( OpenSSL )
-IF( NOT ${OPENSSL_FOUND} )
-  MESSAGE(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-  IF ( WIN32 )
-    MESSAGE(SEND_ERROR "You can install OpenSSL for windows by visiting http://www.slproweb.com/products/Win32OpenSSL.html and installing the latest recommended full installation package")
-  ELSE()
-    MESSAGE(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
-  ENDIF()
-ENDIF()
-#enable libssh
-ADD_DEFINITIONS(-DLIBSSH_STATIC)
-# add sub directory
-ADD_SUBDIRECTORY( src/libssh )
-INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
-
-
 # Ruby
 FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH )
 FIND_PACKAGE( Ruby REQUIRED )
@@ -309,6 +293,51 @@ ENDIF()
 
 MESSAGE(STATUS "Ruby module code installing to: ${RUBY_MODULE_DIR}")
 MESSAGE(STATUS "Ruby module arch library installing to: ${RUBY_MODULE_ARCH_DIR}")
+
+
+# OpenSSL / libssh support
+IF( BUILD_WITH_OPENSSL )
+  IF(WIN32)
+    IF(CMAKE_CL_64)
+      SET(OPENSSL_PATH "OpenSSL-Win64")
+    ELSE()
+      SET(OPENSSL_PATH "OpenSSL-Win32")
+    ENDIF()
+    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/${OPENSSL_PATH}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    SET(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+  ENDIF()
+
+  FIND_PACKAGE( OpenSSL )
+  IF( NOT ${OPENSSL_FOUND} )
+    MESSAGE(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
+    IF ( WIN32 )
+      MESSAGE(SEND_ERROR "You can install OpenSSL for windows by visiting http://www.slproweb.com/products/Win32OpenSSL.html and installing the latest recommended full installation package")
+    ELSE()
+      MESSAGE(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+    ENDIF()
+  ELSEIF(WIN32)
+    SET(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/libeay32.dll")
+    SET(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/ssleay32.dll")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/MinSizeRel/")
+    INSTALL(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
+    INSTALL(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
+  ENDIF()
+  
+  #enable libssh
+  ADD_DEFINITIONS(-DLIBSSH_STATIC)
+  
+  # add sub directory
+  ADD_SUBDIRECTORY( src/libssh )
+  INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
+      
+ENDIF()
+
+
 
 FIND_PACKAGE( SWIG 1.3.40 REQUIRED )
 MARK_AS_ADVANCED(  
@@ -844,6 +873,7 @@ export(TARGETS openstudio_runmanager
                openstudio_analysis
                openstudio_radiance
                openstudio_gbxml
+               openstudio_isomodel
                openstudio_lib
                openstudio_plugin
                openstudio_sdd
@@ -943,5 +973,3 @@ IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
   ENDIF()
 
 ENDIF()
-
-

@@ -142,6 +142,8 @@ SET( geometry_src
   geometry/EulerAngles.cpp  
   geometry/Geometry.hpp
   geometry/Geometry.cpp  
+  geometry/Intersection.hpp
+  geometry/Intersection.cpp  
   geometry/Plane.hpp
   geometry/Plane.cpp
   geometry/Point3d.hpp
@@ -150,6 +152,7 @@ SET( geometry_src
   geometry/Transformation.cpp
   geometry/Vector3d.hpp
   geometry/Vector3d.cpp
+  ../polypartition/polypartition.cpp
 )
 
 SET( math_src
@@ -431,6 +434,7 @@ SET( ${target_name}_test_src
   geometry/Test/GeometryFixture.hpp
   geometry/Test/GeometryFixture.cpp
   geometry/Test/Geometry_GTest.cpp
+  geometry/Test/Intersection_GTest.cpp
   geometry/Test/Plane_GTest.cpp
   geometry/Test/Transformation_GTest.cpp
   math/test/FloatCompare_GTest.cpp

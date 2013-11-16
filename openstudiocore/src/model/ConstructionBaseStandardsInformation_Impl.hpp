@@ -32,7 +32,6 @@ class Material;
 namespace detail {
 
   class MODEL_API ConstructionBaseStandardsInformation_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** Constructors and Destructors */
     //@{

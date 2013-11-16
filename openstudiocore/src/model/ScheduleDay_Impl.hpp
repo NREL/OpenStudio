@@ -23,9 +23,9 @@
 #include <model/ModelAPI.hpp>
 #include <model/ScheduleBase_Impl.hpp>
 
-namespace openstudio {
+#include <utilities/time/Time.hpp>
 
-class Time;
+namespace openstudio {
 
 namespace model {
 
@@ -123,8 +123,16 @@ namespace detail {
     virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const;
 
     virtual bool okToResetScheduleTypeLimits() const;
+
+   private slots:
+
+    void clearCachedVariables();
+
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleDay");
+
+    mutable boost::optional<std::vector<openstudio::Time> > m_cachedTimes;
+    mutable boost::optional<std::vector<double> > m_cachedValues;
   };
 
 } // detail

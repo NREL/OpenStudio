@@ -29,7 +29,6 @@ namespace analysis {
 namespace detail {
 
   class ANALYSIS_API OutputVariable_Impl : public Variable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
