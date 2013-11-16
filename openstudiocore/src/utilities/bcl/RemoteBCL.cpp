@@ -38,6 +38,7 @@
 #include <QNetworkRequest>
 #include <QSslError>
 #include <QTextStream>
+#include <QSslSocket>
 
 #define REMOTE_PRODUCTION_SERVER "http://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
@@ -92,6 +93,25 @@ namespace openstudio{
     delete m_mutex;
   }
 
+  bool RemoteBCL::initializeSSL(const openstudio::path &t_pathToSSLLibraries)
+  {
+    QByteArray oldpath = qgetenv("PATH");
+    if (!t_pathToSSLLibraries.empty())
+    {
+      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.file_string()).toUtf8());
+    }
+
+    bool opensslloaded = QSslSocket::supportsSsl();
+    
+    if (!t_pathToSSLLibraries.empty())
+    {
+      qputenv("PATH", oldpath);
+    }
+
+    return opensslloaded;
+  }
+
+  
   ///////////////////////////////////////////////////////////////////////////
   /// Inherited members
   ///////////////////////////////////////////////////////////////////////////

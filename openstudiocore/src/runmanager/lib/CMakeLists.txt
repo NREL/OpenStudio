@@ -282,7 +282,7 @@ IF( OPENSSL_FOUND AND BUILD_WITH_OPENSSL )
   TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset libssh_static ${OPENSSL_LIBRARIES}) 
    
   IF(MSVC)
-    TARGET_LINK_LIBRARIES(${target_name} delayimp)
+    TARGET_LINK_LIBRARIES(${target_name} delayimp ws2_32)
     
     SET_TARGET_PROPERTIES(${target_name} PROPERTIES LINK_FLAGS "/DELAYLOAD:libeay32.dll")
   ENDIF()
