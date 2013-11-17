@@ -128,6 +128,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
+  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+
   bool addBranchForHVACComponent(HVACComponent airTerminal);
 
   SizingSystem sizingSystem() const;

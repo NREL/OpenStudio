@@ -150,7 +150,7 @@ class CreateSketchUpGroupsFromDiagram < OpenStudio::Ruleset::ModelUserScript
           group.transformation = new_transform
 
           # extrude surface by floor height
-          status = face.pushpull height*-1, true
+          status = face.pushpull height*-1, false
 
           rm = rm + 1
           # set space name
