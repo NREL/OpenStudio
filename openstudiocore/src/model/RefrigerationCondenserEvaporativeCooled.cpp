@@ -83,7 +83,7 @@ namespace detail {
   {
     RefrigerationCondenserEvaporativeCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
-    modelObjectClone.resetAirInletNode();
+    //modelObjectClone.resetAirInletNode();
 
     return modelObjectClone;
   }

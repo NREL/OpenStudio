@@ -202,7 +202,7 @@ namespace detail {
     // TODO: Check argument type. From object lists, some candidates are: std::string.
     //bool setAirInletNode(std::string airInletNode);
 
-    void resetAirInletNode();
+    //void resetAirInletNode();
 
     void setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
