@@ -300,8 +300,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(airLoop);
   }
 
-<<<<<<< HEAD
-=======
   // get AirConditionerVariableRefrigerantFlow objects in sorted order
   std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getModelObjects<AirConditionerVariableRefrigerantFlow>();
   std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
@@ -309,7 +307,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(vrf);
   }
 
->>>>>>> develop
   // get plant loops in sorted order
   std::vector<PlantLoop> plantLoops = model.getModelObjects<PlantLoop>();
   std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
@@ -397,15 +394,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   switch(modelObject.iddObject().type().value())
   {
-<<<<<<< HEAD
-=======
   case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow :
     {
       model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
       retVal = translateAirConditionerVariableRefrigerantFlow(vrf);
       break;
     }
->>>>>>> develop
   case openstudio::IddObjectType::OS_AirLoopHVAC :
     {
       model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
@@ -545,15 +539,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingDXTwoSpeed(coil);
       break;
     }
-<<<<<<< HEAD
-=======
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :
     {
       model::CoilCoolingDXVariableRefrigerantFlow coil = modelObject.cast<CoilCoolingDXVariableRefrigerantFlow>();
       retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
       break;
     }
->>>>>>> develop
   case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow :
     {
       // no-op
@@ -604,15 +595,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
-<<<<<<< HEAD
-=======
   case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow :
     {
       model::CoilHeatingDXVariableRefrigerantFlow coil = modelObject.cast<CoilHeatingDXVariableRefrigerantFlow>();
       retVal = translateCoilHeatingDXVariableRefrigerantFlow(coil);
       break;
     }
->>>>>>> develop
   case openstudio::IddObjectType::OS_Coil_Heating_Water :
     {
       model::CoilHeatingWater coil = modelObject.cast<CoilHeatingWater>();
@@ -880,11 +868,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
       retVal = translateElectricEquipment(equipment);
       break;
-<<<<<<< HEAD
-    }     
-=======
     }
->>>>>>> develop
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1154,7 +1138,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
       break;
     }
-<<<<<<< HEAD
   case openstudio::IddObjectType::OS_Refrigeration_Condenser_Cascade:
     {
       model::RefrigerationCondenserCascade refrigerationCondenserCascade = modelObject.cast<RefrigerationCondenserCascade>();
@@ -1191,23 +1174,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationSecondarySystem(refrigerationSecondarySystem);
       break;
     }
-=======
->>>>>>> develop
   case openstudio::IddObjectType::OS_Refrigeration_System :
     {
       model::RefrigerationSystem refrigerationSystem = modelObject.cast<RefrigerationSystem>();
       retVal = translateRefrigerationSystem(refrigerationSystem);
       break;
     }
-<<<<<<< HEAD
   case openstudio::IddObjectType::OS_Refrigeration_WalkIn :
     {
       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
       retVal = translateRefrigerationWalkIn(refrigerationWalkIn);
       break;
     }
-=======
->>>>>>> develop
   case openstudio::IddObjectType::OS_Rendering_Color :
     {
       // no-op
@@ -1586,15 +1564,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACPackagedTerminalAirConditioner(mo);
       break;
     }
-<<<<<<< HEAD
-=======
   case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow :
     {
       model::ZoneHVACTerminalUnitVariableRefrigerantFlow mo = modelObject.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
       retVal = translateZoneHVACTerminalUnitVariableRefrigerantFlow(mo);
       break;
     }
->>>>>>> develop
   case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
     {
       model::ZoneHVACWaterToAirHeatPump mo = modelObject.cast<ZoneHVACWaterToAirHeatPump>();
@@ -1806,15 +1781,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
-<<<<<<< HEAD
-  result.push_back(IddObjectType::OS_Refrigeration_System);
-=======
-  result.push_back(IddObjectType::OS_Refrigeration_Case);
-  result.push_back(IddObjectType::OS_Refrigeration_Compressor);
-  result.push_back(IddObjectType::OS_Refrigeration_Condenser_AirCooled);
   result.push_back(IddObjectType::OS_Refrigeration_System);
 
->>>>>>> develop
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 
@@ -2424,7 +2392,4 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 } // energyplus
 
 } // openstudio
-<<<<<<< HEAD
-=======
 
->>>>>>> develop

@@ -123,7 +123,6 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationSubcoolerMechanical.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSecondarySystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSystem.cpp
-<<<<<<< HEAD
   ForwardTranslator/ForwardTranslateRefrigerationWalkIn.cpp
   ForwardTranslator/ForwardTranslateRoofVegetation.cpp
   ForwardTranslator/ForwardTranslateRunPeriod.cpp
@@ -147,30 +146,6 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
-=======
-  ForwardTranslator/ForwardTranslateRoofVegetation.cpp
-  ForwardTranslator/ForwardTranslateRunPeriod.cpp
-  ForwardTranslator/ForwardTranslateRunPeriodControlDaylightSavingTime.cpp
-  ForwardTranslator/ForwardTranslateRunPeriodControlSpecialDays.cpp
-  ForwardTranslator/ForwardTranslateScreen.cpp
-  ForwardTranslator/ForwardTranslateScheduleCompact.cpp
-  ForwardTranslator/ForwardTranslateScheduleConstant.cpp
-  ForwardTranslator/ForwardTranslateScheduleDay.cpp
-  ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
-  ForwardTranslator/ForwardTranslateScheduleRuleset.cpp
-  ForwardTranslator/ForwardTranslateScheduleTypeLimits.cpp
-  ForwardTranslator/ForwardTranslateScheduleVariableInterval.cpp
-  ForwardTranslator/ForwardTranslateScheduleWeek.cpp
-  ForwardTranslator/ForwardTranslateScheduleYear.cpp
-  ForwardTranslator/ForwardTranslateSetpointManagerFollowOutdoorAirTemperature.cpp
-  ForwardTranslator/ForwardTranslateSetpointManagerMixedAir.cpp
-  ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
-  ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
-  ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
-  ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
-  ForwardTranslator/ForwardTranslateShade.cpp
-  ForwardTranslator/ForwardTranslateShadowCalculation.cpp
->>>>>>> develop
   ForwardTranslator/ForwardTranslateShadingControl.cpp
   ForwardTranslator/ForwardTranslateShadingSurface.cpp
   ForwardTranslator/ForwardTranslateShadingSurfaceGroup.cpp

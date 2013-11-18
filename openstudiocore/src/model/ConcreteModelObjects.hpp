@@ -20,12 +20,7 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
-<<<<<<< HEAD
-=======
 #include <model/AirConditionerVariableRefrigerantFlow.hpp>
-#include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
-#include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
->>>>>>> develop
 #include <model/AirGap.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
@@ -54,19 +49,13 @@
 #include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
-<<<<<<< HEAD
-=======
 #include <model/CoilCoolingDXVariableRefrigerantFlow.hpp>
->>>>>>> develop
 #include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
 #include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
-<<<<<<< HEAD
-=======
 #include <model/CoilHeatingDXVariableRefrigerantFlow.hpp>
->>>>>>> develop
 #include <model/CoilHeatingElectric.hpp>
 #include <model/CoilHeatingGas.hpp>
 #include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
@@ -119,11 +108,8 @@
 #include <model/ElectricEquipment.hpp>
 #include <model/ElectricEquipmentDefinition.hpp>
 #include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
-<<<<<<< HEAD
 #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
 #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
-=======
->>>>>>> develop
 #include <model/ExteriorLights.hpp>
 #include <model/ExteriorLightsDefinition.hpp>
 #include <model/Facility.hpp>
@@ -181,7 +167,6 @@
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
-<<<<<<< HEAD
 #include <model/RefrigerationCondenserCascade.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationCondenserWaterCooled.hpp>
@@ -191,9 +176,6 @@
 #include <model/RefrigerationSystem.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkInZoneBoundary.hpp>
-=======
-#include <model/RefrigerationSystem.hpp>
->>>>>>> develop
 #include <model/RenderingColor.hpp>
 #include <model/RoofVegetation.hpp>
 #include <model/RunPeriod.hpp>
@@ -278,18 +260,11 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-<<<<<<< HEAD
-=======
-#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
->>>>>>> develop
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 
 // include all concrete ModelObject Impls too
-<<<<<<< HEAD
-=======
 #include <model/AirConditionerVariableRefrigerantFlow_Impl.hpp>
->>>>>>> develop
 #include <model/AirGap_Impl.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
@@ -318,19 +293,13 @@
 #include <model/CoilCoolingCooledBeam_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
-<<<<<<< HEAD
-=======
 #include <model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp>
->>>>>>> develop
 #include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
 #include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
-<<<<<<< HEAD
-=======
 #include <model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp>
->>>>>>> develop
 #include <model/CoilHeatingElectric_Impl.hpp>
 #include <model/CoilHeatingGas_Impl.hpp>
 #include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
@@ -440,7 +409,6 @@
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
-<<<<<<< HEAD
 #include <model/RefrigerationCondenserCascade_Impl.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
 #include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
@@ -450,9 +418,6 @@
 #include <model/RefrigerationSystem_Impl.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
-=======
-#include <model/RefrigerationSystem_Impl.hpp>
->>>>>>> develop
 #include <model/RenderingColor_Impl.hpp>
 #include <model/RoofVegetation_Impl.hpp>
 #include <model/RunPeriod_Impl.hpp>
@@ -538,10 +503,7 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-<<<<<<< HEAD
-=======
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
->>>>>>> develop
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
 
