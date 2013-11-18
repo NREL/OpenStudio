@@ -159,20 +159,17 @@ if (APPLE)
   #LIST(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall")
   
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-           DESTINATION OpenStudio.app/Contents/share/openstudio/OSApp 
-           PATTERN ".svn" EXCLUDE
+           DESTINATION OpenStudio.app/Contents/share/openstudio/OSApp
          )
 elseif (WIN32)
   #LIST(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Release" "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Debug")
   
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-           DESTINATION share/openstudio/OSApp 
-           PATTERN ".svn" EXCLUDE
+           DESTINATION share/openstudio/OSApp
          )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
            DESTINATION share/openstudio/OSApp
-           PATTERN ".svn" EXCLUDE
          ) 
 endif()
 
