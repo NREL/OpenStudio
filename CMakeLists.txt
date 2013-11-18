@@ -154,7 +154,7 @@ MARK_AS_ADVANCED(Boost_LIB_DIAGNOSTIC_DEFINITIONS)
 MARK_AS_ADVANCED(ProcessorCount_cmd_getconf)
 MARK_AS_ADVANCED(ProcessorCount_cmd_sysctl)
 
-# Fix for OSX 10.9 Mavericks
+# Fix for OSX 10.9 Mavericks, allows osx_deployment_target=10.9
 if(APPLE)
     set(apple-frameworks "-stdlib=libstdc++")
     set(CMAKE_SHARED_LINKER_FLAGS " ${apple-frameworks} ${CMAKE_SHARED_LINKER_FLAGS}")
@@ -365,6 +365,8 @@ ENDIF()
 IF(BUILD_BOOST)
   IF(APPLE)
     STRING(REGEX MATCH "[0-9]+\\.[0-9]+" OSX_SDK_VERSION ${CMAKE_OSX_SYSROOT})
+    # Added cxxflags="-stdlib=libstdc++" linkflags="-stdlib=libstdc++" for Boost 1.47.0 to compile when osx_deployment_target=10.9
+    # These flags can be removed if Boost is updated to newer version (~1.55.0), may need --c++11 flag?
     ExternalProject_Add( Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
       URL_MD5 b0d9b288627b6a57d41d425d4f467592
