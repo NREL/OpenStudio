@@ -35,6 +35,7 @@ class RefrigerationSystemGridView;
 class RefrigerationSystemListController;
 class RefrigerationScene;
 class RefrigerationSystemDetailView;
+class OSItemId;
 
 class RefrigerationController : public QObject
 {
@@ -56,19 +57,31 @@ class RefrigerationController : public QObject
 
   void zoomOutToSystemGridView();
 
+  private slots:
+
+  void refresh();
+
+  void refreshNow();
+
+  void onCondenserViewDrop(const OSItemId & itemid);
+
   private:
 
   QPointer<QGraphicsView> m_refrigerationGraphicsView;
 
-  QSharedPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
+  QPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
 
-  QSharedPointer<RefrigerationSystemDetailView> m_detailView;
+  QPointer<RefrigerationSystemDetailView> m_detailView;
 
   QSharedPointer<RefrigerationSystemListController> m_refrigerationSystemListController;
 
   QSharedPointer<QGraphicsScene> m_refrigerationGridScene;
 
   QSharedPointer<QGraphicsScene> m_refrigerationScene;
+
+  bool m_dirty;
+
+  boost::optional<model::RefrigerationSystem> m_currentSystem;
 };
 
 class RefrigerationSystemListController : public OSListController

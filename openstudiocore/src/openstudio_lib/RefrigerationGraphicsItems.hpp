@@ -35,6 +35,7 @@ class RefrigerationSHXView;
 class RefrigerationCasesView;
 class RefrigerationSystemView;
 class RefrigerationSecondaryView;
+class OSItemId;
 
 // A grid layout of refrigeration systems
 class RefrigerationSystemGridView : public QGraphicsObject
@@ -45,7 +46,7 @@ class RefrigerationSystemGridView : public QGraphicsObject
 
   RefrigerationSystemGridView();
 
-  virtual ~RefrigerationSystemGridView() {};
+  virtual ~RefrigerationSystemGridView();
 
   void setDelegate(QSharedPointer<OSGraphicsItemDelegate> delegate);
 
@@ -279,19 +280,35 @@ class RefrigerationCasesView : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationCondenserView : public QGraphicsObject
+class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 
   public:
 
+  RefrigerationCondenserView();
+
+  virtual ~RefrigerationCondenserView() {}
+
   QRectF boundingRect() const;
+
+  void setEmpty(bool empty);
+
+  signals:
+
+  void componentDropped(const OSItemId & itemid);
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void dropEvent(QGraphicsSceneDragDropEvent *event);
+
+  private:
+
+  bool m_empty;
 };
 
 class RefrigerationCompressorView : public QGraphicsObject
@@ -309,7 +326,7 @@ class RefrigerationCompressorView : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationSubCoolerView : public QGraphicsObject
+class RefrigerationSubCoolerView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 
@@ -324,7 +341,7 @@ class RefrigerationSubCoolerView : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationHeatReclaimView : public QGraphicsObject
+class RefrigerationHeatReclaimView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 
@@ -339,7 +356,7 @@ class RefrigerationHeatReclaimView : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationSHXView : public QGraphicsObject
+class RefrigerationSHXView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 

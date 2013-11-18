@@ -20,6 +20,7 @@
 #include <shared_gui_components/GraphicsItems.hpp>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
+#include <QApplication>
 
 namespace openstudio {
 
@@ -53,6 +54,12 @@ void ButtonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 {
   if( m_mouseDown )
   {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
     if( shape().contains(event->pos()) )
     {
       event->accept();
@@ -60,10 +67,6 @@ void ButtonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
       emit mouseClicked();
     }
   }
-
-  m_mouseDown = false;
-
-  this->update();
 }
 
 void ButtonItem::hoverEnterEvent(QGraphicsSceneHoverEvent * event)

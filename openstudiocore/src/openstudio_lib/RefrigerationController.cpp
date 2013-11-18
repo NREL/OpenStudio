@@ -20,13 +20,17 @@
 #include "RefrigerationController.hpp"
 #include "RefrigerationGraphicsItems.hpp"
 #include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 #include "../model/Model.hpp"
 #include "../model/RefrigerationSystem.hpp"
 #include "../model/RefrigerationSystem_Impl.hpp"
+#include "../model/RefrigerationCondenserAirCooled.hpp"
+#include "../model/RefrigerationCondenserAirCooled_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QTimer>
 
 namespace openstudio {
 
@@ -37,7 +41,8 @@ RefrigerationController::RefrigerationController()
 
   m_refrigerationGraphicsView = new QGraphicsView();
 
-  m_refrigerationSystemGridView = QSharedPointer<RefrigerationSystemGridView>(new RefrigerationSystemGridView());
+  // These get deleted with when the scene is deleted
+  m_refrigerationSystemGridView = new RefrigerationSystemGridView();
 
   m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController(this));
 
@@ -45,7 +50,7 @@ RefrigerationController::RefrigerationController()
 
   m_refrigerationSystemGridView->setDelegate(QSharedPointer<RefrigerationSystemItemDelegate>(new RefrigerationSystemItemDelegate()));
 
-  m_refrigerationGridScene->addItem(m_refrigerationSystemGridView.data());
+  m_refrigerationGridScene->addItem(m_refrigerationSystemGridView);
 
   m_refrigerationGraphicsView->setScene(m_refrigerationGridScene.data());
 }
@@ -56,26 +61,89 @@ RefrigerationController::~RefrigerationController()
   {
     delete m_refrigerationGraphicsView;
   }
+
+  // This is for completeness, but will be taken care of when the scene is deleted.
+  if( m_refrigerationSystemGridView )
+  {
+    delete m_refrigerationSystemGridView;
+  }
+
+  // This is for completeness, but will be taken care of when the scene is deleted.
+  if( m_detailView )
+  {
+    delete m_detailView;
+  }
 }
 
 void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem)
 {
+  m_currentSystem = refrigerationSystem;
+
   m_refrigerationScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
 
-  m_detailView = QSharedPointer<RefrigerationSystemDetailView>(new RefrigerationSystemDetailView());
+  // These get deleted with when the scene is deleted
+  m_detailView = new RefrigerationSystemDetailView();
 
-  m_refrigerationScene->addItem(m_detailView.data());
+  m_refrigerationScene->addItem(m_detailView);
 
   m_refrigerationGraphicsView->setScene(m_refrigerationScene.data());
 
   bool bingo;
   bingo = connect(m_detailView->zoomOutButton,SIGNAL(mouseClicked()),this,SLOT(zoomOutToSystemGridView()));
   OS_ASSERT(bingo);
+
+  bingo = connect(m_detailView->refrigerationSystemView->refrigerationCondenserView,SIGNAL(componentDropped(const OSItemId &)),
+                  this,SLOT(onCondenserViewDrop(const OSItemId &)));
+  OS_ASSERT(bingo);
 }
 
 void RefrigerationController::zoomOutToSystemGridView()
 {
+  m_currentSystem = boost::none;
+
   m_refrigerationGraphicsView->setScene(m_refrigerationGridScene.data());
+}
+
+void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
+{
+  OS_ASSERT(m_currentSystem);
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  if( doc->fromComponentLibrary(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+
+    OS_ASSERT(mo); 
+
+    if( boost::optional<model::RefrigerationCondenserAirCooled> condenser 
+          = mo->optionalCast<model::RefrigerationCondenserAirCooled>() )
+    {
+      model::RefrigerationCondenserAirCooled condenserClone = 
+        condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserAirCooled>();
+
+      m_currentSystem->setRefrigerationCondenser(condenserClone);
+
+      refresh();
+    }
+  }
+}
+
+void RefrigerationController::refresh()
+{
+  m_dirty = true;
+
+  QTimer::singleShot(0,this,SLOT(refreshNow()));
+}
+
+void RefrigerationController::refreshNow()
+{
+  if( m_dirty && m_currentSystem && m_detailView )
+  {
+    m_detailView->refrigerationSystemView->refrigerationCondenserView->setEmpty(true);
+  
+    m_dirty = false;
+  }
 }
 
 QGraphicsView * RefrigerationController::refrigerationGraphicsView() const
@@ -123,7 +191,7 @@ int RefrigerationSystemListController::systemIndex(const model::RefrigerationSys
 {
   std::vector<model::RefrigerationSystem> _systems = systems();
 
-  int i = 0;
+  int i = 1;
 
   for( std::vector<model::RefrigerationSystem>::const_iterator it = _systems.begin();
        it != _systems.end();
@@ -137,7 +205,7 @@ int RefrigerationSystemListController::systemIndex(const model::RefrigerationSys
     i++;
   }
 
-  return i + 1;
+  return i;
 }
 
 void RefrigerationSystemListController::createNewSystem()

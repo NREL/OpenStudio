@@ -17,11 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#include "OSItem.hpp"
 #include "RefrigerationGraphicsItems.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <QPainter>
 #include <utility>
 #include <QGraphicsSceneMouseEvent>
+#include <QApplication>
 
 namespace openstudio {
 
@@ -29,6 +31,17 @@ const int RefrigerationSystemView::verticalSpacing = 50;
 
 RefrigerationSystemGridView::RefrigerationSystemGridView()
 {
+}
+
+RefrigerationSystemGridView::~RefrigerationSystemGridView()
+{
+  QList<QGraphicsItem *> itemList = childItems();
+  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
+       it < itemList.end(); 
+       it++ )
+  {
+    delete *it;
+  }
 }
 
 QRectF RefrigerationSystemGridView::boundingRect() const
@@ -41,12 +54,9 @@ QRectF RefrigerationSystemGridView::boundingRect() const
 
 void RefrigerationSystemGridView::setDelegate(QSharedPointer<OSGraphicsItemDelegate> delegate)
 {
-  if( delegate )
-  { 
-    m_delegate = delegate;
+  m_delegate = delegate;
 
-    refreshAllItemViews();
-  }
+  refreshAllItemViews();
 }
 
 void RefrigerationSystemGridView::setListController(QSharedPointer<OSListController> listController)
@@ -129,22 +139,6 @@ void RefrigerationSystemGridView::setItemViewGridPos(QGraphicsObject * item,std:
 
     item->setPos(x,y);
 
-    //std::map<std::pair<int,int>,QObject *>::iterator it = m_gridPosItemViewPairs.find(gridPos)
-    //if( it != m_gridPosItemViewPairs.end() )
-    //{
-    //  m_gridPosItemViewPairs.erase(it); 
-    //}
-
-    //std::map<QObject *,std::pair<int,int>::iterator it2 = m_itemViewGridPosPairs.find(item);
-    //if( it2 != m_itemViewGridPosPairs.end() )
-    //{
-    //  m_itemViewGridPosPairs.erase(it2);
-    //}
-
-    //m_gridPosItemViewPairs.insert( std::make_pair<std::pair<int,int>,QObject *>(std::make_pair<int,int>(x,y),item) );
-
-    //m_itemViewGridPosPairs.insert( std::make_pair<QObject *,std::pair<int,int> >(item,std::make_pair<int,int>(x,y)) );
-
     m_gridPosItemViewPairs[gridPos] = item;
 
     m_itemViewGridPosPairs[item] = gridPos;
@@ -157,14 +151,14 @@ void RefrigerationSystemGridView::insertItemView(int index)
   {
     prepareGeometryChange();
 
-    // Move Everything after index forward one grid position
-    for( int i = index + 1; i < m_listController->count(); i++ )
+    // Move existing views forward one grid position
+    for( int i = (m_listController->count() - 2); i >= index; i-- )
     {
-      std::pair<int,int> oldPos = gridPos(i - 1);
+      std::pair<int,int> oldPos = gridPos(i);
 
       QGraphicsObject * item = viewFromGridPos(oldPos);
 
-      std::pair<int,int> newPos = gridPos(i);
+      std::pair<int,int> newPos = gridPos(i + 1);
 
       setItemViewGridPos(item,newPos);
     }
@@ -176,6 +170,8 @@ void RefrigerationSystemGridView::insertItemView(int index)
 
       setItemViewGridPos(item,pos);
     }
+
+    QApplication::processEvents();
   }
 }
 
@@ -183,24 +179,30 @@ void RefrigerationSystemGridView::removeItemView(int index)
 {
   if( m_listController )
   {
-    prepareGeometryChange();
-
     // Remove Item
-    if(QGraphicsObject * item = viewFromGridPos(gridPos(index)))
+    if(QGraphicsObject * itemViewToRemove = viewFromGridPos(gridPos(index)))
     {
-      item->deleteLater();
-    }
+      prepareGeometryChange();
 
-    // Move Everything after index back one grid position
-    for( int i = index + 1; i < m_listController->count() + 1; i++ )
-    {
-      std::pair<int,int> oldPos = gridPos(i);
+      removePair(itemViewToRemove);
 
-      QGraphicsObject * item = viewFromGridPos(oldPos);
+      itemViewToRemove->deleteLater();
 
-      std::pair<int,int> newPos = gridPos(i - 1);
+      QApplication::processEvents();
 
-      setItemViewGridPos(item,newPos);
+      // Move Everything after index back one grid position
+      for( int i = index + 1; i < m_listController->count() + 1; i++ )
+      {
+        std::pair<int,int> oldPos = gridPos(i);
+
+        QGraphicsObject * item = viewFromGridPos(oldPos);
+
+        OS_ASSERT(item);
+
+        std::pair<int,int> newPos = gridPos(i - 1);
+
+        setItemViewGridPos(item,newPos);
+      }
     }
   }
 }
@@ -515,6 +517,30 @@ QRectF RefrigerationCasesView::boundingRect() const
   return QRectF(0,0,200,100);
 }
 
+RefrigerationCondenserView::RefrigerationCondenserView()
+  : m_empty(true)
+{
+}
+
+void RefrigerationCondenserView::setEmpty(bool empty)
+{
+  m_empty = empty;
+
+  update();
+}
+
+void RefrigerationCondenserView::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+  event->accept();
+
+  if(event->proposedAction() == Qt::CopyAction)
+  {
+    OSItemId id = OSItemId(event->mimeData());
+
+    emit componentDropped(id);
+  }
+}
+
 void RefrigerationCondenserView::paint( QPainter *painter, 
                                         const QStyleOptionGraphicsItem *option, 
                                         QWidget *widget )
@@ -525,7 +551,14 @@ void RefrigerationCondenserView::paint( QPainter *painter,
 
   painter->drawRoundedRect(10,10,boundingRect().width() - 20, boundingRect().height() - 20,8,8);
 
-  painter->drawText(boundingRect(),Qt::AlignCenter,"Condenser");
+  if( m_empty )
+  {
+    painter->drawText(boundingRect(),Qt::AlignCenter,"Drop Condenser");
+  }
+  else
+  {
+    painter->drawText(boundingRect(),Qt::AlignCenter,"Condenser: X¥Z");
+  }
 }
 
 QRectF RefrigerationCondenserView::boundingRect() const
@@ -627,6 +660,8 @@ RefrigerationSystemDropZoneView::RefrigerationSystemDropZoneView()
   : QGraphicsObject(), 
     m_mouseDown(false)
 {
+  setAcceptHoverEvents(true);
+  setAcceptDrops(true);
 }
 
 QRectF RefrigerationSystemDropZoneView::boundingRect() const
@@ -658,6 +693,12 @@ void RefrigerationSystemDropZoneView::mouseReleaseEvent(QGraphicsSceneMouseEvent
 {
   if( m_mouseDown )
   {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
     if( shape().contains(event->pos()) )
     {
       event->accept();
@@ -665,10 +706,6 @@ void RefrigerationSystemDropZoneView::mouseReleaseEvent(QGraphicsSceneMouseEvent
       emit mouseClicked();
     }
   }
-
-  m_mouseDown = false;
-
-  this->update();
 }
 
 RefrigerationSystemDetailView::RefrigerationSystemDetailView()
