@@ -334,10 +334,10 @@ boost::optional<Unit> ScheduleTypeLimits::units(std::string unitType, bool retur
       }
       else if (unitType == "convectioncoefficient") {
         if (returnIP) {
-          result = createSIThermalConductance();
+          result = BTUUnit(BTUExpnt(1,-2,-1,-1));
         }
         else {
-          result = BTUUnit(BTUExpnt(1,-2,-1,-1));
+          result = createSIThermalConductance();
         }
       }
       break;
