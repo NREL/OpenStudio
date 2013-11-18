@@ -939,7 +939,9 @@ IF (NOT UNIX)
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/ruby-1.8.6-msvc.zip"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install"
     RESULT_VARIABLE rv)
-    
+  
+  file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/ruby-install/ruby/bin")
+  
   install( DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install" DESTINATION . )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
