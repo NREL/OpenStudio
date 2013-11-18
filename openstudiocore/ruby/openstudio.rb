@@ -93,7 +93,7 @@ end
 # restore original path
 ENV['PATH'] = original_path
 
-if OpenStudio::RemoteBCL::initializeSSL("#{$OpenStudio_Dir}OpenStudio")
+if OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Dir}OpenStudio"))
   puts "OpenSSL loaded"
 elsif OpenStudio::RemoteBCL::initializeSSL()
   puts "OpenSSL loaded"
