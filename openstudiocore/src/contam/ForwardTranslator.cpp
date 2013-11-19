@@ -477,13 +477,8 @@ bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const 
     QTextStream textStream(&file);
     textStream << *output;
     file.close();
+    return true;
   }
-  /*
-  else
-  {
-    return false;
-  }
-  */
   return false;
 }
 
