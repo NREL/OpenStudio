@@ -617,6 +617,9 @@ namespace openstudio{
       bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostDataPointJSON()));
       OS_ASSERT(test);
 
+      test = QObject::connect(m_networkReply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(logUploadProgress(qint64,qint64)));
+      OS_ASSERT(test);
+
       return true;
     }
 
@@ -639,7 +642,7 @@ namespace openstudio{
           QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
 
           QByteArray data(QString("--" + bound + "\r\n").toAscii());
-          data += "Content-Disposition: form-data; name=\"file\"; filename=\"seed_zip.zip\"\r\n";
+          data += "Content-Disposition: form-data; name=\"file\"; filename=\"project.zip\"\r\n";
           data += "Content-Type: application/x-zip-compressed\r\n\r\n";
           data.append(file.readAll());
           data += "\r\n";
@@ -654,7 +657,7 @@ namespace openstudio{
           request.setRawHeader(QString("Cache-Control").toAscii(),QString("no-cache").toAscii());
           request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
           request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
-         
+
           m_networkReply = m_networkAccessManager->post(request, data);
 
           bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
@@ -1126,6 +1129,11 @@ namespace openstudio{
         success = true;
       }else{
         logNetworkError(m_networkReply->error());
+        // Print response headers
+        for(int i=0; i<m_networkReply->rawHeaderList().size(); ++i){
+          QString str(m_networkReply->rawHeaderList()[i].constData());
+          LOG(Debug, toString(str) << ": " << toString(m_networkReply->rawHeader(m_networkReply->rawHeaderList()[i] ).constData()) << std::endl);
+        }
       }
 
       m_networkReply->deleteLater();
@@ -1147,6 +1155,11 @@ namespace openstudio{
         success = true;
       }else{
         logNetworkError(m_networkReply->error());
+        // Print response headers
+        for(int i=0; i<m_networkReply->rawHeaderList().size(); ++i){
+          QString str(m_networkReply->rawHeaderList()[i].constData());
+          LOG(Debug, toString(str) << ": " << toString(m_networkReply->rawHeader(m_networkReply->rawHeaderList()[i] ).constData()) << std::endl);
+        }
       }
 
       m_networkReply->deleteLater();
@@ -1633,6 +1646,16 @@ namespace openstudio{
       m_mutex->unlock();
 
       emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::logUploadProgress(qint64 bytesSent, qint64 bytesTotal) {
+      if (bytesTotal == -1) {
+        LOG(Debug,"Unknown number of bytes in upload.");
+      }
+      else {
+        double percentComplete = 100.0 * (double(bytesSent)/double(bytesTotal));
+        LOG(Debug,"Upload is " << percentComplete << "% complete.");
+      }
     }
 
     void OSServer_Impl::clearErrorsAndWarnings()

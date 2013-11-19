@@ -233,6 +233,9 @@ namespace detail{
 
     void processDownloadDataPointComplete();
 
+    // slot provided for debugging
+    void logUploadProgress(qint64 bytesSent, qint64 bytesTotal);
+
   private:
 
     Url m_url;
