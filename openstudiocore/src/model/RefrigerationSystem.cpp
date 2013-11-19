@@ -201,12 +201,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_SystemFields::RefrigerationTransferLoadListName);
   }
 
-  ModelObject RefrigerationSystem_Impl::refrigerationCondenser() const {
-    boost::optional<ModelObject> value = optionalRefrigerationCondenser();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Refrigeration Condenser attached.");
-    }
-    return value.get();
+  boost::optional<ModelObject> RefrigerationSystem_Impl::refrigerationCondenser() const {
+    return optionalRefrigerationCondenser();
   }
 
   ModelObjectList RefrigerationSystem_Impl::compressorList() const {
@@ -651,7 +647,7 @@ boost::optional<ModelObjectList> RefrigerationSystem::refrigerationTransferLoadL
   return getImpl<detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
 }*/
 
-ModelObject RefrigerationSystem::refrigerationCondenser() const {
+boost::optional<ModelObject> RefrigerationSystem::refrigerationCondenser() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->refrigerationCondenser();
 }
 
