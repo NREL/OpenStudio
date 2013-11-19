@@ -888,7 +888,6 @@ SET( ${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
-  CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
@@ -954,7 +953,6 @@ SET( ${target_name}_moc
   HotWaterEquipment_Impl.hpp
   HotWaterEquipmentDefinition_Impl.hpp 
   HVACComponent_Impl.hpp
-  ZoneHVACComponent_Impl.hpp
   IlluminanceMap_Impl.hpp
   InsideSurfaceConvectionAlgorithm_Impl.hpp
   InternalMass_Impl.hpp
@@ -973,7 +971,6 @@ SET( ${target_name}_moc
   MasslessOpaqueMaterial_Impl.hpp
   Material_Impl.hpp
   Meter_Impl.hpp
-  PortList_Impl.hpp
   OpaqueMaterial_Impl.hpp
   OtherEquipment_Impl.hpp
   OtherEquipmentDefinition_Impl.hpp
