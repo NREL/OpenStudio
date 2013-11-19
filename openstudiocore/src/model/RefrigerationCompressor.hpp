@@ -73,15 +73,15 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   bool isEndUseSubcategoryDefaulted() const;
 
-  // std::string modeofOperation() const;
+  std::string modeofOperation() const;
 
-  // bool isModeofOperationDefaulted() const;
-
-  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
-  // boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
+  bool isModeofOperationDefaulted() const;
 
   // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
-  // boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
+  boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
+
+  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
+  boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
   //@}
   /** @name Setters */
@@ -113,19 +113,19 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   void resetEndUseSubcategory();
 
-  // bool setModeofOperation(std::string modeofOperation);
+  bool setModeofOperation(std::string modeofOperation);
 
-  // void resetModeofOperation();
-
-  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
-  // bool setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic);
-
-  // void resetTranscriticalCompressorPowerCurve();
+  void resetModeofOperation();
 
   // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
-  // bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
+  bool setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
-  // void resetTranscriticalCompressorCapacityCurve();
+  void resetTranscriticalCompressorPowerCurve();
+
+  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
+  bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
+
+  void resetTranscriticalCompressorCapacityCurve();
 
   //@}
   /** @name Other */

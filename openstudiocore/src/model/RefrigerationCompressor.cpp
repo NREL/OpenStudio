@@ -82,6 +82,14 @@ namespace detail {
     CurveBicubic refCapacitryCurve = refrigerationCompressorCapacityCurve();
     modelObjectClone.setRefrigerationCompressorCapacityCurve(refCapacitryCurve.clone(model).cast<CurveBicubic>());
 
+    if ( boost::optional<CurveBicubic> transPowerCurve = transcriticalCompressorPowerCurve() ) {
+      modelObjectClone.setTranscriticalCompressorPowerCurve(transPowerCurve.get().clone(model).cast<CurveBicubic>());
+    }
+
+    if ( boost::optional<CurveBicubic> transCapacitryCurve = transcriticalCompressorCapacityCurve() ) {
+      modelObjectClone.setTranscriticalCompressorCapacityCurve(transCapacitryCurve.get().clone(model).cast<CurveBicubic>());
+    }
+
     return modelObjectClone;
   }
 
@@ -102,12 +110,12 @@ namespace detail {
     if ( (intermediate = refrigerationCompressorCapacityCurve()) ) {
       result.push_back(*intermediate);
     }
-    /*if ( (intermediate = transcriticalCompressorPowerCurve()) ) {
+    if ( (intermediate = transcriticalCompressorPowerCurve()) ) {
       result.push_back(*intermediate);
     }
     if ( (intermediate = transcriticalCompressorCapacityCurve()) ) {
       result.push_back(*intermediate);
-    }*/
+    }
     return result;
   }
 
@@ -411,21 +419,21 @@ bool RefrigerationCompressor::isEndUseSubcategoryDefaulted() const {
   return getImpl<detail::RefrigerationCompressor_Impl>()->isEndUseSubcategoryDefaulted();
 }
 
-// std::string RefrigerationCompressor::modeofOperation() const {
-//   return getImpl<detail::RefrigerationCompressor_Impl>()->modeofOperation();
-// }
+std::string RefrigerationCompressor::modeofOperation() const {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->modeofOperation();
+}
 
-// bool RefrigerationCompressor::isModeofOperationDefaulted() const {
-//   return getImpl<detail::RefrigerationCompressor_Impl>()->isModeofOperationDefaulted();
-// }
+bool RefrigerationCompressor::isModeofOperationDefaulted() const {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->isModeofOperationDefaulted();
+}
 
-// boost::optional<CurveBicubic> RefrigerationCompressor::transcriticalCompressorPowerCurve() const {
-//   return getImpl<detail::RefrigerationCompressor_Impl>()->transcriticalCompressorPowerCurve();
-// }
+boost::optional<CurveBicubic> RefrigerationCompressor::transcriticalCompressorPowerCurve() const {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->transcriticalCompressorPowerCurve();
+}
 
-// boost::optional<CurveBicubic> RefrigerationCompressor::transcriticalCompressorCapacityCurve() const {
-//   return getImpl<detail::RefrigerationCompressor_Impl>()->transcriticalCompressorCapacityCurve();
-// }
+boost::optional<CurveBicubic> RefrigerationCompressor::transcriticalCompressorCapacityCurve() const {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->transcriticalCompressorCapacityCurve();
+}
 
 bool RefrigerationCompressor::setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic) {
   return getImpl<detail::RefrigerationCompressor_Impl>()->setRefrigerationCompressorPowerCurve(curveBicubic);
@@ -475,29 +483,29 @@ void RefrigerationCompressor::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetEndUseSubcategory();
 }
 
-// bool RefrigerationCompressor::setModeofOperation(std::string modeofOperation) {
-//   return getImpl<detail::RefrigerationCompressor_Impl>()->setModeofOperation(modeofOperation);
-// }
+bool RefrigerationCompressor::setModeofOperation(std::string modeofOperation) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setModeofOperation(modeofOperation);
+}
 
-// void RefrigerationCompressor::resetModeofOperation() {
-//   getImpl<detail::RefrigerationCompressor_Impl>()->resetModeofOperation();
-// }
+void RefrigerationCompressor::resetModeofOperation() {
+  getImpl<detail::RefrigerationCompressor_Impl>()->resetModeofOperation();
+}
 
-// bool RefrigerationCompressor::setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic) {
-//   return getImpl<detail::RefrigerationCompressor_Impl>()->setTranscriticalCompressorPowerCurve(curveBicubic);
-// }
+bool RefrigerationCompressor::setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setTranscriticalCompressorPowerCurve(curveBicubic);
+}
 
-// void RefrigerationCompressor::resetTranscriticalCompressorPowerCurve() {
-//   getImpl<detail::RefrigerationCompressor_Impl>()->resetTranscriticalCompressorPowerCurve();
-// }
+void RefrigerationCompressor::resetTranscriticalCompressorPowerCurve() {
+  getImpl<detail::RefrigerationCompressor_Impl>()->resetTranscriticalCompressorPowerCurve();
+}
 
-// bool RefrigerationCompressor::setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic) {
-//   return getImpl<detail::RefrigerationCompressor_Impl>()->setTranscriticalCompressorCapacityCurve(curveBicubic);
-// }
+bool RefrigerationCompressor::setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setTranscriticalCompressorCapacityCurve(curveBicubic);
+}
 
-// void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
-//   getImpl<detail::RefrigerationCompressor_Impl>()->resetTranscriticalCompressorCapacityCurve();
-// }
+void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
+  getImpl<detail::RefrigerationCompressor_Impl>()->resetTranscriticalCompressorCapacityCurve();
+}
 
 /// @cond
 RefrigerationCompressor::RefrigerationCompressor(boost::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
