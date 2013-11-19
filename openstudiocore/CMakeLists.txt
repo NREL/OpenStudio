@@ -67,12 +67,6 @@ OPTION( ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF )
 # Build with OpenSSL support
 SET( BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections" )
 
-# Build SimXML
-OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
-
-# Build SDD
-OPTION( BUILD_SDD "Build with SDD support" ON )
-
 # Build R package
 OPTION( BUILD_R "Build R package" OFF )
 
@@ -149,11 +143,9 @@ SET( project_directories
   plugin
   openstudio_app
   pat_app
+  sdd
 )
 
-IF( BUILD_SDD )
-  LIST(APPEND project_directories sdd)
-ENDIF( BUILD_SDD ) 
 
 ###############################################################################
 
@@ -235,8 +227,7 @@ IF(MSVC)
   
   # ignore warnings about the stl being insecure
   ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
-  # only build eefg dll on msvc
-  LIST(APPEND project_directories eefg)
+
 ENDIF(MSVC)
 ###############################################################################
 

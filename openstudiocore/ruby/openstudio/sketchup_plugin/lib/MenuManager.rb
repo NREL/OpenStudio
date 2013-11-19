@@ -41,10 +41,6 @@ require("openstudio/sketchup_plugin/lib/tools/NewLuminaireTool")
 require("openstudio/sketchup_plugin/lib/tools/NewSpaceTool")
 require("openstudio/sketchup_plugin/lib/observers/ErrorObserver")  # This is hopefully only a temporary location
 
-if ($OpenStudio_SimXML)
-  require("openstudio/sketchup_plugin/lib/SimXMLImporter")
-end
-
 module OpenStudio
 
   class MenuManager
