@@ -268,25 +268,6 @@ class RefrigerationSystemView : public QGraphicsObject
               QWidget *widget = 0 );
 };
 
-class RefrigerationCasesView : public QGraphicsObject
-{
-  Q_OBJECT;
-
-  public:
-
-  RefrigerationCasesView();
-
-  virtual ~RefrigerationCasesView() {}
-
-  QRectF boundingRect() const;
-
-  protected:
-
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
-              QWidget *widget = 0 );
-};
-
 class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
@@ -356,6 +337,60 @@ class RefrigerationCompressorView : public QGraphicsObject
   private:
 
   int m_numberOfCompressors;
+};
+
+class RefrigerationCasesDropZoneView : public RefrigerationSystemDropZoneView
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationCasesDropZoneView();
+
+  virtual ~RefrigerationCasesDropZoneView() {}
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 );
+};
+
+class RefrigerationCasesView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationCasesView();
+
+  virtual ~RefrigerationCasesView() {}
+
+  QRectF boundingRect() const;
+
+  RefrigerationCasesDropZoneView * refrigerationCasesDropZoneView;
+
+  void setNumberOfDisplayCases(int number);
+
+  void setNumberOfWalkinCases(int number);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 );
+
+  private:
+
+  QRectF displayCasesRect() const;
+
+  QRectF walkinCasesRect() const;
+
+  int m_numberOfDisplayCases;
+
+  int m_numberOfWalkinCases;
 };
 
 class RefrigerationSubCoolerView : public RefrigerationSystemDropZoneView

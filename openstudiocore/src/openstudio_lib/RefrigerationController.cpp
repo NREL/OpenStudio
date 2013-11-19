@@ -28,6 +28,8 @@
 #include "../model/RefrigerationCondenserAirCooled_Impl.hpp"
 #include "../model/RefrigerationCompressor.hpp"
 #include "../model/RefrigerationCompressor_Impl.hpp"
+#include "../model/RefrigerationCase.hpp"
+#include "../model/RefrigerationCase_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 #include <QGraphicsScene>
@@ -105,6 +107,10 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
   bingo = connect(m_detailView->refrigerationSystemView->refrigerationCompressorView->refrigerationCompressorDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
                   this,SLOT(onCompressorViewDrop(const OSItemId &)));
   OS_ASSERT(bingo);
+
+  bingo = connect(m_detailView->refrigerationSystemView->refrigerationCasesView->refrigerationCasesDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
+                  this,SLOT(onCasesViewDrop(const OSItemId &)));
+  OS_ASSERT(bingo);
 }
 
 void RefrigerationController::zoomOutToSystemGridView()
@@ -166,6 +172,31 @@ void RefrigerationController::onCompressorViewDrop(const OSItemId & itemid)
   }
 }
 
+void RefrigerationController::onCasesViewDrop(const OSItemId & itemid)
+{
+  OS_ASSERT(m_currentSystem);
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  if( doc->fromComponentLibrary(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+
+    OS_ASSERT(mo); 
+
+    if( boost::optional<model::RefrigerationCase> _case 
+          = mo->optionalCast<model::RefrigerationCase>() )
+    {
+      model::RefrigerationCase caseClone = 
+        _case->clone(m_currentSystem->model()).cast<model::RefrigerationCase>();
+
+      m_currentSystem->addCase(caseClone);
+
+      refresh();
+    }
+  }
+}
+
 void RefrigerationController::refresh()
 {
   m_dirty = true;
@@ -189,6 +220,8 @@ void RefrigerationController::refreshNow()
       }
 
       m_detailView->refrigerationSystemView->refrigerationCompressorView->setNumberOfCompressors(m_currentSystem->compressors().size());
+
+      m_detailView->refrigerationSystemView->refrigerationCasesView->setNumberOfDisplayCases(m_currentSystem->cases().size());
 
       m_detailView->refrigerationSystemView->adjustLayout();
     }

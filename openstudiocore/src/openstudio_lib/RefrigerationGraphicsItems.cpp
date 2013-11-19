@@ -496,8 +496,33 @@ int RefrigerationSystemView::rightXPos() const
 }
 
 RefrigerationCasesView::RefrigerationCasesView()
-  : QGraphicsObject()
+  : QGraphicsObject(),
+    m_numberOfDisplayCases(0),
+    m_numberOfWalkinCases(0)
 {
+  refrigerationCasesDropZoneView = new RefrigerationCasesDropZoneView();
+
+  refrigerationCasesDropZoneView->setParentItem(this);
+
+  refrigerationCasesDropZoneView->setPos(RefrigerationSystemView::margin,RefrigerationSystemView::margin);
+}
+
+void RefrigerationCasesView::setNumberOfDisplayCases(int number)
+{
+  prepareGeometryChange();
+
+  m_numberOfDisplayCases = number;
+
+  update();
+}
+
+void RefrigerationCasesView::setNumberOfWalkinCases(int number)
+{
+  prepareGeometryChange();
+
+  m_numberOfWalkinCases = number;
+
+  update();
 }
 
 void RefrigerationCasesView::paint( QPainter *painter, 
@@ -508,14 +533,39 @@ void RefrigerationCasesView::paint( QPainter *painter,
   painter->setBrush(Qt::NoBrush);
   painter->setPen(QPen(Qt::red,2,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawRoundedRect(10,10,boundingRect().width() - 20, boundingRect().height() - 20,8,8);
+  painter->drawRoundedRect(0,0,boundingRect().width(), boundingRect().height(),8,8);
 
-  painter->drawText(boundingRect(),Qt::AlignCenter,"Cases");
+  painter->drawRect(displayCasesRect()); 
+
+  painter->drawText(displayCasesRect(),Qt::AlignCenter,QString::number(m_numberOfDisplayCases));
+
+  painter->drawRect(walkinCasesRect()); 
+
+  painter->drawText(walkinCasesRect(),Qt::AlignCenter,QString::number(m_numberOfWalkinCases));
+}
+
+QRectF RefrigerationCasesView::displayCasesRect() const
+{
+  return QRectF(refrigerationCasesDropZoneView->pos().x() + refrigerationCasesDropZoneView->boundingRect().width() + RefrigerationSystemView::margin,
+                RefrigerationSystemView::margin,
+                80,80);
+}
+
+QRectF RefrigerationCasesView::walkinCasesRect() const
+{
+  return QRectF(displayCasesRect().x() + displayCasesRect().width() + RefrigerationSystemView::margin,
+                RefrigerationSystemView::margin,
+                80,80);
 }
 
 QRectF RefrigerationCasesView::boundingRect() const
 {
-  return QRectF(0,0,200,100);
+  return QRectF(0,0,
+                RefrigerationSystemView::margin + refrigerationCasesDropZoneView->boundingRect().width() +
+                RefrigerationSystemView::margin + displayCasesRect().width() + 
+                RefrigerationSystemView::margin + walkinCasesRect().width() + 
+                RefrigerationSystemView::margin,
+                100);
 }
 
 RefrigerationCondenserView::RefrigerationCondenserView()
@@ -624,6 +674,28 @@ QRectF RefrigerationCompressorView::boundingRect() const
                 m_numberOfCompressors * (80 + RefrigerationSystemView::margin) 
                 + RefrigerationSystemView::margin
                 ,100);
+}
+
+RefrigerationCasesDropZoneView::RefrigerationCasesDropZoneView()
+{
+}
+
+QRectF RefrigerationCasesDropZoneView::boundingRect() const
+{
+  return QRectF(0,0,100,80);
+}
+
+void RefrigerationCasesDropZoneView::paint( QPainter *painter, 
+                                         const QStyleOptionGraphicsItem *option, 
+                                         QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::red,2,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawRoundedRect(0,0,boundingRect().width(), boundingRect().height(),8,8);
+
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drag and Drop\nCases");
 }
 
 void RefrigerationSubCoolerView::paint( QPainter *painter, 

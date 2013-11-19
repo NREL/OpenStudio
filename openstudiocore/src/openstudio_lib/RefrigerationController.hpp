@@ -67,6 +67,8 @@ class RefrigerationController : public QObject
 
   void onCompressorViewDrop(const OSItemId & itemid);
 
+  void onCasesViewDrop(const OSItemId & itemid);
+
   private:
 
   QPointer<QGraphicsView> m_refrigerationGraphicsView;

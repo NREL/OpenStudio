@@ -2650,3 +2650,77 @@ OS:Curve:Bicubic,
   Temperature,                            !- Input Unit Type for Y
   Capacity;                               !- Output Unit Type
 
+OS:Version,
+  {e241afe9-b6e0-4889-98c9-2a93ea155939}, !- Handle
+  1.1.1;                                  !- Version Identifier
+
+OS:Schedule:Ruleset,
+  {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Handle
+  Refrigeration Default Schedule,         !- Name
+  {b753221d-2424-45d9-a74b-31494bf508ef}, !- Schedule Type Limits Name
+  {0ed6184f-f6d1-4889-8240-49f89a75a9dd}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {0ed6184f-f6d1-4889-8240-49f89a75a9dd}, !- Handle
+  Refrigeration Default Day,              !- Name
+  {b753221d-2424-45d9-a74b-31494bf508ef}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Refrigeration:Case,
+  {f2b4154e-97d8-492a-b1d1-1f2e7f9c1d34}, !- Handle
+  Refrigeration Case,                   !- Name
+  ,                                       !- Availability Schedule Name
+  ,                                       !- Zone Name
+  24,                                     !- Rated Ambient Temperature {C}
+  55,                                     !- Rated Ambient Relative Humidity {percent}
+  1432.66,                                !- Rated Total Cooling Capacity per Unit Length {W/m}
+  0.3,                                    !- Rated Latent Heat Ratio
+  0.85,                                   !- Rated Runtime Fraction
+  3.66,                                   !- Case Length {m}
+  2.78,                                   !- Case Operating Temperature {C}
+  CaseTemperatureMethod,                  !- Latent Case Credit Curve Type
+  {012a63c6-2590-4f3d-a487-c600bf72ad75}, !- Latent Case Credit Curve Name
+  41.01,                                  !- Standard Case Fan Power per Unit Length {W/m}
+  41.01,                                  !- Operating Case Fan Power per Unit Length {W/m}
+  45.93,                                  !- Standard Case Lighting Power per Unit Length {W/m}
+  45.93,                                  !- Installed Case Lighting Power per Unit Length {W/m}
+  {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Case Lighting Schedule Name
+  1,                                      !- Fraction of Lighting Energy to Case
+  ,                                       !- Case Anti-Sweat Heater Power per Unit Length {W/m}
+  ,                                       !- Minimum Anti-Sweat Heater Power per Unit Length {W/m}
+  None,                                   !- Anti-Sweat Heater Control Type
+  -10,                                    !- Humidity at Zero Anti-Sweat Heater Energy {percent}
+  1.5,                                    !- Case Height {m}
+  1,                                      !- Fraction of Anti-Sweat Heater Energy to Case
+  0,                                      !- Case Defrost Power per Unit Length {W/m}
+  OffCycle,                               !- Case Defrost Type
+  {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Case Defrost Schedule Name
+  {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Case Defrost Drip-Down Schedule Name
+  None,                                   !- Defrost Energy Correction Curve Type
+  ,                                       !- Defrost Energy Correction Curve Name
+  0,                                      !- Under Case HVAC Return Air Fraction
+  ,                                       !- Refrigerated Case Restocking Schedule Name
+  ,                                       !- Case Credit Fraction Schedule Name
+  -5.56;                                  !- Design Evaporator Temperature or Brine Inlet Temperature {C}
+
+OS:Curve:Cubic,
+  {012a63c6-2590-4f3d-a487-c600bf72ad75}, !- Handle
+  Refrigeration Case Latent Credit Curve, !- Name
+  0.026526281,                            !- Coefficient1 Constant
+  0.001078032,                            !- Coefficient2 x
+  -6.02558e-05,                           !- Coefficient3 x**2
+  1.23732e-06,                            !- Coefficient4 x**3
+  -35,                                    !- Minimum Value of x {BasedOnField A2}
+  20;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:ScheduleTypeLimits,
+  {b753221d-2424-45d9-a74b-31494bf508ef}, !- Handle
+  Fractional,                             !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+
+
