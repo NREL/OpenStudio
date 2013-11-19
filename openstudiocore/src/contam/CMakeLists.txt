@@ -78,11 +78,3 @@ ENDIF()
 
 MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 
-add_executable(epw2wth epw2wth.cpp)
-
-TARGET_LINK_LIBRARIES( epw2wth 
-  ${${target_name}_depends}
-  openstudio_osversion
-  openstudio_contam
-)
-
