@@ -80,6 +80,8 @@ namespace detail {
 
     std::vector<RefrigerationCompressor> compressors() const;
 
+    std::vector<RefrigerationCompressor> highStageCompressors() const;
+
     std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
     std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
@@ -170,6 +172,12 @@ namespace detail {
     void removeCompressor( const RefrigerationCompressor & compressor);
 
     void removeAllCompressors();
+
+    bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+    void removeHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+    void removeAllHighStageCompressors();
 
     bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
 

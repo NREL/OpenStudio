@@ -93,6 +93,14 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCompressor> compressors() const;
 
+  bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+  void removeHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+  void removeAllHighStageCompressors();
+
+  std::vector<RefrigerationCompressor> highStageCompressors() const;
+
   bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
 
   void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
@@ -150,17 +158,17 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   bool isEndUseSubcategoryDefaulted() const;
 
-  //std::string numberofCompressorStages() const;
+  std::string numberofCompressorStages() const;
 
-  //bool isNumberofCompressorStagesDefaulted() const;
+  // bool isNumberofCompressorStagesDefaulted() const;
 
-  //std::string intercoolerType() const;
+  std::string intercoolerType() const;
 
-  //bool isIntercoolerTypeDefaulted() const;
+  bool isIntercoolerTypeDefaulted() const;
 
-  //double shellandCoilIntercoolerEffectiveness() const;
+  double shellandCoilIntercoolerEffectiveness() const;
 
-  //bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
+  bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
 
   // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
   //boost::optional<ModelObjectList> highStageCompressorList() const;
@@ -217,17 +225,17 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetEndUseSubcategory();
 
-  //bool setNumberofCompressorStages(std::string numberofCompressorStages);
+  // bool setNumberofCompressorStages(std::string numberofCompressorStages);
 
-  //void resetNumberofCompressorStages();
+  // void resetNumberofCompressorStages();
 
-  //bool setIntercoolerType(std::string intercoolerType);
+  bool setIntercoolerType(std::string intercoolerType);
 
-  //void resetIntercoolerType();
+  void resetIntercoolerType();
 
-  //void setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
+  void setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
 
-  //void resetShellandCoilIntercoolerEffectiveness();
+  void resetShellandCoilIntercoolerEffectiveness();
 
   // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
   //bool setHighStageCompressorList(const ModelObjectList& modelObjectLists);

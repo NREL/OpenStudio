@@ -268,53 +268,52 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   }
 
 //Number of Compressor Stages 
-  /*s = modelObject.numberofCompressorStages();
+  s = modelObject.numberofCompressorStages();
   if (s) {
     refrigerationSystem.setString(Refrigeration_SystemFields::NumberofCompressorStages,s.get());
-  }*/
-  refrigerationSystem.setString(Refrigeration_SystemFields::NumberofCompressorStages,"1");
+  }
 
 //Intercooler Type 
-  /*s = modelObject.intercoolerType();
+  s = modelObject.intercoolerType();
   if (s) {
     refrigerationSystem.setString(Refrigeration_SystemFields::IntercoolerType,s.get());
-  }*/
-  refrigerationSystem.setString(Refrigeration_SystemFields::IntercoolerType,"None");
+  }
 
 //Shell-and-Coil Intercooler Effectiveness 
-  /*d = modelObject.shellandCoilIntercoolerEffectiveness();
+  d = modelObject.shellandCoilIntercoolerEffectiveness();
   if (d) {
     refrigerationSystem.setDouble(Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness,d.get());
-  }*/
-  refrigerationSystem.setDouble(Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness,0.8);
+  }
 
 //High-Stage Compressor or CompressorList Name
-  /*std::vector<ModelObject> highStageCompressorList = modelObject.highStageCompressorList();
+  std::vector<RefrigerationCompressor> highStageCompressors = modelObject.highStageCompressors();
 
-  if( !highStageCompressorList.empty() )
+  if( !highStageCompressors.empty() )
   {
-    refrigerationSystem.setString(Refrigeration_SystemFields::HighStageCompressororCompressorListName, refrigerationSystem.name() + " High Stage Compressor List";
+    // Name
+    name = " High Stage Compressor List";
+    refrigerationSystem.setString(Refrigeration_SystemFields::HighStageCompressororCompressorListName, refrigerationSystem.name().get() + name);
 
-    IdfObject _highStageCompressorListList(IddObjectType::Refrigeration_CompressorList);
+    IdfObject _highStageCompressorList(IddObjectType::Refrigeration_CompressorList);
 
-    m_idfObjects.push_back(_highStageCompressorListList);
+    m_idfObjects.push_back(_highStageCompressorList);
 
-    _highStageCompressorListList.setName(refrigerationSystem.name() + " High Stage Compressor List");
+    _highStageCompressorList.setName(refrigerationSystem.name().get() + name);
 
-    for( std::vector<ModelObject>::iterator it = highStageCompressorList.begin();
-       it != highStageCompressorList.end();
+    for( std::vector<RefrigerationCompressor>::iterator it = highStageCompressors.begin();
+       it != highStageCompressors.end();
        it++ )
     {
-      boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _highStageCompressor = translateAndMapModelObject(*it);
 
-      if( _compressor )
+      if( _highStageCompressor )
       {
-        IdfExtensibleGroup eg = _highStageCompressorListList.pushExtensibleGroup();
+        IdfExtensibleGroup eg = _highStageCompressorList.pushExtensibleGroup();
 
-        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
+        eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_highStageCompressor->name().get()); 
       }
     }
-  }*/
+  }
 
   return refrigerationSystem;
 

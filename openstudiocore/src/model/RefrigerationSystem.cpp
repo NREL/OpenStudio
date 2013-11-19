@@ -121,10 +121,10 @@ namespace detail {
       result.insert(result.end(), removedLiqSuctionSubcooler.begin(), removedLiqSuctionSubcooler.end());
     }
 
-    // if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
-    //   std::vector<IdfObject> removedHighStageCompressors = highStageCompressorList->remove();
-    //   result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
-    // }
+    if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
+      std::vector<IdfObject> removedHighStageCompressors = highStageCompressorList->remove();
+      result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
+    }
 
     std::vector<IdfObject> removedRefrigerationSystem = ModelObject_Impl::remove();
     result.insert(result.end(), removedRefrigerationSystem.begin(), removedRefrigerationSystem.end());
@@ -166,10 +166,10 @@ namespace detail {
       modelObjectClone.setLiquidSuctionHeatExchangerSubcooler(liqSuctionSubClone);
     }
 
-    // if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
-    //   ModelObjectList highStageCompressorListClone = highStageCompressorList->clone(model).cast<ModelObjectList>();
-    //   modelObjectClone.getImpl<detail::RefrigerationSystem_Impl>()->setHighStageCompressorList(highStageCompressorListClone);
-    // }
+    if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
+      ModelObjectList highStageCompressorListClone = highStageCompressorList->clone(model).cast<ModelObjectList>();
+      modelObjectClone.getImpl<detail::RefrigerationSystem_Impl>()->setHighStageCompressorList(highStageCompressorListClone);
+    }
 
     modelObjectClone.resetSuctionPipingZone();
 
@@ -184,9 +184,9 @@ namespace detail {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
       for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> caseOrWalkin = it->optionalCast<T>();
-          if (caseOrWalkin) {
-            result.push_back(caseOrWalkin.get());
+          boost::optional<T> modelObject = it->optionalCast<T>();
+          if (modelObject) {
+            result.push_back(modelObject.get());
           }
       }
     }
@@ -203,17 +203,11 @@ namespace detail {
   }
 
   std::vector<RefrigerationCompressor> RefrigerationSystem_Impl::compressors() const {
-    std::vector<RefrigerationCompressor> result;
+    return RefrigerationSystem_Impl::listTemplate<RefrigerationCompressor>( compressorList() );
+  }
 
-      std::vector<ModelObject> modelObjects = compressorList().modelObjects();
-
-      if(!modelObjects.empty()) {
-        for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-            result.push_back(it->cast<RefrigerationCompressor>());
-        }
-      }
-
-    return result;
+  std::vector<RefrigerationCompressor> RefrigerationSystem_Impl::highStageCompressors() const {
+    return RefrigerationSystem_Impl::listTemplate<RefrigerationCompressor>( highStageCompressorList() );
   }
 
   std::vector<RefrigerationSecondarySystem> RefrigerationSystem_Impl::secondarySystemLoads() const {
@@ -303,9 +297,15 @@ namespace detail {
   }
 
   std::string RefrigerationSystem_Impl::numberofCompressorStages() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
-    OS_ASSERT(value);
-    return value.get();
+    // boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
+    // OS_ASSERT(value);
+    // return value.get();
+
+    if ( this->highStageCompressors().empty() ) {
+      return "1";
+    } else {
+      return "2";
+    }
   }
 
   bool RefrigerationSystem_Impl::isNumberofCompressorStagesDefaulted() const {
@@ -405,6 +405,21 @@ namespace detail {
 
   void RefrigerationSystem_Impl::removeAllCompressors() {
     compressorList().removeAllModelObjects();
+  }
+
+  bool RefrigerationSystem_Impl::addHighStageCompressor( const RefrigerationCompressor& refrigerationHighStageCompressor ) {
+    boost::optional<ModelObjectList> modelObjectList = highStageCompressorList();
+    return addTemplate<RefrigerationCompressor>(refrigerationHighStageCompressor, modelObjectList);
+  }
+
+  void RefrigerationSystem_Impl::removeHighStageCompressor( const RefrigerationCompressor& refrigerationHighStageCompressor ) {
+    boost::optional<ModelObjectList> modelObjectList = highStageCompressorList();
+    removeTemplate<RefrigerationCompressor>(refrigerationHighStageCompressor, modelObjectList);
+  }
+
+  void RefrigerationSystem_Impl::removeAllHighStageCompressors() {
+    boost::optional<ModelObjectList> modelObjectList = highStageCompressorList();
+    removeAllTemplate<RefrigerationCompressor>(modelObjectList);
   }
 
   bool RefrigerationSystem_Impl::addSecondarySystemLoad( const RefrigerationSecondarySystem& refrigerationSecondarySystem) {
@@ -647,6 +662,10 @@ RefrigerationSystem::RefrigerationSystem(const Model& model)
   compressorlist.setName(this->name().get() + " Compressor List");
   ok = getImpl<detail::RefrigerationSystem_Impl>()->setCompressorList(compressorlist);
   OS_ASSERT(ok);
+  ModelObjectList highStageCompressorlist = ModelObjectList(model);
+  highStageCompressorlist.setName(this->name().get() + " High Stage Compressor List");
+  ok = getImpl<detail::RefrigerationSystem_Impl>()->setHighStageCompressorList(highStageCompressorlist);
+  OS_ASSERT(ok);
   setMinimumCondensingTemperature(21.0);
   ok = setRefrigerationSystemWorkingFluidType("R404a");
   OS_ASSERT(ok);
@@ -696,6 +715,10 @@ std::vector<RefrigerationWalkIn> RefrigerationSystem::walkins() const {
 
 std::vector<RefrigerationCompressor> RefrigerationSystem::compressors() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->compressors();
+}
+
+std::vector<RefrigerationCompressor> RefrigerationSystem::highStageCompressors() const {
+  return getImpl<detail::RefrigerationSystem_Impl>()->highStageCompressors();
 }
 
 std::vector<RefrigerationSecondarySystem> RefrigerationSystem::secondarySystemLoads() const {
@@ -766,13 +789,13 @@ bool RefrigerationSystem::isEndUseSubcategoryDefaulted() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->isEndUseSubcategoryDefaulted();
 }
 
-/*std::string RefrigerationSystem::numberofCompressorStages() const {
+std::string RefrigerationSystem::numberofCompressorStages() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->numberofCompressorStages();
 }
 
-bool RefrigerationSystem::isNumberofCompressorStagesDefaulted() const {
-  return getImpl<detail::RefrigerationSystem_Impl>()->isNumberofCompressorStagesDefaulted();
-}
+// bool RefrigerationSystem::isNumberofCompressorStagesDefaulted() const {
+//   return getImpl<detail::RefrigerationSystem_Impl>()->isNumberofCompressorStagesDefaulted();
+// }
 
 std::string RefrigerationSystem::intercoolerType() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->intercoolerType();
@@ -790,9 +813,9 @@ bool RefrigerationSystem::isShellandCoilIntercoolerEffectivenessDefaulted() cons
   return getImpl<detail::RefrigerationSystem_Impl>()->isShellandCoilIntercoolerEffectivenessDefaulted();
 }
 
-boost::optional<ModelObjectList> RefrigerationSystem::highStageCompressorList() const {
-  return getImpl<detail::RefrigerationSystem_Impl>()->highStageCompressorList();
-}*/
+// boost::optional<ModelObjectList> RefrigerationSystem::highStageCompressorList() const {
+//   return getImpl<detail::RefrigerationSystem_Impl>()->highStageCompressorList();
+// }
 
 bool RefrigerationSystem::addCase(const RefrigerationCase& refrigerationCase) {
   return getImpl<detail::RefrigerationSystem_Impl>()->addCase(refrigerationCase);
@@ -828,6 +851,18 @@ void RefrigerationSystem::removeCompressor(const RefrigerationCompressor& refrig
 
 void RefrigerationSystem::removeAllCompressors() {
   return getImpl<detail::RefrigerationSystem_Impl>()->removeAllCompressors();
+}
+
+bool RefrigerationSystem::addHighStageCompressor(const RefrigerationCompressor& refrigerationHighStageCompressor) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->addHighStageCompressor(refrigerationHighStageCompressor);
+}
+
+void RefrigerationSystem::removeHighStageCompressor(const RefrigerationCompressor& refrigerationHighStageCompressor) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->removeHighStageCompressor(refrigerationHighStageCompressor);
+}
+
+void RefrigerationSystem::removeAllHighStageCompressors() {
+  return getImpl<detail::RefrigerationSystem_Impl>()->removeAllHighStageCompressors();
 }
 
 bool RefrigerationSystem::addSecondarySystemLoad(const RefrigerationSecondarySystem& refrigerationSecondarySystemLoad) {
@@ -934,13 +969,13 @@ void RefrigerationSystem::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetEndUseSubcategory();
 }
 
-/*bool RefrigerationSystem::setNumberofCompressorStages(std::string numberofCompressorStages) {
-  return getImpl<detail::RefrigerationSystem_Impl>()->setNumberofCompressorStages(numberofCompressorStages);
-}
+// bool RefrigerationSystem::setNumberofCompressorStages(std::string numberofCompressorStages) {
+//   return getImpl<detail::RefrigerationSystem_Impl>()->setNumberofCompressorStages(numberofCompressorStages);
+// }
 
-void RefrigerationSystem::resetNumberofCompressorStages() {
-  getImpl<detail::RefrigerationSystem_Impl>()->resetNumberofCompressorStages();
-}
+// void RefrigerationSystem::resetNumberofCompressorStages() {
+//   getImpl<detail::RefrigerationSystem_Impl>()->resetNumberofCompressorStages();
+// }
 
 bool RefrigerationSystem::setIntercoolerType(std::string intercoolerType) {
   return getImpl<detail::RefrigerationSystem_Impl>()->setIntercoolerType(intercoolerType);
@@ -958,13 +993,13 @@ void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetShellandCoilIntercoolerEffectiveness();
 }
 
-bool RefrigerationSystem::setHighStageCompressorList(const ModelObjectList& modelObjectList) {
-  return getImpl<detail::RefrigerationSystem_Impl>()->setHighStageCompressorList(modelObjectList);
-}
+// bool RefrigerationSystem::setHighStageCompressorList(const ModelObjectList& modelObjectList) {
+//   return getImpl<detail::RefrigerationSystem_Impl>()->setHighStageCompressorList(modelObjectList);
+// }
 
-void RefrigerationSystem::resetHighStageCompressorList() {
-  getImpl<detail::RefrigerationSystem_Impl>()->resetHighStageCompressorList();
-}*/
+// void RefrigerationSystem::resetHighStageCompressorList() {
+//   getImpl<detail::RefrigerationSystem_Impl>()->resetHighStageCompressorList();
+// }
 
 /// @cond
 RefrigerationSystem::RefrigerationSystem(boost::shared_ptr<detail::RefrigerationSystem_Impl> impl)
