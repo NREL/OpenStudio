@@ -607,7 +607,7 @@ namespace detail {
       OS_ASSERT(!m_postQueue.empty());
       OS_ASSERT(numCompleteDataPoints() == 0u);
 
-      success = postNextDataPoint();
+      success = postNextDataPointBatch();
     }
 
     if (!success) {
@@ -674,7 +674,7 @@ namespace detail {
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
-        success = postNextDataPoint();
+        success = postNextDataPointBatch();
       }
       else if (m_waitingQueue.size() > 0) {
         LOG(Debug,"No data points need to be posted, so see if the analysis is already running.");
@@ -747,7 +747,7 @@ namespace detail {
         success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
       }
       else {
-        success = postNextDataPoint();
+        success = postNextDataPointBatch();
       }
     }
 
@@ -1418,74 +1418,81 @@ namespace detail {
     m_onlyProcessingDownloadRequests = true;
   }
 
-  bool CloudAnalysisDriver_Impl::postNextDataPoint() {
-    DataPoint toQueue = m_postQueue.front();
-    if (toQueue.runType() == DataPointRunType::Local) {
-      toQueue.setRunType(DataPointRunType::CloudSlim);
+  bool CloudAnalysisDriver_Impl::postNextDataPointBatch() {
+    DataPointVector batch;
+    while (!m_postQueue.empty() && batch.size() < 50u) {
+      DataPoint toQueue = m_postQueue.front();
+      if (toQueue.runType() == DataPointRunType::Local) {
+        toQueue.setRunType(DataPointRunType::CloudSlim);
+      }
+      m_postQueue.pop_front();
+      batch.push_back(toQueue);
+      m_waitingQueue.push_back(toQueue);
     }
-    m_postQueue.pop_front();
-    m_waitingQueue.push_back(toQueue);
 
     // get json before we add the dummy job
-    std::string toQueueJson = toQueue.toJSON(DataPointSerializationOptions(project().projectDir()));
-    bool result = m_requestRun->startPostDataPointJSON(project().analysis().uuid(), toQueueJson);
+    std::string batchJson = toJSON(batch);
+    bool result = m_requestRun->startPostDataPointJSON(project().analysis().uuid(), batchJson);
 
     if (result) {
 
-      // here we are going to create a dummy job to attach to the datapoint for saving job state
-      runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
+      BOOST_FOREACH(DataPoint& toQueue,batch) {
 
-      // DLM: need to make this workflow's hash appear unique to run manager or it will not enqueue it
-      JobParams dataPointUUID;
-      dataPointUUID.append("dataPointUUID", openstudio::toString(toQueue.uuid()));
-      workflow.add(dataPointUUID);
+        // here we are going to create a dummy job to attach to the datapoint for saving job state
+        runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
 
-      runmanager::Job job = workflow.create(openstudio::path(),
-                                            openstudio::path(),
-                                            openstudio::path(),
-                                            std::vector<URLSearchPath>());
-      runmanager::JobFactory::optimizeJobTree(job);
-      
-      // can only set status on externally managed jobs
-      job.makeExternallyManaged();
-      job.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
+        // DLM: need to make this workflow's hash appear unique to run manager or it will not enqueue it
+        JobParams dataPointUUID;
+        dataPointUUID.append("dataPointUUID", openstudio::toString(toQueue.uuid()));
+        workflow.add(dataPointUUID);
 
-      // add job to database
-      // ETH: Added enqueueOrReturnExisting because failure to enqueue resulted in
-      // landing in the catch clause below. Clearing results for a DataPoint does remove the
-      // topLevelJob, but maybe the initial fake job threw us off, that is, maybe the original
-      // fake job  (with a different UUID than the final job) needs to get thrown away and is
-      // not?
-      boost::optional<runmanager::Job> substitute = project().runManager().enqueueOrReturnExisting(job, true);
-      if (substitute) {
-        job = *substitute;
-      }
+        runmanager::Job job = workflow.create(openstudio::path(),
+                                              openstudio::path(),
+                                              openstudio::path(),
+                                              std::vector<URLSearchPath>());
+        runmanager::JobFactory::optimizeJobTree(job);
+        
+        // can only set status on externally managed jobs
+        job.makeExternallyManaged();
+        job.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
 
-      // attach externalJob to datapoint
-      bool test = project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
-      OS_ASSERT(test);
-
-      // make sure things are good
-      boost::optional<Job> topLevelJob = toQueue.topLevelJob();
-      OS_ASSERT(topLevelJob);
-      OS_ASSERT(topLevelJob->uuid() == job.uuid());
-      OS_ASSERT(topLevelJob->externallyManaged());
-      try{
-        project().runManager().getJob(topLevelJob->uuid());
-      }catch (const std::out_of_range &) {
-        std::cout << "UUID is " << toString(job.uuid()) << std::endl;
-        std::cout << "DB has " << std::endl;
-        BOOST_FOREACH(runmanager::Job j, project().runManager().getJobs()){
-          std::cout << "  " << toString(j.uuid()) << std::endl;
+        // add job to database
+        // ETH: Added enqueueOrReturnExisting because failure to enqueue resulted in
+        // landing in the catch clause below. Clearing results for a DataPoint does remove the
+        // topLevelJob, but maybe the initial fake job threw us off, that is, maybe the original
+        // fake job  (with a different UUID than the final job) needs to get thrown away and is
+        // not?
+        boost::optional<runmanager::Job> substitute = project().runManager().enqueueOrReturnExisting(job, true);
+        if (substitute) {
+          job = *substitute;
         }
-        OS_ASSERT(false);
+
+        // attach externalJob to datapoint
+        bool test = project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
+        OS_ASSERT(test);
+
+        // make sure things are good
+        boost::optional<Job> topLevelJob = toQueue.topLevelJob();
+        OS_ASSERT(topLevelJob);
+        OS_ASSERT(topLevelJob->uuid() == job.uuid());
+        OS_ASSERT(topLevelJob->externallyManaged());
+        try{
+          project().runManager().getJob(topLevelJob->uuid());
+        }catch (const std::out_of_range &) {
+          std::cout << "UUID is " << toString(job.uuid()) << std::endl;
+          std::cout << "DB has " << std::endl;
+          BOOST_FOREACH(runmanager::Job j, project().runManager().getJobs()){
+            std::cout << "  " << toString(j.uuid()) << std::endl;
+          }
+          OS_ASSERT(false);
+        }
+
+        // DLM: Elaine do we need to do this here?  Saving after each data point is very costly, could we do this at the end on either 
+        // successful completion or failure?
+        project().save();
+
+        emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
       }
-
-      // DLM: Elaine do we need to do this here?  Saving after each data point is very costly, could we do this at the end on either 
-      // successful completion or failure?
-      project().save();
-
-      emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
     }
 
     // caller will register failure if !result

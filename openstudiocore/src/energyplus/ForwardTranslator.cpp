@@ -300,6 +300,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(airLoop);
   }
 
+  // get AirConditionerVariableRefrigerantFlow objects in sorted order
+  std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getModelObjects<AirConditionerVariableRefrigerantFlow>();
+  std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
+  BOOST_FOREACH(AirConditionerVariableRefrigerantFlow vrf, vrfs){
+    translateAndMapModelObject(vrf);
+  }
+
   // get plant loops in sorted order
   std::vector<PlantLoop> plantLoops = model.getModelObjects<PlantLoop>();
   std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
@@ -387,6 +394,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   switch(modelObject.iddObject().type().value())
   {
+  case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow :
+    {
+      model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
+      retVal = translateAirConditionerVariableRefrigerantFlow(vrf);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirLoopHVAC :
     {
       model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
@@ -526,6 +539,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingDXTwoSpeed(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :
+    {
+      model::CoilCoolingDXVariableRefrigerantFlow coil = modelObject.cast<CoilCoolingDXVariableRefrigerantFlow>();
+      retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow :
     {
       // no-op
@@ -575,6 +594,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       // no-op
       return retVal;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow :
+    {
+      model::CoilHeatingDXVariableRefrigerantFlow coil = modelObject.cast<CoilHeatingDXVariableRefrigerantFlow>();
+      retVal = translateCoilHeatingDXVariableRefrigerantFlow(coil);
+      break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Water :
     {
@@ -843,7 +868,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
       retVal = translateElectricEquipment(equipment);
       break;
-    }     
+    }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1539,6 +1564,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACPackagedTerminalAirConditioner(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow :
+    {
+      model::ZoneHVACTerminalUnitVariableRefrigerantFlow mo = modelObject.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+      retVal = translateZoneHVACTerminalUnitVariableRefrigerantFlow(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
     {
       model::ZoneHVACWaterToAirHeatPump mo = modelObject.cast<ZoneHVACWaterToAirHeatPump>();
@@ -1751,6 +1782,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
+
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 

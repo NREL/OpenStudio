@@ -1054,7 +1054,11 @@ void PatApp::exportXml()
   //make results.xml inside the project directory
   openstudio::path resultsXmlPath = projectPath / toPath("results.xml");
   openstudio::analysis::exportxml::ExportXML newXMLdoc;
-  newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath));
+  if (!newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath))) {
+    // user canceled, stop the export process
+    mainWindow->setEnabled(true);
+    return;
+  }
 
   openstudio::path outdir = projectPath / toPath("QAQC");
 
