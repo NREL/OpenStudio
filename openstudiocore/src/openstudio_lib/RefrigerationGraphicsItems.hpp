@@ -35,6 +35,7 @@ class RefrigerationSHXView;
 class RefrigerationCasesView;
 class RefrigerationSystemView;
 class RefrigerationSecondaryView;
+class RefrigerationCompressorDropZoneView;
 class OSItemId;
 
 // A grid layout of refrigeration systems
@@ -200,6 +201,8 @@ class RefrigerationSystemDropZoneView : public QGraphicsObject
 
   void mouseClicked();
 
+  void componentDropped(const OSItemId & itemid);
+
   protected:
 
   void paint( QPainter *painter, 
@@ -209,6 +212,8 @@ class RefrigerationSystemDropZoneView : public QGraphicsObject
   void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
   void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  void dropEvent(QGraphicsSceneDragDropEvent *event);
 
   private:
 
@@ -226,6 +231,8 @@ class RefrigerationSystemView : public QGraphicsObject
   virtual ~RefrigerationSystemView() {}
 
   static const int verticalSpacing; 
+
+  static const int margin;
 
   RefrigerationCondenserView * refrigerationCondenserView;
 
@@ -294,28 +301,26 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
 
   void setEmpty(bool empty);
 
-  signals:
-
-  void componentDropped(const OSItemId & itemid);
-
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
 
-  void dropEvent(QGraphicsSceneDragDropEvent *event);
-
   private:
 
   bool m_empty;
 };
 
-class RefrigerationCompressorView : public QGraphicsObject
+class RefrigerationCompressorDropZoneView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 
   public:
+
+  RefrigerationCompressorDropZoneView();
+
+  virtual ~RefrigerationCompressorDropZoneView() {}
 
   QRectF boundingRect() const;
 
@@ -324,6 +329,33 @@ class RefrigerationCompressorView : public QGraphicsObject
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+};
+
+class RefrigerationCompressorView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationCompressorView();
+
+  virtual ~RefrigerationCompressorView() {}
+
+  QRectF boundingRect() const;
+
+  RefrigerationCompressorDropZoneView * refrigerationCompressorDropZoneView;
+
+  void setNumberOfCompressors(int numberOfCompressors);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 );
+
+  private:
+
+  int m_numberOfCompressors;
 };
 
 class RefrigerationSubCoolerView : public RefrigerationSystemDropZoneView

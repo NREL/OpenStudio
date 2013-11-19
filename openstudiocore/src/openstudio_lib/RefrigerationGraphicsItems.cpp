@@ -28,6 +28,7 @@
 namespace openstudio {
 
 const int RefrigerationSystemView::verticalSpacing = 50;
+const int RefrigerationSystemView::margin = 10;
 
 RefrigerationSystemGridView::RefrigerationSystemGridView()
 {
@@ -529,18 +530,6 @@ void RefrigerationCondenserView::setEmpty(bool empty)
   update();
 }
 
-void RefrigerationCondenserView::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-  event->accept();
-
-  if(event->proposedAction() == Qt::CopyAction)
-  {
-    OSItemId id = OSItemId(event->mimeData());
-
-    emit componentDropped(id);
-  }
-}
-
 void RefrigerationCondenserView::paint( QPainter *painter, 
                                         const QStyleOptionGraphicsItem *option, 
                                         QWidget *widget )
@@ -557,13 +546,52 @@ void RefrigerationCondenserView::paint( QPainter *painter,
   }
   else
   {
-    painter->drawText(boundingRect(),Qt::AlignCenter,"Condenser: X¥Z");
+    painter->drawText(boundingRect(),Qt::AlignCenter,"Condenser: XYZ");
   }
 }
 
 QRectF RefrigerationCondenserView::boundingRect() const
 {
   return QRectF(0,0,200,100);
+}
+
+RefrigerationCompressorDropZoneView::RefrigerationCompressorDropZoneView()
+{
+}
+
+QRectF RefrigerationCompressorDropZoneView::boundingRect() const
+{
+  return QRectF(0,0,100,80);
+}
+
+void RefrigerationCompressorDropZoneView::paint( QPainter *painter, 
+                                         const QStyleOptionGraphicsItem *option, 
+                                         QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::red,2,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawRoundedRect(0,0,boundingRect().width(), boundingRect().height(),8,8);
+
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drag and Drop\nCompressor");
+}
+
+RefrigerationCompressorView::RefrigerationCompressorView()
+  : m_numberOfCompressors(0)
+{
+  refrigerationCompressorDropZoneView = new RefrigerationCompressorDropZoneView();
+  refrigerationCompressorDropZoneView->setParentItem(this);
+  refrigerationCompressorDropZoneView->setPos(RefrigerationSystemView::margin,RefrigerationSystemView::margin);
+}
+
+void RefrigerationCompressorView::setNumberOfCompressors(int numberOfCompressors)
+{
+  prepareGeometryChange();
+
+  m_numberOfCompressors = numberOfCompressors;
+
+  update();
 }
 
 void RefrigerationCompressorView::paint( QPainter *painter, 
@@ -574,14 +602,28 @@ void RefrigerationCompressorView::paint( QPainter *painter,
   painter->setBrush(Qt::NoBrush);
   painter->setPen(QPen(Qt::red,2,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawRoundedRect(10,10,boundingRect().width() - 20, boundingRect().height() - 20,8,8);
+  painter->drawRoundedRect(0,0,boundingRect().width(), boundingRect().height(),8,8);
 
-  painter->drawText(boundingRect(),Qt::AlignCenter,"Compressor");
+  int x = refrigerationCompressorDropZoneView->pos().x() + refrigerationCompressorDropZoneView->boundingRect().width() + 10;
+  int y = RefrigerationSystemView::margin;
+
+  for( int i = 0; i < m_numberOfCompressors; i++ )
+  {
+    painter->drawRect(x,y,80,80);
+
+    painter->drawText(QRectF(x,y,80,80),Qt::AlignCenter,QString::number(i + 1));
+
+    x = x + 80 + RefrigerationSystemView::margin;
+  }
 }
 
 QRectF RefrigerationCompressorView::boundingRect() const
 {
-  return QRectF(0,0,200,100);
+  return QRectF(0,0,
+                RefrigerationSystemView::margin + refrigerationCompressorDropZoneView->boundingRect().width() +
+                m_numberOfCompressors * (80 + RefrigerationSystemView::margin) 
+                + RefrigerationSystemView::margin
+                ,100);
 }
 
 void RefrigerationSubCoolerView::paint( QPainter *painter, 
@@ -662,6 +704,18 @@ RefrigerationSystemDropZoneView::RefrigerationSystemDropZoneView()
 {
   setAcceptHoverEvents(true);
   setAcceptDrops(true);
+}
+
+void RefrigerationSystemDropZoneView::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+  event->accept();
+
+  if(event->proposedAction() == Qt::CopyAction)
+  {
+    OSItemId id = OSItemId(event->mimeData());
+
+    emit componentDropped(id);
+  }
 }
 
 QRectF RefrigerationSystemDropZoneView::boundingRect() const

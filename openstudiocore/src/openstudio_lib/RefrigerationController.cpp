@@ -26,6 +26,8 @@
 #include "../model/RefrigerationSystem_Impl.hpp"
 #include "../model/RefrigerationCondenserAirCooled.hpp"
 #include "../model/RefrigerationCondenserAirCooled_Impl.hpp"
+#include "../model/RefrigerationCompressor.hpp"
+#include "../model/RefrigerationCompressor_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 #include <QGraphicsScene>
@@ -53,6 +55,8 @@ RefrigerationController::RefrigerationController()
   m_refrigerationGridScene->addItem(m_refrigerationSystemGridView);
 
   m_refrigerationGraphicsView->setScene(m_refrigerationGridScene.data());
+
+  refresh();
 }
 
 RefrigerationController::~RefrigerationController()
@@ -84,6 +88,8 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
   // These get deleted with when the scene is deleted
   m_detailView = new RefrigerationSystemDetailView();
 
+  refresh();
+
   m_refrigerationScene->addItem(m_detailView);
 
   m_refrigerationGraphicsView->setScene(m_refrigerationScene.data());
@@ -95,11 +101,17 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
   bingo = connect(m_detailView->refrigerationSystemView->refrigerationCondenserView,SIGNAL(componentDropped(const OSItemId &)),
                   this,SLOT(onCondenserViewDrop(const OSItemId &)));
   OS_ASSERT(bingo);
+
+  bingo = connect(m_detailView->refrigerationSystemView->refrigerationCompressorView->refrigerationCompressorDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
+                  this,SLOT(onCompressorViewDrop(const OSItemId &)));
+  OS_ASSERT(bingo);
 }
 
 void RefrigerationController::zoomOutToSystemGridView()
 {
   m_currentSystem = boost::none;
+
+  refresh();
 
   m_refrigerationGraphicsView->setScene(m_refrigerationGridScene.data());
 }
@@ -129,6 +141,31 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
   }
 }
 
+void RefrigerationController::onCompressorViewDrop(const OSItemId & itemid)
+{
+  OS_ASSERT(m_currentSystem);
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  if( doc->fromComponentLibrary(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+
+    OS_ASSERT(mo); 
+
+    if( boost::optional<model::RefrigerationCompressor> compressor 
+          = mo->optionalCast<model::RefrigerationCompressor>() )
+    {
+      model::RefrigerationCompressor compressorClone = 
+        compressor->clone(m_currentSystem->model()).cast<model::RefrigerationCompressor>();
+
+      m_currentSystem->addCompressor(compressorClone);
+
+      refresh();
+    }
+  }
+}
+
 void RefrigerationController::refresh()
 {
   m_dirty = true;
@@ -138,12 +175,26 @@ void RefrigerationController::refresh()
 
 void RefrigerationController::refreshNow()
 {
-  if( m_dirty && m_currentSystem && m_detailView )
+  if( ! m_dirty ) return;
+
+  if( m_detailView )
   {
     m_detailView->refrigerationSystemView->refrigerationCondenserView->setEmpty(true);
-  
-    m_dirty = false;
+
+    if( m_currentSystem )
+    {
+      if( m_currentSystem->refrigerationCondenser() )
+      {
+        m_detailView->refrigerationSystemView->refrigerationCondenserView->setEmpty(false);
+      }
+
+      m_detailView->refrigerationSystemView->refrigerationCompressorView->setNumberOfCompressors(m_currentSystem->compressors().size());
+
+      m_detailView->refrigerationSystemView->adjustLayout();
+    }
   }
+  
+  m_dirty = false;
 }
 
 QGraphicsView * RefrigerationController::refrigerationGraphicsView() const

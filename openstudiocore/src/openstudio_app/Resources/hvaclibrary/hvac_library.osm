@@ -1,7 +1,7 @@
 
 OS:Version,
-  {1b25e67a-cf6a-4b01-a0ec-5518d0163d29}, !- Handle
-  1.1.0;                                  !- Version Identifier
+  {93669bf1-952a-4b9a-88ba-7e09d7906ccf}, !- Handle
+  1.1.1;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -2576,4 +2576,77 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   15.0,                                   !- Design Inlet Water Temperature {C}
   17.0,                                   !- Design Outlet Water Temperature {C}
   Autocalculate;                          !- Coefficient of Induction Kin
+
+OS:Refrigeration:Condenser:AirCooled,
+  {825bada4-344f-4a1b-8e72-ce40833c0e9e}, !- Handle
+  Air Cooled Refrigeration Condenser,   !- Name
+  {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Rated Effective Total Heat Rejection Rate Curve Name
+  0,                                      !- Rated Subcooling Temperature Difference {deltaC}
+  VariableSpeed,                          !- Condenser Fan Speed Control Type
+  7000,                                   !- Rated Fan Power {W}
+  0.25;                                   !- Minimum Fan Air Flow Ratio {dimensionless}
+
+OS:Curve:Linear,
+  {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Handle
+  Refrigeration Condenser Air Cooled HR Curve, !- Name
+  0,                                      !- Coefficient1 Constant
+  22000,                                  !- Coefficient2 x
+  5,                                      !- Minimum Value of x {BasedOnField A2}
+  22.2;                                   !- Maximum Value of x {BasedOnField A2}
+
+OS:Refrigeration:Compressor,
+  {56efd5d3-167b-4b77-b017-7704623596e1}, !- Handle
+  Refrigeration Compressor,             !- Name
+  {341b9403-ca2b-4895-a88f-57cf24eebda4}, !- Refrigeration Compressor Power Curve Name
+  {fa8d1a11-1610-42d7-87bf-b9d29315c412}, !- Refrigeration Compressor Capacity Curve Name
+  ,                                       !- Rated Superheat {deltaC}
+  18.3,                                   !- Rated Return Gas Temperature {C}
+  ,                                       !- Rated Liquid Temperature {C}
+  0;                                      !- Rated Subcooling {deltaC}
+
+OS:Curve:Bicubic,
+  {341b9403-ca2b-4895-a88f-57cf24eebda4}, !- Handle
+  Refrigeration Compressor Power Curve,   !- Name
+  4451.46,                                !- Coefficient1 Constant
+  -166.108,                               !- Coefficient2 x
+  -5.35664,                               !- Coefficient3 x**2
+  263.553,                                !- Coefficient4 y
+  -0.958849,                              !- Coefficient5 y**2
+  8.09252,                                !- Coefficient6 x*y
+  -0.0239354,                             !- Coefficient7 x**3
+  0.000633306,                            !- Coefficient8 y**3
+  0.0778798,                              !- Coefficient9 x**2*y
+  -0.0167386,                             !- Coefficient10 x*y**2
+  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
+  7.2,                                    !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  60,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Power;                                  !- Output Unit Type
+
+OS:Curve:Bicubic,
+  {fa8d1a11-1610-42d7-87bf-b9d29315c412}, !- Handle
+  Refrigeration Compressor Capacity Curve, !- Name
+  83249.9,                                !- Coefficient1 Constant
+  3147.96,                                !- Coefficient2 x
+  44.9276,                                !- Coefficient3 x**2
+  -1035.51,                               !- Coefficient4 y
+  3.74692,                                !- Coefficient5 y**2
+  -37.3907,                               !- Coefficient6 x*y
+  0.179897,                               !- Coefficient7 x**3
+  -0.0199971,                             !- Coefficient8 y**3
+  -0.481641,                              !- Coefficient9 x**2*y
+  0.0428673,                              !- Coefficient10 x*y**2
+  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
+  7.2,                                    !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  60,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Capacity;                               !- Output Unit Type
 
