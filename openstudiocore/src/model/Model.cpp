@@ -331,7 +331,15 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(RefrigerationCase);
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
+    REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
+    REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
+    REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
     REGISTER_CONSTRUCTOR(RefrigerationSystem);
+    REGISTER_CONSTRUCTOR(RefrigerationWalkIn);
+    REGISTER_CONSTRUCTOR(RefrigerationWalkInZoneBoundary);
     REGISTER_CONSTRUCTOR(RenderingColor);
     REGISTER_CONSTRUCTOR(RoofVegetation);
     REGISTER_CONSTRUCTOR(RunPeriod);
@@ -599,7 +607,15 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(RefrigerationCase);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserWaterCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSystem);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationWalkIn);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationWalkInZoneBoundary);
     REGISTER_COPYCONSTRUCTORS(RenderingColor);
     REGISTER_COPYCONSTRUCTORS(RoofVegetation);
     REGISTER_COPYCONSTRUCTORS(RunPeriod);
@@ -2428,4 +2444,3 @@ void addExampleConstructions(Model& model) {
 
 } // model
 } // openstudio
-
