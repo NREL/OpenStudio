@@ -358,6 +358,37 @@ class RefrigerationCasesDropZoneView : public RefrigerationSystemDropZoneView
               QWidget *widget = 0 );
 };
 
+class RefrigerationCaseDetailView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationCaseDetailView();
+
+  virtual ~RefrigerationCaseDetailView() {}
+
+  static QSizeF size();
+
+  QRectF boundingRect() const;
+
+  void setName(const QString & name);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 );
+
+  private:
+
+  QRectF nameRect() const;
+
+  QRectF iconRect() const;
+
+  QString m_name;
+};
+
 class RefrigerationCasesView : public QGraphicsObject
 {
   Q_OBJECT;
@@ -376,6 +407,10 @@ class RefrigerationCasesView : public QGraphicsObject
 
   void setNumberOfWalkinCases(int number);
 
+  void insertCaseDetailView(int index, QGraphicsObject * object);
+
+  void removeAllCaseDetailViews();
+
   protected:
 
   void paint( QPainter *painter, 
@@ -384,13 +419,21 @@ class RefrigerationCasesView : public QGraphicsObject
 
   private:
 
+  QPointF casePos(int index) const;
+
   QRectF displayCasesRect() const;
 
   QRectF walkinCasesRect() const;
 
+  QRectF summaryRect() const;
+
   int m_numberOfDisplayCases;
 
   int m_numberOfWalkinCases;
+
+  bool m_expanded;
+
+  std::vector<QGraphicsObject *> m_caseDetailViews;
 };
 
 class RefrigerationSubCoolerView : public RefrigerationSystemDropZoneView

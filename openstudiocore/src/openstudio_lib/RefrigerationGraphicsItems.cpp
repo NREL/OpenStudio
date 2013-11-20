@@ -498,7 +498,8 @@ int RefrigerationSystemView::rightXPos() const
 RefrigerationCasesView::RefrigerationCasesView()
   : QGraphicsObject(),
     m_numberOfDisplayCases(0),
-    m_numberOfWalkinCases(0)
+    m_numberOfWalkinCases(0),
+    m_expanded(true)
 {
   refrigerationCasesDropZoneView = new RefrigerationCasesDropZoneView();
 
@@ -558,7 +559,7 @@ QRectF RefrigerationCasesView::walkinCasesRect() const
                 80,80);
 }
 
-QRectF RefrigerationCasesView::boundingRect() const
+QRectF RefrigerationCasesView::summaryRect() const
 {
   return QRectF(0,0,
                 RefrigerationSystemView::margin + refrigerationCasesDropZoneView->boundingRect().width() +
@@ -566,6 +567,122 @@ QRectF RefrigerationCasesView::boundingRect() const
                 RefrigerationSystemView::margin + walkinCasesRect().width() + 
                 RefrigerationSystemView::margin,
                 100);
+}
+
+QRectF RefrigerationCasesView::boundingRect() const
+{
+  if( m_expanded )
+  {
+    double width = summaryRect().width();
+
+    int numberOfCases = m_numberOfWalkinCases + m_numberOfDisplayCases;
+
+    double height = 0.0;
+
+    if( numberOfCases > 0 )
+    {
+      height = casePos(numberOfCases - 1).y() + 
+               RefrigerationCaseDetailView::size().height() + 
+               RefrigerationSystemView::margin;
+    }
+    else
+    {
+      height = summaryRect().height();
+    }
+
+    return QRectF(0,0,width,height);
+  }
+  else
+  {
+    return summaryRect();
+  }
+}
+
+void RefrigerationCasesView::insertCaseDetailView(int index, QGraphicsObject * object)
+{
+  prepareGeometryChange();
+
+  m_caseDetailViews.insert(m_caseDetailViews.begin() + index,object);
+
+  object->setParentItem(this);
+
+  int i = 0;
+
+  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
+       it != m_caseDetailViews.end();
+       it++ )
+  {
+    (*it)->setPos(casePos(i));
+
+    i++;
+  }
+}
+
+void RefrigerationCasesView::removeAllCaseDetailViews()
+{
+  prepareGeometryChange();
+
+  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
+       it != m_caseDetailViews.end(); )
+  {
+    delete * it;
+
+    it = m_caseDetailViews.erase(it);
+  }
+}
+
+QPointF RefrigerationCasesView::casePos(int index) const
+{
+  QRectF _summaryRect = summaryRect();
+
+  double x = _summaryRect.width() / 2.0 - RefrigerationCaseDetailView::size().width() / 2.0;
+  double y = _summaryRect.height() + index * ( RefrigerationCaseDetailView::size().height() + RefrigerationSystemView::margin);
+
+  return QPointF(x,y);
+}
+
+RefrigerationCaseDetailView::RefrigerationCaseDetailView()
+{
+}
+
+QSizeF RefrigerationCaseDetailView::size()
+{
+  return QSizeF(300,100);
+}
+
+QRectF RefrigerationCaseDetailView::boundingRect() const
+{
+  return QRectF(0,0,size().width(),size().height());
+}
+
+void RefrigerationCaseDetailView::setName(const QString & name)
+{
+  m_name = name;
+}
+
+QRectF RefrigerationCaseDetailView::nameRect() const
+{
+  return QRectF(100,0,200,100);
+}
+
+QRectF RefrigerationCaseDetailView::iconRect() const
+{
+  return QRectF(0,0,100,100);
+}
+
+void RefrigerationCaseDetailView::paint( QPainter *painter, 
+            const QStyleOptionGraphicsItem *option, 
+            QWidget * widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::red,2,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawRect(iconRect());
+
+  painter->drawRect(boundingRect());
+
+  painter->drawText(nameRect(),Qt::AlignCenter,m_name);
 }
 
 RefrigerationCondenserView::RefrigerationCondenserView()

@@ -212,6 +212,8 @@ void RefrigerationController::refreshNow()
   {
     m_detailView->refrigerationSystemView->refrigerationCondenserView->setEmpty(true);
 
+    m_detailView->refrigerationSystemView->refrigerationCasesView->removeAllCaseDetailViews();
+
     if( m_currentSystem )
     {
       if( m_currentSystem->refrigerationCondenser() )
@@ -219,10 +221,24 @@ void RefrigerationController::refreshNow()
         m_detailView->refrigerationSystemView->refrigerationCondenserView->setEmpty(false);
       }
 
+      std::vector<model::RefrigerationCase> cases = m_currentSystem->cases();
+
       m_detailView->refrigerationSystemView->refrigerationCompressorView->setNumberOfCompressors(m_currentSystem->compressors().size());
 
-      m_detailView->refrigerationSystemView->refrigerationCasesView->setNumberOfDisplayCases(m_currentSystem->cases().size());
+      m_detailView->refrigerationSystemView->refrigerationCasesView->setNumberOfDisplayCases(cases.size());
 
+      for( std::vector<model::RefrigerationCase>::iterator it = cases.begin();
+           it != cases.end();
+           it++ )
+      {
+        RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
+
+        detailView->setName(QString::fromStdString(it->name().get()));
+
+        m_detailView->refrigerationSystemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
+      }
+
+      // Consider moving this inside RefrigerationSystemView
       m_detailView->refrigerationSystemView->adjustLayout();
     }
   }
