@@ -6390,18 +6390,13 @@ OS:Refrigeration:System,
         \type alpha
         \retaincase
         \default General
-  N3,   \field Number of Compressor Stages
-        \type choice
-        \key 1
-        \key 2
-        \default 1
   A13,  \field Intercooler Type
         \type choice
         \key None
         \key Flash Intercooler
         \key Shell-and-Coil Intercooler
         \default None
-  N4,   \field Shell-and-Coil Intercooler Effectiveness
+  N3,   \field Shell-and-Coil Intercooler Effectiveness
         \type real
         \default 0.8
   A14;  \field High-Stage CompressorList Name
