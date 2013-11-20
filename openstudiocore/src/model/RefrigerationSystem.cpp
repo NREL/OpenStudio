@@ -302,15 +302,15 @@ namespace detail {
     return isEmpty(OS_Refrigeration_SystemFields::EndUseSubcategory);
   }
 
-  std::string RefrigerationSystem_Impl::numberofCompressorStages() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+  // std::string RefrigerationSystem_Impl::numberofCompressorStages() const {
+  //   boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
+  //   OS_ASSERT(value);
+  //   return value.get();
+  // }
 
-  bool RefrigerationSystem_Impl::isNumberofCompressorStagesDefaulted() const {
-    return isEmpty(OS_Refrigeration_SystemFields::NumberofCompressorStages);
-  }
+  // bool RefrigerationSystem_Impl::isNumberofCompressorStagesDefaulted() const {
+  //   return isEmpty(OS_Refrigeration_SystemFields::NumberofCompressorStages);
+  // }
 
   std::string RefrigerationSystem_Impl::intercoolerType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::IntercoolerType,true);
@@ -572,15 +572,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool RefrigerationSystem_Impl::setNumberofCompressorStages(std::string numberofCompressorStages) {
-    bool result = setString(OS_Refrigeration_SystemFields::NumberofCompressorStages, numberofCompressorStages);
-    return result;
-  }
+  // bool RefrigerationSystem_Impl::setNumberofCompressorStages(std::string numberofCompressorStages) {
+  //   bool result = setString(OS_Refrigeration_SystemFields::NumberofCompressorStages, numberofCompressorStages);
+  //   return result;
+  // }
 
-  void RefrigerationSystem_Impl::resetNumberofCompressorStages() {
-    bool result = setString(OS_Refrigeration_SystemFields::NumberofCompressorStages, "");
-    OS_ASSERT(result);
-  }
+  // void RefrigerationSystem_Impl::resetNumberofCompressorStages() {
+  //   bool result = setString(OS_Refrigeration_SystemFields::NumberofCompressorStages, "");
+  //   OS_ASSERT(result);
+  // }
 
   bool RefrigerationSystem_Impl::setIntercoolerType(std::string intercoolerType) {
     bool result = setString(OS_Refrigeration_SystemFields::IntercoolerType, intercoolerType);
@@ -668,10 +668,10 @@ std::vector<std::string> RefrigerationSystem::suctionTemperatureControlTypeValue
                         OS_Refrigeration_SystemFields::SuctionTemperatureControlType);
 }
 
-std::vector<std::string> RefrigerationSystem::numberofCompressorStagesValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Refrigeration_SystemFields::NumberofCompressorStages);
-}
+// std::vector<std::string> RefrigerationSystem::numberofCompressorStagesValues() {
+//   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+//                         OS_Refrigeration_SystemFields::NumberofCompressorStages);
+// }
 
 std::vector<std::string> RefrigerationSystem::intercoolerTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
