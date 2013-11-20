@@ -261,12 +261,10 @@ CREATE_SRC_GROUPS( "${osversion_resources_src}" )
 if (APPLE)
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
            DESTINATION sharedresources
-           PATTERN ".svn" EXCLUDE
          )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
            DESTINATION share/openstudio
-           PATTERN ".svn" EXCLUDE
          )
 endif()
 
@@ -608,6 +606,8 @@ SET(analysis_resources_src
   analysis/version/data_point_1-0-3.json
   analysis/version/analysis_1-0-4.json
   analysis/version/data_point_1-0-4.json
+  analysis/version/analysis_1-1-1.json
+  analysis/version/data_point_1-1-1.json  
 )
 
 # update the resources
