@@ -1,6 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2010, Alliance for Sustainable Energy.
- *  Copyright (c) 2013, The Pennsylvania State University.
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -478,13 +477,8 @@ bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const 
     QTextStream textStream(&file);
     textStream << *output;
     file.close();
+    return true;
   }
-  /*
-  else
-  {
-    return false;
-  }
-  */
   return false;
 }
 

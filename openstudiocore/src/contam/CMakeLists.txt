@@ -41,6 +41,7 @@ SET( ${target_name}_swig_src
   Contam.i
 )
 
+# Someone should make sure these are all really needed
 SET( ${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
@@ -76,20 +77,4 @@ IF(BUILD_TESTING)
 ENDIF()
 
 MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
-
-add_executable(osm2prj osm2prj.cpp)
-
-TARGET_LINK_LIBRARIES( osm2prj
-  ${${target_name}_depends}
-  openstudio_osversion
-  openstudio_contam
-)
-
-add_executable(epw2wth epw2wth.cpp)
-
-TARGET_LINK_LIBRARIES( epw2wth 
-  ${${target_name}_depends}
-  openstudio_osversion
-  openstudio_contam
-)
 
