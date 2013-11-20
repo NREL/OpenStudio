@@ -554,7 +554,7 @@ namespace detail {
 
     if (success) {
       if (m_requestRun->lastDataPointUUIDs().empty()) {
-        LOG(Debug,"There are not data points, go ahead and upload the analysis files.");
+        LOG(Debug,"There are no data points, go ahead and upload the analysis files.");
         // no data points posted yet, upload the analysis files
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);

@@ -275,6 +275,8 @@ namespace detail{
     void logWarning(const std::string& warning) const;
     std::vector<UUID> processListOfUUID(const QByteArray& bytes, bool& success) const;
 
+    void resetNetworkReply();
+
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");
   };

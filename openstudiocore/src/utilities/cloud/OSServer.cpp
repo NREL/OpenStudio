@@ -79,11 +79,7 @@ namespace openstudio{
 
     OSServer_Impl::~OSServer_Impl()
     {
-      if (m_networkReply){
-        m_networkReply->blockSignals(true);
-        m_networkReply->deleteLater();
-        m_networkReply = 0;
-      };
+      resetNetworkReply();
     }
  
     bool OSServer_Impl::available(int msec)
@@ -412,9 +408,7 @@ namespace openstudio{
       }
 
       QObject::disconnect(m_networkReply, 0, this, 0);
-      m_networkReply->blockSignals(true);
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(false);
@@ -586,6 +580,9 @@ namespace openstudio{
       bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostAnalysisJSON()));
       OS_ASSERT(test);
 
+      test = QObject::connect(m_networkReply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(logUploadProgress(qint64,qint64)));
+      OS_ASSERT(test);
+
       return true;
     }
 
@@ -661,6 +658,9 @@ namespace openstudio{
           m_networkReply = m_networkAccessManager->post(request, data);
 
           bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+          OS_ASSERT(test);
+
+          test = QObject::connect(m_networkReply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(logUploadProgress(qint64,qint64)));
           OS_ASSERT(test);
 
           return true;
@@ -981,9 +981,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1001,9 +999,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1022,12 +1018,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processDeleteProject()
@@ -1043,9 +1037,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1089,9 +1081,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1110,9 +1100,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1129,16 +1117,9 @@ namespace openstudio{
         success = true;
       }else{
         logNetworkError(m_networkReply->error());
-        // Print response headers
-        for(int i=0; i<m_networkReply->rawHeaderList().size(); ++i){
-          QString str(m_networkReply->rawHeaderList()[i].constData());
-          LOG(Debug, toString(str) << ": " << toString(m_networkReply->rawHeader(m_networkReply->rawHeaderList()[i] ).constData()) << std::endl);
-        }
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1155,19 +1136,12 @@ namespace openstudio{
         success = true;
       }else{
         logNetworkError(m_networkReply->error());
-        // Print response headers
-        for(int i=0; i<m_networkReply->rawHeaderList().size(); ++i){
-          QString str(m_networkReply->rawHeaderList()[i].constData());
-          LOG(Debug, toString(str) << ": " << toString(m_networkReply->rawHeader(m_networkReply->rawHeaderList()[i] ).constData()) << std::endl);
-        }
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processStart()
@@ -1183,12 +1157,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processIsAnalysisQueued()
@@ -1234,12 +1206,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processIsAnalysisRunning()
@@ -1285,12 +1255,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processIsAnalysisComplete()
@@ -1336,9 +1304,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1357,9 +1323,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1402,9 +1366,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1447,9 +1409,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1492,9 +1452,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1537,9 +1495,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1582,9 +1538,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1612,9 +1566,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1640,9 +1592,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1654,7 +1604,7 @@ namespace openstudio{
       }
       else {
         double percentComplete = 100.0 * (double(bytesSent)/double(bytesTotal));
-        LOG(Debug,"Upload is " << percentComplete << "% complete.");
+        LOG(Debug,"Upload is " << percentComplete << "% complete, " << bytesSent << " of " << bytesTotal << " bytes.");
       }
     }
 
@@ -1666,7 +1616,7 @@ namespace openstudio{
 
     void OSServer_Impl::logNetworkReply(const std::string& methodName) const
     {
-      bool doLog = false;
+      bool doLog = true;
 
       if (doLog && m_networkReply){
         LogLevel level = Warn;
@@ -1824,6 +1774,14 @@ namespace openstudio{
       }
 
       return result;
+    }
+
+    void OSServer_Impl::resetNetworkReply() {
+      if (m_networkReply) {
+        m_networkReply->blockSignals(true);
+        m_networkReply->deleteLater();
+        m_networkReply = 0;
+      };
     }
 
   }
