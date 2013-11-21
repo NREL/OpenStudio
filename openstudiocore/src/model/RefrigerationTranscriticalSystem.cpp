@@ -86,25 +86,25 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
-    // if ( boost::optional<ModelObject> condenser = this->optionalRefrigerationCondenser() ) {
-    //   std::vector<IdfObject> removedCondenser = condenser->remove();
-    //   result.insert(result.end(), removedCondenser.begin(), removedCondenser.end());
-    // }
+    if (boost::optional<ModelObjectList> mediumTemperatureCaseAndWalkinList = this->mediumTemperatureRefrigeratedCaseAndWalkInList()) {
+      std::vector<IdfObject> removedCasesAndWalkins = mediumTemperatureCaseAndWalkinList->remove();
+      result.insert(result.end(), removedCasesAndWalkins.begin(), removedCasesAndWalkins.end());
+    }
 
-    // if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-    //   std::vector<IdfObject> removedCasesAndWalkins = caseAndWalkinList->remove();
-    //   result.insert(result.end(), removedCasesAndWalkins.begin(), removedCasesAndWalkins.end());
-    // }
+    if (boost::optional<ModelObjectList> lowTemperatureCaseAndWalkinList = this->lowTemperatureRefrigeratedCaseAndWalkInList()) {
+      std::vector<IdfObject> removedCasesAndWalkins = lowTemperatureCaseAndWalkinList->remove();
+      result.insert(result.end(), removedCasesAndWalkins.begin(), removedCasesAndWalkins.end());
+    }
 
-    // if (boost::optional<ModelObjectList> transferLoadList = this->refrigerationTransferLoadList()) {
-    //   std::vector<IdfObject> removedTransferLoads = transferLoadList->remove();
-    //   result.insert(result.end(), removedTransferLoads.begin(), removedTransferLoads.end());
-    // }
+    if (boost::optional<ModelObjectList> highPressureCompressorList = this->highPressureCompressorList()) {
+      std::vector<IdfObject> removedCompressors = highPressureCompressorList->remove();
+      result.insert(result.end(), removedCompressors.begin(), removedCompressors.end());
+    }
 
-    // if (boost::optional<ModelObjectList> compressorList = this->compressorList()) {
-    //   std::vector<IdfObject> removedCompressors = compressorList->remove();
-    //   result.insert(result.end(), removedCompressors.begin(), removedCompressors.end());
-    // }
+    if (boost::optional<ModelObjectList> lowPressureCompressorList = this->lowPressureCompressorList()) {
+      std::vector<IdfObject> removedCompressors = lowPressureCompressorList->remove();
+      result.insert(result.end(), removedCompressors.begin(), removedCompressors.end());
+    }
 
     std::vector<IdfObject> removedRefrigerationTranscriticalSystem = ModelObject_Impl::remove();
     result.insert(result.end(), removedRefrigerationTranscriticalSystem.begin(), removedRefrigerationTranscriticalSystem.end());
@@ -116,27 +116,28 @@ namespace detail {
   {
     RefrigerationTranscriticalSystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationTranscriticalSystem>();
 
-    // if ( boost::optional<ModelObject> condenser = this->optionalRefrigerationCondenser() ) {
-    //   ModelObject condenserClone = condenser->clone(model);
-    //   modelObjectClone.setRefrigerationCondenser(condenserClone);
-    // }
+    if (boost::optional<ModelObjectList> mediumTemperatureCaseAndWalkinList = this->mediumTemperatureRefrigeratedCaseAndWalkInList()) {
+      ModelObjectList caseAndWalkinListClone = mediumTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
+      modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
+    }
 
-    // if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-    //   ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
-    //   modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
-    // }
+    if (boost::optional<ModelObjectList> lowTemperatureCaseAndWalkinList = this->lowTemperatureRefrigeratedCaseAndWalkInList()) {
+      ModelObjectList caseAndWalkinListClone = lowTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
+      modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowTemperatureRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
+    }
 
-    // if (boost::optional<ModelObjectList> transferLoadList = this->refrigerationTransferLoadList()) {
-    //   ModelObjectList transferLoadListClone = transferLoadList->clone(model).cast<ModelObjectList>();
-    //   modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationTransferLoadList(transferLoadListClone);
-    // }
+    if (boost::optional<ModelObjectList> highPressureCompressorList = this->highPressureCompressorList()) {
+      ModelObjectList compressorListClone = highPressureCompressorList->clone(model).cast<ModelObjectList>();
+      modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setHighPressureCompressorList(compressorListClone);
+    }
 
-    // if (boost::optional<ModelObjectList> compressorList = this->compressorList()) {
-    //   ModelObjectList compressorListClone = compressorList->clone(model).cast<ModelObjectList>();
-    //   modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setCompressorList(compressorListClone);
-    // }
+    if (boost::optional<ModelObjectList> lowPressureCompressorList = this->lowPressureCompressorList()) {
+      ModelObjectList compressorListClone = lowPressureCompressorList->clone(model).cast<ModelObjectList>();
+      modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowPressureCompressorList(compressorListClone);
+    }
 
-    // modelObjectClone.resetSuctionPipingZone();
+    modelObjectClone.resetMediumTemperatureSuctionPipingZone();
+    modelObjectClone.resetLowTemperatureSuctionPipingZone();
 
     return modelObjectClone;
   }
@@ -531,18 +532,22 @@ RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(const Model& 
 {
   OS_ASSERT(getImpl<detail::RefrigerationTranscriticalSystem_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Refrigeration_TranscriticalSystemFields::MediumTemperatureRefrigeratedCaseAndWalkInListName
-  //     OS_Refrigeration_TranscriticalSystemFields::RefrigerationGasCoolerName
-  //     OS_Refrigeration_TranscriticalSystemFields::HighPressureCompressorListName
   bool ok = true;
-  // ok = setMediumTemperatureRefrigeratedCaseAndWalkInList();
+  ModelObjectList mediumTemperatureCaseAndWalkinList = ModelObjectList(model);
+  mediumTemperatureCaseAndWalkinList.setName(this->name().get() + " Medium Temperature Case and Walkin List");
+  ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(mediumTemperatureCaseAndWalkinList);
   OS_ASSERT(ok);
-  // ok = setRefrigerationGasCooler();
+  ModelObjectList lowTemperatureCaseAndWalkinList = ModelObjectList(model);
+  lowTemperatureCaseAndWalkinList.setName(this->name().get() + " Low Temperature Case and Walkin List");
+  ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowTemperatureRefrigeratedCaseAndWalkInList(lowTemperatureCaseAndWalkinList);
   OS_ASSERT(ok);
-  // ok = setHighPressureCompressorList();
+  ModelObjectList highPressureCompressorlist = ModelObjectList(model);
+  highPressureCompressorlist.setName(this->name().get() + " High Pressure Compressor List");
+  ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setHighPressureCompressorList(highPressureCompressorlist);
   OS_ASSERT(ok);
-  // ok = setRefrigerationSystemWorkingFluidType();
+  ModelObjectList lowPressureCompressorlist = ModelObjectList(model);
+  lowPressureCompressorlist.setName(this->name().get() + " Low Pressure Compressor List");
+  ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowPressureCompressorList(lowPressureCompressorlist);
   OS_ASSERT(ok);
 }
 
