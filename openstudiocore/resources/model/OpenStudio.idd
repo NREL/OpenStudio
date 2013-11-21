@@ -6474,18 +6474,13 @@ OS:Refrigeration:System,
         \type alpha
         \retaincase
         \default General
-  N3,   \field Number of Compressor Stages
-        \type choice
-        \key 1
-        \key 2
-        \default 1
   A13,  \field Intercooler Type
         \type choice
         \key None
         \key Flash Intercooler
         \key Shell-and-Coil Intercooler
         \default None
-  N4,   \field Shell-and-Coil Intercooler Effectiveness
+  N3,   \field Shell-and-Coil Intercooler Effectiveness
         \type real
         \default 0.8
   A14;  \field High-Stage CompressorList Name
@@ -6493,7 +6488,7 @@ OS:Refrigeration:System,
         \object-list ModelObjectLists
 
 OS:Refrigeration:TranscriticalSystem,
-        \min-fields 8
+        \min-fields 7
         \memo Detailed transcritical carbon dioxide (CO2) booster refrigeration systems used in
         \memo supermarkets.  The object allows for modeling either a single stage system with
         \memo medium-temperature loads or a two stage system with both medium- and low-temperature
@@ -6504,12 +6499,7 @@ OS:Refrigeration:TranscriticalSystem,
         \required-field
         \type alpha
         \reference RefrigerationSystemNames
-  A3,   \field System Type
-        \required-field
-        \type choice
-        \key SingleStage
-        \key TwoStage
-  A4,   \field Medium Temperature Refrigerated CaseAndWalkInList Name
+  A3,   \field Medium Temperature Refrigerated CaseAndWalkInList Name
         \note Enter the name of a Refrigeration:Case or Refrigeration:WalkIn object.
         \note If there is more than one refrigerated case or walkin served by this system,
         \note enter the name of a Refrigeration:CaseAndWalkInList object.
@@ -6518,7 +6508,7 @@ OS:Refrigeration:TranscriticalSystem,
         \required-field
         \type object-list
         \object-list ModelObjectLists
-  A5,   \field Low Temperature Refrigerated CaseAndWalkInList Name
+  A4,   \field Low Temperature Refrigerated CaseAndWalkInList Name
         \note Enter the name of a Refrigeration:Case or Refrigeration:WalkIn object.
         \note If there is more than one refrigerated case or walkin served by this system,
         \note enter the name of a Refrigeration:CaseAndWalkInList object.
@@ -6526,15 +6516,15 @@ OS:Refrigeration:TranscriticalSystem,
         \note included in this list.
         \type object-list
         \object-list ModelObjectLists
-  A6,   \field Refrigeration Gas Cooler Name
+  A5,   \field Refrigeration Gas Cooler Name
         \required-field
         \type object-list
         \object-list RefrigerationAllTypesGasCoolerNames
-  A7,   \field High Pressure CompressorList Name
+  A6,   \field High Pressure CompressorList Name
         \required-field
         \type object-list
         \object-list ModelObjectLists
-  A8,   \field Low Pressure CompressorList Name
+  A7,   \field Low Pressure CompressorList Name
         \type object-list
         \object-list ModelObjectLists
   N1,   \field Receiver Pressure
@@ -6544,7 +6534,7 @@ OS:Refrigeration:TranscriticalSystem,
   N2,   \field Subcooler Effectiveness
         \type real
         \default 0.4
-  A9,   \field Refrigeration System Working Fluid Type
+  A8,   \field Refrigeration System Working Fluid Type
         \required-field
         \type choice
         \key R11
@@ -6563,7 +6553,7 @@ OS:Refrigeration:TranscriticalSystem,
         \default 0.0
         \units W/K
         \note Use only if you want to include suction piping heat gain in refrigeration load
-  A10,  \field Medium Temperature Suction Piping Zone Name
+  A9,   \field Medium Temperature Suction Piping Zone Name
         \note This will be used to determine the temperature used for distribution piping heat
         \note gain and the pipe heat gains as cooling credit for the zone.
         \note Required only if Sum UA Distribution Piping for Medium Temperature Loads > 0.0
@@ -6574,13 +6564,13 @@ OS:Refrigeration:TranscriticalSystem,
         \default 0.0
         \units W/K
         \note Use only if you want to include suction piping heat gain in refrigeration load
-  A11,  \field Low Temperature Suction Piping Zone Name
+  A10,  \field Low Temperature Suction Piping Zone Name
         \note This will be used to determine the temperature used for distribution piping heat
         \note gain and the pipe heat gains as cooling credit for the zone.
         \note Required only if Sum UA Distribution Piping for Low Temperature Loads > 0.0
         \type object-list
         \object-list ThermalZoneNames
-  A12;  \field End-Use Subcategory
+  A11;  \field End-Use Subcategory
         \type alpha
         \retaincase
         \default General
