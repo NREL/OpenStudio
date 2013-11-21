@@ -260,8 +260,78 @@ namespace openstudio{
       return 0;
     }
 
-    LOG_FREE(Error, "utilities.geometry.getDistancePointToTriangle", "Not yet implemented");
-    return 0;
+    //Distance Between Point and Triangle in 3D
+    //David Eberly
+    //Geometric Tools, LLC
+    //http://www.geometrictools.com/
+
+    //T(s; t) = B+sE0+tE1
+
+    Point3d B = triangle[0];
+    Vector3d E0 = triangle[1] - triangle[0];
+    Vector3d E1 = triangle[2] - triangle[0];
+    Vector3d BminusP = B - point;
+
+    double b = E0.dot(E1);
+
+    if (std::abs(b) > 1.0-1.0E-12){
+      // triangle is colinear
+      return 0;
+    }
+
+    double a = E0.dot(E0);
+    double c = E1.dot(E1);
+    double d = E0.dot(BminusP);
+    double e = E1.dot(BminusP);
+    double f = BminusP.dot(BminusP);
+
+    double det = a*c-b*b; 
+    double s = b*e-c*d; 
+    double t = b*d-a*e;
+
+    Point3d closestPoint;
+
+    if ( s+t <= det ) {
+      if ( s < 0 ) {  
+        if ( t < 0 ) { 
+          //region 4, closest to point triangle[0] 
+          return getDistance(point, triangle[0]);
+        } else { 
+          //region 3, closest to line triangle[0] to triangle[2] 
+          std::vector<Point3d> line;
+          line.push_back(triangle[0]);
+          line.push_back(triangle[2]);
+          return getDistancePointToLineSegment(point, line); 
+        } 
+      } else if ( t < 0 ) { 
+        //region 5, closest to line triangle[0] to triangle[1] 
+        std::vector<Point3d> line;
+        line.push_back(triangle[0]);
+        line.push_back(triangle[1]);
+        return getDistancePointToLineSegment(point, line);
+      } else { 
+        //region 0, closest point is inside triangle
+        double invDet = 1.0/det;
+        closestPoint = B + invDet*s*E0 + invDet*t*E1;
+      }
+    } else {
+      if ( s < 0 ) { 
+        //region 2, closest to point triangle[2]
+        return getDistance(point, triangle[2]);
+      } else if ( t < 0 ) { 
+        //region 6, closest to point triangle[1]
+        return getDistance(point, triangle[1]);
+      } else { 
+        //region 1, closest to line triangle[1] to triangle[2]
+        std::vector<Point3d> line;
+        line.push_back(triangle[1]);
+        line.push_back(triangle[2]);
+        return getDistancePointToLineSegment(point, line);
+      }
+    }
+  
+    Vector3d diff = point-closestPoint;
+    return diff.length();
   }
 
   double getAngle(const Vector3d& vector1, const Vector3d& vector2) {
