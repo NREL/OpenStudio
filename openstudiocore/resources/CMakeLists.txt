@@ -476,27 +476,6 @@ ADD_CUSTOM_TARGET( openstudio_radiance_resources
 CREATE_SRC_GROUPS( "${radiance_resources_src}" )
 
 ########################################################
-# eefg resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-SET(ENERGYPLUS_OUTPUTS "")
-
-SET(eefg_resources_src
-  eefg/dummy.idd
-  eefg/dummy.idf
-)
-
-# update the resources
-UPDATE_RESOURCES("${eefg_resources_src}")
-
-# add target
-ADD_CUSTOM_TARGET( openstudio_eefg_resources
-  DEPENDS ${eefg_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${eefg_resources_src}
-)
-
-CREATE_SRC_GROUPS( "${eefg_resources_src}" )
-
-########################################################
 # resultsviewer resources
 
 # clear runs, calls to RUN_ENERGYPLUS will populate this
@@ -550,51 +529,23 @@ ADD_CUSTOM_TARGET( openstudio_gbxml_resources
 CREATE_SRC_GROUPS( "${gbxml_resources_src}" )
 
 ########################################################
-# simxml resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-IF(BUILD_SIMXML)
-
-  SET(ENERGYPLUS_OUTPUTS "")
-
-  SET(simxml_resources_src
-    simxml/ClassLevel_Test-3.xml
-  )
-
-  # update the resources
-  UPDATE_RESOURCES("${simxml_resources_src}")
-
-  # add target
-  ADD_CUSTOM_TARGET( openstudio_simxml_resources
-    DEPENDS ${simxml_resources_src} ${ENERGYPLUS_OUTPUTS}
-    SOURCES ${simxml_resources_src}
-  )
-
-  CREATE_SRC_GROUPS( "${simxml_resources_src}" )
-
-ENDIF(BUILD_SIMXML)
-
-########################################################
 # sdd resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this
-IF(BUILD_SDD)
+SET(ENERGYPLUS_OUTPUTS "")
 
-  SET(ENERGYPLUS_OUTPUTS "")
+SET(sdd_resources_src
+)
 
-  SET(sdd_resources_src
-  )
+# update the resources
+UPDATE_RESOURCES("${sdd_resources_src}")
 
-  # update the resources
-  UPDATE_RESOURCES("${sdd_resources_src}")
+# add target
+ADD_CUSTOM_TARGET( openstudio_sdd_resources
+  DEPENDS ${sdd_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${sdd_resources_src}
+)
 
-  # add target
-  ADD_CUSTOM_TARGET( openstudio_sdd_resources
-    DEPENDS ${sdd_resources_src} ${ENERGYPLUS_OUTPUTS}
-    SOURCES ${sdd_resources_src}
-  )
-
-  CREATE_SRC_GROUPS( "${sdd_resources_src}" )
-
-ENDIF(BUILD_SDD)
+CREATE_SRC_GROUPS( "${sdd_resources_src}" )
 
 ########################################################
 # analysis resources

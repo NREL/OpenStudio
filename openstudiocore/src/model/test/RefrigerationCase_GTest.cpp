@@ -34,41 +34,33 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,RefrigerationCase_RefrigerationCase)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT (
-  {
-     Model m;
-     ScheduleCompact cls(m);
+  
+  ASSERT_EXIT ( 
+  {  
+     Model m; 
      ScheduleCompact cds(m);
-     ScheduleCompact cddds(m);
-
-     RefrigerationCase refrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+     RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
      exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-
-
 TEST_F(ModelFixture,RefrigerationCase_iddObjectType)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
 
-    EXPECT_EQ( testRefrigerationCase.iddObjectType(), IddObjectType::OS_Refrigeration_Case);
+    ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
+
+	EXPECT_EQ( testRefrigerationCase.iddObjectType(), IddObjectType::OS_Refrigeration_Case);
 }
 
 TEST_F(ModelFixture,RefrigerationCase_RatedAmbientTemperature)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum> 0.0
     // default 23.9
@@ -89,14 +81,12 @@ TEST_F(ModelFixture,RefrigerationCase_RatedAmbientTemperature)
 
 
 TEST_F(ModelFixture,RefrigerationCase_RatedAmbientRelativeHumidity)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
-    //   minimum> 0.0
+	//   minimum> 0.0
     //   maximum< 100.0
     //   default 55.0
 
@@ -118,12 +108,10 @@ TEST_F(ModelFixture,RefrigerationCase_RatedAmbientRelativeHumidity)
 
 
 TEST_F(ModelFixture,RefrigerationCase_RatedTotalCoolingCapacityperUnitLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //    minimum> 0.0
     //    default 1900.0
@@ -144,12 +132,10 @@ TEST_F(ModelFixture,RefrigerationCase_RatedTotalCoolingCapacityperUnitLength)
 
 
 TEST_F(ModelFixture,RefrigerationCase_RatedLatentHeatRatio)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //    minimum 0.0
     //    maximum 1.0
@@ -172,12 +158,10 @@ TEST_F(ModelFixture,RefrigerationCase_RatedLatentHeatRatio)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_RatedRuntimeFraction)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //  minimum> 0.0
     //  maximum 1.0
@@ -200,12 +184,10 @@ TEST_F(ModelFixture,RefrigerationCase_RatedRuntimeFraction)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_CaseLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum> 0.0
     // default 3.0
@@ -225,14 +207,12 @@ TEST_F(ModelFixture,RefrigerationCase_CaseLength)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_CaseOperatingTemperature)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
-    // maximum< 20.0
+	// maximum< 20.0
     // default 1.1
 
     EXPECT_DOUBLE_EQ( testRefrigerationCase.caseOperatingTemperature(), 2.78); // Brian's value
@@ -250,14 +230,12 @@ TEST_F(ModelFixture,RefrigerationCase_CaseOperatingTemperature)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_StandardCaseFanPowerperUnitLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
-    // minimum 0.0
+	// minimum 0.0
     // default 75.0
 
     EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseFanPowerperUnitLength(), 41.01); // Brian's value
@@ -276,12 +254,10 @@ TEST_F(ModelFixture,RefrigerationCase_StandardCaseFanPowerperUnitLength)
 
 
 TEST_F(ModelFixture,RefrigerationCase_OperatingCaseFanPowerperUnitLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // default 75.0
@@ -302,36 +278,32 @@ TEST_F(ModelFixture,RefrigerationCase_OperatingCaseFanPowerperUnitLength)
 
 
 TEST_F(ModelFixture,RefrigerationCase_StandardCaseLightingPowerperUnitLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
-    // default 90.0
+	// default 90.0
 
-    EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), 45.93); // Brian's values
+	EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), 45.93); // Brian's values
+	
+	testRefrigerationCase.setStandardCaseLightingPowerperUnitLength(10.5);
+	EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), 10.5);
 
-    testRefrigerationCase.setStandardCaseLightingPowerperUnitLength(10.5);
-    EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), 10.5);
+	testRefrigerationCase.setStandardCaseLightingPowerperUnitLength(-10.5);
+	EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), -10.5);
 
-    testRefrigerationCase.setStandardCaseLightingPowerperUnitLength(-10.5);
-    EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), -10.5);
-
-    testRefrigerationCase.setStandardCaseLightingPowerperUnitLength(20.4);
-    testRefrigerationCase.resetStandardCaseLightingPowerperUnitLength();
-    EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), 90.0); // IDD default
+	testRefrigerationCase.setStandardCaseLightingPowerperUnitLength(20.4);
+	testRefrigerationCase.resetStandardCaseLightingPowerperUnitLength();
+	EXPECT_DOUBLE_EQ( testRefrigerationCase.standardCaseLightingPowerperUnitLength(), 90.0); // IDD default
 }
 
 
 TEST_F(ModelFixture,RefrigerationCase_InstalledCaseLightingPowerperUnitLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // note Default set equal to Standard Case Lighting Power per Unit Length
 
@@ -349,12 +321,10 @@ TEST_F(ModelFixture,RefrigerationCase_InstalledCaseLightingPowerperUnitLength)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_FractionofLightingEnergytoCase)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // maximum 1.0
@@ -377,14 +347,12 @@ TEST_F(ModelFixture,RefrigerationCase_FractionofLightingEnergytoCase)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_CaseAntiSweatHeaterPowerperUnitLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
-    // minimum 0.0
+	// minimum 0.0
     // default 0.0
 
     EXPECT_DOUBLE_EQ( testRefrigerationCase.caseAntiSweatHeaterPowerperUnitLength(), 0.0);
@@ -402,14 +370,12 @@ TEST_F(ModelFixture,RefrigerationCase_CaseAntiSweatHeaterPowerperUnitLength)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_HumidityatZeroAntiSweatHeaterEnergy)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
-    //    default -10.0
+	//	default -10.0
     //    note This field is only applicable to Linear AS heater control type
     //    note Zone relative humidity (%) where anti-sweat heater energy is zero
 
@@ -428,12 +394,10 @@ TEST_F(ModelFixture,RefrigerationCase_HumidityatZeroAntiSweatHeaterEnergy)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_CaseHeight)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // default 1.5
@@ -456,12 +420,10 @@ TEST_F(ModelFixture,RefrigerationCase_CaseHeight)
 
 
 TEST_F(ModelFixture,RefrigerationCase_FractionofAntiSweatHeaterEnergytoCase)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //  minimum 0.0
     //  maximum 1.0
@@ -484,12 +446,10 @@ TEST_F(ModelFixture,RefrigerationCase_FractionofAntiSweatHeaterEnergytoCase)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_CaseDefrostPowerperUnitLength)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // default 0.0
@@ -512,12 +472,10 @@ TEST_F(ModelFixture,RefrigerationCase_CaseDefrostPowerperUnitLength)
 
 
 TEST_F(ModelFixture,RefrigerationCase_UnderCaseHVACReturnAirFraction)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // maximum 1.0
@@ -540,12 +498,10 @@ TEST_F(ModelFixture,RefrigerationCase_UnderCaseHVACReturnAirFraction)
 }
 
 TEST_F(ModelFixture,RefrigerationCase_DesignEvaporatorTemperatureorBrineInletTemperature)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum -70.0
     // maximum 40.0
@@ -571,12 +527,10 @@ TEST_F(ModelFixture,RefrigerationCase_DesignEvaporatorTemperatureorBrineInletTem
 }
 
 TEST_F(ModelFixture,RefrigerationCase_AverageRefrigerantChargeInventory)
-{
-    Model m;
-    ScheduleCompact cls(m);
-    ScheduleCompact cds(m);
-    ScheduleCompact cddds(m);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cls, cds, cddds);
+{    
+	Model m; 
+	ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // default 0.0
 
@@ -592,11 +546,9 @@ TEST_F(ModelFixture,RefrigerationCase_AverageRefrigerantChargeInventory)
 
 TEST_F(ModelFixture, RefrigerationCase_Remove)
 {
-    Model model;
-    ScheduleCompact cls(model);
-    ScheduleCompact cds(model);
-    ScheduleCompact cddds(model);
-    RefrigerationCase testRefrigerationCase = RefrigerationCase(model, cls, cds, cddds);
+	Model model; 
+	ScheduleCompact cds(model);
+	RefrigerationCase testRefrigerationCase = RefrigerationCase(model, cds);
 
     std::vector<RefrigerationCase> testAllRefrigerationCases = model.getModelObjects<RefrigerationCase>();
     EXPECT_EQ(1, testAllRefrigerationCases.size());
@@ -609,161 +561,154 @@ TEST_F(ModelFixture, RefrigerationCase_Remove)
 
 TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithDefaultData)
 {
-    Model model;
-    ScheduleCompact cls(model);
-    ScheduleCompact cds(model);
-    ScheduleCompact cddds(model);
-    RefrigerationCase testObject = RefrigerationCase(model, cls, cds, cddds);
+	Model model; 
+	ScheduleCompact cds(model);
+	RefrigerationCase testObject = RefrigerationCase(model, cds);
 
-    RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+	RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
-    EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
+	EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
 
-    EXPECT_DOUBLE_EQ( 24.0, testObjectClone.ratedAmbientTemperature() );
-    EXPECT_DOUBLE_EQ( 55.0, testObjectClone.ratedAmbientRelativeHumidity() );
-    EXPECT_DOUBLE_EQ( 1432.66, testObjectClone.ratedTotalCoolingCapacityperUnitLength() );
-    EXPECT_DOUBLE_EQ( 0.3, testObjectClone.ratedLatentHeatRatio() );
-    EXPECT_DOUBLE_EQ( 0.85, testObjectClone.ratedRuntimeFraction() );
-    EXPECT_DOUBLE_EQ( 3.66, testObjectClone.caseLength());
-    EXPECT_DOUBLE_EQ( 2.78, testObjectClone.caseOperatingTemperature());
-    EXPECT_EQ( "CaseTemperatureMethod", testObjectClone.latentCaseCreditCurveType() );
-    EXPECT_DOUBLE_EQ( 41.01, testObjectClone.standardCaseFanPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 41.01, testObjectClone.operatingCaseFanPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 45.93, testObjectClone.standardCaseLightingPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 45.93, testObjectClone.installedCaseLightingPowerperUnitLength().get());
-    EXPECT_EQ( "None", testObjectClone.antiSweatHeaterControlType() );
-    EXPECT_DOUBLE_EQ( 1.0, testObjectClone.fractionofLightingEnergytoCase() );
-    EXPECT_DOUBLE_EQ( -10.0, testObjectClone.humidityatZeroAntiSweatHeaterEnergy() );
-    EXPECT_DOUBLE_EQ( 1.5, testObjectClone.caseHeight() );
-    EXPECT_DOUBLE_EQ( 1.0, testObjectClone.fractionofAntiSweatHeaterEnergytoCase() );
-    EXPECT_DOUBLE_EQ( 0.0, testObjectClone.caseDefrostPowerperUnitLength() );
-    EXPECT_DOUBLE_EQ( 0.0, testObjectClone.underCaseHVACReturnAirFraction() );
-    EXPECT_DOUBLE_EQ( -5.56, testObjectClone.designEvaporatorTemperatureorBrineInletTemperature().get() );
-    EXPECT_EQ( "OffCycle", testObjectClone.caseDefrostType() );
+	EXPECT_DOUBLE_EQ( 24.0, testObjectClone.ratedAmbientTemperature() );  
+	EXPECT_DOUBLE_EQ( 55.0, testObjectClone.ratedAmbientRelativeHumidity() );
+	EXPECT_DOUBLE_EQ( 1432.66, testObjectClone.ratedTotalCoolingCapacityperUnitLength() ); 
+	EXPECT_DOUBLE_EQ( 0.3, testObjectClone.ratedLatentHeatRatio() );  
+	EXPECT_DOUBLE_EQ( 0.85, testObjectClone.ratedRuntimeFraction() );
+	EXPECT_DOUBLE_EQ( 3.66, testObjectClone.caseLength()); 
+	EXPECT_DOUBLE_EQ( 2.78, testObjectClone.caseOperatingTemperature());  
+	EXPECT_EQ( "CaseTemperatureMethod", testObjectClone.latentCaseCreditCurveType() );
+	EXPECT_DOUBLE_EQ( 41.01, testObjectClone.standardCaseFanPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 41.01, testObjectClone.operatingCaseFanPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 45.93, testObjectClone.standardCaseLightingPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 45.93, testObjectClone.installedCaseLightingPowerperUnitLength().get());
+	EXPECT_EQ( "None", testObjectClone.antiSweatHeaterControlType() );
+	EXPECT_DOUBLE_EQ( 1.0, testObjectClone.fractionofLightingEnergytoCase() );
+	EXPECT_DOUBLE_EQ( -10.0, testObjectClone.humidityatZeroAntiSweatHeaterEnergy() );
+	EXPECT_DOUBLE_EQ( 1.5, testObjectClone.caseHeight() );
+	EXPECT_DOUBLE_EQ( 1.0, testObjectClone.fractionofAntiSweatHeaterEnergytoCase() );
+	EXPECT_DOUBLE_EQ( 0.0, testObjectClone.caseDefrostPowerperUnitLength() );
+	EXPECT_DOUBLE_EQ( 0.0, testObjectClone.underCaseHVACReturnAirFraction() );
+	EXPECT_DOUBLE_EQ( -5.56, testObjectClone.designEvaporatorTemperatureorBrineInletTemperature().get() );
+	EXPECT_EQ( "OffCycle", testObjectClone.caseDefrostType() );
     EXPECT_EQ( "None", testObjectClone.defrostEnergyCorrectionCurveType() );
 }
 
 
 TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithCustomData)
 {
-    Model model;
-    ScheduleCompact cls(model);
-    ScheduleCompact cds(model);
-    ScheduleCompact cddds(model);
-    RefrigerationCase testObject = RefrigerationCase(model, cls, cds, cddds);
+ 	Model model; 
+	ScheduleCompact cds(model);
+	RefrigerationCase testObject = RefrigerationCase(model, cds);
 
-    CurveCubic latentCaseCreditCurve = CurveCubic(model);
-    latentCaseCreditCurve.setName("Refrigeration Case Latent Credit Curve Test");
-    latentCaseCreditCurve.setCoefficient1Constant(0.06757726281);
-    latentCaseCreditCurve.setCoefficient2x(0.001078032);
-    latentCaseCreditCurve.setCoefficient3xPOW2(-0.0000602558);
-    latentCaseCreditCurve.setCoefficient4xPOW3(0.00000123732);
-    latentCaseCreditCurve.setMinimumValueofx(-35);
-    latentCaseCreditCurve.setMaximumValueofx(20);
-    testObject.setLatentCaseCreditCurve(latentCaseCreditCurve);
+	CurveCubic latentCaseCreditCurve = CurveCubic(model);
+	latentCaseCreditCurve.setName("Refrigeration Case Latent Credit Curve Test");
+	latentCaseCreditCurve.setCoefficient1Constant(0.06757726281);
+	latentCaseCreditCurve.setCoefficient2x(0.001078032);
+	latentCaseCreditCurve.setCoefficient3xPOW2(-0.0000602558);
+	latentCaseCreditCurve.setCoefficient4xPOW3(0.00000123732);
+	latentCaseCreditCurve.setMinimumValueofx(-35);
+	latentCaseCreditCurve.setMaximumValueofx(20);
+	testObject.setLatentCaseCreditCurve(latentCaseCreditCurve);
 
-    testObject.setRatedAmbientTemperature(28.5);
-    testObject.setRatedAmbientRelativeHumidity(58.0);
-    testObject.setRatedTotalCoolingCapacityperUnitLength(1200.1);
-    testObject.setRatedLatentHeatRatio(0.5);
-    testObject.setRatedRuntimeFraction(0.5);
-    testObject.setCaseLength(1.0);
-    testObject.setCaseOperatingTemperature(1.0);
-    testObject.setLatentCaseCreditCurveType("RelativeHumidityMethod");
-    testObject.setStandardCaseFanPowerperUnitLength(45.0);
-    testObject.setOperatingCaseFanPowerperUnitLength(45.0);
-    testObject.setStandardCaseLightingPowerperUnitLength(30.0);
-    testObject.setInstalledCaseLightingPowerperUnitLength(30.0);
-    testObject.setFractionofLightingEnergytoCase(0.5);
-    testObject.setHumidityatZeroAntiSweatHeaterEnergy(5.0);
-    testObject.setCaseHeight(2.5);
-    testObject.setFractionofAntiSweatHeaterEnergytoCase(0.5);
-    testObject.setCaseDefrostPowerperUnitLength(1.0);
-    testObject.setUnderCaseHVACReturnAirFraction(0.5);
-    testObject.setDesignEvaporatorTemperatureorBrineInletTemperature(-1.0);
-    testObject.setCaseDefrostType("HotGas");
+	testObject.setRatedAmbientTemperature(28.5);  
+	testObject.setRatedAmbientRelativeHumidity(58.0);
+	testObject.setRatedTotalCoolingCapacityperUnitLength(1200.1); 
+	testObject.setRatedLatentHeatRatio(0.5);  
+	testObject.setRatedRuntimeFraction(0.5);
+	testObject.setCaseLength(1.0); 
+	testObject.setCaseOperatingTemperature(1.0);  
+	testObject.setLatentCaseCreditCurveType("RelativeHumidityMethod");
+	testObject.setStandardCaseFanPowerperUnitLength(45.0);
+	testObject.setOperatingCaseFanPowerperUnitLength(45.0);
+	testObject.setStandardCaseLightingPowerperUnitLength(30.0);
+	testObject.setInstalledCaseLightingPowerperUnitLength(30.0);
+	testObject.setFractionofLightingEnergytoCase(0.5);
+	testObject.setHumidityatZeroAntiSweatHeaterEnergy(5.0);
+	testObject.setCaseHeight(2.5);
+	testObject.setFractionofAntiSweatHeaterEnergytoCase(0.5);
+	testObject.setCaseDefrostPowerperUnitLength(1.0);
+	testObject.setUnderCaseHVACReturnAirFraction(0.5);
+	testObject.setDesignEvaporatorTemperatureorBrineInletTemperature(-1.0);
+	testObject.setCaseDefrostType("HotGas");
 
-    RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+	RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
-    EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
-    EXPECT_NE(latentCaseCreditCurve.handle(), testObjectClone.latentCaseCreditCurve().handle());
-    EXPECT_DOUBLE_EQ( 28.5, testObjectClone.ratedAmbientTemperature() );
-    EXPECT_DOUBLE_EQ( 58.0, testObjectClone.ratedAmbientRelativeHumidity() );
-    EXPECT_DOUBLE_EQ( 1200.1, testObjectClone.ratedTotalCoolingCapacityperUnitLength() );
-    EXPECT_DOUBLE_EQ( 0.5, testObjectClone.ratedLatentHeatRatio() );
-    EXPECT_DOUBLE_EQ( 0.5, testObjectClone.ratedRuntimeFraction() );
-    EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseLength());
-    EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseOperatingTemperature());
-    EXPECT_EQ( "RelativeHumidityMethod", testObjectClone.latentCaseCreditCurveType() );
-    EXPECT_DOUBLE_EQ( 45.0, testObjectClone.standardCaseFanPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 45.0, testObjectClone.operatingCaseFanPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 30.0, testObjectClone.standardCaseLightingPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 30.0, testObjectClone.installedCaseLightingPowerperUnitLength().get());
-    EXPECT_DOUBLE_EQ( 0.5, testObjectClone.fractionofLightingEnergytoCase() );
-    EXPECT_DOUBLE_EQ( 5.0, testObjectClone.humidityatZeroAntiSweatHeaterEnergy() );
-    EXPECT_DOUBLE_EQ( 2.5, testObjectClone.caseHeight() );
-    EXPECT_DOUBLE_EQ( 0.5, testObjectClone.fractionofAntiSweatHeaterEnergytoCase() );
-    EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseDefrostPowerperUnitLength() );
-    EXPECT_DOUBLE_EQ( 0.5, testObjectClone.underCaseHVACReturnAirFraction() );
-    EXPECT_DOUBLE_EQ( -1.0, testObjectClone.designEvaporatorTemperatureorBrineInletTemperature().get() );
-    EXPECT_EQ( "HotGas", testObjectClone.caseDefrostType() );
+	EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
+	EXPECT_NE(latentCaseCreditCurve.handle(), testObjectClone.latentCaseCreditCurve().handle());
+	EXPECT_DOUBLE_EQ( 28.5, testObjectClone.ratedAmbientTemperature() );  
+	EXPECT_DOUBLE_EQ( 58.0, testObjectClone.ratedAmbientRelativeHumidity() );
+	EXPECT_DOUBLE_EQ( 1200.1, testObjectClone.ratedTotalCoolingCapacityperUnitLength() ); 
+	EXPECT_DOUBLE_EQ( 0.5, testObjectClone.ratedLatentHeatRatio() );  
+	EXPECT_DOUBLE_EQ( 0.5, testObjectClone.ratedRuntimeFraction() );
+	EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseLength()); 
+	EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseOperatingTemperature());  
+	EXPECT_EQ( "RelativeHumidityMethod", testObjectClone.latentCaseCreditCurveType() );
+	EXPECT_DOUBLE_EQ( 45.0, testObjectClone.standardCaseFanPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 45.0, testObjectClone.operatingCaseFanPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 30.0, testObjectClone.standardCaseLightingPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 30.0, testObjectClone.installedCaseLightingPowerperUnitLength().get());
+	EXPECT_DOUBLE_EQ( 0.5, testObjectClone.fractionofLightingEnergytoCase() );
+	EXPECT_DOUBLE_EQ( 5.0, testObjectClone.humidityatZeroAntiSweatHeaterEnergy() );
+	EXPECT_DOUBLE_EQ( 2.5, testObjectClone.caseHeight() );
+	EXPECT_DOUBLE_EQ( 0.5, testObjectClone.fractionofAntiSweatHeaterEnergytoCase() );
+	EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseDefrostPowerperUnitLength() );
+	EXPECT_DOUBLE_EQ( 0.5, testObjectClone.underCaseHVACReturnAirFraction() );
+	EXPECT_DOUBLE_EQ( -1.0, testObjectClone.designEvaporatorTemperatureorBrineInletTemperature().get() );
+	EXPECT_EQ( "HotGas", testObjectClone.caseDefrostType() );
 }
 
 TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData)
 {
-    Model model;
-    ScheduleCompact cls(model);
-    ScheduleCompact cds(model);
-    ScheduleCompact cddds(model);
-    RefrigerationCase testObject = RefrigerationCase(model, cls, cds, cddds);
+	Model model;
+	ScheduleCompact cds(model);
+	RefrigerationCase testObject = RefrigerationCase(model, cds);
 
-    RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+	RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
-    Model model2;
+	Model model2;
 
-    std::vector<CurveCubic> refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
-    EXPECT_EQ(0, refrigerationCaseCurves2.size());
+	std::vector<CurveCubic> refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
+	EXPECT_EQ(0, refrigerationCaseCurves2.size());
 
-    RefrigerationCase testObjectClone2 = testObject.clone(model2).cast<RefrigerationCase>();
+	RefrigerationCase testObjectClone2 = testObject.clone(model2).cast<RefrigerationCase>();
 
-    std::vector<CurveCubic> refrigerationCaseCurves = model.getModelObjects<CurveCubic>();
-    EXPECT_EQ(2, refrigerationCaseCurves.size());
+	std::vector<CurveCubic> refrigerationCaseCurves = model.getModelObjects<CurveCubic>();
+	EXPECT_EQ(2, refrigerationCaseCurves.size());
 
-    refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
-    EXPECT_EQ(1, refrigerationCaseCurves2.size());
+	refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
+	EXPECT_EQ(1, refrigerationCaseCurves2.size());
 
-    for(std::vector<CurveCubic>::iterator it = refrigerationCaseCurves.begin(); it != refrigerationCaseCurves.end(); ++it) {
-        EXPECT_TRUE(it->parent());
-    }
+	for(std::vector<CurveCubic>::iterator it = refrigerationCaseCurves.begin(); it != refrigerationCaseCurves.end(); ++it) {
+		EXPECT_TRUE(it->parent());
+	}
 
-    for(std::vector<CurveCubic>::iterator it = refrigerationCaseCurves2.begin(); it != refrigerationCaseCurves2.end(); ++it) {
-        EXPECT_TRUE(it->parent());
-    }
+	for(std::vector<CurveCubic>::iterator it = refrigerationCaseCurves2.begin(); it != refrigerationCaseCurves2.end(); ++it) {
+		EXPECT_TRUE(it->parent());
+	}
 
-    EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
-    EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
+	EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
+	EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 
-    EXPECT_DOUBLE_EQ( 24.0, testObjectClone2.ratedAmbientTemperature() );
-    EXPECT_DOUBLE_EQ( 55.0, testObjectClone2.ratedAmbientRelativeHumidity() );
-    EXPECT_DOUBLE_EQ( 1432.66, testObjectClone2.ratedTotalCoolingCapacityperUnitLength() );
-    EXPECT_DOUBLE_EQ( 0.3, testObjectClone2.ratedLatentHeatRatio() );
-    EXPECT_DOUBLE_EQ( 0.85, testObjectClone2.ratedRuntimeFraction() );
-    EXPECT_DOUBLE_EQ( 3.66, testObjectClone2.caseLength());
-    EXPECT_DOUBLE_EQ( 2.78, testObjectClone2.caseOperatingTemperature());
-    EXPECT_EQ( "CaseTemperatureMethod", testObjectClone2.latentCaseCreditCurveType() );
-    EXPECT_DOUBLE_EQ( 41.01, testObjectClone2.standardCaseFanPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 41.01, testObjectClone2.operatingCaseFanPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 45.93, testObjectClone2.standardCaseLightingPowerperUnitLength());
-    EXPECT_DOUBLE_EQ( 45.93, testObjectClone2.installedCaseLightingPowerperUnitLength().get());
-    EXPECT_EQ( "None", testObjectClone2.antiSweatHeaterControlType() );
-    EXPECT_DOUBLE_EQ( 1.0, testObjectClone2.fractionofLightingEnergytoCase() );
-    EXPECT_DOUBLE_EQ( -10.0, testObjectClone2.humidityatZeroAntiSweatHeaterEnergy() );
-    EXPECT_DOUBLE_EQ( 1.5, testObjectClone2.caseHeight() );
-    EXPECT_DOUBLE_EQ( 1.0, testObjectClone2.fractionofAntiSweatHeaterEnergytoCase() );
-    EXPECT_DOUBLE_EQ( 0.0, testObjectClone2.caseDefrostPowerperUnitLength() );
-    EXPECT_DOUBLE_EQ( 0.0, testObjectClone2.underCaseHVACReturnAirFraction() );
-    EXPECT_DOUBLE_EQ( -5.56, testObjectClone2.designEvaporatorTemperatureorBrineInletTemperature().get() );
-    EXPECT_EQ( "OffCycle", testObjectClone2.caseDefrostType() );
+	EXPECT_DOUBLE_EQ( 24.0, testObjectClone2.ratedAmbientTemperature() );  
+	EXPECT_DOUBLE_EQ( 55.0, testObjectClone2.ratedAmbientRelativeHumidity() );
+	EXPECT_DOUBLE_EQ( 1432.66, testObjectClone2.ratedTotalCoolingCapacityperUnitLength() ); 
+	EXPECT_DOUBLE_EQ( 0.3, testObjectClone2.ratedLatentHeatRatio() );  
+	EXPECT_DOUBLE_EQ( 0.85, testObjectClone2.ratedRuntimeFraction() );
+	EXPECT_DOUBLE_EQ( 3.66, testObjectClone2.caseLength()); 
+	EXPECT_DOUBLE_EQ( 2.78, testObjectClone2.caseOperatingTemperature());  
+	EXPECT_EQ( "CaseTemperatureMethod", testObjectClone2.latentCaseCreditCurveType() );
+	EXPECT_DOUBLE_EQ( 41.01, testObjectClone2.standardCaseFanPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 41.01, testObjectClone2.operatingCaseFanPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 45.93, testObjectClone2.standardCaseLightingPowerperUnitLength());
+	EXPECT_DOUBLE_EQ( 45.93, testObjectClone2.installedCaseLightingPowerperUnitLength().get());
+	EXPECT_EQ( "None", testObjectClone2.antiSweatHeaterControlType() );
+	EXPECT_DOUBLE_EQ( 1.0, testObjectClone2.fractionofLightingEnergytoCase() );
+	EXPECT_DOUBLE_EQ( -10.0, testObjectClone2.humidityatZeroAntiSweatHeaterEnergy() );
+	EXPECT_DOUBLE_EQ( 1.5, testObjectClone2.caseHeight() );
+	EXPECT_DOUBLE_EQ( 1.0, testObjectClone2.fractionofAntiSweatHeaterEnergytoCase() );
+	EXPECT_DOUBLE_EQ( 0.0, testObjectClone2.caseDefrostPowerperUnitLength() );
+	EXPECT_DOUBLE_EQ( 0.0, testObjectClone2.underCaseHVACReturnAirFraction() );
+	EXPECT_DOUBLE_EQ( -5.56, testObjectClone2.designEvaporatorTemperatureorBrineInletTemperature().get() );
+	EXPECT_EQ( "OffCycle", testObjectClone2.caseDefrostType() );
     EXPECT_EQ( "None", testObjectClone2.defrostEnergyCorrectionCurveType() );
 }
-

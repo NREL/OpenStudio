@@ -79,17 +79,7 @@ require 'openstudioanalysis'
 require 'openstudiolib'
 require 'openstudioplugin'
 require 'openstudioisomodel'
-
-# optional extensions
-begin
-  require 'openstudiosimxml'
-rescue Exception=>e
-end
-
-begin
-  require 'openstudiosdd'
-rescue Exception=>e
-end
+require 'openstudiosdd'
 
 # restore original path
 ENV['PATH'] = original_path

@@ -1563,7 +1563,21 @@ namespace isomodel {
     double heating_system_efficiency = 0;
     int heating_fuel_type = 0;
 
-    if (OSM_extract_HVAC) {
+    size_t num_ideal_air_loads = 0;
+    BOOST_FOREACH(const openstudio::model::ThermalZone &z, thermal_zones) {
+      if (z.useIdealAirLoads()) ++num_ideal_air_loads; 
+    }
+
+    bool uses_ideal_air_loads = false;
+
+    if (num_ideal_air_loads > 0 && num_ideal_air_loads != thermal_zones.size()) {
+      throw std::runtime_error("cannot translate model, only some zones use ideal air loads");
+    } else if (num_ideal_air_loads == thermal_zones.size()) {
+      uses_ideal_air_loads = true;
+    }
+
+
+    if (OSM_extract_HVAC && !uses_ideal_air_loads) {
       std::vector<openstudio::model::ModelObject> hvac_component_array;
       std::vector<double> hvac_component_area_array;
 
@@ -1868,6 +1882,12 @@ namespace isomodel {
         heating_system_efficiency = heating_system_efficiency_default;
         heating_fuel_type = heating_fuel_type_default;
       } 
+    } else if (uses_ideal_air_loads) {
+      LOG(Warn, "Using ideal airloads, which should use district heating and cooling, but we don't have that option yet");
+      cooling_COP = 1.0;
+      heating_system_efficiency = 1.0;
+      heating_fuel_type = 2; // gas
+//      hvac_type = 0; // perfect efficiencies
     } else {
       cooling_COP = cooling_COP_default;
       heating_system_efficiency = heating_system_efficiency_default;
@@ -1902,7 +1922,7 @@ namespace isomodel {
     double hvac_heating_loss_factor = hvac_hot_table[hvac_type];
     double hvac_cooling_loss_factor=hvac_cold_table[hvac_type];
 
-    LOG(Debug, "#HVAC type was " << hvac_type_default);
+    LOG(Debug, "#HVAC type was " << hvac_type);
     LOG(Debug, "HVAC Waste Factor = " << hvac_waste_factor);
     LOG(Debug, "HVAC Heating Loss Factor = " << hvac_heating_loss_factor);
     LOG(Debug, "HVAC Cooling Loss Factor = " << hvac_cooling_loss_factor);

@@ -356,6 +356,18 @@ boost::optional<Unit> ScheduleTypeLimits::units(std::string unitType, bool retur
       }
       break;
     }
+  case 'l' :
+    {
+      if (unitType == "linearpowerdensity") {
+        if (returnIP) {
+          result = (createIPPower() / createIPLength());
+        }
+        else {
+          result = (createSIPower() / createSILength());
+        }
+      }
+      break;
+    }
   case 'm' :
     {
       if (unitType == "massflowrate") {

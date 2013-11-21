@@ -22,8 +22,5 @@ if /Visual\sStudio/.match("${CMAKE_GENERATOR}")
   $OpenStudio_RubyBinaryDir += "#{$OpenStudio_Configuration}/"
 end
 
-$OpenStudio_SimXML = ( "${BUILD_SIMXML}" == "ON" )
-$OpenStudio_SDD = ( "${BUILD_SDD}" == "ON" )
-
 puts "Loading OpenStudio ruby binaries from #{$OpenStudio_RubyBinaryDir}"
 puts "Loading OpenStudio shared libraries from #{$OpenStudio_BinaryDir}"
