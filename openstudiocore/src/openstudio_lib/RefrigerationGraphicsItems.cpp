@@ -414,10 +414,20 @@ RefrigerationSystemView::RefrigerationSystemView()
   refrigerationCasesView = new RefrigerationCasesView();
   refrigerationCasesView->setParentItem(this);
 
+  bool bingo = connect(refrigerationCasesView->expandButton,SIGNAL(mouseClicked(bool)),this,SLOT(setCasesExpanded(bool)));
+  OS_ASSERT(bingo);
+
   // Secondary Item
 
   refrigerationSecondaryView = new RefrigerationSecondaryView();
   refrigerationSecondaryView->setParentItem(this);
+
+  adjustLayout();
+}
+
+void RefrigerationSystemView::setCasesExpanded(bool expanded)
+{
+  refrigerationCasesView->setExpanded(expanded);
 
   adjustLayout();
 }
@@ -510,14 +520,9 @@ RefrigerationCasesView::RefrigerationCasesView()
 
   expandButton->setParentItem(this);
 
-  QSizeF _size = size();
+  setExpanded(false);
 
-  double x = _size.width() / 2.0;
-  double y = _size.height() - 10.0;
-
-  expandButton->setPos(x,y);
-
-  setExpanded(true);
+  adjustLayout();
 }
 
 void RefrigerationCasesView::setNumberOfDisplayCases(int number)
@@ -540,6 +545,8 @@ void RefrigerationCasesView::setNumberOfWalkinCases(int number)
 
 void RefrigerationCasesView::setExpanded(bool exapanded)
 {
+  prepareGeometryChange();
+
   m_expanded = exapanded;
 
   for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
@@ -555,6 +562,8 @@ void RefrigerationCasesView::setExpanded(bool exapanded)
       (*it)->hide();
     }
   }
+
+  adjustLayout();
 }
 
 void RefrigerationCasesView::paint( QPainter *painter, 
@@ -602,13 +611,16 @@ QRectF RefrigerationCasesView::summaryRect() const
 
 QSizeF RefrigerationCasesView::size() const
 {
+  double width = 0.0;
+  double height = 0.0;
+
+  QRectF _summaryRect = summaryRect();
+
   if( m_expanded )
   {
-    double width = summaryRect().width();
+    width = _summaryRect.width();
 
     int numberOfCases = m_numberOfWalkinCases + m_numberOfDisplayCases;
-
-    double height = 0.0;
 
     if( numberOfCases > 0 )
     {
@@ -618,15 +630,20 @@ QSizeF RefrigerationCasesView::size() const
     }
     else
     {
-      height = summaryRect().height();
+      height = _summaryRect.height();
     }
-
-    return QSizeF(width,height);
   }
   else
   {
-    return QSizeF(summaryRect().width(),summaryRect().height());
+    width = _summaryRect.width();
+
+    height = _summaryRect.height();
   }
+
+  // Add room for a footer with expand button.
+  height = height + RefrigerationSystemView::margin / 2.0 + CaseViewExpandButton::size().height();
+
+  return QSizeF(width,height);
 }
 
 
@@ -654,16 +671,7 @@ void RefrigerationCasesView::insertCaseDetailView(int index, QGraphicsObject * o
     object->hide();
   }
 
-  int i = 0;
-
-  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
-       it != m_caseDetailViews.end();
-       it++ )
-  {
-    (*it)->setPos(casePos(i));
-
-    i++;
-  }
+  adjustLayout();
 }
 
 void RefrigerationCasesView::removeAllCaseDetailViews()
@@ -677,6 +685,29 @@ void RefrigerationCasesView::removeAllCaseDetailViews()
 
     it = m_caseDetailViews.erase(it);
   }
+
+  adjustLayout();
+}
+
+void RefrigerationCasesView::adjustLayout()
+{
+  int i = 0;
+
+  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
+       it != m_caseDetailViews.end();
+       it++ )
+  {
+    (*it)->setPos(casePos(i));
+
+    i++;
+  }
+
+  QSizeF _size = size();
+
+  double x = _size.width() / 2.0 - CaseViewExpandButton::size().width() / 2.0;
+  double y = _size.height() - CaseViewExpandButton::size().height() - RefrigerationSystemView::margin / 2.0;
+
+  expandButton->setPos(x,y);
 }
 
 QPointF RefrigerationCasesView::casePos(int index) const
@@ -1032,7 +1063,7 @@ CaseViewExpandButton::CaseViewExpandButton()
   m_openImage = QPixmap(":/images/contextual_arrow.png");
 }
 
-QSize CaseViewExpandButton::size() const
+QSize CaseViewExpandButton::size()
 {
   return QSize(20,20);
 }

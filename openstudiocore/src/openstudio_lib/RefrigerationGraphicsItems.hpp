@@ -52,6 +52,8 @@ class CaseViewExpandButton : public AbstractButtonItem
 
   QRectF boundingRect() const;
 
+  static QSize size();
+
   protected:
 
   void paint(QPainter *painter, 
@@ -59,8 +61,6 @@ class CaseViewExpandButton : public AbstractButtonItem
              QWidget *widget = 0);
 
   private:
-
-  QSize size() const;
 
   QPixmap m_openImage;
 
@@ -290,6 +290,10 @@ class RefrigerationSystemView : public QGraphicsObject
 
   QRectF boundingRect() const;
 
+  public slots:
+
+  void setCasesExpanded(bool expanded);
+
   protected:
 
   void paint( QPainter *painter, 
@@ -441,6 +445,10 @@ class RefrigerationCasesView : public QGraphicsObject
   void insertCaseDetailView(int index, QGraphicsObject * object);
 
   void removeAllCaseDetailViews();
+
+  void adjustLayout();
+
+  public slots:
 
   void setExpanded(bool exapanded);
 
