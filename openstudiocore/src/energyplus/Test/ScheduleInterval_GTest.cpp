@@ -46,7 +46,8 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval)
 {
-  Vector values = linspace(0, 100, 8760);
+  //Vector values = linspace(0, 100, 8760);
+  Vector values = linspace(1, 8760, 8760);
 
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0)), Time(0,1,0), values, "");
 
@@ -71,17 +72,17 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval)
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
-  bool nextValueShouldBe100 = false;
+  bool nextValueShouldBeLast = false;
   unsigned numUntils = 0;
   
   for ( unsigned i = 0; i < N; ++i){
     boost::optional<std::string> field = objects[0].getString(i, true, false);
     ASSERT_TRUE(field);
 
-    if (nextValueShouldBe100){
+    if (nextValueShouldBeLast){
       double value = boost::lexical_cast<double>(*field);
-      EXPECT_EQ(100.0, value);
-      nextValueShouldBe100 = false;
+      EXPECT_EQ(8760.0, value);
+      nextValueShouldBeLast = false;
     }
 
     boost::smatch throughMatches;
@@ -117,6 +118,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval)
 
       int hr = boost::lexical_cast<int>(hrText);
       int min = boost::lexical_cast<int>(minText);
+      EXPECT_TRUE(hr <= 24);
+      EXPECT_TRUE(min < 60);
 
       if ((hr == 24) && (min == 0)){
         until24Found = true;
@@ -126,7 +129,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval)
       EXPECT_FALSE((hr==0) && (min==0));
 
       if ((lastDateThrough == Date(MonthOfYear(12),31)) && until24Found){
-        nextValueShouldBe100 = true;
+        nextValueShouldBeLast = true;
       }
     }
   }

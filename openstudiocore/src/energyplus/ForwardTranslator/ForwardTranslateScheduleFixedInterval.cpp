@@ -53,7 +53,7 @@ static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
 
 static unsigned addUntil(IdfObject &idfObject,unsigned fieldIndex,int hours,int minutes,double value)
 {
-  QString string = QString().sprintf("Until: %02d/%02d",hours,minutes);
+  QString string = QString().sprintf("Until: %02d:%02d",hours,minutes);
   //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Until input field index is " << fieldIndex);
   idfObject.setString(fieldIndex, string.toStdString());
   ++fieldIndex;
@@ -82,7 +82,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
 
   TimeSeries timeseries = modelObject.timeSeries();
   DateTime firstReportDateTime = timeseries.firstReportDateTime();
-  Vector daysFromFirstReport = timeseries.daysFromFirstReport();
+  Vector daysFromFirst = timeseries.daysFromFirstReport();
   Vector values = timeseries.values();
 
   std::string interpolateField;
@@ -91,16 +91,33 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   }else{
     interpolateField = "Interpolate:No";
   }
- 
+
+  // New version starts here
   Date lastDate = firstReportDateTime.date(); // The last date data was written
   Time dayDelta = Time(1.0);
   double lastDay = 0.0; // The day number of the date that data was last written relative to the first date
+  // Adjust the floating point day delta to be relative to the beginning of the first day and
+  // shift the start of the loop if needed
+  double timeShift = firstReportDateTime.time().totalDays();
   unsigned int start = 0;
-  if(daysFromFirstReport[0] == 0.0)
+  if(timeShift == 0.0)
   {
-    // Skip the first value if it is at 00:00:00
-    unsigned start=1;
+    start = 1;
   }
+  else
+  {
+    for(unsigned int i=0;i<daysFromFirst.size();i++)
+    {
+      daysFromFirst[i] += timeShift;
+    }
+  }
+
+  //unsigned N = daysFromFirst.size();
+  //std::cout << N << " " << start << std::endl;
+  //std::cout << daysFromFirst[0] << " " << values[0] << std::endl;
+  //std::cout << daysFromFirst[1] << " " << values[1] << std::endl;
+  //std::cout << daysFromFirst[N-2] << " " << values[N-2] <<  std::endl;
+  //std::cout << daysFromFirst[N-1] << " " << values[N-1] <<  std::endl;
 
   // Start the input into the schedule object
   unsigned fieldIndex = Schedule_CompactFields::ScheduleTypeLimitsName + 1;
@@ -111,17 +128,27 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   //idfObject.setString(fieldIndex, "For: AllDays");
   //++fieldIndex;
 
-  for(unsigned int i=start; i < values.size(); i++)
+  for(unsigned int i=start; i < values.size()-1; i++)
   {
     // We could loop over the entire array and use the fact that the
     // last entry in the daysFromFirstReport vector should be a round
-    // number to avoid logic. That is probably too tricky and could be
-    // vulnerable to rounding issues. It still might be worth it to allow
-    // for a margin of error (say a half second or something) to avoid
-    // problems in the calculation of the fractional part (hms) below.
-    double today = floor(daysFromFirstReport[i]);
-    double hms = daysFromFirstReport[i]-today;
-    if(hms == 0)
+    // number to avoid logic. However, this whole thing is very, very
+    // sensitive to round off issues. We still have a HUGE aliasing
+    // problem unless the API has enforced that the times in the 
+    // time series are all distinct when rounded to the minute. Is that
+    // happening?
+    //std::cout << daysFromFirstReport[i] << std::endl;
+    double today = floor(daysFromFirst[i]);
+    double hms = daysFromFirst[i]-today;
+    // Here, we need to make sure that we aren't nearly the end of a day
+    // 5.787x10^-6 days is a little less than half a second.
+    if(1-hms < 5.787e-6)
+    {
+      today += 1;
+      hms = 0.0;
+    }
+    //std::cout << daysFromFirst[i] << " " << today << " " << hms << std::endl;
+    if(hms < 5.787e-6)
     {
       // This value is an end of day value, but we could have skipped multiple days
       int diff = today-lastDay;
@@ -173,6 +200,15 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
       Time time(hms);
       int hours = time.hours();
       int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
+      //std::cout << today << " " << hours << " " << minutes << " " << daysFromFirst[i] << " " 
+      //  << QString().sprintf("%.15e",hms).toStdString() << std::endl;
+      // This is a little dangerous, but all of the problematic 24:00 
+      // times that might need to cause a day++ should be caught above.
+      if(minutes==60)
+      {
+        hours += 1;
+        minutes = 0;
+      }
       fieldIndex = addUntil(idfObject,fieldIndex,hours,minutes,values[i]);
       //QString string = QString().sprintf("Until: %02d/%02d",hours,minutes);
       //idfObject.setString(fieldIndex, string.toStdString());
@@ -183,11 +219,19 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     lastDay = today;
   }
   // Handle the last point a little differently to make sure that the schedule ends exactly on the end of a day
-  int i = values.size()-1;
-  double today = floor(daysFromFirstReport[i]); // Could skip this, but better to be safe
+  unsigned int i = values.size()-1;
+  // Could skip this, but better to be safe. Again allow up to a half second or so of error
+  double today = floor(daysFromFirst[i]);
+  double hms = daysFromFirst[i]-today;
+  if(1-hms < 5.787e-6)
+  {
+    today += 1;
+    hms = 0.0;
+  }
   // Did we miss any days?
   int diff = today-lastDay;
-  for(int j=diff; j>0; j--)
+  //std::cout << diff << " " << today << " " << lastDay << std::endl;
+  for(int j=diff; j>1; j--)
   {
     fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
     //idfObject.setString(fieldIndex, "Until: 24:00");
@@ -209,7 +253,9 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   //++fieldIndex;
   //idfObject.setDouble(fieldIndex, values[i]);
   //++fieldIndex;
+
   /*
+  // Old version starts here
   boost::optional<Date> lastDate;
 
   unsigned fieldIndex = Schedule_CompactFields::ScheduleTypeLimitsName + 1;
