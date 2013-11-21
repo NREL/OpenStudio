@@ -273,6 +273,40 @@ TEST_F(GeometryFixture, GetDistance)
   EXPECT_EQ(5, getDistance(point, Point3d(-4,0,3)));
 
 }
+TEST_F(GeometryFixture, GetDistancePointToLineSegment)
+{
+  Point3d point1(0,0,0);
+  Point3d point2(1,0,0);
+  std::vector<Point3d> line;
+  line.push_back(point1);
+  line.push_back(point2);
+  EXPECT_EQ(2u, line.size());
+
+  EXPECT_DOUBLE_EQ(0, getDistancePointToLineSegment(Point3d(0,0,0), line));
+
+  EXPECT_DOUBLE_EQ(0, getDistancePointToLineSegment(Point3d(1,0,0), line));
+
+  EXPECT_DOUBLE_EQ(0, getDistancePointToLineSegment(Point3d(0.5,0,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(2,0,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(-1,0,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(0,1,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(1,1,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(0.5,1,0), line));
+
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToLineSegment(Point3d(2,1,0), line));
+
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToLineSegment(Point3d(-1,1,0), line));
+
+  line.push_back(Point3d(2,0,0));
+  EXPECT_EQ(3u, line.size());
+  EXPECT_EQ(0, getDistancePointToLineSegment(Point3d(3,0,0), line));
+}
+
 
 TEST_F(GeometryFixture, CircularEqual)
 {

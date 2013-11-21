@@ -23,6 +23,11 @@
 #include <utilities/core/Assert.hpp>
 
 #include <boost/math/constants/constants.hpp>
+#include <boost/foreach.hpp>
+
+#include <polypartition/polypartition.h>
+
+#include <list>
 
 namespace openstudio{
   /// convert degrees to radians
@@ -215,6 +220,50 @@ namespace openstudio{
     return result;
   }
 
+  double getDistancePointToLineSegment(const Point3d& point, const std::vector<Point3d>& lineSegment)
+  {
+    if (lineSegment.size() != 2){
+      return 0;
+    }
+
+    // http://paulbourke.net/geometry/pointlineplane/
+
+    Point3d point1 = lineSegment[0];
+    Point3d point2 = lineSegment[1];
+
+    Vector3d p2p1 = point2-point1;
+    Vector3d p3p1 = point-point1;
+
+    double d12 = p2p1.length();
+    if (d12 < 1.0e-12){
+      return p3p1.length();
+    }
+
+    Point3d closestPoint;
+    double u = p3p1.dot(p2p1) / (d12*d12);
+    if (u < 0){
+      closestPoint = point1;
+    }else if (u > 1){
+      closestPoint = point2;
+    }else{
+      closestPoint = point1 + u*p2p1;
+    }
+
+    Vector3d diff = point - closestPoint;
+
+    return diff.length();
+  }
+
+  double getDistancePointToTriangle(const Point3d& point, const std::vector<Point3d>& triangle)
+  {
+    if (triangle.size() != 3){
+      return 0;
+    }
+
+    LOG_FREE(Error, "utilities.geometry.getDistancePointToTriangle", "Not yet implemented");
+    return 0;
+  }
+
   double getAngle(const Vector3d& vector1, const Vector3d& vector2) {
     Vector3d working1(vector1);
     working1.normalize();
@@ -275,6 +324,104 @@ namespace openstudio{
         return result;
       }
     }
+
+    return result;
+  }
+
+  Point3d getCombinedPoint(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
+  {
+    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2) + std::pow(point3d.z()-otherPoint.z(), 2)) < tol){
+        return otherPoint;
+      }
+    }
+    allPoints.push_back(point3d);
+    return point3d;
+  }
+
+  std::vector<std::vector<Point3d> > computeTriangulation(const Point3dVector& vertices, const std::vector<std::vector<Point3d> >& holes, double tol)
+  {
+    std::vector<std::vector<Point3d> > result;
+
+    if (vertices.size () < 3){
+      return result;
+    }
+
+    std::vector<Point3d> allPoints;
+
+    // convert input to vector of TPPLPoly
+    std::list<TPPLPoly> polys;
+
+    TPPLPoly outerPoly; // must be counter-clockwise
+    outerPoly.Init(vertices.size());
+    outerPoly.SetHole(false);
+    for(unsigned i = 0; i < vertices.size(); ++i){
+
+      // should all have zero z coordinate now
+      double z = vertices[i].z();
+      if (abs(z) > tol){
+        LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
+        return result;
+      }
+
+      Point3d point = getCombinedPoint(vertices[i], allPoints, tol);
+      outerPoly[i].x = point.x();
+      outerPoly[i].y = point.y();
+    }
+    outerPoly.SetOrientation(TPPL_CCW);
+    polys.push_back(outerPoly);
+
+
+    BOOST_FOREACH(const std::vector<Point3d>& holeVertices, holes){
+
+      if (holeVertices.size () < 3){
+        LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Hole has fewer than 3 points, ignoring");
+        continue;
+      }
+
+      TPPLPoly innerPoly; // must be clockwise
+      innerPoly.Init(holeVertices.size());
+      innerPoly.SetHole(true);
+      //std::cout << "inner :";
+      for(unsigned i = 0; i < holeVertices.size(); ++i){
+
+        // should all have zero z coordinate now
+        double z = holeVertices[i].z();
+        if (abs(z) > tol){
+          LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
+          return result;
+        }
+
+        Point3d point = getCombinedPoint(holeVertices[i], allPoints, tol);
+        innerPoly[i].x = point.x();
+        innerPoly[i].y = point.y();
+      }
+      innerPoly.SetOrientation(TPPL_CW);
+      polys.push_back(innerPoly);
+    }
+
+    // do partitioning
+    TPPLPartition pp;
+    std::list<TPPLPoly> resultPolys;
+    int test = pp.Triangulate_EC(&polys,&resultPolys);
+    if (test == 0){
+      LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Failed to partition polygon");
+      return result;
+    }
+
+    // convert back to vertices
+    std::list<TPPLPoly>::iterator it, itend;
+    //std::cout << "Start" << std::endl;
+    for(it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it){
+      std::vector<Point3d> triangle;
+      for (long i = 0; i < it->GetNumPoints(); ++i){
+        TPPLPoint point = it->GetPoint(i);
+        triangle.push_back(Point3d(point.x, point.y, 0));
+      }
+      //std::cout << triangle << std::endl;
+      result.push_back(triangle);
+    }
+    //std::cout << "End" << std::endl;
 
     return result;
   }
