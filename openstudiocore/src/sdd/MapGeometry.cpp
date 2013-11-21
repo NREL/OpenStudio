@@ -1044,6 +1044,13 @@ namespace sdd {
       OS_ASSERT(subSurface);
     }
 
+    // translate shadingSurfaces
+    QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
+    for (int i = 0; i < exteriorShadingElements.count(); ++i){
+      boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, surface);
+      OS_ASSERT(exteriorShading);
+    }
+
     // check for adjacent surface
     QDomElement adjacentSpaceElement = element.firstChildElement("AdjacentSpcRef");
     if (!adjacentSpaceElement.isNull()){
@@ -1169,7 +1176,7 @@ namespace sdd {
     return subSurface;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateShadingSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::SubSurface& subSurface)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateShadingSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::PlanarSurface& planarSurface)
   {
     std::vector<openstudio::Point3d> vertices;
 
@@ -1211,10 +1218,10 @@ namespace sdd {
       vertices.push_back(openstudio::Point3d(x,y,z));
     }
 
-    model::Model model = subSurface.model();
+    model::Model model = planarSurface.model();
 
     model::ShadingSurfaceGroup shadingSurfaceGroup(model);
-    boost::optional<model::Space> space = subSurface.space();
+    boost::optional<model::Space> space = planarSurface.space();
     if (space){
       shadingSurfaceGroup.setSpace(*space);
     }
