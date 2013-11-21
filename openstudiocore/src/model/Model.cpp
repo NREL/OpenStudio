@@ -338,6 +338,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 	REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
     REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
     REGISTER_CONSTRUCTOR(RefrigerationSystem);
+    REGISTER_CONSTRUCTOR(RefrigerationTranscriticalSystem);
     REGISTER_CONSTRUCTOR(RefrigerationWalkIn);
     REGISTER_CONSTRUCTOR(RefrigerationWalkInZoneBoundary);
     REGISTER_CONSTRUCTOR(RenderingColor);
@@ -424,6 +425,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalAirConditioner);
+    REGISTER_CONSTRUCTOR(ZoneHVACRefrigerationChillerSet);
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
@@ -614,6 +616,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSystem);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationTranscriticalSystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkIn);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkInZoneBoundary);
     REGISTER_COPYCONSTRUCTORS(RenderingColor);
@@ -700,6 +703,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalAirConditioner);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACRefrigerationChillerSet);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);

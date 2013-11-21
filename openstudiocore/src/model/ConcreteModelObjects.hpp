@@ -174,6 +174,7 @@
 #include <model/RefrigerationSubcoolerMechanical.hpp>
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationSystem.hpp>
+#include <model/RefrigerationTranscriticalSystem.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkInZoneBoundary.hpp>
 #include <model/RenderingColor.hpp>
@@ -260,6 +261,7 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
+#include <model/ZoneHVACRefrigerationChillerSet.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
@@ -417,6 +419,7 @@
 #include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
 #include <model/RefrigerationSecondarySystem_Impl.hpp>
 #include <model/RefrigerationSystem_Impl.hpp>
+#include <model/RefrigerationTranscriticalSystem_Impl.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
 #include <model/RenderingColor_Impl.hpp>
@@ -504,6 +507,7 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
+#include <model/ZoneHVACRefrigerationChillerSet_Impl.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>

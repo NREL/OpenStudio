@@ -268,6 +268,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACPackagedTerminalAirConditioner","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"ZoneHVACRefrigerationChillerSet","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Terminal Unit Availability schedule","terminalUnitAvailabilityschedule",false,"Availability",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

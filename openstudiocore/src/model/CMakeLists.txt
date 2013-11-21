@@ -538,6 +538,9 @@ SET( ${target_name}_src
   RefrigerationSystem.hpp
   RefrigerationSystem_Impl.hpp
   RefrigerationSystem.cpp
+  RefrigerationTranscriticalSystem.hpp
+  RefrigerationTranscriticalSystem_Impl.hpp
+  RefrigerationTranscriticalSystem.cpp
   RefrigerationWalkIn.hpp
   RefrigerationWalkIn_Impl.hpp
   RefrigerationWalkIn.cpp
@@ -841,6 +844,9 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
+  ZoneHVACRefrigerationChillerSet.hpp
+  ZoneHVACRefrigerationChillerSet_Impl.hpp
+  ZoneHVACRefrigerationChillerSet.cpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
@@ -1183,6 +1189,7 @@ SET( ${target_name}_test_src
   test/RefrigerationSubcoolerMechanical_GTest.cpp
   test/RefrigerationSecondarySystem_GTest.cpp
   test/RefrigerationSystem_GTest.cpp
+  test/RefrigerationTranscriticalSystem_GTest.cpp
   test/RefrigerationWalkIn_GTest.cpp
   test/RefrigerationWalkInZoneBoundary_GTest.cpp
   test/RenderingColor_GTest.cpp
@@ -1238,6 +1245,7 @@ SET( ${target_name}_test_src
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
+  test/ZoneHVACRefrigerationChillerSet_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
 )
