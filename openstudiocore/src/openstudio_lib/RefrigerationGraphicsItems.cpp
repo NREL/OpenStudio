@@ -765,15 +765,38 @@ void RefrigerationCaseDetailView::paint( QPainter *painter,
 }
 
 RefrigerationCondenserView::RefrigerationCondenserView()
-  : m_empty(true)
 {
+  removeButtonItem = new RemoveButtonItem();
+
+  removeButtonItem->setParentItem(this);
+
+  removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width(),0);
+
+  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
+  OS_ASSERT(bingo);
+
+  setCondenserId(OSItemId());
 }
 
-void RefrigerationCondenserView::setEmpty(bool empty)
+void RefrigerationCondenserView::setCondenserName(const QString & name)
 {
-  m_empty = empty;
+  m_name = name;
 
   update();
+}
+
+void RefrigerationCondenserView::setCondenserId(const OSItemId & condenserId)
+{
+  m_condenserId = condenserId;
+
+  removeButtonItem->setVisible(! m_condenserId.itemId().isEmpty());
+
+  update();
+}
+
+void RefrigerationCondenserView::onRemoveButtonClicked()
+{
+  emit removeClicked(m_condenserId);
 }
 
 void RefrigerationCondenserView::paint( QPainter *painter, 
@@ -786,19 +809,24 @@ void RefrigerationCondenserView::paint( QPainter *painter,
 
   painter->drawRoundedRect(10,10,boundingRect().width() - 20, boundingRect().height() - 20,8,8);
 
-  if( m_empty )
+  if( m_condenserId.itemId().isEmpty() )
   {
     painter->drawText(boundingRect(),Qt::AlignCenter,"Drop Condenser");
   }
   else
   {
-    painter->drawText(boundingRect(),Qt::AlignCenter,"Condenser: XYZ");
+    painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,m_name);
   }
 }
 
 QRectF RefrigerationCondenserView::boundingRect() const
 {
-  return QRectF(0,0,200,100);
+  return QRectF(0,0,size().width(),size().height());
+}
+
+QSizeF RefrigerationCondenserView::size()
+{
+  return QSizeF(200,100);
 }
 
 RefrigerationCompressorDropZoneView::RefrigerationCompressorDropZoneView()
@@ -821,6 +849,18 @@ void RefrigerationCompressorDropZoneView::paint( QPainter *painter,
   painter->drawRoundedRect(0,0,boundingRect().width(), boundingRect().height(),8,8);
 
   painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drag and Drop\nCompressor");
+}
+
+void RefrigerationCompressorView::insertCompressorDetailView(int index, QGraphicsObject * object)
+{
+}
+
+void RefrigerationCompressorView::removeAllCompressorDetailViews()
+{
+}
+
+void RefrigerationCompressorView::adjustLayout()
+{
 }
 
 RefrigerationCompressorView::RefrigerationCompressorView()

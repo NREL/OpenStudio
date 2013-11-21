@@ -21,6 +21,7 @@
 #include "RefrigerationGraphicsItems.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
+#include "OSItem.hpp"
 #include "../model/Model.hpp"
 #include "../model/RefrigerationSystem.hpp"
 #include "../model/RefrigerationSystem_Impl.hpp"
@@ -111,6 +112,10 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
   bingo = connect(m_detailView->refrigerationSystemView->refrigerationCasesView->refrigerationCasesDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
                   this,SLOT(onCasesViewDrop(const OSItemId &)));
   OS_ASSERT(bingo);
+
+  bingo = connect(m_detailView->refrigerationSystemView->refrigerationCondenserView,SIGNAL(removeClicked(const OSItemId &)),
+                  this,SLOT(removeCondenser(const OSItemId &)));
+  OS_ASSERT(bingo);
 }
 
 void RefrigerationController::zoomOutToSystemGridView()
@@ -137,6 +142,11 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
     if( boost::optional<model::RefrigerationCondenserAirCooled> condenser 
           = mo->optionalCast<model::RefrigerationCondenserAirCooled>() )
     {
+      if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
+      {
+        currentCondenser->remove();
+      }
+
       model::RefrigerationCondenserAirCooled condenserClone = 
         condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserAirCooled>();
 
@@ -210,15 +220,17 @@ void RefrigerationController::refreshNow()
 
   if( m_detailView )
   {
-    m_detailView->refrigerationSystemView->refrigerationCondenserView->setEmpty(true);
+    m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserId(OSItemId());
 
     m_detailView->refrigerationSystemView->refrigerationCasesView->removeAllCaseDetailViews();
 
     if( m_currentSystem )
     {
-      if( m_currentSystem->refrigerationCondenser() )
+      if( boost::optional<model::ModelObject> condenser = m_currentSystem->refrigerationCondenser() )
       {
-        m_detailView->refrigerationSystemView->refrigerationCondenserView->setEmpty(false);
+        m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle(),QString(),false));
+
+        m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
       }
 
       std::vector<model::RefrigerationCase> cases = m_currentSystem->cases();
@@ -238,7 +250,6 @@ void RefrigerationController::refreshNow()
         m_detailView->refrigerationSystemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
       }
 
-      // Consider moving this inside RefrigerationSystemView
       m_detailView->refrigerationSystemView->adjustLayout();
     }
   }
@@ -249,6 +260,36 @@ void RefrigerationController::refreshNow()
 QGraphicsView * RefrigerationController::refrigerationGraphicsView() const
 {
   return m_refrigerationGraphicsView;
+}
+
+void RefrigerationController::removeCompressor(const OSItemId & itemid)
+{
+  if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
+  {
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    {
+      mo->remove();
+
+      OS_ASSERT(m_detailView);
+
+      //m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserId(OSItemId());
+    }
+  }
+}
+
+void RefrigerationController::removeCondenser(const OSItemId & itemid)
+{
+  if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
+  {
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    {
+      mo->remove();
+
+      OS_ASSERT(m_detailView);
+
+      m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserId(OSItemId());
+    }
+  }
 }
 
 QSharedPointer<RefrigerationSystemListController> RefrigerationController::refrigerationSystemListController() const

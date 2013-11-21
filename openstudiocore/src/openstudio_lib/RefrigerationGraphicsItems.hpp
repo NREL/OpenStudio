@@ -21,6 +21,7 @@
 #define OPENSTUDIO_REFRIGERATIONGRAPHICSITEMS_H
 
 #include <QGraphicsObject>
+#include "OSItem.hpp"
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
@@ -311,9 +312,19 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
 
   virtual ~RefrigerationCondenserView() {}
 
+  RemoveButtonItem * removeButtonItem;
+
   QRectF boundingRect() const;
 
-  void setEmpty(bool empty);
+  void setCondenserId(const OSItemId & condenserId);
+
+  void setCondenserName(const QString & name);
+
+  static QSizeF size();
+
+  signals:
+
+  void removeClicked(OSItemId id);
 
   protected:
 
@@ -321,10 +332,36 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
 
+  private slots:
+
+  void onRemoveButtonClicked();
+
   private:
 
-  bool m_empty;
+  OSItemId m_condenserId;
+
+  QString m_name;
 };
+
+//class RefrigerationCompressorDetailView : public QGraphicsObject
+//{
+//  Q_OBJECT;
+//
+//  public:
+//
+//  RefrigerationCompressorDetailView();
+//
+//  virtual ~RefrigerationCompressorDetailView() {}
+//
+//  QRectF boundingRect() const;
+//
+//  protected:
+//
+//  void paint( QPainter *painter, 
+//              const QStyleOptionGraphicsItem *option, 
+//              QWidget *widget = 0 );
+//  
+//};
 
 class RefrigerationCompressorDropZoneView : public RefrigerationSystemDropZoneView
 {
@@ -361,6 +398,12 @@ class RefrigerationCompressorView : public QGraphicsObject
 
   void setNumberOfCompressors(int numberOfCompressors);
 
+  void insertCompressorDetailView(int index, QGraphicsObject * object);
+
+  void removeAllCompressorDetailViews();
+
+  void adjustLayout();
+
   protected:
 
   void paint( QPainter *painter, 
@@ -370,6 +413,8 @@ class RefrigerationCompressorView : public QGraphicsObject
   private:
 
   int m_numberOfCompressors;
+
+  std::vector<QGraphicsObject *> m_compressorDetailViews;
 };
 
 class RefrigerationCasesDropZoneView : public RefrigerationSystemDropZoneView
