@@ -2392,7 +2392,3 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 } // energyplus
 
 } // openstudio
-<<<<<<< HEAD
-
-=======
->>>>>>> develop

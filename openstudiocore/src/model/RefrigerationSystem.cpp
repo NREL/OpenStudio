@@ -296,7 +296,6 @@ namespace detail {
     return isEmpty(OS_Refrigeration_SystemFields::EndUseSubcategory);
   }
 
-<<<<<<< HEAD
   std::string RefrigerationSystem_Impl::numberofCompressorStages() const {
     // boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
     // OS_ASSERT(value);
@@ -308,13 +307,6 @@ namespace detail {
       return "2";
     }
   }
-=======
-  // std::string RefrigerationSystem_Impl::numberofCompressorStages() const {
-  //   boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
-  //   OS_ASSERT(value);
-  //   return value.get();
-  // }
->>>>>>> develop
 
   // bool RefrigerationSystem_Impl::isNumberofCompressorStagesDefaulted() const {
   //   return isEmpty(OS_Refrigeration_SystemFields::NumberofCompressorStages);
