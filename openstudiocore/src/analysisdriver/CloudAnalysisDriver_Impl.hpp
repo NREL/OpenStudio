@@ -365,7 +365,7 @@ namespace detail {
     void setStatus(AnalysisStatus status);
 
     void registerRunRequestFailure();
-    bool postNextDataPoint();
+    bool postNextDataPointBatch(); // groups of 50
     bool startMonitoring();
     void registerMonitoringFailure();
 

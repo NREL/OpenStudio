@@ -38,7 +38,6 @@ namespace detail {
 
   /** RubyMeasure_Impl is a Measure_Impl that is the implementation class for RubyMeasure.*/
   class ANALYSIS_API RubyMeasure_Impl : public Measure_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

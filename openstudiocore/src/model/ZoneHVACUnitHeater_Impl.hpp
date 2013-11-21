@@ -38,7 +38,6 @@ namespace detail {
 
   class MODEL_API ZoneHVACUnitHeater_Impl : public ZoneHVACComponent_Impl
   {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
 

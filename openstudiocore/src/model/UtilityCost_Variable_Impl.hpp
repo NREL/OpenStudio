@@ -33,9 +33,7 @@ namespace detail {
 
 class MODEL_API UtilityCost_Variable_Impl : public ParentObject_Impl{
   
-  Q_OBJECT;
-
-public:
+ public:
   // constructor
   UtilityCost_Variable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 

@@ -30,7 +30,6 @@ namespace detail {
 
   /** CoilCoolingCooledBeam_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingCooledBeam.*/
   class MODEL_API CoilCoolingCooledBeam_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -159,20 +159,17 @@ if (APPLE)
   #LIST(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall")
   
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-           DESTINATION OpenStudio.app/Contents/share/openstudio/OSApp 
-           PATTERN ".svn" EXCLUDE
+           DESTINATION OpenStudio.app/Contents/share/openstudio/OSApp
          )
 elseif (WIN32)
   #LIST(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Release" "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Debug")
   
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
-           DESTINATION share/openstudio/OSApp 
-           PATTERN ".svn" EXCLUDE
+           DESTINATION share/openstudio/OSApp
          )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
            DESTINATION share/openstudio/OSApp
-           PATTERN ".svn" EXCLUDE
          ) 
 endif()
 
@@ -239,4 +236,25 @@ IF( APPLE )
 
     fixup_bundle(\"${APPS}\" \"\${FIXUPPLUGINS}\" \"${DIRS}\")
   " )
+ENDIF()
+
+
+SET( ${target_name}_test_src
+  test/OpenStudioAppFixture.hpp
+  test/OpenStudioAppFixture.cpp
+  test/Resources_GTest.cpp
+)
+
+SET (${target_name}_test_depends
+  ${depends} 
+)
+
+CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}" )
+CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
+IF( BUILD_TESTING )
+
+  #ADD_DEPENDENCIES("${target_name}_tests" 
+  #  openstudio_app_resources 
+  #)
+  
 ENDIF()

@@ -735,6 +735,8 @@ namespace sdd {
     }
 
     model::SimulationControl simulationControl = model.getUniqueModelObject<model::SimulationControl>();
+
+    simulationControl.setMaximumNumberofWarmupDays(50);
     
     //if ((hvacAutoSizingElement.text().toInt() == 0) && (runDesignDaysElement.text().toInt() == 0)){
     //  simulationControl.setRunSimulationforSizingPeriods(false);

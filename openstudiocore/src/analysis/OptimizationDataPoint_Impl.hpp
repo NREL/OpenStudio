@@ -33,7 +33,6 @@ namespace detail {
 
   /** OptimizationDataPoint_Impl is a DataPoint_Impl that is the implementation class for OptimizationDataPoint.*/
   class ANALYSIS_API OptimizationDataPoint_Impl : public DataPoint_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

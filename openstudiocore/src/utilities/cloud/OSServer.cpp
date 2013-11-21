@@ -601,7 +601,10 @@ namespace openstudio{
       }
 
       QString id = toQString(removeBraces(analysisUUID));
-      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+      // ETH: We are only using batch_upload now. Should rails application also just make 
+      // data_points.json be a batch upload. (Deprecate old, single point functionality, and move
+      // data_points/batch_upload.json to be data_points.json?)
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points/batch_upload.json"));
 
       QByteArray postData; 
       postData.append(toQString(dataPointJSON)); 

@@ -33,7 +33,6 @@ namespace detail {
 
   /** DDACEAlgorithm_Impl is a DakotaAlgorithm_Impl that is the implementation class for DDACEAlgorithm.*/
   class ANALYSIS_API DDACEAlgorithm_Impl : public DakotaAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

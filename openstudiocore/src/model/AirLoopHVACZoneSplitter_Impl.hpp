@@ -30,7 +30,6 @@ class ThermalZone;
 namespace detail {
 
 class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
-  Q_OBJECT;
  public:
 
   // constructor

@@ -33,8 +33,6 @@ namespace detail {
 
   /** AvailabilityManagerAssignmentList_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerAssignmentList.*/
   class MODEL_API AvailabilityManagerAssignmentList_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-
    public:
 
     AvailabilityManagerAssignmentList_Impl(const IdfObject& idfObject,
