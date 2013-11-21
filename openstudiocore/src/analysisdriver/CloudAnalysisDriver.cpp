@@ -1430,7 +1430,7 @@ namespace detail {
 
   bool CloudAnalysisDriver_Impl::postNextDataPointBatch() {
     DataPointVector batch;
-    while (!m_postQueue.empty() && batch.size() < 50u) {
+    while (!m_postQueue.empty() && batch.size() < 10u) {
       DataPoint toQueue = m_postQueue.front();
       if (toQueue.runType() == DataPointRunType::Local) {
         toQueue.setRunType(DataPointRunType::CloudSlim);
