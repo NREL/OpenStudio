@@ -24,6 +24,40 @@
 
 namespace openstudio {
 
+// Button functionality without any visual elements
+// ButtonItem already existed when AbstractButtonItem was factored out.
+// Ideally ButtonItem derives from AbstractButtonItem.
+class AbstractButtonItem : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  AbstractButtonItem(QGraphicsItem * parent = 0);
+
+  virtual ~AbstractButtonItem() {}
+
+  void setChecked(bool checked);
+  
+  signals:
+
+  void mouseClicked(bool checked = false);
+
+  void toggled(bool checked);
+
+  protected:
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_checked;
+
+  private:
+
+  bool m_mouseDown;
+};
+
 class ButtonItem : public QGraphicsObject
 {
   Q_OBJECT;

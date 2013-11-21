@@ -24,6 +24,56 @@
 
 namespace openstudio {
 
+AbstractButtonItem::AbstractButtonItem(QGraphicsItem * parent)
+  : QGraphicsObject(parent),
+    m_checked(false),
+    m_mouseDown(false)
+{
+}
+
+void AbstractButtonItem::setChecked(bool checked)
+{
+  m_checked = checked;
+
+  update();
+
+  emit toggled(m_checked);
+}
+
+void AbstractButtonItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  update();
+
+  event->accept();
+}
+
+void AbstractButtonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      m_checked = ! m_checked;
+
+      update();
+
+      emit mouseClicked(m_checked);
+
+      emit toggled(m_checked);
+    }
+  }
+}
+
 ButtonItem::ButtonItem(const QPixmap & image, const QPixmap & downImage, 
                        const QPixmap & hoverImage, QGraphicsItem * parent)
   : QGraphicsObject(parent),

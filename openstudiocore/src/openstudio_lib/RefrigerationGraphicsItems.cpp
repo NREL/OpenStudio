@@ -498,14 +498,26 @@ int RefrigerationSystemView::rightXPos() const
 RefrigerationCasesView::RefrigerationCasesView()
   : QGraphicsObject(),
     m_numberOfDisplayCases(0),
-    m_numberOfWalkinCases(0),
-    m_expanded(true)
+    m_numberOfWalkinCases(0)
 {
   refrigerationCasesDropZoneView = new RefrigerationCasesDropZoneView();
 
   refrigerationCasesDropZoneView->setParentItem(this);
 
   refrigerationCasesDropZoneView->setPos(RefrigerationSystemView::margin,RefrigerationSystemView::margin);
+
+  expandButton = new CaseViewExpandButton();
+
+  expandButton->setParentItem(this);
+
+  QSizeF _size = size();
+
+  double x = _size.width() / 2.0;
+  double y = _size.height() - 10.0;
+
+  expandButton->setPos(x,y);
+
+  setExpanded(true);
 }
 
 void RefrigerationCasesView::setNumberOfDisplayCases(int number)
@@ -524,6 +536,25 @@ void RefrigerationCasesView::setNumberOfWalkinCases(int number)
   m_numberOfWalkinCases = number;
 
   update();
+}
+
+void RefrigerationCasesView::setExpanded(bool exapanded)
+{
+  m_expanded = exapanded;
+
+  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
+       it != m_caseDetailViews.end();
+       it++ )
+  {
+    if( m_expanded )
+    {
+      (*it)->show();
+    }
+    else
+    {
+      (*it)->hide();
+    }
+  }
 }
 
 void RefrigerationCasesView::paint( QPainter *painter, 
@@ -569,7 +600,7 @@ QRectF RefrigerationCasesView::summaryRect() const
                 100);
 }
 
-QRectF RefrigerationCasesView::boundingRect() const
+QSizeF RefrigerationCasesView::size() const
 {
   if( m_expanded )
   {
@@ -590,12 +621,20 @@ QRectF RefrigerationCasesView::boundingRect() const
       height = summaryRect().height();
     }
 
-    return QRectF(0,0,width,height);
+    return QSizeF(width,height);
   }
   else
   {
-    return summaryRect();
+    return QSizeF(summaryRect().width(),summaryRect().height());
   }
+}
+
+
+QRectF RefrigerationCasesView::boundingRect() const
+{
+  QSizeF _size = size();
+
+  return QRectF(0,0,_size.width(),_size.height());
 }
 
 void RefrigerationCasesView::insertCaseDetailView(int index, QGraphicsObject * object)
@@ -605,6 +644,15 @@ void RefrigerationCasesView::insertCaseDetailView(int index, QGraphicsObject * o
   m_caseDetailViews.insert(m_caseDetailViews.begin() + index,object);
 
   object->setParentItem(this);
+
+  if( m_expanded )
+  {
+    object->show();
+  }
+  else
+  {
+    object->hide();
+  }
 
   int i = 0;
 
@@ -976,6 +1024,38 @@ void RefrigerationSystemDetailView::paint( QPainter *painter,
             const QStyleOptionGraphicsItem *option, 
             QWidget *widget )
 {
+}
+
+CaseViewExpandButton::CaseViewExpandButton()
+{
+  m_closeImage = QPixmap(":/images/contextual_arrow_up.png");
+  m_openImage = QPixmap(":/images/contextual_arrow.png");
+}
+
+QSize CaseViewExpandButton::size() const
+{
+  return QSize(20,20);
+}
+
+QRectF CaseViewExpandButton::boundingRect() const
+{
+  return QRectF(0,0,size().width(),size().height());
+}
+
+void CaseViewExpandButton::paint(QPainter *painter, 
+                                 const QStyleOptionGraphicsItem *option, 
+                                 QWidget * widget)
+{
+  QRect rect(0,0,size().width(),size().height());
+
+  if( m_checked )
+  {
+    painter->drawPixmap(rect,m_closeImage);
+  }
+  else
+  {
+    painter->drawPixmap(rect,m_openImage);
+  }
 }
 
 } // openstudio

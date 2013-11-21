@@ -33,10 +33,39 @@ class RefrigerationHeatReclaimView;
 class RefrigerationCompressorView;
 class RefrigerationSHXView;
 class RefrigerationCasesView;
+class RefrigerationCaseDetailView;
+class RefrigerationCasesDropZoneView;
 class RefrigerationSystemView;
 class RefrigerationSecondaryView;
 class RefrigerationCompressorDropZoneView;
 class OSItemId;
+
+class CaseViewExpandButton : public AbstractButtonItem
+{
+  Q_OBJECT;
+
+  public:
+
+  CaseViewExpandButton();
+
+  virtual ~CaseViewExpandButton() {}
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = 0);
+
+  private:
+
+  QSize size() const;
+
+  QPixmap m_openImage;
+
+  QPixmap m_closeImage;
+};
 
 // A grid layout of refrigeration systems
 class RefrigerationSystemGridView : public QGraphicsObject
@@ -403,6 +432,8 @@ class RefrigerationCasesView : public QGraphicsObject
 
   RefrigerationCasesDropZoneView * refrigerationCasesDropZoneView;
 
+  CaseViewExpandButton * expandButton;
+
   void setNumberOfDisplayCases(int number);
 
   void setNumberOfWalkinCases(int number);
@@ -410,6 +441,8 @@ class RefrigerationCasesView : public QGraphicsObject
   void insertCaseDetailView(int index, QGraphicsObject * object);
 
   void removeAllCaseDetailViews();
+
+  void setExpanded(bool exapanded);
 
   protected:
 
@@ -426,6 +459,8 @@ class RefrigerationCasesView : public QGraphicsObject
   QRectF walkinCasesRect() const;
 
   QRectF summaryRect() const;
+
+  QSizeF size() const;
 
   int m_numberOfDisplayCases;
 
