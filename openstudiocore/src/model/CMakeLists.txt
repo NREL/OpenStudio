@@ -1,12 +1,12 @@
 SET( target_name openstudio_model )
 
-SET( ${target_name}_src 
+SET( ${target_name}_src
 
-  mainpage.hpp 
+  mainpage.hpp
   ModelAPI.hpp
   Model.hpp
   Model_Impl.hpp
-  Model.cpp 
+  Model.cpp
   Component.hpp
   Component_Impl.hpp
   Component.cpp
@@ -30,7 +30,7 @@ SET( ${target_name}_src
   ModelObjectList.hpp
   ModelObjectList_Impl.hpp
   ModelObjectList.cpp
-  
+
   ConcreteModelObjects.hpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
@@ -40,7 +40,7 @@ SET( ${target_name}_src
   AirGap.cpp
   AirLoopHVAC.hpp
   AirLoopHVAC_Impl.hpp
-  AirLoopHVAC.cpp 
+  AirLoopHVAC.cpp
   AirLoopHVACUnitaryHeatPumpAirToAir.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir.cpp
@@ -241,7 +241,7 @@ SET( ${target_name}_src
   CurveFunctionalPressureDrop.cpp
   CurveLinear.hpp
   CurveLinear_Impl.hpp
-  CurveLinear.cpp  
+  CurveLinear.cpp
   CurveQuadratic.hpp
   CurveQuadratic_Impl.hpp
   CurveQuadratic.cpp
@@ -256,10 +256,10 @@ SET( ${target_name}_src
   CurveRectangularHyperbola1.cpp
   CurveRectangularHyperbola2.hpp
   CurveRectangularHyperbola2_Impl.hpp
-  CurveRectangularHyperbola2.cpp  
+  CurveRectangularHyperbola2.cpp
   CurveSigmoid.hpp
   CurveSigmoid_Impl.hpp
-  CurveSigmoid.cpp  
+  CurveSigmoid.cpp
   CurveTriquadratic.hpp
   CurveTriquadratic_Impl.hpp
   CurveTriquadratic.cpp
@@ -369,10 +369,10 @@ SET( ${target_name}_src
   HotWaterEquipmentDefinition_Impl.hpp
   HotWaterEquipmentDefinition.cpp
   HVACComponent.hpp
-  HVACComponent_Impl.hpp   
+  HVACComponent_Impl.hpp
   HVACComponent.cpp
   ZoneHVACComponent.hpp
-  ZoneHVACComponent_Impl.hpp   
+  ZoneHVACComponent_Impl.hpp
   ZoneHVACComponent.cpp
   HVACTemplates.cpp
   HVACTemplates.hpp
@@ -392,7 +392,7 @@ SET( ${target_name}_src
   InternalMassDefinition_Impl.hpp
   InternalMassDefinition.cpp
   InteriorPartitionSurface.hpp
-  InteriorPartitionSurface_Impl.hpp    
+  InteriorPartitionSurface_Impl.hpp
   InteriorPartitionSurface.cpp
   InteriorPartitionSurfaceGroup.hpp
   InteriorPartitionSurfaceGroup_Impl.hpp
@@ -426,7 +426,7 @@ SET( ${target_name}_src
   LightsDefinition.cpp
   Loop.hpp
   Loop_Impl.hpp
-  Loop.cpp 
+  Loop.cpp
   Luminaire.hpp
   Luminaire_Impl.hpp
   Luminaire.cpp
@@ -517,9 +517,33 @@ SET( ${target_name}_src
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
+  RefrigerationCondenserCascade.hpp
+  RefrigerationCondenserCascade_Impl.hpp
+  RefrigerationCondenserCascade.cpp
+  RefrigerationCondenserEvaporativeCooled.hpp
+  RefrigerationCondenserEvaporativeCooled_Impl.hpp
+  RefrigerationCondenserEvaporativeCooled.cpp
+  RefrigerationCondenserWaterCooled.hpp
+  RefrigerationCondenserWaterCooled_Impl.hpp
+  RefrigerationCondenserWaterCooled.cpp
+  RefrigerationSubcoolerLiquidSuction.hpp
+  RefrigerationSubcoolerLiquidSuction_Impl.hpp
+  RefrigerationSubcoolerLiquidSuction.cpp
+  RefrigerationSubcoolerMechanical.hpp
+  RefrigerationSubcoolerMechanical_Impl.hpp
+  RefrigerationSubcoolerMechanical.cpp
+  RefrigerationSecondarySystem.hpp
+  RefrigerationSecondarySystem_Impl.hpp
+  RefrigerationSecondarySystem.cpp
   RefrigerationSystem.hpp
   RefrigerationSystem_Impl.hpp
   RefrigerationSystem.cpp
+  RefrigerationWalkIn.hpp
+  RefrigerationWalkIn_Impl.hpp
+  RefrigerationWalkIn.cpp
+  RefrigerationWalkInZoneBoundary.hpp
+  RefrigerationWalkInZoneBoundary_Impl.hpp
+  RefrigerationWalkInZoneBoundary.cpp
   RenderingColor.hpp
   RenderingColor_Impl.hpp
   RenderingColor.cpp
@@ -537,10 +561,10 @@ SET( ${target_name}_src
   RunPeriodControlDaylightSavingTime.cpp
   RunPeriodControlSpecialDays.hpp
   RunPeriodControlSpecialDays_Impl.hpp
-  RunPeriodControlSpecialDays.cpp  
+  RunPeriodControlSpecialDays.cpp
   Schedule.hpp
   Schedule_Impl.hpp
-  Schedule.cpp 
+  Schedule.cpp
   ScheduleBase.hpp
   ScheduleBase_Impl.hpp
   ScheduleBase.cpp
@@ -555,28 +579,28 @@ SET( ${target_name}_src
   ScheduleDay.cpp
   ScheduleFixedInterval.hpp
   ScheduleFixedInterval_Impl.hpp
-  ScheduleFixedInterval.cpp 
+  ScheduleFixedInterval.cpp
   ScheduleInterval.hpp
   ScheduleInterval_Impl.hpp
-  ScheduleInterval.cpp 
+  ScheduleInterval.cpp
   ScheduleRule.hpp
   ScheduleRule_Impl.hpp
-  ScheduleRule.cpp   
+  ScheduleRule.cpp
   ScheduleRuleset.hpp
   ScheduleRuleset_Impl.hpp
-  ScheduleRuleset.cpp    
+  ScheduleRuleset.cpp
   ScheduleTypeLimits.hpp
   ScheduleTypeLimits_Impl.hpp
   ScheduleTypeLimits.cpp
   ScheduleVariableInterval.hpp
   ScheduleVariableInterval_Impl.hpp
-  ScheduleVariableInterval.cpp 
+  ScheduleVariableInterval.cpp
   ScheduleWeek.hpp
   ScheduleWeek_Impl.hpp
   ScheduleWeek.cpp
   ScheduleYear.hpp
   ScheduleYear_Impl.hpp
-  ScheduleYear.cpp  
+  ScheduleYear.cpp
   Screen.hpp
   Screen_Impl.hpp
   Screen.cpp
@@ -692,7 +716,7 @@ SET( ${target_name}_src
   SteamEquipmentDefinition_Impl.hpp
   SteamEquipmentDefinition.cpp
   StraightComponent.hpp
-  StraightComponent_Impl.hpp   
+  StraightComponent_Impl.hpp
   StraightComponent.cpp
   SubSurface.hpp
   SubSurface_Impl.hpp
@@ -785,20 +809,20 @@ SET( ${target_name}_src
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial.cpp
   ZoneHVACBaseboardConvectiveElectric.hpp
-  ZoneHVACBaseboardConvectiveElectric_Impl.hpp   
+  ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACBaseboardConvectiveElectric.cpp
   ZoneHVACBaseboardConvectiveWater.hpp
-  ZoneHVACBaseboardConvectiveWater_Impl.hpp   
+  ZoneHVACBaseboardConvectiveWater_Impl.hpp
   ZoneHVACBaseboardConvectiveWater.cpp
   ZoneHVACEquipmentList.hpp
-  ZoneHVACEquipmentList_Impl.hpp   
+  ZoneHVACEquipmentList_Impl.hpp
   ZoneHVACEquipmentList.cpp
   ZoneHVACIdealLoadsAirSystem.hpp
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
   ZoneHVACIdealLoadsAirSystem.cpp
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
-  ZoneHVACFourPipeFanCoil.cpp  
+  ZoneHVACFourPipeFanCoil.cpp
   ZoneHVACLowTemperatureRadiantElectric.hpp
   ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
   ZoneHVACLowTemperatureRadiantElectric.cpp
@@ -816,13 +840,13 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.cpp
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
-  ZoneHVACPackagedTerminalAirConditioner.cpp  
+  ZoneHVACPackagedTerminalAirConditioner.cpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
   ZoneHVACWaterToAirHeatPump.hpp
   ZoneHVACWaterToAirHeatPump_Impl.hpp
-  ZoneHVACWaterToAirHeatPump.cpp    
+  ZoneHVACWaterToAirHeatPump.cpp
   ZoneHVACUnitHeater.hpp
   ZoneHVACUnitHeater_Impl.hpp
   ZoneHVACUnitHeater.cpp
@@ -843,7 +867,7 @@ SET( ${target_name}_moc
   Component_Impl.hpp
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
-  
+
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
@@ -864,7 +888,6 @@ SET( ${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
-  CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
@@ -930,7 +953,6 @@ SET( ${target_name}_moc
   HotWaterEquipment_Impl.hpp
   HotWaterEquipmentDefinition_Impl.hpp 
   HVACComponent_Impl.hpp
-  ZoneHVACComponent_Impl.hpp
   IlluminanceMap_Impl.hpp
   InsideSurfaceConvectionAlgorithm_Impl.hpp
   InternalMass_Impl.hpp
@@ -949,7 +971,6 @@ SET( ${target_name}_moc
   MasslessOpaqueMaterial_Impl.hpp
   Material_Impl.hpp
   Meter_Impl.hpp
-  PortList_Impl.hpp
   OpaqueMaterial_Impl.hpp
   OtherEquipment_Impl.hpp
   OtherEquipmentDefinition_Impl.hpp
@@ -1021,8 +1042,8 @@ SET( ${target_name}_moc
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
-  ZoneHVACFourPipeFanCoil_Impl.hpp  
-  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
+  ZoneHVACFourPipeFanCoil_Impl.hpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
@@ -1043,7 +1064,7 @@ AddPCH(${target_name})
 
 IF( NOT APPLE )
 INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin 
+  RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib )
 ENDIF()
 
@@ -1155,7 +1176,15 @@ SET( ${target_name}_test_src
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
+  test/RefrigerationCondenserCascade_GTest.cpp
+  test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
+  test/RefrigerationCondenserWaterCooled_GTest.cpp
+  test/RefrigerationSubcoolerLiquidSuction_GTest.cpp
+  test/RefrigerationSubcoolerMechanical_GTest.cpp
+  test/RefrigerationSecondarySystem_GTest.cpp
   test/RefrigerationSystem_GTest.cpp
+  test/RefrigerationWalkIn_GTest.cpp
+  test/RefrigerationWalkInZoneBoundary_GTest.cpp
   test/RenderingColor_GTest.cpp
   test/ResourceObject_GTest.cpp
   test/RoofVegetation_GTest.cpp
@@ -1209,22 +1238,22 @@ SET( ${target_name}_test_src
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
-  test/ZoneHVACWaterToAirHeatPump_GTest.cpp    
+  test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
 )
 
 SET (${target_name}_test_depends
-  ${${target_name}_depends} 
+  ${${target_name}_depends}
 )
 
 CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}" )
 CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
 IF( BUILD_TESTING )
 
-  ADD_DEPENDENCIES("${target_name}_tests" 
-    openstudio_model_resources 
+  ADD_DEPENDENCIES("${target_name}_tests"
+    openstudio_model_resources
   )
-  
+
   # Compiler and system specific options
   IF(UNIX OR MINGW)
     # treat warnings as errors
@@ -1246,4 +1275,3 @@ MAKE_SWIG_TARGET( OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHV
 MAKE_SWIG_TARGET( OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
 
 MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration )
-
