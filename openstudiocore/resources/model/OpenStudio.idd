@@ -6392,7 +6392,11 @@ OS:Refrigeration:Subcooler:LiquidSuction,
         \note Applicable only and required for liquid suction heat exchangers (LSHX)
         \note Design vapor inlet temperature must be less than or equal to
         \note      the Liquid inlet design temp
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> develop
 OS:Refrigeration:System,
         \min-fields 8
   A1,   \field Handle
@@ -10166,6 +10170,7 @@ OS:Coil:Heating:Gas,
        \type real
        \units W
 
+<<<<<<< HEAD
 OS:Coil:Heating:Desuperheater,
        \memo Desuperheater air heating coil. The heating energy provided by this coil is reclaimed
        \memo from the superheated refrigerant gas leaving a compressor and does not impact the
@@ -10207,6 +10212,8 @@ OS:Coil:Heating:Desuperheater,
        \note such as solenoid valves, etc.
        \ip-units W
 
+=======
+>>>>>>> develop
 OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
         \min-fields 8
    A1 , \field Handle

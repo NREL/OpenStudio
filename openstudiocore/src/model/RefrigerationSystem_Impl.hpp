@@ -127,7 +127,7 @@ namespace detail {
 
     bool isEndUseSubcategoryDefaulted() const;
 
-    std::string numberofCompressorStages() const;
+    // std::string numberofCompressorStages() const;
 
     // bool isNumberofCompressorStagesDefaulted() const;
 

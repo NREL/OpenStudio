@@ -42,7 +42,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule, Schedule& walkinDefrostDripDownSchedule);
+  explicit RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule);
 
   virtual ~RefrigerationWalkIn() {}
 

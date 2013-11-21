@@ -844,9 +844,12 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
+<<<<<<< HEAD
   ZoneHVACRefrigerationChillerSet.hpp
   ZoneHVACRefrigerationChillerSet_Impl.hpp
   ZoneHVACRefrigerationChillerSet.cpp
+=======
+>>>>>>> develop
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp

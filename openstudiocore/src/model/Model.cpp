@@ -332,10 +332,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
-	REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
-	REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
-	REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
-	REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
+    REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
+    REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
     REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
     REGISTER_CONSTRUCTOR(RefrigerationSystem);
     REGISTER_CONSTRUCTOR(RefrigerationTranscriticalSystem);
@@ -425,7 +425,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalAirConditioner);
+<<<<<<< HEAD
     REGISTER_CONSTRUCTOR(ZoneHVACRefrigerationChillerSet);
+=======
+>>>>>>> develop
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
@@ -610,11 +613,11 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
-	REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserWaterCooled);
-	REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
-	REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
-	REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationTranscriticalSystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkIn);
@@ -703,7 +706,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalAirConditioner);
+<<<<<<< HEAD
     REGISTER_COPYCONSTRUCTORS(ZoneHVACRefrigerationChillerSet);
+=======
+>>>>>>> develop
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
@@ -2448,4 +2454,7 @@ void addExampleConstructions(Model& model) {
 
 } // model
 } // openstudio
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop

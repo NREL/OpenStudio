@@ -101,8 +101,13 @@ namespace openstudio{
       qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.file_string()).toUtf8());
     }
 
-    bool opensslloaded = QSslSocket::supportsSsl();
-    
+    bool opensslloaded = false;
+#ifdef QT_NO_OPENSSL
+    // nothing to do
+#else
+    opensslloaded = QSslSocket::supportsSsl();
+#endif
+
     if (!t_pathToSSLLibraries.empty())
     {
       qputenv("PATH", oldpath);
