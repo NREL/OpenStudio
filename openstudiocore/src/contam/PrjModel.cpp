@@ -24,31 +24,31 @@
 namespace openstudio {
 namespace contam {
 
-Model::Model(openstudio::path path)
+CxModel::CxModel(openstudio::path path)
 {
   read(path);
 }
 
-Model::Model(std::string filename)
+CxModel::CxModel(std::string filename)
 {
   read(filename);
 }
 
-Model::Model(Reader &input)
+CxModel::CxModel(Reader &input)
 {
   read(input);
 }
 
-bool Model::read(openstudio::path path)
+bool CxModel::read(openstudio::path path)
 {
   return read(openstudio::toString(path));
 }
 
-bool Model::read(std::string filename)
+bool CxModel::read(std::string filename)
 {
   QFile fp(QString().fromStdString(filename));
 
-  m_valid = false;
+  d->valid = false;
   if (fp.open(QFile::ReadOnly))
   {
     QTextStream stream(&fp);
@@ -56,177 +56,177 @@ bool Model::read(std::string filename)
     read(input);
 
   }
-  return m_valid;
+  return d->valid;
 }
 
-bool Model::read(Reader &input)
+bool CxModel::read(Reader &input)
 {
-  m_valid = false;
+  d->valid = false;
   // Section 1: Project, Weather, Simulation, and Output Controls
-  m_rc.read(input); // Read the run control section
+  d->rc.read(input); // Read the run control section
   input.read999(FILELINE);
   // Section 2: Species and Contaminants
-  m_contaminants = input.readIntVector(FILELINEC false);
-  m_species = input.readSectionVector<Species>(FILELINEC "species");
+  d->contaminants = input.readIntVector(FILELINEC false);
+  d->species = input.readSectionVector<Species>(FILELINEC "species");
   // Section 3: Level and Icon Data
-  m_levels = input.readSectionVector<Level>(FILELINEC "level");
+  d->levels = input.readSectionVector<Level>(FILELINEC "level");
   // Section 4: Day Schedules
-  m_daySchedules = input.readSectionVector<DaySchedule>(FILELINEC "day schedule");
+  d->daySchedules = input.readSectionVector<DaySchedule>(FILELINEC "day schedule");
   // Section 5: Week Schedules
-  m_weekSchedules = input.readSectionVector<WeekSchedule>(FILELINEC "week schedule");
+  d->weekSchedules = input.readSectionVector<WeekSchedule>(FILELINEC "week schedule");
   // Section 6: Wind Pressure Profiles
-  m_windPressureProfiles = input.readSectionVector<WindPressureProfile>(FILELINEC "wind pressure profiles");
+  d->windPressureProfiles = input.readSectionVector<WindPressureProfile>(FILELINEC "wind pressure profiles");
   // Section 7: Kinetic Reactions
   std::string kinr = input.readSection(FILELINE); // Skip it
-  m_unsupported["KineticReaction"] = kinr;
+  d->unsupported["KineticReaction"] = kinr;
   // Section 8a: Filter Elements
   std::string flte = input.readSection(FILELINE); // Skip it
-  m_unsupported["FilterElement"] = flte;
+  d->unsupported["FilterElement"] = flte;
   // Section 8b: Filters
   std::string filt = input.readSection(FILELINE); // Skip it
-  m_unsupported["Filter"] = filt;
+  d->unsupported["Filter"] = filt;
   // Section 9: Source/Sink Elements
   std::string cse = input.readSection(FILELINE); // Skip it
-  m_unsupported["SourceSink"] = cse;
+  d->unsupported["SourceSink"] = cse;
   // Section 10: Airflow Elements
-  m_airflowElements = input.readElementVector<AirflowElement>(FILELINEC "airflow element");
+  d->airflowElements = input.readElementVector<AirflowElement>(FILELINEC "airflow element");
   // Section 11: Duct Elements
   std::string dfe = input.readSection(FILELINE); // Skip it
-  m_unsupported["DuctElement"] = dfe;
+  d->unsupported["DuctElement"] = dfe;
   // Section 12a: Control Super Elements
   std::string selmt = input.readSection(FILELINE); // Skip it
-  m_unsupported["ControlSuperElements"] = selmt;
+  d->unsupported["ControlSuperElements"] = selmt;
   // Section 12b: Control Nodes
   //std::string ctrl = input.readSection(FILELINE); // Skip it
   //m_unsupported["ControlNode"] = ctrl;
-  m_controlNodes = input.readElementVector<ControlNode>(FILELINEC "control node");
+  d->controlNodes = input.readElementVector<ControlNode>(FILELINEC "control node");
   // Section 13: Simple Air Handling System (AHS)
-  m_ahs = input.readSectionVector<Ahs>(FILELINEC "ahs");
+  d->ahs = input.readSectionVector<Ahs>(FILELINEC "ahs");
   // Section 14: Zones
-  m_zones = input.readSectionVector<Zone>(FILELINEC "zone");
+  d->zones = input.readSectionVector<Zone>(FILELINEC "zone");
   // Section 15: Initial Zone Concentrations
   readZoneIc(input);
   // Section 16: Airflow Paths
-  m_paths = input.readSectionVector<Path>(FILELINEC "path");
+  d->paths = input.readSectionVector<Path>(FILELINEC "path");
   // Section 17: Duct Junctions
   std::string jct = input.readSection(FILELINE); // Skip it
-  m_unsupported["DuctJunction"] = jct;
+  d->unsupported["DuctJunction"] = jct;
   // Section 18: Initial Junction Concentrations
   std::string jctic = input.readSection(FILELINE); // Skip it
-  m_unsupported["JunctionIC"] = jctic;
+  d->unsupported["JunctionIC"] = jctic;
   // Section 19: Duct Segments
   std::string dct = input.readSection(FILELINE); // Skip it
-  m_unsupported["DuctSegment"] = dct;
+  d->unsupported["DuctSegment"] = dct;
   // Section 20: Source/Sinks
   //m_sourceSinks = input.readSectionVector<SourceSink>(FILELINEC QString("source/sink"));
   std::string css = input.readSection(FILELINE); // Skip it
-  m_unsupported["SourceSink"] = css;
+  d->unsupported["SourceSink"] = css;
   // Section 21: Occupancy Schedules
   std::string osch = input.readSection(FILELINE); // Skip it
-  m_unsupported["OccupancySchedule"] = osch;
+  d->unsupported["OccupancySchedule"] = osch;
   // Section 22: Exposures
   std::string pexp = input.readSection(FILELINE); // Skip it
-  m_unsupported["Exposure"] = pexp;
+  d->unsupported["Exposure"] = pexp;
   // Section 23: Annotations
   std::string note = input.readSection(FILELINE); // Skip it
-  m_unsupported["Annotation"] = note;
+  d->unsupported["Annotation"] = note;
   input.readEnd(FILELINE);
-  m_valid = true;
+  d->valid = true;
   return true;
 }
 
-std::string Model::toString()
+std::string CxModel::toString()
 {
   std::string output;
-  if(!m_valid)
+  if(!d->valid)
   {
     return output;
   }
   // Section 1: Project, Weather, Simulation, and Output Controls
-  output += m_rc.write();
+  output += d->rc.write();
   output += "-999\n";
   // Section 2: Species and Contaminants
-  output += writeArray(m_contaminants,"contaminants:");
-  output += writeSectionVector(m_species,"species:");
+  output += writeArray(d->contaminants,"contaminants:");
+  output += writeSectionVector(d->species,"species:");
   // Section 3: Level and Icon Data
-  output += writeSectionVector(m_levels,"levels:");
+  output += writeSectionVector(d->levels,"levels:");
   // Section 4: Day Schedules
-  output += writeSectionVector(m_daySchedules,"day-schedules:");
+  output += writeSectionVector(d->daySchedules,"day-schedules:");
   // Section 5: Week Schedules
-  output += writeSectionVector(m_weekSchedules,"week-schedules:");
+  output += writeSectionVector(d->weekSchedules,"week-schedules:");
   // Section 6: Wind Pressure Profiles
-  output += writeSectionVector(m_windPressureProfiles,"wind pressure profiles:");
+  output += writeSectionVector(d->windPressureProfiles,"wind pressure profiles:");
   // Section 7: Kinetic Reactions
-  output += m_unsupported["KineticReaction"];
+  output += d->unsupported["KineticReaction"];
   // Section 8a: Filter Elements
-  output += m_unsupported["FilterElement"];
+  output += d->unsupported["FilterElement"];
   // Section 8b: Filters
-  output += m_unsupported["Filter"];
+  output += d->unsupported["Filter"];
   // Section 9: Source/Sink Elements
-  output += m_unsupported["SourceSink"];
+  output += d->unsupported["SourceSink"];
   // Section 10: Airflow Elements
-  output += writeSectionVector(m_airflowElements,"flow elements:");
+  output += writeSectionVector(d->airflowElements,"flow elements:");
   // Section 11: Duct Elements
-  output += m_unsupported["DuctElement"];
+  output += d->unsupported["DuctElement"];
   // Section 12a: Control Super Elements
-  output += m_unsupported["ControlSuperElements"];
+  output += d->unsupported["ControlSuperElements"];
   // Section 12b: Control Nodes
   //output += m_unsupported["ControlNode"];
-  output += writeSectionVector(m_controlNodes,"control nodes:");
+  output += writeSectionVector(d->controlNodes,"control nodes:");
   // Section 13: Simple Air Handling System (AHS)
-  output += writeSectionVector(m_ahs,"simple AHS:");
+  output += writeSectionVector(d->ahs,"simple AHS:");
   // Section 14: Zones
-  output += writeSectionVector(m_zones,"zones:");
+  output += writeSectionVector(d->zones,"zones:");
   // Section 15: Initial Zone Concentrations
   output += writeZoneIc();
   // Section 16: Airflow Paths
-  output += writeSectionVector(m_paths,"flow paths:");
+  output += writeSectionVector(d->paths,"flow paths:");
   // Section 17: Duct Junctions
-  output += m_unsupported["DuctJunction"];
+  output += d->unsupported["DuctJunction"];
   // Section 18: Initial Junction Concentrations
-  output += m_unsupported["JunctionIC"];
+  output += d->unsupported["JunctionIC"];
   // Section 19: Duct Segments
-  output += m_unsupported["DuctSegment"];
+  output += d->unsupported["DuctSegment"];
   // Section 20: Source/Sinks
-  output += m_unsupported["SourceSink"];
+  output += d->unsupported["SourceSink"];
   // Section 21: Occupancy Schedules
-  output += m_unsupported["OccupancySchedule"];
+  output += d->unsupported["OccupancySchedule"];
   // Section 22: Exposures
-  output += m_unsupported["Exposure"];
+  output += d->unsupported["Exposure"];
   // Section 23: Annotations
-  output += m_unsupported["Annotation"];
+  output += d->unsupported["Annotation"];
   // End of the PRJ file
   output += "* end project file.";
   return output;
 }
 
-std::vector<std::vector<int> > Model::zoneExteriorFlowPaths()
+std::vector<std::vector<int> > CxModel::zoneExteriorFlowPaths()
 {
-  std::vector<std::vector<int> > paths(m_zones.size());
+  std::vector<std::vector<int> > paths(d->zones.size());
 
-  for(unsigned int i=0;i<m_paths.size();i++)
+  for(unsigned int i=0;i<d->paths.size();i++)
   {
-    if(m_paths[i].pzn() == -1)
+    if(d->paths[i].pzn() == -1)
     {
-      int nr = m_paths[i].pzm();
-      if(nr > 0 && (unsigned int)nr<=m_zones.size())
+      int nr = d->paths[i].pzm();
+      if(nr > 0 && (unsigned int)nr<=d->zones.size())
       {
-        paths[nr-1].push_back(-m_paths[i].nr()); // This flow path is negative for flow into zone
+        paths[nr-1].push_back(-d->paths[i].nr()); // This flow path is negative for flow into zone
       }
     }
-    else if(m_paths[i].pzm() == -1)
+    else if(d->paths[i].pzm() == -1)
     {
-      int nr = m_paths[i].pzn();
-      if(nr > 0 && (unsigned int)nr<=m_zones.size())
+      int nr = d->paths[i].pzn();
+      if(nr > 0 && (unsigned int)nr<=d->zones.size())
       {
-        paths[nr-1].push_back(m_paths[i].nr()); // This flow path is positive for flow into zone
+        paths[nr-1].push_back(d->paths[i].nr()); // This flow path is positive for flow into zone
       }
     }
   }
   return paths;
 }
 
-std::vector<TimeSeries> Model::zoneInfiltration(SimFile *sim)
+std::vector<TimeSeries> CxModel::zoneInfiltration(SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
@@ -235,7 +235,7 @@ std::vector<TimeSeries> Model::zoneInfiltration(SimFile *sim)
   //std::vector<std::vector<double> > flow0 = sim->F0();
   std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
   unsigned int ntimes = sim->dateTimes().size();
-  for(unsigned int i=0; i<m_zones.size(); i++)
+  for(unsigned int i=0; i<d->zones.size(); i++)
   {
     // This is lame, but I can't tell for sure if the values of a Vector are actually zero.
     Vector inf = createVector(std::vector<double>(ntimes,0));
@@ -312,26 +312,26 @@ std::vector<TimeSeries> Model::zoneInfiltration(SimFile *sim)
   return results;
 }
 
-void Model::rebuildContaminants()
+void CxModel::rebuildContaminants()
 {
-  m_contaminants.clear();
-  for(unsigned int i=1;i<=m_species.size();i++)
+  d->contaminants.clear();
+  for(unsigned int i=1;i<=d->species.size();i++)
   {
-    m_species[i].setNr(i);
-    if(m_species[i].sflag())
+    d->species[i].setNr(i);
+    if(d->species[i].sflag())
     {
-      m_contaminants.push_back(i);
+      d->contaminants.push_back(i);
     }
   }
 }
 
-void Model::readZoneIc(Reader &input)
+void CxModel::readZoneIc(Reader &input)
 {
   unsigned int nn = input.readUInt(FILELINE);
   if(nn != 0)
   {
-    unsigned int nctm = m_contaminants.size();
-    if(nn != nctm*m_zones.size())
+    unsigned int nctm = d->contaminants.size();
+    if(nn != nctm*d->zones.size())
     {
       QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
 #ifndef NOFILELINE
@@ -339,7 +339,7 @@ void Model::readZoneIc(Reader &input)
 #endif
       LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
     }
-    for(unsigned int i=0;i<m_zones.size();i++)
+    for(unsigned int i=0;i<d->zones.size();i++)
     {
       unsigned int nr = input.readUInt(FILELINE);
       if(nr != i+1)
@@ -356,29 +356,29 @@ void Model::readZoneIc(Reader &input)
       {
         ic.push_back(input.readNumber<RX>(FILELINE));
       }
-      m_zones[i].setIc(ic);
+      d->zones[i].setIc(ic);
     }
   }
   input.read999("Failed to find zone IC section termination" CFILELINE);
 }
 
-std::string Model::writeZoneIc(int start)
+std::string CxModel::writeZoneIc(int start)
 {
   int offset = 1;
   if(start != 0)
   {
     offset = 1-start;
   }
-  int nctm = m_contaminants.size()*(m_zones.size()-start);
+  int nctm = d->contaminants.size()*(d->zones.size()-start);
   std::string string = openstudio::toString(nctm) + " ! initial zone concentrations:\n";
   if(nctm)
   {
-    for(unsigned int i=start;i<m_zones.size();i++)
+    for(unsigned int i=start;i<d->zones.size();i++)
     {
       string += openstudio::toString(i+offset);
-      for(unsigned int j=0;j<m_contaminants.size();j++)
+      for(unsigned int j=0;j<d->contaminants.size();j++)
       {
-        string += ' ' + openstudio::toString(m_zones[i].ic(j));
+        string += ' ' + openstudio::toString(d->zones[i].ic(j));
       }
       string += '\n';
     }
@@ -396,13 +396,13 @@ std::string Model::writeZoneIc(int start)
 
 //template void Model::addAirflowElement(PlrTest1);
 
-int Model::airflowElementNrByName(std::string name) const
+int CxModel::airflowElementNrByName(std::string name) const
 {
-  for(int i=0;i<m_airflowElements.size();i++)
+  for(int i=0;i<d->airflowElements.size();i++)
   {
-    if(m_airflowElements[i]->name() == name)
+    if(d->airflowElements[i]->name() == name)
     {
-      return m_airflowElements[i]->nr();
+      return d->airflowElements[i]->nr();
     }
   }
   return 0;

@@ -59,10 +59,14 @@ private:
   Date m_end;
 };
 
-class CONTAM_API ForwardTranslator : public Model
+class CONTAM_API ForwardTranslator : public CxModel
 {
 public:
-  ForwardTranslator(const openstudio::model::Model& model, bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator();
+
+  //void translate(const openstudio::model::Model& model, bool translateHVAC, ProgressBar* progressBar);
+
+  /*ForwardTranslator(const openstudio::model::Model& model, bool translateHVAC=true, ProgressBar* progressBar=NULL);
   ForwardTranslator(const openstudio::model::Model& model, std::string leakageDescriptor, bool translateHVAC=true,
     ProgressBar* progressBar=NULL);
   ForwardTranslator(const openstudio::model::Model& model, double flow, double n, double deltaP,
@@ -72,9 +76,8 @@ public:
   ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, std::string leakageDescriptor,
     bool translateHVAC=true, ProgressBar* progressBar=NULL);
   ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, double flow, double n, 
-    double deltaP, bool translateHVAC=true, ProgressBar* progressBar=NULL);
+    double deltaP, bool translateHVAC=true, ProgressBar* progressBar=NULL);*/
 
-  std::string toString();
   bool toPrj(const openstudio::path& path);
   
   // Static translation function
@@ -150,7 +153,7 @@ public:
 
 private:
   // Translators
-  bool translate(bool translateHVAC=true);
+  boost::optional<contam::CxModel> translate(model::Model model, bool translateHVAC=true);
 
   // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
@@ -159,7 +162,7 @@ private:
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
-  void init();
+  void clear();
 
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
@@ -171,13 +174,16 @@ private:
   std::map <Handle, int> m_surfaceMap;    // Surface paths stored by handle
   QMap <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
 
-  openstudio::model::Model m_model;
+  //openstudio::model::Model m_model;
   CvFile m_cvf;
   //boost::optional<EpwFile> m_epwFile;
   boost::optional<DateTime> m_startDateTime;
   boost::optional<DateTime> m_endDateTime;
   bool m_ready;
   boost::optional<std::string> m_leakageDescriptor;
+  boost::optional<double> m_flow;
+  boost::optional<double> m_n;
+  boost::optional<double> m_deltaP;
   double m_returnSupplyRatio;
   bool m_ratioOverride;
 
