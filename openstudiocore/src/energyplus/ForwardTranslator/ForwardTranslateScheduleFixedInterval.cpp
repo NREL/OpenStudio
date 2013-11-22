@@ -42,10 +42,8 @@ namespace energyplus {
 static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
 {
   QString string = QString().sprintf("Through: %02d/%02d",date.monthOfYear().value(),date.dayOfMonth());
-  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Day input field index is " << fieldIndex);
   idfObject.setString(fieldIndex, string.toStdString());
   ++fieldIndex;
-  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Field index is " << fieldIndex);
   idfObject.setString(fieldIndex, "For: AllDays");
   ++fieldIndex;
   return fieldIndex;
@@ -54,13 +52,10 @@ static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
 static unsigned addUntil(IdfObject &idfObject,unsigned fieldIndex,int hours,int minutes,double value)
 {
   QString string = QString().sprintf("Until: %02d:%02d",hours,minutes);
-  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Until input field index is " << fieldIndex);
   idfObject.setString(fieldIndex, string.toStdString());
   ++fieldIndex;
-  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Field index is " << fieldIndex);
   idfObject.setDouble(fieldIndex, value);
   ++fieldIndex;
-  //LOG_FREE(Info,"openstudio.model.ScheduleFixedInterval","Until complete");
   return fieldIndex;
 }
 
@@ -85,6 +80,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   Vector daysFromFirst = timeseries.daysFromFirstReport();
   Vector values = timeseries.values();
 
+  // We aren't using this - should we?
   std::string interpolateField;
   if (modelObject.interpolatetoTimestep()){
     interpolateField = "Interpolate:Yes";
@@ -92,7 +88,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     interpolateField = "Interpolate:No";
   }
 
-  // New version starts here and assumes that the interval is less than one day.
+  // New version assumes that the interval is less than one day.
   // The original version did not, so it was a bit more complicated.
   // 5.787x10^-6 days is a little less than half a second
   double eps = 5.787e-6;
@@ -180,258 +176,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   // We'll skip a sanity check here, but it might be a good idea to add one at some point
   fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
   
-  /*
-  // Original new version starts here
-  // 5.787x10^-6 days is a little less than half a second
-  double eps = 5.787e-6;
-  // The last date data was written
-  Date lastDate = firstReportDateTime.date();
-  Time dayDelta = Time(1.0);
-  // The day number of the date that data was last written relative to the first date
-  double lastDay = 0.0; 
-  // Adjust the floating point day delta to be relative to the beginning of the first day and
-  // shift the start of the loop if needed
-  double timeShift = firstReportDateTime.time().totalDays();
-  std::cout << "s@#$%@#$% " << firstReportDateTime.toString() << " " 
-    << QString().sprintf("%.15e",timeShift).toStdString() << std::endl;
-  unsigned int start = 0;
-  if(timeShift == 0.0)
-  {
-    start = 1;
-  }
-  else
-  {
-    for(unsigned int i=0;i<daysFromFirst.size();i++)
-    {
-      daysFromFirst[i] += timeShift;
-    }
-  }
-
-  unsigned N = daysFromFirst.size();
-  std::cout << N << " " << start << std::endl;
-  std::cout << daysFromFirst[0] << " " << values[0] << std::endl;
-  std::cout << daysFromFirst[1] << " " << values[1] << std::endl;
-  std::cout << daysFromFirst[N-1] << " " << values[N-1] << std::endl;
-  //std::cout << daysFromFirst[N-2] << " " << values[N-2] <<  std::endl;
-  //std::cout << daysFromFirst[N-1] << " " << values[N-1] <<  std::endl;
-
-  // Start the input into the schedule object
-  unsigned fieldIndex = Schedule_CompactFields::ScheduleTypeLimitsName + 1;
-  fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
-  //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
-  //idfObject.setString(fieldIndex, string.toStdString());
-  //++fieldIndex;
-  //idfObject.setString(fieldIndex, "For: AllDays");
-  //++fieldIndex;
-
-  for(unsigned int i=start; i < values.size()-1; i++)
-  {
-    // We could loop over the entire array and use the fact that the
-    // last entry in the daysFromFirstReport vector should be a round
-    // number to avoid logic. However, this whole thing is very, very
-    // sensitive to round off issues. We still have a HUGE aliasing
-    // problem unless the API has enforced that the times in the 
-    // time series are all distinct when rounded to the minute. Is that
-    // happening?
-    double today = floor(daysFromFirst[i]);
-    double hms = daysFromFirst[i]-today;
-    // Here, we need to make sure that we aren't nearly the end of a day
-    if(fabs(1.0-hms) < eps)
-    {
-      today += 1;
-      hms = 0.0;
-    }
-    std::cout << daysFromFirst[i] << " " << today << " " << hms << std::endl;
-    if(hms < eps)
-    {
-      // This value is an end of day value, but we could have skipped multiple days
-      int diff = today-lastDay;
-      for(int j=diff; j>0; j--)
-      {
-        fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
-        //idfObject.setString(fieldIndex, "Until: 24:00");
-        //++fieldIndex;
-        //idfObject.setDouble(fieldIndex, values[i]);
-        //++fieldIndex;
-
-        lastDate += dayDelta;
-        fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
-        //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
-        //idfObject.setString(fieldIndex, string.toStdString());
-        //++fieldIndex;
-        //idfObject.setString(fieldIndex, "For: AllDays");
-        //++fieldIndex;
-      }
-    }
-    else
-    {
-      std::cout << today << " " << lastDay << std::endl;
-      if(values[i] == values[i+1])
-      {
-        // Bail on values that match the next value
-        continue;
-      }
-      if(today != lastDay)
-      {
-        // We're on a new day, need 24:00:00 value(s), how many days did we miss?
-        int diff = today-lastDay;
-        for(int j=diff; j>0; j--)
-        {
-          fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
-          //idfObject.setString(fieldIndex, "Until: 24:00");
-          //++fieldIndex;
-          //idfObject.setDouble(fieldIndex, values[i]);
-          //++fieldIndex;
-
-          lastDate += dayDelta;
-          fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
-          //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
-          //idfObject.setString(fieldIndex, string.toStdString());
-          //++fieldIndex;
-          //idfObject.setString(fieldIndex, "For: AllDays");
-          //++fieldIndex;
-        }
-      }
-      Time time(hms);
-      int hours = time.hours();
-      int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
-      //std::cout << today << " " << hours << " " << minutes << " " << daysFromFirst[i] << " " 
-      //  << QString().sprintf("%.15e",hms).toStdString() << std::endl;
-      // This is a little dangerous, but all of the problematic 24:00 
-      // times that might need to cause a day++ should be caught above.
-      if(minutes==60)
-      {
-        hours += 1;
-        minutes = 0;
-      }
-      fieldIndex = addUntil(idfObject,fieldIndex,hours,minutes,values[i]);
-      //QString string = QString().sprintf("Until: %02d/%02d",hours,minutes);
-      //idfObject.setString(fieldIndex, string.toStdString());
-      //++fieldIndex;
-      //idfObject.setDouble(fieldIndex, values[i]);
-      //++fieldIndex;
-    }
-    lastDay = today;
-  }
-  // Handle the last point a little differently to make sure that the schedule ends exactly on the end of a day
-  unsigned int i = values.size()-1;
-  // Could skip this, but better to be safe. Again allow up to a half second or so of error
-  double today = floor(daysFromFirst[i]);
-  double hms = daysFromFirst[i]-today;
-  if(fabs(1-hms) < eps)
-  {
-    today += 1;
-    hms = 0.0;
-  }
-  // Did we miss any days?
-  int diff = today-lastDay;
-  //std::cout << diff << " " << today << " " << lastDay << std::endl;
-  for(int j=diff; j>1; j--)
-  {
-    fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
-    //idfObject.setString(fieldIndex, "Until: 24:00");
-    //++fieldIndex;
-    //idfObject.setDouble(fieldIndex, values[i]);
-    //++fieldIndex;
-
-    lastDate += dayDelta;
-    fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
-    //QString string = QString().sprintf("Through: %02d/%02d",lastDate.monthOfYear().value(),lastDate.dayOfMonth());
-    //idfObject.setString(fieldIndex, string.toStdString());
-    //++fieldIndex;
-    //idfObject.setString(fieldIndex, "For: AllDays");
-    //++fieldIndex;
-  }
-
-  fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
-  //idfObject.setString(fieldIndex, "Until: 24:00");
-  //++fieldIndex;
-  //idfObject.setDouble(fieldIndex, values[i]);
-  //++fieldIndex;
-  */
-  /*
-  // Old version starts here
-  boost::optional<Date> lastDate;
-
-  unsigned fieldIndex = Schedule_CompactFields::ScheduleTypeLimitsName + 1;
-  unsigned N = values.size();
-  for (unsigned i = 0; i < N; ++i){
-    DateTime dateTime = firstReportDateTime + Time(daysFromFirstReport[i]);
-    Date date = dateTime.date();
-    Time time = dateTime.time();
-
-    int hours = time.hours();
-    int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
-
-    if ((i < (N-1)) && (hours == 0) && (minutes == 0)){
-      continue;
-    }
-    
-    if ((i < (N-1)) && (values[i] == values[i+1])){
-      DateTime dateTime2 = firstReportDateTime + Time(daysFromFirstReport[i+1]);
-      Date date2 = dateTime2.date();
-      if (date == date2){
-        continue;
-      }
-    }
-    
-    if (minutes == 60){
-      hours += 1;
-      minutes = 0;
-    }
-
-    int month = date.monthOfYear().value();
-    int day = date.dayOfMonth();
-
-    if (!lastDate || (date > *lastDate)){
-      
-      if (lastDate){
-        // we know that date > *currentDate
-        if ((hours != 24) || (minutes != 0)){
-          idfObject.setString(fieldIndex, "Until: 24:00");
-          ++fieldIndex;
-          
-          idfObject.setDouble(fieldIndex, values[i-1]);
-          ++fieldIndex;
-        }
-      }
-
-      lastDate = date;
-
-      std::stringstream ss;
-
-      ss << "Through: " << setfill('0') << setw(2) << month << "/" << setfill('0') << setw(2) << day;
-      idfObject.setString(fieldIndex, ss.str());
-      ++fieldIndex;
-
-      idfObject.setString(fieldIndex, "For: AllDays");
-      ++fieldIndex;
-
-      idfObject.setString(fieldIndex, interpolateField);
-      ++fieldIndex;
-    }
-
-    std::stringstream ss;
-
-    ss << "Until: " << setfill('0') << setw(2) << hours << ":" << setfill('0') << setw(2) << minutes;
-    idfObject.setString(fieldIndex, ss.str());
-    ++fieldIndex;
-
-    idfObject.setDouble(fieldIndex, values[i]);
-    ++fieldIndex;
-    
-    if (i == (N-1)){
-      if ((hours != 24) || (minutes != 0)){
-        idfObject.setString(fieldIndex, "Until: 24:00");
-        ++fieldIndex;
-        
-        idfObject.setDouble(fieldIndex, values[i]);
-        ++fieldIndex;
-      }    
-    }
-  }
-  */
-
   return idfObject;
 }
 
