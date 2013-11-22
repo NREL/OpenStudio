@@ -116,6 +116,16 @@ namespace sdd {
       building.setNorthAxis(northAngle);
     }
 
+    // translate shadingSurfaces
+    QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
+    model::ShadingSurfaceGroup shadingSurfaceGroup(model);
+    shadingSurfaceGroup.setName("Building ShadingGroup");
+    shadingSurfaceGroup.setShadingSurfaceType("Building");
+    for (int i = 0; i < exteriorShadingElements.count(); ++i){
+      boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+      OS_ASSERT(exteriorShading);
+    }
+
     // create all spaces
     for (int i = 0; i < spaceElements.count(); i++){
       QDomElement spaceElement = spaceElements.at(i).toElement();
@@ -291,6 +301,16 @@ namespace sdd {
       QDomElement interiorFloorElement = interiorFloorElements.at(i).toElement();
       boost::optional<model::ModelObject> surface = translateSurface(interiorFloorElement, doc, *space);
       OS_ASSERT(surface); // what type of error handling do we want?
+    }
+
+    // translate shadingSurfaces
+    QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
+    model::ShadingSurfaceGroup shadingSurfaceGroup(space->model());
+    shadingSurfaceGroup.setName(spaceName + " ShadingGroup");
+    shadingSurfaceGroup.setSpace(*space);
+    for (int i = 0; i < exteriorShadingElements.count(); ++i){
+      boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+      OS_ASSERT(exteriorShading);
     }
 
     // Service Hot Water
@@ -1044,13 +1064,6 @@ namespace sdd {
       OS_ASSERT(subSurface);
     }
 
-    // translate shadingSurfaces
-    QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
-    for (int i = 0; i < exteriorShadingElements.count(); ++i){
-      boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, surface);
-      OS_ASSERT(exteriorShading);
-    }
-
     // check for adjacent surface
     QDomElement adjacentSpaceElement = element.firstChildElement("AdjacentSpcRef");
     if (!adjacentSpaceElement.isNull()){
@@ -1163,20 +1176,13 @@ namespace sdd {
       LOG(Error, "Unknown subsurface type '" << toString(tagName) << "'");
     }
 
-    // translate shadingSurfaces
-    QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
-    for (int i = 0; i < exteriorShadingElements.count(); ++i){
-      boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, subSurface);
-      OS_ASSERT(exteriorShading);
-    }
-    
     // DLM: currently unhandled
     // InternalShadingDevice
 
     return subSurface;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateShadingSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::PlanarSurface& planarSurface)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateShadingSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup)
   {
     std::vector<openstudio::Point3d> vertices;
 
@@ -1218,13 +1224,7 @@ namespace sdd {
       vertices.push_back(openstudio::Point3d(x,y,z));
     }
 
-    model::Model model = planarSurface.model();
-
-    model::ShadingSurfaceGroup shadingSurfaceGroup(model);
-    boost::optional<model::Space> space = planarSurface.space();
-    if (space){
-      shadingSurfaceGroup.setSpace(*space);
-    }
+    model::Model model = shadingSurfaceGroup.model();
 
     QDomElement nameElement = element.firstChildElement("Name");
     std::string name = escapeName(nameElement.text());
@@ -1252,20 +1252,8 @@ namespace sdd {
         visRefl = visReflElement.text().toDouble();
       }
 
-      // create a construction with these properties
-      model::Construction construction(model);
-      construction.setName(name + " Construction");
+      model::ConstructionBase construction = shadingConstruction(model, solRefl, visRefl);
       shadingSurface.setConstruction(construction);
-
-      model::MasslessOpaqueMaterial material(model);
-      material.setSolarAbsorptance(1.0-solRefl);
-      material.setVisibleAbsorptance(1.0-visRefl);
-      material.setName(name + " Material");
-
-      std::vector<model::Material> materials;
-      materials.push_back(material);
-      bool test = construction.setLayers(materials);
-      OS_ASSERT(test); // what type of error handling do we want?
 
       QDomElement scheduleReferenceElement = element.firstChildElement("TransSchRef");
       if(!scheduleReferenceElement.isNull()){
@@ -1283,6 +1271,34 @@ namespace sdd {
     }
 
     return shadingSurface;
+  }
+
+  model::ConstructionBase ReverseTranslator::shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl)
+  {
+    std::pair<double, double> key = std::make_pair<double, double>(solRefl, visRefl);
+    std::map<std::pair<double, double>, model::ConstructionBase>::iterator it = m_shadingConstructionMap.find(key);
+    if (it != m_shadingConstructionMap.end()){
+      return it->second;
+    }
+
+    std::string description = boost::lexical_cast<std::string>(solRefl) + "-" + boost::lexical_cast<std::string>(visRefl);
+
+    // create a construction with these properties
+    model::Construction construction(model);
+    construction.setName("Shading Construction " + description);
+
+    model::MasslessOpaqueMaterial material(model);
+    material.setSolarAbsorptance(1.0-solRefl);
+    material.setVisibleAbsorptance(1.0-visRefl);
+    material.setName("Shading Material" + description);
+
+    std::vector<model::Material> materials;
+    materials.push_back(material);
+    bool test = construction.setLayers(materials);
+    OS_ASSERT(test); // what type of error handling do we want?
+
+    m_shadingConstructionMap.insert(std::make_pair<std::pair<double, double>, model::ConstructionBase>(key, construction));
+    return construction;
   }
 
   boost::optional<QDomElement> ForwardTranslator::translateBuilding(const openstudio::model::Building& building, QDomDocument& doc)

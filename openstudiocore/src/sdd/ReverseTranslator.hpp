@@ -28,6 +28,7 @@
 #include <utilities/core/StringStreamLogSink.hpp>
 
 #include <model/Schedule.hpp>
+#include <model/ConstructionBase.hpp>
 
 class QDomDocument;
 class QDomElement;
@@ -42,7 +43,7 @@ namespace model {
   class ModelObject;
   class BuildingStory;
   class Space;
-  class PlanarSurface;
+  class ShadingSurfaceGroup;
   class Surface;
   class SubSurface;
   class PlantLoop;
@@ -102,7 +103,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateLoads(const QDomElement& element, const QDomDocument& doc, openstudio::model::Space& space);
     boost::optional<openstudio::model::ModelObject> translateSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Space& space);
     boost::optional<openstudio::model::ModelObject> translateSubSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Surface& surface);
-    boost::optional<openstudio::model::ModelObject> translateShadingSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::PlanarSurface& planarSurface);
+    boost::optional<openstudio::model::ModelObject> translateShadingSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup);
     boost::optional<openstudio::model::ModelObject> translateAirSystem(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCoilCooling(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCoilHeating(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
@@ -138,6 +139,9 @@ namespace sdd {
 
     model::Schedule serviceHotWaterSetpointSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_serviceHotWaterSetpointSchedule;
+
+    model::ConstructionBase shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl);
+    std::map<std::pair<double, double>, model::ConstructionBase> m_shadingConstructionMap;
 
     //helper method to do unit conversions; probably should be in OS proper
     boost::optional<double> unitToUnit(const double& val, const std::string& ipUnitString, const std::string& siUnitString);
