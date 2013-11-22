@@ -44,8 +44,14 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 
   QWidget * utilityBillsView = subTabView()->inspectorView(); 
 
-  bool isConnected = connect( this,SIGNAL(toggleUnitsClicked( bool )),
-                              utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
+  bool isConnected = false;
+
+  isConnected = connect(this,SIGNAL(toggleUnitsClicked( bool )),
+    utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
+  OS_ASSERT(isConnected);
+
+  isConnected = connect( utilityBillsView,SIGNAL(enableAddNewObjectButton( bool )),
+    this,SLOT(enableAddNewObjectButton( bool )) );
   OS_ASSERT(isConnected);
 }
 
@@ -105,7 +111,14 @@ void UtilityBillsController::onClearSelection()
   UtilityBillsInspectorView * utilityBillsInspectorView = qobject_cast<UtilityBillsInspectorView *>(inspectorView);
   OS_ASSERT(utilityBillsInspectorView);
 
-  if(utilityBillsInspectorView->runPeriodDates()){
+  enableAddNewObjectButton(utilityBillsInspectorView->runPeriodDates());
+}
+
+///// SLOTS
+
+void UtilityBillsController::enableAddNewObjectButton(bool enable)
+{
+  if(enable){
     m_subTabView->itemSelectorButtons()->enableAddButton();
   } else {
     m_subTabView->itemSelectorButtons()->disableAddButton();

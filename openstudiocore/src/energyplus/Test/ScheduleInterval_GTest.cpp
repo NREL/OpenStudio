@@ -24,6 +24,8 @@
 #include <energyplus/ReverseTranslator.hpp>
 
 #include <utilities/data/TimeSeries.hpp>
+#include <utilities/time/Date.hpp>
+#include <utilities/time/Time.hpp>
 
 #include <model/Model.hpp>
 #include <model/ScheduleInterval.hpp>
@@ -33,7 +35,10 @@
 #include <model/ScheduleVariableInterval.hpp>
 #include <model/ScheduleVariableInterval_Impl.hpp>
 
+#include <boost/regex.hpp>
+
 #include <sstream>
+
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -55,7 +60,81 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval)
 
   Workspace workspace = ft.translateModel(model);
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Compact).size());
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
+  ASSERT_EQ(1u, objects.size());
+
+  boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
+  boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
+
+  workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval.idf"), true);
+
+  unsigned N = objects[0].numFields();
+  boost::optional<Date> lastDateThrough;
+  bool until24Found = false;
+  bool nextValueShouldBe100 = false;
+  unsigned numUntils = 0;
+  
+  for ( unsigned i = 0; i < N; ++i){
+    boost::optional<std::string> field = objects[0].getString(i, true, false);
+    ASSERT_TRUE(field);
+
+    if (nextValueShouldBe100){
+      double value = boost::lexical_cast<double>(*field);
+      EXPECT_EQ(100.0, value);
+      nextValueShouldBe100 = false;
+    }
+
+    boost::smatch throughMatches;
+    if (boost::regex_search(*field, throughMatches, throughRegex)){
+
+      std::string monthText(throughMatches[1].first, throughMatches[1].second);
+      std::string dayText(throughMatches[2].first, throughMatches[2].second);
+
+      int month = boost::lexical_cast<int>(monthText);
+      int day = boost::lexical_cast<int>(dayText);
+
+      Date date(MonthOfYear(month), day);
+      if (lastDateThrough){
+        // check that this date is greater than last date
+        EXPECT_TRUE(date > *lastDateThrough) << date << " <= " << *lastDateThrough;
+
+        // DLM: this schedule should not wrap around to 1/1, it should end on 12/31 at 24:00
+
+        // check that last date was closed at 24:00
+        EXPECT_TRUE(until24Found);
+      }
+      lastDateThrough = date;
+      until24Found = false;
+    }
+
+    boost::smatch untilMatches;
+    if (boost::regex_search(*field, untilMatches, untilRegex)){
+
+      numUntils += 1;
+
+      std::string hrText(untilMatches[1].first, untilMatches[1].second);
+      std::string minText(untilMatches[2].first, untilMatches[2].second);
+
+      int hr = boost::lexical_cast<int>(hrText);
+      int min = boost::lexical_cast<int>(minText);
+
+      if ((hr == 24) && (min == 0)){
+        until24Found = true;
+      }
+
+      // should see Until: 00:00,
+      EXPECT_FALSE((hr==0) && (min==0));
+
+      if ((lastDateThrough == Date(MonthOfYear(12),31)) && until24Found){
+        nextValueShouldBe100 = true;
+      }
+    }
+  }
+
+  // check last date was closed
+  EXPECT_TRUE(until24Found);
+
+  EXPECT_EQ(8760, numUntils);
 }
 
 

@@ -364,12 +364,10 @@ SET(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
 if (APPLE)  
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
            DESTINATION Pat.app/Contents/share/openstudio/pat
-           PATTERN ".svn" EXCLUDE
          )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
            DESTINATION share/openstudio/pat
-           PATTERN ".svn" EXCLUDE
          ) 
 endif()
 

@@ -1,25 +1,17 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
  
 PROJECT(OpenStudioCore)
 
 ###############################################################################
 # Project version information
-  # We are not currently using the svn revision info because it is proving to be unreliable
-  # svn revision info
-  #find_package(Subversion)
-  #if(Subversion_FOUND)
-  #  Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} OS_REV)
-  #  SET(SUBVERSION_REVISION ${OS_REV_WC_REVISION})
-  #endif(Subversion_FOUND)
-    SET(SUBVERSION_REVISION "Unknown")
-SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # svn revision
+SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
 
 # OpenStudio version
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
 SET(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version 
-SET(ENERGYPLUS_VERSION "8.0")
+SET(ENERGYPLUS_VERSION "8.0" CACHE INTERNAL "EnergyPlus Version")
 
 # Dakota version
 SET(DAKOTA_VERSION "5.3.1")
@@ -73,13 +65,7 @@ OPTION( BUILD_PACKAGE "Build package" OFF )
 OPTION( ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF )
 
 # Build with OpenSSL support
-OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
-
-# Build SimXML
-OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
-
-# Build SDD
-OPTION( BUILD_SDD "Build with SDD support" ON )
+SET( BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections" )
 
 # Build R package
 OPTION( BUILD_R "Build R package" OFF )
@@ -90,7 +76,10 @@ OPTION( BUILD_RUBY_GEM "Build Ruby Gem" OFF )
 IF (BUILD_RUBY_GEM)
   FIND_PROGRAM( GEM NAMES gem )
   IF( NOT GEM )
-    MESSAGE(SEND_ERROR "gem tool not found, cannot build gem")
+    MESSAGE(SEND_ERROR "Gem tool not found, cannot build gem")
+    IF(UNIX AND NOT APPLE)
+      MESSAGE(SEND_ERROR "Please install rubygems using your package management system")
+    ENDIF()    
   ENDIF()
 
   # Build Ruby gem and package up all the libs
@@ -123,7 +112,7 @@ ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=2)
 
 IF(MSVC)
   # Build with Multiple Processes
-  OPTION( BUILD_WITH_MULTIPLE_PROCESSES "/MP compiler flag for full processor utilization" ON )
+  SET( BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization" )
   MARK_AS_ADVANCED( BUILD_WITH_MULTIPLE_PROCESSES )
 ENDIF()
 
@@ -153,11 +142,9 @@ SET( project_directories
   openstudio_lib
   openstudio_app
   pat_app
+  sdd
 )
 
-IF( BUILD_SDD )
-  LIST(APPEND project_directories sdd)
-ENDIF( BUILD_SDD ) 
 
 ###############################################################################
 
@@ -175,7 +162,7 @@ SET ( LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBR
 INCLUDE(ProjectMacros.cmake)
 
 # Search for modules in the root dir first to override cmake ones 
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # Use CTest
 IF( BUILD_TESTING )
@@ -239,8 +226,7 @@ IF(MSVC)
   
   # ignore warnings about the stl being insecure
   ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
-  # only build eefg dll on msvc
-  LIST(APPEND project_directories eefg)
+
 ENDIF(MSVC)
 ###############################################################################
 
@@ -255,7 +241,7 @@ ENDIF()
 
 
 ###############################################################################
-# Conditionally required dependencies 
+# Dependencies 
 
 # EnergyPlus
 #IF( BUILD_TESTING OR BUILD_PACKAGE)
@@ -266,32 +252,6 @@ ENDIF()
     ENERGYPLUS_WEATHER_DIR
   )
 #ENDIF( BUILD_TESTING OR BUILD_PACKAGE )
-
-# OpenSSL
-IF( ${BUILD_WITH_OPENSSL} )
-
-  # OpenSSL / libssh support
-  FIND_PACKAGE( OpenSSL )
-
-  IF( NOT ${OPENSSL_FOUND} )
-    MESSAGE(SEND_ERROR "OpenSSL could not be found, building without ssh support for BCL and remote jobs")
-    IF ( WIN32 )
-      MESSAGE(SEND_ERROR "You can install OpenSSL for windows by visiting http://www.slproweb.com/products/Win32OpenSSL.html and installing the latest recommended full installation package")
-    ELSE()
-      MESSAGE(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
-    ENDIF()
-  ENDIF()
-
-  #enable libssh
-  ADD_DEFINITIONS(-DLIBSSH_STATIC)
-
-  # add sub directory
-  ADD_SUBDIRECTORY( src/libssh )
-  INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
-
-ELSE()
-  MESSAGE(WARNING "Building without ssh support for BCL and remote jobs")
-ENDIF()
 
 # Ruby
 FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH )
@@ -323,6 +283,40 @@ ENDIF()
 
 MESSAGE(STATUS "Ruby module code installing to: ${RUBY_MODULE_DIR}")
 MESSAGE(STATUS "Ruby module arch library installing to: ${RUBY_MODULE_ARCH_DIR}")
+
+
+# OpenSSL / libssh support
+IF( BUILD_WITH_OPENSSL )
+
+  FIND_PACKAGE( OpenSSL )
+  IF( NOT ${OPENSSL_FOUND} )
+    MESSAGE(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
+    IF ( WIN32 )
+      MESSAGE(SEND_ERROR "You can install OpenSSL for windows by visiting http://www.slproweb.com/products/Win32OpenSSL.html and installing the latest recommended full installation package")
+    ELSE()
+      MESSAGE(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+    ENDIF()
+  ELSEIF(WIN32)
+    SET(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/libeay32.dll")
+    SET(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/ssleay32.dll")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
+    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/MinSizeRel/")
+    INSTALL(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
+    INSTALL(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
+  ENDIF()
+  
+  #enable libssh
+  ADD_DEFINITIONS(-DLIBSSH_STATIC)
+  
+  # add sub directory
+  ADD_SUBDIRECTORY( src/libssh )
+  INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
+      
+ENDIF()
+
+
 
 FIND_PACKAGE( SWIG 1.3.40 REQUIRED )
 MARK_AS_ADVANCED(  
@@ -585,7 +579,7 @@ ADD_DEFINITIONS( -DSQLITE_THREADSAFE=1 ) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
-FIND_PACKAGE (Qt4 4.6.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns REQUIRED)
+FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns REQUIRED)
 
 # Newer versions of cmake have a sqlite plugin finder built into the Qt package finder.  
 # This is for older versions.  Sometime before cmake version 2.8.7.
@@ -923,7 +917,9 @@ IF (NOT UNIX)
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/ruby-1.8.6-msvc.zip"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install"
     RESULT_VARIABLE rv)
-    
+  
+  file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/ruby-install/ruby/bin")
+  
   install( DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install" DESTINATION . )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
@@ -957,5 +953,3 @@ IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
   ENDIF()
 
 ENDIF()
-
-

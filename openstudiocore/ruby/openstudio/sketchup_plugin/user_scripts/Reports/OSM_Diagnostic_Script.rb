@@ -278,7 +278,7 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
       end
 
       n2 = all_surfaces.size # updated with sub-surfaces added at the beginning
-
+      surfaces_to_remove = Hash.new
       (0...n2).each do |i|
         (i+1...n2).each do |j|
 
@@ -290,13 +290,14 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
             puts "*(error) '#{p1.name.to_s}' has similar geometry to '#{p2.name.to_s}' in the surface group named '#{planar_surface_group.name.to_s}'"
             if remove_errors
               puts "**(removing object) '#{p1.name.to_s}'" # remove p1 vs. p2 to avoid failure if three or more similar surfaces in a group
-              remove = p1.remove
+              # don't remove here, just mark to remove
+              surfaces_to_remove[p1.handle.to_s] = p1
               savediagnostic = true
             end
           end
-
         end
       end
+      surfaces_to_remove.each_pair {|handle, surface| surface.remove}
 
     end
     if switch == 0 then puts "none" end

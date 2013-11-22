@@ -434,6 +434,19 @@ void VariableListController::moveUp(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
+    if (project->analysis().dataPoints().size() > 1){
+      // warn user that this will blow away their data points
+      QMessageBox::StandardButton test = QMessageBox::question( 
+          m_app->mainWidget(), 
+          "Rearrange Measure Group?", 
+          "Rearranging a measure group will remove existing design alternatives and save your project, do you want to proceed?", 
+          QMessageBox::Yes |  QMessageBox::No, 
+          QMessageBox::No );
+      if (test == QMessageBox::No){
+        return;
+      }
+    }
+
     // HERE - Logic seems questionable. Also check dirty flags.
     std::vector<analysis::MeasureGroup> vars = variables();
 
@@ -471,6 +484,19 @@ void VariableListController::moveDown(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
+    if (project->analysis().dataPoints().size() > 1){
+      // warn user that this will blow away their data points
+      QMessageBox::StandardButton test = QMessageBox::question( 
+          m_app->mainWidget(), 
+          "Rearrange Measure Group?", 
+          "Rearranging a measure group will remove existing design alternatives and save your project, do you want to proceed?", 
+          QMessageBox::Yes |  QMessageBox::No, 
+          QMessageBox::No );
+      if (test == QMessageBox::No){
+        return;
+      }
+    }
+
     std::vector<analysis::MeasureGroup> vars = variables();
 
     int i = 0;
