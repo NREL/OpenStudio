@@ -1731,13 +1731,13 @@ namespace detail {
     QVariantList variablesList;
 
     // create workflow list
-    Q_FOREACH(const WorkflowStep& step, workflow()) {
+    BOOST_FOREACH(const WorkflowStep& step, workflow()) {
 
       if (compoundRubyMeasure) {
         // see if chain is still going
         if (step.isInputVariable()) {
           if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
-            if (rcv->measure() == compoundRubyMeasure.get()) {
+            if (rcv->measure().uuidAndVersionEqual(compoundRubyMeasure.get())) {
               // still going -- add this variable to list
               QVariantMap variableMap = step.toVariant().toMap();
               variableMap["variable_index"] = variableIndex;
@@ -1954,7 +1954,7 @@ namespace detail {
         // see if chain is still going
         if (step.isInputVariable()) {
           if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
-            if (rcv->measure() == compoundRubyMeasure.get()) {
+            if (rcv->measure().uuidAndVersionEqual(compoundRubyMeasure.get())) {
               continue;
             }
           }
@@ -2038,7 +2038,7 @@ namespace detail {
         rcv = step.inputVariable().optionalCast<RubyContinuousVariable>();
         nrcv = nextStep->inputVariable().optionalCast<RubyContinuousVariable>();
         if (rcv && nrcv) {
-          if (rcv->measure() == nrcv->measure()) {
+          if (rcv->measure().uuidAndVersionEqual(nrcv->measure())) {
             return true;
           }
         }
