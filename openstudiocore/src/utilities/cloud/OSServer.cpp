@@ -1616,7 +1616,7 @@ namespace openstudio{
 
     void OSServer_Impl::logNetworkReply(const std::string& methodName) const
     {
-      bool doLog = true;
+      bool doLog = false;
 
       if (doLog && m_networkReply){
         LogLevel level = Warn;
