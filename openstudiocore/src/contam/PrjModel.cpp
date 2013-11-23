@@ -408,5 +408,17 @@ int CxModel::airflowElementNrByName(std::string name) const
   return 0;
 }
 
+bool CxModel::setSteadyWeather(double windSpeed, double windDirection)
+{
+  if(windSpeed < 0)
+  {
+    windSpeed = -windSpeed; // Maybe should return false in this case?
+  }
+  // Is a negative wind direction allowed? Will have to check
+  d->rc.ssWeather().setWindspd(QString().sprintf("%g",windSpeed).toStdString());
+  d->rc.ssWeather().setWinddir(QString().sprintf("%g",windDirection).toStdString());
+  return true;
+}
+
 } // contam
 } // openstudio

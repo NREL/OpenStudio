@@ -1137,19 +1137,6 @@ boost::optional<EpwFile> ForwardTranslator::translateEpw(openstudio::path epwpat
   return epw;
 }
 
-bool ForwardTranslator::setSteadyWeather(contam::CxModel cxModel, double windSpeed, double windDirection)
-{
-  if(windSpeed < 0)
-  {
-    LOG(Warn, "Steady state wind speed is negative, using absolute value.");
-    windSpeed = -windSpeed; // Maybe should return false in this case?
-  }
-  // Is a negative wind direction allowed? Will have to check
-  cxModel.rc().ssWeather().setWindspd(QString().sprintf("%g",windSpeed).toStdString());
-  cxModel.rc().ssWeather().setWinddir(QString().sprintf("%g",windDirection).toStdString());
-  return true;
-}
-
 static double laminarCoefficient(double Ct, double x)
 {
   // Ct  turbulent flow coefficient

@@ -101,7 +101,6 @@ public:
   boost::optional<DateTime> endDateTime() const;
 
   // We may need more functions like this that modify the CONTAM model
-  bool setSteadyWeather(contam::CxModel cxModel,double windSpeed, double windDirection);
   int addNewAirflowElement(contam::CxModel cxModel,std::string name,double flow,double n=0.65,double deltaP=75.0);
 
   // Write control files

@@ -79,6 +79,7 @@ public:
 
   std::vector<std::vector<int> > zoneExteriorFlowPaths();
   std::vector<TimeSeries> zoneInfiltration(SimFile *sim);
+  bool setSteadyWeather(double windSpeed, double windDirection);
 
   RunControl rc() const
   {
