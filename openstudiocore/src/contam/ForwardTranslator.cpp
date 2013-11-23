@@ -1,21 +1,21 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
- *  All rights reserved.
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- **********************************************************************/
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
 
 #include <contam/ForwardTranslator.hpp>
 #include <contam/WindPressure.hpp>
@@ -63,8 +63,15 @@ namespace contam {
 
 CvFile::CvFile()
 {
+  clear();
+}
+
+void CvFile::clear()
+{
   m_start = Date(MonthOfYear::Jan,1);
   m_end = Date(MonthOfYear::Dec,31);
+  m_names = std::vector<std::string>();
+  m_series = std::vector<TimeSeries>();
 }
 
 void CvFile::addTimeSeries(std::string name, TimeSeries series)
@@ -88,7 +95,7 @@ bool CvFile::write(openstudio::path filepath)
     textStream << "ContinuousValuesFile ContamW 2.1\n";
     textStream << "CVF file from E+ results\n";
     textStream << month(m_start.monthOfYear()) << '/' << m_start.dayOfMonth() << '\t'
-               <<  month(m_end.monthOfYear())  << '/' <<  m_end.dayOfMonth()  << '\n';
+      <<  month(m_end.monthOfYear())  << '/' <<  m_end.dayOfMonth()  << '\n';
     textStream << m_names.size() << '\n';
     for(unsigned int i=0;i<m_names.size();i++)
     {
@@ -150,102 +157,6 @@ ForwardTranslator::ForwardTranslator()
   clear();
 }
 
-//void ForwardTranslator::translate(const openstudio::model::Model& model, bool translateHVAC, ProgressBar* progressBar)
-//{
-  //read(std::string(":/templates/template.prj"));
-  //if(valid())
-  //{
-    // The template is a legal PRJ file, so it has one level. Not for long.
-   // setLevels(std::vector<Level>());
- // }
-  /*
-  m_model = model;
-  m_ratioOverride=false;
-  m_returnSupplyRatio=1.0;
-  m_progressBar = progressBar;
-  init();
-  setAirtightnessLevel("Average");
-  translate(translateHVAC);
-  */
-//}
-
-/*
-ForwardTranslator::ForwardTranslator(const openstudio::model::Model& model, std::string leakageDescriptor, bool translateHVAC,
-  ProgressBar* progressBar)
-{
-  m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
-  m_model = model;
-  m_ratioOverride=false;
-  m_returnSupplyRatio=1.0;
-  m_progressBar = progressBar;
-  init();
-  setAirtightnessLevel(leakageDescriptor);
-  translate(translateHVAC);
-}
-
-ForwardTranslator::ForwardTranslator(const openstudio::model::Model& model, double flow, double n, double deltaP, 
-  bool translateHVAC, ProgressBar* progressBar)
-{
-  m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
-  m_model = model;
-  m_ratioOverride=false;
-  m_returnSupplyRatio=1.0;
-  m_progressBar = progressBar;
-  init();
-  setExteriorFlowRate(flow,n,deltaP);
-  translate(translateHVAC);
-}
-
-ForwardTranslator::ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, bool translateHVAC, 
-  ProgressBar* progressBar)
-{
-  m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
-  m_model = model;
-  m_ratioOverride=true;
-  m_returnSupplyRatio=returnSupplyRatio;
-  m_progressBar = progressBar;
-  init();
-  setAirtightnessLevel("Average");
-  translate(translateHVAC);
-}
-
-ForwardTranslator::ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, 
-  std::string leakageDescriptor, bool translateHVAC, ProgressBar* progressBar)
-{
-  m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
-  m_model = model;
-  m_ratioOverride=true;
-  m_returnSupplyRatio=returnSupplyRatio;
-  m_progressBar = progressBar;
-  init();
-  setAirtightnessLevel(leakageDescriptor);
-  translate(translateHVAC);
-}
-
-ForwardTranslator::ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, double flow, double n,
-  double deltaP, bool translateHVAC, ProgressBar* progressBar)
-{
-  m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
-  m_model = model;
-  m_ratioOverride=true;
-  m_returnSupplyRatio=returnSupplyRatio;
-  m_progressBar = progressBar;
-  init();
-  setExteriorFlowRate(flow,n,deltaP);
-  translate(translateHVAC);
-}
-*/
-
 void ForwardTranslator::clear()
 {
   m_afeMap = std::map<std::string,int>();
@@ -259,7 +170,8 @@ void ForwardTranslator::clear()
   m_ratioOverride = false;
   m_startDateTime = boost::optional<DateTime>();
   m_endDateTime = boost::optional<DateTime>();
-  ProgressBar* m_progressBar = 0;
+  m_translateHVAC = true;
+  m_progressBar = 0;
 }
 
 int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
@@ -333,135 +245,169 @@ Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char
   return Handle();
 }
 
+// Getters and setters
+double ForwardTranslator::returnSupplyRatio() const
+{
+  return m_returnSupplyRatio;
+}
+void ForwardTranslator::setReturnSupplyRatio(double returnSupplyRatio)
+{
+  m_returnSupplyRatio = fabs(returnSupplyRatio);
+}
+
+bool ForwardTranslator::ratioOverride() const
+{
+  return m_ratioOverride;
+}
+void ForwardTranslator::setRatioOverride(bool ratioOverride)
+{
+  m_ratioOverride = ratioOverride;
+}
+
+bool ForwardTranslator::translateHVAC() const
+{
+  return m_translateHVAC;
+}
+void ForwardTranslator::setTranslateHVAC(bool translateHVAC)
+{
+  m_translateHVAC = translateHVAC;
+}
+
+boost::optional<DateTime> ForwardTranslator::startDateTime() const
+{
+  return m_startDateTime;
+}
+
+boost::optional<DateTime> ForwardTranslator::endDateTime() const
+{
+  return m_endDateTime;
+}
+
 boost::optional<std::string> ForwardTranslator::airtightnessLevel() const
 {
   return m_leakageDescriptor;
 }
 
-bool ForwardTranslator::setAirtightnessLevel(std::string level)
+void ForwardTranslator::setAirtightnessLevel(std::string level)
+{
+  m_leakageDescriptor = boost::optional<std::string>(level);
+  m_flow = boost::optional<double>();
+  m_n = boost::optional<double>();
+  m_deltaP = boost::optional<double>();
+}
+
+bool ForwardTranslator::applyAirtightnessLevel(contam::CxModel cxModel)
 {
   // For this to work, the "standard" names must be in the PRJ data
-  if(m_afeMap.size())
+  if(!m_leakageDescriptor)
   {
-    // Set the leakage elements after initial translation, not yet implemented
-    LOG(Warn,"Setting the leakage elements after initial translation is not yet implemented");
     return false;
   }
-  else
+  std::map<std::string,int> afeMap;
+  QList<std::string> grade, wallExt, wallInt, floor, roof;
+  grade << "Leaky" << "Average" << "Tight";
+  wallExt << "ExtWallLeaky" << "ExtWallAvg" << "ExtWallTight";
+  wallInt << "IntWallLeaky" << "IntWallAvg" << "IntWallTight";
+  floor << "FloorLeaky" << "FloorAvg" << "FloorTight";
+  roof << "RoofLeaky" << "RoofAvg" << "RoofTight";
+  int index = grade.indexOf(m_leakageDescriptor.get());
+  if(index == -1) // Default to average, unknown leakage level
   {
-    std::map<std::string,int> afeMap;
-    QList<std::string> grade, wallExt, wallInt, floor, roof;
-    grade << "Leaky" << "Average" << "Tight";
-    wallExt << "ExtWallLeaky" << "ExtWallAvg" << "ExtWallTight";
-    wallInt << "IntWallLeaky" << "IntWallAvg" << "IntWallTight";
-    floor << "FloorLeaky" << "FloorAvg" << "FloorTight";
-    roof << "RoofLeaky" << "RoofAvg" << "RoofTight";
-    int index = grade.indexOf(level);
-    if(index == -1) // Default to average, unknown leakage level
-    {
-      LOG(Warn, "Unknown airtightness level '" << level << "', defaulting to 'Average'");
-      index = 1;
-    }
-    int nr;
-    // Exterior walls
-    nr = airflowElementNrByName(wallExt[index]);
-    if(!nr)
-    {
-      return false;
-    }
-    afeMap["exterior"] = nr;
-    // Interior walls
-    nr = airflowElementNrByName(wallInt[index]);
-    if(!nr)
-    {
-      return false;
-    }
-    afeMap["interior"] =  nr;
-    // Floors
-    nr = airflowElementNrByName(floor[index]);
-    if(!nr)
-    {
-      return false;
-    }
-    afeMap["floor"] = nr;
-    // Roof
-    nr = airflowElementNrByName(roof[index]);
-    if(!nr)
-    {
-      return false;
-    }
-    afeMap["roof"] = nr;
-    m_afeMap = afeMap;
-    m_leakageDescriptor = boost::optional<std::string>(level);
+    LOG(Warn, "Unknown airtightness level '" << m_leakageDescriptor.get() << "', defaulting to 'Average'");
+    index = 1;
   }
+  int nr;
+  // Exterior walls
+  nr = cxModel.airflowElementNrByName(wallExt[index]);
+  if(!nr)
+  {
+    return false;
+  }
+  afeMap["exterior"] = nr;
+  // Interior walls
+  nr = cxModel.airflowElementNrByName(wallInt[index]);
+  if(!nr)
+  {
+    return false;
+  }
+  afeMap["interior"] =  nr;
+  // Floors
+  nr = cxModel.airflowElementNrByName(floor[index]);
+  if(!nr)
+  {
+    return false;
+  }
+  afeMap["floor"] = nr;
+  // Roof
+  nr = cxModel.airflowElementNrByName(roof[index]);
+  if(!nr)
+  {
+    return false;
+  }
+  afeMap["roof"] = nr;
+  m_afeMap = afeMap;
   return true;
 }
 
-double ForwardTranslator::exteriorFlowRate() const
+boost::optional<double> ForwardTranslator::exteriorFlowRate() const
 {
-  std::vector<PlrTest1> plrt1s = getPlrTest1();
-  BOOST_FOREACH(PlrTest1 plr, plrt1s)
-  {
-    if(plr.name() == "exterior")
-    {
-      return QString().fromStdString(plr.Flow()).toDouble();
-    }
-  }
-  return 0;
+  return m_flow;
 }
 
-double ForwardTranslator::exteriorExponent() const
+boost::optional<double> ForwardTranslator::exteriorExponent() const
 {
-  std::vector<PlrTest1> plrt1s = getPlrTest1();
-  BOOST_FOREACH(PlrTest1 plr, plrt1s)
-  {
-    if(plr.name() == "exterior")
-    {
-      return QString().fromStdString(plr.expt()).toDouble();
-    }
-  }
-  return 0;
+  return m_n;
 }
 
-double ForwardTranslator::exteriorDeltaP() const
+boost::optional<double> ForwardTranslator::exteriorDeltaP() const
 {
-  std::vector<PlrTest1> plrt1s = getPlrTest1();
-  BOOST_FOREACH(PlrTest1 plr, plrt1s)
-  {
-    if(plr.name() == "exterior")
-    {
-      return QString().fromStdString(plr.dP()).toDouble();
-    }
-  }
-  return 0;
+  return m_deltaP;
 }
 
-bool ForwardTranslator::setExteriorFlowRate(double flow,double n,double deltaP)
+bool ForwardTranslator::setExteriorFlowRate(double flow, double n, double deltaP)
 {
-  if(m_afeMap.size())
+  if(flow > 0 && m_n > 0 && m_deltaP > 0)
   {
-    // Set the leakage elements after initial translation, not yet implemented
-    LOG(Warn,"Setting the leakage elements after initial translation is not yet implemented");
-    return false;
+    m_flow = boost::optional<double>(flow);
+    m_n = boost::optional<double>(n);
+    m_deltaP = boost::optional<double>(deltaP);
+    m_leakageDescriptor = boost::optional<std::string>();
+    return true;
   }
-  else
+  return false;
+}
+
+bool ForwardTranslator::applyExteriorFlowRate(contam::CxModel cxModel)
+{
+  if(m_flow && m_n && m_deltaP)
   {
     std::map<std::string,int> afeMap;
-    afeMap["exterior"] = addNewAirflowElement("CustomExterior",flow,n,deltaP);
-    afeMap["roof"] = addNewAirflowElement("CustomRoof",flow,n,deltaP);
-    afeMap["interior"] = addNewAirflowElement("CustomInterior",2*flow,n,deltaP);
-    afeMap["floor"] = addNewAirflowElement("CustomFloor",2*flow,n,deltaP);
+    afeMap["exterior"] = addNewAirflowElement(cxModel,"CustomExterior",m_flow.get(),m_n.get(),m_deltaP.get());
+    afeMap["roof"] = addNewAirflowElement(cxModel,"CustomRoof",m_flow.get(),m_n.get(),m_deltaP.get());
+    afeMap["interior"] = addNewAirflowElement(cxModel,"CustomInterior",2*m_flow.get(),m_n.get(),m_deltaP.get());
+    afeMap["floor"] = addNewAirflowElement(cxModel,"CustomFloor",2*m_flow.get(),m_n.get(),m_deltaP.get());
     m_afeMap = afeMap;
     m_leakageDescriptor = boost::optional<std::string>();
+    return true;
   }
-  return true;
+  return false;
 }
 
-bool ForwardTranslator::toPrj(const openstudio::path& path)
+bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
+  bool translateHVAC, std::string leakageDescriptor, ProgressBar* progressBar)
 {
-  boost::optional<std::string> output = this->toString();
-  if(output)
+  ForwardTranslator translator;
+  translator.setTranslateHVAC(translateHVAC);
+  translator.setAirtightnessLevel(leakageDescriptor);
+
+  boost::optional<contam::CxModel> cxModel = translator.translate(model);
+  if(cxModel)
   {
+    boost::optional<std::string> output = cxModel->toString();
+    if (!output)
+    {
+      return false;
+    }
     QFile file(toQString(path));
     if(file.open(QFile::WriteOnly))
     {
@@ -470,28 +416,6 @@ bool ForwardTranslator::toPrj(const openstudio::path& path)
       file.close();
       return true;
     }
-  }
-  return false;
-}
-
-bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
-  bool translateHVAC, std::string leakageDescriptor, ProgressBar* progressBar)
-{
-  ForwardTranslator translator; //model,leakageDescriptor,translateHVAC,progressBar);
-
-  boost::optional<std::string> output;
-  output = translator.toString();
-  if (!output)
-  {
-    return false;
-  }
-  QFile file(toQString(path));
-  if(file.open(QFile::WriteOnly))
-  {
-    QTextStream textStream(&file);
-    textStream << *output;
-    file.close();
-    return true;
   }
   return false;
 }
@@ -505,7 +429,7 @@ bool compareElevation(openstudio::model::BuildingStory a, openstudio::model::Bui
 
 // This function is altogether too long and needs to be broken up into smaller functions.
 // This is particularly true for the HVAC translation.
-boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model, bool translateHVAC)
+boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model)
 {
   m_logSink.setThreadId(QThread::currentThread());
   m_logSink.resetStringStream();
@@ -517,7 +441,25 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
     return boost::optional<contam::CxModel>();
   }
   // The template is a legal PRJ file, so it has one level. Not for long.
-  setLevels(std::vector<Level>());
+  cxModel.setLevels(std::vector<Level>());
+
+  // Do some setup work
+  if(m_leakageDescriptor)
+  {
+    if(!applyAirtightnessLevel(cxModel))
+    {
+      LOG(Error,"Application of airtightness level failed.");
+      return boost::optional<contam::CxModel>();
+    }
+  }
+  else
+  {
+    if(!applyExteriorFlowRate(cxModel))
+    {
+      LOG(Error,"Application of exterior flow rate failed.");
+      return boost::optional<contam::CxModel>();
+    }
+  }
 
   QString output;
   int nr;
@@ -731,7 +673,7 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
         }
         continue;
       }
-      contam::Zone zone = zones()[zoneNr-1];
+      contam::Zone zone = cxModel.zones()[zoneNr-1];
       // Get the surface area - will need to do more work here later if large openings are present
       double area = surface.grossArea();
       std::string type = surface.surfaceType();
@@ -742,7 +684,7 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
         averageZ += point.z();
       }
       // Now set the path info
-      path.setRelHt(QString().sprintf("%g",averageZ / numVertices - QString().fromStdString(levels()[zone.pl()-1].refht()).toDouble()).toStdString());
+      path.setRelHt(QString().sprintf("%g",averageZ / numVertices - QString().fromStdString(cxModel.levels()[zone.pl()-1].refht()).toDouble()).toStdString());
       path.setPld(zone.pl());
       path.setMult(QString().sprintf("%g",area).toStdString());
       // Now for the type specific info
@@ -817,7 +759,7 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
     }
   }
 
-  if(translateHVAC)
+  if(m_translateHVAC)
   {
     // Generate air handling systems
     std::vector<openstudio::model::AirLoopHVAC> systems = model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>();
@@ -846,7 +788,7 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
       ahs.setName(QString("AHS_%1").arg(nr).toStdString());
       // Create supply and return zones
       openstudio::contam::Zone rz;
-      rz.setNr(zones().size()+1);
+      rz.setNr(cxModel.zones().size()+1);
       rz.setPl(1);
       rz.setT0(QString("293.15").toStdString());
       rz.setSystem(true);
@@ -873,7 +815,7 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
         int zoneNr = tableLookup(m_zoneMap,thermalZone.handle(),"zoneMap");
         // Supply path
         openstudio::contam::Path sp;
-        sp.setNr(paths().size()+1);
+        sp.setNr(cxModel.paths().size()+1);
         sp.setPld(1);
         sp.setPzn(ahs.zone_s());
         sp.setPzm(zoneNr);
@@ -891,7 +833,7 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
         m_pathMap[(thermalZone.name().get()+" return")] = rp.nr();
         // Add the paths to the path list
         cxModel.addPath(sp);
-        addPath(rp);
+        cxModel.addPath(rp);
       }
       cxModel.addAhs(ahs);
       if (m_progressBar)
@@ -904,21 +846,21 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
     {
       m_progressBar->setWindowTitle(openstudio::toString("Connecting AHS to zones"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(ahs().size());
+      m_progressBar->setMaximum(cxModel.ahs().size());
       m_progressBar->setValue(0);
     }
     // Now loop back through the AHS list and connect the supply and return zones together
-    for(unsigned int i=0;i<ahs().size();i++)
+    for(unsigned int i=0;i<cxModel.ahs().size();i++)
     {
       std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
       // Recirculation path
       openstudio::contam::Path recirc;
-      recirc.setNr(paths().size()+1);
+      recirc.setNr(cxModel.paths().size()+1);
       recirc.setPld(1);
       // Set the OA fraction schedule here
       //recirc.ps = ?
-      recirc.setPzn(ahs()[i].zone_r());
-      recirc.setPzm(ahs()[i].zone_s());
+      recirc.setPzn(cxModel.ahs()[i].zone_r());
+      recirc.setPzm(cxModel.ahs()[i].zone_s());
       recirc.setRecirculation(true);
       m_pathMap[loopName + " recirculation"] = recirc.nr();
       // Outside air path
@@ -926,14 +868,14 @@ boost::optional<contam::CxModel> ForwardTranslator::translate(model::Model model
       oa.setNr(recirc.nr()+1);
       oa.setPld(1);
       oa.setPzn(-1);
-      oa.setPzm(ahs()[i].zone_s());
+      oa.setPzm(cxModel.ahs()[i].zone_s());
       oa.setOutsideAir(true);
       m_pathMap[loopName + " oa"] = oa.nr();
       // Exhaust path;
       openstudio::contam::Path exhaust;
       exhaust.setNr(oa.nr()+1);
       exhaust.setPld(1);
-      exhaust.setPzn(ahs()[i].zone_r());
+      exhaust.setPzn(cxModel.ahs()[i].zone_r());
       exhaust.setPzm(-1);
       exhaust.setExhaust(true);
       m_pathMap[loopName + " exhaust"] = exhaust.nr();
@@ -1195,89 +1137,7 @@ boost::optional<EpwFile> ForwardTranslator::translateEpw(openstudio::path epwpat
   return epw;
 }
 
-/*
-boost::optional<std::vector<TimeSeries> > ForwardTranslator::zoneInfiltration(openstudio::path simPath)
-{
-  std::vector<TimeSeries> results;
-
-  // Collect results - eventually this should use the SQLite results
-  openstudio::contam::sim::LinkFlow lfr;
-  openstudio::path lfrPath = simPath.replace_extension(openstudio::toPath("lfr").string());
-  if(!lfr.read(lfrPath))
-  {
-    LOG(Error,"Failed to read link flow results.");
-    return boost::optional<std::vector<TimeSeries> >();
-  }
-
-  // Do some error checking
-  std::vector<std::vector<double> > flow0 = lfr.F0();
-  if(flow0.size() != paths().size())
-  {
-    LOG(Error,"Mismatch between lfr data and model path count.");
-    return boost::optional<std::vector<TimeSeries> >();
-  }
-  unsigned int ntimes = flow0[0].size();
-  for(unsigned int i=1;i<flow0.size();i++)
-  {
-    if(flow0[i].size() != ntimes)
-    {
-      LOG(Error,"Missing or additional data for path " << i+1 << ".");
-      return boost::optional<std::vector<TimeSeries> >();
-    }
-  }
-
-  // Collect a vector of the exterior paths
-  std::vector<openstudio::contam::Path> extPaths;
-  BOOST_FOREACH(openstudio::contam::Path path, paths())
-  {
-    if(path.flags() == 0 || path.flags() == 1) // These should be it... hopefully... maybe collect this during translation?
-    {
-      if(path.pzm() == -1 || path.pzn() == -1)
-      {
-        extPaths.push_back(path);
-      }
-    }
-  }
-
-  std::vector<DateTime> dateTimes = lfr.dateTimes();
-
-  // Initialize storage
-  std::vector<Vector> values;
-  for(unsigned int j=0; j<zones().size(); j++)
-  {
-    values.push_back(Vector(ntimes));
-  }
-
-  // Collect up infiltration on a zone-by-zone basis
-  for(unsigned int i=0; i<ntimes; i++)
-  {
-    for(unsigned int j=0; j<paths().size(); j++)
-    {
-      double flow = flow0[j][i];
-      int pzn = paths()[j].pzn();
-      int pzm = paths()[j].pzm();
-      if(pzn == -1 && flow < 0)
-      {
-        values[pzm-1][i]-= flow;
-      }
-      else if(pzm == -1 && flow > 0)
-      {
-        values[pzn-1][i] += flow;
-      }
-    }
-  }
-
-  // Create TimeSeries objects
-  for(unsigned int j=0; j<zones().size(); j++)
-  {
-    results.push_back(TimeSeries(dateTimes,values[j],"kg/s"));
-  }
-
-  return boost::optional<std::vector<TimeSeries> >(results);
-}
-*/
-
-bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
+bool ForwardTranslator::setSteadyWeather(contam::CxModel cxModel, double windSpeed, double windDirection)
 {
   if(windSpeed < 0)
   {
@@ -1285,8 +1145,8 @@ bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
     windSpeed = -windSpeed; // Maybe should return false in this case?
   }
   // Is a negative wind direction allowed? Will have to check
-  rc().ssWeather().setWindspd(QString().sprintf("%g",windSpeed).toStdString());
-  rc().ssWeather().setWinddir(QString().sprintf("%g",windDirection).toStdString());
+  cxModel.rc().ssWeather().setWindspd(QString().sprintf("%g",windSpeed).toStdString());
+  cxModel.rc().ssWeather().setWinddir(QString().sprintf("%g",windDirection).toStdString());
   return true;
 }
 
@@ -1322,7 +1182,7 @@ static double laminarCoefficient(double Ct, double x)
 
 }
 
-int ForwardTranslator::addNewAirflowElement(std::string name, double flow,double n,double deltaP)
+int ForwardTranslator::addNewAirflowElement(contam::CxModel cxModel,std::string name, double flow,double n,double deltaP)
 {
   // flow - volume flow rate in m^3/h
   // deltaP - pressure difference in Pa
@@ -1330,7 +1190,7 @@ int ForwardTranslator::addNewAirflowElement(std::string name, double flow,double
 
   double RHOAIR = 1.20410;    // density of standard air
   double SRHO = 1.097315;     // sqrt( RHOAIR )
-    
+
   double F = RHOAIR*flow/3600.0;  // mass flow in kg/s
 
   double Ct = F/(SRHO*std::pow(deltaP,n));
@@ -1347,7 +1207,7 @@ int ForwardTranslator::addNewAirflowElement(std::string name, double flow,double
   // Create a 1-point test element with display units of m^3/h
   PlrTest1 afe(0, 0, name, " ", lam, turb, expt, dP, Flow, u_P, u_F);
 
-  addAirflowElement(afe);
+  cxModel.addAirflowElement(afe);
 
   return afe.nr();
 }
