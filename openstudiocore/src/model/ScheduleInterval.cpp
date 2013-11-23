@@ -101,11 +101,13 @@ boost::optional<ScheduleInterval> ScheduleInterval::fromTimeSeries(const openstu
   if (timeSeries.intervalLength()){
     result = ScheduleFixedInterval(model);
     if(!result->setTimeSeries(timeSeries)){
+      result->remove();
       return boost::optional<ScheduleInterval>();
     }
   }else{
     result = ScheduleVariableInterval(model);
     if(!result->setTimeSeries(timeSeries)){
+      result->remove();
       return boost::optional<ScheduleInterval>();
     }
   }
