@@ -34,9 +34,6 @@ namespace detail {
   /** FanOnOff_Impl is a StraightComponent_Impl that is the implementation class for FanOnOff.*/
   class MODEL_API FanOnOff_Impl : public StraightComponent_Impl 
   {
-
-    Q_OBJECT
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -73,6 +70,10 @@ namespace detail {
     virtual unsigned inletPort();
 
     virtual unsigned outletPort();
+
+    virtual std::vector<ModelObject> children() const;
+
+    virtual bool addToNode(Node & node);
 
     //@}
     /** @name Getters and Setters */

@@ -19,19 +19,16 @@
 
 #include <model/FanOnOff.hpp>
 #include <model/FanOnOff_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/Model.hpp>
+#include <model/Loop.hpp>
 #include <model/StraightComponent.hpp>
 #include <model/StraightComponent_Impl.hpp>
 #include <model/Curve.hpp>
 #include <model/Curve_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
 #include <model/CurveCubic.hpp>
 #include <model/CurveCubic_Impl.hpp>
 #include <model/CurveExponent.hpp>
@@ -90,7 +87,17 @@ namespace detail {
     return StraightComponent_Impl::remove();
   }
 
-
+  std::vector<ModelObject> FanOnOff_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if (boost::optional<Curve> intermediate = fanPowerRatioFunctionofSpeedRatioCurve()) {
+      result.push_back(*intermediate);
+    }
+    if (boost::optional<Curve> intermediate = fanEfficiencyRatioFunctionofSpeedRatioCurve()) {
+      result.push_back(*intermediate);
+    }
+    return result;
+  }
 
   // Inlet and Outlet nodes
 
@@ -311,67 +318,35 @@ namespace detail {
 
   Curve FanOnOff_Impl::fanPowerRatioFunctionofSpeedRatioCurve() const
   {
-    boost::optional<Curve> curve;
-
-    curve = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Fan_OnOffFields::FanPowerRatioFunctionofSpeedRatioCurveName);
-
+    boost::optional<Curve> curve = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Fan_OnOffFields::FanPowerRatioFunctionofSpeedRatioCurveName);
     OS_ASSERT(curve);
-
     return curve.get();
   }
 
   bool FanOnOff_Impl::setFanPowerRatioFunctionofSpeedRatioCurve(const Curve& curve )
   {
-    bool accepted = false;
-
     if( model() != curve.model() )
     {
-      return accepted;
+      return false;
     }
-
-    else if( curve.optionalCast<CurveExponent>() )
-    {
-      accepted = true;
-    }
-
-    OS_ASSERT(this->setPointer(OS_Fan_OnOffFields::FanPowerRatioFunctionofSpeedRatioCurveName,curve.handle()));
-
-    return accepted;
+    return this->setPointer(OS_Fan_OnOffFields::FanPowerRatioFunctionofSpeedRatioCurveName,curve.handle());
   }
 
 
   Curve FanOnOff_Impl::fanEfficiencyRatioFunctionofSpeedRatioCurve() const
   {
-    boost::optional<Curve> curve;
-
-    curve = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Fan_OnOffFields::FanEfficiencyRatioFunctionofSpeedRatioCurveName);
-
+    boost::optional<Curve> curve = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Fan_OnOffFields::FanEfficiencyRatioFunctionofSpeedRatioCurveName);
     OS_ASSERT(curve);
-
     return curve.get();
   }
 
   bool FanOnOff_Impl::setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve )
   {
-    bool accepted = false;
-
     if( model() != curve.model() )
     {
-      return accepted;
+      return false;
     }
-
-    if( curve.optionalCast<CurveQuadratic>() )
-    {
-      accepted = true;
-    }
-    else if( curve.optionalCast<CurveCubic>() )
-    {
-      accepted = true;
-    }
-
-    OS_ASSERT(this->setPointer(OS_Fan_OnOffFields::FanEfficiencyRatioFunctionofSpeedRatioCurveName,curve.handle()));
-
-    return accepted;
+    return this->setPointer(OS_Fan_OnOffFields::FanEfficiencyRatioFunctionofSpeedRatioCurveName,curve.handle());
   }
 
   ModelObject FanOnOff_Impl::clone(Model model) const
@@ -385,6 +360,18 @@ namespace detail {
     newFan.setFanEfficiencyRatioFunctionofSpeedRatioCurve(curve2.clone(model).cast<Curve>());
 
     return newFan;
+  }
+
+  // Fan:OnOff can not be added to an AirLoopHVAC.
+  // It can only be contained within another HVAC Component, such as Unitary, ZoneHVAC, etc.
+  bool FanOnOff_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<Loop> loop = node.loop() ) {
+      return false;
+    }
+    else {
+      return StraightComponent_Impl::addToNode(node);
+    }
   }
 
   boost::optional<ZoneHVACComponent> FanOnOff_Impl::containingZoneHVACComponent() const
@@ -412,8 +399,42 @@ namespace detail {
 
 } // detail
 
+FanOnOff::FanOnOff(const Model& model, Schedule& availabilitySchedule)
+  : StraightComponent(FanOnOff::iddObjectType(),model)
+  {
+    OS_ASSERT(getImpl<detail::FanOnOff_Impl>());
+
+    bool ok = setAvailabilitySchedule(availabilitySchedule);
+
+    ok = setFanEfficiency(0.6);
+    OS_ASSERT(ok);
+    setPressureRise(300);
+    autosizeMaximumFlowRate();
+    ok = setMotorEfficiency(0.8);
+    OS_ASSERT(ok);
+    ok = setMotorInAirstreamFraction(1.0);
+    OS_ASSERT(ok);
+
+    CurveExponent fanPowerFtSpeedCurve(model);
+    fanPowerFtSpeedCurve.setName("Fan On Off Power Curve");
+    fanPowerFtSpeedCurve.setCoefficient1Constant(1.0);
+    fanPowerFtSpeedCurve.setCoefficient2Constant(0);
+    fanPowerFtSpeedCurve.setCoefficient3Constant(0);
+    ok = setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFtSpeedCurve);
+    OS_ASSERT(ok);
+
+    CurveCubic fanEfficiencyFtSpeedCurve(model);
+    fanEfficiencyFtSpeedCurve.setName("Fan On Off Efficiency Curve");
+    fanEfficiencyFtSpeedCurve.setCoefficient1Constant(1.0);
+    fanEfficiencyFtSpeedCurve.setCoefficient2x(0.0);
+    fanEfficiencyFtSpeedCurve.setCoefficient3xPOW2(0.0);
+    fanEfficiencyFtSpeedCurve.setCoefficient4xPOW3(0.0);
+    ok = setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFtSpeedCurve);
+    OS_ASSERT(ok);
+  }
+
 FanOnOff::FanOnOff(const Model& model,
-                   Schedule& schedule,
+                   Schedule& availabilitySchedule,
                    Curve& fanPowerRatioFunctionofSpeedRatioCurve,
                    Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
                   )
@@ -422,46 +443,21 @@ FanOnOff::FanOnOff(const Model& model,
   {
     OS_ASSERT(getImpl<detail::FanOnOff_Impl>());
 
-    bool ok = setAvailabilitySchedule(schedule);
+    bool ok = setAvailabilitySchedule(availabilitySchedule);
 
-    if (!ok)
-    {
-      remove();
-      LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to " << schedule.briefDescription() << ".");
-    }
-
-    setEndUseSubcategory("");
-    ok = setFanEfficiency(0.6045);
+    ok = setFanEfficiency(0.6);
     OS_ASSERT(ok);
-    setPressureRise(250);
+    setPressureRise(300);
     autosizeMaximumFlowRate();
     ok = setMotorEfficiency(0.8);
     OS_ASSERT(ok);
     ok = setMotorInAirstreamFraction(1.0);
     OS_ASSERT(ok);
 
-    CurveExponent fanPowerFtSpeedCurve(model);
-
-    fanPowerFtSpeedCurve.setCoefficient1Constant(0.0);
-    fanPowerFtSpeedCurve.setCoefficient2Constant(1.0);
-    fanPowerFtSpeedCurve.setCoefficient3Constant(3.0);
-    fanPowerFtSpeedCurve.setMinimumValueofx(0.0);
-    fanPowerFtSpeedCurve.setMaximumValueofx(1.5);
-    fanPowerFtSpeedCurve.setMinimumCurveOutput(0.01);
-    fanPowerFtSpeedCurve.setMaximumCurveOutput(1.5);
-    ok = setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerFtSpeedCurve);
+    ok = setFanPowerRatioFunctionofSpeedRatioCurve(fanPowerRatioFunctionofSpeedRatioCurve);
     OS_ASSERT(ok);
 
-    CurveCubic fanEfficiencyFtSpeedCurve(model);
-    fanEfficiencyFtSpeedCurve.setCoefficient1Constant(0.33856828);
-    fanEfficiencyFtSpeedCurve.setCoefficient2x(1.72644131);
-    fanEfficiencyFtSpeedCurve.setCoefficient3xPOW2(-1.49280132);
-    fanEfficiencyFtSpeedCurve.setCoefficient4xPOW3(0.42776208);
-    fanEfficiencyFtSpeedCurve.setMinimumValueofx(0.5);
-    fanEfficiencyFtSpeedCurve.setMaximumValueofx(1.5);
-    fanEfficiencyFtSpeedCurve.setMinimumCurveOutput(0.3);
-    fanEfficiencyFtSpeedCurve.setMaximumCurveOutput(1.0);
-    ok = setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyFtSpeedCurve);
+    ok = setFanEfficiencyRatioFunctionofSpeedRatioCurve(fanEfficiencyRatioFunctionofSpeedRatioCurve);
     OS_ASSERT(ok);
   }
 

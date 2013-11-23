@@ -44,10 +44,12 @@ class MODEL_API FanOnOff : public StraightComponent {
   //@{
 
   explicit FanOnOff(const Model& model,
-                          Schedule& schedule,
+                          Schedule& availabilitySchedule,
                           Curve& fanPowerRatioFunctionofSpeedRatioCurve,
                           Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
                     );
+
+  explicit FanOnOff(const Model& model, Schedule& availabilitySchedule);
 
   virtual ~FanOnOff() {}
 
