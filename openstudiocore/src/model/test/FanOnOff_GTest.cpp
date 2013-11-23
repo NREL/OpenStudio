@@ -40,6 +40,23 @@
 #include <model/FanOnOff_Impl.hpp>
 #include <utilities/units/Unit.hpp>
 
+#include <model/HVACComponent.hpp>
+#include <model/CurveBiquadratic.hpp>
+#include <model/CoilHeatingWater.hpp>
+#include <model/CoilHeatingElectric.hpp>
+#include <model/CoilCoolingWater.hpp>
+#include <model/CoilCoolingDXSingleSpeed.hpp>
+#include <model/CoilHeatingDXSingleSpeed.hpp>
+#include <model/ZoneHVACWaterToAirHeatPump.hpp>
+#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
+#include <model/ZoneHVACFourPipeFanCoil.hpp>
+#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
+#include <model/ZoneHVACUnitHeater.hpp>
+#include <model/ZoneHVACBaseboardConvectiveElectric.hpp>
+#include <model/ZoneHVACLowTemperatureRadiantElectric.hpp>
+#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -392,4 +409,157 @@ TEST_F(ModelFixture,FanOnOff_Test_Setters_and_Getters)
   EXPECT_FALSE(testObject.setFanPowerRatioFunctionofSpeedRatioCurve(newCurve2));
   EXPECT_FALSE(testObject.setFanPowerRatioFunctionofSpeedRatioCurve(newCurve3));
   EXPECT_FALSE(testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(newCurve1));
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACWaterToAirHeatPump)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  CoilHeatingWater heatingCoil(m, s);
+  CoilCoolingWater coolingCoil(m, s);
+  CoilHeatingElectric supplementalHeatingCoil(m, s);
+
+  ZoneHVACWaterToAirHeatPump zoneHVACWaterToAirHeatPump(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACWaterToAirHeatPump.handle());
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACFourPipeFanCoil)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  CoilHeatingWater heatingCoil(m, s);
+  CoilCoolingWater coolingCoil(m, s);
+
+  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(m, s, fan, coolingCoil, heatingCoil);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACFourPipeFanCoil.handle());
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTerminalAirConditioner)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  CurveBiquadratic c1(m);
+  CurveQuadratic c2(m);
+  CurveBiquadratic c3(m);
+  CurveQuadratic c4(m);
+  CurveQuadratic c5(m);
+
+  CoilHeatingWater heatingCoil(m, s);
+  CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
+
+  ZoneHVACPackagedTerminalAirConditioner zoneHVACPackagedTerminalAirConditioner(m, s, fan, heatingCoil, coolingCoil);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACPackagedTerminalAirConditioner.handle());
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTerminalHeatPump)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  CurveBiquadratic c1(m);
+  CurveQuadratic c2(m);
+  CurveBiquadratic c3(m);
+  CurveQuadratic c4(m);
+  CurveQuadratic c5(m);
+
+  CoilHeatingDXSingleSpeed heatingCoil(m, s, c1, c2, c3, c4, c5);
+  CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
+  CoilHeatingElectric supplementalHeatingCoil(m, s);
+
+  ZoneHVACPackagedTerminalHeatPump zoneHVACPackagedTerminalHeatPump(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACPackagedTerminalHeatPump.handle());
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACUnitHeater)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  CoilHeatingWater heatingCoil(m, s);
+
+  ZoneHVACUnitHeater zoneHVACUnitHeater(m, s, fan, heatingCoil);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACUnitHeater.handle());
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACTerminalUnitVariableRefrigerantFlow)
+{
+  Model m;
+  ZoneHVACTerminalUnitVariableRefrigerantFlow zoneHVACTerminalUnitVariableRefrigerantFlow(m);
+
+  std::vector<FanOnOff> fans = m.getModelObjects<FanOnOff>();
+  EXPECT_EQ(1, fans.size());
+
+  boost::optional<ZoneHVACComponent> component = fans[0].containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACTerminalUnitVariableRefrigerantFlow.handle());
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACBaseboardConvectiveElectric)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  ZoneHVACBaseboardConvectiveElectric zoneHVACBaseboardConvectiveElectric(m);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  EXPECT_FALSE(component);
+}
+
+TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACLowTemperatureRadiantElectric)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(m, s, s);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  EXPECT_FALSE(component);
+}
+
+TEST_F(ModelFixture,FanOnOff_containingHVACComponent_AirLoopHVACUnitaryHeatPumpAirToAir)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanOnOff fan = FanOnOff(m, s);
+
+  CurveBiquadratic c1(m);
+  CurveQuadratic c2(m);
+  CurveBiquadratic c3(m);
+  CurveQuadratic c4(m);
+  CurveQuadratic c5(m);
+
+  CoilHeatingDXSingleSpeed heatingCoil(m, s, c1, c2, c3, c4, c5);
+  CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
+  CoilHeatingElectric supplementalHeatingCoil(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir airLoopHVACUnitaryHeatPumpAirToAir(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+
+  boost::optional<HVACComponent> component = fan.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), airLoopHVACUnitaryHeatPumpAirToAir.handle());
 }

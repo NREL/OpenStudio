@@ -161,6 +161,8 @@ namespace detail {
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
 
+    virtual boost::optional<HVACComponent> containingHVACComponent() const;
+
   };
 
 

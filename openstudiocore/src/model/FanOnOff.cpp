@@ -37,6 +37,18 @@
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
+#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
+#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
+#include <model/ZoneHVACFourPipeFanCoil.hpp>
+#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
+#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
+#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
+#include <model/ZoneHVACUnitHeater.hpp>
+#include <model/ZoneHVACUnitHeater_Impl.hpp>
+#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
+#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Assert.hpp>
@@ -374,24 +386,70 @@ namespace detail {
     }
   }
 
-  boost::optional<ZoneHVACComponent> FanOnOff_Impl::containingZoneHVACComponent() const
+  boost::optional<HVACComponent> FanOnOff_Impl::containingHVACComponent() const
   {
-    // ZoneHVACWaterToAirHeatPump
+    // Process all types that might contain a FanOnOff object.
 
-    std::vector<ZoneHVACWaterToAirHeatPump> zoneHVACWaterToAirHeatPump;
+    // AirLoopHVACUnitaryHeatPumpAirToAir
+    std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-    zoneHVACWaterToAirHeatPump = this->model().getModelObjects<ZoneHVACWaterToAirHeatPump>();
-
-    for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPump.begin();
-    it < zoneHVACWaterToAirHeatPump.end();
+    for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
+    it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
     it++ )
     {
-      if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
+      if( boost::optional<HVACComponent> fan = it->supplyAirFan() )
       {
-        if( coil->handle() == this->handle() )
+        if( fan->handle() == this->handle() )
         {
           return *it;
         }
+      }
+    }
+
+    return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> FanOnOff_Impl::containingZoneHVACComponent() const
+  {
+    std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
+    for( std::vector<ZoneHVACComponent>::iterator it = zoneHVACComponent.begin();
+    it < zoneHVACComponent.end();
+    it++ )
+    {
+      switch(it->iddObject().type().value())
+      {
+      case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil :
+        {
+          ZoneHVACFourPipeFanCoil component = it->cast<ZoneHVACFourPipeFanCoil>();
+          if (component.supplyAirFan().handle() == this->handle()) return *it;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
+        {
+          ZoneHVACPackagedTerminalHeatPump component = it->cast<ZoneHVACPackagedTerminalHeatPump>();
+          if (component.supplyAirFan().handle() == this->handle()) return *it;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner :
+        {
+          ZoneHVACPackagedTerminalAirConditioner component = it->cast<ZoneHVACPackagedTerminalAirConditioner>();
+          if (component.supplyAirFan().handle() == this->handle()) return *it;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow :
+        {
+          ZoneHVACTerminalUnitVariableRefrigerantFlow component = it->cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+          if (component.supplyAirFan().handle() == this->handle()) return *it;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
+        {
+          ZoneHVACWaterToAirHeatPump component = it->cast<ZoneHVACWaterToAirHeatPump>();
+          if (component.supplyAirFan().handle() == this->handle()) return *it;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater :
+        {
+          ZoneHVACUnitHeater component = it->cast<ZoneHVACUnitHeater>();
+          if (component.supplyAirFan().handle() == this->handle()) return *it;
+        }
+      default:
+        {}
       }
     }
     return boost::none;
