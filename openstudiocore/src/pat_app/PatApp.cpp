@@ -542,6 +542,7 @@ void PatApp::create()
     openstudio::path projectDir = openstudio::toPath(fileName);
     openstudio::analysisdriver::SimpleProjectOptions options;
     options.setPauseRunManagerQueue(true); // do not start running when creating
+    options.setInitializeRunManagerUI(false);
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::createPATProject(projectDir, options);
     if(project.is_initialized()){
@@ -1195,6 +1196,7 @@ bool PatApp::openFile(const QString& fileName)
     openstudio::path projectDir = openstudio::toPath(dirAbsolutePath);
     openstudio::analysisdriver::SimpleProjectOptions options;
     options.setPauseRunManagerQueue(true); // do not start running when opening
+    options.setInitializeRunManagerUI(false);
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::openPATProject(projectDir, options);
     if(project.is_initialized()){

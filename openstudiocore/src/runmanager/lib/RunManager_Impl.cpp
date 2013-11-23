@@ -91,6 +91,7 @@ namespace detail {
 
   void WorkflowItem::updateDescription()
   {
+    
     switch (m_col)
     {
       case 0:
@@ -150,6 +151,7 @@ namespace detail {
           }
         }
     };
+    
   }
 
   void WorkflowItem::stateChanged()
@@ -1369,8 +1371,9 @@ namespace detail {
 
   // RunManager_Impl implementation
 
-  RunManager_Impl::RunManager_Impl(const openstudio::path &DB, bool t_paused, bool t_initui, bool t_temporaryDB)
-    : m_dbholder(new DBHolder(DB)),
+  RunManager_Impl::RunManager_Impl(const openstudio::path &DB, bool t_paused, bool t_initui, bool t_temporaryDB, bool t_useStatusGUI)
+    : m_useStatusGUI(t_useStatusGUI && t_initui),
+      m_dbholder(new DBHolder(DB)),
       m_dbfile(DB),
       m_processingQueue(false),
       m_workPending(false), m_paused(t_paused), m_continue(true),
@@ -1382,6 +1385,10 @@ namespace detail {
       m_lastRunningLocally(0),
       m_lastStatistics(QDateTime::currentDateTime())
   {
+    if (!t_initui && t_useStatusGUI)
+    {
+      LOG(Warn, "User requested to not initialize UI but left status GUI enabled. Disabling status GUI");
+    }
 
     LOG(Info, "Creating RunManager with file: " << toString(DB));
     RunManager_Impl::registerMetaTypes();
@@ -1441,6 +1448,7 @@ namespace detail {
 
 
     processQueue();
+    LOG(Info, "Runmanager Started");
   }
 
   RunManager_Impl::~RunManager_Impl()
@@ -1748,7 +1756,7 @@ namespace detail {
       job.setIndex(m_queue.size());
       m_queue.push_back(job);
 
-      if (!parent)
+      if (!parent && m_useStatusGUI)
       {
         // Only top level jobs get displayed in the model
         QList<QStandardItem*> cols;
