@@ -211,14 +211,16 @@ IF (UNIX)
 ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
-  OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 ruby 2.0" OFF)
-  
-  IF(WIN32 AND MSVC AND CMAKE_CL_64)
-    MESSAGE(ERROR "Cannot use 32bit mingw build of ruby 2.0 with 64bit build of openstudio") 
-  ENDIF() 
-  
   MARK_AS_ADVANCED(BUILD_RUBY)
-  MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
+  
+  IF(WIN32 AND MSVC)
+    IF(CMAKE_CL_64)
+      MESSAGE(WARNING "Cannot use 32bit mingw build of ruby 2.0 with 64bit build of openstudio") 
+    ELSE()
+      OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 ruby 2.0" OFF)
+      MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
+    ENDIF()
+  ENDIF() 
 ENDIF()
 
 IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
