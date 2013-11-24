@@ -1344,6 +1344,35 @@ namespace sdd {
     aboveGradeStoryCountElement.appendChild(doc.createTextNode(QString::number(numAboveGroundStories)));
     */
 
+    // translate building shading
+    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = building.model().getModelObjects<model::ShadingSurfaceGroup>();
+    std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
+
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Building Shading"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(shadingSurfaceGroups.size()); 
+      m_progressBar->setValue(0);
+    }
+
+    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+      if (istringEqual(shadingSurfaceGroup.shadingSurfaceType(), "Building")){
+
+        Transformation transformation = shadingSurfaceGroup.siteTransformation();
+
+        BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+          boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, transformation, doc);
+          if (shadingSurfaceElement){
+            result.appendChild(*shadingSurfaceElement);
+          }
+        }
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
     // translate building story
     BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
 
@@ -1485,6 +1514,21 @@ namespace sdd {
       thermalZoneElement.appendChild(doc.createTextNode(escapeName(thermalZoneName)));
     }
 
+    // translate space shading
+    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = space.shadingSurfaceGroups();
+    std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
+
+    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+      Transformation shadingTransformation = shadingSurfaceGroup.siteTransformation();
+
+      BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+        boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, shadingTransformation, doc);
+        if (shadingSurfaceElement){
+          result.appendChild(*shadingSurfaceElement);
+        }
+      }
+    }
+
     // translate surfaces
     std::vector<model::Surface> surfaces = space.surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
@@ -1494,11 +1538,6 @@ namespace sdd {
       if (surfaceElement){
         result.appendChild(*surfaceElement);
       }
-    }
-
-    // translate space shading, for now just warn
-    if (!space.shadingSurfaceGroups().empty()){
-      LOG(Warn, "Shading surfaces are not currently translated for space '" << name << "'");
     }
 
     return result;
@@ -1762,6 +1801,105 @@ namespace sdd {
 
     // translate vertices
     Point3dVector vertices = transformation*subSurface.vertices();
+    QDomElement polyLoopElement = doc.createElement("PolyLp");
+    result->appendChild(polyLoopElement);
+    BOOST_FOREACH(const Point3d& vertex, vertices){
+      QDomElement cartesianPointElement = doc.createElement("CartesianPt");
+      polyLoopElement.appendChild(cartesianPointElement);
+
+      /* DLM: these conversions were taking about 75% of the time it takes to convert a large model
+
+      Quantity xSI(vertex.x(), SIUnit(SIExpnt(0,1,0)));
+      Quantity ySI(vertex.y(), SIUnit(SIExpnt(0,1,0)));
+      Quantity zSI(vertex.z(), SIUnit(SIExpnt(0,1,0)));
+
+      OptionalQuantity xIP = QuantityConverter::instance().convert(xSI, ipSys);
+      OS_ASSERT(xIP);
+      OS_ASSERT(xIP->units() == IPUnit(IPExpnt(0,1,0)));
+
+      OptionalQuantity yIP = QuantityConverter::instance().convert(ySI, ipSys);
+      OS_ASSERT(yIP);
+      OS_ASSERT(yIP->units() == IPUnit(IPExpnt(0,1,0)));
+
+      OptionalQuantity zIP = QuantityConverter::instance().convert(zSI, ipSys);
+      OS_ASSERT(zIP);
+      OS_ASSERT(zIP->units() == IPUnit(IPExpnt(0,1,0)));
+
+      QDomElement coordinateXElement = doc.createElement("Coord");
+      cartesianPointElement.appendChild(coordinateXElement);
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(xIP->value())));
+
+      QDomElement coordinateYElement = doc.createElement("Coord");
+      cartesianPointElement.appendChild(coordinateYElement);
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(yIP->value())));
+
+      QDomElement coordinateZElement = doc.createElement("Coord");
+      cartesianPointElement.appendChild(coordinateZElement);
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(zIP->value())));
+      */
+
+      QDomElement coordinateXElement = doc.createElement("Coord");
+      cartesianPointElement.appendChild(coordinateXElement);
+      coordinateXElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.x())));
+
+      QDomElement coordinateYElement = doc.createElement("Coord");
+      cartesianPointElement.appendChild(coordinateYElement);
+      coordinateYElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.y())));
+
+      QDomElement coordinateZElement = doc.createElement("Coord");
+      cartesianPointElement.appendChild(coordinateZElement);
+      coordinateZElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.z())));
+    }
+
+    return result;
+  }
+
+  boost::optional<QDomElement> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, QDomDocument& doc)
+  {
+    UnitSystem ipSys(UnitSystem::IP);
+
+    boost::optional<QDomElement> result;
+
+    // return if already translated
+    if (m_translatedObjects.find(shadingSurface.handle()) != m_translatedObjects.end()){
+      return boost::none;
+    }
+
+    result = doc.createElement("ExtShdgObj");
+    m_translatedObjects[shadingSurface.handle()] = *result;
+
+    // name
+    std::string name = shadingSurface.name().get();
+    QDomElement nameElement = doc.createElement("Name");
+    result->appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode(escapeName(name)));
+
+    // schedule
+    boost::optional<model::Schedule> transmittanceSchedule = shadingSurface.transmittanceSchedule();
+    if (transmittanceSchedule){
+
+      std::string transmittanceScheduleName = transmittanceSchedule->name().get();
+
+      // check that construction has been translated
+      if (m_translatedObjects.find(transmittanceSchedule->handle()) != m_translatedObjects.end()){
+        QDomElement transmittanceScheduleReferenceElement = doc.createElement("TransSchRef");
+        result->appendChild(transmittanceScheduleReferenceElement);
+        transmittanceScheduleReferenceElement.appendChild(doc.createTextNode(escapeName(transmittanceScheduleName)));
+      }else{
+        LOG(Error, "ShadingSurface '" << name << "' uses transmittance schedule '" << transmittanceScheduleName << "' which has not been translated");
+      }
+    }
+
+    //QDomElement solReflElement = doc.createElement("SolRefl");
+    //result->appendChild(solReflElement);
+    //solReflElement.appendChild(doc.createTextNode(QString::number(0.1)));
+
+    //QDomElement visReflElement = doc.createElement("VisRefl");
+    //result->appendChild(visReflElement);
+    //visReflElement.appendChild(doc.createTextNode(QString::number(0.1)));
+
+    // translate vertices
+    Point3dVector vertices = transformation*shadingSurface.vertices();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result->appendChild(polyLoopElement);
     BOOST_FOREACH(const Point3d& vertex, vertices){
