@@ -1631,13 +1631,24 @@ boost::optional<int> EpwFile::endDateActualYear() const
   return m_endDateActualYear;
 }
 
-std::vector<EpwDataPoint> EpwFile::data() const
+std::vector<EpwDataPoint> EpwFile::data()
 {
+  if(m_data.size()==0){
+    if (!parse(true)){
+      LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
+    }
+  }
   return m_data;
 }
 
-boost::optional<TimeSeries> EpwFile::timeSeries(std::string name)
+boost::optional<TimeSeries> EpwFile::getTimeSeries(std::string name)
 {
+  if(m_data.size()==0){
+    if (!parse(true)){
+      LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
+      return boost::optional<TimeSeries>();
+    }
+  }
   EpwDataField id;
   try
   {
@@ -1672,8 +1683,17 @@ boost::optional<TimeSeries> EpwFile::timeSeries(std::string name)
   return boost::optional<TimeSeries>();
 }
 
-bool EpwFile::translateToWth(openstudio::path path, std::string description) const
+bool EpwFile::translateToWth(openstudio::path path, std::string description)
 {
+  if(m_data.size()==0)
+  {
+    if (!parse(true))
+    {
+      LOG(Error,"EpwFile '" << toString(m_path) << "' cannot be processed");
+      return false;
+    }
+  }
+
   if(description.empty())
   {
     description = "Translated from " + openstudio::toString(this->path());
@@ -1944,11 +1964,22 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   boost::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)$");
   boost::smatch matches;
   if (boost::regex_search(line, matches, dataPeriodRegex)){
+    std::string nDataPeriods =  std::string(matches[1].first, matches[1].second); boost::trim(nDataPeriods);
     std::string timeStep = std::string(matches[2].first, matches[2].second); boost::trim(timeStep);
     std::string startDayOfWeek = std::string(matches[4].first, matches[4].second); boost::trim(startDayOfWeek);
     std::string startDate = std::string(matches[5].first, matches[5].second); boost::trim(startDate);
     std::string endDate = std::string(matches[6].first, matches[6].second); boost::trim(endDate);
 
+    try{
+      int N = boost::lexical_cast<int>(nDataPeriods);
+      if(N>1)
+      {
+        LOG(Error, "More than one data period in EPW file '" << m_path << "', which is not supported");
+        result = false;
+      }
+    }catch(...){
+      result = false;
+    }
     try{
       m_timeStep = Time(boost::lexical_cast<double>(timeStep) / 24.0);
     }catch(...){

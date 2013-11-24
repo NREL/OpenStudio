@@ -303,14 +303,14 @@ public:
   boost::optional<int> endDateActualYear() const;
 
   /// get the weather data
-  std::vector<EpwDataPoint> data() const;
+  std::vector<EpwDataPoint> data();
 
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
-  boost::optional<TimeSeries> timeSeries(std::string field);
+  boost::optional<TimeSeries> getTimeSeries(std::string field);
 
   /// export to CONTAM WTH file
-  bool translateToWth(openstudio::path path,std::string description=std::string()) const;
+  bool translateToWth(openstudio::path path,std::string description=std::string());
 
 private:
 
