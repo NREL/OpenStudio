@@ -400,7 +400,7 @@ bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const 
   translator.setTranslateHVAC(translateHVAC);
   translator.setAirtightnessLevel(leakageDescriptor);
 
-  boost::optional<contam::PrjModel> prjModel = translator.translate(model);
+  boost::optional<contam::PrjModel> prjModel = translator.translateModel(model);
   if(prjModel)
   {
     boost::optional<std::string> output = prjModel->toString();
@@ -429,7 +429,7 @@ bool compareElevation(openstudio::model::BuildingStory a, openstudio::model::Bui
 
 // This function is altogether too long and needs to be broken up into smaller functions.
 // This is particularly true for the HVAC translation.
-boost::optional<contam::PrjModel> ForwardTranslator::translate(model::Model model)
+boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model model)
 {
   m_logSink.setThreadId(QThread::currentThread());
   m_logSink.resetStringStream();
@@ -1110,31 +1110,6 @@ boost::optional<contam::PrjModel> ForwardTranslator::translate(model::Model mode
   //ZoneData *afz = zoneList.at(i);
   //double flowRate = afz->area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
 
-}
-
-boost::optional<EpwFile> ForwardTranslator::translateEpw(openstudio::path epwpath, openstudio::path outpath)
-{
-  boost::optional<EpwFile> epw;
-  try
-  {
-    EpwFile epwFile(epwpath,true);
-    try
-    {
-      epwFile.translateToWth(outpath);
-    }
-    catch(...) // Is this going to work?
-    {
-      LOG(Error,"Translation of EPW file failed, weather will be steady state");
-      return false;
-    }
-    epw = boost::optional<EpwFile>(epwFile);
-  }
-  catch(...)
-  {
-    LOG(Error,"Failed to correctly load EPW file, weather will be steady state");
-    return false;
-  }
-  return epw;
 }
 
 static double laminarCoefficient(double Ct, double x)

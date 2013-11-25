@@ -47,7 +47,8 @@ namespace contam{
  *  www.bfrl.nist.gov/IAQanalysis/CONTAM/manual/Content/html/IDH_UsingControls_CVF.htm
  *
  *  Data is input as TimeSeries that should cover the entire time period to 
- *  be simulated.
+ *  be simulated. TimeSeries with Celcius units will be converted to Kelvin
+ *  on output. All other TimeSeries should be in the units CONTAM expects.
  *
  */
 class CONTAM_API CvFile
@@ -75,7 +76,7 @@ private:
  *
  *  ForwardTranslator translates an OpenStudio energy model into a CONTAM
  *  airflow model using a streamlined approach. Each wall is assigned an
- *  overall leakage rate, and individual components are not presently
+ *  overall leakage rate and individual components are not presently
  *  represented.
  *
  */
@@ -84,25 +85,18 @@ class CONTAM_API ForwardTranslator
 public:
   ForwardTranslator();
 
-  // Clear out the translator and reset to the defaults
-  void clear();
-
-  // Translator
-  boost::optional<contam::PrjModel> translate(model::Model model);
+  // Translation function
+  boost::optional<contam::PrjModel> translateModel(model::Model model);
   
   // Static translation function
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
     bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=NULL);
 
-  // Secondary translation functions - this doesn't really fit here any more, so maybe it needs
-  // to be moved elsewhere, could be made static
-  boost::optional<EpwFile> translateEpw(openstudio::path epwpath, openstudio::path outpath);
-
   // Accessors to the element maps
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
-  // Getters and setters - the setters modify how translation
+  // Getters and setters - the setters modify how translation is done
   // Setters that could fail return a boolean
   boost::optional<std::string> airtightnessLevel() const;
   void setAirtightnessLevel(std::string level);
@@ -119,9 +113,6 @@ public:
   boost::optional<DateTime> startDateTime() const;
   boost::optional<DateTime> endDateTime() const;
 
-  // We may need more functions like this that modify the CONTAM model
-  int addNewAirflowElement(contam::PrjModel prjModel,std::string name,double flow,double n=0.65,double deltaP=75.0);
-
   // Write control files
   bool writeCvFile(openstudio::path filepath);
 
@@ -132,8 +123,15 @@ public:
   std::vector<LogMessage> errors() const;
 
 private:
+  // Do the work to set up the leakage paths
   bool applyExteriorFlowRate(contam::PrjModel prjModel);
   bool applyAirtightnessLevel(contam::PrjModel prjModel);
+
+  // Convenience function to add a new one-point test airflow element to the model
+  int addNewAirflowElement(contam::PrjModel prjModel,std::string name,double flow,double n=0.65,double deltaP=75.0);
+
+  // Clear out the translator and reset to the defaults
+  void clear();
 
   // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
@@ -142,7 +140,7 @@ private:
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
-  // Maps - will be populated after a call of translateToPrj
+  // Maps - will be populated after a call of translateModel
   // All map to the CONTAM index (1,2,...,nElement)
   std::map<std::string,int> m_afeMap;  // Map from descriptor ("exterior", "floor", etc.) to CONTAM airflow element index
   QMap <Handle, int> m_levelMap;      // Building story to level map by handle
