@@ -36,6 +36,8 @@
 #include <model/Construction_Impl.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
+#include <model/MasslessOpaqueMaterial.hpp>
+#include <model/MasslessOpaqueMaterial_Impl.hpp>
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/geometry/Transformation.hpp>
@@ -181,21 +183,41 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
         std::vector<model::Material> layers = construction->layers();
 
         // we want the outer layer
-        if (!layers.empty() && layers[0].optionalCast<model::StandardOpaqueMaterial>()){
-          model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+        if (!layers.empty()){
 
-          boost::optional<double> solRefl = outerMaterial.solarReflectance();
-          if (solRefl){
-            shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
-            addShadingPropertyObject = true;
+          if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
+            model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+
+            boost::optional<double> solRefl = outerMaterial.solarReflectance();
+            if (solRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
+              addShadingPropertyObject = true;
+            }
+
+            boost::optional<double> visRefl = outerMaterial.visibleReflectance();
+            if (visRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
+              addShadingPropertyObject = true;
+            }
           }
 
-          boost::optional<double> visRefl = outerMaterial.visibleReflectance();
-          if (visRefl){
-            shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
-            addShadingPropertyObject = true;
-          }
           
+          if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
+            model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
+
+            boost::optional<double> solRefl = outerMaterial.solarReflectance();
+            if (solRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
+              addShadingPropertyObject = true;
+            }
+
+            boost::optional<double> visRefl = outerMaterial.visibleReflectance();
+            if (visRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
+              addShadingPropertyObject = true;
+            }
+          }
+
         }
       }
     }

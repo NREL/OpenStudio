@@ -27,6 +27,7 @@
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
 #include <model/MasslessOpaqueMaterial.hpp>
+#include <model/MasslessOpaqueMaterial_Impl.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
 #include <model/FFactorGroundFloorConstruction.hpp>
@@ -1903,15 +1904,30 @@ namespace sdd {
       if (construction){
 
         std::vector<model::Material> layers = construction->layers();
-        if (!layers.size() && layers[0].optionalCast<model::StandardOpaqueMaterial>()){
-          model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
-          boost::optional<double> test = outerMaterial.solarReflectance();
-          if (test){
-            solRefl = *test;
+        if (!layers.empty()){
+          
+          if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
+            model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+            boost::optional<double> test = outerMaterial.solarReflectance();
+            if (test){
+              solRefl = *test;
+            }
+            test = outerMaterial.visibleReflectance();
+            if (test){
+              visRefl = *test;
+            }
           }
-          test = outerMaterial.visibleReflectance();
-          if (test){
-            visRefl = *test;
+
+          if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
+            model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
+            boost::optional<double> test = outerMaterial.solarReflectance();
+            if (test){
+              solRefl = *test;
+            }
+            test = outerMaterial.visibleReflectance();
+            if (test){
+              visRefl = *test;
+            }
           }
         }
       }
