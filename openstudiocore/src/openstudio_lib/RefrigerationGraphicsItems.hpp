@@ -326,11 +326,19 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
 
   void removeClicked(OSItemId id);
 
+  void inspectClicked(OSItemId id);
+
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_mouseDown;
 
   private slots:
 
@@ -367,11 +375,19 @@ class RefrigerationCompressorDetailView : public QGraphicsObject
 
   void removeClicked(OSItemId id);
 
+  void inspectClicked(OSItemId id);
+
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_mouseDown;
 
   private slots:
 
@@ -477,11 +493,19 @@ class RefrigerationCaseDetailView : public QGraphicsObject
 
   void removeClicked(OSItemId id);
 
+  void inspectClicked(OSItemId id);
+
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_mouseDown;
 
   private slots:
 

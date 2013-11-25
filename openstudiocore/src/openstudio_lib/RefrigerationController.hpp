@@ -75,6 +75,8 @@ class RefrigerationController : public QObject
 
   void removeCase(const OSItemId & itemid);
 
+  void inspectOSItem(const OSItemId & itemid);
+
   private:
 
   QPointer<QGraphicsView> m_refrigerationGraphicsView;

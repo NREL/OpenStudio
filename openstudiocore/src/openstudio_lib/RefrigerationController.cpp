@@ -22,6 +22,7 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
+#include "MainRightColumnController.hpp"
 #include "../model/Model.hpp"
 #include "../model/RefrigerationSystem.hpp"
 #include "../model/RefrigerationSystem_Impl.hpp"
@@ -115,6 +116,10 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 
   bingo = connect(m_detailView->refrigerationSystemView->refrigerationCondenserView,SIGNAL(removeClicked(const OSItemId &)),
                   this,SLOT(removeCondenser(const OSItemId &)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_detailView->refrigerationSystemView->refrigerationCondenserView,SIGNAL(inspectClicked(const OSItemId &)),
+                  this,SLOT(inspectOSItem(const OSItemId &)));
   OS_ASSERT(bingo);
 }
 
@@ -255,6 +260,10 @@ void RefrigerationController::refreshNow()
                              this,SLOT(removeCompressor(const OSItemId &)));
         OS_ASSERT(bingo);
 
+        bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                        this,SLOT(inspectOSItem(const OSItemId &)));
+        OS_ASSERT(bingo);
+
         m_detailView->refrigerationSystemView->refrigerationCompressorView->insertCompressorDetailView(0,detailView);
 
         compressorIndex++;
@@ -280,6 +289,10 @@ void RefrigerationController::refreshNow()
                              this,SLOT(removeCase(const OSItemId &)));
         OS_ASSERT(bingo);
 
+        bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                        this,SLOT(inspectOSItem(const OSItemId &)));
+        OS_ASSERT(bingo);
+
         m_detailView->refrigerationSystemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
       }
 
@@ -293,6 +306,19 @@ void RefrigerationController::refreshNow()
 QGraphicsView * RefrigerationController::refrigerationGraphicsView() const
 {
   return m_refrigerationGraphicsView;
+}
+
+void RefrigerationController::inspectOSItem(const OSItemId & itemid)
+{
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  OS_ASSERT(doc);
+
+  OS_ASSERT(m_currentSystem);
+
+  boost::optional<model::ModelObject> mo = m_currentSystem->model().getModelObject<model::ModelObject>(Handle(itemid.itemId()));
+
+  doc->mainRightColumnController()->inspectModelObject(mo,false);
 }
 
 void RefrigerationController::removeCompressor(const OSItemId & itemid)

@@ -734,6 +734,36 @@ RefrigerationCaseDetailView::RefrigerationCaseDetailView()
   setId(OSItemId());
 }
 
+void RefrigerationCaseDetailView::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  update();
+
+  event->accept();
+}
+
+void RefrigerationCaseDetailView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      update();
+
+      emit inspectClicked(m_id);
+    }
+  }
+}
+
 void RefrigerationCaseDetailView::onRemoveButtonClicked()
 {
   emit removeClicked(m_id);
@@ -796,6 +826,36 @@ RefrigerationCondenserView::RefrigerationCondenserView()
   OS_ASSERT(bingo);
 
   setCondenserId(OSItemId());
+}
+
+void RefrigerationCondenserView::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  update();
+
+  event->accept();
+}
+
+void RefrigerationCondenserView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      update();
+
+      emit inspectClicked(m_condenserId);
+    }
+  }
 }
 
 void RefrigerationCondenserView::setCondenserName(const QString & name)
@@ -861,6 +921,36 @@ RefrigerationCompressorDetailView::RefrigerationCompressorDetailView()
   OS_ASSERT(bingo);
 
   setId(OSItemId());
+}
+
+void RefrigerationCompressorDetailView::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  update();
+
+  event->accept();
+}
+
+void RefrigerationCompressorDetailView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      update();
+
+      emit inspectClicked(m_id);
+    }
+  }
 }
 
 void RefrigerationCompressorDetailView::onRemoveButtonClicked()
