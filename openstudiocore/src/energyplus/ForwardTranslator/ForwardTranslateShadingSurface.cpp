@@ -158,6 +158,8 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
   }
 
   // get reflectance properties from construction if possible
+  bool addShadingPropertyObject = false;
+
   IdfObject shadingPropertyObject = IdfObject(openstudio::IddObjectType::ShadingProperty_Reflectance);
   shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::ShadingSurfaceName, modelObject.name().get());
 
@@ -167,6 +169,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
 
       shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::FractionofShadingSurfaceThatIsGlazed, 1.0);
       shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::GlazingConstructionName, constructionBase->name().get());
+      addShadingPropertyObject = true;
 
     }else{
 
@@ -184,11 +187,13 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
           boost::optional<double> solRefl = outerMaterial.solarReflectance();
           if (solRefl){
             shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
+            addShadingPropertyObject = true;
           }
 
           boost::optional<double> visRefl = outerMaterial.visibleReflectance();
           if (visRefl){
             shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
+            addShadingPropertyObject = true;
           }
           
         }
@@ -196,7 +201,9 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
     }
   }
 
-  m_idfObjects.push_back(shadingPropertyObject);
+  if (addShadingPropertyObject){
+    m_idfObjects.push_back(shadingPropertyObject);
+  }
 
   return idfObject;
 }
