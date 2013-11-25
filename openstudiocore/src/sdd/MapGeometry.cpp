@@ -25,7 +25,10 @@
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/Construction.hpp>
+#include <model/Construction_Impl.hpp>
 #include <model/MasslessOpaqueMaterial.hpp>
+#include <model/StandardOpaqueMaterial.hpp>
+#include <model/StandardOpaqueMaterial_Impl.hpp>
 #include <model/FFactorGroundFloorConstruction.hpp>
 #include <model/FFactorGroundFloorConstruction_Impl.hpp>
 #include <model/CFactorUndergroundWallConstruction.hpp>
@@ -1890,13 +1893,37 @@ namespace sdd {
       }
     }
 
-    //QDomElement solReflElement = doc.createElement("SolRefl");
-    //result->appendChild(solReflElement);
-    //solReflElement.appendChild(doc.createTextNode(QString::number(0.1)));
+    // DLM: what defaults do we want
+    double solRefl = 0.2;
+    double visRefl = 0.2;
 
-    //QDomElement visReflElement = doc.createElement("VisRefl");
-    //result->appendChild(visReflElement);
-    //visReflElement.appendChild(doc.createTextNode(QString::number(0.1)));
+    boost::optional<model::ConstructionBase> constructionBase = shadingSurface.construction();
+    if (constructionBase){
+      boost::optional<model::Construction> construction = constructionBase->optionalCast<model::Construction>();
+      if (construction){
+
+        std::vector<model::Material> layers = construction->layers();
+        if (!layers.size() && layers[0].optionalCast<model::StandardOpaqueMaterial>()){
+          model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+          boost::optional<double> test = outerMaterial.solarReflectance();
+          if (test){
+            solRefl = *test;
+          }
+          test = outerMaterial.visibleReflectance();
+          if (test){
+            visRefl = *test;
+          }
+        }
+      }
+    }
+
+    QDomElement solReflElement = doc.createElement("SolRefl");
+    result->appendChild(solReflElement);
+    solReflElement.appendChild(doc.createTextNode(QString::number(solRefl)));
+
+    QDomElement visReflElement = doc.createElement("VisRefl");
+    result->appendChild(visReflElement);
+    visReflElement.appendChild(doc.createTextNode(QString::number(visRefl)));
 
     // translate vertices
     Point3dVector vertices = transformation*shadingSurface.vertices();
