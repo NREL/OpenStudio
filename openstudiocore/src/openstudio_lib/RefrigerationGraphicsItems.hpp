@@ -343,25 +343,46 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
   QString m_name;
 };
 
-//class RefrigerationCompressorDetailView : public QGraphicsObject
-//{
-//  Q_OBJECT;
-//
-//  public:
-//
-//  RefrigerationCompressorDetailView();
-//
-//  virtual ~RefrigerationCompressorDetailView() {}
-//
-//  QRectF boundingRect() const;
-//
-//  protected:
-//
-//  void paint( QPainter *painter, 
-//              const QStyleOptionGraphicsItem *option, 
-//              QWidget *widget = 0 );
-//  
-//};
+class RefrigerationCompressorDetailView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationCompressorDetailView();
+
+  virtual ~RefrigerationCompressorDetailView() {}
+
+  RemoveButtonItem * removeButtonItem;
+
+  static QSizeF size();
+
+  QRectF boundingRect() const;
+
+  void setLabel(const QString & label);
+
+  void setId(const OSItemId & id);
+
+  signals:
+
+  void removeClicked(OSItemId id);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 );
+
+  private slots:
+
+  void onRemoveButtonClicked();
+  
+  private:
+
+  QString m_label;
+
+  OSItemId m_id;
+};
 
 class RefrigerationCompressorDropZoneView : public RefrigerationSystemDropZoneView
 {
@@ -396,8 +417,6 @@ class RefrigerationCompressorView : public QGraphicsObject
 
   RefrigerationCompressorDropZoneView * refrigerationCompressorDropZoneView;
 
-  void setNumberOfCompressors(int numberOfCompressors);
-
   void insertCompressorDetailView(int index, QGraphicsObject * object);
 
   void removeAllCompressorDetailViews();
@@ -411,8 +430,6 @@ class RefrigerationCompressorView : public QGraphicsObject
               QWidget *widget = 0 );
 
   private:
-
-  int m_numberOfCompressors;
 
   std::vector<QGraphicsObject *> m_compressorDetailViews;
 };
@@ -446,17 +463,29 @@ class RefrigerationCaseDetailView : public QGraphicsObject
 
   virtual ~RefrigerationCaseDetailView() {}
 
+  RemoveButtonItem * removeButtonItem;
+
   static QSizeF size();
 
   QRectF boundingRect() const;
 
   void setName(const QString & name);
 
+  void setId(const OSItemId & id);
+
+  signals:
+
+  void removeClicked(OSItemId id);
+
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  private slots:
+
+  void onRemoveButtonClicked();
 
   private:
 
@@ -465,6 +494,8 @@ class RefrigerationCaseDetailView : public QGraphicsObject
   QRectF iconRect() const;
 
   QString m_name;
+
+  OSItemId m_id;
 };
 
 class RefrigerationCasesView : public QGraphicsObject

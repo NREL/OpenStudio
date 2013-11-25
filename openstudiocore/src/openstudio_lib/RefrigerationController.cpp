@@ -224,6 +224,8 @@ void RefrigerationController::refreshNow()
 
     m_detailView->refrigerationSystemView->refrigerationCasesView->removeAllCaseDetailViews();
 
+    m_detailView->refrigerationSystemView->refrigerationCompressorView->removeAllCompressorDetailViews();
+
     if( m_currentSystem )
     {
       if( boost::optional<model::ModelObject> condenser = m_currentSystem->refrigerationCondenser() )
@@ -233,9 +235,34 @@ void RefrigerationController::refreshNow()
         m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
       }
 
-      std::vector<model::RefrigerationCase> cases = m_currentSystem->cases();
+      // insert compressors
 
-      m_detailView->refrigerationSystemView->refrigerationCompressorView->setNumberOfCompressors(m_currentSystem->compressors().size());
+      std::vector<model::RefrigerationCompressor> compressors = m_currentSystem->compressors();
+
+      int compressorIndex = 1;
+
+      for( std::vector<model::RefrigerationCompressor>::iterator it = compressors.begin();
+           it != compressors.end();
+           it++ )
+      {
+        RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
+
+        detailView->setId(OSItemId(it->handle(),QString(),false));
+
+        detailView->setLabel(QString::number(compressorIndex));
+
+        bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
+                             this,SLOT(removeCompressor(const OSItemId &)));
+        OS_ASSERT(bingo);
+
+        m_detailView->refrigerationSystemView->refrigerationCompressorView->insertCompressorDetailView(0,detailView);
+
+        compressorIndex++;
+      }
+
+      // insert cases
+
+      std::vector<model::RefrigerationCase> cases = m_currentSystem->cases();
 
       m_detailView->refrigerationSystemView->refrigerationCasesView->setNumberOfDisplayCases(cases.size());
 
@@ -245,7 +272,13 @@ void RefrigerationController::refreshNow()
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
+        detailView->setId(OSItemId(it->handle(),QString(),false));
+
         detailView->setName(QString::fromStdString(it->name().get()));
+
+        bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
+                             this,SLOT(removeCase(const OSItemId &)));
+        OS_ASSERT(bingo);
 
         m_detailView->refrigerationSystemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
       }
@@ -270,9 +303,7 @@ void RefrigerationController::removeCompressor(const OSItemId & itemid)
     {
       mo->remove();
 
-      OS_ASSERT(m_detailView);
-
-      //m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserId(OSItemId());
+      refresh();
     }
   }
 }
@@ -288,6 +319,19 @@ void RefrigerationController::removeCondenser(const OSItemId & itemid)
       OS_ASSERT(m_detailView);
 
       m_detailView->refrigerationSystemView->refrigerationCondenserView->setCondenserId(OSItemId());
+    }
+  }
+}
+
+void RefrigerationController::removeCase(const OSItemId & itemid)
+{
+  if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
+  {
+    if(boost::optional<model::ModelObject> mo = model->getModelObject<model::ModelObject>(Handle(itemid.itemId())))
+    {
+      mo->remove();
+
+      refresh();
     }
   }
 }
