@@ -24,27 +24,27 @@
 namespace openstudio {
 namespace contam {
 
-CxModel::CxModel(openstudio::path path)
+PrjModel::PrjModel(openstudio::path path)
 {
   read(path);
 }
 
-CxModel::CxModel(std::string filename)
+PrjModel::PrjModel(std::string filename)
 {
   read(filename);
 }
 
-CxModel::CxModel(Reader &input)
+PrjModel::PrjModel(Reader &input)
 {
   read(input);
 }
 
-bool CxModel::read(openstudio::path path)
+bool PrjModel::read(openstudio::path path)
 {
   return read(openstudio::toString(path));
 }
 
-bool CxModel::read(std::string filename)
+bool PrjModel::read(std::string filename)
 {
   QFile fp(QString().fromStdString(filename));
 
@@ -59,7 +59,7 @@ bool CxModel::read(std::string filename)
   return d->valid;
 }
 
-bool CxModel::read(Reader &input)
+bool PrjModel::read(Reader &input)
 {
   d->valid = false;
   // Section 1: Project, Weather, Simulation, and Output Controls
@@ -97,8 +97,6 @@ bool CxModel::read(Reader &input)
   std::string selmt = input.readSection(FILELINE); // Skip it
   d->unsupported["ControlSuperElements"] = selmt;
   // Section 12b: Control Nodes
-  //std::string ctrl = input.readSection(FILELINE); // Skip it
-  //m_unsupported["ControlNode"] = ctrl;
   d->controlNodes = input.readElementVector<ControlNode>(FILELINEC "control node");
   // Section 13: Simple Air Handling System (AHS)
   d->ahs = input.readSectionVector<Ahs>(FILELINEC "ahs");
@@ -118,7 +116,6 @@ bool CxModel::read(Reader &input)
   std::string dct = input.readSection(FILELINE); // Skip it
   d->unsupported["DuctSegment"] = dct;
   // Section 20: Source/Sinks
-  //m_sourceSinks = input.readSectionVector<SourceSink>(FILELINEC QString("source/sink"));
   std::string css = input.readSection(FILELINE); // Skip it
   d->unsupported["SourceSink"] = css;
   // Section 21: Occupancy Schedules
@@ -135,7 +132,7 @@ bool CxModel::read(Reader &input)
   return true;
 }
 
-std::string CxModel::toString()
+std::string PrjModel::toString()
 {
   std::string output;
   if(!d->valid)
@@ -200,7 +197,7 @@ std::string CxModel::toString()
   return output;
 }
 
-std::vector<std::vector<int> > CxModel::zoneExteriorFlowPaths()
+std::vector<std::vector<int> > PrjModel::zoneExteriorFlowPaths()
 {
   std::vector<std::vector<int> > paths(d->zones.size());
 
@@ -226,13 +223,12 @@ std::vector<std::vector<int> > CxModel::zoneExteriorFlowPaths()
   return paths;
 }
 
-std::vector<TimeSeries> CxModel::zoneInfiltration(SimFile *sim)
+std::vector<TimeSeries> PrjModel::zoneInfiltration(SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
   // of the text form outputs.
   std::vector<TimeSeries> results;
-  //std::vector<std::vector<double> > flow0 = sim->F0();
   std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
   unsigned int ntimes = sim->dateTimes().size();
   for(unsigned int i=0; i<d->zones.size(); i++)
@@ -282,37 +278,12 @@ std::vector<TimeSeries> CxModel::zoneInfiltration(SimFile *sim)
         }
       }
     }
-    /*
-    // Run through the times and compute the infiltration
-    for(unsigned int j=0; j<ntimes; j++)
-    {
-    for(unsigned int k=0; k<extPaths.size(); k++)
-    {
-    int nr = paths[i][k];
-    if(nr > 0) // Positive value is infiltration
-    {
-    nr -= 1;
-    if(flow0[nr][j] > 0)
-    {
-    inf[j] += flow0[nr][j];
-    }
-    }
-    else // Negative value is infiltration
-    {
-    nr = -nr - 1;
-    if(flow0[nr][j] < 0)
-    {
-    inf[j] -= flow0[nr][j];
-    }
-    }
-    }
-    }*/
     results.push_back(openstudio::TimeSeries(sim->dateTimes(),inf,"kg/s"));
   }
   return results;
 }
 
-void CxModel::rebuildContaminants()
+void PrjModel::rebuildContaminants()
 {
   d->contaminants.clear();
   for(unsigned int i=1;i<=d->species.size();i++)
@@ -325,7 +296,7 @@ void CxModel::rebuildContaminants()
   }
 }
 
-void CxModel::readZoneIc(Reader &input)
+void PrjModel::readZoneIc(Reader &input)
 {
   unsigned int nn = input.readUInt(FILELINE);
   if(nn != 0)
@@ -362,7 +333,7 @@ void CxModel::readZoneIc(Reader &input)
   input.read999("Failed to find zone IC section termination" CFILELINE);
 }
 
-std::string CxModel::writeZoneIc(int start)
+std::string PrjModel::writeZoneIc(int start)
 {
   int offset = 1;
   if(start != 0)
@@ -386,17 +357,7 @@ std::string CxModel::writeZoneIc(int start)
   return string  + "-999\n";
 }
 
-//template <class T> void Model::addAirflowElement(T element)
-//{
-//    T *copy = new T;
-//    *copy = element;
-//    copy->setNr(m_airflowElements.size()+1);
-//    m_airflowElements.push_back(QSharedPointer<AirflowElement>((AirflowElement*)copy));
-//}
-
-//template void Model::addAirflowElement(PlrTest1);
-
-int CxModel::airflowElementNrByName(std::string name) const
+int PrjModel::airflowElementNrByName(std::string name) const
 {
   for(int i=0;i<d->airflowElements.size();i++)
   {
@@ -408,7 +369,7 @@ int CxModel::airflowElementNrByName(std::string name) const
   return 0;
 }
 
-bool CxModel::setSteadyWeather(double windSpeed, double windDirection)
+bool PrjModel::setSteadyWeather(double windSpeed, double windDirection)
 {
   if(windSpeed < 0)
   {

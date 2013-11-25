@@ -36,10 +36,12 @@ namespace contam {
 
 class SimFile;
 
-class CxModelPrivate : public QSharedData
+namespace detail {
+
+class PrjModelPrivate : public QSharedData
 {
 public:
-  CxModelPrivate()
+  PrjModelPrivate()
   {
     valid = false;
   }
@@ -62,16 +64,32 @@ public:
   std::vector<Path> paths;
 };
 
-class CONTAM_API CxModel
+} // detail
+
+/** PrjModel is primarily a container for CONTAM airflow model data.
+ *
+ *  PrjModel contains CONTAM airflow model elements and has several methods 
+ *  to produce the PRJ file. The PRJ file is a positional text file and is
+ *  the primary way in which data is provided to the ContamX solver. The 
+ *  format is documented here: 
+ *
+ *  www.bfrl.nist.gov/IAQanalysis/CONTAM/manual/Content/html/PRJ/PRJ_PRJ_Sections.htm
+ *
+ *  Note that the representation in this object is not very sophisticated. In
+ *  particular, links between many items are based upon array indices, so
+ *  modifications to the model should be made with care.
+ *
+ */
+class CONTAM_API PrjModel
 {
 public:
-  CxModel()
+  PrjModel()
   {
-    d = new CxModelPrivate();
+    d = new detail::PrjModelPrivate();
   }
-  explicit CxModel(openstudio::path path);
-  explicit CxModel(std::string filename);
-  explicit CxModel(Reader &input);
+  explicit PrjModel(openstudio::path path);
+  explicit PrjModel(std::string filename);
+  explicit PrjModel(Reader &input);
   bool read(openstudio::path path);
   bool read(std::string filename);
   bool read(Reader &input);
@@ -158,14 +176,6 @@ public:
     }
     return afe;
   }
-
-  //    template <class T> void addAirflowElement(T element);
-  //    {
-  //        T *copy = new T;
-  //        *copy = element;
-  //        copy->setNr(m_airflowElements.size()+1);
-  //        m_airflowElements.push_back(QSharedPointer<AirflowElement>((AirflowElement*)copy));
-  //    }
 
   template <class T> void addAirflowElement(T element)
   {
@@ -280,17 +290,13 @@ private:
   void readZoneIc(Reader &input);
   std::string writeZoneIc(int start=0);
   template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
-  // SWIG has some problems with this template for some reason. Comment out for now, delete if it doesn't
-  // get uncommented soon.
-  //  template <class T, template <class T> class U> std::string writeSectionVector(U<QSharedPointer<T> > vector,
-  //    std::string label=std::string(), int start=0);
   template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
 
-  QExplicitlySharedDataPointer<CxModelPrivate> d;
+  QExplicitlySharedDataPointer<detail::PrjModelPrivate> d;
 };
 
-template <class T> std::string CxModel::writeSectionVector(std::vector<T> vector, std::string label, int start)
+template <class T> std::string PrjModel::writeSectionVector(std::vector<T> vector, std::string label, int start)
 {
   std::string string;
   int number = vector.size()-start;
@@ -310,30 +316,7 @@ template <class T> std::string CxModel::writeSectionVector(std::vector<T> vector
   return string;
 }
 
-/*
-template <class T, template <class T> class U> STRING Model::writeSectionVector(U<QSharedPointer<T> > vector,
-STRING label, int start)
-{
-std::string string;
-int number = vector.size()-start;
-if(label.empty())
-{
-string += openstudio::toString(number) + '\n';
-}
-else
-{
-string += openstudio::toString(number) + " ! " + label + '\n';
-}
-for(int i=start;i<vector.size();i++)
-{
-string += vector[i]->write();
-}
-string += "-999\n";
-return string;
-}
-*/
-
-template <class T> std::string CxModel::writeSectionVector(QVector<QSharedPointer<T> > vector,
+template <class T> std::string PrjModel::writeSectionVector(QVector<QSharedPointer<T> > vector,
   std::string label, int start)
 {
   std::string string;
@@ -354,7 +337,7 @@ template <class T> std::string CxModel::writeSectionVector(QVector<QSharedPointe
   return string;
 }
 
-template <class T> std::string CxModel::writeArray(std::vector<T> vector, std::string label, int start)
+template <class T> std::string PrjModel::writeArray(std::vector<T> vector, std::string label, int start)
 {
   std::string string;
   int number = vector.size()-start;

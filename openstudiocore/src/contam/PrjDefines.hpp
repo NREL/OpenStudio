@@ -23,15 +23,9 @@
 #define RX_IS_STRING
 
 #ifdef RX_IS_STRING
-#ifndef STD_STRING
-#define RX QString
-#define RX_C(v) v
-#define RX_INIT(v) QString(#v)
-#else
 #define RX std::string
 #define RX_C(v) v
 #define RX_INIT(v) std::string(#v)
-#endif
 #endif
 
 #define NOFILELINE
@@ -174,6 +168,8 @@
 #define EXP_2     253  /* FD 375 exponent 2 */
 #define SUB_2     254  /* FE 376 subscript 2 */
 
+// The defines below were mainly for the ReverseTranslator object - so
+// can be eliminated if that object doesn't ever come back.
 // Directional icon defines: E=1, N=2, W=4, S=8
 #define BIT_E       1
 #define BIT_N       2

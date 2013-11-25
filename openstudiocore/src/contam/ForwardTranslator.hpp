@@ -39,6 +39,17 @@ class ProgressBar;
 
 namespace contam{
 
+/** CvFile is a container for data that is to be written to a CONTAM CVF.
+ *
+ *  CvFile contains time series data that is to be written to a CONTAM
+ *  Continuous Values File, which is documented here:
+ *
+ *  www.bfrl.nist.gov/IAQanalysis/CONTAM/manual/Content/html/IDH_UsingControls_CVF.htm
+ *
+ *  Data is input as TimeSeries that should cover the entire time period to 
+ *  be simulated.
+ *
+ */
 class CONTAM_API CvFile
 {
 public:
@@ -60,7 +71,15 @@ private:
   Date m_end;
 };
 
-class CONTAM_API ForwardTranslator// : public CxModel
+/** ForwardTranslator translates an OpenStudio model into a CONTAM model.
+ *
+ *  ForwardTranslator translates an OpenStudio energy model into a CONTAM
+ *  airflow model using a streamlined approach. Each wall is assigned an
+ *  overall leakage rate, and individual components are not presently
+ *  represented.
+ *
+ */
+class CONTAM_API ForwardTranslator
 {
 public:
   ForwardTranslator();
@@ -69,7 +88,7 @@ public:
   void clear();
 
   // Translator
-  boost::optional<contam::CxModel> translate(model::Model model);
+  boost::optional<contam::PrjModel> translate(model::Model model);
   
   // Static translation function
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
@@ -101,7 +120,7 @@ public:
   boost::optional<DateTime> endDateTime() const;
 
   // We may need more functions like this that modify the CONTAM model
-  int addNewAirflowElement(contam::CxModel cxModel,std::string name,double flow,double n=0.65,double deltaP=75.0);
+  int addNewAirflowElement(contam::PrjModel prjModel,std::string name,double flow,double n=0.65,double deltaP=75.0);
 
   // Write control files
   bool writeCvFile(openstudio::path filepath);
@@ -113,8 +132,8 @@ public:
   std::vector<LogMessage> errors() const;
 
 private:
-  bool applyExteriorFlowRate(contam::CxModel cxModel);
-  bool applyAirtightnessLevel(contam::CxModel cxModel);
+  bool applyExteriorFlowRate(contam::PrjModel prjModel);
+  bool applyAirtightnessLevel(contam::PrjModel prjModel);
 
   // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
