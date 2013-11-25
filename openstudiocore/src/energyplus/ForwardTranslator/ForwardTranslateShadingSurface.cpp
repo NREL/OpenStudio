@@ -181,7 +181,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
         std::vector<model::Material> layers = construction->layers();
 
         // we want the outer layer
-        if (!layers.size() && layers[0].optionalCast<model::StandardOpaqueMaterial>()){
+        if (!layers.empty() && layers[0].optionalCast<model::StandardOpaqueMaterial>()){
           model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
 
           boost::optional<double> solRefl = outerMaterial.solarReflectance();
