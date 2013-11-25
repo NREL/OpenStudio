@@ -126,8 +126,10 @@ namespace sdd {
     shadingSurfaceGroup.setName("Building ShadingGroup");
     shadingSurfaceGroup.setShadingSurfaceType("Building");
     for (int i = 0; i < exteriorShadingElements.count(); ++i){
-      boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
-      OS_ASSERT(exteriorShading);
+      if (exteriorShadingElements.at(i).parentNode() == element){
+        boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+        OS_ASSERT(exteriorShading);
+      }
     }
 
     // create all spaces
@@ -313,8 +315,10 @@ namespace sdd {
     shadingSurfaceGroup.setName(spaceName + " ShadingGroup");
     shadingSurfaceGroup.setSpace(*space);
     for (int i = 0; i < exteriorShadingElements.count(); ++i){
-      boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
-      OS_ASSERT(exteriorShading);
+      if (exteriorShadingElements.at(i).parentNode() == element){
+        boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+       OS_ASSERT(exteriorShading);
+      }
     }
 
     // Service Hot Water

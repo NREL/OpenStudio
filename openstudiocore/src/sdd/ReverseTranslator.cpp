@@ -446,8 +446,10 @@ namespace sdd {
       shadingSurfaceGroup.setName("Site ShadingGroup");
       shadingSurfaceGroup.setShadingSurfaceType("Site");
       for (int i = 0; i < exteriorShadingElements.count(); ++i){
-        boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
-        OS_ASSERT(exteriorShading);
+        if (exteriorShadingElements.at(i).parentNode() == projectElement){
+          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+          OS_ASSERT(exteriorShading);
+        }
       }
 
       // translate the building
