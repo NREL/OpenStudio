@@ -963,7 +963,7 @@ namespace detail {
     }
 
     // create zip file
-    m_zipFileForCloud = tempDir / toPath("analysis_" + removeBraces(analysis().uuid()) + ".zip");
+    m_zipFileForCloud = tempDir / toPath("project.zip");
     ZipFile zipFile(m_zipFileForCloud,false);
 
     // add contents
