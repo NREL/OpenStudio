@@ -39,6 +39,17 @@ class ProgressBar;
 
 namespace contam{
 
+/** CvFile is a container for data that is to be written to a CONTAM CVF.
+ *
+ *  CvFile contains time series data that is to be written to a CONTAM
+ *  Continuous Values File, which is documented here:
+ *
+ *  www.bfrl.nist.gov/IAQanalysis/CONTAM/manual/Content/html/IDH_UsingControls_CVF.htm
+ *
+ *  Data is input as TimeSeries that should cover the entire time period to 
+ *  be simulated.
+ *
+ */
 class CONTAM_API CvFile
 {
 public:
@@ -50,6 +61,7 @@ public:
   Date end() const {return m_end;}
   void setEnd(Date date){m_end=date;}
   bool isEmpty() {return m_names.size() == 0;}
+  void clear();
 
 private:
   std::vector<std::string> m_names;
@@ -59,85 +71,56 @@ private:
   Date m_end;
 };
 
-class CONTAM_API ForwardTranslator : public Model
+/** ForwardTranslator translates an OpenStudio model into a CONTAM model.
+ *
+ *  ForwardTranslator translates an OpenStudio energy model into a CONTAM
+ *  airflow model using a streamlined approach. Each wall is assigned an
+ *  overall leakage rate, and individual components are not presently
+ *  represented.
+ *
+ */
+class CONTAM_API ForwardTranslator
 {
 public:
-  ForwardTranslator(const openstudio::model::Model& model, bool translateHVAC=true, ProgressBar* progressBar=NULL);
-  ForwardTranslator(const openstudio::model::Model& model, std::string leakageDescriptor, bool translateHVAC=true,
-    ProgressBar* progressBar=NULL);
-  ForwardTranslator(const openstudio::model::Model& model, double flow, double n, double deltaP,
-    bool translateHVAC=true, ProgressBar* progressBar=NULL);
-  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, bool translateHVAC=true, 
-    ProgressBar* progressBar=NULL);
-  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, std::string leakageDescriptor,
-    bool translateHVAC=true, ProgressBar* progressBar=NULL);
-  ForwardTranslator(const openstudio::model::Model& model, double returnSupplyRatio, double flow, double n, 
-    double deltaP, bool translateHVAC=true, ProgressBar* progressBar=NULL);
+  ForwardTranslator();
 
-  std::string toString();
-  bool toPrj(const openstudio::path& path);
+  // Clear out the translator and reset to the defaults
+  void clear();
+
+  // Translator
+  boost::optional<contam::PrjModel> translate(model::Model model);
   
   // Static translation function
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
     bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=NULL);
 
-  // Secondary translation functions - need to add more of these by chopping out parts of the main translation function
+  // Secondary translation functions - this doesn't really fit here any more, so maybe it needs
+  // to be moved elsewhere, could be made static
   boost::optional<EpwFile> translateEpw(openstudio::path epwpath, openstudio::path outpath);
 
-  bool ready() const {return m_ready && valid();}
+  // Accessors to the element maps
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
-  // Getters and setters - the setters modify how translation is done or modify the model after translation (eventually). 
+  // Getters and setters - the setters modify how translation
   // Setters that could fail return a boolean
   boost::optional<std::string> airtightnessLevel() const;
-  bool setAirtightnessLevel(std::string level);
-  double exteriorFlowRate() const;
-  double exteriorExponent() const;
-  double exteriorDeltaP() const;
-  bool setExteriorFlowRate(double flow,double n=0.65,double deltaP=75.0);
-
-  // Getters and setters
-  double returnSupplyRatio() const
-  {
-    return m_returnSupplyRatio;
-  }
-  void setReturnSupplyRatio(double returnSupplyRatio)
-  {
-    m_returnSupplyRatio = fabs(returnSupplyRatio);
-  }
-
-  bool ratioOverride() const
-  {
-    return m_ratioOverride;
-  }
-  /*
-  void setRatioOverride(bool ratioOverride)
-  {
-    m_ratioOverride = ratioOverride;
-  }
-  */
-
-  //boost::optional<EpwFile> epwFile() const
-  //{
-  //  return m_epwFile;
-  //}
-
-  boost::optional<DateTime> startDateTime() const
-  {
-    return m_startDateTime;
-  }
-
-  boost::optional<DateTime> endDateTime() const
-  {
-    return m_endDateTime;
-  }
-  // Postprocessing Functions
-  //boost::optional<std::vector<TimeSeries> > zoneInfiltration(openstudio::path simPath);
+  void setAirtightnessLevel(std::string level);
+  boost::optional<double> exteriorFlowRate() const;
+  boost::optional<double> exteriorExponent() const;
+  boost::optional<double> exteriorDeltaP() const;
+  bool setExteriorFlowRate(double flow, double n, double deltaP);
+  double returnSupplyRatio() const;
+  void setReturnSupplyRatio(double returnSupplyRatio);
+  bool ratioOverride() const;
+  void setRatioOverride(bool ratioOverride);
+  bool translateHVAC() const;
+  void setTranslateHVAC(bool translateHVAC);
+  boost::optional<DateTime> startDateTime() const;
+  boost::optional<DateTime> endDateTime() const;
 
   // We may need more functions like this that modify the CONTAM model
-  bool setSteadyWeather(double windSpeed, double windDirection);
-  int addNewAirflowElement(std::string name,double flow,double n=0.65,double deltaP=75.0);
+  int addNewAirflowElement(contam::PrjModel prjModel,std::string name,double flow,double n=0.65,double deltaP=75.0);
 
   // Write control files
   bool writeCvFile(openstudio::path filepath);
@@ -149,8 +132,8 @@ public:
   std::vector<LogMessage> errors() const;
 
 private:
-  // Translators
-  bool translate(bool translateHVAC=true);
+  bool applyExteriorFlowRate(contam::PrjModel prjModel);
+  bool applyAirtightnessLevel(contam::PrjModel prjModel);
 
   // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
@@ -158,8 +141,6 @@ private:
   int tableLookup(std::map<Handle,int> map, Handle handle, const char *name);
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
-
-  void init();
 
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
@@ -171,15 +152,16 @@ private:
   std::map <Handle, int> m_surfaceMap;    // Surface paths stored by handle
   QMap <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
 
-  openstudio::model::Model m_model;
   CvFile m_cvf;
-  //boost::optional<EpwFile> m_epwFile;
   boost::optional<DateTime> m_startDateTime;
   boost::optional<DateTime> m_endDateTime;
-  bool m_ready;
   boost::optional<std::string> m_leakageDescriptor;
+  boost::optional<double> m_flow;
+  boost::optional<double> m_n;
+  boost::optional<double> m_deltaP;
   double m_returnSupplyRatio;
   bool m_ratioOverride;
+  bool m_translateHVAC;
 
   ProgressBar* m_progressBar;
 
