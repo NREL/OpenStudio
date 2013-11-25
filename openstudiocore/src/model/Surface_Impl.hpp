@@ -23,16 +23,13 @@
 #include <model/ModelAPI.hpp>
 #include <model/PlanarSurface_Impl.hpp>
 
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/adapted/boost_tuple.hpp>
-
-
 namespace openstudio {
 namespace model {
 
 class Space;
 class SubSurface;
 class Surface;
+class SurfaceIntersection;
 
 namespace detail {
 
@@ -239,6 +236,7 @@ namespace detail {
      *  If the surfaces are the same, returns true but no new geometry is created.
      *  Returns true if an intersection occurred. Does not set surface adjacency. */
     bool intersect(Surface& otherSurface);
+    boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
 
     /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.  
         Returns the new Surface if created. */
@@ -303,9 +301,6 @@ namespace detail {
 
     bool setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setAdjacentSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
-
-    // helper function to get a boost polygon point from a Point3d
-    boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const;
 
   };
 

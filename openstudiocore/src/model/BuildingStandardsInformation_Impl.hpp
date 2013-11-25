@@ -30,7 +30,6 @@ class BuildingStandardsInformation;
 namespace detail {
 
   class MODEL_API BuildingStandardsInformation_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
  
     /** Constructors and Destructors */

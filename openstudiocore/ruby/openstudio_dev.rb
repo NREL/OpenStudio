@@ -71,15 +71,8 @@ require 'openstudioanalysis'
 require 'openstudiolib'
 require 'openstudioplugin'
 require 'openstudioosversion'
-
-# optional extensions
-if ($OpenStudio_SimXML)
-  require 'openstudiosimxml'
-end
-
-if ($OpenStudio_SDD)
-  require 'openstudiosdd'
-end
+require 'openstudioisomodel'
+require 'openstudiosdd'
 
 # restore original path
 ENV['PATH'] = original_path

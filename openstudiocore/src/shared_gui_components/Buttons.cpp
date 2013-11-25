@@ -326,6 +326,9 @@ CloudOffButton::CloudOffButton(QWidget * parent)
                "  background-image:url(':/shared_gui_components/images/cloud_off.png');"
                "  border:none;"
                "}");
+  style.append("QPushButton:disabled {"
+               "  background-image:url(':/shared_gui_components/images/cloud_off_disabled.png');"
+               "}");
 
   setStyleSheet(style);
 }
@@ -342,6 +345,9 @@ CloudOnButton::CloudOnButton(QWidget * parent)
   style.append("QPushButton {"
                "  background-image:url(':/shared_gui_components/images/cloud_on.png');"
                "  border:none;"
+               "}");
+  style.append("QPushButton:disabled {"
+               "  background-image:url(':/shared_gui_components/images/cloud_on_disabled.png');"
                "}");
 
   setStyleSheet(style);

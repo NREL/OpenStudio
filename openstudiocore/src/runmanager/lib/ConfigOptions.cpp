@@ -635,6 +635,7 @@ namespace runmanager {
     searchdirs.push_back(toPath("C:\\"));
 #elif defined(Q_OS_MAC)
     searchdirs.push_back(toPath("/Applications"));
+
 #else
     searchdirs.push_back(toPath("/usr/local"));
 #endif
@@ -958,6 +959,15 @@ namespace runmanager {
 #else
     search.push_back(openstudio::toPath("/"));
     search.push_back(openstudio::toPath("/usr/local"));
+
+#ifdef Q_OS_MAC
+#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ == 1090
+    search.push_back(toPath("/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin"));
+#else
+    search.push_back(toPath("/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin"));
+#endif
+#endif
+
 #endif
     
     if (!openstudio::applicationIsRunningFromBuildDirectory())

@@ -28,7 +28,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API Connection_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
 
     Connection_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

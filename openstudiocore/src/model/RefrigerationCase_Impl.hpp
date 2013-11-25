@@ -35,7 +35,6 @@ namespace detail {
 
   /** RefrigerationCase_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCase.*/
   class MODEL_API RefrigerationCase_Impl : public ParentObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -32,7 +32,6 @@ namespace detail {
 
 /** SetpointManagerWarmest_Impl is a HVACComponent_Impl that is the implementation class for SetpointManagerWarmest.*/
 class MODEL_API SetpointManagerWarmest_Impl : public HVACComponent_Impl {
-  Q_OBJECT;
  public:
   /** @name Constructors and Destructors */
   //@{

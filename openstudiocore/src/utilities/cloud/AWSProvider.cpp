@@ -735,10 +735,10 @@ namespace openstudio{
         //awsComputerInformation.processorCount = 1;
         //info.push_back(awsComputerInformation);
 
-        awsComputerInformation.instanceType = "c1.xlarge";
-        awsComputerInformation.prettyName = "High-CPU Extra Large";
-        awsComputerInformation.processorCount = 8;
-        info.push_back(awsComputerInformation);
+        //awsComputerInformation.instanceType = "c1.xlarge";
+        //awsComputerInformation.prettyName = "High-CPU Extra Large";
+        //awsComputerInformation.processorCount = 8;
+        //info.push_back(awsComputerInformation);
 
         awsComputerInformation.instanceType = "cc2.8xlarge";
         awsComputerInformation.prettyName = "Cluster Compute Eight Extra Large";

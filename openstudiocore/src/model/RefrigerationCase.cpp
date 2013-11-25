@@ -798,7 +798,7 @@ namespace detail {
 
 } // detail
 
-RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseLightingSchedule, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule)
+RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule)
   : ParentObject(RefrigerationCase::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
@@ -829,7 +829,6 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseLightingS
   setOperatingCaseFanPowerperUnitLength(41.01);
   setStandardCaseLightingPowerperUnitLength(45.93);
   setInstalledCaseLightingPowerperUnitLength(45.93);
-  setCaseLightingSchedule(caseLightingSchedule);
   setFractionofLightingEnergytoCase(1);
   setAntiSweatHeaterControlType("None");
   setHumidityatZeroAntiSweatHeaterEnergy(-10);
@@ -838,7 +837,6 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseLightingS
   setCaseDefrostPowerperUnitLength(0.0);
   setCaseDefrostType("OffCycle");
   setCaseDefrostSchedule(caseDefrostSchedule);
-  setCaseDefrostDripDownSchedule(caseDefrostDripDownSchedule);
   setDefrostEnergyCorrectionCurveType("None");
   setUnderCaseHVACReturnAirFraction(0.0);
   setDesignEvaporatorTemperatureorBrineInletTemperature(-5.56);
