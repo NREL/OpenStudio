@@ -2723,4 +2723,23 @@ OS:ScheduleTypeLimits,
   1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous;                             !- Numeric Type
 
+OS:Refrigeration:System,
+  {c5203f94-88c4-413e-af5c-938dee4249e2}, !- Handle
+  Refrigeration System,                 !- Name
+  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Refrigerated CaseAndWalkInList Name
+  ,                                       !- Refrigeration TransferLoad List Name
+  ,                                       !- Refrigeration Condenser Name
+  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- CompressorList Name
+  21,                                     !- Minimum Condensing Temperature {C}
+  R404a,                                  !- Refrigeration System Working Fluid Type
+  ConstantSuctionTemperature;             !- Suction Temperature Control Type
+
+OS:ModelObjectList,
+  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Handle
+  Refrigeration System Case and Walkin List; !- Name
+
+OS:ModelObjectList,
+  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- Handle
+  Refrigeration System Compressor List; !- Name
+
 

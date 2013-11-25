@@ -429,6 +429,29 @@ void RefrigerationSystemListController::createNewSystem()
   }
 }
 
+void RefrigerationSystemListController::addSystem(const OSItemId & itemid)
+{
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  if( doc->fromComponentLibrary(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+
+    boost::optional<model::Model> model = OSAppBase::instance()->currentModel();
+
+    if( mo && model )
+    {
+      if( boost::optional<model::RefrigerationSystem> system = mo->optionalCast<model::RefrigerationSystem>() )
+      {
+        model::RefrigerationSystem systemClone = 
+          system->clone(model.get()).cast<model::RefrigerationSystem>();
+
+        emit itemInserted(systemIndex(systemClone));
+      }
+    }
+  }
+}
+
 void RefrigerationSystemListController::removeSystem(model::RefrigerationSystem & refrigerationSystem)
 {
   int i = systemIndex(refrigerationSystem);
@@ -502,8 +525,8 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
     RefrigerationSystemDropZoneView * refrigerationSystemDropZoneView = new RefrigerationSystemDropZoneView();
 
     bool bingo;
-    bingo = connect(refrigerationSystemDropZoneView,SIGNAL(mouseClicked()),
-                    qobject_cast<RefrigerationSystemListController *>(dataSource->controller()),SLOT(createNewSystem()));
+    bingo = connect(refrigerationSystemDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
+                    qobject_cast<RefrigerationSystemListController *>(dataSource->controller()),SLOT(addSystem(const OSItemId &)));
     OS_ASSERT(bingo);
 
     itemView = refrigerationSystemDropZoneView;

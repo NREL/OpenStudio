@@ -112,6 +112,8 @@ class RefrigerationSystemListController : public OSListController
 
   public slots:
 
+  void addSystem(const OSItemId & itemid);
+
   void createNewSystem();
 
   void removeSystem(model::RefrigerationSystem & refrigerationSystem);
