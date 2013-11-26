@@ -51,6 +51,7 @@ namespace model {
   class Space;
   class Surface;
   class SubSurface;
+  class ShadingSurface;
 }
 
 namespace sdd {
@@ -85,6 +86,7 @@ namespace sdd {
     boost::optional<QDomElement> translateSpace(const openstudio::model::Space& space, QDomDocument& doc);
     boost::optional<QDomElement> translateSurface(const openstudio::model::Surface& surface, const openstudio::Transformation& transformation, QDomDocument& doc);
     boost::optional<QDomElement> translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
+    boost::optional<QDomElement> translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
     boost::optional<QDomElement> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, QDomDocument& doc);
 
     std::map<openstudio::Handle, QDomElement> m_translatedObjects;
