@@ -201,6 +201,9 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Get the plane, throws openstudio::Exception if cannot compute plane for this surface.
   Plane plane() const;
 
+  /// Get a triangulation of this surface, subsurfaces will be replaced by holes in the triangulation
+  virtual std::vector<std::vector<Point3d> > triangulation() const;
+
  protected:
 
   /** @name Constructors and Destructors */
