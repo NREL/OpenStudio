@@ -1244,17 +1244,15 @@ namespace sdd {
     QString tagName = element.tagName();
     if (tagName == "ExtShdgObj"){
 
-      //<TransSchRef>OpqShdgTrans Sch</TransSchRef>
-      //<SolRefl>0.1</SolRefl>
-      //<VisRefl>0.1</VisRefl>
-
-      double solRefl = 0.1;
+      // default to 0 reflectance
+      // http://code.google.com/p/cbecc/issues/detail?id=344#c16
+      double solRefl = 0.0;
       QDomElement solReflElement = element.firstChildElement("SolRefl");
       if(!solReflElement.isNull()){
         solRefl = solReflElement.text().toDouble();
       }
 
-      double visRefl = 0.1;
+      double visRefl = 0.0;
       QDomElement visReflElement = element.firstChildElement("VisRefl");
       if(!visReflElement.isNull()){
         visRefl = visReflElement.text().toDouble();
@@ -1898,9 +1896,10 @@ namespace sdd {
       }
     }
 
-    // DLM: what defaults do we want
-    double solRefl = 0.2;
-    double visRefl = 0.2;
+    // default to 0 reflectance
+    // http://code.google.com/p/cbecc/issues/detail?id=344#c16
+    double solRefl = 0.0;
+    double visRefl = 0.0;
 
     boost::optional<model::ConstructionBase> constructionBase = shadingSurface.construction();
     if (constructionBase){
