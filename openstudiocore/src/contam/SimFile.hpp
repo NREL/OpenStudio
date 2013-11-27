@@ -60,7 +60,7 @@ public:
   boost::optional<openstudio::TimeSeries> nodePressure(int nr) const;
   boost::optional<openstudio::TimeSeries> nodeDensity(int nr) const;
 
-  std::vector<DateTime> dateTimes() const
+  std::vector<openstudio::DateTime> dateTimes() const
   {
     return m_dateTimes;
   }
@@ -80,7 +80,7 @@ private:
   std::vector<std::vector<double> > m_T;
   std::vector<std::vector<double> > m_P;
   std::vector<std::vector<double> > m_D;
-  std::vector<DateTime> m_dateTimes;
+  std::vector<openstudio::DateTime> m_dateTimes;
 
   bool m_hasLfr;
   bool m_hasNfr;

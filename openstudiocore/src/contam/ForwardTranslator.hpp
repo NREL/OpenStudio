@@ -110,8 +110,8 @@ public:
   void setRatioOverride(bool ratioOverride);
   bool translateHVAC() const;
   void setTranslateHVAC(bool translateHVAC);
-  boost::optional<DateTime> startDateTime() const;
-  boost::optional<DateTime> endDateTime() const;
+  boost::optional<openstudio::DateTime> startDateTime() const;
+  boost::optional<openstudio::DateTime> endDateTime() const;
 
   // Write control files
   bool writeCvFile(openstudio::path filepath);
@@ -151,8 +151,8 @@ private:
   QMap <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
 
   CvFile m_cvf;
-  boost::optional<DateTime> m_startDateTime;
-  boost::optional<DateTime> m_endDateTime;
+  boost::optional<openstudio::DateTime> m_startDateTime;
+  boost::optional<openstudio::DateTime> m_endDateTime;
   boost::optional<std::string> m_leakageDescriptor;
   boost::optional<double> m_flow;
   boost::optional<double> m_n;

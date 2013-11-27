@@ -64,7 +64,7 @@ public:
   void read(Reader &input);
   std::string write();
   bool isWall();
-  uint bits();
+  unsigned bits();
   int icon() const;
   void setIcon(const int icon);
   int col() const;

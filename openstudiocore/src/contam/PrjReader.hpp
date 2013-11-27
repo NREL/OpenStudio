@@ -42,7 +42,7 @@ public:
   double readDouble(DECFILELINE);
   std::string readString(DECFILELINE);
   int readInt(DECFILELINE);
-  unsigned int readUInt(DECFILELINE);
+  unsigned readUInt(DECFILELINE);
 
   std::string readLine(DECFILELINE);
   void read999(DECFILELINE);
