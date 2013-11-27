@@ -621,13 +621,12 @@ namespace openstudio {
             OS_ASSERT(isConnected);
           }
 
-          //boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
-          //OSDocument * doc = currentDocument.get();
-          //QObject * obj = qobject_cast<QObject *>(doc);
-          //if (currentDocument){         
-          //  bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), obj, SIGNAL(treeChanged(const openstudio::UUID &)));
-          //  OS_ASSERT(isConnected);
-          //}
+          boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+          if (currentDocument){         
+            bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), 
+              currentDocument.get(), SIGNAL(treeChanged(const openstudio::UUID &)));
+            OS_ASSERT(isConnected);
+          }
         }
       }
 

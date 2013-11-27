@@ -18,7 +18,9 @@
 **********************************************************************/
 
 #include <openstudio_lib/ResultsTabView.hpp>
+
 #include <openstudio_lib/OSDocument.hpp>
+
 #include "OSAppBase.hpp"
 
 #include <model/Model_Impl.hpp>
@@ -50,6 +52,7 @@
 
 #include <vtkCharts/Color.h> // TODO remove
 
+#include <runmanager/lib/FileInfo.hpp>
 #include <runmanager/lib/JobStatusWidget.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/RunManager.hpp>
@@ -1010,92 +1013,6 @@ void UtilityBillComparisonChart::onUtilityBillChanged()
   }
 }
 
-void UtilityBillComparisonChart::plotConsumption2()
-{
-  unsigned numberBillingPeriodsInCalculations = m_utilityBill.numberBillingPeriodsInCalculations();
-  boost::optional<double> CVRMSE = m_utilityBill.CVRMSE();
-  boost::optional<double> NMBE = m_utilityBill.NMBE();
-
-  QString CVRMSEString("-");
-  QString NMBEString("-");
-
-  bool valid = false;
-  bool validCVRMSE = false;
-  bool validNMBE = false;
-  if (CVRMSE){
-    if (*CVRMSE < m_calibrationMaxCVRMSE){
-      CVRMSEString = QString::number(*CVRMSE, 'f', 1) + "%";
-      validCVRMSE = true;
-    }else{
-      CVRMSEString = "<font color=\"red\">" + QString::number(*CVRMSE, 'f', 1) + "%</font>";
-    }
-  }
-  if (NMBE){
-    if (std::abs(*NMBE) < m_calibrationMaxNMBE){
-      NMBEString = QString::number(*NMBE, 'f', 1) + "%";
-      validNMBE = true;
-    }else{
-      NMBEString = "<font color=\"red\">" + QString::number(*NMBE, 'f', 2) + "%</font>";
-    }
-  }
-  valid = (validCVRMSE && validNMBE);
-
-  std::string consumptionUnit = m_utilityBill.consumptionUnit();
-  std::string fuelTypeString = m_utilityBill.fuelType().valueDescription() + " Consumption (" + consumptionUnit + ")";
-
-  QString labelText;
-  labelText += "<b>" + toQString(fuelTypeString) + "</b><br>";
-  labelText += "<b>CV(RMSE)</b> = " + CVRMSEString + "<br>";
-  labelText += "<b>NMBE</b> = " + NMBEString + "<br>";
-
-  m_label->setText(labelText);
-  
-  std::vector<std::string> labels;
-  std::vector<float> consumptionValues;
-  std::vector<float> modelConsumptionValues;
-
-  // goes from billing units to J
-  double consumptionUnitConversionFactor = m_utilityBill.consumptionUnitConversionFactor();
-
-  std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.billingPeriods();
-  int i = 1;
-  Q_FOREACH(const model::BillingPeriod& billingPeriod, billingPeriods){
-
-    boost::optional<double> consumption = billingPeriod.consumption();
-    if (consumption){
-      consumptionValues.push_back(*consumption);
-    }else{
-      consumptionValues.push_back(0);
-    }
-
-    boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
-    if (modelConsumption){
-      modelConsumptionValues.push_back(*modelConsumption / consumptionUnitConversionFactor);
-    }else{
-      modelConsumptionValues.push_back(0);
-    }
-
-    std::stringstream ss;
-    ss << i; 
-    labels.push_back(ss.str());
-
-    ++i;
-  }
-  m_chart->setXTickLabels(labels);
-
-  m_chart->setColors(UtilityBillComparisonLegend::getColors(m_utilityBill.fuelType()));
-
-  m_chart->axis(vtkCharts::Axis::LEFT).setTitle(consumptionUnit);
-  m_chart->axis(vtkCharts::Axis::BOTTOM).setTitle("Billing Period");
-
-  m_chart->addSeries(consumptionValues, "Actual");
-  m_chart->addSeries(modelConsumptionValues, "Model");
-
-  m_chart->rescale();
-
-  setUpdatesEnabled(true);
-}
-
 void UtilityBillComparisonChart::plotConsumption()
 {
   unsigned numberBillingPeriodsInCalculations = m_utilityBill.numberBillingPeriodsInCalculations();
@@ -1710,17 +1627,17 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   
   //********************************************* PAGE 3 (WebKit) *********************************************
 
-  QWebView * view = new QWebView(this);
-  view->load(QUrl("file:///C:/openstudio_git/OpenStudio/openstudiocore/src/openstudio_lib/indexWithDataIncluded.html"));
+  m_view = new QWebView(this);
+  //m_view->load(QUrl("file:///C:/openstudio_git/OpenStudio/openstudiocore/src/openstudio_lib/indexWithDataIncluded.html"));
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
-  view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+  m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
   QWebInspector *inspector = new QWebInspector;
-  inspector->setPage(view->page());
+  inspector->setPage(m_view->page());
   inspector->setVisible(true);
 #endif
 
-  m_stackedWidget->addWidget(view);
+  m_stackedWidget->addWidget(m_view);
 
   //********************************************* Connects *********************************************
 
@@ -1932,33 +1849,25 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
 
     openstudio::path htmlpath;
 
-    if (status == openstudio::runmanager::TreeStatusEnum::Finished
-        || status == openstudio::runmanager::TreeStatusEnum::Failed
-        || status == openstudio::runmanager::TreeStatusEnum::Canceled)
+    if (status == openstudio::runmanager::TreeStatusEnum::Finished)
     {
-      if (status == openstudio::runmanager::TreeStatusEnum::Failed)
-      {
-        statusstr = "Canceled";
-      }
-
       try {
         htmlpath = j.treeAllFiles().getLastByFilename("results.html").fullPath;
+        //std::vector<FileInfo> files = j.treeAllFiles().getAllByFilename("results.html").fullPath;
+        //m_view->load(QUrl(htmlpath));
       } catch (const std::exception &e) {
         LOG(Debug, "Tree finished, error getting html file: " << e.what());
       } catch (...) {
         LOG(Debug, "Tree finished, error getting html file");
         // no html file exists
       }
-
     } 
   } catch (const std::exception &e) {
     LOG(Debug, "Tree finished, error getting status: " << e.what());
-
   } catch (...) {
     LOG(Debug, "Tree finished, error getting status");
     // no html file exists
   }
-
 }
 
 } // openstudio

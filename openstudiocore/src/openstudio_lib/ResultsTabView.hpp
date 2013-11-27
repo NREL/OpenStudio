@@ -45,6 +45,7 @@ class QPushButton;
 class QStackedWidget;
 class QTableWidget;
 class QVBoxLayout;
+class QWebView;
 
 namespace vtkCharts {
   class BarChart;
@@ -183,7 +184,6 @@ namespace openstudio {
     
       void onUtilityBillChanged();
       void plotConsumption();
-      void plotConsumption2();
       void plotDemand();
 
     private:
@@ -290,6 +290,8 @@ namespace openstudio {
       
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
+
+      QWebView * m_view;
   };
 
   class ResultsTabView : public MainTabView
