@@ -96,8 +96,8 @@ public:
   void setDate(Date date);
   Time time() const;
   void setTime(Time time);
-  DateTime dateTime() const;
-  void setDateTime(DateTime dateTime);
+  openstudio::DateTime dateTime() const;
+  void setDateTime(openstudio::DateTime dateTime);
   int year() const;
   void setYear(int year);
   bool setYear(std::string year);
