@@ -481,8 +481,6 @@ void RunView::playButtonClicked(bool t_checked)
 {
   LOG(Debug, "playButtonClicked " << t_checked);
 
-
-
   boost::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
 
   if(osdocument->modified())

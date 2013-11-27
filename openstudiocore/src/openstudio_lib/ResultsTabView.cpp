@@ -43,9 +43,16 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
+#include <QtWebKit>
+#include <QWebView>
+
 #include <iostream>
 
-#include <vtkCharts/Color.h>
+#include <vtkCharts/Color.h> // TODO remove
+
+#include <runmanager/lib/JobStatusWidget.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/RunManager.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
@@ -173,6 +180,8 @@ void ConsumptionData::setValue(const openstudio::EndUseFuelType &t_fuelType,
   m_data[t_fuelType][t_categoryType][t_monthOfYear] = t_value;
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ResultsConsumptionChart::ResultsConsumptionChart(const openstudio::EndUseFuelType &t_fuelType, 
     const openstudio::Unit &t_unit, QWidget *t_parent)
   : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit)
@@ -187,6 +196,7 @@ ResultsConsumptionChart::ResultsConsumptionChart(const openstudio::EndUseFuelTyp
   setLayout(vboxlayout);
 
   setData(ConsumptionData(), m_unit);
+  setHTMLData(ConsumptionData(), m_unit);
 }
 
 openstudio::EndUseFuelType ResultsConsumptionChart::getFuelType() const
@@ -201,6 +211,7 @@ void ResultsConsumptionChart::setData(const ConsumptionData &t_data, const opens
   if(unitstring == "MBtu"){
     unitstring = "Million Btu";
   }
+
   m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
   setUpdatesEnabled(false);
   QLayout *l = layout();
@@ -281,6 +292,162 @@ void ResultsConsumptionChart::setData(const ConsumptionData &t_data, const opens
   setUpdatesEnabled(true);
 }
 
+void ResultsConsumptionChart::setHTMLData(const ConsumptionData &t_data, const openstudio::Unit &t_unit)
+{
+  return;
+  bool success = false;
+
+  QFile inputFile("C:/openstudio_git/OpenStudio/openstudiocore/src/openstudio_lib/test.html");
+  
+  success = inputFile.open(QFile::ReadOnly);
+  QString fileError;
+  fileError = inputFile.errorString();
+
+  OS_ASSERT(success);
+
+  QByteArray boilerPlateText = inputFile.readAll();
+  OS_ASSERT(!boilerPlateText.isEmpty());
+
+  inputFile.close();
+
+  QFile outputFile("C:/openstudio_git/OpenStudio/openstudiocore/src/openstudio_lib/indexWithDataIncluded.html");
+  
+  success = outputFile.open(QFile::WriteOnly);
+  OS_ASSERT(success);
+
+  qint64 val;
+  val = outputFile.write(boilerPlateText);
+  OS_ASSERT(val != -1);
+
+  outputFile.close();
+
+  QString data("var consumption = {\n");
+
+  m_unit = t_unit;
+  std::string unitstring = t_unit.prettyString().empty()?t_unit.standardString():t_unit.prettyString();
+  if(unitstring == "MBtu"){
+    unitstring = "Million Btu";
+  }
+
+  QString chartLabel = openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")");
+
+  setUpdatesEnabled(false);
+  //QLayout *l = layout();
+
+  //if (l->count() > 1)
+  //{
+  //  l->removeItem(l->itemAt(l->count() - 1));
+  //}
+
+  //m_chart.reset();
+
+  //boost::shared_ptr<vtkCharts::BarChart> chart(new vtkCharts::BarChart("Consumption"));
+  std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+
+  std::vector<std::string> labels;
+  std::map<int, std::string> monthnames = openstudio::MonthOfYear::getNames();
+
+  int monthnum = 0;
+  for (std::map<int, std::string>::const_iterator itr = monthnames.begin();
+        itr != monthnames.end() && monthnum < 12;
+        ++itr, ++monthnum)
+  {
+    labels.push_back(itr->second);
+  }
+
+  //chart->setXTickLabels(labels); TODO push to HTML
+
+  int numzeros = m_unit.scale().exponent;
+
+  std::string scalestring;
+  for (int i = 0; i < numzeros; ++i)
+  {
+    if (i % 3 == 0 && i != 0)
+    {
+      scalestring.insert(0, ",");
+    }
+
+    scalestring.insert(0, "0");
+  }
+
+  scalestring.insert(0, "x");
+
+  // TODO see next below chart->setColors(ResultsConsumptionLegend::getColors());
+
+  // Heating: 237, 28, 36
+  // Cooling: 0, 113, 188
+  // Interior Lighting: 244, 222, 17
+  // Exterior Lighting: 216, 192, 18
+  // Interior Equipment: 77, 77, 77
+  // Exterior Equipment: 179, 179, 179
+  // Fans: 255, 123,172
+  // Pumps: 102, 45, 145
+  // Heat Rejection: 241, 90, 36
+  // Humidification: 46,49, 146
+  // Water Systems: 251, 176, 59
+  // Refrigeration: 41, 171, 226
+  // Generators: 140, 198, 63
+  std::vector<QColor> colors;
+  colors.push_back(QColor(237, 28, 36));
+  colors.push_back(QColor(0, 113, 188));
+  colors.push_back(QColor(244, 222, 17));
+  colors.push_back(QColor(216, 192, 18));
+  colors.push_back(QColor(77, 77, 77));
+  colors.push_back(QColor(179, 179, 179));
+  colors.push_back(QColor(255, 123, 172));
+  colors.push_back(QColor(102, 45, 145));
+  colors.push_back(QColor(241, 90, 36));
+  colors.push_back(QColor(46, 49, 146));
+  colors.push_back(QColor(200, 90, 36));
+  colors.push_back(QColor(251, 176, 59));
+  colors.push_back(QColor(41, 171, 226));
+  colors.push_back(QColor(140, 198, 63));
+  // TODO NOTE: use colors.at(i).name() to return the hex color as a QString
+
+  //chart->axis(vtkCharts::Axis::LEFT).setTitle("(" + scalestring + ")");
+  //chart->axis(vtkCharts::Axis::LEFT).setTitle("");
+  //chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
+
+  Unit u = *openstudio::createUnit("J");
+
+  for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
+  {
+    std::vector<float> uses;
+    std::set<int> months = openstudio::MonthOfYear::getValues();
+    int monthcount = 0;
+    for (std::set<int>::const_iterator monthitr = months.begin();
+          monthitr != months.end() && monthcount < 12; // NOTE : only to 12
+          ++monthitr, ++monthcount)
+    {
+      boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
+      if (val)
+      {
+        Quantity q(*val, u);
+        uses.push_back(openstudio::convert(q, m_unit)->value());
+      } else {
+        uses.push_back(0);
+      }
+    }
+//    outputFile.write("");
+    // TODO write to QFile;
+
+    //chart->stackSeries(uses, "Consumption", openstudio::EndUseCategoryType::valueDescription(*itr));
+  }
+
+  //chart->widget()->setFixedHeight(400);
+  //layout()->addWidget(chart->widget());
+  //chart->rescale();
+  //m_chart = chart;
+  //setUpdatesEnabled(true);
+
+
+//  outputFile.close();
+}
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ResultsConsumptionLegend::ResultsConsumptionLegend(QWidget *t_parent)
   : QWidget(t_parent)
 {
@@ -341,6 +508,25 @@ std::vector<vtkCharts::Color3ub> ResultsConsumptionLegend::getColors()
   colors.push_back(vtkCharts::Color3ub(140, 198, 63));
 
   return colors;
+}
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ResultsConsumptionTable::ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, const openstudio::Unit &t_unit, QWidget *t_parent)
+  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+  m_label = new QLabel();
+  m_label->setObjectName("H2");
+  vboxlayout->addWidget(m_label);
+
+  updateUnitsLabel();
+
+  buildDataGrid();
+
+  vboxlayout->addLayout(m_grid);
+
+  setLayout(vboxlayout);
 }
 
 void ResultsConsumptionTable::setRowHighlights()
@@ -480,24 +666,6 @@ QLabel *ResultsConsumptionTable::createDataLabel(bool t_bold)
 
   setDataValue(lbl, boost::optional<double>());
   return lbl;
-}
-
-ResultsConsumptionTable::ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, 
-    const openstudio::Unit &t_unit, QWidget *t_parent)
-  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
-{
-  QVBoxLayout *vboxlayout = new QVBoxLayout();
-  m_label = new QLabel();
-  m_label->setObjectName("H2");
-  vboxlayout->addWidget(m_label);
-
-  updateUnitsLabel();
-
-  buildDataGrid();
-
-  vboxlayout->addLayout(m_grid);
-
-  setLayout(vboxlayout);
 }
 
 void ResultsConsumptionTable::updateUnitsLabel()
@@ -643,6 +811,7 @@ void ResultsConsumptionTable::setData(const ConsumptionData &t_data, const opens
   setDataCategoryTotals(t_data);
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent), m_model(model)
@@ -706,6 +875,8 @@ struct UtilityBillSorter
     return (left.fuelType() < right.fuelType());
   }
 };
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 void UtilityBillComparisonView::buildGridLayout()
 {
@@ -799,6 +970,8 @@ void UtilityBillComparisonView::onObjectRemoved(const openstudio::WorkspaceObjec
   }
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 UtilityBillComparisonChart::UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
                                                        double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent)
   : QWidget(t_parent), m_utilityBill(utilityBill), m_isDemandChart(isDemandChart), m_calibrationMaxCVRMSE(calibrationMaxCVRMSE), m_calibrationMaxNMBE(calibrationMaxNMBE)
@@ -835,6 +1008,92 @@ void UtilityBillComparisonChart::onUtilityBillChanged()
   }else{
     plotConsumption();
   }
+}
+
+void UtilityBillComparisonChart::plotConsumption2()
+{
+  unsigned numberBillingPeriodsInCalculations = m_utilityBill.numberBillingPeriodsInCalculations();
+  boost::optional<double> CVRMSE = m_utilityBill.CVRMSE();
+  boost::optional<double> NMBE = m_utilityBill.NMBE();
+
+  QString CVRMSEString("-");
+  QString NMBEString("-");
+
+  bool valid = false;
+  bool validCVRMSE = false;
+  bool validNMBE = false;
+  if (CVRMSE){
+    if (*CVRMSE < m_calibrationMaxCVRMSE){
+      CVRMSEString = QString::number(*CVRMSE, 'f', 1) + "%";
+      validCVRMSE = true;
+    }else{
+      CVRMSEString = "<font color=\"red\">" + QString::number(*CVRMSE, 'f', 1) + "%</font>";
+    }
+  }
+  if (NMBE){
+    if (std::abs(*NMBE) < m_calibrationMaxNMBE){
+      NMBEString = QString::number(*NMBE, 'f', 1) + "%";
+      validNMBE = true;
+    }else{
+      NMBEString = "<font color=\"red\">" + QString::number(*NMBE, 'f', 2) + "%</font>";
+    }
+  }
+  valid = (validCVRMSE && validNMBE);
+
+  std::string consumptionUnit = m_utilityBill.consumptionUnit();
+  std::string fuelTypeString = m_utilityBill.fuelType().valueDescription() + " Consumption (" + consumptionUnit + ")";
+
+  QString labelText;
+  labelText += "<b>" + toQString(fuelTypeString) + "</b><br>";
+  labelText += "<b>CV(RMSE)</b> = " + CVRMSEString + "<br>";
+  labelText += "<b>NMBE</b> = " + NMBEString + "<br>";
+
+  m_label->setText(labelText);
+  
+  std::vector<std::string> labels;
+  std::vector<float> consumptionValues;
+  std::vector<float> modelConsumptionValues;
+
+  // goes from billing units to J
+  double consumptionUnitConversionFactor = m_utilityBill.consumptionUnitConversionFactor();
+
+  std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.billingPeriods();
+  int i = 1;
+  Q_FOREACH(const model::BillingPeriod& billingPeriod, billingPeriods){
+
+    boost::optional<double> consumption = billingPeriod.consumption();
+    if (consumption){
+      consumptionValues.push_back(*consumption);
+    }else{
+      consumptionValues.push_back(0);
+    }
+
+    boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
+    if (modelConsumption){
+      modelConsumptionValues.push_back(*modelConsumption / consumptionUnitConversionFactor);
+    }else{
+      modelConsumptionValues.push_back(0);
+    }
+
+    std::stringstream ss;
+    ss << i; 
+    labels.push_back(ss.str());
+
+    ++i;
+  }
+  m_chart->setXTickLabels(labels);
+
+  m_chart->setColors(UtilityBillComparisonLegend::getColors(m_utilityBill.fuelType()));
+
+  m_chart->axis(vtkCharts::Axis::LEFT).setTitle(consumptionUnit);
+  m_chart->axis(vtkCharts::Axis::BOTTOM).setTitle("Billing Period");
+
+  m_chart->addSeries(consumptionValues, "Actual");
+  m_chart->addSeries(modelConsumptionValues, "Model");
+
+  m_chart->rescale();
+
+  setUpdatesEnabled(true);
 }
 
 void UtilityBillComparisonChart::plotConsumption()
@@ -987,6 +1246,8 @@ void UtilityBillComparisonChart::plotDemand()
   setUpdatesEnabled(true);
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 UtilityBillComparisonLegend::UtilityBillComparisonLegend(const openstudio::FuelType& fuelType, QWidget *t_parent)
   : QWidget(t_parent), m_fuelType(fuelType)
 {
@@ -1088,6 +1349,8 @@ std::vector<vtkCharts::Color3ub> UtilityBillComparisonLegend::getColors(const op
 
   return colors;
 }
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 UtilityBillComparisonTable::UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
                                                        double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent)
@@ -1218,7 +1481,6 @@ void UtilityBillComparisonTable::onUtilityBillChanged()
   setRowHighlights();
 }
 
-
 void UtilityBillComparisonTable::setRowHighlights()
 {
   const int numrows = 6;
@@ -1246,6 +1508,7 @@ void UtilityBillComparisonTable::setRowHighlights()
   }
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ResultsTabView::ResultsTabView(const model::Model & model,
                                const QString & tabLabel,
@@ -1259,7 +1522,12 @@ ResultsTabView::ResultsTabView(const model::Model & model,
   scrollarea->setWidgetResizable(true);
   addTabWidget(scrollarea);
   m_resultsView->setAutoFillBackground(false);
-//    addTabWidget(m_resultsView);
+
+  bool isConnected = false;
+  isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
+    m_resultsView, SLOT(treeChanged(const openstudio::UUID &)));
+  OS_ASSERT(isConnected);
+
 }
 
 void ResultsTabView::searchForExistingResults(const openstudio::path &t_runDir)
@@ -1280,6 +1548,8 @@ void ResultsTabView::resultsGenerated(const openstudio::path &t_sqlFilePath, con
   LOG(Debug, "resultsGenerated " << openstudio::toString(t_sqlFilePath) << " " << openstudio::toString(t_radianceResultsPath));
   m_resultsView->resultsGenerated(t_sqlFilePath, t_radianceResultsPath);
 }
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 openstudio::Unit ResultsView::getUnit(openstudio::EndUseFuelType t_type, bool t_isIP)
 {
@@ -1384,6 +1654,11 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   hLayout->addWidget(m_calibrationResultsBtn, 0, Qt::AlignLeft | Qt::AlignTop);
   buttonGroup->addButton(m_calibrationResultsBtn,1);
 
+  QPushButton * webKitBtn = new QPushButton("WebKit",this);
+  webKitBtn->setCheckable(true);
+  hLayout->addWidget(webKitBtn, 0, Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(webKitBtn,2);
+
   hLayout->addStretch();
 
   hLayout->addWidget(m_openResultsViewerBtn);
@@ -1433,7 +1708,22 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   // Make Comparision Method Layout
   m_stackedWidget->addWidget(m_utilityBillComparisonView);
   
-  // connect model signals
+  //********************************************* PAGE 3 (WebKit) *********************************************
+
+  QWebView * view = new QWebView(this);
+  view->load(QUrl("file:///C:/openstudio_git/OpenStudio/openstudiocore/src/openstudio_lib/indexWithDataIncluded.html"));
+
+#if _DEBUG || (__GNUC__ && !NDEBUG)
+  view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+  QWebInspector *inspector = new QWebInspector;
+  inspector->setPage(view->page());
+  inspector->setVisible(true);
+#endif
+
+  m_stackedWidget->addWidget(view);
+
+  //********************************************* Connects *********************************************
+
   isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
                    SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
@@ -1545,9 +1835,12 @@ void ResultsView::updateReportButtons()
     m_standardResultsBtn->setVisible(true);
     m_calibrationResultsBtn->setVisible(true);
   }
+
+  // TODO remove
+m_reportLabel->setVisible(true);
+m_standardResultsBtn->setVisible(true);
+m_calibrationResultsBtn->setVisible(true);
 }
-
-
 
 void ResultsView::onUnitSystemChange(bool t_isIP) 
 {
@@ -1616,6 +1909,56 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_districtCoolingConsumptionTable->setData(consumptionData, getUnit(m_districtCoolingConsumptionTable->getFuelType(), m_isIP));
 
   m_utilityBillComparisonView->buildGridLayout();
+}
+
+openstudio::runmanager::RunManager ResultsView::runManager()
+{
+  return OSAppBase::instance()->project()->runManager();
+}
+
+void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
+{
+  std::string statusstr = "Ready";
+
+  try {
+    openstudio::runmanager::Job j = runManager().getJob(t_uuid);
+    while (j.parent())
+    {
+      j = j.parent().get();
+    }
+
+    openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
+    statusstr = status.valueDescription();
+
+    openstudio::path htmlpath;
+
+    if (status == openstudio::runmanager::TreeStatusEnum::Finished
+        || status == openstudio::runmanager::TreeStatusEnum::Failed
+        || status == openstudio::runmanager::TreeStatusEnum::Canceled)
+    {
+      if (status == openstudio::runmanager::TreeStatusEnum::Failed)
+      {
+        statusstr = "Canceled";
+      }
+
+      try {
+        htmlpath = j.treeAllFiles().getLastByFilename("results.html").fullPath;
+      } catch (const std::exception &e) {
+        LOG(Debug, "Tree finished, error getting html file: " << e.what());
+      } catch (...) {
+        LOG(Debug, "Tree finished, error getting html file");
+        // no html file exists
+      }
+
+    } 
+  } catch (const std::exception &e) {
+    LOG(Debug, "Tree finished, error getting status: " << e.what());
+
+  } catch (...) {
+    LOG(Debug, "Tree finished, error getting status");
+    // no html file exists
+  }
+
 }
 
 } // openstudio

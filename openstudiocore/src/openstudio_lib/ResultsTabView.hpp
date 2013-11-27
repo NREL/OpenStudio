@@ -29,9 +29,11 @@
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/units/Unit.hpp>
 
+#include <runmanager/lib/RunManager.hpp>
+
 #include <boost/smart_ptr.hpp>
 
-#include <vtkCharts/BarChart.h>
+#include <vtkCharts/BarChart.h> // TODO remove
 
 #include <QComboBox>
 #include <QPushButton>
@@ -81,6 +83,7 @@ namespace openstudio {
         const openstudio::Unit &t_unit, QWidget *t_parent=0);
       virtual ~ResultsConsumptionChart() {}
       void setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
+      void setHTMLData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
       openstudio::EndUseFuelType getFuelType() const;
 
     private:
@@ -180,6 +183,7 @@ namespace openstudio {
     
       void onUtilityBillChanged();
       void plotConsumption();
+      void plotConsumption2();
       void plotDemand();
 
     private:
@@ -256,10 +260,12 @@ namespace openstudio {
       void onObjectAdded(const WorkspaceObject& workspaceObject);
       void onObjectRemoved(const WorkspaceObject& workspaceObject);
       void updateReportButtons();
+      void treeChanged(const openstudio::UUID &t_uuid);
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
       static openstudio::Unit getUnit(openstudio::EndUseFuelType t_type, bool t_isIP);
+      openstudio::runmanager::RunManager runManager();
 
       openstudio::model::Model m_model;
       bool m_isIP;
@@ -309,6 +315,8 @@ namespace openstudio {
       void removeResultClicked();
 
       void importResultClicked();
+
+      void treeChanged(const openstudio::UUID &t_uuid);
 
     private:
       ResultsView * m_resultsView;

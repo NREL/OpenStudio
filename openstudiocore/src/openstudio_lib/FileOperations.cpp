@@ -18,7 +18,8 @@
 **********************************************************************/
 
 #include <openstudio_lib/FileOperations.hpp>
-#include <openstudio_lib/FileOperations.hpp>
+
+#include <openstudio_lib/OSDocument.hpp>
 
 #include <analysisdriver/SimpleProject.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
@@ -619,6 +620,14 @@ namespace openstudio {
             bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), parent, SLOT(treeChanged(const openstudio::UUID &)));
             OS_ASSERT(isConnected);
           }
+
+          //boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+          //OSDocument * doc = currentDocument.get();
+          //QObject * obj = qobject_cast<QObject *>(doc);
+          //if (currentDocument){         
+          //  bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), obj, SIGNAL(treeChanged(const openstudio::UUID &)));
+          //  OS_ASSERT(isConnected);
+          //}
         }
       }
 
