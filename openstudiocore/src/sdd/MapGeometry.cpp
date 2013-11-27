@@ -99,8 +99,8 @@
 namespace openstudio {
 namespace sdd {
 
-  double footToMeter =  0.3048;
-  double meterToFoot = 1.0/0.3048;
+  const double footToMeter =  0.3048;
+  const double meterToFoot = 1.0/0.3048;
 
   boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
