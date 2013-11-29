@@ -292,6 +292,7 @@ namespace openstudio {
       openstudio::path m_radianceResultsPath;
 
       QWebView * m_view;
+      QComboBox * m_files;
   };
 
   class ResultsTabView : public MainTabView
