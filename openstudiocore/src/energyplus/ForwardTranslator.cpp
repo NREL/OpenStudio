@@ -680,6 +680,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoolingTowerSingleSpeed(tower);
       break;
     }
+  case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
+    {
+      model::CoolingTowerVariableSpeed tower = modelObject.cast<CoolingTowerVariableSpeed>();
+      retVal = translateCoolingTowerVariableSpeed(tower);
+      break;
+    }
   case openstudio::IddObjectType::OS_CurrencyType :
     {
       model::CurrencyType mo = modelObject.cast<CurrencyType>();
