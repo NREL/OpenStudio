@@ -76,6 +76,7 @@
 #include <model/ControllerWaterCoil.hpp>
 #include <model/ConvergenceLimits.hpp>
 #include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerVariableSpeed.hpp>
 #include <model/CurrencyType.hpp>
 #include <model/CurveBicubic.hpp>
 #include <model/CurveBiquadratic.hpp>
@@ -321,6 +322,7 @@
 #include <model/ControllerWaterCoil_Impl.hpp>
 #include <model/ConvergenceLimits_Impl.hpp>
 #include <model/CoolingTowerSingleSpeed_Impl.hpp>
+#include <model/CoolingTowerVariableSpeed_Impl.hpp>
 #include <model/CurrencyType_Impl.hpp>
 #include <model/CurveBicubic_Impl.hpp>
 #include <model/CurveBiquadratic_Impl.hpp>

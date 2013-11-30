@@ -206,6 +206,9 @@ SET( ${target_name}_src
   CoolingTowerSingleSpeed.hpp
   CoolingTowerSingleSpeed_Impl.hpp
   CoolingTowerSingleSpeed.cpp
+  CoolingTowerVariableSpeed.hpp
+  CoolingTowerVariableSpeed_Impl.hpp
+  CoolingTowerVariableSpeed.cpp
   CurrencyType.hpp
   CurrencyType_Impl.hpp
   CurrencyType.cpp
@@ -904,6 +907,7 @@ SET( ${target_name}_moc
   ControllerWaterCoil_Impl.hpp
   ConvergenceLimits_Impl.hpp
   CoolingTowerSingleSpeed_Impl.hpp
+  CoolingTowerVariableSpeed_Impl.hpp
   Curve_Impl.hpp
   CurveBicubic_Impl.hpp
   CurveBiquadratic_Impl.hpp
