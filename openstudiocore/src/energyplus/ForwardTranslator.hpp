@@ -71,6 +71,7 @@ class ControllerOutdoorAir;
 class ControllerMechanicalVentilation;
 class ControllerWaterCoil;
 class ConvergenceLimits;
+class CoolingTowerPerformanceCoolTools;
 class CoolingTowerSingleSpeed;
 class CoolingTowerVariableSpeed;
 class CurrencyType;
@@ -352,6 +353,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateControllerWaterCoil( model::ControllerWaterCoil & modelObject );
 
   boost::optional<IdfObject> translateConvergenceLimits( model::ConvergenceLimits & modelObject );
+
+  boost::optional<IdfObject> translateCoolingTowerPerformanceCoolTools( model::CoolingTowerPerformanceCoolTools & modelObject );
 
   boost::optional<IdfObject> translateCoolingTowerSingleSpeed( model::CoolingTowerSingleSpeed & modelObject );
 

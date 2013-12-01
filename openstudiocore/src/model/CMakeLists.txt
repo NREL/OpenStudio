@@ -203,6 +203,9 @@ SET( ${target_name}_src
   ConvergenceLimits.hpp
   ConvergenceLimits_Impl.hpp
   ConvergenceLimits.cpp
+  CoolingTowerPerformanceCoolTools.hpp
+  CoolingTowerPerformanceCoolTools_Impl.hpp
+  CoolingTowerPerformanceCoolTools.cpp
   CoolingTowerSingleSpeed.hpp
   CoolingTowerSingleSpeed_Impl.hpp
   CoolingTowerSingleSpeed.cpp
@@ -906,6 +909,7 @@ SET( ${target_name}_moc
   ControllerMechanicalVentilation_Impl.hpp
   ControllerWaterCoil_Impl.hpp
   ConvergenceLimits_Impl.hpp
+  CoolingTowerPerformanceCoolTools_Impl.hpp
   CoolingTowerSingleSpeed_Impl.hpp
   CoolingTowerVariableSpeed_Impl.hpp
   Curve_Impl.hpp
