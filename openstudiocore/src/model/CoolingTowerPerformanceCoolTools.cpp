@@ -583,7 +583,7 @@ CoolingTowerPerformanceCoolTools::CoolingTowerPerformanceCoolTools(const Model& 
   setCoefficient28(0.00493294869565511);
   setCoefficient29(-0.00796260394174197);
   setCoefficient30(0.000222619828621544);
-  setCoefficient21(-0.0543952001568055);
+  setCoefficient31(-0.0543952001568055);
   setCoefficient32(0.00474266879161693);
   setCoefficient33(-0.0185854671815598);
   setCoefficient34(0.00115667701293848);
