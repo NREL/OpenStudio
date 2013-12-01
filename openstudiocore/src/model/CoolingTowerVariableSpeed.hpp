@@ -60,11 +60,15 @@ class MODEL_API CoolingTowerVariableSpeed : public StraightComponent {
 
   void resetModelType();
 
-  //boost::optional<VariableSpeedTowerCoefficient> modelCoefficient() const;
+  /** Returns CoolingTowerPerformanceYorkCalc, CoolingTowerPerformanceCoolTools, or boost::none 
+   */
+  boost::optional<ModelObject> modelCoefficient() const;
 
-  //bool setModelCoefficient(const VariableSpeedTowerCoefficient& variableSpeedTowerCoefficient);
+  /** Accepts CoolingTowerPerformanceYorkCalc or CoolingTowerPerformanceCoolTools
+   */
+  bool setModelCoefficient(const ModelObject& variableSpeedTowerCoefficient);
 
-  //void resetModelCoefficient();
+  void resetModelCoefficient();
 
   boost::optional<double> designInletAirWetBulbTemperature() const;
 

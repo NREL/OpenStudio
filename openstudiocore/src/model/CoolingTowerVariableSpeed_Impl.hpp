@@ -72,7 +72,7 @@ namespace detail {
 
     boost::optional<std::string> modelType() const;
 
-    //boost::optional<VariableSpeedTowerCoefficient> modelCoefficient() const;
+    boost::optional<ModelObject> modelCoefficient() const;
 
     boost::optional<double> designInletAirWetBulbTemperature() const;
 
@@ -136,9 +136,9 @@ namespace detail {
 
     void resetModelType();
 
-    //bool setModelCoefficient(const boost::optional<VariableSpeedTowerCoefficient>& variableSpeedTowerCoefficient);
+    bool setModelCoefficient(const boost::optional<ModelObject>& variableSpeedTowerCoefficient);
 
-    //void resetModelCoefficient();
+    void resetModelCoefficient();
 
     bool setDesignInletAirWetBulbTemperature(boost::optional<double> designInletAirWetBulbTemperature);
 
@@ -231,6 +231,12 @@ namespace detail {
     bool setSizingFactor(boost::optional<double> sizingFactor);
 
     void resetSizingFactor();
+
+    ModelObject clone(Model model) const;
+
+    std::vector<IddObjectType> allowableChildTypes() const;
+
+    std::vector<ModelObject> children() const;
 
    private:
 

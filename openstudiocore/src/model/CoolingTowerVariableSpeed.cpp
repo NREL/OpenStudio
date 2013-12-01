@@ -17,6 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#include <model/Model.hpp>
 #include <model/CoolingTowerVariableSpeed.hpp>
 #include <model/CoolingTowerVariableSpeed_Impl.hpp>
 #include <model/Schedule.hpp>
@@ -69,6 +70,36 @@ namespace detail {
     return CoolingTowerVariableSpeed::iddObjectType();
   }
 
+  ModelObject CoolingTowerVariableSpeed_Impl::clone(Model model) const
+  {
+    CoolingTowerVariableSpeed newTower = ModelObject_Impl::clone(model).cast<CoolingTowerVariableSpeed>();
+
+    if( boost::optional<ModelObject> mo = modelCoefficient() )
+    {
+      newTower.setModelCoefficient(mo->clone(model));
+    }
+
+    return newTower;
+  }
+
+  std::vector<IddObjectType> CoolingTowerVariableSpeed_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_CoolingTowerPerformance_YorkCalc);
+    result.push_back(IddObjectType::OS_CoolingTowerPerformance_CoolTools);
+    return result;
+  }
+
+  std::vector<ModelObject> CoolingTowerVariableSpeed_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if(boost::optional<ModelObject> mo = modelCoefficient())
+    {
+      result.push_back(mo.get());
+    }
+    return result;
+  }
+
   std::vector<ScheduleTypeKey> CoolingTowerVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
@@ -89,9 +120,9 @@ namespace detail {
     return getString(OS_CoolingTower_VariableSpeedFields::ModelType,true);
   }
 
-  //boost::optional<VariableSpeedTowerCoefficient> CoolingTowerVariableSpeed_Impl::modelCoefficient() const {
-  //  return getObject<ModelObject>().getModelObjectTarget<VariableSpeedTowerCoefficient>(OS_CoolingTower_VariableSpeedFields::ModelCoefficient);
-  //}
+  boost::optional<ModelObject> CoolingTowerVariableSpeed_Impl::modelCoefficient() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_CoolingTower_VariableSpeedFields::ModelCoefficient);
+  }
 
   boost::optional<double> CoolingTowerVariableSpeed_Impl::designInletAirWetBulbTemperature() const {
     return getDouble(OS_CoolingTower_VariableSpeedFields::DesignInletAirWetBulbTemperature,true);
@@ -235,22 +266,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  //bool CoolingTowerVariableSpeed_Impl::setModelCoefficient(const boost::optional<VariableSpeedTowerCoefficient>& variableSpeedTowerCoefficient) {
-  //  bool result(false);
-  //  if (variableSpeedTowerCoefficient) {
-  //    result = setPointer(OS_CoolingTower_VariableSpeedFields::ModelCoefficient, variableSpeedTowerCoefficient.get().handle());
-  //  }
-  //  else {
-  //    resetModelCoefficient();
-  //    result = true;
-  //  }
-  //  return result;
-  //}
+  bool CoolingTowerVariableSpeed_Impl::setModelCoefficient(const boost::optional<ModelObject>& variableSpeedTowerCoefficient) {
+    bool result(false);
+    if (variableSpeedTowerCoefficient) {
+      result = setPointer(OS_CoolingTower_VariableSpeedFields::ModelCoefficient, variableSpeedTowerCoefficient.get().handle());
+    }
+    else {
+      resetModelCoefficient();
+      result = true;
+    }
+    return result;
+  }
 
-  //void CoolingTowerVariableSpeed_Impl::resetModelCoefficient() {
-  //  bool result = setString(OS_CoolingTower_VariableSpeedFields::ModelCoefficient, "");
-  //  OS_ASSERT(result);
-  //}
+  void CoolingTowerVariableSpeed_Impl::resetModelCoefficient() {
+    bool result = setString(OS_CoolingTower_VariableSpeedFields::ModelCoefficient, "");
+    OS_ASSERT(result);
+  }
 
   bool CoolingTowerVariableSpeed_Impl::setDesignInletAirWetBulbTemperature(boost::optional<double> designInletAirWetBulbTemperature) {
     bool result(false);
@@ -663,9 +694,9 @@ boost::optional<std::string> CoolingTowerVariableSpeed::modelType() const {
   return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->modelType();
 }
 
-//boost::optional<VariableSpeedTowerCoefficient> CoolingTowerVariableSpeed::modelCoefficient() const {
-//  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->modelCoefficient();
-//}
+boost::optional<ModelObject> CoolingTowerVariableSpeed::modelCoefficient() const {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->modelCoefficient();
+}
 
 boost::optional<double> CoolingTowerVariableSpeed::designInletAirWetBulbTemperature() const {
   return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->designInletAirWetBulbTemperature();
@@ -783,13 +814,13 @@ void CoolingTowerVariableSpeed::resetModelType() {
   getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetModelType();
 }
 
-//bool CoolingTowerVariableSpeed::setModelCoefficient(const VariableSpeedTowerCoefficient& variableSpeedTowerCoefficient) {
-//  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setModelCoefficient(variableSpeedTowerCoefficient);
-//}
-//
-//void CoolingTowerVariableSpeed::resetModelCoefficient() {
-//  getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetModelCoefficient();
-//}
+bool CoolingTowerVariableSpeed::setModelCoefficient(const ModelObject& variableSpeedTowerCoefficient) {
+  return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setModelCoefficient(variableSpeedTowerCoefficient);
+}
+
+void CoolingTowerVariableSpeed::resetModelCoefficient() {
+  getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetModelCoefficient();
+}
 
 bool CoolingTowerVariableSpeed::setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature) {
   return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setDesignInletAirWetBulbTemperature(designInletAirWetBulbTemperature);
