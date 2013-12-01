@@ -680,6 +680,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoolingTowerPerformanceCoolTools(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_CoolingTowerPerformance_YorkCalc :
+    {
+      model::CoolingTowerPerformanceYorkCalc mo = modelObject.cast<CoolingTowerPerformanceYorkCalc>();
+      retVal = translateCoolingTowerPerformanceYorkCalc(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       model::CoolingTowerSingleSpeed tower = modelObject.cast<CoolingTowerSingleSpeed>();

@@ -50,6 +50,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateControllerOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateControllerWaterCoil.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerPerformanceCoolTools.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerPerformanceYorkCalc.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCurrencyType.cpp
