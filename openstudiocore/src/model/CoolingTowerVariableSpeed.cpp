@@ -79,6 +79,11 @@ namespace detail {
       newTower.setModelCoefficient(mo->clone(model));
     }
 
+    if( boost::optional<CurveCubic> mo = fanPowerRatioFunctionofAirFlowRateRatioCurve() )
+    {
+      newTower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(mo->clone(model).cast<CurveCubic>());
+    }
+
     return newTower;
   }
 
@@ -87,6 +92,7 @@ namespace detail {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_CoolingTowerPerformance_YorkCalc);
     result.push_back(IddObjectType::OS_CoolingTowerPerformance_CoolTools);
+    result.push_back(IddObjectType::OS_Curve_Cubic);
     return result;
   }
 
@@ -97,6 +103,12 @@ namespace detail {
     {
       result.push_back(mo.get());
     }
+
+    if(boost::optional<CurveCubic> mo = fanPowerRatioFunctionofAirFlowRateRatioCurve() )
+    {
+      result.push_back(mo.get());
+    }
+
     return result;
   }
 
@@ -664,6 +676,34 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoolingTowerVariableSpeed_Impl>());
 
+  setModelType("CoolToolsCrossFlow");
+  setDesignInletAirWetBulbTemperature(25.5556);
+  setDesignApproachTemperature(3.8889);
+  setDesignRangeTemperature(5.5556);
+  autosizeDesignWaterFlowRate();
+  autosizeDesignAirFlowRate();
+  autosizeDesignFanPower();
+  setMinimumAirFlowRateRatio(0.2000);
+  setFractionofTowerCapacityinFreeConvectionRegime(0.1250);
+  setBasinHeaterCapacity(0.0000);
+  setBasinHeaterSetpointTemperature(2.0000);
+  setEvaporationLossMode("SaturatedExit");
+  setEvaporationLossFactor(0.2000);
+  setDriftLossPercent(0.0080);
+  setBlowdownCalculationMode("ConcentrationRatio");
+  setBlowdownConcentrationRatio(3.0000);
+  setSizingFactor(1.0000);
+
+  CurveCubic curve(model);
+  curve.setName(name().get() + " Fan Power Ratio Curve");
+  curve.setCoefficient1Constant(-0.0093);
+  curve.setCoefficient2x(0.0512);
+  curve.setCoefficient3xPOW2(-0.0838);
+  curve.setCoefficient4xPOW3(1.0419);
+  curve.setMinimumValueofx(0.1500);
+  curve.setMaximumValueofx(1.0000);
+
+  setFanPowerRatioFunctionofAirFlowRateRatioCurve(curve);
 }
 
 IddObjectType CoolingTowerVariableSpeed::iddObjectType() {
