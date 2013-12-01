@@ -134,6 +134,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::DesignFanPower,d.get());
   }
+  else if( modelObject.isDesignFanPowerAutosized() )
+  {
+    idfObject.setString(CoolingTower_VariableSpeedFields::DesignFanPower,"Autosize");
+  }
 
   // FanPowerRatioFunctionofAirFlowRateRatioCurve
 
