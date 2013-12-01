@@ -80,10 +80,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
 
   // ModelCoefficient
 
-  //if( d = modelObject.modelCoefficient() )
-  //{
-  //  idfObject.setDouble(CoolingTower_VariableSpeedFields::ModelCoefficient,d.get());
-  //}
+  if( boost::optional<ModelObject> mo = modelObject.modelCoefficient() )
+  {
+    if( boost::optional<IdfObject> _mo = translateAndMapModelObject(mo.get()) )
+    {
+      idfObject.setString(CoolingTower_VariableSpeedFields::ModelCoefficientName,_mo->name().get());
+    }
+  }
 
   // DesignInletAirWetBulbTemperature
 
