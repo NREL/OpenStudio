@@ -3275,6 +3275,40 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     supplyOutletNode.addSetpointManager(spm);
   }
+  else if( istringEqual(tempCtrlElement.text().toStdString(),"WetBulbReset") )
+  {
+    model::SetpointManagerFollowOutdoorAirTemperature spm(model);
+
+    spm.setReferenceTemperatureType("OutdoorAirWetBulb");
+
+    supplyOutletNode.addSetpointManager(spm);
+
+    boost::optional<double> rstSupHi;
+    boost::optional<double> rstSupLow;
+
+    // RstSupHi
+    QDomElement rstSupHiElement = fluidSysElement.firstChildElement("RstSupHi");
+    value = rstSupHiElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstSupHi = unitToUnit(value,"F","C").get();
+    }
+
+    // RstSupLow
+    QDomElement rstSupLoElement = fluidSysElement.firstChildElement("RstSupLow");
+    value = rstSupLoElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstSupLow = unitToUnit(value,"F","C").get();
+    }
+
+    if( rstSupLow && rstSupHi )
+    {
+      spm.setMinimumSetpointTemperature(rstSupLow.get());
+
+      spm.setMaximumSetpointTemperature(rstSupHi.get());
+    }
+  }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"OutsideAirReset") )
   {
     model::SetpointManagerOutdoorAirReset spm(model);
