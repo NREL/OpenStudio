@@ -1358,6 +1358,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
                                                  energyInputRatioFunctionofFlowFractionCurve.get(),
                                                  partLoadFractionCorrelationCurve.get() ); 
 
+    // Name
+    heatingCoil.setName(nameElement.text().toStdString());
+
     // HtPumpEIR
     QDomElement htPumpEIRElement = heatingCoilElement.firstChildElement("HtPumpEIR");
     value = htPumpEIRElement.text().toDouble(&ok);
