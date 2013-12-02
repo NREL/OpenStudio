@@ -513,6 +513,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   // Air Segments
   QDomNodeList airSegmentElements = airSystemElement.elementsByTagName("AirSeg");
 
+  // Save the fan to add last
+  boost::optional<model::HVACComponent> fan;
+
+  bool isFanDrawthrough = true;
+
   for (int i = 0; i < airSegmentElements.count(); i++)
   {
     QDomElement airSegmentElement = airSegmentElements.at(i).toElement();
@@ -613,7 +618,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           }
         }
         // Fan
-        else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"Fan") )
+        else if( (istringEqual(airSegmentChildElement.tagName().toStdString(),"Fan")) && (! fan) )
         {
           if( boost::optional<model::ModelObject> mo = 
                 translateFan(airSegmentChildElement,doc,model) )
@@ -621,7 +626,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             if( boost::optional<model::HVACComponent> hvacComponent = 
                   mo->optionalCast<model::HVACComponent>() )
             {
-              hvacComponent->addToNode(supplyInletNode);
+              // Determine fan position
+
+              QDomElement posElement = airSegmentChildElement.firstChildElement("Pos");
+
+              fan = hvacComponent;
+
+              if( posElement.text().compare("DrawThrough",Qt::CaseInsensitive) == 0 )
+              {
+                isFanDrawthrough = true;
+              }
+              else
+              {
+                isFanDrawthrough = false;
+              }
 
               if( availabilitySchedule )
               {
@@ -642,6 +660,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               }
             }
           }
+        }
+      }
+      if( fan )
+      {
+        if( isFanDrawthrough )
+        {
+          fan->addToNode(supplyOutletNode);
+        }
+        else
+        {
+          fan->addToNode(supplyInletNode);
         }
       }
     }
@@ -824,27 +853,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   }
 
   // Add Setpoint managers
-  std::vector<model::ModelObject> supplyNodes = airLoopHVAC.supplyComponents(IddObjectType::OS_Node);
-
-  // Mixed air setpoint managers
-  for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
-       it != supplyNodes.end();
-       it++ )
-  {
-    if( *it != airLoopHVAC.supplyInletNode() &&
-        *it != airLoopHVAC.supplyOutletNode() )
-    {
-      model::Node node = it->cast<model::Node>();
-
-      model::SetpointManagerMixedAir spm(model);
-
-      node.addSetpointManager(spm);
-    }
-  }
 
   QDomElement clgCtrlElement = airSystemElement.firstChildElement("ClgCtrl");
 
   // Establish deck temperature
+
+  boost::optional<model::HVACComponent> deckSPM;
 
   if( istringEqual(clgCtrlElement.text().toStdString(),"Fixed") )
   {
@@ -853,6 +867,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       )
     {
       model::SetpointManagerSingleZoneReheat spm(model);
+
+      deckSPM = spm;
 
       supplyOutletNode.addSetpointManager(spm);
     }
@@ -881,6 +897,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
       model::SetpointManagerScheduled spm(model,schedule);
 
+      deckSPM = spm;
+
       supplyOutletNode.addSetpointManager(spm);
     }
   }
@@ -889,6 +907,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     if( istringEqual(airSystemTypeElement.text().toStdString(),"HV") )
     {
       model::SetpointManagerSingleZoneReheat spm(model);
+
+      deckSPM = spm;
 
       supplyOutletNode.addSetpointManager(spm);
     }
@@ -902,6 +922,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
 
     model::SetpointManagerWarmest spm(model);
+
+    deckSPM = spm;
 
     supplyOutletNode.addSetpointManagerWarmest(spm);
 
@@ -954,11 +976,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     model::SetpointManagerScheduled spm(model,schedule.get());
 
+    deckSPM = spm;
+
     supplyOutletNode.addSetpointManager(spm);
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"OutsideAirReset") )
   {
     model::SetpointManagerOutdoorAirReset spm(model);
+
+    deckSPM = spm;
 
     supplyOutletNode.addSetpointManager(spm);
 
@@ -1021,6 +1047,66 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       spm.setSetpointatOutdoorLowTemperature(22.0);
       spm.setOutdoorHighTemperature(24.0);
       spm.setSetpointatOutdoorHighTemperature(10.0);
+    }
+  }
+
+  // Mixed air setpoint managers
+
+  if( isFanDrawthrough )
+  {
+    std::vector<model::ModelObject> supplyNodes = airLoopHVAC.supplyComponents(model::Node::iddObjectType());
+
+    for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
+         it != supplyNodes.end();
+         it++ )
+    {
+      if( *it != airLoopHVAC.supplyInletNode() &&
+          *it != airLoopHVAC.supplyOutletNode() )
+      {
+        model::Node node = it->cast<model::Node>();
+
+        model::SetpointManagerMixedAir spm(model);
+
+        spm.addToNode(node);
+      }
+    }
+  }
+  else
+  {
+    if( deckSPM )
+    {
+      std::vector<model::ModelObject> supplyNodes;
+
+      if( boost::optional<model::Node> mixedAirNode = airLoopHVAC.mixedAirNode() )
+      {
+        supplyNodes = airLoopHVAC.supplyComponents(mixedAirNode.get(),supplyOutletNode,model::Node::iddObjectType());
+
+        model::SetpointManagerMixedAir spm(model);
+
+        spm.addToNode(mixedAirNode.get());
+      }
+      else
+      {
+        supplyNodes = airLoopHVAC.supplyComponents(supplyInletNode,supplyOutletNode,model::Node::iddObjectType());
+      }
+
+      if( supplyNodes.size() > 2 )
+      {
+        supplyNodes.erase(supplyNodes.begin());
+
+        supplyNodes.erase(supplyNodes.end());
+
+        for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
+             it != supplyNodes.end();
+             it++ )
+        {
+          model::Node node = it->cast<model::Node>();
+
+          model::HVACComponent spmClone = deckSPM->clone(model).cast<model::HVACComponent>();
+
+          spmClone.addToNode(node);
+        }
+      }
     }
   }
 
