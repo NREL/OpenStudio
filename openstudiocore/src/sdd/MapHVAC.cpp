@@ -2759,6 +2759,96 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     result = terminal;
   }
+  else if( istringEqual("ParallelFanBox",typeElement.text().toStdString()) )
+  {
+    model::Schedule schedule = alwaysOnSchedule(model);
+
+    // CoilHtg
+
+    QDomElement coilHtgElement = trmlUnitElement.firstChildElement("CoilHtg");
+
+    boost::optional<model::ModelObject> coil;
+
+    coil = translateCoilHeating(coilHtgElement,doc,model);
+
+    if( ! coil )
+    {
+      coil = model::CoilHeatingElectric(model,schedule);
+    }
+
+    model::HVACComponent hvacComponentCoil = coil->cast<model::HVACComponent>();
+
+    // Fan
+
+    QDomElement fanElement = trmlUnitElement.firstChildElement("Fan");
+
+    boost::optional<model::ModelObject> fan;
+
+    fan = translateFan(fanElement,doc,model);
+
+    if( ! fan )
+    {
+      fan = model::FanConstantVolume(model,schedule);
+    }
+
+    model::HVACComponent hvacComponentFan = fan->cast<model::HVACComponent>();
+
+    // Terminal
+
+    model::AirTerminalSingleDuctParallelPIUReheat terminal(model,schedule,hvacComponentFan,hvacComponentCoil);
+
+    if( primaryAirFlow )
+    {
+      terminal.setMaximumPrimaryAirFlowRate(primaryAirFlow.get());
+    }
+
+    if( primaryAirFlow && primaryAirFlowMin )
+    {
+      terminal.setMinimumPrimaryAirFlowFraction(primaryAirFlowMin.get() / primaryAirFlow.get());
+    }
+
+    // Maximum Secondary Air Flow Rate
+
+    if( boost::optional<model::FanConstantVolume> constantFan = hvacComponentFan.optionalCast<model::FanConstantVolume>() )
+    {
+      if( boost::optional<double> flow = constantFan->maximumFlowRate() )
+      {
+        terminal.setMaximumSecondaryAirFlowRate(flow.get());
+      }
+    }
+    else if( boost::optional<model::FanVariableVolume> variableFan = hvacComponentFan.optionalCast<model::FanVariableVolume>() )
+    {
+      if( boost::optional<double> flow = variableFan->maximumFlowRate() )
+      {
+        terminal.setMaximumSecondaryAirFlowRate(flow.get());
+      }
+    }
+
+    // Hot Water Related Properties
+    
+    if( boost::optional<model::CoilHeatingWater> waterCoil = hvacComponentCoil.optionalCast<model::CoilHeatingWater>() )
+    {
+      terminal.setConvergenceTolerance(0.001); 
+
+      if( boost::optional<double> flow = waterCoil->maximumWaterFlowRate() )
+      {
+        terminal.setMaximumHotWaterorSteamFlowRate(flow.get());
+      }
+    }
+
+    // ParallelBoxFanFlowFrac
+
+    QDomElement parallelBoxFanFlowFracElement = trmlUnitElement.firstChildElement("ParallelBoxFanFlowFrac");
+
+    value = parallelBoxFanFlowFracElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      terminal.setFanOnFlowFraction(value);
+    }
+
+    result = terminal;
+  }
   else if( istringEqual("SeriesFanBox",typeElement.text().toStdString()) )
   {
     model::Schedule schedule = alwaysOnSchedule(model);
