@@ -696,6 +696,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       {
         oaController.setName(nameElement.text().toStdString());
         newOASystem.setName(nameElement.text().toStdString() + " OA System");
+        oaController.controllerMechanicalVentilation().setName(nameElement.text().toStdString() + " Mech Vent Controller");
       }
 
       // MaxOARat
