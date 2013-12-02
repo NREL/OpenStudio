@@ -32,8 +32,6 @@ namespace detail {
 
   /** PeopleDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for PeopleDefinition.*/
   class MODEL_API PeopleDefinition_Impl : public SpaceLoadDefinition_Impl {
-    Q_OBJECT;
-  
    public:
     /** @name Constructors and Destructors */
     //@{

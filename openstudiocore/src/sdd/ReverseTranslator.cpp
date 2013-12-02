@@ -29,6 +29,8 @@
 #include <model/Building_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/ShadingSurfaceGroup.hpp>
+#include <model/ShadingSurfaceGroup_Impl.hpp>
 #include <model/Site.hpp>
 #include <model/Site_Impl.hpp>
 #include <model/WeatherFile.hpp>
@@ -181,7 +183,9 @@ namespace sdd {
 
     // get project, assume one project per file
     QDomElement projectElement = element.firstChildElement("Proj");
-    if (!projectElement.isNull()){
+    if (projectElement.isNull()){
+      LOG(Error, "Could not find required element 'Proj'");
+    }else{
 
       result = openstudio::model::Model();
       result->setFastNaming(true);
@@ -433,6 +437,18 @@ namespace sdd {
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+
+      // translate shadingSurfaces
+      QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
+      model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
+      shadingSurfaceGroup.setName("Site ShadingGroup");
+      shadingSurfaceGroup.setShadingSurfaceType("Site");
+      for (int i = 0; i < exteriorShadingElements.count(); ++i){
+        if (exteriorShadingElements.at(i).parentNode() == projectElement){
+          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+          OS_ASSERT(exteriorShading);
         }
       }
 
@@ -735,6 +751,8 @@ namespace sdd {
     }
 
     model::SimulationControl simulationControl = model.getUniqueModelObject<model::SimulationControl>();
+
+    simulationControl.setMaximumNumberofWarmupDays(50);
     
     //if ((hvacAutoSizingElement.text().toInt() == 0) && (runDesignDaysElement.text().toInt() == 0)){
     //  simulationControl.setRunSimulationforSizingPeriods(false);

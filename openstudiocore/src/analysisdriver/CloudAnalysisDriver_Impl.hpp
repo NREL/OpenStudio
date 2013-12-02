@@ -231,7 +231,7 @@ namespace detail {
      //     DataPoints.
 
      // 8. Keep posting DataPoints until the postQueue is empty.
-     void dataPointQueued(bool success);
+     void dataPointsQueued(bool success);
 
      // 9. Is the analysis already running on the server?
      //    (Could skip this step if uploaded analysis, but doesn't seem worth the extra
@@ -323,6 +323,7 @@ namespace detail {
     // request run process
     boost::optional<OSServer> m_requestRun;
     std::deque<analysis::DataPoint> m_postQueue;
+    unsigned m_batchSize;
     unsigned m_analysisNotRunningCount;
     unsigned m_maxAnalysisNotRunningCount;
     // the following are used in starting the run and in monitoring
@@ -365,7 +366,7 @@ namespace detail {
     void setStatus(AnalysisStatus status);
 
     void registerRunRequestFailure();
-    bool postNextDataPoint();
+    bool postNextDataPointBatch(); // groups of 50
     bool startMonitoring();
     void registerMonitoringFailure();
 

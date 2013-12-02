@@ -472,10 +472,8 @@ namespace detail {
           OS_ASSERT(loadedTopLevelJob);
           if (runManager) {
             if (m_topLevelJob){
-              // HERE -- job is in runManager
               runManager->updateJob(m_topLevelJob->uuid(), *loadedTopLevelJob);
             }else{
-              // HERE -- job not in runManager yet
               runManager->updateJob(*loadedTopLevelJob);
               m_topLevelJob = runManager->getJob(loadedTopLevelJob->uuid());
             }
@@ -518,7 +516,7 @@ namespace detail {
       // unzip 
       UnzipFile unzip(zipPath);
       unzip.extractAllFiles(directory());
-      // TODO: Delete zip file once extracted. Leave for now for debugging.
+      boost::filesystem::remove(zipPath);
     }catch(const std::exception&){
       LOG(Info,"Could not unzip dataPoint.zip file in directory '" << toString(directory()) << "'.");
       return false;
@@ -639,22 +637,20 @@ namespace detail {
   }
 
   bool DataPoint_Impl::saveJSON(const openstudio::path& p,
-                                const DataPointSerializationOptions& options,
                                 bool overwrite) const
   {
-    QVariant json = toTopLevelVariant(options);
+    QVariant json = toTopLevelVariant();
     return openstudio::saveJSON(json,p,overwrite);
   }
 
-  std::ostream& DataPoint_Impl::toJSON(std::ostream& os,
-                                       const DataPointSerializationOptions& options) const
+  std::ostream& DataPoint_Impl::toJSON(std::ostream& os) const
   {
-    os << toJSON(options);
+    os << toJSON();
     return os;
   }
 
-  std::string DataPoint_Impl::toJSON(const DataPointSerializationOptions& options) const {
-    QVariant json = toTopLevelVariant(options);
+  std::string DataPoint_Impl::toJSON() const {
+    QVariant json = toTopLevelVariant();
     return openstudio::toJSON(json);
   }
 
@@ -800,18 +796,11 @@ namespace detail {
     return QVariant(dataPointData);
   }
 
-  QVariant DataPoint_Impl::toTopLevelVariant(const DataPointSerializationOptions& options) const {
-    QVariant dataPointData = this->toVariant();
-
-    QVariantMap metadata = jsonMetadata().toMap();
-
-    if (!options.projectDir.empty()) {
-      metadata["project_dir"] = toQString(options.projectDir);
-    }
+  QVariant DataPoint_Impl::toTopLevelVariant() const {
+    QVariantMap dataPointData = this->toVariant().toMap();
 
     // create top-level of final file
-    QVariantMap result;
-    result["metadata"] = metadata;
+    QVariantMap result = jsonMetadata().toMap(); // openstudio_version
     result["data_point"] = dataPointData;
 
     return result;
@@ -953,11 +942,6 @@ namespace detail {
   }
 
 } // detail
-
-DataPointSerializationOptions::DataPointSerializationOptions(
-    const openstudio::path& t_projectDir)
-  : projectDir(t_projectDir)
-{}
 
 DataPoint::DataPoint(const Problem& problem,
                      const std::vector<QVariant>& variableValues)
@@ -1204,24 +1188,21 @@ void DataPoint::clearResults() {
 }
 
 bool DataPoint::saveJSON(const openstudio::path& p,
-                         const DataPointSerializationOptions& options,
                          bool overwrite) const
 {
-  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,options,overwrite);
+  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,overwrite);
 }
 
-std::ostream& DataPoint::toJSON(std::ostream& os,
-                                const DataPointSerializationOptions& options) const
+std::ostream& DataPoint::toJSON(std::ostream& os) const
 {
-  return getImpl<detail::DataPoint_Impl>()->toJSON(os,options);
+  return getImpl<detail::DataPoint_Impl>()->toJSON(os);
 }
 
-std::string DataPoint::toJSON(const DataPointSerializationOptions& options) const {
-  return getImpl<detail::DataPoint_Impl>()->toJSON(options);
+std::string DataPoint::toJSON() const {
+  return getImpl<detail::DataPoint_Impl>()->toJSON();
 }
 
-boost::optional<DataPoint> DataPoint::loadJSON(const openstudio::path& p,
-                                               const openstudio::path& newProjectDir)
+boost::optional<DataPoint> DataPoint::loadJSON(const openstudio::path& p)
 {
   OptionalDataPoint result;
   AnalysisJSONLoadResult loadResult = analysis::loadJSON(p);
@@ -1231,8 +1212,7 @@ boost::optional<DataPoint> DataPoint::loadJSON(const openstudio::path& p,
   return result;
 }
 
-boost::optional<DataPoint> DataPoint::loadJSON(std::istream& json,
-                                               const openstudio::path& newProjectDir)
+boost::optional<DataPoint> DataPoint::loadJSON(std::istream& json)
 {
   OptionalDataPoint result;
   AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
@@ -1242,8 +1222,7 @@ boost::optional<DataPoint> DataPoint::loadJSON(std::istream& json,
   return result;
 }
 
-boost::optional<DataPoint> DataPoint::loadJSON(const std::string& json,
-                                               const openstudio::path& newProjectDir)
+boost::optional<DataPoint> DataPoint::loadJSON(const std::string& json)
 {
   OptionalDataPoint result;
   AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
@@ -1289,6 +1268,118 @@ void DataPoint::setResponseValues(const std::vector<double> values) {
 
 void DataPoint::setProblem(const Problem& problem) {
   getImpl<detail::DataPoint_Impl>()->setProblem(problem);
+}
+
+bool saveJSON(const std::vector<DataPoint>& dataPoints,
+              const openstudio::path& p,
+              bool overwrite)
+{
+  QVariant json = detail::toTopLevelVariant(dataPoints);
+  return openstudio::saveJSON(json,p,overwrite);
+}
+
+std::string toJSON(const std::vector<DataPoint>& dataPoints) 
+{
+  QVariant json = detail::toTopLevelVariant(dataPoints);
+  return openstudio::toJSON(json);
+}
+
+std::ostream& toJSON(const std::vector<DataPoint>& dataPoints,
+                     std::ostream& os)
+{
+  os << toJSON(dataPoints);
+  return os;
+}
+
+std::vector<DataPoint> toDataPointVector(const openstudio::path& jsonFilepath) {
+  DataPointVector result;
+  try {
+    QVariant variant = openstudio::loadJSON(jsonFilepath);
+    VersionString version = extractOpenStudioVersion(variant);
+    QVariantMap map = variant.toMap();
+    if (map.contains("data_points")) {
+      result = deserializeOrderedVector<DataPoint>(
+                   map["data_points"].toList(),
+                   "data_point_batch_index",
+                   boost::function<DataPoint (const QVariant&)>(boost::bind(detail::DataPoint_Impl::factoryFromVariant,_1,version,boost::none)));
+    }
+    else {
+      LOG_FREE(Error,"openstudio.analysis.DataPoint",
+               "The file at " << toString(jsonFilepath) << " cannot be parsed as an OpenStudio "
+               << "data point vector json file, because it does not contain a top-level "
+               << "'data_points' object.");
+    }
+  }
+  catch (std::exception& e) {
+    LOG_FREE(Error,"openstudio.analysis.DataPoint",
+             "The file at " << toString(jsonFilepath) << " cannot be parsed as an OpenStudio "
+             << "data point vector json file, because " << e.what());
+  }
+  catch (...) {
+    LOG_FREE(Error,"openstudio.analysis.DataPoint",
+             "The file at " << toString(jsonFilepath) << " cannot be parsed as an OpenStudio "
+             << "data point vector json file.");
+  }
+
+  return result;
+}
+
+std::vector<DataPoint> toDataPointVector(const std::string& json) {
+  DataPointVector result;
+  try {
+    QVariant variant = openstudio::loadJSON(json);
+    VersionString version = extractOpenStudioVersion(variant);
+    QVariantMap map = variant.toMap();
+    if (map.contains("data_points")) {
+      result = deserializeOrderedVector<DataPoint>(
+                   map["data_points"].toList(),
+                   "data_point_batch_index",
+                   boost::function<DataPoint (const QVariant&)>(boost::bind(detail::DataPoint_Impl::factoryFromVariant,_1,version,boost::none)));
+    }
+    else {
+      LOG_FREE(Error,"openstudio.analysis.DataPoint",
+               "The parsed json string does not contain a top-level 'data_points' object.");
+    }
+  }
+  catch (std::exception& e) {
+    LOG_FREE(Error,"openstudio.analysis.DataPoint",
+             "The json string cannot be parsed as an OpenStudio data point vector json file, because " 
+             << e.what());
+  }
+  catch (...) {
+    LOG_FREE(Error,"openstudio.analysis.DataPoint",
+             "The following string cannot be parsed as an OpenStudio data point vector json file." 
+             << std::endl << std::endl << json);
+  }
+  return result;
+}
+
+std::vector<DataPoint> toDataPointVector(std::istream& json) {
+  // istream -> string code from
+  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
+  std::string contents;
+  json.seekg(0, std::ios::end);
+  contents.resize(json.tellg());
+  json.seekg(0, std::ios::beg);
+  json.read(&contents[0], contents.size());
+  return toDataPointVector(contents);
+}
+
+namespace detail {
+  QVariant toTopLevelVariant(const std::vector<DataPoint>& dataPoints) 
+  {
+    QVariantList list;
+    unsigned i(0);
+    BOOST_FOREACH(const DataPoint& dataPoint, dataPoints) {
+      QVariantMap dpm = dataPoint.toVariant().toMap();
+      dpm["data_point_batch_index"] = i;
+      list.push_back(dpm);
+      ++i;
+    }
+    QVariantMap json = jsonMetadata().toMap();
+    json["data_points"] = QVariant(list);
+    return QVariant(json);
+  }
 }
 
 } // analysis

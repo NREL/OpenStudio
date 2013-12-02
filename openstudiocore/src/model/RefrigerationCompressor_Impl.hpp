@@ -33,7 +33,6 @@ namespace detail {
 
   /** RefrigerationCompressor_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCompressor.*/
   class MODEL_API RefrigerationCompressor_Impl : public ParentObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

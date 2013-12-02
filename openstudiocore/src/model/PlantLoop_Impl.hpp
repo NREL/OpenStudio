@@ -41,8 +41,6 @@ namespace detail {
 class Model_Impl;
 
 class MODEL_API PlantLoop_Impl : public Loop_Impl {
-  Q_OBJECT;
-
  public:
 
   PlantLoop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

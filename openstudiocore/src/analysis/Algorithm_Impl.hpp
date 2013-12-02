@@ -34,7 +34,6 @@ namespace detail {
 
   /** Algorithm_Impl is a AnalysisObject_Impl that is the implementation class for Algorithm.*/
   class ANALYSIS_API Algorithm_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

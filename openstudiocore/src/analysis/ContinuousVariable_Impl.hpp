@@ -33,7 +33,6 @@ namespace detail {
   /** ContinuousVariable_Impl is an InputVariable_Impl that is the implementation class
    *  for ContinuousVariable.*/
   class ANALYSIS_API ContinuousVariable_Impl : public InputVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

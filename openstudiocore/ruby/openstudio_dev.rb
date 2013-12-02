@@ -54,6 +54,7 @@ require 'openstudioutilities'
 require 'openstudioenergyplus'
 require 'openstudioradiance'
 require 'openstudiogbxml'
+require 'openstudiocontam'
 require 'openstudiomodel'
 require 'openstudiomodelcore'
 require 'openstudiomodelsimulation'
@@ -69,18 +70,9 @@ require 'openstudioanalysisdriver'
 require 'openstudiomodeleditor'
 require 'openstudioanalysis'
 require 'openstudiolib'
-require 'openstudioplugin'
 require 'openstudioosversion'
 require 'openstudioisomodel'
-
-# optional extensions
-if ($OpenStudio_SimXML)
-  require 'openstudiosimxml'
-end
-
-if ($OpenStudio_SDD)
-  require 'openstudiosdd'
-end
+require 'openstudiosdd'
 
 # restore original path
 ENV['PATH'] = original_path

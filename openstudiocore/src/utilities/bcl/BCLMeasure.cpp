@@ -169,34 +169,15 @@ namespace openstudio{
 
     m_bclXML = *bclXML;
 
-    // ACS: This causes the version_id to change, disabling for now
-    // remove deprecated attributes
-    // m_bclXML.removeAttribute("Measure Function");
-    // m_bclXML.removeAttribute("MeasureFunction");
-    // m_bclXML.removeAttribute("Requires EnergyPlus Results");
-    // m_bclXML.removeAttribute("RequiresEnergyPlusResults");
-
-    // check for required attributes, and update old attributes
+    // check for required attributes
     boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
     if (!measureType){
-      measureType = m_bclXML.getAttribute("MeasureType");
-      if (measureType){
-        m_bclXML.addAttribute(Attribute("Measure Type", measureType->valueAsString()));
-        m_bclXML.removeAttribute("MeasureType");
-      }
+      LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Measure Type\"");
     }
 
     boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
     if (!usesSketchUpAPI){
-      usesSketchUpAPI = m_bclXML.getAttribute("UsesSketchUpAPI");
-      if (usesSketchUpAPI){
-        m_bclXML.addAttribute(Attribute("Uses SketchUp API", usesSketchUpAPI->valueAsBoolean()));
-        m_bclXML.removeAttribute("UsesSketchUpAPI");
-      }
-    }
-
-    if (!measureType || !usesSketchUpAPI){
-      LOG_AND_THROW("'" << toString(dir) << "' is not a valid measure");
+      LOG_AND_THROW("'" << toString(dir) << "' is missing the required attribute \"Uses SketchUp API\"");
     }
 
     // these may throw later, test here now
