@@ -38,23 +38,23 @@ namespace openstudio{
     /// constructor from start date, interval length, and values
     /// first reporting interval ends at Date + Time(0) + intervalLength
     TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
-      // length of interval in days
-      const double daysPerInterval = intervalLength.totalDays();
+      // length of interval in seconds
+      int secondsPerInterval = intervalLength.totalSeconds();
 
       // date and time of first report, end of the first reporting interval
       // DLM: startDate may or may not have baseYear defined
       m_firstReportDateTime=DateTime(startDate,intervalLength); 
 
       for (unsigned i = 0; i < values.size(); ++i){
-        m_daysFromFirstReport(i) = i*daysPerInterval;
+        m_secondsFromFirstReport[i] = i*secondsPerInterval;
       }
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = maximum(m_daysFromFirstReport);
+        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0;
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
         if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
@@ -66,22 +66,22 @@ namespace openstudio{
     /// constructor from start date and time, interval length, and values
     /// first reporting interval ends at startDateTime
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
+      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
-      // length of interval in days
-      const double daysPerInterval = intervalLength.totalDays();
+      // length of interval in seconds
+      int secondsPerInterval = intervalLength.totalSeconds();
 
       // DLM: startDate may or may not have baseYear defined
       m_firstReportDateTime = DateTime(startDateTime.date(), startDateTime.time());
 
       for (unsigned i = 0; i < values.size(); ++i){
-        m_daysFromFirstReport(i) = i*daysPerInterval;
+        m_secondsFromFirstReport[i] = i*secondsPerInterval;
       }
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = maximum(m_daysFromFirstReport);
+        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
         if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
@@ -93,15 +93,19 @@ namespace openstudio{
 
     /// constructor from first report date and time, days from first report vector, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(daysFromFirstReport), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
+      for (unsigned i = 0; i < values.size(); ++i){
+        m_secondsFromFirstReport[i] = daysFromFirstReport(i)*86400.0; // JWD: Does this get rounded? I don't think so.
+      }
+
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = maximum(m_daysFromFirstReport);
+        double duration = maximum(daysFromFirstReport); // JWD: Can this be changed?
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
         if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
@@ -111,20 +115,22 @@ namespace openstudio{
     }
 
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
-      : m_daysFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
       //        for (unsigned i = 0; i < values.size(); i++) m_values(i) = values[i];
-      //        for (unsigned i = 0; i < daysFromFirstReport.size(); i++) m_daysFromFirstReport(i) = daysFromFirstReport[i];
       std::copy(values.begin(), values.end(), m_values.begin());
-      std::copy(daysFromFirstReport.begin(), daysFromFirstReport.end(), m_daysFromFirstReport.begin());
+
+      for (unsigned i = 0; i < values.size(); ++i){
+        m_secondsFromFirstReport[i] = daysFromFirstReport[i]*86400.0; // JWD: Does this get rounded? I don't think so.
+      }
     
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = maximum(m_daysFromFirstReport);
+        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
         if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
@@ -135,7 +141,7 @@ namespace openstudio{
 
     /// constructor from date times, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: startDate may or may not have baseYear defined
       m_firstReportDateTime = dateTimes.front();
@@ -160,9 +166,32 @@ namespace openstudio{
         if (!calendarYear && (dateTime < m_firstReportDateTime)){
           m_wrapAround = true;
           DateTime wrappedDateTime = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), m_firstReportDateTime.date().year() + 1), dateTime.time());
-          m_daysFromFirstReport(i) = (wrappedDateTime-firstReportDateTimeWithYear).totalDays();
+          m_secondsFromFirstReport[i] = (wrappedDateTime-firstReportDateTimeWithYear).totalSeconds();
         }else{
-          m_daysFromFirstReport(i) = (dateTime-m_firstReportDateTime).totalDays();
+          m_secondsFromFirstReport[i] = (dateTime-m_firstReportDateTime).totalSeconds();
+        }
+      }
+    }
+
+    /// constructor from first report date and time, seconds from first report vector, values, and units
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<boost::uint32_t>& secondsFromFirstReport, const Vector& values, const std::string& units)
+      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+    {
+      // DLM: firstReportDateTime may or may not have baseYear defined
+      m_firstReportDateTime = firstReportDateTime;
+
+      for (unsigned i = 0; i < values.size(); ++i){
+        m_secondsFromFirstReport[i] = secondsFromFirstReport[i];
+      }
+
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
         }
       }
     }
@@ -177,14 +206,34 @@ namespace openstudio{
     /// time in days from end of the first reporting interval
     Vector TimeSeries_Impl::daysFromFirstReport() const 
     {
-      return m_daysFromFirstReport;
+      Vector daysFromFirstReport(m_secondsFromFirstReport.size());
+      for(unsigned i=0;i<m_secondsFromFirstReport.size();i++)
+      {
+        daysFromFirstReport[i] = m_secondsFromFirstReport[i]/86400.0;
+      }
+      return daysFromFirstReport;
     }
 
     /// time in days from end of the first reporting interval at index i
     double TimeSeries_Impl::daysFromFirstReport(const unsigned& i) const 
     {
       double value = m_outOfRangeValue;
-      if ((i>=0) && (i<m_daysFromFirstReport.size())) value = m_daysFromFirstReport[i];
+      if ((i>=0) && (i<m_secondsFromFirstReport.size())) value = (double)m_secondsFromFirstReport[i]/86400.0;
+      return value;
+    }
+
+    /// time in seconds from end of the first reporting interval
+    std::vector<boost::uint32_t> TimeSeries_Impl::secondsFromFirstReport() const 
+    {
+      return m_secondsFromFirstReport;
+    }
+
+    /// time in seconds from end of the first reporting interval at index i
+    boost::uint32_t TimeSeries_Impl::secondsFromFirstReport(const unsigned& i) const 
+    {
+      //double value = m_outOfRangeValue; // Shouldn't the out of range value be for values only?
+      boost::uint32_t value = 0;
+      if ((i>=0) && (i<m_secondsFromFirstReport.size())) value = m_secondsFromFirstReport[i];
       return value;
     }
 
@@ -218,6 +267,8 @@ namespace openstudio{
     /// get value at number of days from start date
     double TimeSeries_Impl::value(double daysFromFirstReport) const
     {
+
+      Vector m_daysFromFirstReport = this->daysFromFirstReport(); // Need the "this" due to argument name
 
       double result = m_outOfRangeValue;
       double duration = m_daysFromFirstReport(m_daysFromFirstReport.size()-1);
@@ -349,17 +400,17 @@ namespace openstudio{
         }
       }
 
-      double startDaysFromFirstReport = (startDateTimeWithYear - firstReportDateTimeWithYear).totalDays();
-      double endDaysFromFirstReport = (endDateTimeWithYear - firstReportDateTimeWithYear).totalDays();
+      double startSecondsFromFirstReport = (startDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
+      double endSecondsFromFirstReport = (endDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
 
       unsigned numValues = m_values.size();
-      BOOST_ASSERT(numValues == m_daysFromFirstReport.size());
+      BOOST_ASSERT(numValues == m_secondsFromFirstReport.size());
 
       Vector result(numValues);
       unsigned resultSize = 0;
       for (unsigned i = 0; i < numValues; ++i){
-        if ((m_daysFromFirstReport[i] >= startDaysFromFirstReport) &&
-            (m_daysFromFirstReport[i] <= endDaysFromFirstReport)){
+        if ((m_secondsFromFirstReport[i] >= startSecondsFromFirstReport) &&
+            (m_secondsFromFirstReport[i] <= endSecondsFromFirstReport)){
           result[resultSize] = m_values[i];
           ++resultSize;
         }
@@ -393,6 +444,7 @@ namespace openstudio{
         // make unique, ordered set of all date times
         std::set<DateTime> dateTimesSet;
         DateTimeVector dateTimes1(m_values.size());
+        Vector m_daysFromFirstReport = daysFromFirstReport();  // Another stand-in for using seconds
         for(unsigned i=0; i<m_values.size();i++)
         {
           dateTimes1[i] = m_firstReportDateTime + Time(m_daysFromFirstReport[i]);
@@ -438,6 +490,7 @@ namespace openstudio{
         // make unique, ordered set of all date times
         std::set<DateTime> dateTimesSet;
         DateTimeVector dateTimes1(m_values.size());
+        Vector m_daysFromFirstReport = daysFromFirstReport();  // Another stand-in for using seconds
         for(unsigned i=0; i<m_values.size();i++)
         {
           dateTimes1[i] = m_firstReportDateTime + Time(m_daysFromFirstReport[i]);
@@ -475,7 +528,7 @@ namespace openstudio{
     boost::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator*(double d) const {
 
       return boost::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime, 
-        m_daysFromFirstReport,
+        m_secondsFromFirstReport,
         m_values*d, 
         m_units));
     }

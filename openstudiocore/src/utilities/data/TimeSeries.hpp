@@ -32,6 +32,8 @@
 #include <boost/function.hpp>
 
 #include <vector>
+//#include <cstdint>
+//#define uint32_t boost::uint32_t
 
 namespace openstudio{
 
@@ -60,6 +62,9 @@ namespace openstudio{
         /// constructor from date times, values, and units
         TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
 
+        /// constructor from first report date and time, seconds from first report vector, values, and units
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<boost::uint32_t>& secondsFromFirstReport, const Vector& values, const std::string& units);
+
         // virtual destructor
         ~TimeSeries_Impl() {}
 
@@ -73,6 +78,11 @@ namespace openstudio{
         openstudio::Vector daysFromFirstReport() const;
         /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
         double daysFromFirstReport(const unsigned& i) const;
+
+        /// time in seconds from end of the first reporting interval
+        std::vector<boost::uint32_t> secondsFromFirstReport() const;
+        /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+        boost::uint32_t secondsFromFirstReport(const unsigned& i) const;
 
         /// values
         openstudio::Vector values() const;
@@ -119,7 +129,10 @@ namespace openstudio{
         DateTime m_firstReportDateTime;
 
         // fractional days from first report date time, used for quick interpolation
-        Vector m_daysFromFirstReport; 
+        //Vector m_daysFromFirstReport; 
+
+        // integer seconds from first report date time, used for quick interpolation
+        std::vector<boost::uint32_t> m_secondsFromFirstReport; 
 
         // values reported at m_dateTimes
         Vector m_values;
