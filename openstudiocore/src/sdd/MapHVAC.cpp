@@ -878,6 +878,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       supplyOutletNode.addSetpointManager(spm);
     }
   }
+  else if(istringEqual(clgCtrlElement.text().toStdString(),"NoSATControl"))
+  {
+    if( istringEqual(airSystemTypeElement.text().toStdString(),"HV") )
+    {
+      model::SetpointManagerSingleZoneReheat spm(model);
+
+      supplyOutletNode.addSetpointManager(spm);
+    }
+  }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") ||
            istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
   {
@@ -2350,7 +2359,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
         LOG(Error, "Cannot assign cooling schedule to unconditioned thermal zone '" << name << "'");
       }
     }else{
-      LOG(Error, "Could not find schedule '" << scheduleName << "'");
+      LOG(Error, "Schedule named " << scheduleName << " cannot be found.");
+    }
+  }
+  else
+  {
+    if (optionalThermostat){
+      model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
+
+      scheduleRuleset.setName(thermalZone.name().get() + " Default Cooling Schedule");
+
+      model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
+
+      scheduleDay.addValue(Time(1.0),90.0);
+
+      optionalThermostat->setCoolingSchedule(scheduleRuleset);
     }
   }
 
@@ -2366,7 +2389,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
         LOG(Error, "Cannot assign heating schedule to unconditioned thermal zone '" << name << "'");
       }
     }else{
-      LOG(Error, "Could not find schedule '" << scheduleName << "'");
+      LOG(Error, "Schedule named " << scheduleName << " cannot be found.");
+    }
+  }
+  else
+  {
+    if (optionalThermostat){
+      model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
+
+      scheduleRuleset.setName(thermalZone.name().get() + " Default Heating Schedule");
+
+      model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
+
+      scheduleDay.addValue(Time(1.0),-100.0);
+
+      optionalThermostat->setHeatingSchedule(scheduleRuleset);
     }
   }
 
