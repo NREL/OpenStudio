@@ -761,7 +761,7 @@ module OpenStudio
     def create_menus
 
       # Add the plugin menu
-      @plugin_menu = UI.menu("Plugins").add_submenu(Plugin.name)
+      @plugin_menu = UI.menu("Plugins").add_submenu(OpenStudio::Plugin.name)
 
       id = @plugin_menu.add_item(@about_cmd)
       @plugin_menu.set_validation_proc(id) { MF_ENABLED }

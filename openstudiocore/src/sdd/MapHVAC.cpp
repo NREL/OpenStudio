@@ -136,6 +136,7 @@
 #include <model/Splitter_Impl.hpp>
 #include <model/Mixer.hpp>
 #include <model/Mixer_Impl.hpp>
+#include <model/DaylightingControl.hpp>
 
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/IPUnit.hpp>
@@ -150,6 +151,8 @@
 #include <utilities/time/Date.hpp>
 #include <utilities/units/UnitFactory.hpp>
 #include <utilities/math/FloatCompare.hpp>
+#include <utilities/geometry/Geometry.hpp>
+#include <utilities/geometry/BoundingBox.hpp>
 
 #include <QFile>
 #include <QDomDocument>
@@ -160,6 +163,9 @@
 namespace openstudio {
 namespace sdd {
 
+const double footToMeter =  0.3048;
+const double meterToFoot = 1.0/0.3048;
+const double footCandleToLux = 10.76391;
 const double cpWater = 4180.0;
 const double densityWater = 1000.0;
 
@@ -2255,6 +2261,141 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   {
     it->setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
   }
+
+  // Daylighting
+  QDomNodeList daylighting1CoordElements = thermalZoneElement.elementsByTagName("DayltgIllumRefPt1Coord");
+  QDomElement daylighting1SetpointElement = thermalZoneElement.firstChildElement("DayltgIllumSetPt1");
+  QDomElement daylighting1FractionElement = thermalZoneElement.firstChildElement("DayltgCtrlLtgFrac1");
+
+  QDomNodeList daylighting2CoordElements = thermalZoneElement.elementsByTagName("DayltgIllumRefPt2Coord");
+  QDomElement daylighting2SetpointElement = thermalZoneElement.firstChildElement("DayltgIllumSetPt2");
+  QDomElement daylighting2FractionElement = thermalZoneElement.firstChildElement("DayltgCtrlLtgFrac2");
+
+  QDomElement daylightingMinLightingElement = thermalZoneElement.firstChildElement("DayltgMinDimLtgFrac");
+  QDomElement daylightingMinPowerElement = thermalZoneElement.firstChildElement("DayltgMinDimPwrFrac");
+  QDomElement daylightingGlareAzimuthElement = thermalZoneElement.firstChildElement("DayltgGlrAz");
+  QDomElement daylightingMaxGlareElement = thermalZoneElement.firstChildElement("DayltgMaxGlrIdx");
+
+  boost::optional<double> daylightingMinLighting;
+  if (!daylightingMinLightingElement.isNull()){
+    daylightingMinLighting = daylightingMinLightingElement.text().toDouble();
+  }
+  boost::optional<double> daylightingMinPower;
+  if (!daylightingMinPowerElement.isNull()){
+    daylightingMinPower = daylightingMinPowerElement.text().toDouble();
+  }
+  boost::optional<double> daylightingGlareAzimuth;
+  if (!daylightingGlareAzimuthElement.isNull()){
+    daylightingGlareAzimuth = daylightingGlareAzimuthElement.text().toDouble();
+  }
+  boost::optional<double> daylightingMaxGlare;
+  if (!daylightingMaxGlareElement.isNull()){
+    daylightingMaxGlare = daylightingMaxGlareElement.text().toDouble();
+  }
+
+  // first point
+  boost::optional<model::DaylightingControl> daylightingControl1;
+  if (daylighting1CoordElements.size() == 3 && !daylighting1SetpointElement.isNull() && !daylighting1FractionElement.isNull()){
+    double x = footToMeter*daylighting1CoordElements.at(0).toElement().text().toDouble();
+    double y = footToMeter*daylighting1CoordElements.at(1).toElement().text().toDouble();
+    double z = footToMeter*daylighting1CoordElements.at(2).toElement().text().toDouble();
+    double setpoint = footCandleToLux*daylighting1SetpointElement.text().toDouble();
+    double fraction = daylighting1FractionElement.text().toDouble();
+
+    daylightingControl1 = model::DaylightingControl(model);
+    daylightingControl1->setPositionXCoordinate(x);
+    daylightingControl1->setPositionYCoordinate(y);
+    daylightingControl1->setPositionZCoordinate(z);
+    daylightingControl1->setIlluminanceSetpoint(setpoint);
+    daylightingControl1->setLightingControlType("Continuous");
+    if (daylightingMinLighting){
+      daylightingControl1->setMinimumLightOutputFractionforContinuousDimmingControl(*daylightingMinLighting);
+    }
+    if (daylightingMinPower){
+      daylightingControl1->setMinimumInputPowerFractionforContinuousDimmingControl(*daylightingMinPower);
+    }
+    if (daylightingGlareAzimuth){
+      daylightingControl1->setPhiRotationAroundZAxis(degToRad(*daylightingGlareAzimuth));
+    }
+    if (daylightingMaxGlare){
+      daylightingControl1->setMaximumAllowableDiscomfortGlareIndex(*daylightingMaxGlare);
+    }
+
+    BoundingBox pointBox;
+    pointBox.addPoint(Point3d(x,y,z));
+    BOOST_FOREACH(model::Space space, spaces){
+      BoundingBox boundingBox = space.boundingBox();
+      if (boundingBox.intersects(pointBox)){
+        daylightingControl1->setSpace(space);
+        break;
+      }
+    }
+
+    if (!daylightingControl1->space()){
+      LOG(Error, "Primary daylighting control specified for Thermal Zone '" << name << "' could not be associated with a space in that zone");
+      daylightingControl1->remove();
+      daylightingControl1.reset();
+    }else{
+      thermalZone.setPrimaryDaylightingControl(*daylightingControl1);
+      thermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(fraction);
+    }
+
+  }
+
+  // second point
+  boost::optional<model::DaylightingControl> daylightingControl2;
+  if (daylighting2CoordElements.size() == 3 && !daylighting2SetpointElement.isNull() && !daylighting2FractionElement.isNull()){
+    if (!daylightingControl1){
+      LOG(Error, "Secondary daylighting control specified for Thermal Zone '" << name << "' but there is no primary daylighting control");
+    }else{
+      double x = footToMeter*daylighting2CoordElements.at(0).toElement().text().toDouble();
+      double y = footToMeter*daylighting2CoordElements.at(1).toElement().text().toDouble();
+      double z = footToMeter*daylighting2CoordElements.at(2).toElement().text().toDouble();
+      double setpoint = footCandleToLux*daylighting2SetpointElement.text().toDouble();
+      double fraction = daylighting2FractionElement.text().toDouble();
+
+      daylightingControl2 = model::DaylightingControl(model);
+      daylightingControl2->setPositionXCoordinate(x);
+      daylightingControl2->setPositionYCoordinate(y);
+      daylightingControl2->setPositionZCoordinate(z);
+      daylightingControl2->setIlluminanceSetpoint(setpoint);
+      daylightingControl2->setLightingControlType("Continuous");
+      if (daylightingMinLighting){
+        daylightingControl2->setMinimumLightOutputFractionforContinuousDimmingControl(*daylightingMinLighting);
+      }
+      if (daylightingMinPower){
+        daylightingControl2->setMinimumInputPowerFractionforContinuousDimmingControl(*daylightingMinPower);
+      }
+      if (daylightingGlareAzimuth){
+        daylightingControl2->setPhiRotationAroundZAxis(degToRad(*daylightingGlareAzimuth));
+      }
+      if (daylightingMaxGlare){
+        daylightingControl2->setMaximumAllowableDiscomfortGlareIndex(*daylightingMaxGlare);
+      }
+
+      thermalZone.setSecondaryDaylightingControl(*daylightingControl2);
+
+      BoundingBox pointBox;
+      pointBox.addPoint(Point3d(x,y,z));
+      BOOST_FOREACH(model::Space space, spaces){
+        BoundingBox boundingBox = space.boundingBox();
+        if (boundingBox.intersects(pointBox)){
+          daylightingControl2->setSpace(space);
+          break;
+        }
+      }
+
+      if (!daylightingControl2->space()){
+        LOG(Error, "Secondary daylighting control specified for Thermal Zone '" << name << "' could not be associated with a space in that zone");
+        daylightingControl2->remove();
+        daylightingControl2.reset();
+      }else{
+        thermalZone.setSecondaryDaylightingControl(*daylightingControl2);
+        thermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(fraction);
+      }
+    }
+  }
+
 
   // Mult
   QDomElement multElement = thermalZoneElement.firstChildElement("Mult");
