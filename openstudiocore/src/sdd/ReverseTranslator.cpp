@@ -893,14 +893,14 @@ namespace sdd {
 
     simulationControl.setMaximumNumberofWarmupDays(50);
     
-    //if ((hvacAutoSizingElement.text().toInt() == 0) && (runDesignDaysElement.text().toInt() == 0)){
-    //  simulationControl.setRunSimulationforSizingPeriods(false);
-    //}else{
-    //  simulationControl.setRunSimulationforSizingPeriods(true);
-    //}
-    
-    // We will probably never have completely autosized models so at least for now we need to ask for sizing runs.
-    simulationControl.setRunSimulationforSizingPeriods(true);
+    if( (runDesignDaysElement.text().toInt() == 1) || (hvacAutoSizingElement.text().toInt() == 1) )
+    {
+      simulationControl.setRunSimulationforSizingPeriods(true);
+    }
+    else
+    {
+      simulationControl.setRunSimulationforSizingPeriods(false);
+    }
 
     if (beginMonthElement.text().toInt() == 0){
       simulationControl.setRunSimulationforWeatherFileRunPeriods(false);
