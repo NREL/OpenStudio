@@ -64,6 +64,7 @@
 #include <model/CurveQuadratic.hpp>
 #include <model/CurveBiquadratic.hpp>
 #include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerVariableSpeed.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
@@ -3762,73 +3763,91 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
     return result;
   }
 
-  model::CoolingTowerSingleSpeed tower(model);
+  // ModCtrl
 
-  // Name
+  QDomElement modCtrlElement = htRejElement.firstChildElement("ModCtrl");
 
-  QDomElement nameElement = htRejElement.firstChildElement("Name");
-  
-  tower.setName(nameElement.text().toStdString());
-
-  if( ! autosize() )
+  if( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 )
   {
-    bool ok;
-    double value;
+    model::CoolingTowerVariableSpeed tower(model);
 
-    // PerformanceInputMethod
-    tower.setPerformanceInputMethod("NominalCapacity");
+    result = tower;
+  }
+  else
+  {
+    model::CoolingTowerSingleSpeed tower(model);
 
-    tower.resetDesignWaterFlowRate();
+    result = tower;
 
-    tower.resetUFactorTimesAreaValueatDesignAirFlowRate();
-
-    tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
-
-    //// AirFlowCap
-    //QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCap");
-    //value = airFlowCapElement.text().toDouble(&ok);
-
-    //if( ok )
-    //{
-    //  // DesignAirFlowRate
-    //  tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
-
-    //  // AirFlowRateinFreeConvectionRegime
-    //  tower.setAirFlowRateinFreeConvectionRegime(0.0);  
-    //}
-
-
-    //// TotFanHP
-    //QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
-    //value = totFanHPElement.text().toDouble(&ok);
-
-    //if( ok )
-    //{
-    //  // FanPoweratDesignAirFlowRate
-    //  tower.setFanPoweratDesignAirFlowRate(value * 745.7);
-    //}
-
-
-    // CapRtd
-    QDomElement capRtdElement = htRejElement.firstChildElement("CapRtd");
-    value = capRtdElement.text().toDouble(&ok);
-
-    if( ok )
+    if( ! autosize() )
     {
-      // NominalCapacity
-      double cap = unitToUnit(value,"Btu/h","W").get();
+      bool ok;
+      double value;
 
-      tower.setNominalCapacity(cap);
+      // PerformanceInputMethod
+      tower.setPerformanceInputMethod("NominalCapacity");
 
-      double power = 0.0105 * cap;
+      tower.resetDesignWaterFlowRate();
 
-      tower.setFanPoweratDesignAirFlowRate(power);
+      tower.resetUFactorTimesAreaValueatDesignAirFlowRate();
 
-      tower.setDesignAirFlowRate(0.5 * 1.275 * power / 190.0);
+      tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
+
+      //// AirFlowCap
+      //QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCap");
+      //value = airFlowCapElement.text().toDouble(&ok);
+
+      //if( ok )
+      //{
+      //  // DesignAirFlowRate
+      //  tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+
+      //  // AirFlowRateinFreeConvectionRegime
+      //  tower.setAirFlowRateinFreeConvectionRegime(0.0);  
+      //}
+
+
+      //// TotFanHP
+      //QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
+      //value = totFanHPElement.text().toDouble(&ok);
+
+      //if( ok )
+      //{
+      //  // FanPoweratDesignAirFlowRate
+      //  tower.setFanPoweratDesignAirFlowRate(value * 745.7);
+      //}
+
+
+      // CapRtd
+      QDomElement capRtdElement = htRejElement.firstChildElement("CapRtd");
+      value = capRtdElement.text().toDouble(&ok);
+
+      if( ok )
+      {
+        // NominalCapacity
+        double cap = unitToUnit(value,"Btu/h","W").get();
+
+        tower.setNominalCapacity(cap);
+
+        double power = 0.0105 * cap;
+
+        tower.setFanPoweratDesignAirFlowRate(power);
+
+        tower.setDesignAirFlowRate(0.5 * 1.275 * power / 190.0);
+      }
     }
   }
 
-  return tower;
+  if( result )
+  {
+    // Name
+
+    QDomElement nameElement = htRejElement.firstChildElement("Name");
+    
+    result->setName(nameElement.text().toStdString());
+  }
+
+  return result;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChiller(
