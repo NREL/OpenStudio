@@ -32,6 +32,12 @@
 #include <model/Building_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/Construction.hpp>
+#include <model/Construction_Impl.hpp>
+#include <model/StandardOpaqueMaterial.hpp>
+#include <model/StandardOpaqueMaterial_Impl.hpp>
+#include <model/MasslessOpaqueMaterial.hpp>
+#include <model/MasslessOpaqueMaterial_Impl.hpp>
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/geometry/Transformation.hpp>
@@ -40,6 +46,7 @@
 #include <utilities/idd/Shading_Site_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Building_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Zone_Detailed_FieldEnums.hxx>
+#include <utilities/idd/ShadingProperty_Reflectance_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -150,6 +157,74 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
     group.setDouble(0, point.x());
     group.setDouble(1, point.y());
     group.setDouble(2, point.z());
+  }
+
+  // get reflectance properties from construction if possible
+  bool addShadingPropertyObject = false;
+
+  IdfObject shadingPropertyObject = IdfObject(openstudio::IddObjectType::ShadingProperty_Reflectance);
+  shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::ShadingSurfaceName, modelObject.name().get());
+
+  boost::optional<model::ConstructionBase> constructionBase = modelObject.construction();
+  if (constructionBase){
+    if (constructionBase->isFenestration()){
+
+      shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::FractionofShadingSurfaceThatIsGlazed, 1.0);
+      shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::GlazingConstructionName, constructionBase->name().get());
+      addShadingPropertyObject = true;
+
+    }else{
+
+      shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::FractionofShadingSurfaceThatIsGlazed, 0.0);
+
+      boost::optional<model::Construction> construction = constructionBase->optionalCast<model::Construction>();
+      if (construction){
+
+        std::vector<model::Material> layers = construction->layers();
+
+        // we want the outer layer
+        if (!layers.empty()){
+
+          if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
+            model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+
+            boost::optional<double> solRefl = outerMaterial.solarReflectance();
+            if (solRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
+              addShadingPropertyObject = true;
+            }
+
+            boost::optional<double> visRefl = outerMaterial.visibleReflectance();
+            if (visRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
+              addShadingPropertyObject = true;
+            }
+          }
+
+          
+          if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
+            model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
+
+            boost::optional<double> solRefl = outerMaterial.solarReflectance();
+            if (solRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
+              addShadingPropertyObject = true;
+            }
+
+            boost::optional<double> visRefl = outerMaterial.visibleReflectance();
+            if (visRefl){
+              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
+              addShadingPropertyObject = true;
+            }
+          }
+
+        }
+      }
+    }
+  }
+
+  if (addShadingPropertyObject){
+    m_idfObjects.push_back(shadingPropertyObject);
   }
 
   return idfObject;
