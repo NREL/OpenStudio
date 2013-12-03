@@ -174,7 +174,7 @@ namespace openstudio{
     }
 
     /// constructor from first report date and time, seconds from first report vector, values, and units
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<boost::uint32_t>& secondsFromFirstReport, const Vector& values, const std::string& units)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
       :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: firstReportDateTime may or may not have baseYear defined
@@ -202,6 +202,17 @@ namespace openstudio{
       return m_intervalLength;
     }
 
+    DateTimeVector TimeSeries_Impl::dateTimes() const
+    {
+      DateTimeVector dateTimeObjs(m_secondsFromFirstReport.size());
+      for(unsigned i=0;i<m_secondsFromFirstReport.size();i++)
+      {
+        dateTimeObjs[i] = m_firstReportDateTime + openstudio::Time(0,0,0,
+          m_secondsFromFirstReport[i]);
+      }
+      return dateTimeObjs;
+    }
+
 
     /// time in days from end of the first reporting interval
     Vector TimeSeries_Impl::daysFromFirstReport() const 
@@ -223,17 +234,20 @@ namespace openstudio{
     }
 
     /// time in seconds from end of the first reporting interval
-    std::vector<boost::uint32_t> TimeSeries_Impl::secondsFromFirstReport() const 
+    std::vector<long> TimeSeries_Impl::secondsFromFirstReport() const 
     {
       return m_secondsFromFirstReport;
     }
 
     /// time in seconds from end of the first reporting interval at index i
-    boost::uint32_t TimeSeries_Impl::secondsFromFirstReport(const unsigned& i) const 
+    long TimeSeries_Impl::secondsFromFirstReport(const unsigned& i) const 
     {
-      //double value = m_outOfRangeValue; // Shouldn't the out of range value be for values only?
-      boost::uint32_t value = 0;
-      if ((i>=0) && (i<m_secondsFromFirstReport.size())) value = m_secondsFromFirstReport[i];
+      //double value = m_outOfRangeValue; // JWD: Shouldn't the out of range value be for values only?
+      long value = 0;
+      if ((i>=0) && (i<m_secondsFromFirstReport.size()))
+      {
+        value = m_secondsFromFirstReport[i];
+      }
       return value;
     }
 
@@ -570,6 +584,12 @@ namespace openstudio{
     m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(dateTimes, values, units));
   }
 
+  /// constructor from first report date and time, seconds from first report vector, values, and units
+  TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
+  {
+    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, secondsFromFirstReport, values, units));
+  }
+
   /// interval length if any
   openstudio::OptionalTime TimeSeries::intervalLength() const
   {
@@ -577,10 +597,10 @@ namespace openstudio{
   }
 
   /// date and times at which values are reported, these are the end of each reporting interval 
-  //  std::vector<openstudio::DateTime> TimeSeries::dateTimes() const
-  //  {
-  //    return m_impl->dateTimes();
-  //  }
+  openstudio::DateTimeVector TimeSeries::dateTimes() const
+  {
+    return m_impl->dateTimes();
+  }
   openstudio::DateTime TimeSeries::firstReportDateTime() const
   {
     return m_impl->firstReportDateTime();
@@ -595,6 +615,17 @@ namespace openstudio{
   double TimeSeries::daysFromFirstReport(const unsigned& i) const
   {
     return m_impl->daysFromFirstReport(i);
+  }
+
+  /// time in seconds from end of the first reporting interval
+  std::vector<long> TimeSeries::secondsFromFirstReport() const
+  {
+    return m_impl->secondsFromFirstReport();
+  }
+  /// time in seconds from end of the first reporting interval at index i
+  long TimeSeries::secondsFromFirstReport(const unsigned& i) const
+  {
+    return m_impl->secondsFromFirstReport(i);
   }
 
   /// values
