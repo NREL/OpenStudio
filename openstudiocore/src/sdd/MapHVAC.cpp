@@ -514,7 +514,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   QDomNodeList airSegmentElements = airSystemElement.elementsByTagName("AirSeg");
 
   // Save the fan to add last
-  boost::optional<model::HVACComponent> fan;
+  boost::optional<model::Node> dropNode;
 
   bool isFanDrawthrough = true;
 
@@ -529,9 +529,76 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     {
       QDomNodeList airSegmentChildElements = airSegmentElement.childNodes();
 
-      for (int j = airSegmentChildElements.count() - 1; j >= 0 ; j--)
+      // Locate and add the fan first
+      // This is so we don't mess up control nodes
+
+      for(int j = 0; j != airSegmentChildElements.count(); j++)
       {
         QDomElement airSegmentChildElement = airSegmentChildElements.at(j).toElement();
+
+        // Fan
+        if( (istringEqual(airSegmentChildElement.tagName().toStdString(),"Fan")) )
+        {
+          if( boost::optional<model::ModelObject> mo = 
+                translateFan(airSegmentChildElement,doc,model) )
+          {
+            if( boost::optional<model::StraightComponent> hvacComponent = 
+                  mo->optionalCast<model::StraightComponent>() )
+            {
+              // Determine fan position
+
+              QDomElement posElement = airSegmentChildElement.firstChildElement("Pos");
+
+              //fan = hvacComponent;
+
+              hvacComponent->addToNode(supplyOutletNode);
+
+              if( posElement.text().compare("DrawThrough",Qt::CaseInsensitive) == 0 )
+              {
+                dropNode = hvacComponent->inletModelObject()->cast<model::Node>();
+
+                isFanDrawthrough = true;
+              }
+              else
+              {
+                dropNode = supplyOutletNode;
+
+                isFanDrawthrough = false;
+              }
+
+              if( availabilitySchedule )
+              {
+                if( boost::optional<model::FanConstantVolume> fan = hvacComponent->optionalCast<model::FanConstantVolume>() )
+                {
+                  if( ! fan->isMaximumFlowRateAutosized() )
+                  {
+                    airLoopHVAC.setDesignSupplyAirFlowRate(fan->maximumFlowRate().get());
+                  }
+                }
+                else if( boost::optional<model::FanVariableVolume> fan = hvacComponent->optionalCast<model::FanVariableVolume>() )
+                {
+                  if( ! fan->isMaximumFlowRateAutosized() )
+                  {
+                    airLoopHVAC.setDesignSupplyAirFlowRate(fan->maximumFlowRate().get());
+                  }
+                }
+              }
+            }
+            break;
+          }
+        }
+      }
+
+      if( ! dropNode )
+      {
+        dropNode = supplyOutletNode;
+      }
+
+      for(int j = (airSegmentChildElements.count() - 1); j > -1;  j--)
+      {
+        QDomElement airSegmentChildElement = airSegmentChildElements.at(j).toElement();
+
+        boost::optional<model::ModelObject> lastComponent = boost::none;
         
         // CoilCooling
         if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilClg") )
@@ -541,9 +608,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           {
             OS_ASSERT(mo);
 
+            lastComponent = mo;
+
             model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
 
-            hvacComponent.addToNode(supplyInletNode);
+            hvacComponent.addToNode(dropNode.get());
 
             if( ! autosize() )
             {
@@ -575,9 +644,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
           OS_ASSERT(mo);
 
+          lastComponent = mo;
+
           model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
 
-          hvacComponent.addToNode(supplyInletNode);
+          hvacComponent.addToNode(dropNode.get());
 
           if( boost::optional<model::CoilHeatingWater> coilHeatingWater = hvacComponent.optionalCast<model::CoilHeatingWater>() )
           {
@@ -617,60 +688,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             }
           }
         }
-        // Fan
-        else if( (istringEqual(airSegmentChildElement.tagName().toStdString(),"Fan")) && (! fan) )
+
+        if( lastComponent )
         {
-          if( boost::optional<model::ModelObject> mo = 
-                translateFan(airSegmentChildElement,doc,model) )
+          if( boost::optional<model::StraightComponent> straightComponent = lastComponent->optionalCast<model::StraightComponent>() )
           {
-            if( boost::optional<model::HVACComponent> hvacComponent = 
-                  mo->optionalCast<model::HVACComponent>() )
-            {
-              // Determine fan position
-
-              QDomElement posElement = airSegmentChildElement.firstChildElement("Pos");
-
-              fan = hvacComponent;
-
-              if( posElement.text().compare("DrawThrough",Qt::CaseInsensitive) == 0 )
-              {
-                isFanDrawthrough = true;
-              }
-              else
-              {
-                isFanDrawthrough = false;
-              }
-
-              if( availabilitySchedule )
-              {
-                if( boost::optional<model::FanConstantVolume> fan = hvacComponent->optionalCast<model::FanConstantVolume>() )
-                {
-                  if( ! fan->isMaximumFlowRateAutosized() )
-                  {
-                    airLoopHVAC.setDesignSupplyAirFlowRate(fan->maximumFlowRate().get());
-                  }
-                }
-                else if( boost::optional<model::FanVariableVolume> fan = hvacComponent->optionalCast<model::FanVariableVolume>() )
-                {
-                  if( ! fan->isMaximumFlowRateAutosized() )
-                  {
-                    airLoopHVAC.setDesignSupplyAirFlowRate(fan->maximumFlowRate().get());
-                  }
-                }
-              }
-            }
+            dropNode = straightComponent->inletModelObject()->cast<model::Node>();
           }
-        }
-      }
-      if( fan )
-      {
-        if( isFanDrawthrough )
-        {
-          fan->addToNode(supplyOutletNode);
-        }
-        else
-        {
-          fan->addToNode(supplyInletNode);
+          else if( boost::optional<model::WaterToAirComponent> waterToAirComponent = lastComponent->optionalCast<model::WaterToAirComponent>() )
+          {
+            dropNode = waterToAirComponent->airInletModelObject()->cast<model::Node>();
+          }
         }
       }
     }
