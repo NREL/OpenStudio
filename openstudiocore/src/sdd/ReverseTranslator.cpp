@@ -893,7 +893,7 @@ namespace sdd {
 
     simulationControl.setMaximumNumberofWarmupDays(50);
     
-    if( (runDesignDaysElement.text().toInt() == 1) || (hvacAutoSizingElement.text().toInt() == 1) )
+    if( (runDesignDaysElement.text().toInt() == 1) || (hvacAutoSizingElement.text().toInt() == 1) || m_masterAutosize )
     {
       simulationControl.setRunSimulationforSizingPeriods(true);
     }
