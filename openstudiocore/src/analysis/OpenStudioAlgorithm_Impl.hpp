@@ -32,7 +32,6 @@ namespace detail {
 
   /** OpenStudioAlgorithm_Impl is a Algorithm_Impl that is the implementation class for OpenStudioAlgorithm.*/
   class ANALYSIS_API OpenStudioAlgorithm_Impl : public Algorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

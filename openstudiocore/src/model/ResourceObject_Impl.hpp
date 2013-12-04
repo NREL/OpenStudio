@@ -34,7 +34,6 @@ namespace detail {
 
   class MODEL_API ResourceObject_Impl : public ParentObject_Impl
   {
-    Q_OBJECT;
    public:
 
     // Construct completely new object.

@@ -766,9 +766,11 @@ bool OpenStudioApp::notify(QObject* receiver, QEvent* event)
   return QApplication::notify(receiver, event);
 }
 
-void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName, 
-    const openstudio::path &tempModelDir) {
-  
+void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& translator, 
+                                            bool successful, 
+                                            const QString& fileName, 
+                                            const openstudio::path &tempModelDir) 
+{  
   QMessageBox messageBox; 
 
   QString log;

@@ -35,7 +35,6 @@ namespace detail {
   /** MeasureGroup_Impl is an DiscreteVariable_Impl that is the implementation class
    *  for MeasureGroup.*/
   class ANALYSIS_API MeasureGroup_Impl : public DiscreteVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

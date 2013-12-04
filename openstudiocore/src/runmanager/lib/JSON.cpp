@@ -67,8 +67,7 @@ namespace detail {
 
   std::string JSON::toJSON(const std::vector<Job> &t_jobs)
   {
-    QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    QVariantMap result = jsonMetadata().toMap();
     result["jobs"] = toVariant(t_jobs);
 
     return openstudio::toJSON(QVariant(result));
@@ -77,8 +76,7 @@ namespace detail {
 
   /// \returns a JSON string representation of the given job tree
   std::string JSON::toJSON(const Job &t_jobTree) {
-    QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    QVariantMap result = jsonMetadata().toMap();
     result["job"] = toVariant(t_jobTree);
     return openstudio::toJSON(QVariant(result));
   }
@@ -213,8 +211,7 @@ namespace detail {
   /// \returns a JSON string representation of the WorkItem
   std::string JSON::toJSON(const WorkItem &t_workItem)
   {
-    QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    QVariantMap result = jsonMetadata().toMap();
     result["work_item"] = toVariant(t_workItem);
     return openstudio::toJSON(QVariant(result));
   }
@@ -268,8 +265,7 @@ namespace detail {
                       const openstudio::path &t_p,
                       bool t_overwrite)
   {
-    QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    QVariantMap result = jsonMetadata().toMap();
     result["work_items"] = toVariant(t_workItems);
     return openstudio::saveJSON(QVariant(result),t_p,t_overwrite);
   }
@@ -286,8 +282,7 @@ namespace detail {
 
 
   std::string JSON::toJSON(const std::vector<WorkItem> &t_workItems) {
-    QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    QVariantMap result = jsonMetadata().toMap();
     result["work_items"] = toVariant(t_workItems);
     return openstudio::toJSON(QVariant(result));
   }

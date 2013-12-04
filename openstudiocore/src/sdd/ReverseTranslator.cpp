@@ -29,6 +29,8 @@
 #include <model/Building_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/ShadingSurfaceGroup.hpp>
+#include <model/ShadingSurfaceGroup_Impl.hpp>
 #include <model/Site.hpp>
 #include <model/Site_Impl.hpp>
 #include <model/WeatherFile.hpp>
@@ -43,6 +45,7 @@
 #include <model/Timestep.hpp>
 #include <model/Timestep_Impl.hpp>
 #include <model/Meter.hpp>
+#include <model/OutputVariable.hpp>
 #include <model/SimulationControl.hpp>
 #include <model/SimulationControl_Impl.hpp>
 #include <model/RunPeriod.hpp>
@@ -51,6 +54,14 @@
 #include <model/YearDescription_Impl.hpp>
 #include <model/OutputControlReportingTolerances.hpp>
 #include <model/OutputControlReportingTolerances_Impl.hpp>
+#include <model/ChillerElectricEIR.hpp>
+#include <model/ChillerElectricEIR_Impl.hpp>
+#include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerSingleSpeed_Impl.hpp>
+#include <model/BoilerHotWater.hpp>
+#include <model/BoilerHotWater_Impl.hpp>
+#include <model/SizingParameters.hpp>
+#include <model/SizingParameters_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -172,7 +183,9 @@ namespace sdd {
 
     // get project, assume one project per file
     QDomElement projectElement = element.firstChildElement("Proj");
-    if (!projectElement.isNull()){
+    if (projectElement.isNull()){
+      LOG(Error, "Could not find required element 'Proj'");
+    }else{
 
       result = openstudio::model::Model();
       result->setFastNaming(true);
@@ -202,6 +215,10 @@ namespace sdd {
       {
         m_autosize = false;
       }
+
+      model::SizingParameters sp = result->getUniqueModelObject<model::SizingParameters>();
+      sp.setHeatingSizingFactor(1.0);
+      sp.setCoolingSizingFactor(1.0);
 
       // do materials before constructions
       QDomNodeList materialElements = projectElement.elementsByTagName("Mat");
@@ -423,6 +440,18 @@ namespace sdd {
         }
       }
 
+      // translate shadingSurfaces
+      QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
+      model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
+      shadingSurfaceGroup.setName("Site ShadingGroup");
+      shadingSurfaceGroup.setShadingSurfaceType("Site");
+      for (int i = 0; i < exteriorShadingElements.count(); ++i){
+        if (exteriorShadingElements.at(i).parentNode() == projectElement){
+          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
+          OS_ASSERT(exteriorShading);
+        }
+      }
+
       // translate the building
       QDomElement buildingElement = projectElement.firstChildElement("Bldg");
       OS_ASSERT(!buildingElement.isNull()); // what type of error handling do we want?
@@ -631,6 +660,33 @@ namespace sdd {
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
+      if( ! result->getModelObjects<model::PlantLoop>().empty() )
+      {
+        model::OutputVariable var("Plant Supply Side Cooling Demand Rate",*result);
+        var.setReportingFrequency("hourly");
+
+        model::OutputVariable var2("Plant Supply Side Heating Demand Rate",*result);
+        var2.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::ChillerElectricEIR>().empty() )
+      {
+        model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::CoolingTowerSingleSpeed>().empty() )
+      {
+        model::OutputVariable var("Cooling Tower Heat Transfer Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
+      if( ! result->getModelObjects<model::BoilerHotWater>().empty() )
+      {
+        model::OutputVariable var("Boiler Heating Rate",*result);
+        var.setReportingFrequency("hourly");
+      }
+
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
       rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
       rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
@@ -695,6 +751,8 @@ namespace sdd {
     }
 
     model::SimulationControl simulationControl = model.getUniqueModelObject<model::SimulationControl>();
+
+    simulationControl.setMaximumNumberofWarmupDays(50);
     
     //if ((hvacAutoSizingElement.text().toInt() == 0) && (runDesignDaysElement.text().toInt() == 0)){
     //  simulationControl.setRunSimulationforSizingPeriods(false);

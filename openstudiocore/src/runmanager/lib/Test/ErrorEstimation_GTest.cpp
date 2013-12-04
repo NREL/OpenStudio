@@ -36,6 +36,9 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
+#include <isomodel/UserModel.hpp>
+#include <isomodel/ForwardTranslator.hpp>
+
 #include <boost/filesystem/path.hpp>
 
 #include <QDir>
@@ -104,6 +107,12 @@ double compareSqlFile(const openstudio::SqlFile &sf1, const openstudio::SqlFile 
   return *sf1.netSiteEnergy() - *sf2.netSiteEnergy();
 }
 
+double compare(double v1, double v2)
+{
+  return v1-v2;
+}
+
+
 double compareUses(const openstudio::runmanager::FuelUses &t_fuse1, const openstudio::runmanager::FuelUses &t_fuse2)
 {
   double gas1 = t_fuse1.fuelUse(openstudio::FuelType::Gas);
@@ -134,6 +143,13 @@ std::pair<double, double> runSimulation(openstudio::runmanager::ErrorEstimation 
   openstudio::SqlFile sqlfile2(runSimulation(m, true));
   qint64 reducedtime = et.elapsed();
 
+  openstudio::path weatherpath = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw");
+  openstudio::isomodel::ForwardTranslator translator;
+  openstudio::isomodel::UserModel userModel = translator.translateModel(m);
+  userModel.setWeatherFilePath(weatherpath);
+  openstudio::isomodel::SimModel simModel = userModel.toSimModel();
+  openstudio::isomodel::ISOResults isoResults = simModel.simulate();
+
   LOG_FREE(Info, "runSimulation", "OriginalTime " << originaltime << " reduced " << reducedtime);
 
   std::vector<double> variables;
@@ -145,13 +161,14 @@ std::pair<double, double> runSimulation(openstudio::runmanager::ErrorEstimation 
     LOG_FREE(Info, "runSimulation", "Unable to generate estimate: " << e.what());
   }
 
+  openstudio::runmanager::FuelUses fuses3 = t_ee.add(userModel, isoResults, "ISO", variables);
   openstudio::runmanager::FuelUses fuses2 = t_ee.add(sqlfile2, "Estimation", variables);
   openstudio::runmanager::FuelUses fuses1 = t_ee.add(sqlfile1, "FullRun", variables);
 
   LOG_FREE(Info, "runSimulation", "Comparing Full Run to linear approximation");
   compareUses(fuses1, fuses0);
-  LOG_FREE(Info, "runSimulation", "Comparing Full Run to error adjusted estimation run");
-  return std::make_pair(compareSqlFile(sqlfile1, sqlfile2), compareUses(fuses1, fuses2));
+  LOG_FREE(Info, "runSimulation", "Comparing Full Run to error adjusted ISO run");
+  return std::make_pair(compare(*sqlfile1.netSiteEnergy(), isoResults.totalEnergyUse()), compareUses(fuses1, fuses3));
 }
 
 TEST_F(RunManagerTestFixture, ErrorEstimationTest)
@@ -159,6 +176,7 @@ TEST_F(RunManagerTestFixture, ErrorEstimationTest)
   openstudio::runmanager::ErrorEstimation ee(1);
   ee.setConfidence("FullRun", 1.0);
   ee.setConfidence("Estimation", 0.75);
+  ee.setConfidence("ISO", 0.50);
 
   std::pair<double, double> run1 = runSimulation(ee, 0);
   LOG(Info, "Run1 initialerror: " << run1.first*1000000000 << " adjustederror: " << run1.second);

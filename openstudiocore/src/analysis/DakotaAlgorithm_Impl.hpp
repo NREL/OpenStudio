@@ -41,7 +41,6 @@ namespace detail {
   /** DakotaAlgorithm_Impl is a Algorithm_Impl that is the implementation class for
    *  DakotaAlgorithm. */
   class ANALYSIS_API DakotaAlgorithm_Impl : public Algorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

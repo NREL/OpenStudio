@@ -95,6 +95,7 @@ namespace detail {
     std::vector<ModelObject> modelObjects = this->modelObjects();
 
     if ( !modelObjects.empty() ){
+      modelObjectListClone.removeAllModelObjects();
       for( std::vector<ModelObject>::iterator it = modelObjects.begin();
        it != modelObjects.end();
        it++ )
