@@ -59,15 +59,16 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   std::string baseName = modelObject.name().get();
 
   //  A3 ,Field Availability Schedule Name
-  
-  Schedule availabilitySchedule = modelObject.availabilitySchedule();
-  translateAndMapModelObject(availabilitySchedule);
-  
-  s = availabilitySchedule.name();
-  
-  if(s)
+  boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();
+
+  if( availabilitySchedule )
   {
-    idfObject.setString(Fan_OnOffFields::AvailabilityScheduleName,*s);
+    boost::optional<IdfObject> _availabilitySchedule = translateAndMapModelObject(availabilitySchedule.get());
+
+    if( _availabilitySchedule && _availabilitySchedule->name() )
+    {
+      idfObject.setString(Fan_OnOffFields::AvailabilityScheduleName, _availabilitySchedule->name().get());
+    }
   }
   
   //  N1 ,Field Fan Efficiency
@@ -76,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   
   if( value )
   {
-    idfObject.setDouble(Fan_OnOffFields::FanEfficiency,*value);
+    idfObject.setDouble(Fan_OnOffFields::FanEfficiency, *value);
   }
   
   //  N2 Pressure Rise
@@ -85,18 +86,16 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   
   if( value )
   {
-    idfObject.setDouble(Fan_OnOffFields::PressureRise,*value);
+    idfObject.setDouble(Fan_OnOffFields::PressureRise, *value);
   }
   
   // N3,  Field Maximum Flow Rate
-  
+
   value = modelObject.maximumFlowRate();
-  
   if( value )
   {
-    idfObject.setDouble(Fan_OnOffFields::MaximumFlowRate,*value);
+    idfObject.setDouble(Fan_OnOffFields::MaximumFlowRate, value.get());
   }
-  
   else
   {
     idfObject.setString(Fan_OnOffFields::MaximumFlowRate,"Autosize");
@@ -117,53 +116,60 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   
   if( value )
   {
-    idfObject.setDouble(Fan_OnOffFields::MotorInAirstreamFraction,*value);
+    idfObject.setDouble(Fan_OnOffFields::MotorInAirstreamFraction, *value);
   }
   
   // A4 Air Inlet Node Name
-  
-  mo = modelObject.inletModelObject();
-  if(mo)
+
+  if( boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject() )
   {
-    s = mo->name();
-    if(s)
+    if( boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>() )
     {
-      idfObject.setString(openstudio::Fan_OnOffFields::AirInletNodeName,*s);
+      idfObject.setString(Fan_OnOffFields::AirInletNodeName, inletNode->name().get());
     }
   }
 
   // A5 , Field Air Outlet Node Name
   
-  mo = modelObject.outletModelObject();
-  if(mo)
+  if( boost::optional<ModelObject> ouletModelObject = modelObject.inletModelObject() )
   {
-    s = mo->name();
-    if(s)
+    if( boost::optional<Node> ouletNode = ouletModelObject->optionalCast<Node>() )
     {
-      idfObject.setString(openstudio::Fan_OnOffFields::AirOutletNodeName,*s);
+      idfObject.setString(Fan_OnOffFields::AirOutletNodeName, ouletNode->name().get());
     }
   }
 
   // A6 , Field Fan Power Ratio Function of Speed Ratio Curve Name
-  
-  Curve cb1 =  modelObject.fanPowerRatioFunctionofSpeedRatioCurve();
-  
-  translateAndMapModelObject(cb1);
-  
-  idfObject.setString(Fan_OnOffFields::FanPowerRatioFunctionofSpeedRatioCurveName,cb1.name().get());
+
+  boost::optional<Curve> fanPowerRatioFunctionofSpeedRatioCurve = modelObject.fanPowerRatioFunctionofSpeedRatioCurve();
+
+  if( fanPowerRatioFunctionofSpeedRatioCurve )
+  {
+    boost::optional<IdfObject> _fanPowerRatioFunctionofSpeedRatioCurve = translateAndMapModelObject(fanPowerRatioFunctionofSpeedRatioCurve.get());
+
+    if( _fanPowerRatioFunctionofSpeedRatioCurve && _fanPowerRatioFunctionofSpeedRatioCurve->name() )
+    {
+      idfObject.setString(Fan_OnOffFields::FanPowerRatioFunctionofSpeedRatioCurveName, _fanPowerRatioFunctionofSpeedRatioCurve->name().get());
+    }
+  }
   
   // A7 , Field Fan Efficiency Ratio Function of Speed Ratio Curve Name
-  
-  Curve cb2 =  modelObject.fanEfficiencyRatioFunctionofSpeedRatioCurve();
-  
-  translateAndMapModelObject(cb2);
-  
-  idfObject.setString(Fan_OnOffFields::FanEfficiencyRatioFunctionofSpeedRatioCurveName,cb2.name().get());
-  
+
+  boost::optional<Curve> fanEfficiencyRatioFunctionofSpeedRatioCurve = modelObject.fanEfficiencyRatioFunctionofSpeedRatioCurve();
+
+  if( fanEfficiencyRatioFunctionofSpeedRatioCurve )
+  {
+    boost::optional<IdfObject> _fanEfficiencyRatioFunctionofSpeedRatioCurve = translateAndMapModelObject(fanEfficiencyRatioFunctionofSpeedRatioCurve.get());
+
+    if( _fanEfficiencyRatioFunctionofSpeedRatioCurve && _fanEfficiencyRatioFunctionofSpeedRatioCurve->name() )
+    {
+      idfObject.setString(Fan_OnOffFields::FanEfficiencyRatioFunctionofSpeedRatioCurveName, _fanEfficiencyRatioFunctionofSpeedRatioCurve->name().get());
+    }
+  }
   
   // A8 , Field End-Use Subcategory
 
-   idfObject.setString(Fan_OnOffFields::EndUseSubcategory,modelObject.endUseSubcategory());
+   idfObject.setString(Fan_OnOffFields::EndUseSubcategory, modelObject.endUseSubcategory());
 
   return idfObject;
 }
