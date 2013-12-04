@@ -1544,6 +1544,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   // ConstantVolume
   if( istringEqual(fanControlMethodElement.text().toStdString(),"ConstantVolume") )
   {
+    // The type of fan is dependent on the context.  We use FanOnOff for fan coil units, FanConstantVolume for everything else
+    QDomElement parentElement = fanElement.parentNode().toElement();
+
+    if( parentElement.nodeName().compare("ZnSys",Qt::CaseInsensitive) == 0 )
+    {
+      // Type 
+
+      QDomElement znSysTypeElement = parentElement.firstChildElement("Type");
+
+      if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 )
+      {
+      }
+    }
+
     model::Schedule schedule = alwaysOnSchedule(model);
 
     model::FanConstantVolume fan(model,schedule);
@@ -4921,10 +4935,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       fpfc.setMaximumSupplyAirFlowRate(flowCap.get());
     }
 
-    // zero out the max OA flowrate
-    fpfc.setMaximumOutdoorAirFlowRate(0.0);
-
-
     //set the max heating water flow rate
     if( dsnHtgFlowRt )
     {
@@ -4935,6 +4945,38 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     if( dsnClgFlowRt )
     {
       fpfc.setMaximumColdWaterFlowRate(dsnClgFlowRt.get());
+    }
+
+    // FanCtrl
+    
+    QDomElement fanCtrlElement = element.firstChildElement("FanCtrl");
+
+    if( (fanCtrlElement.text().compare("Continuous",Qt::CaseInsensitive)) == 0 )
+    {
+      if( boost::optional<model::FanOnOff> fanConstantVolume = fan.optionalCast<model::FanOnOff>() )
+      {
+      }
+      else if( boost::optional<model::FanVariableVolume> fanVariableVolume = fan.optionalCast<model::FanVariableVolume>() )
+      {
+      }
+      else
+      {
+      }
+    }
+    else if( (fanCtrlElement.text().compare("Cycling",Qt::CaseInsensitive)) == 0 )
+    {
+      if( boost::optional<model::FanOnOff> fanConstantVolume = fan.optionalCast<model::FanOnOff>() )
+      {
+      }
+      else if( boost::optional<model::FanVariableVolume> fanVariableVolume = fan.optionalCast<model::FanVariableVolume>() )
+      {
+      }
+      else
+      {
+      }
+    }
+    else
+    {
     }
 
     // Name
