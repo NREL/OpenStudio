@@ -28,6 +28,7 @@
 #include <QDateTime>
 #include <QMessageBox>
 #include <QMutexLocker>
+#include <QElapsedTimer>
 #include <utilities/core/System.hpp>
 #include <utilities/core/Compare.hpp>
 
@@ -556,31 +557,36 @@ namespace detail {
       }
 
 
-      std::pair<openstudio::DateTime, JobErrors> loadJobStatus(const openstudio::UUID &t_uuid)
+      static std::map<openstudio::UUID, std::pair<openstudio::DateTime, JobErrors> > loadJobStatus(const std::vector<RunManagerDB::JobStatus> &t_statuses,
+          const std::vector<RunManagerDB::JobErrors> &t_errors)
       {
-        JobErrors ret;
-        RunManagerDB::JobStatus status = litesql::select<RunManagerDB::JobStatus>(m_db, RunManagerDB::JobStatus::JobUuid == toString(t_uuid)).one();
-        int resultValue = status.result;
-        ret.result = ruleset::OSResultValue(resultValue);
+        std::map<openstudio::UUID, std::pair<openstudio::DateTime, JobErrors> > ret;
 
-        if (ret.result == ruleset::OSResultValue::NA){
-          ret.numNAs = 1;
+        for (std::vector<RunManagerDB::JobStatus>::const_iterator itr = t_statuses.begin();
+             itr != t_statuses.end();
+             ++itr)
+        {
+          JobErrors err;
+          std::string lastRun = itr->lastRun;
+          int resultValue = itr->result;
+          err.result = ruleset::OSResultValue(resultValue);
+
+          if (err.result == ruleset::OSResultValue::NA) {
+            err.numNAs = 1;
+          }
+          
+          ret[openstudio::toUUID(itr->jobUuid)] = std::make_pair(openstudio::DateTime(lastRun), err);
         }
 
-        std::vector<RunManagerDB::JobErrors> errors 
-          = litesql::select<RunManagerDB::JobErrors>(m_db,
-              RunManagerDB::JobErrors::JobUuid == toString(t_uuid)).all();
-
-        for (std::vector<RunManagerDB::JobErrors>::iterator itr = errors.begin();
-             itr != errors.end();
+        for (std::vector<RunManagerDB::JobErrors>::const_iterator itr = t_errors.begin();
+             itr != t_errors.end();
              ++itr)
         {
           int errortype = itr->errorType;
-          ret.addError(ErrorType(errortype), itr->value);
+          ret[openstudio::toUUID(itr->jobUuid)].second.addError(ErrorType(errortype), itr->value);
         }
 
-        std::string lastRun = status.lastRun;
-        return std::make_pair(openstudio::DateTime(lastRun), ret);
+        return ret;
       }
 
 
@@ -727,10 +733,84 @@ namespace detail {
           }
         }
 
-        std::list<std::pair<RunManagerDB::Job, openstudio::runmanager::Job> > loadedjobs;
+
+        QElapsedTimer et;
+        et.start();
 
         std::vector<RunManagerDB::Job> jobs
           = litesql::select<RunManagerDB::Job>(m_db, RunManagerDB::Job::IsWorkflowJob == isWorkflow).orderBy(RunManagerDB::Job::Index).all();
+
+
+
+        std::map<openstudio::UUID, Tools> allTools;
+        std::map<openstudio::UUID, JobParams> allJobParams;
+        std::map<openstudio::UUID, Files> allFiles;
+        std::map<openstudio::UUID, Files> allOutputFiles;
+        std::map<openstudio::UUID, std::pair<openstudio::DateTime, JobErrors> > allStatus;
+
+        if (!isWorkflow)
+        {
+          std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db).all();
+          std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db).all();
+          std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db).all();
+          std::vector<RunManagerDB::OutputRequiredFile> outputrequiredfiles = litesql::select<RunManagerDB::OutputRequiredFile>(m_db).all();
+          std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db).all();
+          std::vector<RunManagerDB::RequiredFile> requiredfiles = litesql::select<RunManagerDB::RequiredFile>(m_db).all();
+          std::vector<RunManagerDB::JobStatus> status = litesql::select<RunManagerDB::JobStatus>(m_db).all();
+          std::vector<RunManagerDB::JobErrors> errors = litesql::select<RunManagerDB::JobErrors>(m_db).all();
+
+          LOG(Info, "Time to load all RunManager data: " << et.restart() << " sizes: " << tools.size() << " " << params.size() << " " << outputfiles.size() << " " << outputrequiredfiles.size() << " " << files.size() << " " << requiredfiles.size() << " " << jobs.size() << " " << status.size() << " " << errors.size());
+
+          allTools = loadJobTools(tools);
+          LOG(Info, "Time to parse alltools: " << et.restart());
+          allJobParams = loadJobParams(params);
+          LOG(Info, "Time to parse allJobParams: " << et.restart());
+          allFiles = loadJobFiles(files, requiredfiles);
+          LOG(Info, "Time to parse allFiles: " << et.restart());
+          allOutputFiles = loadJobFiles(outputfiles, outputrequiredfiles);
+          LOG(Info, "Time to parse allOutputFiles: " << et.restart());
+          allStatus = loadJobStatus(status, errors);
+          LOG(Info, "Time to parse allStatus: " << et.restart());
+        } else {
+          for (std::vector<RunManagerDB::Job>::const_iterator itr = jobs.begin();
+               itr != jobs.end();
+               ++itr)
+          {
+            std::string uuidstr = itr->uuid;
+            openstudio::UUID uuid = openstudio::toUUID(itr->uuid);
+
+            std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db,
+              RunManagerDB::JobToolInfo::JobUuid == uuidstr).all();
+            std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db,
+              RunManagerDB::JobParam::JobUuid == uuidstr).all();
+            std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db,
+              RunManagerDB::OutputFileInfo::JobUuid == uuidstr).all();
+            std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db,
+              RunManagerDB::JobFileInfo::JobUuid == uuidstr).all();
+
+            std::vector<RunManagerDB::RequiredFile> requiredfiles;
+            for (std::vector<RunManagerDB::JobFileInfo>::const_iterator fileitr = files.begin();
+                 fileitr != files.end();
+                 ++fileitr)
+            {
+              std::vector<RunManagerDB::RequiredFile> part = litesql::select<RunManagerDB::RequiredFile>(m_db,
+                  RunManagerDB::RequiredFile::ParentId == fileitr->id).all();
+              requiredfiles.insert(requiredfiles.end(), part.begin(), part.end());
+            }
+
+
+            LOG(Info, "Time to load for uuid: " << uuidstr << " " << et.restart());
+
+            allTools[uuid] = loadJobTools(tools)[uuid];
+            LOG(Info, "Time to parse tools for uuid: " << uuidstr << " " << et.restart());
+            allJobParams[uuid] = loadJobParams(params)[uuid];
+            LOG(Info, "Time to parse params for uuid: " << uuidstr << " " << et.restart());
+            allFiles[uuid] = loadJobFiles(files, requiredfiles)[uuid];
+            LOG(Info, "Time to parse files for uuid: " << uuidstr << " " << et.restart());
+          }
+        }
+
+        std::list<std::pair<RunManagerDB::Job, openstudio::runmanager::Job> > loadedjobs;
 
         int index = 0;
         for (std::vector<RunManagerDB::Job>::iterator itr = jobs.begin();
@@ -752,21 +832,23 @@ namespace detail {
               JobErrors e;
               Files f;
 
-              try {
-                std::pair<openstudio::DateTime, JobErrors> status = loadJobStatus(uuid);
+              std::map<openstudio::UUID, std::pair<openstudio::DateTime, JobErrors> >::const_iterator statusitr = allStatus.find(uuid);
+
+              if (statusitr != allStatus.end())
+              {
+                const std::pair<openstudio::DateTime, JobErrors> &status = statusitr->second;
                 dt = status.first;
                 e = status.second;
-                f = loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>(uuid);
-              } catch (const std::exception &) {
-                // guess there wasn't a job status record for this job
+                f = allOutputFiles[uuid];
               }
+
 
               // only add the job if it's one that was found with our workflow key search
               Job j = JobFactory::createJob(
                   JobType(itr->jobType),
-                  loadJobTools(uuid),
-                  loadJobParams(uuid),
-                  loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>(uuid),
+                  allTools[uuid],
+                  allJobParams[uuid],
+                  allFiles[uuid],
                   std::vector<URLSearchPath>(),
                   true,
                   uuid,
@@ -847,85 +929,90 @@ namespace detail {
 
       }
 
-      JobParams loadJobParams(const openstudio::UUID &t_uuid)
+      static std::map<openstudio::UUID, JobParams> loadJobParams(const std::vector<RunManagerDB::JobParam> &t_params)
       {
-        std::list<std::pair<RunManagerDB::JobParam, JobParam> > loadedparams;
+        std::map<openstudio::UUID, std::list<std::pair<RunManagerDB::JobParam, JobParam> > > allloadedparams;
 
-        std::vector<RunManagerDB::JobParam> tools
-          = litesql::select<RunManagerDB::JobParam>(m_db,
-              RunManagerDB::JobParam::JobUuid == toString(t_uuid)).all();
-
-        // Get all the parameters and insert them into "loadedparams"
-        for (std::vector<RunManagerDB::JobParam>::iterator itr = tools.begin();
-            itr != tools.end();
-            ++itr)
+        for (std::vector<RunManagerDB::JobParam>::const_iterator itr = t_params.begin();
+             itr != t_params.end();
+             ++itr)
         {
-          JobParam p(itr->value);
-          loadedparams.push_back(std::make_pair(*itr, p));
+          allloadedparams[openstudio::toUUID(itr->jobUuid)].push_back(std::make_pair(*itr, JobParam(itr->value)));
         }
 
-        std::list<std::pair<RunManagerDB::JobParam, JobParam> > completedparams;
-        std::vector<std::pair<int, JobParam*> > paramlookup; // yes I'm using a pointer for this temporary storage where I don't want a copy
+        std::map<openstudio::UUID, JobParams> retval;
 
-        // Loop through all of the loaded params as many times as it takes to empty them all out
-        bool didsomething = true;
-        while (!loadedparams.empty() && didsomething)
+        for (std::map<openstudio::UUID, std::list<std::pair<RunManagerDB::JobParam, JobParam> > >::iterator allitr = allloadedparams.begin();
+             allitr != allloadedparams.end();
+             ++allitr)
         {
-          didsomething = false;
+          std::list<std::pair<RunManagerDB::JobParam, JobParam> > completedparams;
+          std::list<std::pair<RunManagerDB::JobParam, JobParam> > &loadedparams(allitr->second);
 
-          for (std::list<std::pair<RunManagerDB::JobParam, JobParam> >::iterator itr = loadedparams.begin();
-               itr != loadedparams.end();
-               ++itr)
+          std::vector<std::pair<int, JobParam*> > paramlookup; // yes I'm using a pointer for this temporary storage where I don't want a copy
+
+          // Loop through all of the loaded params as many times as it takes to empty them all out
+          bool didsomething = true;
+          while (!loadedparams.empty() && didsomething)
           {
-            // If it has no parent we know it's a top level param
-            if (itr->first.parentId == 0)
+            didsomething = false;
+
+            for (std::list<std::pair<RunManagerDB::JobParam, JobParam> >::iterator itr = loadedparams.begin();
+                itr != loadedparams.end();
+                ++itr)
             {
-              completedparams.push_back(*itr);
-              paramlookup.push_back(std::make_pair(itr->first.id, &completedparams.back().second));
-              didsomething = true;
-              loadedparams.erase(itr);
-            } else {
-              // look for parent
-              for (std::vector<std::pair<int, JobParam*> >::iterator itr2 = paramlookup.begin();
-                   itr2 != paramlookup.end();
-                   ++itr2)
+              // If it has no parent we know it's a top level param
+              if (itr->first.parentId == 0)
               {
-                if (itr2->first == itr->first.parentId)
+                completedparams.push_back(*itr);
+                paramlookup.push_back(std::make_pair(itr->first.id, &completedparams.back().second));
+                didsomething = true;
+                loadedparams.erase(itr);
+              } else {
+                // look for parent
+                for (std::vector<std::pair<int, JobParam*> >::iterator itr2 = paramlookup.begin();
+                    itr2 != paramlookup.end();
+                    ++itr2)
                 {
-                  itr2->second->children.push_back(itr->second);
-                  paramlookup.push_back(std::make_pair(itr->first.id, &itr2->second->children.back()));
-                  didsomething = true;
-                  loadedparams.erase(itr);
-                  break; // break out of find parent loop
+                  if (itr2->first == itr->first.parentId)
+                  {
+                    itr2->second->children.push_back(itr->second);
+                    paramlookup.push_back(std::make_pair(itr->first.id, &itr2->second->children.back()));
+                    didsomething = true;
+                    loadedparams.erase(itr);
+                    break; // break out of find parent loop
+                  }
                 }
+              }
+
+              if (didsomething)
+              {
+                // We did something, let's break from this loop
+                // and restart the search
+                break;
               }
             }
 
-            if (didsomething)
-            {
-              // We did something, let's break from this loop
-              // and restart the search
-              break;
-            }
           }
 
+          if (!didsomething)
+          {
+            LOG(Error, "Error loading job params, params left unhandled");
+          }
+
+          JobParams params;
+
+          for (std::list<std::pair<RunManagerDB::JobParam, JobParam> >::iterator itr2 = completedparams.begin();
+              itr2 != completedparams.end();
+              ++itr2)
+          {
+            params.append(itr2->second);
+          }
+
+          retval[allitr->first] = params;
         }
 
-        if (!didsomething)
-        {
-          LOG(Error, "Error loading job params, params left unhandled");
-        }
-
-        JobParams params;
-
-        for (std::list<std::pair<RunManagerDB::JobParam, JobParam> >::iterator itr2 = completedparams.begin();
-             itr2 != completedparams.end();
-             ++itr2)
-        {
-          params.append(itr2->second);
-        }
-
-        return params;
+        return retval;
       }
 
       void deleteJobParams(const openstudio::runmanager::Job &t_job)
@@ -990,16 +1077,12 @@ namespace detail {
         }
       }
 
-      Tools loadJobTools(const openstudio::UUID &t_uuid)
+      static std::map<openstudio::UUID, Tools> loadJobTools(const std::vector<RunManagerDB::JobToolInfo> &t_tools)
       {
-        Tools ret;
+        std::map<openstudio::UUID, Tools> foundTools;
 
-        std::vector<RunManagerDB::JobToolInfo> tools
-          = litesql::select<RunManagerDB::JobToolInfo>(m_db,
-              RunManagerDB::JobToolInfo::JobUuid == toString(t_uuid)).all();
-
-        for (std::vector<RunManagerDB::JobToolInfo>::iterator itr = tools.begin();
-             itr != tools.end();
+        for (std::vector<RunManagerDB::JobToolInfo>::const_iterator itr = t_tools.begin();
+             itr != t_tools.end();
              ++itr)
         {
           boost::optional<int> major;
@@ -1034,11 +1117,13 @@ namespace detail {
               boost::regex(regexstr)
               );
 
-          ret.append(ti);
+
+          foundTools[openstudio::toUUID(itr->jobUuid)].append(ti);
         }
 
-        return ret;
+        return foundTools;
       }
+
 
       void deleteJobTools(const openstudio::runmanager::Job &t_job)
       {
@@ -1099,16 +1184,21 @@ namespace detail {
       }
 
       template<typename JobFileType, typename RequiredFileType>
-      Files loadJobFiles(const openstudio::UUID &uuid)
+      static std::map<openstudio::UUID, Files> loadJobFiles(const std::vector<JobFileType> &t_files, const std::vector<RequiredFileType> &t_requiredFiles)
       {
-        std::vector<JobFileType> files
-          = litesql::select<JobFileType>(m_db,
-              JobFileType::JobUuid == toString(uuid)).all();
+        std::map<int, std::list<std::pair<QUrl, openstudio::path> > > requiredFiles;
 
-        Files ret;
+        for (typename std::vector<RequiredFileType>::const_iterator itr = t_requiredFiles.begin();
+             itr != t_requiredFiles.end();
+             ++itr)
+        {
+          requiredFiles[itr->parentId].push_back(std::make_pair(QUrl::fromUserInput(toQString(itr->from)), toPath(itr->to)));
+        }
 
-        for (typename std::vector<JobFileType>::iterator itr = files.begin();
-             itr != files.end();
+        std::map<openstudio::UUID, Files> ret;
+
+        for (typename std::vector<JobFileType>::const_iterator itr = t_files.begin();
+             itr != t_files.end();
              ++itr)
         {
           openstudio::path fullpath = itr->fullPath.value().empty()?openstudio::path():toPath(itr->fullPath);
@@ -1127,27 +1217,24 @@ namespace detail {
               itr->fullPath.value().empty()?openstudio::path():toPath(itr->fullPath)
               );
 
-          std::vector<RequiredFileType> requiredFiles
-            = litesql::select<RequiredFileType>(m_db, RequiredFileType::ParentId == itr->id).all();
+          const std::list<std::pair<QUrl, openstudio::path> > &theseRequiredFiles = requiredFiles[itr->id];
 
-          for (typename std::vector<RequiredFileType>::iterator itr2 = requiredFiles.begin();
-               itr2 != requiredFiles.end();
+          for (typename std::list<std::pair<QUrl, openstudio::path> >::const_iterator itr2 = theseRequiredFiles.begin();
+               itr2 != theseRequiredFiles.end();
                ++itr2)
           {
             try {
-              f.addRequiredFile(QUrl::fromUserInput(toQString(itr2->from)), toPath(itr2->to));
+              f.addRequiredFile(itr2->first, itr2->second);
             } catch (const std::runtime_error &) {
-              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict: '" << openstudio::toString(itr2->from) << "' to '" << openstudio::toString(itr2->to));
+              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict: '" << openstudio::toString(itr2->first.toString()) << "' to '" << openstudio::toString(itr2->second));
               throw;
             }
           }
 
-          ret.append(f);
-
+          ret[openstudio::toUUID(itr->jobUuid)].append(f);
         }
 
         return ret;
-
       }
 
       template<typename JobFileType, typename RequiredFileType>
