@@ -129,6 +129,7 @@ SET( project_directories
   energyplus
   radiance
   gbxml
+  contam
   isomodel
   osversion
   ruleset
@@ -140,7 +141,6 @@ SET( project_directories
   resultsviewer
   model_editor
   openstudio_lib
-  plugin
   openstudio_app
   pat_app
   sdd
@@ -841,6 +841,7 @@ ELSE( WIN32 )
   SET(QTWINMIGRATE_EXPORT "")
 ENDIF( WIN32 )
 
+
 export(TARGETS openstudio_runmanager 
                openstudio_project
                openstudio_osversion
@@ -855,8 +856,8 @@ export(TARGETS openstudio_runmanager
                openstudio_gbxml
                openstudio_isomodel
                openstudio_lib
-               openstudio_plugin
                openstudio_sdd
+               openstudio_contam
                ${LIBSSH_EXPORT}
                ${QTWINMIGRATE_EXPORT}
                zkexpat

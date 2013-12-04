@@ -86,6 +86,20 @@ using namespace openstudio::model;
 using std::string;
 using boost::to_upper_copy;
 
+double triangulatedArea(const std::vector<std::vector<Point3d> >& triangulation)
+{
+  double result = 0;
+  BOOST_FOREACH(const std::vector<Point3d>& triangle, triangulation){
+    if(3u == triangle.size()){
+      boost::optional<double> area = getArea(triangle);
+      if (area){
+        result += *area;
+      }
+    }
+  }
+  return result;
+}
+
 TEST_F(ModelFixture, Surface_SetVertices)
 {
   Model model;
@@ -232,7 +246,8 @@ TEST_F(ModelFixture, Surface_Area)
   EXPECT_EQ(1, surface.outwardNormal().length());
   EXPECT_EQ(1.0, surface.grossArea());
   EXPECT_EQ(1.0, surface.netArea());
-
+  EXPECT_EQ(1.0, triangulatedArea(surface.triangulation()));
+  
   // square with unit area
   points.clear();
   points.push_back(Point3d(0, 1, 0));
@@ -247,6 +262,7 @@ TEST_F(ModelFixture, Surface_Area)
   EXPECT_EQ(1, surface.outwardNormal().length());
   EXPECT_EQ(1.0, surface.grossArea());
   EXPECT_EQ(1.0, surface.netArea());
+  EXPECT_EQ(1.0, triangulatedArea(surface.triangulation()));
 
   // u shape (concave) with 5 unit area, includes colinear points
   points.clear();
@@ -270,6 +286,7 @@ TEST_F(ModelFixture, Surface_Area)
   EXPECT_EQ(1, surface.outwardNormal().length());
   EXPECT_EQ(5.0, surface.grossArea());
   EXPECT_EQ(5.0, surface.netArea());
+  EXPECT_EQ(5.0, triangulatedArea(surface.triangulation()));
 }
 
 /* HAS TO WAIT UNTIL WE GET A GOOD OSM EXAMPLE
@@ -1254,11 +1271,15 @@ TEST_F(ModelFixture, Surface_createAdjacentSurface){
   ASSERT_TRUE(surface2);
   EXPECT_EQ(surface1.grossArea(), surface2->grossArea());
   EXPECT_EQ(surface1.netArea(), surface2->netArea());
+  EXPECT_EQ(surface1.netArea(), triangulatedArea(surface1.triangulation()));
+  EXPECT_EQ(surface2->netArea(), triangulatedArea(surface2->triangulation()));
 
   ASSERT_EQ(1u, surface2->subSurfaces().size());
   SubSurface subSurface2 = surface2->subSurfaces()[0];
   EXPECT_EQ(subSurface1.grossArea(), subSurface2.grossArea());
   EXPECT_EQ(subSurface1.netArea(), subSurface2.netArea());
+  EXPECT_EQ(subSurface1.netArea(), triangulatedArea(subSurface1.triangulation()));
+  EXPECT_EQ(subSurface2.netArea(), triangulatedArea(subSurface2.triangulation()));
 }
 
 TEST_F(ModelFixture, Surface_DeleteAdjacentSurface){
