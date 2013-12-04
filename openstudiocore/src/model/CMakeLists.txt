@@ -32,6 +32,9 @@ SET( ${target_name}_src
   ModelObjectList.cpp
 
   ConcreteModelObjects.hpp
+  AirConditionerVariableRefrigerantFlow.hpp
+  AirConditionerVariableRefrigerantFlow_Impl.hpp
+  AirConditionerVariableRefrigerantFlow.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
@@ -119,6 +122,9 @@ SET( ${target_name}_src
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
+  CoilCoolingDXVariableRefrigerantFlow.hpp
+  CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlow.cpp
   CoilCoolingLowTempRadiantConstFlow.hpp
   CoilCoolingLowTempRadiantConstFlow_Impl.hpp
   CoilCoolingLowTempRadiantConstFlow.cpp
@@ -134,6 +140,9 @@ SET( ${target_name}_src
   CoilHeatingDXSingleSpeed.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXSingleSpeed.cpp
+  CoilHeatingDXVariableRefrigerantFlow.hpp
+  CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlow.cpp
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
@@ -508,9 +517,33 @@ SET( ${target_name}_src
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
+  RefrigerationCondenserCascade.hpp
+  RefrigerationCondenserCascade_Impl.hpp
+  RefrigerationCondenserCascade.cpp
+  RefrigerationCondenserEvaporativeCooled.hpp
+  RefrigerationCondenserEvaporativeCooled_Impl.hpp
+  RefrigerationCondenserEvaporativeCooled.cpp
+  RefrigerationCondenserWaterCooled.hpp
+  RefrigerationCondenserWaterCooled_Impl.hpp
+  RefrigerationCondenserWaterCooled.cpp
+  RefrigerationSubcoolerLiquidSuction.hpp
+  RefrigerationSubcoolerLiquidSuction_Impl.hpp
+  RefrigerationSubcoolerLiquidSuction.cpp
+  RefrigerationSubcoolerMechanical.hpp
+  RefrigerationSubcoolerMechanical_Impl.hpp
+  RefrigerationSubcoolerMechanical.cpp
+  RefrigerationSecondarySystem.hpp
+  RefrigerationSecondarySystem_Impl.hpp
+  RefrigerationSecondarySystem.cpp
   RefrigerationSystem.hpp
   RefrigerationSystem_Impl.hpp
   RefrigerationSystem.cpp
+  RefrigerationWalkIn.hpp
+  RefrigerationWalkIn_Impl.hpp
+  RefrigerationWalkIn.cpp
+  RefrigerationWalkInZoneBoundary.hpp
+  RefrigerationWalkInZoneBoundary_Impl.hpp
+  RefrigerationWalkInZoneBoundary.cpp
   RenderingColor.hpp
   RenderingColor_Impl.hpp
   RenderingColor.cpp
@@ -808,6 +841,9 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
+  ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
   ZoneHVACWaterToAirHeatPump.hpp
   ZoneHVACWaterToAirHeatPump_Impl.hpp
   ZoneHVACWaterToAirHeatPump.cpp
@@ -831,9 +867,8 @@ SET( ${target_name}_moc
   Component_Impl.hpp
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
-  GenericModelObject_Impl.hpp
-  ModelObjectList_Impl.hpp
 
+  AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
@@ -853,10 +888,12 @@ SET( ${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
-	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
+  CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingWater_Impl.hpp
@@ -916,7 +953,6 @@ SET( ${target_name}_moc
   HotWaterEquipment_Impl.hpp
   HotWaterEquipmentDefinition_Impl.hpp 
   HVACComponent_Impl.hpp
-  ZoneHVACComponent_Impl.hpp
   IlluminanceMap_Impl.hpp
   InsideSurfaceConvectionAlgorithm_Impl.hpp
   InternalMass_Impl.hpp
@@ -935,7 +971,6 @@ SET( ${target_name}_moc
   MasslessOpaqueMaterial_Impl.hpp
   Material_Impl.hpp
   Meter_Impl.hpp
-  PortList_Impl.hpp
   OpaqueMaterial_Impl.hpp
   OtherEquipment_Impl.hpp
   OtherEquipmentDefinition_Impl.hpp
@@ -996,7 +1031,6 @@ SET( ${target_name}_moc
   ThermostatSetpointDualSetpoint_Impl.hpp
   TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
-  Version_Impl.hpp
   WaterHeaterMixed_Impl.hpp
   WaterUseConnections_Impl.hpp
   WaterUseEquipment_Impl.hpp
@@ -1009,6 +1043,7 @@ SET( ${target_name}_moc
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
@@ -1041,6 +1076,7 @@ IF(UNIX OR MINGW)
 ENDIF(UNIX OR MINGW)
 
 SET( ${target_name}_test_src
+  test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
@@ -1140,7 +1176,15 @@ SET( ${target_name}_test_src
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
+  test/RefrigerationCondenserCascade_GTest.cpp
+  test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
+  test/RefrigerationCondenserWaterCooled_GTest.cpp
+  test/RefrigerationSubcoolerLiquidSuction_GTest.cpp
+  test/RefrigerationSubcoolerMechanical_GTest.cpp
+  test/RefrigerationSecondarySystem_GTest.cpp
   test/RefrigerationSystem_GTest.cpp
+  test/RefrigerationWalkIn_GTest.cpp
+  test/RefrigerationWalkInZoneBoundary_GTest.cpp
   test/RenderingColor_GTest.cpp
   test/ResourceObject_GTest.cpp
   test/RoofVegetation_GTest.cpp
@@ -1231,4 +1275,3 @@ MAKE_SWIG_TARGET( OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHV
 MAKE_SWIG_TARGET( OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
 
 MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration )
-

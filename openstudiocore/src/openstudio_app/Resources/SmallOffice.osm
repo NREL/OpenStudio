@@ -1,7 +1,7 @@
 
 OS:Version,
-  {726a9e7b-6b26-4a9e-87e2-273542ff799a}, !- Handle
-  0.11.5;                                 !- Version Identifier
+  {3d21955e-4c4a-43ef-9eee-900d4c5a9303}, !- Handle
+  1.1.2;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {cbae3349-f243-4796-a1cb-45c1100f2d2d}, !- Handle
@@ -6359,21 +6359,21 @@ OS:Output:Variable,
   {09fcef34-b4ba-4ccd-9fdd-977d3630d66b}, ! Handle
   hourly* - Zone Air System Sensible Heating Rate, ! Name
   *,                                      ! Key Value
-  Zone Air System Sensible Cooling Rate,         ! Variable Name
+  Zone Air System Sensible Cooling Rate,  ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {02920f4a-81d4-4a52-9a69-571558686c58}, ! Handle
   hourly* - Zone Air System Sensible Cooling Rate, ! Name
   *,                                      ! Key Value
-  Surface Outside Face Incident Solar Radiation Rate per Area,             ! Variable Name
+  Surface Outside Face Incident Solar Radiation Rate per Area, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {ff154c33-9004-4e1b-bb72-11afa80ddc4f}, ! Handle
   hourly* - Surface Inside Temperature,   ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 1 Glare Index,             ! Variable Name
+  Daylighting Reference Point 1 Glare Index, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
@@ -6385,21 +6385,21 @@ OS:Output:Variable,
 
 OS:Output:Variable,
   {6f9b0cd3-d709-4d1b-95de-9d090deefb13}, ! Handle
-  hourly* - Daylighting Reference Point 2 Glare Index,   ! Name
+  hourly* - Daylighting Reference Point 2 Glare Index, ! Name
   *,                                      ! Key Value
   Zone Mean Radiant Temperature,          ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {345492e9-5a5a-4e94-825f-6bf921ff43ad}, ! Handle
-  hourly* - Surface Outside Face Incident Solar Radiation Rate per Area,   ! Name
+  hourly* - Surface Outside Face Incident Solar Radiation Rate per Area, ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 2 Illuminance,          ! Variable Name
+  Daylighting Reference Point 2 Illuminance, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {b9608830-1990-416a-8291-76a6609d60ab}, ! Handle
-  hourly* - Daylighting Reference Point 1 Glare Index,   ! Name
+  hourly* - Daylighting Reference Point 1 Glare Index, ! Name
   *,                                      ! Key Value
   Zone Mean Air Temperature,              ! Variable Name
   hourly;                                 ! Reporting Frequency
@@ -6408,21 +6408,21 @@ OS:Output:Variable,
   {a02d897f-9b18-4b7f-b412-8f561dab269b}, ! Handle
   hourly* - Daylighting Reference Point 2 Illuminance, ! Name
   *,                                      ! Key Value
-  Zone Air System Sensible Heating Rate,         ! Variable Name
+  Zone Air System Sensible Heating Rate,  ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {60367b68-f1f7-4227-8965-37b962e78de9}, ! Handle
   hourly* - Daylighting Reference Point 1 Illuminance, ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 1 Illuminance,          ! Variable Name
+  Daylighting Reference Point 1 Illuminance, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {c9f9746b-df8d-4cc1-85d9-3ffff2b05a99}, ! Handle
   hourly* - Zone Mean Air Temperature,    ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 2 Glare Index,             ! Variable Name
+  Daylighting Reference Point 2 Glare Index, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,

@@ -1,0 +1,450 @@
+ContamW 3.1  0
+CONTAM template for OS - 5/7/2013
+! rows cols ud uf    T   uT     N     wH  u  Ao    a
+    58   66  0  0 293.150 2    0.00 10.00 0 0.600 0.280
+!  scale     us  orgRow  orgCol  invYaxis showGeom
+ 1.000e+000   0      56       1     0        0
+! Ta       Pb      Ws    Wd    rh  day u..
+293.150 101325.0  0.000   0.0 0.000 1 2 0 0 1 ! steady simulation
+293.150 101325.0  1.000 270.0 0.000 1 2 0 0 1 ! wind pressure test
+null ! no weather file
+null ! no contaminant file
+null ! no continuous values file
+null ! no discrete values file
+null ! no WPC file
+null ! no EWC file
+WPC description
+!  Xref    Yref    Zref   angle u
+   0.000   0.000   0.000   0.00 0
+! epsP epsS  tShift  dStart dEnd wp mf wpctrig
+  0.01 0.01 00:00:00   1/1   1/1  0  0  0
+! latd  longtd   tznr  altd  Tgrnd u..
+ 40.00  -90.00  -6.00     0 283.15 2 0
+!sim_af afcalc afmaxi afrcnvg afacnvg afrelax uac Pbldg uPb
+     0      1     30  1e-005  1e-006    0.75   0 50.00   0
+!   slae rs aflmaxi aflcnvg aflinit Tadj
+      0   1    100  1e-006      1    0
+!sim_mf slae rs maxi   relcnvg   abscnvg relax gamma ucc
+    0             30 1.00e-004 1.00e-015 1.250         0 ! (cyclic)
+          0   1  100 1.00e-006 1.00e-015 1.100 1.000   0 ! (non-trace)
+          0   1  100 1.00e-006 1.00e-015 1.100 1.000   0 ! (trace)
+          0   1  100 1.00e-006 1.00e-015 1.100         0 ! (cvode)
+!mf_solver sim_1dz sim_1dd   celldx  sim_vjt udx
+     0        1       0    1.00e-001    0     0
+!cvode    rcnvg     acnvg    dtmax
+   0    1.00e-006 1.00e-013   0.00
+!tsdens relax tsmaxi cnvgSS densZP stackD dodMdt
+   0    0.75    20     1      0      0      0
+!date_st time_st  date_0 time_0   date_1 time_1    t_step   t_list   t_scrn
+  Jan01 00:00:00  Jan01 00:00:00  Jan01 24:00:00  00:05:00 01:00:00 01:00:00
+!restart  date  time
+    0    Jan01 00:00:00
+!list doDlg pfsave zfsave zcsave
+   1     1      1      1      1
+!vol ach -bw cbw exp -bw age -bw
+  0   0   0   0   0   0   0   0
+!rzf rzm rz1 csm srf log
+  0   0   0   1   1   1
+! 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 <- extra[]
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+2 ! rvals:
+1.2041 9.8055 
+!valZ valD valC
+   0    0    0
+!cfd  cfdcnvg   var zref  maxi dtcmo
+  0  1.00e-002   0   0    1000   1
+-999
+0 ! contaminants:
+2 ! species:
+! # s t   molwt    mdiam       edens       decay       Dm          CCdef        Cp    u...  name
+  1 0 0  44.0100 0.0000e+000 0.0000e+000 0.0000e+000 2.0000e-005 6.0795e-004    0.000 0 0 0 0 0 CO2
+Carbon dioxide tracer gas
+  2 0 0 146.0600 0.0000e+000 0.0000e+000 0.0000e+000 2.0000e-005 0.0000e+000    0.000 0 0 0 0 0 SF6
+Sulfur Hexafluoride tracer gas
+-999
+1 ! levels plus icon data:
+! #  refHt   delHt  ni  u  name
+  1   0.000   3.000 0 0 0 <1>
+!icn col row  #
+-999
+21 ! day-schedules:
+! # npts shap utyp ucnv name
+  1    2    0    1    0 0_percent_day
+Continuous operation at 0%.
+ 00:00:00 0
+ 24:00:00 0
+  2    2    0    1    0 100_percent_day
+Continuous operation at 100%.
+ 00:00:00 1
+ 24:00:00 1
+  3    2    0    1    0 10_percent_day
+Continuous operation at 10%.
+ 00:00:00 0.1
+ 24:00:00 0.1
+  4    2    0    1    0 15_percent_day
+Continuous operation at 15%.
+ 00:00:00 0.15
+ 24:00:00 0.15
+  5    2    0    1    0 20_percent_day
+Continuous operation at 20%.
+ 00:00:00 0.2
+ 24:00:00 0.2
+  6    2    0    1    0 25_percent_day
+Continuous operation at 25%.
+ 00:00:00 0.25
+ 24:00:00 0.25
+  7    2    0    1    0 30_percent_day
+Continuous operation at 30%.
+ 00:00:00 0.3
+ 24:00:00 0.3
+  8    2    0    1    0 35_percent_day
+Continuous operation at 35%.
+ 00:00:00 0.35
+ 24:00:00 0.35
+  9    2    0    1    0 40_percent_day
+Continuous operation at 40%.
+ 00:00:00 0.4
+ 24:00:00 0.4
+ 10    2    0    1    0 45_percent_day
+Continuous operation at 45%.
+ 00:00:00 0.45
+ 24:00:00 0.45
+ 11    2    0    1    0 50_percent_day
+Continuous operation at 50%.
+ 00:00:00 0.5
+ 24:00:00 0.5
+ 12    2    0    1    0 55_percent_day
+Continuous operation at 55%.
+ 00:00:00 0.55
+ 24:00:00 0.55
+ 13    2    0    1    0 5_percent_day
+Continuous operation at 5%.
+ 00:00:00 0.05
+ 24:00:00 0.05
+ 14    2    0    1    0 60_percent_day
+Continuous operation at 60%.
+ 00:00:00 0.6
+ 24:00:00 0.6
+ 15    2    0    1    0 65_percent_day
+Continuous operation at 65%.
+ 00:00:00 0.65
+ 24:00:00 0.65
+ 16    2    0    1    0 70_percent_day
+Continuous operation at 70%.
+ 00:00:00 0.7
+ 24:00:00 0.7
+ 17    2    0    1    0 75_percent_day
+Continuous operation at 75%.
+ 00:00:00 0.75
+ 24:00:00 0.75
+ 18    2    0    1    0 80_percent_day
+Continuous operation at 80%.
+ 00:00:00 0.8
+ 24:00:00 0.8
+ 19    2    0    1    0 85_percent_day
+Continuous operation at 85%.
+ 00:00:00 0.85
+ 24:00:00 0.85
+ 20    2    0    1    0 90_percent_day
+Continuous operation at 90%.
+ 00:00:00 0.9
+ 24:00:00 0.9
+ 21    2    0    1    0 95_percent_day
+Continuous operation at 95%.
+ 00:00:00 0.95
+ 24:00:00 0.95
+-999
+21 ! week-schedules:
+! # utyp ucnv name
+  1    1    0 0_percent
+Continuous operation at 0%.
+ 1 1 1 1 1 1 1 1 1 1 1 1
+  2    1    0 100_percent
+Continuous operation at 100%.
+ 2 2 2 2 2 2 2 2 2 2 2 2
+  3    1    0 10_percent
+Continuous operation at 10%.
+ 3 3 3 3 3 3 3 3 3 3 3 3
+  4    1    0 15_percent
+Continuous operation at 15%.
+ 4 4 4 4 4 4 4 4 4 4 4 4
+  5    1    0 20_percent
+Continuous operation at 20%.
+ 5 5 5 5 5 5 5 5 5 5 5 5
+  6    1    0 25_percent
+Continuous operation at 25%.
+ 6 6 6 6 6 6 6 6 6 6 6 6
+  7    1    0 30_percent
+Continuous operation at 30%.
+ 7 7 7 7 7 7 7 7 7 7 7 7
+  8    1    0 35_percent
+Continuous operation at 35%.
+ 8 8 8 8 8 8 8 8 8 8 8 8
+  9    1    0 40_percent
+Continuous operation at 40%.
+ 9 9 9 9 9 9 9 9 9 9 9 9
+ 10    1    0 45_percent
+Continuous operation at 45%.
+ 10 10 10 10 10 10 10 10 10 10 10 10
+ 11    1    0 50_percent
+Continuous operation at 50%.
+ 11 11 11 11 11 11 11 11 11 11 11 11
+ 12    1    0 55_percent
+Continuous operation at 55%.
+ 12 12 12 12 12 12 12 12 12 12 12 12
+ 13    1    0 5_percent
+Continuous operation at 5%.
+ 13 13 13 13 13 13 13 13 13 13 13 13
+ 14    1    0 60_percent
+Continuous operation at 60%.
+ 14 14 14 14 14 14 14 14 14 14 14 14
+ 15    1    0 65_percent
+Continuous operation at 65%.
+ 15 15 15 15 15 15 15 15 15 15 15 15
+ 16    1    0 70_percent
+Continuous operation at 70%.
+ 16 16 16 16 16 16 16 16 16 16 16 16
+ 17    1    0 75_percent
+Continuous operation at 75%.
+ 17 17 17 17 17 17 17 17 17 17 17 17
+ 18    1    0 80_percent
+Continuous operation at 80%.
+ 18 18 18 18 18 18 18 18 18 18 18 18
+ 19    1    0 85_percent
+Continuous operation at 85%.
+ 19 19 19 19 19 19 19 19 19 19 19 19
+ 20    1    0 90_percent
+Continuous operation at 90%.
+ 20 20 20 20 20 20 20 20 20 20 20 20
+ 21    1    0 95_percent
+Continuous operation at 95%.
+ 21 21 21 21 21 21 21 21 21 21 21 21
+-999
+5 ! wind pressure profiles:
+1 13 2 high_rise_1/1
+High rise building with L/W=1
+   0.0  0.600
+  30.0  0.450
+  60.0  0.000
+  90.0 -0.550
+ 120.0 -0.550
+ 150.0 -0.400
+ 180.0 -0.330
+ 210.0 -0.400
+ 240.0 -0.550
+ 270.0 -0.550
+ 300.0  0.000
+ 330.0  0.450
+ 360.0  0.600
+2 13 2 high_rise_1/4
+high rise building with L/W=1/4
+   0.0  0.600
+  30.0  0.400
+  60.0 -0.250
+  90.0 -0.700
+ 120.0 -0.500
+ 150.0 -0.300
+ 180.0 -0.250
+ 210.0 -0.300
+ 240.0 -0.500
+ 270.0 -0.700
+ 300.0 -0.250
+ 330.0  0.400
+ 360.0  0.600
+3 13 2 high_rise_4/1
+high rise building with L/W = 4/1
+   0.0  0.600
+  30.0  0.500
+  60.0  0.200
+  90.0 -0.250
+ 120.0 -0.600
+ 150.0 -0.550
+ 180.0 -0.500
+ 210.0 -0.550
+ 240.0 -0.600
+ 270.0 -0.250
+ 300.0  0.200
+ 330.0  0.500
+ 360.0  0.600
+4 13 2 low_rise_walls
+Wind pressure for walls of low rise buildings 
+   0.0  0.600
+  30.0  0.400
+  60.0  0.100
+  90.0 -0.450
+ 120.0 -0.500
+ 150.0 -0.450
+ 180.0 -0.350
+ 210.0 -0.450
+ 240.0 -0.500
+ 270.0 -0.450
+ 300.0  0.100
+ 330.0  0.400
+ 360.0  0.600
+5 3 2 roof
+wind pressure profile for all roofs
+   0.0 -0.500
+ 180.0 -0.500
+ 360.0 -0.500
+-999
+0 ! kinetic reactions:
+-999
+11 ! filter elements:
+1 cef 1 0.1 100 0 0 SF6_10pct
+filter for SF6, 10% filter efficiency
+  1
+  SF6 0.1
+2 cef 1 0.1 100 0 0 SF6_20pct
+filter for SF6, 20% filter efficiency
+  1
+  SF6 0.2
+3 cef 1 0.1 100 0 0 SF6_30pct
+filter for SF6, 30% filter efficiency
+  1
+  SF6 0.3
+4 cef 1 0.1 100 0 0 SF6_40pct
+filter for SF6, 40% filter efficiency
+  1
+  SF6 0.4
+5 cef 1 0.1 100 0 0 SF6_50pct
+filter for SF6, 50% filter efficiency
+  1
+  SF6 0.5
+6 cef 1 0.1 100 0 0 SF6_60pct
+filter for SF6, 60% filter efficiency
+  1
+  SF6 0.6
+7 cef 1 0.1 100 0 0 SF6_70pct
+filter for SF6, 70% filter efficiency
+  1
+  SF6 0.7
+8 cef 1 0.1 100 0 0 SF6_80pct
+filter for SF6, 80% filter efficiency
+  1
+  SF6 0.8
+9 cef 1 0.1 100 0 0 SF6_90pct
+filter for SF6, 90% filter efficiency
+  1
+  SF6 0.9
+10 cef 1 0.1 100 0 0 SF6_95pct
+filter for SF6, 95% filter efficiency
+  1
+  SF6 0.95
+11 cef 1 0.1 100 0 0 SF6_99pct
+filter for SF6, 99% filter efficiency
+  1
+  SF6 0.99
+-999
+0 ! filters:
+-999
+5 ! source/sink elements:
+1 SF6 brs 1kgSF6
+1 kg sulfur hexafluoride tracer gas instantaneously added to a zone
+ 1 0
+2 SF6 ccf 1kgperhourSF6
+1 kg/hr sulfur hexafluoride tracer gas added to a zone
+ 0.000277778 0 24 0
+3 SF6 brs 1lbSF6
+1 lb of sulfur hexafluoride tracer gas instantaneously added to a zone
+ 0.453592 1
+4 SF6 ccf 1lbperhourSF6
+1 lb per hour sulfur hexafluoride tracer gas added to a zone
+ 0.000125999 0 25 0
+5 CO2 ccf CO2_one_person
+Carbon dioxide production for one person with metabolic rate of 1 met
+ 2.53049e-005 0 21 0
+-999
+21 ! flow elements:
+1 30 fan_cmf BathFan
+
+ 0.170467 1
+2 23 plr_leak1 ClosedDoor
+
+ 1.09247e-006 0.000912394 0.5 1 4 0.00064516 0 0 3 2 2 0
+3 23 plr_leak1 ElevDoor
+
+ 1.00357e-005 0.0259606 0.65 1 4 0.0226 0 0 2 2 2 0
+4 25 plr_shaft ElevShaft
+
+ 0.294425 29.9035 0.508448 3.048 5.85289 9.7536 0.1 1 1 1 2
+5 23 plr_test1 ExtWallAvg
+
+ 6.13696e-008 0.000499082 0.65 75 0.00906345 0 4
+6 23 plr_test1 ExtWallLeaky
+
+ 1.288e-007 0.000895033 0.65 75 0.016254 0 4
+7 23 plr_test1 ExtWallTight
+
+ 8.29484e-009 0.000103131 0.65 75 0.00187289 0 4
+8 23 plr_test1 FloorAvg
+
+ 1.47921e-007 0.000998165 0.65 75 0.0181269 0 4
+9 23 plr_test1 FloorLeaky
+
+ 3.1045e-007 0.00179007 0.65 75 0.032508 0 4
+10 23 plr_test1 FloorTight
+
+ 1.99933e-008 0.000206263 0.65 75 0.00374578 0 4
+11 23 plr_test1 IntWallAvg
+
+ 1.47921e-007 0.000998165 0.65 75 0.0181269 0 4
+12 23 plr_test1 IntWallLeaky
+
+ 3.1045e-007 0.00179007 0.65 75 0.032508 0 4
+13 23 plr_test1 IntWallTight
+
+ 1.99933e-008 0.000206263 0.65 75 0.00374578 0 4
+14 23 plr_leak1 OpenDoor
+
+ 0.18167 2.75908 0.5 1 4 1.95096 0 0 1 2 2 0
+15 23 plr_test1 RoofAvg
+
+ 6.13696e-008 0.000499083 0.65 75 0.00906345 0 4
+16 23 plr_test1 RoofLeaky
+
+ 1.288e-007 0.000895033 0.65 75 0.016254 0 4
+17 23 plr_test1 RoofTight
+
+ 8.29484e-009 0.000103131 0.65 75 0.00187289 0 4
+18 23 plr_leak3 ShaftWall
+
+ 2.33047e-008 0.000218253 0.65 1 4 0 0 0.00019 2 2 2 0
+19 23 plr_leak1 StairDoor
+
+ 5.07153e-006 0.0151628 0.65 1 4 0.0132 0 0 2 2 2 0
+20 25 plr_stair StairWell
+
+ 0.282182 4.38745 0.5 3.048 20.4387 0 0 1 1
+21 23 plr_leak1 TransferGrille
+
+ 0.00188779 0.131385 0.5 1 4 0.092903 0 0 1 2 2 0
+-999
+0 ! duct elements:
+-999
+0 ! control super elements:
+-999
+0 ! control nodes:
+-999
+0 ! simple AHS:
+-999
+0 ! zones:
+-999
+0 ! initial zone concentrations:
+-999
+0 ! flow paths:
+-999
+0 ! duct junctions:
+-999
+0 ! initial junction concentrations:
+-999
+0 ! duct segments:
+-999
+0 ! source/sinks:
+-999
+0 ! occupancy schedules:
+-999
+0 ! exposures:
+-999
+0 ! annotations:
+-999
+* end project file.
