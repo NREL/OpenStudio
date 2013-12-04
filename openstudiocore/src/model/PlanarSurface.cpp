@@ -227,8 +227,10 @@ namespace model {
           MaterialVector layers = construction.layers();
           OS_ASSERT(layers.size() == 1u);
           result = layers[0].optionalCast<AirWallMaterial>();
-        }
-        else {
+        }else if (construction.numLayers() == 0) {
+          LOG(Error, "Air wall detected with zero layers, classifying as air wall");
+          result = true;
+        }else {
           LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
           result = false;
         }
