@@ -45,8 +45,6 @@
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACUnitHeater_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
@@ -441,11 +439,6 @@ namespace detail {
       case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
         {
           ZoneHVACWaterToAirHeatPump component = it->cast<ZoneHVACWaterToAirHeatPump>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
-        }
-      case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater :
-        {
-          ZoneHVACUnitHeater component = it->cast<ZoneHVACUnitHeater>();
           if (component.supplyAirFan().handle() == this->handle()) return *it;
         }
       default:
