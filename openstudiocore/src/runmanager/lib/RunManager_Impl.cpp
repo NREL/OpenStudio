@@ -31,7 +31,8 @@
 #include <QElapsedTimer>
 #include <utilities/core/System.hpp>
 #include <utilities/core/Compare.hpp>
-
+#include <QtConcurrentRun>
+#include <QFuture>
 #include <OpenStudio.hxx>
 
 #include <boost/bind.hpp>
@@ -750,27 +751,40 @@ namespace detail {
 
         if (!isWorkflow)
         {
-          std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db).all();
-          std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db).all();
-          std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db).all();
-          std::vector<RunManagerDB::OutputRequiredFile> outputrequiredfiles = litesql::select<RunManagerDB::OutputRequiredFile>(m_db).all();
           std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db).all();
           std::vector<RunManagerDB::RequiredFile> requiredfiles = litesql::select<RunManagerDB::RequiredFile>(m_db).all();
+
+          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, boost::ref(files), boost::ref(requiredfiles)));
+
+          std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db).all();
+          std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db).all();
+
+          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(boost::bind(&loadJobParams, boost::ref(params)));
+
           std::vector<RunManagerDB::JobStatus> status = litesql::select<RunManagerDB::JobStatus>(m_db).all();
           std::vector<RunManagerDB::JobErrors> errors = litesql::select<RunManagerDB::JobErrors>(m_db).all();
 
+          std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db).all();
+          std::vector<RunManagerDB::OutputRequiredFile> outputrequiredfiles = litesql::select<RunManagerDB::OutputRequiredFile>(m_db).all();
+
+          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, boost::ref(outputfiles), boost::ref(outputrequiredfiles)));
+
           LOG(Info, "Time to load all RunManager data: " << et.restart() << " sizes: " << tools.size() << " " << params.size() << " " << outputfiles.size() << " " << outputrequiredfiles.size() << " " << files.size() << " " << requiredfiles.size() << " " << jobs.size() << " " << status.size() << " " << errors.size());
 
-          allTools = loadJobTools(tools);
-          LOG(Info, "Time to parse alltools: " << et.restart());
-          allJobParams = loadJobParams(params);
-          LOG(Info, "Time to parse allJobParams: " << et.restart());
-          allFiles = loadJobFiles(files, requiredfiles);
-          LOG(Info, "Time to parse allFiles: " << et.restart());
-          allOutputFiles = loadJobFiles(outputfiles, outputrequiredfiles);
-          LOG(Info, "Time to parse allOutputFiles: " << et.restart());
+
           allStatus = loadJobStatus(status, errors);
           LOG(Info, "Time to parse allStatus: " << et.restart());
+          allTools = loadJobTools(tools);
+          LOG(Info, "Time to parse alltools: " << et.restart());
+//          allJobParams = loadJobParams(params);
+          allJobParams = futureparams;
+          LOG(Info, "Time to parse allJobParams: " << et.restart());
+//          allFiles = loadJobFiles(files, requiredfiles);
+          allFiles = futurefiles;
+          LOG(Info, "Time to parse allFiles: " << et.restart());
+          allOutputFiles = futureoutputfiles;
+//          allOutputFiles = loadJobFiles(outputfiles, outputrequiredfiles);
+          LOG(Info, "Time to parse allOutputFiles: " << et.restart());
         } else {
           for (std::vector<RunManagerDB::Job>::const_iterator itr = jobs.begin();
                itr != jobs.end();
