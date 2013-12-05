@@ -33,6 +33,7 @@
 #include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
@@ -264,7 +265,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
 
   if( airInletNodeName && _fan )
   {
-    _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,airInletNodeName.get());
+    if( _fan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
+    {
+      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,airInletNodeName.get());
+    }
+    else if( _fan->iddObject().type() == IddObjectType::Fan_OnOff )
+    {
+      _fan->setString(Fan_OnOffFields::AirInletNodeName,airInletNodeName.get());
+    }
   }
 
   //if( airOutletNodeName && _heatingCoil )
@@ -276,7 +284,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   {
     std::string nodeName = modelObject.name().get() + " Fan - Cooling Coil Node";
 
-    _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,nodeName);
+    if( _fan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
+    {
+      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,nodeName);
+    }
+    else if( _fan->iddObject().type() == IddObjectType::Fan_OnOff )
+    {
+      _fan->setString(Fan_OnOffFields::AirOutletNodeName,nodeName);
+    }
 
     _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,nodeName);
   }
