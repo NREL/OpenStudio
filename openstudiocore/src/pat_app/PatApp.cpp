@@ -66,6 +66,7 @@
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
 
@@ -1207,6 +1208,15 @@ bool PatApp::openFile(const QString& fileName)
         QTimer::singleShot(0, this, SLOT(markAsModified()));
       } else {
         QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
+      }
+      openstudio::path osmForThisOsp = project->projectDir().parent_path() / toPath(project->projectDir().stem());
+      osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
+      if (boost::filesystem::exists(osmForThisOsp)) {
+        QMessageBox::warning(mainWindow,
+                             "PAT Project Associated with an OSM",
+                             QString("This project appears to be associated with the OpenStudio Application file '") + 
+                             toQString(osmForThisOsp) + 
+                             QString("'. For best results, 'Save as ...' this project elsewhere before continuing your work."));
       }
       return true;
     } else {
