@@ -26,6 +26,9 @@
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 
+class QGraphicsView;
+class QPushButton;
+
 namespace openstudio {
 
 class RefrigerationCondenserView;
@@ -40,6 +43,21 @@ class RefrigerationSystemView;
 class RefrigerationSecondaryView;
 class RefrigerationCompressorDropZoneView;
 class OSItemId;
+
+class RefrigerationView : public QWidget
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationView();
+
+  QWidget * header;
+
+  QGraphicsView * graphicsView;
+
+  QPushButton * zoomOutButton;
+};
 
 class CaseViewExpandButton : public AbstractButtonItem
 {
@@ -346,7 +364,7 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
 
   private:
 
-  OSItemId m_condenserId;
+  OSItemId m_id;
 
   QString m_name;
 };
@@ -585,13 +603,47 @@ class RefrigerationSubCoolerView : public RefrigerationSystemDropZoneView
 
   public:
 
+  RefrigerationSubCoolerView();
+
+  virtual ~RefrigerationSubCoolerView() {}
+
+  RemoveButtonItem * removeButtonItem;
+
   QRectF boundingRect() const;
+
+  void setId(const OSItemId & id);
+
+  void setName(const QString & name);
+
+  static QSizeF size();
+
+  signals:
+
+  void removeClicked(OSItemId id);
+
+  void inspectClicked(OSItemId id);
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_mouseDown;
+
+  private slots:
+
+  void onRemoveButtonClicked();
+
+  private:
+
+  OSItemId m_id;
+
+  QString m_name;
 };
 
 class RefrigerationHeatReclaimView : public RefrigerationSystemDropZoneView
@@ -615,13 +667,47 @@ class RefrigerationSHXView : public RefrigerationSystemDropZoneView
 
   public:
 
+  RefrigerationSHXView();
+
+  virtual ~RefrigerationSHXView() {}
+
+  RemoveButtonItem * removeButtonItem;
+
   QRectF boundingRect() const;
+
+  void setId(const OSItemId & id);
+
+  void setName(const QString & name);
+
+  static QSizeF size();
+
+  signals:
+
+  void removeClicked(OSItemId id);
+
+  void inspectClicked(OSItemId id);
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_mouseDown;
+
+  private slots:
+
+  void onRemoveButtonClicked();
+
+  private:
+
+  OSItemId m_id;
+
+  QString m_name;
 };
 
 class RefrigerationSecondaryView : public QGraphicsObject

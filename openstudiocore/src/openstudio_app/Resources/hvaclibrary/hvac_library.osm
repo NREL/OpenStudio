@@ -2742,4 +2742,16 @@ OS:ModelObjectList,
   {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- Handle
   Refrigeration System Compressor List; !- Name
 
+OS:Refrigeration:Subcooler:Mechanical,
+  {95085174-fabf-4659-a947-6ec9fc65c977}, !- Handle
+  Refrigeration Subcooler Mechanical,   !- Name
+  ,                                       !- Capacity-Providing System
+  10;                                     !- Outlet Control Temperature {C}
+
+OS:Refrigeration:Subcooler:LiquidSuction,
+  {c6cc85c4-8d3e-4814-8b2a-cd8ff1b41ee9}, !- Handle
+  Refrigeration Subcooler Liquid Suction, !- Name
+  6,                                      !- Liquid Suction Design Subcooling Temperature Difference {deltaC}
+  16,                                     !- Design Liquid Inlet Temperature {C}
+  0;                                      !- Design Vapor Inlet Temperature {C}
 

@@ -28,14 +28,17 @@
 class QGraphicsScene;
 class QGraphicsView;
 class QGraphicsObject;
+class QWidget;
 
 namespace openstudio {
 
 class RefrigerationSystemGridView;
+class RefrigerationSystemView;
 class RefrigerationSystemListController;
 class RefrigerationScene;
 class RefrigerationSystemDetailView;
 class OSItemId;
+class RefrigerationView;
 
 class RefrigerationController : public QObject
 {
@@ -47,7 +50,7 @@ class RefrigerationController : public QObject
 
   virtual ~RefrigerationController();
 
-  QGraphicsView * refrigerationGraphicsView() const;
+  RefrigerationView * refrigerationView() const;
 
   QSharedPointer<RefrigerationSystemListController> refrigerationSystemListController() const;
 
@@ -67,6 +70,10 @@ class RefrigerationController : public QObject
 
   void onCompressorViewDrop(const OSItemId & itemid);
 
+  void onSubCoolerViewDrop(const OSItemId & itemid);
+
+  void onSHXViewDrop(const OSItemId & itemid);
+
   void onCasesViewDrop(const OSItemId & itemid);
 
   void removeCondenser(const OSItemId & itemid);
@@ -75,15 +82,19 @@ class RefrigerationController : public QObject
 
   void removeCase(const OSItemId & itemid);
 
+  void removeSubCooler(const OSItemId & itemid);
+
+  void removeSubCoolerLiquidSuction(const OSItemId & itemid);
+
   void inspectOSItem(const OSItemId & itemid);
 
   private:
 
-  QPointer<QGraphicsView> m_refrigerationGraphicsView;
+  QPointer<RefrigerationView> m_refrigerationView;
 
   QPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
 
-  QPointer<RefrigerationSystemDetailView> m_detailView;
+  QPointer<RefrigerationSystemView> m_detailView;
 
   QSharedPointer<RefrigerationSystemListController> m_refrigerationSystemListController;
 

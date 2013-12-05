@@ -19,6 +19,7 @@
 
 #include "HVACSystemsController.hpp"
 #include "RefrigerationController.hpp"
+#include "RefrigerationGraphicsItems.hpp"
 #include "LoopLibraryDialog.hpp"
 #include "HVACSystemsView.hpp"
 #include "LoopScene.hpp"
@@ -255,7 +256,7 @@ void HVACSystemsController::update()
     {
       m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
 
-      m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationController->refrigerationGraphicsView());
+      m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationController->refrigerationView());
     }
     else
     {
