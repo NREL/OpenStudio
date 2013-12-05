@@ -282,6 +282,8 @@ class RefrigerationSystemView : public QGraphicsObject
 
   static const int margin;
 
+  static const double componentHeight;
+
   RefrigerationCondenserView * refrigerationCondenserView;
 
   RefrigerationSubCoolerView * refrigerationSubCoolerView;
@@ -457,6 +459,8 @@ class RefrigerationCompressorView : public QGraphicsObject
 
   void adjustLayout();
 
+  static double height();
+
   protected:
 
   void paint( QPainter *painter, 
@@ -477,6 +481,8 @@ class RefrigerationCasesDropZoneView : public RefrigerationSystemDropZoneView
   RefrigerationCasesDropZoneView();
 
   virtual ~RefrigerationCasesDropZoneView() {}
+
+  static QSizeF size();
 
   QRectF boundingRect() const;
 
@@ -500,6 +506,10 @@ class RefrigerationCaseDetailView : public QGraphicsObject
   RemoveButtonItem * removeButtonItem;
 
   static QSizeF size();
+
+  static QRectF nameRect();
+
+  static QRectF iconRect();
 
   QRectF boundingRect() const;
 
@@ -530,10 +540,6 @@ class RefrigerationCaseDetailView : public QGraphicsObject
   void onRemoveButtonClicked();
 
   private:
-
-  QRectF nameRect() const;
-
-  QRectF iconRect() const;
 
   QString m_name;
 
@@ -566,6 +572,12 @@ class RefrigerationCasesView : public QGraphicsObject
 
   void adjustLayout();
 
+  static QRectF displayCasesRect();
+
+  static QRectF walkinCasesRect();
+
+  static QRectF summaryRect();
+
   public slots:
 
   void setExpanded(bool exapanded);
@@ -580,17 +592,11 @@ class RefrigerationCasesView : public QGraphicsObject
 
   QPointF casePos(int index) const;
 
-  QRectF displayCasesRect() const;
-
-  QRectF walkinCasesRect() const;
-
-  QRectF summaryRect() const;
-
-  QSizeF size() const;
-
   int m_numberOfDisplayCases;
 
   int m_numberOfWalkinCases;
+
+  QSizeF size() const;
 
   bool m_expanded;
 
