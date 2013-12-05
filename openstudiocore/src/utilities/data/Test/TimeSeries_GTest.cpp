@@ -177,6 +177,14 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor)
 
     EXPECT_EQ(numPeriods, timeSeries.value(periodEnd));
   }
+
+  // check date/time objects
+  DateTimeVector fromSeries = timeSeries.dateTimes();
+  ASSERT_EQ(numValues,fromSeries.size());
+  for (unsigned i = 0; i < numValues; ++i){
+    EXPECT_TRUE(fromSeries[i]==dateTimes[i]);
+  }
+
 }
 
 
