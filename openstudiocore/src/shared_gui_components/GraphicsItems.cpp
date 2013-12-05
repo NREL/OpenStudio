@@ -156,9 +156,9 @@ void ButtonItem::paint(QPainter *painter,
 }
 
 RemoveButtonItem::RemoveButtonItem(QGraphicsItem * parent)
-  : ButtonItem(QPixmap(":/images/delete-icon.png"),
-               QPixmap(":/images/delete-icon.png"),
-               QPixmap(":/images/delete-icon.png"),
+  : ButtonItem(QPixmap(":/images/delete.png"),
+               QPixmap(":/images/delete.png"),
+               QPixmap(":/images/delete.png"),
                parent)
 {
 }

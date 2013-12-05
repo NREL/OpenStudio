@@ -57,6 +57,7 @@ RefrigerationView::RefrigerationView()
   headerLayout->addWidget(zoomOutButton);
 
   graphicsView = new QGraphicsView();
+  graphicsView->setObjectName("GrayWidget");
   mainVLayout->addWidget(graphicsView);
 }
 
@@ -77,8 +78,8 @@ RefrigerationSystemGridView::~RefrigerationSystemGridView()
 
 QRectF RefrigerationSystemGridView::boundingRect() const
 {
-  int x = columns() * (RefrigerationSystemMiniView::cellSize().width() + spacing()) - spacing();
-  int y = rows() * (RefrigerationSystemMiniView::cellSize().height() + spacing()) - spacing();
+  int x = columns() * (RefrigerationSystemMiniView::cellSize().width() + spacing()) - spacing() + RefrigerationSystemView::margin * 2.0;
+  int y = rows() * (RefrigerationSystemMiniView::cellSize().height() + spacing()) - spacing() + RefrigerationSystemView::margin * 2.0;
 
   return QRectF(0,0,x,y);
 }
@@ -165,8 +166,8 @@ void RefrigerationSystemGridView::setItemViewGridPos(QGraphicsObject * item,std:
 {
   if( item )
   {
-    int x = gridPos.second * (RefrigerationSystemMiniView::cellSize().width() + spacing());
-    int y = gridPos.first * (RefrigerationSystemMiniView::cellSize().height() + spacing());
+    int x = gridPos.second * (RefrigerationSystemMiniView::cellSize().width() + spacing()) + RefrigerationSystemView::margin;
+    int y = gridPos.first * (RefrigerationSystemMiniView::cellSize().height() + spacing()) + RefrigerationSystemView::margin ;
 
     item->setPos(x,y);
 
@@ -202,6 +203,11 @@ void RefrigerationSystemGridView::insertItemView(int index)
       setItemViewGridPos(item,pos);
     }
 
+    if( QGraphicsScene * _scene = scene() )
+    {
+      _scene->setSceneRect(boundingRect());
+    }
+
     QApplication::processEvents();
   }
 }
@@ -234,6 +240,11 @@ void RefrigerationSystemGridView::removeItemView(int index)
 
         setItemViewGridPos(item,newPos);
       }
+    }
+
+    if( QGraphicsScene * _scene = scene() )
+    {
+      _scene->setSceneRect(boundingRect());
     }
   }
 }
@@ -275,7 +286,7 @@ void RefrigerationSystemGridView::refreshItemView(int i)
 
 int RefrigerationSystemGridView::spacing() const
 {
-  return 25;
+  return RefrigerationSystemView::margin;
 }
 
 int RefrigerationSystemGridView::rows() const
@@ -349,11 +360,11 @@ RefrigerationSystemMiniView::RefrigerationSystemMiniView()
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
-  removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,10);
+  removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,headerHeight() / 2.0 - removeButtonItem->boundingRect().height() / 2.0);
 
   zoomInButtonItem = new ZoomInButtonItem();
   zoomInButtonItem->setParentItem(this);
-  zoomInButtonItem->setPos(removeButtonItem->pos().x() - 10 - zoomInButtonItem->boundingRect().width(),removeButtonItem->pos().y());
+  zoomInButtonItem->setPos(removeButtonItem->pos().x() - 10 - zoomInButtonItem->boundingRect().width(),headerHeight() / 2.0 - zoomInButtonItem->boundingRect().height() / 2.0);
 }
 
 QRectF RefrigerationSystemMiniView::boundingRect() const
@@ -406,9 +417,12 @@ void RefrigerationSystemMiniView::paint( QPainter *painter,
   painter->drawRect(boundingRect());
 
   painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
-  painter->drawRect(headerRect());
 
-  painter->drawText(headerRect(),m_name);
+  QRectF _headerRect = headerRect();
+
+  painter->drawRect(_headerRect);
+
+  painter->drawText(QRectF(_headerRect.x() + 5, _headerRect.y() + 5, _headerRect.width() - 10, _headerRect.height() - 10),Qt::AlignVCenter | Qt::AlignLeft,m_name);
 }
 
 RefrigerationSystemView::RefrigerationSystemView()

@@ -151,6 +151,8 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
   bingo = connect(m_detailView->refrigerationSHXView,SIGNAL(inspectClicked(const OSItemId &)),
                   this,SLOT(inspectOSItem(const OSItemId &)));
   OS_ASSERT(bingo);
+
+  m_refrigerationView->graphicsView->setAlignment(Qt::AlignCenter);
 }
 
 void RefrigerationController::zoomOutToSystemGridView()
@@ -162,6 +164,8 @@ void RefrigerationController::zoomOutToSystemGridView()
   refresh();
 
   m_refrigerationView->graphicsView->setScene(m_refrigerationGridScene.data());
+
+  m_refrigerationView->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 }
 
 void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
