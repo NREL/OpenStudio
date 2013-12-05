@@ -28,6 +28,8 @@
     <file>images/coming_soon_water_mains_temperature.png</file>
     <file>images/components_icon_off.png</file>
     <file>images/components_icon_pressed.png</file>
+    <file>images/compressor.png</file>
+    <file>images/condensor.png</file>
     <file>images/contextual_arrow.png</file>
     <file>images/contextual_arrow_up.png</file>
     <file>images/controller_icon_off.png</file>
@@ -48,6 +50,7 @@
     <file>images/divider_dots.png</file>
     <file>images/districtcooling.png</file>
     <file>images/districtheating.png</file>
+    <file>images/display_case.png</file>
     <file>images/duplicate_disabled.png</file>
     <file>images/duplicate_off.png</file>
     <file>images/duplicate_over.png</file>
@@ -82,6 +85,7 @@
     <file>images/loop_name_icon.png</file>
     <file>images/lowtempradiant_constflow.png</file>   
     <file>images/lowtempradiant_varflow.png</file>       
+    <file>images/mechanical-sub-cooler.png</file>
     <file>images/mixer.png</file>
     <file>images/OAMixer.png</file>
     <file>images/off_building_stories_tab.png</file>
@@ -154,6 +158,7 @@
     <file>images/sewer_press.png</file>
     <file>images/sink.png</file>
     <file>images/sizing.png</file>
+    <file>images/slhx.png</file>
     <file>images/snowflake.png</file>
     <file>images/splitter.png</file>
     <file>images/supply_mixer.png</file>
@@ -180,6 +185,7 @@
     <file>images/vav_noreheat.png</file>
     <file>images/vav-reheat.png</file>
     <file>images/v_divider_dots.png</file>
+    <file>images/walkin_case.png</file>    
     <file>images/wahpDXCC.png</file>    
     <file>images/wahpDXHC.png</file>
     <file>images/water_connection.png</file>

@@ -369,6 +369,8 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
   OSItemId m_id;
 
   QString m_name;
+
+  QPixmap m_pixmap;
 };
 
 class RefrigerationCompressorDetailView : public QGraphicsObject
@@ -418,6 +420,8 @@ class RefrigerationCompressorDetailView : public QGraphicsObject
   QString m_label;
 
   OSItemId m_id;
+
+  QPixmap m_pixmap;
 };
 
 class RefrigerationCompressorDropZoneView : public RefrigerationSystemDropZoneView
@@ -544,6 +548,10 @@ class RefrigerationCaseDetailView : public QGraphicsObject
   QString m_name;
 
   OSItemId m_id;
+
+  QPixmap m_displayCasesPixmap;
+
+  QPixmap m_walkinPixmap;
 };
 
 class RefrigerationCasesView : public QGraphicsObject
@@ -601,6 +609,10 @@ class RefrigerationCasesView : public QGraphicsObject
   bool m_expanded;
 
   std::vector<QGraphicsObject *> m_caseDetailViews;
+
+  QPixmap m_displayCasesPixmap;
+
+  QPixmap m_walkinPixmap;
 };
 
 class RefrigerationSubCoolerView : public RefrigerationSystemDropZoneView
@@ -650,6 +662,8 @@ class RefrigerationSubCoolerView : public RefrigerationSystemDropZoneView
   OSItemId m_id;
 
   QString m_name;
+
+  QPixmap m_pixmap;
 };
 
 class RefrigerationHeatReclaimView : public RefrigerationSystemDropZoneView
@@ -714,6 +728,8 @@ class RefrigerationSHXView : public RefrigerationSystemDropZoneView
   OSItemId m_id;
 
   QString m_name;
+
+  QPixmap m_pixmap;
 };
 
 class RefrigerationSecondaryView : public QGraphicsObject
