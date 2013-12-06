@@ -509,6 +509,15 @@
     <rule IddField="Refrigeration Compressor Power Curve Name" Access="LOCKED"/>
     <rule IddField="Refrigeration Compressor Capacity Curve Name" Access="LOCKED"/>
   </POLICY>
-  Transcritical Compressor Power Curve Name
-  Transcritical Compressor Capacity Curve Name
+  <POLICY IddObjectType="OS_Refrigeration_Condenser_AirCooled">
+    <rule IddField="Rated Effective Total Heat Rejection Rate Curve Name" Access="LOCKED"/>
+    <rule IddField="Condenser Refrigerant Operating Charge Inventory" Access="LOCKED"/>
+    <rule IddField="Condensate Receiver Refrigerant Inventory" Access="LOCKED"/>
+    <rule IddField="Condensate Piping Refrigerant Inventory" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_Case">
+    <rule IddField="Latent Case Credit Curve Name" Access="LOCKED"/>
+    <rule IddField="Defrost Energy Correction Curve Name" Access="HIDDEN"/>
+    <rule IddField="Defrost Energy Correction Curve Type" Access="LOCKED"/>
+  </POLICY>
 </ROOT>
