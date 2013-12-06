@@ -188,6 +188,9 @@ void HVACSystemsController::update()
   if( m_dirty )
   {
     m_hvacSystemsView->setUpdatesEnabled(false); 
+
+    model::OptionalModelObject mo;
+    OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObject(mo,false);
     
     // Remove old stuff
 
@@ -281,8 +284,6 @@ void HVACSystemsController::update()
           m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
           m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
 
-          model::OptionalModelObject mo;
-          OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObject(mo,false);
           OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::MY_MODEL);
         }
         else

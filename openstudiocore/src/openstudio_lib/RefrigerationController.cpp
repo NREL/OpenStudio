@@ -95,6 +95,12 @@ RefrigerationController::~RefrigerationController()
 
 void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem)
 {
+  model::OptionalModelObject mo;
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  doc->mainRightColumnController()->inspectModelObject(mo,false);
+
   m_currentSystem = refrigerationSystem;
 
   m_refrigerationScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
@@ -165,6 +171,12 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 
 void RefrigerationController::zoomOutToSystemGridView()
 {
+  model::OptionalModelObject mo;
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  doc->mainRightColumnController()->inspectModelObject(mo,false);
+
   m_currentSystem = boost::none;
 
   m_refrigerationView->header->hide();
