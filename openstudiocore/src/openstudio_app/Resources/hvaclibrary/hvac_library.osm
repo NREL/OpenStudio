@@ -2683,7 +2683,7 @@ OS:Schedule:Day,
 OS:Refrigeration:Case,
   {f2b4154e-97d8-492a-b1d1-1f2e7f9c1d34}, !- Handle
   Refrigeration Case,                   !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Zone Name
   24,                                     !- Rated Ambient Temperature {C}
   55,                                     !- Rated Ambient Relative Humidity {percent}
