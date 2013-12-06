@@ -1422,6 +1422,11 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   buttonGroup->addButton(webKitBtn,2);
 
   m_files = new QComboBox(this);
+
+  isConnected = connect(m_files, SIGNAL(currentIndexChanged( int )),
+    this, SLOT(resultFileChanged( int )));
+  OS_ASSERT(isConnected);
+
   hLayout->addWidget(m_files, 0, Qt::AlignLeft | Qt::AlignTop);
 
   hLayout->addStretch();
@@ -1476,14 +1481,13 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   //********************************************* PAGE 3 (WebKit) *********************************************
 
   m_view = new QWebView(this);
-  //m_view->load(QUrl("file:///C:/openstudio_git/OpenStudio/openstudiocore/src/openstudio_lib/indexWithDataIncluded.html"));
 
-#if _DEBUG || (__GNUC__ && !NDEBUG)
-  m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-  QWebInspector *inspector = new QWebInspector;
-  inspector->setPage(m_view->page());
-  inspector->setVisible(true);
-#endif
+//#if _DEBUG || (__GNUC__ && !NDEBUG)
+//  m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+//  QWebInspector *inspector = new QWebInspector;
+//  inspector->setPage(m_view->page());
+//  inspector->setVisible(true);
+//#endif
 
   m_stackedWidget->addWidget(m_view);
 
@@ -1699,21 +1703,20 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
     if (status == openstudio::runmanager::TreeStatusEnum::Finished)
     {
       try {
-        path = j.treeAllFiles().getLastByFilename("results.html").fullPath;
-        fullPathString = toQString(path.string());
-        fullPathString.prepend("file:///");
-        m_view->load(QUrl(fullPathString));
-
         int i = 1;
         QString num;
-        openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("results.html");
+        openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
         std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
+        m_files->clear();
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
           filename = file.filename;
           path = file.fullPath;
           fullPathString = toQString(path.string());
           fullPathString.prepend("file:///");
           m_files->addItem(num.setNum(i),fullPathString);
+        }
+        if(m_files->count() > 0){
+          resultFileChanged(0);
         }
       } catch (const std::exception &e) {
         LOG(Debug, "Tree finished, error getting html file: " << e.what());
@@ -1728,6 +1731,12 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
     LOG(Debug, "Tree finished, error getting status");
     // no html file exists
   }
+}
+
+void ResultsView::resultFileChanged(int index)
+{
+  QString filename = m_files->itemData(index).toString();
+  m_view->load(QUrl(filename));
 }
 
 } // openstudio

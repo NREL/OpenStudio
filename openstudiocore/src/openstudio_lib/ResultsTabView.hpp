@@ -260,6 +260,7 @@ namespace openstudio {
       void onObjectRemoved(const WorkspaceObject& workspaceObject);
       void updateReportButtons();
       void treeChanged(const openstudio::UUID &t_uuid);
+      void resultFileChanged( int index);
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
