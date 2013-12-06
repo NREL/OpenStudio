@@ -208,6 +208,7 @@ namespace runmanager {
 
       const std::vector<RubyJobBuilder> &mergedJobs() const;
 
+      boost::optional<openstudio::UUID> originalUUID() const;
 
       static JobParams toJobParams(const std::vector<ruleset::OSArgument> &t_args,
           const openstudio::path &t_basePath=openstudio::path());
@@ -248,6 +249,7 @@ namespace runmanager {
       std::vector<std::string> m_toolparams;
       openstudio::path m_script;
       std::vector<RubyJobBuilder> m_mergedJobs;
+      boost::optional<openstudio::UUID> m_originalUUID;
 
       bool m_userScriptJob;
 

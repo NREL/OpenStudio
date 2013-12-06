@@ -130,6 +130,11 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
   }
 
   try {
+    JobParam uuid = t_params.get("original_job_uuid");
+    m_originalUUID = openstudio::toUUID(uuid.children.at(0).value);
+  } catch (const std::exception &) {}
+
+  try {
     JobParam inputfiles = t_params.get("ruby_inputfiles");
 
     for (std::vector<JobParam>::const_iterator itr = inputfiles.children.begin();
@@ -351,6 +356,8 @@ void RubyJobBuilder::addToWorkflow(Workflow &t_wf, const std::vector<openstudio:
 
 JobParams RubyJobBuilder::toParams() const
 {
+
+ 
   JobParam inputfilelist("ruby_inputfiles");
 
   for(std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> >::const_iterator itr
@@ -426,6 +433,11 @@ JobParams RubyJobBuilder::toParams() const
   params.append(copyrequiredfileslist);
   params.append(requiredFiles);
 
+  if (m_originalUUID)
+  {
+    params.append("original_job_uuid", openstudio::toString(*m_originalUUID));
+  }
+
 
   if (m_userScriptJob)
   {
@@ -455,6 +467,11 @@ std::vector<std::string> RubyJobBuilder::getToolParameters() const
 std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > RubyJobBuilder::inputFiles() const
 {
   return m_inputfiles;
+}
+
+boost::optional<openstudio::UUID> RubyJobBuilder::originalUUID() const
+{
+  return m_originalUUID;
 }
 
 std::vector<boost::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const

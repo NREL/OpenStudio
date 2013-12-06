@@ -26,6 +26,7 @@
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include "ToolBasedJob.hpp"
+#include "MergedJobResults.hpp"
 #include <energyplus/ErrorFile.hpp>
 
 #include <QProcess>
@@ -78,6 +79,9 @@ namespace detail {
       virtual void basePathChanged();
 
       virtual void mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+
+      virtual bool hasMergedJobsImpl() const;
+      virtual std::vector<MergedJobResults> mergedJobResultsImpl() const;
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.RubyJob");

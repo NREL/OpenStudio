@@ -158,6 +158,11 @@ namespace detail {
       job_to_merge.remove("merged_ruby_jobs");
     }
 
+    if (!job_to_merge.has("original_job_uuid"))
+    {
+      job_to_merge.append("original_job_uuid", openstudio::toString(t_job->uuid()));
+    }
+
     existing_merged_jobs.insert(existing_merged_jobs.begin(), job_to_merge);
     usjob->m_mergedJobs.clear();
     m_mergedJobs.insert(m_mergedJobs.end(), existing_merged_jobs.begin(), existing_merged_jobs.end());
@@ -213,6 +218,7 @@ namespace detail {
     RubyJobBuilder rjb(params());
     getFiles(rjb);
 
+    assert(rjb.mergedJobs().empty() || dynamic_cast<UserScriptJob*>(this) != 0); // this must only run with user script jobs if merged
 
     std::map<std::string, int> filenames;
 
@@ -226,9 +232,9 @@ namespace detail {
           ++itr)
       {
         std::stringstream ssfilename;
-        if (!rjb.mergedJobs().empty() && pairs->first != 0)
+        if (!rjb.mergedJobs().empty())
         {
-          ssfilename << pairs->first << "/";
+          ssfilename << "mergedjob-" << pairs->first << "/";
         }
 
         ssfilename << (pairs->second.second.empty()?itr->filename:pairs->second.second);
@@ -285,10 +291,22 @@ namespace detail {
 
     // Add ruby script file name
     try {
-      addRequiredFile(rjb.toWorkItem().files.getLastByExtension("rb"), toPath("in.rb"));
-//      addRequiredFile(inputfiles.getLastByExtension("rb"), toPath("in.rb"));
-      addParameter("ruby", toString("in.rb"));
-      runmanager::detail::JSON::saveJSON(rjb.toParams().params(), outdir()/openstudio::toPath("params.json"));
+      openstudio::path outpath = outdir();
+      FileInfo fi = rjb.toWorkItem().files.getLastByExtension("rb");
+      if (!rjb.mergedJobs().empty())
+      {
+        openstudio::path p = openstudio::toPath("mergedjob-0");
+        outpath = outpath / p;
+        addParameter("ruby", toString(p / openstudio::toPath("in.rb")));
+        boost::filesystem::create_directory(outpath);
+        fi.prependRequiredFilePath(p);
+        addRequiredFile(fi, p / toPath("in.rb"));
+      } else {
+        addParameter("ruby", toString("in.rb"));
+        addRequiredFile(fi, toPath("in.rb"));
+      }
+
+      runmanager::detail::JSON::saveJSON(rjb.toParams().params(), outpath / openstudio::toPath("params.json"));
 
       for (size_t i = 0; i < rjb.mergedJobs().size(); ++i)
       {
@@ -296,7 +314,6 @@ namespace detail {
 
         FileInfo fi = rjb.mergedJobs()[i].toWorkItem().files.getLastByExtension("rb");
         fi.prependRequiredFilePath(p);
-
         addRequiredFile(fi, p / openstudio::toPath("in.rb"));
         boost::filesystem::create_directory(outdir()/p);
         runmanager::detail::JSON::saveJSON(rjb.mergedJobs()[i].toParams().params(), outdir()/p/openstudio::toPath("params.json"));
@@ -339,6 +356,73 @@ namespace detail {
       }
     }
 
+  }
+
+  bool RubyJob::hasMergedJobsImpl() const
+  {
+    return !RubyJobBuilder(params()).mergedJobs().empty();
+  }
+
+  std::vector<MergedJobResults> RubyJob::mergedJobResultsImpl() const
+  {
+    std::vector<MergedJobResults> results;
+
+    RubyJobBuilder rjb(params());
+
+    if (rjb.mergedJobs().empty())
+    {
+      return results;
+    }
+
+    std::vector<FileInfo> files = outputFiles().files();
+    for (size_t i = 0; i <= rjb.mergedJobs().size(); ++i)
+    {
+      openstudio::UUID id;
+
+      if (i == 0) { 
+        id = uuid(); 
+      } else {
+        boost::optional<openstudio::UUID> optid = rjb.mergedJobs()[i-1].originalUUID();
+
+        if (optid)
+        {
+          id = *optid;
+        }
+      }
+
+      std::stringstream ss;
+      ss << "mergedjob-" << i;
+      openstudio::path expectedPath = openstudio::toPath(ss.str());
+
+      Files jobfiles;
+
+      for (std::vector<FileInfo>::const_iterator itr = files.begin();
+           itr != files.end();
+           ++itr)
+      {
+        if (itr->fullPath.parent_path().filename() == expectedPath)
+        {
+          jobfiles.append(*itr);
+        }
+      }
+
+      JobErrors e; // default is failed case
+      try {
+        openstudio::path p = jobfiles.getLastByExtension("ossr").fullPath;
+        boost::optional<openstudio::ruleset::OSResult> osresult = openstudio::ruleset::OSResult::load(p);
+        if (osresult)
+        {
+          ErrorInfo ei;
+          ei.osResult(*osresult);
+          e = ei.errors();
+        } 
+      } catch (const std::exception &) {
+      }
+
+      results.push_back(MergedJobResults(id, e, jobfiles));
+    }
+
+    return results;
   }
 
   void RubyJob::getFiles(const RubyJobBuilder &t_rjb)

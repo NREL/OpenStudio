@@ -78,6 +78,11 @@ end
 
 optparse.parse!
 
+if File.directory?(scriptfolder + "/mergedjob-0")
+  # if the 0th job has been merged in, switch to it
+  Dir.chdir("#{scriptfolder}/mergedjob-0") 
+end
+
 # GET THE USER SCRIPT
 
 if options[:userScript]

@@ -28,6 +28,7 @@
 #include <runmanager/lib/LocalProcessCreator.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/WorkItem.hpp>
+#include <runmanager/lib/MergedJobResults.hpp>
 
 #include <model/Model.hpp>
 #include <model/WeatherFile.hpp>
@@ -319,7 +320,7 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     rm.setPaused(false);
     rm.waitForFinished();
 
-    ASSERT_TRUE(j.treeErrors().succeeded());
+    EXPECT_TRUE(j.treeErrors().succeeded());
     openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
     boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
     ASSERT_TRUE(m);
@@ -329,10 +330,14 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
 
     openstudio::runmanager::FileInfo idf = j.treeOutputFiles().getLastByExtension("idf");
     boost::optional<openstudio::IdfFile> f = openstudio::IdfFile::load(idf.fullPath);
-    ASSERT_TRUE(f);
-    ss.str("");
-    f->print(ss);
-    unmergedidf = ss.str();
+    EXPECT_TRUE(f);
+
+    if (f)
+    {
+      ss.str("");
+      f->print(ss);
+      unmergedidf = ss.str();
+    }
 
     EXPECT_EQ(3u, j.treeOutputFiles().getAllByFilename("result.ossr").files().size());
   }
@@ -352,6 +357,10 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     ASSERT_EQ(1u, j.children()[0].children()[0].children().size());
     ASSERT_TRUE(j.children()[0].children()[0].children()[0].children().empty());
 
+    openstudio::UUID job1uuid = j.uuid();
+    openstudio::UUID job2uuid = j.children()[0].uuid();
+    openstudio::UUID job3uuid = j.children()[0].children()[0].uuid();
+
     openstudio::runmanager::JobFactory::optimizeJobTree(j);
 
     EXPECT_EQ(1u, j.children().size());
@@ -362,7 +371,7 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
     rm.setPaused(false);
     rm.waitForFinished();
 
-    ASSERT_TRUE(j.treeErrors().succeeded());
+    EXPECT_TRUE(j.treeErrors().succeeded());
     openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
     boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
     ASSERT_TRUE(m);
@@ -372,12 +381,37 @@ TEST_F(RunManagerTestFixture, UserScriptJobMerging)
 
     openstudio::runmanager::FileInfo idf = j.treeOutputFiles().getLastByExtension("idf");
     boost::optional<openstudio::IdfFile> f = openstudio::IdfFile::load(idf.fullPath);
-    ASSERT_TRUE(f);
-    ss.str("");
-    f->print(ss);
-    mergedidf = ss.str();
+    EXPECT_TRUE(f);
+    if (f)
+    {
+      ss.str("");
+      f->print(ss);
+      mergedidf = ss.str();
+    }
+
 
     EXPECT_EQ(3u, j.treeOutputFiles().getAllByFilename("result.ossr").files().size());
+
+    ASSERT_TRUE(j.hasMergedJobs());
+    
+    std::vector<openstudio::runmanager::MergedJobResults> mergedResults = j.mergedJobResults();
+    ASSERT_EQ(3u, mergedResults.size());
+
+    EXPECT_EQ(job1uuid, mergedResults[0].uuid);
+    EXPECT_EQ(job2uuid, mergedResults[1].uuid);
+    EXPECT_EQ(job3uuid, mergedResults[2].uuid);
+
+    EXPECT_TRUE(mergedResults[0].errors.succeeded());
+    EXPECT_TRUE(mergedResults[1].errors.succeeded());
+    EXPECT_TRUE(mergedResults[2].errors.succeeded());
+
+    ASSERT_FALSE(mergedResults[0].outputFiles.files().empty());
+    ASSERT_FALSE(mergedResults[1].outputFiles.files().empty());
+    ASSERT_FALSE(mergedResults[2].outputFiles.files().empty());
+
+    EXPECT_EQ(openstudio::toPath("mergedjob-0"), mergedResults[0].outputFiles.getLastByFilename("result.ossr").fullPath.parent_path().filename());
+    EXPECT_EQ(openstudio::toPath("mergedjob-1"), mergedResults[1].outputFiles.getLastByFilename("result.ossr").fullPath.parent_path().filename());
+    EXPECT_EQ(openstudio::toPath("mergedjob-2"), mergedResults[2].outputFiles.getLastByFilename("result.ossr").fullPath.parent_path().filename());
   }
 
   qint64 mergedtime = timer.restart();

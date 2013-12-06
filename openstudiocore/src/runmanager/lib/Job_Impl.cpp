@@ -21,6 +21,7 @@
 #include "JobErrorsDisplay.hpp"
 #include "RunManager_Impl.hpp"
 #include "MergeJobError.hpp"
+#include "MergedJobResults.hpp"
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -1990,6 +1991,27 @@ namespace detail {
       m_finishedJob->makeExternallyManaged();
     }
   }
+
+  bool Job_Impl::hasMergedJobs() const
+  {
+    return hasMergedJobsImpl();
+  }
+
+  std::vector<MergedJobResults> Job_Impl::mergedJobResults() const 
+  {
+    return mergedJobResultsImpl();
+  }
+
+  bool Job_Impl::hasMergedJobsImpl() const
+  {
+    return false;
+  }
+
+  std::vector<MergedJobResults> Job_Impl::mergedJobResultsImpl() const
+  {
+    return std::vector<MergedJobResults>();
+  }
+
 
 }
 }
