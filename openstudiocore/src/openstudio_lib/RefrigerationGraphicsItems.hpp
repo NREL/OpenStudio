@@ -28,6 +28,7 @@
 
 class QGraphicsView;
 class QPushButton;
+class QLabel;
 
 namespace openstudio {
 
@@ -57,6 +58,8 @@ class RefrigerationView : public QWidget
   QGraphicsView * graphicsView;
 
   QPushButton * zoomOutButton;
+
+  QLabel * nameLabel;
 };
 
 class CaseViewExpandButton : public AbstractButtonItem

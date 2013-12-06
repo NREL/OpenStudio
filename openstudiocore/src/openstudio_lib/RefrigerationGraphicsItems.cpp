@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QGraphicsView>
+#include <QLabel>
 
 namespace openstudio {
 
@@ -53,6 +54,9 @@ RefrigerationView::RefrigerationView()
   headerLayout->setContentsMargins(5,5,5,5);
   headerLayout->setSpacing(0);
   header->setLayout(headerLayout);
+
+  nameLabel = new QLabel();
+  headerLayout->addWidget(nameLabel);
 
   zoomOutButton = new ZoomOutButton();
   headerLayout->addStretch();
@@ -1017,7 +1021,7 @@ RefrigerationCondenserView::RefrigerationCondenserView()
 
   removeButtonItem->setParentItem(this);
 
-  removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width(),0);
+  removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
 
   bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
   OS_ASSERT(bingo);
@@ -1339,7 +1343,7 @@ RefrigerationSubCoolerView::RefrigerationSubCoolerView()
 
   removeButtonItem->setParentItem(this);
 
-  removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width(),0);
+  removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
 
   bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
   OS_ASSERT(bingo);
@@ -1491,7 +1495,7 @@ RefrigerationSHXView::RefrigerationSHXView()
 
   removeButtonItem->setParentItem(this);
 
-  removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width(),0);
+  removeButtonItem->setPos(size().width() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
 
   bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
   OS_ASSERT(bingo);
