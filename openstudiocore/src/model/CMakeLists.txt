@@ -940,7 +940,6 @@ SET( ${target_name}_moc
   ExteriorLightsDefinition_Impl.hpp
   Facility_Impl.hpp
   FanConstantVolume_Impl.hpp
-  FanOnOff_Impl.hpp
   FanVariableVolume_Impl.hpp
   FFactorGroundFloorConstruction_Impl.hpp
   Gas_Impl.hpp
