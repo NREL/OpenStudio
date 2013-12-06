@@ -76,7 +76,7 @@ namespace detail {
 
     public:
       /// \param DB path to database object with configuration and queue data
-      RunManager_Impl(const openstudio::path &DB, bool t_paused=false, bool t_initui=true, bool t_tempdb=false);
+      RunManager_Impl(const openstudio::path &DB, bool t_paused=false, bool t_initui=true, bool t_tempdb=false, bool t_useStatusGUI=true);
       virtual ~RunManager_Impl();
 
       /// \param job Job to check out of data status for
@@ -272,6 +272,7 @@ namespace detail {
       /// If successful, returns boost::none. Otherwise, returns existing job that was substituted for t_job.
       boost::optional<openstudio::runmanager::Job> enqueueImpl(openstudio::runmanager::Job t_job, bool force, const openstudio::path &t_path);
 
+      bool m_useStatusGUI;
       mutable QMutex m_mutex;
       mutable QMutex m_activate_mutex;
       QWaitCondition m_waitCondition;
