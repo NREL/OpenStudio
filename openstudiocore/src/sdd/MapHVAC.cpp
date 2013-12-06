@@ -30,6 +30,8 @@
 #include <model/ControllerOutdoorAir.hpp>
 #include <model/FanConstantVolume.hpp>
 #include <model/FanVariableVolume.hpp>
+#include <model/FanOnOff.hpp>
+#include <model/FanOnOff_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
 #include <model/CoilHeatingGas.hpp>
@@ -1542,7 +1544,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   }
 
   // ConstantVolume
-  if( istringEqual(fanControlMethodElement.text().toStdString(),"ConstantVolume") )
+  if( istringEqual(fanControlMethodElement.text().toStdString(),"ConstantVolume") ||
+      istringEqual(fanControlMethodElement.text().toStdString(),"TwoSpeed") )
   {
     // The type of fan is dependent on the context.  We use FanOnOff for fan coil units, FanConstantVolume for everything else
     QDomElement parentElement = fanElement.parentNode().toElement();
@@ -1555,54 +1558,102 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
       if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 )
       {
+        model::Schedule schedule = alwaysOnSchedule(model);
+
+        model::FanOnOff fan(model,schedule);
+
+        fan.setName(nameElement.text().toStdString());
+
+        // OverallEff
+        value = overallEffElement.text().toDouble(&ok);
+        if( ok )
+        {
+          fan.setFanEfficiency(value);
+        }
+
+        // MtrEff
+        value = mtrEffElement.text().toDouble(&ok);
+        if( ok )
+        {
+          fan.setMotorEfficiency(value);
+        }
+
+        // FlowCap
+        if( flowCap )
+        {
+          fan.setMaximumFlowRate(flowCap.get());
+        }
+
+        // TotStaticPress
+        value = totStaticPressElement.text().toDouble(&ok);
+        if( ok )
+        {
+          // Convert in WC to Pa
+          fan.setPressureRise(value * 249.0889 );
+        }
+
+        // MtrPos
+        if( motorInAirstream )
+        {
+          fan.setMotorInAirstreamFraction(1.0);
+        }
+        else
+        {
+          fan.setMotorInAirstreamFraction(0.0);
+        }
+
+        result = fan;
       }
     }
 
-    model::Schedule schedule = alwaysOnSchedule(model);
-
-    model::FanConstantVolume fan(model,schedule);
-
-    fan.setName(nameElement.text().toStdString());
-
-    // OverallEff
-    value = overallEffElement.text().toDouble(&ok);
-    if( ok )
+    if( ! result )
     {
-      fan.setFanEfficiency(value);
-    }
+      model::Schedule schedule = alwaysOnSchedule(model);
 
-    // MtrEff
-    value = mtrEffElement.text().toDouble(&ok);
-    if( ok )
-    {
-      fan.setMotorEfficiency(value);
-    }
+      model::FanConstantVolume fan(model,schedule);
 
-    // FlowCap
-    if( flowCap )
-    {
-      fan.setMaximumFlowRate(flowCap.get());
-    }
+      fan.setName(nameElement.text().toStdString());
 
-    // TotStaticPress
-    value = totStaticPressElement.text().toDouble(&ok);
-    if( ok )
-    {
-      // Convert in WC to Pa
-      fan.setPressureRise(value * 249.0889 );
-    }
+      // OverallEff
+      value = overallEffElement.text().toDouble(&ok);
+      if( ok )
+      {
+        fan.setFanEfficiency(value);
+      }
 
-    // MtrPos
-    if( motorInAirstream )
-    {
-      fan.setMotorInAirstreamFraction(1.0);
-    }
-    else
-    {
-      fan.setMotorInAirstreamFraction(0.0);
-    }
+      // MtrEff
+      value = mtrEffElement.text().toDouble(&ok);
+      if( ok )
+      {
+        fan.setMotorEfficiency(value);
+      }
 
-    result = fan;
+      // FlowCap
+      if( flowCap )
+      {
+        fan.setMaximumFlowRate(flowCap.get());
+      }
+
+      // TotStaticPress
+      value = totStaticPressElement.text().toDouble(&ok);
+      if( ok )
+      {
+        // Convert in WC to Pa
+        fan.setPressureRise(value * 249.0889 );
+      }
+
+      // MtrPos
+      if( motorInAirstream )
+      {
+        fan.setMotorInAirstreamFraction(1.0);
+      }
+      else
+      {
+        fan.setMotorInAirstreamFraction(0.0);
+      }
+
+      result = fan;
+    }
   }
   // Variable Volume
   else if( istringEqual(fanControlMethodElement.text().toStdString(),"VariableSpeedDrive") ) 
@@ -4516,21 +4567,27 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
   QDomElement fanElement = element.firstChildElement("Fan"); 
 
   QDomElement flowCapElement = fanElement.firstChildElement("FlowCapSim");
+  QDomElement flowMinElement = fanElement.firstChildElement("FlowMinSim");
 
   boost::optional<double> flowCap;
+  boost::optional<double> flowMin;
+  double value;
+  bool ok;
 
   if( ! autosize() )
   {
-    bool ok;
-
-    double value = flowCapElement.text().toDouble(&ok);
+    value = flowCapElement.text().toDouble(&ok);
 
     if( ok ) 
     {
-      Quantity flowRateIP(value,createCFMVolumetricFlowrate());
-      OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-      OS_ASSERT(flowRateSI);
-      flowCap = flowRateSI->value();
+      flowCap = unitToUnit(value,"cfm","m^3/s").get();
+    }
+
+    value = flowMinElement.text().toDouble(&ok);
+
+    if( ok ) 
+    {
+      flowMin = unitToUnit(value,"cfm","m^3/s").get();
     }
   }
 
@@ -4871,7 +4928,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     OS_ASSERT(mo);
 
     model::HVACComponent fan = mo->cast<model::HVACComponent>();
- 
+
     // Heating Coil
 
     QDomElement heatingCoilElement = element.firstChildElement("CoilHtg"); 
@@ -4947,36 +5004,68 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       fpfc.setMaximumColdWaterFlowRate(dsnClgFlowRt.get());
     }
 
+    // FanElementControlMethod
+
+    QDomElement fanElementControlMethodElement = fanElement.firstChildElement("CtrlMthd");
+
+    // FanElementMinFlow
+
+    QDomElement fanElementFlowMinElement = fanElement.firstChildElement("FlowMinSim");
+    
+    // FanElementFlowCap
+
+    QDomElement fanElementFlowCapElement = fanElement.firstChildElement("FlowCapSim");
+
+    boost::optional<double> flowMinRatio;
+ 
+    if( flowMin && flowCap )
+    {
+      flowMinRatio = flowMin.get() / flowCap.get();
+    }
+
     // FanCtrl
+
+    fpfc.setLowSpeedSupplyAirFlowRatio(1.0);
+
+    fpfc.setMediumSpeedSupplyAirFlowRatio(1.0);
     
     QDomElement fanCtrlElement = element.firstChildElement("FanCtrl");
 
     if( (fanCtrlElement.text().compare("Continuous",Qt::CaseInsensitive)) == 0 )
     {
-      if( boost::optional<model::FanOnOff> fanConstantVolume = fan.optionalCast<model::FanOnOff>() )
+      if( (fanElementControlMethodElement.text().compare("ConstantVolume",Qt::CaseInsensitive)) == 0 )
       {
+        fpfc.setCapacityControlMethod("ConstantFanVariableFlow");
       }
-      else if( boost::optional<model::FanVariableVolume> fanVariableVolume = fan.optionalCast<model::FanVariableVolume>() )
+      else if( (fanElementControlMethodElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive)) == 0 )
       {
-      }
-      else
-      {
+        fpfc.setCapacityControlMethod("VariableFanVariableFlow");
+
+        if( flowMinRatio )
+        {
+          fpfc.setLowSpeedSupplyAirFlowRatio(flowMinRatio.get());
+
+          fpfc.setMediumSpeedSupplyAirFlowRatio(flowMinRatio.get());
+        }
       }
     }
     else if( (fanCtrlElement.text().compare("Cycling",Qt::CaseInsensitive)) == 0 )
     {
-      if( boost::optional<model::FanOnOff> fanConstantVolume = fan.optionalCast<model::FanOnOff>() )
+      if( (fanElementControlMethodElement.text().compare("TwoSpeed",Qt::CaseInsensitive)) == 0 )
       {
+        fpfc.setCapacityControlMethod("CyclingFan");
+
+        if( flowMinRatio )
+        {
+          fpfc.setLowSpeedSupplyAirFlowRatio(flowMinRatio.get());
+
+          fpfc.setMediumSpeedSupplyAirFlowRatio(flowMinRatio.get());
+        }
       }
-      else if( boost::optional<model::FanVariableVolume> fanVariableVolume = fan.optionalCast<model::FanVariableVolume>() )
+      else if( (fanElementControlMethodElement.text().compare("ConstantVolume",Qt::CaseInsensitive)) == 0 )
       {
+        fpfc.setCapacityControlMethod("CyclingFan");
       }
-      else
-      {
-      }
-    }
-    else
-    {
     }
 
     // Name
