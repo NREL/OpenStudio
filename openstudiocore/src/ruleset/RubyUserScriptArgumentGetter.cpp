@@ -58,7 +58,11 @@ std::string argumentExtractorRubyFunction() {
   ss << "  if scriptPath.empty?" << std::endl;
   ss << "    raise \"Unable to locate primary Ruby script path for BCLMeasure '\" + " << std::endl;
   ss << "        bclMeasure.name + \"' located at \" + bclMeasure.directory.to_s + \".\"" << std::endl;
-  ss << "  end" << std::endl;
+  ss << "  end" << std::endl << std::endl;
+  // Check list of objects in memory before loading the script
+  ss << "  currentObjects = Hash.new" << std::endl;
+  ss << "  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }" << std::endl << std::endl; 
+  ss << "  ObjectSpace.garbage_collect" << std::endl;
   // This line is REQUIRED or the ObjectSpace order will change when garbage collection runs automatically
   // If ~12 measures are added and garbage collection runs, the following loop to grab the first userscript
   //   will get the wrong one and return incorrect arguments
@@ -67,27 +71,29 @@ std::string argumentExtractorRubyFunction() {
   ss << std::endl;
   ss << "  userScript = nil" << std::endl;
   ss << "  type = String.new" << std::endl;
-  ss << "  scripts = ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|" << std::endl;
-  ss << "    if obj.is_a? OpenStudio::Ruleset::UtilityUserScript" << std::endl;
-  ss << "      userScript = obj" << std::endl;
-  ss << "      type = \"utility\"" << std::endl;
-  ss << "    elsif obj.is_a? OpenStudio::Ruleset::ModelUserScript" << std::endl;
-  ss << "      userScript = obj" << std::endl;
-  ss << "      type = \"model\"" << std::endl;
-  ss << "    elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript" << std::endl;
-  ss << "      userScript = obj" << std::endl;
-  ss << "      type = \"workspace\"" << std::endl;
-  ss << "    elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript" << std::endl;
-  ss << "      userScript = obj" << std::endl;
-  ss << "      type = \"translation\"" << std::endl;
-  ss << "    elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript" << std::endl;
-  ss << "      userScript = obj" << std::endl;
-  ss << "      type = \"utility\"" << std::endl;
-  ss << "    elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript" << std::endl;
-  ss << "      userScript = obj" << std::endl;
-  ss << "      type = \"report\"" << std::endl;
+  ss << "  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) do |obj|" << std::endl;
+  ss << "    if not currentObjects[obj]" << std::endl;
+  ss << "      if obj.is_a? OpenStudio::Ruleset::UtilityUserScript" << std::endl;
+  ss << "        userScript = obj" << std::endl;
+  ss << "        type = \"utility\"" << std::endl;
+  ss << "      elsif obj.is_a? OpenStudio::Ruleset::ModelUserScript" << std::endl;
+  ss << "        userScript = obj" << std::endl;
+  ss << "        type = \"model\"" << std::endl;
+  ss << "      elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript" << std::endl;
+  ss << "        userScript = obj" << std::endl;
+  ss << "        type = \"workspace\"" << std::endl;
+  ss << "      elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript" << std::endl;
+  ss << "        userScript = obj" << std::endl;
+  ss << "        type = \"translation\"" << std::endl;
+  ss << "      elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript" << std::endl;
+  ss << "        userScript = obj" << std::endl;
+  ss << "        type = \"utility\"" << std::endl;
+  ss << "      elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript" << std::endl;
+  ss << "        userScript = obj" << std::endl;
+  ss << "        type = \"report\"" << std::endl;
+  ss << "      end" << std::endl;
   ss << "    end" << std::endl;
-  ss << "  }" << std::endl;
+  ss << "  end" << std::endl;
   ss << std::endl;
   ss << "  if not userScript" << std::endl;
   ss << "    raise \"Unable to extract OpenStudio::Ruleset::UserScript object from \" + " << std::endl;
