@@ -275,6 +275,7 @@ openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t
         openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
 
   wf.add(tools);
+  wf.addParam(runmanager::JobParam("flatoutdir"));
 
   openstudio::runmanager::Job j = wf.create(t_outdir, osm, epw);
 
