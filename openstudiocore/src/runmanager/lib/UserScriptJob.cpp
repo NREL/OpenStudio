@@ -44,9 +44,7 @@ namespace detail {
       const JobState &t_restoreData)
     : RubyJob(t_uuid, JobType::UserScript, t_tools, t_params, t_files, t_restoreData)
   {
-    LOG(Debug, "Creating a UserScriptJob");
-
-    LOG(Debug, "UserScriptJob Created");
+    LOG(Trace, "UserScriptJob Created");
   }
 
   UserScriptJob::~UserScriptJob()
