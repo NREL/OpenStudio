@@ -84,7 +84,6 @@ namespace openstudio {
         const openstudio::Unit &t_unit, QWidget *t_parent=0);
       virtual ~ResultsConsumptionChart() {}
       void setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
-      void setHTMLData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
       openstudio::EndUseFuelType getFuelType() const;
 
     private:
