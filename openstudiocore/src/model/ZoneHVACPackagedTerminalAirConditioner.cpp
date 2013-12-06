@@ -418,6 +418,10 @@ namespace detail {
     {
       isAllowedType = true;
     }
+    else if( fan.iddObjectType() == IddObjectType::OS_Fan_OnOff )
+    {
+      isAllowedType = true;
+    }
 
     if( isAllowedType )
     {
