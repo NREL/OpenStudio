@@ -908,6 +908,9 @@ void PatApp::showVerticalTab(int verticalId)
 {
   m_mainTabId = verticalId;
 
+  // get rid of the view before destroying all the widgets
+  mainWindow->verticalTabWidget->mainViewSwitcher->clear();
+
   m_designAlternativesTabController.clear();
   m_runTabController.clear();
   m_measuresTabController.clear();
