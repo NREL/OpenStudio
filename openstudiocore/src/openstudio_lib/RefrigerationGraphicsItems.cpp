@@ -1683,7 +1683,7 @@ CaseViewExpandButton::CaseViewExpandButton()
 
 QSize CaseViewExpandButton::size()
 {
-  return QSize(20,20);
+  return QSize(10,10);
 }
 
 QRectF CaseViewExpandButton::boundingRect() const
