@@ -44,6 +44,8 @@ RefrigerationView::RefrigerationView()
   setLayout(mainVLayout);
 
   header = new QWidget();
+  header->setObjectName("RefrigerationHeader");
+  header->setStyleSheet("QWidget#RefrigerationHeader { background: #C3C3C3; }");
   header->setFixedHeight(35);
   mainVLayout->addWidget(header);
 
@@ -470,6 +472,41 @@ RefrigerationSystemView::RefrigerationSystemView()
   adjustLayout();
 }
 
+void RefrigerationSystemView::setId(const OSItemId & id)
+{
+  m_id = id;
+}
+
+void RefrigerationSystemView::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  update();
+
+  event->accept();
+}
+
+void RefrigerationSystemView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      update();
+
+      emit inspectClicked(m_id);
+    }
+  }
+}
+
 void RefrigerationSystemView::setCasesExpanded(bool expanded)
 {
   refrigerationCasesView->setExpanded(expanded);
@@ -533,6 +570,55 @@ void RefrigerationSystemView::paint( QPainter *painter,
   painter->setPen(Qt::NoPen);
 
   painter->drawRoundedRect(boundingRect(),5,5);
+
+  painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+
+  QRectF compressorRect = refrigerationCompressorView->boundingRect();
+  QPointF compressorPoint = refrigerationCompressorView->pos();
+
+  QRectF condRect = refrigerationCondenserView->boundingRect();
+  QPointF condPoint = refrigerationCondenserView->pos();
+
+  QRectF subCoolerRect = refrigerationSubCoolerView->boundingRect();
+  QPointF subCoolerPoint = refrigerationSubCoolerView->pos();
+
+  QRectF shxRect = refrigerationSHXView->boundingRect();
+  QPointF shxPoint = refrigerationSHXView->pos();
+
+  QRectF caseRect = refrigerationCasesView->boundingRect();
+  QPointF casePoint = refrigerationCasesView->pos();
+
+  painter->drawLine(compressorPoint.x() + compressorRect.width() / 2.0, compressorPoint.y(),
+                    compressorPoint.x() + compressorRect.width() / 2.0, condPoint.y() + condRect.height() / 2.0);
+
+  painter->drawLine(compressorPoint.x() + compressorRect.width() / 2.0, condPoint.y() + condRect.height() / 2.0,
+                    condPoint.x() + condRect.width(), condPoint.y() + condRect.height() / 2.0);
+
+  painter->drawLine(condPoint.x(),condPoint.y() + condRect.height() / 2.0,
+                    subCoolerPoint.x() + subCoolerRect.width() / 2.0,condPoint.y() + condRect.height() / 2.0);
+
+  painter->drawLine(subCoolerPoint.x() + subCoolerRect.width() / 2.0,condPoint.y() + condRect.height() / 2.0,
+                    subCoolerPoint.x() + subCoolerRect.width() / 2.0,subCoolerPoint.y());
+
+  painter->drawLine(subCoolerPoint.x() + subCoolerRect.width() / 2.0,subCoolerPoint.y() + subCoolerRect.height(),
+                    shxPoint.x() + shxRect.width() / 2.0,shxPoint.y());
+
+  painter->drawLine(shxPoint.x() + shxRect.width() / 2.0,shxPoint.y() + shxRect.height(),
+                    shxPoint.x() + shxRect.width() / 2.0,casePoint.y());
+
+  if( compressorPoint.x() + compressorRect.width() / 2.0 > casePoint.x() + caseRect.width() )
+  {
+    painter->drawLine(casePoint.x() + caseRect.width(),casePoint.y() + caseRect.height() / 2.0,
+                      compressorPoint.x() + compressorRect.width() / 2.0,casePoint.y() + caseRect.height() / 2.0);
+
+    painter->drawLine(compressorPoint.x() + compressorRect.width() / 2.0,casePoint.y() + caseRect.height() / 2.0,
+                      compressorPoint.x() + compressorRect.width() / 2.0,compressorPoint.y() + compressorRect.height());
+  }
+  else
+  {
+    painter->drawLine(compressorPoint.x() + compressorRect.width() / 2.0,compressorPoint.y() + compressorRect.height(),
+                      compressorPoint.x() + compressorRect.width() / 2.0,casePoint.y());
+  }
 }
 
 QRectF RefrigerationSystemView::boundingRect() const
@@ -1010,6 +1096,8 @@ void RefrigerationCondenserView::paint( QPainter *painter,
   {
     painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
 
+    painter->drawRoundedRect(_boudingRect,5,5);
+
     painter->drawPixmap(_boudingRect.width() / 2.0 - m_pixmap.rect().width() / 2.0,
                         _boudingRect.height() / 2.0 - m_pixmap.rect().height() / 2.0,
                         m_pixmap);
@@ -1242,7 +1330,8 @@ void RefrigerationCasesDropZoneView::paint( QPainter *painter,
 
 RefrigerationSubCoolerView::RefrigerationSubCoolerView()
 {
-  m_pixmap = QPixmap(":/images/mechanical-sub-cooler.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
+  m_pixmap = QPixmap(":/images/mechanical-sub-cooler.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
+                                                                  RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin);
 
   removeButtonItem = new RemoveButtonItem();
 
@@ -1275,6 +1364,8 @@ void RefrigerationSubCoolerView::paint( QPainter *painter,
   else
   {
     painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+
+    painter->drawRoundedRect(_boudingRect,5,5);
 
     painter->drawPixmap(_boudingRect.width() / 2.0 - m_pixmap.rect().width() / 2.0,
                         _boudingRect.height() / 2.0 - m_pixmap.rect().height() / 2.0,
@@ -1381,6 +1472,8 @@ void RefrigerationSHXView::paint( QPainter *painter,
   {
     painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
 
+    painter->drawRoundedRect(_boudingRect,5,5);
+
     painter->drawPixmap(_boudingRect.width() / 2.0 - m_pixmap.rect().width() / 2.0,
                         _boudingRect.height() / 2.0 - m_pixmap.rect().height() / 2.0,
                         m_pixmap);
@@ -1389,7 +1482,8 @@ void RefrigerationSHXView::paint( QPainter *painter,
 
 RefrigerationSHXView::RefrigerationSHXView()
 {
-  m_pixmap = QPixmap(":/images/slhx.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
+  m_pixmap = QPixmap(":/images/slhx.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
+                                                 RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin);
 
   removeButtonItem = new RemoveButtonItem();
 
@@ -1516,6 +1610,12 @@ void RefrigerationSystemDropZoneView::paint( QPainter *painter,
   painter->setPen(QPen(Qt::black,2,Qt::DashLine, Qt::RoundCap));
 
   painter->drawRect(boundingRect());
+
+  QFont font = painter->font();
+  font.setPointSize(30);
+  painter->setFont(font);
+  painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drop Refrigeration System");
 }
 
 void RefrigerationSystemDropZoneView::mousePressEvent(QGraphicsSceneMouseEvent * event)

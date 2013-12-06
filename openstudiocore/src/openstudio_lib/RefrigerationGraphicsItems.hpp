@@ -311,6 +311,12 @@ class RefrigerationSystemView : public QGraphicsObject
 
   QRectF boundingRect() const;
 
+  void setId(const OSItemId & id);
+
+  signals:
+
+  void inspectClicked(OSItemId id);
+
   public slots:
 
   void setCasesExpanded(bool expanded);
@@ -320,6 +326,16 @@ class RefrigerationSystemView : public QGraphicsObject
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_mouseDown;
+
+  private:
+
+  OSItemId m_id;
 };
 
 class RefrigerationCondenserView : public RefrigerationSystemDropZoneView

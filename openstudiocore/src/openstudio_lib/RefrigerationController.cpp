@@ -22,6 +22,7 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
+#include "MainWindow.hpp"
 #include "MainRightColumnController.hpp"
 #include "../model/Model.hpp"
 #include "../model/RefrigerationSystem.hpp"
@@ -32,6 +33,8 @@
 #include "../model/RefrigerationCompressor_Impl.hpp"
 #include "../model/RefrigerationCase.hpp"
 #include "../model/RefrigerationCase_Impl.hpp"
+#include "../model/RefrigerationWalkIn.hpp"
+#include "../model/RefrigerationWalkIn_Impl.hpp"
 #include "../model/RefrigerationSubcoolerMechanical.hpp"
 #include "../model/RefrigerationSubcoolerMechanical_Impl.hpp"
 #include "../model/RefrigerationSubcoolerLiquidSuction.hpp"
@@ -41,6 +44,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTimer>
+#include <QMessageBox>
 
 namespace openstudio {
 
@@ -152,6 +156,10 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
                   this,SLOT(inspectOSItem(const OSItemId &)));
   OS_ASSERT(bingo);
 
+  bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                  this,SLOT(inspectOSItem(const OSItemId &)));
+  OS_ASSERT(bingo);
+
   m_refrigerationView->graphicsView->setAlignment(Qt::AlignCenter);
 }
 
@@ -244,6 +252,19 @@ void RefrigerationController::onCasesViewDrop(const OSItemId & itemid)
       m_currentSystem->addCase(caseClone);
 
       refresh();
+    }
+    else if( boost::optional<model::RefrigerationWalkIn> _walkin 
+              = mo->optionalCast<model::RefrigerationWalkIn>())
+    {
+      //model::RefrigerationWalkIn walkinClone = 
+      //  _walkin->clone(m_currentSystem->model()).cast<model::RefrigerationWalkIn>();
+
+      //m_currentSystem->addWalkin(walkinClone);
+
+      //refresh();
+      QMessageBox box(doc->mainWindow());
+      box.setText("Walkins are not yet supported by OpenStudio.");
+      box.exec();
     }
   }
 }
@@ -349,6 +370,8 @@ void RefrigerationController::refreshNow()
 
     if( m_currentSystem )
     {
+      m_detailView->setId(OSItemId(m_currentSystem->handle(),QString(),false));
+
       if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> subcooler = m_currentSystem->liquidSuctionHeatExchangerSubcooler() )
       {
         m_detailView->refrigerationSHXView->setId(OSItemId(subcooler->handle(),QString(),false));
@@ -407,6 +430,33 @@ void RefrigerationController::refreshNow()
 
       for( std::vector<model::RefrigerationCase>::iterator it = cases.begin();
            it != cases.end();
+           it++ )
+      {
+        RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
+
+        detailView->setId(OSItemId(it->handle(),QString(),false));
+
+        detailView->setName(QString::fromStdString(it->name().get()));
+
+        bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
+                             this,SLOT(removeCase(const OSItemId &)));
+        OS_ASSERT(bingo);
+
+        bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                        this,SLOT(inspectOSItem(const OSItemId &)));
+        OS_ASSERT(bingo);
+
+        m_detailView->refrigerationCasesView->insertCaseDetailView(0,detailView);
+      }
+
+      // insert walkins
+
+      std::vector<model::RefrigerationWalkIn> walkins = m_currentSystem->walkins();
+
+      m_detailView->refrigerationCasesView->setNumberOfWalkinCases(walkins.size());
+
+      for( std::vector<model::RefrigerationWalkIn>::iterator it = walkins.begin();
+           it != walkins.end();
            it++ )
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();

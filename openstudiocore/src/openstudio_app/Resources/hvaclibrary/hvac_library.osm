@@ -2602,7 +2602,11 @@ OS:Refrigeration:Compressor,
   ,                                       !- Rated Superheat {deltaC}
   18.3,                                   !- Rated Return Gas Temperature {C}
   ,                                       !- Rated Liquid Temperature {C}
-  0;                                      !- Rated Subcooling {deltaC}
+  0,                                      !- Rated Subcooling {deltaC}
+  ,                                       !- End-Use Subcategory
+  ,                                       !- Mode of Operation
+  ,                                       !- Transcritical Compressor Power Curve Name
+  ;                                       !- Transcritical Compressor Capacity Curve Name
 
 OS:Curve:Bicubic,
   {341b9403-ca2b-4895-a88f-57cf24eebda4}, !- Handle
@@ -2732,7 +2736,15 @@ OS:Refrigeration:System,
   {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- CompressorList Name
   21,                                     !- Minimum Condensing Temperature {C}
   R404a,                                  !- Refrigeration System Working Fluid Type
-  ConstantSuctionTemperature;             !- Suction Temperature Control Type
+  ConstantSuctionTemperature,             !- Suction Temperature Control Type
+  ,                                       !- Mechanical Subcooler Name
+  ,                                       !- Liquid Suction Heat Exchanger Subcooler Name
+  ,                                       !- Sum UA Suction Piping
+  ,                                       !- Suction Piping Zone Name
+  ,                                       !- End-Use Subcategory
+  ,                                       !- Intercooler Type
+  ,                                       !- Shell-and-Coil Intercooler Effectiveness
+  ;                                       !- High-Stage CompressorList Name
 
 OS:ModelObjectList,
   {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Handle
@@ -2754,4 +2766,67 @@ OS:Refrigeration:Subcooler:LiquidSuction,
   6,                                      !- Liquid Suction Design Subcooling Temperature Difference {deltaC}
   16,                                     !- Design Liquid Inlet Temperature {C}
   0;                                      !- Design Vapor Inlet Temperature {C}
+
+OS:Schedule:Ruleset,
+  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Handle
+  Always Off Schedule,                     !- Name
+  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
+  {cf531912-42db-457b-983b-bd936ad4f545}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {cf531912-42db-457b-983b-bd936ad4f545}, !- Handle
+  Always Off Schedule Day,                         !- Name
+  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:Refrigeration:WalkIn,
+  {ee3d06e5-e4a3-4b2d-b500-c9622fffe03c}, !- Handle
+  Refrigeration Walk In,                !- Name
+  ,                                       !- Availability Schedule Name
+  4690,                                   !- Rated Coil Cooling Capacity {W}
+  -2.22,                                  !- Operating Temperature {C}
+  -6.67,                                  !- Rated Cooling Source Temperature {C}
+  0,                                      !- Rated Total Heating Power {W}
+  ,                                       !- Heating Power Schedule Name
+  735,                                    !- Rated Cooling Coil Fan Power {W}
+  0,                                      !- Rated Circulation Fan Power {W}
+  120,                                    !- Rated Total Lighting Power {W}
+  ,                                       !- Lighting Schedule Name
+  Electric,                               !- Defrost Type
+  TimeSchedule,                           !- Defrost Control Type
+  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Defrost Schedule Name
+  ,                                       !- Defrost Drip-Down Schedule Name
+  5512,                                   !- Defrost Power {W}
+  ,                                       !- Temperature Termination Defrost Fraction to Ice {dimensionless}
+  ,                                       !- Restocking Schedule Name
+  ,                                       !- Average Refrigerant Charge Inventory {kg}
+  13,                                     !- Insulated Floor Surface Area {m2}
+  0.207,                                  !- Insulated Floor U-Value {W/m2-K}
+  {525dce58-6555-4c3f-a3b6-be7cc870d92a}; !- WalkIn Zone Boundary 1
+
+OS:ScheduleTypeLimits,
+  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Handle
+  Fractional,                             !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+
+OS:Refrigeration:WalkIn:ZoneBoundary,
+  {525dce58-6555-4c3f-a3b6-be7cc870d92a}, !- Handle
+  Refrigeration Walk In Zone Boundary 1,  !- Name
+  ,                                       !- Zone Name
+  43.4,                                   !- Total Insulated Surface Area Facing Zone {m2}
+  0.235,                                  !- Insulated Surface U-Value Facing Zone {W/m2-K}
+  ,                                       !- Area of Glass Reach In Doors Facing Zone {m2}
+  ,                                       !- Height of Glass Reach In Doors Facing Zone {m}
+  ,                                       !- Glass Reach In Door U Value Facing Zone {W/m2-K}
+  ,                                       !- Glass Reach In Door Opening Schedule Name Facing Zone
+  2,                                      !- Area of Stocking Doors Facing Zone {m2}
+  2,                                      !- Height of Stocking Doors Facing Zone {m}
+  ,                                       !- Stocking Door U Value Facing Zone {W/m2-K}
+  ,                                       !- Stocking Door Opening Schedule Name Facing Zone
+  StripCurtain;                           !- Stocking Door Opening Protection Type Facing Zone
 
