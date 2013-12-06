@@ -257,9 +257,21 @@ void HVACSystemsController::update()
 
     if( handle == REFRIGERATION )
     {
-      m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
+      m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
+      m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
 
-      m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationController->refrigerationView());
+      if( m_hvacSystemsView->hvacToolbarView->topologyViewButton->isChecked() )
+      {
+        m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
+
+        m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationController->refrigerationView());
+      }
+      else
+      {
+          m_hvacControlsController = boost::shared_ptr<HVACControlsController>(new HVACControlsController(this));
+
+          m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->noControlsView());
+      }
     }
     else
     {
