@@ -389,7 +389,7 @@ IF(BUILD_RUBY)
       ELSE()
         # And windows requires mingw to build ruby, so we just unpackage it locally
         ExternalProject_Add(Ruby
-          URL ${CMAKE_SOURCE_DIR}/dependencies/ruby-1.8.6-msvc-ssl.zip
+          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.6-msvc-ssl.zip
           URL_MD5 d3fdb49726e63f123941f5f41f594149
           CONFIGURE_COMMAND ""
           BUILD_COMMAND ""
