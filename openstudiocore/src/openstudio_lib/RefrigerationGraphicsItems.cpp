@@ -569,7 +569,9 @@ void RefrigerationSystemView::paint( QPainter *painter,
   painter->setBrush(QColor(206,206,206));
   painter->setPen(Qt::NoPen);
 
-  painter->drawRoundedRect(boundingRect(),5,5);
+  QRectF _boudingRect = boundingRect();
+
+  painter->drawRoundedRect(_boudingRect.x(),_boudingRect.y() + 5,_boudingRect.width(),_boudingRect.height() - 10,5,5);
 
   painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
 
