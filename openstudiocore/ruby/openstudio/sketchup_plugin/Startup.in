@@ -24,6 +24,8 @@ $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false
 # about dl/import
 require 'OpenStudio/OpenStudio-config'
 
+minimum_version = ''
+minimum_version_key = ''
 if (RUBY_PLATFORM =~ /mswin/)  # Windows
   minimum_version = '7.0.0000'
   minimum_version_key = '000700000000'

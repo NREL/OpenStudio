@@ -17,7 +17,11 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("openstudio/sketchup_plugin/stdruby/set")
+if Sketchup.version_number > 14000000
+  require("set")
+else
+  require("openstudio/sketchup_plugin/stdruby/set")
+end
 
 module OpenStudio
 

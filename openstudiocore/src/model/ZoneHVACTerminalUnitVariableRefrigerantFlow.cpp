@@ -473,19 +473,7 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
   heatingCoil.setName(name().get() + " Heating Coil");
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoil);
 
-  CurveCubic fanPowerCurve(model);
-  fanPowerCurve.setName(name().get() + " Fan Power Curve");
-  fanPowerCurve.setCoefficient1Constant(1.0);
-  fanPowerCurve.setCoefficient2x(0.0);
-  fanPowerCurve.setCoefficient3xPOW2(0.0);
-
-  CurveCubic fanEfficiencyCurve(model);
-  fanPowerCurve.setName(name().get() + " Fan Efficiency Curve");
-  fanEfficiencyCurve.setCoefficient1Constant(1.0);
-  fanEfficiencyCurve.setCoefficient2x(0.0);
-  fanEfficiencyCurve.setCoefficient3xPOW2(0.0);
-
-  FanOnOff fan(model,alwaysOnSchedule,fanPowerCurve,fanEfficiencyCurve);
+  FanOnOff fan(model,alwaysOnSchedule);
   fan.setName(name().get() + " Fan");
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
 }

@@ -80,7 +80,8 @@ namespace detail {
       /// \param[in] t_paused If true the processor is started in paused mode.
       /// \param[in] t_initializeui If true the application's UI subsystem is initialized. Used in a standalone
       ///                           application that utilized RunManager
-      RunManager(bool t_paused = false, bool t_initializeui = true);
+      /// \param[in] t_useStatusGUI Enable the use of Job status GUI elements
+      RunManager(bool t_paused = false, bool t_initializeui = true, bool t_useStatusGUI = true);
 
       /// Construct a RunManager from a given database file path
       /// \param[in] DB The file location for the database storing prefs and job queue
@@ -88,7 +89,8 @@ namespace detail {
       /// \param[in] t_paused If true the processor is started in paused mode.
       /// \param[in] t_initializeui If true the application's UI subsystem is initialized. Used in a standalone
       ///                           application that utilized RunManager
-      RunManager(const openstudio::path &DB, bool t_new = false, bool t_paused = false, bool t_initializeui=true);
+      /// \param[in] t_useStatusGUI Enable the use of Job status GUI elements
+      RunManager(const openstudio::path &DB, bool t_new = false, bool t_paused = false, bool t_initializeui=true, bool t_useStatusGUI = true);
       ~RunManager();
 
       /// Return tue if the given job is out of date
