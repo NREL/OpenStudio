@@ -19,6 +19,7 @@
   
 #endif
 
+MODELOBJECT_TEMPLATES(RefrigerationAirChiller);
 MODELOBJECT_TEMPLATES(RefrigerationCase);
 MODELOBJECT_TEMPLATES(RefrigerationCompressor);
 MODELOBJECT_TEMPLATES(RefrigerationCondenserAirCooled);
@@ -33,6 +34,7 @@ MODELOBJECT_TEMPLATES(RefrigerationTranscriticalSystem);
 MODELOBJECT_TEMPLATES(RefrigerationWalkIn);
 MODELOBJECT_TEMPLATES(RefrigerationWalkInZoneBoundary);
 
+SWIG_MODELOBJECT(RefrigerationAirChiller);
 SWIG_MODELOBJECT(RefrigerationCase);
 SWIG_MODELOBJECT(RefrigerationCompressor);
 SWIG_MODELOBJECT(RefrigerationCondenserAirCooled);

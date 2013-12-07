@@ -164,6 +164,7 @@
 #include <model/PumpVariableSpeed.hpp>
 #include <model/RadianceParameters.hpp>
 #include <model/RefractionExtinctionGlazing.hpp>
+#include <model/RefrigerationAirChiller.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
@@ -261,7 +262,6 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACRefrigerationChillerSet.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
@@ -409,6 +409,7 @@
 #include <model/PumpVariableSpeed_Impl.hpp>
 #include <model/RadianceParameters_Impl.hpp>
 #include <model/RefractionExtinctionGlazing_Impl.hpp>
+#include <model/RefrigerationAirChiller_Impl.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
@@ -507,7 +508,6 @@
 #include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACRefrigerationChillerSet_Impl.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>

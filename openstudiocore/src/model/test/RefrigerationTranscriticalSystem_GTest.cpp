@@ -33,6 +33,8 @@
 #include <model/ModelObjectList_Impl.hpp>
 #include <model/ScheduleCompact.hpp>
 #include <model/ScheduleCompact_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;

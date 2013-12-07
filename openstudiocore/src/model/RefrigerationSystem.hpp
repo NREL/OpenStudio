@@ -61,7 +61,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   static std::vector<std::string> suctionTemperatureControlTypeValues();
 
-  static std::vector<std::string> numberofCompressorStagesValues();
+  // static std::vector<std::string> numberofCompressorStagesValues();
 
   static std::vector<std::string> intercoolerTypeValues();
 

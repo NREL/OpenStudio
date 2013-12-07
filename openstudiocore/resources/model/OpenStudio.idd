@@ -6965,7 +6965,7 @@ OS:Refrigeration:AirChiller,
         \memo fans and heaters is modeled based on inputs for nominal power, schedules, and control
         \memo type. The air chiller model accounts for the sensible and latent heat exchange
         \memo with the surrounding environment.
-        \min-fields 24
+        \min-fields 26
   A1,   \field Handle
         \type handle
         \required-field
@@ -6974,12 +6974,21 @@ OS:Refrigeration:AirChiller,
         \type alpha
         \reference AllObjects
         \reference RefrigerationAirChillerNames
+        \reference ConnectionObject
   A3,   \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.
         \note If this field is blank, the system is always available.
         \type object-list
         \object-list ScheduleNames
-  A4,   \field Capacity Rating Type
+  A4,   \field Air Inlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  A5,   \field Air Outlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  A6,   \field Capacity Rating Type
         \required-field
         \note In each case, select the rating option that corresponds to the expected service conditions.
         \note For example, U.S. manufacturers quote a separate Unit Load Factor for wet or frosted coils.
@@ -6987,18 +6996,17 @@ OS:Refrigeration:AirChiller,
         \note Within the European convention, select SC1, 2, 3, 4, or 5 depending upon the expected evaporating temperature.        
         \type choice
         \key UnitLoadFactorSensibleOnly
-        \key CapacityTotalSpecificConditions
         \key EuropeanSC1Standard
         \key EuropeanSC1NominalWet
         \key EuropeanSC2Standard
         \key EuropeanSC2NominalWet
         \key EuropeanSC3Standard
-        \key FixedLinear
         \key EuropeanSC3NominalWet
         \key EuropeanSC4Standard
         \key EuropeanSC4NominalWet
         \key EuropeanSC5Standard
         \key EuropeanSC5NominalWet
+        \default UnitLoadFactorSensibleOnly
   N1,   \field Rated Unit Load Factor
         \type real
         \units W/K
@@ -7060,15 +7068,16 @@ OS:Refrigeration:AirChiller,
         \units dimensionless
         \default 1.0
         \note This is the manufacturer's correction factor for refrigerant corresponding to rating
-  A5,   \field Capacity Correction Curve Type
+  A7,   \field Capacity Correction Curve Type
         \note In each case, select the correction curve type that corresponds to the rating type.
         \type choice
         \key LinearSHR60
         \key QuadraticSHR
         \key European
         \key TabularRHxDT1xTRoom
+        \default LinearSHR60
         \note default LinearSHR60 unless Capcity Rating Type = CapacityTotalSpecificConditions
-  A6,   \field Capacity Correction Curve Name
+  A8,   \field Capacity Correction Curve Name
         \type object-list
         \object-list LinearCurves
         \object-list QuadraticCurves
@@ -7086,13 +7095,13 @@ OS:Refrigeration:AirChiller,
         \required-field
         \note Include total for all heater power
         \note Do not include defrost heater power
-  A7,   \field Heating Power Schedule Name
+  A9,   \field Heating Power Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note Values will be used to multiply the total heating power
         \note Values in the schedule should be between 0.0 and 1.0
         \note Defaults to always on if schedule name left blank.
-  A8,   \field Fan Speed Control Type
+  A10,  \field Fan Speed Control Type
         \type choice
         \key Fixed
         \key FixedLinear
@@ -7114,7 +7123,7 @@ OS:Refrigeration:AirChiller,
         \units dimensionless
         \minimum 0.0
         \default 0.2
-  A9,   \field Defrost Type
+  A11,  \field Defrost Type
         \type choice
         \key HotFluid
         \key Electric
@@ -7123,17 +7132,17 @@ OS:Refrigeration:AirChiller,
         \default Electric
         \note HotFluid includes either hot gas defrost for a DX system or
         \note   Hot Brine defrost if this walk in is cooled by brine from a secondary chiller
-  A10,  \field Defrost Control Type
+  A12,  \field Defrost Control Type
         \type choice
         \key TimeSchedule
         \key TemperatureTermination
         \default TimeSchedule
-  A11,  \field Defrost Schedule Name
+  A13,  \field Defrost Schedule Name
         \type object-list
         \object-list ScheduleNames
         \required-field
         \note The schedule values should be 0 (off) or 1 (on)
-  A12,  \field Defrost Drip-Down Schedule Name
+  A14,  \field Defrost Drip-Down Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note The schedule values should be 0 (off) or 1 (on)
@@ -7155,7 +7164,7 @@ OS:Refrigeration:AirChiller,
         \note This is the portion of the defrost energy that is available to melt frost
         \note     Needed only for defrost control type TemperatureTermination
         \note     defaults to 0.7 for electric defrost and to 0.3 for hot fluid defrost
-  A13,  \field Vertical Location
+  A15,  \field Vertical Location
         \type choice
         \key Ceiling
         \key Middle
@@ -7166,47 +7175,6 @@ OS:Refrigeration:AirChiller,
         \type real
         \default 0.0
         \note This value is only used if the Cooling Source Type is DXEvaporator
-
-OS:ZoneHVAC:RefrigerationChillerSet,
-        \memo Works in conjunction with one or multiple air chillers, compressor racks,
-        \memo refrigeration systems, or refrigeration secondary system objects to simulate the
-        \memo performance of a group of air chillers cooling a single zone. The chiller set
-        \memo model passes information about the zone conditions to determine the performance of
-        \memo individual chiller coils within the set, thus providing the sensible and latent heat
-        \memo exchange with the zone environment.
-        \extensible:1 -- duplicate last field, remembering to remove ; from "inner" fields.
-        \min-fields 7
-  A1,   \field Handle
-        \type handle
-        \required-field
-  A2,   \field Name
-        \required-field
-        \type alpha
-  A3,   \field Availability Schedule Name
-        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
-        \note If this field is blank, the system is always available.
-        \type object-list
-        \object-list ScheduleNames
-  A4,   \field Zone Name
-        \note This must be a controlled zone and appear in a ZoneHVAC:EquipmentConnections object.
-        \type object-list
-        \object-list ThermalZoneNames
-  A5,   \field Air Inlet Node Name
-        \type alpha
-        \note Not used - reserved for future use
-        \note Name of the zone exhaust node (see Node) from which the refrigeration chiller
-        \note draws its indoor air.
-        \note This should be one of the zone exhaust nodes for the zone cooled by the chiller set.
-  A6,   \field Air Outlet Node Name
-        \type alpha
-        \note Not used - reserved for future use
-        \note The name of the node where the chiller coil sends its outlet air,
-        \note which must be one of the inlet air nodes for the zone which is being cooled.
-  A7;   \field Air Chiller Name
-        \begin-extensible
-        \type object-list
-        \note Air chillers turned on in order to meet the zone load
-        \object-list RefrigerationAirChillerNames
 
 \group OpenStudio HVAC
 

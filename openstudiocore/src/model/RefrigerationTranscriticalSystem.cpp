@@ -549,6 +549,13 @@ RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(const Model& 
   lowPressureCompressorlist.setName(this->name().get() + " Low Pressure Compressor List");
   ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowPressureCompressorList(lowPressureCompressorlist);
   OS_ASSERT(ok);
+
+  setReceiverPressure(3500000.0);
+  setSubcoolerEffectiveness(0.4);
+  ok = setRefrigerationSystemWorkingFluidType("R744");
+  OS_ASSERT(ok);
+  setSumUASuctionPipingforMediumTemperatureLoads(0.0);
+  setSumUASuctionPipingforLowTemperatureLoads(0.0);
 }
 
 IddObjectType RefrigerationTranscriticalSystem::iddObjectType() {
