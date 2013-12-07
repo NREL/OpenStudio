@@ -21,8 +21,13 @@
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <model/ZoneHVACEquipmentList.hpp>
 #include <model/ZoneHVACEquipmentList_Impl.hpp>
+#include <model/Schedule.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/RefrigerationAirChiller.hpp>
+#include <model/RefrigerationAirChiller_Impl.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_RefrigerationChillerSet_FieldEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -52,10 +57,18 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     idfObject.setName(*s);
   }
 
+  std::vector<ModelObject> airChillers;
+
   for( std::vector<ModelObject>::iterator it = objects.begin();
        it != objects.end();
        it++ )
   {
+    if (boost::optional<RefrigerationAirChiller> airChiller = it->optionalCast<RefrigerationAirChiller>())
+    {
+      airChillers.push_back(airChiller.get());
+      continue;
+    }
+
     unsigned coolingPriority = modelObject.coolingPriority(*it);
     unsigned heatingPriority = modelObject.heatingPriority(*it);
 
@@ -70,6 +83,73 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority); 
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority); 
     }
+  }
+
+  if (!airChillers.empty()) {
+    // ZoneHVAC:RefrigerationChillerSet
+    // Name
+      IdfObject _chillerSet(IddObjectType::ZoneHVAC_RefrigerationChillerSet);
+
+      m_idfObjects.push_back(_chillerSet);
+
+      _chillerSet.setName("ZoneHVAC Refrigeration Chiller Set");
+
+    // AvailabilityScheduleName
+      boost::optional<Schedule> availabilitySchedule = modelObject.model().alwaysOnDiscreteSchedule();
+
+      if( availabilitySchedule )
+      {
+        boost::optional<IdfObject> _availabilitySchedule = translateAndMapModelObject(availabilitySchedule.get());
+
+        if( _availabilitySchedule && _availabilitySchedule->name() )
+        {
+          _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AvailabilityScheduleName,_availabilitySchedule->name().get());
+        }
+      }
+
+    // ZoneName
+      boost::optional<ThermalZone> thermalZone = modelObject.thermalZone();
+
+      if( thermalZone )
+      {
+        boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone.get());
+
+        if( _thermalZone && _thermalZone->name() )
+        {
+          _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::ZoneName,_thermalZone->name().get());
+        }
+      }
+
+    // AirInletNodeName
+      _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AirInletNodeName,"");
+
+    // AirOutletNodeName
+      _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AirOutletNodeName,"");
+
+    // AirChiller (extensible)
+      for( std::vector<ModelObject>::iterator it = airChillers.begin();
+         it != airChillers.end();
+         it++ )
+      {
+        boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
+
+        if( _airChiller )
+        {
+          IdfExtensibleGroup eg = _chillerSet.pushExtensibleGroup();
+
+          eg.setString(ZoneHVAC_RefrigerationChillerSetExtensibleFields::AirChillerName,_airChiller->name().get()); 
+        }
+      }
+
+    unsigned coolingPriority = modelObject.coolingPriority(airChillers.front());
+    unsigned heatingPriority = modelObject.heatingPriority(airChillers.front());
+
+    IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+
+    eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType,_chillerSet.iddObject().name()); 
+    eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_chillerSet.name().get()); 
+    eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority); 
+    eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority); 
   }
 
   m_idfObjects.push_back(idfObject);

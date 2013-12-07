@@ -508,6 +508,9 @@ SET( ${target_name}_src
   RefractionExtinctionGlazing.hpp
   RefractionExtinctionGlazing_Impl.hpp
   RefractionExtinctionGlazing.cpp
+  RefrigerationAirChiller.hpp
+  RefrigerationAirChiller_Impl.hpp
+  RefrigerationAirChiller.cpp
   RefrigerationCase.hpp
   RefrigerationCase_Impl.hpp
   RefrigerationCase.cpp
@@ -844,9 +847,6 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
-  ZoneHVACRefrigerationChillerSet.hpp
-  ZoneHVACRefrigerationChillerSet_Impl.hpp
-  ZoneHVACRefrigerationChillerSet.cpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
@@ -1179,6 +1179,7 @@ SET( ${target_name}_test_src
   test/PumpVariableSpeed_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
+  test/RefrigerationAirChiller_GTest.cpp
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
@@ -1245,7 +1246,6 @@ SET( ${target_name}_test_src
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
-  test/ZoneHVACRefrigerationChillerSet_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
 )

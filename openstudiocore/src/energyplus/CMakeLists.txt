@@ -113,6 +113,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp

@@ -1120,6 +1120,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePortList(portList);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_AirChiller :
+    {
+      model::RefrigerationAirChiller refrigerationAirChiller = modelObject.cast<RefrigerationAirChiller>();
+      retVal = translateRefrigerationAirChiller(refrigerationAirChiller);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Case :
     {
       model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();

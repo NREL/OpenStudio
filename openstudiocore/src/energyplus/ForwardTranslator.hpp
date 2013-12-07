@@ -135,6 +135,7 @@ class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
 class RefractionExtinctionGlazing;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationCondenserAirCooled;
@@ -479,6 +480,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePumpVariableSpeed( model::PumpVariableSpeed & modelObject );
 
   boost::optional<IdfObject> translateRefractionExtinctionGlazing( model::RefractionExtinctionGlazing & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationAirChiller( model::RefrigerationAirChiller & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationCase( model::RefrigerationCase & modelObject );
 
