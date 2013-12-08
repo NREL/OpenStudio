@@ -63,6 +63,7 @@
 #include <model/CoilHeatingWater.hpp>
 #include <model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
+#include <model/CoilWaterHeatingDesuperheater.hpp>
 #include <model/ComponentCostAdjustments.hpp>
 #include <model/ComponentData.hpp>
 #include <model/Connection.hpp>
@@ -310,6 +311,7 @@
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/CoilWaterHeatingDesuperheater_Impl.hpp>
 #include <model/ComponentCostAdjustments_Impl.hpp>
 #include <model/ComponentData_Impl.hpp>
 #include <model/Connection_Impl.hpp>

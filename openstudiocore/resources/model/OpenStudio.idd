@@ -10175,6 +10175,137 @@ OS:Coil:Heating:Desuperheater,
        \note such as solenoid valves, etc.
        \ip-units W
 
+OS:Coil:WaterHeating:Desuperheater,
+       \memo Desuperheater air heating coil. The heating energy provided by this coil is reclaimed
+       \memo from the superheated refrigerant gas leaving a compressor and does not impact the
+       \memo performance of the compressor. This coil must be used with a water heater tank, see
+       \memo Water Heater:Mixed.
+       \min-fields 17
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference WaterHeatingCoilsDesuperheater
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values of 0 denote the desuperheater heating coil is off and the parasitic electric
+       \note energy is also off.
+  A4,  \field Setpoint Temperature Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note Defines the cut-out temperature where the desuperheater water heating coil turns off.
+       \note The desuperheater heating coil setpoint temperature should always be greater
+       \note than the water tank's heater (element or burner) setpoint temperature. Temperature
+       \note schedule values should be in degrees C.
+  N1,  \field Dead Band Temperature Difference
+       \type real
+       \units deltaC
+       \minimum> 0
+       \maximum 20
+       \default 5
+       \note Setpoint temperature minus the dead band temperature difference defines
+       \note the cut-in temperature where the desuperheater water heating coil turns on.
+       \note The water tank's heater (element or burner) setpoint temperature
+       \note should always be less than the desuperheater heating coil cut-in temperature.
+  N2,  \field Rated Heat Reclaim Recovery Efficiency
+       \type real
+       \minimum> 0.0
+       \note Enter the fraction of waste heat reclaimed by the desuperheater water heating coil.
+  N3,  \field Rated Inlet Water Temperature
+       \required-field
+       \type real
+       \units C
+       \note The inlet water temperature corresponding to the rated heat reclaim recovery efficiency.
+  N4,  \field Rated Outdoor Air Temperature
+       \required-field
+       \type real
+       \units C
+       \note The outdoor air dry-bulb temperature corresponding to the
+       \note rated heat reclaim recovery efficiency.
+  N5,  \field Maximum Inlet Water Temperature for Heat Reclaim
+       \required-field
+       \type real
+       \units C
+       \note The desuperheater water heating coil is off when the inlet water temperature is above
+       \note the maximum inlet water temperature for heat reclaim.
+  A5,  \field Heat Reclaim Efficiency Function of Temperature Curve Name
+       \type object-list
+       \object-list BiquadraticCurves
+       \note A biquadratic curve defining the performance of the desuperheater heating coil.
+       \note Performance can be specified as a function of inlet water temperature, outdoor air
+       \note dry-bulb temperature, or both.
+       \note Curve = a + b*Tw + c*Tw**2 + d*odb + e*odb**2 + f*Tw*odb.
+       \note Tw = desuperheater heating coil entering water temperature (C).
+       \note Odb = outdoor dry-bulb temperature at DX system condenser (C).
+  A6,  \field Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+       \note The node from which the desuperheater heating coil draws its inlet water.
+       \note This name should match the source side outlet node name in the associated
+       \note water heater tank object.
+  A7,  \field Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+       \note The node to which the desuperheater heating coil sends its outlet water.
+       \note This name should match the source side inlet node name in the associated
+       \note water heater tank object.
+  A8,  \field Tank Name
+       \required-field
+       \type object-list
+       \note The name of the water heater tank used by this desuperheater water heating coil.
+       \note Needs to match the name used in the corresponding water heater object.
+       \object-list WaterHeaterNames
+  A9,  \field Heating Source Name
+       \required-field
+       \type object-list
+       \object-list DesuperHeatingCoilSources
+       \note The name of the DX system used for heat reclaim.
+  N6,  \field Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0
+       \note The operating water flow rate.
+  N7,  \field Water Pump Power
+       \type real
+       \units W
+       \minimum 0.0
+       \default 0.0
+       \note The water circulation pump electric power.
+  N8,  \field Fraction of Pump Heat to Water
+       \type real
+       \minimum 0
+       \maximum 1
+       \default 0.2
+       \note The fraction of pump heat transferred to the water. The pump is assumed to be downstream of
+       \note the desuperheater water heating coil.
+  N9,  \field On-Cycle Parasitic Electric Load
+       \type real
+       \units W
+       \minimum 0
+       \default 0
+       \note Parasitic electric power consumed when the desuperheater water heating coil operates.
+       \note Parasitic electric load does not contribute to water heating or the zone air heat balance.
+       \ip-units W
+  N10; \field Off-Cycle Parasitic Electric Load
+       \type real
+       \units W
+       \minimum 0
+       \default 0
+       \note Parasitic electric load consumed when the desuperheater water heating coil is off.
+       \note Parasitic electric load does not contribute to water heating or the zone air heat balance.
+       \note Off-cycle parasitic power is 0 when the availability schedule is 0.
+       \ip-units W
+
 OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
         \min-fields 8
    A1 , \field Handle
