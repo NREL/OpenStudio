@@ -587,9 +587,9 @@ namespace openstudio {
 
         runmanager::Workflow wf(workitems);
         wf.add(co.getTools());
-        openstudio::runmanager::JobParams params;
-        params.append("cleanoutfiles", "none");
-        wf.add(params);
+        //openstudio::runmanager::JobParams params;
+        //params.append("cleanoutfiles", "none");
+        //wf.add(params);
         runmanager::Job j = wf.create(modelTempDir / toPath("resources") / simulationDir, modelTempDir / openstudio::toPath("in.osm"));
         runmanager::JobFactory::optimizeJobTree(j);
         rm.enqueue(j, true);
