@@ -85,6 +85,13 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
   OS_ASSERT(isConnected);
 }
 
+PatVerticalTabWidget::~PatVerticalTabWidget() 
+{ 
+  if (mainViewSwitcher){
+    mainViewSwitcher->clear(); 
+  }
+}
+
 void PatVerticalTabWidget::addTab( int id,
                                    QString toolTip,
                                    const QString & selectedImagePath,
