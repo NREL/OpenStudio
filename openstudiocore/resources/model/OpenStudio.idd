@@ -9770,11 +9770,13 @@ OS:Coil:Heating:Desuperheater,
        \type real
        \minimum 0.0
   A4,  \field Air Inlet Node Name
+       \type object-list
        \required-field
-       \type ConnectionNames
+       \object-list ConnectionNames
   A5,  \field Air Outlet Node Name
+       \type object-list
        \required-field
-       \type ConnectionNames
+       \object-list ConnectionNames
   A6,  \field Heating Source Name
        \required-field
        \type object-list
