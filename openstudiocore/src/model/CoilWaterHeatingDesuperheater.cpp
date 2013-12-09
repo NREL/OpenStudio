@@ -27,6 +27,8 @@
 #include <model/CurveBiquadratic_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -402,23 +404,27 @@ CoilWaterHeatingDesuperheater::CoilWaterHeatingDesuperheater(const Model& model)
   //     OS_Coil_WaterHeating_DesuperheaterFields::SetpointTemperatureScheduleName
   //     OS_Coil_WaterHeating_DesuperheaterFields::TankName
   //     OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName
+
   bool ok = true;
-  // ok = setHandle();
+  Schedule availabilitySchedule = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule(availabilitySchedule);
   OS_ASSERT(ok);
-  // ok = setSetpointTemperatureSchedule();
+  ok = setDeadBandTemperatureDifference(5.0);
   OS_ASSERT(ok);
-  // setRatedInletWaterTemperature();
-  // setRatedOutdoorAirTemperature();
-  // setMaximumInletWaterTemperatureforHeatReclaim();
-  // ok = setWaterInletNode();
+  ok = setRatedHeatReclaimRecoveryEfficiency(0.8);
   OS_ASSERT(ok);
-  // ok = setWaterOutletNode();
+  setRatedInletWaterTemperature(50.0);
+  setRatedOutdoorAirTemperature(35.0);
+  setMaximumInletWaterTemperatureforHeatReclaim(60.0);
+  ok = setWaterFlowRate(0.0001);
   OS_ASSERT(ok);
-  // ok = setTank();
+  ok = setWaterPumpPower(100.0);
   OS_ASSERT(ok);
-  // ok = setHeatingSource();
+  ok = setFractionofPumpHeattoWater(0.2);
   OS_ASSERT(ok);
-  // ok = setWaterFlowRate();
+  ok = setOnCycleParasiticElectricLoad(0.0);
+  OS_ASSERT(ok);
+  ok = setOffCycleParasiticElectricLoad(0.0);
   OS_ASSERT(ok);
 }
 

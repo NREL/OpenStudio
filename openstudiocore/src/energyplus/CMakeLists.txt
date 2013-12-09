@@ -43,6 +43,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingGas.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
+  ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp

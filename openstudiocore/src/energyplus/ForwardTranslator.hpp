@@ -65,6 +65,7 @@ class CoilHeatingElectric;
 class CoilHeatingGas;
 class CoilHeatingWater;
 class CoilHeatingWaterToAirHeatPumpEquationFit;
+class CoilWaterHeatingDesuperheater;
 class Construction;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
@@ -340,6 +341,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilHeatingWater( model::CoilHeatingWater & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingWaterToAirHeatPumpEquationFit( model::CoilHeatingWaterToAirHeatPumpEquationFit & modelObject );
+
+  boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater( model::CoilWaterHeatingDesuperheater & modelObject );
 
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
   
