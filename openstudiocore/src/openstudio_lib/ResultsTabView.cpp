@@ -1421,6 +1421,10 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   hLayout->addWidget(webKitBtn, 0, Qt::AlignLeft | Qt::AlignTop);
   buttonGroup->addButton(webKitBtn,2);
 
+  m_standardResultsBtn->hide();
+  m_calibrationResultsBtn->hide();
+  webKitBtn->hide();
+
   m_files = new QComboBox(this);
 
   isConnected = connect(m_files, SIGNAL(currentIndexChanged( int )),
@@ -1481,6 +1485,7 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   //********************************************* PAGE 3 (WebKit) *********************************************
 
   m_view = new QWebView(this);
+  m_view->setContextMenuPolicy(Qt::NoContextMenu);
 
 //#if _DEBUG || (__GNUC__ && !NDEBUG)
 //  m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
@@ -1559,7 +1564,9 @@ void ResultsView::openResultsViewerClicked()
 
 void ResultsView::selectView(int index)
 {
-  m_stackedWidget->setCurrentIndex(index);
+  //m_stackedWidget->setCurrentIndex(index);
+  // NOTE: Always select the webview widget
+  m_stackedWidget->setCurrentIndex(m_stackedWidget->count() - 1);
 }
 
 void ResultsView::onObjectAdded(const WorkspaceObject& workspaceObject)
@@ -1596,19 +1603,16 @@ void ResultsView::updateReportButtons()
 
   if (!showUtilityCalibration){
     m_reportLabel->setVisible(false);
-    m_standardResultsBtn->setVisible(false);
-    m_calibrationResultsBtn->setVisible(false);
-    m_standardResultsBtn->click();
+    //m_standardResultsBtn->setVisible(false);
+    //m_calibrationResultsBtn->setVisible(false);
+    //m_standardResultsBtn->click();
   }else{
     m_reportLabel->setVisible(true);
-    m_standardResultsBtn->setVisible(true);
-    m_calibrationResultsBtn->setVisible(true);
+    // NOTE: Always leave these buttons hidden
+    //m_standardResultsBtn->setVisible(true);
+    //m_calibrationResultsBtn->setVisible(true);
   }
 
-  // TODO remove
-m_reportLabel->setVisible(true);
-m_standardResultsBtn->setVisible(true);
-m_calibrationResultsBtn->setVisible(true);
 }
 
 void ResultsView::onUnitSystemChange(bool t_isIP) 
@@ -1708,16 +1712,21 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
         openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
         std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
         m_files->clear();
+        m_files->blockSignals(true);
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
           filename = file.filename;
           path = file.fullPath;
           fullPathString = toQString(path.string());
           fullPathString.prepend("file:///");
-          m_files->addItem(num.setNum(i),fullPathString);
+          m_files->addItem(num.setNum(m_files->count() + 1),fullPathString);
         }
-        if(m_files->count() > 0){
-          resultFileChanged(0);
+        for(int i = 0; i < m_files->count(); i++){
+          resultFileChanged(i);
         }
+        if(m_files->count()){
+          m_files->setCurrentIndex(0);
+        }
+        m_files->blockSignals(false);
       } catch (const std::exception &e) {
         LOG(Debug, "Tree finished, error getting html file: " << e.what());
       } catch (...) {
