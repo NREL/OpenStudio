@@ -200,7 +200,7 @@ namespace openstudio{
       openstudio::OptionalTime intervalLength() const;
 
       /// date and times at which values are reported, these are the end of each reporting interval 
-      openstudio::DateTimeVector TimeSeries::dateTimes() const;
+      openstudio::DateTimeVector dateTimes() const;
 
       /// date and time of first report value
       openstudio::DateTime firstReportDateTime() const;
