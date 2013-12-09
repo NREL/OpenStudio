@@ -176,6 +176,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ControllerMechanicalVentilation","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoolingTowerSingleSpeed","Basin Heater Operating","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoolingTowerSingleSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
+    {"CoolingTowerVariableSpeed","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
+    {"CoolingTowerVariableSpeed","Blowdown Makeup Water Usage Schedule","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
     {"DefaultScheduleSet","Hours of Operation","hoursofOperationSchedule",false,"Availability",0.0,1.0},
     {"DefaultScheduleSet","Number of People","numberofPeopleSchedule",true,"",0.0,1.0},
     {"DefaultScheduleSet","People Activity Level","peopleActivityLevelSchedule",true,"ActivityLevel",0.0,OptionalDouble()},
