@@ -517,6 +517,9 @@ SET( ${target_name}_src
   RefrigerationCondenserWaterCooled.hpp
   RefrigerationCondenserWaterCooled_Impl.hpp
   RefrigerationCondenserWaterCooled.cpp
+  RefrigerationGasCoolerAirCooled.hpp
+  RefrigerationGasCoolerAirCooled_Impl.hpp
+  RefrigerationGasCoolerAirCooled.cpp
   RefrigerationSubcoolerLiquidSuction.hpp
   RefrigerationSubcoolerLiquidSuction_Impl.hpp
   RefrigerationSubcoolerLiquidSuction.cpp
@@ -1167,6 +1170,7 @@ SET( ${target_name}_test_src
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
   test/RefrigerationCondenserWaterCooled_GTest.cpp
+  test/RefrigerationGasCoolerAirCooled_GTest.cpp
   test/RefrigerationSubcoolerLiquidSuction_GTest.cpp
   test/RefrigerationSubcoolerMechanical_GTest.cpp
   test/RefrigerationSecondarySystem_GTest.cpp

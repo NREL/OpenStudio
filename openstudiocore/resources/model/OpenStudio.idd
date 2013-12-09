@@ -6322,7 +6322,8 @@ OS:Refrigeration:GasCooler:AirCooled,
         \units C
         \default 10.0
   A5,   \field Air Inlet Node Name
-        \type alpha
+        \type object-list
+        \object-list ThermalZoneNames
         \note If field is left blank,
         \note then the model assumes that the inlet air
         \note conditions are the outdoor air conditions for the current timestep

@@ -138,6 +138,7 @@ class RefrigerationCondenserAirCooled;
 class RefrigerationCondenserCascade;
 class RefrigerationCondenserEvaporativeCooled;
 class RefrigerationCondenserWaterCooled;
+class RefrigerationGasCoolerAirCooled;
 class RefrigerationSubcoolerLiquidSuction;
 class RefrigerationSubcoolerMechanical;
 class RefrigerationSecondarySystem;
@@ -481,6 +482,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateRefrigerationCondenserEvaporativeCooled( model::RefrigerationCondenserEvaporativeCooled & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationCondenserWaterCooled( model::RefrigerationCondenserWaterCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationGasCoolerAirCooled( model::RefrigerationGasCoolerAirCooled & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationSubcoolerLiquidSuction( model::RefrigerationSubcoolerLiquidSuction & modelObject );
 

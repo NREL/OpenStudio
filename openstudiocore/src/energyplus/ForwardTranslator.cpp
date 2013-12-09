@@ -1131,6 +1131,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationCondenserWaterCooled(refrigerationCondenserWaterCooled);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_GasCooler_AirCooled:
+    {
+      model::RefrigerationGasCoolerAirCooled refrigerationGasCoolerAirCooled = modelObject.cast<RefrigerationGasCoolerAirCooled>();
+      retVal = translateRefrigerationGasCoolerAirCooled(refrigerationGasCoolerAirCooled);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction:
     {
       model::RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = modelObject.cast<RefrigerationSubcoolerLiquidSuction>();
