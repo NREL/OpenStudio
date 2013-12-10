@@ -254,7 +254,7 @@ std::vector<TimeSeries> PrjModel::zoneInfiltration(SimFile *sim)
         else
         {
           // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
-          // results file for some reason - which unlikely to be accidental. So there must be a good reason
+          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
           // for getting here, and for now we won't issue a warning.
         }
       }
@@ -278,6 +278,79 @@ std::vector<TimeSeries> PrjModel::zoneInfiltration(SimFile *sim)
         }
       }
     }
+    results.push_back(openstudio::TimeSeries(sim->dateTimes(),inf,"kg/s"));
+  }
+  return results;
+}
+
+std::vector<TimeSeries> PrjModel::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
+{
+  // This should probably include a lot more checks of things and is written in
+  // somewhat strange way to avoid taking too much advantage of the specifics 
+  // of the text form outputs.
+  std::vector<TimeSeries> results;
+  std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
+  unsigned int ntimes = sim->dateTimes().size();
+  for(unsigned int i=0; i<pathNrs.size(); i++)
+  {
+    Vector inf = createVector(std::vector<double>(ntimes,0.0));
+    if(pathNrs[i]<=0 || (unsigned)pathNrs[i] > d->paths.size())
+    {
+      // Possibly should issue a warning here, the path number is out of range
+    }
+    else
+    {
+      contam::Path path = d->paths[pathNrs[i]-1];
+      if(path.pzn() == -1)
+      {
+        // This flow path is negative for flow into zone
+        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
+        if(optFlow)
+        {
+          Vector flow = optFlow.get().values();
+          for(unsigned int k=0; k<ntimes; k++)
+          {
+            if(flow[k] < 0)
+            {
+              inf[k] = -flow[k];
+            }
+          }
+        }
+        else
+        {
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
+          // for getting here, and for now we won't issue a warning.
+        }
+      }
+      else if(path.pzm() == -1)
+      {
+        // This flow path is positive for flow into zone
+        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
+        if(optFlow)
+        {
+          Vector flow = optFlow.get().values();
+          for(unsigned int k=0; k<ntimes; k++)
+          {
+              if(flow[k] > 0)
+              {
+              inf[k] = flow[k];
+            }
+          }
+        }
+        else
+        {
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
+          // for getting here, and for now we won't issue a warning.
+        }
+      }
+      else
+      {
+        // Another situation that might need a warning, since the path is not connected to the ambient
+      }
+    }
+    // Save the time series
     results.push_back(openstudio::TimeSeries(sim->dateTimes(),inf,"kg/s"));
   }
   return results;
