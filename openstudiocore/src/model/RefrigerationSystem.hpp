@@ -28,6 +28,7 @@ namespace openstudio {
 namespace model {
 
 class ModelObjectList;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
@@ -116,6 +117,14 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   void removeAllCascadeCondenserLoads();
 
   std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
+
+  bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAllAirChillers();
+
+  std::vector<RefrigerationAirChiller> airChillers() const;
 
   /** @name Getters */
   //@{

@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class ModelObjectList;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
@@ -85,6 +86,8 @@ namespace detail {
     std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
     std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
+
+    std::vector<RefrigerationAirChiller> airChillers() const;
 
     template <class T>
     std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
@@ -190,6 +193,12 @@ namespace detail {
     void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
 
     void removeAllCascadeCondenserLoads();
+
+    bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAllAirChillers();
 
     // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);

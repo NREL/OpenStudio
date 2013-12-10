@@ -30,6 +30,7 @@ namespace model {
 class ModelObjectList;
 class CurveCubic;
 class ThermalZone;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationWalkIn;
 
@@ -79,8 +80,10 @@ namespace detail {
 
     std::vector<RefrigerationWalkIn> walkins() const;
 
+    std::vector<RefrigerationAirChiller> airChillers() const;
+
     template <class T>
-    std::vector<T> casesOrWalkins() const;
+    std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
 
     // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
@@ -151,13 +154,13 @@ namespace detail {
     //@{
 
     template <class T>
-    void removeAllCasesOrWalkins();
+    void removeAllTemplate( boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    void removeCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+    void removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    bool addCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+    bool addTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
 
     bool addCase( const RefrigerationCase & refrigerationCase);
 
@@ -170,6 +173,12 @@ namespace detail {
     void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
     void removeAllWalkins();
+
+    bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAllAirChillers();
 
     // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);

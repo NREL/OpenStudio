@@ -31,6 +31,7 @@ namespace model {
 class ModelObjectList;
 class CurveCubic;
 class ThermalZone;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationWalkIn;
 
@@ -73,6 +74,14 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   void removeAllWalkins();
 
   std::vector<RefrigerationWalkIn> walkins() const;
+
+  bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAllAirChillers();
+
+  std::vector<RefrigerationAirChiller> airChillers() const;
 
   /** @name Getters */
   //@{

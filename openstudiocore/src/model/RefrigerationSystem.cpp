@@ -22,6 +22,8 @@
 
 #include <model/ModelObjectList.hpp>
 #include <model/ModelObjectList_Impl.hpp>
+#include <model/RefrigerationAirChiller.hpp>
+#include <model/RefrigerationAirChiller_Impl.hpp>
 #include <model/RefrigerationCondenserCascade.hpp>
 #include <model/RefrigerationCondenserCascade_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
@@ -216,6 +218,10 @@ namespace detail {
 
   std::vector<RefrigerationCondenserCascade> RefrigerationSystem_Impl::cascadeCondenserLoads() const {
     return RefrigerationSystem_Impl::listTemplate<RefrigerationCondenserCascade>(refrigerationTransferLoadList());
+  }
+
+  std::vector<RefrigerationAirChiller> RefrigerationSystem_Impl::airChillers() const {
+    return RefrigerationSystem_Impl::listTemplate<RefrigerationAirChiller>(refrigeratedCaseAndWalkInList());
   }
 
   boost::optional<ModelObjectList> RefrigerationSystem_Impl::refrigeratedCaseAndWalkInList() const {
@@ -450,6 +456,21 @@ namespace detail {
   void RefrigerationSystem_Impl::removeAllCascadeCondenserLoads() {
     boost::optional<ModelObjectList> modelObjectList = refrigerationTransferLoadList();
     removeAllTemplate<RefrigerationCondenserCascade>(modelObjectList);
+  }
+
+  bool RefrigerationSystem_Impl::addAirChiller( const RefrigerationAirChiller& refrigerationAirChiller) {
+    boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+    return addTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
+  }
+
+  void RefrigerationSystem_Impl::removeAirChiller( const RefrigerationAirChiller& refrigerationAirChiller) {
+    boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+    removeTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
+  }
+
+  void RefrigerationSystem_Impl::removeAllAirChillers() {
+    boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+    removeAllTemplate<RefrigerationAirChiller>(modelObjectList);
   }
 
   bool RefrigerationSystem_Impl::setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList) {
@@ -729,6 +750,10 @@ std::vector<RefrigerationCondenserCascade> RefrigerationSystem::cascadeCondenser
   return getImpl<detail::RefrigerationSystem_Impl>()->cascadeCondenserLoads();
 }
 
+std::vector<RefrigerationAirChiller> RefrigerationSystem::airChillers() const {
+  return getImpl<detail::RefrigerationSystem_Impl>()->airChillers();
+}
+
 /*boost::optional<ModelObjectList> RefrigerationSystem::refrigeratedCaseAndWalkInList() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
 }
@@ -887,6 +912,18 @@ void RefrigerationSystem::removeCascadeCondenserLoad(const RefrigerationCondense
 
 void RefrigerationSystem::removeAllCascadeCondenserLoads() {
   return getImpl<detail::RefrigerationSystem_Impl>()->removeAllCascadeCondenserLoads();
+}
+
+bool RefrigerationSystem::addAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->addAirChiller(refrigerationAirChiller);
+}
+
+void RefrigerationSystem::removeAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->removeAirChiller(refrigerationAirChiller);
+}
+
+void RefrigerationSystem::removeAllAirChillers() {
+  return getImpl<detail::RefrigerationSystem_Impl>()->removeAllAirChillers();
 }
 
 /*bool RefrigerationSystem::setRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList) {
