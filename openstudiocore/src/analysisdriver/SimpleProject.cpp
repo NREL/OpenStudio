@@ -53,12 +53,15 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/WorkItem.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
 
 #include <energyplus/ForwardTranslator.hpp>
 
 #include <osversion/VersionTranslator.hpp>
 
 #include <model/Model.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
 #include <model/WeatherFile.hpp>
 #include <model/WeatherFile_Impl.hpp>
 
@@ -422,6 +425,23 @@ namespace detail {
       return false;
     }
 
+    if (!getStandardReportWorkflowStep()) {
+      return false;
+    }
+
+    unsigned numReportWorkItems = 1u;
+    if (shouldIncludeCalibrationReports()) {
+      if (!getCalibrationReportWorkflowStep()) {
+        return false;
+      }
+      ++numReportWorkItems;
+    }
+    else {
+      if (getCalibrationReportWorkflowStep()) {
+        return false;
+      }
+    }
+
     BOOST_FOREACH(const InputVariable& variable,problem.variables()) {
       if (OptionalMeasureGroup dv = variable.optionalCast<MeasureGroup>()) {
         BOOST_FOREACH(const Measure& measure,dv->measures(false)) {
@@ -446,6 +466,7 @@ namespace detail {
     // check workflow
     bool inputVariableOk = true; // model measures ok
     boost::optional<JobType> nextWorkItemType = JobType(JobType::ModelToIdf);
+    unsigned reportCount = 0u;
     BOOST_FOREACH(const WorkflowStep& step,problem.workflow()) {
       if (!inputVariableOk && step.isInputVariable()) {
         return false;
@@ -470,7 +491,14 @@ namespace detail {
             inputVariableOk = false;
             break;
           case JobType::EnergyPlus :
-            nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
+            nextWorkItemType = JobType(JobType::UserScript);
+            inputVariableOk = true; // reporting measures ok
+            break;
+          case JobType::UserScript :
+            ++reportCount;
+            if (reportCount == numReportWorkItems) {
+              nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
+            }
             inputVariableOk = true; // reporting measures ok
             break;
           case JobType::OpenStudioPostProcess :
@@ -528,6 +556,92 @@ namespace detail {
         }
       }
     }
+    return result;
+  }
+
+  boost::optional<analysis::WorkflowStep> SimpleProject_Impl::getStandardReportWorkflowStep() const {
+    OptionalWorkflowStep result;
+    Problem problem = analysis().problem();
+
+    WorkflowStepVector workflow = problem.workflow();
+    OptionalInt start = problem.getWorkflowStepIndexByJobType(JobType::UserScript);
+    if (start) {
+      for (unsigned i = *start, n = workflow.size(); i < n; ++i) {
+        WorkflowStep step = workflow[i];
+        if (!step.isWorkItem()) {
+          continue;
+        }
+        WorkItem workItem = step.workItem();
+        if (workItem.type != JobType::UserScript) {
+          continue;
+        }
+        try {
+          JobParam params = workItem.params.get("ruby_bclmeasureparameters");
+          for (std::vector<JobParam>::const_iterator it = params.children.begin(),
+               itEnd = params.children.end(); it != itEnd; ++it)
+          {
+            if (it->value == "bcl_measure_uuid") {
+              if (openstudio::toUUID(it->children.at(0).value) == standardReportMeasureUUID()) {
+                result = step;
+                break;
+              }
+            }
+          }
+        }
+        catch (...) {}
+        if (result) {
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  bool SimpleProject_Impl::shouldIncludeCalibrationReports() const {
+    bool result(false);
+    if (OptionalModel model = seedModel()) {
+      result = (model->getModelObjects<model::UtilityBill>().size() > 0);
+    }
+    return result;
+  }
+
+  boost::optional<analysis::WorkflowStep> SimpleProject_Impl::getCalibrationReportWorkflowStep() const {
+    OptionalWorkflowStep result;
+    Problem problem = analysis().problem();
+
+    WorkflowStepVector workflow = problem.workflow();
+    OptionalInt start = problem.getWorkflowStepIndexByJobType(JobType::UserScript);
+    if (start) {
+      for (unsigned i = *start, n = workflow.size(); i < n; ++i) {
+        WorkflowStep step = workflow[i];
+        if (!step.isWorkItem()) {
+          continue;
+        }
+        WorkItem workItem = step.workItem();
+        if (workItem.type != JobType::UserScript) {
+          continue;
+        }
+        try {
+          JobParam params = workItem.params.get("ruby_bclmeasureparameters");
+          for (std::vector<JobParam>::const_iterator it = params.children.begin(),
+               itEnd = params.children.end(); it != itEnd; ++it)
+          {
+            if (it->value == "bcl_measure_uuid") {
+              if (openstudio::toUUID(it->children.at(0).value) == calibrationReportMeasureUUID()) {
+                result = step;
+                break;
+              }
+            }
+          }
+        }
+        catch (...) {}
+        if (result) {
+          break;
+        }
+      }
+    }
+
     return result;
   }
 
@@ -1245,6 +1359,123 @@ namespace detail {
     return true;
   }
 
+  bool SimpleProject_Impl::insertStandardReportWorkflowStep() {
+    if (getStandardReportWorkflowStep()) {
+      // nothing to do
+      return true;
+    }
+
+    bool dataPointsOk = !analysis().dataPointsAreInvalid();
+
+    Problem problem = analysis().problem();
+    OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::OpenStudioPostProcess);
+    if (!index) {
+      return false;
+    }
+
+    std::vector<BCLMeasure> patMeasures = BCLMeasure::patApplicationMeasures();
+    std::vector<BCLMeasure>::const_iterator it = std::find_if(
+          patMeasures.begin(),
+          patMeasures.end(),
+          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,standardReportMeasureUUID()));
+    OS_ASSERT(it != patMeasures.end());
+    BCLMeasure bclMeasure = insertMeasure(*it);
+
+    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure);
+
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.idf",
+                                "in.idf");
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.osm",
+                                "in.osm");
+    // be able to access OpenStudio Ruby bindings
+    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+
+    bool ok = problem.insert(*index,WorkflowStep(workItem));
+    if (!ok) {
+      return false;
+    }
+
+    // changing work items does not invalidate data points
+    if (dataPointsOk) {
+      OS_ASSERT(!analysis().dataPointsAreInvalid());
+    }
+    return true;
+  }
+
+  bool SimpleProject_Impl::insertCalibrationReportWorkflowStep() {
+    if (getCalibrationReportWorkflowStep()) {
+      // nothing to do
+      return true;
+    }
+
+    bool dataPointsOk = !analysis().dataPointsAreInvalid();
+
+    Problem problem = analysis().problem();
+    OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::OpenStudioPostProcess);
+    if (!index) {
+      return false;
+    }
+
+    std::vector<BCLMeasure> patMeasures = BCLMeasure::patApplicationMeasures();
+    std::vector<BCLMeasure>::const_iterator it = std::find_if(
+          patMeasures.begin(),
+          patMeasures.end(),
+          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,calibrationReportMeasureUUID()));
+    OS_ASSERT(it != patMeasures.end());
+    BCLMeasure bclMeasure = insertMeasure(*it);
+
+    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure);
+
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.idf",
+                                "in.idf");
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.osm",
+                                "in.osm");
+    // be able to access OpenStudio Ruby bindings
+    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+
+    bool ok = problem.insert(*index,WorkflowStep(workItem));
+    if (!ok) {
+      return false;
+    }
+
+    // changing work items does not invalidate data points
+    if (dataPointsOk) {
+      OS_ASSERT(!analysis().dataPointsAreInvalid());
+    }
+    return true;
+  }
+
+  bool SimpleProject_Impl::clearCalibrationReportWorkflowStep() {
+    OptionalWorkflowStep step = getCalibrationReportWorkflowStep();
+    if (!step) {
+      // nothing to do
+      return true;
+    }
+
+    bool dataPointsOk = !analysis().dataPointsAreInvalid();
+
+    bool ok = analysis().problem().erase(*step);
+    if (!ok) {
+      return false;
+    }
+
+    // changing work items does not invalidate data points
+    if (dataPointsOk) {
+      OS_ASSERT(!analysis().dataPointsAreInvalid());
+    }
+    return true;
+  }
+
   void SimpleProject_Impl::save() const
   {
     analysis::Analysis analysis = this->analysis();
@@ -1778,6 +2009,14 @@ namespace detail {
     return toUUID("{d234ecee-c118-44e7-a381-db0a8917d751}");
   }
 
+  openstudio::UUID SimpleProject_Impl::standardReportMeasureUUID() {
+    return toUUID("fc337100-8634-404e-8966-01243d292a79");
+  }
+
+  openstudio::UUID SimpleProject_Impl::calibrationReportMeasureUUID() {
+    return toUUID("e6642d40-7366-4647-8724-53a37991d579");
+  }
+
 } // detail
 
 SimpleProjectOptions::SimpleProjectOptions()
@@ -2031,6 +2270,18 @@ boost::optional<analysis::MeasureGroup> SimpleProject::getAlternativeModelVariab
   return getImpl()->getAlternativeModelVariable();
 }
 
+boost::optional<analysis::WorkflowStep> SimpleProject::getStandardReportWorkflowStep() const {
+  return getImpl()->getStandardReportWorkflowStep();
+}
+
+bool SimpleProject::shouldIncludeCalibrationReports() const {
+  return getImpl()->shouldIncludeCalibrationReports();
+}
+
+boost::optional<analysis::WorkflowStep> SimpleProject::getCalibrationReportWorkflowStep() const {
+  return getImpl()->getCalibrationReportWorkflowStep();
+}
+
 std::pair<bool,std::vector<BCLMeasure> > SimpleProject::setSeed(const FileReference& currentSeedLocation,
                                                  ProgressBar* progressBar)
 {
@@ -2106,6 +2357,18 @@ bool SimpleProject::insertAlternativeModelVariable() {
   return getImpl()->insertAlternativeModelVariable();
 }
 
+bool SimpleProject::insertStandardReportWorkflowStep() {
+  return getImpl()->insertStandardReportWorkflowStep();
+}
+
+bool SimpleProject::insertCalibrationReportWorkflowStep() {
+  return getImpl()->insertCalibrationReportWorkflowStep();
+}
+
+bool SimpleProject::clearCalibrationReportWorkflowStep() {
+  return getImpl()->clearCalibrationReportWorkflowStep();
+}
+
 void SimpleProject::save() const {
   getImpl()->save();
 }
@@ -2141,6 +2404,9 @@ boost::optional<SimpleProject> createPATProject(const openstudio::path& projectD
     problem.push(WorkItem(JobType::EnergyPlusPreProcess));
     problem.push(WorkItem(JobType::EnergyPlus));
     problem.push(WorkItem(JobType::OpenStudioPostProcess));
+
+    result->insertStandardReportWorkflowStep();
+    OS_ASSERT(!result->shouldIncludeCalibrationReports());
   }
   return result;
 }
@@ -2151,15 +2417,48 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
   OptionalSimpleProject result = SimpleProject::open(projectDir,options);
   if (result) {
     bool save(false);
+    bool ok(true);
 
     // check for swap variable, try to add if not present
     if (!result->getAlternativeModelVariable()) {
-      bool ok = result->insertAlternativeModelVariable();
+      ok = result->insertAlternativeModelVariable();
       if (!ok) {
         result.reset();
         return result;
       }
       save = true;
+    }
+
+    // check for standard report, try to add if not present
+    if (!result->getStandardReportWorkflowStep()) {
+      ok = result->insertStandardReportWorkflowStep();
+      if (!ok) {
+        result.reset();
+        return result;
+      }
+      save = true;
+    }
+
+    // check and try to fix status of calibration report
+    if (result->shouldIncludeCalibrationReports()) {
+      if (!result->getCalibrationReportWorkflowStep()) {
+        ok = result->insertCalibrationReportWorkflowStep();
+        if (!ok) {
+          result.reset();
+          return result;
+        }
+        save = true;
+      }
+    }
+    else {
+      if (result->getCalibrationReportWorkflowStep()) {
+        ok = result->clearCalibrationReportWorkflowStep();
+        if (!ok) {
+          result.reset();
+          return result;
+        }
+        save = true;
+      }
     }
 
     if (!result->isPATProject()) {
@@ -2172,18 +2471,22 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
     OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::ModelToIdf);
     if (!index) {
       problem.push(WorkItem(JobType(JobType::ModelToIdf)));
+      save = true;
     }
     index = problem.getWorkflowStepIndexByJobType(JobType::ExpandObjects);
     if (!index) {
       problem.push(WorkItem(JobType(JobType::ExpandObjects)));
+      save = true;
     }
     index = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlusPreProcess);
     if (!index) {
       problem.push(WorkItem(JobType(JobType::EnergyPlusPreProcess)));
+      save = true;
     }
     index = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlus);
     if (!index) {
       problem.push(WorkItem(JobType(JobType::EnergyPlus)));
+      save = true;
     }
     index = problem.getWorkflowStepIndexByJobType(JobType::OpenStudioPostProcess);
     if (!index) {
