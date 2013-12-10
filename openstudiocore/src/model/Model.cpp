@@ -333,18 +333,11 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
-<<<<<<< HEAD
 	REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
 	REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
     REGISTER_CONSTRUCTOR(RefrigerationGasCoolerAirCooled);
 	REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
 	REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
-=======
-    REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
-    REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
-    REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
-    REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
->>>>>>> develop
     REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
     REGISTER_CONSTRUCTOR(RefrigerationSystem);
     REGISTER_CONSTRUCTOR(RefrigerationWalkIn);
@@ -620,16 +613,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserWaterCooled);
-<<<<<<< HEAD
     REGISTER_COPYCONSTRUCTORS(RefrigerationGasCoolerAirCooled);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
-=======
-    REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
-    REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
-    REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
->>>>>>> develop
     REGISTER_COPYCONSTRUCTORS(RefrigerationSystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkIn);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkInZoneBoundary);
