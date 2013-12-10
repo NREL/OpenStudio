@@ -1280,10 +1280,12 @@ ResultsTabView::ResultsTabView(const model::Model & model,
                                : MainTabView(tabLabel,hasSubTab,parent),
                                  m_resultsView(new ResultsView(model))
 {
-  QScrollArea *scrollarea = new QScrollArea();
-  scrollarea->setWidget(m_resultsView);
-  scrollarea->setWidgetResizable(true);
-  addTabWidget(scrollarea);
+  //QScrollArea *scrollarea = new QScrollArea();
+  //scrollarea->setWidget(m_resultsView);
+  //scrollarea->setWidgetResizable(true);
+  //addTabWidget(scrollarea);
+
+  addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
   bool isConnected = false;
