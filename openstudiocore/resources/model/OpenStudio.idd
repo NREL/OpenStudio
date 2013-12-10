@@ -10178,7 +10178,6 @@ OS:Coil:Heating:Desuperheater,
        \note such as solenoid valves, etc.
        \ip-units W
 
-<<<<<<< HEAD
 OS:Coil:WaterHeating:Desuperheater,
        \memo Desuperheater air heating coil. The heating energy provided by this coil is reclaimed
        \memo from the superheated refrigerant gas leaving a compressor and does not impact the
@@ -10310,8 +10309,6 @@ OS:Coil:WaterHeating:Desuperheater,
        \note Off-cycle parasitic power is 0 when the availability schedule is 0.
        \ip-units W
 
-=======
->>>>>>> Refrigeration_part_3
 OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
         \min-fields 8
    A1 , \field Handle
