@@ -4,11 +4,11 @@ PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 1)
-SET(CMAKE_VERSION_PATCH 2)
+SET(CMAKE_VERSION_PATCH 4)
 
 SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 FIND_PACKAGE(Git)
-IF(GIT_FOUND AND (CMAKE_VERSION_BUILD STREQUAL "Unknown" OR CMAKE_VERSION_BUILD STREQUAL ""))
+IF(GIT_FOUND)
   EXECUTE_PROCESS(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   TIMEOUT 10
@@ -80,10 +80,17 @@ IF(UNIX)
 ELSEIF(WIN32)
   IF(CMAKE_CL_64)
     SET(OPENSSL_PATH "OpenSSL-Win64")
+    IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+      MESSAGE(STATUS "Downloading OpenSSL (x64)")
+    ENDIF()
+    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win64.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 974FDD1EDD3CBDCC54A0EEEE0DBB00CC)
   ELSE()
     SET(OPENSSL_PATH "OpenSSL-Win32")
+    IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+      MESSAGE(STATUS "Downloading OpenSSL (x86)")
+    ENDIF()
+    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win32.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 890EA14E30C5BE3C4F9298DBC516AA33)
   ENDIF()
-  FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/${OPENSSL_PATH}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
   EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
   EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   SET(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
@@ -198,6 +205,10 @@ IF(APPLE)
     MESSAGE(FATAL_ERROR "OSX Sysroot must be set")
   ENDIF()
 
+  IF (CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*" OR CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+    MESSAGE(WARNING "You are building against the 10.9 SDK which means ruby 2.0")
+  ENDIF()
+
 ENDIF()
 
 include(ExternalProject)
@@ -262,7 +273,7 @@ ELSE()
   OPTION(BUILD_SWIG "Build SWIG" ON)
 ENDIF()
 
-FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH )
+FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH}  NO_SYSTEM_ENVIRONMENT_PATH )
 FIND_PACKAGE( Ruby )
 
 
@@ -279,7 +290,14 @@ IF (UNIX)
 ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
+  OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 ruby 2.0" OFF)
+  
+  IF(WIN32 AND MSVC AND CMAKE_CL_64)
+    MESSAGE(ERROR "Cannot use 32bit mingw build of ruby 2.0 with 64bit build of openstudio") 
+  ENDIF() 
+  
   MARK_AS_ADVANCED(BUILD_RUBY)
+  MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
 ENDIF()
 
 IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
@@ -351,21 +369,37 @@ IF(BUILD_RUBY)
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && nmake install
         )
       SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe )
-      set(RUBY_DLL x64-msvcr100-ruby200.dll)
-      set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
-      set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
+      SET(RUBY_DLL x64-msvcr100-ruby200.dll)
+      SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
+      SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
     ELSE()
-      # And windows requires mingw to build ruby, so we just unpackage it locally
-      ExternalProject_Add(Ruby
-        URL ${CMAKE_SOURCE_DIR}/dependencies/ruby-1.8.6-msvc.zip
-        URL_MD5 4ddb09388d9bc2c6dfdc47b01e0e8bb9
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        )
-      SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
-      set(RUBY_DLL msvcrt-ruby18.dll)
-      set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+      IF (BUILD_RUBY_MINGW32_2_0)
+        # And windows requires mingw to build ruby, so we just unpackage it locally
+        ExternalProject_Add(Ruby
+          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip
+          PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby 
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+        SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
+        SET(RUBY_DLL msvcrt-ruby200.dll)
+        SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby200.lib")
+      ELSE()
+        # And windows requires mingw to build ruby, so we just unpackage it locally
+        ExternalProject_Add(Ruby
+          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.6-msvc-ssl.zip
+          URL_MD5 d3fdb49726e63f123941f5f41f594149
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+        SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
+        SET(RUBY_DLL msvcrt-ruby18.dll)
+        SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby18.lib") 
+      ENDIF()
     ENDIF()
     
     
@@ -539,7 +573,7 @@ IF(BUILD_QT)
     ExternalProject_Add( Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
-      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
+      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-phonon -no-phonon-backend -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       PATCH_COMMAND ${APPLE_PATCH_COMMAND}
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile      
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && make -j1 install"

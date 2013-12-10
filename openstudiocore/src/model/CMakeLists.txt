@@ -137,6 +137,9 @@ SET( ${target_name}_src
   CoilCoolingWaterToAirHeatPumpEquationFit.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit.cpp
+  CoilHeatingDesuperheater.hpp
+  CoilHeatingDesuperheater_Impl.hpp
+  CoilHeatingDesuperheater.cpp
   CoilHeatingDXSingleSpeed.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXSingleSpeed.cpp
@@ -532,6 +535,9 @@ SET( ${target_name}_src
   RefrigerationCondenserWaterCooled.hpp
   RefrigerationCondenserWaterCooled_Impl.hpp
   RefrigerationCondenserWaterCooled.cpp
+  RefrigerationGasCoolerAirCooled.hpp
+  RefrigerationGasCoolerAirCooled_Impl.hpp
+  RefrigerationGasCoolerAirCooled.cpp
   RefrigerationSubcoolerLiquidSuction.hpp
   RefrigerationSubcoolerLiquidSuction_Impl.hpp
   RefrigerationSubcoolerLiquidSuction.cpp
@@ -901,6 +907,7 @@ SET( ${target_name}_moc
   CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
+  CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingElectric_Impl.hpp
@@ -949,7 +956,6 @@ SET( ${target_name}_moc
   ExteriorLightsDefinition_Impl.hpp
   Facility_Impl.hpp
   FanConstantVolume_Impl.hpp
-  FanOnOff_Impl.hpp
   FanVariableVolume_Impl.hpp
   FFactorGroundFloorConstruction_Impl.hpp
   Gas_Impl.hpp
@@ -1111,6 +1117,7 @@ SET( ${target_name}_test_src
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
+  test/CoilHeatingDesuperheater_GTest.cpp
   test/CoilHeatingDXSingleSpeed_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
@@ -1190,6 +1197,7 @@ SET( ${target_name}_test_src
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
   test/RefrigerationCondenserWaterCooled_GTest.cpp
+  test/RefrigerationGasCoolerAirCooled_GTest.cpp
   test/RefrigerationSubcoolerLiquidSuction_GTest.cpp
   test/RefrigerationSubcoolerMechanical_GTest.cpp
   test/RefrigerationSecondarySystem_GTest.cpp

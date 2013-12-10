@@ -59,6 +59,7 @@ class CoilCoolingDXTwoSpeed;
 class CoilCoolingDXVariableRefrigerantFlow;
 class CoilCoolingWater;
 class CoilCoolingWaterToAirHeatPumpEquationFit;
+class CoilHeatingDesuperheater;
 class CoilHeatingDXSingleSpeed;
 class CoilHeatingDXVariableRefrigerantFlow;
 class CoilHeatingElectric;
@@ -143,6 +144,7 @@ class RefrigerationCondenserAirCooled;
 class RefrigerationCondenserCascade;
 class RefrigerationCondenserEvaporativeCooled;
 class RefrigerationCondenserWaterCooled;
+class RefrigerationGasCoolerAirCooled;
 class RefrigerationSubcoolerLiquidSuction;
 class RefrigerationSubcoolerMechanical;
 class RefrigerationSecondarySystem;
@@ -328,6 +330,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilCoolingWaterToAirHeatPumpEquationFit( model::CoilCoolingWaterToAirHeatPumpEquationFit & modelObject );
 
+  boost::optional<IdfObject> translateCoilHeatingDesuperheater( model::CoilHeatingDesuperheater & modelObject );
+
   boost::optional<IdfObject> translateCoilHeatingDXSingleSpeed( model::CoilHeatingDXSingleSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingDXSingleSpeedWithoutUnitary( model::CoilHeatingDXSingleSpeed & modelObject );
@@ -497,6 +501,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateRefrigerationCondenserEvaporativeCooled( model::RefrigerationCondenserEvaporativeCooled & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationCondenserWaterCooled( model::RefrigerationCondenserWaterCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationGasCoolerAirCooled( model::RefrigerationGasCoolerAirCooled & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationSubcoolerLiquidSuction( model::RefrigerationSubcoolerLiquidSuction & modelObject );
 

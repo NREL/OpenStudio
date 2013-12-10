@@ -340,17 +340,6 @@ namespace openstudio{
     return result;
   }
 
-  Point3d getCombinedPoint(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
-  {
-    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
-      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
-        return otherPoint;
-      }
-    }
-    allPoints.push_back(point3d);
-    return point3d;
-  }
-
   // convert a Point3d to a BoostPoint
   boost::tuple<double, double> boostPointFromPoint3d(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
   {

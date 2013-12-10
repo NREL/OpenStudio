@@ -516,11 +516,12 @@ namespace detail {
       // unzip 
       UnzipFile unzip(zipPath);
       unzip.extractAllFiles(directory());
-      boost::filesystem::remove(zipPath);
     }catch(const std::exception&){
       LOG(Info,"Could not unzip dataPoint.zip file in directory '" << toString(directory()) << "'.");
       return false;
     }
+
+    boost::filesystem::remove(zipPath);
 
     // fix up topLevelJob
     OS_ASSERT(m_topLevelJob);
@@ -528,7 +529,6 @@ namespace detail {
       // files are now in directory(), need to update paths
       runManager->updateJob(*m_topLevelJob, directory());
     }
-
 
     // get file references for
     //   m_osmInputData

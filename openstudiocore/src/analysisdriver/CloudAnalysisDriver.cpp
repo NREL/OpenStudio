@@ -61,6 +61,7 @@ namespace detail {
       m_lastDownloadDetailedResultsSuccess(false),
       m_status(AnalysisStatus::Idle),
       m_processingQueuesInitialized(false),
+      m_batchSize(0),
       m_analysisNotRunningCount(0),
       m_maxAnalysisNotRunningCount(0),
       m_dataPointsNotRunningCount(0),
@@ -553,7 +554,7 @@ namespace detail {
 
     if (success) {
       if (m_requestRun->lastDataPointUUIDs().empty()) {
-        LOG(Debug,"There are not data points, go ahead and upload the analysis files.");
+        LOG(Debug,"There are no data points, go ahead and upload the analysis files.");
         // no data points posted yet, upload the analysis files
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
@@ -596,7 +597,7 @@ namespace detail {
     if (success) {
       LOG(Debug,"The analysis files were successfully uploaded. Start posting data points.");
       // start posting DataPoints
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)),Qt::QueuedConnection);
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsQueued(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       // initialize queue
@@ -671,7 +672,7 @@ namespace detail {
       if (m_postQueue.size() > 0) {
         LOG(Debug,"Have some data points to post, so do it.");
         // start posting DataPoints
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsQueued(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = postNextDataPointBatch();
@@ -708,7 +709,7 @@ namespace detail {
 
   }
 
-  void CloudAnalysisDriver_Impl::dataPointQueued(bool success) {
+  void CloudAnalysisDriver_Impl::dataPointsQueued(bool success) {
 
     if (!success) {
       logError("Run request failed on trying to post a data point.");
@@ -718,12 +719,20 @@ namespace detail {
       success = m_requestRun->lastPostDataPointJSONSuccess();
       if (success) {
 
-        OS_ASSERT(!m_waitingQueue.empty());
-        DataPoint lastQueued = m_waitingQueue.back();
-        boost::optional<Job> topLevelJob = lastQueued.topLevelJob();
-        OS_ASSERT(topLevelJob);
-        topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
-        // no need to call updateJob because we have the same job that is in the database
+        OS_ASSERT(m_waitingQueue.size() >= m_batchSize);
+        DataPointVector::iterator batchStart = m_waitingQueue.end();
+        for (unsigned i = 0; i < m_batchSize; ++i) {
+          --batchStart;
+        }
+        DataPointVector batch(batchStart,m_waitingQueue.end());
+        OS_ASSERT(batch.size() == m_batchSize);
+
+        BOOST_FOREACH(DataPoint& queued,batch) {
+          boost::optional<Job> topLevelJob = queued.topLevelJob();
+          OS_ASSERT(topLevelJob);
+          topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
+          // no need to call updateJob because we have the same job that is in the database
+        }
         project().save();
 
       }else{
@@ -732,12 +741,12 @@ namespace detail {
     }
 
     if (success) {
-      LOG(Debug,"Data point successfully posted.");
+      LOG(Debug,"Data points successfully posted.");
       // see if you make another post or go on to starting the analysis
       if (m_postQueue.empty()) {
         LOG(Debug,"All done posting data points, see if this analysis is already running on the server.");
         // done posting --move on
-        bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)));
+        bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsQueued(bool)));
         OS_ASSERT(test);
 
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningOnServer(bool)),Qt::QueuedConnection);
@@ -1377,6 +1386,7 @@ namespace detail {
     m_detailsFailures.clear();
 
     m_processingQueuesInitialized = false;
+    m_batchSize = 0;
     m_analysisNotRunningCount = 0;
     m_maxAnalysisNotRunningCount = 0;
     m_dataPointsNotRunningCount = 0;
@@ -1420,7 +1430,7 @@ namespace detail {
 
   bool CloudAnalysisDriver_Impl::postNextDataPointBatch() {
     DataPointVector batch;
-    while (!m_postQueue.empty() && batch.size() < 50u) {
+    while (!m_postQueue.empty() && batch.size() < 10u) {
       DataPoint toQueue = m_postQueue.front();
       if (toQueue.runType() == DataPointRunType::Local) {
         toQueue.setRunType(DataPointRunType::CloudSlim);
@@ -1433,6 +1443,7 @@ namespace detail {
     // get json before we add the dummy job
     std::string batchJson = toJSON(batch);
     bool result = m_requestRun->startPostDataPointJSON(project().analysis().uuid(), batchJson);
+    m_batchSize = batch.size();
 
     if (result) {
 
@@ -1487,12 +1498,10 @@ namespace detail {
           OS_ASSERT(false);
         }
 
-        // DLM: Elaine do we need to do this here?  Saving after each data point is very costly, could we do this at the end on either 
-        // successful completion or failure?
-        project().save();
-
         emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
       }
+
+      project().save();
     }
 
     // caller will register failure if !result
