@@ -23,8 +23,32 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlus-0/eplusout.sql"
   end
   
+  def reportPath
+    return "./report.html"
+  end
+  
   # create test files if they do not exist
   def setup
+    if File.exist?(modelPath())
+      #FileUtils.rm(modelPath())
+    end
+    if File.exist?(runDir())
+      #FileUtils.rm_rf(runDir())
+    end
+    if File.exist?(reportPath())
+      #FileUtils.rm(reportPath())
+    end
+    
+    # check that the measure is not out of date
+    #measure_path = OpenStudio::system_complete(OpenStudio::Path.new("#{File.dirname(__FILE__)}/../"))
+    #measure = OpenStudio::BCLMeasure.new(measure_path)
+    #assert_equal("Reporting Measure", measure.name())
+    #if (measure.checkForUpdates())
+    #  puts "Measure is out of date, automatically saving"
+    #  measure.save()
+    #end
+    #assert((not measure.checkForUpdates()))
+    
     if not File.exist?(modelPath())
       puts "Creating example model"
       model = OpenStudio::Model::exampleModel()
@@ -53,10 +77,13 @@ class ReportingMeasure_Test < Test::Unit::TestCase
   # delete test files, comment this out if you do not want to run EnergyPlus each time you run tests
   def teardown
     if File.exist?(modelPath())
-      FileUtils.rm(modelPath())
+      #FileUtils.rm(modelPath())
     end
     if File.exist?(runDir())
-      FileUtils.rm_rf(runDir())
+      #FileUtils.rm_rf(runDir())
+    end
+    if File.exist?(reportPath())
+      #FileUtils.rm(reportPath())
     end
   end
   
@@ -75,12 +102,6 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     # get arguments and test that they are what we are expecting
     arguments = measure.arguments()
     assert_equal(0, arguments.size)
-
-    # set argument values to bad values and run the measure
-    argument_map = OpenStudio::Ruleset::OSArgumentMap.new
-    measure.run(runner, argument_map)
-    result = runner.result
-    assert(result.value.valueName == "Fail")
     
     # set up runner, this will happen automatically when measure is run in PAT
     runner.setLastOpenStudioModelPath(OpenStudio::Path.new(modelPath))    
@@ -93,7 +114,9 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     show_output(result)
     assert(result.value.valueName == "Success")
     assert(result.warnings.size == 0)
-    assert(result.info.size == 4)
+    #assert(result.info.size == 1)
+    
+    assert(File.exist?(reportPath()))
     
   end  
 
