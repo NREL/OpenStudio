@@ -2495,7 +2495,8 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
     }
 
     if (result->analysis().resultsAreInvalid()) {
-      // HERE -- Yuck, but needed to make the code work right now!
+      // ETH: Yuck, but needed to make the code work with the addition of our standard
+      // reporting measures!
       result->clearAllResults();
       save = true;
     }
