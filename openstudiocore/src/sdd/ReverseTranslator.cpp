@@ -694,11 +694,33 @@ namespace sdd {
       {
         model::OutputVariable var("Zone Air Temperature",*result);
         var.setReportingFrequency(interval);
+      }
 
-        var = model::OutputVariable("Zone Air Terminal VAV Damper Position",*result);
+      // SimVarsHVACZn
+
+      QDomElement simVarsHVACZnElement = projectElement.firstChildElement("SimVarsHVACZn");
+
+      if( simVarsHVACZnElement.text().toInt() == 1 )
+      {
+        model::OutputVariable var("Zone Air Terminal VAV Damper Position",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Zone Air Terminal Outdoor Air Volume Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone Packaged Terminal Heat Pump Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone Packaged Terminal Heat Pump Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone Packaged Terminal Air Conditioner Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone Packaged Terminal Air Conditioner Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Baseboard Total Heating Rate",*result);
         var.setReportingFrequency(interval);
       }
 
@@ -752,7 +774,7 @@ namespace sdd {
         }
       }
 
-      // SimVarsHVACSec
+      // SimVarsHVACPri
 
       QDomElement simVarsHVACPriElement = projectElement.firstChildElement("SimVarsHVACPri");
 
@@ -797,34 +819,28 @@ namespace sdd {
         var = model::OutputVariable("Boiler Ancillary Electric Power",*result);
         var.setReportingFrequency(interval);
 
+        var = model::OutputVariable("Plant Supply Side Cooling Demand Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Plant Supply Side Heating Demand Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Chiller Evaporator Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Boiler Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Plant Supply Side Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Plant Supply Side Outlet Temperature",*result);
+        var.setReportingFrequency(interval);
       }
 
-      if( ! result->getModelObjects<model::PlantLoop>().empty() )
-      {
-        model::OutputVariable var("Plant Supply Side Cooling Demand Rate",*result);
-        var.setReportingFrequency("hourly");
-
-        model::OutputVariable var2("Plant Supply Side Heating Demand Rate",*result);
-        var2.setReportingFrequency("hourly");
-      }
-
-      if( ! result->getModelObjects<model::ChillerElectricEIR>().empty() )
-      {
-        model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
-        var.setReportingFrequency("hourly");
-      }
-
-      if( ! result->getModelObjects<model::CoolingTowerSingleSpeed>().empty() )
-      {
-        model::OutputVariable var("Cooling Tower Heat Transfer Rate",*result);
-        var.setReportingFrequency("hourly");
-      }
-
-      if( ! result->getModelObjects<model::BoilerHotWater>().empty() )
-      {
-        model::OutputVariable var("Boiler Heating Rate",*result);
-        var.setReportingFrequency("hourly");
-      }
 
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
       rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
