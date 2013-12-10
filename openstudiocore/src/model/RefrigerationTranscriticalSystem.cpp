@@ -29,8 +29,8 @@
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/ModelObjectList.hpp>
 #include <model/ModelObjectList_Impl.hpp>
-// #include <model/RefrigerationGasCoolerAirCooled.hpp>
-// #include <model/RefrigerationGasCoolerAirCooled.hpp>
+#include <model/RefrigerationGasCoolerAirCooled.hpp>
+#include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Model.hpp>
@@ -311,9 +311,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_TranscriticalSystemFields::LowTemperatureRefrigeratedCaseAndWalkInListName);
   }
 
-  // boost::optional<RefrigerationGasCoolerAirCooled> RefrigerationTranscriticalSystem_Impl::refrigerationGasCooler() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<RefrigerationAllTypesGasCooler>(OS_Refrigeration_TranscriticalSystemFields::RefrigerationGasCoolerName);
-  // }
+  boost::optional<RefrigerationGasCoolerAirCooled> RefrigerationTranscriticalSystem_Impl::refrigerationGasCooler() const {
+    return getObject<ModelObject>().getModelObjectTarget<RefrigerationGasCoolerAirCooled>(OS_Refrigeration_TranscriticalSystemFields::RefrigerationGasCoolerName);
+  }
 
   boost::optional<ModelObjectList> RefrigerationTranscriticalSystem_Impl::highPressureCompressorList() const {
     return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_TranscriticalSystemFields::HighPressureCompressorListName);
@@ -409,10 +409,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  // bool RefrigerationTranscriticalSystem_Impl::setRefrigerationGasCooler(const RefrigerationAllTypesGasCooler& refrigerationAllTypesGasCooler) {
-  //   bool result = setPointer(OS_Refrigeration_TranscriticalSystemFields::RefrigerationGasCoolerName, refrigerationAllTypesGasCooler.handle());
-  //   return result;
-  // }
+  bool RefrigerationTranscriticalSystem_Impl::setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled) {
+    bool result = setPointer(OS_Refrigeration_TranscriticalSystemFields::RefrigerationGasCoolerName, refrigerationGasCoolerAirCooled.handle());
+    return result;
+  }
 
   bool RefrigerationTranscriticalSystem_Impl::setHighPressureCompressorList(const ModelObjectList& modelObjectList) {
     bool result = setPointer(OS_Refrigeration_TranscriticalSystemFields::HighPressureCompressorListName, modelObjectList.handle());
@@ -679,9 +679,9 @@ void RefrigerationTranscriticalSystem::removeAllLowPressureCompressors() {
 //   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList();
 // }
 
-// boost::optional<RefrigerationGasCoolerAirCooled> RefrigerationTranscriticalSystem::refrigerationGasCooler() const {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->refrigerationGasCooler();
-// }
+boost::optional<RefrigerationGasCoolerAirCooled> RefrigerationTranscriticalSystem::refrigerationGasCooler() const {
+  return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->refrigerationGasCooler();
+}
 
 // boost::optional<ModelObjectList> RefrigerationTranscriticalSystem::highPressureCompressorList() const {
 //   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->highPressureCompressorList();
@@ -755,9 +755,9 @@ bool RefrigerationTranscriticalSystem::isEndUseSubcategoryDefaulted() const {
 //   getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetLowTemperatureRefrigeratedCaseAndWalkInList();
 // }
 
-// bool RefrigerationTranscriticalSystem::setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled) {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationGasCooler(refrigerationGasCoolerAirCooled);
-// }
+bool RefrigerationTranscriticalSystem::setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled) {
+  return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationGasCooler(refrigerationGasCoolerAirCooled);
+}
 
 // bool RefrigerationTranscriticalSystem::setHighPressureCompressorList(const ModelObjectList& modelObjectList) {
 //   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setHighPressureCompressorList(modelObjectList);

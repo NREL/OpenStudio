@@ -1204,6 +1204,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationSystem(refrigerationSystem);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_TranscriticalSystem :
+    {
+      model::RefrigerationTranscriticalSystem refrigerationTranscriticalSystem = modelObject.cast<RefrigerationTranscriticalSystem>();
+      retVal = translateRefrigerationTranscriticalSystem(refrigerationTranscriticalSystem);
+      break;
+    }    
   case openstudio::IddObjectType::OS_Refrigeration_WalkIn :
     {
       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
@@ -1807,6 +1813,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
+  result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

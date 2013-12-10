@@ -149,6 +149,7 @@ class RefrigerationSubcoolerLiquidSuction;
 class RefrigerationSubcoolerMechanical;
 class RefrigerationSecondarySystem;
 class RefrigerationSystem;
+class RefrigerationTranscriticalSystem;
 class RefrigerationWalkIn;
 class RoofVegetation;
 class RunPeriod;
@@ -511,6 +512,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateRefrigerationSecondarySystem( model::RefrigerationSecondarySystem & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationSystem( model::RefrigerationSystem & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationTranscriticalSystem( model::RefrigerationTranscriticalSystem & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationWalkIn( model::RefrigerationWalkIn & modelObject );
 

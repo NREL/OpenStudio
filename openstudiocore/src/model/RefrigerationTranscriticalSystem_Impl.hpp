@@ -31,7 +31,7 @@ class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
 class ModelObjectList;
-// class RefrigerationGasCoolerAirCooled;
+class RefrigerationGasCoolerAirCooled;
 class ThermalZone;
 
 namespace detail {
@@ -139,7 +139,7 @@ namespace detail {
     boost::optional<ModelObjectList> lowTemperatureRefrigeratedCaseAndWalkInList() const;
 
     // TODO: Check return type. From object lists, some candidates are: RefrigerationGasCoolerAirCooled.
-    // boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
+    boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
 
     // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> highPressureCompressorList() const;
@@ -188,7 +188,7 @@ namespace detail {
     void resetLowTemperatureRefrigeratedCaseAndWalkInList();
 
     // TODO: Check argument type. From object lists, some candidates are: RefrigerationGasCoolerAirCooled.
-    // bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
+    bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
 
     // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setHighPressureCompressorList(const ModelObjectList& modelObjectList);
