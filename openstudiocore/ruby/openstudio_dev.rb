@@ -77,6 +77,15 @@ require 'openstudiosdd'
 # restore original path
 ENV['PATH'] = original_path
 
+if OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_RubyBinaryDir}"))
+  puts "OpenSSL loaded"
+elsif OpenStudio::RemoteBCL::initializeSSL()
+  puts "OpenSSL loaded"
+else
+  raise "Unable to initialize OpenSSL: Verify that ruby can assess the OpenSSL libraries"
+end  
+
+
 # Find current ruby path, we may need this for launching ruby jobs later
 begin
 

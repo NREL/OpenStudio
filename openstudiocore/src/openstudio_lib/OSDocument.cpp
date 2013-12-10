@@ -177,6 +177,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening
+  options.setInitializeRunManagerUI(true);
   options.setLogLevel(Debug);
 
   // initialize project object

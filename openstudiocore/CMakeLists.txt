@@ -912,18 +912,7 @@ IF (NOT UNIX)
     
   install( DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION . )
   
-  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/ruby-install")
-  
-  execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/ruby-install"
-    RESULT_VARIABLE rv)
-  
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/ruby-1.8.6-msvc.zip"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install"
-    RESULT_VARIABLE rv)
-  
-  file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/ruby-install/ruby/bin")
-  
-  install( DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install" DESTINATION . )
+  install( DIRECTORY "${CMAKE_BINARY_DIR}/../../../Ruby-prefix/src/Ruby/" DESTINATION "ruby-install/ruby" )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   INCLUDE(InstallRequiredSystemLibraries)

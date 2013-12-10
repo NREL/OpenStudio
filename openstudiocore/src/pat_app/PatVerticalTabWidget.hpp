@@ -44,7 +44,7 @@ class PatVerticalTabWidget : public QWidget
 
   PatVerticalTabWidget(QWidget * parent = 0);
 
-  virtual ~PatVerticalTabWidget() {}
+  virtual ~PatVerticalTabWidget();
   
   void addTab( int id,
                QString toolTip,
