@@ -72,6 +72,10 @@ namespace detail {
 
     virtual unsigned outletPort();
 
+    virtual bool addToThermalZone(ThermalZone & thermalZone);
+
+    virtual void removeFromThermalZone();
+
     //@}
     /** @name Getters */
     //@{

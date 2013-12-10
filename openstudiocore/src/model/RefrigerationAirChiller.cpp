@@ -25,6 +25,8 @@
 #include <model/Schedule_Impl.hpp>
 // #include <model/CurveLinear.hpp>
 // #include <model/CurveLinear_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <model/Model.hpp>
@@ -128,6 +130,16 @@ namespace detail {
   unsigned RefrigerationAirChiller_Impl::outletPort()
   {
     return OS_Refrigeration_AirChillerFields::AirOutletNodeName;
+  }
+
+  bool RefrigerationAirChiller_Impl::addToThermalZone(ThermalZone & thermalZone)
+  {
+    return ZoneHVACComponent_Impl::addToThermalZone(thermalZone);
+  }
+
+  void RefrigerationAirChiller_Impl::removeFromThermalZone()
+  {
+    ZoneHVACComponent_Impl::removeFromThermalZone();
   }
 
   boost::optional<Schedule> RefrigerationAirChiller_Impl::availabilitySchedule() const {

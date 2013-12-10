@@ -11,6 +11,7 @@
 %import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
+%import <model/ModelHVAC.i>
 
 #if defined SWIGCSHARP
 
