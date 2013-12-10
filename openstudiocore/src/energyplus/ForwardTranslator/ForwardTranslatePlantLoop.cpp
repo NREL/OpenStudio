@@ -394,6 +394,12 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         coolingComponents.push_back(*it);
         break;
       }
+      case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
+      {
+        condenserComponents.push_back(*it);
+        coolingComponents.push_back(*it);
+        break;
+      }
       default:
       {
         break;
