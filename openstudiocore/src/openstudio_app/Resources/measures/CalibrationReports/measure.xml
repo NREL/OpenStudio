@@ -1,7 +1,7 @@
 <measure>
   <name>Calibration Reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>9f65688c-5af2-4b6c-b274-5fe75d567822</version_id>
+  <version_id>50cd9091-df2f-45c6-b0f5-6bdd25ee70ae</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -22,18 +22,6 @@
   </attributes>
   <files>
     <file>
-      <filename>CalibrationReports_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>B33AA8BD</checksum>
-    </file>
-    <file>
-      <filename>House1203_a_ver112.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>E70C6B2A</checksum>
-    </file>
-    <file>
       <filename>report.html.in</filename>
       <filetype>in</filetype>
       <usage_type>resource</usage_type>
@@ -47,7 +35,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>26FA5FDC</checksum>
+      <checksum>C9CEAB5B</checksum>
+    </file>
+    <file>
+      <filename>ExampleModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>C24F8C60</checksum>
+    </file>
+    <file>
+      <filename>CalibrationReports_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BA0F1AB6</checksum>
     </file>
   </files>
 </measure>

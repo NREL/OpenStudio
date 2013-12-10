@@ -4371,8 +4371,8 @@ OS:Rendering:Color,
 
 OS:YearDescription,
   {fb706778-97ec-4b68-a089-0dea130bfeed}, !- Handle
-  2012,                                   !- Calendar Year
-  ,                                       !- Day of Week for Start Day
+  ,                                       !- Calendar Year
+  Sunday,                                 !- Day of Week for Start Day
   ;                                       !- Is Leap Year
 
 OS:RadianceParameters,
@@ -4441,9 +4441,9 @@ OS:RunPeriod,
   {32e4d7b1-356a-43d8-b3e5-edf6dd866c85}, !- Handle
   Run Period 1,                           !- Name
   1,                                      !- Begin Month
-  2,                                      !- Begin Day of Month
+  1,                                      !- Begin Day of Month
   12,                                     !- End Month
-  30,                                     !- End Day of Month
+  31,                                     !- End Day of Month
   ,                                       !- Use Weather File Holidays and Special Days
   ,                                       !- Use Weather File Daylight Saving Period
   ,                                       !- Apply Weekend Holiday Rule
@@ -8016,25 +8016,25 @@ OS:Rendering:Color,
 
 OS:WeatherFile,
   {82115850-a8c0-4ee3-82f9-e058e4cb6c4a}, !- Handle
-  KBDU,                                   !- City
-  KBDU,                                   !- State Province Region
-  KBDU,                                   !- Country
-  TMY2,                                   !- Data Source
-  57167,                                  !- WMO Number
-  40.033,                                 !- Latitude {deg}
-  -105.233,                               !- Longitude {deg}
+  Denver Centennial  Golden   Nr,         !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  TMY3,                                   !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
   -7,                                     !- Time Zone {hr}
-  1612,                                   !- Elevation {m}
-  file:files/SPtMasterTable_57167_2012_amy.epw, !- Url
-  FEC2CEC8;                               !- Checksum
+  1829,                                   !- Elevation {m}
+  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
+  3CF64E88;                               !- Checksum
 
 OS:Site,
   {8b52a327-429f-42c5-905e-2f30a140b77a}, !- Handle
   Site 1,                                 !- Name
-  40.033,                                 !- Latitude {deg}
-  -105.233,                               !- Longitude {deg}
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
   -7,                                     !- Time Zone {hr}
-  1612,                                   !- Elevation {m}
+  1829,                                   !- Elevation {m}
   ;                                       !- Terrain
 
 OS:SpaceType,

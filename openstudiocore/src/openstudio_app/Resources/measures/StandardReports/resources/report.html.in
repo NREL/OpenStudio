@@ -72,7 +72,7 @@ function outputTable(name, units, obj) {
     $table.append('<thead>').children('thead').append('<tr />').children('tr').append('<th>&nbsp;</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th><th>Total</th>');
     var $tbody = $table.append('<tbody />').children('tbody');
     var key;
-    var totalTotal;
+    var totalTotal = 0;
     var columnTotal = new Array();
     for (key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -90,7 +90,8 @@ function outputTable(name, units, obj) {
         }
     }
     // Append column totals as new, last row of table
-    columnTotal[columnTotal.length] = totalTotal
+    if (columnTotal[columnTotal.length] === undefined) columnTotal[columnTotal.length] = 0;
+    columnTotal[columnTotal.length-1] = totalTotal
     var $row = $tbody.append('<tr />').children('tr:last');
     $row.append("<td>Total</td>");
     for (i = 0; i < columnTotal.length; i++) {
@@ -201,7 +202,7 @@ for (var c in charts) {
 
   if(c == charts.length - 1){
     var legend = svg.selectAll(".legend")
-        .data(color.domain().slice().reverse())
+        .data(color.domain().slice())
       .enter().append("g")
         .attr("class", "legend")
         .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
