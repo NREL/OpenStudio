@@ -260,12 +260,13 @@ namespace openstudio {
       void onObjectRemoved(const WorkspaceObject& workspaceObject);
       void updateReportButtons();
       void treeChanged(const openstudio::UUID &t_uuid);
-      void resultFileChanged( int index);
+      void comboBoxChanged(int index);
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
       static openstudio::Unit getUnit(openstudio::EndUseFuelType t_type, bool t_isIP);
       openstudio::runmanager::RunManager runManager();
+      void populateComboBox(  std::vector<openstudio::path> reports);
 
       openstudio::model::Model m_model;
       bool m_isIP;
@@ -292,7 +293,7 @@ namespace openstudio {
       openstudio::path m_radianceResultsPath;
 
       QWebView * m_view;
-      QComboBox * m_files;
+      QComboBox * m_comboBox;
   };
 
   class ResultsTabView : public MainTabView

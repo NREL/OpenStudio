@@ -33,6 +33,7 @@
 #include <QButtonGroup>
 #include <QComboBox>
 #include <QDir>
+#include <QDomDocument>
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
@@ -1396,10 +1397,10 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   // Make Selection Button Widget
   
   hLayout = new QHBoxLayout(this);
-  m_reportLabel = new QLabel("View: ",this);
+  m_reportLabel = new QLabel("Reports: ",this);
   m_reportLabel->setObjectName("H2");
   m_reportLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-  hLayout->addWidget(m_reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
+  hLayout->addWidget(m_reportLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   buttonGroup = new QButtonGroup(this);
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
@@ -1425,13 +1426,13 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   m_calibrationResultsBtn->hide();
   webKitBtn->hide();
 
-  m_files = new QComboBox(this);
+  m_comboBox = new QComboBox(this);
 
-  isConnected = connect(m_files, SIGNAL(currentIndexChanged( int )),
-    this, SLOT(resultFileChanged( int )));
+  isConnected = connect(m_comboBox, SIGNAL(currentIndexChanged( int )),
+    this, SLOT(comboBoxChanged( int )));
   OS_ASSERT(isConnected);
 
-  hLayout->addWidget(m_files, 0, Qt::AlignLeft | Qt::AlignTop);
+  hLayout->addWidget(m_comboBox, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   hLayout->addStretch();
 
@@ -1602,12 +1603,12 @@ void ResultsView::updateReportButtons()
   }
 
   if (!showUtilityCalibration){
-    m_reportLabel->setVisible(false);
+    //m_reportLabel->setVisible(false);
     //m_standardResultsBtn->setVisible(false);
     //m_calibrationResultsBtn->setVisible(false);
     //m_standardResultsBtn->click();
   }else{
-    m_reportLabel->setVisible(true);
+    //m_reportLabel->setVisible(true);
     // NOTE: Always leave these buttons hidden
     //m_standardResultsBtn->setVisible(true);
     //m_calibrationResultsBtn->setVisible(true);
@@ -1629,6 +1630,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
 
   std::vector<openstudio::path> eplusout;
   std::vector<openstudio::path> radout;
+  std::vector<openstudio::path> reports;
 
   for ( boost::filesystem::basic_recursive_directory_iterator<openstudio::path> end, dir(t_runDir); 
         dir != end; 
@@ -1640,6 +1642,8 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
       eplusout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "radout.sql") {
       radout.push_back(p);
+    } else if (openstudio::toString(p.filename()) == "report.html") {
+      reports.push_back(p);
     }
   }
 
@@ -1647,6 +1651,8 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   openstudio::path rad = radout.empty()?openstudio::path():radout.back();
 
   resultsGenerated(eplus, rad);
+
+  populateComboBox(reports);
 }
 
 void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstudio::path &t_radianceResultsPath)
@@ -1702,31 +1708,17 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
 
     QString fullPathString;
     openstudio::path path;
-    std::string filename;
 
     if (status == openstudio::runmanager::TreeStatusEnum::Finished)
     {
       try {
-        int i = 1;
-        QString num;
         openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
         std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
-        m_files->clear();
-        m_files->blockSignals(true);
+        std::vector<openstudio::path> reports;
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
-          filename = file.filename;
-          path = file.fullPath;
-          fullPathString = toQString(path.string());
-          fullPathString.prepend("file:///");
-          m_files->addItem(num.setNum(m_files->count() + 1),fullPathString);
+          reports.push_back(file.fullPath);
         }
-        for(int i = 0; i < m_files->count(); i++){
-          resultFileChanged(i);
-        }
-        if(m_files->count()){
-          m_files->setCurrentIndex(0);
-        }
-        m_files->blockSignals(false);
+        populateComboBox(reports);
       } catch (const std::exception &e) {
         LOG(Debug, "Tree finished, error getting html file: " << e.what());
       } catch (...) {
@@ -1742,9 +1734,41 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
   }
 }
 
-void ResultsView::resultFileChanged(int index)
+void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 {
-  QString filename = m_files->itemData(index).toString();
+  QString num;
+  QString fullPathString;
+  openstudio::path path;
+
+  m_comboBox->clear();
+  Q_FOREACH(openstudio::path report, reports){
+    fullPathString = toQString(report.string());
+    QFile file(fullPathString);
+    fullPathString.prepend("file:///");
+    if (file.open(QFile::ReadOnly)){
+      QDomDocument doc;
+      doc.setContent(&file);
+      file.close();
+      QString string = doc.toString();
+      int startingIndex = string.indexOf("<title>");
+      int endingIndex = string.indexOf("</title>");
+      if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
+        m_comboBox->addItem(num.setNum(m_comboBox->count() + 1),fullPathString);
+      } else {
+        // length of "<title>" = 7
+        QString title = string.mid(startingIndex+7, endingIndex-startingIndex-7);
+        m_comboBox->addItem(title,fullPathString);
+      }
+    }
+  }
+  if(m_comboBox->count()){
+    m_comboBox->setCurrentIndex(0);
+  }
+}
+
+void ResultsView::comboBoxChanged(int index)
+{
+  QString filename = m_comboBox->itemData(index).toString();
   m_view->load(QUrl(filename));
 }
 
