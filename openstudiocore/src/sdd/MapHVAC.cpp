@@ -3217,6 +3217,8 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
         terminal.setMaximumReheatAirTemperature(value);
       }
 
+      terminal.setMaximumFlowFractionDuringReheat(1.0);
+
       terminal.setDamperHeatingAction("Reverse");
 
       if( airLoopHVAC )
