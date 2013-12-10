@@ -2516,6 +2516,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   QDomElement daylightingGlareAzimuthElement = thermalZoneElement.firstChildElement("DayltgGlrAz");
   QDomElement daylightingMaxGlareElement = thermalZoneElement.firstChildElement("DayltgMaxGlrIdx");
 
+  QDomElement daylightingControlTypeElement = thermalZoneElement.firstChildElement("DayltgCtrlType");
+  QDomElement daylightingNumberOfControlStepsElement = thermalZoneElement.firstChildElement("DayltgNumOfCtrlSteps");
+
   boost::optional<double> daylightingMinLighting;
   if (!daylightingMinLightingElement.isNull()){
     daylightingMinLighting = daylightingMinLightingElement.text().toDouble();
@@ -2532,6 +2535,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   if (!daylightingMaxGlareElement.isNull()){
     daylightingMaxGlare = daylightingMaxGlareElement.text().toDouble();
   }
+  boost::optional<std::string> daylightingControlType;
+  if (!daylightingControlTypeElement.isNull()){
+    daylightingControlType = toString(daylightingControlTypeElement.text());
+  }
+  boost::optional<int> daylightingNumberOfControlSteps;
+  if (!daylightingNumberOfControlStepsElement.isNull()){
+    daylightingNumberOfControlSteps = daylightingNumberOfControlStepsElement.text().toInt();
+  }
 
   // first point
   boost::optional<model::DaylightingControl> daylightingControl1;
@@ -2547,7 +2558,31 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     daylightingControl1->setPositionYCoordinate(y);
     daylightingControl1->setPositionZCoordinate(z);
     daylightingControl1->setIlluminanceSetpoint(setpoint);
-    daylightingControl1->setLightingControlType("Continuous");
+
+    if (daylightingControlType){
+      if (istringEqual(*daylightingControlType, "SteppedSwitching") || istringEqual(*daylightingControlType, "SteppedDimming")){
+        ok = daylightingControl1->setLightingControlType("Stepped");
+        if (!ok){
+          LOG(Error, "Could not set daylighting control type to 'Stepped'");
+        }
+        if (daylightingNumberOfControlSteps){
+          daylightingControl1->setNumberofSteppedControlSteps(*daylightingNumberOfControlSteps);
+        }
+      }else if (istringEqual(*daylightingControlType, "Continuous")){
+        ok = daylightingControl1->setLightingControlType("Continuous");
+        if (!ok){
+          LOG(Error, "Could not set daylighting control type to 'Continuous'");
+        }
+      }else if (istringEqual(*daylightingControlType, "ContinuousPlusOff")){
+        ok = daylightingControl1->setLightingControlType("Continuous/Off");
+        if (!ok){
+          LOG(Error, "Could not set daylighting control type to 'Continuous/Off'");
+        }
+      }else{
+        LOG(Error, "Unknown DayltgCtrlType '" << *daylightingControlType << "'");
+      }
+    }
+
     if (daylightingMinLighting){
       daylightingControl1->setMinimumLightOutputFractionforContinuousDimmingControl(*daylightingMinLighting);
     }
@@ -2599,7 +2634,31 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       daylightingControl2->setPositionYCoordinate(y);
       daylightingControl2->setPositionZCoordinate(z);
       daylightingControl2->setIlluminanceSetpoint(setpoint);
-      daylightingControl2->setLightingControlType("Continuous");
+
+      if (daylightingControlType){
+        if (istringEqual(*daylightingControlType, "SteppedSwitching") || istringEqual(*daylightingControlType, "SteppedDimming")){
+          ok = daylightingControl2->setLightingControlType("Stepped");
+          if (!ok){
+            LOG(Error, "Could not set daylighting control type to 'Stepped'");
+          }
+          if (daylightingNumberOfControlSteps){
+            daylightingControl2->setNumberofSteppedControlSteps(*daylightingNumberOfControlSteps);
+          }
+        }else if (istringEqual(*daylightingControlType, "Continuous")){
+          ok = daylightingControl2->setLightingControlType("Continuous");
+          if (!ok){
+            LOG(Error, "Could not set daylighting control type to 'Continuous'");
+          }
+        }else if (istringEqual(*daylightingControlType, "ContinuousPlusOff")){
+          ok = daylightingControl2->setLightingControlType("Continuous/Off");
+          if (!ok){
+            LOG(Error, "Could not set daylighting control type to 'Continuous/Off'");
+          }
+        }else{
+          LOG(Error, "Unknown DayltgCtrlType '" << *daylightingControlType << "'");
+        }
+      }
+
       if (daylightingMinLighting){
         daylightingControl2->setMinimumLightOutputFractionforContinuousDimmingControl(*daylightingMinLighting);
       }
