@@ -53,6 +53,11 @@ class UtilityBillsController : public ModelSubTabController
     virtual void onSelectItem(OSItem *item);
 
     virtual void onClearSelection();
+
+  private slots:
+
+    void enableAddNewObjectButton(bool enable);
+
 };
 
 } // openstudio

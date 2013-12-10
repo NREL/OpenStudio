@@ -26,6 +26,8 @@
 
 #include <project/ProjectDatabase.hpp>
 #include <analysisdriver/CloudAnalysisDriver.hpp>
+#include <analysisdriver/SimpleProject.hpp>
+#include <analysis/DataPoint.hpp>
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
@@ -238,9 +240,21 @@ void CloudMonitor::startCloud()
   {
     bool preCheckPassed = true;
 
-    CloudSettings settings = PatApp::instance()->cloudSettings();
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if( preCheckPassed && project )
+    {
+      // check for baseline
+      analysis::DataPoint baseline = project->baselineDataPoint();
+      if ( !baseline.complete() ||  baseline.failed() ){
+        QString error("The baseline model must be run before starting the cloud.");
+        QMessageBox::critical(PatApp::instance()->mainWindow, "Baseline Not Run", error);
+        preCheckPassed = false;
+      }
+    }
 
-    if( boost::optional<AWSSettings> awsSettings = settings.optionalCast<AWSSettings>() )
+    CloudSettings settings = PatApp::instance()->cloudSettings();
+    boost::optional<AWSSettings> awsSettings = settings.optionalCast<AWSSettings>();
+    if( preCheckPassed && awsSettings )
     {
       if( !awsSettings->validAccessKey() ) {
         QString error("Invalid Access Key.  Verify settings from Cloud menu.");
@@ -256,7 +270,6 @@ void CloudMonitor::startCloud()
         QString error("The user agreement must be reviewed and signed before continuing.  Verify settings from Cloud menu.");
         QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
         preCheckPassed = false;
-
       }
     }
 
@@ -290,8 +303,16 @@ void CloudMonitor::onStartCloudWorkerComplete()
   else if( ! m_startCloudWorker->validCredentials() )
   {
     setStatus(CLOUD_ERROR);
-    
-    QString error("Invalid cloud credentials.  Verify settings from Cloud menu.");
+
+    QString error;
+    if( m_startCloudWorker->errors().size() )
+    {
+      error = toQString(m_startCloudWorker->errors()[0]) + ".  Verify settings from Cloud menu.";
+    }
+    else
+    {
+      error = "Invalid cloud credentials.  Verify settings from Cloud menu.";
+    }
 
     QMessageBox::critical(PatApp::instance()->mainWindow, "Cloud Settings", error);
 
@@ -675,18 +696,22 @@ void StartCloudWorker::startWorking()
     m_error = true;
   }
 
-  m_validCredentials = provider->validateCredentials();
-
-  if( ! m_error && ! m_validCredentials )
+  if( ! m_error )
   {
-    m_error = true;
+    m_validCredentials = provider->validateCredentials();
+    if( ! m_validCredentials )
+    {
+      m_error = true;
+    }
   }
 
-  m_resourcesAvailableToStart = provider->resourcesAvailableToStart();
-
-  if( ! m_error && ! m_resourcesAvailableToStart )
+  if( ! m_error)
   {
-    m_error = true;
+    m_resourcesAvailableToStart = provider->resourcesAvailableToStart();
+    if( ! m_resourcesAvailableToStart )
+    {
+      m_error = true;
+    }
   }
 
   if( ! m_error )
@@ -709,6 +734,7 @@ void StartCloudWorker::startWorking()
     }
   }
 
+  std::vector<std::string> serverErrors;
   if( ! m_error )
   {
     m_error = true;
@@ -729,7 +755,11 @@ void StartCloudWorker::startWorking()
         }
         else
         {
-          System::msleep(3000);
+          if (i < 14) {
+            System::msleep(3000);
+          } else {
+            serverErrors = server.errors();
+          }
         }
       } 
     }
@@ -744,6 +774,10 @@ void StartCloudWorker::startWorking()
   {
     m_errors = provider->errors();
     m_warnings = provider->warnings();
+
+    if (!m_errors.size() && serverErrors.size()) {
+      m_errors = serverErrors;
+    }
 
     if( provider->requestTerminate() )
     {

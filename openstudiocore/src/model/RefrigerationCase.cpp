@@ -798,7 +798,7 @@ namespace detail {
 
 } // detail
 
-RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule)
+RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule)
   : ParentObject(RefrigerationCase::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
@@ -837,7 +837,6 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSc
   setCaseDefrostPowerperUnitLength(0.0);
   setCaseDefrostType("OffCycle");
   setCaseDefrostSchedule(caseDefrostSchedule);
-  setCaseDefrostDripDownSchedule(caseDefrostDripDownSchedule);
   setDefrostEnergyCorrectionCurveType("None");
   setUnderCaseHVACReturnAirFraction(0.0);
   setDesignEvaporatorTemperatureorBrineInletTemperature(-5.56);

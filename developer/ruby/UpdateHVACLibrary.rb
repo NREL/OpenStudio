@@ -8,7 +8,7 @@ if OpenStudio::exists(model_path)
   versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
   model = versionTranslator.loadModel(model_path)
   if model.empty?
-    puts "Version translation failed for #{model_path_string}"
+    puts "Version translation failed for #{model_path}"
     exit
   else
     model = model.get

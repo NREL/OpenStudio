@@ -61,6 +61,7 @@ require 'openstudioutilities'
 require 'openstudioenergyplus'
 require 'openstudioradiance'
 require 'openstudiogbxml'
+require 'openstudiocontam'
 require 'openstudiomodel'
 require 'openstudiomodelcore'
 require 'openstudiomodelsimulation'
@@ -76,22 +77,20 @@ require 'openstudioanalysisdriver'
 require 'openstudiomodeleditor'
 require 'openstudioanalysis'
 require 'openstudiolib'
-require 'openstudioplugin'
 require 'openstudioisomodel'
-
-# optional extensions
-begin
-  require 'openstudiosimxml'
-rescue Exception=>e
-end
-
-begin
-  require 'openstudiosdd'
-rescue Exception=>e
-end
+require 'openstudiosdd'
 
 # restore original path
 ENV['PATH'] = original_path
+
+if OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Dir}OpenStudio"))
+  puts "OpenSSL loaded"
+elsif OpenStudio::RemoteBCL::initializeSSL()
+  puts "OpenSSL loaded"
+else
+  raise "Unable to initialize OpenSSL: Verify that ruby can assess the OpenSSL libraries"
+end  
+
 
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   $OpenStudio_BinaryDir = "#{$OpenStudio_Dir}../bin/"

@@ -32,6 +32,9 @@ SET( ${target_name}_src
   ModelObjectList.cpp
 
   ConcreteModelObjects.hpp
+  AirConditionerVariableRefrigerantFlow.hpp
+  AirConditionerVariableRefrigerantFlow_Impl.hpp
+  AirConditionerVariableRefrigerantFlow.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
@@ -119,6 +122,9 @@ SET( ${target_name}_src
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
+  CoilCoolingDXVariableRefrigerantFlow.hpp
+  CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlow.cpp
   CoilCoolingLowTempRadiantConstFlow.hpp
   CoilCoolingLowTempRadiantConstFlow_Impl.hpp
   CoilCoolingLowTempRadiantConstFlow.cpp
@@ -137,6 +143,9 @@ SET( ${target_name}_src
   CoilHeatingDXSingleSpeed.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXSingleSpeed.cpp
+  CoilHeatingDXVariableRefrigerantFlow.hpp
+  CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlow.cpp
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
@@ -838,6 +847,9 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
+  ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
   ZoneHVACWaterToAirHeatPump.hpp
   ZoneHVACWaterToAirHeatPump_Impl.hpp
   ZoneHVACWaterToAirHeatPump.cpp
@@ -861,9 +873,8 @@ SET( ${target_name}_moc
   Component_Impl.hpp
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
-  GenericModelObject_Impl.hpp
-  ModelObjectList_Impl.hpp
 
+  AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
@@ -883,11 +894,13 @@ SET( ${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
-	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
+  CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingWater_Impl.hpp
@@ -934,7 +947,6 @@ SET( ${target_name}_moc
   ExteriorLightsDefinition_Impl.hpp
   Facility_Impl.hpp
   FanConstantVolume_Impl.hpp
-  FanOnOff_Impl.hpp
   FanVariableVolume_Impl.hpp
   FFactorGroundFloorConstruction_Impl.hpp
   Gas_Impl.hpp
@@ -947,7 +959,6 @@ SET( ${target_name}_moc
   HotWaterEquipment_Impl.hpp
   HotWaterEquipmentDefinition_Impl.hpp 
   HVACComponent_Impl.hpp
-  ZoneHVACComponent_Impl.hpp
   IlluminanceMap_Impl.hpp
   InsideSurfaceConvectionAlgorithm_Impl.hpp
   InternalMass_Impl.hpp
@@ -966,7 +977,6 @@ SET( ${target_name}_moc
   MasslessOpaqueMaterial_Impl.hpp
   Material_Impl.hpp
   Meter_Impl.hpp
-  PortList_Impl.hpp
   OpaqueMaterial_Impl.hpp
   OtherEquipment_Impl.hpp
   OtherEquipmentDefinition_Impl.hpp
@@ -1027,7 +1037,6 @@ SET( ${target_name}_moc
   ThermostatSetpointDualSetpoint_Impl.hpp
   TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
-  Version_Impl.hpp
   WaterHeaterMixed_Impl.hpp
   WaterUseConnections_Impl.hpp
   WaterUseEquipment_Impl.hpp
@@ -1040,6 +1049,7 @@ SET( ${target_name}_moc
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
@@ -1072,6 +1082,7 @@ IF(UNIX OR MINGW)
 ENDIF(UNIX OR MINGW)
 
 SET( ${target_name}_test_src
+  test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp

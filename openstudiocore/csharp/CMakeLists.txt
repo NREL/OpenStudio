@@ -12,7 +12,6 @@ IF(MSVC)
       PATTERN "*.resx"
       PATTERN "*.settings"
       PATTERN "*.docx"
-      PATTERN ".svn" EXCLUDE
     )
 
   # Take stab at finding Sandcastle to make sure the runSandcastle.bat will execute

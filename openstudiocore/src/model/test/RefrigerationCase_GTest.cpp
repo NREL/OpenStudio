@@ -38,10 +38,8 @@ TEST_F(ModelFixture,RefrigerationCase_RefrigerationCase)
   ASSERT_EXIT ( 
   {  
      Model m; 
-	 ScheduleCompact cds(m);
-	 ScheduleCompact cddds(m);
-
-     RefrigerationCase refrigerationCase = RefrigerationCase(m, cds, cddds);
+     ScheduleCompact cds(m);
+     RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
      exit(0);
   } ,
@@ -51,9 +49,9 @@ TEST_F(ModelFixture,RefrigerationCase_RefrigerationCase)
 TEST_F(ModelFixture,RefrigerationCase_iddObjectType)
 {    
 	Model m; 
-	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+
+    ScheduleCompact cds(m);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
 	EXPECT_EQ( testRefrigerationCase.iddObjectType(), IddObjectType::OS_Refrigeration_Case);
 }
@@ -62,8 +60,7 @@ TEST_F(ModelFixture,RefrigerationCase_RatedAmbientTemperature)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum> 0.0
     // default 23.9
@@ -87,8 +84,7 @@ TEST_F(ModelFixture,RefrigerationCase_RatedAmbientRelativeHumidity)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
 	//   minimum> 0.0
     //   maximum< 100.0
@@ -115,8 +111,7 @@ TEST_F(ModelFixture,RefrigerationCase_RatedTotalCoolingCapacityperUnitLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //    minimum> 0.0
     //    default 1900.0
@@ -140,8 +135,7 @@ TEST_F(ModelFixture,RefrigerationCase_RatedLatentHeatRatio)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //    minimum 0.0
     //    maximum 1.0
@@ -167,8 +161,7 @@ TEST_F(ModelFixture,RefrigerationCase_RatedRuntimeFraction)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //  minimum> 0.0
     //  maximum 1.0
@@ -194,8 +187,7 @@ TEST_F(ModelFixture,RefrigerationCase_CaseLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum> 0.0
     // default 3.0
@@ -218,8 +210,7 @@ TEST_F(ModelFixture,RefrigerationCase_CaseOperatingTemperature)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
 	// maximum< 20.0
     // default 1.1
@@ -242,8 +233,7 @@ TEST_F(ModelFixture,RefrigerationCase_StandardCaseFanPowerperUnitLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
 	// minimum 0.0
     // default 75.0
@@ -267,8 +257,7 @@ TEST_F(ModelFixture,RefrigerationCase_OperatingCaseFanPowerperUnitLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // default 75.0
@@ -292,8 +281,7 @@ TEST_F(ModelFixture,RefrigerationCase_StandardCaseLightingPowerperUnitLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
 	// default 90.0
 
@@ -315,8 +303,7 @@ TEST_F(ModelFixture,RefrigerationCase_InstalledCaseLightingPowerperUnitLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // note Default set equal to Standard Case Lighting Power per Unit Length
 
@@ -337,8 +324,7 @@ TEST_F(ModelFixture,RefrigerationCase_FractionofLightingEnergytoCase)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // maximum 1.0
@@ -364,8 +350,7 @@ TEST_F(ModelFixture,RefrigerationCase_CaseAntiSweatHeaterPowerperUnitLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
 	// minimum 0.0
     // default 0.0
@@ -388,8 +373,7 @@ TEST_F(ModelFixture,RefrigerationCase_HumidityatZeroAntiSweatHeaterEnergy)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
 	//	default -10.0
     //    note This field is only applicable to Linear AS heater control type
@@ -413,8 +397,7 @@ TEST_F(ModelFixture,RefrigerationCase_CaseHeight)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // default 1.5
@@ -440,8 +423,7 @@ TEST_F(ModelFixture,RefrigerationCase_FractionofAntiSweatHeaterEnergytoCase)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     //  minimum 0.0
     //  maximum 1.0
@@ -467,8 +449,7 @@ TEST_F(ModelFixture,RefrigerationCase_CaseDefrostPowerperUnitLength)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // default 0.0
@@ -494,8 +475,7 @@ TEST_F(ModelFixture,RefrigerationCase_UnderCaseHVACReturnAirFraction)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum 0.0
     // maximum 1.0
@@ -521,8 +501,7 @@ TEST_F(ModelFixture,RefrigerationCase_DesignEvaporatorTemperatureorBrineInletTem
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // minimum -70.0
     // maximum 40.0
@@ -551,8 +530,7 @@ TEST_F(ModelFixture,RefrigerationCase_AverageRefrigerantChargeInventory)
 {    
 	Model m; 
 	ScheduleCompact cds(m);
-	ScheduleCompact cddds(m);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds, cddds);
+    RefrigerationCase testRefrigerationCase = RefrigerationCase(m, cds);
 
     // default 0.0
 
@@ -570,8 +548,7 @@ TEST_F(ModelFixture, RefrigerationCase_Remove)
 {
 	Model model; 
 	ScheduleCompact cds(model);
-	ScheduleCompact cddds(model);
-	RefrigerationCase testRefrigerationCase = RefrigerationCase(model, cds, cddds);
+	RefrigerationCase testRefrigerationCase = RefrigerationCase(model, cds);
 
     std::vector<RefrigerationCase> testAllRefrigerationCases = model.getModelObjects<RefrigerationCase>();
     EXPECT_EQ(1, testAllRefrigerationCases.size());
@@ -586,8 +563,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithDefaultData)
 {
 	Model model; 
 	ScheduleCompact cds(model);
-	ScheduleCompact cddds(model);
-	RefrigerationCase testObject = RefrigerationCase(model, cds, cddds);
+	RefrigerationCase testObject = RefrigerationCase(model, cds);
 
 	RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
@@ -622,8 +598,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithCustomData)
 {
  	Model model; 
 	ScheduleCompact cds(model);
-	ScheduleCompact cddds(model);
-	RefrigerationCase testObject = RefrigerationCase(model, cds, cddds);
+	RefrigerationCase testObject = RefrigerationCase(model, cds);
 
 	CurveCubic latentCaseCreditCurve = CurveCubic(model);
 	latentCaseCreditCurve.setName("Refrigeration Case Latent Credit Curve Test");
@@ -686,8 +661,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData)
 {
 	Model model;
 	ScheduleCompact cds(model);
-	ScheduleCompact cddds(model);
-	RefrigerationCase testObject = RefrigerationCase(model, cds, cddds);
+	RefrigerationCase testObject = RefrigerationCase(model, cds);
 
 	RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 

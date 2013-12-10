@@ -32,6 +32,7 @@ var OpenStudioModelHVAC = require('OpenStudioModelHVAC').OpenStudioModelHVAC;
 var OpenStudioModel = require('OpenStudioModel').OpenStudioModel;
 var OpenStudioOSVersion = require('OpenStudioOSVersion').OpenStudioOSVersion;
 var OpenStudioRuleset = require('OpenStudioRuleset').OpenStudioRuleset;
+var OpenStudioISOModel = require('OpenStudioISOModel').OpenStudioISOModel;
 var OpenStudioRunManager = require('OpenStudioRunManager').OpenStudioRunManager;
 var OpenStudioProject = require('OpenStudioProject').OpenStudioProject;
 var OpenStudioAnalysisDriver = require('OpenStudioAnalysisDriver').OpenStudioAnalysisDriver;
@@ -72,6 +73,8 @@ openstudio.model = merge_objects(openstudio.model, OpenStudioModel);
 openstudio.osversion = OpenStudioOSVersion;
 
 openstudio.ruleset = OpenStudioRuleset;
+
+openstudio.isomodel = OpenStudioISOModel;
 
 openstudio.runmanager = OpenStudioRunManager;
 

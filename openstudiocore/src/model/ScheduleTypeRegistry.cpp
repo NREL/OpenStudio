@@ -130,7 +130,10 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
 ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
 {
   const ScheduleType scheduleTypes[] =
-  { 
+  {
+    {"AirConditionerVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"AirConditionerVariableRefrigerantFlow","Thermostat Priority Schedule","thermostatPrioritySchedule",false,"ControlMode",0.0,1.0},
+    {"AirConditionerVariableRefrigerantFlow","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -148,6 +151,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilCoolingDXSingleSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDXVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingLowTempRadiantConstFlow","Cooling High Water Temperature","coolingHighWaterTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingLowTempRadiantConstFlow","Cooling Low Water Temperature","coolingLowWaterTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingLowTempRadiantConstFlow","Cooling High Control Temperature","coolingHighControlTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -156,6 +160,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilCoolingWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingDXSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilHeatingDXVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingGas","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingLowTempRadiantConstFlow","Heating High Water Temperature","heatingHighWaterTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -264,6 +269,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACPackagedTerminalAirConditioner","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Terminal Unit Availability schedule","terminalUnitAvailabilityschedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACUnitHeater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

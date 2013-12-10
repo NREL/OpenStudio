@@ -525,7 +525,7 @@ namespace detail {
 
 } // detail
 
-RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule, Schedule& walkinDefrostDripDownSchedule)
+RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule)
   : ModelObject(RefrigerationWalkIn::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationWalkIn_Impl>());
@@ -547,8 +547,6 @@ RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDef
   ok = setDefrostControlType("TimeSchedule");
   OS_ASSERT(ok);
   ok = setDefrostSchedule(walkinDefrostSchedule);
-  OS_ASSERT(ok);
-  ok = setDefrostDripDownSchedule(walkinDefrostDripDownSchedule);
   OS_ASSERT(ok);
   ok = setDefrostPower(5512.0);
   OS_ASSERT(ok);

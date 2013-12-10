@@ -6,12 +6,13 @@ SET( ${target_name}_src
   ErrorFile.hpp
   ErrorFile.cpp
   GeometryTranslator.hpp
-  GeometryTranslator.cpp
+  GeometryTranslator.cpp 
   MapFields.hpp
   MapFields.cpp
 
   ForwardTranslator.hpp
   ForwardTranslator.cpp
+  ForwardTranslator/ForwardTranslateAirConditionerVariableRefrigerantFlow.cpp
   ForwardTranslator/ForwardTranslateAirGap.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVAC.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACOutdoorAirSystem.cpp
@@ -33,10 +34,12 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlow.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWater.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWaterToAirHeatPumpEquationFit.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlow.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectric.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingGas.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
@@ -179,14 +182,15 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveWater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
-  ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp    
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTemperatureRadiantElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantConstFlow.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantVarFlow.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalAirConditioner.cpp
-  ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACTerminalUnitVariableRefrigerantFlow.cpp 
+  ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp 
   ForwardTranslator/ForwardTranslateZoneHVACUnitHeater.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
@@ -231,7 +235,7 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
-  ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
+  ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp 
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGroundHeatExchangerVertical.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
@@ -286,7 +290,7 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateWindowMaterialSimpleGlazingSystem.cpp
   ReverseTranslator/ReverseTranslateZoneAirHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateZone.cpp
-  ReverseTranslator/ReverseTranslateZoneHVACEquipmentList.cpp
+  ReverseTranslator/ReverseTranslateZoneHVACEquipmentList.cpp 
   ReverseTranslator/ReverseTranslateZoneHVACIdealLoadsAirSystem.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationDesignFlowRate.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationEffectiveLeakageArea.cpp
@@ -303,7 +307,7 @@ SET( ${target_name}_test_src
   Test/GeometryTranslator_GTest.cpp
   Test/ForwardTranslator_GTest.cpp
   Test/ReverseTranslator_GTest.cpp
-
+  
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
   Test/Construction_GTest.cpp
@@ -360,8 +364,8 @@ TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
 AddPCH(${target_name})
 
 IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
+INSTALL(TARGETS ${target_name} 
+  RUNTIME DESTINATION bin 
   LIBRARY DESTINATION lib )
 ENDIF()
 
@@ -372,10 +376,10 @@ CREATE_SRC_GROUPS( "${${target_name}_src}" )
 CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 IF(BUILD_TESTING)
 
-  ADD_DEPENDENCIES(${target_name}_tests
+  ADD_DEPENDENCIES(${target_name}_tests 
     ResultsViewer_resources
     openstudio_energyplus_resources)
-
+    
 ENDIF()
 
 MAKE_SWIG_TARGET( OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel )

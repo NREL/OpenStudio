@@ -60,6 +60,9 @@ namespace openstudio{
         /// constructor from date times, values, and units
         TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
 
+        /// constructor from first report date and time, seconds from first report vector, values, and units
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
+
         // virtual destructor
         ~TimeSeries_Impl() {}
 
@@ -69,10 +72,18 @@ namespace openstudio{
         /// date and time of first report value
         openstudio::DateTime firstReportDateTime() const;
 
+        /// date and times at which values are reported, these are the end of each reporting interval 
+        DateTimeVector dateTimes() const;
+
         /// time in days from end of the first reporting interval
         openstudio::Vector daysFromFirstReport() const;
         /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
         double daysFromFirstReport(const unsigned& i) const;
+
+        /// time in seconds from end of the first reporting interval
+        std::vector<long> secondsFromFirstReport() const;
+        /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+        long secondsFromFirstReport(const unsigned& i) const;
 
         /// values
         openstudio::Vector values() const;
@@ -119,7 +130,10 @@ namespace openstudio{
         DateTime m_firstReportDateTime;
 
         // fractional days from first report date time, used for quick interpolation
-        Vector m_daysFromFirstReport; 
+        //Vector m_daysFromFirstReport; 
+
+        // integer seconds from first report date time, used for quick interpolation
+        std::vector<long> m_secondsFromFirstReport; 
 
         // values reported at m_dateTimes
         Vector m_values;
@@ -172,6 +186,9 @@ namespace openstudio{
       /// constructor from date times, values, and units
       TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
 
+      /// constructor from first report date and time, seconds from first report vector, values, and units
+      TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
+
       /// virtual destructor
       ~TimeSeries() {}
 
@@ -182,6 +199,9 @@ namespace openstudio{
       /// interval length if any
       openstudio::OptionalTime intervalLength() const;
 
+      /// date and times at which values are reported, these are the end of each reporting interval 
+      openstudio::DateTimeVector dateTimes() const;
+
       /// date and time of first report value
       openstudio::DateTime firstReportDateTime() const;
 
@@ -190,6 +210,12 @@ namespace openstudio{
 
       /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
       double daysFromFirstReport(const unsigned& i) const;
+
+      /// time in seconds from end of the first reporting interval
+      std::vector<long> secondsFromFirstReport() const;
+
+      /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+      long secondsFromFirstReport(const unsigned& i) const;
 
       /// values
       openstudio::Vector values() const;

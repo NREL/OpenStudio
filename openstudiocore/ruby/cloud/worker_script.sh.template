@@ -16,18 +16,15 @@ cp /data/launch-instance/setup* /home/ubuntu/
 chmod 775 /home/ubuntu/setup*
 chown ubuntu:ubuntu /home/ubuntu/setup*
 
-# Force the generation of various directories that are in the EBS mnt
+# Force the generation of OpenStudio on the EBS mount and copy worker files
 sudo rm -rf /mnt/openstudio
 sudo mkdir -p /mnt/openstudio
 sudo chmod -R 777 /mnt/openstudio
-
-# Copy worker node files to the run directory location
 cp -rf /data/worker-nodes/* /mnt/openstudio/
 
-# Unzip the rails-models
+# Unzip the worker files (including Mongoid models) and set permissions one last time
+# Note that the 777 is redundant but needed until we actually deploy ACL
 cd /mnt/openstudio/rails-models && unzip -o rails-models.zip
-
-# Run this once more to make sure all files have world writable permissions (for now)
 sudo chmod -R 777 /mnt/openstudio
 
 #turn off hyperthreading

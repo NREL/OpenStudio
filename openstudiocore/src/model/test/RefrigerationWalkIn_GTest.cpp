@@ -38,8 +38,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_DefaultConstructor)
   {  
     Model model;
 	ScheduleCompact wds(model);
-	ScheduleCompact wddds(model);
-	RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds, wddds);
+	RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
     exit(0); 
   } ,
@@ -50,8 +49,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_Remove)
 {
   Model model;
   ScheduleCompact wds(model);
-  ScheduleCompact wddds(model);
-  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
   std::vector<RefrigerationWalkIn> refrigerationWalkIn = model.getModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(1, refrigerationWalkIn.size());
@@ -72,8 +70,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithDefaultData)
 {
   Model model;
   ScheduleCompact wds(model);
-  ScheduleCompact wddds(model);
-  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
   RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
@@ -103,18 +100,15 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithDefaultData)
 
   EXPECT_EQ(testObjectClone.defrostSchedule().handle(), testObject.defrostSchedule().handle());
   EXPECT_EQ(testObjectClone.defrostSchedule().handle(), wds.handle());
-  EXPECT_EQ(testObjectClone.defrostDripDownSchedule()->handle(), testObject.defrostDripDownSchedule()->handle());
-  EXPECT_EQ(testObjectClone.defrostDripDownSchedule()->handle(), wddds.handle());
 }
 
 TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithCustomData)
 {
   Model model;
   ScheduleCompact wds(model);
-  ScheduleCompact wddds(model);
   ScheduleCompact wds2(model);
   ScheduleCompact wddds2(model);
-  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
   testObject.setRatedCoilCoolingCapacity(999.0);
   testObject.setOperatingTemperature(-999.0);
@@ -147,7 +141,6 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithCustomData)
 
   EXPECT_EQ(testObjectClone.defrostSchedule().handle(), testObject.defrostSchedule().handle());
   EXPECT_EQ(testObjectClone.defrostSchedule().handle(), wds2.handle());
-  EXPECT_EQ(testObjectClone.defrostDripDownSchedule()->handle(), testObject.defrostDripDownSchedule()->handle());
   EXPECT_EQ(testObjectClone.defrostDripDownSchedule()->handle(), wddds2.handle());
 }
 
@@ -155,8 +148,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneTwoModelsWithDefaultData)
 {
   Model model;
   ScheduleCompact wds(model);
-  ScheduleCompact wddds(model);
-  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
   RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
@@ -195,8 +187,6 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneTwoModelsWithDefaultData)
   EXPECT_NE(testObjectCloneZoneBoundaries2[0].handle(), testObjectCloneZoneBoundaries[0].handle());
   EXPECT_NE(testObjectClone2.defrostSchedule().handle(), testObject.defrostSchedule().handle());
   EXPECT_NE(testObjectClone2.defrostSchedule().handle(), wds.handle());
-  EXPECT_NE(testObjectClone2.defrostDripDownSchedule()->handle(), testObject.defrostDripDownSchedule()->handle());
-  EXPECT_NE(testObjectClone2.defrostDripDownSchedule()->handle(), wddds.handle());
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
@@ -205,8 +195,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_ZoneBoundaries)
 {
   Model model;
   ScheduleCompact wds(model);
-  ScheduleCompact wddds(model);
-  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds, wddds);
+  RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
   RefrigerationWalkInZoneBoundary _zoneBoundary1(model);
   RefrigerationWalkInZoneBoundary _zoneBoundary2(model);
 

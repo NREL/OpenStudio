@@ -125,9 +125,9 @@ namespace detail {
 
     bool isEndUseSubcategoryDefaulted() const;
 
-    std::string numberofCompressorStages() const;
+    // std::string numberofCompressorStages() const;
 
-    bool isNumberofCompressorStagesDefaulted() const;
+    // bool isNumberofCompressorStagesDefaulted() const;
 
     std::string intercoolerType() const;
 
@@ -231,9 +231,9 @@ namespace detail {
 
     void resetEndUseSubcategory();
 
-    bool setNumberofCompressorStages(std::string numberofCompressorStages);
+    // bool setNumberofCompressorStages(std::string numberofCompressorStages);
 
-    void resetNumberofCompressorStages();
+    // void resetNumberofCompressorStages();
 
     bool setIntercoolerType(std::string intercoolerType);
 

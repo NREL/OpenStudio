@@ -891,6 +891,9 @@ namespace detail {
       return spaces[0];
     }
 
+    // sort by space name 
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+
     // if these variables are set, then they are not defaulted and are common to all spaces
     boost::optional<BuildingStory> buildingStory = spaces[0].buildingStory();
     boost::optional<SpaceType> spaceType = spaces[0].spaceType();
@@ -1137,7 +1140,12 @@ namespace detail {
     // merge surfaces
     boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup;
     std::set<Surface> mergedSurfaces;
-    BOOST_FOREACH(Surface surface, newSpace.surfaces()){
+
+    // sort by surface name 
+    std::vector<Surface> surfaces = newSpace.surfaces();
+    std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
+
+    BOOST_FOREACH(Surface surface, surfaces){
 
       std::set<Surface>::iterator it = mergedSurfaces.find(surface);
       if (it != mergedSurfaces.end()){
@@ -1153,7 +1161,9 @@ namespace detail {
             interiorPartitionSurfaceGroup->setSpace(newSpace);
           }
 
+          // DLM: is there a better way to pick which vertices to keep based on outward normal?
           InteriorPartitionSurface interiorPartitionSurface(surface.vertices(), model);
+          interiorPartitionSurface.setName("Merged " + surface.name().get() + " - " + adjacentSurface->name().get());
           interiorPartitionSurface.setInteriorPartitionSurfaceGroup(*interiorPartitionSurfaceGroup);
     
           boost::optional<ConstructionBase> construction = surface.construction();
