@@ -511,6 +511,35 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
   }
 
+  // Adjust Sizing:System Object
+
+  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
+
+  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
+
+  bool ok;
+
+  value = clgSupAirTempElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+  }
+  else
+  {
+    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+  }
+
+  value = htgSupAirTempElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+  }
+  else
+  {
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+  }
 
   // Air Segments
   QDomNodeList airSegmentElements = airSystemElement.elementsByTagName("AirSeg");
@@ -851,36 +880,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.resetEconomizerMinimumLimitDryBulbTemperature();
       }
     }
-  }
-
-  // Adjust Sizing:System Object
-
-  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
-
-  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
-
-  bool ok;
-
-  value = clgSupAirTempElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
-  }
-  else
-  {
-    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
-  }
-
-  value = htgSupAirTempElement.text().toDouble(&ok);
-
-  if( ok )
-  {
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
-  }
-  else
-  {
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
   }
 
   // Add Setpoint managers
@@ -1233,6 +1232,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     coil.setName(nameElement.text().toStdString());
 
+    QDomElement fluidSegInRefElement = heatingCoilElement.firstChildElement("FluidSegInRef");
+
+    boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement.text(),doc,model);
+
+    if( plant )
+    {
+      plant->addDemandBranchForComponent(coil);
+    }
+
     if( capTotGrossRtd )
     {
       coil.setPerformanceInputMethod("NominalCapacity");
@@ -1246,13 +1254,41 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       coil.setRatedOutletWaterTemperature(54.4);
 
       coil.setRatedOutletAirTemperature(32.2);
-    }
 
-    QDomElement fluidSegInRefElement = heatingCoilElement.firstChildElement("FluidSegInRef");
+      // Find related/containing systems (aka figure out the context of the coil)
 
-    if( boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement.text(),doc,model) )
-    {
-      plant->addDemandBranchForComponent(coil);
+      QDomElement sysElement;
+
+      QDomElement airSysElement = heatingCoilElement.parentNode().parentNode().toElement();
+
+      QDomElement znSysElement = heatingCoilElement.parentNode().toElement();
+
+      if( airSysElement.tagName().compare("AirSys",Qt::CaseInsensitive) == 0 )
+      {
+        sysElement = airSysElement;
+      }
+      else if( znSysElement.tagName().compare("ZnSys",Qt::CaseInsensitive) == 0 )
+      {
+        sysElement = znSysElement;
+      }
+
+      QDomElement htgDsgnSupAirTempElement = sysElement.firstChildElement("HtgDsgnSupAirTemp");
+
+      value = htgDsgnSupAirTempElement.text().toDouble(&ok);
+
+      if( ok )
+      {
+        coil.setRatedOutletAirTemperature(unitToUnit(value,"F","C").get());
+      }
+
+      if( plant )
+      {
+        model::SizingPlant sizingPlant = plant->sizingPlant();
+
+        coil.setRatedInletWaterTemperature(sizingPlant.designLoopExitTemperature());
+
+        coil.setRatedOutletWaterTemperature(sizingPlant.designLoopExitTemperature() - sizingPlant.loopDesignTemperatureDifference());
+      }
     }
 
     result = coil;
@@ -1602,6 +1638,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
           fan.setMotorInAirstreamFraction(0.0);
         }
 
+        // Pwr_fPLRCrvRef
+        QDomElement pwr_fPLRCrvElement = fanElement.firstChildElement("Pwr_fPLRCrvRef");
+        boost::optional<model::Curve> pwr_fPLRCrv;
+        pwr_fPLRCrv = model.getModelObjectByName<model::Curve>(pwr_fPLRCrvElement.text().toStdString());
+        if( pwr_fPLRCrv )
+        {
+          fan.setFanPowerRatioFunctionofSpeedRatioCurve(pwr_fPLRCrv.get());
+        }
+
+        // End Use Subcategory
+        fan.setEndUseSubcategory("Interior Fans");
+
         result = fan;
       }
     }
@@ -1749,17 +1797,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   if( ! istringEqual(coolingCoilElement.tagName().toStdString(),"CoilClg") )
   {
     return result;
-  }
-
-  // Go up and look for a containning air system element
-  
-  QDomElement airSysElement = coolingCoilElement.parentNode().parentNode().toElement();
-
-  QDomElement airSystemTypeElement;
-
-  if( ! airSysElement.isNull() )
-  {
-    airSystemTypeElement = airSysElement.firstChildElement("Type");
   }
 
   // Look for a sibling fan to figure out what the flow capacity should be
@@ -2243,6 +2280,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     coilCooling.setName(nameElement.text().toStdString());
 
+    // Plant
+
+    QDomElement fluidSegNameElement = coolingCoilElement.firstChildElement("FluidSegInRef");
+
+    boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement.text(),doc,model);
+
+    if( plant )
+    {
+      plant->addDemandBranchForComponent(coilCooling);
+    }
 
     if( ! autosize() )
     {
@@ -2251,6 +2298,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       QDomElement fluidFlowRtDsgnElement = coolingCoilElement.firstChildElement("FluidFlowRtDsgnSim");
 
       coilCooling.setDesignWaterFlowRate(fluidFlowRtDsgnElement.text().toDouble() * 0.00006309);
+
+      // Design defaults
 
       coilCooling.setDesignInletWaterTemperature(7.22); // From Sizing Plant
 
@@ -2262,6 +2311,37 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
       coilCooling.setDesignOutletAirHumidityRatio(0.0085); // From Sizing System
 
+      // Find related/containing systems (aka figure out the context of the coil)
+
+      QDomElement sysElement;
+
+      QDomElement airSysElement = coolingCoilElement.parentNode().parentNode().toElement();
+
+      QDomElement znSysElement = coolingCoilElement.parentNode().toElement();
+
+      if( airSysElement.tagName().compare("AirSys",Qt::CaseInsensitive) == 0 )
+      {
+        sysElement = airSysElement;
+      }
+      else if( znSysElement.tagName().compare("ZnSys",Qt::CaseInsensitive) == 0 )
+      {
+        sysElement = znSysElement;
+      }
+
+      QDomElement clgDsgnSupAirTempElement = sysElement.firstChildElement("ClgDsgnSupAirTemp");
+
+      value = clgDsgnSupAirTempElement.text().toDouble(&ok);
+
+      if( ok )
+      {
+        coilCooling.setDesignOutletAirTemperature(unitToUnit(value,"F","C").get());
+      }
+
+      if( plant )
+      {
+        coilCooling.setDesignInletWaterTemperature(plant->sizingPlant().designLoopExitTemperature());
+      }
+
       // FlowCap
 
       double value = flowCapElement.text().toDouble();
@@ -2270,15 +2350,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
       OS_ASSERT(flowRateSI);
       coilCooling.setDesignAirFlowRate(flowRateSI->value());
-    }
-
-    // Plant
-
-    QDomElement fluidSegNameElement = coolingCoilElement.firstChildElement("FluidSegInRef");
-
-    if( boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement.text(),doc,model) )
-    {
-      plant->addDemandBranchForComponent(coilCooling);
     }
 
     result = coilCooling;
