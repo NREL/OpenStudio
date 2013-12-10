@@ -218,6 +218,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingWater);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpEquationFit);
+    REGISTER_CONSTRUCTOR(CoilHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
     REGISTER_CONSTRUCTOR(CoilHeatingGas);
@@ -330,6 +331,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
 	REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
 	REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationGasCoolerAirCooled);
 	REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
 	REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
     REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
@@ -489,6 +491,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWater);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpEquationFit);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGas);
@@ -601,6 +604,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserWaterCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationGasCoolerAirCooled);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
 	REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
