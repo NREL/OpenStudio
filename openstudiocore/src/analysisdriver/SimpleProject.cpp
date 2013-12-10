@@ -2494,6 +2494,12 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
       save = true;
     }
 
+    if (result->analysis().resultsAreInvalid()) {
+      // HERE -- Yuck, but needed to make the code work right now!
+      result->clearAllResults();
+      save = true;
+    }
+
     if (result && save) {
       result->save();
     }
