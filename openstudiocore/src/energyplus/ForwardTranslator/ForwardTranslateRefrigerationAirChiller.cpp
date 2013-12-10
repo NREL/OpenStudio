@@ -80,9 +80,19 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationAirChiller( 
   // }
 
 //CapacityRatingType
+  std::string capacityCorrectionCurveType;
   s = modelObject.capacityRatingType();
   if (s) {
     object.setString(Refrigeration_AirChillerFields::CapacityRatingType,s.get());
+    if (istringEqual(s.get(),"UnitLoadFactorSensibleOnly")) {
+      capacityCorrectionCurveType = "LinearSHR60";
+    }
+    else if (s.get().find("European") != std::string::npos) {
+      capacityCorrectionCurveType = "European";
+    }
+    else {
+      capacityCorrectionCurveType = "LinearSHR60";
+    }
   }
 //RatedUnitLoadFactor
   d = modelObject.ratedUnitLoadFactor();
@@ -129,7 +139,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationAirChiller( 
   // if (s) {
   //   object.setString(Refrigeration_AirChillerFields::CapacityCorrectionCurveType,s.get());
   // }
-  object.setString(Refrigeration_AirChillerFields::CapacityCorrectionCurveType,"");
+  object.setString(Refrigeration_AirChillerFields::CapacityCorrectionCurveType, capacityCorrectionCurveType);
 //CapacityCorrectionCurveName
   // boost::optional<Curve> capacityCorrectionCurve = modelObject.capacityCorrectionCurve();
 
