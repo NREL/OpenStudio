@@ -573,14 +573,17 @@ namespace openstudio {
         openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure(standardReportsPath);
         openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure(calibrationReportsPath);
 
-        bool standardReportsFound = findBCLMeasureWorkItem(workitems, standardReportsMeasure.uuid());
-        if (!standardReportsFound){
+        // DLM: always add this measure even if the user has their own copy, this is more clear
+        //bool standardReportsFound = findBCLMeasureWorkItem(workitems, standardReportsMeasure.uuid());
+        //if (!standardReportsFound){
           bool test = addReportingMeasureWorkItem(workitems, standardReportsMeasure);
           OS_ASSERT(test);
-        }
+        //}
 
-        bool calibrationReportsFound = findBCLMeasureWorkItem(workitems, calibrationReportsMeasure.uuid());
-        if (requireCalibrationReports && !calibrationReportsFound){
+        // DLM: always add this measure even if the user has their own copy, this is more clear
+        //bool calibrationReportsFound = findBCLMeasureWorkItem(workitems, calibrationReportsMeasure.uuid());
+        //if (requireCalibrationReports && !calibrationReportsFound){
+        if (requireCalibrationReports){
           bool test = addReportingMeasureWorkItem(workitems, calibrationReportsMeasure);
           OS_ASSERT(test);
         }
