@@ -892,56 +892,42 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   if( istringEqual(clgCtrlElement.text().toStdString(),"Fixed") )
   {
-    if( istringEqual(airSystemTypeElement.text().toStdString(),"SZAC") ||
-        istringEqual(airSystemTypeElement.text().toStdString(),"SZHP")
-      )
+    model::ScheduleRuleset schedule(model);
+
+    schedule.setName(airLoopHVAC.name().get() + " Supply Air Temp Schedule");
+
+    QDomElement clgFixedSupTempElement = airSystemElement.firstChildElement("ClgFixedSupTemp");
+
+    value = clgFixedSupTempElement.text().toDouble(&ok);
+
+    if( ok )
     {
-      model::SetpointManagerSingleZoneReheat spm(model);
+      model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
 
-      deckSPM = spm;
+      value = unitToUnit(value,"F","C").get();
 
-      supplyOutletNode.addSetpointManager(spm);
+      scheduleDay.addValue(Time(1.0),value);
     }
     else
     {
-      model::ScheduleRuleset schedule(model);
+      model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
 
-      schedule.setName(airLoopHVAC.name().get() + " Supply Air Temp Schedule");
-
-      value = clgSupAirTempElement.text().toDouble(&ok);
-
-      if( ok )
-      {
-        model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
-        value = unitToUnit(value,"F","C").get();
-
-        scheduleDay.addValue(Time(1.0),value);
-      }
-      else
-      {
-        model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
-        scheduleDay.addValue(Time(1.0),12.8);
-      }
-
-      model::SetpointManagerScheduled spm(model,schedule);
-
-      deckSPM = spm;
-
-      supplyOutletNode.addSetpointManager(spm);
+      scheduleDay.addValue(Time(1.0),12.8);
     }
+
+    model::SetpointManagerScheduled spm(model,schedule);
+
+    deckSPM = spm;
+
+    supplyOutletNode.addSetpointManager(spm);
   }
   else if(istringEqual(clgCtrlElement.text().toStdString(),"NoSATControl"))
   {
-    if( istringEqual(airSystemTypeElement.text().toStdString(),"HV") )
-    {
-      model::SetpointManagerSingleZoneReheat spm(model);
+    model::SetpointManagerSingleZoneReheat spm(model);
 
-      deckSPM = spm;
+    deckSPM = spm;
 
-      supplyOutletNode.addSetpointManager(spm);
-    }
+    supplyOutletNode.addSetpointManager(spm);
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") ||
            istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
