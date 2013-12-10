@@ -11,6 +11,14 @@
     <rule IddField="Nominal Capacity" Access="HIDDEN"/>
     <rule IddField="Free Convection Capacity" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_CoolingTower_VariableSpeed">
+    <rule IddField="Water Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Model Coefficient" Access="LOCKED"/>
+    <rule IddField="Fan Power Ratio Function of Air Flow Rate Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Supply Water Storage Tank" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_GroundHeatExchanger_Vertical">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
