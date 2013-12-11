@@ -8,19 +8,19 @@ require 'fileutils'
 
 require 'test/unit'
 
-class ReportingMeasure_Test < Test::Unit::TestCase
+class StandardReports_Test < Test::Unit::TestCase
     
   # paths to expected test files, includes osm and eplusout.sql
   def modelPath
-    return "#{File.dirname(__FILE__)}/ExampleModel.osm"
+    return "#{File.dirname(__FILE__)}/House1203_a_ver112.osm"
   end
   
   def runDir
-    return "#{File.dirname(__FILE__)}/ExampleModel/"
+    return "#{File.dirname(__FILE__)}/House1203_a_ver112/"
   end
   
   def sqlPath
-    return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlus-0/eplusout.sql"
+    return "#{File.dirname(__FILE__)}/House1203_a_ver112/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
   end
   
   def reportPath
@@ -40,14 +40,14 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     end
     
     # check that the measure is not out of date
-    #measure_path = OpenStudio::system_complete(OpenStudio::Path.new("#{File.dirname(__FILE__)}/../"))
-    #measure = OpenStudio::BCLMeasure.new(measure_path)
-    #assert_equal("Reporting Measure", measure.name())
-    #if (measure.checkForUpdates())
-    #  puts "Measure is out of date, automatically saving"
-    #  measure.save()
-    #end
-    #assert((not measure.checkForUpdates()))
+    measure_path = OpenStudio::system_complete(OpenStudio::Path.new("#{File.dirname(__FILE__)}/../"))
+    measure = OpenStudio::BCLMeasure.new(measure_path)
+    assert_equal("Standard Reports", measure.name())
+    if (measure.checkForUpdates())
+      puts "Measure is out of date, automatically saving"
+      measure.save()
+    end
+    assert((not measure.checkForUpdates()))
     
     if not File.exist?(modelPath())
       puts "Creating example model"
@@ -64,7 +64,7 @@ class ReportingMeasure_Test < Test::Unit::TestCase
       co = OpenStudio::Runmanager::ConfigOptions.new(true)
       co.findTools(false, true, false, true)
       
-      wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energyplus")
+      wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energypluspreprocess->energyplus")
       wf.add(co.getTools())
       job = wf.create(OpenStudio::Path.new(runDir()), OpenStudio::Path.new(modelPath()))
 
@@ -88,13 +88,13 @@ class ReportingMeasure_Test < Test::Unit::TestCase
   end
   
   # the actual test
-  def test_ReportingMeasure
+  def test_StandardReports
      
     assert(File.exist?(modelPath()))
     assert(File.exist?(sqlPath()))
      
     # create an instance of the measure
-    measure = ReportingMeasure.new
+    measure = StandardReports.new
     
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new

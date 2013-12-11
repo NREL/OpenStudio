@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Calibration | OpenStudio</title>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        font: 10px sans-serif;
+    }
+    .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    .bar {
+        fill: steelblue;
+    }
+    .x.axis path {
+        display: none;
+    }
+</style>
+<body>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+
+    </head>
+    <body>
+        <form>
+            <fieldset>
+                    <label>Calibration Method</label>
+                    <select id="calibrationMethodSelect">
+                    </select>
+            </fieldset>
+        </form>
+        <div class="row-fluid">
+            <h6 id="calibrationString"></h6>
+            <h4 id="title-0"></h4>
+            <div id="chart-0"></div>
+            <div id="table-0"></div>
+            <h4 id="title-1"></h4>
+            <div id="chart-1"></div>
+            <div id="table-1"></div>
+        </div>
+        <script>
+            function numFormat(n) {
+                var parts = n.toString().split(".");
+                return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+            }
+
+<%= energy %>
+
+            $.each(calibrationGuidelines, function(index, value) {
+                 $('#calibrationMethodSelect')
+                     .append($("<option></option>")
+                     .attr("value",index)
+                     .text(value));
+            });
+
+            $( "#calibrationMethodSelect" ).change(onMethodChange);
+
+            var maxNMBE = 0;
+            var maxCVRMSE = 0; 
+
+            function onMethodChange(){
+                if($('#calibrationMethodSelect').val() == 0){
+                    maxNMBE = ashraeMaxNMBE;
+                    maxCVRMSE = ashraeMaxCVRMSE;
+                } else {
+                    maxNMBE = fempMaxNMBE;
+                    maxCVRMSE = fempMaxCVRMSE;
+                }
+                $('#calibrationString').text("NBME of " + maxNMBE + "% or less and CV(RSME) of " + maxCVRMSE + "% relative to monthly data.  Must contain all utility data for one year and real weather data.  Check the guideline for additional requirements.");
+            }
+
+            onMethodChange();
+
+            function outputTable(name, units, obj, id) {
+                var $table = $('<table id="' + name.toLowerCase().replace(/ /g, '-') + '">').addClass("table table-striped table-bordered table-condensed");
+                var headers = '';
+                for (var i = 1; i <= obj.Start.length; i++) headers += '<th>' + i + '</th>';
+                $table.append('<thead>').children('thead').append('<tr />').children('tr').append('<th>&nbsp;</th>').append(headers);
+                var $tbody = $table.append('<tbody />').children('tbody');
+                var key;
+                for (key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        if (key == "Start" | key == "End" | key == "Actual" | key == "Model" | key == "NMBE") {
+                            var $row = $tbody.append('<tr />').children('tr:last');
+                            $row.append("<td>" + key + "</td>");
+                            for (i = 0; i < obj.Start.length; i++) {
+                                var num = obj[key][i] === 0 ? "&mdash;" : numFormat(obj[key][i])
+                                if (num != "&mdash;") {
+                                    if (key == "NMBE" & Math.abs(num) > maxNMBE) {
+                                        num = "<font color=\"red\">" + num;
+                                    }
+                                    num = num + "%";
+                                }
+                                $row.append("<td>" + num + "</td>");
+                            }
+                        }
+                    }
+                }
+                $table.appendTo('#'+id);
+            }
+
+            var margin = {
+                top: 20,
+                right: 20,
+                bottom: 30,
+                left: 40
+            },
+            width = 560 - margin.left - margin.right,
+                height = 300 - margin.top - margin.bottom;
+
+            var x0 = d3.scale.ordinal()
+                .rangeRoundBands([0, width], .1);
+
+            var x1 = d3.scale.ordinal();
+
+            var y = d3.scale.linear()
+                .range([height, 0]);
+
+            var color = d3.scale.ordinal()
+                .range(["#8CC739", "#29AAE7"]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x0)
+                .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .tickFormat(d3.format(".2s"));
+
+            var charts = ["Electricity Consumption", "Natural Gas Consumption"];
+
+            for (var c in charts) {
+
+                if (c == 0) {
+                    margin.right = 125;
+                }
+
+                $('#title-'+c).text(charts[c]);
+
+                var svg = d3.select("#chart-" + c).append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                data = [];
+                for (var enduse in consumption[charts[c]].data) {
+                    if (enduse == "Actual" | enduse == "Model") {
+                        var enduse_data = consumption[charts[c]].data[enduse];
+                        for (var i = 1; i <= enduse_data.length; i++) {
+                            if (data.length < enduse_data.length) {
+                                var temp = {
+                                    "Month": i
+                                }
+                                temp[enduse] = enduse_data[i - 1];
+                                data.push(temp);
+                            } else {
+                                data[i - 1][enduse] = enduse_data[i - 1];
+                            }
+                        }
+                    }
+                }
+                var comparison = d3.keys(data[0]).filter(function(key) {
+                    return key !== "Month";
+                });
+
+                data.forEach(function(d) {
+                    d.consumption = comparison.map(function(name) {
+                        return {
+                            name: name,
+                            value: +d[name]
+                        };
+                    })
+                });
+
+                x0.domain(data.map(function(d) {
+                    return d.Month;
+                }));
+                x1.domain(comparison).rangeRoundBands([0, x0.rangeBand()]);
+                y.domain([0, d3.max(data, function(d) {
+                    return d3.max(d.consumption, function(d) {
+                        return d.value;
+                    });
+                })]);
+
+                //data.sort(function(a, b) { return b.total - a.total; });
+
+                svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
+                svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", -36)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text(consumption[charts[c]].units);
+
+                var month = svg.selectAll(".month")
+                    .data(data)
+                    .enter().append("g")
+                    .attr("class", "g")
+                    .attr("transform", function(d) {
+                    return "translate(" + x0(d.Month) + ",0)";
+                });
+
+                month.selectAll("rect")
+                    .data(function(d) {
+                    return d.consumption;
+                })
+                    .enter().append("rect")
+                    .attr("width", x1.rangeBand())
+                    .attr("x", function(d) {
+                    return x1(d.name);
+                })
+                    .attr("y", function(d) {
+                    return y(d.value);
+                })
+                    .attr("height", function(d) {
+                    return height - y(d.value);
+                })
+                    .style("fill", function(d) {
+                    return color(d.name);
+                });
+
+                
+                var legend = svg.selectAll(".legend")
+                    .data(comparison.slice().reverse())
+                    .enter().append("g")
+                    .attr("class", "legend")
+                    .attr("transform", function(d, i) {
+                    return "translate(0," + i * 20 + ")";
+                });
+
+                legend.append("rect")
+                    .attr("x", width + 105)
+                    .attr("width", 18)
+                    .attr("height", 18)
+                    .style("fill", color);
+
+                legend.append("text")
+                    .attr("x", width + 105 - 3)
+                    .attr("y", 9)
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "end")
+                    .text(function(d) {
+                    return d;
+                });
+                
+                outputTable(charts[c], consumption[charts[c]].units, consumption[charts[c]].data, "table-"+c);
+            }
+        </script>
+    </body>
+
+    </html>
