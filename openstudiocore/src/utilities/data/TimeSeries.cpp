@@ -53,7 +53,7 @@ namespace openstudio{
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
-      if (!calendarYear){
+      if (!calendarYear && values.size()){
         double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0;
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
@@ -80,7 +80,7 @@ namespace openstudio{
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
-      if (!calendarYear){
+      if (!calendarYear && values.size()){
         double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
@@ -93,18 +93,25 @@ namespace openstudio{
 
     /// constructor from first report date and time, days from first report vector, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
-      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      :  m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(daysFromFirstReport.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
-      for (unsigned i = 0; i < values.size(); ++i){
+      // JWD: Maybe there is a more C++ish way to do this.
+      // Copy a vector the size of the DateTime vector, any left over elements have been initialized to the
+      // outOfRangeValue above
+      for (unsigned i = 0; i < min(daysFromFirstReport.size(),values.size()); ++i){
+        m_values[i] = values[i];
+      }
+
+      for (unsigned i = 0; i < daysFromFirstReport.size(); ++i){
         m_secondsFromFirstReport[i] = daysFromFirstReport(i)*86400.0; // JWD: Does this get rounded? I don't think so.
       }
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
-      if (!calendarYear){
+      if (!calendarYear && daysFromFirstReport.size()){
         double duration = maximum(daysFromFirstReport); // JWD: Can this be changed?
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
@@ -115,21 +122,28 @@ namespace openstudio{
     }
 
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
-      : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(daysFromFirstReport.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
       //        for (unsigned i = 0; i < values.size(); i++) m_values(i) = values[i];
-      std::copy(values.begin(), values.end(), m_values.begin());
+      //std::copy(values.begin(), values.end(), m_values.begin());
 
-      for (unsigned i = 0; i < values.size(); ++i){
+      // JWD: Maybe there is a more C++ish way to do this.
+      // Copy a vector the size of the DateTime vector, any left over elements have been initialized to the
+      // outOfRangeValue above
+      for (unsigned i = 0; i < min(daysFromFirstReport.size(),values.size()); ++i){
+        m_values[i] = values[i];
+      }
+
+      for (unsigned i = 0; i < daysFromFirstReport.size(); ++i){
         m_secondsFromFirstReport[i] = daysFromFirstReport[i]*86400.0; // JWD: Does this get rounded? I don't think so.
       }
     
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
-      if (!calendarYear){
+      if (!calendarYear && daysFromFirstReport.size()){
         double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
@@ -141,7 +155,7 @@ namespace openstudio{
 
     /// constructor from date times, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
-      : m_secondsFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromFirstReport(dateTimes.size()), m_values(dateTimes.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: startDate may or may not have baseYear defined
       m_firstReportDateTime = dateTimes.front();
@@ -152,6 +166,13 @@ namespace openstudio{
       if (!calendarYear){
         // add year
         firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
+      }
+
+      // JWD: Maybe there is a more C++ish way to do this.
+      // Copy a vector the size of the DateTime vector, any left over elements have been initialized to the
+      // outOfRangeValue above
+      for (unsigned i = 0; i < min(numDateTimes,values.size()); ++i){
+        m_values[i] = values[i];
       }
       
       for (unsigned i = 0; i < numDateTimes; ++i){
@@ -175,18 +196,18 @@ namespace openstudio{
 
     /// constructor from first report date and time, seconds from first report vector, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
-      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      :  m_secondsFromFirstReport(secondsFromFirstReport.size()), m_values(secondsFromFirstReport.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
-      for (unsigned i = 0; i < values.size(); ++i){
+      for (unsigned i = 0; i < secondsFromFirstReport.size(); ++i){
         m_secondsFromFirstReport[i] = secondsFromFirstReport[i];
       }
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
-      if (!calendarYear){
+      if (!calendarYear && secondsFromFirstReport.size()){
         double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
         DateTime lastDateTime = m_firstReportDateTime.date() + duration;
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
