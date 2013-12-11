@@ -39,6 +39,12 @@
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/CoilHeatingGas.hpp>
+#include <model/CoilHeatingGas_Impl.hpp>
+#include <model/CoilHeatingElectric.hpp>
+#include <model/CoilHeatingElectric_Impl.hpp>
+#include <model/CoilHeatingWater.hpp>
+#include <model/CoilHeatingWater_Impl.hpp>
 #include <model/Model.hpp>
 
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_Reheat_FieldEnums.hxx>
@@ -382,28 +388,22 @@ namespace detail {
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setReheatCoil(const HVACComponent& coil) {
     bool result = false;
 
-    switch(coil.iddObject().type().value())
+    if( coil.iddObject().type() == CoilHeatingGas::iddObjectType() )
     {
-    case openstudio::IddObjectType::OS_Coil_Heating_Gas :
-      {
         result = true;
-        break;
-      }
-    case openstudio::IddObjectType::OS_Coil_Heating_Water :
-      {
+    }
+    else if( coil.iddObject().type() == CoilHeatingWater::iddObjectType() )
+    {
         result = true;
-        break;
-      }
-    case openstudio::IddObjectType::OS_Coil_Heating_Electric :
-      {
+    }
+    else if( coil.iddObject().type() == CoilHeatingElectric::iddObjectType() )
+    {
         result = true;
-        break;
-      }
-    default:
-      {
-        LOG(Warn, "Unsupported or invalid IddObjectType: '" << coil.iddObject().name() << "'");
-        result = false;
-      }
+    }
+    else
+    {
+      LOG(Warn, "Unsupported or invalid IddObjectType: '" << coil.iddObject().name() << "'");
+      result = false;
     }
 
     if( result )

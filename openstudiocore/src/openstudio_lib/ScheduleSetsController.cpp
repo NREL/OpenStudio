@@ -34,12 +34,13 @@ ScheduleSetsController::ScheduleSetsController(const model::Model& model)
 
 void ScheduleSetsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  switch(iddObjectType.value()){
-    case IddObjectType::OS_DefaultScheduleSet:
-      openstudio::model::DefaultScheduleSet(this->model());
-      break;
-    default:
-      LOG_FREE_AND_THROW("ScheduleSetsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
+  if(iddObjectType == IddObjectType::OS_DefaultScheduleSet)
+  {
+    openstudio::model::DefaultScheduleSet(this->model());
+  }
+  else
+  {
+    LOG_FREE_AND_THROW("ScheduleSetsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
   }
 }
 

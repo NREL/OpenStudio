@@ -200,12 +200,12 @@ void OSItem::createLayout()
   if(doc){
     boost::optional<IddObjectType> iddObjectType = doc->getIddObjectType(m_itemId);
     if(iddObjectType){
-      const QPixmap * pixmap = IconLibrary::Instance().findMiniIcon(iddObjectType->value());
+      const QPixmap * pixmap = IconLibrary::Instance().findMiniIcon(iddObjectType.get());
       if(pixmap){
         setLeftPixmap(*pixmap);
       }
 
-      pixmap = IconLibrary::Instance().findIcon(iddObjectType->value());
+      pixmap = IconLibrary::Instance().findIcon(iddObjectType.get());
       if(pixmap){
         m_largePixmap = *pixmap;
       }

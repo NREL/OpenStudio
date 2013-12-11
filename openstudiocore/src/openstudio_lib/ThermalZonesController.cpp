@@ -225,7 +225,7 @@ void ThermalZonesController::onSelectItem(OSItem *item)
 
 void ThermalZonesController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  OS_ASSERT(IddObjectType::OS_ThermalZone == iddObjectType.value());
+  OS_ASSERT(IddObjectType::OS_ThermalZone == iddObjectType);
   openstudio::model::ThermalZone(this->model());
 }
 

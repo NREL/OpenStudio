@@ -27,6 +27,12 @@
 #include <model/PortList_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
+#include <model/CoilHeatingElectric.hpp>
+#include <model/CoilHeatingElectric_Impl.hpp>
+#include <model/CoilHeatingGas.hpp>
+#include <model/CoilHeatingGas_Impl.hpp>
+#include <model/CoilHeatingWater.hpp>
+#include <model/CoilHeatingWater_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
@@ -536,32 +542,23 @@ namespace detail{
   {
     bool result = false;
 
-    switch(coil.iddObject().type().value())
+    if( coil.iddObject().type() == CoilHeatingGas::iddObjectType() )
     {
-    case openstudio::IddObjectType::OS_Coil_Heating_Gas :
-      {
-        result = true;
+      result = true;
+    }
+    else if( coil.iddObject().type() == CoilHeatingWater::iddObjectType() )
+    {
+      result = true;
+    }
+    else if( coil.iddObject().type() == CoilHeatingElectric::iddObjectType() )
+    {
+      result = true;
+    }
+    else
+    {
+      LOG(Warn, "Unsupported or invalid IddObjectType: '" << coil.iddObject().name() << "'");
 
-        break;
-      }
-    case openstudio::IddObjectType::OS_Coil_Heating_Water :
-      {
-        result = true;
-
-        break;
-      }
-    case openstudio::IddObjectType::OS_Coil_Heating_Electric :
-      {
-        result = true;
-
-        break;
-      }
-    default:
-      {
-        LOG(Warn, "Unsupported or invalid IddObjectType: '" << coil.iddObject().name() << "'");
-
-        result = false;
-      }
+      result = false;
     }
 
     if( result )

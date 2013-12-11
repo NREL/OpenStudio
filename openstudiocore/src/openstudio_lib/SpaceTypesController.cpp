@@ -41,7 +41,7 @@ SpaceTypesController::SpaceTypesController(const model::Model& model)
 
 void SpaceTypesController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  OS_ASSERT(IddObjectType::OS_SpaceType == iddObjectType.value());
+  OS_ASSERT(IddObjectType::OS_SpaceType == iddObjectType);
   openstudio::model::SpaceType(this->model());
 }
 

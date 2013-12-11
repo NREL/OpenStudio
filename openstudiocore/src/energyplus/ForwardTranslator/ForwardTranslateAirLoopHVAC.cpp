@@ -122,22 +122,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   {
     boost::optional<ControllerWaterCoil> controller;
 
-    switch(it->iddObject().type().value())
+    if( it->iddObject().type() == CoilCoolingWater::iddObjectType() )
     {
-      case openstudio::IddObjectType::OS_Coil_Cooling_Water :
-      {
-        controller = it->cast<CoilCoolingWater>().controllerWaterCoil();
-        break;
-      }
-      case openstudio::IddObjectType::OS_Coil_Heating_Water :
-      {
-        controller = it->cast<CoilHeatingWater>().controllerWaterCoil();
-        break;
-      }
-      default:
-      {
-        break;
-      }
+      controller = it->cast<CoilCoolingWater>().controllerWaterCoil();
+    }
+    else if( it->iddObject().type() == CoilHeatingWater::iddObjectType() )
+    {
+      controller = it->cast<CoilHeatingWater>().controllerWaterCoil();
     }
 
     if( controller )
