@@ -30,6 +30,7 @@
 #include <model/Splitter.hpp>
 #include <model/Loop.hpp>
 #include <openstudio_lib/OSItem.hpp>
+#include "shared_gui_components/GraphicsItems.hpp"
 
 class QMenu;
 
@@ -126,57 +127,6 @@ class GridItem : public QGraphicsObject
   void onRemoveButtonClicked();
 
   private:
-};
-
-class ButtonItem : public QGraphicsObject
-{
-  Q_OBJECT;
-
-  public:
-
-  ButtonItem(const QPixmap & image, const QPixmap & downImage, 
-             const QPixmap & hoverImage, QGraphicsItem * parent = 0);
-
-  virtual ~ButtonItem() {}
-
-  QRectF boundingRect() const;
-
-  signals:
-
-  void mouseClicked();
-
-  protected:
-
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-
-  void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
-
-  void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
-
-  void paint(QPainter *painter, 
-             const QStyleOptionGraphicsItem *option, 
-             QWidget *widget = 0);
-
-  private:
-
-  bool m_mouseDown;
-
-  bool m_isHovering;
-
-  QPixmap m_image;
-
-  QPixmap m_downImage;
-
-  QPixmap m_hoverImage;
-};
-
-class RemoveButtonItem : public ButtonItem
-{
-  public:
-
-  RemoveButtonItem(QGraphicsItem * parent = 0);
 };
 
 class NodeContextButtonItem : public ButtonItem

@@ -201,32 +201,32 @@ HVACSystemsView::HVACSystemsView()
   mainVLayout->addWidget(mainViewSwitcher);
 }
 
-void HVACSystemsView::enableDeleteButton(bool enable)
-{
-  m_deleteButton->setEnabled(enable);
-}
+//void HVACSystemsView::enableDeleteButton(bool enable)
+//{
+//  m_deleteButton->setEnabled(enable);
+//}
 
-void HVACSystemsView::configureHeaderForNavigating()
-{
-  m_navigatorStack->setCurrentIndex(0);
-}
+//void HVACSystemsView::configureHeaderForNavigating()
+//{
+//  m_navigatorStack->setCurrentIndex(0);
+//}
 
-void HVACSystemsView::configureHeaderWithText(const QString & text)
-{
-  m_text->setText(text);
-
-  m_navigatorStack->setCurrentIndex(1);
-}
+//void HVACSystemsView::configureHeaderWithText(const QString & text)
+//{
+//  m_text->setText(text);
+//
+//  m_navigatorStack->setCurrentIndex(1);
+//}
 
 QSize HVACSystemsView::sizeHint () const
 {
   return QSize(800,550);
 }
 
-model::OptionalModel HVACSystemsView::model() const
-{
-  return m_model;
-}
+//model::OptionalModel HVACSystemsView::model() const
+//{
+//  return m_model;
+//}
 
 void HVACSystemsView::paintEvent ( QPaintEvent * event )
 {
@@ -236,10 +236,10 @@ void HVACSystemsView::paintEvent ( QPaintEvent * event )
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-OSComboBox * HVACSystemsView::chooser() const
-{
-  return m_chooser;
-}
+//OSComboBox * HVACSystemsView::chooser() const
+//{
+//  return m_chooser;
+//}
 
 HVACGraphicsView::HVACGraphicsView( QWidget * parent )
   : QGraphicsView(parent)

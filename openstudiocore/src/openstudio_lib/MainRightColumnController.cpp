@@ -821,12 +821,18 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature,"Setpoint Manager Follow Outdoor Air Temperature");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirReset,"Setpoint Manager Outdoor Air Reset");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Warmest,"Setpoint Manager Warmest");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_WalkIn,"Refrigeration Walkin");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_System,"Refrigeration System");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical,"Refrigeration Subcooler Mechanical");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction,"Refrigeration Subcooler Liquid Suction");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Compressor,"Refrigeration Compressor");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_AirCooled,"Refrigeration Condenser Air Cooled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Case,"Refrigeration Case");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_ConstantSpeed,"Pump Constant Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_VariableSpeed,"Pump Variable Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Adiabatic, "Pipes");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent,"Heat Exchanger Air To Air Sensible and Latent");
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_VariableVolume,"Fan Variable Volume");
-  libraryWidget->addModelObjectType(IddObjectType::OS_Fan_OnOff,"Fan On Off");  
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_ConstantVolume,"Fan Constant Volume");
   libraryWidget->addModelObjectType(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial,"Evaporative Cooler Direct Research Special");
   libraryWidget->addModelObjectType(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed,"Evaporative Fluid Cooler SingleSpeed");
@@ -834,6 +840,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_DistrictHeating,"District Heating");
   libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical, "Vertical Ground Heat Exchanger");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_SingleSpeed, "Cooling Tower Single Speed");
+  libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_VariableSpeed, "Cooling Tower Variable Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller Electric EIR");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Heating_Gas,"Coil Heating Gas");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Heating_DX_SingleSpeed,"Coil Heating DX SingleSpeed");
