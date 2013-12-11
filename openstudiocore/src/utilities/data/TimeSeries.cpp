@@ -40,6 +40,10 @@ namespace openstudio{
     TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
       : m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      if (values.empty()){
+        LOG_AND_THROW("Cannot create empty timeseries");
+      }
+
       // length of interval in seconds
       int secondsPerInterval = intervalLength.totalSeconds();
 
@@ -51,13 +55,17 @@ namespace openstudio{
         m_secondsFromFirstReport[i] = i*secondsPerInterval;
       }
 
+      long durationSeconds = 0;
+      if (!m_secondsFromFirstReport.empty()){
+        durationSeconds = m_secondsFromFirstReport.back();
+      }
+
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0;
-        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        DateTime lastDateTime = m_firstReportDateTime.date() + Time(0,0,0,durationSeconds);
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
-        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+        if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
           m_wrapAround = true;
         }
       }
@@ -68,6 +76,10 @@ namespace openstudio{
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
       :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      if (values.empty()){
+        LOG_AND_THROW("Cannot create empty timeseries");
+      }
+
       // length of interval in seconds
       int secondsPerInterval = intervalLength.totalSeconds();
 
@@ -78,13 +90,17 @@ namespace openstudio{
         m_secondsFromFirstReport[i] = i*secondsPerInterval;
       }
 
+      long durationSeconds = 0;
+      if (!m_secondsFromFirstReport.empty()){
+        durationSeconds = m_secondsFromFirstReport.back();
+      }
+
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
-        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        DateTime lastDateTime = m_firstReportDateTime.date() +  Time(0,0,0,durationSeconds);
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
-        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+        if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
           m_wrapAround = true;
         }
       }
@@ -95,20 +111,37 @@ namespace openstudio{
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
       :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      if (values.empty()){
+        LOG_AND_THROW("Cannot create empty timeseries");
+      }
+
+      if (daysFromFirstReport.size() != values.size()){
+        LOG_AND_THROW("Length of values must match length of times");
+      }
+
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
       for (unsigned i = 0; i < values.size(); ++i){
-        m_secondsFromFirstReport[i] = daysFromFirstReport(i)*86400.0; // JWD: Does this get rounded? I don't think so.
+        m_secondsFromFirstReport[i] = Time(daysFromFirstReport(i)).totalSeconds(); 
+        if (i > 0){
+          if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
+            LOG_AND_THROW("Days from first report must be monotonically increasing");
+          }
+        }
+      }
+
+      long durationSeconds = 0;
+      if (!m_secondsFromFirstReport.empty()){
+        durationSeconds = m_secondsFromFirstReport.back();
       }
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = maximum(daysFromFirstReport); // JWD: Can this be changed?
-        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        DateTime lastDateTime = m_firstReportDateTime.date() + Time(0,0,0,durationSeconds);
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
-        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+        if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
           m_wrapAround = true;
         }
       }
@@ -117,6 +150,14 @@ namespace openstudio{
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
       : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      if (values.empty()){
+        LOG_AND_THROW("Cannot create empty timeseries");
+      }
+
+      if (daysFromFirstReport.size() != values.size()){
+        LOG_AND_THROW("Length of values must match length of times");
+      }
+
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
@@ -124,16 +165,25 @@ namespace openstudio{
       std::copy(values.begin(), values.end(), m_values.begin());
 
       for (unsigned i = 0; i < values.size(); ++i){
-        m_secondsFromFirstReport[i] = daysFromFirstReport[i]*86400.0; // JWD: Does this get rounded? I don't think so.
+        m_secondsFromFirstReport[i] = Time(daysFromFirstReport[i]).totalSeconds();
+        if (i > 0){
+          if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
+            LOG_AND_THROW("Days from first report must be monotonically increasing");
+          }
+        }
+      }
+
+      long durationSeconds = 0;
+      if (!m_secondsFromFirstReport.empty()){
+        durationSeconds = m_secondsFromFirstReport.back();
       }
     
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
-        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        DateTime lastDateTime = m_firstReportDateTime.date() + Time(0,0,0,durationSeconds);
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
-        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+        if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
           m_wrapAround = true;
         }
       }
@@ -143,6 +193,14 @@ namespace openstudio{
     TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
       : m_secondsFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      if (values.empty()){
+        LOG_AND_THROW("Cannot create empty timeseries");
+      }
+
+      if (dateTimes.size() != values.size()){
+        LOG_AND_THROW("Length of values must match length of times");
+      }
+
       // DLM: startDate may or may not have baseYear defined
       m_firstReportDateTime = dateTimes.front();
       unsigned numDateTimes = dateTimes.size();
@@ -170,6 +228,12 @@ namespace openstudio{
         }else{
           m_secondsFromFirstReport[i] = (dateTime-m_firstReportDateTime).totalSeconds();
         }
+
+        if (i > 0){
+          if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
+            LOG_AND_THROW("Days from first report must be monotonically increasing");
+          }
+        }
       }
     }
 
@@ -177,20 +241,37 @@ namespace openstudio{
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
       :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      if (values.empty()){
+        LOG_AND_THROW("Cannot create empty timeseries");
+      }
+
+      if (secondsFromFirstReport.size() != values.size()){
+        LOG_AND_THROW("Length of values must match length of times");
+      }
+
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
       for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = secondsFromFirstReport[i];
+        if (i > 0){
+          if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
+            LOG_AND_THROW("Days from first report must be monotonically increasing");
+          }
+        }
+      }
+
+      long durationSeconds = 0;
+      if (!m_secondsFromFirstReport.empty()){
+        durationSeconds = m_secondsFromFirstReport.back();
       }
 
       // check for wrap around
       boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
       if (!calendarYear){
-        double duration = (double)m_secondsFromFirstReport[values.size()-1]/86400.0; // JWD: Not so sure about this
-        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        DateTime lastDateTime = m_firstReportDateTime.date() + Time(0,0,0,durationSeconds);
         Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
-        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+        if ((durationSeconds > Time(366.0).totalSeconds()) || (lastDate < m_firstReportDateTime.date())){
           m_wrapAround = true;
         }
       }
@@ -220,7 +301,7 @@ namespace openstudio{
       Vector daysFromFirstReport(m_secondsFromFirstReport.size());
       for(unsigned i=0;i<m_secondsFromFirstReport.size();i++)
       {
-        daysFromFirstReport[i] = m_secondsFromFirstReport[i]/86400.0;
+        daysFromFirstReport[i] = Time(0,0,0,m_secondsFromFirstReport[i]).totalDays();
       }
       return daysFromFirstReport;
     }
@@ -229,7 +310,9 @@ namespace openstudio{
     double TimeSeries_Impl::daysFromFirstReport(const unsigned& i) const 
     {
       double value = m_outOfRangeValue;
-      if ((i>=0) && (i<m_secondsFromFirstReport.size())) value = (double)m_secondsFromFirstReport[i]/86400.0;
+      if ((i>=0) && (i<m_secondsFromFirstReport.size())){
+        value = Time(0,0,0,m_secondsFromFirstReport[i]).totalDays();
+      }
       return value;
     }
 
@@ -277,43 +360,41 @@ namespace openstudio{
       return m_firstReportDateTime;
     }
 
-
-    /// get value at number of days from start date
-    double TimeSeries_Impl::value(double daysFromFirstReport) const
+    /// get value at number of seconds from start date and time
+    double TimeSeries_Impl::valueAtSecondsFromFirstReport(long secondsFromFirstReport) const
     {
-
-      Vector m_daysFromFirstReport = this->daysFromFirstReport(); // Need the "this" due to argument name
-
       double result = m_outOfRangeValue;
-      double duration = m_daysFromFirstReport(m_daysFromFirstReport.size()-1);
+
+      if (m_secondsFromFirstReport.empty()){
+        LOG(Debug, "Cannot compute value because timeseries is empty");
+        return result;
+      }
+
+      long duration = m_secondsFromFirstReport.back();
 
       if (m_intervalLength){
 
         // before the start of the first interval 
-        if (daysFromFirstReport <= -m_intervalLength->totalDays()){
-          LOG(Debug, "Cannot compute value " << daysFromFirstReport << " days before first reporting time when interval length is " << *m_intervalLength);
-        }else if(daysFromFirstReport > duration){
+        if (secondsFromFirstReport <= -m_intervalLength->totalSeconds()){
+          LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds before first reporting time when interval length is " << *m_intervalLength);
+        }else if(secondsFromFirstReport > duration){
           // after end of time series
-          LOG(Debug, "Cannot compute value " << daysFromFirstReport << " days after first reporting time when duration is " << duration << " days");
+          LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds after first reporting time when duration is " << duration << " seconds");
         }else{
-          // faster interpolation if know we have fixed interval
-          double numIntervals = daysFromFirstReport / m_intervalLength->totalDays();
-          double floorNumIntervals = floor(numIntervals);
+          // faster look up if know we have fixed interval
+          unsigned numIntervals = secondsFromFirstReport / m_intervalLength->totalSeconds();
+          unsigned remainder = secondsFromFirstReport % m_intervalLength->totalSeconds();
           unsigned index;
-          if (floorNumIntervals < numIntervals){
-            index = (unsigned)(floorNumIntervals+1);
+          if (remainder > 0){
+            index = numIntervals+1;
           }else{
-            if (floorNumIntervals < 0.0){
-              // had some issues with numeric precision resulting in floorNumIntervals == numIntervals == -1
-              return result;
-            }
-            index = (unsigned)(floorNumIntervals);
+            index = numIntervals;
           }
 
           // issue with daily, hourly flood plots when index == m_values.size()
           if (index >= m_values.size()) {
-            LOG(Warn, "timeseries index " << index << " is greater than or equal to values size " << m_values.size() << " and has been set to size - 1.");
-            index = index  - 1;
+            LOG(Warn, "Timeseries index " << index << " is greater than or equal to values size " << m_values.size() << " and has been set to size - 1.");
+            index = index - 1;
           }
           result = m_values(index);
         }
@@ -321,25 +402,34 @@ namespace openstudio{
       }else{
 
         // before the end of the first interval, do not know when start is
-        if (daysFromFirstReport < 0){
-          LOG(Debug, "Cannot compute value " << daysFromFirstReport << " days before first reporting time when interval length is unknown");
+        if (secondsFromFirstReport < 0){
+          LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds before first reporting time when interval length is unknown");
 
-        }else if(daysFromFirstReport > duration){
+        }else if(secondsFromFirstReport > duration){
           // after end of time series
-          LOG(Debug, "Cannot compute value " << daysFromFirstReport << " days after first reporting time when duration is " << duration << " days");
+          LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds after first reporting time when duration is " << duration << " seconds");
         }else{
+          // recenter secondsFromFirstReport -> 0 for better precision
+          Vector tmp = createVector(m_secondsFromFirstReport, secondsFromFirstReport);
+
           // normal interpolation
-          result = interp(m_daysFromFirstReport, m_values, daysFromFirstReport, HoldNextInterp, NoneExtrap);
+          result = interp(tmp, m_values, 0.0, HoldNextInterp, NoneExtrap);
         }
       }
 
       return result;
     }
 
+    /// get value at number of days from start date
+    double TimeSeries_Impl::value(double daysFromFirstReport) const
+    {
+      return valueAtSecondsFromFirstReport(Time(daysFromFirstReport).totalSeconds());
+    }
+
     /// get value at time from first report date and time
     double TimeSeries_Impl::value(const Time& timeFromFirstReport) const
     {
-      return value(timeFromFirstReport.totalDays());
+      return valueAtSecondsFromFirstReport(timeFromFirstReport.totalSeconds());
     }
 
     /// get value at date and time

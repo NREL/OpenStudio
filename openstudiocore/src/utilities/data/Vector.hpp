@@ -44,6 +44,9 @@ typedef VectorStruct::ScalarVectorType ScalarVector;
 /// Helper function to construct Vector from std::vector<double>.
 UTILITIES_API Vector createVector(const std::vector<double>& values);
 
+/// Helper function to construct Vector from std::vector<long>, subtracts newCenter from all values first.
+UTILITIES_API Vector createVector(const std::vector<long>& values, long newCenter = 0);
+
 UTILITIES_API std::vector<double> toStandardVector(const Vector& values);
 
 //////////////////////////////////////////////////////////////////////////

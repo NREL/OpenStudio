@@ -77,21 +77,27 @@ namespace openstudio{
 
         /// time in days from end of the first reporting interval
         openstudio::Vector daysFromFirstReport() const;
+
         /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
         double daysFromFirstReport(const unsigned& i) const;
 
         /// time in seconds from end of the first reporting interval
         std::vector<long> secondsFromFirstReport() const;
+
         /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
         long secondsFromFirstReport(const unsigned& i) const;
 
         /// values
         openstudio::Vector values() const;
+
         /// values at index i to prevent inplicit vector copy for single value
         double values(const unsigned& i) const;
 
         /// units
         const std::string units() const;
+
+        /// get value at number of seconds from start date and time
+        double valueAtSecondsFromFirstReport(long secondsFromFirstReport) const;
 
         /// get value at number of days from start date and time
         /// Note that rounding errors may occur - see trac 1380 and 
@@ -130,6 +136,7 @@ namespace openstudio{
         DateTime m_firstReportDateTime;
 
         // fractional days from first report date time, used for quick interpolation
+        // DLM: changed to m_secondsFromFirstReport for better precision
         //Vector m_daysFromFirstReport; 
 
         // integer seconds from first report date time, used for quick interpolation
