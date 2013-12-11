@@ -20,7 +20,7 @@
 #include "OSItem.hpp"
 #include "RefrigerationGraphicsItems.hpp"
 #include "../utilities/core/Assert.hpp"
-#include "../shared_gui_components/buttons.hpp"
+#include "../shared_gui_components/Buttons.hpp"
 #include <QPainter>
 #include <utility>
 #include <QGraphicsSceneMouseEvent>
