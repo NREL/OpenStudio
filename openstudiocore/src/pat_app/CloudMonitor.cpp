@@ -831,7 +831,7 @@ std::vector<std::string> StartCloudWorker::warnings() const
 
 StopCloudWorker::StopCloudWorker(CloudMonitor * monitor)
   : QObject(),
-    m_monitor(monitor),
+    m_monitor(monitor)
 {
 }
 
