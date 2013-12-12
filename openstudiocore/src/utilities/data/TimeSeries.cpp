@@ -33,7 +33,7 @@ namespace openstudio{
   namespace detail{
 
     /// default constructor
-    TimeSeries_Impl::TimeSeries_Impl()
+    TimeSeries_Impl::TimeSeries_Impl():m_outOfRangeValue(0.0)
     {}
 
     /// constructor from start date, interval length, and values
@@ -592,6 +592,9 @@ namespace openstudio{
         result = boost::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(dateTimes, values, m_units));
 
       }
+      else{
+        LOG(Warn, "Adding timeseries with different units returns an empty timeseries");
+      }
 
       return result;
     }
@@ -637,6 +640,9 @@ namespace openstudio{
         // make new result
         result = boost::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(dateTimes, values, m_units));
 
+      }
+      else{
+        LOG(Warn, "Subtracting timeseries with different units returns an empty timeseries");
       }
 
       return result;
