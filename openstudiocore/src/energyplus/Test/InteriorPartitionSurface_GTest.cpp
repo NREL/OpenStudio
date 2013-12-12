@@ -40,6 +40,8 @@
 #include <model/Space_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/StandardOpaqueMaterial.hpp>
+#include <model/StandardOpaqueMaterial_Impl.hpp>
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
 
@@ -67,7 +69,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
   ASSERT_TRUE(space2);
   space2->setXOrigin(1);
 
+  StandardOpaqueMaterial material(model);
+
+  std::vector<Material> layers;
+  layers.push_back(material);
+  
   Construction construction(model);
+  EXPECT_TRUE(construction.setLayers(layers));
   
   // interior walls will be converted to internal mass
   DefaultSurfaceConstructions defaultSurfaceConstructions(model);

@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include <utilities/data/TimeSeries.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <exception>
 #include <set>
@@ -390,7 +391,10 @@ namespace openstudio{
           unsigned numIntervals = secondsFromFirstReport / m_intervalLength->totalSeconds();
           unsigned remainder = secondsFromFirstReport % m_intervalLength->totalSeconds();
           unsigned index;
-          if (remainder > 0){
+          if (secondsFromFirstReport < 0){
+            OS_ASSERT(numIntervals == 0);
+            index = numIntervals;
+          }else if (remainder > 0){
             index = numIntervals+1;
           }else{
             index = numIntervals;
