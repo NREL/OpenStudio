@@ -290,7 +290,13 @@ std::vector<TimeSeries> PrjModel::pathInfiltration(std::vector<int> pathNrs, Sim
   // of the text form outputs.
   std::vector<TimeSeries> results;
   std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
-  unsigned int ntimes = sim->dateTimes().size();
+  unsigned int ntimes = 1;
+  std::vector<DateTime> dateTimes = sim->dateTimes();
+  if(sim->dateTimes().size()!=1)
+  {
+    ntimes = sim->dateTimes().size()-1;
+    dateTimes = std::vector<DateTime>(dateTimes.begin() + 1,dateTimes.end());
+  }
   for(unsigned int i=0; i<pathNrs.size(); i++)
   {
     Vector inf = createVector(std::vector<double>(ntimes,0.0));
@@ -351,7 +357,7 @@ std::vector<TimeSeries> PrjModel::pathInfiltration(std::vector<int> pathNrs, Sim
       }
     }
     // Save the time series
-    results.push_back(openstudio::TimeSeries(sim->dateTimes(),inf,"kg/s"));
+    results.push_back(openstudio::TimeSeries(dateTimes,inf,"kg/s"));
   }
   return results;
 }
