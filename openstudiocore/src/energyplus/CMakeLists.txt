@@ -253,6 +253,8 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateOutputMeterMeterFileOnly.cpp
   ReverseTranslator/ReverseTranslateOutputVariable.cpp
   ReverseTranslator/ReverseTranslatePeople.cpp
+  ReverseTranslator/ReverseTranslateRefrigerationCase.cpp
+  ReverseTranslator/ReverseTranslateRefrigerationCompressor.cpp
   ReverseTranslator/ReverseTranslateRunPeriod.cpp
   ReverseTranslator/ReverseTranslateRunPeriodControlDaylightSavingTime.cpp
   ReverseTranslator/ReverseTranslateRunPeriodControlSpecialDays.cpp

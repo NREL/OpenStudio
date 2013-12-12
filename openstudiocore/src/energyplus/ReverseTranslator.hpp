@@ -183,6 +183,10 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateRefrigerationCase(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateRefrigerationCompressor(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateRunPeriod(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateRunPeriodControlDaylightSavingTime(const WorkspaceObject & workspaceObject);
