@@ -1266,7 +1266,10 @@ namespace sdd {
         std::string scheduleName = escapeName(scheduleReferenceElement.text());
         boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
         if(schedule){
-          shadingSurface.setTransmittanceSchedule(*schedule);
+          bool test = shadingSurface.setTransmittanceSchedule(*schedule);
+          if (!test){
+            LOG(Error, "Failed to assign schedule '" << scheduleName << "' to shading surface '" << name << "'");
+          }
         }else{
           LOG(Error, "Cannot find schedule '" << scheduleName << "'");
         }
@@ -1288,19 +1291,29 @@ namespace sdd {
     }
 
     std::string description = boost::lexical_cast<std::string>(solRefl) + "-" + boost::lexical_cast<std::string>(visRefl);
+    std::string constructionName = "Shading Construction " + description;
+    std::string materialName = "Shading Material " + description;
 
     // create a construction with these properties
     model::Construction construction(model);
-    construction.setName("Shading Construction " + description);
+    construction.setName(constructionName);
 
     model::MasslessOpaqueMaterial material(model);
-    material.setSolarAbsorptance(1.0-solRefl);
-    material.setVisibleAbsorptance(1.0-visRefl);
-    material.setName("Shading Material" + description);
+    material.setName(materialName);
+
+    bool test = material.setSolarAbsorptance(1.0-solRefl);
+    if (!test){
+      LOG(Error, "Failed to assign solar absorptance '" << 1.0-solRefl << "' to material '" << materialName << "'");
+    }
+
+    test = material.setVisibleAbsorptance(1.0-visRefl);
+    if (!test){
+      LOG(Error, "Failed to assign visible absorptance '" << 1.0-visRefl << "' to material '" << materialName << "'");
+    }
 
     std::vector<model::Material> materials;
     materials.push_back(material);
-    bool test = construction.setLayers(materials);
+    test = construction.setLayers(materials);
     OS_ASSERT(test); // what type of error handling do we want?
 
     m_shadingConstructionMap.insert(std::make_pair<std::pair<double, double>, model::ConstructionBase>(key, construction));
@@ -1911,25 +1924,33 @@ namespace sdd {
           
           if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
             model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
-            boost::optional<double> test = outerMaterial.solarReflectance();
-            if (test){
-              solRefl = *test;
+            if (!outerMaterial.isSolarAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.solarReflectance();
+              if (test){
+                solRefl = *test;
+              }
             }
-            test = outerMaterial.visibleReflectance();
-            if (test){
-              visRefl = *test;
+            if (!outerMaterial.isVisibleAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.visibleReflectance();
+              if (test){
+                visRefl = *test;
+              }
             }
           }
 
           if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
             model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
-            boost::optional<double> test = outerMaterial.solarReflectance();
-            if (test){
-              solRefl = *test;
+            if (!outerMaterial.isSolarAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.solarReflectance();
+              if (test){
+                solRefl = *test;
+              }
             }
-            test = outerMaterial.visibleReflectance();
-            if (test){
-              visRefl = *test;
+            if (!outerMaterial.isVisibleAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.visibleReflectance();
+              if (test){
+                visRefl = *test;
+              }
             }
           }
         }

@@ -210,6 +210,7 @@ QwtDoubleRect TimeSeriesFloodPlotData::boundingRect() const
 
 double TimeSeriesFloodPlotData::value(double fractionalDay, double hourOfDay) const
 {
+  // DLM: we are flooring the day because we want to plot day vs hour in flood plot
   double fracDays = floor(fractionalDay) + hourOfDay/24.0;
   return m_timeSeries.value(fracDays-m_startFractionalDay);
 }
