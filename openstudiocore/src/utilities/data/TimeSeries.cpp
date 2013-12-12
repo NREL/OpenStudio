@@ -41,7 +41,7 @@ namespace openstudio{
       : m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
-        LOG(Error, "Creating empty timeseries");
+        LOG(Warn, "Creating empty timeseries");
       }
 
       // length of interval in seconds
@@ -78,7 +78,7 @@ namespace openstudio{
       :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
-        LOG(Error, "Creating empty timeseries");
+        LOG(Warn, "Creating empty timeseries");
       }
 
       // length of interval in seconds
@@ -114,7 +114,7 @@ namespace openstudio{
       :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
-        LOG(Error, "Creating empty timeseries");
+        LOG(Warn, "Creating empty timeseries");
       }
 
       if (daysFromFirstReport.size() != values.size()){
@@ -154,7 +154,7 @@ namespace openstudio{
       : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
-        LOG(Error, "Creating empty timeseries");
+        LOG(Warn, "Creating empty timeseries");
       }
 
       if (daysFromFirstReport.size() != values.size()){
@@ -198,7 +198,7 @@ namespace openstudio{
       : m_secondsFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
-        LOG(Error, "Creating empty timeseries");
+        LOG(Warn, "Creating empty timeseries");
       }
 
       if (dateTimes.size() != values.size()){
@@ -247,7 +247,7 @@ namespace openstudio{
       :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
-        LOG(Error, "Creating empty timeseries");
+        LOG(Warn, "Creating empty timeseries");
       }
 
       if (secondsFromFirstReport.size() != values.size()){
