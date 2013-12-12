@@ -41,11 +41,11 @@ namespace openstudio{
     return result;
   }
 
-  Vector createVector(const std::vector<long>& values, long newCenter) {
+  Vector createVector(const std::vector<long>& values) {
     unsigned n = values.size();
     Vector result(n);
     for (unsigned i = 0; i < n; ++i) {
-      result[i] = (double)(values[i] - newCenter);
+      result[i] = (double)(values[i]);
     }
     return result;
   }

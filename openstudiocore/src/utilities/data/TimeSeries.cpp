@@ -54,6 +54,7 @@ namespace openstudio{
       for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = i*secondsPerInterval;
       }
+      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
       long durationSeconds = 0;
       if (!m_secondsFromFirstReport.empty()){
@@ -89,6 +90,7 @@ namespace openstudio{
       for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = i*secondsPerInterval;
       }
+      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
       long durationSeconds = 0;
       if (!m_secondsFromFirstReport.empty()){
@@ -130,6 +132,7 @@ namespace openstudio{
           }
         }
       }
+      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
       long durationSeconds = 0;
       if (!m_secondsFromFirstReport.empty()){
@@ -172,6 +175,7 @@ namespace openstudio{
           }
         }
       }
+      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
       long durationSeconds = 0;
       if (!m_secondsFromFirstReport.empty()){
@@ -235,6 +239,7 @@ namespace openstudio{
           }
         }
       }
+      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
     }
 
     /// constructor from first report date and time, seconds from first report vector, values, and units
@@ -260,6 +265,7 @@ namespace openstudio{
           }
         }
       }
+      m_secondsFromFirstReportAsVector = createVector(m_secondsFromFirstReport);
 
       long durationSeconds = 0;
       if (!m_secondsFromFirstReport.empty()){
@@ -288,8 +294,7 @@ namespace openstudio{
       DateTimeVector dateTimeObjs(m_secondsFromFirstReport.size());
       for(unsigned i=0;i<m_secondsFromFirstReport.size();i++)
       {
-        dateTimeObjs[i] = m_firstReportDateTime + openstudio::Time(0,0,0,
-          m_secondsFromFirstReport[i]);
+        dateTimeObjs[i] = m_firstReportDateTime + openstudio::Time(0,0,0,m_secondsFromFirstReport[i]);
       }
       return dateTimeObjs;
     }
@@ -409,11 +414,8 @@ namespace openstudio{
           // after end of time series
           LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds after first reporting time when duration is " << duration << " seconds");
         }else{
-          // recenter secondsFromFirstReport -> 0 for better precision
-          Vector tmp = createVector(m_secondsFromFirstReport, secondsFromFirstReport);
-
           // normal interpolation
-          result = interp(tmp, m_values, 0.0, HoldNextInterp, NoneExtrap);
+          result = interp(m_secondsFromFirstReportAsVector, m_values, secondsFromFirstReport, HoldNextInterp, NoneExtrap);
         }
       }
 

@@ -396,6 +396,7 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year)
   Vector values(8760);
   DateTime startDate(Date(MonthOfYear::Jan, startDay), Time(0,startHour,0,0));
   for(unsigned i = 0; i < 8760; ++i){
+    // every day is the same, it should be 0 until hour 1, 1 until hour 2, 2 until hour 3, ..., 23 until hour 24
     dateTimes[i] = startDate + Time(0,i,0,0);
     values[i] = i % 24;
   }
@@ -403,29 +404,60 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year)
   TimeSeries ts(dateTimes, values, "");
   TimeSeriesFloodPlotData::Ptr data = TimeSeriesFloodPlotData::create(ts);
   
-  double epsilon=1e-6;
+  double epsilon=2.0/3600.0; // 2 seconds in hours
   EXPECT_DOUBLE_EQ(1, data->minX());
-  EXPECT_DOUBLE_EQ(1+365, data->maxX());
+  EXPECT_DOUBLE_EQ(1+365, data->maxX()); // days
   EXPECT_DOUBLE_EQ(0.0, data->minY());
-  EXPECT_DOUBLE_EQ(24.0, data->maxY());
+  EXPECT_DOUBLE_EQ(24.0, data->maxY()); // hours
   EXPECT_DOUBLE_EQ(0.0, data->minValue());
-  EXPECT_DOUBLE_EQ(23.0, data->maxValue());
+  EXPECT_DOUBLE_EQ(23.0, data->maxValue()); // values
+
   EXPECT_DOUBLE_EQ(0.0, data->value(1,0.0));
-  EXPECT_DOUBLE_EQ(0.0, data->value(1,1));
-  EXPECT_DOUBLE_EQ(12.0, data->value(212,12.0));
-  EXPECT_DOUBLE_EQ(4.0, data->value(1,5.0));
-  EXPECT_DOUBLE_EQ(0.0, data->value(1.0,1.0-epsilon)); 
-  EXPECT_DOUBLE_EQ(21.0, data->value(215.0,22.0)); 
-  EXPECT_DOUBLE_EQ(23.0, data->value(216.0,23.0+epsilon)); 
-  EXPECT_DOUBLE_EQ(22.0, data->value(2.0,23.0-epsilon));
-  EXPECT_DOUBLE_EQ(0.0, data->value(1,25.0-epsilon)); 
-  EXPECT_DOUBLE_EQ(23.0, data->value(1,24.0-epsilon));
+  EXPECT_DOUBLE_EQ(0.0, data->value(1,0.0+epsilon));
+
+  EXPECT_DOUBLE_EQ(0.0, data->value(1,1.0-epsilon));
+  EXPECT_DOUBLE_EQ(0.0, data->value(1,1.0));
+  EXPECT_DOUBLE_EQ(1.0, data->value(1,1.0+epsilon));
+
+  EXPECT_DOUBLE_EQ(1.0, data->value(1,2.0-epsilon));
   EXPECT_DOUBLE_EQ(1.0, data->value(1,2.0));
-  EXPECT_DOUBLE_EQ(23.0, data->value(365.0,-1.0+epsilon));
+  EXPECT_DOUBLE_EQ(2.0, data->value(1,2.0+epsilon));
+
+  EXPECT_DOUBLE_EQ(4.0, data->value(1,5.0-epsilon));
+  EXPECT_DOUBLE_EQ(4.0, data->value(1,5.0));
+  EXPECT_DOUBLE_EQ(5.0, data->value(1,5.0+epsilon));
+
+  EXPECT_DOUBLE_EQ(11.0, data->value(212,12.0-epsilon));
+  EXPECT_DOUBLE_EQ(11.0, data->value(212,12.0));
+  EXPECT_DOUBLE_EQ(12.0, data->value(212,12.0+epsilon));
+
+  EXPECT_DOUBLE_EQ(21.0, data->value(215.0,22.0-epsilon)); 
+  EXPECT_DOUBLE_EQ(21.0, data->value(215.0,22.0)); 
+  EXPECT_DOUBLE_EQ(22.0, data->value(215.0,22.0+epsilon)); 
+
+  EXPECT_DOUBLE_EQ(22.0, data->value(216.0,23.0-epsilon)); 
+  EXPECT_DOUBLE_EQ(22.0, data->value(216.0,23.0)); 
+  EXPECT_DOUBLE_EQ(23.0, data->value(216.0,23.0+epsilon)); 
+
+  EXPECT_DOUBLE_EQ(22.0, data->value(2.0,23.0-epsilon));
+  EXPECT_DOUBLE_EQ(22.0, data->value(2.0,23.0));
+  EXPECT_DOUBLE_EQ(23.0, data->value(2.0,23.0+epsilon));
+
+  EXPECT_DOUBLE_EQ(0.0, data->value(1,25.0-epsilon)); // hour 1
+  EXPECT_DOUBLE_EQ(0.0, data->value(1,25.0));  // hour 1
+  EXPECT_DOUBLE_EQ(1.0, data->value(1,25.0+epsilon)); // hour 1
+ 
+  EXPECT_DOUBLE_EQ(23.0, data->value(1,24.0-epsilon)); // hour 24
+  EXPECT_DOUBLE_EQ(23.0, data->value(1,24.0)); // hour 24
+  EXPECT_DOUBLE_EQ(0.0, data->value(1,24.0+epsilon)); // hour 24
+
+  EXPECT_DOUBLE_EQ(22.0, data->value(364.0,23.0-epsilon));
   EXPECT_DOUBLE_EQ(22.0, data->value(364.0,23.0));
-  EXPECT_DOUBLE_EQ(23.0, data->value(364.0,24.0));
-  EXPECT_DOUBLE_EQ(0.0, data->value(365.0,-23.0-epsilon)); 
-  EXPECT_DOUBLE_EQ(0.0, data->value(364.0,1.0-epsilon)); 
+  EXPECT_DOUBLE_EQ(23.0, data->value(364.0,23.0+epsilon));
+
+  EXPECT_DOUBLE_EQ(23.0, data->value(364.0,24.0-epsilon)); // hour 24
+  EXPECT_DOUBLE_EQ(23.0, data->value(364.0,24.0)); // hour 24
+  EXPECT_DOUBLE_EQ(0.0, data->value(364.0,24.0+epsilon)); // hour 24
 
   FloodPlot::Ptr fp = FloodPlot::create();
   std::string name = "TimeSeries Detailed Year Flood Plot Test";

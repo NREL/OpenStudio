@@ -210,6 +210,7 @@ QwtDoubleRect TimeSeriesFloodPlotData::boundingRect() const
 
 double TimeSeriesFloodPlotData::value(double fractionalDay, double hourOfDay) const
 {
+  // DLM: why are we passing in a double then flooring it, should this be an integer?
   double fracDays = floor(fractionalDay) + hourOfDay/24.0;
   return m_timeSeries.value(fracDays-m_startFractionalDay);
 }
