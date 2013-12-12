@@ -29,7 +29,7 @@
 
 #include <utilities/time/DateTime.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
-#include <Utilities/core/PathHelpers.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <QDir>
 #include <QDateTime>
