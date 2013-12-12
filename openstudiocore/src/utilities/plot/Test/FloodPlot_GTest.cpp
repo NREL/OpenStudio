@@ -404,7 +404,7 @@ TEST(FloodPlot, TimeSeriesFloodPlot_Detailed_Year)
   TimeSeries ts(dateTimes, values, "");
   TimeSeriesFloodPlotData::Ptr data = TimeSeriesFloodPlotData::create(ts);
   
-  double epsilon=2.0/3600.0; // 2 seconds in hours
+  double epsilon=1.5/3600.0; // 1.5 seconds in hours
   EXPECT_DOUBLE_EQ(1, data->minX());
   EXPECT_DOUBLE_EQ(1+365, data->maxX()); // days
   EXPECT_DOUBLE_EQ(0.0, data->minY());
