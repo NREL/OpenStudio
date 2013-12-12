@@ -22,6 +22,7 @@
 #include <model/RefrigerationSystem.hpp>
 #include <model/ThermalZone.hpp>
 //#include <model/RefrigerationCondenserAirCooled.hpp>
+#include <model/RefrigerationAirChiller.hpp>
 #include <model/RefrigerationCondenserCascade.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
@@ -62,8 +63,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 //Refrigerated Case or Walkin or CaseAndWalkInList Name
   std::vector<RefrigerationCase> cases = modelObject.cases();
   std::vector<RefrigerationWalkIn> walkins = modelObject.walkins();
+  std::vector<RefrigerationAirChiller> airChillers = modelObject.airChillers();
 
-  if( !cases.empty() || !walkins.empty() )
+  if( !cases.empty() || !walkins.empty() || !airChillers.empty() )
   {
   	// Name
   	name = " Case and Walkin List";
@@ -102,6 +104,20 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   		  eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
   		}
   	}
+
+    for( std::vector<RefrigerationAirChiller>::iterator it = airChillers.begin();
+       it != airChillers.end();
+       it++ )
+    {
+      boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
+
+      if( _airChiller )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_airChiller->name().get()); 
+      }
+    }
   }
 
 //Refrigeration Transfer Load or TransferLoad List Name
