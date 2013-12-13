@@ -6966,7 +6966,7 @@ OS:Refrigeration:AirChiller,
         \memo fans and heaters is modeled based on inputs for nominal power, schedules, and control
         \memo type. The air chiller model accounts for the sensible and latent heat exchange
         \memo with the surrounding environment.
-        \min-fields 26
+        \min-fields 24
   A1,   \field Handle
         \type handle
         \required-field
@@ -6975,21 +6975,12 @@ OS:Refrigeration:AirChiller,
         \type alpha
         \reference AllObjects
         \reference RefrigerationAirChillerNames
-        \reference ConnectionObject
   A3,   \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.
         \note If this field is blank, the system is always available.
         \type object-list
         \object-list ScheduleNames
-  A4,   \field Air Inlet Node Name
-        \required-field
-        \type object-list
-        \object-list ConnectionNames
-  A5,   \field Air Outlet Node Name
-        \required-field
-        \type object-list
-        \object-list ConnectionNames
-  A6,   \field Capacity Rating Type
+  A4,   \field Capacity Rating Type
         \required-field
         \note In each case, select the rating option that corresponds to the expected service conditions.
         \note For example, U.S. manufacturers quote a separate Unit Load Factor for wet or frosted coils.
@@ -7069,7 +7060,7 @@ OS:Refrigeration:AirChiller,
         \units dimensionless
         \default 1.0
         \note This is the manufacturer's correction factor for refrigerant corresponding to rating
-  A7,   \field Capacity Correction Curve Type
+  A5,   \field Capacity Correction Curve Type
         \note In each case, select the correction curve type that corresponds to the rating type.
         \type choice
         \key LinearSHR60
@@ -7078,7 +7069,7 @@ OS:Refrigeration:AirChiller,
         \key TabularRHxDT1xTRoom
         \default LinearSHR60
         \note default LinearSHR60 unless Capcity Rating Type = CapacityTotalSpecificConditions
-  A8,   \field Capacity Correction Curve Name
+  A6,   \field Capacity Correction Curve Name
         \type object-list
         \object-list LinearCurves
         \object-list QuadraticCurves
@@ -7096,13 +7087,13 @@ OS:Refrigeration:AirChiller,
         \required-field
         \note Include total for all heater power
         \note Do not include defrost heater power
-  A9,   \field Heating Power Schedule Name
+  A7,   \field Heating Power Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note Values will be used to multiply the total heating power
         \note Values in the schedule should be between 0.0 and 1.0
         \note Defaults to always on if schedule name left blank.
-  A10,  \field Fan Speed Control Type
+  A8,   \field Fan Speed Control Type
         \type choice
         \key Fixed
         \key FixedLinear
@@ -7124,7 +7115,7 @@ OS:Refrigeration:AirChiller,
         \units dimensionless
         \minimum 0.0
         \default 0.2
-  A11,  \field Defrost Type
+  A9,   \field Defrost Type
         \type choice
         \key HotFluid
         \key Electric
@@ -7133,17 +7124,17 @@ OS:Refrigeration:AirChiller,
         \default Electric
         \note HotFluid includes either hot gas defrost for a DX system or
         \note   Hot Brine defrost if this walk in is cooled by brine from a secondary chiller
-  A12,  \field Defrost Control Type
+  A10,  \field Defrost Control Type
         \type choice
         \key TimeSchedule
         \key TemperatureTermination
         \default TimeSchedule
-  A13,  \field Defrost Schedule Name
+  A11,  \field Defrost Schedule Name
         \type object-list
         \object-list ScheduleNames
         \required-field
         \note The schedule values should be 0 (off) or 1 (on)
-  A14,  \field Defrost Drip-Down Schedule Name
+  A12,  \field Defrost Drip-Down Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note The schedule values should be 0 (off) or 1 (on)
@@ -7165,7 +7156,7 @@ OS:Refrigeration:AirChiller,
         \note This is the portion of the defrost energy that is available to melt frost
         \note     Needed only for defrost control type TemperatureTermination
         \note     defaults to 0.7 for electric defrost and to 0.3 for hot fluid defrost
-  A15,  \field Vertical Location
+  A13,  \field Vertical Location
         \type choice
         \key Ceiling
         \key Middle

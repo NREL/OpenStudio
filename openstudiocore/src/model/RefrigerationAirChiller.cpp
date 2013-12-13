@@ -124,22 +124,58 @@ namespace detail {
 
   unsigned RefrigerationAirChiller_Impl::inletPort()
   {
-    return OS_Refrigeration_AirChillerFields::AirInletNodeName;
+    // return OS_Refrigeration_AirChillerFields::AirInletNodeName;
+    return 0; // this object has no inlet or outlet node
   }
 
   unsigned RefrigerationAirChiller_Impl::outletPort()
   {
-    return OS_Refrigeration_AirChillerFields::AirOutletNodeName;
+    // return OS_Refrigeration_AirChillerFields::AirOutletNodeName;
+    return 0; // this object has no inlet or outlet node
+  }
+
+  boost::optional<ThermalZone> RefrigerationAirChiller_Impl::thermalZone()
+  {
+    Model m = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        return *it;
+      }
+    }
+    return boost::none;
   }
 
   bool RefrigerationAirChiller_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
-    return ZoneHVACComponent_Impl::addToThermalZone(thermalZone);
+    // return ZoneHVACComponent_Impl::addToThermalZone(thermalZone);
+    Model m = this->model();
+
+    if( thermalZone.model() != m )
+    {
+      return false;
+    }
+
+    removeFromThermalZone();
+    thermalZone.setUseIdealAirLoads(false);
+    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+    return true;
   }
 
   void RefrigerationAirChiller_Impl::removeFromThermalZone()
   {
-    ZoneHVACComponent_Impl::removeFromThermalZone();
+    // ZoneHVACComponent_Impl::removeFromThermalZone();
+    if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
+      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+    }
   }
 
   boost::optional<Schedule> RefrigerationAirChiller_Impl::availabilitySchedule() const {

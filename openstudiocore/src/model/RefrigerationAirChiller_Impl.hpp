@@ -76,6 +76,8 @@ namespace detail {
 
     virtual void removeFromThermalZone();
 
+    virtual boost::optional<ThermalZone> thermalZone();
+
     //@}
     /** @name Getters */
     //@{
