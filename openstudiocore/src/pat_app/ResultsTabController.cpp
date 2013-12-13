@@ -118,44 +118,31 @@ void ResultsTabController::selectView(int index)
 {
   bool bingo = false;
 
+  if (m_currentSelectionController){
+    bingo = disconnect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    OS_ASSERT(bingo);
+    bingo = disconnect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
+    OS_ASSERT(bingo);
+    bingo = disconnect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    OS_ASSERT(bingo);
+  }
+
   if (index == 0){
-
-    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    OS_ASSERT(bingo);
-    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
-    OS_ASSERT(bingo);
-    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    OS_ASSERT(bingo);
-
-    bingo = disconnect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    //OS_ASSERT(bingo);
-    bingo = disconnect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
-    //OS_ASSERT(bingo);
-    bingo = disconnect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    //OS_ASSERT(bingo);
-
     m_currentSelectionController = m_dataPointResultsListController->selectionController();
-    m_currentSelectionController->unselectAllItems();
-
-  }else{
-
-    bingo = disconnect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    //OS_ASSERT(bingo);
-    bingo = disconnect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
-    //OS_ASSERT(bingo);
-    bingo = disconnect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    //OS_ASSERT(bingo);
-
-    bingo = connect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    OS_ASSERT(bingo);
-    bingo = connect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
-    OS_ASSERT(bingo);
-    bingo = connect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    OS_ASSERT(bingo);
-
+  }else if (index == 1){
     m_currentSelectionController = m_dataPointCalibrationListController->selectionController();
-    m_currentSelectionController->unselectAllItems();
+  }
 
+  if (m_currentSelectionController){
+    bingo = connect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    OS_ASSERT(bingo);
+    bingo = connect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
+    OS_ASSERT(bingo);
+    bingo = connect(m_currentSelectionController.data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    OS_ASSERT(bingo);
+
+    //m_currentSelectionController->unselectAllItems();
+    m_currentSelectionController->emitSelectionChanged();
   }
 
   resultsView->selectView(index);
