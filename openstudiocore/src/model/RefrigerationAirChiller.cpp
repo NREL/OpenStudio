@@ -124,13 +124,11 @@ namespace detail {
 
   unsigned RefrigerationAirChiller_Impl::inletPort()
   {
-    // return OS_Refrigeration_AirChillerFields::AirInletNodeName;
     return 0; // this object has no inlet or outlet node
   }
 
   unsigned RefrigerationAirChiller_Impl::outletPort()
   {
-    // return OS_Refrigeration_AirChillerFields::AirOutletNodeName;
     return 0; // this object has no inlet or outlet node
   }
 
@@ -155,7 +153,6 @@ namespace detail {
 
   bool RefrigerationAirChiller_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
-    // return ZoneHVACComponent_Impl::addToThermalZone(thermalZone);
     Model m = this->model();
 
     if( thermalZone.model() != m )
@@ -172,7 +169,6 @@ namespace detail {
 
   void RefrigerationAirChiller_Impl::removeFromThermalZone()
   {
-    // ZoneHVACComponent_Impl::removeFromThermalZone();
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
       thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
@@ -709,7 +705,7 @@ RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& d
   OS_ASSERT(ok);
   ok = setTemperatureTerminationDefrostFractiontoIce(0.7);
   OS_ASSERT(ok);
-  ok = setVerticalLocation("Ceiling");
+  ok = setVerticalLocation("Middle");
   OS_ASSERT(ok);
 }
 
