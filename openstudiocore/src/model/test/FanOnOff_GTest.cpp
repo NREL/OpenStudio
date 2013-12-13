@@ -47,6 +47,8 @@
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
+#include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
+#include <model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
@@ -417,8 +419,8 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACWaterToAirHeatP
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
 
-  CoilHeatingWater heatingCoil(m, s);
-  CoilCoolingWater coolingCoil(m, s);
+  CoilHeatingWaterToAirHeatPumpEquationFit heatingCoil(m);
+  CoilCoolingWaterToAirHeatPumpEquationFit coolingCoil(m);
   CoilHeatingElectric supplementalHeatingCoil(m, s);
 
   ZoneHVACWaterToAirHeatPump zoneHVACWaterToAirHeatPump(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
