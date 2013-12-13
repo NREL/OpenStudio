@@ -149,14 +149,10 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   std::vector<RefrigerationCompressor> compressorsClone = testObjectClone.compressors();
   EXPECT_EQ(1, compressorsClone.size());
   EXPECT_NE(compressorsClone[0].handle(), _compressors[0].handle());
-<<<<<<< HEAD
   std::vector<RefrigerationCompressor> highStageCompressorsClone = testObjectClone.highStageCompressors();
   EXPECT_EQ(1, highStageCompressorsClone.size());
   EXPECT_NE(highStageCompressorsClone[0].handle(), _highStageCompressors[0].handle());
-  EXPECT_NE(testObjectClone.refrigerationCondenser().handle(), condenser1.handle());
-=======
   EXPECT_NE(testObjectClone.refrigerationCondenser().get().handle(), condenser1.handle());
->>>>>>> develop
   EXPECT_NE(testObjectClone.mechanicalSubcooler().get().handle(), mechSubcooler.handle());
   EXPECT_NE(testObjectClone.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcool.handle());
 }
@@ -234,14 +230,10 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
   std::vector<RefrigerationCompressor> compressorsClone = testObjectClone2.compressors();
   EXPECT_EQ(1, compressorsClone.size());
   EXPECT_NE(compressorsClone[0].handle(), _compressors[0].handle());
-<<<<<<< HEAD
   std::vector<RefrigerationCompressor> highStageCompressorsClone = testObjectClone2.highStageCompressors();
   EXPECT_EQ(1, highStageCompressorsClone.size());
   EXPECT_NE(highStageCompressorsClone[0].handle(), _highStageCompressors[0].handle());
-  EXPECT_NE(testObjectClone2.refrigerationCondenser().handle(), condenser1.handle());
-=======
   EXPECT_NE(testObjectClone2.refrigerationCondenser().get().handle(), condenser1.handle());
->>>>>>> develop
   EXPECT_NE(testObjectClone2.mechanicalSubcooler().get().handle(), mechSubcooler.handle());
   EXPECT_NE(testObjectClone2.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcooler.handle());
 }
