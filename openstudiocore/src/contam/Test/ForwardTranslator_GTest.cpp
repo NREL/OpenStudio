@@ -331,6 +331,4 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
     int zoneExteriorWallCount = exteriorFlowPaths[zoneNumber-1].size();
     EXPECT_EQ(exteriorWallCount[thermalZone.name().get()],zoneExteriorWallCount);
   }
-
-  //EXPECT_TRUE(test);
 }
