@@ -2207,7 +2207,7 @@ namespace openstudio{
     {
       openstudio::OptionalTimeSeries ts;
       openstudio::DateTime startDate;
-      std::vector<double> stdDaysFromFirstReport;
+      std::vector<long> stdSecondsFromFirstReport;
       std::vector<double> stdValues;
       unsigned month, day, hour, minute, interval;
       double value;
@@ -2262,7 +2262,7 @@ namespace openstudio{
           {
             startDate=firstDateTime();
             openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0));
-            stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
+            stdSecondsFromFirstReport.push_back((dateTime-startDate).totalSeconds());
             lastDateTime = dateTime;
           }
           else
@@ -2278,7 +2278,7 @@ namespace openstudio{
                 dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
               }
             }
-            stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
+            stdSecondsFromFirstReport.push_back((dateTime-startDate).totalSeconds());
             lastDateTime = dateTime;
           }
           // step to next row
@@ -2291,7 +2291,8 @@ namespace openstudio{
         // remove year before passing to TimeSeries
         startDate = DateTime(Date(startDate.date().monthOfYear(), startDate.date().dayOfMonth()), startDate.time());
         
-        ts = openstudio::TimeSeries(startDate, stdDaysFromFirstReport, stdValues, units);
+        Vector values = createVector(stdValues);
+        ts = openstudio::TimeSeries(startDate, stdSecondsFromFirstReport, values, units);
       }
       return ts;
     }

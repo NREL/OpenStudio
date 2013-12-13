@@ -35,7 +35,6 @@ namespace detail {
 
   /** Function_Impl is a AnalysisObject_Impl that is the implementation class for Function.*/
   class ANALYSIS_API Function_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

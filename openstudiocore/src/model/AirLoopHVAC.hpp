@@ -209,6 +209,9 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Overloaded version of addBranchForZone() **/
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
+  /** Overloaded version of addBranchForZone() **/
+  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
    *  Returns true if the airTerminal was accepted, otherwise false.  The demand side
    *  of the air loop must be empty for this operation to succeed.

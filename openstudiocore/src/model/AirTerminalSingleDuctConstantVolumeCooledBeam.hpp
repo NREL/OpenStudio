@@ -47,26 +47,26 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
   //@{
 
   explicit AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model,
-																																																															Schedule & availabilitySchedule,
-																																																															HVACComponent & coilCoolingCooledBeam);
+                                                               Schedule & availabilitySchedule,
+                                                               HVACComponent & coilCoolingCooledBeam);
 
   virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() {}
 
   //@}
 
   static IddObjectType iddObjectType();
-  
+
   /** @name Getters */
   //@{
-		
-		Schedule availabilitySchedule() const;
-  
-		HVACComponent coilCoolingCooledBeam() const;
-  
+
+  Schedule availabilitySchedule() const;
+
+  HVACComponent coilCoolingCooledBeam() const;
+
   static std::vector<std::string> cooledBeamTypeValues();
-  
-		std::string cooledBeamType() const;
-  
+
+  std::string cooledBeamType() const;
+
   boost::optional<double> supplyAirVolumetricFlowRate() const;
 
   bool isSupplyAirVolumetricFlowRateDefaulted() const;
@@ -110,11 +110,11 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
   //@{
 
   bool setAvailabilitySchedule(Schedule& schedule);
-  
+
   bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam);
 
   bool setCooledBeamType(std::string cooledBeamType);
-  
+
   bool setSupplyAirVolumetricFlowRate(double supplyAirVolumetricFlowRate);
 
   void resetSupplyAirVolumetricFlowRate();
@@ -152,11 +152,11 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
   void resetCoefficientofInductionKin();
 
   void autocalculateCoefficientofInductionKin();
-  
+
   // boost::optional<ThermalZone> thermalZone();
-  
+
   // bool addToThermalZone(ThermalZone & thermalZone);
-  
+
   // void removeFromThermalZone();
 
   //@}

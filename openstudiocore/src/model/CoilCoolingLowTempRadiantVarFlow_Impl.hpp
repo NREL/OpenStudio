@@ -127,7 +127,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantVarFlow");
-							
+
     std::vector<std::string> condensationControlTypeValues() const;
 
     //boost::optional<ModelObject> coolingWaterInletNodeAsModelObject() const;

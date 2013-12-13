@@ -67,6 +67,8 @@ class RunTabController : public QObject
 
     void onDataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
+    void onDataPointResultsCleared(const openstudio::UUID& dataPoint);
+
     void requestRefresh();
 
     void refresh();
@@ -80,6 +82,9 @@ class RunTabController : public QObject
     QSharedPointer<DataPointRunItemDelegate> m_dataPointRunItemDelegate;
 
     REGISTER_LOGGER("openstudio.pat.RunTabController");
+
+    // converts UUID to index i and emits signal to get DataPoint job details to refresh
+    void emitDataPointChanged(const openstudio::UUID& dataPoint);
 };
 
 /// Controller class for the list of data points on the run tab
@@ -130,12 +135,16 @@ class DataPointRunItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
-  public:
+ public:
 
   virtual ~DataPointRunItemDelegate() {}
 
   /// Widget returned will be a DataPointRunListItem
   QWidget * view(QSharedPointer<OSListItem> dataSource);
+
+ signals:
+
+  void dataPointResultsCleared(const openstudio::UUID& dataPoint);
 };
 
 /// Controller class for the list jobs for a data points on the run tab

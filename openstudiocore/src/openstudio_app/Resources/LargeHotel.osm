@@ -1,7 +1,7 @@
 
 OS:Version,
-  {42e0cf66-2095-431b-9594-632029334c0e}, !- Handle
-  0.11.5;                                 !- Version Identifier
+  {785287e5-495d-4b18-ae4b-1c8f0a4f143b}, !- Handle
+  1.1.2;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {8e151935-c84d-4cfc-8b4e-af7b3610926b}, !- Handle
@@ -8747,21 +8747,21 @@ OS:Output:Variable,
   {63032569-4e82-4c36-b296-8607160c90f4}, ! Handle
   hourly* - Zone Air System Sensible Heating Rate, ! Name
   *,                                      ! Key Value
-  Surface Outside Face Incident Solar Radiation Rate per Area,             ! Variable Name
+  Surface Outside Face Incident Solar Radiation Rate per Area, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {583e875e-94a2-4556-919e-2281cc64d5ff}, ! Handle
   hourly* - Zone Air System Sensible Cooling Rate, ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 2 Illuminance,          ! Variable Name
+  Daylighting Reference Point 2 Illuminance, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {c5795d4e-84cf-4920-b04b-4da2879717a0}, ! Handle
   hourly* - Surface Inside Temperature,   ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 2 Glare Index,             ! Variable Name
+  Daylighting Reference Point 2 Glare Index, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
@@ -8773,21 +8773,21 @@ OS:Output:Variable,
 
 OS:Output:Variable,
   {de925ed6-b9f0-4c5d-beb1-26dfa3d7abc9}, ! Handle
-  hourly* - Daylighting Reference Point 2 Glare Index,   ! Name
+  hourly* - Daylighting Reference Point 2 Glare Index, ! Name
   *,                                      ! Key Value
-  Zone Air System Sensible Cooling Rate,         ! Variable Name
+  Zone Air System Sensible Cooling Rate,  ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {3af120f4-2f0d-4881-97ea-92e6a970359d}, ! Handle
-  hourly* - Surface Outside Face Incident Solar Radiation Rate per Area,   ! Name
+  hourly* - Surface Outside Face Incident Solar Radiation Rate per Area, ! Name
   *,                                      ! Key Value
   Surface Outside Temperature,            ! Variable Name
   Hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {73123363-3d3b-4c0f-a9a5-a1a24da336e5}, ! Handle
-  hourly* - Daylighting Reference Point 1 Glare Index,   ! Name
+  hourly* - Daylighting Reference Point 1 Glare Index, ! Name
   *,                                      ! Key Value
   Zone Mean Radiant Temperature,          ! Variable Name
   hourly;                                 ! Reporting Frequency
@@ -8796,14 +8796,14 @@ OS:Output:Variable,
   {71e9c1f9-ad3b-471e-a037-81457e95218d}, ! Handle
   hourly* - Daylighting Reference Point 2 Illuminance, ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 1 Illuminance,          ! Variable Name
+  Daylighting Reference Point 1 Illuminance, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {d1bd1e55-65ed-44ae-9045-609fd082f9e9}, ! Handle
   hourly* - Daylighting Reference Point 1 Illuminance, ! Name
   *,                                      ! Key Value
-  Zone Air System Sensible Heating Rate,         ! Variable Name
+  Zone Air System Sensible Heating Rate,  ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
@@ -8817,7 +8817,7 @@ OS:Output:Variable,
   {1fafd466-c5e8-4ef8-b52c-4a3cca9e483b}, ! Handle
   hourly* - Zone Mean Radiant Temperature, ! Name
   *,                                      ! Key Value
-  Daylighting Reference Point 1 Glare Index,             ! Variable Name
+  Daylighting Reference Point 1 Glare Index, ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:People,

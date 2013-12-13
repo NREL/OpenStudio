@@ -50,20 +50,15 @@ namespace analysis {
 
 class Analysis;
 class Problem;
+class DataPoint;
 
 namespace detail {
   class DataPoint_Impl;
   class Problem_Impl;
   class Analysis_Impl;
+
+  ANALYSIS_API QVariant toTopLevelVariant(const std::vector<DataPoint>& dataPoints);
 } // detail
-
-struct ANALYSIS_API DataPointSerializationOptions {
-  openstudio::path projectDir;
-  bool osServerView;
-
-  DataPointSerializationOptions(const openstudio::path& t_projectDir = openstudio::path(),
-                                bool t_osServerView=true);
-};
 
 /** \class DataPointRunType
  *  \brief List of DataPoint run types.
@@ -277,22 +272,17 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** @name Serialization */
   //@{
 
-  bool saveJSON(const openstudio::path& p,
-                const DataPointSerializationOptions& options,
-                bool overwrite=false) const;
+  bool saveJSON(const openstudio::path& p,bool overwrite=false) const;
 
-  std::ostream& toJSON(std::ostream& os,const DataPointSerializationOptions& options) const;
+  std::ostream& toJSON(std::ostream& os) const;
 
-  std::string toJSON(const DataPointSerializationOptions& options) const;
+  std::string toJSON() const;
 
-  static boost::optional<DataPoint> loadJSON(const openstudio::path& p,
-                                             const openstudio::path& newProjectDir=openstudio::path());
+  static boost::optional<DataPoint> loadJSON(const openstudio::path& p);
 
-  static boost::optional<DataPoint> loadJSON(std::istream& json,
-                                             const openstudio::path& newProjectDir=openstudio::path());
+  static boost::optional<DataPoint> loadJSON(std::istream& json);
 
-  static boost::optional<DataPoint> loadJSON(const std::string& json,
-                                             const openstudio::path& newProjectDir=openstudio::path());
+  static boost::optional<DataPoint> loadJSON(const std::string& json);
 
   //@}
  protected:
@@ -333,6 +323,8 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** Let Analysis_Impl set the DataPoint's Problem to get a clean clone. */
   void setProblem(const Problem& problem);
 
+  friend QVariant detail::toTopLevelVariant(const std::vector<DataPoint>&);
+
  private:
 
   REGISTER_LOGGER("openstudio.analysis.DataPoint");
@@ -343,6 +335,29 @@ typedef boost::optional<DataPoint> OptionalDataPoint;
 
 /** \relates DataPoint*/
 typedef std::vector<DataPoint> DataPointVector;
+
+/** Save a vector of \link DataPoint DataPoints\endlink to a JSON file. Used for batch upload
+ *  to openstudio-server. */
+ANALYSIS_API bool saveJSON(const std::vector<DataPoint>& dataPoints,
+                           const openstudio::path& p,
+                           bool overwrite=false);
+
+/** Print a vector of \link DataPoint DataPoints\endlink to std::string in JSON format. Used 
+ *  for batch upload to openstudio-server. */
+ANALYSIS_API std::string toJSON(const std::vector<DataPoint>& dataPoints);
+
+/** \overload */
+ANALYSIS_API std::ostream& toJSON(const std::vector<DataPoint>& dataPoints,
+                                  std::ostream& os);
+
+/** Deserialize JSON file of a vector of DataPoints. */
+ANALYSIS_API std::vector<DataPoint> toDataPointVector(const openstudio::path& jsonFilepath);
+
+/** Deserialize JSON string of a vector of DataPoints. */
+ANALYSIS_API std::vector<DataPoint> toDataPointVector(const std::string& json);
+
+/** \overload */
+ANALYSIS_API std::vector<DataPoint> toDataPointVector(std::istream& json);
 
 } // analysis
 } // openstudio

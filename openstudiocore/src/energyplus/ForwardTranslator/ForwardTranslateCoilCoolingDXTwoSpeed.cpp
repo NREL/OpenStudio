@@ -207,7 +207,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
   cq = modelObject.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve();
   translateAndMapModelObject(cq);
   idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName,
-                      cq.name().get());	
+                      cq.name().get());
 
   //  A12, \field Condenser Air Inlet Node Name
   s=modelObject.getCondenserAirInletNodeName();
@@ -276,7 +276,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
     idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::BasinHeaterCapacity,*d);
   }
 
-  //  N16, \field Basin Heater Setpoint Temperature	
+  //  N16, \field Basin Heater Setpoint Temperature
   d=modelObject.getBasinHeaterSetpointTemperature();
   if(d)
   {

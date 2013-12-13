@@ -78,7 +78,7 @@ class RunStatusView : public QWidget
 {
   Q_OBJECT
 
- public:
+  public:
 
    RunStatusView();
 
@@ -103,6 +103,10 @@ class RunStatusView : public QWidget
    CloudLostConnectionButton * cloudLostConnectionButton;
 
    void paintEvent(QPaintEvent * e);
+
+ signals:
+
+   void dataPointResultsCleared(const openstudio::UUID& dataPoint);
 
  public slots:
    
@@ -146,6 +150,10 @@ class DataPointRunHeaderView : public OSHeader
   DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint);
 
   virtual ~DataPointRunHeaderView() {}
+
+ signals:
+
+  void dataPointResultsCleared(const openstudio::UUID& dataPoint);
 
  public slots:
 
@@ -194,7 +202,7 @@ class DataPointRunItemView : public OSCollapsibleView
 {
   Q_OBJECT
 
-  public:
+ public:
 
   DataPointRunItemView(const openstudio::analysis::DataPoint& dataPoint);
 
@@ -203,12 +211,16 @@ class DataPointRunItemView : public OSCollapsibleView
   DataPointRunHeaderView * dataPointRunHeaderView;
 
   DataPointRunContentView * dataPointRunContentView;
+ 
+ signals:
 
-  public slots:
+  void dataPointResultsCleared(const openstudio::UUID& dataPoint);
+
+ public slots:
 
   void checkForUpdate();
 
-  private:
+ private:
 
   openstudio::analysis::DataPoint m_dataPoint;
   UUID m_topLevelJobUUID;

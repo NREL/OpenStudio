@@ -168,6 +168,26 @@ namespace runmanager {
         bool path1_is_aws = subPathMatch(t_path1, boost::regex(".*-aws-.*", boost::regex::perl));
         bool path2_is_aws = subPathMatch(t_path2, boost::regex(".*-aws-.*", boost::regex::perl));
 
+#ifdef Q_OS_MAC
+#ifdef __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+
+#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ == 1090
+        bool path1isruby20 = t_path1 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin");
+        bool path2isruby20 = t_path2 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin");
+
+        if (path1isruby20) return t_path1;
+        if (path2isruby20) return t_path2;
+#else
+        bool path1isruby18 = t_path1 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin");
+        bool path2isruby18 = t_path2 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin");
+
+        if (path1isruby18) return t_path1;
+        if (path2isruby18) return t_path2;
+#endif
+
+#endif
+
+#endif
 
         // return the shortest path that exists. Unless one of the two exists in the run dir,
         // that means it's one we provided and we want to return it
@@ -350,7 +370,7 @@ namespace runmanager {
         QFileInfo fi(*itr);
 
         openstudio::path curPath = openstudio::toPath(p);
-	
+
         if (t_dlg)
         {
           t_dlg->setLabelText(toQString("Scanning For Tools In: " + shortenPath(curPath)));

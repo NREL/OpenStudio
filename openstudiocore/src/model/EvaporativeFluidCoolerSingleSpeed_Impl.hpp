@@ -33,8 +33,6 @@ namespace detail {
 
   /** EvaporativeFluidCoolerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for EvaporativeFluidCoolerSingleSpeed.*/
   class MODEL_API EvaporativeFluidCoolerSingleSpeed_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
-
    public:
     /** @name Constructors and Destructors */
     //@{

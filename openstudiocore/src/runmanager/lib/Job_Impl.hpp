@@ -310,7 +310,7 @@ namespace detail {
       bool externallyManaged() const;
 
       // send job state and file output signals as if the job had gone from no state
-	    // to the current state
+      // to the current state
       void sendSignals();
 
       /// sets this job (and children) as being externally managed
@@ -478,7 +478,7 @@ namespace detail {
       void maximumClean();
 
       void standardClean();
-	  
+
       void sendSignals(JobState oldState, JobState newState, const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID);
 
       std::vector<FileInfo> relativeOutputFilesInternal(const openstudio::runmanager::Files &t_outputFiles, const openstudio::path &t_outdir) const;

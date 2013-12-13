@@ -35,7 +35,6 @@ namespace detail {
   /** WorkflowStep_Impl is an AnalysisObject_Impl that is the implementation class for
    *  WorkflowStep. */
   class ANALYSIS_API WorkflowStep_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

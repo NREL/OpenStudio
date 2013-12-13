@@ -39,8 +39,6 @@ class BillingPeriod;
 namespace detail {
 
   class MODEL_API UtilityBill_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-
    public:
     /** @name Constructors and Destructors */
     //@{

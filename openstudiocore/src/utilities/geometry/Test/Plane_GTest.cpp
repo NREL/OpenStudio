@@ -328,6 +328,196 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse)
   EXPECT_FALSE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
 }
 
+TEST_F(GeometryFixture, Plane_FromPoints_Separated_X)
+{
+  std::vector<Point3d> points1;
+  points1.push_back(Point3d(10,0,1));
+  points1.push_back(Point3d(10,0,0));
+  points1.push_back(Point3d(10,1,0));
+  points1.push_back(Point3d(10,1,1));
+
+  std::vector<Point3d> points2;
+  points2.push_back(Point3d(20,0,1));
+  points2.push_back(Point3d(20,0,0));
+  points2.push_back(Point3d(20,1,0));
+  points2.push_back(Point3d(20,1,1));
+  
+  Plane p1(points1);
+  Plane p2(points2);
+
+  EXPECT_TRUE(p1.parallel(p2));
+  EXPECT_FALSE(p1.equal(p2));
+  EXPECT_FALSE(p1.reverseEqual(p2));
+  EXPECT_TRUE(vectorEqual(Vector3d(1,0,0), p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(Vector3d(1,0,0), p2.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
+}
+
+
+TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_X)
+{
+  std::vector<Point3d> points1;
+  points1.push_back(Point3d(-10,0,1));
+  points1.push_back(Point3d(-10,0,0));
+  points1.push_back(Point3d(-10,1,0));
+  points1.push_back(Point3d(-10,1,1));
+
+  std::vector<Point3d> points2;
+  points2.push_back(Point3d(-20,1,1));
+  points2.push_back(Point3d(-20,1,0));
+  points2.push_back(Point3d(-20,0,0));
+  points2.push_back(Point3d(-20,0,1));
+  
+  Plane p1(points1);
+  Plane p2(points2);
+
+  EXPECT_TRUE(p1.parallel(p2));
+  EXPECT_FALSE(p1.equal(p2));
+  EXPECT_FALSE(p1.reverseEqual(p2));
+  EXPECT_TRUE(vectorEqual(Vector3d(1,0,0), p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(Vector3d(-1,0,0), p2.outwardNormal()));
+  EXPECT_FALSE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
+}
+
+TEST_F(GeometryFixture, Plane_FromPoints_Separated_Y)
+{
+  std::vector<Point3d> points1;
+  points1.push_back(Point3d(0,-10,1));
+  points1.push_back(Point3d(0,-10,0));
+  points1.push_back(Point3d(1,-10,0));
+  points1.push_back(Point3d(1,-10,1));
+
+  std::vector<Point3d> points2;
+  points2.push_back(Point3d(0,10,1));
+  points2.push_back(Point3d(0,10,0));
+  points2.push_back(Point3d(1,10,0));
+  points2.push_back(Point3d(1,10,1));
+  
+  Plane p1(points1);
+  Plane p2(points2);
+
+  EXPECT_TRUE(p1.parallel(p2));
+  EXPECT_FALSE(p1.equal(p2));
+  EXPECT_FALSE(p1.reverseEqual(p2));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,-1,0), p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,-1,0), p2.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
+}
+
+
+TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Y)
+{
+  std::vector<Point3d> points1;
+  points1.push_back(Point3d(0,-20,1));
+  points1.push_back(Point3d(0,-20,0));
+  points1.push_back(Point3d(1,-20,0));
+  points1.push_back(Point3d(1,-20,1));
+
+  std::vector<Point3d> points2;
+  points2.push_back(Point3d(1,20,1));
+  points2.push_back(Point3d(1,20,0));
+  points2.push_back(Point3d(0,20,0));
+  points2.push_back(Point3d(0,20,1));
+  
+  Plane p1(points1);
+  Plane p2(points2);
+
+  EXPECT_TRUE(p1.parallel(p2));
+  EXPECT_FALSE(p1.equal(p2));
+  EXPECT_FALSE(p1.reverseEqual(p2));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,-1,0), p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,1,0), p2.outwardNormal()));
+  EXPECT_FALSE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
+}
+
+TEST_F(GeometryFixture, Plane_FromPoints_Separated_Z)
+{
+  std::vector<Point3d> points1;
+  points1.push_back(Point3d(0,1,10));
+  points1.push_back(Point3d(0,0,10));
+  points1.push_back(Point3d(1,0,10));
+  points1.push_back(Point3d(1,1,10));
+
+  std::vector<Point3d> points2;
+  points2.push_back(Point3d(0,1,-10));
+  points2.push_back(Point3d(0,0,-10));
+  points2.push_back(Point3d(1,0,-10));
+  points2.push_back(Point3d(1,1,-10));
+  
+  Plane p1(points1);
+  Plane p2(points2);
+
+  EXPECT_TRUE(p1.parallel(p2));
+  EXPECT_FALSE(p1.equal(p2));
+  EXPECT_FALSE(p1.reverseEqual(p2));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,0,1), p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,0,1), p2.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
+}
+
+
+TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Z)
+{
+  std::vector<Point3d> points1;
+  points1.push_back(Point3d(0,1,-10));
+  points1.push_back(Point3d(0,0,-10));
+  points1.push_back(Point3d(1,0,-10));
+  points1.push_back(Point3d(1,1,-10));
+
+  std::vector<Point3d> points2;
+  points2.push_back(Point3d(1,1,-20));
+  points2.push_back(Point3d(1,0,-20));
+  points2.push_back(Point3d(0,0,-20));
+  points2.push_back(Point3d(0,1,-20));
+  
+  Plane p1(points1);
+  Plane p2(points2);
+
+  EXPECT_TRUE(p1.parallel(p2));
+  EXPECT_FALSE(p1.equal(p2));
+  EXPECT_FALSE(p1.reverseEqual(p2));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,0,1), p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(Vector3d(0,0,-1), p2.outwardNormal()));
+  EXPECT_FALSE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
+}
+
+TEST_F(GeometryFixture, Plane_FromPoints_ProblemSurface_IntersectModel22)
+{
+  // from Surface 1292
+  std::vector<Point3d> points1;
+  points1.push_back(Point3d(33.5280021336, -29.717998476, 91.44));
+  points1.push_back(Point3d(33.5280021336, -29.717998476, 86.868));
+  points1.push_back(Point3d(33.5280021336,  29.718001524, 86.868));
+  points1.push_back(Point3d(33.5280021336,  29.718001524, 91.44));
+
+  // from Surface 1384
+  std::vector<Point3d> points2;
+  points2.push_back(Point3d(28.9560021336, -25.145998476, 96.012));
+  points2.push_back(Point3d(28.9560021336, -25.145998476, 91.44));
+  points2.push_back(Point3d(28.9560021336,  25.146001524, 91.44));
+  points2.push_back(Point3d(28.9560021336,  25.146001524, 96.012));
+
+  Plane p1(points1);
+  Plane p2(points2);
+
+  EXPECT_TRUE(p1.parallel(p2));
+  EXPECT_FALSE(p1.equal(p2));
+  EXPECT_FALSE(p1.reverseEqual(p2));
+  EXPECT_TRUE(vectorEqual(Vector3d(1,0,0), p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(Vector3d(1,0,0), p2.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(p1.outwardNormal(), p2.outwardNormal()));
+
+  OptionalVector3d n1 = getOutwardNormal(points1);
+  OptionalVector3d n2 = getOutwardNormal(points2);
+  ASSERT_TRUE(n1);
+  ASSERT_TRUE(n2);
+  EXPECT_TRUE(vectorEqual(*n1, p1.outwardNormal()));
+  EXPECT_TRUE(vectorEqual(*n2, p2.outwardNormal()));
+}
+
+
+
+
 TEST_F(GeometryFixture, Plane_Transformation)
 {
   // translation by 1 meter in x then rotation of 90 degrees about z

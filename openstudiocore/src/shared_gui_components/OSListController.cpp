@@ -18,10 +18,9 @@
  **********************************************************************/
 
 #include "OSListController.hpp"
-
 #include <utilities/core/Assert.hpp>
-
 #include <algorithm>
+#include <QWidget>
 
 namespace openstudio {
 
@@ -291,6 +290,15 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
   }
 }
 
+QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
+{ 
+  return new QWidget();
+}
+
+QGraphicsObject * OSGraphicsItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
+{ 
+  return NULL;
+}
 
 } // openstudio
 
