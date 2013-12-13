@@ -62,6 +62,9 @@ ResultsTabController::ResultsTabController()
   test = connect(resultsView, SIGNAL(downloadResultsButtonClicked(bool)), this, SLOT(downloadResults()));
   OS_ASSERT(test);
 
+  test = connect(resultsView, SIGNAL(viewSelected(int)), this, SLOT(selectView(int)));
+  OS_ASSERT(test);
+
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
     // ensure that baseline exists
@@ -79,15 +82,6 @@ ResultsTabController::ResultsTabController()
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
 
     bool bingo = false;
-
-    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    OS_ASSERT(bingo);
-
-    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
-    OS_ASSERT(bingo);
-
-    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    OS_ASSERT(bingo);
 
     bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
     OS_ASSERT(bingo);
@@ -111,6 +105,8 @@ ResultsTabController::ResultsTabController()
       OS_ASSERT(bingo);
     }
   }
+
+  selectView(0);
 }
 
 ResultsTabController::~ResultsTabController()
@@ -118,9 +114,56 @@ ResultsTabController::~ResultsTabController()
   if( resultsView ) { delete resultsView; }
 }
 
+void ResultsTabController::selectView(int index)
+{
+  bool bingo = false;
+
+  if (index == 0){
+
+    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    OS_ASSERT(bingo);
+    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
+    OS_ASSERT(bingo);
+    bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    OS_ASSERT(bingo);
+
+    bingo = disconnect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    //OS_ASSERT(bingo);
+    bingo = disconnect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
+    //OS_ASSERT(bingo);
+    bingo = disconnect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    //OS_ASSERT(bingo);
+
+    m_currentSelectionController = m_dataPointResultsListController->selectionController();
+    m_currentSelectionController->unselectAllItems();
+
+  }else{
+
+    bingo = disconnect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    //OS_ASSERT(bingo);
+    bingo = disconnect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
+    //OS_ASSERT(bingo);
+    bingo = disconnect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    //OS_ASSERT(bingo);
+
+    bingo = connect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
+    OS_ASSERT(bingo);
+    bingo = connect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableDownloadResultsButton()));
+    OS_ASSERT(bingo);
+    bingo = connect(m_dataPointCalibrationListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    OS_ASSERT(bingo);
+
+    m_currentSelectionController = m_dataPointCalibrationListController->selectionController();
+    m_currentSelectionController->unselectAllItems();
+
+  }
+
+  resultsView->selectView(index);
+}
+
 void ResultsTabController::onOpenButtonClicked()
 {
-  std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+  std::vector<QPointer<OSListItem> > selectedItems = m_currentSelectionController->selectedItems();
 
   if (!selectedItems.empty()){
     DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
@@ -205,7 +248,7 @@ void ResultsTabController::onOpenButtonClicked()
 
 void ResultsTabController::openDirectory()
 {
-  std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+  std::vector<QPointer<OSListItem> > selectedItems = m_currentSelectionController->selectedItems();
 
   if (!selectedItems.empty()){
     DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
@@ -221,7 +264,7 @@ void ResultsTabController::openDirectory()
 void ResultsTabController::downloadResults()
 {
   if( resultsView ){
-    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    std::vector<QPointer<OSListItem> > selectedItems = m_currentSelectionController->selectedItems();
     if (!selectedItems.empty()){
       DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
       if (dataPointResultListItem){
@@ -259,7 +302,7 @@ void ResultsTabController::downloadResults()
 void ResultsTabController::dataPointDetailsComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint)
 {
   if( resultsView ){
-    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    std::vector<QPointer<OSListItem> > selectedItems = m_currentSelectionController->selectedItems();
     if (!selectedItems.empty()){
       DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
       if (dataPointResultListItem){
@@ -290,7 +333,7 @@ void ResultsTabController::enableDownloadResultsButton()
 
     // find datapoint
     boost::optional<analysis::DataPoint> dataPoint;
-    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    std::vector<QPointer<OSListItem> > selectedItems = m_currentSelectionController->selectedItems();
     if (!selectedItems.empty()){
       DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
       if (dataPointResultListItem){
@@ -368,7 +411,7 @@ void ResultsTabController::enableViewFileButton()
 
     bool enabled = false;
 
-    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    std::vector<QPointer<OSListItem> > selectedItems = m_currentSelectionController->selectedItems();
     if (!selectedItems.empty()){
       DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
       if (dataPointResultListItem){
@@ -391,7 +434,7 @@ void ResultsTabController::enableOpenDirectoryButton()
 
     bool enabled = false;
 
-    std::vector<QPointer<OSListItem> > selectedItems = m_baselineDataPointResultListController->selectionController()->selectedItems();
+    std::vector<QPointer<OSListItem> > selectedItems = m_currentSelectionController->selectedItems();
     if (!selectedItems.empty()){
       DataPointResultListItem* dataPointResultListItem = dynamic_cast<DataPointResultListItem*>(selectedItems[0].data());
       if (dataPointResultListItem){
@@ -431,28 +474,6 @@ bool DataPointResultListItem::alternateRow() const
   return m_alternateRow;
 }
 
-DataPointCalibrationListItem::DataPointCalibrationListItem(const openstudio::analysis::DataPoint& dataPoint,
-                                                           const openstudio::analysis::DataPoint& baselineDataPoint,
-                                                           bool alternateRow)
-  : m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
-{
-}
-
-openstudio::analysis::DataPoint DataPointCalibrationListItem::dataPoint() const
-{
-  return m_dataPoint;
-}
-
-openstudio::analysis::DataPoint DataPointCalibrationListItem::baselineDataPoint() const
-{
-  return m_baselineDataPoint;
-}
-
-bool DataPointCalibrationListItem::alternateRow() const
-{
-  return m_alternateRow;
-}
-
 QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   QSharedPointer<DataPointResultListItem> dataPointResultListItem = dataSource.dynamicCast<DataPointResultListItem>();
@@ -478,7 +499,7 @@ DataPointCalibrationItemDelegate::DataPointCalibrationItemDelegate(double maxNMB
 
 QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
-  QSharedPointer<DataPointCalibrationListItem> dataPointCalibrationListItem = dataSource.dynamicCast<DataPointCalibrationListItem>();
+  QSharedPointer<DataPointResultListItem> dataPointCalibrationListItem = dataSource.dynamicCast<DataPointResultListItem>();
   OS_ASSERT(dataPointCalibrationListItem);
 
   openstudio::analysis::DataPoint dataPoint = dataPointCalibrationListItem->dataPoint();
@@ -591,7 +612,7 @@ QSharedPointer<OSListItem> DataPointCalibrationListController::itemAt(int i)
     std::vector<openstudio::analysis::DataPoint> dataPoints = this->dataPoints();
     if (i >= 0 && i < (int)dataPoints.size()){
       bool alternateRow = ((i % 2) == 1);
-      QSharedPointer<OSListItem> item = QSharedPointer<OSListItem>(new DataPointCalibrationListItem(dataPoints[i], baselineDataPoint, alternateRow));
+      QSharedPointer<OSListItem> item = QSharedPointer<OSListItem>(new DataPointResultListItem(dataPoints[i], baselineDataPoint, alternateRow));
       item->setController(this);
       return item;
     }
