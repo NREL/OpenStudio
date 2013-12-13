@@ -96,6 +96,9 @@ class UTILITIES_API SqlFile {
   /// get the path
   openstudio::path path() const;
 
+  /// \returns true if the sqlfile is of a version that's in our supported range
+  bool supportedVersion() const;
+
   /// close the file
   bool close();
 
