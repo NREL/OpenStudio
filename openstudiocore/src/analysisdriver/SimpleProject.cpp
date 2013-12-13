@@ -425,21 +425,13 @@ namespace detail {
       return false;
     }
 
-    if (!getStandardReportWorkflowStep()) {
-      return false;
-    }
-
-    unsigned numReportWorkItems = 1u;
-    if (shouldIncludeCalibrationReports()) {
-      if (!getCalibrationReportWorkflowStep()) {
-        return false;
-      }
+    // be wiggly about standard reports
+    unsigned numReportWorkItems(0u);
+    if (getStandardReportWorkflowStep()) {
       ++numReportWorkItems;
     }
-    else {
-      if (getCalibrationReportWorkflowStep()) {
-        return false;
-      }
+    if (getCalibrationReportWorkflowStep()) {
+      ++numReportWorkItems;
     }
 
     BOOST_FOREACH(const InputVariable& variable,problem.variables()) {
@@ -491,7 +483,12 @@ namespace detail {
             inputVariableOk = false;
             break;
           case JobType::EnergyPlus :
-            nextWorkItemType = JobType(JobType::UserScript);
+            if (numReportWorkItems > 0) {
+              nextWorkItemType = JobType(JobType::UserScript);
+            }
+            else {
+              nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
+            }
             inputVariableOk = true; // reporting measures ok
             break;
           case JobType::UserScript :
@@ -735,7 +732,7 @@ namespace detail {
   }
 
   bool SimpleProject_Impl::registerArguments(const BCLMeasure& measure,
-                                        const std::vector<ruleset::OSArgument>& arguments)
+                                             const std::vector<ruleset::OSArgument>& arguments)
   {
     if (getMeasureByUUID(measure.uuid())) {
       m_measureArguments[measure.uuid()] = arguments;
@@ -2429,38 +2426,6 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
       save = true;
     }
 
-    // check for standard report, try to add if not present
-    if (!result->getStandardReportWorkflowStep()) {
-      ok = result->insertStandardReportWorkflowStep();
-      if (!ok) {
-        result.reset();
-        return result;
-      }
-      save = true;
-    }
-
-    // check and try to fix status of calibration report
-    if (result->shouldIncludeCalibrationReports()) {
-      if (!result->getCalibrationReportWorkflowStep()) {
-        ok = result->insertCalibrationReportWorkflowStep();
-        if (!ok) {
-          result.reset();
-          return result;
-        }
-        save = true;
-      }
-    }
-    else {
-      if (result->getCalibrationReportWorkflowStep()) {
-        ok = result->clearCalibrationReportWorkflowStep();
-        if (!ok) {
-          result.reset();
-          return result;
-        }
-        save = true;
-      }
-    }
-
     if (!result->isPATProject()) {
       result.reset();
       return result;
@@ -2495,8 +2460,6 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
     }
 
     if (result->analysis().resultsAreInvalid()) {
-      // ETH: Yuck, but needed to make the code work with the addition of our standard
-      // reporting measures!
       result->clearAllResults();
       save = true;
     }

@@ -1646,6 +1646,8 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
       radout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "report.html") {
       reports.push_back(p);
+    } else if (openstudio::toString(p.filename()) == "eplusout.html") {
+      reports.push_back(p);
     }
   }
 
@@ -1717,6 +1719,11 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
         openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
         std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
         std::vector<openstudio::path> reports;
+        Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
+          reports.push_back(file.fullPath);
+        }
+        f = j.treeAllFiles().getAllByFilename("eplusout.html");
+        t_files = f.files();
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
           reports.push_back(file.fullPath);
         }
