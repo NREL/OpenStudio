@@ -112,7 +112,7 @@ namespace openstudio{
 
     /// constructor from first report date and time, days from first report vector, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
-      :  m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(daysFromFirstReport.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
@@ -152,7 +152,7 @@ namespace openstudio{
     }
 
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
-      : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(daysFromFirstReport.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
@@ -166,7 +166,7 @@ namespace openstudio{
       m_firstReportDateTime = firstReportDateTime;
 
       //        for (unsigned i = 0; i < values.size(); i++) m_values(i) = values[i];
-      //std::copy(values.begin(), values.end(), m_values.begin());
+      std::copy(values.begin(), values.end(), m_values.begin());
 
       for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = Time(daysFromFirstReport[i]).totalSeconds();
@@ -196,7 +196,7 @@ namespace openstudio{
 
     /// constructor from date times, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
-      : m_secondsFromFirstReport(dateTimes.size()), m_values(dateTimes.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      : m_secondsFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
@@ -215,13 +215,6 @@ namespace openstudio{
       if (!calendarYear){
         // add year
         firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
-      }
-
-      // JWD: Maybe there is a more C++ish way to do this.
-      // Copy a vector the size of the DateTime vector, any left over elements have been initialized to the
-      // outOfRangeValue above
-      for (unsigned i = 0; i < min(numDateTimes,values.size()); ++i){
-        m_values[i] = values[i];
       }
       
       for (unsigned i = 0; i < numDateTimes; ++i){
@@ -252,7 +245,7 @@ namespace openstudio{
 
     /// constructor from first report date and time, seconds from first report vector, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
-      :  m_secondsFromFirstReport(secondsFromFirstReport.size()), m_values(secondsFromFirstReport.size(),0.0), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+      :  m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       if (values.empty()){
         LOG(Warn, "Creating empty timeseries");
@@ -265,7 +258,7 @@ namespace openstudio{
       // DLM: firstReportDateTime may or may not have baseYear defined
       m_firstReportDateTime = firstReportDateTime;
 
-      for (unsigned i = 0; i < secondsFromFirstReport.size(); ++i){
+      for (unsigned i = 0; i < values.size(); ++i){
         m_secondsFromFirstReport[i] = secondsFromFirstReport[i];
         if (i > 0){
           if (m_secondsFromFirstReport[i] < m_secondsFromFirstReport[i-1]){
