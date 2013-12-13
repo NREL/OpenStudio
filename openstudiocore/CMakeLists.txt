@@ -545,8 +545,7 @@ ENDIF (WIN32)
 MARK_AS_ADVANCED(Boost_DIR)
 
 SET( Boost_ADDITIONAL_VERSIONS "1.40" )
-#FIND_PACKAGE( Boost 1.40.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization)
-FIND_PACKAGE( Boost 1.40.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time )
+FIND_PACKAGE( Boost 1.40.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization)
 INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIR} )
 MARK_AS_ADVANCED( Boost_LIB_DIAGNOSTIC_DEFINITIONS )
 

@@ -33,7 +33,7 @@
 #include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
-//#include <boost/archive/archive_exception.hpp>
+#include <boost/archive/archive_exception.hpp>
 
 #ifndef __APPLE__
 BOOST_CLASS_EXPORT(openstudio::SectionHeading);
@@ -287,24 +287,24 @@ bool Document::save(const openstudio::path& p, bool overwrite) const {
   if (makeParentFolder(wp)) {
     boost::filesystem::ofstream outFile(wp);
     if (outFile) {
-      //if (expectedExtension == documentFileExtension()) {
-      //  try {
-      //    boost::archive::text_oarchive out(outFile);
-      //    out << boost::serialization::make_nvp("document",*this);
-      //    outFile.close();
-      //    return true;
-      //  }
-      //  catch (boost::archive::archive_exception e) {
-      //    LOG(Error,"Boost archive exception while writing Document out to boost serialization "
-      //        << "text format (.osd). Code " << e.code << ". Message: " << e.what());
-      //    return false;
-      //  }
-      //  catch (...) {
-      //    LOG(Error,"Error serializing Document to boost serializaiton text format (.osd).");
-      //    return false;
-      //  }
-      //}
-      //else {
+      if (expectedExtension == documentFileExtension()) {
+        try {
+          boost::archive::text_oarchive out(outFile);
+          out << boost::serialization::make_nvp("document",*this);
+          outFile.close();
+          return true;
+        }
+        catch (boost::archive::archive_exception e) {
+          LOG(Error,"Boost archive exception while writing Document out to boost serialization "
+              << "text format (.osd). Code " << e.code << ". Message: " << e.what());
+          return false;
+        }
+        catch (...) {
+          LOG(Error,"Error serializing Document to boost serializaiton text format (.osd).");
+          return false;
+        }
+      }
+      else {
         try {
           printToStream(outFile);
           outFile.close();
@@ -314,7 +314,7 @@ bool Document::save(const openstudio::path& p, bool overwrite) const {
           LOG(Error,"Unable to write Document to path '" << toString(p) << "'.");
           return false;
         }
-      //}
+      }
     }
   }
 
@@ -329,19 +329,19 @@ boost::optional<Document> Document::load(const openstudio::path& p) {
   boost::filesystem::ifstream inFile(wp);
   if (!inFile) { return result; }
 
-  //try {
-  //  boost::archive::text_iarchive in(inFile);
-  //  Document tmp;
-  //  in >> boost::serialization::make_nvp("document",tmp);
-  //  result = tmp;
-  //}
-  //catch (boost::archive::archive_exception e) {
-  //  LOG_FREE(Error,"openstudio.Document","Boost archive exception while loading Document from boost serialization text "
-  //      << "format (.osd). Code " << e.code << ". Message: " << e.what());
-  //}
-  //catch (...) {
-  //  LOG_FREE(Error,"openstudio.Document","Error deserializing Document from boost serialization text format (.osd).");
-  //}
+  try {
+    boost::archive::text_iarchive in(inFile);
+    Document tmp;
+    in >> boost::serialization::make_nvp("document",tmp);
+    result = tmp;
+  }
+  catch (boost::archive::archive_exception e) {
+    LOG_FREE(Error,"openstudio.Document","Boost archive exception while loading Document from boost serialization text "
+        << "format (.osd). Code " << e.code << ". Message: " << e.what());
+  }
+  catch (...) {
+    LOG_FREE(Error,"openstudio.Document","Error deserializing Document from boost serialization text format (.osd).");
+  }
   return result;
 }
 

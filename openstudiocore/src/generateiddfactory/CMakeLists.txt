@@ -18,7 +18,7 @@ SET( ${target_name}_SRC
   ${CMAKE_CURRENT_BINARY_DIR}/../utilities/core/GeneratorApplicationPathHelpers.cxx
   ../utilities/core/String.hpp        # needed for Path to link properly
   ../utilities/core/String.cpp
-  #../utilities/core/Serialization.hpp # needed for Path to link properly
+  ../utilities/core/Serialization.hpp # needed for Path to link properly
   ../utilities/idd/IddRegex.hpp
   ../utilities/idd/IddRegex.cpp
 )

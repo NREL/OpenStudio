@@ -51,7 +51,7 @@ SET( core_src
   core/PathWatcher.hpp
   core/PathWatcher.cpp
   core/Queue.hpp
-  #core/Serialization.hpp
+  core/Serialization.hpp
   core/Singleton.hpp
   core/StaticInitializer.hpp
   core/String.hpp
@@ -493,7 +493,7 @@ SET( ${target_name}_swig_src
   core/Path.i
   core/PathWatcher.i
   core/Qt.i
-  #core/Serialization.i
+  core/Serialization.i
   core/Singleton.i
   core/System.i
   core/UpdateManager.i

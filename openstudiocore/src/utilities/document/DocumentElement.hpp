@@ -22,7 +22,7 @@
 
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/core/Logger.hpp>
-//#include <utilities/core/Serialization.hpp>
+#include <utilities/core/Serialization.hpp>
 
 #include <utilities/document/DocumentEnums.hpp>
 
@@ -96,15 +96,15 @@ class UTILITIES_API DocumentElement {
   // bad default constructor for serialization
   DocumentElement() {};
 
-  //// serialization support
-  //friend class boost::serialization::access;
-  //template<class Archive>
-  //void serialize(Archive& ar, const unsigned int version) {
-  //  ar & BOOST_SERIALIZATION_NVP(m_impl);
-  //}
+  // serialization support
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive& ar, const unsigned int version) {
+    ar & BOOST_SERIALIZATION_NVP(m_impl);
+  }
 };
 
-//BOOST_SERIALIZATION_ASSUME_ABSTRACT(DocumentElement);
+BOOST_SERIALIZATION_ASSUME_ABSTRACT(DocumentElement);
 
 /** \relates DocumentElement */
 typedef boost::optional<DocumentElement> OptionalDocumentElement;

@@ -98,13 +98,13 @@ namespace detail {
     std::string mf_printLaTeX() const;
     std::string mf_printXHTML() const;
 
-    //// serialization support
-    //friend class boost::serialization::access;
-    //template<class Archive>
-    //void serialize(Archive& ar, const unsigned int version) {
-    //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement_Impl);
-    //  ar & BOOST_SERIALIZATION_NVP(m_paragraphs);
-    //}
+    // serialization support
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive& ar, const unsigned int version) {
+      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement_Impl);
+      ar & BOOST_SERIALIZATION_NVP(m_paragraphs);
+    }
   };
 
 } // detail

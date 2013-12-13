@@ -31,7 +31,7 @@
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>
 %include <utilities/core/Application.i>
-// %include <utilities/core/Serialization.i>
+%include <utilities/core/Serialization.i>
 %include <utilities/core/Logger.i>
 %include <utilities/core/UpdateManager.i>
 %include <utilities/core/Url.i>

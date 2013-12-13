@@ -33,11 +33,10 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
-//#include <boost/archive/archive_exception.hpp>
+#include <boost/archive/archive_exception.hpp>
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/regex.hpp>
-#include <iomanip> 
 
 namespace openstudio {
 
@@ -558,25 +557,25 @@ namespace detail {
     if (makeParentFolder(p)) {
       boost::filesystem::ofstream outFile(p);
       if (outFile) {
-        //if (expectedExtension == tableFileExtension()) {
-        //  try {
-        //    boost::archive::text_oarchive out(outFile);
-        //    Table publicSelf = getObject<Table>();
-        //    out << boost::serialization::make_nvp("table",publicSelf);
-        //    outFile.close();
-        //    return true;
-        //  }
-        //  catch (boost::archive::archive_exception e) {
-        //    LOG(Error,"Boost archive exception while writing Table out to boost serialization text ("
-        //        << tableFileExtension() << "). Code " << e.code << ". Message: " << e.what());
-        //  }
-        //  catch (...) {
-        //    LOG(Error,"Error serializing Table to boost serialization text ("
-        //        << tableFileExtension() << ").");
-        //  }
-        //  return false;
-        //}
-        //else {
+        if (expectedExtension == tableFileExtension()) {
+          try {
+            boost::archive::text_oarchive out(outFile);
+            Table publicSelf = getObject<Table>();
+            out << boost::serialization::make_nvp("table",publicSelf);
+            outFile.close();
+            return true;
+          }
+          catch (boost::archive::archive_exception e) {
+            LOG(Error,"Boost archive exception while writing Table out to boost serialization text ("
+                << tableFileExtension() << "). Code " << e.code << ". Message: " << e.what());
+          }
+          catch (...) {
+            LOG(Error,"Error serializing Table to boost serialization text ("
+                << tableFileExtension() << ").");
+          }
+          return false;
+        }
+        else {
           try {
             outFile << print(TableFormat(TableFormat::CSV));
             outFile.close();
@@ -586,7 +585,7 @@ namespace detail {
             LOG(Error,"Unable to write Table to path '" << toString(p) << "'.");
             return false;
           }
-        //} // if expectedExtension
+        } // if expectedExtension
       } // if outFile
     } // if parent folder
 
@@ -1293,18 +1292,18 @@ Table Table::loadFromCsv(std::istream& is,
 
 Table Table::loadFromBoostTextSerialization(boost::filesystem::ifstream& is) {
   Table result;
-  //try {
-  //  boost::archive::text_iarchive in(is);
-  //  Table tmp;
-  //  in >> boost::serialization::make_nvp("table",tmp);
-  //  result = tmp;
-  //}
-  //catch (boost::archive::archive_exception e) {
-  //  LOG(Error,"Boost archive exception while loading Table from Text. Code " << e.code << ". Message: " << e.what());
-  //}
-  //catch (...) {
-  //  LOG(Error,"Error deserializing object of type 'Table' from boost searialization text file (.ost).");
-  //}
+  try {
+    boost::archive::text_iarchive in(is);
+    Table tmp;
+    in >> boost::serialization::make_nvp("table",tmp);
+    result = tmp;
+  }
+  catch (boost::archive::archive_exception e) {
+    LOG(Error,"Boost archive exception while loading Table from Text. Code " << e.code << ". Message: " << e.what());
+  }
+  catch (...) {
+    LOG(Error,"Error deserializing object of type 'Table' from boost searialization text file (.ost).");
+  }
   return result;
 }
 

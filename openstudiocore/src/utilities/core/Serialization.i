@@ -2,7 +2,7 @@
 #define UTILITIES_CORE_SERIALIZATION_I
 
 %{
-  //#include <utilities/core/Serialization.hpp>
+  #include <utilities/core/Serialization.hpp>
 %}
 
 #define MAKE_PTR_SERIALIZABLE(__T__) \

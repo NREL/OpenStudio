@@ -102,12 +102,12 @@ class UTILITIES_API Section : public SectionElement {
  private:
   REGISTER_LOGGER("openstudio.Section");
 
-  //// serialization support
-  //friend class boost::serialization::access;
-  //template<class Archive>
-  //void serialize(Archive& ar, const unsigned int version) {
-  //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement);
-  //}
+  // serialization support
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive& ar, const unsigned int version) {
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement);
+  }
 };
 
 /** \relates Section */
