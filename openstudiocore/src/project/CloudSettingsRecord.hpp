@@ -74,6 +74,9 @@ OPENSTUDIO_ENUM(CloudSettingsRecordColumns,
   ((numWorkers)(INTEGER)(16))
   ((terminationDelayEnabled)(BOOLEAN)(17))
   ((terminationDelay)(INTEGER)(18))
+  ((region)(TEXT)(19))
+  ((serverInstanceType)(TEXT)(20))
+  ((workerInstanceType)(TEXT)(21))
 );
 
 /** CloudSettingsRecord is a ObjectRecord. */

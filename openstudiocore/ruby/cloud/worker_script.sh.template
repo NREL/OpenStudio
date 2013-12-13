@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# AWS Worker Bootstrap File
+
 # Change Host File Entries
 ENTRY="SERVER_IP SERVER_HOSTNAME SERVER_ALIAS"
 FILE=/etc/hosts
@@ -14,21 +16,23 @@ cp /data/launch-instance/setup* /home/ubuntu/
 chmod 775 /home/ubuntu/setup*
 chown ubuntu:ubuntu /home/ubuntu/setup*
 
-# Force the generation of various directories that are in the EBS mnt
+# Force the generation of OpenStudio on the EBS mount and copy worker files
 sudo rm -rf /mnt/openstudio
 sudo mkdir -p /mnt/openstudio
-
-# save some files into the right directory
-cp /data/prototype/pat/SimulateDataPoint.rb /mnt/openstudio/
-cp /data/prototype/pat/CommunicateResults_Mongo.rb /mnt/openstudio/
-
-# copy over the models needed for mongo
-mkdir -p /mnt/openstudio/rails-models
-cp /data/prototype/pat/rails-models.zip /mnt/openstudio/rails-models/
-cd /mnt/openstudio/rails-models
-unzip -o rails-models.zip
-
 sudo chmod -R 777 /mnt/openstudio
+cp -rf /data/worker-nodes/* /mnt/openstudio/
+
+# Unzip the worker files (including Mongoid models) and set permissions one last time
+# Note that the 777 is redundant but needed until we actually deploy ACL
+cd /mnt/openstudio/rails-models && unzip -o rails-models.zip
+sudo chmod -R 777 /mnt/openstudio
+
+#turn off hyperthreading
+for cpunum in $(
+  cat /sys/devices/system/cpu/cpu*/topology/thread_siblings_list | 
+  cut -s -d, -f2- | tr ',' '\n' | sort -un); do
+    echo 0 > /sys/devices/system/cpu/cpu$cpunum/online
+done
 
 #file flag the user_data has completed
 cat /dev/null > /home/ubuntu/user_data_done

@@ -442,3 +442,84 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
   }
 }
 
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_Analysis2_Simulate_Roundtrip) {
+  // Create example analysis
+  Analysis analysis = analysis2(true);
+
+  // Serialize Analysis with no data points
+  std::string json = analysis.toJSON(AnalysisSerializationOptions());
+  EXPECT_FALSE(json.empty());
+
+  // Deserialize and check results
+  AnalysisJSONLoadResult loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  Analysis formulationCopy = loadResult.analysisObject->cast<Analysis>();
+  std::string jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
+  bool test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
+
+  // Save analysis with no data points
+  openstudio::path p = toPath("AnalysisFixtureData/analysis2_simulate.json");
+  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationOptions(),true));
+
+  // Load and check results
+  loadResult = loadJSON(p);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  formulationCopy = loadResult.analysisObject->cast<Analysis>();
+  jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
+}
+
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_Analysis2_NoSimulate_Roundtrip) {
+  // Create example analysis
+  Analysis analysis = analysis2(false);
+
+  // Serialize Analysis with no data points
+  std::string json = analysis.toJSON(AnalysisSerializationOptions());
+  EXPECT_FALSE(json.empty());
+
+  // Deserialize and check results
+  AnalysisJSONLoadResult loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  Analysis formulationCopy = loadResult.analysisObject->cast<Analysis>();
+  std::string jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
+  bool test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
+
+  // Save analysis with no data points
+  openstudio::path p = toPath("AnalysisFixtureData/analysis2_no_simulate.json");
+  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationOptions(),true));
+
+  // Load and check results
+  loadResult = loadJSON(p);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  formulationCopy = loadResult.analysisObject->cast<Analysis>();
+  jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
+}

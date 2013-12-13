@@ -37,7 +37,6 @@ class SetpointManagerWarmest;
 namespace detail {
 
   class MODEL_API Node_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
    public:
 
     // constructor

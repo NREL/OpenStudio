@@ -28,7 +28,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API SkyTemperature_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
 
     // constructor

@@ -34,6 +34,7 @@ class Transformation;
 
 namespace model{
 
+class AirConditionerVariableRefrigerantFlow;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
@@ -42,6 +43,7 @@ class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeReheat;
 class AirTerminalSingleDuctParallelPIUReheat;
 class AirTerminalSingleDuctUncontrolled;
+class AirTerminalSingleDuctVAVNoReheat;
 class AirTerminalSingleDuctVAVReheat;
 class AirLoopHVACZoneMixer;
 class AirLoopHVACOutdoorAirSystem;
@@ -54,9 +56,11 @@ class CFactorUndergroundWallConstruction;
 class ChillerElectricEIR;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
+class CoilCoolingDXVariableRefrigerantFlow;
 class CoilCoolingWater;
 class CoilCoolingWaterToAirHeatPumpEquationFit;
 class CoilHeatingDXSingleSpeed;
+class CoilHeatingDXVariableRefrigerantFlow;
 class CoilHeatingElectric;
 class CoilHeatingGas;
 class CoilHeatingWater;
@@ -67,7 +71,10 @@ class ControllerOutdoorAir;
 class ControllerMechanicalVentilation;
 class ControllerWaterCoil;
 class ConvergenceLimits;
+class CoolingTowerPerformanceCoolTools;
+class CoolingTowerPerformanceYorkCalc;
 class CoolingTowerSingleSpeed;
+class CoolingTowerVariableSpeed;
 class CurrencyType;
 class CurveBicubic;
 class CurveBiquadratic;
@@ -131,6 +138,17 @@ class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
 class RefractionExtinctionGlazing;
+class RefrigerationCase;
+class RefrigerationCompressor;
+class RefrigerationCondenserAirCooled;
+class RefrigerationCondenserCascade;
+class RefrigerationCondenserEvaporativeCooled;
+class RefrigerationCondenserWaterCooled;
+class RefrigerationSubcoolerLiquidSuction;
+class RefrigerationSubcoolerMechanical;
+class RefrigerationSecondarySystem;
+class RefrigerationSystem;
+class RefrigerationWalkIn;
 class RoofVegetation;
 class RunPeriod;
 class RunPeriodControlDaylightSavingTime;
@@ -194,10 +212,10 @@ class ZoneHVACLowTempRadiantVarFlow;
 class ZoneHVACLowTemperatureRadiantElectric;
 class ZoneHVACPackagedTerminalHeatPump;
 class ZoneHVACPackagedTerminalAirConditioner;
+class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 class ZoneHVACWaterToAirHeatPump;
 class ZoneHVACEquipmentList;
 class ZoneHVACUnitHeater;
-class AirTerminalSingleDuctVAVNoReheat;
 }
 
 namespace energyplus {
@@ -257,6 +275,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAndMapModelObject( model::ModelObject & modelObject );
 
+  boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow( model::AirConditionerVariableRefrigerantFlow & modelObject );
+
   boost::optional<IdfObject> translateAirGap( model::AirGap & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVAC( model::AirLoopHVAC & modelObject );
@@ -277,6 +297,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctUncontrolled( model::AirTerminalSingleDuctUncontrolled & modelObject );
 
+  boost::optional<IdfObject> translateAirTerminalSingleDuctVAVNoReheat( model::AirTerminalSingleDuctVAVNoReheat & modelObject );
+  
   boost::optional<IdfObject> translateAirTerminalSingleDuctVAVReheat( model::AirTerminalSingleDuctVAVReheat & modelObject );
 
   boost::optional<IdfObject> translateAirWallMaterial( model::AirWallMaterial & modelObject );
@@ -301,6 +323,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilCoolingDXTwoSpeedWithoutUnitary( model::CoilCoolingDXTwoSpeed & modelObject );
 
+  boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow( model::CoilCoolingDXVariableRefrigerantFlow & modelObject );
+
   boost::optional<IdfObject> translateCoilCoolingWater( model::CoilCoolingWater & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingWaterToAirHeatPumpEquationFit( model::CoilCoolingWaterToAirHeatPumpEquationFit & modelObject );
@@ -308,6 +332,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilHeatingDXSingleSpeed( model::CoilHeatingDXSingleSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingDXSingleSpeedWithoutUnitary( model::CoilHeatingDXSingleSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlow( model::CoilHeatingDXVariableRefrigerantFlow & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingElectric( model::CoilHeatingElectric & modelObject );
 
@@ -329,7 +355,13 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateConvergenceLimits( model::ConvergenceLimits & modelObject );
 
+  boost::optional<IdfObject> translateCoolingTowerPerformanceCoolTools( model::CoolingTowerPerformanceCoolTools & modelObject );
+
+  boost::optional<IdfObject> translateCoolingTowerPerformanceYorkCalc( model::CoolingTowerPerformanceYorkCalc & modelObject );
+
   boost::optional<IdfObject> translateCoolingTowerSingleSpeed( model::CoolingTowerSingleSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoolingTowerVariableSpeed( model::CoolingTowerVariableSpeed & modelObject );
 
   boost::optional<IdfObject> translateCurrencyType( model::CurrencyType & modelObject );
 
@@ -457,6 +489,28 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateRefractionExtinctionGlazing( model::RefractionExtinctionGlazing & modelObject );
 
+  boost::optional<IdfObject> translateRefrigerationCase( model::RefrigerationCase & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCompressor( model::RefrigerationCompressor & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCondenserAirCooled( model::RefrigerationCondenserAirCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCondenserCascade( model::RefrigerationCondenserCascade & modelObject );
+  
+  boost::optional<IdfObject> translateRefrigerationCondenserEvaporativeCooled( model::RefrigerationCondenserEvaporativeCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCondenserWaterCooled( model::RefrigerationCondenserWaterCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationSubcoolerLiquidSuction( model::RefrigerationSubcoolerLiquidSuction & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationSubcoolerMechanical( model::RefrigerationSubcoolerMechanical & modelObject );
+  
+  boost::optional<IdfObject> translateRefrigerationSecondarySystem( model::RefrigerationSecondarySystem & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationSystem( model::RefrigerationSystem & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationWalkIn( model::RefrigerationWalkIn & modelObject );
+
   boost::optional<IdfObject> translateRoofVegetation( model::RoofVegetation & modelObject );
 
   boost::optional<IdfObject> translateRunPeriod( model::RunPeriod & modelObject );
@@ -583,6 +637,8 @@ class ENERGYPLUS_API ForwardTranslator {
  
   boost::optional<IdfObject> translateZoneHVACPackagedTerminalAirConditioner( model::ZoneHVACPackagedTerminalAirConditioner & modelObject );
 
+  boost::optional<IdfObject> translateZoneHVACTerminalUnitVariableRefrigerantFlow( model::ZoneHVACTerminalUnitVariableRefrigerantFlow & modelObject );
+
   boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump( model::ZoneHVACWaterToAirHeatPump & modelObject );
   
   boost::optional<IdfObject> translateZoneHVACUnitHeater( model::ZoneHVACUnitHeater & modelObject );
@@ -590,12 +646,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
 
   boost::optional<IdfObject> createAirLoopHVACReturnPath( model::AirLoopHVAC & airLoopHVAC );
-  
-  boost::optional<IdfObject> translateAirTerminalSingleDuctVAVNoReheat( model::AirTerminalSingleDuctVAVNoReheat & modelObject );
 
 
   // helper method used by ForwardTranslatePlantLoop
-  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects,	model::PlantLoop & plantLoop);
+  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::PlantLoop & plantLoop);
 
   // translate all constructions
   void translateConstructions(const model::Model & model);
@@ -632,7 +686,35 @@ class ENERGYPLUS_API ForwardTranslator {
   static std::vector<IddObjectType> iddObjectsToTranslate();
   static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
 
+  /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
+   *  IdfFile if successful. */
+  boost::optional<IdfFile> findIdfFile(const std::string& path);
+
+  /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
+   *  fluidType. Returns an uninitialized object if unsuccessful for any reason. If successful, returns
+   *  the FluidProperties:Name IdfObject. If the fluidType already exists in m_idfObjects, it will not
+   *  add new IdfObjects and will return the existing FluidProperties:Name IdfObject. Valid choices for 
+   *  fluidType are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
+  boost::optional<IdfObject> createFluidProperties(const std::string& fluidType);
+
+  /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
+   *  glycolType adn glycolConcentration. Returns an uninitialized object if unsuccessful for any reason. 
+   *  If successful, returns the FluidProperties:Name IdfObject with a FluidName of 
+   *  glycolType + "_" + glycolConcentration ie. PropyleneGlycol_30. If the fluidType already 
+   *  exists in m_idfObjects, it will not add new IdfObjects and will return the existing 
+   *  FluidProperties:Name IdfObject. Valid choices for glycolType are: PropyleneGlycol, EthyleneGlycol
+   *   */
+  boost::optional<IdfObject> createFluidProperties(const std::string& glycolType, int glycolConcentration);
+
+  /** Initializes m_fluidPropertiesMap with refrigerant names and path to refrigerant resource files.
+   *  Valid refrigerants are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
+  void createFluidPropertiesMap();
+
   typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;
+
+  typedef std::map<const std::string, const std::string> FluidPropertiesMap;
+
+  FluidPropertiesMap m_fluidPropertiesMap;
 
   ModelObjectMap m_map;
 
@@ -675,4 +757,3 @@ namespace detail
 } // openstudio
 
 #endif // OPENSTUDIO_ENERGYPLUS_FORWARDTRANSLATOR_HPP
-

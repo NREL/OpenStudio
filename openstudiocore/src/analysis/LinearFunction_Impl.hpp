@@ -33,7 +33,6 @@ namespace detail {
 
   /** LinearFunction_Impl is a Function_Impl that is the implementation class for LinearFunction.*/
   class ANALYSIS_API LinearFunction_Impl : public Function_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

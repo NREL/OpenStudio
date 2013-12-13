@@ -22,6 +22,8 @@
 
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include <analysisdriver/AnalysisDriver_Impl.hpp>
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
@@ -98,9 +100,14 @@ namespace detail {
       m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+    OS_ASSERT(test);
+
     if (m_analysis) {
-      m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      test = m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
+      OS_ASSERT(test);
     }
+
     m_logFile.setLogLevel(options.logLevel());
     OS_ASSERT(runManager().paused());
     if (!options.pauseRunManagerQueue()) {
@@ -320,13 +327,39 @@ namespace detail {
   }
 
   bool SimpleProject_Impl::isRunning() const {
-    return analysisDriver().isRunning();
+    //DLM: Elaine does this look right?  Should we or these?
+    bool result = false;
+    if (m_cloudAnalysisDriver){
+      //result = m_cloudAnalysisDriver->isRunning();
+      result = m_cloudAnalysisDriver->isRunning() || m_cloudAnalysisDriver->isDownloading() ||  m_cloudAnalysisDriver->isStopping() || m_cloudAnalysisDriver->lastRunSuccess();
+      // DLM: should we be checking connected to cloud here too?
+    }else{
+      result = m_analysisDriver.isRunning();
+    }
+
+    return result;
   }
 
-  boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const {
+  AnalysisStatus SimpleProject_Impl::status() const
+  {
+    if (m_cloudAnalysisDriver){
+      return m_cloudAnalysisDriver->status();
+    }
+    return analysisDriver().status();
+  }
+
+  boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const{
     if (!m_cloudAnalysisDriver) {
       if (boost::optional<CloudSession> session = cloudSession()) {
+        bool test = disconnect(m_analysisDriver.getImpl().get(), SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+        OS_ASSERT(test);
+
         m_cloudAnalysisDriver = CloudAnalysisDriver(*session,simpleProject());
+        
+        test = m_cloudAnalysisDriver->connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+        OS_ASSERT(test);
+
+        emit analysisStatusChanged(m_cloudAnalysisDriver->status());
       }
     }
     return m_cloudAnalysisDriver;
@@ -527,6 +560,16 @@ namespace detail {
           << "'.");
       return result;
     }
+
+    // is not osm that made this osp
+    openstudio::path osmForThisOsp = projectDir().parent_path() / toPath(projectDir().stem());
+    osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
+    if (currentSeedLocation.path() == osmForThisOsp) {
+      LOG(Warn,"Cannot set seed to " << toString(currentSeedLocation.path()) <<
+          ", because this OSP file was created by that OSM. Saving this project elsewhere "
+          << "before setting the baseline to that file will break the circular reference.");
+      return result;
+    } 
 
     // compatible with analysis?
     bool ok = analysis().setSeed(currentSeedLocation);
@@ -873,6 +916,11 @@ namespace detail {
 
   void SimpleProject_Impl::clearCloudAnalysisDriver() {
     m_cloudAnalysisDriver.reset();
+
+    bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
+    OS_ASSERT(test);
+
+    emit analysisStatusChanged(m_analysisDriver.status());
   }
 
   bool SimpleProject_Impl::setCloudSession(const CloudSession& session) {
@@ -925,7 +973,7 @@ namespace detail {
     }
 
     // create zip file
-    m_zipFileForCloud = tempDir / toPath("analysis_" + removeBraces(analysis().uuid()) + ".zip");
+    m_zipFileForCloud = tempDir / toPath("project.zip");
     ZipFile zipFile(m_zipFileForCloud,false);
 
     // add contents
@@ -1965,6 +2013,10 @@ bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
 }
 
+AnalysisStatus SimpleProject::status() const {
+  return getImpl()->status();
+}
+
 boost::optional<CloudAnalysisDriver> SimpleProject::cloudAnalysisDriver() const {
   return getImpl()->cloudAnalysisDriver();
 }
@@ -2236,13 +2288,9 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
     runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
   }
 
-  // ETH@20130306 - Is this the best option?
-  // DLM: for now we will let run manager manage the number of jobs running at a time
-  //      even though this does result in long time to queue initially
-  // DLM: i did confirm that the data points in the run list update correctly if this is set
-  // ETH: hoping uncommenting this and setting it to 50 eases the problems David saw with
-  // running 100's of points on his local machine
-  runOptions.setQueueSize(50);
+  // limits the AnalysisDriver queue to 24. this way, not all data points are made and queued 
+  // in the RunManager at the same time.
+  runOptions.setQueueSize(24);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
   // however there seem to be intermittant failures when this is done (bug 1077)

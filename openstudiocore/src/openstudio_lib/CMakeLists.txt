@@ -218,6 +218,12 @@ SET( ${target_name}_SRC
   PlanarSurfaceWidget.hpp
   RadianceDialog.cpp
   RadianceDialog.hpp
+  RefrigerationController.cpp
+  RefrigerationController.hpp
+  RefrigerationGraphicsItems.cpp
+  RefrigerationGraphicsItems.hpp
+  RefrigerationScene.cpp
+  RefrigerationScene.hpp
   RenderingColorWidget.cpp
   RenderingColorWidget.hpp
   ResultsTabController.cpp
@@ -370,6 +376,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/EditView.cpp
   ../shared_gui_components/EditView.hpp
   ../shared_gui_components/FieldMethodTypedefs.hpp
+  ../shared_gui_components/GraphicsItems.cpp
+  ../shared_gui_components/GraphicsItems.hpp
   ../shared_gui_components/HeaderViews.cpp
   ../shared_gui_components/HeaderViews.hpp
   ../shared_gui_components/LocalLibrary.hpp
@@ -377,6 +385,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/LocalLibraryController.hpp
   ../shared_gui_components/LocalLibraryView.cpp
   ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.cpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/MeasureDragData.cpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
@@ -534,6 +544,9 @@ SET( ${target_name}_moc
   PeopleInspectorView.hpp
   PlanarSurfaceWidget.hpp
   RadianceDialog.hpp
+  RefrigerationController.hpp
+  RefrigerationGraphicsItems.hpp
+  RefrigerationScene.hpp
   RenderingColorWidget.hpp
   ResultsTabController.hpp
   ResultsTabView.hpp
@@ -610,7 +623,9 @@ SET( ${target_name}_moc
   ../shared_gui_components/ComponentList.hpp
   ../shared_gui_components/EditController.hpp
   ../shared_gui_components/EditView.hpp
+  ../shared_gui_components/GraphicsItems.hpp
   ../shared_gui_components/HeaderViews.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/LocalLibraryController.hpp
   ../shared_gui_components/LocalLibraryView.hpp
   ../shared_gui_components/MeasureDragData.hpp

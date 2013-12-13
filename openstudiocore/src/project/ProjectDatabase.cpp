@@ -728,8 +728,8 @@ namespace detail {
       update_1_0_4_to_1_0_5(dbv);
     }
 
-    if (dbv < VersionString("1.1.0")) {
-      update_1_0_6_to_1_1_0(dbv);
+    if (dbv < VersionString("1.0.7")) {
+      update_1_0_6_to_1_0_7(dbv);
     }
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
@@ -1805,7 +1805,7 @@ namespace detail {
     query.clear();
 
     save();
-  	bool test = this->commitTransaction();
+    bool test = this->commitTransaction();
     OS_ASSERT(test);
 
     LOG(Info,"Removing all standards rule and ruleset information.");
@@ -1819,7 +1819,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1831,7 +1831,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1846,7 +1846,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -1864,7 +1864,7 @@ namespace detail {
     query.clear();
 
     save();
-  	test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
   }
 
@@ -2281,15 +2281,15 @@ namespace detail {
     OS_ASSERT(test);    
   }
 
-  void ProjectDatabase_Impl::update_1_0_6_to_1_1_0(const VersionString& startVersion) {
+  void ProjectDatabase_Impl::update_1_0_6_to_1_0_7(const VersionString& startVersion) {
 
     if (startVersion > VersionString("1.0.4")) {
 
       bool didStartTransaction = startTransaction();
       OS_ASSERT(didStartTransaction);
 
-      LOG(Info,"Adding columns for numWorkers, terminationDelayEnabled, and terminationDelay to "
-          << CloudSettingsRecord::databaseTableName() << ".");
+      LOG(Info,"Adding columns to " << CloudSettingsRecord::databaseTableName()
+          << " to support AWSSettings.");
 
       ProjectDatabase database(this->shared_from_this());
       QSqlQuery query(*(database.qSqlDatabase()));
@@ -2312,6 +2312,27 @@ namespace detail {
       query.prepare(QString::fromStdString(
                       "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
                       terminationDelayColumn.valueName() + " " + terminationDelayColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns regionColumn("region");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      regionColumn.valueName() + " " + regionColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns serverInstanceTypeColumn("serverInstanceType");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      serverInstanceTypeColumn.valueName() + " " + serverInstanceTypeColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      CloudSettingsRecordColumns workerInstanceTypeColumn("workerInstanceType");
+      query.prepare(QString::fromStdString(
+                      "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+                      workerInstanceTypeColumn.valueName() + " " + workerInstanceTypeColumn.valueDescription()));
       assertExec(query);
       query.clear();
 
@@ -2368,24 +2389,24 @@ namespace detail {
       assertExec(query);
       query.clear();
 
-      CloudSessionRecordColumns regionColumn("region");
+      CloudSessionRecordColumns sessionRegionColumn("region");
       query.prepare(QString::fromStdString(
                       "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
-                      regionColumn.valueName() + " " + regionColumn.valueDescription()));
+                      sessionRegionColumn.valueName() + " " + sessionRegionColumn.valueDescription()));
       assertExec(query);
       query.clear();
 
-      CloudSessionRecordColumns serverInstanceTypeColumn("serverInstanceType");
+      CloudSessionRecordColumns sessionServerInstanceTypeColumn("serverInstanceType");
       query.prepare(QString::fromStdString(
                       "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
-                      serverInstanceTypeColumn.valueName() + " " + serverInstanceTypeColumn.valueDescription()));
+                      sessionServerInstanceTypeColumn.valueName() + " " + sessionServerInstanceTypeColumn.valueDescription()));
       assertExec(query);
       query.clear();
 
-      CloudSessionRecordColumns workerInstanceTypeColumn("workerInstanceType");
+      CloudSessionRecordColumns sessionWorkerInstanceTypeColumn("workerInstanceType");
       query.prepare(QString::fromStdString(
                       "ALTER TABLE " + CloudSessionRecord::databaseTableName() + " ADD COLUMN " +
-                      workerInstanceTypeColumn.valueName() + " " + workerInstanceTypeColumn.valueDescription()));
+                      sessionWorkerInstanceTypeColumn.valueName() + " " + sessionWorkerInstanceTypeColumn.valueDescription()));
       assertExec(query);
       query.clear();
 

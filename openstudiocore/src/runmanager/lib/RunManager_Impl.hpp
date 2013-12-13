@@ -76,7 +76,7 @@ namespace detail {
 
     public:
       /// \param DB path to database object with configuration and queue data
-      RunManager_Impl(const openstudio::path &DB, bool t_paused=false, bool t_initui=true, bool t_tempdb=false);
+      RunManager_Impl(const openstudio::path &DB, bool t_paused=false, bool t_initui=true, bool t_tempdb=false, bool t_useStatusGUI=true);
       virtual ~RunManager_Impl();
 
       /// \param job Job to check out of data status for
@@ -90,7 +90,11 @@ namespace detail {
       ///                       the path of the runmanager db is used.
       /// \returns true if the job was successfully added, false if there was a conflict with
       ///          workflowkeys
-      bool enqueue(const openstudio::runmanager::Job &t_job, bool force, const openstudio::path &t_path);
+      bool enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &path);
+
+      boost::optional<openstudio::runmanager::Job> enqueueOrReturnExisting(const openstudio::runmanager::Job &job,
+                                                                           bool force,
+                                                                           const openstudio::path &path);
 
       /// Queue a vector of jobs and all children up for processing
       /// \param t_jobs jobs to queue up for processing
@@ -103,7 +107,6 @@ namespace detail {
 
       /// Remove the given job and all child jobs from the queue
       void remove(openstudio::runmanager::Job job);
-
 
       /// \param t_job job to raise the priority (list order) of
       void raisePriority(const openstudio::runmanager::Job &t_job);
@@ -266,9 +269,10 @@ namespace detail {
 
       WorkflowItem *getWorkflowItemImpl(const Job &t_job, const QModelIndex &parent) const;
 
-      bool enqueueImpl(openstudio::runmanager::Job t_job, bool force, const openstudio::path &t_path);
+      /// If successful, returns boost::none. Otherwise, returns existing job that was substituted for t_job.
+      boost::optional<openstudio::runmanager::Job> enqueueImpl(openstudio::runmanager::Job t_job, bool force, const openstudio::path &t_path);
 
-
+      bool m_useStatusGUI;
       mutable QMutex m_mutex;
       mutable QMutex m_activate_mutex;
       QWaitCondition m_waitCondition;

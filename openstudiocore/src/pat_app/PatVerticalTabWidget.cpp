@@ -85,6 +85,13 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
   OS_ASSERT(isConnected);
 }
 
+PatVerticalTabWidget::~PatVerticalTabWidget() 
+{ 
+  if (mainViewSwitcher){
+    mainViewSwitcher->clear(); 
+  }
+}
+
 void PatVerticalTabWidget::addTab( int id,
                                    QString toolTip,
                                    const QString & selectedImagePath,
@@ -225,8 +232,7 @@ void PatVerticalTabWidget::refreshIcons()
       imagePath = m_unSelectedPixmaps[i];
     }
     else if(!button->isEnabled() && button->isChecked()){
-      // you should not be here
-      OS_ASSERT(false);
+      imagePath = m_selectedPixmaps[i];
     }
     else if(!button->isEnabled() && !button->isChecked()){
       imagePath = m_disabledPixmaps[i];

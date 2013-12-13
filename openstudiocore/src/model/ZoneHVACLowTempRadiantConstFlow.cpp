@@ -470,6 +470,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::setCircuitLength(double circuitLength) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength, circuitLength);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantConstFlow_Impl::optionalAvailabilitySchedule() const {
@@ -557,7 +558,8 @@ namespace detail {
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model, 
                                                                  Schedule& availabilitySchedule,
                                                                  HVACComponent& heatingCoil,
-                                                                 HVACComponent& coolingCoil)
+                                                                 HVACComponent& coolingCoil,
+                                                                 double hydronicTubingLength)
   : ZoneHVACComponent(ZoneHVACLowTempRadiantConstFlow::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>());
@@ -572,6 +574,9 @@ ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& mo
   BOOST_ASSERT(ok);
 
   ok = setCoolingCoil(coolingCoil);
+  BOOST_ASSERT(ok);
+
+  ok = setHydronicTubingLength(hydronicTubingLength);
   BOOST_ASSERT(ok);
 
 }

@@ -1,17 +1,36 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
 
 PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 1)
-SET(CMAKE_VERSION_PATCH 0)
+SET(CMAKE_VERSION_PATCH 4)
 
-SET(SUBVERSION_REVISION "Unknown")
-SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # svn revision
+SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
+FIND_PACKAGE(Git)
+IF(GIT_FOUND)
+  EXECUTE_PROCESS(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  TIMEOUT 10
+                  RESULT_VARIABLE RESULT
+                  OUTPUT_VARIABLE GIT_VERSION
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  IF(${RESULT} EQUAL 0)
+    SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
+  ENDIF()
+ENDIF()
+
+# EnergyPlus Idd version
+SET(ENERGYPLUS_VERSION "8.0" CACHE INTERNAL "EnergyPlus Version")
+
 
 OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )
 
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
+
+# Search for modules in the openstudiocore dir first to override cmake ones 
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE_SOURCE_DIR})
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
@@ -46,10 +65,52 @@ OPTION( BUILD_PACKAGE "Build package" OFF )
 OPTION( ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF )
 
 # Build with OpenSSL support
-OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
+SET( BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections" )
+IF(UNIX)
+  FIND_PACKAGE( OpenSSL )
+  IF( NOT ${OPENSSL_FOUND} )
+    MESSAGE(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
+    MESSAGE(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+  ELSE()
+    MARK_AS_ADVANCED(LIB_EAY_DEBUG)
+    MARK_AS_ADVANCED(LIB_EAY_RELEASE)
+    MARK_AS_ADVANCED(SSL_EAY_DEBUG)
+    MARK_AS_ADVANCED(SSL_EAY_RELEASE)
+  ENDIF()
+ELSEIF(WIN32)
+  IF(CMAKE_CL_64)
+    SET(OPENSSL_PATH "OpenSSL-Win64")
+    IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+      MESSAGE(STATUS "Downloading OpenSSL (x64)")
+    ENDIF()
+    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win64.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 974FDD1EDD3CBDCC54A0EEEE0DBB00CC)
+  ELSE()
+    SET(OPENSSL_PATH "OpenSSL-Win32")
+    IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+      MESSAGE(STATUS "Downloading OpenSSL (x86)")
+    ENDIF()
+    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win32.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 890EA14E30C5BE3C4F9298DBC516AA33)
+  ENDIF()
+  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  SET(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+ENDIF()
 
-# Build SimXML
-OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
+
+
+IF(MSVC)
+  # Build with Multiple Processes
+  SET(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
+  MARK_AS_ADVANCED( BUILD_WITH_MULTIPLE_PROCESSES )
+ENDIF()
+
+# EnergyPlus
+FIND_PACKAGE(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+MARK_AS_ADVANCED(
+  ENERGYPLUS_EXE
+  ENERGYPLUS_IDD
+  ENERGYPLUS_WEATHER_DIR
+)
 
 # Package Radiance and EnergyPlus for convenience 
 OPTION( PACKAGE_RADIANCE_AND_ENERGYPLUS "Package Radiance and EnergyPlus" OFF )
@@ -115,12 +176,17 @@ MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 IF(MSVC)
   # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
   OPTION( MSVC_IS_EXPRESS "using the Express editions of Visual Studio, must install both C++ and C# versions" FALSE )
+  
+  MARK_AS_ADVANCED(CMAKE_CONFIGURATION_TYPES)
 ENDIF()
 
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
 
-FIND_PACKAGE (Qt4 4.6.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns )
+FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns )
+MARK_AS_ADVANCED(QT_QTMOTIF_INCLUDE_DIR)
+MARK_AS_ADVANCED(QT_QTMOTIF_LIBRARY_DEBUG)
+MARK_AS_ADVANCED(QT_QTMOTIF_LIBRARY_RELEASE)
 
   # Build Qt
 IF(QT_QMAKE_EXECUTABLE)
@@ -139,10 +205,14 @@ IF(APPLE)
     MESSAGE(FATAL_ERROR "OSX Sysroot must be set")
   ENDIF()
 
+  IF (CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*" OR CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+    MESSAGE(WARNING "You are building against the 10.9 SDK which means ruby 2.0")
+  ENDIF()
+
 ENDIF()
 
-include(${CMAKE_SOURCE_DIR}/ExternalProject.cmake)
-include(${CMAKE_SOURCE_DIR}/ProcessorCount.cmake)
+include(ExternalProject)
+include(ProcessorCount)
 
 ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
@@ -153,6 +223,15 @@ MARK_AS_ADVANCED(Boost_DIR)
 MARK_AS_ADVANCED(Boost_LIB_DIAGNOSTIC_DEFINITIONS)
 MARK_AS_ADVANCED(ProcessorCount_cmd_getconf)
 MARK_AS_ADVANCED(ProcessorCount_cmd_sysctl)
+
+# Fix for OSX 10.9 Mavericks, allows osx_deployment_target=10.9
+if(APPLE)
+    set(apple-frameworks "-stdlib=libstdc++")
+    set(CMAKE_SHARED_LINKER_FLAGS " ${apple-frameworks} ${CMAKE_SHARED_LINKER_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS " ${apple-frameworks} ${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_MODULE_LINKER_FLAGS " ${apple-frameworks} ${CMAKE_MODULE_LINKER_FLAGS}")
+    set(CMAKE_CXX_FLAGS " -stdlib=libstdc++ ${CMAKE_CXX_FLAGS}")
+endif()
 
 # Boost
 IF(APPLE)
@@ -194,7 +273,7 @@ ELSE()
   OPTION(BUILD_SWIG "Build SWIG" ON)
 ENDIF()
 
-FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH )
+FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH}  NO_SYSTEM_ENVIRONMENT_PATH )
 FIND_PACKAGE( Ruby )
 
 
@@ -211,7 +290,14 @@ IF (UNIX)
 ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
+  OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 ruby 2.0" OFF)
+  
+  IF(WIN32 AND MSVC AND CMAKE_CL_64)
+    MESSAGE(ERROR "Cannot use 32bit mingw build of ruby 2.0 with 64bit build of openstudio") 
+  ENDIF() 
+  
   MARK_AS_ADVANCED(BUILD_RUBY)
+  MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
 ENDIF()
 
 IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
@@ -221,6 +307,10 @@ IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
       AND ${SWIG_VERSION} VERSION_LESS "2.0.10")
     MESSAGE(SEND_ERROR "For Ruby >= 1.9.0, SWIG >= 2.0.10 is required. Use of the BUILD_SWIG option is suggested")
   ENDIF()
+ENDIF()
+
+IF(BUILD_WITH_MULTIPLE_PROCESSES)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 ENDIF()
 
 IF(BUILD_NODE)
@@ -279,21 +369,37 @@ IF(BUILD_RUBY)
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && nmake install
         )
       SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe )
-      set(RUBY_DLL x64-msvcr100-ruby200.dll)
-      set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
-      set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
+      SET(RUBY_DLL x64-msvcr100-ruby200.dll)
+      SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
+      SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
     ELSE()
-      # And windows requires mingw to build ruby, so we just unpackage it locally
-      ExternalProject_Add(Ruby
-        URL ${CMAKE_SOURCE_DIR}/dependencies/ruby-1.8.6-msvc.zip
-        URL_MD5 4ddb09388d9bc2c6dfdc47b01e0e8bb9
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        )
-      SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
-      set(RUBY_DLL msvcrt-ruby18.dll)
-      set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+      IF (BUILD_RUBY_MINGW32_2_0)
+        # And windows requires mingw to build ruby, so we just unpackage it locally
+        ExternalProject_Add(Ruby
+          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip
+          PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby 
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+        SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
+        SET(RUBY_DLL msvcrt-ruby200.dll)
+        SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby200.lib")
+      ELSE()
+        # And windows requires mingw to build ruby, so we just unpackage it locally
+        ExternalProject_Add(Ruby
+          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.6-msvc-ssl.zip
+          URL_MD5 d3fdb49726e63f123941f5f41f594149
+          CONFIGURE_COMMAND ""
+          BUILD_COMMAND ""
+          INSTALL_COMMAND ""
+          )
+        SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
+        SET(RUBY_DLL msvcrt-ruby18.dll)
+        SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby18.lib") 
+      ENDIF()
     ENDIF()
     
     
@@ -356,12 +462,14 @@ ENDIF()
 IF(BUILD_BOOST)
   IF(APPLE)
     STRING(REGEX MATCH "[0-9]+\\.[0-9]+" OSX_SDK_VERSION ${CMAKE_OSX_SYSROOT})
+    # Added cxxflags="-stdlib=libstdc++" linkflags="-stdlib=libstdc++" for Boost 1.47.0 to compile when osx_deployment_target=10.9
+    # These flags can be removed if Boost is updated to newer version (~1.55.0), may need --c++11 flag?
     ExternalProject_Add( Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
       URL_MD5 b0d9b288627b6a57d41d425d4f467592
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
       PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_43.diff
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 variant=release variant=debug address-model=32_64 macosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} macosx-version=${OSX_SDK_VERSION}  architecture=x86 --layout=tagged  --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags="-stdlib=libstdc++" linkflags="-stdlib=libstdc++" variant=release variant=debug address-model=32_64 macosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} macosx-version=${OSX_SDK_VERSION}  architecture=x86 --layout=tagged  --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
       )
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -421,6 +529,10 @@ ExternalProject_Add( BoostLog
   -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
   -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
   -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
    )
 
 ExternalProject_Add( GoogleTest
@@ -434,6 +546,10 @@ ExternalProject_Add( GoogleTest
   -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
   -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
   -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
    )
 
 SET(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
@@ -457,7 +573,7 @@ IF(BUILD_QT)
     ExternalProject_Add( Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
-      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
+      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-phonon -no-phonon-backend -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       PATCH_COMMAND ${APPLE_PATCH_COMMAND}
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile      
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && make -j1 install"
@@ -466,15 +582,16 @@ IF(BUILD_QT)
     ExternalProject_Add( Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
-      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -no-qt3support -nomake examples -nomake demos -nomake docs -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
+      CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -no-qt3support -openssl -nomake examples -nomake demos -nomake docs -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
       )
   ELSE()
+
     ExternalProject_Add( Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && configure -debug-and-release -opensource -confirm-license -shared -plugin-sql-sqlite -no-qt3support -nomake examples -nomake docs -nomake demos -mp -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
+      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && configure -debug-and-release -opensource -confirm-license -shared -plugin-sql-sqlite -no-qt3support -nomake examples -nomake docs -nomake demos -mp -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install -L ${OPENSSL_ROOT_DIR}/lib -I ${OPENSSL_ROOT_DIR}/include -openssl
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && nmake 
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && nmake install
       )
@@ -501,6 +618,10 @@ ExternalProject_Add(QJSON
   -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
   -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
   -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
   -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
   -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-install
 )
@@ -528,6 +649,10 @@ ExternalProject_Add( VTK
   -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
   -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
   -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
    INSTALL_COMMAND ""
   PATCH_COMMAND ${VTK_PATCH_COMMAND} 
   )
@@ -552,6 +677,10 @@ ExternalProject_Add( vtkCharts
   -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
   -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
   -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
   -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
   INSTALL_COMMAND ""
   PATCH_COMMAND ${VTK_CHARTS_PATCH_COMMAND}
@@ -610,6 +739,7 @@ ExternalProject_Add( OpenStudioCore
     -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
     -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
     -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+    -DENERGYPLUS_VERSION:STRING=${ENERGYPLUS_VERSION}
     -DBUILD_DOCUMENTATION:BOOL=${BUILD_DOCUMENTATION}
     -DBUILD_CSHARP_BINDINGS:BOOL=${BUILD_CSHARP_BINDINGS}
     -DBUILD_V8_BINDINGS:BOOL=${BUILD_V8_BINDINGS}
@@ -618,6 +748,7 @@ ExternalProject_Add( OpenStudioCore
     -DBUILD_TESTING:BOOL=${BUILD_TESTING}
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
     -DENABLE_TEST_RUNNER_TARGETS:BOOL=${ENABLE_TEST_RUNNER_TARGETS}
+    -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
     -DBUILD_WITH_OPENSSL:BOOL=${BUILD_WITH_OPENSSL}
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
     -DBUILD_RUBY_GEM_WITH_LIBS:BOOL=${BUILD_RUBY_GEM_WITH_LIBS}
@@ -653,6 +784,7 @@ ExternalProject_Add( OpenStudioCore
     -DPACKAGE_RADIANCE_AND_ENERGYPLUS:BOOL=${PACKAGE_RADIANCE_AND_ENERGYPLUS}
     -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
     -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
+    -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     INSTALL_COMMAND ""
 )
 
@@ -713,31 +845,6 @@ set(OPENSTUDIOCORE_BUILD_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenS
 set(OPENSTUDIOCORE_LIB_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products)
 set(OPENSTUDIOCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/src)
 set(OPENSTUDIOCORE_ROOT_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/)
-
-
-
-if (BUILD_SIMXML)
-  ExternalProject_Add( SimXml
-    DEPENDS OpenStudioCore
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/simxml
-    INSTALL_COMMAND ""
-    CMAKE_CACHE_ARGS
-    -DBoostLog_DIR:PATH=${BoostLog_DIR}
-    -DOpenStudioCore_DIR:PATH=${OPENSTUDIOCORE_BUILD_DIR}
-    -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
-    -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
-    -DRUBY_EXECUTABLE:STRING=${RUBY_EXECUTABLE}
-    -DRUBY_LIBRARY:STRING=${RUBY_LIBRARY}
-    -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
-    -DBOOST_ROOT:STRING=${BOOST_ROOT}
-    -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
-     )
-endif()
-
-# Search for modules in the root dir first to override cmake ones 
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
 
 ###############################################################################
 # Use CPack

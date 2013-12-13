@@ -563,6 +563,11 @@ namespace openstudio{
           return lastInternetAvailable();
         }
       }
+      if (m_networkReply){
+        m_networkReply->blockSignals(true);
+        m_networkReply->deleteLater();
+        m_networkReply = 0;
+      }
       return false;
     }
 
@@ -572,6 +577,11 @@ namespace openstudio{
         if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
+      }
+      if (m_checkServiceProcess){
+        m_checkServiceProcess->disconnect(this, 0);
+        m_checkServiceProcess->kill();
+        m_checkServiceProcess = 0;
       }
       return false;
     }
@@ -583,6 +593,7 @@ namespace openstudio{
           return lastValidateCredentials();
         }
       }
+      // nothing to clean up
       return false;
     }
 
@@ -593,17 +604,34 @@ namespace openstudio{
           return lastResourcesAvailableToStart();
         }
       }
+      // nothing to clean up
       return false;
     }
 
     bool VagrantProvider_Impl::waitForServer(int msec)
     {
-      return waitForFinished(msec, boost::bind(&VagrantProvider_Impl::serverStarted, this));
+      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::serverStarted, this))){
+        return m_serverStarted;
+      }
+      if (m_startServerProcess){
+        m_startServerProcess->disconnect(this, 0);
+        m_startServerProcess->kill();
+        m_startServerProcess = 0;
+      }
+      return false;
     }
 
     bool VagrantProvider_Impl::waitForWorkers(int msec) 
     {
-      return waitForFinished(msec, boost::bind(&VagrantProvider_Impl::workersStarted, this));
+      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::workersStarted, this))){
+        return m_workerStarted;
+      }
+      if (m_startWorkerProcess){
+        m_startWorkerProcess->disconnect(this, 0);
+        m_startWorkerProcess->kill();
+        m_startWorkerProcess = 0;
+      }
+      return false;
     }
 
     bool VagrantProvider_Impl::serverRunning(int msec)
@@ -612,6 +640,11 @@ namespace openstudio{
         if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServerRunningFinished, this))){
           return lastServerRunning();
         }
+      }
+      if (m_checkServerRunningProcess){
+        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkServerRunningProcess->kill();
+        m_checkServerRunningProcess = 0;
       }
       return false;
     }
@@ -623,12 +656,30 @@ namespace openstudio{
           return lastWorkersRunning();
         }
       }
+      if (m_checkWorkerRunningProcess){
+        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkWorkerRunningProcess->kill();
+        m_checkWorkerRunningProcess = 0;
+      }
       return false;
     }
 
     bool VagrantProvider_Impl::waitForTerminated(int msec)
     {
-      return waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateFinished, this));
+      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateFinished, this))){
+        return (m_serverStopped && m_workerStopped);
+      }
+      if (m_stopServerProcess){
+        m_stopServerProcess->disconnect(this, 0);
+        m_stopServerProcess->kill();
+        m_stopServerProcess = 0;
+      }
+      if (m_stopWorkerProcess){
+        m_stopWorkerProcess->disconnect(this, 0);
+        m_stopWorkerProcess->kill();
+        m_stopWorkerProcess = 0;
+      }
+      return false;
     }
 
     bool VagrantProvider_Impl::terminateCompleted(int msec)
@@ -637,6 +688,11 @@ namespace openstudio{
         if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateCompletedFinished, this))){
           return lastTerminateCompleted();
         }
+      }
+      if (m_checkTerminatedProcess){
+        m_checkTerminatedProcess->disconnect(this, 0);
+        m_checkTerminatedProcess->kill();
+        m_checkTerminatedProcess = 0;
       }
       return false;
     }
@@ -1184,7 +1240,7 @@ namespace openstudio{
       args << "/C";
       args << "vagrant.bat";
 #else
-      args << "vagrant.sh";
+      args << "vagrant";
 #endif
       return;
     }

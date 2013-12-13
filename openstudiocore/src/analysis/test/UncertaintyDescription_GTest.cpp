@@ -45,7 +45,7 @@ TEST_F(AnalysisFixture,UncertaintyDescription_ConstructionCopyingAndCasting) {
   }
 
   {
-	  GenericUncertaintyDescription genericCopy = stdNormal.cast<GenericUncertaintyDescription>();
+    GenericUncertaintyDescription genericCopy = stdNormal.cast<GenericUncertaintyDescription>();
     EXPECT_EQ(2u,genericCopy.attributes().size());
   }
 

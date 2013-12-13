@@ -67,6 +67,11 @@ namespace project {
   class AnalysisRecord;
 }
 
+namespace pat {
+  class PatApp;
+  class RunTabController;
+}
+
 namespace analysisdriver {
 
 class CloudAnalysisDriver;
@@ -187,6 +192,8 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /** Returns true if the analysis() is being run by analysisDriver(). */
   bool isRunning() const;
+
+  AnalysisStatus status() const;
 
   /** If there is a CloudSession, returns a CloudAnalysisDriver for this project. */
   boost::optional<CloudAnalysisDriver> cloudAnalysisDriver() const;
@@ -355,6 +362,8 @@ class ANALYSISDRIVER_API SimpleProject {
   /// @cond
   typedef detail::SimpleProject_Impl ImplType;
   friend class detail::SimpleProject_Impl;
+  friend class openstudio::pat::PatApp;
+  friend class openstudio::pat::RunTabController;
 
   explicit SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl);
 

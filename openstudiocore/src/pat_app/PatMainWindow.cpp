@@ -19,6 +19,7 @@
 
 #include <pat_app/PatMainWindow.hpp>
 
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/HorizontalTabWidget.hpp>
 #include <pat_app/PatApp.hpp>
 #include <pat_app/PatMainMenu.hpp>
@@ -36,6 +37,7 @@
 #include <QGraphicsView>
 #include <QListWidget>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QScrollArea>
 #include <QSettings>
 #include <QSizePolicy>
@@ -127,6 +129,12 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
   isConnected = connect(mainMenu, SIGNAL(openBclDlgClicked()), this, SIGNAL(openBclDlgClicked()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(mainMenu, SIGNAL(openCloudDlgClicked()), this, SIGNAL(openCloudDlgClicked()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainMenu, SIGNAL(openMonitorUseDlgClicked()), this, SIGNAL(openMonitorUseDlgClicked()));
+  OS_ASSERT(isConnected);
+
   isConnected = connect(mainMenu, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
   OS_ASSERT(isConnected);
 
@@ -161,7 +169,63 @@ void PatMainWindow::setMainRightColumnView(QWidget * widget)
 
 void PatMainWindow::closeEvent(QCloseEvent *event)
 {
-  qobject_cast<PatApp *>(QApplication::instance())->quit();
+  CloudStatus status = PatApp::instance()->cloudMonitor()->status();
+
+  if (status == CLOUD_STARTING || status == CLOUD_STOPPING) {
+    QMessageBox::warning(this, 
+      "Cannot Exit PAT", 
+      "PAT cannot be closed while the cloud is starting or stopping.  The current cloud operation should be completed shortly.", 
+      QMessageBox::Ok);
+
+    event->ignore();
+    return;
+  } else if (status == CLOUD_RUNNING) {
+
+    // if project is running we can quit, user might want to leave cloud on
+    // if project is idle we can quit, 99% sure we should turn cloud off
+    // if project is starting can't quit
+    // if project is stopping we can quit, 90% sure we should turn cloud off
+    // if project is error we can quit, 90% sure we should turn cloud off
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    if (project && (project->status() == analysisdriver::AnalysisStatus::Starting)){
+      QMessageBox::warning(this, 
+        "Cannot Exit PAT", 
+        "PAT cannot be closed while the remote analysis is starting.  The current cloud operation should be completed shortly.", 
+        QMessageBox::Ok);
+
+      event->ignore();
+      return;
+    }else{
+      int result = QMessageBox::warning(this, 
+                     "Close PAT?", 
+                     "The cloud is currently running and charges are accruing.  Are you sure you want to exit PAT?", 
+                     QMessageBox::Ok, 
+                     QMessageBox::Cancel);
+
+      if(result == QMessageBox::Cancel) {
+        event->ignore();
+        return;
+      }
+    }
+
+  } else if (status == CLOUD_RUNNING) {
+
+    // DLM: check if running locally?
+
+  } else if (status == CLOUD_ERROR) {
+    int result = QMessageBox::warning(this, 
+                   "Close PAT?", 
+                   "You are disconnected from the cloud, but it may currently be running and accruing charges.  Are you sure you want to exit PAT?", 
+                   QMessageBox::Ok, 
+                   QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) {
+      event->ignore();
+      return;
+    }
+  }
+
+  qobject_cast<PatApp *>(QApplication::instance())->quit(true);
   writeSettings();
 
   QMainWindow::closeEvent(event);

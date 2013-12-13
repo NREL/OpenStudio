@@ -398,6 +398,11 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       condenserComponents.push_back(*it);
       coolingComponents.push_back(*it);
     }
+    else if( it->iddObject().type() ==  CoolingTowerVariableSpeed::iddObjectType() )
+    {
+      condenserComponents.push_back(*it);
+      coolingComponents.push_back(*it);
+    }
   }
 
   boost::optional<IdfObject> _optionalHeatingPlantEquipmentList;

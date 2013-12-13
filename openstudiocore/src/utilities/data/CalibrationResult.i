@@ -4,8 +4,10 @@
   #include <utilities/data/CalibrationResult.hpp>
 %}
 
-// create an instantiation of the optional class
+// create an instantiation of the optional classes
 %template(OptionalCalibrationResult) boost::optional< openstudio::CalibrationResult >;
+%template(OptionalCalibrationBillingPeriod) boost::optional< openstudio::CalibrationBillingPeriod >;
+%template(OptionalCalibrationUtilityBill) boost::optional< openstudio::CalibrationUtilityBill >;
 
 // create an instantiation of the vector class
 %template(CalibrationResultVector) std::vector< openstudio::CalibrationResult >;

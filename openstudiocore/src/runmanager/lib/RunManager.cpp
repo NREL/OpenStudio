@@ -85,7 +85,7 @@ namespace runmanager {
       }  
     }
 
-    boost::shared_ptr<detail::RunManager_Impl> get_impl(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_tempdb)
+    boost::shared_ptr<detail::RunManager_Impl> get_impl(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_tempdb, bool t_useStatusGUI)
     {
       // use complete path
       openstudio::path wDB = completeAndNormalize(DB);
@@ -128,7 +128,7 @@ namespace runmanager {
 
       // We were unable to construct a valid shared_ptr from what we
       // did or did not have, so make a new one
-      boost::shared_ptr<detail::RunManager_Impl> impl(new detail::RunManager_Impl(wDB, t_paused, t_initui, t_tempdb));
+      boost::shared_ptr<detail::RunManager_Impl> impl(new detail::RunManager_Impl(wDB, t_paused, t_initui, t_tempdb, t_useStatusGUI));
       m_dbs.insert(std::make_pair(wDB, boost::weak_ptr<detail::RunManager_Impl>(impl)));
       return impl;
 
@@ -151,13 +151,13 @@ namespace runmanager {
 #endif
   }
 
-  RunManager::RunManager(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui)
-    : m_impl(get_db_handler().get_impl(DB, t_new, t_paused, t_initui, false))
+  RunManager::RunManager(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_useStatusGUI)
+    : m_impl(get_db_handler().get_impl(DB, t_new, t_paused, t_initui, false, t_useStatusGUI))
   {
   }
 
-  RunManager::RunManager(bool t_paused, bool t_initui)
-    : m_impl(get_db_handler().get_impl(generateTempPathName(), true, t_paused, t_initui, true))
+  RunManager::RunManager(bool t_paused, bool t_initui, bool t_useStatusGUI)
+    : m_impl(get_db_handler().get_impl(generateTempPathName(), true, t_paused, t_initui, true, t_useStatusGUI))
   {
   }
 
@@ -186,14 +186,21 @@ namespace runmanager {
     return m_impl->outOfDate(job);
   }
 
-  void RunManager::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &t_basePath)
+  bool RunManager::enqueue(const Job &job, bool force, const openstudio::path &basePath)
   {
-    m_impl->enqueue(job, force, t_basePath);
+    return m_impl->enqueue(job, force, basePath);
   }
 
-  void RunManager::enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath)
+  boost::optional<Job> RunManager::enqueueOrReturnExisting(const Job &job,
+                                                           bool force,
+                                                           const openstudio::path &basePath)
   {
-    m_impl->enqueue(jobs, force, t_basePath);
+    return m_impl->enqueueOrReturnExisting(job,force,basePath);
+  }
+
+  bool RunManager::enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath)
+  {
+    return m_impl->enqueue(jobs, force, t_basePath);
   }
 
   void RunManager::remove(const openstudio::runmanager::Job &job)

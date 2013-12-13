@@ -85,11 +85,17 @@ namespace detail {
     unsigned m_numWorkers;
     bool m_terminationDelayEnabled;
     unsigned m_terminationDelay;
+    std::string m_region;
+    std::string m_serverInstanceType;
+    std::string m_workerInstanceType;
 
     bool m_lastUserAgreementSigned;
     unsigned m_lastNumWorkers;
     bool m_lastTerminationDelayEnabled;
     unsigned m_lastTerminationDelay;
+    std::string m_lastRegion;
+    std::string m_lastServerInstanceType;
+    std::string m_lastWorkerInstanceType;
   };
 
 } // detail

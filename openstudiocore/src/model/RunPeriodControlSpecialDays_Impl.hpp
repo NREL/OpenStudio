@@ -34,7 +34,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API RunPeriodControlSpecialDays_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
 
     // constructor

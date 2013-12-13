@@ -30,7 +30,6 @@ class AirLoopHVAC;
 namespace detail {
 
   class MODEL_API StraightComponent_Impl : public HVACComponent_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

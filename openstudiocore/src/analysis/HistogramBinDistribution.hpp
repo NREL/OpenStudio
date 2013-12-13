@@ -60,15 +60,15 @@ class ANALYSIS_API HistogramBinDistribution : public UncertaintyDescription {
   /** @name Setters */
   //@{
 
-	/** Abscissas values must be strictly increasing. */
+  /** Abscissas values must be strictly increasing. */
   bool setAbscissas(const std::vector<double>& value);
 
-	/** The last value of counts must be 0; all other values must be positive. */
+  /** The last value of counts must be 0; all other values must be positive. */
   bool setCounts(const std::vector<double>& value);
 
   void resetCounts();
 
-	/** The last value of ordinates must be 0; all other values must be positive. */
+  /** The last value of ordinates must be 0; all other values must be positive. */
   bool setOrdinates(const std::vector<double>& value);
 
   void resetOrdinates();

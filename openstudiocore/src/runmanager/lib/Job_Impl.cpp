@@ -425,6 +425,9 @@ namespace detail {
 
   void Job_Impl::maximumClean()
   {
+    // start with a standardClean, then get what it leaves behind
+    standardClean();
+
     QDir dir(openstudio::toQString(outdir()));
 
     QFileInfoList list = dir.entryInfoList();
@@ -1756,7 +1759,7 @@ namespace detail {
 
       if (myChildrenIds != otherChildrenIds)
       {
-        throw std::runtime_error("Job children do not match, unable to updateJob");
+        throw std::runtime_error("Job children UUIDs do not match, unable to updateJob");
       }
 
     } else {
@@ -1815,19 +1818,27 @@ namespace detail {
     l.unlock();
 
 
-    // update children first, to make sure they can be updated
-    for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
-         itr != myChildren.end();
-         ++itr)
+    if (t_allowUUIDUpdate)
     {
-      for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr2 = otherChildren.begin();
-           itr2 != otherChildren.end();
-           ++itr2)
+      if (myChildren.size() == 1)
       {
-        if ((*itr)->uuid() == (*itr2)->uuid())
+        myChildren[0]->updateJob(otherChildren[0], true);
+      }
+    } else {
+      // update children first, to make sure they can be updated
+      for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
+          itr != myChildren.end();
+          ++itr)
+      {
+        for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr2 = otherChildren.begin();
+            itr2 != otherChildren.end();
+            ++itr2)
         {
-          (*itr)->updateJob(*itr2, t_allowUUIDUpdate);
-          break;
+          if ((*itr)->uuid() == (*itr2)->uuid())
+          {
+            (*itr)->updateJob(*itr2, t_allowUUIDUpdate);
+            break;
+          }
         }
       }
     }
@@ -1845,6 +1856,10 @@ namespace detail {
     m_tools = newtools;
     m_params = newparams;
     m_id = newUUID;
+    m_outdir = boost::none;
+    m_allTools = boost::none;
+    m_allParams = boost::none;
+    m_allInputFiles = boost::none;
     l.unlock();
 
     sendSignals(oldState, newState, oldUUID, newUUID);
@@ -1872,12 +1887,8 @@ namespace detail {
 
   void Job_Impl::sendSignals(JobState oldState, JobState newState, const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID)
   {
-    bool sendStatus = false;
-    if (oldState.status != newState.status)
-    {
-      sendStatus = true;
-    }
-
+    // always send the status
+    bool sendStatus = true;
     bool sendFinished = false;
     bool sendStarted = false;
 

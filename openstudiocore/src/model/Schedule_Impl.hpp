@@ -33,7 +33,6 @@ namespace detail {
     
   // derive Schedule_Impl from ResourceObject_Impl to override virtual methods
   class MODEL_API Schedule_Impl : public ScheduleBase_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

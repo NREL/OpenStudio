@@ -39,6 +39,10 @@
 #include <model/Surface_Impl.hpp>
 #include <model/SubSurface.hpp>
 #include <model/SubSurface_Impl.hpp>
+#include <model/ShadingSurface.hpp>
+#include <model/ShadingSurface_Impl.hpp>
+#include <model/ShadingSurfaceGroup.hpp>
+#include <model/ShadingSurfaceGroup_Impl.hpp>
 
 #include <utilities/plot/ProgressBar.hpp>
 #include <utilities/core/Assert.hpp>
@@ -159,7 +163,7 @@ namespace sdd {
     projectClimateZoneElement.appendChild( doc.createTextNode( "unknown"));
 
     // set lat, lon, elev
-    // DLM: do not translate forward,  Issue 242: 	Forward Translator - Remove Proj:Lat/Lon/Elevation translation
+    // DLM: do not translate forward,  Issue 242: Forward Translator - Remove Proj:Lat/Lon/Elevation translation
     /*
     boost::optional<model::Site> site = model.getOptionalUniqueModelObject<model::Site>();
     if (site){
@@ -296,6 +300,35 @@ namespace sdd {
       boost::optional<QDomElement> constructionElement = translateFenestrationConstruction(constructionBase, doc);
       if (constructionElement){
         projectElement.appendChild(*constructionElement);
+      }
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // translate site shading
+    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = model.getModelObjects<model::ShadingSurfaceGroup>();
+    std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
+
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Site Shading"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(shadingSurfaceGroups.size()); 
+      m_progressBar->setValue(0);
+    }
+
+    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+      if (istringEqual(shadingSurfaceGroup.shadingSurfaceType(), "Site")){
+
+        Transformation transformation = shadingSurfaceGroup.siteTransformation();
+
+        BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+          boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, transformation, doc);
+          if (shadingSurfaceElement){
+            projectElement.appendChild(*shadingSurfaceElement);
+          }
+        }
       }
 
       if (m_progressBar){

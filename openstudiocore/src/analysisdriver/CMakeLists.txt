@@ -6,6 +6,7 @@ SET( ${target_name}_src
   AnalysisDriver.hpp
   AnalysisDriver_Impl.hpp
   AnalysisDriver.cpp
+  AnalysisDriverEnums.hpp
   CloudAnalysisDriver.hpp
   CloudAnalysisDriver_Impl.hpp
   CloudAnalysisDriver.cpp

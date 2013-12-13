@@ -500,6 +500,9 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /** Match surfaces and sub surfaces in this space with those in the other. */
   void matchSurfaces(Space& other);
 
+  /** Intersect surfaces in this space with those in the other. */
+  void intersectSurfaces(Space& other);
+
   /** Find surfaces within angular range, specified in degrees and in the site coordinate system, an unset optional means no limit.
       Values for degrees from North are between 0 and 360 and for degrees tilt they are between 0 and 180.
       Note that maxDegreesFromNorth may be less than minDegreesFromNorth,

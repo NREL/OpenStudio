@@ -74,7 +74,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
 
   EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
-				
+
   // inlet and outlet ports
   EXPECT_TRUE(testObject.inletPort());
   EXPECT_TRUE(testObject.outletPort());

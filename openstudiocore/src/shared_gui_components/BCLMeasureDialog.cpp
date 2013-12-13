@@ -37,7 +37,7 @@ namespace openstudio {
 BCLMeasureDialog::BCLMeasureDialog(QWidget* parent)
   : OSDialog(false, parent)
 {
-  this->setWindowTitle("Create New Measure");
+  setWindowTitle("Create New Measure");
 
   init();
 
@@ -52,7 +52,7 @@ BCLMeasureDialog::BCLMeasureDialog(QWidget* parent)
 BCLMeasureDialog::BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent)
   : m_bclMeasureToCopy(bclMeasure)
 {
-  this->setWindowTitle("Copy Measure");
+  setWindowTitle("Copy Measure");
 
   init();
 
@@ -90,6 +90,11 @@ BCLMeasureDialog::BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent
 
 BCLMeasureDialog::~BCLMeasureDialog()
 {
+}
+
+QSize BCLMeasureDialog::sizeHint() const
+{
+  return QSize(770,540);
 }
 
 boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
@@ -188,30 +193,30 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
   if (newName == "Envelope"){
     m_taxonomySecondLevelComboBox->addItem("Form");
     m_taxonomySecondLevelComboBox->addItem("Opaque");
-	m_taxonomySecondLevelComboBox->addItem("Fenestration");
-	m_taxonomySecondLevelComboBox->addItem("Construction Sets");
+    m_taxonomySecondLevelComboBox->addItem("Fenestration");
+    m_taxonomySecondLevelComboBox->addItem("Construction Sets");
     m_taxonomySecondLevelComboBox->addItem("Daylighting");
     m_taxonomySecondLevelComboBox->addItem("Infiltration");
-	m_taxonomySecondLevelComboBox->setCurrentIndex(0);
+    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Electric Lighting"){
-    m_taxonomySecondLevelComboBox->addItem("Controls");
+    m_taxonomySecondLevelComboBox->addItem("Electric Lighting Controls");
     m_taxonomySecondLevelComboBox->addItem("Lighting Equipment");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Equipment"){
-    m_taxonomySecondLevelComboBox->addItem("Controls");
+    m_taxonomySecondLevelComboBox->addItem("Equipment Controls");
     m_taxonomySecondLevelComboBox->addItem("Electric Equipment");
     m_taxonomySecondLevelComboBox->addItem("Gas Equipment");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "People"){
     m_taxonomySecondLevelComboBox->addItem("Characteristics");
-    m_taxonomySecondLevelComboBox->addItem("Schedules");
+    m_taxonomySecondLevelComboBox->addItem("People Schedules");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "HVAC"){
-    m_taxonomySecondLevelComboBox->addItem("Controls");
+    m_taxonomySecondLevelComboBox->addItem("HVAC Controls");
     m_taxonomySecondLevelComboBox->addItem("Heating");
     m_taxonomySecondLevelComboBox->addItem("Cooling");
     m_taxonomySecondLevelComboBox->addItem("Heat Rejection");
@@ -232,7 +237,7 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Whole Building"){
-    m_taxonomySecondLevelComboBox->addItem("Schedules");
+    m_taxonomySecondLevelComboBox->addItem("Whole Building Schedules");
     m_taxonomySecondLevelComboBox->addItem("Space Types");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
@@ -250,14 +255,20 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 
 void BCLMeasureDialog::init()
 {
+  int btnHeight = 34;
+
+#ifdef Q_OS_MAC
+  btnHeight = 44;
+#endif
+
   QPushButton* cancelButton = this->cancelButton();
   cancelButton->setText("Cancel");
-  cancelButton->setMinimumHeight(34);
+  cancelButton->setMinimumHeight(btnHeight);
   cancelButton->setDefault(true);
 
   QPushButton* okButton = this->okButton();
   okButton->setText("Create Measure and \n Open for Editing");
-  okButton->setMinimumHeight(34);
+  okButton->setMinimumHeight(btnHeight);
 
   QVBoxLayout* vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));

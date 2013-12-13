@@ -43,9 +43,12 @@
 
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
+#include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
+#include <utilities/idd/FluidProperties_GlycolConcentration_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
 #include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
@@ -56,7 +59,11 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/plot/ProgressBar.hpp>
 
+#include <QFile>
+#include <QTextStream>
 #include <QThread>
+
+#include <sstream>
 
 using namespace openstudio::model;
 
@@ -71,6 +78,7 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
+  createFluidPropertiesMap();
 
   // temp code 
   m_keepRunControlSpecialDays = false;
@@ -292,6 +300,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(airLoop);
   }
 
+  // get AirConditionerVariableRefrigerantFlow objects in sorted order
+  std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getModelObjects<AirConditionerVariableRefrigerantFlow>();
+  std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
+  BOOST_FOREACH(AirConditionerVariableRefrigerantFlow vrf, vrfs){
+    translateAndMapModelObject(vrf);
+  }
+
   // get plant loops in sorted order
   std::vector<PlantLoop> plantLoops = model.getModelObjects<PlantLoop>();
   std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
@@ -377,10 +392,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   LOG(Trace,"Translating " << modelObject.briefDescription() << ".");
 
-  if( modelObject.iddObject().type() == AirLoopHVAC::iddObjectType() )
+  if( modelObject.iddObject().type() == AirConditionerVariableRefrigerantFlow::iddObjectType() )
   {
-    model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
-    retVal = translateAirLoopHVAC(airLoopHVAC);
+       model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
+       retVal = translateAirConditionerVariableRefrigerantFlow(vrf);
+  }
+  else if( modelObject.iddObject().type() == AirLoopHVAC::iddObjectType() )
+  {
+       model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
+       retVal = translateAirLoopHVAC(airLoopHVAC);
   }
   else if( modelObject.iddObject().type() == AirTerminalSingleDuctConstantVolumeReheat::iddObjectType() )
   {
@@ -495,6 +515,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
        model::CoilCoolingDXTwoSpeed coil = modelObject.cast<CoilCoolingDXTwoSpeed>();
        retVal = translateCoilCoolingDXTwoSpeed(coil);
   }
+  else if ( modelObject.iddObject().type() ==  CoilCoolingDXVariableRefrigerantFlow::iddObjectType() )
+  {
+       model::CoilCoolingDXVariableRefrigerantFlow coil = modelObject.cast<CoilCoolingDXVariableRefrigerantFlow>();
+       retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
+  }
   else if( modelObject.iddObject().type() ==  CoilCoolingLowTempRadiantConstFlow::iddObjectType() )
   {
        // no-op
@@ -539,6 +564,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
        // no-op
        return retVal;
+  }
+  else if( modelObject.iddObject().type() ==  CoilHeatingDXVariableRefrigerantFlow::iddObjectType() ) )
+  {
+       model::CoilHeatingDXVariableRefrigerantFlow coil = modelObject.cast<CoilHeatingDXVariableRefrigerantFlow>();
+       retVal = translateCoilHeatingDXVariableRefrigerantFlow(coil);
   }
   else if( modelObject.iddObject().type() ==  CoilHeatingWater::iddObjectType() )
   {
@@ -605,10 +635,25 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
        model::ControllerWaterCoil controller = modelObject.cast<ControllerWaterCoil>();
        retVal = translateControllerWaterCoil(controller);
   }
+  else if( modelObject.iddObject().type() ==  CoolingTowerPerformanceCoolTools::iddObjectType() )
+  {
+       model::CoolingTowerPerformanceCoolTools mo = modelObject.cast<CoolingTowerPerformanceCoolTools>();
+       retVal = translateCoolingTowerPerformanceCoolTools(mo);
+  }
+  else if( modelObject.iddObject().type() ==  CoolingTowerPerformanceYorkCalc::iddObjectType() )
+  {
+       model::CoolingTowerPerformanceYorkCalc mo = modelObject.cast<CoolingTowerPerformanceYorkCalc>();
+       retVal = translateCoolingTowerPerformanceYorkCalc(mo);
+  }
   else if( modelObject.iddObject().type() ==  CoolingTowerSingleSpeed::iddObjectType() )
   {
        model::CoolingTowerSingleSpeed tower = modelObject.cast<CoolingTowerSingleSpeed>();
        retVal = translateCoolingTowerSingleSpeed(tower);
+  }
+  else if( modelObject.iddObject().type() ==  CoolingTowerVariableSpeed::iddObjectType() )
+  {
+       model::CoolingTowerVariableSpeed tower = modelObject.cast<CoolingTowerVariableSpeed>();
+       retVal = translateCoolingTowerVariableSpeed(tower);
   }
   else if( modelObject.iddObject().type() ==  CurrencyType::iddObjectType() )
   {
@@ -982,6 +1027,61 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
        model::PortList portList = modelObject.cast<PortList>();
        retVal = translatePortList(portList);
   }
+  else if ( modelObject.iddObject().type() ==  RefrigerationCase::iddObjectType() ) )
+  {
+       model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();
+       retVal = translateRefrigerationCase(refrigerationCase);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationCompressor::iddObjectType() )
+  {
+       model::RefrigerationCompressor refrigerationCompressor = modelObject.cast<RefrigerationCompressor>();
+       retVal = translateRefrigerationCompressor(refrigerationCompressor);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationCondenserAirCooled::iddObjectType() )
+  {
+       model::RefrigerationCondenserAirCooled refrigerationCondenserAirCooled = modelObject.cast<RefrigerationCondenserAirCooled>();
+       retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationCondenserCascade::iddObjectType() )
+  {
+       model::RefrigerationCondenserCascade refrigerationCondenserCascade = modelObject.cast<RefrigerationCondenserCascade>();
+       retVal = translateRefrigerationCondenserCascade(refrigerationCondenserCascade);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationCondenserEvaporativeCooled::iddObjectType() )
+  {
+       model::RefrigerationCondenserEvaporativeCooled refrigerationCondenserEvaporativeCooled = modelObject.cast<RefrigerationCondenserEvaporativeCooled>();
+       retVal = translateRefrigerationCondenserEvaporativeCooled(refrigerationCondenserEvaporativeCooled);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationCondenserWaterCooled::iddObjectType() )
+  {
+       model::RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = modelObject.cast<RefrigerationCondenserWaterCooled>();
+       retVal = translateRefrigerationCondenserWaterCooled(refrigerationCondenserWaterCooled);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationSubcoolerLiquidSuction::iddObjectType() )
+  {
+       model::RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = modelObject.cast<RefrigerationSubcoolerLiquidSuction>();
+       retVal = translateRefrigerationSubcoolerLiquidSuction(refrigerationSubcoolerLiquidSuction);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationSubcoolerMechanical::iddObjectType() )
+  {
+       model::RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = modelObject.cast<RefrigerationSubcoolerMechanical>();
+       retVal = translateRefrigerationSubcoolerMechanical(refrigerationSubcoolerMechanical);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationSecondarySystem::iddObjectType() )
+  {
+       model::RefrigerationSecondarySystem refrigerationSecondarySystem = modelObject.cast<RefrigerationSecondarySystem>();
+       retVal = translateRefrigerationSecondarySystem(refrigerationSecondarySystem);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationSystem::iddObjectType() )
+  {
+       model::RefrigerationSystem refrigerationSystem = modelObject.cast<RefrigerationSystem>();
+       retVal = translateRefrigerationSystem(refrigerationSystem);
+  }
+  else if ( modelObject.iddObject().type() ==  RefrigerationWalkIn::iddObjectType() )
+  {
+       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
+       retVal = translateRefrigerationWalkIn(refrigerationWalkIn);
+  }
   else if( modelObject.iddObject().type() ==  RenderingColor::iddObjectType() )
   {
        // no-op
@@ -1301,6 +1401,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
        model::ZoneHVACPackagedTerminalAirConditioner mo = modelObject.cast<ZoneHVACPackagedTerminalAirConditioner>();
        retVal = translateZoneHVACPackagedTerminalAirConditioner(mo);
   }
+  else if( modelObject.iddObject().type() ==  ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType() )
+  {
+       model::ZoneHVACTerminalUnitVariableRefrigerantFlow mo = modelObject.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+       retVal = translateZoneHVACTerminalUnitVariableRefrigerantFlow(mo);
+  }
   else if( modelObject.iddObject().type() ==  ZoneHVACWaterToAirHeatPump::iddObjectType() )
   {
        model::ZoneHVACWaterToAirHeatPump mo = modelObject.cast<ZoneHVACWaterToAirHeatPump>();
@@ -1508,6 +1613,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+
+  result.push_back(IddObjectType::OS_Refrigeration_System);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
@@ -2004,7 +2111,117 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
   return idfObject;
 }
 
+boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
+  QFile file(QString().fromStdString(path));
+  bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
+  OS_ASSERT(opened);
+
+  QTextStream in(&file);
+  std::stringstream ss;
+  ss << in.readAll().toStdString();
+
+  return IdfFile::load(ss, IddFileType::EnergyPlus);
+}
+
+void ForwardTranslator::createFluidPropertiesMap()
+{
+  m_fluidPropertiesMap.insert(make_pair("R11", ":/Resources/R11_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R12", ":/Resources/R12_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R22", ":/Resources/R22_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R123", ":/Resources/R123_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R134a", ":/Resources/R134a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R404a", ":/Resources/R404a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R407a", ":/Resources/R407a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R410a", ":/Resources/R410a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("NH3", ":/Resources/NH3_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R507a", ":/Resources/R507a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R744", ":/Resources/R744_FluidPropertiesDataSet.idf"));
+}
+
+boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& glycolType, int glycolConcentration) {
+
+  std::stringstream sstm;
+  sstm << glycolType << "_" << glycolConcentration;
+  std::string glycolName = sstm.str();
+
+  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+     it != m_idfObjects.end();
+     it++ )
+  {
+    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+      if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
+        return *it;
+      }
+    }
+  }
+
+  IdfObject fluidPropName(openstudio::IddObjectType::FluidProperties_Name);
+  fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
+  fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");
+
+  IdfObject fluidPropGlyConcentration(openstudio::IddObjectType::FluidProperties_GlycolConcentration);
+  fluidPropGlyConcentration.setName(glycolName);
+  if(istringEqual(glycolType, "PropyleneGlycol")){
+    fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, "PropyleneGlycol");
+  }
+  else if(istringEqual(glycolType, "EthyleneGlycol")){
+    fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, "EthyleneGlycol");
+  }
+  else {
+    return boost::none;
+  }
+  fluidPropGlyConcentration.setDouble(FluidProperties_GlycolConcentrationFields::GlycolConcentration, glycolConcentration * 0.01);
+
+  m_idfObjects.push_back(fluidPropName);
+  m_idfObjects.push_back(fluidPropGlyConcentration);
+
+  return fluidPropName;
+}
+
+boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& fluidType) {
+
+  boost::optional<IdfObject> idfObject;
+  boost::optional<IdfFile> idfFile;
+
+  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+     it != m_idfObjects.end();
+     it++ )
+  {
+    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+      if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
+        return *it;
+      }
+    }
+  }
+
+  FluidPropertiesMap::const_iterator objInMap = m_fluidPropertiesMap.find( fluidType );
+  if( objInMap != m_fluidPropertiesMap.end() )
+  {
+    idfFile = findIdfFile(objInMap->second);
+  }
+  else
+  {
+    LOG(Warn, "Fluid Type not valid choice: '" << fluidType << "'");
+    return boost::none;
+  }
+
+  if(idfFile){
+    std::vector<IdfObject> fluidObjects = idfFile->objects();
+
+    for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
+       it != fluidObjects.end();
+       it++ )
+    {
+      if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+        idfObject = *it;
+      }
+      m_idfObjects.push_back(*it);
+    }
+  }
+
+  return idfObject;
+}
+
 } // energyplus
 
 } // openstudio
-

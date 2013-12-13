@@ -41,11 +41,6 @@ using namespace openstudio::runmanager;
 using namespace openstudio::ruleset;
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
-  // Right now, round-tripping only works with no server view attached.
-  // Should be able to relax this once Analysis has a method to update its
-  // DataPoints from JSON.
-  DataPointSerializationOptions options(openstudio::path(),false);
-
   Analysis analysis = analysis1(PreRun);
 
   // Retrieve data point
@@ -53,7 +48,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
   DataPoint dataPoint = analysis.dataPoints()[0];
 
   // Serialize data point
-  std::string json = dataPoint.toJSON(options);
+  std::string json = dataPoint.toJSON();
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
@@ -61,26 +56,21 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
   ASSERT_TRUE(loadResult.analysisObject);
   ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
   DataPoint copy = loadResult.analysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON(options));
+  EXPECT_EQ(json,copy.toJSON());
 
   // Save data point
   openstudio::path p = toPath("AnalysisFixtureData/data_point_pre_run.json");
-  EXPECT_TRUE(dataPoint.saveJSON(p,options,true));
+  EXPECT_TRUE(dataPoint.saveJSON(p,true));
 
   // Load and check results
   loadResult = loadJSON(json);
   ASSERT_TRUE(loadResult.analysisObject);
   ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
   copy = loadResult.analysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON(options));
+  EXPECT_EQ(json,copy.toJSON());
 }
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
-  // Right now, round-tripping only works with no server view attached.
-  // Should be able to relax this once Analysis has a method to update its
-  // DataPoints from JSON.
-  DataPointSerializationOptions options(openstudio::path(),false);
-
   // Create analysis
   Analysis analysis = analysis1(PostRun);
 
@@ -89,7 +79,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
   DataPoint dataPoint = analysis.dataPoints()[0];
 
   // Serialize data point
-  std::string json = dataPoint.toJSON(options);
+  std::string json = dataPoint.toJSON();
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
@@ -97,21 +87,21 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
   ASSERT_TRUE(loadResult.analysisObject);
   ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
   DataPoint copy = loadResult.analysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON(options));
+  EXPECT_EQ(json,copy.toJSON());
 
   // Save data point
   openstudio::path p = toPath("AnalysisFixtureData/data_point_post_run.json");
-  EXPECT_TRUE(dataPoint.saveJSON(p,options,true));
+  EXPECT_TRUE(dataPoint.saveJSON(p,true));
 
   // Load and check results
   loadResult = loadJSON(json);
   ASSERT_TRUE(loadResult.analysisObject);
   ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
   copy = loadResult.analysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON(options));
-  if (copy.toJSON(options) != json) {
+  EXPECT_EQ(json,copy.toJSON());
+  if (copy.toJSON() != json) {
     p = toPath("AnalysisFixtureData/data_point_post_run_roundtripped.json");
-    copy.saveJSON(p,options,true);
+    copy.saveJSON(p,true);
   }
 
 }
@@ -123,7 +113,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_Versioning) {
   DataPoint dataPoint = analysis1(PostRun).dataPoints()[0];
   std::string dashVersionString = boost::regex_replace(openStudioVersion(),boost::regex("\\."),"-");
   openstudio::path p = dir / toPath("data_point_" + dashVersionString + ".json");
-  bool ok = dataPoint.saveJSON(p,DataPointSerializationOptions(),true);
+  bool ok = dataPoint.saveJSON(p,true);
   EXPECT_TRUE(ok);
 
   // loop through all versions' json files

@@ -8,6 +8,9 @@
 #include <utilities/sql/SqlFileEnums.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
+#include <isomodel/SimModel.hpp>
+#include <isomodel/UserModel.hpp>
+
 #include "LinearApproximation.hpp"
 
 /// These classes are currently stubbed in here as we are move towards a full error estimation model
@@ -51,6 +54,7 @@ namespace openstudio {
       double confidence() const;
       double average() const;
       double absoluteAverage() const;
+      double sum() const;
 
       private:
         std::map<openstudio::FuelType, double> m_uses;
@@ -82,6 +86,17 @@ namespace openstudio {
         /// \returns The error corrected values, or the input values if error correction was not possible
         openstudio::runmanager::FuelUses add(const SqlFile &t_sql, const std::string &t_sourceName, const std::vector<double> &t_variables);
 
+        /// Adds the data of an ISOResults from an ISO simulation into the ErrorEstimation and returns the error corrected values;
+        /// 
+        /// \param[in] t_results The SqlFile to pull the year end summary data from
+        /// \param[in] t_sourceName The name of the simulation source this data is from, registered with addSource
+        /// \param[in] t_variables The name of the variable that this data is for
+        ///
+        /// \returns The error corrected values, or the input values if error correction was not possible
+        openstudio::runmanager::FuelUses add(const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results, const std::string &t_sourceName, const std::vector<double> &t_variables);
+
+        openstudio::runmanager::FuelUses add(FuelUses t_origUses, const std::string &t_sourceName, const std::vector<double> &t_variables);
+
         /// Returns an estimated FuelUsage for the given variable at the given value
         /// 
         /// \param[in] t_variable The variable to 
@@ -104,6 +119,9 @@ namespace openstudio {
 
         /// Returns the FuelUses from the given SqlFile, with the confidence level of the source name applied
         FuelUses getUses(const std::string &t_sourceName, const SqlFile &t_sql) const;
+
+        /// Returns the FuelUses from the given ISOResults, with the confidence level of the source name applied
+        FuelUses getUses(const std::string &t_sourceName, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results) const;
     };
 
   }

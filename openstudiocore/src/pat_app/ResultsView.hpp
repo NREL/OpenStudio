@@ -40,6 +40,8 @@ class OSListView;
 class OpenDirectoryButton;
 
 namespace pat {
+  
+enum DownloadResultsStatus { LOCAL_MODE, RESULTS_DISABLED, RESULTS_DOWNLOADED, RESULTS_UNAVAILABLE, RESULTS_AVAILABLE, RUNNING_DETAILED, RUNNING_SLIM };
 
 class ResultsView : public PatMainTabView
 {
@@ -67,6 +69,8 @@ class ResultsView : public PatMainTabView
 
     void openDirButtonClicked(bool clicked);
 
+    void downloadResultsButtonClicked(bool clicked);
+
     void calibrationThresholdsChanged(double maxNMBE, double maxCVRMSE);
 
   public slots:
@@ -79,14 +83,22 @@ class ResultsView : public PatMainTabView
 
     void enableOpenDirectoryButton(bool enable);
 
+    void enableDownloadResultsButton(const DownloadResultsStatus& status);
+
     void selectCalibrationMethod(const QString &);
 
   private:
+
+    void downloadResultsButtonEnabled(bool enabled);
+
+    void openButtonEnabled(bool enabled);
+  
     QStackedWidget * m_stackedWidget;
 
     QPushButton * m_standardResultsBtn;
     QPushButton * m_calibrationResultsBtn;
     QPushButton* m_viewFileButton;
+    QPushButton* m_downloadResultsButton;
 
     QLabel* m_calibrationMethodLabel;
     double m_calibrationMaxNMBE;
