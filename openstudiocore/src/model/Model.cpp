@@ -244,7 +244,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ControllerOutdoorAir);
     REGISTER_CONSTRUCTOR(ControllerWaterCoil);
     REGISTER_CONSTRUCTOR(ConvergenceLimits);
+    REGISTER_CONSTRUCTOR(CoolingTowerPerformanceCoolTools);
+    REGISTER_CONSTRUCTOR(CoolingTowerPerformanceYorkCalc);
     REGISTER_CONSTRUCTOR(CoolingTowerSingleSpeed);
+    REGISTER_CONSTRUCTOR(CoolingTowerVariableSpeed);
     REGISTER_CONSTRUCTOR(CurrencyType);
     REGISTER_CONSTRUCTOR(CurveBicubic);
     REGISTER_CONSTRUCTOR(CurveBiquadratic);
@@ -525,7 +528,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ControllerOutdoorAir);
     REGISTER_COPYCONSTRUCTORS(ControllerWaterCoil);
     REGISTER_COPYCONSTRUCTORS(ConvergenceLimits);
+    REGISTER_COPYCONSTRUCTORS(CoolingTowerPerformanceCoolTools);
+    REGISTER_COPYCONSTRUCTORS(CoolingTowerPerformanceYorkCalc);
     REGISTER_COPYCONSTRUCTORS(CoolingTowerSingleSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoolingTowerVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(CurrencyType);
     REGISTER_COPYCONSTRUCTORS(CurveBicubic);
     REGISTER_COPYCONSTRUCTORS(CurveBiquadratic);

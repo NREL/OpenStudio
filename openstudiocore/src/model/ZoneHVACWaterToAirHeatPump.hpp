@@ -168,11 +168,11 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
 
   void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setSupplyAirFan(HVACComponent& fansOnOff);
+  bool setSupplyAirFan(HVACComponent& fansOnOff);
 
-  void setHeatingCoil(HVACComponent& heatingCoils);
+  bool setHeatingCoil(HVACComponent& heatingCoils);
 
-  void setCoolingCoil(HVACComponent& coolingCoils);
+  bool setCoolingCoil(HVACComponent& coolingCoils);
 
   bool setMaximumCyclingRate(boost::optional<double> maximumCyclingRate);
 

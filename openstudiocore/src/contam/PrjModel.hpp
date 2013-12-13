@@ -97,6 +97,7 @@ public:
 
   std::vector<std::vector<int> > zoneExteriorFlowPaths();
   std::vector<TimeSeries> zoneInfiltration(SimFile *sim);
+  std::vector<TimeSeries> pathInfiltration(std::vector<int> pathNrs, SimFile *sim);
   bool setSteadyWeather(double windSpeed, double windDirection);
 
   RunControl rc() const

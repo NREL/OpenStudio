@@ -73,7 +73,10 @@ class ControllerOutdoorAir;
 class ControllerMechanicalVentilation;
 class ControllerWaterCoil;
 class ConvergenceLimits;
+class CoolingTowerPerformanceCoolTools;
+class CoolingTowerPerformanceYorkCalc;
 class CoolingTowerSingleSpeed;
+class CoolingTowerVariableSpeed;
 class CurrencyType;
 class CurveBicubic;
 class CurveBiquadratic;
@@ -361,7 +364,13 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateConvergenceLimits( model::ConvergenceLimits & modelObject );
 
+  boost::optional<IdfObject> translateCoolingTowerPerformanceCoolTools( model::CoolingTowerPerformanceCoolTools & modelObject );
+
+  boost::optional<IdfObject> translateCoolingTowerPerformanceYorkCalc( model::CoolingTowerPerformanceYorkCalc & modelObject );
+
   boost::optional<IdfObject> translateCoolingTowerSingleSpeed( model::CoolingTowerSingleSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoolingTowerVariableSpeed( model::CoolingTowerVariableSpeed & modelObject );
 
   boost::optional<IdfObject> translateCurrencyType( model::CurrencyType & modelObject );
 

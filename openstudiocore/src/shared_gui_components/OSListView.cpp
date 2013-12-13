@@ -26,6 +26,7 @@
 #include <QScrollArea>
 #include <QStyleOption>
 #include <QPainter>
+#include <QGraphicsObject>
 
 namespace openstudio {
 
@@ -210,11 +211,6 @@ void OSListView::refreshItemView(int i)
   removeItemView(i);
 
   insertItemView(i);
-}
-
-QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
-  return new QWidget();
 }
 
 } // openstudio
