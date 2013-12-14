@@ -565,7 +565,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
        // no-op
        return retVal;
   }
-  else if( modelObject.iddObject().type() ==  CoilHeatingDXVariableRefrigerantFlow::iddObjectType() ) )
+  else if( modelObject.iddObject().type() ==  CoilHeatingDXVariableRefrigerantFlow::iddObjectType() )
   {
        model::CoilHeatingDXVariableRefrigerantFlow coil = modelObject.cast<CoilHeatingDXVariableRefrigerantFlow>();
        retVal = translateCoilHeatingDXVariableRefrigerantFlow(coil);
@@ -1027,7 +1027,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
        model::PortList portList = modelObject.cast<PortList>();
        retVal = translatePortList(portList);
   }
-  else if ( modelObject.iddObject().type() ==  RefrigerationCase::iddObjectType() ) )
+  else if ( modelObject.iddObject().type() ==  RefrigerationCase::iddObjectType() )
   {
        model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();
        retVal = translateRefrigerationCase(refrigerationCase);
@@ -2148,7 +2148,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
      it != m_idfObjects.end();
      it++ )
   {
-    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+    if(it->iddObject().type() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
         return *it;
       }
@@ -2187,7 +2187,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
      it != m_idfObjects.end();
      it++ )
   {
-    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+    if(it->iddObject().type() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
         return *it;
       }
@@ -2212,7 +2212,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
        it != fluidObjects.end();
        it++ )
     {
-      if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+      if(it->iddObject().type() == openstudio::IddObjectType::FluidProperties_Name) {
         idfObject = *it;
       }
       m_idfObjects.push_back(*it);
