@@ -9,7 +9,7 @@ OS:SimulationControl,
   Yes,                                    !- Do System Sizing Calculation
   ,                                       !- Do Plant Sizing Calculation
   Yes,                                    !- Run Simulation for Sizing Periods
-  No;                                     !- Run Simulation for Weather File Run Periods
+  Yes;                                    !- Run Simulation for Weather File Run Periods
 
 OS:Timestep,
   {eb4c2965-98e5-4997-8a4e-8c4f15debb16}, !- Handle
@@ -43,10 +43,10 @@ OS:ShadowCalculation,
 OS:Site,
   {5c1f9d16-87a5-488e-aa99-a6dd668a2146}, !- Handle
   Site 1,                                 !- Name
-  41.77,                                  !- Latitude {deg}
-  -87.75,                                 !- Longitude {deg}
-  -6,                                     !- Time Zone {hr}
-  190,                                    !- Elevation {m}
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
   ;                                       !- Terrain
 
 OS:Site:GroundTemperature:BuildingSurface,
@@ -1761,7 +1761,10 @@ OS:Construction,
 
 OS:SpaceType,
   {53148cd3-f7e8-45bd-becf-46361d6848b4}, !- Handle
-  Space Type 1;                           !- Name
+  Space Type 1,                           !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  {8a5091f9-381f-4a4b-b5cb-353801cfb21f}; !- Group Rendering Name
 
 OS:Lights:Definition,
   {30077710-ec09-456a-b5ce-93ac9d61937b}, !- Handle
@@ -1910,7 +1913,7 @@ OS:BuildingStory,
   3,                                      !- Nominal Floor to Floor Height {m}
   ,                                       !- Default Construction Set Name
   ,                                       !- Default Schedule Set Name
-  ;                                       !- Group Rendering Name
+  {9ef04724-9b33-4053-b66f-94ef7f280b7d}; !- Group Rendering Name
 
 OS:Space,
   {6e81b6eb-e552-4e68-8e12-8ff03c46a0d7}, !- Handle
@@ -3115,25 +3118,25 @@ OS:SetpointManager:SingleZone:Reheat,
 OS:Output:Variable,
   {53396c41-2d2b-4372-9510-246eddcf8b43}, !- Handle
   Output Variable 1,                      !- Name
-  ,                                       !- Key Value
+  *,                                      !- Key Value
   Zone Outdoor Air Drybulb Temperature;   !- Variable Name
 
 OS:Output:Variable,
   {89a82f45-298f-4938-9c1e-8ca1b201d618}, !- Handle
   Output Variable 2,                      !- Name
-  ,                                       !- Key Value
+  *,                                      !- Key Value
   Zone Outdoor Air Wetbulb Temperature;   !- Variable Name
 
 OS:Output:Variable,
   {b6166f3a-2f27-43d9-b9cc-da15c738be6d}, !- Handle
   Output Variable 3,                      !- Name
-  ,                                       !- Key Value
+  *,                                      !- Key Value
   Surface Inside Face Temperature;        !- Variable Name
 
 OS:Output:Variable,
   {e6d9045f-4663-48da-bb46-960f812a514c}, !- Handle
   Output Variable 4,                      !- Name
-  ,                                       !- Key Value
+  *,                                      !- Key Value
   Surface Outside Face Temperature;       !- Variable Name
 
 OS:Meter,
@@ -3150,4 +3153,88 @@ OS:Meter,
   {46cc5b2e-bbf7-48a5-9ee1-89b94a4d6cb9}, !- Handle
   Propane:Facility,                       !- Name
   Hourly;                                 !- Reporting Frequency
+
+OS:YearDescription,
+  {cc25c0b7-0a9a-4a68-8068-93a13153fb44}, !- Handle
+  ,                                       !- Calendar Year
+  Sunday;                                 !- Day of Week for Start Day
+
+OS:RadianceParameters,
+  {46c82c0e-60d3-4bad-ac61-998576d94182}, !- Handle
+  1,                                      !- Accumulated Rays per Record
+  0,                                      !- Direct Threshold
+  1,                                      !- Direct Certainty
+  1,                                      !- Direct Jitter
+  1,                                      !- Direct Pretest
+  6,                                      !- Ambient Bounces VMX
+  2,                                      !- Ambient Bounces DMX
+  4050,                                   !- Ambient Divisions VMX
+  512,                                    !- Ambient Divisions DMX
+  256,                                    !- Ambient Supersamples
+  0.001,                                  !- Limit Weight VMX
+  0.001,                                  !- Limit Weight DMX
+  500,                                    !- Klems Sampling Density
+  146;                                    !- Sky Discretization Resolution
+
+OS:Sizing:Parameters,
+  {77451c42-cf75-4ea0-b1a9-bdb193b96b0c}, !- Handle
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
+
+OS:ProgramControl,
+  {807ad925-cc53-445d-aaa2-905a99ddfa0d}; !- Handle
+
+OS:OutputControl:ReportingTolerances,
+  {3059009e-a46e-45bb-b74a-f0c2b28ff695}; !- Handle
+
+OS:ZoneAirContaminantBalance,
+  {a72820f2-f7df-417d-b6e8-07787aa81fcb}; !- Handle
+
+OS:ZoneCapacitanceMultiplier:ResearchSpecial,
+  {d9422987-dfa2-41cd-b95d-410bf94d5db9}, !- Handle
+  ,                                       !- Temperature Capacity Multiplier
+  ,                                       !- Humidity Capacity Multiplier
+  ;                                       !- Carbon Dioxide Capacity Multiplier
+
+OS:RunPeriod,
+  {eda09313-72c2-4707-b5d5-7df8afcc3ad0}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+
+OS:Rendering:Color,
+  {8a5091f9-381f-4a4b-b5cb-353801cfb21f}, !- Handle
+  Rendering Color 1,                      !- Name
+  240,                                    !- Rendering Red Value
+  255,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:Rendering:Color,
+  {9ef04724-9b33-4053-b66f-94ef7f280b7d}, !- Handle
+  Rendering Color 2,                      !- Name
+  0,                                      !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
+
+OS:WeatherFile,
+  {cc5a7650-318f-41dd-a20a-acaeef25de6a}, !- Handle
+  Denver Centennial  Golden   Nr,         !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  TMY3,                                   !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
+  3CF64E88;                               !- Checksum
 

@@ -48,12 +48,9 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     output << "Measure Name = " << name << "<br>"
     output << "Building Name = " << model.getBuilding.name.get << "<br>"                       # optioanl variable
     output << "Building Type = " << model.getBuilding.buildingType << "<br>"                   # string variable
-    output << "Building Type = " << model.getBuilding.nominalFloortoFloorHeight.to_s << "<br>" # double variable
+    output << "Floor to Floor Height = " << model.getBuilding.nominalFloortoFloorHeight.to_s << " (m)<br>" # double variable
+    output << "Net Site Energy = " << sqlFile.netSiteEnergy.to_s << " (GJ)<br>" # double variable
     output << "\""
-    
-    #output << "E+ version = " << s << "\n"
-    
-    #output << "Gross Wall Area = " << d.to_s
 
     # read in template
     html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
