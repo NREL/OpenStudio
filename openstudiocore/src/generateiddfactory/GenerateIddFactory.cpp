@@ -1181,6 +1181,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
   << "  static const IddObjectType OS_Boiler_Steam;" << std::endl
   << "  static const IddObjectType OS_Chiller_Electric_EIR;" << std::endl
   << "  static const IddObjectType OS_CoolingTower_SingleSpeed;" << std::endl
+  << "  static const IddObjectType OS_CoolingTower_VariableSpeed;" << std::endl
   << "  static const IddObjectType OS_DistrictCooling;" << std::endl
   << "  static const IddObjectType OS_DistrictHeating;" << std::endl
   << "  static const IddObjectType OS_GroundHeatExchanger_Vertical;" << std::endl
@@ -1272,7 +1273,26 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
   << "  static const IddObjectType OS_UtilityBill;" << std::endl
   << "  static const IddObjectType OS_OutputControl_ReportingTolerances;" << std::endl
   << "  static const IddObjectType OS_Meter;" << std::endl
-  << "  static const IddObjectType OS_Output_Variable;" << std::endl;
+  << "  static const IddObjectType OS_Output_Variable;" << std::endl
+  << "  static const IddObjectType OS_ModelObjectList;" << std::endl
+  << "  static const IddObjectType OS_AirConditioner_VariableRefrigerantFlow;" << std::endl
+  << "  static const IddObjectType OS_Coil_Cooling_DX_VariableRefrigerantFlow;" << std::endl
+  << "  static const IddObjectType OS_Coil_Heating_DX_VariableRefrigerantFlow;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Case;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Condenser_AirCooled;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Condenser_EvaporativeCooled;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Condenser_WaterCooled;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Condenser_Cascade;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Compressor;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Subcooler_Mechanical;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_Subcooler_LiquidSuction;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_System;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_SecondarySystem;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_WalkIn;" << std::endl
+  << "  static const IddObjectType OS_Refrigeration_WalkIn_ZoneBoundary;" << std::endl
+  << "  static const IddObjectType OS_CoolingTowerPerformance_CoolTools;" << std::endl
+  << "  static const IddObjectType OS_CoolingTowerPerformance_YorkCalc;" << std::endl
+  << "  static const IddObjectType OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow;" << std::endl;
 
   outFiles.iddEnumsHxx.tempFile
     << std::endl
@@ -2243,6 +2263,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
   << "const IddObjectType IddObjectType::OS_Boiler_Steam = IddObjectType(\"OS:Boiler:Steam\");" << std::endl
   << "const IddObjectType IddObjectType::OS_Chiller_Electric_EIR = IddObjectType(\"OS:Chiller:Electric:EIR\");" << std::endl
   << "const IddObjectType IddObjectType::OS_CoolingTower_SingleSpeed = IddObjectType(\"OS:CoolingTower:SingleSpeed\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_CoolingTower_VariableSpeed = IddObjectType(\"OS:CoolingTower:VariableSpeed\");" << std::endl
   << "const IddObjectType IddObjectType::OS_DistrictCooling = IddObjectType(\"OS:DistrictCooling\");" << std::endl
   << "const IddObjectType IddObjectType::OS_DistrictHeating = IddObjectType(\"OS:DistrictHeating\");" << std::endl
   << "const IddObjectType IddObjectType::OS_GroundHeatExchanger_Vertical = IddObjectType(\"OS:GroundHeatExchanger:Vertical\");" << std::endl
@@ -2334,7 +2355,26 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
   << "const IddObjectType IddObjectType::OS_UtilityBill = IddObjectType(\"OS:UtilityBill\");" << std::endl
   << "const IddObjectType IddObjectType::OS_OutputControl_ReportingTolerances = IddObjectType(\"OS:OutputControl:ReportingTolerances\");" << std::endl
   << "const IddObjectType IddObjectType::OS_Meter = IddObjectType(\"OS:Meter\");" << std::endl
-  << "const IddObjectType IddObjectType::OS_Output_Variable = IddObjectType(\"OS:Output:Variable\");" << std::endl;
+  << "const IddObjectType IddObjectType::OS_Output_Variable = IddObjectType(\"OS:Output:Variable\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_ModelObjectList = IddObjectType(\"OS:ModelObjectList\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_AirConditioner_VariableRefrigerantFlow = IddObjectType(\"OS:AirConditioner:VariableRefrigerantFlow\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow = IddObjectType(\"OS:Coil:Cooling:DX:VariableRefrigerantFlow\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Coil_Heating_DX_VariableRefrigerantFlow = IddObjectType(\"OS:Coil:Cooling:DX:VariableRefrigerantFlow\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Case = IddObjectType(\"OS:Refrigeration:Case\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Condenser_AirCooled = IddObjectType(\"OS:Refrigeration:Condenser:AirCooled\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled = IddObjectType(\"OS:Refrigeration:Condenser:EvaporativeCooled\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Condenser_WaterCooled = IddObjectType(\"OS:Refrigeration:Condenser:WaterCooled\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Condenser_Cascade = IddObjectType(\"OS:Refrigeration:Condenser:Cascade\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Compressor = IddObjectType(\"OS:Refrigeration:Compressor\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Subcooler_Mechanical = IddObjectType(\"OS:Refrigeration:Subcooler:Mechanical\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction = IddObjectType(\"OS:Refrigeration:Subcooler:LiquidSuction\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_System = IddObjectType(\"OS:Refrigeration:System\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_SecondarySystem = IddObjectType(\"OS:Refrigeration:SecondarySystem\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_WalkIn = IddObjectType(\"OS:Refrigeration:WalkIn\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_Refrigeration_WalkIn_ZoneBoundary = IddObjectType(\"OS:Refrigeration:WalkIn:ZoneBoundary\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_CoolingTowerPerformance_CoolTools = IddObjectType(\"OS:CoolingTowerPerformance:CoolTools\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_CoolingTowerPerformance_YorkCalc = IddObjectType(\"OS:CoolingTowerPerformance:YorkCalc\");" << std::endl
+  << "const IddObjectType IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow = IddObjectType(\"OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow\");" << std::endl;
 
   // create function for CommentOnly IddObject
   outFiles.iddFactoryCxx.tempFile
