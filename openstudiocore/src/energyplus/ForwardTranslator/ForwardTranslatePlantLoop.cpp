@@ -44,6 +44,8 @@
 #include <model/BoilerHotWater_Impl.hpp>
 #include <model/CoolingTowerSingleSpeed.hpp>
 #include <model/CoolingTowerSingleSpeed_Impl.hpp>
+#include <model/CoolingTowerVariableSpeed.hpp>
+#include <model/CoolingTowerVariableSpeed_Impl.hpp>
 #include <model/ChillerElectricEIR.hpp>
 #include <model/ChillerElectricEIR_Impl.hpp>
 #include <model/CoilCoolingCooledBeam.hpp>
