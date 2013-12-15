@@ -222,6 +222,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void toggleUnitsClicked(bool displayIP);
 
+  void treeChanged(const openstudio::UUID &t_uuid);
+
  public slots:
 
   void markAsModified();

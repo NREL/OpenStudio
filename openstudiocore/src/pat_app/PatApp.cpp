@@ -736,6 +736,23 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
 
       // refresh the measures tab
       m_measuresTabController->refreshAllViews();
+
+      // add standard report if not there (is not added on opening old projects)
+      if (!m_project->getStandardReportWorkflowStep()) {
+        m_project->insertStandardReportWorkflowStep();
+      }
+
+      // update whether workflow contains calibration report
+      if (m_project->shouldIncludeCalibrationReports()) {
+        if (!m_project->getCalibrationReportWorkflowStep()) {
+          m_project->insertCalibrationReportWorkflowStep();
+        }
+      }
+      else {
+        if (m_project->getCalibrationReportWorkflowStep()) {
+          m_project->clearCalibrationReportWorkflowStep();
+        }
+      }
       
       // get new number of variables and report out how many fixed measures were added
       int nvarsAdded = m_project->analysis().problem().numVariables() - nvars;
