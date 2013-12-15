@@ -739,6 +739,12 @@ namespace sdd {
         var = model::OutputVariable("Fan Electric Energy",*result);
         var.setReportingFrequency(interval);
 
+        var = model::OutputVariable("Heating Coil Gas Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Heating Coil Electric Power",*result);
+        var.setReportingFrequency(interval);
+
         std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
 
         for( std::vector<model::AirLoopHVAC>::iterator it = airloops.begin();
