@@ -38,12 +38,13 @@ DefaultConstructionSetsController::~DefaultConstructionSetsController()
 
 void DefaultConstructionSetsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  switch(iddObjectType.value()){
-    case IddObjectType::OS_DefaultConstructionSet:
-      openstudio::model::DefaultConstructionSet(this->model());
-      break;
-    default:
-      LOG_FREE_AND_THROW("DefaultConstructionSetsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
+  if( iddObjectType == IddObjectType::OS_DefaultConstructionSet )
+  {
+    openstudio::model::DefaultConstructionSet(this->model());
+  }
+  else
+  {
+    LOG_FREE_AND_THROW("DefaultConstructionSetsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
   }
 }
 

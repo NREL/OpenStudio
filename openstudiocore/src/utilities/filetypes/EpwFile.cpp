@@ -21,6 +21,7 @@
 #include <utilities/idf/IdfObject.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/core/Checksum.hpp>
+#include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -2021,7 +2022,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
 }
 
 IdfObject toIdfObject(const EpwFile& epwFile) {
-  IdfObject result(IddObjectType::OS_WeatherFile);
+  IdfObject result(iddobjectname::OS_WeatherFile);
 
   bool success = true;
 

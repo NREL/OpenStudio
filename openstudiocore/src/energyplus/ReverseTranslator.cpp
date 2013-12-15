@@ -27,6 +27,7 @@
 #include <utilities/idf/WorkspaceObject.hpp>
 #include <utilities/idf/ValidityReport.hpp>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFieldEnums.hxx>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/plot/ProgressBar.hpp>
@@ -256,604 +257,477 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
 
   bool addToUntranslated = true;
 
-  switch(workspaceObject.iddObject().type().value())
-  {
-  case openstudio::IddObjectType::AirLoopHVAC :
+  if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirLoopHVAC) )
     {
       //modelObject = translateAirLoopHVAC(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::AirLoopHVAC_ControllerList :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirLoopHVAC_ControllerList) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirLoopHVAC_OutdoorAirSystem) )
     {
       //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem_EquipmentList :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirLoopHVAC_OutdoorAirSystem_EquipmentList) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::AirLoopHVAC_ReturnPath :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirLoopHVAC_ReturnPath) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::CoilSystem_Cooling_DX :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::CoilSystem_Cooling_DX) )
     {
       //modelObject = translateCoilSystemCoolingDX(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::AirLoopHVAC_ZoneSplitter :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirLoopHVAC_ZoneSplitter) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_Reheat :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirTerminal_SingleDuct_ConstantVolume_Reheat) )
     {
       modelObject = translateAirTerminalSingleDuctConstantVolumeReheat(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::AirTerminal_SingleDuct_Uncontrolled :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirTerminal_SingleDuct_Uncontrolled) )
     {
       //modelObject = translateAirTerminalSingleDuctUncontrolled(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirTerminal_SingleDuct_VAV_NoReheat) )
     {
       modelObject = translateAirTerminalSingleDuctVAVNoReheat(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_Reheat :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AirTerminal_SingleDuct_VAV_Reheat) )
     {
       //modelObject = translateAirTerminalSingleDuctVAVReheat(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::AvailabilityManagerAssignmentList :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::AvailabilityManagerAssignmentList) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Branch :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Branch) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::BranchList :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::BranchList) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::BuildingSurface_Detailed :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::BuildingSurface_Detailed) )
     {
       modelObject = translateBuildingSurfaceDetailed(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Building :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Building) )
     {
       modelObject = translateBuilding(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Coil_Heating_Gas :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Coil_Heating_Gas) )
     {
       //modelObject = translateCoilHeatingGas(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Coil_Cooling_DX_SingleSpeed :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Coil_Cooling_DX_SingleSpeed) )
     {
       //modelObject = translateCoilCoolingDXSingleSpeed(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::CommentOnly :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::CommentOnly) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::ComponentCost_LineItem :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ComponentCost_LineItem) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Connector_Mixer :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Connector_Mixer) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Connector_Splitter :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Connector_Splitter) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::ConnectorList :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ConnectorList) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Construction :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Construction) )
     {
       modelObject = translateConstruction(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Controller_OutdoorAir :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Controller_OutdoorAir) )
     {
       //modelObject = translateControllerOutdoorAir(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ConvergenceLimits :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ConvergenceLimits) )
     {
       modelObject = translateConvergenceLimits(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Bicubic :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Bicubic) )
     {
       modelObject = translateCurveBicubic(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Biquadratic :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Biquadratic) )
     {
       modelObject = translateCurveBiquadratic(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Cubic :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Cubic) )
     {
       modelObject = translateCurveCubic(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_DoubleExponentialDecay :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_DoubleExponentialDecay) )
     {
       modelObject = translateCurveDoubleExponentialDecay(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_ExponentialSkewNormal :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_ExponentialSkewNormal) )
     {
       modelObject = translateCurveExponentialSkewNormal(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_FanPressureRise :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_FanPressureRise) )
     {
       modelObject = translateCurveFanPressureRise(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Functional_PressureDrop :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Functional_PressureDrop) )
     {
       modelObject = translateCurveFunctionalPressureDrop(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Linear :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Linear) )
     {
       modelObject = translateCurveLinear(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Quadratic :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Quadratic) )
     {
       modelObject = translateCurveQuadratic(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_QuadraticLinear :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_QuadraticLinear) )
     {
       modelObject = translateCurveQuadraticLinear(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Quartic :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Quartic) )
     {
       modelObject = translateCurveQuartic(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_RectangularHyperbola1 :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_RectangularHyperbola1) )
     {
       modelObject = translateCurveRectangularHyperbola1(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_RectangularHyperbola2 :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_RectangularHyperbola2) )
     {
       modelObject = translateCurveRectangularHyperbola2(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Sigmoid :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Sigmoid) )
     {
       modelObject = translateCurveSigmoid(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Curve_Triquadratic :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Curve_Triquadratic) )
     {
       modelObject = translateCurveTriquadratic(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Daylighting_Controls :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Daylighting_Controls) )
     {
       modelObject = translateDaylightingControls(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::DesignSpecification_OutdoorAir :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::DesignSpecification_OutdoorAir) )
     {
       modelObject = translateDesignSpecificationOutdoorAir(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ElectricEquipment :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ElectricEquipment) )
     {
       modelObject = translateElectricEquipment(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Exterior_Lights :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Exterior_Lights) )
     {
       //modelObject = translateExteriorLights(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::EvaporativeCooler_Direct_ResearchSpecial) )
     {
       //modelObject = translateEvaporativeCoolerDirectResearchSpecial(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::EvaporativeFluidCooler_SingleSpeed :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::EvaporativeFluidCooler_SingleSpeed) )
     {
       modelObject = translateEvaporativeFluidCoolerSingleSpeed(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Fan_ConstantVolume :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Fan_ConstantVolume) )
     {
       //modelObject = translateFanConstantVolume(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::FenestrationSurface_Detailed :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::FenestrationSurface_Detailed) )
     {
       modelObject = translateFenestrationSurfaceDetailed(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::GlobalGeometryRules :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::GlobalGeometryRules) )
     {
       // added by geometry translator, do not add to untranslated objects
       addToUntranslated = false;
-      break; // no-op
     }
-  case openstudio::IddObjectType::GasEquipment :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::GasEquipment) )
     {
       modelObject = translateGasEquipment(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::GroundHeatExchanger_Vertical :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::GroundHeatExchanger_Vertical) )
     {
       //modelObject = translateGroundHeatExchangerVertical(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::HeatBalanceAlgorithm :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::HeatBalanceAlgorithm) )
     {
       modelObject = translateHeatBalanceAlgorithm(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::HotWaterEquipment :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::HotWaterEquipment) )
     {
       modelObject = translateHotWaterEquipment(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::HVACTemplate_Thermostat :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::HVACTemplate_Thermostat) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::InternalMass :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::InternalMass) )
     {
       modelObject = translateInternalMass(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Lights :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Lights) )
     {
       modelObject = translateLights(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Material :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Material) )
     {
       modelObject = translateMaterial(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Material_AirGap :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Material_AirGap) )
     {
       modelObject = translateMaterialAirGap(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Material_NoMass :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Material_NoMass) )
     {
       modelObject = translateMaterialNoMass(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Meter_Custom :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Meter_Custom) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Meter_CustomDecrement :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Meter_CustomDecrement) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::OtherEquipment :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::OtherEquipment) )
     {
       modelObject = translateOtherEquipment(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::OutdoorAir_Mixer :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::OutdoorAir_Mixer) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::OutdoorAir_Node :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::OutdoorAir_Node) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::OutdoorAir_NodeList :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::OutdoorAir_NodeList) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Output_IlluminanceMap :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_IlluminanceMap) )
     {
       modelObject = translateOutputIlluminanceMap(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Output_Meter :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_Meter) )
     {
       modelObject = translateOutputMeter(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Output_Meter_Cumulative :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_Meter_Cumulative) )
     {
       modelObject = translateOutputMeterCumulative(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Output_Meter_Cumulative_MeterFileOnly :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_Meter_Cumulative_MeterFileOnly) )
     {
       modelObject = translateOutputMeterCumulativeMeterFileOnly(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Output_Meter_MeterFileOnly :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_Meter_MeterFileOnly) )
     {
       modelObject = translateOutputMeterMeterFileOnly(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Output_SQLite :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_SQLite) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Output_Table_Monthly :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_Table_Monthly) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Output_Table_SummaryReports :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_Table_SummaryReports) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Output_Variable :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Output_Variable) )
     {
       modelObject = translateOutputVariable(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::OutputControl_Table_Style :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::OutputControl_Table_Style) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::People :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::People) )
     {
       modelObject = translatePeople(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::RunPeriod :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::RunPeriod) )
     {
       modelObject = translateRunPeriod(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::RunPeriodControl_DaylightSavingTime :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::RunPeriodControl_DaylightSavingTime) )
     {
       //modelObject = translateRunPeriodControlDaylightSavingTime(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::RunPeriodControl_SpecialDays :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::RunPeriodControl_SpecialDays) )
     {
       //modelObject = translateRunPeriodControlSpecialDays(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Schedule_Compact :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Schedule_Compact) )
     {
       modelObject = translateScheduleCompact(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Schedule_Constant :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Schedule_Constant) )
     {
       modelObject = translateScheduleConstant(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Schedule_Day_Hourly :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Schedule_Day_Hourly) )
     {
       modelObject = translateScheduleDayHourly(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Schedule_Day_Interval :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Schedule_Day_Interval) )
     {
       modelObject = translateScheduleDayInterval(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ScheduleTypeLimits :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ScheduleTypeLimits) )
     {
       modelObject = translateScheduleTypeLimits(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Schedule_Week_Daily :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Schedule_Week_Daily) )
     {
       modelObject = translateScheduleWeekDaily(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Schedule_Year :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Schedule_Year) )
     {
       modelObject = translateScheduleYear(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::SetpointManager_MixedAir :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SetpointManager_MixedAir) )
     {
       //modelObject = translateSetpointManagerMixedAir(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::SetpointManager_Scheduled :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SetpointManager_Scheduled) )
     {
       //modelObject = translateSetpointManagerScheduled(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::SetpointManager_SingleZone_Reheat :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SetpointManager_SingleZone_Reheat) )
     {
       //modelObject = translateSetpointManagerSingleZoneReheat(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Shading_Building_Detailed :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Shading_Building_Detailed) )
     {
       modelObject = translateShadingBuildingDetailed(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Shading_Site_Detailed :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Shading_Site_Detailed) )
     {
       modelObject = translateShadingSiteDetailed(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Shading_Zone_Detailed :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Shading_Zone_Detailed) )
     {
       modelObject = translateShadingZoneDetailed(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ShadowCalculation :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ShadowCalculation) )
     {
       modelObject = translateShadowCalculation(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::SimulationControl :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SimulationControl) )
     {
       modelObject = translateSimulationControl(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Site_Location :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Site_Location) )
     {
       modelObject = translateSiteLocation(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Site_GroundReflectance :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Site_GroundReflectance) )
     {
       //modelObject = translateSiteGroundReflectance(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Site_GroundTemperature_BuildingSurface :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Site_GroundTemperature_BuildingSurface) )
     {
       //modelObject = translateSiteGroundTemperatureBuildingSurface(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Site_WaterMainsTemperature :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Site_WaterMainsTemperature) )
     {
       //modelObject = translateSiteWaterMainsTemperature(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Sizing_Parameters :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Sizing_Parameters) )
     {
       modelObject = translateSizingParameters(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::SizingPeriod_DesignDay :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SizingPeriod_DesignDay) )
     {
       modelObject = translateSizingPeriodDesignDay(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Sizing_System :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Sizing_System) )
     {
       //modelObject = translateSizingSystem(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::Sizing_Zone :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Sizing_Zone) )
     {
       //modelObject = translateSizingZone(workspaceObject );
-      break;
     }
-  case openstudio::IddObjectType::SteamEquipment :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SteamEquipment) )
     {
       modelObject = translateSteamEquipment(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::SurfaceConvectionAlgorithm_Inside :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SurfaceConvectionAlgorithm_Inside) )
     {
       //modelObject = translateSurfaceConvectionAlgorithmInside(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::SurfaceConvectionAlgorithm_Outside :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::SurfaceConvectionAlgorithm_Outside) )
     {
       //modelObject = translateSurfaceConvectionAlgorithmOutside(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ThermostatSetpoint_DualSetpoint) )
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Timestep :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Timestep) )
     {
       modelObject = translateTimestep(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::UtilityCost_Charge_Simple :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::UtilityCost_Charge_Simple) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::UtilityCost_Qualify :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::UtilityCost_Qualify) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::Version :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Version) )
    {
      modelObject = translateVersion(workspaceObject );
-     break;
    }
-  case openstudio::IddObjectType::WindowMaterial_Gas:
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::WindowMaterial_Gas) )
     {
       modelObject = translateWindowMaterialGas(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::WindowMaterial_Glazing:
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::WindowMaterial_Glazing) )
     {
       modelObject = translateWindowMaterialGlazing(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::WindowMaterial_SimpleGlazingSystem:
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::WindowMaterial_SimpleGlazingSystem) )
     {
       modelObject = translateWindowMaterialSimpleGlazingSystem(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::Zone:
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::Zone) )
     {
       modelObject = translateZone(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ZoneAirHeatBalanceAlgorithm:
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneAirHeatBalanceAlgorithm) )
     {
       //modelObject = translateZoneAirHeatBalanceAlgorithm(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ZoneControl_Thermostat :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneControl_Thermostat) )
     {
-      break; // no-op
     }
-  case openstudio::IddObjectType::ZoneHVAC_EquipmentList :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneHVAC_EquipmentList) )
     {
       //modelObject = translateZoneHVACEquipmentList(workspaceObject);
-      break; 
     }
-  case openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneHVAC_IdealLoadsAirSystem) )
     {
       //modelObject = translateZoneHVACIdealLoadsAirSystem(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ZoneInfiltration_DesignFlowRate :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneInfiltration_DesignFlowRate) )
     {
       modelObject = translateZoneInfiltrationDesignFlowRate(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ZoneInfiltration_EffectiveLeakageArea :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneInfiltration_EffectiveLeakageArea) )
   {
       modelObject = translateZoneInfiltrationEffectiveLeakageArea(workspaceObject);
-      break;
   }
-  case openstudio::IddObjectType::ZoneList:
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneList) )
     {
       modelObject = translateZone(workspaceObject);
-      break;
     }
-  case openstudio::IddObjectType::ZoneVentilation_DesignFlowRate :
+  else if( workspaceObject.iddObject().type() == IddObjectType(iddobjectname::ZoneVentilation_DesignFlowRate) )
     {
       modelObject = translateZoneVentilationDesignFlowRate(workspaceObject);
-      break;
     }
-  default:
+  else
     {
-      break; // no-op
     }
-  }
 
   if( modelObject )
   {

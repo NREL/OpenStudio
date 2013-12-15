@@ -25,6 +25,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddKey.hpp>
 #include <utilities/idd/CommentRegex.hpp>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <utilities/core/Assert.hpp>
 
@@ -51,7 +52,7 @@ namespace detail {
   /// default constructor for serialization
   IddObject_Impl::IddObject_Impl() : 
     m_name("Catchall"), 
-    m_type(IddObjectType::Catchall)
+    m_type(iddobjectname::Catchall)
   {
     m_properties.extensible = true;
     m_properties.numExtensible = 1;
@@ -219,8 +220,8 @@ namespace detail {
   }
 
   bool IddObject_Impl::isVersionObject() const {
-    return (type() == IddObjectType::Version) ||
-           (type() == IddObjectType::OS_Version) ||
+    return (type() == "Version") ||
+           (type() == "OS:Version") ||
            (boost::regex_match(name(),iddRegex::versionObjectName()));
   }
 
@@ -817,7 +818,7 @@ boost::optional<IddObject> IddObject::load(const std::string& name,
                                            const std::string& group,
                                            const std::string& text)
 {
-  return load(name,group,text,IddObjectType(IddObjectType::UserCustom));
+  return load(name,group,text,IddObjectType(iddobjectname::UserCustom));
 }
 
 std::ostream& IddObject::print(std::ostream& os) const

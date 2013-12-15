@@ -5,6 +5,8 @@
 
 namespace openstudio {
 
+class IddObjectType;
+
 /*! This class is a simple singleton that maps IddObjectType.value() to QPixmaps
  *
  *
@@ -23,12 +25,12 @@ public:
    \param val should be an IddObjectType.value()
    \return either a pointer to the Icon, or NULL if it isn't found
   */
-  const QPixmap* findIcon( unsigned int val ) const;
+  const QPixmap* findIcon( const IddObjectType & ) const;
   /*! gets a  MiniIcon
    \param val should be an IddObjectType.value()
    \return either a pointer to the MiniIcon, or NULL if it isn't found
   */
-  const QPixmap* findMiniIcon( unsigned int val ) const;
+  const QPixmap* findMiniIcon( const IddObjectType & ) const;
 
 protected:
   
@@ -40,8 +42,8 @@ private:
   
   static IconLibrary* s_instance;
   
-  std::map<unsigned int, QPixmap*> m_icons;
-  std::map<unsigned int, QPixmap*> m_miniIcons;
+  std::map<IddObjectType, QPixmap*> m_icons;
+  std::map<IddObjectType, QPixmap*> m_miniIcons;
 };
 
 }

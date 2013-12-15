@@ -414,42 +414,30 @@ namespace detail {
     it < zoneHVACComponent.end();
     it++ )
     {
-      switch(it->iddObject().type().value())
+      if( it->iddObjectType() == openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil )
       {
-      case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil :
-        {
-          ZoneHVACFourPipeFanCoil component = it->cast<ZoneHVACFourPipeFanCoil>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
-          break;
-        }
-      case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
-        {
-          ZoneHVACPackagedTerminalHeatPump component = it->cast<ZoneHVACPackagedTerminalHeatPump>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
-          break;
-        }
-      case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner :
-        {
-          ZoneHVACPackagedTerminalAirConditioner component = it->cast<ZoneHVACPackagedTerminalAirConditioner>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
-          break;
-        }
-      case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow :
-        {
-          ZoneHVACTerminalUnitVariableRefrigerantFlow component = it->cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
-          break;
-        }
-      case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
-        {
-          ZoneHVACWaterToAirHeatPump component = it->cast<ZoneHVACWaterToAirHeatPump>();
-          if (component.supplyAirFan().handle() == this->handle()) return *it;
-          break;
-        }
-      default:
-        {
-          break;
-        }
+        ZoneHVACFourPipeFanCoil component = it->cast<ZoneHVACFourPipeFanCoil>();
+        if (component.supplyAirFan().handle() == this->handle()) return *it;
+      }
+      else if( it->iddObjectType() ==  openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump )
+      {
+        ZoneHVACPackagedTerminalHeatPump component = it->cast<ZoneHVACPackagedTerminalHeatPump>();
+        if (component.supplyAirFan().handle() == this->handle()) return *it;
+      }
+      else if( it->iddObjectType() ==  openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner )
+      {
+        ZoneHVACPackagedTerminalAirConditioner component = it->cast<ZoneHVACPackagedTerminalAirConditioner>();
+        if (component.supplyAirFan().handle() == this->handle()) return *it;
+      }
+      else if( it->iddObjectType() ==  openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow )
+      {
+        ZoneHVACTerminalUnitVariableRefrigerantFlow component = it->cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+        if (component.supplyAirFan().handle() == this->handle()) return *it;
+      }
+      else if( it->iddObjectType() ==  openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump )
+      {
+        ZoneHVACWaterToAirHeatPump component = it->cast<ZoneHVACWaterToAirHeatPump>();
+        if (component.supplyAirFan().handle() == this->handle()) return *it;
       }
     }
     return boost::none;

@@ -166,7 +166,7 @@ bool ObjectOrderBase::inOrder(const IddObjectType& type) const {
 }
 
 OptionalUnsigned ObjectOrderBase::indexInOrder(const IddObjectType& type) const {
-  if (m_orderByIddEnum) { return static_cast<unsigned>(type.value()); }
+  //if (m_orderByIddEnum) { return static_cast<unsigned>(type.value()); }
   if (m_iddOrder) { 
     IddObjectTypeVector::const_iterator it = getIterator(type);
     return (it - m_iddOrder->begin());

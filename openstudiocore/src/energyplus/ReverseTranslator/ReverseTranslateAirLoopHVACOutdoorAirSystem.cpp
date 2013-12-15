@@ -145,26 +145,19 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVACOutdoorAirSystem( con
                it < equipmentVector.end();
                it++ )
           {
-            switch(it->iddObject().type().value())
+            if( it->iddObject().type() == IddObjectType(iddobjectname::EvaporativeCooler_Direct_ResearchSpecial) )
             {
-              case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
+              oaStreamOutletNodeName = it->getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName);
+              if( oaStreamOutletNodeName )
               {
-                oaStreamOutletNodeName = it->getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName);
-                if( oaStreamOutletNodeName )
+                if( istringEqual(oaStreamOutletNodeName.get(),oaStreamInletNodeName.get()) )
                 {
-                  if( istringEqual(oaStreamOutletNodeName.get(),oaStreamInletNodeName.get()) )
-                  {
-                    newOAStreamInletNodeName = it->getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName);
+                  newOAStreamInletNodeName = it->getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName);
 
-                    oaComponentModelObject = translateAndMapWorkspaceObject(*it);
-                  }
+                  oaComponentModelObject = translateAndMapWorkspaceObject(*it);
                 }
-                break;
               }
-              default :
-              {
-                break;
-              }
+              break;
             }
             if( newOAStreamInletNodeName )
             {

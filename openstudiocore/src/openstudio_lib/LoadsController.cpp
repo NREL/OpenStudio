@@ -64,36 +64,45 @@ LoadsController::~LoadsController()
 
 void LoadsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  switch(iddObjectType.value()){
-    case IddObjectType::OS_People_Definition:
-      openstudio::model::PeopleDefinition(this->model());
-      break;
-    case IddObjectType::OS_InternalMass_Definition:
-      openstudio::model::InternalMassDefinition(this->model());
-      break;
-    case IddObjectType::OS_Lights_Definition:
-      openstudio::model::LightsDefinition(this->model());
-      break;
-    case IddObjectType::OS_Luminaire_Definition:
-      openstudio::model::LuminaireDefinition(this->model());
-      break;
-    case IddObjectType::OS_ElectricEquipment_Definition:
-      openstudio::model::ElectricEquipmentDefinition(this->model());
-      break;
-    case IddObjectType::OS_GasEquipment_Definition:
-      openstudio::model::GasEquipmentDefinition(this->model());
-      break;
-    case IddObjectType::OS_SteamEquipment_Definition:
-      openstudio::model::SteamEquipmentDefinition(this->model());
-      break;
-    case IddObjectType::OS_OtherEquipment_Definition:
-      openstudio::model::OtherEquipmentDefinition(this->model());
-      break;
-    case IddObjectType::OS_WaterUse_Equipment_Definition:
-      openstudio::model::WaterUseEquipmentDefinition(this->model());
-      break;
-    default:
-      LOG_FREE(Error, "LoadsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
+  if(iddObjectType == IddObjectType::OS_People_Definition)
+  {
+    openstudio::model::PeopleDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_InternalMass_Definition)
+  {
+    openstudio::model::InternalMassDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_Lights_Definition)
+  {
+    openstudio::model::LightsDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_Luminaire_Definition)
+  {
+    openstudio::model::LuminaireDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_ElectricEquipment_Definition)
+  {
+    openstudio::model::ElectricEquipmentDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_GasEquipment_Definition)
+  {
+    openstudio::model::GasEquipmentDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_SteamEquipment_Definition)
+  {
+    openstudio::model::SteamEquipmentDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_OtherEquipment_Definition)
+  {
+    openstudio::model::OtherEquipmentDefinition(this->model());
+  }
+  else if(iddObjectType == IddObjectType::OS_WaterUse_Equipment_Definition)
+  {
+    openstudio::model::WaterUseEquipmentDefinition(this->model());
+  }
+  else
+  {
+    LOG_FREE(Error, "LoadsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
   }
 }
 

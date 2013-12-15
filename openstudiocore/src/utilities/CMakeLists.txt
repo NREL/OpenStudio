@@ -305,10 +305,11 @@ FOREACH( f IN LISTS idf_moc )
   ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${f} ${CMAKE_CURRENT_BINARY_DIR}/${fxx} 
     DEPENDS
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx 
+    #${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx
+    #${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx
+    #${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx
+    #${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx 
+    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory_done.stamp
     ${CMAKE_CURRENT_SOURCE_DIR}/${f}
   )
 ENDFOREACH()

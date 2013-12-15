@@ -36,7 +36,7 @@ BuildingStoriesController::BuildingStoriesController(const model::Model& model)
 
 void BuildingStoriesController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  OS_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
+  OS_ASSERT(model::BuildingStory::iddObjectType() == iddObjectType);
   openstudio::model::BuildingStory(this->model());
 }
 

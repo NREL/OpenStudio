@@ -170,37 +170,6 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
   SET( ${exportname} "${RequiredHeaders}")
   SET( ${exportname} "${RequiredHeaders}"  PARENT_SCOPE)
 
-  IF(NOT TARGET ${PARENT_TARGET}_GeneratedHeaders)
-    # Add a command to generate the generated headers discovered at this point.
-    ADD_CUSTOM_COMMAND(
-      OUTPUT "${CMAKE_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
-      COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
-
-      DEPENDS ${GeneratedHeaders}
-    ) 
-
-    # And a target that calls the above command
-    ADD_CUSTOM_TARGET(${PARENT_TARGET}_GeneratedHeaders
-      SOURCES "${CMAKE_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
-      )
-
-    # Now we say that our PARENT_TARGET depends on this new GeneratedHeaders
-    # target. This is where the magic happens. By making both the parent
-    # and this *_swig.cxx files below rely on this new target we force all
-    # of the generated files to be generated before either the
-    # PARENT_TARGET is built or the cxx files are generated. This solves the problems with
-    # parallel builds trying to generate the same file multiple times while still
-    # allowing files to compile in parallel
-    ADD_DEPENDENCIES(${PARENT_TARGET} ${PARENT_TARGET}_GeneratedHeaders)
-  ENDIF()
-
-  ##
-  ## Finish requirements gathering
-  ##
-
-
-
-
   
   INCLUDE_DIRECTORIES( ${RUBY_INCLUDE_DIRS} )
 
@@ -238,8 +207,8 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
   ENDIF()
 
   SET(this_depends ${ParentSWIGWrappers})
-  LIST(APPEND this_depends ${PARENT_TARGET}_GeneratedHeaders)
   LIST(APPEND this_depends ${RequiredHeaders})
+  LIST(APPEND this_depends ${GeneratedHeaders})
   LIST(REMOVE_DUPLICATES this_depends)
   SET(${NAME}_SWIG_Depends "${this_depends}")
   SET(${NAME}_SWIG_Depends "${this_depends}" PARENT_SCOPE)

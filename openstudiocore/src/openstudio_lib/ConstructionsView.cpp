@@ -85,25 +85,29 @@ void ConstructionsInspectorView::onUpdate()
 
 void ConstructionsInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
-  switch( modelObject.iddObjectType().value() )
+  if( modelObject.iddObjectType() == IddObjectType::OS_Construction )
   {
-    case IddObjectType::OS_Construction:
-      this->showConstructionInspector(modelObject);
-      break;
-    case IddObjectType::OS_Construction_CfactorUndergroundWall:
-      this->showCfactorUndergroundWallInspector(modelObject);
-      break;
-    case IddObjectType::OS_Construction_FfactorGroundFloor:
-      this->showFfactorGroundFloorInspector(modelObject);
-      break;
-    case IddObjectType::OS_Construction_InternalSource:
-      this->showInternalSourceInspector(modelObject);
-      break;
-    case IddObjectType::OS_Construction_WindowDataFile:
-      this->showWindowDataFileInspector(modelObject);
-      break;
-    default:
-      showDefaultView();      
+    this->showConstructionInspector(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Construction_CfactorUndergroundWall )
+  {
+    this->showCfactorUndergroundWallInspector(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Construction_FfactorGroundFloor )
+  {
+    this->showFfactorGroundFloorInspector(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Construction_InternalSource )
+  {
+    this->showInternalSourceInspector(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Construction_WindowDataFile )
+  {
+    this->showWindowDataFileInspector(modelObject);
+  }
+  else
+  {
+    showDefaultView();      
   }
 }
 

@@ -49,24 +49,29 @@ ConstructionsController::~ConstructionsController()
 
 void ConstructionsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  switch(iddObjectType.value()){
-    case IddObjectType::OS_Construction:
-      openstudio::model::Construction(this->model());
-      break;
-    case IddObjectType::OS_Construction_InternalSource:
-      openstudio::model::ConstructionWithInternalSource(this->model());
-      break;
-    case IddObjectType::OS_Construction_CfactorUndergroundWall:
-      openstudio::model::CFactorUndergroundWallConstruction(this->model());
-      break;
-    case IddObjectType::OS_Construction_FfactorGroundFloor:
-      openstudio::model::FFactorGroundFloorConstruction(this->model());
-      break;
-    case IddObjectType::OS_Construction_WindowDataFile:
-      openstudio::model::WindowDataFile(this->model());
-      break;
-    default:
-      LOG_FREE_AND_THROW("ConstructionsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
+  if( iddObjectType == IddObjectType::OS_Construction )
+  {
+    openstudio::model::Construction(this->model());
+  }
+  else if( iddObjectType == IddObjectType::OS_Construction_InternalSource )
+  {
+    openstudio::model::ConstructionWithInternalSource(this->model());
+  }
+  else if( iddObjectType == IddObjectType::OS_Construction_CfactorUndergroundWall )
+  {
+    openstudio::model::CFactorUndergroundWallConstruction(this->model());
+  }
+  else if( iddObjectType == IddObjectType::OS_Construction_FfactorGroundFloor )
+  {
+    openstudio::model::FFactorGroundFloorConstruction(this->model());
+  }
+  else if( iddObjectType == IddObjectType::OS_Construction_WindowDataFile )
+  {
+    openstudio::model::WindowDataFile(this->model());
+  }
+  else 
+  {
+    LOG_FREE_AND_THROW("ConstructionsController", "Unknown IddObjectType '" << iddObjectType.valueName() << "'");
   }
 }
 

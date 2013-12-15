@@ -67,7 +67,7 @@ class UTILITIES_API IddFileAndFactoryWrapper {
   std::vector<IddObject> getObjectsInGroup(const std::string& group) const;
 
   /** Get the IddObjects that match objectRegex. */
-  std::vector<IddObject> getObjects(const boost::regex& objectRegex) const;
+  //std::vector<IddObject> getObjects(const boost::regex& objectRegex) const;
 
   /** If possible, returns the version IddObject for this IddFile. */
   boost::optional<IddObject> versionObject() const;

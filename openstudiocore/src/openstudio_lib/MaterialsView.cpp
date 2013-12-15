@@ -129,55 +129,69 @@ void MaterialsInspectorView::onUpdate()
 
 void MaterialsInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
-  switch( modelObject.iddObjectType().value() )
+  if( modelObject.iddObjectType() == IddObjectType::OS_Material)
   {
-  case IddObjectType::OS_Material:
-      this->showMaterialInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_Material_AirGap:
-      this->showMaterialAirGapInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_Material_AirWall:
-      this->showMaterialAirWallInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_Material_InfraredTransparent:
-      this->showMaterialInfraredTransparentInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_Material_NoMass:
-      this->showMaterialNoMassInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_Material_RoofVegetation:
-      this->showMaterialRoofVegetationInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_Blind:
-      this->showWindowMaterialBlindInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_Gas:
-      this->showWindowMaterialGasInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_GasMixture:
-      this->showWindowMaterialGasMixtureInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_Glazing:
-      this->showWindowMaterialGlazingInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod:
-      this->showWindowMaterialGlazingRefractionExtinctionMethodInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic:
-      this->showWindowMaterialGlazingGroupThermochromicInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_Screen:
-      this->showWindowMaterialScreenInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_Shade:
-      this->showWindowMaterialShadeInspectorView(modelObject);
-      break;
-    case IddObjectType::OS_WindowMaterial_SimpleGlazingSystem:
-      this->showWindowMaterialSimpleGlazingSystemInspectorView(modelObject);
-      break;      
-    default:
-      showDefaultView();      
+    this->showMaterialInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Material_AirGap)
+  {
+    this->showMaterialAirGapInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Material_AirWall)
+  {
+    this->showMaterialAirWallInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Material_InfraredTransparent)
+  {
+    this->showMaterialInfraredTransparentInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Material_NoMass)
+  {
+    this->showMaterialNoMassInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_Material_RoofVegetation)
+  {
+    this->showMaterialRoofVegetationInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_Blind)
+  {
+    this->showWindowMaterialBlindInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_Gas)
+  {
+    this->showWindowMaterialGasInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_GasMixture)
+  {
+    this->showWindowMaterialGasMixtureInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_Glazing)
+  {
+    this->showWindowMaterialGlazingInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod)
+  {
+    this->showWindowMaterialGlazingRefractionExtinctionMethodInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic)
+  {
+    this->showWindowMaterialGlazingGroupThermochromicInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_Screen)
+  {
+    this->showWindowMaterialScreenInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_Shade)
+  {
+    this->showWindowMaterialShadeInspectorView(modelObject);
+  }
+  else if( modelObject.iddObjectType() == IddObjectType::OS_WindowMaterial_SimpleGlazingSystem)
+  {
+    this->showWindowMaterialSimpleGlazingSystemInspectorView(modelObject);
+  }
+  else
+  { 
+    showDefaultView();      
   }
 }
 

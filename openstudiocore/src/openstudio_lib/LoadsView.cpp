@@ -97,37 +97,45 @@ void LoadsInspectorView::onClearSelection()
 
 void LoadsInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
-  switch( modelObject.iddObjectType().value() )
+  if(modelObject.iddObjectType() == IddObjectType::OS_People_Definition)
   {
-    case IddObjectType::OS_People_Definition:
-      this->showPeopleDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_Lights_Definition:
-      this->showLightsDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_Luminaire_Definition:
-      this->showLuminaireDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_ElectricEquipment_Definition:
-      this->showElectricEquipmentDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_GasEquipment_Definition:
-      this->showGasEquipmentDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_SteamEquipment_Definition:
-      this->showSteamEquipmentDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_OtherEquipment_Definition:
-      this->showOtherEquipmentDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_InternalMass_Definition:
-      this->showInternalMassDefinitionsInspector(modelObject);
-      break;
-    case IddObjectType::OS_WaterUse_Equipment_Definition:
-      this->showWaterUseEquipmentDefinitionsInspector(modelObject);
-      break;
-    default:
-      showDefaultView();      
+    this->showPeopleDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_Lights_Definition)
+  {
+    this->showLightsDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_Luminaire_Definition)
+  {
+    this->showLuminaireDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_ElectricEquipment_Definition)
+  {
+    this->showElectricEquipmentDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_GasEquipment_Definition)
+  {
+    this->showGasEquipmentDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_SteamEquipment_Definition)
+  {
+    this->showSteamEquipmentDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_OtherEquipment_Definition)
+  {
+    this->showOtherEquipmentDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_InternalMass_Definition)
+  {
+    this->showInternalMassDefinitionsInspector(modelObject);
+  }
+  else if(modelObject.iddObjectType() == IddObjectType::OS_WaterUse_Equipment_Definition)
+  {
+    this->showWaterUseEquipmentDefinitionsInspector(modelObject);
+  }
+  else
+  {
+    showDefaultView();      
   }
 }
 

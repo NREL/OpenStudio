@@ -187,7 +187,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
       << std::endl
       << "  static IddObject object;" << std::endl
       << std::endl
-      << "  if (object.type() == IddObjectType::Catchall) {" << std::endl
+      << "  if (object.type() == iddobjectname::Catchall) {" << std::endl
       << "    std::stringstream ss;" << std::endl
       << "    ss << \"" << m_readyLineForOutput(line) << "\\n\";";
 
@@ -204,7 +204,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
         cxxFile->tempFile
           << std::endl
           << std::endl
-          << "    IddObjectType objType(IddObjectType::" << objectName.first << ");" << std::endl
+          << "    IddObjectType objType(\"" << objectName.second << "\");" << std::endl
           << "    OptionalIddObject oObj = IddObject::load(\"" << objectName.second << "\"," << std::endl
           << "                                             \"" << group << "\"," << std::endl
           << "                                             ss.str()," << std::endl
@@ -213,7 +213,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
           << "    object = *oObj;" << std::endl
           << "  }" << std::endl
           << std::endl
-          << "  OS_ASSERT(object.type() == IddObjectType::" << objectName.first << ");" << std::endl
+          << "  OS_ASSERT(object.type() == \"" << objectName.second << "\");" << std::endl
           << "  return object;" << std::endl
           << "}" << std::endl;
 
@@ -290,6 +290,14 @@ void IddFileFactoryData::parseFile(const path& outPath,
 
           fieldEnumHxx.tempFile
             << std::endl
+            << "namespace iddobjectname {" << std::endl
+            << std::endl
+            << "  const std::string " << objectName.first <<  " = \"" << objectName.second << "\";" << std::endl
+            << std::endl
+            << "}" << std::endl
+            //<< std::endl
+            //<< "#define " << "IddObjectType::" << objectName.first << " IddObjectType(\"" << objectName.second << "\")" << std::endl
+            //<< std::endl
             << "} // openstudio" << std::endl
             << std::endl
             << "#endif // UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << std::endl;
@@ -361,8 +369,8 @@ void IddFileFactoryData::parseFile(const path& outPath,
     << "void IddFactorySingleton::register" << fileName() << "ObjectsInCallbackMap() {" << std::endl;
   BOOST_FOREACH(const StringPair& objectName, objectNames()) {
     cxxFile->tempFile
-      << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType::" 
-      << objectName.first << ",create" << objectName.first << "IddObject));" << std::endl;
+      << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType(\"" 
+      << objectName.second << "\"),create" << objectName.first << "IddObject));" << std::endl;
   }
   cxxFile->tempFile
     << "}" << std::endl

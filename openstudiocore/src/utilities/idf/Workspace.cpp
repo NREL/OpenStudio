@@ -300,10 +300,10 @@ namespace detail {
     OptionalWorkspaceObject result;
     WorkspaceObjectVector candidates;
     if (iddFileType() == IddFileType::EnergyPlus) {
-      candidates = getObjectsByType(IddObjectType(IddObjectType::Version));
+      candidates = getObjectsByType(IddObjectType("Version"));
     }
     else if (iddFileType() == IddFileType::OpenStudio) {
-      candidates = getObjectsByType(IddObjectType(IddObjectType::OS_Version));
+      candidates = getObjectsByType(IddObjectType("OS:Version"));
     }
     else if (OptionalIddObject versionIdd = m_iddFileAndFactoryWrapper.versionObject()){
       candidates = getObjectsByType(*versionIdd);

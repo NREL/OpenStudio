@@ -114,7 +114,7 @@ bool InspectorDialog::setIddObjectType(const openstudio::IddObjectType& iddObjec
       continue;
     }
 
-    if (data.toInt() == iddObjectType.value()){
+    if (data.toString().toStdString() == iddObjectType.valueName()){
       //select this row
       m_listWidget->setCurrentRow(i);
       break;
@@ -418,7 +418,7 @@ void InspectorDialog::onListWidgetSelectionChanged()
 
     QVariant data = selectedItems.at(0)->data(Qt::UserRole);
     if (data.isValid()){
-      IddObjectType iddObjectType(data.toInt());
+      IddObjectType iddObjectType(data.toString().toStdString());
       setIddObjectType(iddObjectType);
     }
 
@@ -1085,7 +1085,7 @@ void InspectorDialog::loadListWidgetData()
       listItem = new QListWidgetItem();
       listItem->setText(text);
       listItem->setFlags(Qt::NoItemFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-      listItem->setData(Qt::UserRole, type.value());
+      listItem->setData(Qt::UserRole, QString::fromStdString(type.valueName()));
 
       if (alternate){
         listItem->setBackground(itemAlternateBackground);
@@ -1110,7 +1110,7 @@ void InspectorDialog::updateListWidgetData()
       continue;
     }
 
-    IddObjectType type(data.toInt());
+    IddObjectType type(data.toString().toStdString());
     unsigned numObjects = m_model.numObjectsOfType(type);
 
     QString text(type.valueDescription().c_str());

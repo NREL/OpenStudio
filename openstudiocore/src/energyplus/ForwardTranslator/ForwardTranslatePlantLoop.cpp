@@ -40,8 +40,22 @@
 #include <model/WaterToWaterComponent_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/BoilerHotWater.hpp>
+#include <model/BoilerHotWater_Impl.hpp>
+#include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerSingleSpeed_Impl.hpp>
+#include <model/CoolingTowerVariableSpeed.hpp>
+#include <model/CoolingTowerVariableSpeed_Impl.hpp>
+#include <model/ChillerElectricEIR.hpp>
+#include <model/ChillerElectricEIR_Impl.hpp>
 #include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingCooledBeam_Impl.hpp>
+#include <model/DistrictHeating.hpp>
+#include <model/DistrictHeating_Impl.hpp>
+#include <model/DistrictCooling.hpp>
+#include <model/DistrictCooling_Impl.hpp>
+#include <model/WaterHeaterMixed.hpp>
+#include <model/WaterHeaterMixed_Impl.hpp>
 #include <model/StraightComponent.hpp>
 #include <model/StraightComponent_Impl.hpp>
 #include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
@@ -361,49 +375,35 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
        it < supplyComponents.end();
        it++ )
   {
-    switch(it->iddObject().type().value())
+    if( it->iddObject().type() == BoilerHotWater::iddObjectType() )
     {
-      case openstudio::IddObjectType::OS_Boiler_HotWater :
-      {
-        heatingComponents.push_back(*it);
-        break;
-      }
-      case openstudio::IddObjectType::OS_WaterHeater_Mixed :
-      {
-        heatingComponents.push_back(*it);
-        break;
-      }
-      case openstudio::IddObjectType::OS_DistrictHeating :
-      {
-        heatingComponents.push_back(*it);
-        break;
-      }      
-      case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
-      {
-        coolingComponents.push_back(*it);
-        break;
-      }
-      case openstudio::IddObjectType::OS_DistrictCooling :
-      {
-        coolingComponents.push_back(*it);
-        break;
-      }      
-      case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
-      {
-        condenserComponents.push_back(*it);
-        coolingComponents.push_back(*it);
-        break;
-      }
-      case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
-      {
-        condenserComponents.push_back(*it);
-        coolingComponents.push_back(*it);
-        break;
-      }
-      default:
-      {
-        break;
-      }
+      heatingComponents.push_back(*it);
+    }
+    else if( it->iddObject().type() ==  WaterHeaterMixed::iddObjectType() )
+    {
+      heatingComponents.push_back(*it);
+    }
+    else if( it->iddObject().type() ==  DistrictHeating::iddObjectType() )
+    {
+      heatingComponents.push_back(*it);
+    }      
+    else if( it->iddObject().type() ==  ChillerElectricEIR::iddObjectType() )
+    {
+      coolingComponents.push_back(*it);
+    }
+    else if( it->iddObject().type() ==  DistrictCooling::iddObjectType() )
+    {
+      coolingComponents.push_back(*it);
+    }      
+    else if( it->iddObject().type() ==  CoolingTowerSingleSpeed::iddObjectType() )
+    {
+      condenserComponents.push_back(*it);
+      coolingComponents.push_back(*it);
+    }
+    else if( it->iddObject().type() ==  CoolingTowerVariableSpeed::iddObjectType() )
+    {
+      condenserComponents.push_back(*it);
+      coolingComponents.push_back(*it);
     }
   }
 
