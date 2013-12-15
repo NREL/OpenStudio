@@ -65,6 +65,8 @@ class ResultsView : public PatMainTabView
 
   signals: 
 
+    void viewSelected(int);
+
     void openButtonClicked(bool clicked);
 
     void openDirButtonClicked(bool clicked);

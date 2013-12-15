@@ -152,6 +152,8 @@ class OSItemSelectionController : public QObject
 
   void selectAllItems();
 
+  void emitSelectionChanged();
+
   signals:
 
   void selectionChanged(std::vector<QPointer<OSListItem> > selectedItems);
