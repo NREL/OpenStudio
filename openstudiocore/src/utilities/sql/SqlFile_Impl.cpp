@@ -51,7 +51,7 @@ namespace openstudio{
     }
 
     SqlFile_Impl::SqlFile_Impl(const openstudio::path& path)
-      : m_path(path), m_connectionOpen(false)
+      : m_path(path), m_connectionOpen(false), m_supportedVersion(false)
     {
       reopen();
     }
@@ -393,7 +393,8 @@ namespace openstudio{
       try{
         close();
         init(m_path);
-      }catch(const std::exception&){
+      }catch(const std::exception&e){
+        LOG(Error, "Exception while opening database: " << e.what());
         result = false;
       }
       return result;
@@ -426,6 +427,11 @@ namespace openstudio{
       }
     }
 
+    bool SqlFile_Impl::isSupportedVersion() const
+    {
+      return m_supportedVersion;
+    }
+
     bool SqlFile_Impl::isValidConnection()
     {
       int code = -1;
@@ -434,6 +440,7 @@ namespace openstudio{
         sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%'",-1,&sqlStmtPtr,NULL);
         code = sqlite3_step(sqlStmtPtr);
         sqlite3_finalize(sqlStmtPtr);
+        m_supportedVersion = true;
 
         // use this code block to try to support EnergyPlus versions before they are released
         if (code != SQLITE_ROW){
@@ -441,6 +448,16 @@ namespace openstudio{
           sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.1%'",-1,&sqlStmtPtr,NULL);
           code = sqlite3_step(sqlStmtPtr);
           sqlite3_finalize(sqlStmtPtr);
+          m_supportedVersion = false;
+        }
+
+        // use this code block to try to support EnergyPlus versions before they are released
+        if (code != SQLITE_ROW){
+          LOG(Warn, "Trying unsupported EnergyPlus version 6.0");
+          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%6.0%'",-1,&sqlStmtPtr,NULL);
+          code = sqlite3_step(sqlStmtPtr);
+          sqlite3_finalize(sqlStmtPtr);
+          m_supportedVersion = false;
         }
       }
       return (code == SQLITE_ROW);
