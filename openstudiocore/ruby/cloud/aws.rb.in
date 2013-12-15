@@ -344,7 +344,7 @@ def download_file(host, remote_path, local_path)
 end
 
 begin
-  @logger = Logger.new("aws.log")
+  @logger = Logger.new(File.expand_path("~/.aws.log"))
   @logger.info("initialized")
   case ARGV[4]
     when 'describe_availability_zones'

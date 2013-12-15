@@ -61,6 +61,8 @@ class ResultsTabController : public QObject
 
     void downloadResults();
 
+    void dataPointDetailsComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
     void enableDownloadResultsButton();
 
     void enableViewFileButton();

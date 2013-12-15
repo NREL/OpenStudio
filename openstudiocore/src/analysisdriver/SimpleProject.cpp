@@ -672,6 +672,16 @@ namespace detail {
       return result;
     }
 
+    // is not osm that made this osp
+    openstudio::path osmForThisOsp = projectDir().parent_path() / toPath(projectDir().stem());
+    osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
+    if (currentSeedLocation.path() == osmForThisOsp) {
+      LOG(Warn,"Cannot set seed to " << toString(currentSeedLocation.path()) <<
+          ", because this OSP file was created by that OSM. Saving this project elsewhere "
+          << "before setting the baseline to that file will break the circular reference.");
+      return result;
+    } 
+
     // compatible with analysis?
     bool ok = analysis().setSeed(currentSeedLocation);
     if (!ok) {

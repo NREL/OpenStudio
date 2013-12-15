@@ -473,6 +473,10 @@ namespace detail {
     {
       isAllowedType = true;
     }
+    else if( hvacComponent.iddObjectType() == IddObjectType::OS_Fan_OnOff )
+    {
+      isAllowedType = true;
+    }
 
     if( isAllowedType )
     {

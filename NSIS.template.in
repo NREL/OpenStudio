@@ -35,6 +35,17 @@
   Name "@CPACK_NSIS_PACKAGE_NAME@"
   OutFile "@CPACK_TOPLEVEL_DIRECTORY@/@CPACK_OUTPUT_FILE_NAME@"
 
+  VIProductVersion "@CPACK_PACKAGE_VERSION@.0"
+  VIAddVersionKey ProductName "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
+  VIAddVersionKey CompanyName "NREL"
+  VIAddVersionKey LegalCopyright "Copyright (c) 2013 National Renewable Energy Laboratory"
+  VIAddVersionKey FileDescription "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
+  VIAddVersionKey FileVersion "@CPACK_PACKAGE_VERSION@"
+  VIAddVersionKey ProductVersion "@CPACK_PACKAGE_VERSION@"
+  VIAddVersionKey InternalName "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
+  VIAddVersionKey LegalTrademarks "OpenStudio (TM) is a trademark of NREL"
+  VIAddVersionKey OriginalFilename "@CPACK_OUTPUT_FILE_NAME@"
+
   ;Set compression
   SetCompressor @CPACK_NSIS_COMPRESSOR@
 

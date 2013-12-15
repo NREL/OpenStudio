@@ -32,6 +32,16 @@ class QTimer;
 
 namespace openstudio {
 
+class ZoomOutButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  ZoomOutButton(QWidget * parent = 0);
+  virtual ~ZoomOutButton() {}
+};
+
 class OrangeButton : public QPushButton
 {
   Q_OBJECT

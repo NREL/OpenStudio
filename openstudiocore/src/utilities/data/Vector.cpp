@@ -41,6 +41,15 @@ namespace openstudio{
     return result;
   }
 
+  Vector createVector(const std::vector<long>& values) {
+    unsigned n = values.size();
+    Vector result(n);
+    for (unsigned i = 0; i < n; ++i) {
+      result[i] = (double)(values[i]);
+    }
+    return result;
+  }
+
   std::vector<double> toStandardVector(const Vector& values) {
     unsigned n = values.size();
     std::vector<double> result(n);

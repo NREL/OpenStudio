@@ -227,8 +227,10 @@ namespace model {
           MaterialVector layers = construction.layers();
           OS_ASSERT(layers.size() == 1u);
           result = layers[0].optionalCast<AirWallMaterial>();
-        }
-        else {
+        }else if (construction.numLayers() == 0) {
+          LOG(Error, "Air wall detected with zero layers, classifying as air wall");
+          result = true;
+        }else {
           LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
           result = false;
         }
@@ -277,7 +279,12 @@ namespace model {
         Point3dVector vertices = this->vertices();
         m_cachedOutwardNormal = getOutwardNormal(vertices);
         if(!m_cachedOutwardNormal){
-          LOG_AND_THROW("Cannot compute outward normal for vertices " << vertices);
+          std::string surfaceNameMsg;
+          boost::optional<std::string> name = this->name();
+          if (name){
+            surfaceNameMsg = ", surface name = '" + *name + "'";
+          }
+          LOG_AND_THROW("Cannot compute outward normal for vertices " << vertices << surfaceNameMsg);
         }
       }
       return m_cachedOutwardNormal.get();

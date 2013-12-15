@@ -983,13 +983,12 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
 
     if (!isTestPath)
     {
-      LOG(Trace, "Adding required file from measure: " << openstudio::toString(itr->path()) << " to: " << openstudio::toString(itr->path().filename()));
+      LOG(Trace, "Adding required file from measure: " << openstudio::toString(itr->path()) << " to: " << openstudio::toString(relativePath));
+      addRequiredFile(itr->path(), relativePath);
     } else {
       LOG(Trace, "Skipping test file from measure: " << openstudio::toString(itr->path()));
     }
 
-    // DLM: this does not actually skip the test files?
-    addRequiredFile(itr->path(), itr->path().filename());
   }
 
   FileReferenceType infile = t_measure.inputFileType();

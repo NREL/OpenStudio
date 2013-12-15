@@ -41,6 +41,21 @@ class StartupView : public QWidget
   void paintEvent(QPaintEvent *);
 };
 
+class LoadingProjectView : public QWidget
+{
+  Q_OBJECT
+
+  public:
+
+  LoadingProjectView(QWidget * parent = 0);
+
+  virtual ~LoadingProjectView() {}
+
+  protected:
+
+  void paintEvent(QPaintEvent *);
+};
+
 } // pat
 
 } // openstudio
