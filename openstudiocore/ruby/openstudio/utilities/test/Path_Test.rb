@@ -19,6 +19,8 @@
 
 require 'openstudio'
 
+require 'pathname'
+
 require 'test/unit'
 
 def changeTestPath(p)
@@ -40,14 +42,35 @@ class Path_Test < Test::Unit::TestCase
   end
 
   def test_funcOnlyTakesAPath
+
     p = OpenStudio::Path.new("./here")
-    OpenStudio::funcOnlyTakesAPath(p)
+    q = OpenStudio::funcOnlyTakesAPath(p)
+    assert_equal(p.to_s, q.to_s)
     
-    # would like to be able to call with string and Pathname
-    #s = "./here"
-    #OpenStudio::funcOnlyTakesAPath(s)
-    #p = Pathname.new("./here")
-    #OpenStudio::funcOnlyTakesAPath(p)
+    # would like to be able to call with string
+    s = p.to_s
+    assert_equal(s.class, String)
+    q = OpenStudio::funcOnlyTakesAPath(s)
+    assert_equal(p.to_s, q.to_s)
+    
+    # do we need to be able to handle Pathname too?
+    pn = Pathname.new(p.to_s)
+    #assert_equal(pn.class, Pathname)
+    #q = OpenStudio::funcOnlyTakesAPath(pn)
+    #assert_equal(p.to_s, q.to_s)
+    assert_raise TypeError do
+      OpenStudio::funcOnlyTakesAPath(pn)
+    end
+    
+    # expected failure, pass double
+    assert_raise TypeError do
+      OpenStudio::funcOnlyTakesAPath(7)
+    end
+    
+    # expected failure, pass nil
+    assert_raise ArgumentError do
+      OpenStudio::funcOnlyTakesAPath(nil)
+    end
   end
   
   def test_PathCopy

@@ -169,6 +169,7 @@ namespace openstudio {
       return toString(*self);
     }
   
+  
     #ifdef SWIGRUBY
       #ifdef _WINDOWS
         // constructor from std::string 
@@ -176,26 +177,58 @@ namespace openstudio {
           path *p;
           p = new path(toPath(s));
           return p;
-        }
+        }      
       #endif
     #endif
+    
  
-#ifdef SWIGJAVASCRIPT
-    path append(const path &other) const {
-      return (*self) / other;
-    }
+    #ifdef SWIGJAVASCRIPT
+        path append(const path &other) const {
+          return (*self) / other;
+        }
 
-#ifdef _WINDOWS
-    // constructor from std::string 
-    path(const std::string& s){
-      path *p;
-      p = new path(toPath(s));
-      return p;
-    }
-#endif
-
-#endif 
+      #ifdef _WINDOWS
+          // constructor from std::string 
+          path(const std::string& s){
+            path *p;
+            p = new path(toPath(s));
+            return p;
+          }
+      #endif
+    #endif 
   };
+  
+  #ifdef SWIGRUBY
+    %typemap(in) const path& {
+      $1=NULL;
+
+      // check if input is a path already
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr($input, &vptr, SWIGTYPE_p_openstudio__path, 0);
+      if (SWIG_IsOK(res)) {
+        if (vptr) {
+          // make a new copy, freearg typemap will call delete on this below
+          openstudio::path * p = reinterpret_cast< openstudio::path * >(vptr);
+          $1 = (openstudio::path *)new openstudio::path(*(openstudio::path const *)p);        
+        }else{
+          SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "openstudio::path const &", "$symname", 1, $input)); 
+        }
+      } else if (TYPE($input) == T_STRING) {
+        // otherwise, if a string
+        Check_Type($input, T_STRING);
+        std::string s(STR2CSTR($input));
+        $1 = new openstudio::path(openstudio::toPath(s));
+      } else {
+        SWIG_exception_fail(SWIG_ArgError(res), Ruby_Format_TypeError( "", "openstudio::path const &", "$symname", 1, $input)); 
+      }
+    }
+
+    %typemap(freearg) const path& {
+      if ($1){
+        delete $1;
+      }
+    }
+  #endif
   
 } // openstudio
 
@@ -205,9 +238,13 @@ namespace openstudio {
 
 // DLM@20100101: demo purposes only, should be able to automatically convert a string input, delete when working
 %{
-  void funcOnlyTakesAPath(const openstudio::path& p){}
+  openstudio::path funcOnlyTakesAPath(const openstudio::path& p)
+  {
+    openstudio::path copy(p);
+    return copy;
+  }
 %}
-void funcOnlyTakesAPath(const openstudio::path& p);
+openstudio::path funcOnlyTakesAPath(const openstudio::path& p);
 
 
 #endif // UTILITIES_CORE_PATH_I
