@@ -530,15 +530,23 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
   }
 
-  value = htgSupAirTempElement.text().toDouble(&ok);
-
-  if( ok )
+  if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+      istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
   {
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(airLoopHVAC.sizingSystem().centralCoolingDesignSupplyAirTemperature());
   }
   else
   {
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+    value = htgSupAirTempElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+    }
+    else
+    {
+      airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+    }
   }
 
   // Air Segments
@@ -3120,22 +3128,33 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setMaximumAirFlowRate(primaryAirFlow.get());
     }
 
-    if( primaryAirFlowMin )
-    {
-      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
-
-      terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
-    }
-    else
+    if( (istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+         istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString())) && autosize() )
     {
       terminal.setZoneMinimumAirFlowMethod("Constant");
 
-      terminal.setConstantMinimumAirFlowFraction(0.2);
+      terminal.setConstantMinimumAirFlowFraction(0.5);
+    }
+    else
+    {
+      if( primaryAirFlowMin )
+      {
+        terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+
+        terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
+      }
+      else
+      {
+        terminal.setZoneMinimumAirFlowMethod("Constant");
+
+        terminal.setConstantMinimumAirFlowFraction(0.2);
+      }
     }
 
     // ReheatCtrlMthd
     QDomElement reheatCtrlMthdElement = trmlUnitElement.firstChildElement("ReheatCtrlMthd");
-    if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") )
+    if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") &&
+        coil->optionalCast<model::CoilHeatingWater>() )
     {
       terminal.setDamperHeatingAction("Reverse");
     }
