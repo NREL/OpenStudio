@@ -44,6 +44,9 @@ namespace resultsviewer{
     if (isFileOpen(sqlFile)) return RVD_FILEALREADYOPENED;
 
     m_sqlFileMap[sqlFile] = alias;
+
+    if (!sqlFile.supportedVersion()) return RVD_UNSUPPORTEDVERSION;
+
     return RVD_SUCCESS;
   }
 

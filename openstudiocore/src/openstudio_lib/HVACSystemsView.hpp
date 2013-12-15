@@ -56,61 +56,9 @@ class HVACSystemsView : public QWidget
 
   QSize sizeHint() const;
 
-  model::OptionalModel model() const;
-
-  OSComboBox * chooser() const;
-
-  void configureHeaderForNavigating();
-
-  void configureHeaderWithText(const QString & text);
-
-  void enableDeleteButton(bool enable);
-
-  signals:
-
-  void zoomInClicked();
-
-  void zoomOutClicked();
-
-  void addSystemClicked();
-
-  void removeClicked();
-
   protected:
 
   void paintEvent(QPaintEvent * event);
-
-  private:
-
-  model::OptionalModel m_model;
-
-  QWidget * m_loopNavigatorWidget;
-
-  OSComboBox * m_chooser; 
-
-  QPushButton * m_deleteButton;
-
-  QPushButton * m_addButton;
-
-  QPushButton * m_zoomInButton;
-
-  QPushButton * m_zoomOutButton;
-
-  HVACGraphicsView * m_hvacGraphicsView;
-
-  QStackedWidget * m_navigatorStack;
-
-  QLabel * m_text;
-
-  QWidget * m_controlsWidget;
-
-  QPushButton * m_topologyViewButton;
-
-  QPushButton * m_controlsViewButton;
-
-  QStackedWidget * m_viewStack;
-
-  HVACControlsView * m_hvacControlsView;
 };
 
 class HVACToolbarView : public QWidget

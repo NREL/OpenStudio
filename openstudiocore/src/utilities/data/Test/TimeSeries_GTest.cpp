@@ -85,12 +85,20 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor)
   EXPECT_EQ(-99, timeSeries1.value(startDateTime + Time(0,0,-61,0))); // out of range
   EXPECT_EQ(-99, timeSeries1.value(startDateTime + Time(0,0,-60,0))); // out of range
   EXPECT_EQ(0, timeSeries1.value(startDateTime + Time(0,0,-59,0))); // in range
+  EXPECT_EQ(0, timeSeries1.value(startDateTime)); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,59,0))); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,60,0))); // in range
+  EXPECT_EQ(2, timeSeries1.value(startDateTime + Time(0,0,61,0))); // in range
   EXPECT_EQ(2, timeSeries1.value(endDateTime)); // in range
   EXPECT_EQ(-99, timeSeries1.value(endDateTime + Time(0,1,0,0))); // out of range
 
   EXPECT_EQ(-99, timeSeries2.value(startDateTime + Time(0,0,-61,0))); // out of range
   EXPECT_EQ(-99, timeSeries2.value(startDateTime + Time(0,0,-60,0))); // out of range
   EXPECT_EQ(0, timeSeries2.value(startDateTime + Time(0,0,-59,0))); // in range
+  EXPECT_EQ(0, timeSeries1.value(startDateTime)); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,59,0))); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,60,0))); // in range
+  EXPECT_EQ(2, timeSeries1.value(startDateTime + Time(0,0,61,0))); // in range
   EXPECT_EQ(2, timeSeries2.value(endDateTime)); // in range
   EXPECT_EQ(-99, timeSeries2.value(endDateTime + Time(0,1,0,0))); // out of range
 

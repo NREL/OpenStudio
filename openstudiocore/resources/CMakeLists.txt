@@ -599,3 +599,22 @@ ADD_CUSTOM_TARGET( openstudio_isomodel_resources
 )
 
 CREATE_SRC_GROUPS( "${isomodel_resources_src}" )
+########################################################
+# CONTAM resources
+# clear runs, calls to RUN_ENERGYPLUS will populate this
+SET(ENERGYPLUS_OUTPUTS "")
+
+SET(contam_resources_src
+  contam/CONTAMTemplate.osm
+)
+
+# update the resources
+UPDATE_RESOURCES("${contam_resources_src}")
+
+# add target
+ADD_CUSTOM_TARGET( openstudio_contam_resources
+  DEPENDS ${contam_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${contam_resources_src}
+)
+
+CREATE_SRC_GROUPS( "${contam_resources_src}" )

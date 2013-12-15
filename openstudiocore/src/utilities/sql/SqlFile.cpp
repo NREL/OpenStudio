@@ -1791,4 +1791,13 @@ Table monthlyEndUsesTable(const SqlFile& sqlFile,const EndUseFuelType& fuelType,
   return result;
 }
 
+bool SqlFile::supportedVersion() const
+{
+  if (m_impl){
+    return m_impl->isSupportedVersion();
+  }
+
+  return false;
+}
+
 } // openstudio

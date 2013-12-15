@@ -2558,7 +2558,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     double x = footToMeter*daylighting1CoordElements.at(0).toElement().text().toDouble();
     double y = footToMeter*daylighting1CoordElements.at(1).toElement().text().toDouble();
     double z = footToMeter*daylighting1CoordElements.at(2).toElement().text().toDouble();
-    double setpoint = footCandleToLux*daylighting1SetpointElement.text().toDouble();
+    
+    // DLM: units in SDD are in lux
+    //double setpoint = footCandleToLux*daylighting1SetpointElement.text().toDouble();
+    double setpoint = daylighting1SetpointElement.text().toDouble();
     double fraction = daylighting1FractionElement.text().toDouble();
 
     daylightingControl1 = model::DaylightingControl(model);
@@ -2634,7 +2637,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       double x = footToMeter*daylighting2CoordElements.at(0).toElement().text().toDouble();
       double y = footToMeter*daylighting2CoordElements.at(1).toElement().text().toDouble();
       double z = footToMeter*daylighting2CoordElements.at(2).toElement().text().toDouble();
-      double setpoint = footCandleToLux*daylighting2SetpointElement.text().toDouble();
+
+      // DLM: units in SDD are in lux
+      //double setpoint = footCandleToLux*daylighting2SetpointElement.text().toDouble();
+      double setpoint = daylighting2SetpointElement.text().toDouble();
       double fraction = daylighting2FractionElement.text().toDouble();
 
       daylightingControl2 = model::DaylightingControl(model);

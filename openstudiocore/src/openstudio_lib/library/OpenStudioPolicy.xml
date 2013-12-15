@@ -11,6 +11,14 @@
     <rule IddField="Nominal Capacity" Access="HIDDEN"/>
     <rule IddField="Free Convection Capacity" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_CoolingTower_VariableSpeed">
+    <rule IddField="Water Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Model Coefficient" Access="LOCKED"/>
+    <rule IddField="Fan Power Ratio Function of Air Flow Rate Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Supply Water Storage Tank" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_GroundHeatExchanger_Vertical">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
@@ -493,5 +501,31 @@
     <rule IddField="Supply Air Outlet Node" Access="HIDDEN"/>
     <rule IddField="Exhaust Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Exhaust Air Outlet Node" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_System">
+    <rule IddField="Refrigeration TransferLoad List Name" Access="HIDDEN"/>
+    <rule IddField="Refrigeration Condenser Name" Access="HIDDEN"/>
+    <rule IddField="CompressorList Name" Access="HIDDEN"/>
+    <rule IddField="Mechanical Subcooler Name" Access="HIDDEN"/>
+    <rule IddField="Liquid Suction Heat Exchanger Subcooler Name" Access="HIDDEN"/>
+    <rule IddField="Intercooler Type" Access="HIDDEN"/>
+    <rule IddField="High-Stage CompressorList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_Compressor">
+    <rule IddField="Transcritical Compressor Power Curve Name" Access="HIDDEN"/>
+    <rule IddField="Transcritical Compressor Capacity Curve Name" Access="HIDDEN"/>
+    <rule IddField="Refrigeration Compressor Power Curve Name" Access="LOCKED"/>
+    <rule IddField="Refrigeration Compressor Capacity Curve Name" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_Condenser_AirCooled">
+    <rule IddField="Rated Effective Total Heat Rejection Rate Curve Name" Access="LOCKED"/>
+    <rule IddField="Condenser Refrigerant Operating Charge Inventory" Access="LOCKED"/>
+    <rule IddField="Condensate Receiver Refrigerant Inventory" Access="LOCKED"/>
+    <rule IddField="Condensate Piping Refrigerant Inventory" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_Case">
+    <rule IddField="Latent Case Credit Curve Name" Access="LOCKED"/>
+    <rule IddField="Defrost Energy Correction Curve Name" Access="HIDDEN"/>
+    <rule IddField="Defrost Energy Correction Curve Type" Access="LOCKED"/>
   </POLICY>
 </ROOT>

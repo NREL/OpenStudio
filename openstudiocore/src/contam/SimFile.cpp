@@ -314,6 +314,25 @@ bool SimFile::readNfr(QString fileName)
   return true;
 }
 
+static openstudio::TimeSeries convertData(std::vector<openstudio::DateTime> inputDateTimes,
+                                          std::vector<double> inputValues, std::string units)
+{
+  // Use a per-interval trapezoidal approximation to convert the CONTAM point data into E+ interval data
+  std::vector<openstudio::DateTime> dateTimes;
+  std::vector<double> values;
+  if(inputDateTimes.size()==1) // Account for steady simulation results
+  {
+    return openstudio::TimeSeries(inputDateTimes,createVector(inputValues),units);
+  }
+  for(unsigned i=1;i<inputDateTimes.size();i++)
+  {
+    dateTimes.push_back(inputDateTimes[i]);
+    values.push_back(0.5*(inputValues[i-1]+inputValues[i]));
+  }
+  return openstudio::TimeSeries(dateTimes,createVector(values),units);
+}
+
+
 boost::optional<openstudio::TimeSeries> SimFile::pathDeltaP(int nr) const
 {
   int index = m_pathNr.indexOf(nr);
@@ -321,7 +340,8 @@ boost::optional<openstudio::TimeSeries> SimFile::pathDeltaP(int nr) const
   {
     return boost::optional<openstudio::TimeSeries>();
   }
-  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_dP[index]),"Pa"));
+  openstudio::TimeSeries series = convertData(m_dateTimes,m_dP[index],"Pa");
+  return boost::optional<openstudio::TimeSeries>(series);
 }
 
 boost::optional<openstudio::TimeSeries> SimFile::pathFlow0(int nr) const
@@ -331,7 +351,8 @@ boost::optional<openstudio::TimeSeries> SimFile::pathFlow0(int nr) const
   {
     return boost::optional<openstudio::TimeSeries>();
   }
-  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_F0[index]),"kg/s"));
+  openstudio::TimeSeries series = convertData(m_dateTimes,m_F0[index],"kg/s");
+  return boost::optional<openstudio::TimeSeries>(series);
 }
 
 boost::optional<openstudio::TimeSeries> SimFile::pathFlow1(int nr) const
@@ -341,7 +362,8 @@ boost::optional<openstudio::TimeSeries> SimFile::pathFlow1(int nr) const
   {
     return boost::optional<openstudio::TimeSeries>();
   }
-  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_F1[index]),"kg/s"));
+  openstudio::TimeSeries series = convertData(m_dateTimes,m_F1[index],"kg/s");
+  return boost::optional<openstudio::TimeSeries>(series);
 }
 
 boost::optional<openstudio::TimeSeries> SimFile::pathFlow(int nr) const
@@ -351,10 +373,14 @@ boost::optional<openstudio::TimeSeries> SimFile::pathFlow(int nr) const
   {
     return boost::optional<openstudio::TimeSeries>();
   }
-  openstudio::Vector f0 = openstudio::createVector(m_F0[index]);
-  openstudio::Vector f1 = openstudio::createVector(m_F1[index]);
-  // Need to confirm that the total flow is f0+f1, since it also could be f0-f1
-  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,f0+f1,"kg/s"));
+  std::vector<double> flow(m_dateTimes.size());
+  for(unsigned i=0;i<m_dateTimes.size();i++)
+  {
+    flow[i] = m_F0[index][i] + m_F1[index][i];
+  }
+  // Need to confirm that the total flow is F0+F1, since it also could be F0-F1
+  openstudio::TimeSeries series = convertData(m_dateTimes,flow,"kg/s");
+  return boost::optional<openstudio::TimeSeries>(series);
 }
 
 boost::optional<openstudio::TimeSeries> SimFile::nodeTemperature(int nr) const
@@ -364,7 +390,8 @@ boost::optional<openstudio::TimeSeries> SimFile::nodeTemperature(int nr) const
   {
     return boost::optional<openstudio::TimeSeries>();
   }
-  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_T[index]),"K"));
+  openstudio::TimeSeries series = convertData(m_dateTimes,m_T[index],"K");
+  return boost::optional<openstudio::TimeSeries>(series);
 }
 
 boost::optional<openstudio::TimeSeries> SimFile::nodePressure(int nr) const
@@ -374,7 +401,8 @@ boost::optional<openstudio::TimeSeries> SimFile::nodePressure(int nr) const
   {
     return boost::optional<openstudio::TimeSeries>();
   }
-  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_P[index]),"Pa"));
+  openstudio::TimeSeries series = convertData(m_dateTimes,m_P[index],"Pa");
+  return boost::optional<openstudio::TimeSeries>(series);
 }
 
 boost::optional<openstudio::TimeSeries> SimFile::nodeDensity(int nr) const
@@ -384,7 +412,8 @@ boost::optional<openstudio::TimeSeries> SimFile::nodeDensity(int nr) const
   {
     return boost::optional<openstudio::TimeSeries>();
   }
-  return boost::optional<openstudio::TimeSeries>(openstudio::TimeSeries(m_dateTimes,createVector(m_T[index]),"kg/m^3"));
+  openstudio::TimeSeries series = convertData(m_dateTimes,m_D[index],"kg/m^3");
+  return boost::optional<openstudio::TimeSeries>(series);
 }
 
 /*

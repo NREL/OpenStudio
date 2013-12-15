@@ -40,18 +40,24 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( const WorkspaceObject & workspaceObject )
 {
- if( workspaceObject.iddObject().type() != IddObjectType::FenestrationSurface_Detailed ){
-   LOG(Error, "WorkspaceObject is not IddObjectType: Site:FenestrationSurface_Detailed");
+  if( workspaceObject.iddObject().type() != IddObjectType::FenestrationSurface_Detailed ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: Site:FenestrationSurface_Detailed");
     return boost::none;
   }
 
   openstudio::Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, workspaceObject);
  
-  SubSurface subSurface(vertices, m_model);
+  boost::optional<SubSurface> subSurface;
+  try{
+    subSurface = SubSurface(vertices, m_model);
+  }catch(const std::exception&){
+    LOG(Error, "Cannot create SubSurface for object: " << workspaceObject);
+    return boost::none;
+  }
 
   OptionalString s = workspaceObject.name();
   if(s) {
-    subSurface.setName(*s);
+    subSurface->setName(*s);
   }
 
   OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::ConstructionName);
@@ -59,7 +65,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<ConstructionBase>()){
-        subSurface.setConstruction(modelObject->cast<ConstructionBase>());
+        subSurface->setConstruction(modelObject->cast<ConstructionBase>());
       }
     }
   }
@@ -69,7 +75,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<Surface>()){
-        subSurface.setSurface(modelObject->cast<Surface>());
+        subSurface->setSurface(modelObject->cast<Surface>());
       }
     }
   }
@@ -80,7 +86,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
     if (istringEqual("Window", *s)){
       s = "FixedWindow";
 
-      boost::optional<Surface> surface = subSurface.surface();
+      boost::optional<Surface> surface = subSurface->surface();
       if (surface){
         if ((surface->surfaceType() == "RoofCeiling") &&
             (surface->outsideBoundaryCondition() == "Outdoors")){
@@ -88,7 +94,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
         }
       }
     }
-    subSurface.setSubSurfaceType(*s);
+    subSurface->setSubSurfaceType(*s);
   }
 
   target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject);
@@ -100,7 +106,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
       if(modelObject->optionalCast<Space>()){
         Space adjacentSpace = modelObject->cast<Space>();
 
-        OptionalSurface surface = subSurface.surface();
+        OptionalSurface surface = subSurface->surface();
         if (surface && surface->space()){
           Space space = surface->space().get();
 
@@ -111,14 +117,14 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
               Transformation transformation = adjacentSpace.transformation().inverse()*surface->space()->transformation();
 
               // duplicate subsurface in other space
-              SubSurface adjacentSubSurface = subSurface.clone(m_model).cast<SubSurface>();
-              adjacentSubSurface.setName(subSurface.name().get() + " Reversed");
+              SubSurface adjacentSubSurface = subSurface->clone(m_model).cast<SubSurface>();
+              adjacentSubSurface.setName(subSurface->name().get() + " Reversed");
               std::reverse(vertices.begin(), vertices.end());
               adjacentSubSurface.setVertices(transformation*vertices);
               adjacentSubSurface.setSurface(adjacentSurface);
-              subSurface.setAdjacentSubSurface(adjacentSubSurface);
+              subSurface->setAdjacentSubSurface(adjacentSubSurface);
 
-              return subSurface;
+              return subSurface.get();
             }
           }
         }
@@ -133,8 +139,8 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
         if (it->second.optionalCast<SubSurface>()){
           // this will set other side boundary object on both surfaces
           SubSurface adjacentSubSurface = it->second.cast<SubSurface>();
-          subSurface.setAdjacentSubSurface(adjacentSubSurface);
-          return subSurface;
+          subSurface->setAdjacentSubSurface(adjacentSubSurface);
+          return subSurface.get();
         }
       }
     }else{  
@@ -142,9 +148,10 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
     }
   }
 
+  // DLM: should these be before control paths that return above?
   OptionalDouble d = workspaceObject.getDouble(FenestrationSurface_DetailedFields::ViewFactortoGround);
   if (d) {
-    subSurface.setViewFactortoGround(*d);
+    subSurface->setViewFactortoGround(*d);
   }
 
   target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::ShadingControlName);
@@ -159,10 +166,10 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
 
   OptionalInt i = workspaceObject.getInt(FenestrationSurface_DetailedFields::Multiplier);
   if (i) {
-    subSurface.setMultiplier(*i);
+    subSurface->setMultiplier(*i);
   }
 
-  return subSurface;
+  return subSurface.get();
 }
 
 } // energyplus

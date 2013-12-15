@@ -76,6 +76,12 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   }
 
   TimeSeries timeseries = modelObject.timeSeries();
+  // Check that the time series has at least one point
+  if(timeseries.values().size() == 0)
+  {
+    LOG(Error,"Time series in schedule '" << modelObject.name().get() << "' has no values, schedule will not be translated");
+    return boost::optional<IdfObject>();
+  }
   DateTime firstReportDateTime = timeseries.firstReportDateTime();
   Vector daysFromFirst = timeseries.daysFromFirstReport();
   Vector values = timeseries.values();
