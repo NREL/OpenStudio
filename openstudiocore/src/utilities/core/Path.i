@@ -216,7 +216,7 @@ namespace openstudio {
       } else if (TYPE($input) == T_STRING) {
         // otherwise, if a string
         Check_Type($input, T_STRING);
-        std::string s(STR2CSTR($input));
+        std::string s(StringValuePtr($input));
         $1 = new openstudio::path(openstudio::toPath(s));
       } else {
         SWIG_exception_fail(SWIG_ArgError(res), Ruby_Format_TypeError( "", "openstudio::path const &", "$symname", 1, $input)); 
