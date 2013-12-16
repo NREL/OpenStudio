@@ -2405,7 +2405,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   double clgDsgnSizingFac = 1.0;
   double htgDsgnSupAirTemp = 40.0;
   double htgDsgnSizingFac = 1.0;
-  double htgDsgnMaxFlowFrac = 0.5;
   double value;
   bool ok;
 
@@ -2437,13 +2436,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     htgDsgnSizingFac = value; 
   }
 
-  QDomElement htgDsgnMaxFlowFracElement = thermalZoneElement.firstChildElement("HtgDsgnMaxFlowFrac");
-  value = htgDsgnMaxFlowFracElement.text().toDouble(&ok);
-  if( ok )
-  {
-    htgDsgnMaxFlowFrac = value;
-  }
-
   model::SizingZone sizingZone = thermalZone.sizingZone();
   sizingZone.setZoneCoolingDesignSupplyAirTemperature(clgDsgnSupAirTemp);
   sizingZone.setZoneCoolingSizingFactor(clgDsgnSizingFac);
@@ -2460,7 +2452,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   sizingZone.setHeatingMaximumAirFlowFraction(0.0);
   sizingZone.setHeatingDesignAirFlowMethod("DesignDay");
 
-  if( htgDsgnMaxFlowFrac > 0.0 )
+  QDomElement htgDsgnMaxFlowFracElement = thermalZoneElement.firstChildElement("HtgDsgnMaxFlowFrac");
+  double htgDsgnMaxFlowFrac = htgDsgnMaxFlowFracElement.text().toDouble(&ok);
+  if( ok )
   {
     sizingZone.setHeatingDesignAirFlowMethod("DesignDayWithLimit");
     sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
