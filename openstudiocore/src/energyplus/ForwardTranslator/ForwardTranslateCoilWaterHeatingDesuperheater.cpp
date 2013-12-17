@@ -140,14 +140,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingDesuperhe
 
 // TankObjectType
 // TankName
-  if( boost::optional<HVACComponent> tank = modelObject.tank() )
+  if( boost::optional<ModelObject> heatRejectionTarget = modelObject.heatRejectionTarget() )
   {
-    boost::optional<IdfObject> _tank = translateAndMapModelObject(tank.get());
+    boost::optional<IdfObject> _heatRejectionTarget = translateAndMapModelObject(heatRejectionTarget.get());
 
-    if( _tank && _tank->name() )
+    if( _heatRejectionTarget && _heatRejectionTarget->name() )
     {
-      idfObject.setString(Coil_WaterHeating_DesuperheaterFields::TankObjectType,_tank->iddObject().name());
-      idfObject.setString(Coil_WaterHeating_DesuperheaterFields::TankName,_tank->name().get());
+      idfObject.setString(Coil_WaterHeating_DesuperheaterFields::TankObjectType,_heatRejectionTarget->iddObject().name());
+      idfObject.setString(Coil_WaterHeating_DesuperheaterFields::TankName,_heatRejectionTarget->name().get());
     }
   }
 

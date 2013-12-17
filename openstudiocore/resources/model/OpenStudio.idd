@@ -10659,7 +10659,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \memo from the superheated refrigerant gas leaving a compressor and does not impact the
        \memo performance of the compressor. This coil must be used with a water heater tank, see
        \memo Water Heater:Mixed.
-       \min-fields 17
+       \min-fields 16
   A1,  \field Handle
        \type handle
        \required-field
@@ -10737,13 +10737,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \note The node to which the desuperheater heating coil sends its outlet water.
        \note This name should match the source side inlet node name in the associated
        \note water heater tank object.
-  A8,  \field Tank Name
-       \required-field
-       \type object-list
-       \note The name of the water heater tank used by this desuperheater water heating coil.
-       \note Needs to match the name used in the corresponding water heater object.
-       \object-list WaterHeaterNames
-  A9,  \field Heating Source Name
+  A8,  \field Heating Source Name
        \required-field
        \type object-list
        \object-list DesuperHeatingCoilSources

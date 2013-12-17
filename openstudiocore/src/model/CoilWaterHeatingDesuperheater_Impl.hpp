@@ -30,6 +30,7 @@ namespace model {
 class Schedule;
 class CurveBiquadratic;
 class HVACComponent;
+class WaterHeaterMixed;
 
 namespace detail {
 
@@ -67,6 +68,12 @@ namespace detail {
 
     virtual unsigned outletPort();
 
+    boost::optional<ModelObject> heatRejectionTarget() const;
+
+    bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
+
+    void removeFromHeatRejectionTarget();
+
     //@}
     /** @name Getters */
     //@{
@@ -99,7 +106,7 @@ namespace detail {
     // Connection waterOutletNode() const;
 
     // TODO: Check return type. From object lists, some candidates are: WaterHeater.
-    boost::optional<HVACComponent> tank() const;
+    // boost::optional<HVACComponent> tank() const;
 
     // TODO: Check return type. From object lists, some candidates are: DesuperHeatingCoilSources.
     boost::optional<ModelObject> heatingSource() const;
@@ -160,7 +167,7 @@ namespace detail {
     // bool setWaterOutletNode(const Connection& connection);
 
     // TODO: Check argument type. From object lists, some candidates are: WaterHeater.
-    bool setTank(const HVACComponent& waterHeater);
+    // bool setTank(const HVACComponent& waterHeater);
 
     // TODO: Check argument type. From object lists, some candidates are: DesuperHeatingCoilSources.
     bool setHeatingSource(const ModelObject& heatingSource);

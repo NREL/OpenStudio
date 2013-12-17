@@ -44,13 +44,19 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit CoilWaterHeatingDesuperheater(const Model& model);
+  explicit CoilWaterHeatingDesuperheater(const Model& model, Schedule& setpointTemperatureSchedule);
 
   virtual ~CoilWaterHeatingDesuperheater() {}
 
   //@}
 
   static IddObjectType iddObjectType();
+
+  boost::optional<ModelObject> heatRejectionTarget() const;
+
+  bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
+
+  void removeFromHeatRejectionTarget();
 
   /** @name Getters */
   //@{
@@ -83,7 +89,7 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
   // Connection waterOutletNode() const;
 
   // TODO: Check return type. From object lists, some candidates are: HVACComponent.
-  boost::optional<HVACComponent> tank() const;
+  // boost::optional<HVACComponent> tank() const;
 
   // TODO: Check return type. From object lists, some candidates are: DesuperHeatingCoilSources.
   boost::optional<ModelObject> heatingSource() const;
@@ -144,7 +150,7 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
   // bool setWaterOutletNode(const Connection& connection);
 
   // TODO: Check argument type. From object lists, some candidates are: HVACComponent.
-  bool setTank(const HVACComponent& waterHeater);
+  // bool setTank(const HVACComponent& waterHeater);
 
   // TODO: Check argument type. From object lists, some candidates are: DesuperHeatingCoilSources.
   bool setHeatingSource(const ModelObject& heatingSource);
