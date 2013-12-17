@@ -4371,8 +4371,8 @@ OS:Rendering:Color,
 
 OS:YearDescription,
   {fb706778-97ec-4b68-a089-0dea130bfeed}, !- Handle
-  ,                                       !- Calendar Year
-  Sunday,                                 !- Day of Week for Start Day
+  2000,                                   !- Calendar Year
+  ,                                       !- Day of Week for Start Day
   ;                                       !- Is Leap Year
 
 OS:RadianceParameters,
@@ -8475,91 +8475,91 @@ OS:UtilityBill,
   2011,                                   !- Billing Period Begin Year 1
   34,                                     !- Number of Days in Billing Period 1
   728,                                    !- Billing Period Consumption 1
-  ,                                       !- Billing Period Peak Demand 1
+  70,                                     !- Billing Period Peak Demand 1
   93.78,                                  !- Billing Period Total Cost 1
   1,                                      !- Billing Period Begin Month 2
   16,                                     !- Billing Period Begin Day of Month 2
   2012,                                   !- Billing Period Begin Year 2
   29,                                     !- Number of Days in Billing Period 2
   562,                                    !- Billing Period Consumption 2
-  ,                                       !- Billing Period Peak Demand 2
+  56,                                     !- Billing Period Peak Demand 2
   71.89,                                  !- Billing Period Total Cost 2
   2,                                      !- Billing Period Begin Month 3
   14,                                     !- Billing Period Begin Day of Month 3
   2012,                                   !- Billing Period Begin Year 3
   29,                                     !- Number of Days in Billing Period 3
   526,                                    !- Billing Period Consumption 3
-  ,                                       !- Billing Period Peak Demand 3
+  53,                                     !- Billing Period Peak Demand 3
   68.09,                                  !- Billing Period Total Cost 3
   3,                                      !- Billing Period Begin Month 4
   14,                                     !- Billing Period Begin Day of Month 4
   2012,                                   !- Billing Period Begin Year 4
   30,                                     !- Number of Days in Billing Period 4
   434,                                    !- Billing Period Consumption 4
-  ,                                       !- Billing Period Peak Demand 4
+  43,                                     !- Billing Period Peak Demand 4
   57.31,                                  !- Billing Period Total Cost 4
   4,                                      !- Billing Period Begin Month 5
   13,                                     !- Billing Period Begin Day of Month 5
   2012,                                   !- Billing Period Begin Year 5
   31,                                     !- Number of Days in Billing Period 5
   480,                                    !- Billing Period Consumption 5
-  ,                                       !- Billing Period Peak Demand 5
+  48,                                     !- Billing Period Peak Demand 5
   62.16,                                  !- Billing Period Total Cost 5
   5,                                      !- Billing Period Begin Month 6
   14,                                     !- Billing Period Begin Day of Month 6
   2012,                                   !- Billing Period Begin Year 6
   30,                                     !- Number of Days in Billing Period 6
   535,                                    !- Billing Period Consumption 6
-  ,                                       !- Billing Period Peak Demand 6
+  53,                                     !- Billing Period Peak Demand 6
   76.97,                                  !- Billing Period Total Cost 6
   6,                                      !- Billing Period Begin Month 7
   13,                                     !- Billing Period Begin Day of Month 7
   2012,                                   !- Billing Period Begin Year 7
   30,                                     !- Number of Days in Billing Period 7
   937,                                    !- Billing Period Consumption 7
-  ,                                       !- Billing Period Peak Demand 7
+  93,                                     !- Billing Period Peak Demand 7
   142.83,                                 !- Billing Period Total Cost 7
   7,                                      !- Billing Period Begin Month 8
   13,                                     !- Billing Period Begin Day of Month 8
   2012,                                   !- Billing Period Begin Year 8
   31,                                     !- Number of Days in Billing Period 8
   858,                                    !- Billing Period Consumption 8
-  ,                                       !- Billing Period Peak Demand 8
+  85,                                     !- Billing Period Peak Demand 8
   140.81,                                 !- Billing Period Total Cost 8
   8,                                      !- Billing Period Begin Month 9
   13,                                     !- Billing Period Begin Day of Month 9
   2012,                                   !- Billing Period Begin Year 9
   30,                                     !- Number of Days in Billing Period 9
   798,                                    !- Billing Period Consumption 9
-  ,                                       !- Billing Period Peak Demand 9
+  78,                                     !- Billing Period Peak Demand 9
   131.58,                                 !- Billing Period Total Cost 9
   9,                                      !- Billing Period Begin Month 10
   12,                                     !- Billing Period Begin Day of Month 10
   2012,                                   !- Billing Period Begin Year 10
   29,                                     !- Number of Days in Billing Period 10
   487,                                    !- Billing Period Consumption 10
-  ,                                       !- Billing Period Peak Demand 10
+  47,                                     !- Billing Period Peak Demand 10
   32.13,                                  !- Billing Period Total Cost 10
   10,                                     !- Billing Period Begin Month 11
   11,                                     !- Billing Period Begin Day of Month 11
   2012,                                   !- Billing Period Begin Year 11
   29,                                     !- Number of Days in Billing Period 11
   506,                                    !- Billing Period Consumption 11
-  ,                                       !- Billing Period Peak Demand 11
+  50,                                     !- Billing Period Peak Demand 11
   70.06,                                  !- Billing Period Total Cost 11
   11,                                     !- Billing Period Begin Month 12
   9,                                      !- Billing Period Begin Day of Month 12
   2012,                                   !- Billing Period Begin Year 12
   33,                                     !- Number of Days in Billing Period 12
   696,                                    !- Billing Period Consumption 12
-  ,                                       !- Billing Period Peak Demand 12
+  67,                                     !- Billing Period Peak Demand 12
   93.35,                                  !- Billing Period Total Cost 12
   12,                                     !- Billing Period Begin Month 13
   12,                                     !- Billing Period Begin Day of Month 13
   2012,                                   !- Billing Period Begin Year 13
   34,                                     !- Number of Days in Billing Period 13
   734,                                    !- Billing Period Consumption 13
-  ,                                       !- Billing Period Peak Demand 13
+  71,                                     !- Billing Period Peak Demand 13
   98.24;                                  !- Billing Period Total Cost 13
 
 OS:Meter,
