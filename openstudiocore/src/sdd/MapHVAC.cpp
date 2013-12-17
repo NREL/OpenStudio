@@ -3129,95 +3129,22 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     }
 
     if( (istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
-         istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString())) && autosize() )
+         istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString())) )
     {
-      terminal.setZoneMinimumAirFlowMethod("Constant");
-
-      terminal.setConstantMinimumAirFlowFraction(0.5);
-    }
-    else
-    {
-      if( primaryAirFlowMin )
+      // ReheatCtrlMthd, notice we are not looking for this property in the SDD because we don't expect it to be there for SZVAV
+      if( coil->optionalCast<model::CoilHeatingWater>() )
       {
-        terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
-
-        terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
+        terminal.setDamperHeatingAction("Reverse");
       }
       else
       {
-        terminal.setZoneMinimumAirFlowMethod("Constant");
-
-        terminal.setConstantMinimumAirFlowFraction(0.2);
-      }
-    }
-
-    // ReheatCtrlMthd
-    QDomElement reheatCtrlMthdElement = trmlUnitElement.firstChildElement("ReheatCtrlMthd");
-    if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") &&
-        coil->optionalCast<model::CoilHeatingWater>() )
-    {
-      terminal.setDamperHeatingAction("Reverse");
-    }
-    else
-    {
-      terminal.setDamperHeatingAction("Normal");
-    }
-
-    QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
-    value = htgAirFlowMaxElement.text().toDouble(&ok);
-    if( ok && primaryAirFlow )
-    {
-       value = unitToUnit(value,"cfm","m^3/s").get();
-       double fraction = value / primaryAirFlow.get();
-       terminal.setMaximumFlowFractionDuringReheat(fraction);
-    }
-    else
-    {
-      bool found = false;
-
-      QDomElement zoneServedElement = trmlUnitElement.firstChildElement("ZnServedRef");
-
-      QDomNodeList thrmlZnElements = trmlUnitElement.parentNode().parentNode().parentNode().toElement().elementsByTagName("ThrmlZn");
-
-      for( int j = 0; j < thrmlZnElements.count(); j++ )
-      {
-        QDomElement thrmlZnElement = thrmlZnElements.at(j).toElement();
-
-        QDomElement thrmlZnNameElement = thrmlZnElement.firstChildElement("Name");
-
-        if(istringEqual(thrmlZnNameElement.text().toStdString(),zoneServedElement.text().toStdString()))
-        {
-          QDomElement htgDsgnMaxFlowFracElement = thrmlZnElement.firstChildElement("HtgDsgnMaxFlowFrac");
-
-          value = htgDsgnMaxFlowFracElement.text().toDouble(&ok);
-
-          if( ok )
-          {
-            terminal.setMaximumFlowFractionDuringReheat(value);
-
-            found = true;
-          }
-
-          break;
-        }
+        terminal.setDamperHeatingAction("Normal");
       }
 
-      if( ! found )
-      {
-        if( istringEqual(terminal.damperHeatingAction(),"Reverse") )
-        {
-          terminal.setMaximumFlowFractionDuringReheat(0.5);
-        }
-        else
-        {
-          terminal.setMaximumFlowFractionDuringReheat(0.2);
-        }
-      }
-    }
+      // Maximum Flow Fraction During Reheat
+      terminal.setMaximumFlowFractionDuringReheat(1.0);
 
-    if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
-        istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) )
-    {
+      // Maximum Reheat Air Temperature, taken from system level
       QDomElement clRstSupHiElement;
       boost::optional<model::AirLoopHVAC> airLoopHVAC;
 
@@ -3236,21 +3163,111 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
         terminal.setMaximumReheatAirTemperature(value);
       }
 
-      terminal.setMaximumFlowFractionDuringReheat(1.0);
+      bool fixedFlowRate = false;
 
-      terminal.setDamperHeatingAction("Reverse");
-
-      if( airLoopHVAC )
+      if( ! autosize() )
       {
-        std::vector<model::ModelObject> fans = airLoopHVAC->supplyComponents(model::FanVariableVolume::iddObjectType());
-
-        if( ! fans.empty() )
+        if( airLoopHVAC )
         {
-          if( boost::optional<double> minflow = fans.front().cast<model::FanVariableVolume>().fanPowerMinimumAirFlowRate() )
-          {
-            terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+          std::vector<model::ModelObject> fans = airLoopHVAC->supplyComponents(model::FanVariableVolume::iddObjectType());
 
-            terminal.setFixedMinimumAirFlowRate(minflow.get());
+          if( ! fans.empty() )
+          {
+            if( boost::optional<double> minflow = fans.front().cast<model::FanVariableVolume>().fanPowerMinimumAirFlowRate() )
+            {
+              fixedFlowRate = true;
+
+              terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+
+              terminal.setFixedMinimumAirFlowRate(minflow.get());
+            }
+          }
+        }
+      }
+
+      if( ! fixedFlowRate )
+      {
+        terminal.setZoneMinimumAirFlowMethod("Constant");
+
+        terminal.setConstantMinimumAirFlowFraction(0.5);
+      }
+
+    }
+    else // Not SZVAV
+    {
+      if( primaryAirFlowMin )
+      {
+        terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+
+        terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
+      }
+      else
+      {
+        terminal.setZoneMinimumAirFlowMethod("Constant");
+
+        terminal.setConstantMinimumAirFlowFraction(0.2);
+      }
+
+      // ReheatCtrlMthd
+      QDomElement reheatCtrlMthdElement = trmlUnitElement.firstChildElement("ReheatCtrlMthd");
+      if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") &&
+          coil->optionalCast<model::CoilHeatingWater>() )
+      {
+        terminal.setDamperHeatingAction("Reverse");
+      }
+      else
+      {
+        terminal.setDamperHeatingAction("Normal");
+      }
+
+      QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMaxSim");
+      value = htgAirFlowMaxElement.text().toDouble(&ok);
+      if( ok && primaryAirFlow )
+      {
+         value = unitToUnit(value,"cfm","m^3/s").get();
+         double fraction = value / primaryAirFlow.get();
+         terminal.setMaximumFlowFractionDuringReheat(fraction);
+      }
+      else
+      {
+        bool found = false;
+
+        QDomElement zoneServedElement = trmlUnitElement.firstChildElement("ZnServedRef");
+
+        QDomNodeList thrmlZnElements = trmlUnitElement.parentNode().parentNode().parentNode().toElement().elementsByTagName("ThrmlZn");
+
+        for( int j = 0; j < thrmlZnElements.count(); j++ )
+        {
+          QDomElement thrmlZnElement = thrmlZnElements.at(j).toElement();
+
+          QDomElement thrmlZnNameElement = thrmlZnElement.firstChildElement("Name");
+
+          if(istringEqual(thrmlZnNameElement.text().toStdString(),zoneServedElement.text().toStdString()))
+          {
+            QDomElement htgDsgnMaxFlowFracElement = thrmlZnElement.firstChildElement("HtgDsgnMaxFlowFrac");
+
+            value = htgDsgnMaxFlowFracElement.text().toDouble(&ok);
+
+            if( ok )
+            {
+              terminal.setMaximumFlowFractionDuringReheat(value);
+
+              found = true;
+            }
+
+            break;
+          }
+        }
+
+        if( ! found )
+        {
+          if( istringEqual(terminal.damperHeatingAction(),"Reverse") )
+          {
+            terminal.setMaximumFlowFractionDuringReheat(0.5);
+          }
+          else
+          {
+            terminal.setMaximumFlowFractionDuringReheat(0.2);
           }
         }
       }
