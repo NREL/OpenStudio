@@ -176,6 +176,8 @@ class RubyOperations_Test < Test::Unit::TestCase
   
     model = OpenStudio::Model::Model.new
     
+    model.save("./test.osm")
+    
     model.save("./test.osm", true)
     
     m2 = OpenStudio::Model::Model::load("./test.osm")
