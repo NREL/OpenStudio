@@ -12,15 +12,15 @@ class StandardReports_Test < Test::Unit::TestCase
     
   # paths to expected test files, includes osm and eplusout.sql
   def modelPath
-    return "#{File.dirname(__FILE__)}/House1203_a_ver112.osm"
+    return "#{File.dirname(__FILE__)}/ExampleModel.osm"
   end
   
   def runDir
-    return "#{File.dirname(__FILE__)}/House1203_a_ver112/"
+    return "#{File.dirname(__FILE__)}/ExampleModel/"
   end
   
   def sqlPath
-    return "#{File.dirname(__FILE__)}/House1203_a_ver112/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+    return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
   end
   
   def reportPath
@@ -29,34 +29,14 @@ class StandardReports_Test < Test::Unit::TestCase
   
   # create test files if they do not exist
   def setup
-    if File.exist?(modelPath())
-      #FileUtils.rm(modelPath())
-    end
-    if File.exist?(runDir())
-      #FileUtils.rm_rf(runDir())
-    end
+
     if File.exist?(reportPath())
-      #FileUtils.rm(reportPath())
+      FileUtils.rm(reportPath())
     end
     
-    # check that the measure is not out of date
-    measure_path = OpenStudio::system_complete(OpenStudio::Path.new("#{File.dirname(__FILE__)}/../"))
-    measure = OpenStudio::BCLMeasure.new(measure_path)
-    assert_equal("Standard Reports", measure.name())
-    if (measure.checkForUpdates())
-      puts "Measure is out of date, automatically saving"
-      measure.save()
-    end
-    assert((not measure.checkForUpdates()))
+    assert(File.exist?(modelPath()))
     
-    if not File.exist?(modelPath())
-      puts "Creating example model"
-      model = OpenStudio::Model::exampleModel()
-      model.getRunPeriod.remove
-      model.getSimulationControl.setRunSimulationforSizingPeriods(true)
-      model.getSimulationControl.setRunSimulationforWeatherFileRunPeriods(false)
-      model.save(OpenStudio::Path.new(modelPath()), true)
-    end
+    assert(File.exist?(runDir()))
     
     if not File.exist?(sqlPath())
       puts "Running EnergyPlus"
@@ -74,14 +54,15 @@ class StandardReports_Test < Test::Unit::TestCase
     end
   end
 
-  # delete test files, comment this out if you do not want to run EnergyPlus each time you run tests
+  # delete output files
   def teardown
-    if File.exist?(modelPath())
-      #FileUtils.rm(modelPath())
+  
+    # comment this out if you don't want to rerun EnergyPlus each time
+    if File.exist?(sqlPath())
+      #FileUtils.rm(sqlPath())
     end
-    if File.exist?(runDir())
-      #FileUtils.rm_rf(runDir())
-    end
+    
+    # comment this out if you want to see the resulting report
     if File.exist?(reportPath())
       #FileUtils.rm(reportPath())
     end

@@ -45,6 +45,8 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     # put data into variables, these are available in the local scope binding
     #building_name = model.getBuilding.name.get
 
+    web_asset_path = OpenStudio::getSharedResourcesPath() / OpenStudio::Path.new("web_assets")
+    
     energy = ""
 
     calibrationGuidelines = OpenStudio::Model::UtilityBill::calibrationGuidelines
@@ -91,32 +93,69 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     end
     energy << ";\n"
 
-    energyElec = "var consumption = {\n\t\"Electricity Consumption\":{\n\t\t\"units\":\"kWh\",\n\t\t\t\"data\":{\n"
-    energyGas = "\t\"Natural Gas Consumption\":{\n\t\t\"units\":\"therms\",\n\t\t\t\"data\":{\n"
+    energyElec = "var consumption = {\n\t\"Electricity Consumption\":{\n\t\t\"units\":\"kWh\",\n"
+    energyDemand =  "\t\"Electricity Demand Consumption\":{\n\t\t\"units\":\"kWh\",\n"
+    energyGas = "\t\"Natural Gas Consumption\":{\n\t\t\"units\":\"therms\",\n"
     tempStartDate = ""
     tempEndDate = ""
     elecStartDate = "\t\t\t\t\"Start\":["
     elecEndDate = "\t\t\t\t\"End\":["
     gasStartDate = "\t\t\t\t\"Start\":["
     gasEndDate = "\t\t\t\t\"End\":["
-    actualPeakDemand = "\t\t\t\t\"Actual\":["
-    modelPeakDemand = "\t\t\t\t\"Model\":["
     elecActualConsumption = "\t\t\t\t\"Actual\":["
     elecModelConsumption = "\t\t\t\t\"Model\":["
+    actualPeakDemand = "\t\t\t\t\"Actual\":["
+    modelPeakDemand = "\t\t\t\t\"Model\":[" 
     gasActualConsumption = "\t\t\t\t\"Actual\":["
     gasModelConsumption = "\t\t\t\t\"Model\":["
     elecNMBE = "\t\t\t\t\"NMBE\":["
+    demandNMBE = "\t\t\t\t\"NMBE\":["
     gasNMBE = "\t\t\t\t\"NMBE\":["
     peakDemandUnitConversionFactor = 1.0
     consumptionUnitConversionFactor = 1.0
 
+    # must have a runPeriod
+    runPeriod = model.runPeriod
+    if runPeriod.empty?
+      runner.registerError("Model has no run period.")
+    end
+    
+    # must have a calendarYear
+    yearDescription = model.yearDescription
+    if yearDescription.empty?
+      runner.registerError("Model has no year description.")
+    end
+    calendarYear = yearDescription.get.calendarYear
+    if calendarYear.empty?
+      runner.registerError("Model has no calendar year.")
+    end
+    
     model.getUtilityBills.each do |utilityBill|
+
+      cvrsme = 0.0
+      if not utilityBill.CVRMSE.empty?
+        cvrsme = utilityBill.CVRMSE.get
+        cvrsme =  sprintf "%.2f", cvrsme
+      end
+
+      nmbe = 0.0
+      if not utilityBill.NMBE.empty?
+        nmbe = utilityBill.NMBE.get
+        nmbe = sprintf "%.2f", nmbe
+      end
+
+      string = ""
+      string << "\t\t\"cvrsme\":\"" << cvrsme.to_s << "\",\n\t\t\"nmbe\":\"" << nmbe.to_s << "\",\n\t\t\t\"data\":{\n"
+
       hasDemand = false;
       if not utilityBill.peakDemandUnitConversionFactor.empty?
         hasDemand = true;
+        energyElec << string
+        energyDemand << string
         peakDemandUnitConversionFactor = utilityBill.peakDemandUnitConversionFactor.get
       else
         hasDemand = false;
+        energyGas << string
       end
 
       consumptionUnitConversionFactor = utilityBill.consumptionUnitConversionFactor
@@ -160,13 +199,23 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
 
           peakDemand = billingPeriod.modelPeakDemand
           if not peakDemand.empty?
-            modelPeakDemand << peakDemand.get.to_s
+            temp = peakDemand.get / 1000
+            modelPeakDemand << temp.round.to_s
           else
             modelPeakDemand << "0"
           end
           modelPeakDemand << ","
 
-          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty? # and not billingPeriod.consumption.get = 0
+          if not billingPeriod.peakDemand.empty? and not billingPeriod.modelPeakDemand.empty?
+            percent = 100 * ((billingPeriod.modelPeakDemand.get / 1000) - billingPeriod.peakDemand.get) / billingPeriod.peakDemand.get
+            percent = sprintf "%.2f", percent
+            demandNMBE << percent.to_s
+          else
+            demandNMBE << "0"
+          end
+          demandNMBE << ","
+          
+          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty?
             percent = 100 * ((billingPeriod.modelConsumption.get / consumptionUnitConversionFactor) - billingPeriod.consumption.get) / billingPeriod.consumption.get
             percent = sprintf "%.2f", percent
             elecNMBE << percent.to_s
@@ -217,14 +266,19 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     elecActualConsumption << "],\n"
     elecModelConsumption = elecModelConsumption[0..-2]
     elecModelConsumption << "],\n"
-    #actualPeakDemand = actualPeakDemand[0..-2]
-    #actualPeakDemand << "],\n"
-    #modelPeakDemand = modelPeakDemand[0..-2]
-    #modelPeakDemand << "],\n"
+    actualPeakDemand = actualPeakDemand[0..-2]
+    actualPeakDemand << "],\n"
+    modelPeakDemand = modelPeakDemand[0..-2]
+    modelPeakDemand << "],\n"
     elecNMBE = elecNMBE[0..-2]
     elecNMBE << "]\n"
+    demandNMBE = demandNMBE[0..-2]
+    demandNMBE << "]\n"
     energyElec << elecStartDate << elecEndDate << elecActualConsumption << elecModelConsumption << elecNMBE
     energyElec << "\t\t}\n" << "\t},\n"
+    
+    energyDemand << elecStartDate << elecEndDate << actualPeakDemand << modelPeakDemand << demandNMBE
+    energyDemand << "\t\t}\n" << "\t},\n"
 
     gasStartDate = gasStartDate[0..-2]
     gasStartDate << "],\n"
@@ -239,7 +293,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     energyGas << gasStartDate << gasEndDate << gasActualConsumption << gasModelConsumption << gasNMBE
     energyGas << "\t\t}\n" << "\t}\n" << "};"
 
-    energy << energyElec << energyGas
+    energy << energyElec << energyDemand << energyGas
 
     # echo out our values
     #runner.registerInfo("This building is named #{building_name}.")
@@ -264,7 +318,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     html_out_path = "./report.html"
     File.open(html_out_path, 'w') do |file|
       file << html_out
-      # make sure data is written to the disk one way or the other      
+      # make sure data is written to the disk one way or the other
       begin
         file.fsync
       rescue

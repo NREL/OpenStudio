@@ -1,7 +1,7 @@
 <measure>
   <name>Standard Reports</name>
   <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>b4ba29ea-98e0-466a-ad7f-ce4cb28327e4</version_id>
+  <version_id>9a30b9a7-7b96-4b63-96d1-634518c9cf74</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -22,16 +22,10 @@
   </attributes>
   <files>
     <file>
-      <filename>House1203_a_ver112.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>E70C6B2A</checksum>
-    </file>
-    <file>
       <filename>StandardReports_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>C76A2409</checksum>
+      <checksum>8C62A700</checksum>
     </file>
     <file>
       <version>
@@ -41,19 +35,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>DF48DC58</checksum>
+      <checksum>63F94F9C</checksum>
+    </file>
+    <file>
+      <filename>ExampleModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>0D4162D2</checksum>
     </file>
     <file>
       <filename>report.html.in</filename>
       <filetype>in</filetype>
       <usage_type>resource</usage_type>
-      <checksum>C0A2D028</checksum>
-    </file>
-    <file>
-      <filename>report.html</filename>
-      <filetype>html</filetype>
-      <usage_type>test</usage_type>
-      <checksum>0D8155F8</checksum>
+      <checksum>AC3F6804</checksum>
     </file>
   </files>
 </measure>

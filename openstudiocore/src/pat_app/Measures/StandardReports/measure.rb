@@ -53,6 +53,8 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     # put data into variables, these are available in the local scope binding
     #building_name = model.getBuilding.name.get
 
+    web_asset_path = OpenStudio::getSharedResourcesPath() / OpenStudio::Path.new("web_assets")
+
     energy = "var consumption = {\n"
     fuel_type = ""
     units = ""
