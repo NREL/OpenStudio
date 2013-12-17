@@ -580,9 +580,48 @@ namespace openstudio
 #else
           ruby_init();
 #endif
+          openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
           ruby_incpush(openstudio::toString(t_moduleSearchPath.external_file_string()).c_str());
           ruby_incpush(openstudio::toString(t_rubyIncludePath.external_file_string()).c_str());
+
+          if (!rubypath.empty())
+          {
+#ifdef RUBY_SEARCH_PATH
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SEARCH_PATH))).external_file_string()).c_str());
+#endif
+
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB2))).external_file_string()).c_str());
+#ifdef RUBY_SITE_THIN_ARCHLIB
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_THIN_ARCHLIB))).external_file_string()).c_str());
+#endif
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_ARCHLIB))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB))).external_file_string()).c_str());
+
+#ifdef RUBY_VENDOR_LIB2
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB2))).external_file_string()).c_str());
+#endif
+
+#ifdef RUBY_VENDOR_THIN_ARCHLIB
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_THIN_ARCHLIB))).external_file_string()).c_str());
+#endif
+
+#ifdef RUBY_VENDOR_ARCHLIB
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_ARCHLIB))).external_file_string()).c_str());
+#endif
+
+#ifdef RUBY_VENDOR_LIB
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB))).external_file_string()).c_str());
+#endif
+
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_LIB))).external_file_string()).c_str());
+
+#ifdef RUBY_THIN_ARCHLIB
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_THIN_ARCHLIB))).external_file_string()).c_str());
+#endif
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_ARCHLIB))).external_file_string()).c_str());
+          }
+
           ruby_init_loadpath();
 
           // load the modules. If an error occurs, an exception will be thrown explaining the problem

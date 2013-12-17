@@ -215,6 +215,8 @@ namespace openstudio{
 
     static std::vector<BCLMeasure> getMeasuresInDir(openstudio::path dir);
 
+    void createDirectory(const openstudio::path& dir);
+
     openstudio::path m_directory;
     BCLXML m_bclXML;
   };

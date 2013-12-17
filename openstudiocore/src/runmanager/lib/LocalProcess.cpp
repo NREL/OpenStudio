@@ -286,6 +286,7 @@ namespace detail {
 
   std::vector<FileInfo> LocalProcess::outputFiles() const
   {
+
     return std::vector<FileInfo>(m_outfiles.begin(), m_outfiles.end());
   }
 
@@ -465,6 +466,8 @@ namespace detail {
       handleOutput(m_process.readAllStandardOutput(), false);
       handleOutput(m_process.readAllStandardError(), true);
     }
+
+    QCoreApplication::processEvents();
     directoryChanged(openstudio::toQString(m_outdir));
 
     emit finished(t_exitCode, t_exitStatus);
