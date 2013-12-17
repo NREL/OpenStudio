@@ -1172,6 +1172,34 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
   }
 
+  // Flow Capacity
+  // Look for a sibling fan to figure out what the flow capacity should be
+  boost::optional<double> flowCap;
+
+  if( ! autosize() )
+  {
+    QDomElement flowCapElement;
+
+    QDomElement airSegElement = heatingCoilElement.parentNode().toElement();
+
+    if( ! airSegElement.isNull() )
+    {
+      QDomElement fanElement = airSegElement.firstChildElement("Fan");
+
+      if( ! fanElement.isNull() )
+      {
+        flowCapElement = fanElement.firstChildElement("FlowCapSim");
+
+        value = flowCapElement.text().toDouble(&ok);
+
+        if( ok )
+        {
+          flowCap = unitToUnit(value,"cfm","m^3/s").get();
+        }
+      }
+    }
+  }
+
   // Furnace
   if( istringEqual(coilHeatingTypeElement.text().toStdString(),"Furnace") )
   {
@@ -1421,6 +1449,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     // Name
     heatingCoil.setName(nameElement.text().toStdString());
 
+    // FlowCapSim
+    if( flowCap )
+    {
+      heatingCoil.setRatedAirFlowRate(flowCap.get());
+    }
+
+    // CapTotGrossRtdSim
+    if( capTotGrossRtd )
+    {
+      heatingCoil.setRatedTotalHeatingCapacity(capTotGrossRtd.get());
+    }
+
     // HtPumpEIR
     QDomElement htPumpEIRElement = heatingCoilElement.firstChildElement("HtPumpEIR");
     value = htPumpEIRElement.text().toDouble(&ok);
@@ -1465,15 +1505,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     else if( istringEqual(htPumpDefHtSrcElement.text().toStdString(),"HotGas") )
     {
       heatingCoil.setDefrostStrategy("ReverseCycle");
+
+      heatingCoil.setDefrostEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperatureCurve.get());
     }
 
-    // HtPumpDefHtCap
-    QDomElement htPumpDefHtCapElement = heatingCoilElement.firstChildElement("HtPumpDefHtCapSim");
-    value = htPumpDefHtCapElement.text().toDouble(&ok);
-    if( ok )
+    // HtPumpDefHtrCapSim
+    if( ! autosize() )
     {
-      value = unitToUnit(value,"Btu/h","W").get();
-      heatingCoil.setResistiveDefrostHeaterCapacity(value);
+      QDomElement htPumpDefHtCapElement = heatingCoilElement.firstChildElement("HtPumpDefHtrCapSim");
+      value = htPumpDefHtCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"Btu/h","W").get();
+        heatingCoil.setResistiveDefrostHeaterCapacity(value);
+      }
+    }
+    else
+    {
+      heatingCoil.autosizeResistiveDefrostHeaterCapacity();
     }
 
     // HtPumpDefCtrl 
@@ -1495,6 +1544,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       value = unitToUnit(value,"F","C").get();
       heatingCoil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(value);
     }
+
+    // DefrostTimePeriodFraction
+    heatingCoil.setDefrostTimePeriodFraction(0.058333);
 
     result = heatingCoil;
   }
@@ -4822,6 +4874,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     }
   }
 
+  // HtgDsgnSupAirTemp
+
+  boost::optional<double> htgDsgnSupAirTemp;
+
+  if( ! autosize() )
+  {
+    QDomElement htgDsgnSupAirTempElement = element.firstChildElement("HtgDsgnSupAirTemp");
+
+    value = htgDsgnSupAirTempElement.text().toDouble(&ok);
+
+    htgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
+  }
+
   if( istringEqual(type,"PTAC") )
   {
     boost::optional<openstudio::model::ModelObject> mo;
@@ -4890,6 +4955,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     QDomElement htPumpSuppTempElement;
 
+    QDomElement htPumpCprsrLockoutTempElement;
+
     // Fan
     
     QDomElement fanElement = element.firstChildElement("Fan"); 
@@ -4923,6 +4990,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         heatingCoil = mo->cast<model::HVACComponent>();
 
         htPumpSuppTempElement = heatingCoilElement.firstChildElement("HtPumpSuppTemp");
+
+        htPumpCprsrLockoutTempElement = heatingCoilElement.firstChildElement("HtPumpCprsrLockoutTemp");
       }
       else
       {
@@ -5041,9 +5110,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     {
       value = unitToUnit(value,"F","C").get();
 
-      pthp.setMaximumSupplyAirTemperaturefromSupplementalHeater(value);
+      pthp.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
     }
 
+    // HtPumpCprsrLockoutTemp
+
+    value = htPumpCprsrLockoutTempElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
+
+      pthp.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
+    }
+  
     // FanCtrl
     
     QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
@@ -5053,6 +5133,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
       pthp.setSupplyAirFanOperatingModeSchedule(schedule);
+    }
+
+    // htgDsgnSupAirTemp
+
+    if( htgDsgnSupAirTemp )
+    {
+      pthp.setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
     }
 
     return pthp;
