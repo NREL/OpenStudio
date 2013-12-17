@@ -4426,7 +4426,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       }
     }
 
-    QDomElement minSpdRatElement = htRejElement.firstChildElement("MinSpdRat");
+    QDomElement minSpdRatElement = htRejElement.firstChildElement("LowSpdAirFlowRat");
 
     value = minSpdRatElement.text().toDouble(&ok);
     if( ok )
@@ -4434,11 +4434,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       tower.setMinimumAirFlowRateRatio(value);
     }
 
-    boost::optional<model::CurveCubic> pwr_fPLRCrv;
-    QDomElement pwr_fPLRCrvRefElement = htRejElement.firstChildElement("Pwr_fPLRCrvRef");
-    pwr_fPLRCrv = model.getModelObjectByName<model::CurveCubic>(pwr_fPLRCrvRefElement.text().toStdString());
+    boost::optional<model::CurveCubic> vsdFanPwrRatio_fQRatio;
+    QDomElement vsdFanPwrRatio_fQRatioElement = htRejElement.firstChildElement("VSDFanPwrRatio_fQRatio");
+    vsdFanPwrRatio_fQRatio = model.getModelObjectByName<model::CurveCubic>(vsdFanPwrRatio_fQRatioElement.text().toStdString());
 
-    tower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(pwr_fPLRCrv.get());
+    if( vsdFanPwrRatio_fQRatio )
+    {
+      tower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(vsdFanPwrRatio_fQRatio.get());
+    }
+
+    QDomElement cellCntElement = htRejElement.firstChildElement("CellCnt");
+    int cellCnt = cellCntElement.text().toInt(&ok);
+    if( ok )
+    {
+      tower.setNumberofCells(cellCnt);
+    }
 
     result = tower;
   }
@@ -4448,6 +4458,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
     result = tower;
 
+    if( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 )
+    {
+      tower.setCapacityControl("FanCycling");
+    }
+    else if( modCtrlElement.text().compare("Bypass",Qt::CaseInsensitive) == 0 )
+    {
+      tower.setCapacityControl("FluidBypass");
+    }
+
+    QDomElement cellCntElement = htRejElement.firstChildElement("CellCnt");
+    int cellCnt = cellCntElement.text().toInt(&ok);
+    if( ok )
+    {
+      tower.setNumberofCells(cellCnt);
+    }
+    
     if( ! autosize() )
     {
       // PerformanceInputMethod
@@ -4459,31 +4485,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
       tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
 
-      //// AirFlowCap
-      //QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCap");
-      //value = airFlowCapElement.text().toDouble(&ok);
-
-      //if( ok )
-      //{
-      //  // DesignAirFlowRate
-      //  tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
-
-      //  // AirFlowRateinFreeConvectionRegime
-      //  tower.setAirFlowRateinFreeConvectionRegime(0.0);  
-      //}
-
-
-      //// TotFanHP
-      //QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
-      //value = totFanHPElement.text().toDouble(&ok);
-
-      //if( ok )
-      //{
-      //  // FanPoweratDesignAirFlowRate
-      //  tower.setFanPoweratDesignAirFlowRate(value * 745.7);
-      //}
-
-
       // CapRtd
       QDomElement capRtdElement = htRejElement.firstChildElement("CapRtd");
       value = capRtdElement.text().toDouble(&ok);
@@ -4494,12 +4495,30 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         double cap = unitToUnit(value,"Btu/h","W").get();
 
         tower.setNominalCapacity(cap);
+      }
 
-        double power = 0.0105 * cap;
+      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCap");
 
-        tower.setFanPoweratDesignAirFlowRate(power);
+      value = airFlowCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+      
+      QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCap");
 
-        tower.setDesignAirFlowRate(0.5 * 1.275 * power / 190.0);
+      value = wtrFlowCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        tower.setDesignWaterFlowRate(unitToUnit(value,"gal","m^3").get());
+      }
+
+      QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
+
+      value = totFanHPElement.text().toDouble(&ok);
+      if( ok )
+      {
+        tower.setFanPoweratDesignAirFlowRate(value * 745.7);
       }
     }
   }
