@@ -694,6 +694,18 @@ namespace sdd {
       {
         model::OutputVariable var("Zone Air Temperature",*result);
         var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone Lights Electric Power",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Daylighting Reference Point 1 Illuminance",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Daylighting Reference Point 2 Illuminance",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
+        var.setReportingFrequency(interval);
       }
 
       // SimVarsHVACZn
