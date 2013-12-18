@@ -197,6 +197,10 @@ namespace detail {
     return setString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate, ss.str());
   }
 
+  void RunPeriodControlDaylightSavingTime_Impl::ensureNoLeapDays()
+  {
+  }
+
   openstudio::Date RunPeriodControlDaylightSavingTime_Impl::getDate(const std::string& text) const
   {
     Date result;
@@ -310,6 +314,11 @@ bool RunPeriodControlDaylightSavingTime::setEndDate(const openstudio::MonthOfYea
 
 bool RunPeriodControlDaylightSavingTime::setEndDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear){
   return getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->setEndDate(nth, dayOfWeek, monthOfYear);
+}
+
+void RunPeriodControlDaylightSavingTime::ensureNoLeapDays()
+{
+  getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->ensureNoLeapDays();
 }
 
 /// @cond

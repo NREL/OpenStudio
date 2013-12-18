@@ -92,6 +92,9 @@ class MODEL_API LightingDesignDay : public ModelObject {
 
   void clearSimulationTimes();
 
+  // ensure that this object does not contain the date 2/29
+  void ensureNoLeapDays();
+
  protected:
   /// @cond
   typedef detail::LightingDesignDay_Impl ImplType;

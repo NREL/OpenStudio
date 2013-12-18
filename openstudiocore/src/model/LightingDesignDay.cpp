@@ -184,6 +184,10 @@ namespace detail {
     clearExtensibleGroups();
   }
 
+  void LightingDesignDay_Impl::ensureNoLeapDays()
+  {
+  }
+
 } // detail
 
 LightingDesignDay::LightingDesignDay(const std::string& cieSkyModel, const openstudio::Date& date, const Model& model)
@@ -256,6 +260,11 @@ bool LightingDesignDay::addSimulationTime(const openstudio::Time& time)
 void LightingDesignDay::clearSimulationTimes()
 {
   return getImpl<detail::LightingDesignDay_Impl>()->clearSimulationTimes();
+}
+
+void LightingDesignDay::ensureNoLeapDays()
+{
+  getImpl<detail::LightingDesignDay_Impl>()->ensureNoLeapDays();
 }
 
 /// @cond

@@ -214,6 +214,9 @@ namespace detail {
     setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);
   }
 
+  void RunPeriod_Impl::ensureNoLeapDays()
+  {
+  }
 
   // return the parent object in the hierarchy
   boost::optional<ParentObject> RunPeriod_Impl::parent() const
@@ -387,6 +390,11 @@ void RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
 void RunPeriod::setNumTimePeriodRepeats(int numRepeats)
 {
   getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
+}
+
+void RunPeriod::ensureNoLeapDays()
+{
+  getImpl<detail::RunPeriod_Impl>()->ensureNoLeapDays();
 }
 
 bool RunPeriod::isAnnual() const {

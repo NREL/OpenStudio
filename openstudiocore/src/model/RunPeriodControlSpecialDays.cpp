@@ -132,6 +132,10 @@ namespace detail {
     return setString(OS_RunPeriodControl_SpecialDaysFields::SpecialDayType, specialDayType);
   }
 
+  void RunPeriodControlSpecialDays_Impl::ensureNoLeapDays()
+  {
+  }
+
   // return the parent object in the hierarchy
   boost::optional<ParentObject> RunPeriodControlSpecialDays_Impl::parent() const
   {
@@ -285,6 +289,11 @@ bool RunPeriodControlSpecialDays::setDuration(unsigned duration)
 bool RunPeriodControlSpecialDays::setSpecialDayType(const std::string& specialDayType)
 {
   return getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setSpecialDayType(specialDayType);
+}
+
+void RunPeriodControlSpecialDays::ensureNoLeapDays()
+{
+  getImpl<detail::RunPeriodControlSpecialDays_Impl>()->ensureNoLeapDays();
 }
 
 RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(boost::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl)

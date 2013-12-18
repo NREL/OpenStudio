@@ -153,6 +153,9 @@ namespace detail {
     /// Adds a specific date, will delete start and end dates.
     bool addSpecificDate(const openstudio::Date& date);
 
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
+
     //@}
 
     /// Returns true if this rule covers the given date.

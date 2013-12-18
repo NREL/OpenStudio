@@ -74,6 +74,9 @@ class MODEL_API RunPeriodControlSpecialDays : public ModelObject {
   bool setDuration(unsigned duration);
   bool setSpecialDayType(const std::string& specialDayType);
 
+  // ensure that this object does not contain the date 2/29
+  void ensureNoLeapDays();
+
   //@}
 
   /// Returns the IddObjectType.

@@ -642,6 +642,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void DesignDay_Impl::ensureNoLeapDays()
+  {
+  }
+
 } // detail
 
 /// constructor

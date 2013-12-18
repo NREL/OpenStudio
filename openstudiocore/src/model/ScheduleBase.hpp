@@ -71,6 +71,9 @@ class MODEL_API ScheduleBase : public ResourceObject {
    *  if this object is being used by an object that expects it to have a ScheduleTypeLimits. */
   bool resetScheduleTypeLimits();
 
+  // ensure that this object does not contain the date 2/29
+  void ensureNoLeapDays();
+
   //@}
  protected:
   /// @cond

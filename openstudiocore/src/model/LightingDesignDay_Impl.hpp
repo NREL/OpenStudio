@@ -100,6 +100,9 @@ namespace detail {
 
     void clearSimulationTimes();
 
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.LightingDesignDay");

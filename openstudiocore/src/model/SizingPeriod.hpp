@@ -35,6 +35,9 @@ class MODEL_API SizingPeriod : public ParentObject {
 
   virtual ~SizingPeriod() {}
 
+  // ensure that this object does not contain the date 2/29
+  void ensureNoLeapDays();
+
  protected:
 
   typedef detail::SizingPeriod_Impl ImplType;

@@ -410,6 +410,9 @@ namespace detail {
     return true;
   }
 
+  void ScheduleRule_Impl::ensureNoLeapDays(){
+
+  }
 
   bool ScheduleRule_Impl::containsDate(const openstudio::Date& date) {
     bool result = false;
@@ -716,6 +719,9 @@ bool ScheduleRule::addSpecificDate(const openstudio::Date& date) {
   return getImpl<detail::ScheduleRule_Impl>()->addSpecificDate(date);
 }
 
+void ScheduleRule::ensureNoLeapDays(){
+  return getImpl<detail::ScheduleRule_Impl>()->ensureNoLeapDays();
+}
 
 bool ScheduleRule::containsDate(const openstudio::Date& date) {
   return getImpl<detail::ScheduleRule_Impl>()->containsDate(date);

@@ -63,6 +63,10 @@ namespace detail {
     return WeatherFileDays::iddObjectType();
   }
 
+  void DesignDay_Impl::ensureNoLeapDays()
+  {
+  }
+
 } // detail
 
 /// constructor
