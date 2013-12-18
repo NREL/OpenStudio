@@ -371,6 +371,11 @@ namespace detail {
     addValue(Time(1,0),0.0);
   }
 
+  void ScheduleDay_Impl::ensureNoLeapDays()
+  {
+    // nothing to do
+  }
+
   bool ScheduleDay_Impl::candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const {
     // currently only check ScheduleDay against Schedules
     ScheduleVector users = getObject<ScheduleDay>().getModelObjectSources<Schedule>();

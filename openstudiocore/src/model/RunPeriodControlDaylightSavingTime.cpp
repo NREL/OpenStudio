@@ -199,6 +199,7 @@ namespace detail {
 
   void RunPeriodControlDaylightSavingTime_Impl::ensureNoLeapDays()
   {
+    LOG(Warn, "Ensure no leap days is not yet implemented for run control daylight saving time");
   }
 
   openstudio::Date RunPeriodControlDaylightSavingTime_Impl::getDate(const std::string& text) const

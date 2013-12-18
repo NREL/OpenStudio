@@ -134,6 +134,9 @@ namespace detail {
     // Moves this rule to the last position. Called in ScheduleRule remove.
     bool moveToEnd(ScheduleRule& scheduleRule);
 
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays();
+
     //@}
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleRuleset");

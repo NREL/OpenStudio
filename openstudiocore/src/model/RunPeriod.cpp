@@ -216,6 +216,24 @@ namespace detail {
 
   void RunPeriod_Impl::ensureNoLeapDays()
   {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_RunPeriodFields::BeginMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_RunPeriodFields::BeginDayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_RunPeriodFields::BeginDayofMonth, 28);
+      }
+    }
+
+    month = getInt(OS_RunPeriodFields::EndMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_RunPeriodFields::EndDayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_RunPeriodFields::EndDayofMonth, 28);
+      }
+    }
   }
 
   // return the parent object in the hierarchy

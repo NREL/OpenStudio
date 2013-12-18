@@ -134,6 +134,7 @@ namespace detail {
 
   void RunPeriodControlSpecialDays_Impl::ensureNoLeapDays()
   {
+    LOG(Warn, "Ensure no leap days is not yet implemented for run control special days");
   }
 
   // return the parent object in the hierarchy

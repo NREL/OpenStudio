@@ -118,6 +118,9 @@ namespace detail {
     /// Clear all values from this schedule.
     void clearValues();
 
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays();
+
     //@}
    protected:
     virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const;

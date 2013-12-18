@@ -471,6 +471,13 @@ namespace detail {
     return setScheduleRuleIndex(scheduleRule, scheduleRules.size() - 1);
   }
 
+  void ScheduleRuleset_Impl::ensureNoLeapDays()
+  {
+    BOOST_FOREACH(ScheduleRule scheduleRule, this->scheduleRules()){
+      scheduleRule.ensureNoLeapDays();
+    }
+  }
+
   boost::optional<ScheduleDay> ScheduleRuleset_Impl::optionalDefaultDaySchedule() const {
     return getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::DefaultDayScheduleName);
   }

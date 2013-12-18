@@ -169,6 +169,11 @@ namespace detail {
     return false;
   }
 
+  void ScheduleCompact_Impl::ensureNoLeapDays()
+  {
+    LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
+  }
+
   bool ScheduleCompact_Impl::isConstantValue() const {
     IdfExtensibleGroupVector scheduleData = extensibleGroups();
     if (scheduleData.size() == 4u) {
