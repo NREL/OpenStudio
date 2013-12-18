@@ -2506,7 +2506,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   QDomElement htgDsgnMaxFlowFracElement = thermalZoneElement.firstChildElement("HtgDsgnMaxFlowFrac");
   double htgDsgnMaxFlowFrac = htgDsgnMaxFlowFracElement.text().toDouble(&ok);
-  if( ok )
+  if( ok && htgDsgnMaxFlowFrac > 0.0 )
   {
     sizingZone.setHeatingDesignAirFlowMethod("DesignDayWithLimit");
     sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
