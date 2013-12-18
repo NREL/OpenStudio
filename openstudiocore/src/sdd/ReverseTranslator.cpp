@@ -736,7 +736,7 @@ namespace sdd {
         var = model::OutputVariable("Cooling Coil Total Cooling Rate",*result);
         var.setReportingFrequency(interval);
 
-        var = model::OutputVariable("Fan Electric Energy",*result);
+        var = model::OutputVariable("Fan Electric Power",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Heating Coil Gas Rate",*result);
