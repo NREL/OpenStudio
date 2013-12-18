@@ -954,7 +954,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
         istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
     {
-      spm.setMaximumSetpointTemperature(15.56);
+      spm.setMaximumSetpointTemperature(23.89);
     }
     else
     {
