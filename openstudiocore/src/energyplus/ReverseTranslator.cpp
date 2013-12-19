@@ -624,12 +624,12 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Refrigeration_Case :
     {
-      modelObject = translateRefrigerationCase(workspaceObject);
+      // modelObject = translateRefrigerationCase(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::Refrigeration_Compressor :
     {
-      modelObject = translateRefrigerationCompressor(workspaceObject);
+      // modelObject = translateRefrigerationCompressor(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::RunPeriod :
