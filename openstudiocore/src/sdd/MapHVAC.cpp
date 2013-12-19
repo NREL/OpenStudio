@@ -1506,7 +1506,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     {
       heatingCoil.setDefrostStrategy("ReverseCycle");
 
-      heatingCoil.setDefrostEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperatureCurve.get());
+      model::CurveBiquadratic defrostCurve(model);
+      defrostCurve.setName(heatingCoil.name().get() + " Defrost Curve");
+      defrostCurve.setCoefficient1Constant(1.0);
+      heatingCoil.setDefrostEnergyInputRatioFunctionofTemperatureCurve(defrostCurve);
     }
 
     // HtPumpDefHtrCapSim
