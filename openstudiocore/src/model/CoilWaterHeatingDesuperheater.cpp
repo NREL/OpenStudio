@@ -110,6 +110,44 @@ namespace detail {
     return OS_Coil_WaterHeating_DesuperheaterFields::WaterOutletNodeName;
   }
 
+  ModelObject CoilWaterHeatingDesuperheater_Impl::clone(Model model) const {
+    CoilWaterHeatingDesuperheater modelObjectClone = ModelObject_Impl::clone(model).cast<CoilWaterHeatingDesuperheater>();
+
+    if ( boost::optional<CurveBiquadratic> heatReclaimCurve = heatReclaimEfficiencyFunctionofTemperatureCurve() ) {
+      modelObjectClone.setHeatReclaimEfficiencyFunctionofTemperatureCurve(heatReclaimCurve.get().clone(model).cast<CurveBiquadratic>());
+    }
+
+    modelObjectClone.resetHeatingSource();
+
+    return modelObjectClone;
+  }
+
+  std::vector<IddObjectType> CoilWaterHeatingDesuperheater_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Biquadratic);
+    return result;
+  }
+
+  std::vector<ModelObject> CoilWaterHeatingDesuperheater_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    boost::optional<CurveBiquadratic> intermediate;
+    if ( (intermediate = heatReclaimEfficiencyFunctionofTemperatureCurve()) ) {
+      result.push_back(*intermediate);
+    }
+    return result;
+  }
+
+  bool CoilWaterHeatingDesuperheater_Impl::addToNode(Node & node) {
+    return false;
+  }
+
+  std::vector<IdfObject> CoilWaterHeatingDesuperheater_Impl::remove() {
+    removeFromHeatRejectionTarget();
+    return StraightComponent_Impl::remove();
+  }
+
   boost::optional<ModelObject> CoilWaterHeatingDesuperheater_Impl::heatRejectionTarget() const
   {
     boost::optional<ModelObject> inletHeatRejectionTarget;
@@ -243,22 +281,6 @@ namespace detail {
   boost::optional<CurveBiquadratic> CoilWaterHeatingDesuperheater_Impl::heatReclaimEfficiencyFunctionofTemperatureCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_WaterHeating_DesuperheaterFields::HeatReclaimEfficiencyFunctionofTemperatureCurveName);
   }
-
-  // Connection CoilWaterHeatingDesuperheater_Impl::waterInletNode() const {
-  //   boost::optional<Connection> value = optionalWaterInletNode();
-  //   if (!value) {
-  //     LOG_AND_THROW(briefDescription() << " does not have an Water Inlet Node attached.");
-  //   }
-  //   return value.get();
-  // }
-
-  // Connection CoilWaterHeatingDesuperheater_Impl::waterOutletNode() const {
-  //   boost::optional<Connection> value = optionalWaterOutletNode();
-  //   if (!value) {
-  //     LOG_AND_THROW(briefDescription() << " does not have an Water Outlet Node attached.");
-  //   }
-  //   return value.get();
-  // }
 
   // boost::optional<HVACComponent> CoilWaterHeatingDesuperheater_Impl::tank() const {
   //   return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Coil_WaterHeating_DesuperheaterFields::TankName);
@@ -404,25 +426,27 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  // bool CoilWaterHeatingDesuperheater_Impl::setWaterInletNode(const Connection& connection) {
-  //   bool result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::WaterInletNodeName, connection.handle());
-  //   return result;
-  // }
-
-  // bool CoilWaterHeatingDesuperheater_Impl::setWaterOutletNode(const Connection& connection) {
-  //   bool result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::WaterOutletNodeName, connection.handle());
-  //   return result;
-  // }
-
   // bool CoilWaterHeatingDesuperheater_Impl::setTank(const HVACComponent& waterHeater) {
   //   bool result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::TankName, waterHeater.handle());
   //   if (result) addToWaterHeater(waterHeater);
   //   return result;
   // }
 
-  bool CoilWaterHeatingDesuperheater_Impl::setHeatingSource(const ModelObject& heatingSource) {
-    bool result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName, heatingSource.handle());
-    return result;
+  bool CoilWaterHeatingDesuperheater_Impl::setHeatingSource(const boost::optional<ModelObject>& heatingSource) {
+      bool result(false);
+      if (heatingSource) {
+          result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName, heatingSource.get().handle());
+      }
+      else {
+          resetHeatingSource();
+          result = true;
+      }
+      return result;
+  }
+
+  void CoilWaterHeatingDesuperheater_Impl::resetHeatingSource() {
+      bool result = setString(OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName, "");
+      OS_ASSERT(result);
   }
 
   bool CoilWaterHeatingDesuperheater_Impl::setWaterFlowRate(double waterFlowRate) {
@@ -488,11 +512,6 @@ CoilWaterHeatingDesuperheater::CoilWaterHeatingDesuperheater(const Model& model,
   : StraightComponent(CoilWaterHeatingDesuperheater::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilWaterHeatingDesuperheater_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_WaterHeating_DesuperheaterFields::SetpointTemperatureScheduleName
-  //     OS_Coil_WaterHeating_DesuperheaterFields::TankName
-  //     OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName
 
   bool ok = true;
   Schedule availabilitySchedule = model.alwaysOnDiscreteSchedule();
@@ -570,14 +589,6 @@ double CoilWaterHeatingDesuperheater::maximumInletWaterTemperatureforHeatReclaim
 boost::optional<CurveBiquadratic> CoilWaterHeatingDesuperheater::heatReclaimEfficiencyFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->heatReclaimEfficiencyFunctionofTemperatureCurve();
 }
-
-// Connection CoilWaterHeatingDesuperheater::waterInletNode() const {
-//   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->waterInletNode();
-// }
-
-// Connection CoilWaterHeatingDesuperheater::waterOutletNode() const {
-//   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->waterOutletNode();
-// }
 
 // boost::optional<HVACComponent> CoilWaterHeatingDesuperheater::tank() const {
 //   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->tank();
@@ -671,20 +682,16 @@ void CoilWaterHeatingDesuperheater::resetHeatReclaimEfficiencyFunctionofTemperat
   getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
 }
 
-// bool CoilWaterHeatingDesuperheater::setWaterInletNode(const Connection& connection) {
-//   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setWaterInletNode(connection);
-// }
-
-// bool CoilWaterHeatingDesuperheater::setWaterOutletNode(const Connection& connection) {
-//   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setWaterOutletNode(connection);
-// }
-
 // bool CoilWaterHeatingDesuperheater::setTank(const HVACComponent& waterHeater) {
 //   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setTank(waterHeater);
 // }
 
 bool CoilWaterHeatingDesuperheater::setHeatingSource(const ModelObject& heatingSource) {
   return getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->setHeatingSource(heatingSource);
+}
+
+void CoilWaterHeatingDesuperheater::resetHeatingSource() {
+    getImpl<detail::CoilWaterHeatingDesuperheater_Impl>()->resetHeatingSource();
 }
 
 bool CoilWaterHeatingDesuperheater::setWaterFlowRate(double waterFlowRate) {

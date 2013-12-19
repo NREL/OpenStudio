@@ -68,6 +68,16 @@ namespace detail {
 
     virtual unsigned outletPort();
 
+    virtual bool addToNode(Node & node);
+
+    virtual ModelObject clone(Model model) const;
+
+    virtual std::vector<IdfObject> remove();
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
+
     boost::optional<ModelObject> heatRejectionTarget() const;
 
     bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
@@ -170,7 +180,9 @@ namespace detail {
     // bool setTank(const HVACComponent& waterHeater);
 
     // TODO: Check argument type. From object lists, some candidates are: DesuperHeatingCoilSources.
-    bool setHeatingSource(const ModelObject& heatingSource);
+    bool setHeatingSource(const boost::optional<ModelObject>& heatingSource);
+
+    void resetHeatingSource();
 
     bool setWaterFlowRate(double waterFlowRate);
 

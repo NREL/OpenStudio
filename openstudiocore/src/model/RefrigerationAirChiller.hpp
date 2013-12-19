@@ -246,9 +246,9 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   void resetTemperatureTerminationDefrostFractiontoIce();
 
-  bool setVerticalLocation(std::string verticalLocation);
+  // bool setVerticalLocation(std::string verticalLocation);
 
-  void resetVerticalLocation();
+  // void resetVerticalLocation();
 
   void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 

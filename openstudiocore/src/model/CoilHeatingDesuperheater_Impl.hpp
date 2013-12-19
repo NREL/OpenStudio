@@ -67,6 +67,8 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const;
 
+    virtual bool addToNode(Node & node);
+
 //  allowableChildTypes and children
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;

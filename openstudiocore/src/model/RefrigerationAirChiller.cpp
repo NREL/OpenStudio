@@ -705,7 +705,7 @@ RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& d
   OS_ASSERT(ok);
   ok = setTemperatureTerminationDefrostFractiontoIce(0.7);
   OS_ASSERT(ok);
-  ok = setVerticalLocation("Middle");
+  ok = getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation("Middle");
   OS_ASSERT(ok);
 }
 
@@ -1075,13 +1075,13 @@ void RefrigerationAirChiller::resetTemperatureTerminationDefrostFractiontoIce() 
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetTemperatureTerminationDefrostFractiontoIce();
 }
 
-bool RefrigerationAirChiller::setVerticalLocation(std::string verticalLocation) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation(verticalLocation);
-}
+// bool RefrigerationAirChiller::setVerticalLocation(std::string verticalLocation) {
+//   return getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation(verticalLocation);
+// }
 
-void RefrigerationAirChiller::resetVerticalLocation() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetVerticalLocation();
-}
+// void RefrigerationAirChiller::resetVerticalLocation() {
+//   getImpl<detail::RefrigerationAirChiller_Impl>()->resetVerticalLocation();
+// }
 
 void RefrigerationAirChiller::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
   getImpl<detail::RefrigerationAirChiller_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);

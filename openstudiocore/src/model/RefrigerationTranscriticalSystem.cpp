@@ -106,6 +106,11 @@ namespace detail {
       result.insert(result.end(), removedCompressors.begin(), removedCompressors.end());
     }
 
+    if (boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler = this->refrigerationGasCooler()) {
+      std::vector<IdfObject> removedGasCoolers = refrigerationGasCooler->remove();
+      result.insert(result.end(), removedGasCoolers.begin(), removedGasCoolers.end());
+    }
+
     std::vector<IdfObject> removedRefrigerationTranscriticalSystem = ModelObject_Impl::remove();
     result.insert(result.end(), removedRefrigerationTranscriticalSystem.begin(), removedRefrigerationTranscriticalSystem.end());
 
@@ -134,6 +139,11 @@ namespace detail {
     if (boost::optional<ModelObjectList> lowPressureCompressorList = this->lowPressureCompressorList()) {
       ModelObjectList compressorListClone = lowPressureCompressorList->clone(model).cast<ModelObjectList>();
       modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowPressureCompressorList(compressorListClone);
+    }
+
+    if (boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler = this->refrigerationGasCooler()) {
+      RefrigerationGasCoolerAirCooled refrigerationGasCoolerClone = refrigerationGasCooler->clone(model).cast<RefrigerationGasCoolerAirCooled>();
+      modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationGasCooler(refrigerationGasCoolerClone);
     }
 
     modelObjectClone.resetMediumTemperatureSuctionPipingZone();

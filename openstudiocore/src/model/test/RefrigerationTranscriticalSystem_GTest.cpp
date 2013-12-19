@@ -27,6 +27,8 @@
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
+#include <model/RefrigerationGasCoolerAirCooled.hpp>
+#include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/ModelObjectList.hpp>
@@ -57,12 +59,17 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_Remove)
 {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
+  RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
+  testObject.setRefrigerationGasCooler(gasCooler);
 
   std::vector<RefrigerationTranscriticalSystem> refrigerationSystems = model.getModelObjects<RefrigerationTranscriticalSystem>();
   EXPECT_EQ(1, refrigerationSystems.size());
 
   std::vector<ModelObjectList> refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
   EXPECT_EQ(4, refrigerationModelObjectLists.size());
+
+  std::vector<RefrigerationGasCoolerAirCooled> refrigerationGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  EXPECT_EQ(1, refrigerationGasCoolers.size());
 
   testObject.remove();
 
@@ -71,6 +78,9 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_Remove)
 
   refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
+
+  refrigerationGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  EXPECT_EQ(0, refrigerationGasCoolers.size());
 }
 
 TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithDefaultData)
@@ -80,6 +90,11 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithDefaultDa
 
   RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
+  EXPECT_DOUBLE_EQ(3500000.0, testObjectClone.receiverPressure());
+  EXPECT_DOUBLE_EQ(0.4, testObjectClone.subcoolerEffectiveness());
+  EXPECT_EQ("R744", testObjectClone.refrigerationSystemWorkingFluidType());
+  EXPECT_DOUBLE_EQ(0.0, testObjectClone.sumUASuctionPipingforMediumTemperatureLoads());
+  EXPECT_DOUBLE_EQ(0.0, testObjectClone.sumUASuctionPipingforLowTemperatureLoads());
 }
 
 TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomData)
@@ -94,7 +109,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomDat
   RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wds);
   RefrigerationCompressor highPressureCompressor1 = RefrigerationCompressor(model);
   RefrigerationCompressor lowPressureCompressor1 = RefrigerationCompressor(model);
-  // RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
+  RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
 
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   testObject.setMediumTemperatureSuctionPipingZone(thermalZone);
@@ -105,7 +120,13 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomDat
   testObject.addLowTemperatureWalkin(walkin2);
   testObject.addHighPressureCompressor(highPressureCompressor1);
   testObject.addLowPressureCompressor(lowPressureCompressor1);
-  // testObject.setRefrigerationGasCooler(gasCooler);
+  testObject.setRefrigerationGasCooler(gasCooler);
+
+  testObject.setReceiverPressure(999.0);
+  testObject.setSubcoolerEffectiveness(0.99);
+  testObject.setRefrigerationSystemWorkingFluidType("R410a");
+  testObject.setSumUASuctionPipingforMediumTemperatureLoads(999.0);
+  testObject.setSumUASuctionPipingforLowTemperatureLoads(999.0);
 
   std::vector<RefrigerationCase> _mediumTemperatureCases = testObject.mediumTemperatureCases();
   std::vector<RefrigerationWalkIn> _mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
@@ -137,7 +158,13 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomDat
   EXPECT_EQ(1, lowPressureCompressorsClone.size());
   EXPECT_NE(lowPressureCompressorsClone[0].handle(), _lowPressureCompressors[0].handle());
 
-  // EXPECT_NE(testObjectClone.refrigerationGasCooler().get().handle(), gasCooler.handle());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.receiverPressure());
+  EXPECT_DOUBLE_EQ(0.99, testObjectClone.subcoolerEffectiveness());
+  EXPECT_EQ("R410a", testObjectClone.refrigerationSystemWorkingFluidType());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.sumUASuctionPipingforMediumTemperatureLoads());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.sumUASuctionPipingforLowTemperatureLoads());
+  ASSERT_TRUE(testObjectClone.refrigerationGasCooler());
+  EXPECT_NE(gasCooler, testObjectClone.refrigerationGasCooler().get());
 }
 
 TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelsWithDefaultData)
@@ -152,8 +179,13 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelsWithDefaultD
 
   RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
+  EXPECT_DOUBLE_EQ(3500000.0, testObjectClone2.receiverPressure());
+  EXPECT_DOUBLE_EQ(0.4, testObjectClone2.subcoolerEffectiveness());
+  EXPECT_EQ("R744", testObjectClone2.refrigerationSystemWorkingFluidType());
+  EXPECT_DOUBLE_EQ(0.0, testObjectClone2.sumUASuctionPipingforMediumTemperatureLoads());
+  EXPECT_DOUBLE_EQ(0.0, testObjectClone2.sumUASuctionPipingforLowTemperatureLoads());
   EXPECT_NE(testObjectClone2, testObjectClone);
-  EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
+  EXPECT_NE(testObjectClone2, testObject);
 }
 
 TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomData)
@@ -168,7 +200,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomDat
   RefrigerationWalkIn walkin2 = RefrigerationWalkIn(model, wds);
   RefrigerationCompressor highPressureCompressor1 = RefrigerationCompressor(model);
   RefrigerationCompressor lowPressureCompressor1 = RefrigerationCompressor(model);
-  // RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
+  RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
 
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   testObject.setMediumTemperatureSuctionPipingZone(thermalZone);
@@ -179,7 +211,13 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomDat
   testObject.addLowTemperatureWalkin(walkin2);
   testObject.addHighPressureCompressor(highPressureCompressor1);
   testObject.addLowPressureCompressor(lowPressureCompressor1);
-  // testObject.setRefrigerationGasCooler(gasCooler);
+  testObject.setRefrigerationGasCooler(gasCooler);
+
+  testObject.setReceiverPressure(999.0);
+  testObject.setSubcoolerEffectiveness(0.99);
+  testObject.setRefrigerationSystemWorkingFluidType("R410a");
+  testObject.setSumUASuctionPipingforMediumTemperatureLoads(999.0);
+  testObject.setSumUASuctionPipingforLowTemperatureLoads(999.0);
 
   std::vector<RefrigerationCase> _mediumTemperatureCases = testObject.mediumTemperatureCases();
   std::vector<RefrigerationWalkIn> _mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
@@ -213,46 +251,54 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomDat
   std::vector<RefrigerationCompressor> lowPressureCompressorsClone = testObjectClone2.lowPressureCompressors();
   EXPECT_EQ(1, lowPressureCompressorsClone.size());
   EXPECT_NE(lowPressureCompressorsClone[0].handle(), _lowPressureCompressors[0].handle());
-  
-  // EXPECT_NE(testObjectClone2.refrigerationGasCooler().get().handle(), gasCooler.handle());
+
+  ASSERT_TRUE(testObjectClone2.refrigerationGasCooler());
+  EXPECT_NE(gasCooler, testObjectClone2.refrigerationGasCooler().get());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone2.receiverPressure());
+  EXPECT_DOUBLE_EQ(0.99, testObjectClone2.subcoolerEffectiveness());
+  EXPECT_EQ("R410a", testObjectClone2.refrigerationSystemWorkingFluidType());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone2.sumUASuctionPipingforMediumTemperatureLoads());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone2.sumUASuctionPipingforLowTemperatureLoads());
+  EXPECT_NE(testObjectClone2, testObjectClone);
+  EXPECT_NE(testObjectClone2, testObject);
 }
 
-// TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirCooled)
-// {
-//   Model model;
-//   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
-//   RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirCooled)
+{
+  Model model;
+  RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
+  RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
 
-//   EXPECT_FALSE(testObject.refrigerationGasCooler());
-//   EXPECT_TRUE(testObject.setRefrigerationGasCooler(gasCooler));
-//   EXPECT_TRUE(testObject.refrigerationGasCooler());
+  EXPECT_FALSE(testObject.refrigerationGasCooler());
+  EXPECT_TRUE(testObject.setRefrigerationGasCooler(gasCooler));
+  EXPECT_TRUE(testObject.refrigerationGasCooler());
 
-//   std::vector<RefrigerationGasCoolerAirCooled> testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
-//   EXPECT_EQ(1, testGasCoolers.size());
+  std::vector<RefrigerationGasCoolerAirCooled> testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  EXPECT_EQ(1, testGasCoolers.size());
 
-//   RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
-//   EXPECT_NE(testObjectClone.refrigerationGasCooler().get().handle(), gasCooler.handle());
+  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  EXPECT_NE(testObjectClone.refrigerationGasCooler().get().handle(), gasCooler.handle());
 
-//   testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
-//   EXPECT_EQ(2, testGasCoolers.size());
+  testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  EXPECT_EQ(2, testGasCoolers.size());
 
-//   Model model2;
-//   RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
+  Model model2;
+  RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
-//   testGasCoolers = model2.getModelObjects<RefrigerationGasCoolerAirCooled>();
-//   EXPECT_EQ(1, testGasCoolers.size());
+  testGasCoolers = model2.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  EXPECT_EQ(1, testGasCoolers.size());
 
-//   EXPECT_NE(testObjectClone2.refrigerationGasCooler().get().handle(), gasCooler.handle());
+  EXPECT_NE(testObjectClone2.refrigerationGasCooler().get().handle(), gasCooler.handle());
 
-//   gasCooler.remove();
+  gasCooler.remove();
 
-//   EXPECT_FALSE(testObject.refrigerationGasCooler());
-//   EXPECT_TRUE(testObjectClone.refrigerationGasCooler());
-//   EXPECT_TRUE(testObjectClone2.refrigerationGasCooler());
+  EXPECT_FALSE(testObject.refrigerationGasCooler());
+  EXPECT_TRUE(testObjectClone.refrigerationGasCooler());
+  EXPECT_TRUE(testObjectClone2.refrigerationGasCooler());
 
-//   testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
-//   EXPECT_EQ(1, testGasCoolers.size());
-// }
+  testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  EXPECT_EQ(1, testGasCoolers.size());
+}
 
 TEST_F(ModelFixture, RefrigerationTranscriticalSystem_HighPressureCompressors)
 {
@@ -938,14 +984,14 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCas
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-// TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationTranscriticalSystemWorkingFluidType)
-// {
-//   Model model;
-//   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationTranscriticalSystemWorkingFluidType)
+{
+  Model model;
+  RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
-//   EXPECT_EQ("R404a", testObject.refrigerationSystemWorkingFluidType());
-//   EXPECT_TRUE(testObject.setRefrigerationTranscriticalSystemWorkingFluidType("R410a"));
-//   EXPECT_TRUE(testObject.setRefrigerationTranscriticalSystemWorkingFluidType("R22"));
-//   EXPECT_FALSE(testObject.setRefrigerationTranscriticalSystemWorkingFluidType("Not Valid"));
-// }
+  EXPECT_EQ("R744", testObject.refrigerationSystemWorkingFluidType());
+  EXPECT_TRUE(testObject.setRefrigerationSystemWorkingFluidType("R410a"));
+  EXPECT_TRUE(testObject.setRefrigerationSystemWorkingFluidType("R22"));
+  EXPECT_FALSE(testObject.setRefrigerationSystemWorkingFluidType("Not Valid"));
+}
 

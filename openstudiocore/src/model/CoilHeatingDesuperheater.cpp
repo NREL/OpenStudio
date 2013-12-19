@@ -20,15 +20,14 @@
 #include <model/CoilHeatingDesuperheater.hpp>
 #include <model/CoilHeatingDesuperheater_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -98,7 +97,20 @@ namespace detail {
       return modelObjectClone;
   }
 
-  //allowable child types and children
+  bool CoilHeatingDesuperheater_Impl::addToNode(Node & node) {
+    boost::optional<AirLoopHVAC> loop = node.airLoopHVAC();
+
+    if ( !loop ) return false;
+
+    if( loop->supplyComponent(node.handle()) )
+    {
+      return StraightComponent_Impl::addToNode(node);
+    }
+    else
+    {
+      return false;
+    }
+  }
 
   boost::optional<Schedule> CoilHeatingDesuperheater_Impl::availabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_DesuperheaterFields::AvailabilityScheduleName);
@@ -195,22 +207,11 @@ CoilHeatingDesuperheater::CoilHeatingDesuperheater(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingDesuperheater_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_Heating_DesuperheaterFields::AirInletNodeName
-  //     OS_Coil_Heating_DesuperheaterFields::AirOutletNodeName
-  //     OS_Coil_Heating_DesuperheaterFields::HeatingSourceName
   bool ok = true;
-  // ok = setHandle();
+  ok = setHeatReclaimRecoveryEfficiency(0.8);
   OS_ASSERT(ok);
-  // ok = setAirInletNode();
+  ok = setParasiticElectricLoad(0.0);
   OS_ASSERT(ok);
-  // ok = setAirOutletNode();
-  OS_ASSERT(ok);
-  // ok = setHeatingSource();
-  OS_ASSERT(ok);
-
-    setHeatReclaimRecoveryEfficiency(0.8);
-    setParasiticElectricLoad(0.0);
 }
 
 IddObjectType CoilHeatingDesuperheater::iddObjectType() {

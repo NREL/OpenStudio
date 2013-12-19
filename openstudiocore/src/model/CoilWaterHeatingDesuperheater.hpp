@@ -155,6 +155,8 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
   // TODO: Check argument type. From object lists, some candidates are: DesuperHeatingCoilSources.
   bool setHeatingSource(const ModelObject& heatingSource);
 
+  void resetHeatingSource();
+
   bool setWaterFlowRate(double waterFlowRate);
 
   bool setWaterPumpPower(double waterPumpPower);
