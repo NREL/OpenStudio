@@ -13,6 +13,8 @@ SET( ${target_name}_src
   PrjDefines.hpp
   PrjModel.hpp
   PrjModel.cpp
+  PrjModelPrivate.hpp
+  PrjModelPrivate.cpp
   PrjPublic.hpp
   PrjPublic.cpp
   PrjPrivate.hpp

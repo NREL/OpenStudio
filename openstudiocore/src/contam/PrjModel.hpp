@@ -23,7 +23,6 @@
 #include "PrjReader.hpp"
 #include "PrjPublic.hpp"
 
-#include <QSharedData>
 #include <QExplicitlySharedDataPointer>
 
 #include <utilities/core/Path.hpp>
@@ -35,36 +34,7 @@ namespace openstudio {
 namespace contam {
 
 class SimFile;
-
-namespace detail {
-
-class PrjModelPrivate : public QSharedData
-{
-public:
-  PrjModelPrivate()
-  {
-    valid = false;
-  }
-
-  bool valid;
-
-  std::map<std::string,std::string> unsupported;
-
-  RunControl rc;
-  std::vector<int> contaminants;
-  std::vector<Species> species;
-  std::vector<Level> levels;
-  std::vector<DaySchedule> daySchedules;
-  std::vector<WeekSchedule> weekSchedules;
-  std::vector<WindPressureProfile> windPressureProfiles;
-  QVector<QSharedPointer<AirflowElement> > airflowElements;
-  QVector<QSharedPointer<ControlNode> > controlNodes;
-  std::vector<Ahs> ahs;
-  std::vector<Zone> zones;
-  std::vector<Path> paths;
-};
-
-} // detail
+class PrjModelPrivate;
 
 /** PrjModel is primarily a container for CONTAM airflow model data.
  *
@@ -83,13 +53,17 @@ public:
 class CONTAM_API PrjModel
 {
 public:
-  PrjModel()
-  {
-    d = new detail::PrjModelPrivate();
-  }
+  PrjModel();
   explicit PrjModel(openstudio::path path);
   explicit PrjModel(std::string filename);
   explicit PrjModel(Reader &input);
+
+  PrjModel(const PrjModel &other);
+  ~PrjModel();
+  PrjModel& operator=(const PrjModel &other);
+  bool operator==(const PrjModel &other) const;
+  bool operator!=(const PrjModel &other) const;
+
   bool read(openstudio::path path);
   bool read(std::string filename);
   bool read(Reader &input);
@@ -100,262 +74,56 @@ public:
   std::vector<TimeSeries> pathInfiltration(std::vector<int> pathNrs, SimFile *sim);
   bool setSteadyWeather(double windSpeed, double windDirection);
 
-  RunControl rc() const
-  {
-    return d->rc;
-  }
-  void setRc(const RunControl rc)
-  {
-    d->rc = rc;
-  }
+  RunControl rc() const;
+  void setRc(const RunControl rc);
 
-  std::vector<int> contaminants() const
-  {
-    return d->contaminants;
-  }
+  std::vector<int> contaminants() const;
 
-  std::vector <Species> species() const
-  {
-    return d->species;
-  }
-  void setSpecies(const std::vector<Species> species)
-  {
-    d->species = species;
-    rebuildContaminants();
-  }
+  std::vector <Species> species() const;
+  void setSpecies(const std::vector<Species> species);
 
-  std::vector <Level> levels() const
-  {
-    return d->levels;
-  }
-  void setLevels(const std::vector<Level> levels)
-  {
-    d->levels = levels;
-  }
-  void addLevel(Level level)
-  {
-    level.setNr(d->levels.size()+1);
-    d->levels.push_back(level);
-  }
+  std::vector <Level> levels() const;
+  void setLevels(const std::vector<Level> levels);
+  void addLevel(Level level);
 
-  std::vector <DaySchedule> daySchedules() const
-  {
-    return d->daySchedules;
-  }
-  void setDaySchedules(const std::vector<DaySchedule> daySchedules)
-  {
-    d->daySchedules = daySchedules;
-  }
+  std::vector <DaySchedule> daySchedules() const;
+  void setDaySchedules(const std::vector<DaySchedule> daySchedules);
 
-  std::vector <WeekSchedule> weekSchedules() const
-  {
-    return d->weekSchedules;
-  }
-  void setWeekSchedules(const std::vector<WeekSchedule> weekSchedules)
-  {
-    d->weekSchedules = weekSchedules;
-  }
+  std::vector <WeekSchedule> weekSchedules() const;
+  void setWeekSchedules(const std::vector<WeekSchedule> weekSchedules);
 
-  std::vector <WindPressureProfile> windPressureProfiles() const
-  {
-    return d->windPressureProfiles;
-  }
-  void setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles)
-  {
-    d->windPressureProfiles = windPressureProfiles;
-  }
+  std::vector <WindPressureProfile> windPressureProfiles() const;
+  void setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles);
 
-  std::vector<PlrTest1> getPlrTest1() const
-  {
-    std::vector<PlrTest1> afe;
-    for(int i=0;i<d->airflowElements.size();i++)
-    {
-      if(d->airflowElements[i]->dataType() == "plr_test1")
-      {
-        afe.push_back(*(d->airflowElements[i].dynamicCast<PlrTest1>().data()));
-      }
-    }
-    return afe;
-  }
+  std::vector<PlrTest1> getPlrTest1() const;
 
-  template <class T> void addAirflowElement(T element)
-  {
-    T *copy = new T;
-    *copy = element;
-    AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
-    if(pointer)
-    {
-      copy->setNr(d->airflowElements.size()+1);
-      d->airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
-    }
-  }
+  bool addAirflowElement(PlrTest1 element);
 
   int airflowElementNrByName(std::string name) const;
 
-  template <class T> bool replaceAirflowElement(int nr, T element)
-  {
-    if(nr>0 && nr<=d->airflowElements.size())
-    {
-      T *copy = new T;
-      *copy = element;
-      AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
-      if(pointer)
-      {
-        copy->setNr(nr);
-        d->airflowElements.replace(nr-1,QSharedPointer<AirflowElement>(pointer));
-        return true;
-      }
-    }
-    return false;
-  }
+  bool replaceAirflowElement(int nr, PlrTest1 element);
 
-  std::vector<CvfDat> getCvfDat()
-  {
-    std::vector<CvfDat> ctrl;
-    for(int i=0;i<d->controlNodes.size();i++)
-    {
-      QSharedPointer<CvfDat> cast = d->controlNodes[i].dynamicCast<CvfDat>();
-      if(!cast.isNull())
-      {
-        ctrl.push_back(*(cast.data()));
-      }
-    }
-    return ctrl;
-  }
+  std::vector<CvfDat> getCvfDat() const;
 
-  template <class T> void addControlNode(T element, bool sequence=true)
-  {
-    T *copy = new T;
-    *copy = element;
-    ControlNode *pointer = dynamic_cast<ControlNode*>(copy);
-    if(pointer)
-    {
-      copy->setNr(d->controlNodes.size()+1);
-      if(sequence)
-      {
-        copy->setSeqnr(copy->nr());
-      }
-      d->controlNodes.push_back(QSharedPointer<ControlNode>(pointer));
-    }
-  }
+  bool addControlNode(CvfDat element, bool sequence=true);
 
-  std::vector <Ahs> ahs() const
-  {
-    return d->ahs;
-  }
-  void setAhs(const std::vector<Ahs> ahs)
-  {
-    d->ahs = ahs;
-  }
-  void addAhs(Ahs ahs)
-  {
-    ahs.setNr(d->ahs.size()+1);
-    d->ahs.push_back(ahs);
-  }
+  std::vector <Ahs> ahs() const;
+  void setAhs(const std::vector<Ahs> ahs);
+  void addAhs(Ahs ahs);
 
-  std::vector<Zone> zones() const
-  {
-    return d->zones;
-  }
-  void setZones(const std::vector<Zone> zones)
-  {
-    d->zones = zones;
-  }
-  void addZone(Zone zone)
-  {
-    zone.setNr(d->zones.size()+1);
-    d->zones.push_back(zone);
-  }
+  std::vector<Zone> zones() const;
+  void setZones(const std::vector<Zone> zones);
+  void addZone(Zone zone);
 
-  std::vector<Path> paths() const
-  {
-    return d->paths;
-  }
-  void setPaths(const std::vector<Path> paths)
-  {
-    d->paths = paths;
-  }
-  void addPath(Path path)
-  {
-    path.setNr(d->paths.size()+1);
-    d->paths.push_back(path);
-  }
+  std::vector<Path> paths() const;
+  void setPaths(const std::vector<Path> paths);
+  void addPath(Path path);
 
-  bool valid() const
-  {
-    return d->valid;
-  }
+  bool valid() const;
 
 private:
-  void rebuildContaminants();
-  void readZoneIc(Reader &input);
-  std::string writeZoneIc(int start=0);
-  template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
-  template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
-  template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
-
-  QExplicitlySharedDataPointer<detail::PrjModelPrivate> d;
+  QExplicitlySharedDataPointer<PrjModelPrivate> d;
 };
-
-template <class T> std::string PrjModel::writeSectionVector(std::vector<T> vector, std::string label, int start)
-{
-  std::string string;
-  int number = vector.size()-start;
-  if(label.empty())
-  {
-    string += openstudio::toString(number) + '\n';
-  }
-  else
-  {
-    string += openstudio::toString(number) + " ! " + label + '\n';
-  }
-  for(unsigned int i=start;i<vector.size();i++)
-  {
-    string += vector[i].write();
-  }
-  string += "-999\n";
-  return string;
-}
-
-template <class T> std::string PrjModel::writeSectionVector(QVector<QSharedPointer<T> > vector,
-  std::string label, int start)
-{
-  std::string string;
-  int number = vector.size()-start;
-  if(label.empty())
-  {
-    string += openstudio::toString(number) + '\n';
-  }
-  else
-  {
-    string += openstudio::toString(number) + " ! " + label + '\n';
-  }
-  for(int i=start;i<vector.size();i++)
-  {
-    string += vector[i]->write();
-  }
-  string += "-999\n";
-  return string;
-}
-
-template <class T> std::string PrjModel::writeArray(std::vector<T> vector, std::string label, int start)
-{
-  std::string string;
-  int number = vector.size()-start;
-  if(label.empty())
-  {
-    string += openstudio::toString(number) + '\n';
-  }
-  else
-  {
-    string += openstudio::toString(number) + " ! " + label + '\n';
-  }
-  for(unsigned int i=start;i<vector.size();i++)
-  {
-    string += ' ' + openstudio::toString(vector[i]);
-  }
-  return string +'\n';
-}
 
 } // contam
 } // openstudio
