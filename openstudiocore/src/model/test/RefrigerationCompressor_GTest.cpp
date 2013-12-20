@@ -61,6 +61,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
 {
   Model model;
   RefrigerationCompressor testObject = RefrigerationCompressor(model);
+  EXPECT_EQ("Subcritical", testObject.modeofOperation());
 
   RefrigerationCompressor testObjectClone = testObject.clone(model).cast<RefrigerationCompressor>();
 
@@ -71,6 +72,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
 
   EXPECT_DOUBLE_EQ(18.3, testObjectClone.ratedReturnGasTemperature().get());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ratedSubcooling().get());
+  EXPECT_EQ("Subcritical", testObjectClone.modeofOperation());
   EXPECT_NE(testObject.refrigerationCompressorPowerCurve().handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
   EXPECT_NE(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
 }
@@ -169,10 +171,12 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
   transCapacityCurve.setOutputUnitType("Capacity");
   
   testObject.setTranscriticalCompressorCapacityCurve(transCapacityCurve);
+  EXPECT_EQ("Transcritical", testObject.modeofOperation());
 
   RefrigerationCompressor testObjectClone = testObject.clone(model).cast<RefrigerationCompressor>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedReturnGasTemperature().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedSubcooling().get());
+  EXPECT_EQ("Transcritical", testObjectClone.modeofOperation());
   EXPECT_NE(testObject.refrigerationCompressorPowerCurve().handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
   EXPECT_NE(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
   EXPECT_NE(powerCurve.handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());

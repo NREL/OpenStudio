@@ -72,7 +72,7 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   std::string modeofOperation() const;
 
-  bool isModeofOperationDefaulted() const;
+  // bool isModeofOperationDefaulted() const;
 
   boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
@@ -106,9 +106,9 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   void resetEndUseSubcategory();
 
-  bool setModeofOperation(std::string modeofOperation);
+  // bool setModeofOperation(std::string modeofOperation);
 
-  void resetModeofOperation();
+  // void resetModeofOperation();
 
   bool setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic);
 

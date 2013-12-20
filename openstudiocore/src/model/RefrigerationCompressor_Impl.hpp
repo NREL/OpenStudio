@@ -86,7 +86,7 @@ namespace detail {
 
     std::string modeofOperation() const;
 
-    bool isModeofOperationDefaulted() const;
+    // bool isModeofOperationDefaulted() const;
 
     boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
@@ -120,9 +120,9 @@ namespace detail {
 
     void resetEndUseSubcategory();
 
-    bool setModeofOperation(std::string modeofOperation);
+    // bool setModeofOperation(std::string modeofOperation);
 
-    void resetModeofOperation();
+    // void resetModeofOperation();
 
     bool setTranscriticalCompressorPowerCurve(const boost::optional<CurveBicubic>& curveBicubic);
 
