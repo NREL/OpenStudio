@@ -35,8 +35,7 @@ class CONTAM_API SimFile {
 public:
   explicit SimFile(openstudio::path path);
 
-  // These next three functions are probably not needed
-  /*
+  // These are provided for advanced use
   std::vector<std::vector<double> > dP() const
   {
     return m_dP;
@@ -49,9 +48,21 @@ public:
   {
     return m_F1;
   }
-  */
+  std::vector<std::vector<double> > T() const
+  {
+    return m_T;
+  }
+  std::vector<std::vector<double> > P() const
+  {
+    return m_P;
+  }
+  std::vector<std::vector<double> > D() const
+  {
+    return m_D;
+  }
 
-  // Future use should be confined to these
+
+  // Most use should be confined to these
   boost::optional<openstudio::TimeSeries> pathDeltaP(int nr) const;
   boost::optional<openstudio::TimeSeries> pathFlow0(int nr) const;
   boost::optional<openstudio::TimeSeries> pathFlow1(int nr) const;

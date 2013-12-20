@@ -55,8 +55,10 @@ namespace pat {
 
 namespace detail {
 
-void stopCloud()
+bool stopCloud()
 {
+  bool result = false;
+
   boost::optional<CloudProvider> provider;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
@@ -70,8 +72,10 @@ void stopCloud()
 
   if( provider->requestTerminate() )
   {
-    provider->waitForTerminated();
+    result = provider->waitForTerminated();
   }
+
+  return result;
 }
 
 // Return true if the current project session is running
@@ -386,6 +390,13 @@ void CloudMonitor::onStopCloudWorkerComplete()
 {
   setCurrentProjectSession(boost::none);
   setCurrentProjectSettings(boost::none);
+
+  if( m_stopCloudWorker->error() )
+  {
+    QMessageBox::warning(PatApp::instance()->mainWindow, 
+      "Cloud Shutdown Error", 
+      "The OpenStudio Cloud encountered an error while shutting down.  Please use the AWS Management Console to confirm that services have been stopped.");
+  }
 
   m_stopCloudThread->quit();
 
@@ -828,9 +839,14 @@ StopCloudWorker::~StopCloudWorker()
 {
 }
 
+bool StopCloudWorker::error() const
+{
+  return m_error;
+}
+
 void StopCloudWorker::startWorking()
 {
-  detail::stopCloud();
+  m_error = ( ! detail::stopCloud() );
 
   emit doneWorking();
 }

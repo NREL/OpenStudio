@@ -85,12 +85,20 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor)
   EXPECT_EQ(-99, timeSeries1.value(startDateTime + Time(0,0,-61,0))); // out of range
   EXPECT_EQ(-99, timeSeries1.value(startDateTime + Time(0,0,-60,0))); // out of range
   EXPECT_EQ(0, timeSeries1.value(startDateTime + Time(0,0,-59,0))); // in range
+  EXPECT_EQ(0, timeSeries1.value(startDateTime)); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,59,0))); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,60,0))); // in range
+  EXPECT_EQ(2, timeSeries1.value(startDateTime + Time(0,0,61,0))); // in range
   EXPECT_EQ(2, timeSeries1.value(endDateTime)); // in range
   EXPECT_EQ(-99, timeSeries1.value(endDateTime + Time(0,1,0,0))); // out of range
 
   EXPECT_EQ(-99, timeSeries2.value(startDateTime + Time(0,0,-61,0))); // out of range
   EXPECT_EQ(-99, timeSeries2.value(startDateTime + Time(0,0,-60,0))); // out of range
   EXPECT_EQ(0, timeSeries2.value(startDateTime + Time(0,0,-59,0))); // in range
+  EXPECT_EQ(0, timeSeries1.value(startDateTime)); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,59,0))); // in range
+  EXPECT_EQ(1, timeSeries1.value(startDateTime + Time(0,0,60,0))); // in range
+  EXPECT_EQ(2, timeSeries1.value(startDateTime + Time(0,0,61,0))); // in range
   EXPECT_EQ(2, timeSeries2.value(endDateTime)); // in range
   EXPECT_EQ(-99, timeSeries2.value(endDateTime + Time(0,1,0,0))); // out of range
 
@@ -364,6 +372,68 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_WrapAroundDates)
 
 }
 
+TEST_F(DataFixture,TimeSeries_AddSubtract8760)
+{
+  // Test out various addition and subtraction combinations - some of the tests look a little
+  // strange but were the best way to get at some strange rounding issues that came up.
+  std::string units = "C";
+
+  // interval
+  Time interval = Time(0,1);
+  Vector values = linspace(1, 8760, 8760);
+
+  Date startDate(Date(MonthOfYear(MonthOfYear::Jan),1));
+  DateTime startDateTime(startDate, Time(0,1,0,0));
+  Date endDate(Date(MonthOfYear(MonthOfYear::Dec),31));
+  DateTime endDateTime(endDate, Time(0,24,0,0));
+  Time delta(0,1,0,0);
+  std::vector<DateTime> dateTimes;
+  for(openstudio::DateTime current=startDateTime; current <= endDateTime; current += delta)
+  {
+    dateTimes.push_back(current);
+  }
+
+  TimeSeries intervalTimeSeries(startDateTime, interval, values, units);
+  TimeSeries detailedTimeSeries(dateTimes, values, units);
+
+  // Addition
+  TimeSeries intervalPlusDetailed = intervalTimeSeries + detailedTimeSeries;
+  EXPECT_EQ(8760,intervalPlusDetailed.values().size());
+
+  TimeSeries detailedPlusDetailed = detailedTimeSeries + detailedTimeSeries;
+  EXPECT_EQ(8760,detailedPlusDetailed.values().size());
+
+  TimeSeries intervalSelfPlusDetailed = intervalTimeSeries;
+  intervalSelfPlusDetailed = intervalSelfPlusDetailed + detailedTimeSeries;
+  EXPECT_EQ(8760,intervalSelfPlusDetailed.values().size());
+
+  TimeSeries detailedSelfPlusDetailed = detailedTimeSeries;
+  detailedSelfPlusDetailed = detailedSelfPlusDetailed + detailedTimeSeries;
+  EXPECT_EQ(8760,detailedSelfPlusDetailed.values().size());
+
+  TimeSeries dpdSelfPlusDetailed = detailedTimeSeries + detailedTimeSeries;
+  dpdSelfPlusDetailed = dpdSelfPlusDetailed + detailedTimeSeries;
+  EXPECT_EQ(8760,dpdSelfPlusDetailed.values().size());
+
+  // Subtraction
+  TimeSeries intervalMinusDetailed = intervalTimeSeries - detailedTimeSeries;
+  EXPECT_EQ(8760,intervalMinusDetailed.values().size());
+
+  TimeSeries detailedMinusDetailed = detailedTimeSeries - detailedTimeSeries;
+  EXPECT_EQ(8760,detailedMinusDetailed.values().size());
+
+  TimeSeries intervalSelfMinusDetailed = intervalTimeSeries;
+  intervalSelfMinusDetailed = intervalSelfMinusDetailed - detailedTimeSeries;
+  EXPECT_EQ(8760,intervalSelfPlusDetailed.values().size());
+
+  TimeSeries detailedSelfMinusDetailed = detailedTimeSeries;
+  detailedSelfMinusDetailed = detailedSelfMinusDetailed - detailedTimeSeries;
+  EXPECT_EQ(8760,detailedSelfMinusDetailed.values().size());
+
+  TimeSeries dmdSelfMinusDetailed = detailedTimeSeries - detailedTimeSeries;
+  dmdSelfMinusDetailed = dmdSelfMinusDetailed - detailedTimeSeries;
+  EXPECT_EQ(8760,dmdSelfMinusDetailed.values().size());
+}
 
 TEST_F(DataFixture,TimeSeries_AddSubtractSameTimePeriod)
 {

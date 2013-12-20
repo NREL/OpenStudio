@@ -365,4 +365,17 @@ openstudio::path getOpenStudioRubyScriptsPath() {
   }
 }
 
+openstudio::path getOpenStudioEmbeddedRubyPath() {
+#ifdef Q_OS_WIN32
+  if (applicationIsRunningFromBuildDirectory())
+  {
+    return getApplicationBuildDirectory() / openstudio::toPath("ruby-install/ruby");
+  } else {
+    return getApplicationRunDirectory().parent_path() / openstudio::toPath("ruby-install/ruby");
+  }
+#else
+  return openstudio::path();
+#endif
+}
+
 } // openstudio

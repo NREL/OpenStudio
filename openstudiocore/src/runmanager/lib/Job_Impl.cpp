@@ -425,6 +425,9 @@ namespace detail {
 
   void Job_Impl::maximumClean()
   {
+    // start with a standardClean, then get what it leaves behind
+    standardClean();
+
     QDir dir(openstudio::toQString(outdir()));
 
     QFileInfoList list = dir.entryInfoList();

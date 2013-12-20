@@ -578,8 +578,10 @@ namespace detail {
     openstudio::path outpath = outdir();
 
     QWriteLocker l(&m_mutex);
+	std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
+	//m_copiedRequiredFiles.insert(requiredFiles.begin(), requiredFiles.end());
     boost::shared_ptr<Process> process = m_process_creator->createProcess(ti,
-        acquireRequiredFiles(complete_required_files()), m_parameters[t_toolName],
+        requiredFiles, m_parameters[t_toolName],
         outpath, std::vector<openstudio::path>(m_expectedOutputFiles.begin(), m_expectedOutputFiles.end()), "\n\n",
         getBasePath(),
         getRemoteId());
@@ -810,7 +812,7 @@ namespace detail {
 
   void ToolBasedJob::standardCleanImpl()
   {
-    /*
+    
     QReadLocker l(&m_mutex);
 
     for (std::map<ToolInfo, boost::shared_ptr<Process> >::iterator itr = m_processes.begin();
@@ -819,7 +821,7 @@ namespace detail {
     {
       itr->second->cleanUpRequiredFiles();
     }  
-  */  
+    
   }
 
   void ToolBasedJob::copyRequiredFiles(const FileInfo &infile, const std::string &extin, const openstudio::path &filename)

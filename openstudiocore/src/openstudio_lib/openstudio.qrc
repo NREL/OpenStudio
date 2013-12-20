@@ -39,6 +39,7 @@
     <file>images/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
+    <file>images/cooling_tower_variable.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
     <file>images/delete_disabled.png</file>
@@ -133,6 +134,7 @@
     <file>images/properties_icon_on.png</file>
     <file>images/pump_constant.png</file>
     <file>images/pump_variable.png</file>
+    <file>images/refrigeration_system.png</file>
     <file>images/remove_unused_disabled.png</file>
     <file>images/remove_unused_off.png</file>
     <file>images/remove_unused_over.png</file>
@@ -210,6 +212,12 @@
     <file>images/heat_coil-uht.png</file>
     <file>images/coil_ht_dx_singlespeed.png</file>
 
+    <file>images/mini_icons/mini_compressor.png</file>
+    <file>images/mini_icons/mini_condensor.png</file>
+    <file>images/mini_icons/mini_display_case.png</file>
+    <file>images/mini_icons/mini_mechanical-sub-cooler.png</file>
+    <file>images/mini_icons/mini_slhx.png</file>
+    <file>images/mini_icons/mini_walkin_case.png</file>
     <file>images/mini_icons/baseboard_electric.png</file>
     <file>images/mini_icons/baseboard_water.png</file>
     <file>images/mini_icons/boiler.png</file>
@@ -230,6 +238,7 @@
     <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>     
     <file>images/mini_icons/cooling_tower.png</file>
+    <file>images/mini_icons/mini_cooling_tower_variable.png</file>
     <file>images/mini_icons/daylighting_control.png</file>
     <file>images/mini_icons/default_construction_set.png</file>
     <file>images/mini_icons/default_schedule_set.png</file>
@@ -281,6 +290,7 @@
     <file>images/mini_icons/mini_dxcoolingcoil_singlespeed.png</file>
     <file>images/mini_icons/mini-dxcoolingcoil_2speed.png</file>
     <file>images/mini_icons/mini_infiltration_leak.png</file>
+    <file>images/mini_icons/mini_refrigeration_system.png</file>
     <file>images/mini_icons/mini_window_blinds.png</file>
     <file>images/mini_icons/mini_window_refraction.png</file>
     <file>images/mini_icons/mini_window_screen.png</file>

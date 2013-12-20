@@ -102,12 +102,28 @@ namespace sdd {
   const double footToMeter =  0.3048;
   const double meterToFoot = 1.0/0.3048;
 
+  double fixAngle(double angle){
+    while (angle >= 360){
+      angle -= 360;
+    }
+    while (angle < 0){
+      angle += 360;
+    }
+    return angle;
+  }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
     QDomElement nameElement = element.firstChildElement("Name");
+
+    // http://code.google.com/p/cbecc/issues/detail?id=378
+    // The angle between the model Y-Axis and True North, measured clockwise from the model Y-Axis in Degrees. 
     QDomElement northAngleElement = element.firstChildElement("NAng");
+    // The angle between True North and the the model Y-Axis, measured clockwise from True North in Degrees.  
+    QDomElement buildingAzimuthElement = element.firstChildElement("BldgAz"); // this corresponds to Building::North Axis
+
     QDomNodeList spaceElements = element.elementsByTagName("Spc");
     QDomNodeList thermalZoneElements = element.elementsByTagName("ThrmlZn");
     QDomNodeList buildingStoryElements = element.elementsByTagName("Story");
@@ -115,9 +131,14 @@ namespace sdd {
     OS_ASSERT(!nameElement.isNull());
     building.setName(escapeName(nameElement.text()));
 
-    if(!northAngleElement.isNull()){
-      double northAngle = northAngleElement.text().toDouble();
-      building.setNorthAxis(northAngle);
+    if(!buildingAzimuthElement.isNull()){
+      double buildingAzimuth = fixAngle(buildingAzimuthElement.text().toDouble());
+      building.setNorthAxis(buildingAzimuth);
+    }else if(!northAngleElement.isNull()){
+      // use NAng for backwards compatibility with SDD's only having NAng
+      double northAngle = fixAngle(northAngleElement.text().toDouble());
+      double buildingAzimuth = 360.0 - northAngle;
+      building.setNorthAxis(buildingAzimuth);
     }
 
     // translate shadingSurfaces
@@ -1331,10 +1352,18 @@ namespace sdd {
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+    double buildingAzimuth = fixAngle(building.northAxis());
+    double northAngle = 360.0 - buildingAzimuth;
+
     // north angle
     QDomElement northAngleElement = doc.createElement("NAng");
     result.appendChild(northAngleElement);
-    northAngleElement.appendChild(doc.createTextNode(QString::number(building.northAxis())));
+    northAngleElement.appendChild(doc.createTextNode(QString::number(northAngle)));
+
+    // building azimuth
+    QDomElement buildingAzimuthElement = doc.createElement("BldgAz");
+    result.appendChild(buildingAzimuthElement);
+    buildingAzimuthElement.appendChild(doc.createTextNode(QString::number(buildingAzimuth)));
 
     // translate storys
     std::vector<model::BuildingStory> buildingStories = building.model().getModelObjects<model::BuildingStory>();

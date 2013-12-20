@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
   }
 #endif
 
+
 #if _DEBUG || (__GNUC__ && !NDEBUG)
   openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));
@@ -100,8 +101,6 @@ int main(int argc, char *argv[])
     // Initialize the argument getter
     QSharedPointer<openstudio::ruleset::RubyUserScriptArgumentGetter> argumentGetter(
         new openstudio::ruleset::detail::RubyUserScriptArgumentGetter_Impl<openstudio::detail::RubyInterpreter>(rubyInterpreter));
-
-
 
     openstudio::OpenStudioApp app(argc, argv, argumentGetter);
     openstudio::Application::instance().setApplication(&app);

@@ -48,6 +48,7 @@ SET( ${target_name}_depends
   ${QT_LIBS}
   openstudio_utilities
   openstudio_model
+  openstudio_osversion
   zkexpat
   boost_log
 )
@@ -73,7 +74,8 @@ CREATE_SRC_GROUPS( "${${target_name}_swig_src}" )
 
 CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 IF(BUILD_TESTING)
-  ADD_DEPENDENCIES(${target_name}_tests openstudio_contam_resources)
+  ADD_DEPENDENCIES(${target_name}_tests 
+    openstudio_contam_resources)
 ENDIF()
 
 MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
