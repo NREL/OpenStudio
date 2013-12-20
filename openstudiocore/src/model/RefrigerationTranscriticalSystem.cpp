@@ -20,7 +20,6 @@
 #include <model/RefrigerationTranscriticalSystem.hpp>
 #include <model/RefrigerationTranscriticalSystem_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor.hpp>
@@ -681,25 +680,9 @@ void RefrigerationTranscriticalSystem::removeAllLowPressureCompressors() {
   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->removeAllLowPressureCompressors();
 }
 
-// boost::optional<ModelObjectList> RefrigerationTranscriticalSystem::mediumTemperatureRefrigeratedCaseAndWalkInList() const {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList();
-// }
-
-// boost::optional<ModelObjectList> RefrigerationTranscriticalSystem::lowTemperatureRefrigeratedCaseAndWalkInList() const {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList();
-// }
-
 boost::optional<RefrigerationGasCoolerAirCooled> RefrigerationTranscriticalSystem::refrigerationGasCooler() const {
   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->refrigerationGasCooler();
 }
-
-// boost::optional<ModelObjectList> RefrigerationTranscriticalSystem::highPressureCompressorList() const {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->highPressureCompressorList();
-// }
-
-// boost::optional<ModelObjectList> RefrigerationTranscriticalSystem::lowPressureCompressorList() const {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->lowPressureCompressorList();
-// }
 
 double RefrigerationTranscriticalSystem::receiverPressure() const {
   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->receiverPressure();
@@ -753,33 +736,9 @@ bool RefrigerationTranscriticalSystem::isEndUseSubcategoryDefaulted() const {
   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->isEndUseSubcategoryDefaulted();
 }
 
-// bool RefrigerationTranscriticalSystem::setMediumTemperatureRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList) {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(modelObjectList);
-// }
-
-// bool RefrigerationTranscriticalSystem::setLowTemperatureRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList) {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowTemperatureRefrigeratedCaseAndWalkInList(modelObjectList);
-// }
-
-// void RefrigerationTranscriticalSystem::resetLowTemperatureRefrigeratedCaseAndWalkInList() {
-//   getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetLowTemperatureRefrigeratedCaseAndWalkInList();
-// }
-
 bool RefrigerationTranscriticalSystem::setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled) {
   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationGasCooler(refrigerationGasCoolerAirCooled);
 }
-
-// bool RefrigerationTranscriticalSystem::setHighPressureCompressorList(const ModelObjectList& modelObjectList) {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setHighPressureCompressorList(modelObjectList);
-// }
-
-// bool RefrigerationTranscriticalSystem::setLowPressureCompressorList(const ModelObjectList& modelObjectList) {
-//   return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowPressureCompressorList(modelObjectList);
-// }
-
-// void RefrigerationTranscriticalSystem::resetLowPressureCompressorList() {
-//   getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetLowPressureCompressorList();
-// }
 
 void RefrigerationTranscriticalSystem::setReceiverPressure(double receiverPressure) {
   getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setReceiverPressure(receiverPressure);

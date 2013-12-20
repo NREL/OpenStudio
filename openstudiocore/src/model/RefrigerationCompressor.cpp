@@ -20,7 +20,6 @@
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/CurveBicubic.hpp>
 #include <model/CurveBicubic_Impl.hpp>
 #include <model/Model.hpp>

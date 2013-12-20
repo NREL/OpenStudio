@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class CurveBiquadratic;
 class HVACComponent;
@@ -61,10 +60,8 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule setpointTemperatureSchedule() const;
 
   double deadBandTemperatureDifference() const;
@@ -79,19 +76,10 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
 
   double maximumInletWaterTemperatureforHeatReclaim() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveBiquadratic.
   boost::optional<CurveBiquadratic> heatReclaimEfficiencyFunctionofTemperatureCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  // Connection waterInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  // Connection waterOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: HVACComponent.
   // boost::optional<HVACComponent> tank() const;
 
-  // TODO: Check return type. From object lists, some candidates are: DesuperHeatingCoilSources.
   boost::optional<ModelObject> heatingSource() const;
 
   double waterFlowRate() const;
@@ -116,12 +104,10 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setSetpointTemperatureSchedule(Schedule& schedule);
 
   bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
@@ -138,21 +124,12 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
 
   void setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveBiquadratic.
   bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
 
   void resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  // bool setWaterInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  // bool setWaterOutletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: HVACComponent.
   // bool setTank(const HVACComponent& waterHeater);
 
-  // TODO: Check argument type. From object lists, some candidates are: DesuperHeatingCoilSources.
   bool setHeatingSource(const ModelObject& heatingSource);
 
   void resetHeatingSource();

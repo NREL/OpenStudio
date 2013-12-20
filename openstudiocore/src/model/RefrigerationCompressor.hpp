@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class CurveBicubic;
 
 namespace detail {
@@ -55,10 +54,8 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
   CurveBicubic refrigerationCompressorPowerCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
   CurveBicubic refrigerationCompressorCapacityCurve() const;
 
   boost::optional<double> ratedSuperheat() const;
@@ -77,20 +74,16 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   bool isModeofOperationDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
   boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
   boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
   bool setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
   bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
   void setRatedSuperheat(double ratedSuperheat);
@@ -117,12 +110,10 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   void resetModeofOperation();
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
   bool setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
   void resetTranscriticalCompressorPowerCurve();
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
   bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
   void resetTranscriticalCompressorCapacityCurve();

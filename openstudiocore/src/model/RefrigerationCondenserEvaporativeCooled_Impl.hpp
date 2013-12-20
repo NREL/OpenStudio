@@ -26,8 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-//class ThermalZone;
 // WaterStorageTank object not used
 //class WaterStorageTank;
 class Schedule;
@@ -110,7 +108,6 @@ namespace detail {
 
     bool isMaximumCapacityFactorDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: std::string.
     //std::string airInletNode() const;
 
     boost::optional<double> ratedAirFlowRate() const;
@@ -133,10 +130,8 @@ namespace detail {
 
     bool isRatedWaterPumpPowerAutocalculated() const;
 
-    // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
     //boost::optional<WaterStorageTank> evaporativeWaterSupplyTank() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule() const;
 
     std::string endUseSubcategory() const;
@@ -199,7 +194,6 @@ namespace detail {
 
     void resetMaximumCapacityFactor();
 
-    // TODO: Check argument type. From object lists, some candidates are: std::string.
     //bool setAirInletNode(std::string airInletNode);
 
     //void resetAirInletNode();
@@ -224,12 +218,10 @@ namespace detail {
 
     void autocalculateRatedWaterPumpPower();
 
-    // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
     //bool setEvaporativeWaterSupplyTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
     //void resetEvaporativeWaterSupplyTank();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule);
 
     void resetEvaporativeCondenserAvailabilitySchedule();

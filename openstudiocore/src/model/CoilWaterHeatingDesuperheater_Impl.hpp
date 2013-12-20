@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class CurveBiquadratic;
 class HVACComponent;
@@ -88,10 +87,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule setpointTemperatureSchedule() const;
 
     double deadBandTemperatureDifference() const;
@@ -106,19 +103,10 @@ namespace detail {
 
     double maximumInletWaterTemperatureforHeatReclaim() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveBiquadratic.
     boost::optional<CurveBiquadratic> heatReclaimEfficiencyFunctionofTemperatureCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    // Connection waterInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    // Connection waterOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: WaterHeater.
     // boost::optional<HVACComponent> tank() const;
 
-    // TODO: Check return type. From object lists, some candidates are: DesuperHeatingCoilSources.
     boost::optional<ModelObject> heatingSource() const;
 
     double waterFlowRate() const;
@@ -143,12 +131,10 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setSetpointTemperatureSchedule(Schedule& schedule);
 
     bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
@@ -165,21 +151,12 @@ namespace detail {
 
     void setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveBiquadratic.
     bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic);
 
     void resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    // bool setWaterInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    // bool setWaterOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: WaterHeater.
     // bool setTank(const HVACComponent& waterHeater);
 
-    // TODO: Check argument type. From object lists, some candidates are: DesuperHeatingCoilSources.
     bool setHeatingSource(const boost::optional<ModelObject>& heatingSource);
 
     void resetHeatingSource();
@@ -211,7 +188,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.CoilWaterHeatingDesuperheater");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals

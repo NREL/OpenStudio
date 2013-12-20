@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ModelObjectList;
 class CurveCubic;
 class ThermalZone;
@@ -85,7 +84,6 @@ namespace detail {
     template <class T>
     std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
     std::string circulatingFluidName() const;
@@ -120,7 +118,6 @@ namespace detail {
 
     bool isPumpDriveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveCubic.
     boost::optional<CurveCubic> variableSpeedPumpCubicCurve() const;
 
     double pumpMotorHeattoFluid() const;
@@ -131,14 +128,12 @@ namespace detail {
 
     bool isSumUADistributionPipingDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> distributionPipingZone() const;
 
     double sumUAReceiverSeparatorShell() const;
 
     bool isSumUAReceiverSeparatorShellDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> receiverSeparatorZone() const;
 
     double evaporatorRefrigerantInventory() const;
@@ -180,7 +175,6 @@ namespace detail {
 
     void removeAllAirChillers();
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetRefrigeratedCaseAndWalkInList();
@@ -231,7 +225,6 @@ namespace detail {
 
     void resetPumpDriveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
     bool setVariableSpeedPumpCubicCurve(const boost::optional<CurveCubic>& curveCubic);
 
     void resetVariableSpeedPumpCubicCurve();
@@ -244,7 +237,6 @@ namespace detail {
 
     void resetSumUADistributionPiping();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setDistributionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetDistributionPipingZone();
@@ -253,7 +245,6 @@ namespace detail {
 
     void resetSumUAReceiverSeparatorShell();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setReceiverSeparatorZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetReceiverSeparatorZone();

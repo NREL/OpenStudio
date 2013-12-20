@@ -20,7 +20,6 @@
 #include <model/RefrigerationGasCoolerAirCooled.hpp>
 #include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/CurveLinear.hpp>
 #include <model/CurveLinear_Impl.hpp>
 #include <model/ThermalZone.hpp>

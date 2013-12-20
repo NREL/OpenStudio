@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 // class CurveLinear;
 
@@ -66,7 +65,6 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
   std::string capacityRatingType() const;
@@ -97,7 +95,6 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   // bool isCapacityCorrectionCurveTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveLinear, QuadraticCurves.
   // boost::optional<CurveLinear> capacityCorrectionCurve() const;
 
   double sHR60CorrectionFactor() const;
@@ -106,7 +103,6 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   double ratedTotalHeatingPower() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> heatingPowerSchedule() const;
 
   std::string fanSpeedControlType() const;
@@ -131,10 +127,8 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   bool isDefrostControlTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule defrostSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> defrostDripDownSchedule() const;
 
   boost::optional<double> defrostPower() const;
@@ -153,7 +147,6 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
@@ -192,7 +185,6 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   // void resetCapacityCorrectionCurveType();
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveLinear, QuadraticCurves.
   // bool setCapacityCorrectionCurve(const CurveLinear& curveLinear);
 
   // void resetCapacityCorrectionCurve();
@@ -203,7 +195,6 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   void setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setHeatingPowerSchedule(Schedule& schedule);
 
   void resetHeatingPowerSchedule();
@@ -230,10 +221,8 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   void resetDefrostControlType();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setDefrostSchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setDefrostDripDownSchedule(Schedule& schedule);
 
   void resetDefrostDripDownSchedule();

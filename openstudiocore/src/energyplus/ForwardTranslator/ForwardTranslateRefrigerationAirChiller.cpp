@@ -59,26 +59,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationAirChiller( 
     }
   }
 
-//Air Inlet Node Name
-  // boost::optional<std::string> airInletNodeName;
-  // if( boost::optional<Node> node = modelObject.inletNode() )
-  // {
-  //   if( s = node->name() )
-  //   {
-  //     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::AirInletNodeName,s.get() );
-  //   }
-  // }
-
-//Air Outlet Node Name
-  // boost::optional<std::string> airOutletNodeName;
-  // if( boost::optional<Node> node = modelObject.outletNode() )
-  // {
-  //   if( s = node->name() )
-  //   {
-  //     idfObject.setString(ZoneHVAC_FourPipeFanCoilFields::AirOutletNodeName,s.get() );
-  //   }
-  // }
-
 //CapacityRatingType
   std::string capacityCorrectionCurveType;
   s = modelObject.capacityRatingType();

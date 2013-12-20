@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 // class CurveLinear;
 
@@ -82,7 +81,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
     std::string capacityRatingType() const;
@@ -113,7 +111,6 @@ namespace detail {
 
     // bool isCapacityCorrectionCurveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveLinear, QuadraticCurves.
     // boost::optional<CurveLinear> capacityCorrectionCurve() const;
 
     double sHR60CorrectionFactor() const;
@@ -122,7 +119,6 @@ namespace detail {
 
     double ratedTotalHeatingPower() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> heatingPowerSchedule() const;
 
     std::string fanSpeedControlType() const;
@@ -147,10 +143,8 @@ namespace detail {
 
     bool isDefrostControlTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule defrostSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> defrostDripDownSchedule() const;
 
     boost::optional<double> defrostPower() const;
@@ -169,7 +163,6 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
@@ -208,7 +201,6 @@ namespace detail {
 
     // void resetCapacityCorrectionCurveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveLinear, QuadraticCurves.
     // bool setCapacityCorrectionCurve(const boost::optional<CurveLinear>& curveLinear);
 
     // void resetCapacityCorrectionCurve();
@@ -219,7 +211,6 @@ namespace detail {
 
     void setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setHeatingPowerSchedule(Schedule& schedule);
 
     void resetHeatingPowerSchedule();
@@ -246,10 +237,8 @@ namespace detail {
 
     void resetDefrostControlType();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setDefrostSchedule(Schedule& schedule);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setDefrostDripDownSchedule(Schedule& schedule);
 
     void resetDefrostDripDownSchedule();
@@ -279,7 +268,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RefrigerationAirChiller");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals

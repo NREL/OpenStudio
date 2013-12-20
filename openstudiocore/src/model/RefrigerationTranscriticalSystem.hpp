@@ -27,11 +27,9 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
-class ModelObjectList;
 class RefrigerationGasCoolerAirCooled;
 class ThermalZone;
 
@@ -112,20 +110,7 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  // boost::optional<ModelObjectList> mediumTemperatureRefrigeratedCaseAndWalkInList() const;
-
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  // boost::optional<ModelObjectList> lowTemperatureRefrigeratedCaseAndWalkInList() const;
-
-  // TODO: Check return type. From object lists, some candidates are: RefrigerationAllTypesGasCooler.
   boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
-
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  // boost::optional<ModelObjectList> highPressureCompressorList() const;
-
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  // boost::optional<ModelObjectList> lowPressureCompressorList() const;
 
   double receiverPressure() const;
 
@@ -141,14 +126,12 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
 
   bool isSumUASuctionPipingforMediumTemperatureLoadsDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> mediumTemperatureSuctionPipingZone() const;
 
   double sumUASuctionPipingforLowTemperatureLoads() const;
 
   bool isSumUASuctionPipingforLowTemperatureLoadsDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> lowTemperatureSuctionPipingZone() const;
 
   std::string endUseSubcategory() const;
@@ -159,24 +142,7 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  // bool setMediumTemperatureRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList);
-
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  // bool setLowTemperatureRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList);
-
-  // void resetLowTemperatureRefrigeratedCaseAndWalkInList();
-
-  // TODO: Check argument type. From object lists, some candidates are: RefrigerationGasCoolerAirCooled.
   bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
-
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  // bool setHighPressureCompressorList(const ModelObjectList& modelObjectList);
-
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  // bool setLowPressureCompressorList(const ModelObjectList& modelObjectList);
-
-  // void resetLowPressureCompressorList();
 
   void setReceiverPressure(double receiverPressure);
 
@@ -192,7 +158,6 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
 
   void resetSumUASuctionPipingforMediumTemperatureLoads();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setMediumTemperatureSuctionPipingZone(const ThermalZone& thermalZone);
 
   void resetMediumTemperatureSuctionPipingZone();
@@ -201,7 +166,6 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
 
   void resetSumUASuctionPipingforLowTemperatureLoads();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setLowTemperatureSuctionPipingZone(const ThermalZone& thermalZone);
 
   void resetLowTemperatureSuctionPipingZone();

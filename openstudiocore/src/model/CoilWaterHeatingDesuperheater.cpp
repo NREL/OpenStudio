@@ -20,7 +20,6 @@
 #include <model/CoilWaterHeatingDesuperheater.hpp>
 #include <model/CoilWaterHeatingDesuperheater_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/CurveBiquadratic.hpp>
@@ -85,7 +84,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoilWaterHeatingDesuperheater_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());

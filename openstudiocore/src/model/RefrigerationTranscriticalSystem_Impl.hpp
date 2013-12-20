@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
@@ -132,19 +131,14 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> mediumTemperatureRefrigeratedCaseAndWalkInList() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> lowTemperatureRefrigeratedCaseAndWalkInList() const;
 
-    // TODO: Check return type. From object lists, some candidates are: RefrigerationGasCoolerAirCooled.
     boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> highPressureCompressorList() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> lowPressureCompressorList() const;
 
     double receiverPressure() const;
@@ -161,14 +155,12 @@ namespace detail {
 
     bool isSumUASuctionPipingforMediumTemperatureLoadsDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> mediumTemperatureSuctionPipingZone() const;
 
     double sumUASuctionPipingforLowTemperatureLoads() const;
 
     bool isSumUASuctionPipingforLowTemperatureLoadsDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> lowTemperatureSuctionPipingZone() const;
 
     std::string endUseSubcategory() const;
@@ -179,21 +171,16 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setMediumTemperatureRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList);
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setLowTemperatureRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetLowTemperatureRefrigeratedCaseAndWalkInList();
 
-    // TODO: Check argument type. From object lists, some candidates are: RefrigerationGasCoolerAirCooled.
     bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setHighPressureCompressorList(const ModelObjectList& modelObjectList);
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setLowPressureCompressorList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetLowPressureCompressorList();
@@ -212,7 +199,6 @@ namespace detail {
 
     void resetSumUASuctionPipingforMediumTemperatureLoads();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setMediumTemperatureSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetMediumTemperatureSuctionPipingZone();
@@ -221,7 +207,6 @@ namespace detail {
 
     void resetSumUASuctionPipingforLowTemperatureLoads();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setLowTemperatureSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetLowTemperatureSuctionPipingZone();
@@ -239,7 +224,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RefrigerationTranscriticalSystem");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals

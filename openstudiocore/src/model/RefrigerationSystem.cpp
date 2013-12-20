@@ -299,20 +299,12 @@ namespace detail {
   }
 
   std::string RefrigerationSystem_Impl::numberofCompressorStages() const {
-    // boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
-    // OS_ASSERT(value);
-    // return value.get();
-
     if ( this->highStageCompressors().empty() ) {
       return "1";
     } else {
       return "2";
     }
   }
-
-  // bool RefrigerationSystem_Impl::isNumberofCompressorStagesDefaulted() const {
-  //   return isEmpty(OS_Refrigeration_SystemFields::NumberofCompressorStages);
-  // }
 
   std::string RefrigerationSystem_Impl::intercoolerType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::IntercoolerType,true);
@@ -604,16 +596,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  // bool RefrigerationSystem_Impl::setNumberofCompressorStages(std::string numberofCompressorStages) {
-  //   bool result = setString(OS_Refrigeration_SystemFields::NumberofCompressorStages, numberofCompressorStages);
-  //   return result;
-  // }
-
-  // void RefrigerationSystem_Impl::resetNumberofCompressorStages() {
-  //   bool result = setString(OS_Refrigeration_SystemFields::NumberofCompressorStages, "");
-  //   OS_ASSERT(result);
-  // }
-
   bool RefrigerationSystem_Impl::setIntercoolerType(std::string intercoolerType) {
     bool result = setString(OS_Refrigeration_SystemFields::IntercoolerType, intercoolerType);
     return result;
@@ -704,11 +686,6 @@ std::vector<std::string> RefrigerationSystem::suctionTemperatureControlTypeValue
                         OS_Refrigeration_SystemFields::SuctionTemperatureControlType);
 }
 
-// std::vector<std::string> RefrigerationSystem::numberofCompressorStagesValues() {
-//   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-//                         OS_Refrigeration_SystemFields::NumberofCompressorStages);
-// }
-
 std::vector<std::string> RefrigerationSystem::intercoolerTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Refrigeration_SystemFields::IntercoolerType);
@@ -750,21 +727,9 @@ std::vector<RefrigerationAirChiller> RefrigerationSystem::airChillers() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->airChillers();
 }
 
-/*boost::optional<ModelObjectList> RefrigerationSystem::refrigeratedCaseAndWalkInList() const {
-  return getImpl<detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
-}
-
-boost::optional<ModelObjectList> RefrigerationSystem::refrigerationTransferLoadList() const {
-  return getImpl<detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
-}*/
-
 boost::optional<ModelObject> RefrigerationSystem::refrigerationCondenser() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->refrigerationCondenser();
 }
-
-/*ModelObjectList RefrigerationSystem::compressorList() const {
-  return getImpl<detail::RefrigerationSystem_Impl>()->compressorList();
-}*/
 
 double RefrigerationSystem::minimumCondensingTemperature() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->minimumCondensingTemperature();
@@ -814,10 +779,6 @@ std::string RefrigerationSystem::numberofCompressorStages() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->numberofCompressorStages();
 }
 
-// bool RefrigerationSystem::isNumberofCompressorStagesDefaulted() const {
-//   return getImpl<detail::RefrigerationSystem_Impl>()->isNumberofCompressorStagesDefaulted();
-// }
-
 std::string RefrigerationSystem::intercoolerType() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->intercoolerType();
 }
@@ -833,10 +794,6 @@ double RefrigerationSystem::shellandCoilIntercoolerEffectiveness() const {
 bool RefrigerationSystem::isShellandCoilIntercoolerEffectivenessDefaulted() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->isShellandCoilIntercoolerEffectivenessDefaulted();
 }
-
-// boost::optional<ModelObjectList> RefrigerationSystem::highStageCompressorList() const {
-//   return getImpl<detail::RefrigerationSystem_Impl>()->highStageCompressorList();
-// }
 
 bool RefrigerationSystem::addCase(const RefrigerationCase& refrigerationCase) {
   return getImpl<detail::RefrigerationSystem_Impl>()->addCase(refrigerationCase);
@@ -922,29 +879,9 @@ void RefrigerationSystem::removeAllAirChillers() {
   return getImpl<detail::RefrigerationSystem_Impl>()->removeAllAirChillers();
 }
 
-/*bool RefrigerationSystem::setRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList) {
-  return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigeratedCaseAndWalkInList(modelObjectList);
-}
-
-void RefrigerationSystem::resetRefrigeratedCaseAndWalkInList() {
-  getImpl<detail::RefrigerationSystem_Impl>()->resetRefrigeratedCaseAndWalkInList();
-}
-
-bool RefrigerationSystem::setRefrigerationTransferLoadList(const ModelObjectList& modelObjectList) {
-  return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationTransferLoadList(modelObjectList);
-}
-
-void RefrigerationSystem::resetRefrigerationTransferLoadList() {
-  getImpl<detail::RefrigerationSystem_Impl>()->resetRefrigerationTransferLoadList();
-}*/
-
 bool RefrigerationSystem::setRefrigerationCondenser(const ModelObject& refrigerationCondenser) {
   return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationCondenser(refrigerationCondenser);
 }
-
-/*bool RefrigerationSystem::setCompressorList(const ModelObjectList& modelObjectList) {
-  return getImpl<detail::RefrigerationSystem_Impl>()->setCompressorList(modelObjectList);
-}*/
 
 void RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
   getImpl<detail::RefrigerationSystem_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
@@ -1002,14 +939,6 @@ void RefrigerationSystem::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetEndUseSubcategory();
 }
 
-// bool RefrigerationSystem::setNumberofCompressorStages(std::string numberofCompressorStages) {
-//   return getImpl<detail::RefrigerationSystem_Impl>()->setNumberofCompressorStages(numberofCompressorStages);
-// }
-
-// void RefrigerationSystem::resetNumberofCompressorStages() {
-//   getImpl<detail::RefrigerationSystem_Impl>()->resetNumberofCompressorStages();
-// }
-
 bool RefrigerationSystem::setIntercoolerType(std::string intercoolerType) {
   return getImpl<detail::RefrigerationSystem_Impl>()->setIntercoolerType(intercoolerType);
 }
@@ -1025,14 +954,6 @@ void RefrigerationSystem::setShellandCoilIntercoolerEffectiveness(double shellan
 void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetShellandCoilIntercoolerEffectiveness();
 }
-
-// bool RefrigerationSystem::setHighStageCompressorList(const ModelObjectList& modelObjectList) {
-//   return getImpl<detail::RefrigerationSystem_Impl>()->setHighStageCompressorList(modelObjectList);
-// }
-
-// void RefrigerationSystem::resetHighStageCompressorList() {
-//   getImpl<detail::RefrigerationSystem_Impl>()->resetHighStageCompressorList();
-// }
 
 /// @cond
 RefrigerationSystem::RefrigerationSystem(boost::shared_ptr<detail::RefrigerationSystem_Impl> impl)

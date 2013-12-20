@@ -121,23 +121,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     idfObject.setName(name);
   }
 
-  // std::vector<ModelObject> airChillers;
-
   for( std::vector<ModelObject>::iterator it = stdEquipment.begin();
        it != stdEquipment.end();
        it++ )
   {
-    // unsigned coolingPriority = modelObject.coolingPriority(*it);
-    // unsigned heatingPriority = modelObject.heatingPriority(*it);
-
     unsigned coolingPriority = coolingMap[*it];
     unsigned heatingPriority = heatingMap[*it];
-
-    // if (boost::optional<RefrigerationAirChiller> airChiller = it->optionalCast<RefrigerationAirChiller>())
-    // {
-    //   airChillers.push_back(airChiller.get());
-    //   continue;
-    // }
 
     boost::optional<IdfObject> _equipment = translateAndMapModelObject(*it);
 
@@ -207,9 +196,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
           eg.setString(ZoneHVAC_RefrigerationChillerSetExtensibleFields::AirChillerName,_airChiller->name().get()); 
         }
       }
-
-    // unsigned coolingPriority = modelObject.coolingPriority(airChillers.front());
-    // unsigned heatingPriority = modelObject.heatingPriority(airChillers.front());
 
     IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 

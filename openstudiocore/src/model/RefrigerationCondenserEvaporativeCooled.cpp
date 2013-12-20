@@ -20,9 +20,6 @@
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
-//#include <model/ThermalZone.hpp>
-//#include <model/ThermalZone_Impl.hpp>
 // WaterStorageTank object not used
 //#include <model/WaterStorageTank.hpp>
 //#include <model/WaterStorageTank_Impl.hpp>
@@ -90,7 +87,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> RefrigerationCondenserEvaporativeCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());

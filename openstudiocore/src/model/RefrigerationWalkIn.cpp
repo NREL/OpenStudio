@@ -80,7 +80,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> RefrigerationWalkIn_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -159,11 +158,11 @@ namespace detail {
     return temp;
   }
 
-  void RefrigerationWalkIn_Impl::removeZoneBoundary(unsigned groupIndex)
+  void RefrigerationWalkIn_Impl::removeZoneBoundary(unsigned index)
   {
     unsigned numberofDataPairs = numExtensibleGroups();
-    if(groupIndex < numberofDataPairs) {
-      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+    if(index < numberofDataPairs) {
+      getObject<ModelObject>().eraseExtensibleGroup(index);
     }
   }
 
@@ -577,8 +576,8 @@ bool RefrigerationWalkIn::addZoneBoundary(const RefrigerationWalkInZoneBoundary&
   return getImpl<detail::RefrigerationWalkIn_Impl>()->addZoneBoundary(refrigerationWalkInZoneBoundary);
 }
 
-void RefrigerationWalkIn::removeZoneBoundary(unsigned groupIndex){
-  return getImpl<detail::RefrigerationWalkIn_Impl>()->removeZoneBoundary(groupIndex);
+void RefrigerationWalkIn::removeZoneBoundary(unsigned index){
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->removeZoneBoundary(index);
 }
 
 void RefrigerationWalkIn::removeAllZoneBoundaries(){

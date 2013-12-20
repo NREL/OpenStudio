@@ -717,10 +717,6 @@ std::vector<RefrigerationAirChiller> RefrigerationSecondarySystem::airChillers()
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->airChillers();
 }
 
-/*boost::optional<ModelObjectList> RefrigerationSecondarySystem::refrigeratedCaseAndWalkInList() const {
-  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList();
-}*/
-
 std::string RefrigerationSecondarySystem::circulatingFluidName() const {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->circulatingFluidName();
 }
@@ -872,10 +868,6 @@ void RefrigerationSecondarySystem::removeAirChiller(const RefrigerationAirChille
 void RefrigerationSecondarySystem::removeAllAirChillers() {
   return getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeAllAirChillers();
 }
-
-/*bool RefrigerationSecondarySystem::setRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList) {
-  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(modelObjectList);
-}*/
 
 void RefrigerationSecondarySystem::resetRefrigeratedCaseAndWalkInList() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetRefrigeratedCaseAndWalkInList();
