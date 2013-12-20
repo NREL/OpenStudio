@@ -36,6 +36,7 @@ class QWidget;
 
 namespace openstudio {
   class ProgressBar;
+  class BCLMeasure;
 
   namespace model {
     class Model;
@@ -51,6 +52,7 @@ namespace openstudio {
 
   namespace runmanager {
     class RunManager;
+    class WorkItem;
   }
 
   // Recursively remove dirName.
@@ -101,7 +103,11 @@ namespace openstudio {
 
   // Start the run manager
   OPENSTUDIO_API void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-      bool useRadianceForDaylightingCalculations, QWidget* parent = NULL);
+      bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = NULL);
+
+  OPENSTUDIO_API bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid);
+
+  OPENSTUDIO_API bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
 
   OPENSTUDIO_API boost::optional<openstudio::model::Model> modelFromOSM(const openstudio::path& path, openstudio::osversion::VersionTranslator& versionTranslator, openstudio::ProgressBar* progressBar = NULL);
 

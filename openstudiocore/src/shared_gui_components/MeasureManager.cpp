@@ -453,13 +453,17 @@ void MeasureManager::updateMeasuresLists()
   m_bclMeasures.clear();
   m_myMeasures.clear();
 
-  std::vector<BCLMeasure> patAppMeasures = BCLMeasure::patApplicationMeasures();
-  for( std::vector<BCLMeasure>::const_iterator it = patAppMeasures.begin();
-       it != patAppMeasures.end();
-       it++ )
-  {
-    m_bclMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
-  }
+  // DLM: initially these were here to provide a "starter" set of measures
+  // these are now internal measures that are not meant to be seen by the user.
+  // If want to provide a starter set of measures we should do that somewhere
+  // other than patApplicationMeasures.
+  //std::vector<BCLMeasure> patAppMeasures = BCLMeasure::patApplicationMeasures();
+  //for( std::vector<BCLMeasure>::const_iterator it = patAppMeasures.begin();
+  //     it != patAppMeasures.end();
+  //     it++ )
+  //{
+  //  m_bclMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
+  //}
 
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
   for( std::vector<BCLMeasure>::const_iterator it = localBCLMeasures.begin();

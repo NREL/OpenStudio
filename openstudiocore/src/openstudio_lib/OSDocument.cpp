@@ -561,6 +561,12 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(m_runTabController.get(), SIGNAL(useRadianceStateChanged(bool)),
           this, SLOT(markAsModified()));
 
+  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)), 
+      m_resultsTabController.get(), SLOT(resultsGenerated(const openstudio::path &, const openstudio::path &)));
+
+  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)),
+      this, SLOT(runComplete())); 
+  
   // Results
 
   m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController(m_model) );
@@ -575,11 +581,9 @@ OSDocument::OSDocument( openstudio::model::Model library,
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_resultsTabController.get(), SLOT(onUnitSystemChange(bool)));
 
-  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)), 
-      m_resultsTabController.get(), SLOT(resultsGenerated(const openstudio::path &, const openstudio::path &)));
-
-  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)),
-      this, SLOT(runComplete()));
+  isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
+    m_resultsTabController->mainContentWidget(), SIGNAL(treeChanged(const openstudio::UUID &)));
+  OS_ASSERT(isConnected);
 
   m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 

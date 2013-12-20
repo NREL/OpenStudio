@@ -35,6 +35,8 @@
 #include <model/Space_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
 
 #include <runmanager/lib/JobStatusWidget.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
@@ -481,8 +483,6 @@ void RunView::playButtonClicked(bool t_checked)
 {
   LOG(Debug, "playButtonClicked " << t_checked);
 
-
-
   boost::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
 
   if(osdocument->modified())
@@ -561,12 +561,14 @@ void RunView::playButtonClicked(bool t_checked)
     m_canceling = false;
     m_outputWindow->clear();
 
+    bool requireCalibrationReports = (osdocument->model().getModelObjects<model::UtilityBill>().size() > 0);
+
     // reset the model's sqlFile
     osdocument->model().resetSqlFile();
 
     // we are starting the simulations
     openstudio::runmanager::RunManager rm = runManager();
-    startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), this);
+    startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), requireCalibrationReports, this);
   }
 }
 

@@ -553,17 +553,8 @@ namespace openstudio{
 
         // make unique, ordered set of all date times
         std::set<DateTime> dateTimesSet;
-        DateTimeVector dateTimes1(m_values.size());
-        Vector m_daysFromFirstReport = daysFromFirstReport();  // Another stand-in for using seconds
-        for(unsigned i=0; i<m_values.size();i++)
-        {
-          dateTimes1[i] = m_firstReportDateTime + Time(m_daysFromFirstReport[i]);
-        }
-        DateTimeVector dateTimes2(other.values().size());
-        for(unsigned i=0; i<other.values().size();i++)
-        {
-          dateTimes2[i] = other.firstReportDateTime() + Time(other.daysFromFirstReport(i));
-        }
+        DateTimeVector dateTimes1 = dateTimes();
+        DateTimeVector dateTimes2 = other.dateTimes();
         dateTimesSet.insert(dateTimes1.begin(), dateTimes1.end());
         dateTimesSet.insert(dateTimes2.begin(), dateTimes2.end());
 
@@ -602,17 +593,8 @@ namespace openstudio{
 
         // make unique, ordered set of all date times
         std::set<DateTime> dateTimesSet;
-        DateTimeVector dateTimes1(m_values.size());
-        Vector m_daysFromFirstReport = daysFromFirstReport();  // Another stand-in for using seconds
-        for(unsigned i=0; i<m_values.size();i++)
-        {
-          dateTimes1[i] = m_firstReportDateTime + Time(m_daysFromFirstReport[i]);
-        }
-        DateTimeVector dateTimes2(other.values().size());
-        for(unsigned i=0; i<other.values().size();i++)
-        {
-          dateTimes2[i] = other.firstReportDateTime() + Time(other.daysFromFirstReport(i));
-        }
+        DateTimeVector dateTimes1 = dateTimes();
+        DateTimeVector dateTimes2 = other.dateTimes();
         dateTimesSet.insert(dateTimes1.begin(), dateTimes1.end());
         dateTimesSet.insert(dateTimes2.begin(), dateTimes2.end());
 

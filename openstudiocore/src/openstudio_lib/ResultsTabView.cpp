@@ -18,7 +18,9 @@
 **********************************************************************/
 
 #include <openstudio_lib/ResultsTabView.hpp>
+
 #include <openstudio_lib/OSDocument.hpp>
+
 #include "OSAppBase.hpp"
 
 #include <model/Model_Impl.hpp>
@@ -27,8 +29,11 @@
 #include <model/YearDescription.hpp>
 #include <model/YearDescription_Impl.hpp>
 
+#include <QBoxLayout>
 #include <QButtonGroup>
+#include <QComboBox>
 #include <QDir>
+#include <QDomDocument>
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
@@ -37,15 +42,21 @@
 #include <QPushButton>
 #include <QScrollArea>
 #include <QStackedWidget>
+#include <QString>
 #include <QStyleOption>
 #include <QTableWidget>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QTimer>
+#include <QWebInspector>
+#include <QWebView>
 
 #include <iostream>
 
-#include <vtkCharts/Color.h>
+#include <vtkCharts/Color.h> // TODO remove
+
+#include <runmanager/lib/FileInfo.hpp>
+#include <runmanager/lib/JobStatusWidget.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/RunManager.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
@@ -173,6 +184,8 @@ void ConsumptionData::setValue(const openstudio::EndUseFuelType &t_fuelType,
   m_data[t_fuelType][t_categoryType][t_monthOfYear] = t_value;
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ResultsConsumptionChart::ResultsConsumptionChart(const openstudio::EndUseFuelType &t_fuelType, 
     const openstudio::Unit &t_unit, QWidget *t_parent)
   : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit)
@@ -201,6 +214,7 @@ void ResultsConsumptionChart::setData(const ConsumptionData &t_data, const opens
   if(unitstring == "MBtu"){
     unitstring = "Million Btu";
   }
+
   m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
   setUpdatesEnabled(false);
   QLayout *l = layout();
@@ -281,6 +295,8 @@ void ResultsConsumptionChart::setData(const ConsumptionData &t_data, const opens
   setUpdatesEnabled(true);
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ResultsConsumptionLegend::ResultsConsumptionLegend(QWidget *t_parent)
   : QWidget(t_parent)
 {
@@ -341,6 +357,25 @@ std::vector<vtkCharts::Color3ub> ResultsConsumptionLegend::getColors()
   colors.push_back(vtkCharts::Color3ub(140, 198, 63));
 
   return colors;
+}
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ResultsConsumptionTable::ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, const openstudio::Unit &t_unit, QWidget *t_parent)
+  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+  m_label = new QLabel();
+  m_label->setObjectName("H2");
+  vboxlayout->addWidget(m_label);
+
+  updateUnitsLabel();
+
+  buildDataGrid();
+
+  vboxlayout->addLayout(m_grid);
+
+  setLayout(vboxlayout);
 }
 
 void ResultsConsumptionTable::setRowHighlights()
@@ -480,24 +515,6 @@ QLabel *ResultsConsumptionTable::createDataLabel(bool t_bold)
 
   setDataValue(lbl, boost::optional<double>());
   return lbl;
-}
-
-ResultsConsumptionTable::ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, 
-    const openstudio::Unit &t_unit, QWidget *t_parent)
-  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
-{
-  QVBoxLayout *vboxlayout = new QVBoxLayout();
-  m_label = new QLabel();
-  m_label->setObjectName("H2");
-  vboxlayout->addWidget(m_label);
-
-  updateUnitsLabel();
-
-  buildDataGrid();
-
-  vboxlayout->addLayout(m_grid);
-
-  setLayout(vboxlayout);
 }
 
 void ResultsConsumptionTable::updateUnitsLabel()
@@ -643,6 +660,7 @@ void ResultsConsumptionTable::setData(const ConsumptionData &t_data, const opens
   setDataCategoryTotals(t_data);
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent), m_model(model)
@@ -706,6 +724,8 @@ struct UtilityBillSorter
     return (left.fuelType() < right.fuelType());
   }
 };
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 void UtilityBillComparisonView::buildGridLayout()
 {
@@ -798,6 +818,8 @@ void UtilityBillComparisonView::onObjectRemoved(const openstudio::WorkspaceObjec
     buildGridLayout();
   }
 }
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 UtilityBillComparisonChart::UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
                                                        double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent)
@@ -987,6 +1009,8 @@ void UtilityBillComparisonChart::plotDemand()
   setUpdatesEnabled(true);
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 UtilityBillComparisonLegend::UtilityBillComparisonLegend(const openstudio::FuelType& fuelType, QWidget *t_parent)
   : QWidget(t_parent), m_fuelType(fuelType)
 {
@@ -1088,6 +1112,8 @@ std::vector<vtkCharts::Color3ub> UtilityBillComparisonLegend::getColors(const op
 
   return colors;
 }
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 UtilityBillComparisonTable::UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
                                                        double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent)
@@ -1218,7 +1244,6 @@ void UtilityBillComparisonTable::onUtilityBillChanged()
   setRowHighlights();
 }
 
-
 void UtilityBillComparisonTable::setRowHighlights()
 {
   const int numrows = 6;
@@ -1246,6 +1271,7 @@ void UtilityBillComparisonTable::setRowHighlights()
   }
 }
 
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ResultsTabView::ResultsTabView(const model::Model & model,
                                const QString & tabLabel,
@@ -1254,12 +1280,19 @@ ResultsTabView::ResultsTabView(const model::Model & model,
                                : MainTabView(tabLabel,hasSubTab,parent),
                                  m_resultsView(new ResultsView(model))
 {
-  QScrollArea *scrollarea = new QScrollArea();
-  scrollarea->setWidget(m_resultsView);
-  scrollarea->setWidgetResizable(true);
-  addTabWidget(scrollarea);
+  //QScrollArea *scrollarea = new QScrollArea();
+  //scrollarea->setWidget(m_resultsView);
+  //scrollarea->setWidgetResizable(true);
+  //addTabWidget(scrollarea);
+
+  addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
-//    addTabWidget(m_resultsView);
+
+  bool isConnected = false;
+  isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
+    m_resultsView, SLOT(treeChanged(const openstudio::UUID &)));
+  OS_ASSERT(isConnected);
+
 }
 
 void ResultsTabView::searchForExistingResults(const openstudio::path &t_runDir)
@@ -1280,6 +1313,8 @@ void ResultsTabView::resultsGenerated(const openstudio::path &t_sqlFilePath, con
   LOG(Debug, "resultsGenerated " << openstudio::toString(t_sqlFilePath) << " " << openstudio::toString(t_radianceResultsPath));
   m_resultsView->resultsGenerated(t_sqlFilePath, t_radianceResultsPath);
 }
+
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 openstudio::Unit ResultsView::getUnit(openstudio::EndUseFuelType t_type, bool t_isIP)
 {
@@ -1364,10 +1399,10 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   // Make Selection Button Widget
   
   hLayout = new QHBoxLayout(this);
-  m_reportLabel = new QLabel("View: ",this);
+  m_reportLabel = new QLabel("Reports: ",this);
   m_reportLabel->setObjectName("H2");
   m_reportLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-  hLayout->addWidget(m_reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
+  hLayout->addWidget(m_reportLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   buttonGroup = new QButtonGroup(this);
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
@@ -1383,6 +1418,23 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   m_calibrationResultsBtn->setCheckable(true);
   hLayout->addWidget(m_calibrationResultsBtn, 0, Qt::AlignLeft | Qt::AlignTop);
   buttonGroup->addButton(m_calibrationResultsBtn,1);
+
+  QPushButton * webKitBtn = new QPushButton("WebKit",this);
+  webKitBtn->setCheckable(true);
+  hLayout->addWidget(webKitBtn, 0, Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(webKitBtn,2);
+
+  m_standardResultsBtn->hide();
+  m_calibrationResultsBtn->hide();
+  webKitBtn->hide();
+
+  m_comboBox = new QComboBox(this);
+
+  isConnected = connect(m_comboBox, SIGNAL(currentIndexChanged( int )),
+    this, SLOT(comboBoxChanged( int )));
+  OS_ASSERT(isConnected);
+
+  hLayout->addWidget(m_comboBox, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   hLayout->addStretch();
 
@@ -1433,7 +1485,22 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   // Make Comparision Method Layout
   m_stackedWidget->addWidget(m_utilityBillComparisonView);
   
-  // connect model signals
+  //********************************************* PAGE 3 (WebKit) *********************************************
+
+  m_view = new QWebView(this);
+  m_view->setContextMenuPolicy(Qt::NoContextMenu);
+
+//#if _DEBUG || (__GNUC__ && !NDEBUG)
+//  m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+//  QWebInspector *inspector = new QWebInspector;
+//  inspector->setPage(m_view->page());
+//  inspector->setVisible(true);
+//#endif
+
+  m_stackedWidget->addWidget(m_view);
+
+  //********************************************* Connects *********************************************
+
   isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
                    SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
@@ -1500,7 +1567,9 @@ void ResultsView::openResultsViewerClicked()
 
 void ResultsView::selectView(int index)
 {
-  m_stackedWidget->setCurrentIndex(index);
+  //m_stackedWidget->setCurrentIndex(index);
+  // NOTE: Always select the webview widget
+  m_stackedWidget->setCurrentIndex(m_stackedWidget->count() - 1);
 }
 
 void ResultsView::onObjectAdded(const WorkspaceObject& workspaceObject)
@@ -1536,18 +1605,18 @@ void ResultsView::updateReportButtons()
   }
 
   if (!showUtilityCalibration){
-    m_reportLabel->setVisible(false);
-    m_standardResultsBtn->setVisible(false);
-    m_calibrationResultsBtn->setVisible(false);
-    m_standardResultsBtn->click();
+    //m_reportLabel->setVisible(false);
+    //m_standardResultsBtn->setVisible(false);
+    //m_calibrationResultsBtn->setVisible(false);
+    //m_standardResultsBtn->click();
   }else{
-    m_reportLabel->setVisible(true);
-    m_standardResultsBtn->setVisible(true);
-    m_calibrationResultsBtn->setVisible(true);
+    //m_reportLabel->setVisible(true);
+    // NOTE: Always leave these buttons hidden
+    //m_standardResultsBtn->setVisible(true);
+    //m_calibrationResultsBtn->setVisible(true);
   }
+
 }
-
-
 
 void ResultsView::onUnitSystemChange(bool t_isIP) 
 {
@@ -1563,6 +1632,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
 
   std::vector<openstudio::path> eplusout;
   std::vector<openstudio::path> radout;
+  std::vector<openstudio::path> reports;
 
   for ( boost::filesystem::basic_recursive_directory_iterator<openstudio::path> end, dir(t_runDir); 
         dir != end; 
@@ -1574,6 +1644,10 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
       eplusout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "radout.sql") {
       radout.push_back(p);
+    } else if (openstudio::toString(p.filename()) == "report.html") {
+      reports.push_back(p);
+    } else if (openstudio::toString(p.filename()) == "eplusout.html") {
+      reports.push_back(p);
     }
   }
 
@@ -1581,6 +1655,8 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   openstudio::path rad = radout.empty()?openstudio::path():radout.back();
 
   resultsGenerated(eplus, rad);
+
+  populateComboBox(reports);
 }
 
 void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstudio::path &t_radianceResultsPath)
@@ -1616,6 +1692,93 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_districtCoolingConsumptionTable->setData(consumptionData, getUnit(m_districtCoolingConsumptionTable->getFuelType(), m_isIP));
 
   m_utilityBillComparisonView->buildGridLayout();
+}
+
+openstudio::runmanager::RunManager ResultsView::runManager()
+{
+  return OSAppBase::instance()->project()->runManager();
+}
+
+void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
+{
+  try {
+    openstudio::runmanager::Job j = runManager().getJob(t_uuid);
+    while (j.parent())
+    {
+      j = j.parent().get();
+    }
+
+    openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
+
+    QString fullPathString;
+    openstudio::path path;
+
+    if (status == openstudio::runmanager::TreeStatusEnum::Finished)
+    {
+      try {
+        openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
+        std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
+        std::vector<openstudio::path> reports;
+        Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
+          reports.push_back(file.fullPath);
+        }
+        f = j.treeAllFiles().getAllByFilename("eplusout.html");
+        t_files = f.files();
+        Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
+          reports.push_back(file.fullPath);
+        }
+        populateComboBox(reports);
+      } catch (const std::exception &e) {
+        LOG(Debug, "Tree finished, error getting html file: " << e.what());
+      } catch (...) {
+        LOG(Debug, "Tree finished, error getting html file");
+        // no html file exists
+      }
+    } 
+  } catch (const std::exception &e) {
+    LOG(Debug, "Tree finished, error getting status: " << e.what());
+  } catch (...) {
+    LOG(Debug, "Tree finished, error getting status");
+    // no html file exists
+  }
+}
+
+void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
+{
+  QString num;
+  QString fullPathString;
+  openstudio::path path;
+
+  m_comboBox->clear();
+  Q_FOREACH(openstudio::path report, reports){
+    fullPathString = toQString(report.string());
+    QFile file(fullPathString);
+    fullPathString.prepend("file:///");
+    if (file.open(QFile::ReadOnly)){
+      QDomDocument doc;
+      doc.setContent(&file);
+      file.close();
+      QString string = doc.toString();
+      int startingIndex = string.indexOf("<title>");
+      int endingIndex = string.indexOf("</title>");
+      if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
+        m_comboBox->addItem(num.setNum(m_comboBox->count() + 1),fullPathString);
+      } else {
+        // length of "<title>" = 7
+        QString title = string.mid(startingIndex+7, endingIndex-startingIndex-7);
+        m_comboBox->addItem(title,fullPathString);
+      }
+    }
+  }
+  if(m_comboBox->count()){
+    m_comboBox->setCurrentIndex(0);
+  }
+}
+
+void ResultsView::comboBoxChanged(int index)
+{
+  QString filename = m_comboBox->itemData(index).toString();
+  m_view->load(QUrl(filename));
 }
 
 } // openstudio
