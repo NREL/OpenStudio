@@ -916,7 +916,6 @@ SET( ${target_name}_moc
   CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
-  CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingElectric_Impl.hpp
