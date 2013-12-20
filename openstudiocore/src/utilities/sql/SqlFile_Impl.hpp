@@ -801,7 +801,7 @@ namespace openstudio{
       boost::optional<Date> timeSeriesStartDate(const DataDictionaryItem& dataDictionary);
 
       // return first date in time table used for start date of run period variables
-      openstudio::DateTime firstDateTime();
+      openstudio::DateTime firstDateTime(bool includeHourAndMinute);
 
       boost::optional<Time> timeSeriesInterval(const DataDictionaryItem& dataDictionary);
       std::vector<DateTime> dateTimeVec(const DataDictionaryItem& dataDictionary);
