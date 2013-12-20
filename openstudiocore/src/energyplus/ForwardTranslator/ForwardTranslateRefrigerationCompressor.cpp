@@ -99,16 +99,13 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
   }
 
 //Mode of Operation
-  object.setString(Refrigeration_CompressorFields::ModeofOperation,"Subcritical");
-  /*s = modelObject.modeofOperation();
+  s = modelObject.modeofOperation();
   if (s) {
     object.setString(Refrigeration_CompressorFields::ModeofOperation,s.get());
-  }*/
+  }
 
 //Transcritical Compressor Power Curve Name
-  object.setString(Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName,"");
-
-  /*boost::optional<CurveBicubic> transcriticalPowerCurve = modelObject.transcriticalCompressorPowerCurve();
+  boost::optional<CurveBicubic> transcriticalPowerCurve = modelObject.transcriticalCompressorPowerCurve();
 
   if( transcriticalPowerCurve )
   {
@@ -118,12 +115,10 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
     {
       object.setString(Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName,_transcriticalPowerCurve->name().get());
     }
-  }*/
+  }
 
 //Transcritical Compressor Capacity Curve Name
-  object.setString(Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName,"");
-
-  /*boost::optional<CurveBicubic> transcriticalCapacityCurve = modelObject.transcriticalCompressorCapacityCurve();
+  boost::optional<CurveBicubic> transcriticalCapacityCurve = modelObject.transcriticalCompressorCapacityCurve();
 
   if( transcriticalCapacityCurve )
   {
@@ -133,7 +128,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
     {
       object.setString(Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName,_transcriticalCapacityCurve->name().get());
     }
-  }*/
+  }
 
   return object;
 

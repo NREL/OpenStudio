@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class CurveLinear;
 class ThermalZone;
 
@@ -56,7 +55,6 @@ class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: CurveLinear.
   boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;
 
   double ratedSubcoolingTemperatureDifference() const;
@@ -75,7 +73,6 @@ class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
 
   bool isMinimumFanAirFlowRatioDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> airInletZone() const;
 
   std::string endUseSubcategory() const;
@@ -98,7 +95,6 @@ class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveLinear.
   bool setRatedEffectiveTotalHeatRejectionRateCurve(const CurveLinear& curveLinear);
 
   void resetRatedEffectiveTotalHeatRejectionRateCurve();
@@ -119,7 +115,6 @@ class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
 
   void resetMinimumFanAirFlowRatio();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setAirInletZone(const ThermalZone& thermalZone);
 
   void resetAirInletZone();

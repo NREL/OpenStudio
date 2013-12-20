@@ -62,7 +62,7 @@ class MODEL_API ZoneHVACComponent_Impl : public ParentObject_Impl {
 
   boost::optional<Node> outletNode();
 
-  boost::optional<ThermalZone> thermalZone();
+  virtual boost::optional<ThermalZone> thermalZone();
 
   virtual bool addToThermalZone(ThermalZone & thermalZone);
 

@@ -81,7 +81,7 @@ namespace detail{
     
     success =  WaterToAirComponent_Impl::addToNode( node );
     
-    if( success && (! containingHVACComponent()) )
+    if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) )
     {
       if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() )
       {

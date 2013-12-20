@@ -44,13 +44,17 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingGas.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
+  ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
   ForwardTranslator/ForwardTranslateControllerMechanicalVentilation.cpp
   ForwardTranslator/ForwardTranslateControllerOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateControllerWaterCoil.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerPerformanceCoolTools.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerPerformanceYorkCalc.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCurrencyType.cpp
   ForwardTranslator/ForwardTranslateCurveBicubic.cpp
   ForwardTranslator/ForwardTranslateCurveBiquadratic.cpp
@@ -114,6 +118,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
@@ -125,6 +130,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationSubcoolerMechanical.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSecondarySystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSystem.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationTranscriticalSystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationWalkIn.cpp
   ForwardTranslator/ForwardTranslateRoofVegetation.cpp
   ForwardTranslator/ForwardTranslateRunPeriod.cpp

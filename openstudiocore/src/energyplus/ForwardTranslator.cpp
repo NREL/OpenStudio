@@ -619,6 +619,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilHeatingWaterToAirHeatPumpEquationFit(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater :
+    {
+      model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
+      retVal = translateCoilWaterHeatingDesuperheater(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_ComponentData :
     {
       // no-op
@@ -680,10 +686,28 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateControllerWaterCoil(controller);
       break;
     }
+  case openstudio::IddObjectType::OS_CoolingTowerPerformance_CoolTools :
+    {
+      model::CoolingTowerPerformanceCoolTools mo = modelObject.cast<CoolingTowerPerformanceCoolTools>();
+      retVal = translateCoolingTowerPerformanceCoolTools(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoolingTowerPerformance_YorkCalc :
+    {
+      model::CoolingTowerPerformanceYorkCalc mo = modelObject.cast<CoolingTowerPerformanceYorkCalc>();
+      retVal = translateCoolingTowerPerformanceYorkCalc(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       model::CoolingTowerSingleSpeed tower = modelObject.cast<CoolingTowerSingleSpeed>();
       retVal = translateCoolingTowerSingleSpeed(tower);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
+    {
+      model::CoolingTowerVariableSpeed tower = modelObject.cast<CoolingTowerVariableSpeed>();
+      retVal = translateCoolingTowerVariableSpeed(tower);
       break;
     }
   case openstudio::IddObjectType::OS_CurrencyType :
@@ -1126,6 +1150,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePortList(portList);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_AirChiller :
+    {
+      model::RefrigerationAirChiller refrigerationAirChiller = modelObject.cast<RefrigerationAirChiller>();
+      retVal = translateRefrigerationAirChiller(refrigerationAirChiller);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Case :
     {
       model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();
@@ -1192,6 +1222,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationSystem(refrigerationSystem);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_TranscriticalSystem :
+    {
+      model::RefrigerationTranscriticalSystem refrigerationTranscriticalSystem = modelObject.cast<RefrigerationTranscriticalSystem>();
+      retVal = translateRefrigerationTranscriticalSystem(refrigerationTranscriticalSystem);
+      break;
+    }    
   case openstudio::IddObjectType::OS_Refrigeration_WalkIn :
     {
       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
@@ -1757,6 +1793,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Coil_Heating_Gas);
   result.push_back(IddObjectType::OS_Coil_Heating_Water);
   result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
+  result.push_back(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
   result.push_back(IddObjectType::OS_Connection);
   result.push_back(IddObjectType::OS_Connector_Mixer);
   result.push_back(IddObjectType::OS_Connector_Splitter);
@@ -1795,6 +1832,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
+  result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

@@ -40,6 +40,7 @@ OptionalModelObject ReverseTranslator::translateRefrigerationCompressor( const W
   }
 
   boost::optional<RefrigerationCompressor> refrigerationCompressor = RefrigerationCompressor( m_model );
+  boost::optional<WorkspaceObject> wo;
 
   if( refrigerationCompressor )
   {

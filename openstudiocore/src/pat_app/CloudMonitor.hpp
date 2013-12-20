@@ -230,6 +230,8 @@ class StopCloudWorker : public QObject
 
   virtual ~StopCloudWorker();
 
+  bool error() const; 
+
   signals:
 
   void doneWorking();
@@ -243,6 +245,8 @@ class StopCloudWorker : public QObject
   Q_DISABLE_COPY(StopCloudWorker);
 
   QPointer<CloudMonitor> m_monitor;  
+
+  bool m_error;
 };
 
 class ReconnectCloudWorker : public QObject

@@ -26,10 +26,10 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ModelObjectList;
 class CurveCubic;
 class ThermalZone;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationWalkIn;
 
@@ -79,10 +79,11 @@ namespace detail {
 
     std::vector<RefrigerationWalkIn> walkins() const;
 
-    template <class T>
-    std::vector<T> casesOrWalkins() const;
+    std::vector<RefrigerationAirChiller> airChillers() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
+    template <class T>
+    std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
+
     boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
     std::string circulatingFluidName() const;
@@ -117,7 +118,6 @@ namespace detail {
 
     bool isPumpDriveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveCubic.
     boost::optional<CurveCubic> variableSpeedPumpCubicCurve() const;
 
     double pumpMotorHeattoFluid() const;
@@ -128,14 +128,12 @@ namespace detail {
 
     bool isSumUADistributionPipingDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> distributionPipingZone() const;
 
     double sumUAReceiverSeparatorShell() const;
 
     bool isSumUAReceiverSeparatorShellDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> receiverSeparatorZone() const;
 
     double evaporatorRefrigerantInventory() const;
@@ -151,13 +149,13 @@ namespace detail {
     //@{
 
     template <class T>
-    void removeAllCasesOrWalkins();
+    void removeAllTemplate( boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    void removeCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+    void removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    bool addCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+    bool addTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
 
     bool addCase( const RefrigerationCase & refrigerationCase);
 
@@ -171,7 +169,12 @@ namespace detail {
 
     void removeAllWalkins();
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
+    bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAllAirChillers();
+
     bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetRefrigeratedCaseAndWalkInList();
@@ -222,7 +225,6 @@ namespace detail {
 
     void resetPumpDriveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
     bool setVariableSpeedPumpCubicCurve(const boost::optional<CurveCubic>& curveCubic);
 
     void resetVariableSpeedPumpCubicCurve();
@@ -235,7 +237,6 @@ namespace detail {
 
     void resetSumUADistributionPiping();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setDistributionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetDistributionPipingZone();
@@ -244,7 +245,6 @@ namespace detail {
 
     void resetSumUAReceiverSeparatorShell();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setReceiverSeparatorZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetReceiverSeparatorZone();

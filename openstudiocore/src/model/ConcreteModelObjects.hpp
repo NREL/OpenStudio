@@ -64,6 +64,7 @@
 #include <model/CoilHeatingWater.hpp>
 #include <model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
+#include <model/CoilWaterHeatingDesuperheater.hpp>
 #include <model/ComponentCostAdjustments.hpp>
 #include <model/ComponentData.hpp>
 #include <model/Connection.hpp>
@@ -76,7 +77,10 @@
 #include <model/ControllerOutdoorAir.hpp>
 #include <model/ControllerWaterCoil.hpp>
 #include <model/ConvergenceLimits.hpp>
+#include <model/CoolingTowerPerformanceCoolTools.hpp>
+#include <model/CoolingTowerPerformanceYorkCalc.hpp>
 #include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerVariableSpeed.hpp>
 #include <model/CurrencyType.hpp>
 #include <model/CurveBicubic.hpp>
 #include <model/CurveBiquadratic.hpp>
@@ -165,6 +169,7 @@
 #include <model/PumpVariableSpeed.hpp>
 #include <model/RadianceParameters.hpp>
 #include <model/RefractionExtinctionGlazing.hpp>
+#include <model/RefrigerationAirChiller.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
@@ -176,6 +181,7 @@
 #include <model/RefrigerationSubcoolerMechanical.hpp>
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationSystem.hpp>
+#include <model/RefrigerationTranscriticalSystem.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkInZoneBoundary.hpp>
 #include <model/RenderingColor.hpp>
@@ -311,6 +317,7 @@
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/CoilWaterHeatingDesuperheater_Impl.hpp>
 #include <model/ComponentCostAdjustments_Impl.hpp>
 #include <model/ComponentData_Impl.hpp>
 #include <model/Connection_Impl.hpp>
@@ -323,7 +330,10 @@
 #include <model/ControllerOutdoorAir_Impl.hpp>
 #include <model/ControllerWaterCoil_Impl.hpp>
 #include <model/ConvergenceLimits_Impl.hpp>
+#include <model/CoolingTowerPerformanceCoolTools_Impl.hpp>
+#include <model/CoolingTowerPerformanceYorkCalc_Impl.hpp>
 #include <model/CoolingTowerSingleSpeed_Impl.hpp>
+#include <model/CoolingTowerVariableSpeed_Impl.hpp>
 #include <model/CurrencyType_Impl.hpp>
 #include <model/CurveBicubic_Impl.hpp>
 #include <model/CurveBiquadratic_Impl.hpp>
@@ -410,6 +420,7 @@
 #include <model/PumpVariableSpeed_Impl.hpp>
 #include <model/RadianceParameters_Impl.hpp>
 #include <model/RefractionExtinctionGlazing_Impl.hpp>
+#include <model/RefrigerationAirChiller_Impl.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
@@ -421,6 +432,7 @@
 #include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
 #include <model/RefrigerationSecondarySystem_Impl.hpp>
 #include <model/RefrigerationSystem_Impl.hpp>
+#include <model/RefrigerationTranscriticalSystem_Impl.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
 #include <model/RenderingColor_Impl.hpp>

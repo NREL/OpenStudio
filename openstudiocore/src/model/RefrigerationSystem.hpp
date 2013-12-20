@@ -27,7 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-class ModelObjectList;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
@@ -61,8 +61,6 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   static std::vector<std::string> suctionTemperatureControlTypeValues();
 
-  // static std::vector<std::string> numberofCompressorStagesValues();
-
   static std::vector<std::string> intercoolerTypeValues();
 
   std::vector<IdfObject> remove();
@@ -93,6 +91,14 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCompressor> compressors() const;
 
+  bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+  void removeHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+  void removeAllHighStageCompressors();
+
+  std::vector<RefrigerationCompressor> highStageCompressors() const;
+
   bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
 
   void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
@@ -109,97 +115,69 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
+  bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAllAirChillers();
+
+  std::vector<RefrigerationAirChiller> airChillers() const;
+
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  //boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
-
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  //boost::optional<ModelObjectList> refrigerationTransferLoadList() const;
-
-  // TODO: Check return type. From object lists, some candidates are: RefrigerationAllTypesCondenser.
-  ModelObject refrigerationCondenser() const;
-
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  //ModelObjectList compressorList() const;
+  boost::optional<ModelObject> refrigerationCondenser() const;
 
   double minimumCondensingTemperature() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Fluid.
   std::string refrigerationSystemWorkingFluidType() const;
 
   std::string suctionTemperatureControlType() const;
 
   bool isSuctionTemperatureControlTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcoolerMechanical.
   boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler() const;
 
-  // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcoolerLiquidSuction.
   boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler() const;
 
   double sumUASuctionPiping() const;
 
   bool isSumUASuctionPipingDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> suctionPipingZone() const;
 
   std::string endUseSubcategory() const;
 
   bool isEndUseSubcategoryDefaulted() const;
 
-  //std::string numberofCompressorStages() const;
+  std::string numberofCompressorStages() const;
 
-  //bool isNumberofCompressorStagesDefaulted() const;
+  std::string intercoolerType() const;
 
-  //std::string intercoolerType() const;
+  bool isIntercoolerTypeDefaulted() const;
 
-  //bool isIntercoolerTypeDefaulted() const;
+  double shellandCoilIntercoolerEffectiveness() const;
 
-  //double shellandCoilIntercoolerEffectiveness() const;
-
-  //bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
-
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  //boost::optional<ModelObjectList> highStageCompressorList() const;
+  bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  //bool setRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectLists);
-
-  //void resetRefrigeratedCaseAndWalkInList();
-
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  //bool setRefrigerationTransferLoadList(const ModelObjectList& modelObjectLists);
-
-  //void resetRefrigerationTransferLoadList();
-
-  // TODO: Check argument type. From object lists, some candidates are: RefrigerationAllTypesCondenser.
   bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
-
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  //bool setCompressorList(const ModelObjectList& modelObjectLists);
 
   void setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
-  // TODO: Check argument type. From object lists, some candidates are: Fluid.
   bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
   bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
 
   void resetSuctionTemperatureControlType();
 
-  // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcoolerMechanical.
   bool setMechanicalSubcooler(const RefrigerationSubcoolerMechanical& refrigerationSubcoolerMechanical);
 
   void resetMechanicalSubcooler();
 
-  // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcoolerLiquidSuction.
   bool setLiquidSuctionHeatExchangerSubcooler(const RefrigerationSubcoolerLiquidSuction& refrigerationSubcoolerLiquidSuction);
 
   void resetLiquidSuctionHeatExchangerSubcooler();
@@ -208,7 +186,6 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetSumUASuctionPiping();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setSuctionPipingZone(const ThermalZone& thermalZone);
 
   void resetSuctionPipingZone();
@@ -217,22 +194,13 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetEndUseSubcategory();
 
-  //bool setNumberofCompressorStages(std::string numberofCompressorStages);
+  bool setIntercoolerType(std::string intercoolerType);
 
-  //void resetNumberofCompressorStages();
+  void resetIntercoolerType();
 
-  //bool setIntercoolerType(std::string intercoolerType);
+  void setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
 
-  //void resetIntercoolerType();
-
-  //void setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
-
-  //void resetShellandCoilIntercoolerEffectiveness();
-
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  //bool setHighStageCompressorList(const ModelObjectList& modelObjectLists);
-
-  //void resetHighStageCompressorList();
+  void resetShellandCoilIntercoolerEffectiveness();
 
   //@}
   /** @name Other */

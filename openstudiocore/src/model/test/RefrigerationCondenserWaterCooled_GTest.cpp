@@ -132,6 +132,21 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_Connections)
 	EXPECT_EQ( outletNode.handle(), refrigerationCondenserWaterCooled.outletModelObject()->handle() );
 }
 
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_PlantLoopAddDemandBranchForComponent)
+{
+	Model m; 
+	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
+
+	PlantLoop plantLoop = PlantLoop(m);
+	EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
+
+	EXPECT_TRUE(plantLoop.addDemandBranchForComponent(refrigerationCondenserWaterCooled));
+
+	EXPECT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
+
+	ASSERT_TRUE( refrigerationCondenserWaterCooled.inletModelObject() );
+	ASSERT_TRUE( refrigerationCondenserWaterCooled.outletModelObject() );
+}
 
 
 TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterCooledLoopFlowType)

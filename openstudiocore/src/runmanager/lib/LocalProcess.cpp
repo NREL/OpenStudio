@@ -29,6 +29,7 @@
 
 #include <utilities/time/DateTime.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <QDir>
 #include <QDateTime>
@@ -389,7 +390,26 @@ namespace detail {
          ++itr)
     {
       LOG(Debug, "cleanUpRequiredFiles: " << openstudio::toString(*itr));
-      boost::filesystem::remove_all(*itr);
+	    try {
+        boost::filesystem::remove(*itr);
+	    } catch (const std::exception &e) {
+        LOG(Trace, "Unable to remove file: " << e.what());
+		    // no error if it doesn't manage to delete it
+	    }
+
+	    try {
+        openstudio::path p = itr->parent_path();
+
+        while (!p.empty() && !relativePath(p, m_outdir).empty() && m_outdir != p)
+        {
+          // remove the directory if it happens to be empty. 
+          boost::filesystem::remove(p);
+          p = p.parent_path();
+        }
+	    } catch (const std::exception &e) {
+        LOG(Trace, "Unable to remove directory: " << e.what());
+		    // no error if it doesn't manage to delete it
+	    }
     }
   }
 

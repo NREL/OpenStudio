@@ -126,6 +126,50 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
   
   testObject.setRefrigerationCompressorCapacityCurve(capacityCurve);
 
+  CurveBicubic transPowerCurve = CurveBicubic(model);
+  transPowerCurve.setName("Transcritical Compressor Power Curve Test");
+  transPowerCurve.setCoefficient1Constant(4451.46);
+  transPowerCurve.setCoefficient2x(-166.108);
+  transPowerCurve.setCoefficient3xPOW2(-5.35664);
+  transPowerCurve.setCoefficient4y(263.553);
+  transPowerCurve.setCoefficient5yPOW2(-0.958849);
+  transPowerCurve.setCoefficient6xTIMESY(8.09252);
+  transPowerCurve.setCoefficient7xPOW3(-0.0239354);
+  transPowerCurve.setCoefficient8yPOW3(0.000633306);
+  transPowerCurve.setCoefficient9xPOW2TIMESY(0.0778798);
+  transPowerCurve.setCoefficient10xTIMESYPOW2(-0.0167386);
+  transPowerCurve.setMinimumValueofx(-23.3);
+  transPowerCurve.setMaximumValueofx(7.2);
+  transPowerCurve.setMinimumValueofy(10.0);
+  transPowerCurve.setMaximumValueofy(60.0);
+  transPowerCurve.setInputUnitTypeforX("Temperature");
+  transPowerCurve.setInputUnitTypeforY("Temperature");
+  transPowerCurve.setOutputUnitType("Power");
+
+  testObject.setTranscriticalCompressorPowerCurve(transPowerCurve);
+
+  CurveBicubic transCapacityCurve = CurveBicubic(model);
+  transCapacityCurve.setName("Transcritical Compressor Capacity Curve Test");
+  transCapacityCurve.setCoefficient1Constant(83249.9);
+  transCapacityCurve.setCoefficient2x(3147.96);
+  transCapacityCurve.setCoefficient3xPOW2(44.9276);
+  transCapacityCurve.setCoefficient4y(-1035.51);
+  transCapacityCurve.setCoefficient5yPOW2(3.74692);
+  transCapacityCurve.setCoefficient6xTIMESY(-37.3907);
+  transCapacityCurve.setCoefficient7xPOW3(0.179897);
+  transCapacityCurve.setCoefficient8yPOW3(-0.0199971);
+  transCapacityCurve.setCoefficient9xPOW2TIMESY(-0.481641);
+  transCapacityCurve.setCoefficient10xTIMESYPOW2(0.0428673);
+  transCapacityCurve.setMinimumValueofx(-23.3);
+  transCapacityCurve.setMaximumValueofx(7.2);
+  transCapacityCurve.setMinimumValueofy(10.0);
+  transCapacityCurve.setMaximumValueofy(60.0);
+  transCapacityCurve.setInputUnitTypeforX("Temperature");
+  transCapacityCurve.setInputUnitTypeforY("Temperature");
+  transCapacityCurve.setOutputUnitType("Capacity");
+  
+  testObject.setTranscriticalCompressorCapacityCurve(transCapacityCurve);
+
   RefrigerationCompressor testObjectClone = testObject.clone(model).cast<RefrigerationCompressor>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedReturnGasTemperature().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedSubcooling().get());
@@ -133,6 +177,8 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
   EXPECT_NE(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
   EXPECT_NE(powerCurve.handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
   EXPECT_NE(capacityCurve.handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
+  EXPECT_NE(transPowerCurve.handle(), testObjectClone.transcriticalCompressorPowerCurve().get().handle());
+  EXPECT_NE(transCapacityCurve.handle(), testObjectClone.transcriticalCompressorCapacityCurve().get().handle());
 }
 
 TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData)

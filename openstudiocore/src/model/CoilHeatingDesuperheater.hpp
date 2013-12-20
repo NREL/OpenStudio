@@ -23,15 +23,12 @@
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject.hpp>
 #include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
 class ModelObject;
 
 namespace detail {
@@ -57,7 +54,6 @@ class MODEL_API CoilHeatingDesuperheater : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
   double heatReclaimRecoveryEfficiency() const;
@@ -74,7 +70,6 @@ class MODEL_API CoilHeatingDesuperheater : public StraightComponent {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();

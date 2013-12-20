@@ -25,8 +25,8 @@
 #include <model/ModelObject_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -70,29 +70,25 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDesuperheater(
   }
 
 // Air Inlet Node Name
-  omo = modelObject.inletModelObject();
-  if( omo )
+  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
   {
-    translateAndMapModelObject(*omo);
-    s = omo->name();
-    if(s)
+    if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
-      object.setString(Coil_Heating_DesuperheaterFields::AirInletNodeName,*s);
+      object.setString(Coil_Heating_DesuperheaterFields::AirInletNodeName,node->name().get());
     }
   }
 
 // Air Outlet Node Name
-  omo = modelObject.outletModelObject();
-  if( omo )
+  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
   {
-    translateAndMapModelObject(*omo);
-    s = omo->name();
-    if(s)
+    if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
-      object.setString(Coil_Heating_DesuperheaterFields::AirOutletNodeName,*s);
+      object.setString(Coil_Heating_DesuperheaterFields::AirOutletNodeName,node->name().get());
+      object.setString(Coil_Heating_DesuperheaterFields::TemperatureSetpointNodeName,node->name().get());
     }
   }
 
+// HeatingSourceObjectType
 // Heating Source Name
   boost::optional<ModelObject> heatingSource = modelObject.heatingSource();
 
@@ -101,12 +97,17 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDesuperheater(
 
       if ( _heatingSource && _heatingSource->name() )
       {
-          object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceName,_heatingSource->name().get());
+        object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceObjectType,_heatingSource->iddObject().name());
+        object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceName,_heatingSource->name().get());
       }
   }
 
 // Temperature Setpoint Node Name
-  object.setString(Coil_Heating_DesuperheaterFields::TemperatureSetpointNodeName,"");
+  // if( boost::optional<Node> node = modelObject.temperatureSetpointNode() )
+  // {
+  //   object.setString(Coil_Heating_DesuperheaterFields::TemperatureSetpointNodeName,node->name().get());
+  // }
+  // object.setString(Coil_Heating_DesuperheaterFields::TemperatureSetpointNodeName,"");
 
 // Parasitic Electric Load
   d = modelObject.parasiticElectricLoad();

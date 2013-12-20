@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class CurveLinear;
 class ThermalZone;
 
@@ -71,7 +70,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: CurveLinear.
     boost::optional<CurveLinear> ratedTotalHeatRejectionRateCurve() const;
 
     std::string gasCoolerFanSpeedControlType() const;
@@ -124,7 +122,6 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveLinear.
     bool setRatedTotalHeatRejectionRateCurve(const boost::optional<CurveLinear>& curveLinear);
 
     void resetRatedTotalHeatRejectionRateCurve();

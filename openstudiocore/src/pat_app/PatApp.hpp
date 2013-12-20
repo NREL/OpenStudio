@@ -86,6 +86,7 @@ class PatMainWindow;
 class ResultsTabController;
 class RunTabController;
 class StartupView;
+class LoadingProjectView;
 class SystemComponent;
 
 class PatApp : public QApplication, public BaseApp
@@ -243,6 +244,8 @@ class PatApp : public QApplication, public BaseApp
 
   void showStartupView();
 
+  void showLoadingProjectView();
+
   void scanForTools();
 
   void showTools();
@@ -268,6 +271,7 @@ class PatApp : public QApplication, public BaseApp
   void attachProject(boost::optional<analysisdriver::SimpleProject> project);
 
   QPointer<StartupView> m_startupView;
+  QPointer<LoadingProjectView> m_loadingProjectView;
   QPointer<BuildingComponentDialog> m_onlineBclDialog;
   QPointer<CloudDialog> m_cloudDialog;
   QPointer<MonitorUseDialog> m_monitorUseDialog;
