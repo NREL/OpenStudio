@@ -2226,8 +2226,8 @@ namespace openstudio{
       std::string units = dataDictionary.units;
 
       boost::optional<openstudio::DateTime> startDateTime; 
-      std::vector<double> stdDaysFromFirstReport;
-      stdDaysFromFirstReport.reserve(8760);
+      std::vector<long> stdSecondsFromFirstReport;
+      stdSecondsFromFirstReport.reserve(8760);
 
       std::vector<double> stdValues;
       stdValues.reserve(8760);
@@ -2271,7 +2271,7 @@ namespace openstudio{
         s2 << code;
         LOG(Debug, s2.str());
 
-        unsigned cumulativeMinutes = 0;
+        long cumulativeSeconds = 0;
 
         while (code == SQLITE_ROW) 
         {
@@ -2294,9 +2294,9 @@ namespace openstudio{
             }
           }
 
-          stdDaysFromFirstReport.push_back(cumulativeMinutes / (24.0*60.0));
+          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
 
-          cumulativeMinutes += intervalMinutes;
+          cumulativeSeconds += 60*intervalMinutes;
 
           // check if this interval is same as the others
           if (isIntervalTimeSeries && !reportingIntervalMinutes){
@@ -2313,13 +2313,14 @@ namespace openstudio{
         // must finalize to prevent memory leaks
         sqlite3_finalize(sqlStmtPtr);
 
-        if (startDateTime && !stdDaysFromFirstReport.empty()){
+        if (startDateTime && !stdSecondsFromFirstReport.empty()){
           if (isIntervalTimeSeries){
             openstudio::Time intervalTime(0,0,*reportingIntervalMinutes,0);
             openstudio::Vector values = createVector(stdValues);
             ts = openstudio::TimeSeries(*startDateTime, intervalTime, values, units);
           }else{
-            ts = openstudio::TimeSeries(*startDateTime, stdDaysFromFirstReport, stdValues, units);
+            openstudio::Vector values = createVector(stdValues);
+            ts = openstudio::TimeSeries(*startDateTime, stdSecondsFromFirstReport, values, units);
           }
         }
       }
