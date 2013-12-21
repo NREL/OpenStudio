@@ -164,6 +164,16 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   /** @name Setters */
   //@{
 
+  /** \fn bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser)
+      \brief Sets the refrigeration condenser for this refrigeration system.
+      \param[in] refrigerationCondenser The refrigeration condenser.
+
+      Valid inputs: \n
+      \ref RefrigerationCondenserAirCooled \n
+      \ref RefrigerationCondenserCascade \n
+      \ref RefrigerationCondenserEvaporativeCooled \n
+      \ref RefrigerationCondenserWaterCooled \n
+  */
   bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
   void setMinimumCondensingTemperature(double minimumCondensingTemperature);

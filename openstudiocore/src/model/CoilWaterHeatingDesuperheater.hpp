@@ -53,6 +53,13 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
 
   boost::optional<ModelObject> heatRejectionTarget() const;
 
+  /** \fn bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget)
+      \brief Sets the heating rejection target from which the desuperheater heating coil rejects energy.
+      \param[in] heatRejectionTarget The heating rejection target.
+
+      Valid input: \n
+      \ref WaterHeaterMixed
+  */
   bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
 
   void removeFromHeatRejectionTarget();
@@ -130,6 +137,17 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
 
   // bool setTank(const HVACComponent& waterHeater);
 
+  /** \fn bool setHeatingSource(const ModelObject& heatingSource)
+      \brief Sets the heating source from which the desuperheater heating coil recovers energy.
+      \param[in] heatingSource The heating source.
+
+      Valid inputs: \n
+      \ref CoilCoolingDXSingleSpeed \n
+      \ref CoilCoolingDXTwoSpeed \n
+      \ref RefrigerationCondenserAirCooled \n
+      \ref RefrigerationCondenserEvaporativeCooled \n
+      \ref RefrigerationCondenserWaterCooled \n
+  */
   bool setHeatingSource(const ModelObject& heatingSource);
 
   void resetHeatingSource();

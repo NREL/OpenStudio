@@ -37,7 +37,13 @@ namespace detail {
 
 } // detail
 
-/** CoilHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Desuperheater'. */
+/** CoilHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Desuperheater'. 
+
+  This coil can be used in air loop simulations but can’t be used by certain compound objects 
+  (e.g., AirLoopHVACUnitaryHeatPumpAirToAir, AirLoopHVACUnitaryHeatPumpWaterToAir, or DehumidifierDesiccantNoFans) 
+  or any air distribution equipment (e.g., AirTerminalSingleDuctConstantVolumeReheat, AirTerminalSingleDuctVAVReheat, 
+  or AirTerminalSingleDuctSeriesPIUReheat).
+*/
 class MODEL_API CoilHeatingDesuperheater : public StraightComponent {
  public:
   /** @name Constructors and Destructors */
@@ -78,6 +84,17 @@ class MODEL_API CoilHeatingDesuperheater : public StraightComponent {
 
   void resetHeatReclaimRecoveryEfficiency();
 
+  /** \fn bool setHeatingSource(const ModelObject& heatingSource)
+      \brief Sets the heating source from which the desuperheater heating coil recovers energy.
+      \param[in] heatingSource The heating source.
+
+      Valid inputs: \n
+      \ref CoilCoolingDXSingleSpeed \n
+      \ref CoilCoolingDXTwoSpeed \n
+      \ref RefrigerationCondenserAirCooled \n
+      \ref RefrigerationCondenserEvaporativeCooled \n
+      \ref RefrigerationCondenserWaterCooled \n
+  */
   bool setHeatingSource(const ModelObject& modelObject);
 
   void resetHeatingSource();
