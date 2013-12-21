@@ -35,16 +35,16 @@ namespace contam {
 
 class SimFile;
 
-class PrjModelPrivate : public QSharedData
+class PrjModel_Impl : public QSharedData
 {
 public:
-  PrjModelPrivate()
+  PrjModel_Impl()
   {
     m_valid = false;
   }
-  explicit PrjModelPrivate(openstudio::path path);
-  explicit PrjModelPrivate(std::string filename);
-  explicit PrjModelPrivate(Reader &input);
+  explicit PrjModel_Impl(openstudio::path path);
+  explicit PrjModel_Impl(std::string filename);
+  explicit PrjModel_Impl(Reader &input);
   bool read(openstudio::path path);
   bool read(std::string filename);
   bool read(Reader &input);
@@ -271,7 +271,7 @@ private:
   std::vector<Path> m_paths;
 };
 
-template <class T> std::string PrjModelPrivate::writeSectionVector(std::vector<T> vector, std::string label, int start)
+template <class T> std::string PrjModel_Impl::writeSectionVector(std::vector<T> vector, std::string label, int start)
 {
   std::string string;
   int number = vector.size()-start;
@@ -291,7 +291,7 @@ template <class T> std::string PrjModelPrivate::writeSectionVector(std::vector<T
   return string;
 }
 
-template <class T> std::string PrjModelPrivate::writeSectionVector(QVector<QSharedPointer<T> > vector,
+template <class T> std::string PrjModel_Impl::writeSectionVector(QVector<QSharedPointer<T> > vector,
   std::string label, int start)
 {
   std::string string;
@@ -312,7 +312,7 @@ template <class T> std::string PrjModelPrivate::writeSectionVector(QVector<QShar
   return string;
 }
 
-template <class T> std::string PrjModelPrivate::writeArray(std::vector<T> vector, std::string label, int start)
+template <class T> std::string PrjModel_Impl::writeArray(std::vector<T> vector, std::string label, int start)
 {
   std::string string;
   int number = vector.size()-start;

@@ -29,24 +29,24 @@ namespace contam {
 
 PrjModel::PrjModel()
 {
-  d = new PrjModelPrivate;
+  d = new PrjModel_Impl;
 }
 
 PrjModel::PrjModel(openstudio::path path)
 {
-  d = new PrjModelPrivate;
+  d = new PrjModel_Impl;
   d->read(path);
 }
 
 PrjModel::PrjModel(std::string filename)
 {
-  d = new PrjModelPrivate;
+  d = new PrjModel_Impl;
   d->read(filename);
 }
 
 PrjModel::PrjModel(Reader &input)
 {
-  d = new PrjModelPrivate;
+  d = new PrjModel_Impl;
   d->read(input);
 }
 

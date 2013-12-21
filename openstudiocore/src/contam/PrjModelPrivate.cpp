@@ -24,27 +24,27 @@
 namespace openstudio {
 namespace contam {
 
-PrjModelPrivate::PrjModelPrivate(openstudio::path path)
+PrjModel_Impl::PrjModel_Impl(openstudio::path path)
 {
   read(path);
 }
 
-PrjModelPrivate::PrjModelPrivate(std::string filename)
+PrjModel_Impl::PrjModel_Impl(std::string filename)
 {
   read(filename);
 }
 
-PrjModelPrivate::PrjModelPrivate(Reader &input)
+PrjModel_Impl::PrjModel_Impl(Reader &input)
 {
   read(input);
 }
 
-bool PrjModelPrivate::read(openstudio::path path)
+bool PrjModel_Impl::read(openstudio::path path)
 {
   return read(openstudio::toString(path));
 }
 
-bool PrjModelPrivate::read(std::string filename)
+bool PrjModel_Impl::read(std::string filename)
 {
   QFile fp(QString().fromStdString(filename));
 
@@ -59,7 +59,7 @@ bool PrjModelPrivate::read(std::string filename)
   return m_valid;
 }
 
-bool PrjModelPrivate::read(Reader &input)
+bool PrjModel_Impl::read(Reader &input)
 {
   m_valid = false;
   // Section 1: Project, Weather, Simulation, and Output Controls
@@ -132,7 +132,7 @@ bool PrjModelPrivate::read(Reader &input)
   return true;
 }
 
-std::string PrjModelPrivate::toString()
+std::string PrjModel_Impl::toString()
 {
   std::string output;
   if(!m_valid)
@@ -197,7 +197,7 @@ std::string PrjModelPrivate::toString()
   return output;
 }
 
-std::vector<std::vector<int> > PrjModelPrivate::zoneExteriorFlowPaths()
+std::vector<std::vector<int> > PrjModel_Impl::zoneExteriorFlowPaths()
 {
   std::vector<std::vector<int> > paths(m_zones.size());
 
@@ -223,7 +223,7 @@ std::vector<std::vector<int> > PrjModelPrivate::zoneExteriorFlowPaths()
   return paths;
 }
 
-std::vector<TimeSeries> PrjModelPrivate::zoneInfiltration(SimFile *sim)
+std::vector<TimeSeries> PrjModel_Impl::zoneInfiltration(SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
@@ -283,7 +283,7 @@ std::vector<TimeSeries> PrjModelPrivate::zoneInfiltration(SimFile *sim)
   return results;
 }
 
-std::vector<TimeSeries> PrjModelPrivate::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
+std::vector<TimeSeries> PrjModel_Impl::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
@@ -362,7 +362,7 @@ std::vector<TimeSeries> PrjModelPrivate::pathInfiltration(std::vector<int> pathN
   return results;
 }
 
-void PrjModelPrivate::rebuildContaminants()
+void PrjModel_Impl::rebuildContaminants()
 {
   m_contaminants.clear();
   for(unsigned int i=1;i<=m_species.size();i++)
@@ -375,7 +375,7 @@ void PrjModelPrivate::rebuildContaminants()
   }
 }
 
-void PrjModelPrivate::readZoneIc(Reader &input)
+void PrjModel_Impl::readZoneIc(Reader &input)
 {
   unsigned int nn = input.readUInt(FILELINE);
   if(nn != 0)
@@ -412,7 +412,7 @@ void PrjModelPrivate::readZoneIc(Reader &input)
   input.read999("Failed to find zone IC section termination" CFILELINE);
 }
 
-std::string PrjModelPrivate::writeZoneIc(int start)
+std::string PrjModel_Impl::writeZoneIc(int start)
 {
   int offset = 1;
   if(start != 0)
@@ -436,7 +436,7 @@ std::string PrjModelPrivate::writeZoneIc(int start)
   return string  + "-999\n";
 }
 
-int PrjModelPrivate::airflowElementNrByName(std::string name) const
+int PrjModel_Impl::airflowElementNrByName(std::string name) const
 {
   for(int i=0;i<m_airflowElements.size();i++)
   {
@@ -448,7 +448,7 @@ int PrjModelPrivate::airflowElementNrByName(std::string name) const
   return 0;
 }
 
-bool PrjModelPrivate::setSteadyWeather(double windSpeed, double windDirection)
+bool PrjModel_Impl::setSteadyWeather(double windSpeed, double windDirection)
 {
   if(windSpeed < 0)
   {
