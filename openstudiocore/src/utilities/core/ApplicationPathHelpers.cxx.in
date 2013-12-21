@@ -369,7 +369,15 @@ openstudio::path getOpenStudioEmbeddedRubyPath() {
 #ifdef Q_OS_WIN32
   if (applicationIsRunningFromBuildDirectory())
   {
-    return getApplicationBuildDirectory() / openstudio::toPath("ruby-install/ruby");
+    //Ruby 2.0 x64
+    openstudio::path embeddedRubyPath = getApplicationBuildDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby-prefix/src/Ruby-install");
+
+    if (!boost::filesystem::exists(embeddedRubyPath)) {
+      //Ruby 2.0 x86 and Ruby 1.8.6
+      embeddedRubyPath = getApplicationBuildDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby-prefix/src/Ruby");
+    }
+
+    return embeddedRubyPath;
   } else {
     return getApplicationRunDirectory().parent_path() / openstudio::toPath("ruby-install/ruby");
   }

@@ -587,39 +587,65 @@ namespace openstudio
 
           if (!rubypath.empty())
           {
+// Not defined for 1.8.6
 #ifdef RUBY_SEARCH_PATH
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SEARCH_PATH))).external_file_string()).c_str());
 #endif
-
+            
+// 1.8.6: /lib/ruby/site_ruby/1.8
+#ifdef RUBY_SITE_LIB2
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB2))).external_file_string()).c_str());
+#endif
+            
+// Not defined for 1.8.6
 #ifdef RUBY_SITE_THIN_ARCHLIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_THIN_ARCHLIB))).external_file_string()).c_str());
 #endif
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_ARCHLIB))).external_file_string()).c_str());
-            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB))).external_file_string()).c_str());
 
+// 1.8.6 Win: /lib/ruby/site_ruby/1.8/i386-msvcrt
+#ifdef RUBY_SITE_ARCHLIB
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_ARCHLIB))).external_file_string()).c_str());
+#endif
+
+// 1.8.6: /lib/ruby/site_ruby
+#ifdef RUBY_SITE_LIB
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_SITE_LIB))).external_file_string()).c_str());
+#endif
+
+// Not defined for 1.8.6
 #ifdef RUBY_VENDOR_LIB2
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB2))).external_file_string()).c_str());
 #endif
 
+// Not defined for 1.8.6
 #ifdef RUBY_VENDOR_THIN_ARCHLIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_THIN_ARCHLIB))).external_file_string()).c_str());
 #endif
 
+// Not defined for 1.8.6
 #ifdef RUBY_VENDOR_ARCHLIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_ARCHLIB))).external_file_string()).c_str());
 #endif
 
+// Not defined for 1.8.6
 #ifdef RUBY_VENDOR_LIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_VENDOR_LIB))).external_file_string()).c_str());
 #endif
 
+// 1.8.6: /lib/ruby/1.8
+#ifdef RUBY_LIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_LIB))).external_file_string()).c_str());
+#endif
 
+// Not defined for 1.8.6
 #ifdef RUBY_THIN_ARCHLIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_THIN_ARCHLIB))).external_file_string()).c_str());
 #endif
+
+// 1.8.6 Win: /lib/ruby/1.8/i386-mswin32
+#ifdef RUBY_ARCHLIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_ARCHLIB))).external_file_string()).c_str());
+#endif
           }
 
           ruby_init_loadpath();
