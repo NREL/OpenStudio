@@ -27,7 +27,7 @@ namespace openstudio {
 namespace model {
 
 class CurveLinear;
-class ThermalZone;
+// class ThermalZone;
 
 namespace detail {
 
@@ -100,7 +100,7 @@ namespace detail {
 
     bool isMinimumCondensingTemperatureDefaulted() const;
 
-    boost::optional<ThermalZone> airInletNode() const;
+    // boost::optional<ThermalZone> airInletNode() const;
 
     std::string endUseSubcategory() const;
 
@@ -154,9 +154,9 @@ namespace detail {
 
     void resetMinimumCondensingTemperature();
 
-    bool setAirInletNode(const boost::optional<ThermalZone>& thermalZone);
+    // bool setAirInletNode(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetAirInletNode();
+    // void resetAirInletNode();
 
     void setEndUseSubcategory(std::string endUseSubcategory);
 

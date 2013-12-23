@@ -25,8 +25,8 @@
 #include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
 #include <model/CurveLinear.hpp>
 #include <model/CurveLinear_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+// #include <model/ThermalZone.hpp>
+// #include <model/ThermalZone_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -131,7 +131,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithDefaultData)
 TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithCustomData)
 {
     Model model;
-    ThermalZone thermalZone(model);
+    // ThermalZone thermalZone(model);
 
     RefrigerationGasCoolerAirCooled testObject = RefrigerationGasCoolerAirCooled(model);
 
@@ -146,7 +146,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithCustomData)
     testObject.setGasCoolerRefrigerantOperatingChargeInventory(99.0);
     testObject.setGasCoolerReceiverRefrigerantInventory(99.0);
     testObject.setGasCoolerOutletPipingRefrigerantInventory(99.0);
-    testObject.setAirInletNode(thermalZone);
+    // testObject.setAirInletNode(thermalZone);
 
     RefrigerationGasCoolerAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
@@ -161,14 +161,14 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithCustomData)
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerRefrigerantOperatingChargeInventory(),99.0);
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerReceiverRefrigerantInventory(),99.0);
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerOutletPipingRefrigerantInventory(),99.0);
-    EXPECT_FALSE(testObjectClone.airInletNode());
+    // EXPECT_FALSE(testObjectClone.airInletNode());
 }
 
 //Test clone model with custom data
 TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneTwoModelWithCustomData)
 {
     Model model;
-    ThermalZone thermalZone(model);
+    // ThermalZone thermalZone(model);
 
     RefrigerationGasCoolerAirCooled testObject = RefrigerationGasCoolerAirCooled(model);
 
@@ -183,7 +183,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneTwoModelWithCustomData
     testObject.setGasCoolerRefrigerantOperatingChargeInventory(99.0);
     testObject.setGasCoolerReceiverRefrigerantInventory(99.0);
     testObject.setGasCoolerOutletPipingRefrigerantInventory(99.0);
-    testObject.setAirInletNode(thermalZone);
+    // testObject.setAirInletNode(thermalZone);
 
     RefrigerationGasCoolerAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
@@ -203,7 +203,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneTwoModelWithCustomData
     EXPECT_DOUBLE_EQ(testObjectClone2.gasCoolerOutletPipingRefrigerantInventory(),99.0);
     EXPECT_TRUE(testObjectClone2.ratedTotalHeatRejectionRateCurve());
     EXPECT_NE(testObjectClone2.ratedTotalHeatRejectionRateCurve().get(), testObject.ratedTotalHeatRejectionRateCurve().get());
-    EXPECT_FALSE(testObjectClone2.airInletNode());
+    // EXPECT_FALSE(testObjectClone2.airInletNode());
     EXPECT_NE(testObjectClone2, testObjectClone);
     EXPECT_NE(testObjectClone, testObject);
 }

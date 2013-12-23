@@ -22,8 +22,8 @@
 
 #include <model/CurveLinear.hpp>
 #include <model/CurveLinear_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+// #include <model/ThermalZone.hpp>
+// #include <model/ThermalZone_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
@@ -82,7 +82,7 @@ namespace detail {
       modelObjectClone.setRatedTotalHeatRejectionRateCurve(heatRejectionCurve.get().clone(model).cast<CurveLinear>());
     }
 
-    modelObjectClone.resetAirInletNode();
+    // modelObjectClone.resetAirInletNode();
 
     return modelObjectClone;
   }
@@ -177,9 +177,9 @@ namespace detail {
     return isEmpty(OS_Refrigeration_GasCooler_AirCooledFields::MinimumCondensingTemperature);
   }
 
-  boost::optional<ThermalZone> RefrigerationGasCoolerAirCooled_Impl::airInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_GasCooler_AirCooledFields::AirInletNodeName);
-  }
+  // boost::optional<ThermalZone> RefrigerationGasCoolerAirCooled_Impl::airInletNode() const {
+  //   return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_GasCooler_AirCooledFields::AirInletNodeName);
+  // }
 
   std::string RefrigerationGasCoolerAirCooled_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_GasCooler_AirCooledFields::EndUseSubcategory,true);
@@ -308,22 +308,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool RefrigerationGasCoolerAirCooled_Impl::setAirInletNode(const boost::optional<ThermalZone>& thermalZone) {
-    bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_Refrigeration_GasCooler_AirCooledFields::AirInletNodeName, thermalZone.get().handle());
-    }
-    else {
-      resetAirInletNode();
-      result = true;
-    }
-    return result;
-  }
+  // bool RefrigerationGasCoolerAirCooled_Impl::setAirInletNode(const boost::optional<ThermalZone>& thermalZone) {
+  //   bool result(false);
+  //   if (thermalZone) {
+  //     result = setPointer(OS_Refrigeration_GasCooler_AirCooledFields::AirInletNodeName, thermalZone.get().handle());
+  //   }
+  //   else {
+  //     resetAirInletNode();
+  //     result = true;
+  //   }
+  //   return result;
+  // }
 
-  void RefrigerationGasCoolerAirCooled_Impl::resetAirInletNode() {
-    bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::AirInletNodeName, "");
-    OS_ASSERT(result);
-  }
+  // void RefrigerationGasCoolerAirCooled_Impl::resetAirInletNode() {
+  //   bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::AirInletNodeName, "");
+  //   OS_ASSERT(result);
+  // }
 
   void RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::EndUseSubcategory, endUseSubcategory);
@@ -458,9 +458,9 @@ bool RefrigerationGasCoolerAirCooled::isMinimumCondensingTemperatureDefaulted() 
   return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->isMinimumCondensingTemperatureDefaulted();
 }
 
-boost::optional<ThermalZone> RefrigerationGasCoolerAirCooled::airInletNode() const {
-  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->airInletNode();
-}
+// boost::optional<ThermalZone> RefrigerationGasCoolerAirCooled::airInletNode() const {
+//   return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->airInletNode();
+// }
 
 std::string RefrigerationGasCoolerAirCooled::endUseSubcategory() const {
   return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->endUseSubcategory();
@@ -558,13 +558,13 @@ void RefrigerationGasCoolerAirCooled::resetMinimumCondensingTemperature() {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetMinimumCondensingTemperature();
 }
 
-bool RefrigerationGasCoolerAirCooled::setAirInletNode(const ThermalZone& thermalZone) {
-  return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setAirInletNode(thermalZone);
-}
+// bool RefrigerationGasCoolerAirCooled::setAirInletNode(const ThermalZone& thermalZone) {
+//   return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setAirInletNode(thermalZone);
+// }
 
-void RefrigerationGasCoolerAirCooled::resetAirInletNode() {
-  getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetAirInletNode();
-}
+// void RefrigerationGasCoolerAirCooled::resetAirInletNode() {
+//   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetAirInletNode();
+// }
 
 void RefrigerationGasCoolerAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);

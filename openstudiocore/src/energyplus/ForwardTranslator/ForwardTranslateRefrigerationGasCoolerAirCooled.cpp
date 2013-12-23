@@ -21,7 +21,7 @@
 #include <model/Model.hpp>
 #include <model/RefrigerationGasCoolerAirCooled.hpp>
 #include <model/CurveLinear.hpp>
-#include <model/ThermalZone.hpp>
+// #include <model/ThermalZone.hpp>
 
 #include <utilities/idd/Refrigeration_GasCooler_AirCooled_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -99,17 +99,18 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationGasCoolerAir
   }
 
 // Air Inlet Node Name
-  boost::optional<ThermalZone> airInletNode = modelObject.airInletNode();
+  // boost::optional<ThermalZone> airInletNode = modelObject.airInletNode();
 
-  if( airInletNode )
-  {
-    boost::optional<IdfObject> _airInletNode = translateAndMapModelObject(airInletNode.get());
+  // if( airInletNode )
+  // {
+  //   boost::optional<IdfObject> _airInletNode = translateAndMapModelObject(airInletNode.get());
 
-    if( _airInletNode && _airInletNode->name() )
-    {
-      object.setString(Refrigeration_GasCooler_AirCooledFields::AirInletNodeName,_airInletNode->name().get());
-    }
-  }
+  //   if( _airInletNode && _airInletNode->name() )
+  //   {
+  //     object.setString(Refrigeration_GasCooler_AirCooledFields::AirInletNodeName,_airInletNode->name().get());
+  //   }
+  // }
+  object.setString(Refrigeration_GasCooler_AirCooledFields::AirInletNodeName,"");
 
 // End-Use Subcategory
   s = modelObject.endUseSubcategory();
