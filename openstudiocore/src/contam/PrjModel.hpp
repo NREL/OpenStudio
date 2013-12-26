@@ -150,8 +150,11 @@ public:
   /** @name Operators */
   //@{
 
+  /** Copy operator */
   PrjModel& operator=(const PrjModel &other);
+  /** Equality operator */
   bool operator==(const PrjModel &other) const;
+  /** Inequality operator */
   bool operator!=(const PrjModel &other) const;
 
   //@}
