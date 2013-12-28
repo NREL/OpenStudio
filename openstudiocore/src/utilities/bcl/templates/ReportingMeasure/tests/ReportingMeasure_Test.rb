@@ -20,19 +20,23 @@ class ReportingMeasure_Test < Test::Unit::TestCase
   end
   
   def sqlPath
-    return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlus-0/eplusout.sql"
+    return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+  end
+  
+  def reportPath
+    return "./report.html"
   end
   
   # create test files if they do not exist
   def setup
-    if not File.exist?(modelPath())
-      puts "Creating example model"
-      model = OpenStudio::Model::exampleModel()
-      model.getRunPeriod.remove
-      model.getSimulationControl.setRunSimulationforSizingPeriods(true)
-      model.getSimulationControl.setRunSimulationforWeatherFileRunPeriods(false)
-      model.save(OpenStudio::Path.new(modelPath()), true)
+
+    if File.exist?(reportPath())
+      FileUtils.rm(reportPath())
     end
+    
+    assert(File.exist?(modelPath()))
+    
+    assert(File.exist?(runDir()))
     
     if not File.exist?(sqlPath())
       puts "Running EnergyPlus"
@@ -40,7 +44,7 @@ class ReportingMeasure_Test < Test::Unit::TestCase
       co = OpenStudio::Runmanager::ConfigOptions.new(true)
       co.findTools(false, true, false, true)
       
-      wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energyplus")
+      wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energypluspreprocess->energyplus")
       wf.add(co.getTools())
       job = wf.create(OpenStudio::Path.new(runDir()), OpenStudio::Path.new(modelPath()))
 
@@ -50,13 +54,17 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     end
   end
 
-  # delete test files, comment this out if you do not want to run EnergyPlus each time you run tests
+  # delete output files
   def teardown
-    if File.exist?(modelPath())
-      FileUtils.rm(modelPath())
+  
+    # comment this out if you don't want to rerun EnergyPlus each time
+    if File.exist?(sqlPath())
+      #FileUtils.rm(sqlPath())
     end
-    if File.exist?(runDir())
-      FileUtils.rm_rf(runDir())
+    
+    # comment this out if you want to see the resulting report
+    if File.exist?(reportPath())
+      #FileUtils.rm(reportPath())
     end
   end
   
@@ -75,12 +83,6 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     # get arguments and test that they are what we are expecting
     arguments = measure.arguments()
     assert_equal(0, arguments.size)
-
-    # set argument values to bad values and run the measure
-    argument_map = OpenStudio::Ruleset::OSArgumentMap.new
-    measure.run(runner, argument_map)
-    result = runner.result
-    assert(result.value.valueName == "Fail")
     
     # set up runner, this will happen automatically when measure is run in PAT
     runner.setLastOpenStudioModelPath(OpenStudio::Path.new(modelPath))    
@@ -93,7 +95,9 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     show_output(result)
     assert(result.value.valueName == "Success")
     assert(result.warnings.size == 0)
-    assert(result.info.size == 4)
+    #assert(result.info.size == 1)
+    
+    assert(File.exist?(reportPath()))
     
   end  
 

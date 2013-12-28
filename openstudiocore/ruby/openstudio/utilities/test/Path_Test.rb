@@ -21,6 +21,11 @@ require 'openstudio'
 
 require 'test/unit'
 
+def changeTestPath(p)
+  p  = OpenStudio::Path.new("./there")
+  return p
+end
+
 class Path_Test < Test::Unit::TestCase
   
   # def setup
@@ -31,7 +36,6 @@ class Path_Test < Test::Unit::TestCase
   
   def test_path
     p = OpenStudio::Path.new("./here")
-    assert(p)
     assert_equal("./here", p.to_s())
   end
 
@@ -43,7 +47,25 @@ class Path_Test < Test::Unit::TestCase
     #s = "./here"
     #OpenStudio::funcOnlyTakesAPath(s)
     #p = Pathname.new("./here")
-    #OpenStudio::funcOnlyTakesAPath(s)
+    #OpenStudio::funcOnlyTakesAPath(p)
+  end
+  
+  def test_PathCopy
+    p = OpenStudio::Path.new("./here")
+    assert_equal("./here", p.to_s())
+    
+    q = p
+    assert_equal("./here", q.to_s())
+    assert_equal("./here", p.to_s())
+    
+    q = OpenStudio::Path.new("./there")
+    assert_equal("./there", q.to_s())
+    assert_equal("./here", p.to_s())
+    
+    q = changeTestPath(p)
+    assert_equal("./there", q.to_s())
+    assert_equal("./here", p.to_s())
+
   end
 end
 

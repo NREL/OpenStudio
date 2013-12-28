@@ -18,7 +18,8 @@
 **********************************************************************/
 
 #include <openstudio_lib/FileOperations.hpp>
-#include <openstudio_lib/FileOperations.hpp>
+
+#include <openstudio_lib/OSDocument.hpp>
 
 #include <analysisdriver/SimpleProject.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
@@ -41,8 +42,11 @@
 
 #include <energyplus/ReverseTranslator.hpp>
 
+#include <utilities/core/ApplicationPathHelpers.hpp>
+
 #include <utilities/filetypes/EpwFile.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/plot/ProgressBar.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -519,7 +523,7 @@ namespace openstudio {
   }
 
   void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-      bool useRadianceForDaylightingCalculations, QWidget* parent)
+      bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent)
   {
 //    openstudio::path rmdbPath = modelTempDir / toPath("resources/run.db");
     openstudio::path simulationDir = toPath("run");
@@ -554,6 +558,37 @@ namespace openstudio {
         analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
+        // DLM: this should be passed from app level
+        openstudio::path resourcesPath;
+        if (applicationIsRunningFromBuildDirectory()){
+          resourcesPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
+        } else {
+          resourcesPath = getApplicationRunDirectory() / openstudio::toPath("../share/openstudio/OSApp");
+        }
+
+        // find reporting measures
+        openstudio::path standardReportsPath = resourcesPath / openstudio::toPath("measures/StandardReports/");
+        openstudio::path calibrationReportsPath = resourcesPath / openstudio::toPath("measures/CalibrationReports/");
+
+        openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure(standardReportsPath);
+        openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure(calibrationReportsPath);
+
+        // DLM: always add this measure even if the user has their own copy, this is more clear
+        //bool standardReportsFound = findBCLMeasureWorkItem(workitems, standardReportsMeasure.uuid());
+        //if (!standardReportsFound){
+          bool test = addReportingMeasureWorkItem(workitems, standardReportsMeasure);
+          OS_ASSERT(test);
+        //}
+
+        // DLM: always add this measure even if the user has their own copy, this is more clear
+        //bool calibrationReportsFound = findBCLMeasureWorkItem(workitems, calibrationReportsMeasure.uuid());
+        //if (requireCalibrationReports && !calibrationReportsFound){
+        if (requireCalibrationReports){
+          bool test = addReportingMeasureWorkItem(workitems, calibrationReportsMeasure);
+          OS_ASSERT(test);
+        }
+
+        // check if we need to use radiance
         if (useRadianceForDaylightingCalculations)
         {
           std::vector<openstudio::runmanager::ToolInfo> rad = co.getTools().getAllByName("rad").tools();
@@ -586,6 +621,9 @@ namespace openstudio {
 
         runmanager::Workflow wf(workitems);
         wf.add(co.getTools());
+        //openstudio::runmanager::JobParams params;
+        //params.append("cleanoutfiles", "none");
+        //wf.add(params);
         runmanager::Job j = wf.create(modelTempDir / toPath("resources") / simulationDir, modelTempDir / openstudio::toPath("in.osm"));
         runmanager::JobFactory::optimizeJobTree(j);
         rm.enqueue(j, true);
@@ -617,6 +655,13 @@ namespace openstudio {
 
           if (parent){         
             bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), parent, SLOT(treeChanged(const openstudio::UUID &)));
+            OS_ASSERT(isConnected);
+          }
+
+          boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+          if (currentDocument){         
+            bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), 
+              currentDocument.get(), SIGNAL(treeChanged(const openstudio::UUID &)));
             OS_ASSERT(isConnected);
           }
         }
@@ -652,6 +697,68 @@ namespace openstudio {
     return false;
   }
 
+  bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid)
+  {
+    for (std::vector<runmanager::WorkItem>::const_iterator itr = workItems.begin();
+         itr != workItems.end();
+         ++itr)
+    {
+      if (itr->type == openstudio::runmanager::JobType::UserScript)
+      {
+
+        try {
+          runmanager::JobParam parameters = itr->params.get("ruby_bclmeasureparameters");
+
+          for (std::vector<runmanager::JobParam>::const_iterator itr = parameters.children.begin();
+               itr != parameters.children.end();
+               ++itr)
+          {
+            if (itr->value == "bcl_measure_uuid"){
+              openstudio::UUID bclMeasureUUID = openstudio::toUUID(itr->children.at(0).value);
+              if (bclMeasureUUID == uuid){
+                return true;
+              }
+            }
+          }
+        } catch (const std::exception &) {
+        }
+      }
+    }
+
+    return false;
+  }
+
+  bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
+  {
+    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure);
+
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.idf",
+                                "in.idf");
+    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+                                openstudio::runmanager::FileSource("All"),
+                                ".*\\.osm",
+                                "in.osm");
+
+    // be able to access OpenStudio Ruby bindings
+    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+
+    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+
+    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+         itr != workItems.end();
+         ++itr)
+    {
+      if (itr->type == openstudio::runmanager::JobType::OpenStudioPostProcess)
+      {
+        workItems.insert(itr, workItem);
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   boost::optional<openstudio::model::Model> modelFromOSM(const openstudio::path& path, openstudio::osversion::VersionTranslator& versionTranslator, openstudio::ProgressBar* progressBar)
   {

@@ -29,9 +29,11 @@
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/units/Unit.hpp>
 
+#include <runmanager/lib/RunManager.hpp>
+
 #include <boost/smart_ptr.hpp>
 
-#include <vtkCharts/BarChart.h>
+#include <vtkCharts/BarChart.h> // TODO remove
 
 #include <QComboBox>
 #include <QPushButton>
@@ -43,6 +45,7 @@ class QPushButton;
 class QStackedWidget;
 class QTableWidget;
 class QVBoxLayout;
+class QWebView;
 
 namespace vtkCharts {
   class BarChart;
@@ -256,10 +259,14 @@ namespace openstudio {
       void onObjectAdded(const WorkspaceObject& workspaceObject);
       void onObjectRemoved(const WorkspaceObject& workspaceObject);
       void updateReportButtons();
+      void treeChanged(const openstudio::UUID &t_uuid);
+      void comboBoxChanged(int index);
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
       static openstudio::Unit getUnit(openstudio::EndUseFuelType t_type, bool t_isIP);
+      openstudio::runmanager::RunManager runManager();
+      void populateComboBox(  std::vector<openstudio::path> reports);
 
       openstudio::model::Model m_model;
       bool m_isIP;
@@ -284,6 +291,9 @@ namespace openstudio {
       
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
+
+      QWebView * m_view;
+      QComboBox * m_comboBox;
   };
 
   class ResultsTabView : public MainTabView
@@ -309,6 +319,8 @@ namespace openstudio {
       void removeResultClicked();
 
       void importResultClicked();
+
+      void treeChanged(const openstudio::UUID &t_uuid);
 
     private:
       ResultsView * m_resultsView;

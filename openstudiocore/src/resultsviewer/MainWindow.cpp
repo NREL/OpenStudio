@@ -275,6 +275,8 @@ namespace resultsviewer{
     case RVD_FILEALREADYOPENED:
       QMessageBox::information(this, tr("File Open"), tr("File already opened."));
       break;
+    case RVD_UNSUPPORTEDVERSION:
+      QMessageBox::information(this, tr("File Open"), tr("Unsupported EnergyPlus version. Continuing, unknown errors may occur."));
     case RVD_SUCCESS:
       m_treeView->displayFile(alias,  m_data->sqlFile(filename), resultsviewer::TreeView::tvdtVariableName);
 

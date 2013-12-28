@@ -31,6 +31,7 @@
   #include <analysis/NullMeasure.hpp>
   #include <analysis/RubyMeasure.hpp>
   #include <runmanager/lib/RunManager.hpp>
+  #include <runmanager/lib/WorkItem.hpp>
   #include <openstudio_lib/FileOperations.hpp>
   #include <openstudio_lib/OSDocument.hpp>
   
