@@ -23,7 +23,7 @@ CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenSt
 IF( APPLE )
   SET(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   SET(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_VERSION_BUILD}")
-  SET(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2013 National Renewable Energy Laboratory")
+  SET(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2014 National Renewable Energy Laboratory")
 ENDIF()
 
 ###############################################################################
@@ -53,7 +53,7 @@ OPTION( BUILD_V8_BINDINGS "Build Node V8 bindings" OFF )
 OPTION( BUILD_PYTHON_BINDINGS "Build Python bindings" OFF )
 
 # Build ctest testing
-# Requires: EnergyPLus
+# Requires: EnergyPlus
 OPTION( BUILD_TESTING "Build testing targets" OFF )
 
 # Build package
