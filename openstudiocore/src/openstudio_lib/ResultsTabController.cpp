@@ -24,8 +24,8 @@
 
 namespace openstudio {
 
-ResultsTabController::ResultsTabController(const model::Model & model)
-  : MainTabController(new ResultsTabView(model,"Results Summary",false))
+ResultsTabController::ResultsTabController()
+  : MainTabController(new ResultsTabView("Results Summary",false))
 {
   m_resultsTabView = static_cast<ResultsTabView *>(mainContentWidget());
 

@@ -39,7 +39,7 @@ class ResultsTabController : public MainTabController
   Q_OBJECT
 
   public:
-    ResultsTabController(const model::Model & model);
+    ResultsTabController();
 
     virtual ~ResultsTabController() {}
     void searchForExistingResults(const openstudio::path &t_runDir);

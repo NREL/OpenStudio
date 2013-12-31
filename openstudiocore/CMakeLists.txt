@@ -580,7 +580,7 @@ ADD_DEFINITIONS( -DSQLITE_THREADSAFE=1 ) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
-FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns REQUIRED)
+FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns QtWebKit REQUIRED)
 
 # Newer versions of cmake have a sqlite plugin finder built into the Qt package finder.  
 # This is for older versions.  Sometime before cmake version 2.8.7.
@@ -630,47 +630,13 @@ LIST( APPEND QT_LIBS ${QT_QTCORE_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTGUI_LIBRARY})
 LIST( APPEND QT_LIBS ${QT_QTGUI_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTSQL_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTSQL_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIBRARY})
 LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTXML_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXML_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTXMLPATTERNS_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXMLPATTERNS_LIB_DEPENDENCIES})
+LIST( APPEND QT_LIBS ${QT_QTWEBKIT_LIBRARY})
 
 #QT_QSQLITE_PLUGIN_RELEASE
-
-
-# VTK #######################
-find_package(VTK REQUIRED)
-
-include(${VTK_USE_FILE})
-##############################
-
-# vtkCharts ##################
-find_library( VTK_SIMPLE_CHARTS_RELEASE_LIB 
-  NAME vtkSimpleCharts 
-  PATHS ${VTK_CHARTS_LIB_DIR}
-        ${VTK_CHARTS_LIB_DIR}/Release
-  NO_DEFAULT_PATH )
-
-find_library( VTK_SIMPLE_CHARTS_DEBUG_LIB 
-  NAME vtkSimpleCharts 
-  PATHS ${VTK_CHARTS_LIB_DIR}
-        ${VTK_CHARTS_LIB_DIR}/Debug
-  NO_DEFAULT_PATH )
-
-add_definitions(-DvtkCharts_USE_QT)
-
-include_directories(SYSTEM ${VTK_CHARTS_INCLUDE_DIR})
-
-link_directories( ${VTK_CHARTS_LIB_DIR} )
-##############################
-
-
-
-
-
 
 
 ###############################################################################
