@@ -569,7 +569,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   
   // Results
 
-  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController(m_model) );
+  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController() );
   m_mainWindow->addVerticalTab( m_resultsTabController->mainContentWidget(),
                                 RESULTS_SUMMARY,
                                 "Results Summary",
