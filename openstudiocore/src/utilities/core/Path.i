@@ -201,30 +201,70 @@ namespace openstudio {
   #ifdef SWIGRUBY
 
     %typemap(in) (path) {
+    
+      // check if input is a path already
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr($input, &vptr, $&1_descriptor, 0);
+      if (SWIG_IsOK(res)) {
+        if (vptr) {
+          // make a copy, no need to delete later
+          openstudio::path * p = reinterpret_cast< openstudio::path * >(vptr);
+          $1 = openstudio::path(*p);        
+        }else{
+          SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "openstudio::path", "$symname", 1, $input)); 
+        }
+      } else if (TYPE($input) == T_STRING) {
+        // otherwise, if a string
+        Check_Type($input, T_STRING);
+        std::string s(StringValuePtr($input));
+        $1 = openstudio::toPath(s);
+      } else {
+        SWIG_exception_fail(SWIG_ArgError(res), Ruby_Format_TypeError( "", "openstudio::path", "$symname", 1, $input)); 
+      }
+    }
+
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (path) {
+      bool stringType = (TYPE($input) == T_STRING);
+      bool pathType = false;
+      if (!stringType){
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr($input, &vptr, $&1_descriptor, 0);
+        pathType = (SWIG_IsOK(res) && (vptr != 0));
+      }
+      $1 = (stringType || pathType) ? 1 : 0;
+    }    
+    
+    // no need for freearg typemap since new did not get called
+    
+    // handle const path like path
+    %apply path { const path };
+
+    // handle const path& separately
+    %typemap(in) (const path&) {
       $1=NULL;
 
       // check if input is a path already
       void *vptr = 0;
-      int res = SWIG_ConvertPtr($input, &vptr, SWIGTYPE_p_openstudio__path, 0);
+      int res = SWIG_ConvertPtr($input, &vptr, $1_descriptor, 0);
       if (SWIG_IsOK(res)) {
         if (vptr) {
           // make a new copy, freearg typemap will call delete on this below
           openstudio::path * p = reinterpret_cast< openstudio::path * >(vptr);
-          $1 = (openstudio::path *)new openstudio::path(*(openstudio::path const *)p);        
+          $1 = new openstudio::path(*(openstudio::path const *)p);        
         }else{
           SWIG_exception_fail(SWIG_ValueError, Ruby_Format_TypeError("invalid null reference ", "openstudio::path const &", "$symname", 1, $input)); 
         }
       } else if (TYPE($input) == T_STRING) {
-        // otherwise, if a string
+        // otherwise if a string make a new copy, freearg typemap will call delete on this below
         Check_Type($input, T_STRING);
         std::string s(StringValuePtr($input));
         $1 = new openstudio::path(openstudio::toPath(s));
       } else {
         SWIG_exception_fail(SWIG_ArgError(res), Ruby_Format_TypeError( "", "openstudio::path const &", "$symname", 1, $input)); 
       }
-    }
-
-    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (path) {
+    }    
+    
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (const path&) {
       bool stringType = (TYPE($input) == T_STRING);
       bool pathType = false;
       if (!stringType){
@@ -234,16 +274,13 @@ namespace openstudio {
       }
       $1 = (stringType || pathType) ? 1 : 0;
     }    
-
-    %typemap(freearg) (path) {
+    
+    %typemap(freearg) (const path&) {
       if ($1){
         delete $1;
       }
     }
-
-    %apply path { const path };
-    %apply path { const path& };
-
+    
   #endif
   
 } // openstudio
@@ -254,13 +291,54 @@ namespace openstudio {
 
 // DLM@20100101: demo purposes only, should be able to automatically convert a string input, delete when working
 %{
-  openstudio::path funcOnlyTakesAPath(const openstudio::path& p)
+  openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p)
   {
     openstudio::path copy(p);
     return copy;
   }
+  openstudio::path funcOnlyTakesAConstPath(const openstudio::path p)
+  {
+    openstudio::path copy(p);
+    return copy;
+  }
+  openstudio::path funcOnlyTakesAPath(openstudio::path p)
+  {
+    openstudio::path copy(p);
+    return copy;
+  }
+  
+  openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true)
+  {
+    openstudio::path result;
+    if (copy){
+      result = p;
+    }
+    return result;
+  }
+  openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true)
+  {
+    openstudio::path result;
+    if (copy){
+      result = p;
+    }
+    return result;
+  }
+  openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true)
+  {
+    openstudio::path result;
+    if (copy){
+      result = p;
+    }
+    return result;
+  } 
 %}
-openstudio::path funcOnlyTakesAPath(const openstudio::path& p);
+openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p);
+openstudio::path funcOnlyTakesAConstPath(const openstudio::path p);
+openstudio::path funcOnlyTakesAPath(openstudio::path p);
+
+openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true);
+openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true);
+openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true);
 
 
 #endif // UTILITIES_CORE_PATH_I
