@@ -403,6 +403,10 @@ SET( ${target_name}_SRC
   ../shared_gui_components/OSDoubleEdit.hpp
   ../shared_gui_components/OSDragableView.cpp
   ../shared_gui_components/OSDragableView.hpp
+  ../shared_gui_components/OSGridController.cpp
+  ../shared_gui_components/OSGridController.hpp
+  ../shared_gui_components/OSGridView.cpp
+  ../shared_gui_components/OSGridView.hpp
   ../shared_gui_components/OSIntegerEdit.cpp
   ../shared_gui_components/OSIntegerEdit.hpp
   ../shared_gui_components/OSLineEdit.cpp
@@ -636,6 +640,8 @@ SET( ${target_name}_moc
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/OSDoubleEdit.hpp
   ../shared_gui_components/OSDragableView.hpp
+  ../shared_gui_components/OSGridController.hpp
+  ../shared_gui_components/OSGridView.hpp
   ../shared_gui_components/OSIntegerEdit.hpp
   ../shared_gui_components/OSLineEdit.hpp
   ../shared_gui_components/OSListController.hpp
