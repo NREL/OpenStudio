@@ -199,7 +199,8 @@ namespace openstudio {
   };
   
   #ifdef SWIGRUBY
-    %typemap(in) const path& {
+
+    %typemap(in) (path) {
       $1=NULL;
 
       // check if input is a path already
@@ -223,11 +224,26 @@ namespace openstudio {
       }
     }
 
-    %typemap(freearg) const path& {
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (path) {
+      bool stringType = (TYPE($input) == T_STRING);
+      bool pathType = false;
+      if (!stringType){
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr($input, &vptr, $1_descriptor, 0);
+        pathType = (SWIG_IsOK(res) && (vptr != 0));
+      }
+      $1 = (stringType || pathType) ? 1 : 0;
+    }    
+
+    %typemap(freearg) (path) {
       if ($1){
         delete $1;
       }
     }
+
+    %apply path { const path };
+    %apply path { const path& };
+
   #endif
   
 } // openstudio
