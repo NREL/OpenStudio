@@ -299,6 +299,8 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
   }
   if(m_comboBox->count()){
     m_comboBox->setCurrentIndex(0);
+    int width = m_comboBox->minimumSizeHint().width();
+    m_comboBox->setMinimumWidth(width);
   }
 }
 
