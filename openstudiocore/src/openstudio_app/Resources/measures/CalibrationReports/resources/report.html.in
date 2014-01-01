@@ -72,15 +72,12 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
 <div style="width:400px;display:inline-block;">
   <h6 id="calibrationString"></h6>
 </div>
-<h4 id="title-0"></h4>
 <div id="consumptionString-0" class="chartInfo"></div>
 <div id="chart-0"></div>
 <div id="table-0" ></div>
-<h4 id="title-1"></h4>
 <div id="consumptionString-1" class="chartInfo"></div>
 <div id="chart-1"></div>
 <div id="table-1" ></div>
-<h4 id="title-2"></h4>
 <div id="consumptionString-2" class="chartInfo"></div>
 <div id="chart-2"></div>
 <div id="table-2" ></div>
@@ -112,7 +109,7 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
             maxNMBE = fempMaxNMBE;
             maxCVRMSE = fempMaxCVRMSE;
         }
-        $('#calibrationString').text("NBME of " + maxNMBE + "% or less and CV(RSME) of " + maxCVRMSE + "% relative to monthly data.  Must contain all utility data for one year and real weather data.  Check the guideline for additional requirements.");
+        $('#calibrationString').text("NBME of " + maxNMBE + "% or less and CV(RMSE) of " + maxCVRMSE + "% relative to monthly data.  Must contain all utility data for one year and real weather data.  Check the guideline for additional requirements.");
         
         $('.table').each(function(i) {
             $(this).find('tr:last td:not(:first)').each(function(j) {
@@ -127,6 +124,26 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
                 }
             });
         })
+        
+        for (var c in charts) {
+            cvrmseString = "<h6>CV(RMSE) = </h6>"
+            num = consumption[charts[c]].cvrsme;
+            if (Math.abs(num) > maxCVRMSE) {
+                num = "<font color=\"red\">" + num + "<font color=\"black\">";
+            }
+            cvrmseString = cvrmseString + num;
+            
+            nmbeString = "<h6>NMBE = </h6>"
+            num = consumption[charts[c]].nmbe;
+            if (Math.abs(num) > maxNMBE) {
+                num = "<font color=\"red\">" + num;
+            }
+            nmbeString = nmbeString + num;
+                    
+            string = "<h4 style=\"margin-bottom:-10px;\">" + charts[c] + " (" + consumption[charts[c]].units + ")</h4><br>" + cvrmseString + "<br>" + nmbeString;
+            $('#consumptionString-' + c).html(string);
+        }
+        
     }
 
     onMethodChange();
@@ -207,7 +224,7 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
 
     svg.call(tip);
 
-    var charts = ["Electricity Consumption", "Electricity Demand Consumption", "Natural Gas Consumption"];
+    var charts = ["Electricity Consumption", "Electricity Demand", "Natural Gas Consumption"];
 
     for (var c in charts) {
 
@@ -215,10 +232,22 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
             margin.right = 125;
         }
 
-        string = "<h6>" + charts[c] + "(" + consumption[charts[c]].units + ")<br>CV(RMSE) = </h6>" + consumption[charts[c]].cvrsme + "<h6><br>NMBE = </h6>" + consumption[charts[c]].nmbe;
+        cvrmseString = "<h6>CV(RMSE) = </h6>"
+        num = consumption[charts[c]].cvrsme;
+        if (Math.abs(num) > maxCVRMSE) {
+            num = "<font color=\"red\">" + num + "<font color=\"black\">";
+        }
+        cvrmseString = cvrmseString + num;
+        
+        nmbeString = "<h6>NMBE = </h6>"
+        num = consumption[charts[c]].nmbe;
+        if (Math.abs(num) > maxNMBE) {
+            num = "<font color=\"red\">" + num;
+        }
+        nmbeString = nmbeString + num;
+                
+        string = "<h4 style=\"margin-bottom:-10px;\">" + charts[c] + " (" + consumption[charts[c]].units + ")</h4><br>" + cvrmseString + "<br>" + nmbeString;
         $('#consumptionString-' + c).html(string);
-
-        $('#title-' + c).text(charts[c]);
 
         var svg = d3.select("#chart-" + c).append("svg")
             .attr("width", width + margin.left + margin.right)

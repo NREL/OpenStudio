@@ -94,7 +94,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     energy << ";\n"
 
     energyElec = "var consumption = {\n\t\"Electricity Consumption\":{\n\t\t\"units\":\"kWh\",\n"
-    energyDemand =  "\t\"Electricity Demand Consumption\":{\n\t\t\"units\":\"kWh\",\n"
+    energyDemand =  "\t\"Electricity Demand\":{\n\t\t\"units\":\"kW\",\n"
     energyGas = "\t\"Natural Gas Consumption\":{\n\t\t\"units\":\"therms\",\n"
     tempStartDate = ""
     tempEndDate = ""
@@ -200,7 +200,8 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           peakDemand = billingPeriod.modelPeakDemand
           if not peakDemand.empty?
             temp = peakDemand.get / 1000
-            modelPeakDemand << temp.round.to_s
+            temp = sprintf "%.1f", temp
+            modelPeakDemand << temp.to_s
           else
             modelPeakDemand << "0"
           end
