@@ -334,9 +334,7 @@ namespace openstudio {
         }else{
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &"); 
         }
-      } else if($input == Py_None)
-        $1 = new openstudio::path("");
-      else if(PyString_Check($input))
+      } else if(PyString_Check($input))
           $1 = new openstudio::path(PyString_AsString($input));
       else {
         SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path const &"); 
