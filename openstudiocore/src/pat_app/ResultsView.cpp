@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -149,7 +149,7 @@ ResultsView::ResultsView()
   hLayout->addWidget(reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
   QButtonGroup* buttonGroup = new QButtonGroup(this);
-  bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(selectView(int)));
+  bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(viewSelected(int)));
   OS_ASSERT(isConnected);
 
   m_standardResultsBtn = new QPushButton("Standard",this);
@@ -310,7 +310,6 @@ ResultsView::ResultsView()
 
   updateReportButtons();
   calibrationComboBox->setCurrentIndex(0);
-  selectView(0);
 }
 
 double ResultsView::calibrationMaxNMBE() const
@@ -338,7 +337,6 @@ void ResultsView::updateReportButtons()
     }else{
       m_standardResultsBtn->setEnabled(false);
       m_calibrationResultsBtn->setEnabled(false);
-      selectView(0);
     }
   }
 

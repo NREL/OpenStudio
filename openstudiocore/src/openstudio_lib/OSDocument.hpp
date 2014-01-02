@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -221,6 +221,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void toolsUpdated();
 
   void toggleUnitsClicked(bool displayIP);
+
+  void treeChanged(const openstudio::UUID &t_uuid);
 
  public slots:
 

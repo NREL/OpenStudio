@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -241,6 +241,7 @@ namespace runmanager {
       std::vector<std::string> m_toolparams;
       openstudio::path m_script;
       bool m_userScriptJob;
+      boost::optional<openstudio::UUID> m_bclMeasureUUID;
 
       static bool stringToBool(const std::string &t_val);
       static std::string boolToString(bool t_val);

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -71,6 +71,9 @@ UTILITIES_API path getApplicationOutputDirectory(const std::string& outdir);
   ///          gem already installed
   UTILITIES_API openstudio::path getOpenStudioAWSRubyPath();
 
+  /// \returns The packaged ruby installation from the embedded ruby version.
+  ///          Returns nothing on non-windows platforms
+  UTILITIES_API openstudio::path getOpenStudioEmbeddedRubyPath();
 } // openstudio
 
 #endif //UTILITIES_CORE_PATHHELPERS_HPP

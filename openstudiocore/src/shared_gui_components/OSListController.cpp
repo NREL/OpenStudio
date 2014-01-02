@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -241,6 +241,11 @@ void OSItemSelectionController::selectAllItems()
   }
 }
 
+void OSItemSelectionController::emitSelectionChanged()
+{
+  emit selectionChanged(m_selectedItems);
+}
+
 std::vector<QPointer<OSListItem> > OSItemSelectionController::selectedItems() const
 {
   return m_selectedItems;
@@ -272,7 +277,7 @@ void OSItemSelectionController::addSelectedItem(OSListItem * item)
 
   m_selectedItems.push_back(item);
 
-  emit selectionChanged(m_selectedItems);
+  emitSelectionChanged();
 }
 
 void OSItemSelectionController::removeSelectedItem(OSListItem * item)
@@ -286,7 +291,7 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
   {
     m_selectedItems.erase(it);
 
-    emit selectionChanged(m_selectedItems);
+    emitSelectionChanged();
   }
 }
 
