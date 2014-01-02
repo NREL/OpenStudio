@@ -1266,23 +1266,27 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     double outOfRangeValue = std::numeric_limits<double>::min();
     timeseries->setOutOfRangeValue(outOfRangeValue);
 
+    // includes year in billing period start date
+    Date startDate = this->startDate();
+    Date endDate = this->endDate();
+
     // intentionally leave out calendar year
-    //Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth());
-    //Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth());
+    Date runPeriodStartDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
+    Date runPeriodEndDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
 
-    //DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
-    //DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
+    DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
+    DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
 
-    //Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
-    //unsigned numValues = values.size();
-
-    DateTime startDateTime = DateTime(startDate(), Time(0,1,0,0));
-    std::cout << "startDateTime: " << startDateTime.toString() << "\n";
-    DateTime endDateTime = DateTime(endDate(), Time(0,24,0,0));
-    std::cout << "endDateTime: " << endDateTime.toString() << "\n";
-
-    Vector values = timeseries->values(startDateTime, endDateTime);
+    Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
     unsigned numValues = values.size();
+
+    //DateTime startDateTime = DateTime(startDate(), Time(0,1,0,0));
+    //std::cout << "startDateTime: " << startDateTime.toString() << "\n";
+    //DateTime endDateTime = DateTime(endDate(), Time(0,24,0,0));
+    //std::cout << "endDateTime: " << endDateTime.toString() << "\n";
+
+    //Vector values = timeseries->values(startDateTime, endDateTime);
+    //unsigned numValues = values.size();
 
     std::cout << "numValues: " << numValues << "\n";
     std::cout << "timestepsInPeakDemandWindow: " << *timestepsInPeakDemandWindow << "\n";
