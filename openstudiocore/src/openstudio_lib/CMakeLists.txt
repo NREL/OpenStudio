@@ -677,9 +677,6 @@ ADD_LIBRARY( ${target_name}
 )
 
 SET( depends
-  vtkSimpleCharts
-  vtkCharts
-  QVTK
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor

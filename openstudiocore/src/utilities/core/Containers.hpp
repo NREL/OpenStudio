@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std:
 template<typename T, typename U> 
 std::vector<T> castVector(const std::vector<U>& objects) {
   std::vector<T> result;
-  for (unsigned i = 0, n = objects.size(); i < n; ++i) {
+  for (size_t i = 0, n = objects.size(); i < n; ++i) {
     T castObject = objects[i].template cast<T>();
     result.push_back( castObject );
   }
