@@ -172,5 +172,17 @@ class RubyOperations_Test < Test::Unit::TestCase
     
   end
   
+  def test_ImplicitPathSaveLoad
+  
+    model = OpenStudio::Model::Model.new
+    
+    model.save("./test.osm")
+    
+    model.save("./test.osm", true)
+    
+    m2 = OpenStudio::Model::Model::load("./test.osm")
+    assert((not m2.empty?))
+    
+  end
   
 end

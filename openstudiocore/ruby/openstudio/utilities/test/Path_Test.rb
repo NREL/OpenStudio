@@ -19,6 +19,8 @@
 
 require 'openstudio'
 
+require 'pathname'
+
 require 'test/unit'
 
 def changeTestPath(p)
@@ -40,15 +42,114 @@ class Path_Test < Test::Unit::TestCase
   end
 
   def test_funcOnlyTakesAPath
-    p = OpenStudio::Path.new("./here")
-    OpenStudio::funcOnlyTakesAPath(p)
+  
+    functions = []
+    functions << OpenStudio.method("funcOnlyTakesAPath")
+    functions << OpenStudio.method("funcOnlyTakesAConstPath")
+    functions << OpenStudio.method("funcOnlyTakesAConstPathRef")
     
-    # would like to be able to call with string and Pathname
-    #s = "./here"
-    #OpenStudio::funcOnlyTakesAPath(s)
-    #p = Pathname.new("./here")
-    #OpenStudio::funcOnlyTakesAPath(p)
+    functions.each do |function|
+    
+      p = OpenStudio::Path.new("./here")
+      q = function.call(p)
+      assert_equal(p.to_s, q.to_s)
+      
+      # would like to be able to call with string
+      s = p.to_s
+      assert_equal(s.class, String)
+      q = function.call(s)
+      assert_equal(p.to_s, q.to_s)
+      
+      # do we need to be able to handle Pathname too?
+      pn = Pathname.new(p.to_s)
+      assert_equal(pn.class, Pathname)
+      #q = function.call(pn)
+      #assert_equal(p.to_s, q.to_s)
+      assert_raise TypeError do
+        function.call(pn)
+      end
+      
+      # expected failure, pass double
+      assert_raise TypeError do
+        function.call(7)
+      end
+      
+      # expected failure, pass nil
+      assert_raise ArgumentError do
+        function.call(nil)
+      end
+      
+    end
   end
+  
+  def test_defaultArgFuncTakesAPath
+  
+    functions = []
+    functions << OpenStudio.method("defaultArgFuncTakesAPath")
+    functions << OpenStudio.method("defaultArgFuncTakesAConstPath")
+    functions << OpenStudio.method("defaultArgFuncTakesAConstPathRef")
+    
+    second_args = [nil, true, false]
+    
+    functions.each do |function|
+    
+      p = OpenStudio::Path.new("./here")
+      q = function.call(p)
+      assert_equal(p.to_s, q.to_s)
+      q = function.call(p, true)
+      assert_equal(p.to_s, q.to_s)
+      q = function.call(p, false)
+      assert_equal("", q.to_s)
+ 
+      # would like to be able to call with string
+      s = p.to_s
+      assert_equal(s.class, String)
+      q = function.call(s)
+      assert_equal(p.to_s, q.to_s)
+      q = function.call(s, true)
+      assert_equal(p.to_s, q.to_s)
+     q = function.call(s, false)
+      assert_equal("", q.to_s)
+      
+      # do we need to be able to handle Pathname too?
+      pn = Pathname.new(p.to_s)
+      assert_equal(pn.class, Pathname)
+      #q = function.call(pn)
+      #assert_equal(p.to_s, q.to_s)
+      assert_raise ArgumentError do
+        function.call(pn)
+      end
+      assert_raise ArgumentError do
+        function.call(pn, true)
+      end
+      assert_raise ArgumentError do
+        function.call(pn, false)
+      end
+      
+      # expected failure, pass double
+      assert_raise ArgumentError do
+        function.call(7)
+      end
+      assert_raise ArgumentError do
+        function.call(7, true)
+      end
+      assert_raise ArgumentError do
+        function.call(7, false)
+      end
+      
+      # expected failure, pass nil
+      assert_raise ArgumentError do
+        function.call(nil)
+      end
+      assert_raise ArgumentError do
+        function.call(nil, true)
+      end
+      assert_raise ArgumentError do
+        function.call(nil, false)
+      end
+    end
+
+  end  
   
   def test_PathCopy
     p = OpenStudio::Path.new("./here")
