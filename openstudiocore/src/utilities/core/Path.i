@@ -280,7 +280,83 @@ namespace openstudio {
         delete $1;
       }
     }
+  #endif
+
+  #ifdef SWIGPYTHON    
+    %typemap(in) (path) {
     
+      // check if input is a path already
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr($input, &vptr, $&1_descriptor, 0);
+      if (SWIG_IsOK(res)) {
+        if (vptr) {
+          // make a copy, no need to delete later
+          openstudio::path * p = reinterpret_cast< openstudio::path * >(vptr);
+          $1 = openstudio::path(*p);        
+        }else{
+          SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &"); 
+        }
+      } else if(PyString_Check($input)) {
+          $1 = openstudio::toPath(PyString_AsString($input));
+      } else {
+        SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path const &"); 
+      }
+    }
+
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (path) {
+      bool stringType = PyString_Check($input);
+      bool pathType = false;
+      if (!stringType){
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr($input, &vptr, $&1_descriptor, 0);
+        pathType = (SWIG_IsOK(res) && (vptr != 0));
+      }
+      $1 = (stringType || pathType) ? 1 : 0;
+    }    
+    
+    // no need for freearg typemap since new did not get called
+    
+    // handle const path like path
+    %apply path { const path };
+
+    // handle const path& separately
+    %typemap(in) (const path&) {
+      $1=NULL;
+
+      // check if input is a path already
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr($input, &vptr, $1_descriptor, 0);
+      if (SWIG_IsOK(res)) {
+        if (vptr) {
+          // make a new copy, freearg typemap will call delete on this below
+          openstudio::path * p = reinterpret_cast< openstudio::path * >(vptr);
+          $1 = new openstudio::path(*(openstudio::path const *)p);        
+        }else{
+          SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &"); 
+        }
+      } else if(PyString_Check($input))
+          $1 = new openstudio::path(PyString_AsString($input));
+      else {
+        SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path const &"); 
+      }
+    }    
+    
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (const path&) {
+      bool stringType = PyString_Check($input);
+      bool pathType = false;
+      if (!stringType){
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr($input, &vptr, $1_descriptor, 0);
+        pathType = (SWIG_IsOK(res) && (vptr != 0));
+      }
+      $1 = (stringType || pathType) ? 1 : 0;
+    }    
+    
+    %typemap(freearg) (const path&) {
+      if ($1){
+        delete $1;
+      }
+    }
   #endif
   
 } // openstudio
