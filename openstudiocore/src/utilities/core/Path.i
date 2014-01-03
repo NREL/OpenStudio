@@ -297,7 +297,8 @@ namespace openstudio {
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &"); 
         }
       } else if(PyString_Check($input)) {
-          $1 = openstudio::toPath(PyString_AsString($input));
+        std::string s(PyString_AsString($input));
+        $1 = openstudio::toPath(s);
       } else {
         SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path const &"); 
       }
@@ -334,9 +335,10 @@ namespace openstudio {
         }else{
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &"); 
         }
-      } else if(PyString_Check($input))
-          $1 = new openstudio::path(PyString_AsString($input));
-      else {
+      } else if(PyString_Check($input)) {
+        std::string s(PyString_AsString($input));
+        $1 = new openstudio::path(openstudio::toPath(s));
+      } else {
         SWIG_exception_fail(SWIG_ArgError(res), "Wrong input type for openstudio::path const &"); 
       }
     }    
