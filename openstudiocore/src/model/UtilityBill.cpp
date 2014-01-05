@@ -1272,7 +1272,7 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
 
     // intentionally leave out calendar year
     Date runPeriodStartDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
-    Date runPeriodEndDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
+    Date runPeriodEndDate = Date(endDate.monthOfYear(), endDate.dayOfMonth());
 
     DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
     DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
@@ -1280,23 +1280,10 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
     unsigned numValues = values.size();
 
-    //DateTime startDateTime = DateTime(startDate(), Time(0,1,0,0));
-    //std::cout << "startDateTime: " << startDateTime.toString() << "\n";
-    //DateTime endDateTime = DateTime(endDate(), Time(0,24,0,0));
-    //std::cout << "endDateTime: " << endDateTime.toString() << "\n";
-
-    //Vector values = timeseries->values(startDateTime, endDateTime);
-    //unsigned numValues = values.size();
-
-    std::cout << "numValues: " << numValues << "\n";
-    std::cout << "timestepsInPeakDemandWindow: " << *timestepsInPeakDemandWindow << "\n";
-
     if (numValues < *timestepsInPeakDemandWindow){
-      std::cout << "numValues < *timestepsInPeakDemandWindow, returning boost::none" << "\n";
       return boost::none;
     }
 
-    std::cout << "building vector" << "\n";
     for (unsigned i = 0; i < numValues; ++i){
       //  shift window
       for (unsigned j = *timestepsInPeakDemandWindow - 1; j > 0; --j){
