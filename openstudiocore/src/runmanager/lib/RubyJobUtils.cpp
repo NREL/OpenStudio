@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -222,7 +222,19 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
     m_script = openstudio::toPath(parameters.children.at(0).value);
   } catch (const std::exception &) {}
 
+  try {
+    JobParam parameters = t_params.get("ruby_bclmeasureparameters");
 
+    for (std::vector<JobParam>::const_iterator itr = parameters.children.begin();
+         itr != parameters.children.end();
+         ++itr)
+    {
+      if (itr->value == "bcl_measure_uuid"){
+        openstudio::UUID bclMeasureUUID = openstudio::toUUID(itr->children.at(0).value);
+        m_bclMeasureUUID = bclMeasureUUID;
+      }
+    }
+  } catch (const std::exception &) {}
 }
 
 
@@ -405,7 +417,6 @@ JobParams RubyJobBuilder::toParams() const
   }
 
   JobParam toolparams("ruby_toolparameters");
-
   for(std::vector<std::string>::const_iterator itr = m_toolparams.begin();
       itr != m_toolparams.end();
       ++itr)
@@ -424,7 +435,6 @@ JobParams RubyJobBuilder::toParams() const
     p.children.push_back(JobParam(openstudio::toString(itr->second)));
     requiredFiles.children.push_back(p);
   }
-
 
   JobParams params;
   params.append(scriptparams);
@@ -449,6 +459,14 @@ JobParams RubyJobBuilder::toParams() const
   if (!m_script.empty())
   {
     params.append("ruby_scriptfile", openstudio::toString(m_script));
+  }
+
+  if (m_bclMeasureUUID){
+    JobParam bclmeasureparams("ruby_bclmeasureparameters");
+    JobParam p("bcl_measure_uuid");
+    p.children.push_back(openstudio::toString(*m_bclMeasureUUID));
+    bclmeasureparams.children.push_back(p);
+    params.append(bclmeasureparams);
   }
 
   return params;
@@ -1017,6 +1035,8 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
     throw std::runtime_error("Passed in measure does not have a primaryRubyScriptPath set, which is required for RubyJobBuilder");
   }
 
+  m_bclMeasureUUID = t_measure.uuid();
+
   setAsUserScriptRubyJob(*script, t_args, t_relativeTo, t_copyFileTrue);
 
   std::vector<BCLFileReference> files = t_measure.files();
@@ -1042,11 +1062,11 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
     if (!isTestPath)
     {
       LOG(Trace, "Adding required file from measure: " << openstudio::toString(itr->path()) << " to: " << openstudio::toString(itr->path().filename()));
+      addRequiredFile(itr->path(), relativePath);
     } else {
       LOG(Trace, "Skipping test file from measure: " << openstudio::toString(itr->path()));
     }
 
-    addRequiredFile(itr->path(), itr->path().filename());
   }
 
   FileReferenceType infile = t_measure.inputFileType();

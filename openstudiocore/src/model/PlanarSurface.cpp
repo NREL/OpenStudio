@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -279,7 +279,12 @@ namespace model {
         Point3dVector vertices = this->vertices();
         m_cachedOutwardNormal = getOutwardNormal(vertices);
         if(!m_cachedOutwardNormal){
-          LOG_AND_THROW("Cannot compute outward normal for vertices " << vertices);
+          std::string surfaceNameMsg;
+          boost::optional<std::string> name = this->name();
+          if (name){
+            surfaceNameMsg = ", surface name = '" + *name + "'";
+          }
+          LOG_AND_THROW("Cannot compute outward normal for vertices " << vertices << surfaceNameMsg);
         }
       }
       return m_cachedOutwardNormal.get();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class ModelObjectList;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationWalkIn;
@@ -80,54 +81,48 @@ namespace detail {
 
     std::vector<RefrigerationCompressor> compressors() const;
 
+    std::vector<RefrigerationCompressor> highStageCompressors() const;
+
     std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
     std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
+    std::vector<RefrigerationAirChiller> airChillers() const;
+
     template <class T>
     std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> refrigerationTransferLoadList() const;
 
-    // TODO: Check return type. From object lists, some candidates are: RefrigerationAllTypesCondenser.
-    ModelObject refrigerationCondenser() const;
+    boost::optional<ModelObject> refrigerationCondenser() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     ModelObjectList compressorList() const;
 
     double minimumCondensingTemperature() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Fluid.
     std::string refrigerationSystemWorkingFluidType() const;
 
     std::string suctionTemperatureControlType() const;
 
     bool isSuctionTemperatureControlTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcoolerMechanical.
     boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler() const;
 
-    // TODO: Check return type. From object lists, some candidates are: RefrigerationSubcoolerLiquidSuction.
     boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler() const;
 
     double sumUASuctionPiping() const;
 
     bool isSumUASuctionPipingDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> suctionPipingZone() const;
 
     std::string endUseSubcategory() const;
 
     bool isEndUseSubcategoryDefaulted() const;
 
-    // std::string numberofCompressorStages() const;
-
-    // bool isNumberofCompressorStagesDefaulted() const;
+    std::string numberofCompressorStages() const;
 
     std::string intercoolerType() const;
 
@@ -137,7 +132,6 @@ namespace detail {
 
     bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> highStageCompressorList() const;
 
     //@}
@@ -171,6 +165,12 @@ namespace detail {
 
     void removeAllCompressors();
 
+    bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+    void removeHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+
+    void removeAllHighStageCompressors();
+
     bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
 
     void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
@@ -183,37 +183,36 @@ namespace detail {
 
     void removeAllCascadeCondenserLoads();
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
+    bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+    void removeAllAirChillers();
+
     bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetRefrigeratedCaseAndWalkInList();
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setRefrigerationTransferLoadList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetRefrigerationTransferLoadList();
 
-    // TODO: Check argument type. From object lists, some candidates are: RefrigerationAllTypesCondenser.
     bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setCompressorList(const ModelObjectList& modelObjectList);
 
     void setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
-    // TODO: Check argument type. From object lists, some candidates are: Fluid.
     bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
     bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
 
     void resetSuctionTemperatureControlType();
 
-    // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcoolerMechanical.
     bool setMechanicalSubcooler(const boost::optional<RefrigerationSubcoolerMechanical>& refrigerationSubcoolerMechanical);
 
     void resetMechanicalSubcooler();
 
-    // TODO: Check argument type. From object lists, some candidates are: RefrigerationSubcoolerLiquidSuction.
     bool setLiquidSuctionHeatExchangerSubcooler(const boost::optional<RefrigerationSubcoolerLiquidSuction>& refrigerationSubcoolerLiquidSuction);
 
     void resetLiquidSuctionHeatExchangerSubcooler();
@@ -222,7 +221,6 @@ namespace detail {
 
     void resetSumUASuctionPiping();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetSuctionPipingZone();
@@ -230,10 +228,6 @@ namespace detail {
     void setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
-
-    // bool setNumberofCompressorStages(std::string numberofCompressorStages);
-
-    // void resetNumberofCompressorStages();
 
     bool setIntercoolerType(std::string intercoolerType);
 
@@ -243,7 +237,6 @@ namespace detail {
 
     void resetShellandCoilIntercoolerEffectiveness();
 
-    // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setHighStageCompressorList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetHighStageCompressorList();
@@ -257,7 +250,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RefrigerationSystem");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals

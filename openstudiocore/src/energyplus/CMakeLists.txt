@@ -37,19 +37,24 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlow.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWater.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingWaterToAirHeatPumpEquationFit.cpp
+  ForwardTranslator/ForwardTranslateCoilHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlow.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectric.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingGas.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
+  ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
   ForwardTranslator/ForwardTranslateControllerMechanicalVentilation.cpp
   ForwardTranslator/ForwardTranslateControllerOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateControllerWaterCoil.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerPerformanceCoolTools.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerPerformanceYorkCalc.cpp
   ForwardTranslator/ForwardTranslateCoolingTowerSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateCoolingTowerVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCurrencyType.cpp
   ForwardTranslator/ForwardTranslateCurveBicubic.cpp
   ForwardTranslator/ForwardTranslateCurveBiquadratic.cpp
@@ -113,16 +118,19 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserCascade.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserEvaporativeCooled.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserWaterCooled.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationGasCoolerAirCooled.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSubcoolerLiquidSuction.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSubcoolerMechanical.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSecondarySystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationSystem.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationTranscriticalSystem.cpp
   ForwardTranslator/ForwardTranslateRefrigerationWalkIn.cpp
   ForwardTranslator/ForwardTranslateRoofVegetation.cpp
   ForwardTranslator/ForwardTranslateRunPeriod.cpp
@@ -251,6 +259,8 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateOutputMeterMeterFileOnly.cpp
   ReverseTranslator/ReverseTranslateOutputVariable.cpp
   ReverseTranslator/ReverseTranslatePeople.cpp
+  ReverseTranslator/ReverseTranslateRefrigerationCase.cpp
+  ReverseTranslator/ReverseTranslateRefrigerationCompressor.cpp
   ReverseTranslator/ReverseTranslateRunPeriod.cpp
   ReverseTranslator/ReverseTranslateRunPeriodControlDaylightSavingTime.cpp
   ReverseTranslator/ReverseTranslateRunPeriodControlSpecialDays.cpp

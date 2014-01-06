@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -35,6 +35,21 @@ class StartupView : public QWidget
   StartupView(QWidget *parent = 0);
 
   virtual ~StartupView() {}
+
+  protected:
+
+  void paintEvent(QPaintEvent *);
+};
+
+class LoadingProjectView : public QWidget
+{
+  Q_OBJECT
+
+  public:
+
+  LoadingProjectView(QWidget * parent = 0);
+
+  virtual ~LoadingProjectView() {}
 
   protected:
 

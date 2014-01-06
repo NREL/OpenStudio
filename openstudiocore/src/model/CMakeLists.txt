@@ -137,6 +137,9 @@ SET( ${target_name}_src
   CoilCoolingWaterToAirHeatPumpEquationFit.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit.cpp
+  CoilHeatingDesuperheater.hpp
+  CoilHeatingDesuperheater_Impl.hpp
+  CoilHeatingDesuperheater.cpp
   CoilHeatingDXSingleSpeed.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXSingleSpeed.cpp
@@ -164,6 +167,9 @@ SET( ${target_name}_src
   CoilHeatingWaterBaseboard.hpp
   CoilHeatingWaterBaseboard_Impl.hpp
   CoilHeatingWaterBaseboard.cpp
+  CoilWaterHeatingDesuperheater.hpp
+  CoilWaterHeatingDesuperheater_Impl.hpp
+  CoilWaterHeatingDesuperheater.cpp
   ComponentCostAdjustments.hpp
   ComponentCostAdjustments_Impl.hpp
   ComponentCostAdjustments.cpp
@@ -203,9 +209,18 @@ SET( ${target_name}_src
   ConvergenceLimits.hpp
   ConvergenceLimits_Impl.hpp
   ConvergenceLimits.cpp
+  CoolingTowerPerformanceCoolTools.hpp
+  CoolingTowerPerformanceCoolTools_Impl.hpp
+  CoolingTowerPerformanceCoolTools.cpp
+  CoolingTowerPerformanceYorkCalc.hpp
+  CoolingTowerPerformanceYorkCalc_Impl.hpp
+  CoolingTowerPerformanceYorkCalc.cpp
   CoolingTowerSingleSpeed.hpp
   CoolingTowerSingleSpeed_Impl.hpp
   CoolingTowerSingleSpeed.cpp
+  CoolingTowerVariableSpeed.hpp
+  CoolingTowerVariableSpeed_Impl.hpp
+  CoolingTowerVariableSpeed.cpp
   CurrencyType.hpp
   CurrencyType_Impl.hpp
   CurrencyType.cpp
@@ -508,6 +523,9 @@ SET( ${target_name}_src
   RefractionExtinctionGlazing.hpp
   RefractionExtinctionGlazing_Impl.hpp
   RefractionExtinctionGlazing.cpp
+  RefrigerationAirChiller.hpp
+  RefrigerationAirChiller_Impl.hpp
+  RefrigerationAirChiller.cpp
   RefrigerationCase.hpp
   RefrigerationCase_Impl.hpp
   RefrigerationCase.cpp
@@ -526,6 +544,9 @@ SET( ${target_name}_src
   RefrigerationCondenserWaterCooled.hpp
   RefrigerationCondenserWaterCooled_Impl.hpp
   RefrigerationCondenserWaterCooled.cpp
+  RefrigerationGasCoolerAirCooled.hpp
+  RefrigerationGasCoolerAirCooled_Impl.hpp
+  RefrigerationGasCoolerAirCooled.cpp
   RefrigerationSubcoolerLiquidSuction.hpp
   RefrigerationSubcoolerLiquidSuction_Impl.hpp
   RefrigerationSubcoolerLiquidSuction.cpp
@@ -538,6 +559,9 @@ SET( ${target_name}_src
   RefrigerationSystem.hpp
   RefrigerationSystem_Impl.hpp
   RefrigerationSystem.cpp
+  RefrigerationTranscriticalSystem.hpp
+  RefrigerationTranscriticalSystem_Impl.hpp
+  RefrigerationTranscriticalSystem.cpp
   RefrigerationWalkIn.hpp
   RefrigerationWalkIn_Impl.hpp
   RefrigerationWalkIn.cpp
@@ -903,7 +927,10 @@ SET( ${target_name}_moc
   ControllerMechanicalVentilation_Impl.hpp
   ControllerWaterCoil_Impl.hpp
   ConvergenceLimits_Impl.hpp
+  CoolingTowerPerformanceCoolTools_Impl.hpp
+  CoolingTowerPerformanceYorkCalc_Impl.hpp
   CoolingTowerSingleSpeed_Impl.hpp
+  CoolingTowerVariableSpeed_Impl.hpp
   Curve_Impl.hpp
   CurveBicubic_Impl.hpp
   CurveBiquadratic_Impl.hpp
@@ -940,7 +967,6 @@ SET( ${target_name}_moc
   ExteriorLightsDefinition_Impl.hpp
   Facility_Impl.hpp
   FanConstantVolume_Impl.hpp
-  FanOnOff_Impl.hpp
   FanVariableVolume_Impl.hpp
   FFactorGroundFloorConstruction_Impl.hpp
   Gas_Impl.hpp
@@ -1102,6 +1128,7 @@ SET( ${target_name}_test_src
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
+  test/CoilHeatingDesuperheater_GTest.cpp
   test/CoilHeatingDXSingleSpeed_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
@@ -1110,6 +1137,7 @@ SET( ${target_name}_test_src
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
+  test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
@@ -1173,16 +1201,19 @@ SET( ${target_name}_test_src
   test/PumpVariableSpeed_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
+  test/RefrigerationAirChiller_GTest.cpp
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
   test/RefrigerationCondenserWaterCooled_GTest.cpp
+  test/RefrigerationGasCoolerAirCooled_GTest.cpp
   test/RefrigerationSubcoolerLiquidSuction_GTest.cpp
   test/RefrigerationSubcoolerMechanical_GTest.cpp
   test/RefrigerationSecondarySystem_GTest.cpp
   test/RefrigerationSystem_GTest.cpp
+  test/RefrigerationTranscriticalSystem_GTest.cpp
   test/RefrigerationWalkIn_GTest.cpp
   test/RefrigerationWalkInZoneBoundary_GTest.cpp
   test/RenderingColor_GTest.cpp

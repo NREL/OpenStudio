@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,28 @@
 #include <QTimer>
 
 namespace openstudio {
+
+ZoomOutButton::ZoomOutButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  setFixedSize(20,20);
+
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':images/zoom-out.png');"
+               "  border:none;"
+               "}");
+  style.append("QPushButton:hover {"
+               "  background-image:url(':images/zoom-out-over.png');"
+               "}");
+  style.append("QPushButton:pressed {"
+               "  background-image:url(':images/zoom-out-press.png');"
+               "}");
+
+  setStyleSheet(style);
+}
 
 OrangeButton::OrangeButton(QWidget * parent)
   : QPushButton()

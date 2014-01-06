@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -232,24 +232,41 @@ void RunTabController::onPlayButtonClicked()
       // check if we are already done
       int numCompletedJobs = (int)analysis.completeDataPoints().size();
       int totalNumJobs = (int)analysis.completeDataPoints().size() + (int)analysis.dataPointsToQueue().size();
+      int totalDataPoints = (int)analysis.dataPoints().size();
 
       if (numCompletedJobs == totalNumJobs){
-        // does the user want to clear results?
-        QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", "The simulations are already complete, do you want to clear all results?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-        if (test == QMessageBox::Yes){
+        // there is nothing to do, see if the user wants to select all or clear results
 
-          // remove all results
-          bool completeRemoval = project->clearAllResults();
-          if (!completeRemoval) {
-            QMessageBox::critical( runView, "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files.") );
+        if (totalNumJobs < totalDataPoints){
+          // does the user want to select all?
+          QMessageBox::StandardButton test = QMessageBox::question(runView, "Select All", "No simulations are selected to run, do you want to select all?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+          if (test == QMessageBox::Yes){
+            BOOST_FOREACH(analysis::DataPoint dataPoint, analysis.dataPoints()){
+              dataPoint.setSelected(true);
+            }
+            project->save();
+          }else{
+            // nothing to do
+            return;
           }
-          project->save();
         }else{
-          // nothing to do
-          return;
+          // does the user want to clear results?
+          QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", "The simulations are already complete, do you want to clear all results?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+          if (test == QMessageBox::Yes){
+
+            // remove all results
+            bool completeRemoval = project->clearAllResults();
+            if (!completeRemoval) {
+              QMessageBox::critical( runView, "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files.") );
+            }
+            project->save();
+          }else{
+            // nothing to do
+            return;
+          }
         }
 
-        // force refresh after clearing results
+        // force refresh after selecting all or clearing results
         refresh();
         PatApp::instance()->processEvents();
       }

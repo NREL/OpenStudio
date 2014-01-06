@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -783,6 +783,7 @@ namespace openstudio{
           const std::vector<DateTime> &t_times,
           const std::vector<double> &t_xs, const std::vector<double> &t_ys, double t_z, const std::vector<Matrix> &t_maps);
 
+      bool isSupportedVersion() const;
 
     private:
 
@@ -815,6 +816,8 @@ namespace openstudio{
       DataDictionaryTable m_dataDictionary;
       sqlite3* m_db;
       std::string m_sqliteFilename;
+
+      bool m_supportedVersion;
 
       REGISTER_LOGGER("openstudio.energyplus.SqlFile");
     };

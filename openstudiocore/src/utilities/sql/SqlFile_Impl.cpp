@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ namespace openstudio{
     }
 
     SqlFile_Impl::SqlFile_Impl(const openstudio::path& path)
-      : m_path(path), m_connectionOpen(false)
+      : m_path(path), m_connectionOpen(false), m_supportedVersion(false)
     {
       reopen();
     }
@@ -393,7 +393,8 @@ namespace openstudio{
       try{
         close();
         init(m_path);
-      }catch(const std::exception&){
+      }catch(const std::exception&e){
+        LOG(Error, "Exception while opening database: " << e.what());
         result = false;
       }
       return result;
@@ -426,6 +427,11 @@ namespace openstudio{
       }
     }
 
+    bool SqlFile_Impl::isSupportedVersion() const
+    {
+      return m_supportedVersion;
+    }
+
     bool SqlFile_Impl::isValidConnection()
     {
       int code = -1;
@@ -434,6 +440,7 @@ namespace openstudio{
         sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%'",-1,&sqlStmtPtr,NULL);
         code = sqlite3_step(sqlStmtPtr);
         sqlite3_finalize(sqlStmtPtr);
+        m_supportedVersion = true;
 
         // use this code block to try to support EnergyPlus versions before they are released
         if (code != SQLITE_ROW){
@@ -441,6 +448,16 @@ namespace openstudio{
           sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%8.1%'",-1,&sqlStmtPtr,NULL);
           code = sqlite3_step(sqlStmtPtr);
           sqlite3_finalize(sqlStmtPtr);
+          m_supportedVersion = false;
+        }
+
+        // use this code block to try to support EnergyPlus versions before they are released
+        if (code != SQLITE_ROW){
+          LOG(Warn, "Trying unsupported EnergyPlus version 6.0");
+          sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%6.0%'",-1,&sqlStmtPtr,NULL);
+          code = sqlite3_step(sqlStmtPtr);
+          sqlite3_finalize(sqlStmtPtr);
+          m_supportedVersion = false;
         }
       }
       return (code == SQLITE_ROW);
@@ -2190,7 +2207,7 @@ namespace openstudio{
     {
       openstudio::OptionalTimeSeries ts;
       openstudio::DateTime startDate;
-      std::vector<double> stdDaysFromFirstReport;
+      std::vector<long> stdSecondsFromFirstReport;
       std::vector<double> stdValues;
       unsigned month, day, hour, minute, interval;
       double value;
@@ -2245,7 +2262,7 @@ namespace openstudio{
           {
             startDate=firstDateTime();
             openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0));
-            stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
+            stdSecondsFromFirstReport.push_back((dateTime-startDate).totalSeconds());
             lastDateTime = dateTime;
           }
           else
@@ -2261,7 +2278,7 @@ namespace openstudio{
                 dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
               }
             }
-            stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
+            stdSecondsFromFirstReport.push_back((dateTime-startDate).totalSeconds());
             lastDateTime = dateTime;
           }
           // step to next row
@@ -2274,7 +2291,8 @@ namespace openstudio{
         // remove year before passing to TimeSeries
         startDate = DateTime(Date(startDate.date().monthOfYear(), startDate.date().dayOfMonth()), startDate.time());
         
-        ts = openstudio::TimeSeries(startDate, stdDaysFromFirstReport, stdValues, units);
+        Vector values = createVector(stdValues);
+        ts = openstudio::TimeSeries(startDate, stdSecondsFromFirstReport, values, units);
       }
       return ts;
     }

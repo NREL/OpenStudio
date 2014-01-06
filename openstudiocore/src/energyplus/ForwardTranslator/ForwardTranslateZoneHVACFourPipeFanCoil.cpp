@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <utilities/idd/ZoneHVAC_FourPipeFanCoil_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
@@ -108,6 +109,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
         {
           _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,mixedAirNodeName );
           _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName );
+        }
+        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
+        {
+          _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName );
+          _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName );
         }
         else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
         {

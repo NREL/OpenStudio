@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include <pat_app/ResultsView.hpp>
-
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/PatApp.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
@@ -124,6 +124,9 @@ bool hasCalibrationResults(const analysis::DataPoint& dataPoint){
 ResultsView::ResultsView()
   : PatMainTabView()
 {
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  CloudStatus cloudStatus = cloudMonitor->status(); // CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED, CLOUD_ERROR 
+
   setTitle("Create and View Reports");
 
   // Main Content
@@ -146,7 +149,7 @@ ResultsView::ResultsView()
   hLayout->addWidget(reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
   QButtonGroup* buttonGroup = new QButtonGroup(this);
-  bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(selectView(int)));
+  bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(viewSelected(int)));
   OS_ASSERT(isConnected);
 
   m_standardResultsBtn = new QPushButton("Standard",this);
@@ -272,9 +275,14 @@ ResultsView::ResultsView()
   m_downloadResultsButton = new QPushButton();
   m_downloadResultsButton->setFlat(true);
   m_downloadResultsButton->setFixedSize(195,29);
-  enableDownloadResultsButton(false, true);
   hLayout->addWidget(m_downloadResultsButton);
 
+  if (cloudStatus == CLOUD_RUNNING){
+    enableDownloadResultsButton(RESULTS_DISABLED);
+  }else{
+    enableDownloadResultsButton(LOCAL_MODE);
+  }
+  
   isConnected = connect(m_downloadResultsButton, SIGNAL(clicked(bool)),
     this, SIGNAL(downloadResultsButtonClicked(bool)));
   OS_ASSERT(isConnected);
@@ -302,7 +310,6 @@ ResultsView::ResultsView()
 
   updateReportButtons();
   calibrationComboBox->setCurrentIndex(0);
-  selectView(0);
 }
 
 double ResultsView::calibrationMaxNMBE() const
@@ -330,7 +337,6 @@ void ResultsView::updateReportButtons()
     }else{
       m_standardResultsBtn->setEnabled(false);
       m_calibrationResultsBtn->setEnabled(false);
-      selectView(0);
     }
   }
 
@@ -359,27 +365,75 @@ void ResultsView::enableViewFileButton(bool enable)
   m_viewFileButton->setEnabled(enable);
 }
 
-void ResultsView::enableDownloadResultsButton(bool enable, bool sameSession)
+void ResultsView::enableDownloadResultsButton(const DownloadResultsStatus& status)
 {
+  bool visible = false;
+  bool enable = false;
   QString style;
-  if (sameSession){
-    if(enable){
+
+  switch (status){
+    case LOCAL_MODE:
+      visible = false;
+      enable = false;
+      style = ("");
+      break;
+    case RESULTS_DISABLED:
+      visible = true;
+      enable = false;
       style = ("QPushButton {"
-                             "background-image:url(':/images/download_detailed_results_button.png');"
-                             "  border:none;"
-                             "}");
-    } else {
+                           "background-image:url(':/images/download_detailed_results_disabled.png');"
+                           "  border:none;"
+                           "}");
+      break;
+    case RESULTS_DOWNLOADED:
+      visible = true;
+      enable = false;
       style = ("QPushButton {"
-                             "background-image:url(':/images/download_detailed_results_disabled.png');"
-                             "  border:none;"
-                             "}");
-    }
-  }else{
-    style = ("QPushButton {"
+                           "background-image:url(':/images/download_detailed_results_downloaded.png');"
+                           "  border:none;"
+                           "}");
+      break;
+    case RESULTS_UNAVAILABLE:
+      visible = true;
+      enable = false;
+      style = ("QPushButton {"
                            "background-image:url(':/images/download_detailed_results_na_button.png');"
                            "  border:none;"
                            "}");
+
+      break;    
+    case RESULTS_AVAILABLE:
+      visible = true;
+      enable = true;
+      style = ("QPushButton {"
+                           "background-image:url(':/images/download_detailed_results_button.png');"
+                           "  border:none;"
+                           "}");
+      break;
+    case RUNNING_DETAILED:
+      visible = true;
+      enable = false;
+      style = ("QPushButton {"
+                           "background-image:url(':/images/download_detailed_results_queued.png');"
+                           "  border:none;"
+                           "}");
+      break;
+    case RUNNING_SLIM:
+      visible = true;
+      enable = true;
+      style = ("QPushButton {"
+                           "background-image:url(':/images/download_detailed_results_button.png');"
+                           "  border:none;"
+                           "}");
+      break;
+    default:
+      visible = false;
+      enable = false;
+      style = ("");
+      break;
   }
+   
+  m_downloadResultsButton->setVisible(visible);
   m_downloadResultsButton->setStyleSheet(style);
   m_downloadResultsButton->setEnabled(enable);
 }

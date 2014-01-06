@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -55,28 +55,35 @@ end
 
 puts "Extracting arguments from user script " + user_script_path.to_s
 
-require user_script_path.to_s
+# Check list of objects in memory before loading the script
+currentObjects = Hash.new
+ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
+
+ObjectSpace.garbage_collect
+load user_script_path.to_s # need load in case have seen this script before
 
 userScript = nil
 type = String.new
-ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
-  if obj.is_a? OpenStudio::Ruleset::ModelUserScript
-    userScript = obj
-    type = "model"
-  elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
-    userScript = obj
-    type = "workspace"
-  elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
-    userScript = obj
-    type = "translation"
-  elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
-    userScript = obj
-    type = "utility"  
-  elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
-    userScript = obj
-    type = "report"    
+ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) do |obj|
+  if not currentObjects[obj]
+    if obj.is_a? OpenStudio::Ruleset::ModelUserScript
+      userScript = obj
+      type = "model"
+    elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
+      userScript = obj
+      type = "workspace"
+    elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
+      userScript = obj
+      type = "translation"
+    elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
+      userScript = obj
+      type = "utility"  
+    elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
+      userScript = obj
+      type = "report"    
+    end
   end
-}
+end
 
 isUserScript = true
 if not userScript
@@ -93,7 +100,7 @@ if isUserScript
   elsif type == "workspace"
     args = userScript.arguments(OpenStudio::Workspace.new)
   elsif type == "translation"
-    args = userScript.arguments(OpenStudio::Workspace.new)    
+    args = userScript.arguments(OpenStudio::Model::Model.new)    
     userScript.arguments(workspace).each { |arg|
       args << arg
     }      

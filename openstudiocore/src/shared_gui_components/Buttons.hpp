@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -31,6 +31,16 @@ class QPixmap;
 class QTimer;
 
 namespace openstudio {
+
+class ZoomOutButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  ZoomOutButton(QWidget * parent = 0);
+  virtual ~ZoomOutButton() {}
+};
 
 class OrangeButton : public QPushButton
 {

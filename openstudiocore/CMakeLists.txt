@@ -23,7 +23,7 @@ CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenSt
 IF( APPLE )
   SET(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   SET(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_VERSION_BUILD}")
-  SET(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2013 National Renewable Energy Laboratory")
+  SET(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2014 National Renewable Energy Laboratory")
 ENDIF()
 
 ###############################################################################
@@ -53,7 +53,7 @@ OPTION( BUILD_V8_BINDINGS "Build Node V8 bindings" OFF )
 OPTION( BUILD_PYTHON_BINDINGS "Build Python bindings" OFF )
 
 # Build ctest testing
-# Requires: EnergyPLus
+# Requires: EnergyPlus
 OPTION( BUILD_TESTING "Build testing targets" OFF )
 
 # Build package
@@ -580,7 +580,7 @@ ADD_DEFINITIONS( -DSQLITE_THREADSAFE=1 ) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
-FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns REQUIRED)
+FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns QtWebKit REQUIRED)
 
 # Newer versions of cmake have a sqlite plugin finder built into the Qt package finder.  
 # This is for older versions.  Sometime before cmake version 2.8.7.
@@ -630,47 +630,13 @@ LIST( APPEND QT_LIBS ${QT_QTCORE_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTGUI_LIBRARY})
 LIST( APPEND QT_LIBS ${QT_QTGUI_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTSQL_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTSQL_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIBRARY})
 LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTXML_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXML_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTXMLPATTERNS_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXMLPATTERNS_LIB_DEPENDENCIES})
+LIST( APPEND QT_LIBS ${QT_QTWEBKIT_LIBRARY})
 
 #QT_QSQLITE_PLUGIN_RELEASE
-
-
-# VTK #######################
-find_package(VTK REQUIRED)
-
-include(${VTK_USE_FILE})
-##############################
-
-# vtkCharts ##################
-find_library( VTK_SIMPLE_CHARTS_RELEASE_LIB 
-  NAME vtkSimpleCharts 
-  PATHS ${VTK_CHARTS_LIB_DIR}
-        ${VTK_CHARTS_LIB_DIR}/Release
-  NO_DEFAULT_PATH )
-
-find_library( VTK_SIMPLE_CHARTS_DEBUG_LIB 
-  NAME vtkSimpleCharts 
-  PATHS ${VTK_CHARTS_LIB_DIR}
-        ${VTK_CHARTS_LIB_DIR}/Debug
-  NO_DEFAULT_PATH )
-
-add_definitions(-DvtkCharts_USE_QT)
-
-include_directories(SYSTEM ${VTK_CHARTS_INCLUDE_DIR})
-
-link_directories( ${VTK_CHARTS_LIB_DIR} )
-##############################
-
-
-
-
-
 
 
 ###############################################################################
@@ -890,7 +856,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_1_0_20131018.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_2_0_20131220.pdf" DESTINATION . )
 
 ###############################################################################
 
@@ -912,18 +878,7 @@ IF (NOT UNIX)
     
   install( DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION . )
   
-  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/ruby-install")
-  
-  execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/ruby-install"
-    RESULT_VARIABLE rv)
-  
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/ruby-1.8.6-msvc.zip"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install"
-    RESULT_VARIABLE rv)
-  
-  file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/ruby-install/ruby/bin")
-  
-  install( DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install" DESTINATION . )
+  install( DIRECTORY "${CMAKE_BINARY_DIR}/../../../Ruby-prefix/src/Ruby/" DESTINATION "ruby-install/ruby" )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   INCLUDE(InstallRequiredSystemLibraries)

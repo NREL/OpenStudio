@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -567,6 +567,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingWaterToAirHeatPumpEquationFit(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Heating_Desuperheater :
+    {
+      model::CoilHeatingDesuperheater coil = modelObject.cast<CoilHeatingDesuperheater>();
+      retVal = translateCoilHeatingDesuperheater(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Heating_DX_SingleSpeed :
     {
       model::CoilHeatingDXSingleSpeed coil = modelObject.cast<CoilHeatingDXSingleSpeed>();
@@ -611,6 +617,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::CoilHeatingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
       retVal = translateCoilHeatingWaterToAirHeatPumpEquationFit(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater :
+    {
+      model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
+      retVal = translateCoilWaterHeatingDesuperheater(coil);
       break;
     }
   case openstudio::IddObjectType::OS_ComponentData :
@@ -674,10 +686,28 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateControllerWaterCoil(controller);
       break;
     }
+  case openstudio::IddObjectType::OS_CoolingTowerPerformance_CoolTools :
+    {
+      model::CoolingTowerPerformanceCoolTools mo = modelObject.cast<CoolingTowerPerformanceCoolTools>();
+      retVal = translateCoolingTowerPerformanceCoolTools(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoolingTowerPerformance_YorkCalc :
+    {
+      model::CoolingTowerPerformanceYorkCalc mo = modelObject.cast<CoolingTowerPerformanceYorkCalc>();
+      retVal = translateCoolingTowerPerformanceYorkCalc(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       model::CoolingTowerSingleSpeed tower = modelObject.cast<CoolingTowerSingleSpeed>();
       retVal = translateCoolingTowerSingleSpeed(tower);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
+    {
+      model::CoolingTowerVariableSpeed tower = modelObject.cast<CoolingTowerVariableSpeed>();
+      retVal = translateCoolingTowerVariableSpeed(tower);
       break;
     }
   case openstudio::IddObjectType::OS_CurrencyType :
@@ -1120,6 +1150,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePortList(portList);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_AirChiller :
+    {
+      model::RefrigerationAirChiller refrigerationAirChiller = modelObject.cast<RefrigerationAirChiller>();
+      retVal = translateRefrigerationAirChiller(refrigerationAirChiller);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Case :
     {
       model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();
@@ -1156,6 +1192,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationCondenserWaterCooled(refrigerationCondenserWaterCooled);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_GasCooler_AirCooled:
+    {
+      model::RefrigerationGasCoolerAirCooled refrigerationGasCoolerAirCooled = modelObject.cast<RefrigerationGasCoolerAirCooled>();
+      retVal = translateRefrigerationGasCoolerAirCooled(refrigerationGasCoolerAirCooled);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction:
     {
       model::RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = modelObject.cast<RefrigerationSubcoolerLiquidSuction>();
@@ -1180,6 +1222,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationSystem(refrigerationSystem);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_TranscriticalSystem :
+    {
+      model::RefrigerationTranscriticalSystem refrigerationTranscriticalSystem = modelObject.cast<RefrigerationTranscriticalSystem>();
+      retVal = translateRefrigerationTranscriticalSystem(refrigerationTranscriticalSystem);
+      break;
+    }    
   case openstudio::IddObjectType::OS_Refrigeration_WalkIn :
     {
       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
@@ -1741,9 +1789,11 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_Water);
   result.push_back(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
+  result.push_back(IddObjectType::OS_Coil_Heating_Desuperheater);
   result.push_back(IddObjectType::OS_Coil_Heating_Gas);
   result.push_back(IddObjectType::OS_Coil_Heating_Water);
   result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
+  result.push_back(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
   result.push_back(IddObjectType::OS_Connection);
   result.push_back(IddObjectType::OS_Connector_Mixer);
   result.push_back(IddObjectType::OS_Connector_Splitter);
@@ -1782,6 +1832,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
+  result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

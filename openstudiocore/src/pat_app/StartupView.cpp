@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -197,6 +197,31 @@ StartupView::StartupView(QWidget *parent) :
 }
 
 void StartupView::paintEvent(QPaintEvent *)
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+LoadingProjectView::LoadingProjectView(QWidget * parent)
+{
+  setStyleSheet("openstudio--pat--LoadingProjectView { background: #808080; }");
+
+  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  mainVLayout->setContentsMargins(10,10,10,10);
+  mainVLayout->setSpacing(10);
+  mainVLayout->setAlignment(Qt::AlignCenter);
+  setLayout(mainVLayout);
+
+  QLabel * label = new QLabel();
+  label->setWordWrap(true);
+  label->setText("Please wait while the project loads...");
+  mainVLayout->addWidget(label); 
+  label->setStyleSheet("QLabel { font-size: 30px; font: bold; color: #242D31; }");
+}
+
+void LoadingProjectView::paintEvent(QPaintEvent *)
 {
   QStyleOption opt;
   opt.init(this);

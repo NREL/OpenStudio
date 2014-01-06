@@ -1,17 +1,17 @@
 /**********************************************************************
-*  Copyright (c) 2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
-*
+*  
 *  This library is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU Lesser General Public
 *  License as published by the Free Software Foundation; either
 *  version 2.1 of the License, or (at your option) any later version.
-*
+*  
 *  This library is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 *  Lesser General Public License for more details.
-*
+*  
 *  You should have received a copy of the GNU Lesser General Public
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -254,7 +254,7 @@ std::vector<TimeSeries> PrjModel::zoneInfiltration(SimFile *sim)
         else
         {
           // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
-          // results file for some reason - which unlikely to be accidental. So there must be a good reason
+          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
           // for getting here, and for now we won't issue a warning.
         }
       }
@@ -279,6 +279,85 @@ std::vector<TimeSeries> PrjModel::zoneInfiltration(SimFile *sim)
       }
     }
     results.push_back(openstudio::TimeSeries(sim->dateTimes(),inf,"kg/s"));
+  }
+  return results;
+}
+
+std::vector<TimeSeries> PrjModel::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
+{
+  // This should probably include a lot more checks of things and is written in
+  // somewhat strange way to avoid taking too much advantage of the specifics 
+  // of the text form outputs.
+  std::vector<TimeSeries> results;
+  std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
+  unsigned int ntimes = 1;
+  std::vector<DateTime> dateTimes = sim->dateTimes();
+  if(sim->dateTimes().size()!=1)
+  {
+    ntimes = sim->dateTimes().size()-1;
+    dateTimes = std::vector<DateTime>(dateTimes.begin() + 1,dateTimes.end());
+  }
+  for(unsigned int i=0; i<pathNrs.size(); i++)
+  {
+    Vector inf = createVector(std::vector<double>(ntimes,0.0));
+    if(pathNrs[i]<=0 || (unsigned)pathNrs[i] > d->paths.size())
+    {
+      // Possibly should issue a warning here, the path number is out of range
+    }
+    else
+    {
+      contam::Path path = d->paths[pathNrs[i]-1];
+      if(path.pzn() == -1)
+      {
+        // This flow path is negative for flow into zone
+        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
+        if(optFlow)
+        {
+          Vector flow = optFlow.get().values();
+          for(unsigned int k=0; k<ntimes; k++)
+          {
+            if(flow[k] < 0)
+            {
+              inf[k] = -flow[k];
+            }
+          }
+        }
+        else
+        {
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
+          // for getting here, and for now we won't issue a warning.
+        }
+      }
+      else if(path.pzm() == -1)
+      {
+        // This flow path is positive for flow into zone
+        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
+        if(optFlow)
+        {
+          Vector flow = optFlow.get().values();
+          for(unsigned int k=0; k<ntimes; k++)
+          {
+              if(flow[k] > 0)
+              {
+              inf[k] = flow[k];
+            }
+          }
+        }
+        else
+        {
+          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
+          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
+          // for getting here, and for now we won't issue a warning.
+        }
+      }
+      else
+      {
+        // Another situation that might need a warning, since the path is not connected to the ambient
+      }
+    }
+    // Save the time series
+    results.push_back(openstudio::TimeSeries(dateTimes,inf,"kg/s"));
   }
   return results;
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -168,11 +168,11 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
 
   void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setSupplyAirFan(HVACComponent& fansOnOff);
+  bool setSupplyAirFan(HVACComponent& fansOnOff);
 
-  void setHeatingCoil(HVACComponent& heatingCoils);
+  bool setHeatingCoil(HVACComponent& heatingCoils);
 
-  void setCoolingCoil(HVACComponent& coolingCoils);
+  bool setCoolingCoil(HVACComponent& coolingCoils);
 
   bool setMaximumCyclingRate(boost::optional<double> maximumCyclingRate);
 

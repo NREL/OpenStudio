@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -37,6 +37,15 @@ namespace openstudio{
     Vector result(n);
     for (unsigned i = 0; i < n; ++i) {
       result[i] = values[i];
+    }
+    return result;
+  }
+
+  Vector createVector(const std::vector<long>& values) {
+    unsigned n = values.size();
+    Vector result(n);
+    for (unsigned i = 0; i < n; ++i) {
+      result[i] = (double)(values[i]);
     }
     return result;
   }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/CurveCubic.hpp>
+#include <model/RefrigerationAirChiller.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 
@@ -56,8 +57,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
 //RefrigeratedCaseorWalkinorCaseAndWalkInListName
   std::vector<RefrigerationCase> cases = modelObject.cases();
   std::vector<RefrigerationWalkIn> walkins = modelObject.walkins();
+  std::vector<RefrigerationAirChiller> airChillers = modelObject.airChillers();
 
-  if( !cases.empty() || !walkins.empty() )
+  if( !cases.empty() || !walkins.empty() || !airChillers.empty() )
   {
     // Name
     name = " Case and Walkin List";
@@ -94,6 +96,20 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
         IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
 
         eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_walkin->name().get()); 
+      }
+    }
+
+    for( std::vector<RefrigerationAirChiller>::iterator it = airChillers.begin();
+       it != airChillers.end();
+       it++ )
+    {
+      boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
+
+      if( _airChiller )
+      {
+        IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+
+        eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName,_airChiller->name().get()); 
       }
     }
   }

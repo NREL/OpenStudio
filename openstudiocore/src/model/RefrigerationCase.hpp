@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
 class CurveCubic;
@@ -63,10 +62,8 @@ class MODEL_API RefrigerationCase : public ParentObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> thermalZone() const;
 
   double ratedAmbientTemperature() const;
@@ -101,7 +98,6 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   bool isLatentCaseCreditCurveTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveCubic.
   CurveCubic latentCaseCreditCurve() const;
 
   double standardCaseFanPowerperUnitLength() const;
@@ -118,7 +114,6 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   boost::optional<double> installedCaseLightingPowerperUnitLength() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> caseLightingSchedule() const;
 
   double fractionofLightingEnergytoCase() const;
@@ -157,27 +152,22 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   bool isCaseDefrostTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> caseDefrostSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> caseDefrostDripDownSchedule() const;
 
   std::string defrostEnergyCorrectionCurveType() const;
 
   bool isDefrostEnergyCorrectionCurveTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveCubic.
   boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
 
   double underCaseHVACReturnAirFraction() const;
 
   bool isUnderCaseHVACReturnAirFractionDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> caseCreditFractionSchedule() const;
 
   boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature() const;
@@ -190,12 +180,10 @@ class MODEL_API RefrigerationCase : public ParentObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setThermalZone(const ThermalZone& thermalZone);
 
   void resetThermalZone();
@@ -232,7 +220,6 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetLatentCaseCreditCurveType();
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
   bool setLatentCaseCreditCurve(const CurveCubic& curveCubic);
 
   bool setStandardCaseFanPowerperUnitLength(double standardCaseFanPowerperUnitLength);
@@ -251,7 +238,6 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetInstalledCaseLightingPowerperUnitLength();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setCaseLightingSchedule(Schedule& schedule);
 
   void resetCaseLightingSchedule();
@@ -292,12 +278,10 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetCaseDefrostType();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setCaseDefrostSchedule(Schedule& schedule);
 
   void resetCaseDefrostSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setCaseDefrostDripDownSchedule(Schedule& schedule);
 
   void resetCaseDefrostDripDownSchedule();
@@ -306,7 +290,6 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetDefrostEnergyCorrectionCurveType();
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
   bool setDefrostEnergyCorrectionCurve(const CurveCubic& curveCubic);
 
   void resetDefrostEnergyCorrectionCurve();
@@ -315,12 +298,10 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetUnderCaseHVACReturnAirFraction();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setRefrigeratedCaseRestockingSchedule(Schedule& schedule);
 
   void resetRefrigeratedCaseRestockingSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setCaseCreditFractionSchedule(Schedule& schedule);
 
   void resetCaseCreditFractionSchedule();

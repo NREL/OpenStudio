@@ -13,7 +13,8 @@ namespace openstudio {
  *  the items in \ref core_sec, \ref idd_sec, and \ref idf_sec. \ref bcl_sec, \ref data_sec, 
  *  \ref filetypes_sec, \ref sql_sec, \ref time_sec, and \ref units_sec are also quite 
  *  fundamental. For automatically generating tables and reports, see \ref document_sec. The 
- *  code in \ref plot_sec is to be deprecated in favor of plots generated with vtkCharts.
+ *  code in \ref plot_sec is to be deprecated in favor of plots generated with the JavaScript
+ *  charting library D3.
  *
  *  The C++ standard template library (STL) and some boost libraries are used throughout 
  *  OpenStudio. Please familiarize yourself with std::vector, std::set, and iterators in the STL 
@@ -100,7 +101,7 @@ namespace openstudio {
  *  \section plot_sec Plot
  *
  *  Methods used in ResultsViewer for plotting data. Long-term plan is to deprecate this
- *  in favor of vtkCharts.
+ *  in favor of D3.
  *
  *  \section sql_sec Sql
  *

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 
 #include <model/RefrigerationSystem.hpp>
 #include <model/RefrigerationSystem_Impl.hpp>
+#include <model/RefrigerationAirChiller.hpp>
+#include <model/RefrigerationAirChiller_Impl.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
@@ -71,12 +73,28 @@ TEST_F(ModelFixture, RefrigerationSystem_Remove)
 {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
+  RefrigerationSubcoolerMechanical mechSubcooler = RefrigerationSubcoolerMechanical(model);
+  RefrigerationSubcoolerLiquidSuction liqSuctionSubcool = RefrigerationSubcoolerLiquidSuction(model);
+
+  testObject.setRefrigerationCondenser(condenser);
+  testObject.setMechanicalSubcooler(mechSubcooler);
+  testObject.setLiquidSuctionHeatExchangerSubcooler(liqSuctionSubcool);
 
   std::vector<RefrigerationSystem> refrigerationSystems = model.getModelObjects<RefrigerationSystem>();
   EXPECT_EQ(1, refrigerationSystems.size());
 
   std::vector<ModelObjectList> refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
-  EXPECT_EQ(3, refrigerationModelObjectLists.size());
+  EXPECT_EQ(4, refrigerationModelObjectLists.size());
+
+  std::vector<RefrigerationCondenserAirCooled> refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
+  EXPECT_EQ(1, refrigerationCondensers.size());
+
+  std::vector<RefrigerationSubcoolerMechanical> refrigerationSubcoolerMechanicals = model.getModelObjects<RefrigerationSubcoolerMechanical>();
+  EXPECT_EQ(1, refrigerationSubcoolerMechanicals.size());
+
+  std::vector<RefrigerationSubcoolerLiquidSuction> refrigerationSubcoolerLiquidSuctions = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+  EXPECT_EQ(1, refrigerationSubcoolerLiquidSuctions.size());
 
   testObject.remove();
 
@@ -85,6 +103,15 @@ TEST_F(ModelFixture, RefrigerationSystem_Remove)
 
   refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
+
+  refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
+  EXPECT_EQ(0, refrigerationCondensers.size());
+
+  refrigerationSubcoolerMechanicals = model.getModelObjects<RefrigerationSubcoolerMechanical>();
+  EXPECT_EQ(0, refrigerationSubcoolerMechanicals.size());
+
+  refrigerationSubcoolerLiquidSuctions = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+  EXPECT_EQ(0, refrigerationSubcoolerLiquidSuctions.size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithDefaultData)
@@ -109,6 +136,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   ScheduleCompact wds(model);
   RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds);
   RefrigerationCompressor compressor1 = RefrigerationCompressor(model);
+  RefrigerationCompressor highStageCompressor1 = RefrigerationCompressor(model);
   RefrigerationCondenserCascade condenser1 = RefrigerationCondenserCascade(model);
   RefrigerationSubcoolerMechanical mechSubcooler = RefrigerationSubcoolerMechanical(model);
   RefrigerationSubcoolerLiquidSuction liqSuctionSubcool = RefrigerationSubcoolerLiquidSuction(model);
@@ -122,6 +150,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   testObject.addCase(case1);
   testObject.addWalkin(walkin1);
   testObject.addCompressor(compressor1);
+  testObject.addHighStageCompressor(highStageCompressor1);
   testObject.setRefrigerationCondenser(condenser1);
   testObject.setMechanicalSubcooler(mechSubcooler);
   testObject.setLiquidSuctionHeatExchangerSubcooler(liqSuctionSubcool);
@@ -129,6 +158,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   std::vector<RefrigerationCase> _cases = testObject.cases();
   std::vector<RefrigerationWalkIn> _walkins = testObject.walkins();
   std::vector<RefrigerationCompressor> _compressors = testObject.compressors();
+  std::vector<RefrigerationCompressor> _highStageCompressors = testObject.highStageCompressors();
 
   RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.minimumCondensingTemperature());
@@ -146,7 +176,10 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   std::vector<RefrigerationCompressor> compressorsClone = testObjectClone.compressors();
   EXPECT_EQ(1, compressorsClone.size());
   EXPECT_NE(compressorsClone[0].handle(), _compressors[0].handle());
-  EXPECT_NE(testObjectClone.refrigerationCondenser().handle(), condenser1.handle());
+  std::vector<RefrigerationCompressor> highStageCompressorsClone = testObjectClone.highStageCompressors();
+  EXPECT_EQ(1, highStageCompressorsClone.size());
+  EXPECT_NE(highStageCompressorsClone[0].handle(), _highStageCompressors[0].handle());
+  EXPECT_NE(testObjectClone.refrigerationCondenser().get().handle(), condenser1.handle());
   EXPECT_NE(testObjectClone.mechanicalSubcooler().get().handle(), mechSubcooler.handle());
   EXPECT_NE(testObjectClone.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcool.handle());
 }
@@ -180,6 +213,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
   ScheduleCompact wds(model);
   RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds);
   RefrigerationCompressor compressor1 = RefrigerationCompressor(model);
+  RefrigerationCompressor highStageCompressor1 = RefrigerationCompressor(model);
   RefrigerationCondenserCascade condenser1 = RefrigerationCondenserCascade(model);
   RefrigerationSubcoolerMechanical mechSubcooler = RefrigerationSubcoolerMechanical(model);
   RefrigerationSubcoolerLiquidSuction liqSuctionSubcooler = RefrigerationSubcoolerLiquidSuction(model);
@@ -193,6 +227,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
   testObject.addCase(case1);
   testObject.addWalkin(walkin1);
   testObject.addCompressor(compressor1);
+  testObject.addHighStageCompressor(highStageCompressor1);
   testObject.setRefrigerationCondenser(condenser1);
   testObject.setMechanicalSubcooler(mechSubcooler);
   testObject.setLiquidSuctionHeatExchangerSubcooler(liqSuctionSubcooler);
@@ -200,6 +235,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
   std::vector<RefrigerationCase> _cases = testObject.cases();
   std::vector<RefrigerationWalkIn> _walkins = testObject.walkins();
   std::vector<RefrigerationCompressor> _compressors = testObject.compressors();
+  std::vector<RefrigerationCompressor> _highStageCompressors = testObject.highStageCompressors();
 
   RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
 
@@ -221,7 +257,10 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
   std::vector<RefrigerationCompressor> compressorsClone = testObjectClone2.compressors();
   EXPECT_EQ(1, compressorsClone.size());
   EXPECT_NE(compressorsClone[0].handle(), _compressors[0].handle());
-  EXPECT_NE(testObjectClone2.refrigerationCondenser().handle(), condenser1.handle());
+  std::vector<RefrigerationCompressor> highStageCompressorsClone = testObjectClone2.highStageCompressors();
+  EXPECT_EQ(1, highStageCompressorsClone.size());
+  EXPECT_NE(highStageCompressorsClone[0].handle(), _highStageCompressors[0].handle());
+  EXPECT_NE(testObjectClone2.refrigerationCondenser().get().handle(), condenser1.handle());
   EXPECT_NE(testObjectClone2.mechanicalSubcooler().get().handle(), mechSubcooler.handle());
   EXPECT_NE(testObjectClone2.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcooler.handle());
 }
@@ -365,6 +404,71 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors)
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->compressorList());
 }
 
+TEST_F(ModelFixture, RefrigerationSystem_HighStageCompressors)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  std::vector<RefrigerationCompressor> highStageCompressors = testObject.highStageCompressors();
+  EXPECT_TRUE(highStageCompressors.empty());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_AddHighStageCompressor)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
+
+  EXPECT_TRUE(testObject.addHighStageCompressor(testCompressor));
+
+  std::vector<RefrigerationCompressor> highStageCompressors = testObject.highStageCompressors();
+  EXPECT_EQ(1, highStageCompressors.size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
+  RefrigerationCompressor testCompressor2 = RefrigerationCompressor(model);
+
+  testObject.addHighStageCompressor(testCompressor1);
+  testObject.addHighStageCompressor(testCompressor2);
+  testObject.removeHighStageCompressor(testCompressor1);
+
+  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  EXPECT_EQ(2, testRefrigerationCompressors.size());
+
+  std::vector<RefrigerationCompressor> highStageCompressors = testObject.highStageCompressors();
+  EXPECT_EQ(1, highStageCompressors.size());
+  EXPECT_EQ(testCompressor2.handle(), highStageCompressors[0].handle());
+
+  testObject.removeHighStageCompressor(testCompressor2);
+  testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  highStageCompressors = testObject.highStageCompressors();
+  EXPECT_EQ(2, testRefrigerationCompressors.size());
+  EXPECT_TRUE(highStageCompressors.empty());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
+  RefrigerationCompressor testCompressor2 = RefrigerationCompressor(model);
+
+  testObject.addHighStageCompressor(testCompressor1);
+  testObject.addHighStageCompressor(testCompressor2);
+  testObject.removeAllHighStageCompressors();
+
+  std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  EXPECT_EQ(2, testRefrigerationCompressors.size());
+
+  std::vector<RefrigerationCompressor> highStageCompressors = testObject.highStageCompressors();
+  EXPECT_TRUE(highStageCompressors.empty());
+  EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList());
+}
+
 TEST_F(ModelFixture, RefrigerationSystem_Cases)
 {
   Model model;
@@ -440,6 +544,84 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
 
   std::vector<RefrigerationCase> cases = testObject.cases();
   EXPECT_TRUE(cases.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_AirChillers)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+
+  std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
+  EXPECT_TRUE(airChillers.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+
+  testObject.addAirChiller(airChiller1);
+  airChillers = testObject.airChillers();
+  EXPECT_EQ(1, airChillers.size());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_AddAirChiller)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+
+  EXPECT_TRUE(testObject.addAirChiller(airChiller1));
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+  RefrigerationAirChiller airChiller2 = RefrigerationAirChiller(model, s1);
+
+  testObject.addAirChiller(airChiller1);
+  testObject.addAirChiller(airChiller2);
+  testObject.removeAirChiller(airChiller1);
+
+  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  EXPECT_EQ(2, testRefrigerationAirChillers.size());
+
+  std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
+  EXPECT_EQ(1, airChillers.size());
+  EXPECT_EQ(airChiller2.handle(), airChillers[0].handle());
+
+  testObject.removeAirChiller(airChiller2);
+  testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  airChillers = testObject.airChillers();
+  EXPECT_EQ(2, testRefrigerationAirChillers.size());
+  EXPECT_TRUE(airChillers.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+  RefrigerationAirChiller airChiller2 = RefrigerationAirChiller(model, s1);
+
+  testObject.addAirChiller(airChiller1);
+  testObject.addAirChiller(airChiller2);
+  testObject.removeAllAirChillers();
+
+  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  EXPECT_EQ(2, testRefrigerationAirChillers.size());
+
+  std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
+  EXPECT_TRUE(airChillers.empty());
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
@@ -927,20 +1109,16 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser)
   RefrigerationCondenserWaterCooled condenserWaterCooled = RefrigerationCondenserWaterCooled(model);
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserAirCooled));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserAirCooled);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserAirCooled.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserAirCooled.handle());
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserEvaporativeCooled));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserEvaporativeCooled);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserEvaporativeCooled.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserEvaporativeCooled.handle());
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserCascade));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserCascade);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserCascade.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserCascade.handle());
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserWaterCooled));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserWaterCooled);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserWaterCooled.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserWaterCooled.handle());
 
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
   EXPECT_FALSE(testObject.setRefrigerationCondenser(testCompressor));

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -54,6 +54,7 @@ namespace resultsviewer{
 const int RVD_SUCCESS = 0;
 const int RVD_UNSUPPORTEDFILEFORMAT = 1;
 const int RVD_FILEALREADYOPENED = 2;
+const int RVD_UNSUPPORTEDVERSION = 3;
 // data types 
 const int RVD_TIMESERIES = 3;
 const int RVD_ILLUMINANCEMAP = 4;

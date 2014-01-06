@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -301,7 +301,7 @@ namespace detail {
     
     success =  WaterToAirComponent_Impl::addToNode( node );
     
-    if( success && (! containingHVACComponent()) )
+    if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) )
     {
       if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() )
       {

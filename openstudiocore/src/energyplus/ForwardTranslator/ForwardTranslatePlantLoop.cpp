@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -389,6 +389,12 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         break;
       }      
       case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
+      {
+        condenserComponents.push_back(*it);
+        coolingComponents.push_back(*it);
+        break;
+      }
+      case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
       {
         condenserComponents.push_back(*it);
         coolingComponents.push_back(*it);

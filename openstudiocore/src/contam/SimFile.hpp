@@ -1,17 +1,17 @@
 /**********************************************************************
-*  Copyright (c) 2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
-*
+*  
 *  This library is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU Lesser General Public
 *  License as published by the Free Software Foundation; either
 *  version 2.1 of the License, or (at your option) any later version.
-*
+*  
 *  This library is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 *  Lesser General Public License for more details.
-*
+*  
 *  You should have received a copy of the GNU Lesser General Public
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -35,8 +35,7 @@ class CONTAM_API SimFile {
 public:
   explicit SimFile(openstudio::path path);
 
-  // These next three functions are probably not needed
-  /*
+  // These are provided for advanced use
   std::vector<std::vector<double> > dP() const
   {
     return m_dP;
@@ -49,9 +48,21 @@ public:
   {
     return m_F1;
   }
-  */
+  std::vector<std::vector<double> > T() const
+  {
+    return m_T;
+  }
+  std::vector<std::vector<double> > P() const
+  {
+    return m_P;
+  }
+  std::vector<std::vector<double> > D() const
+  {
+    return m_D;
+  }
 
-  // Future use should be confined to these
+
+  // Most use should be confined to these
   boost::optional<openstudio::TimeSeries> pathDeltaP(int nr) const;
   boost::optional<openstudio::TimeSeries> pathFlow0(int nr) const;
   boost::optional<openstudio::TimeSeries> pathFlow1(int nr) const;

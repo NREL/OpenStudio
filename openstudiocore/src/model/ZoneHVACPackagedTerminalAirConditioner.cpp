@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -415,6 +415,10 @@ namespace detail {
     bool isAllowedType = false;
 
     if( fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume )
+    {
+      isAllowedType = true;
+    }
+    else if( fan.iddObjectType() == IddObjectType::OS_Fan_OnOff )
     {
       isAllowedType = true;
     }

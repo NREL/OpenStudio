@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -275,6 +275,8 @@ namespace resultsviewer{
     case RVD_FILEALREADYOPENED:
       QMessageBox::information(this, tr("File Open"), tr("File already opened."));
       break;
+    case RVD_UNSUPPORTEDVERSION:
+      QMessageBox::information(this, tr("File Open"), tr("Unsupported EnergyPlus version. Continuing, unknown errors may occur."));
     case RVD_SUCCESS:
       m_treeView->displayFile(alias,  m_data->sqlFile(filename), resultsviewer::TreeView::tvdtVariableName);
 

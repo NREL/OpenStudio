@@ -1,17 +1,17 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
-*
+*  
 *  This library is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU Lesser General Public
 *  License as published by the Free Software Foundation; either
 *  version 2.1 of the License, or (at your option) any later version.
-*
+*  
 *  This library is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 *  Lesser General Public License for more details.
-*
+*  
 *  You should have received a copy of the GNU Lesser General Public
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -102,12 +102,28 @@ namespace sdd {
   const double footToMeter =  0.3048;
   const double meterToFoot = 1.0/0.3048;
 
+  double fixAngle(double angle){
+    while (angle >= 360){
+      angle -= 360;
+    }
+    while (angle < 0){
+      angle += 360;
+    }
+    return angle;
+  }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
     QDomElement nameElement = element.firstChildElement("Name");
+
+    // http://code.google.com/p/cbecc/issues/detail?id=378
+    // The angle between the model Y-Axis and True North, measured clockwise from the model Y-Axis in Degrees. 
     QDomElement northAngleElement = element.firstChildElement("NAng");
+    // The angle between True North and the the model Y-Axis, measured clockwise from True North in Degrees.  
+    QDomElement buildingAzimuthElement = element.firstChildElement("BldgAz"); // this corresponds to Building::North Axis
+
     QDomNodeList spaceElements = element.elementsByTagName("Spc");
     QDomNodeList thermalZoneElements = element.elementsByTagName("ThrmlZn");
     QDomNodeList buildingStoryElements = element.elementsByTagName("Story");
@@ -115,9 +131,14 @@ namespace sdd {
     OS_ASSERT(!nameElement.isNull());
     building.setName(escapeName(nameElement.text()));
 
-    if(!northAngleElement.isNull()){
-      double northAngle = northAngleElement.text().toDouble();
-      building.setNorthAxis(northAngle);
+    if(!buildingAzimuthElement.isNull()){
+      double buildingAzimuth = fixAngle(buildingAzimuthElement.text().toDouble());
+      building.setNorthAxis(buildingAzimuth);
+    }else if(!northAngleElement.isNull()){
+      // use NAng for backwards compatibility with SDD's only having NAng
+      double northAngle = fixAngle(northAngleElement.text().toDouble());
+      double buildingAzimuth = 360.0 - northAngle;
+      building.setNorthAxis(buildingAzimuth);
     }
 
     // translate shadingSurfaces
@@ -1266,7 +1287,10 @@ namespace sdd {
         std::string scheduleName = escapeName(scheduleReferenceElement.text());
         boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
         if(schedule){
-          shadingSurface.setTransmittanceSchedule(*schedule);
+          bool test = shadingSurface.setTransmittanceSchedule(*schedule);
+          if (!test){
+            LOG(Error, "Failed to assign schedule '" << scheduleName << "' to shading surface '" << name << "'");
+          }
         }else{
           LOG(Error, "Cannot find schedule '" << scheduleName << "'");
         }
@@ -1288,19 +1312,29 @@ namespace sdd {
     }
 
     std::string description = boost::lexical_cast<std::string>(solRefl) + "-" + boost::lexical_cast<std::string>(visRefl);
+    std::string constructionName = "Shading Construction " + description;
+    std::string materialName = "Shading Material " + description;
 
     // create a construction with these properties
     model::Construction construction(model);
-    construction.setName("Shading Construction " + description);
+    construction.setName(constructionName);
 
     model::MasslessOpaqueMaterial material(model);
-    material.setSolarAbsorptance(1.0-solRefl);
-    material.setVisibleAbsorptance(1.0-visRefl);
-    material.setName("Shading Material" + description);
+    material.setName(materialName);
+
+    bool test = material.setSolarAbsorptance(1.0-solRefl);
+    if (!test){
+      LOG(Error, "Failed to assign solar absorptance '" << 1.0-solRefl << "' to material '" << materialName << "'");
+    }
+
+    test = material.setVisibleAbsorptance(1.0-visRefl);
+    if (!test){
+      LOG(Error, "Failed to assign visible absorptance '" << 1.0-visRefl << "' to material '" << materialName << "'");
+    }
 
     std::vector<model::Material> materials;
     materials.push_back(material);
-    bool test = construction.setLayers(materials);
+    test = construction.setLayers(materials);
     OS_ASSERT(test); // what type of error handling do we want?
 
     m_shadingConstructionMap.insert(std::make_pair<std::pair<double, double>, model::ConstructionBase>(key, construction));
@@ -1318,10 +1352,18 @@ namespace sdd {
     result.appendChild(nameElement);
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
+    double buildingAzimuth = fixAngle(building.northAxis());
+    double northAngle = 360.0 - buildingAzimuth;
+
     // north angle
     QDomElement northAngleElement = doc.createElement("NAng");
     result.appendChild(northAngleElement);
-    northAngleElement.appendChild(doc.createTextNode(QString::number(building.northAxis())));
+    northAngleElement.appendChild(doc.createTextNode(QString::number(northAngle)));
+
+    // building azimuth
+    QDomElement buildingAzimuthElement = doc.createElement("BldgAz");
+    result.appendChild(buildingAzimuthElement);
+    buildingAzimuthElement.appendChild(doc.createTextNode(QString::number(buildingAzimuth)));
 
     // translate storys
     std::vector<model::BuildingStory> buildingStories = building.model().getModelObjects<model::BuildingStory>();
@@ -1911,25 +1953,33 @@ namespace sdd {
           
           if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
             model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
-            boost::optional<double> test = outerMaterial.solarReflectance();
-            if (test){
-              solRefl = *test;
+            if (!outerMaterial.isSolarAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.solarReflectance();
+              if (test){
+                solRefl = *test;
+              }
             }
-            test = outerMaterial.visibleReflectance();
-            if (test){
-              visRefl = *test;
+            if (!outerMaterial.isVisibleAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.visibleReflectance();
+              if (test){
+                visRefl = *test;
+              }
             }
           }
 
           if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
             model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
-            boost::optional<double> test = outerMaterial.solarReflectance();
-            if (test){
-              solRefl = *test;
+            if (!outerMaterial.isSolarAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.solarReflectance();
+              if (test){
+                solRefl = *test;
+              }
             }
-            test = outerMaterial.visibleReflectance();
-            if (test){
-              visRefl = *test;
+            if (!outerMaterial.isVisibleAbsorptanceDefaulted()){
+              boost::optional<double> test = outerMaterial.visibleReflectance();
+              if (test){
+                visRefl = *test;
+              }
             }
           }
         }
