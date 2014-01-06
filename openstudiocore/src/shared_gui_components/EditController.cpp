@@ -249,7 +249,7 @@ InputController::InputController(EditController * editController,const ruleset::
     }
     else {
       boolInputView->checkBox->setChecked(false);
-      setValue(false);
+      m_argument.setValue(false);
     }
 
     bool bingo = connect(boolInputView->checkBox,SIGNAL(clicked(bool)),this,SLOT(setValue(bool)));
