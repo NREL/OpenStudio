@@ -622,6 +622,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translatePeople(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Refrigeration_Case :
+    {
+      // modelObject = translateRefrigerationCase(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Refrigeration_Compressor :
+    {
+      // modelObject = translateRefrigerationCompressor(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::RunPeriod :
     {
       modelObject = translateRunPeriod(workspaceObject);

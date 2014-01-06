@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class RefrigerationSystem;
 
 namespace detail {
@@ -65,7 +64,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: RefrigerationSystem.
     boost::optional<RefrigerationSystem> capacityProvidingSystem() const;
 
     boost::optional<double> outletControlTemperature() const;
@@ -74,7 +72,6 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: RefrigerationSystem.
     bool setCapacityProvidingSystem(const boost::optional<RefrigerationSystem>& refrigerationSystem);
 
     void resetCapacityProvidingSystem();
