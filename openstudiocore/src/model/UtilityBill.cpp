@@ -1283,9 +1283,13 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     double outOfRangeValue = std::numeric_limits<double>::min();
     timeseries->setOutOfRangeValue(outOfRangeValue);
 
+    // includes year in billing period start date
+    Date startDate = this->startDate();
+    Date endDate = this->endDate();
+
     // intentionally leave out calendar year
-    Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth());
-    Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth());
+    Date runPeriodStartDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
+    Date runPeriodEndDate = Date(endDate.monthOfYear(), endDate.dayOfMonth());
 
     DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
     DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
