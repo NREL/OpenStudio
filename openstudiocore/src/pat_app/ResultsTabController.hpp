@@ -55,11 +55,15 @@ class ResultsTabController : public QObject
 
   private slots:
 
+    void selectView(int);
+
     void onOpenButtonClicked();
 
     void openDirectory();
 
     void downloadResults();
+
+    void dataPointDetailsComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
     void enableDownloadResultsButton();
 
@@ -74,9 +78,12 @@ class ResultsTabController : public QObject
     QSharedPointer<DataPointResultItemDelegate> m_dataPointResultItemDelegate;
     QSharedPointer<DataPointCalibrationListController> m_dataPointCalibrationListController;
     QSharedPointer<DataPointCalibrationItemDelegate> m_dataPointCalibrationItemDelegate;
+
+    QSharedPointer<OSItemSelectionController> m_currentSelectionController;
 };
 
 /// Item representing a data point on the results tab
+/// Used for both the standard and calibration results
 class DataPointResultListItem : public OSListItem
 {
   Q_OBJECT
@@ -88,30 +95,6 @@ class DataPointResultListItem : public OSListItem
                           bool alternateRow);
 
   virtual ~DataPointResultListItem() {}
-
-  openstudio::analysis::DataPoint dataPoint() const;
-  openstudio::analysis::DataPoint baselineDataPoint() const;
-  bool alternateRow() const;
-
- private:
-
-  openstudio::analysis::DataPoint m_dataPoint;
-  openstudio::analysis::DataPoint m_baselineDataPoint;
-  bool m_alternateRow;
-};
-
-/// Item representing a data point on the calibration tab
-class DataPointCalibrationListItem : public OSListItem
-{
-  Q_OBJECT
-
- public:
-
-  DataPointCalibrationListItem(const openstudio::analysis::DataPoint& dataPoint,
-                               const openstudio::analysis::DataPoint& baselineDataPoint,
-                               bool alternateRow);
-
-  virtual ~DataPointCalibrationListItem() {}
 
   openstudio::analysis::DataPoint dataPoint() const;
   openstudio::analysis::DataPoint baselineDataPoint() const;

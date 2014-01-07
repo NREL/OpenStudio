@@ -61,7 +61,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   static std::vector<std::string> suctionTemperatureControlTypeValues();
 
-  static std::vector<std::string> numberofCompressorStagesValues();
+  // static std::vector<std::string> numberofCompressorStagesValues();
 
   static std::vector<std::string> intercoolerTypeValues();
 
@@ -119,7 +119,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   //boost::optional<ModelObjectList> refrigerationTransferLoadList() const;
 
   // TODO: Check return type. From object lists, some candidates are: RefrigerationAllTypesCondenser.
-  ModelObject refrigerationCondenser() const;
+  boost::optional<ModelObject> refrigerationCondenser() const;
 
   // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
   //ModelObjectList compressorList() const;

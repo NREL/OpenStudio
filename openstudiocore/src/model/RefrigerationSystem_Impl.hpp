@@ -94,7 +94,7 @@ namespace detail {
     boost::optional<ModelObjectList> refrigerationTransferLoadList() const;
 
     // TODO: Check return type. From object lists, some candidates are: RefrigerationAllTypesCondenser.
-    ModelObject refrigerationCondenser() const;
+    boost::optional<ModelObject> refrigerationCondenser() const;
 
     // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     ModelObjectList compressorList() const;

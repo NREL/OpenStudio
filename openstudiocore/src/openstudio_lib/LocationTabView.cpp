@@ -55,6 +55,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSizePolicy>
+#include <QMessageBox>
 
 #define NAME "Name: "
 #define LATITUDE "Latitude: "
@@ -220,7 +221,10 @@ void LocationView::update()
     site.setLongitude(weatherFile->longitude());
     site.setElevation(weatherFile->elevation());
     site.setTimeZone(weatherFile->timeZone());
-  }
+  } else {
+    m_nameLbl->setText("");
+    m_weatherFileLbl->setText("");
+  } 
 
   boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
   if (site){
@@ -244,7 +248,12 @@ void LocationView::update()
     temp.setNum(site->timeZone());
     info += temp;
     m_timeZoneLbl->setText(info);
-  }
+  } else {
+    m_latitudeLbl->setText("");
+    m_longitudeLbl->setText("");
+    m_elevationLbl->setText("");
+    m_timeZoneLbl->setText("");
+  } 
 
   m_designDaysLbl->setText(m_lastDdyPathOpened);
 
@@ -274,11 +283,16 @@ void LocationView::onWeatherFileBtnClicked()
     
     openstudio::path epwPath = toPath(fileName);
     openstudio::path newPath = toPath(m_modelTempDir) / toPath("resources/files") / toPath(epwPath.filename());
+    openstudio::path previousEPWPath;
+
+    StringStreamLogSink ss;
+    ss.setChannelRegex(boost::regex(".*EpwFile.*"));
+    ss.setLogLevel(Error);
 
     try{
       
       boost::optional<openstudio::model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
-      openstudio::path previousEPWPath;
+      
       if (weatherFile){
         boost::optional<openstudio::path> temp = weatherFile->path();
         if (temp){
@@ -297,6 +311,7 @@ void LocationView::onWeatherFileBtnClicked()
 
       double totalDays = (epwFile.endDate() - epwFile.startDate()).totalDays() + 1;
       if (totalDays > 366){
+        LOG_FREE(Error, "openstudio.EpwFile", "Cannot accept weather file with more than 366 days of data");
         throw openstudio::Exception("Cannot accept weather file with more than 366 days of data");
       }
 
@@ -337,6 +352,26 @@ void LocationView::onWeatherFileBtnClicked()
     }catch(...){
 
       boost::filesystem::remove_all(newPath);
+
+      QMessageBox box(QMessageBox::Warning, "Failed To Set Weather File", QString("Failed To Set Weather File To ") + fileName, QMessageBox::Ok);
+      box.setDetailedText(toQString(ss.string())); 
+      box.exec();
+
+      boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
+      if (weatherFile){
+        boost::optional<openstudio::path> weatherFilePath = weatherFile->path();
+        if (weatherFilePath){
+          if (!previousEPWPath.empty()){
+            if (previousEPWPath.filename() != weatherFilePath->filename()){
+              weatherFile->remove();
+            }else if (!boost::filesystem::exists(previousEPWPath)){
+              weatherFile->remove();
+            }
+          }
+        }
+      }
+
+      update();
     }
   }
 }

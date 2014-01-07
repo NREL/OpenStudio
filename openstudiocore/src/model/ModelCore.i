@@ -151,6 +151,7 @@ UNIQUEMODELOBJECT_TEMPLATES(RadianceParameters);
 MODELOBJECT_TEMPLATES(Meter);
 MODELOBJECT_TEMPLATES(LifeCycleCost); // Probably need to make a ModelEconomics.i file for these
 MODELOBJECT_TEMPLATES(UtilityBill); // Probably need to make a ModelEconomics.i file for these
+MODELEXTENSIBLEGROUP_TEMPLATES(BillingPeriod)
 MODELOBJECT_TEMPLATES(ComponentData);
 MODELOBJECT_TEMPLATES(ScheduleTypeLimits); // Needed for OutputVariable
 MODELOBJECT_TEMPLATES(ScheduleBase); // Needed for OutputVariable

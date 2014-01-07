@@ -129,6 +129,7 @@ SET( project_directories
   energyplus
   radiance
   gbxml
+  contam
   isomodel
   osversion
   ruleset
@@ -140,7 +141,6 @@ SET( project_directories
   resultsviewer
   model_editor
   openstudio_lib
-  plugin
   openstudio_app
   pat_app
   sdd
@@ -841,6 +841,7 @@ ELSE( WIN32 )
   SET(QTWINMIGRATE_EXPORT "")
 ENDIF( WIN32 )
 
+
 export(TARGETS openstudio_runmanager 
                openstudio_project
                openstudio_osversion
@@ -855,8 +856,8 @@ export(TARGETS openstudio_runmanager
                openstudio_gbxml
                openstudio_isomodel
                openstudio_lib
-               openstudio_plugin
                openstudio_sdd
+               openstudio_contam
                ${LIBSSH_EXPORT}
                ${QTWINMIGRATE_EXPORT}
                zkexpat
@@ -889,7 +890,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_1_0_20131018.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_2_0_20131220.pdf" DESTINATION . )
 
 ###############################################################################
 
@@ -911,18 +912,7 @@ IF (NOT UNIX)
     
   install( DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION . )
   
-  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/ruby-install")
-  
-  execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/ruby-install"
-    RESULT_VARIABLE rv)
-  
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/ruby-1.8.6-msvc.zip"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install"
-    RESULT_VARIABLE rv)
-  
-  file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/ruby-install/ruby/bin")
-  
-  install( DIRECTORY "${CMAKE_BINARY_DIR}/ruby-install" DESTINATION . )
+  install( DIRECTORY "${CMAKE_BINARY_DIR}/../../../Ruby-prefix/src/Ruby/" DESTINATION "ruby-install/ruby" )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   INCLUDE(InstallRequiredSystemLibraries)

@@ -66,6 +66,7 @@
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
 
@@ -141,6 +142,8 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
   mainWindow = new PatMainWindow();
 
   m_startupView = new StartupView();
+
+  m_loadingProjectView = new LoadingProjectView();
 
   // Main Right Column
   m_mainRightColumnController = QSharedPointer<MainRightColumnController>(new MainRightColumnController()),
@@ -257,9 +260,11 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
 PatApp::~PatApp()
 {
-  if( mainWindow ) { delete mainWindow; }
+  delete mainWindow;
 
-  if( m_startupView ) { delete m_startupView; }
+  delete m_startupView;
+
+  delete m_loadingProjectView;
 }
 
 PatApp * PatApp::instance()
@@ -542,6 +547,7 @@ void PatApp::create()
     openstudio::path projectDir = openstudio::toPath(fileName);
     openstudio::analysisdriver::SimpleProjectOptions options;
     options.setPauseRunManagerQueue(true); // do not start running when creating
+    options.setInitializeRunManagerUI(false);
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::createPATProject(projectDir, options);
     if(project.is_initialized()){
@@ -730,6 +736,23 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
 
       // refresh the measures tab
       m_measuresTabController->refreshAllViews();
+
+      // add standard report if not there (is not added on opening old projects)
+      if (!m_project->getStandardReportWorkflowStep()) {
+        m_project->insertStandardReportWorkflowStep();
+      }
+
+      // update whether workflow contains calibration report
+      if (m_project->shouldIncludeCalibrationReports()) {
+        if (!m_project->getCalibrationReportWorkflowStep()) {
+          m_project->insertCalibrationReportWorkflowStep();
+        }
+      }
+      else {
+        if (m_project->getCalibrationReportWorkflowStep()) {
+          m_project->clearCalibrationReportWorkflowStep();
+        }
+      }
       
       // get new number of variables and report out how many fixed measures were added
       int nvarsAdded = m_project->analysis().problem().numVariables() - nvars;
@@ -906,6 +929,9 @@ void PatApp::showVerticalTab(int verticalId)
 {
   m_mainTabId = verticalId;
 
+  // get rid of the view before destroying all the widgets
+  mainWindow->verticalTabWidget->mainViewSwitcher->clear();
+
   m_designAlternativesTabController.clear();
   m_runTabController.clear();
   m_measuresTabController.clear();
@@ -959,6 +985,13 @@ void PatApp::showStartupView()
   mainWindow->hideRightColumn();
   mainWindow->verticalTabWidget->selectNone();
   mainWindow->verticalTabWidget->mainViewSwitcher->setView(m_startupView);
+}
+
+void PatApp::showLoadingProjectView()
+{
+  mainWindow->hideRightColumn();
+  mainWindow->verticalTabWidget->selectNone();
+  mainWindow->verticalTabWidget->mainViewSwitcher->setView(m_loadingProjectView);
 }
 
 void PatApp::clearAllResults()
@@ -1189,12 +1222,15 @@ bool PatApp::openFile(const QString& fileName)
 {
   if(fileName.length() > 0)
   {
+    showLoadingProjectView();
+    processEvents();
     QFileInfo fileInfo(fileName);
     QDir dir = fileInfo.dir();
     QString dirAbsolutePath = dir.absolutePath();
     openstudio::path projectDir = openstudio::toPath(dirAbsolutePath);
     openstudio::analysisdriver::SimpleProjectOptions options;
     options.setPauseRunManagerQueue(true); // do not start running when opening
+    options.setInitializeRunManagerUI(false);
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::openPATProject(projectDir, options);
     if(project.is_initialized()){
@@ -1208,6 +1244,15 @@ bool PatApp::openFile(const QString& fileName)
       } else {
         QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
       }
+      openstudio::path osmForThisOsp = project->projectDir().parent_path() / toPath(project->projectDir().stem());
+      osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
+      if (boost::filesystem::exists(osmForThisOsp)) {
+        QMessageBox::warning(mainWindow,
+                             "PAT Project Associated with an OSM",
+                             QString("This project appears to be associated with the OpenStudio Application file '") + 
+                             toQString(osmForThisOsp) + 
+                             QString("'. For best results, 'Save as ...' this project elsewhere before continuing your work."));
+      }
       return true;
     } else {
       if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
@@ -1220,6 +1265,7 @@ bool PatApp::openFile(const QString& fileName)
                              "Error Opening Project",
                              QString("Unable to open project at '") + dirAbsolutePath + QString("'."));
       }
+      showStartupView();
     }
   }
 

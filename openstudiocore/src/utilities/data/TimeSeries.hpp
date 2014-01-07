@@ -46,19 +46,28 @@ namespace openstudio{
 
         /// constructor from start date, interval length, values, and units
         /// first reporting interval ends at Date + Time(0) + intervalLength
+        /// throws if values is empty
         TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units);
 
         /// constructor from start date and time, interval length, values, and units
+        /// throws if values is empty
         TimeSeries_Impl(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
 
         /// constructor from first report date and time, days from first report vector, values, and units
+        /// throws if values is empty, daysFromFirstReport and values have different lengths, or daysFromFirstReport is not sorted in ascending order
         TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units);
 
         /// constructor from first report date and time, days from first report , values, and units
+        /// throws if values is empty, daysFromFirstReport and values have different lengths, or daysFromFirstReport is not sorted in ascending order
         TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units);
 
         /// constructor from date times, values, and units
+        /// throws if values is empty, daysFromFirstReport and values have different lengths, or dateTimes is not sorted in ascending order
         TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
+
+        /// constructor from first report date and time, seconds from first report vector, values, and units
+        /// throws if values is empty, daysFromFirstReport and values have different lengths, or secondsFromFirstReport is not sorted in ascending order
+        TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
 
         // virtual destructor
         ~TimeSeries_Impl() {}
@@ -69,18 +78,32 @@ namespace openstudio{
         /// date and time of first report value
         openstudio::DateTime firstReportDateTime() const;
 
+        /// date and times at which values are reported, these are the end of each reporting interval 
+        DateTimeVector dateTimes() const;
+
         /// time in days from end of the first reporting interval
         openstudio::Vector daysFromFirstReport() const;
+
         /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
         double daysFromFirstReport(const unsigned& i) const;
 
+        /// time in seconds from end of the first reporting interval
+        std::vector<long> secondsFromFirstReport() const;
+
+        /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+        long secondsFromFirstReport(const unsigned& i) const;
+
         /// values
         openstudio::Vector values() const;
+
         /// values at index i to prevent inplicit vector copy for single value
         double values(const unsigned& i) const;
 
         /// units
         const std::string units() const;
+
+        /// get value at number of seconds from start date and time
+        double valueAtSecondsFromFirstReport(long secondsFromFirstReport) const;
 
         /// get value at number of days from start date and time
         /// Note that rounding errors may occur - see trac 1380 and 
@@ -118,8 +141,9 @@ namespace openstudio{
         // fully qualified first report date
         DateTime m_firstReportDateTime;
 
-        // fractional days from first report date time, used for quick interpolation
-        Vector m_daysFromFirstReport; 
+        // integer seconds from first report date time, used for quick interpolation
+        std::vector<long> m_secondsFromFirstReport; 
+        Vector m_secondsFromFirstReportAsVector; // same as m_secondsFromFirstReport but stored as Vector
 
         // values reported at m_dateTimes
         Vector m_values;
@@ -172,6 +196,9 @@ namespace openstudio{
       /// constructor from date times, values, and units
       TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
 
+      /// constructor from first report date and time, seconds from first report vector, values, and units
+      TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units);
+
       /// virtual destructor
       ~TimeSeries() {}
 
@@ -182,6 +209,9 @@ namespace openstudio{
       /// interval length if any
       openstudio::OptionalTime intervalLength() const;
 
+      /// date and times at which values are reported, these are the end of each reporting interval 
+      openstudio::DateTimeVector dateTimes() const;
+
       /// date and time of first report value
       openstudio::DateTime firstReportDateTime() const;
 
@@ -190,6 +220,12 @@ namespace openstudio{
 
       /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
       double daysFromFirstReport(const unsigned& i) const;
+
+      /// time in seconds from end of the first reporting interval
+      std::vector<long> secondsFromFirstReport() const;
+
+      /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+      long secondsFromFirstReport(const unsigned& i) const;
 
       /// values
       openstudio::Vector values() const;

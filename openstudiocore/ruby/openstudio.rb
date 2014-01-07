@@ -61,6 +61,7 @@ require 'openstudioutilities'
 require 'openstudioenergyplus'
 require 'openstudioradiance'
 require 'openstudiogbxml'
+require 'openstudiocontam'
 require 'openstudiomodel'
 require 'openstudiomodelcore'
 require 'openstudiomodelsimulation'
@@ -76,7 +77,6 @@ require 'openstudioanalysisdriver'
 require 'openstudiomodeleditor'
 require 'openstudioanalysis'
 require 'openstudiolib'
-require 'openstudioplugin'
 require 'openstudioisomodel'
 require 'openstudiosdd'
 
@@ -88,7 +88,7 @@ if OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Dir}
 elsif OpenStudio::RemoteBCL::initializeSSL()
   puts "OpenSSL loaded"
 else
-  raise "Unable to initialize OpenSSL"
+  raise "Unable to initialize OpenSSL: Verify that ruby can assess the OpenSSL libraries"
 end  
 
 

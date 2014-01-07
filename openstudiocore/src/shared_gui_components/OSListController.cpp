@@ -18,10 +18,9 @@
  **********************************************************************/
 
 #include "OSListController.hpp"
-
 #include <utilities/core/Assert.hpp>
-
 #include <algorithm>
+#include <QWidget>
 
 namespace openstudio {
 
@@ -242,6 +241,11 @@ void OSItemSelectionController::selectAllItems()
   }
 }
 
+void OSItemSelectionController::emitSelectionChanged()
+{
+  emit selectionChanged(m_selectedItems);
+}
+
 std::vector<QPointer<OSListItem> > OSItemSelectionController::selectedItems() const
 {
   return m_selectedItems;
@@ -273,7 +277,7 @@ void OSItemSelectionController::addSelectedItem(OSListItem * item)
 
   m_selectedItems.push_back(item);
 
-  emit selectionChanged(m_selectedItems);
+  emitSelectionChanged();
 }
 
 void OSItemSelectionController::removeSelectedItem(OSListItem * item)
@@ -287,10 +291,19 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
   {
     m_selectedItems.erase(it);
 
-    emit selectionChanged(m_selectedItems);
+    emitSelectionChanged();
   }
 }
 
+QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
+{ 
+  return new QWidget();
+}
+
+QGraphicsObject * OSGraphicsItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
+{ 
+  return NULL;
+}
 
 } // openstudio
 

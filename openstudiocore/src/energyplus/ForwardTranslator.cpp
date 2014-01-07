@@ -674,10 +674,28 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateControllerWaterCoil(controller);
       break;
     }
+  case openstudio::IddObjectType::OS_CoolingTowerPerformance_CoolTools :
+    {
+      model::CoolingTowerPerformanceCoolTools mo = modelObject.cast<CoolingTowerPerformanceCoolTools>();
+      retVal = translateCoolingTowerPerformanceCoolTools(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoolingTowerPerformance_YorkCalc :
+    {
+      model::CoolingTowerPerformanceYorkCalc mo = modelObject.cast<CoolingTowerPerformanceYorkCalc>();
+      retVal = translateCoolingTowerPerformanceYorkCalc(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       model::CoolingTowerSingleSpeed tower = modelObject.cast<CoolingTowerSingleSpeed>();
       retVal = translateCoolingTowerSingleSpeed(tower);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
+    {
+      model::CoolingTowerVariableSpeed tower = modelObject.cast<CoolingTowerVariableSpeed>();
+      retVal = translateCoolingTowerVariableSpeed(tower);
       break;
     }
   case openstudio::IddObjectType::OS_CurrencyType :

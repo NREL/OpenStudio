@@ -26,6 +26,28 @@
 
 namespace openstudio {
 
+ZoomOutButton::ZoomOutButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  setFixedSize(20,20);
+
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':images/zoom-out.png');"
+               "  border:none;"
+               "}");
+  style.append("QPushButton:hover {"
+               "  background-image:url(':images/zoom-out-over.png');"
+               "}");
+  style.append("QPushButton:pressed {"
+               "  background-image:url(':images/zoom-out-press.png');"
+               "}");
+
+  setStyleSheet(style);
+}
+
 OrangeButton::OrangeButton(QWidget * parent)
   : QPushButton()
 {
@@ -326,6 +348,9 @@ CloudOffButton::CloudOffButton(QWidget * parent)
                "  background-image:url(':/shared_gui_components/images/cloud_off.png');"
                "  border:none;"
                "}");
+  style.append("QPushButton:disabled {"
+               "  background-image:url(':/shared_gui_components/images/cloud_off_disabled.png');"
+               "}");
 
   setStyleSheet(style);
 }
@@ -342,6 +367,9 @@ CloudOnButton::CloudOnButton(QWidget * parent)
   style.append("QPushButton {"
                "  background-image:url(':/shared_gui_components/images/cloud_on.png');"
                "  border:none;"
+               "}");
+  style.append("QPushButton:disabled {"
+               "  background-image:url(':/shared_gui_components/images/cloud_on_disabled.png');"
                "}");
 
   setStyleSheet(style);

@@ -146,7 +146,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   std::vector<RefrigerationCompressor> compressorsClone = testObjectClone.compressors();
   EXPECT_EQ(1, compressorsClone.size());
   EXPECT_NE(compressorsClone[0].handle(), _compressors[0].handle());
-  EXPECT_NE(testObjectClone.refrigerationCondenser().handle(), condenser1.handle());
+  EXPECT_NE(testObjectClone.refrigerationCondenser().get().handle(), condenser1.handle());
   EXPECT_NE(testObjectClone.mechanicalSubcooler().get().handle(), mechSubcooler.handle());
   EXPECT_NE(testObjectClone.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcool.handle());
 }
@@ -221,7 +221,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
   std::vector<RefrigerationCompressor> compressorsClone = testObjectClone2.compressors();
   EXPECT_EQ(1, compressorsClone.size());
   EXPECT_NE(compressorsClone[0].handle(), _compressors[0].handle());
-  EXPECT_NE(testObjectClone2.refrigerationCondenser().handle(), condenser1.handle());
+  EXPECT_NE(testObjectClone2.refrigerationCondenser().get().handle(), condenser1.handle());
   EXPECT_NE(testObjectClone2.mechanicalSubcooler().get().handle(), mechSubcooler.handle());
   EXPECT_NE(testObjectClone2.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcooler.handle());
 }
@@ -927,20 +927,16 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser)
   RefrigerationCondenserWaterCooled condenserWaterCooled = RefrigerationCondenserWaterCooled(model);
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserAirCooled));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserAirCooled);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserAirCooled.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserAirCooled.handle());
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserEvaporativeCooled));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserEvaporativeCooled);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserEvaporativeCooled.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserEvaporativeCooled.handle());
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserCascade));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserCascade);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserCascade.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserCascade.handle());
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserWaterCooled));
-  EXPECT_EQ(testObject.refrigerationCondenser(), condenserWaterCooled);
-  EXPECT_EQ(testObject.refrigerationCondenser().handle(), condenserWaterCooled.handle());
+  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserWaterCooled.handle());
 
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
   EXPECT_FALSE(testObject.setRefrigerationCondenser(testCompressor));

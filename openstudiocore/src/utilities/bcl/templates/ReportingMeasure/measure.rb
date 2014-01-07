@@ -1,3 +1,5 @@
+require 'erb'
+
 #start the measure
 class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
   
@@ -38,52 +40,49 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
       return false
     end
     sqlFile = sqlFile.get
+    model.setSqlFile(sqlFile)
+ 
+    # put data into variables, these are available in the local scope binding
     
-    # perform queries on the sql file
-    # look at eplustbl.htm to see how queries in tabulardatawithstrings correspond
+    output =  "Measure Name = " << name << "<br>"
+    output << "Building Name = " << model.getBuilding.name.get << "<br>"                       # optional variable
+    output << "Building Type = " << model.getBuilding.buildingType << "<br>"                   # string variable
+    output << "Floor to Floor Height = " << model.getBuilding.nominalFloortoFloorHeight.to_s << " (m)<br>" # double variable
+    output << "Net Site Energy = " << sqlFile.netSiteEnergy.to_s << " (GJ)<br>" # double variable
     
-    query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' AND ReportForString='Entire Facility' AND TableName='General' AND RowName='Program Version and Build' AND ColumnName='Value'"    
-    
-    s = sqlFile.execAndReturnFirstString(query)
-    if s.empty?
-      s = "Unknown"
-      runner.registerWarning("Cannot read E+ version")
+    web_asset_path = OpenStudio::getSharedResourcesPath() / OpenStudio::Path.new("web_assets")
+
+    # read in template
+    html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
+    if File.exist?(html_in_path)
+        html_in_path = html_in_path
     else
-      s = s.get
-      runner.registerInfo("E+ version = #{s}")
+        html_in_path = "#{File.dirname(__FILE__)}/report.html.in"
+    end
+    html_in = ""
+    File.open(html_in_path, 'r') do |file|
+      html_in = file.read
     end
 
-    query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' AND ReportForString='Entire Facility' AND TableName='Window-Wall Ratio' AND RowName='Gross Wall Area' AND ColumnName='Total' AND Units='m2'"    
-    
-    d = sqlFile.execAndReturnFirstDouble(query)
-    if s.empty?
-      d = 0
-      runner.registerWarning("Cannot read Gross Wall Area")
-    else
-      d = d.get
-      runner.registerInfo("Gross Wall Area = #{d}")
-    end    
-    
-    # if we want this report could write out a csv, html, or any other file here
-    runner.registerInfo("Writing CSV report 'report.csv'")
-    File.open("report.csv", 'w') do |file|
-      file << "#{s}, #{d}"
+    # configure template with variable values
+    renderer = ERB.new(html_in)
+    html_out = renderer.result(binding)
+
+    # write html file
+    html_out_path = "./report.html"
+    File.open(html_out_path, 'w') do |file|
+      file << html_out
+      # make sure data is written to the disk one way or the other      
+      begin
+        file.fsync
+      rescue
+        file.flush
+      end
     end
-    
-    # if we write out OpenStudio attributes then these will be imported into PAT database
-    # these can then be accessed using ProjectMeasures
-    runner.registerInfo("Writing OpenStudio attributes")
-    attributes = OpenStudio::AttributeVector.new
-    attributes << OpenStudio::Attribute.new("GrossWallArea", d)
-    attributes << OpenStudio::Attribute.new("EnergyPlusVersion", s)
-    
-    result = OpenStudio::Attribute.new("report", attributes)
-    
-    result.saveToXml(OpenStudio::Path.new("report.xml"))
 
     #closing the sql file
     sqlFile.close()
-    
+
     #reporting final condition
     runner.registerFinalCondition("Goodbye.")
     

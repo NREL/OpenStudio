@@ -242,6 +242,12 @@ SET(osversion_resources_src
   osversion/1_1_1/OpenStudio.idd
   osversion/1_1_1/example.osm
   osversion/1_1_1/example.osc
+  osversion/1_1_2/OpenStudio.idd
+  osversion/1_1_2/example.osm
+  osversion/1_1_2/example.osc
+  osversion/1_1_3/OpenStudio.idd
+  osversion/1_1_3/example.osm
+  osversion/1_1_3/example.osc
   osversion/unknown.osc
 )
 
@@ -262,8 +268,14 @@ if (APPLE)
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
            DESTINATION sharedresources
          )
+  install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
+           DESTINATION sharedresources
+         )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
+           DESTINATION share/openstudio
+         )
+  install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
            DESTINATION share/openstudio
          )
 endif()
@@ -593,3 +605,22 @@ ADD_CUSTOM_TARGET( openstudio_isomodel_resources
 )
 
 CREATE_SRC_GROUPS( "${isomodel_resources_src}" )
+########################################################
+# CONTAM resources
+# clear runs, calls to RUN_ENERGYPLUS will populate this
+SET(ENERGYPLUS_OUTPUTS "")
+
+SET(contam_resources_src
+  contam/CONTAMTemplate.osm
+)
+
+# update the resources
+UPDATE_RESOURCES("${contam_resources_src}")
+
+# add target
+ADD_CUSTOM_TARGET( openstudio_contam_resources
+  DEPENDS ${contam_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${contam_resources_src}
+)
+
+CREATE_SRC_GROUPS( "${contam_resources_src}" )
