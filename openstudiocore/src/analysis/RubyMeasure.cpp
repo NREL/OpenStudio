@@ -430,13 +430,19 @@ namespace detail {
       m_arguments.at(int(it - m_arguments.begin())) = argument;
     }
     else {
-      m_arguments.push_back(argument);
+      m_arguments.push_back(argument.clone());
     }
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
   void RubyMeasure_Impl::setArguments(const std::vector<ruleset::OSArgument>& arguments) {
-    m_arguments = arguments;
+    if (arguments.empty()) {
+      LOG(Debug,"Empty vector of arguments passed to setArguments.");
+    }
+    m_arguments.clear();
+    BOOST_FOREACH(const ruleset::OSArgument& arg,arguments) {
+      m_arguments.push_back(arg.clone());
+    }
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
