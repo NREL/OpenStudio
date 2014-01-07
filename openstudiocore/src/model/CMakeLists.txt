@@ -47,6 +47,12 @@ SET( ${target_name}_src
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
+  AirLoopHVACReturnPlenum.hpp
+  AirLoopHVACReturnPlenum_Impl.hpp
+  AirLoopHVACReturnPlenum.cpp
+  AirLoopHVACSupplyPlenum.hpp
+  AirLoopHVACSupplyPlenum_Impl.hpp
+  AirLoopHVACSupplyPlenum.cpp
   AirLoopHVACZoneMixer.hpp
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneMixer.cpp
@@ -1092,6 +1098,8 @@ SET( ${target_name}_test_src
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirLoopHVACReturnPlenum_GTest.cpp
+  test/AirLoopHVACSupplyPlenum_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
