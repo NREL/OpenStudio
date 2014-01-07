@@ -98,37 +98,28 @@ ResultsView::ResultsView(QWidget *t_parent)
       this, SLOT(openResultsViewerClicked()));
   OS_ASSERT(isConnected);
   
-  //********************************************* BUTTON WIDGET ATOP PAGE 1 AND PAGE 2 *********************************************
-
-  // Make Selection Button Widget
-  
   hLayout = new QHBoxLayout(this);
+  mainLayout->addLayout(hLayout);
+
   m_reportLabel = new QLabel("Reports: ",this);
   m_reportLabel->setObjectName("H2");
   m_reportLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   hLayout->addWidget(m_reportLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   m_comboBox = new QComboBox(this);
-
   isConnected = connect(m_comboBox, SIGNAL(currentIndexChanged( int )),
     this, SLOT(comboBoxChanged( int )));
   OS_ASSERT(isConnected);
-
   hLayout->addWidget(m_comboBox, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
   hLayout->addStretch();
 
-  hLayout->addWidget(m_openResultsViewerBtn);
-
-  widget = new QWidget(this);
-  widget->setLayout(hLayout);
-
-  mainLayout->addWidget(widget);
+  hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
 
   m_view = new QWebView(this);
   m_view->setContextMenuPolicy(Qt::NoContextMenu);
-
-  mainLayout->addWidget(m_view);
+  m_view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+  mainLayout->addWidget(m_view, 0, Qt::AlignTop);
 
 //#if _DEBUG || (__GNUC__ && !NDEBUG)
 //  m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
@@ -137,6 +128,7 @@ ResultsView::ResultsView(QWidget *t_parent)
 //  inspector->setVisible(true);
 //#endif
 
+  mainLayout->addStretch();
 }
 
 void ResultsView::openResultsViewerClicked()
@@ -300,7 +292,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
   if(m_comboBox->count()){
     m_comboBox->setCurrentIndex(0);
     int width = m_comboBox->minimumSizeHint().width();
-    m_comboBox->setMinimumWidth(width);
+    m_comboBox->setMinimumWidth(width + 20);
   }
 }
 
