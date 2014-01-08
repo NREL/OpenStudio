@@ -20,9 +20,6 @@
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 // WaterStorageTank object not used
 //#include <model/WaterStorageTank.hpp>
 //#include <model/WaterStorageTank_Impl.hpp>
@@ -83,14 +80,13 @@ namespace detail {
   {
     RefrigerationCondenserEvaporativeCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
-    modelObjectClone.resetAirInletNode();
+    //modelObjectClone.resetAirInletNode();
 
     return modelObjectClone;
   }
 
   std::vector<ScheduleTypeKey> RefrigerationCondenserEvaporativeCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -203,9 +199,11 @@ namespace detail {
     return isEmpty(OS_Refrigeration_Condenser_EvaporativeCooledFields::MaximumCapacityFactor);
   }
 
-  boost::optional<ThermalZone> RefrigerationCondenserEvaporativeCooled_Impl::airInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName);
-  }
+  // std::string RefrigerationCondenserEvaporativeCooled_Impl::airInletNode() const {
+  //   boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName,true);
+  //   OS_ASSERT(value);
+  //   return value.get();
+  // }
 
   boost::optional<double> RefrigerationCondenserEvaporativeCooled_Impl::ratedAirFlowRate() const {
     return getDouble(OS_Refrigeration_Condenser_EvaporativeCooledFields::RatedAirFlowRate,true);
@@ -409,22 +407,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool RefrigerationCondenserEvaporativeCooled_Impl::setAirInletNode(const boost::optional<ThermalZone>& thermalZone) {
-    bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName, thermalZone.get().handle());
-    }
-    else {
-      resetAirInletNode();
-      result = true;
-    }
-    return result;
-  }
+  // bool RefrigerationCondenserEvaporativeCooled_Impl::setAirInletNode(std::string airInletNode) {
+  //   bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName, airInletNode);
+  //   return result;
+  // }
 
-  void RefrigerationCondenserEvaporativeCooled_Impl::resetAirInletNode() {
-    bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName, "");
-    OS_ASSERT(result);
-  }
+  // void RefrigerationCondenserEvaporativeCooled_Impl::resetAirInletNode() {
+  //   bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName, "");
+  //   OS_ASSERT(result);
+  // }
 
   void RefrigerationCondenserEvaporativeCooled_Impl::setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate) {
     bool result(false);
@@ -685,9 +676,9 @@ bool RefrigerationCondenserEvaporativeCooled::isMaximumCapacityFactorDefaulted()
   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->isMaximumCapacityFactorDefaulted();
 }
 
-boost::optional<ThermalZone> RefrigerationCondenserEvaporativeCooled::airInletNode() const {
-  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->airInletNode();
-}
+// std::string RefrigerationCondenserEvaporativeCooled::airInletNode() const {
+//   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->airInletNode();
+// }
 
 boost::optional<double> RefrigerationCondenserEvaporativeCooled::ratedAirFlowRate() const {
   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->ratedAirFlowRate();
@@ -849,13 +840,13 @@ void RefrigerationCondenserEvaporativeCooled::resetMaximumCapacityFactor() {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetMaximumCapacityFactor();
 }
 
-bool RefrigerationCondenserEvaporativeCooled::setAirInletNode(const ThermalZone& thermalZone) {
-  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setAirInletNode(thermalZone);
-}
+// bool RefrigerationCondenserEvaporativeCooled::setAirInletNode(std::string airInletNode) {
+//   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setAirInletNode(airInletNode);
+// }
 
-void RefrigerationCondenserEvaporativeCooled::resetAirInletNode() {
-  getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetAirInletNode();
-}
+// void RefrigerationCondenserEvaporativeCooled::resetAirInletNode() {
+//   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetAirInletNode();
+// }
 
 void RefrigerationCondenserEvaporativeCooled::setRatedAirFlowRate(double ratedAirFlowRate) {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);

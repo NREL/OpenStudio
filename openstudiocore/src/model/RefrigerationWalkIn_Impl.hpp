@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class RefrigerationWalkInZoneBoundary;
 
@@ -68,7 +67,7 @@ namespace detail {
 
     bool addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary);
 
-    void removeZoneBoundary(unsigned groupIndex);
+    void removeZoneBoundary(unsigned index);
 
     void removeAllZoneBoundaries();
 
@@ -78,7 +77,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
     double ratedCoilCoolingCapacity() const;
@@ -89,7 +87,6 @@ namespace detail {
 
     double ratedTotalHeatingPower() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> heatingPowerSchedule() const;
 
     double ratedCoolingCoilFanPower() const;
@@ -102,7 +99,6 @@ namespace detail {
 
     double ratedTotalLightingPower() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> lightingSchedule() const;
 
     std::string defrostType() const;
@@ -113,17 +109,14 @@ namespace detail {
 
     bool isDefrostControlTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule defrostSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> defrostDripDownSchedule() const;
 
     boost::optional<double> defrostPower() const;
 
     boost::optional<double> temperatureTerminationDefrostFractiontoIce() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> restockingSchedule() const;
 
     double averageRefrigerantChargeInventory() const;
@@ -136,13 +129,10 @@ namespace detail {
 
     bool isInsulatedFloorUValueDefaulted() const;
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
@@ -155,7 +145,6 @@ namespace detail {
 
     void setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setHeatingPowerSchedule(Schedule& schedule);
 
     void resetHeatingPowerSchedule();
@@ -170,7 +159,6 @@ namespace detail {
 
     void setRatedTotalLightingPower(double ratedTotalLightingPower);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setLightingSchedule(Schedule& schedule);
 
     void resetLightingSchedule();
@@ -183,10 +171,8 @@ namespace detail {
 
     void resetDefrostControlType();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setDefrostSchedule(Schedule& schedule);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setDefrostDripDownSchedule(Schedule& schedule);
 
     void resetDefrostDripDownSchedule();
@@ -199,7 +185,6 @@ namespace detail {
 
     void resetTemperatureTerminationDefrostFractiontoIce();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setRestockingSchedule(Schedule& schedule);
 
     void resetRestockingSchedule();
@@ -214,8 +199,6 @@ namespace detail {
 
     void resetInsulatedFloorUValue();
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Other */
     //@{
@@ -225,7 +208,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RefrigerationWalkIn");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
