@@ -65,6 +65,8 @@ namespace detail {
 
     unsigned nextInletPort();
 
+    bool addToNode(Node & node);
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirLoopHVACReturnPlenum");

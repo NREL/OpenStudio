@@ -21,6 +21,12 @@
 #include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 #include <utilities/idd/OS_AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
 #include <utilities/core/Assert.hpp>
 
@@ -102,6 +108,81 @@ namespace detail {
     return inletPort( this->nextBranchIndex() );
   }
 
+  bool AirLoopHVACReturnPlenum_Impl::addToNode(Node & node)
+  {
+    bool result = true;
+
+    Model _model = model();
+
+    // Is the node in this model
+    if( node.model() != _model )
+    {
+      result = false;
+    }
+
+    // Is the node part of an air loop
+    boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC();
+
+    if( ! airLoop )
+    {
+      result = false;
+    }
+
+    // Is this plenum already connected to an air loop
+    if( boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC() )
+    {
+      result = false;
+    }
+
+    boost::optional<ModelObject> outletObj = node.outletModelObject();
+    boost::optional<ModelObject> inletObj = node.inletModelObject();
+    boost::optional<Mixer> mixer;
+
+    // Is the immediate downstream object to the node a mixer
+    if( result )
+    {
+      mixer = airLoop->demandMixer();
+
+      if( ! (outletObj && mixer && (outletObj.get() == mixer.get()) ) ) 
+      {
+        result = false;
+      }
+    }
+
+    // Make sure there is not already a return plenum
+    if( result )
+    {
+      if(  inletObj && inletObj->optionalCast<AirLoopHVACReturnPlenum>() )
+      {
+        result = false;
+      }
+    }
+
+    if( result )
+    {
+      unsigned inletObjectPort;
+      unsigned outletObjectPort;
+      boost::optional<ModelObject> inletModelObject;
+      boost::optional<ModelObject> outletModelObject;
+
+      inletModelObject = node;
+      inletObjectPort = node.outletPort();
+      outletModelObject = outletObj;
+      outletObjectPort = node.connectedObjectPort(node.outletPort()).get();
+
+      Node plenumOutletNode(_model);
+      plenumOutletNode.createName();
+
+      AirLoopHVACReturnPlenum thisObject = getObject<AirLoopHVACReturnPlenum>();
+
+      _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
+      _model.connect(thisObject,thisObject.outletPort(),plenumOutletNode,plenumOutletNode.inletPort());
+      _model.connect(plenumOutletNode,plenumOutletNode.outletPort(),outletModelObject.get(),outletObjectPort);
+    }
+
+    return result;
+  }
+
 } // detail
 
 AirLoopHVACReturnPlenum::AirLoopHVACReturnPlenum(const Model& model)
@@ -139,6 +220,11 @@ unsigned AirLoopHVACReturnPlenum::inletPort(unsigned branchIndex)
 unsigned AirLoopHVACReturnPlenum::nextInletPort()
 {
   return getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->nextInletPort();
+}
+
+bool AirLoopHVACReturnPlenum::addToNode(Node & node)
+{
+  return getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->addToNode(node);
 }
 
 /// @cond

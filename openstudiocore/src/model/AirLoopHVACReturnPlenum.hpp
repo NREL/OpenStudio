@@ -56,6 +56,8 @@ class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
 
   unsigned nextInletPort();
 
+  bool addToNode(Node & node);
+
  protected:
   /// @cond
   typedef detail::AirLoopHVACReturnPlenum_Impl ImplType;
