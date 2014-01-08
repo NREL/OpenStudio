@@ -21,6 +21,12 @@
 #include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirTerminalSingleDuctUncontrolled.hpp>
+#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <utilities/idd/OS_AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
 #include <utilities/core/Assert.hpp>
 
@@ -102,6 +108,105 @@ namespace detail {
     return outletPort( this->nextBranchIndex() );
   }
 
+  bool AirLoopHVACSupplyPlenum_Impl::addToNode(Node & node)
+  {
+    bool result = true;
+
+    Model _model = model();
+
+    // Is the node in this model
+    if( node.model() != _model )
+    {
+      result = false;
+    }
+
+    // Is the node part of an air loop
+    boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC();
+
+    if( ! airLoop )
+    {
+      result = false;
+    }
+
+    // Is this plenum already connected to an air loop
+    if( boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC() )
+    {
+      result = false;
+    }
+
+    boost::optional<ModelObject> inletObj = node.inletModelObject();
+    boost::optional<ModelObject> outletObj = node.outletModelObject();
+    boost::optional<AirTerminalSingleDuctUncontrolled> directAirModelObject;
+    boost::optional<ModelObject> directAirInletModelObject;
+
+    if( inletObj && inletObj->optionalCast<AirTerminalSingleDuctUncontrolled>() )
+    {
+      directAirModelObject = inletObj->cast<AirTerminalSingleDuctUncontrolled>();
+      directAirInletModelObject = directAirModelObject->inletModelObject();
+    }
+
+    // Is the immediate upstream object to the node a splitter
+    // or a direct air terminal (special case since this guy oddly does not have an inlet node)
+    boost::optional<Splitter> splitter;
+
+    if( result )
+    {
+      splitter = airLoop->demandSplitter();
+
+      if( directAirInletModelObject  )
+      {
+        if( ! (splitter && ( directAirInletModelObject.get() == splitter.get() )) )
+        {
+          result = false;
+        }
+      }
+      else if( ! (inletObj && splitter && ( inletObj.get() == splitter.get() )) )
+      {
+        result = false;
+      }
+    }
+
+    unsigned oldOutletObjectPort;
+    unsigned oldInletObjectPort;
+    boost::optional<ModelObject> oldInletModelObject;
+    boost::optional<ModelObject> oldOutletModelObject;
+
+    // Record the old port connections
+    if( result )
+    {
+      oldInletModelObject = splitter;
+
+      if( directAirModelObject )
+      {
+        oldOutletModelObject = directAirModelObject;
+        oldOutletObjectPort = directAirModelObject->inletPort();
+        oldInletObjectPort = directAirModelObject->connectedObjectPort(directAirModelObject->inletPort()).get();
+      } 
+      else
+      {
+        oldOutletModelObject = node;
+        oldOutletObjectPort = node.inletPort();
+        oldInletObjectPort = node.connectedObjectPort(node.inletPort()).get();
+      }
+    } 
+
+    // Create a new node and connect the plenum
+    if( result )
+    {
+      Node plenumInletNode(_model);
+      plenumInletNode.createName();
+
+      AirLoopHVACSupplyPlenum thisObject = getObject<AirLoopHVACSupplyPlenum>();
+
+      _model.connect(oldInletModelObject.get(),oldInletObjectPort,plenumInletNode,plenumInletNode.inletPort());
+      _model.connect(plenumInletNode,plenumInletNode.outletPort(),thisObject,thisObject.inletPort());
+      _model.connect(thisObject,thisObject.nextOutletPort(),oldOutletModelObject.get(),oldOutletObjectPort);
+    }
+
+    return result;
+  }
+
+
 } // detail
 
 AirLoopHVACSupplyPlenum::AirLoopHVACSupplyPlenum(const Model& model)
@@ -139,6 +244,11 @@ unsigned AirLoopHVACSupplyPlenum::outletPort(unsigned branchIndex)
 unsigned AirLoopHVACSupplyPlenum::nextOutletPort()
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->nextOutletPort();
+}
+
+bool AirLoopHVACSupplyPlenum::addToNode(Node & node)
+{
+  return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->addToNode(node);
 }
 
 /// @cond

@@ -65,6 +65,8 @@ class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
 
   unsigned nextOutletPort();
 
+  bool addToNode(Node & node);
+
  private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVACSupplyPlenum");

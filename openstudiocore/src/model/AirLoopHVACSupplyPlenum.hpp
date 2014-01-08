@@ -56,6 +56,8 @@ class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
 
   unsigned nextOutletPort();
 
+  bool addToNode(Node & node);
+
  protected:
   /// @cond
   typedef detail::AirLoopHVACSupplyPlenum_Impl ImplType;
