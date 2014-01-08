@@ -31,12 +31,10 @@ namespace isomodel {
 
   double ISOResults::totalEnergyUse() const
   {
-    std::vector<EndUses> monthlyResults;
-
     double sum = 0;
-    std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
-    for (std::vector<EndUses>::const_iterator itr = monthlyResults.begin();
-        itr != monthlyResults.end();
+    std::vector<EndUseFuelType> fuelTypes = openstudio::EndUses::fuelTypes();
+    for (std::vector<EndUses>::const_iterator itr = this->monthlyResults.begin();
+        itr != this->monthlyResults.end();
         ++itr)
     {
 
