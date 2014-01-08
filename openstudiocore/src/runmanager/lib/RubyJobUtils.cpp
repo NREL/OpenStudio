@@ -293,6 +293,9 @@ void RubyJobBuilder::addScriptArgument(const std::string &name)
 
 void RubyJobBuilder::setIncludeDir(const openstudio::path &value)
 {
+  // ETH@20140108 - Should this also clear any existing -I toolparams, 
+  // or should there be a separate method for clearning all such toolparams?
+  // I am asking because of line 107.
   if (!value.empty()){
     m_toolparams.push_back("-I");
     m_toolparams.push_back(toString(value));

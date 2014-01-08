@@ -436,9 +436,6 @@ namespace detail {
   }
 
   void RubyMeasure_Impl::setArguments(const std::vector<ruleset::OSArgument>& arguments) {
-    if (arguments.empty()) {
-      LOG(Debug,"Empty vector of arguments passed to setArguments.");
-    }
     m_arguments.clear();
     BOOST_FOREACH(const ruleset::OSArgument& arg,arguments) {
       m_arguments.push_back(arg.clone());
