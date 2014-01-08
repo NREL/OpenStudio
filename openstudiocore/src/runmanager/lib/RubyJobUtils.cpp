@@ -65,6 +65,49 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem)
   initializeFromParams(t_workItem.params);
 }
 
+RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem, 
+                               const openstudio::path& t_originalBasePath,
+                               const openstudio::path& t_newBasePath)
+  : m_userScriptJob(false)
+{
+  try {
+    FileInfo fi = t_workItem.files.getLastByKey("rb");
+    m_script = fi.fullPath;
+    if (toString(m_script.filename()) == "UserScriptAdapter.rb") {
+      openstudio::path adapterPath = toPath("openstudio/runmanager/rubyscripts/UserScriptAdapter.rb");
+      setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
+    }
+    else {
+      openstudio::path temp = relocatePath(m_script,t_originalBasePath,t_newBasePath);
+      if (!temp.empty()) {
+        m_script = temp;
+      }
+    }
+
+    std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = fi.requiredFiles;
+
+    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
+        itr != requiredFiles.end();
+        ++itr)
+    {
+      openstudio::path source = toPath(itr->first.toLocalFile());
+      openstudio::path temp = relocatePath(source,t_originalBasePath,t_newBasePath);
+      if (!temp.empty()) {
+        source = temp;
+      }
+      m_requiredFiles.push_back(std::make_pair(source, itr->second));
+    }
+
+  } catch (const std::exception &) {
+    // carry on
+  }
+
+  initializeFromParams(t_workItem.params);
+  if (userScriptJob()) {
+    setIncludeDir(getOpenStudioRubyIncludePath());
+  }
+}
+
 RubyJobBuilder::RubyJobBuilder(const JobParams &t_params)
   : m_userScriptJob(false)
 {
