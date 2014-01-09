@@ -299,7 +299,7 @@ void VariableListController::removeItemForVariable(analysis::MeasureGroup variab
 
     for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
-         it++ )
+         ++it )
     {
       if( variable == *it )
       {
@@ -455,7 +455,7 @@ void VariableListController::moveUp(analysis::MeasureGroup variable)
 
     for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
-         it++ )
+         ++it )
     {
       if( variable == *it )
       {
@@ -504,7 +504,7 @@ void VariableListController::moveDown(analysis::MeasureGroup variable)
 
     for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
-         it++ )
+         ++it )
     {
       if( variable == *it )
       {
@@ -676,7 +676,7 @@ void MeasureListController::removeItemForMeasure(const analysis::Measure & measu
 
   for( std::vector<analysis::RubyMeasure>::const_iterator it = measures.begin();
        it != measures.end();
-       it++ )
+       ++it )
   {
     if( measure == *it )
     {
@@ -711,7 +711,7 @@ std::vector<analysis::RubyMeasure> MeasureListController::measures() const
 
   for( std::vector<analysis::Measure>::iterator it = allPerts.begin();
       it != allPerts.end();
-      it++ )
+      ++it )
   {
     if( boost::optional<analysis::RubyMeasure> rubyPert = it->optionalCast<analysis::RubyMeasure>() )
     {

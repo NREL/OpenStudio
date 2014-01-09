@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
 
     for( std::vector<RefrigerationCase>::iterator it = cases.begin();
        it != cases.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
 
@@ -85,7 +85,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
 
     for( std::vector<RefrigerationWalkIn>::iterator it = walkins.begin();
        it != walkins.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
 

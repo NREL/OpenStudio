@@ -42,9 +42,7 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
   this->mainContentWidget()->addSubTab("Constructions", m_constructionsController->subTabView(),CONSTRUCTIONS);
   this->mainContentWidget()->addSubTab("Materials", m_materialsController->subTabView(),MATERIALS);
 
-  bool isConnected = false;
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_defaultConstructionSetsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 

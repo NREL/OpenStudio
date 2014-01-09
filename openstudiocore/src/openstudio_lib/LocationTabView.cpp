@@ -79,7 +79,6 @@ LocationView::LocationView(const model::Model & model,
     m_model(model),
     m_modelTempDir(modelTempDir)
 {
-  bool isConnected = false;
   QLabel * label = 0;
   QPushButton * btn = 0;
   QHBoxLayout * hLayout = 0;
@@ -104,7 +103,7 @@ LocationView::LocationView(const model::Model & model,
   btn = new QPushButton("Browse",this);
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
-  isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onWeatherFileBtnClicked()));
+  bool isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onWeatherFileBtnClicked()));
   OS_ASSERT(isConnected);
 
   hLayout = new QHBoxLayout();
@@ -297,7 +296,7 @@ void LocationView::onWeatherFileBtnClicked()
         boost::optional<openstudio::path> temp = weatherFile->path();
         if (temp){
           openstudio::path previousEPWName = temp->filename();
-          std::string ex = toString(previousEPWName.extension());
+          //std::string ex = toString(previousEPWName.extension());
           if (!previousEPWName.empty() && previousEPWName.extension() == toPath(".epw")){
             previousEPWPath = toPath(m_modelTempDir) / toPath("resources/files") / previousEPWName;
           }

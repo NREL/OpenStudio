@@ -198,8 +198,7 @@ namespace detail {
   }
 
   void InteriorPartitionSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -209,8 +208,7 @@ namespace detail {
   }
 
   void InteriorPartitionSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
+    bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -220,8 +218,7 @@ namespace detail {
   }
 
   void InteriorPartitionSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
+    bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -231,8 +228,7 @@ namespace detail {
   }
 
   void InteriorPartitionSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
+    bool result = setDouble(OS_InteriorPartitionSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -242,8 +238,7 @@ namespace detail {
   }
 
   bool InteriorPartitionSurfaceGroup_Impl::setMultiplier(int multiplier) {
-    bool result = false;
-    result = setInt(OS_InteriorPartitionSurfaceGroupFields::Multiplier, multiplier);
+    bool result = setInt(OS_InteriorPartitionSurfaceGroupFields::Multiplier, multiplier);
     return result;
   }
 

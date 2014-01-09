@@ -73,8 +73,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
 
   m_vLayout->addLayout(dropZoneLayout);
 
-  bool isConnected = false;
-  isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)),this,SIGNAL(itemDropped(const OSItemId&)));
+  bool isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)),this,SIGNAL(itemDropped(const OSItemId&)));
   OS_ASSERT(isConnected);
     
   // buttons

@@ -74,8 +74,6 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                                              QWidget * parent )
   : ModelObjectInspectorView(model, false, parent)
 {
-  bool isConnected = false;
-
   // index of hidden widget is 0
   QWidget* hiddenWidget = new QWidget();
   int index = this->stackedWidget()->addWidget(hiddenWidget);
@@ -83,10 +81,10 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
 
   // index of the default is 1
   DefaultInspectorView* defaultInspectorView = new DefaultInspectorView(model, parent);
-  isConnected = connect(defaultInspectorView, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
+  bool isConnected = connect(defaultInspectorView, 
+                             SIGNAL(dropZoneItemClicked(OSItem*)),
+                             this, 
+                             SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(defaultInspectorView);
   OS_ASSERT(index == 1);

@@ -41,7 +41,7 @@ RX WeatherData::Tambt() const
   return d->Tambt;
 }
 
-void WeatherData::setTambt(const RX Tambt)
+void WeatherData::setTambt(const RX &Tambt)
 {
   d->Tambt = Tambt;
 }
@@ -51,7 +51,7 @@ RX WeatherData::barpres() const
   return d->barpres;
 }
 
-void WeatherData::setBarpres(const RX barpres)
+void WeatherData::setBarpres(const RX &barpres)
 {
   d->barpres = barpres;
 }
@@ -61,7 +61,7 @@ RX WeatherData::windspd() const
   return d->windspd;
 }
 
-void WeatherData::setWindspd(const RX windspd)
+void WeatherData::setWindspd(const RX &windspd)
 {
   d->windspd = windspd;
 }
@@ -71,7 +71,7 @@ RX WeatherData::winddir() const
   return d->winddir;
 }
 
-void WeatherData::setWinddir(const RX winddir)
+void WeatherData::setWinddir(const RX &winddir)
 {
   d->winddir = winddir;
 }
@@ -81,7 +81,7 @@ RX WeatherData::relhum() const
   return d->relhum;
 }
 
-void WeatherData::setRelhum(const RX relhum)
+void WeatherData::setRelhum(const RX &relhum)
 {
   d->relhum = relhum;
 }
@@ -254,7 +254,7 @@ RX FanDataPoint::mF() const
   return m_mF;
 }
 
-void FanDataPoint::setMF(const RX mF)
+void FanDataPoint::setMF(const RX &mF)
 {
   m_mF = mF;
 }
@@ -274,7 +274,7 @@ RX FanDataPoint::dP() const
   return m_dP;
 }
 
-void FanDataPoint::setDP(const RX dP)
+void FanDataPoint::setDP(const RX &dP)
 {
   m_dP = dP;
 }
@@ -294,7 +294,7 @@ RX FanDataPoint::rP() const
   return m_rP;
 }
 
-void FanDataPoint::setRP(const RX rP)
+void FanDataPoint::setRP(const RX &rP)
 {
   m_rP = rP;
 }
@@ -330,7 +330,7 @@ RX DataPoint::x() const
   return m_x;
 }
 
-void DataPoint::setX(const RX x)
+void DataPoint::setX(const RX &x)
 {
   m_x = x;
 }
@@ -340,7 +340,7 @@ RX DataPoint::y() const
   return m_y;
 }
 
-void DataPoint::setY(const RX y)
+void DataPoint::setY(const RX &y)
 {
   m_y = y;
 }
@@ -377,7 +377,7 @@ RX AirflowSubelementData::relHt() const
   return m_relHt;
 }
 
-void AirflowSubelementData::setRelHt(const RX relHt)
+void AirflowSubelementData::setRelHt(const RX &relHt)
 {
   m_relHt = relHt;
 }
@@ -413,7 +413,7 @@ RX PressureCoefficientPoint::azm() const
   return m_azm;
 }
 
-void PressureCoefficientPoint::setAzm(const RX azm)
+void PressureCoefficientPoint::setAzm(const RX &azm)
 {
   m_azm = azm;
 }
@@ -423,7 +423,7 @@ RX PressureCoefficientPoint::coef() const
   return m_coef;
 }
 
-void PressureCoefficientPoint::setCoef(const RX coef)
+void PressureCoefficientPoint::setCoef(const RX &coef)
 {
   m_coef = coef;
 }
@@ -449,7 +449,7 @@ std::string SchedulePoint::time() const
   return m_time;
 }
 
-void SchedulePoint::setTime(const std::string time)
+void SchedulePoint::setTime(const std::string &time)
 {
   m_time = time;
 }
@@ -459,7 +459,7 @@ RX SchedulePoint::ctrl() const
   return m_ctrl;
 }
 
-void SchedulePoint::setCtrl(const RX ctrl)
+void SchedulePoint::setCtrl(const RX &ctrl)
 {
   m_ctrl = ctrl;
 }

@@ -284,8 +284,6 @@ boost::optional<double> OSRunner::getOptionalDoubleArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -327,8 +325,6 @@ boost::optional<Quantity> OSRunner::getOptionalQuantityArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -370,8 +366,6 @@ boost::optional<int> OSRunner::getOptionalIntegerArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -413,8 +407,6 @@ boost::optional<std::string> OSRunner::getOptionalStringArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -456,8 +448,6 @@ boost::optional<openstudio::path> OSRunner::getOptionalPathArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {

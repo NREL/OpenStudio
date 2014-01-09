@@ -30,12 +30,10 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
 {
   m_facilityController = boost::shared_ptr<FacilityController>(new FacilityController(isIP, model));
 
-  bool isConnected = false;
-
-  isConnected = connect(m_facilityController.get(),
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-                        this,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
+  bool isConnected = connect(m_facilityController.get(),
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
+                             this,
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),

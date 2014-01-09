@@ -686,7 +686,6 @@ namespace detail {
       RunManagerDB::RunManagerDatabase m_db;
       RunManagerDB::ConfigOptions m_config;
       bool m_loading;
-      bool m_newConfig;
       openstudio::path m_dbPath;
       boost::shared_ptr<openstudio::runmanager::ConfigOptions> m_configOptions;
 
@@ -797,8 +796,8 @@ namespace detail {
               RunManagerDB::JobToolInfo::JobUuid == uuidstr).all();
             std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db,
               RunManagerDB::JobParam::JobUuid == uuidstr).all();
-            std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db,
-              RunManagerDB::OutputFileInfo::JobUuid == uuidstr).all();
+            //std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db,
+            //  RunManagerDB::OutputFileInfo::JobUuid == uuidstr).all();
             std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db,
               RunManagerDB::JobFileInfo::JobUuid == uuidstr).all();
 

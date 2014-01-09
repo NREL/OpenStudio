@@ -61,10 +61,8 @@ LuminaireDefinitionInspectorView::LuminaireDefinitionInspectorView(bool isIP, co
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  bool isConnected = false;
-
   m_lightingPowerEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_lightingPowerEdit, SLOT(onUnitSystemChange(bool)));
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_lightingPowerEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_lightingPowerEdit,3,0);
 

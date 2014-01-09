@@ -34,7 +34,7 @@
 namespace openstudio {
   
 
-ExportXMLDialog::ExportXMLDialog(const std::vector<std::string> alternatives, QWidget* parent)
+ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent)
   : OSDialog(false, parent)
 {
   this->setWindowTitle("Define Baselines");

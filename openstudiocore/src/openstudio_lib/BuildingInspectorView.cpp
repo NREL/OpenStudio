@@ -329,10 +329,8 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_northAxisEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_northAxisEdit, SLOT(onUnitSystemChange(bool)));
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_northAxisEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
 
   vLayout->addWidget(m_northAxisEdit);

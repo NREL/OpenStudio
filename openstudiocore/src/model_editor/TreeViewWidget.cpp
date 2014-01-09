@@ -364,12 +364,12 @@ void TreeViewWidget::on_nameChanged(QString)
     loadModel(); // TODO costly and clunky
     update();
     return;
-    QModelIndexList rowList;
+    /*QModelIndexList rowList;
     if(mTreeView->getSelectedRows(rowList)){
       ///! we are only coded to handle a single row
       OS_ASSERT(rowList.size() == 1);
       //rowList.at(0).
-    }
+    }*/
   }
   else{
     mModelDirty = true;

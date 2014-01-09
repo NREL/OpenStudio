@@ -121,7 +121,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   Problem problem = analysis.problem();
 
   //get the input variables from the problem
-  std::vector<InputVariable> variables = problem.variables();
+  //std::vector<InputVariable> variables = problem.variables();
 
   //alternatives
   int numErrors = 0;

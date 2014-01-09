@@ -112,9 +112,7 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
   m_mainBoxLayout->setSpacing(10);
   mainBox->setLayout(m_mainBoxLayout);
 
-  bool isConnected = false;
-
-  isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addButtonClicked()));
+  bool isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addButtonClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(itemsRequested()),
@@ -280,8 +278,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
 
     ++numItems;
 
-    bool isConnected = false;
-    isConnected = connect( item,SIGNAL(itemRemoveClicked(OSItem*)),
+    bool isConnected = connect( item,SIGNAL(itemRemoveClicked(OSItem*)),
                            this,SIGNAL(itemRemoveClicked(OSItem*)) );
     OS_ASSERT(isConnected);
 
@@ -318,8 +315,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
     OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
-    bool isConnected = false;
-    isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
+    bool isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
     OS_ASSERT(isConnected);
 
     if( m_maxItems == 1 )

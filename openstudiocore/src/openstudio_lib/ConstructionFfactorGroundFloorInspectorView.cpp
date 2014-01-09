@@ -69,10 +69,8 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
-  bool isConnected = false;
-
   m_ffactorEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_ffactorEdit, SLOT(onUnitSystemChange(bool)));
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_ffactorEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_ffactorEdit,3,0);
 

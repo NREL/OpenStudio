@@ -80,8 +80,6 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
 
   verticalTabWidget = new PatVerticalTabWidget();
 
-  bool isConnected = false;
-
   m_mainSplitter->addWidget(verticalTabWidget);
 
   m_mainRightColumnContainer = new QStackedWidget();
@@ -96,7 +94,7 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
 
   this->setMenuBar(mainMenu);
 
-  isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
+  bool isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
@@ -208,7 +206,7 @@ void PatMainWindow::closeEvent(QCloseEvent *event)
       }
     }
 
-  } else if (status == CLOUD_RUNNING) {
+  } else if (status == CLOUD_STOPPED) {
 
     // DLM: check if running locally?
 

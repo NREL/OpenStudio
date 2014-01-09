@@ -299,7 +299,6 @@ namespace detail {
 
     insertResult = times.insert(untilTime);
     unsigned index = std::distance<std::set<openstudio::Time>::const_iterator>(times.begin(),insertResult.first);
-    OS_ASSERT(index >= 0);
     OS_ASSERT(index <= numExtensibleGroups());
     bool result(true);
     if (insertResult.second) {

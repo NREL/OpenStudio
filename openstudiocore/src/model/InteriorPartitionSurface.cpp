@@ -208,8 +208,7 @@ namespace detail {
   }
 
   bool InteriorPartitionSurface_Impl::setSurfaceArea(double surfaceArea) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceFields::SurfaceArea, surfaceArea);
+    bool result = setDouble(OS_InteriorPartitionSurfaceFields::SurfaceArea, surfaceArea);
     return result;
   }
 
@@ -229,8 +228,7 @@ namespace detail {
   }
 
   bool InteriorPartitionSurface_Impl::setNumberofVertices(double numberofVertices) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceFields::NumberofVertices, numberofVertices);
+    bool result = setDouble(OS_InteriorPartitionSurfaceFields::NumberofVertices, numberofVertices);
     return result;
   }
 

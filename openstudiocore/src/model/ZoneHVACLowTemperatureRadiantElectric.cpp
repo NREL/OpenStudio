@@ -406,7 +406,7 @@ namespace detail {
     std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 
@@ -427,9 +427,7 @@ ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(con
   BOOST_ASSERT(getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>());
 
 
-  bool ok = true;
-  
-  ok = setAvailabilitySchedule(availabilitySchedule);
+  bool ok = setAvailabilitySchedule(availabilitySchedule);
      
   if (!ok) 
   {

@@ -90,8 +90,7 @@ namespace detail {
   }
   
   bool DistrictHeating_Impl::setNominalCapacity(double nominalCapacity) {
-    bool result = false;
-    result = setDouble(OS_DistrictHeatingFields::NominalCapacity, nominalCapacity);
+    bool result = setDouble(OS_DistrictHeatingFields::NominalCapacity, nominalCapacity);
     return result;
   }
 

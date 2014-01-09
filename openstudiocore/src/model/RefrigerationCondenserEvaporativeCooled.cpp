@@ -567,8 +567,7 @@ RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled
 {
   OS_ASSERT(getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>());
 
-  bool ok = true;
-  ok = setRatedEffectiveTotalHeatRejectionRate(43100.0);
+  bool ok = setRatedEffectiveTotalHeatRejectionRate(43100.0);
   OS_ASSERT(ok);
   ok = setRatedSubcoolingTemperatureDifference(0.0);
   OS_ASSERT(ok);

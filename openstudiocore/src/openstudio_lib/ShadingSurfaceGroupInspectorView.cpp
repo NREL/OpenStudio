@@ -74,10 +74,8 @@ ShadingSurfaceGroupInspectorView::ShadingSurfaceGroupInspectorView(bool isIP, co
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_directionofRelativeNorthEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_directionofRelativeNorthEdit, SLOT(onUnitSystemChange(bool)));
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_directionofRelativeNorthEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   vLayout->addWidget(m_directionofRelativeNorthEdit);
 

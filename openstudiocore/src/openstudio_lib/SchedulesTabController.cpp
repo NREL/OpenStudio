@@ -79,9 +79,7 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   addQObject(m_schedulesView);
   this->mainContentWidget()->addSubTab("Schedules",m_schedulesView,SCHEDULES);
 
-  bool isConnected = false;
-
-  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
+  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         this,SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
@@ -182,9 +180,7 @@ void SchedulesTabController::showScheduleDialog()
   if(!m_scheduleDialog){
     m_scheduleDialog = new ScheduleDialog(m_isIP,m_model);
 
-    bool isConnected = false;
-
-    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+    bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                           m_scheduleDialog, SIGNAL(toggleUnitsClicked(bool)));
     OS_ASSERT(isConnected);
   }
@@ -205,7 +201,7 @@ void SchedulesTabController::purgeUnusedScheduleRulesets()
 
   for( std::vector<model::ScheduleRuleset>::iterator it = schedules.begin();
        it != schedules.end();
-       it++ )
+       ++it )
   {
     if( it->directUseCount() == 0 )
     {
@@ -262,7 +258,7 @@ void SchedulesTabController::onDayScheduleSceneChanged( DayScheduleScene * scene
 
   for( std::vector<CalendarSegmentItem *>::iterator it = segments.begin();
        it < segments.end();
-       it++ )
+       ++it )
   {
     openstudio::Time time(0,0,0,(*it)->endTime());
 

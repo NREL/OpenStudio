@@ -51,9 +51,7 @@ ResultsTabController::ResultsTabController()
 {
   resultsView = new ResultsView();
 
-  bool test = false;
-
-  test = connect(resultsView, SIGNAL(openButtonClicked(bool)), this, SLOT(onOpenButtonClicked()));
+  bool test = connect(resultsView, SIGNAL(openButtonClicked(bool)), this, SLOT(onOpenButtonClicked()));
   OS_ASSERT(test);
 
   test = connect(resultsView, SIGNAL(openDirButtonClicked(bool)), this, SLOT(openDirectory()));
@@ -81,9 +79,7 @@ ResultsTabController::ResultsTabController()
     // can only select one item between both lists
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
 
-    bool bingo = false;
-
-    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
+    bool bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
     OS_ASSERT(bingo);
 
     // want to reset the list after changing the delegate
@@ -266,7 +262,7 @@ void ResultsTabController::downloadResults()
 
               bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
               if (sameSession){
-                bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+                cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
               }else{
                 // DLM: should not get here
                 QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");

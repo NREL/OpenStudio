@@ -59,7 +59,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePortList( PortList & mode
 
   for( std::vector<ModelObject>::iterator it = modelObjects.begin();
        it != modelObjects.end();
-       it++ )
+       ++it )
   {
     if( boost::optional<Node> node = it->optionalCast<Node>() )
     {

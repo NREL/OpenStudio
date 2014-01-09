@@ -33,9 +33,7 @@ BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& m
   m_buildingStoriesController = boost::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(model));
   this->mainContentWidget()->addTabWidget(m_buildingStoriesController->subTabView());
 
-  bool isConnected = false;
-
-  isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(openBclDlgClicked()),
+  bool isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
   OS_ASSERT(isConnected);
 

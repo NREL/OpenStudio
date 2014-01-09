@@ -256,8 +256,7 @@ namespace detail {
   }
 
   bool ScheduleRule_Impl::setRuleIndex(int index) {
-    bool result = false;
-    result = setInt(OS_Schedule_RuleFields::RuleOrder, index);
+    bool result = setInt(OS_Schedule_RuleFields::RuleOrder, index);
     return result;
   }
 
@@ -342,8 +341,7 @@ namespace detail {
   }
 
   bool ScheduleRule_Impl::setDateSpecificationType(std::string dateSpecificationType) {
-    bool result = false;
-    result = setString(OS_Schedule_RuleFields::DateSpecificationType, dateSpecificationType);
+    bool result = setString(OS_Schedule_RuleFields::DateSpecificationType, dateSpecificationType);
     return result;
   }
   */

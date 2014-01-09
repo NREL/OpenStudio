@@ -757,7 +757,6 @@ namespace detail{
 
   void Attribute_Impl::writeValues(QDomDocument& doc, QDomElement& element) const
   {
-    std::stringstream ss;
     QDomElement childElement;
     QDomText text;
 

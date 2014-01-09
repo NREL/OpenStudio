@@ -318,8 +318,6 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
   
-  bool ok = true;
-
   CurveBicubic powerCurve = CurveBicubic(model);
   powerCurve.setName("Refrigeration Compressor Power Curve");
   powerCurve.setCoefficient1Constant(4451.46);
@@ -340,7 +338,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   powerCurve.setInputUnitTypeforY("Temperature");
   powerCurve.setOutputUnitType("Power");
 
-  ok = setRefrigerationCompressorPowerCurve(powerCurve);
+  bool ok = setRefrigerationCompressorPowerCurve(powerCurve);
   OS_ASSERT(ok);
 
   CurveBicubic capacityCurve = CurveBicubic(model);

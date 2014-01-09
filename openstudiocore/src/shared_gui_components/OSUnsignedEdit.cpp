@@ -144,8 +144,7 @@ void OSUnsignedEdit2::completeBind() {
 
   setEnabled(true);
 
-  bool isConnected = false;
-  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
+  bool isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
@@ -354,8 +353,7 @@ void OSUnsignedEdit::bind(model::ModelObject& modelObject,
 
   setEnabled(true);
 
-  bool isConnected = false;
-  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
+  bool isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),

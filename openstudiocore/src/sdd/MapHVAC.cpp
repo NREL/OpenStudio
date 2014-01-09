@@ -182,7 +182,7 @@ void adjustScheduleDay(model::ScheduleDay & scheduleDay, int startOffset)
   std::vector<Time>::iterator timeIt;
 
   timeIt = times.begin() + 1;
-  for( valueIt = values.begin() + 1; valueIt < values.end(); valueIt++ )
+  for( valueIt = values.begin() + 1; valueIt < values.end(); ++valueIt )
   {
     if( equal<double>(*valueIt,1.0,0.01) && equal<double>(*(valueIt - 1),0.0,0.01) )
     {
@@ -195,7 +195,7 @@ void adjustScheduleDay(model::ScheduleDay & scheduleDay, int startOffset)
       scheduleDay.addValue(newStartTime,0.0);
     }
 
-    timeIt++;
+    ++timeIt;
   }
 }
 
@@ -205,7 +205,7 @@ void adjustSchedule(model::ScheduleYear & scheduleYear, int startOffset)
 
   for( std::vector<model::ScheduleWeek>::iterator it = scheduleWeeks.begin();
        it != scheduleWeeks.end();
-       it++ )
+       ++it )
   {
     std::vector<boost::optional<model::ScheduleDay> > scheduleDays;
 
@@ -235,7 +235,7 @@ void adjustSchedule(model::ScheduleYear & scheduleYear, int startOffset)
 
     for( std::vector<boost::optional<model::ScheduleDay> >::iterator scheduleDayIt = scheduleDays.begin();
          scheduleDayIt != scheduleDays.end();
-         scheduleDayIt++ )
+         ++scheduleDayIt )
     {
       if( *scheduleDayIt )
       {
@@ -263,7 +263,7 @@ model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear & scheduleYe
 
   for( std::vector<model::ScheduleWeek>::iterator it = scheduleWeeks.begin();
        it != scheduleWeeks.end();
-       it++ )
+       ++it )
   {
     model::ScheduleWeek scheduleWeekClone = it->clone(model).cast<model::ScheduleWeek>();
     scheduleWeekClone.setName(name + " Week " + QString::number(i).toStdString());
@@ -355,7 +355,7 @@ model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear & scheduleYe
       scheduleWeekClone.setCustomDay2Schedule(s);
     }
 
-    dateIt++;
+    ++dateIt;
     i++;
   }
 
@@ -1082,7 +1082,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
          it != supplyNodes.end();
-         it++ )
+         ++it )
     {
       if( *it != airLoopHVAC.supplyInletNode() &&
           *it != airLoopHVAC.supplyOutletNode() )
@@ -1122,7 +1122,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
         for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
              it != supplyNodes.end();
-             it++ )
+             ++it )
         {
           model::Node node = it->cast<model::Node>();
 
@@ -2554,7 +2554,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   for( std::vector<model::Space>::iterator it = spaces.begin();
        it != spaces.end();
-       it++ )
+       ++it )
   {
     it->setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
   }
@@ -4023,7 +4023,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       {
         for( std::vector<model::ModelObject>::iterator it = constantPumps.begin();
              it != constantPumps.end();
-             it++ )
+             ++it )
         {
           if( boost::optional<double> ratedFlowRate = it->cast<model::PumpConstantSpeed>().ratedFlowRate() )
           {
@@ -4041,7 +4041,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       {
         for( std::vector<model::ModelObject>::iterator it = variablePumps.begin();
              it != variablePumps.end();
-             it++ )
+             ++it )
         {
           if( boost::optional<double> ratedFlowRate = it->cast<model::PumpVariableSpeed>().ratedFlowRate() )
           {
@@ -4311,14 +4311,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
     boiler.setParasiticElectricLoad(unitToUnit(parasiticLd,"Btu/h","W").get());
   }
 
-  double value;
-
   if( ! autosize() )
   {
     // CapRtd
     boost::optional<double> capRtd;
     QDomElement capRtdElement = boilerElement.firstChildElement("CapRtd");
-    value = capRtdElement.text().toDouble(&ok);
+    double value = capRtdElement.text().toDouble(&ok);
     if( ok )
     {
       capRtd = unitToUnit(value,"Btu/h","W");

@@ -327,8 +327,7 @@ RefrigerationWalkInZoneBoundary::RefrigerationWalkInZoneBoundary(const Model& mo
 {
   OS_ASSERT(getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>());
 
-  bool ok = true;
-  ok = setTotalInsulatedSurfaceAreaFacingZone(43.4);
+  bool ok = setTotalInsulatedSurfaceAreaFacingZone(43.4);
   OS_ASSERT(ok);
   ok = setInsulatedSurfaceUValueFacingZone(.235);
   OS_ASSERT(ok);

@@ -134,7 +134,9 @@ public:
 
   /// constructor
   MandelbrotFloodPlotData(unsigned maxN)
-  : m_maxN(maxN)
+  : m_maxN(maxN),
+    m_minValue(0),
+    m_maxValue(maxN)
   {
     m_colorMapRange = QwtDoubleInterval(0,maxN);
   }

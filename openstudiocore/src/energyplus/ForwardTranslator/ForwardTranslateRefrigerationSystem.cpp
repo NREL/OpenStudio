@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   	for( std::vector<RefrigerationCase>::iterator it = cases.begin();
   	   it != cases.end();
-  	   it++ )
+  	   ++it )
   	{
   		boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
 
@@ -91,7 +91,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   	for( std::vector<RefrigerationWalkIn>::iterator it = walkins.begin();
   	   it != walkins.end();
-  	   it++ )
+  	   ++it )
   	{
   		boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
 
@@ -122,7 +122,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     for( std::vector<RefrigerationSecondarySystem>::iterator it = secondarySystemLoads.begin();
        it != secondarySystemLoads.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _secondarySystemLoad = translateAndMapModelObject(*it);
 
@@ -136,7 +136,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     for( std::vector<RefrigerationCondenserCascade>::iterator it = cascadeCondenserLoads.begin();
        it != cascadeCondenserLoads.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _cascadeCondenserLoad = translateAndMapModelObject(*it);
 
@@ -179,7 +179,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     for( std::vector<RefrigerationCompressor>::iterator it = compressors.begin();
        it != compressors.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
 

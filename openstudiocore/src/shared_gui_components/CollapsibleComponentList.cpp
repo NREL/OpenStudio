@@ -134,10 +134,8 @@ void CollapsibleComponentList::addCollapsibleComponent(CollapsibleComponent * co
   m_mainLayout->addWidget(collapsibleComponent);
   m_collapsibleComponentGroup->addButton(collapsibleComponent,m_collapsibleComponentGroup->buttons().size());
 
-  bool isConnected = false;
-
-  isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
-                        this, SIGNAL(headerClicked(bool)));
+  bool isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
+                             this, SIGNAL(headerClicked(bool)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),

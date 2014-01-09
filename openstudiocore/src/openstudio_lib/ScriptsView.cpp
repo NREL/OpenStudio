@@ -32,6 +32,7 @@
 
 #include <utilities/idf/ImfFile.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/document/DocumentRegex.hpp>
 #include <utilities/core/StringHelpers.hpp>
 
@@ -49,7 +50,6 @@
 
 #include <boost/foreach.hpp>
 
-#include <sstream>
 #include <iomanip>
 
 namespace openstudio {
@@ -331,6 +331,7 @@ namespace openstudio {
                                         SIGNAL(imfFileSections(std::vector<std::string>)),
                                         argChoiceEdit,
                                         SLOT(setChoices(std::vector<std::string>)));
+                    OS_ASSERT(connected);
                     connected = connect(argChoiceEdit,
                                         SIGNAL(newArgumentValue(const ruleset::OSArgument&)),
                                         m_scriptItem,

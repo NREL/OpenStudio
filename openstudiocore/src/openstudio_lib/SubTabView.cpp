@@ -77,11 +77,10 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
   // Item Selector
   outerLeftVLayout->addWidget(m_itemSelector, 10);
 
-  bool isConnected = false;
-  isConnected = QObject::connect(m_itemSelector,
-                                 SIGNAL(itemSelected(OSItem*)),
-                                 this,
-                                 SIGNAL(itemSelected(OSItem*)));
+  bool isConnected = QObject::connect(m_itemSelector,
+                                      SIGNAL(itemSelected(OSItem*)),
+                                      this,
+                                      SIGNAL(itemSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelector,

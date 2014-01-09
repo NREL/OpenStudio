@@ -85,8 +85,6 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   leftPaneWidget->setObjectName("GrayWidget");
   leftPaneWidget->setLayout(leftPanelayout);
 
-  bool isConnected = false;
-
   m_lineEdit = new QLineEdit(this);
 
   QPushButton * searchButton = new QPushButton();
@@ -94,8 +92,8 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   searchButton->setStyleSheet("QPushButton { border: none; background-image: url(\":/shared_gui_components/images/searchbox_magnifyingglass.png\"); }");
   searchButton->setFixedSize(24,24);
 
-  isConnected = connect(searchButton,SIGNAL(clicked()),
-                        this,SLOT(on_searchButton()));
+  bool isConnected = connect(searchButton,SIGNAL(clicked()),
+                             this,SLOT(on_searchButton()));
   OS_ASSERT(isConnected);
 
   QHBoxLayout * searchlayout = new QHBoxLayout();

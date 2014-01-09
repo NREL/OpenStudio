@@ -90,14 +90,12 @@ namespace detail {
   }
 
   bool LightingDesignDay_Impl::setCIESkyModel(std::string cIESkyModel) {
-    bool result = false;
-    result = setString(OS_LightingDesignDayFields::CIESkyModel, cIESkyModel);
+    bool result = setString(OS_LightingDesignDayFields::CIESkyModel, cIESkyModel);
     return result;
   }
 
   bool LightingDesignDay_Impl::setSnowIndicator(int snowIndicator) {
-    bool result = false;
-    result = setInt(OS_LightingDesignDayFields::SnowIndicator, snowIndicator);
+    bool result = setInt(OS_LightingDesignDayFields::SnowIndicator, snowIndicator);
     return result;
   }
 

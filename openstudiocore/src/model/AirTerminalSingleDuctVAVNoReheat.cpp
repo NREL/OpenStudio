@@ -391,8 +391,6 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     Model _model = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
 
-    std::vector<IdfObject> result;
-
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
     
@@ -402,7 +400,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 

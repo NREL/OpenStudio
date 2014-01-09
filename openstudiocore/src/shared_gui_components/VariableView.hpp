@@ -114,10 +114,6 @@ class VariableGroupItemView : public OSCollapsibleView
   LightGradientHeader * variableGroupHeader;
 
   VariableGroupContentView * variableGroupContentView;
-
-  private:
-
-  bool m_fixedMeasuresOnly;
 };
 
 class VariableGroupContentView : public QWidget

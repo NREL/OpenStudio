@@ -116,7 +116,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACLowTempRadiantVarFlow>::iterator it = zoneHVACLowTempRadiantVarFlows.begin();
     it < zoneHVACLowTempRadiantVarFlows.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->heatingCoil() )
       {
@@ -262,9 +262,7 @@ CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(const Model& 
 {
   BOOST_ASSERT(getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>());
 
-  bool ok = true;
-  
-  ok = setHeatingControlTemperatureSchedule(heatingControlTemperature);
+  bool ok = setHeatingControlTemperatureSchedule(heatingControlTemperature);
   BOOST_ASSERT(ok);
 }
 

@@ -605,11 +605,10 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_designSpecificationOutdoorAirDropZone->showAddButton();
   vLayout->addWidget(m_designSpecificationOutdoorAirDropZone);
 
-  bool isConnected = false;
-  isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
+  bool isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
+                             SIGNAL(itemClicked(OSItem*)),
+                             this, 
+                             SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,3,0,1,2);

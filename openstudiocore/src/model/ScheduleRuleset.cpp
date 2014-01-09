@@ -380,7 +380,6 @@ namespace detail {
       if (increment != 0){
         OS_ASSERT(i + increment >= 0);
         unsigned newIndex = i + increment;
-        OS_ASSERT(newIndex >= 0);
         OS_ASSERT(newIndex < N);
         scheduleRules[i].setRuleIndex(newIndex);
       }

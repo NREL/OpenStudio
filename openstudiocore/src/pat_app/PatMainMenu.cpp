@@ -53,9 +53,7 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_saveFileAction->setShortcut(QKeySequence(QKeySequence::Save));
 
   // DLM: actions which result in this menu being deleted should be queued
-  bool isConnected = false;
-
-  isConnected = connect(m_newAction, SIGNAL(triggered()), this, SIGNAL(newClicked()), Qt::QueuedConnection);
+  bool isConnected = connect(m_newAction, SIGNAL(triggered()), this, SIGNAL(newClicked()), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_loadFileAction, SIGNAL(triggered()), this, SIGNAL(loadFileClicked()), Qt::QueuedConnection);

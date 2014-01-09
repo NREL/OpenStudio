@@ -755,12 +755,11 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
   m_space = space;
   m_model = space.model();
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
+  bool isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
+                             SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                             this,
+                             SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                             Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
@@ -802,12 +801,11 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
   m_spaceType = spaceType;
   m_model = spaceType.model();
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                        Qt::QueuedConnection);
+  bool isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
+                             SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                             this,
+                             SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                             Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
@@ -875,11 +873,10 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
 void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == IddObjectType::OS_SpaceType){
-    bool isConnected = false;
-    isConnected = connect(impl.get(),
-                          SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                          this, 
-                          SLOT(onSpaceTypeRelationshipChange(int, Handle, Handle)));
+    bool isConnected = connect(impl.get(),
+                               SIGNAL(onRelationshipChange(int, Handle, Handle)),
+                               this, 
+                               SLOT(onSpaceTypeRelationshipChange(int, Handle, Handle)));
     OS_ASSERT(isConnected);
     return;
   }
@@ -1100,9 +1097,8 @@ void SpaceLoadInstancesWidget::addSpaceLoadInstance(const model::SpaceLoadInstan
 {
   SpaceLoadInstanceMiniView* spaceLoadInstanceMiniView = new SpaceLoadInstanceMiniView(spaceLoadInstance, isDefault);
 
-  bool isConnected = false;
-  isConnected = connect(spaceLoadInstanceMiniView, SIGNAL(removeClicked(SpaceLoadInstanceMiniView*)),
-                        this, SLOT(remove(SpaceLoadInstanceMiniView*)));
+  bool isConnected = connect(spaceLoadInstanceMiniView, SIGNAL(removeClicked(SpaceLoadInstanceMiniView*)),
+                             this, SLOT(remove(SpaceLoadInstanceMiniView*)));
   OS_ASSERT(isConnected);
 
   m_mainVLayout->addWidget(spaceLoadInstanceMiniView);

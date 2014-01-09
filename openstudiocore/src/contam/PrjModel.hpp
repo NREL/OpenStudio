@@ -104,7 +104,7 @@ public:
   {
     return d->rc;
   }
-  void setRc(const RunControl rc)
+  void setRc(const RunControl &rc)
   {
     d->rc = rc;
   }
@@ -118,7 +118,7 @@ public:
   {
     return d->species;
   }
-  void setSpecies(const std::vector<Species> species)
+  void setSpecies(const std::vector<Species> &species)
   {
     d->species = species;
     rebuildContaminants();
@@ -128,11 +128,11 @@ public:
   {
     return d->levels;
   }
-  void setLevels(const std::vector<Level> levels)
+  void setLevels(const std::vector<Level> &levels)
   {
     d->levels = levels;
   }
-  void addLevel(Level level)
+  void addLevel(Level &level)
   {
     level.setNr(d->levels.size()+1);
     d->levels.push_back(level);
@@ -142,7 +142,7 @@ public:
   {
     return d->daySchedules;
   }
-  void setDaySchedules(const std::vector<DaySchedule> daySchedules)
+  void setDaySchedules(const std::vector<DaySchedule> &daySchedules)
   {
     d->daySchedules = daySchedules;
   }
@@ -151,7 +151,7 @@ public:
   {
     return d->weekSchedules;
   }
-  void setWeekSchedules(const std::vector<WeekSchedule> weekSchedules)
+  void setWeekSchedules(const std::vector<WeekSchedule> &weekSchedules)
   {
     d->weekSchedules = weekSchedules;
   }
@@ -160,7 +160,7 @@ public:
   {
     return d->windPressureProfiles;
   }
-  void setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles)
+  void setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles)
   {
     d->windPressureProfiles = windPressureProfiles;
   }
@@ -190,7 +190,7 @@ public:
     }
   }
 
-  int airflowElementNrByName(std::string name) const;
+  int airflowElementNrByName(std::string &name) const;
 
   template <class T> bool replaceAirflowElement(int nr, T element)
   {
@@ -243,7 +243,7 @@ public:
   {
     return d->ahs;
   }
-  void setAhs(const std::vector<Ahs> ahs)
+  void setAhs(const std::vector<Ahs> &ahs)
   {
     d->ahs = ahs;
   }
@@ -257,7 +257,7 @@ public:
   {
     return d->zones;
   }
-  void setZones(const std::vector<Zone> zones)
+  void setZones(const std::vector<Zone> &zones)
   {
     d->zones = zones;
   }
@@ -271,7 +271,7 @@ public:
   {
     return d->paths;
   }
-  void setPaths(const std::vector<Path> paths)
+  void setPaths(const std::vector<Path> &paths)
   {
     d->paths = paths;
   }

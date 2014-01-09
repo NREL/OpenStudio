@@ -848,7 +848,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     for( std::vector<ScheduleConstant>::iterator it = schedules.begin();
          it != schedules.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<std::string> name = it->name() )
       {

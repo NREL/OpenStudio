@@ -681,7 +681,7 @@ namespace runmanager {
       jobname = openstudio::toPath(t_file.stem());     
     }
 
-    std::string workflowkey = "workflow-" + t_wf.key();
+    //std::string workflowkey = "workflow-" + t_wf.key();
 
     if (outpath.empty())
     {

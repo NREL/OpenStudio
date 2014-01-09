@@ -39,8 +39,7 @@ void ModelObjectVectorController::attach(const model::ModelObject& modelObject)
 
   attachModel(modelObject.model());
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+  bool isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
                         SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
@@ -82,8 +81,7 @@ void ModelObjectVectorController::attachModel(const model::Model& model)
   
   m_model = model;
 
-  bool isConnected = false;
-  isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
+  bool isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
                         SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
@@ -109,8 +107,7 @@ void ModelObjectVectorController::attachOtherModelObject(const model::ModelObjec
 
   m_otherModelObjects.push_back(modelObject);
 
-  bool isConnected = false;
-  isConnected = connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(),
+  bool isConnected = connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onRelationshipChange(int, Handle, Handle)),
                         this,
                         SLOT(changeRelationship(int, Handle, Handle)));

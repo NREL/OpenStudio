@@ -42,8 +42,7 @@ ModelObjectListController::ModelObjectListController(const openstudio::IddObject
                                                      bool showLocalBCL)
   : m_iddObjectType(iddObjectType), m_model(model), m_showLocalBCL(showLocalBCL)
 {
-  bool isConnected = false;
-  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
+  bool isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
                         SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
@@ -103,7 +102,7 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
 
     for( std::vector<BCLComponent>::iterator it = bclresults.begin(); 
          it != bclresults.end();
-         it++ )
+         ++it )
     {
       result.push_back(bclComponentToItemId(*it));
     }

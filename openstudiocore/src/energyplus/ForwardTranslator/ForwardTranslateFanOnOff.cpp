@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_OnOff,modelObject);
   
   // Model Name
-  std::string baseName = modelObject.name().get();
+  //std::string baseName = modelObject.name().get();
 
   //  A3 ,Field Availability Schedule Name
   boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();

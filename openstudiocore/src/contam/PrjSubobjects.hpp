@@ -34,15 +34,15 @@ public:
   void read(Reader &input);
   std::string write();
   RX Tambt() const;
-  void setTambt(const RX Tambt);
+  void setTambt(const RX &Tambt);
   RX barpres() const;
-  void setBarpres(const RX barpres);
+  void setBarpres(const RX &barpres);
   RX windspd() const;
-  void setWindspd(const RX windspd);
+  void setWindspd(const RX &windspd);
   RX winddir() const;
-  void setWinddir(const RX winddir);
+  void setWinddir(const RX &winddir);
   RX relhum() const;
-  void setRelhum(const RX relhum);
+  void setRelhum(const RX &relhum);
   int daytyp() const;
   void setDaytyp(const int daytyp);
   int uTa() const;
@@ -86,15 +86,15 @@ public:
   void read(Reader &reader);
   std::string write();
   RX mF() const;
-  void setMF(const RX mF);
+  void setMF(const RX &mF);
   int u_mF() const;
   void setU_mF(const int u_mF);
   RX dP() const;
-  void setDP(const RX dP);
+  void setDP(const RX &dP);
   int u_dP() const;
   void setU_dP(const int u_dP);
   RX rP() const;
-  void setRP(const RX rP);
+  void setRP(const RX &rP);
   int u_rP() const;
   void setU_rP(const int u_rP);
 private:
@@ -113,9 +113,9 @@ public:
   void read(Reader &reader);
   std::string write();
   RX x() const;
-  void setX(const RX x);
+  void setX(const RX &x);
   RX y() const;
-  void setY(const RX y);
+  void setY(const RX &y);
 private:
   RX m_x;  // value of independent variable (R4)
   RX m_y;  // value of dependent variable (R4)
@@ -130,7 +130,7 @@ public:
   int nr() const;
   void setNr(const int nr);
   RX relHt() const;
-  void setRelHt(const RX relHt);
+  void setRelHt(const RX &relHt);
   int filt() const;
   void setFilt(const int filt);
 private:
@@ -146,9 +146,9 @@ public:
   void read(Reader &reader);
   std::string write();
   RX azm() const;
-  void setAzm(const RX azm);
+  void setAzm(const RX &azm);
   RX coef() const;
-  void setCoef(const RX coef);
+  void setCoef(const RX &coef);
 private:
   RX m_azm;  // wind azimuth value {R4} [degrees]
   RX m_coef;  // normalized wind pressure coefficients {R4} [-]
@@ -161,9 +161,9 @@ public:
   void read(Reader &reader);
   std::string write();
   std::string time() const;
-  void setTime(const std::string time);
+  void setTime(const std::string &time);
   RX ctrl() const;
-  void setCtrl(const RX ctrl);
+  void setCtrl(const RX &ctrl);
 private:
   std::string m_time;  // time-of-day [s] (hh:mm:ss)
   RX m_ctrl;  // corresponding control value (R4) [-]

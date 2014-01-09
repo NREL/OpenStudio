@@ -1,4 +1,4 @@
-/**********************************************************************
+  /**********************************************************************
 *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
@@ -794,11 +794,10 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
   m_designSpecificationOutdoorAirDropZone->showAddButton();
   vLayout->addWidget(m_designSpecificationOutdoorAirDropZone);
 
-  bool isConnected = false;
-  isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
+  bool isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
+                             SIGNAL(itemClicked(OSItem*)),
+                             this, 
+                             SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
   vLayout->addStretch();

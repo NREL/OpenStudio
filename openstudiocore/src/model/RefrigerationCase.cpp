@@ -803,7 +803,6 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSc
 {
   OS_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
 
-  bool ok = true;
   CurveCubic latentCaseCreditCurve = CurveCubic(model);
   latentCaseCreditCurve.setName("Refrigeration Case Latent Credit Curve");
   latentCaseCreditCurve.setCoefficient1Constant(0.026526281);
@@ -822,7 +821,7 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSc
   setCaseOperatingTemperature(2.78);
   setLatentCaseCreditCurveType("CaseTemperatureMethod");
 
-  ok = setLatentCaseCreditCurve(latentCaseCreditCurve);
+  bool ok = setLatentCaseCreditCurve(latentCaseCreditCurve);
   OS_ASSERT(ok);
 
   setStandardCaseFanPowerperUnitLength(41.01);

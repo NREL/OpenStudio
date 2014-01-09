@@ -225,26 +225,22 @@ namespace detail {
   }
 
   bool ScheduleFixedInterval_Impl::setStartMonth(int startMonth, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_FixedIntervalFields::StartMonth, startMonth, driverMethod);
+    bool result = setInt(OS_Schedule_FixedIntervalFields::StartMonth, startMonth, driverMethod);
     return result;
   }
 
   bool ScheduleFixedInterval_Impl::setStartDay(int startDay, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_FixedIntervalFields::StartDay, startDay, driverMethod);
+    bool result = setInt(OS_Schedule_FixedIntervalFields::StartDay, startDay, driverMethod);
     return result;
   }
 
   bool ScheduleFixedInterval_Impl::setIntervalLength(double intervalLength, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_Schedule_FixedIntervalFields::IntervalLength, intervalLength, driverMethod);
+    bool result = setDouble(OS_Schedule_FixedIntervalFields::IntervalLength, intervalLength, driverMethod);
     return result;
   }
 
   void ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
+    bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
     OS_ASSERT(result);
   }
 

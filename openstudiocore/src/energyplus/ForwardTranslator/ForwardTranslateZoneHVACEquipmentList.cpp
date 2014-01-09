@@ -54,7 +54,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
   for( std::vector<ModelObject>::iterator it = objects.begin();
        it != objects.end();
-       it++ )
+       ++it )
   {
     unsigned coolingPriority = modelObject.coolingPriority(*it);
     unsigned heatingPriority = modelObject.heatingPriority(*it);

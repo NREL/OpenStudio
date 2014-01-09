@@ -200,6 +200,7 @@ SimSettingsView::SimSettingsView(bool isIP,
   model::YearDescription yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
   isConnected = connect(yearDescription.getImpl<model::detail::YearDescription_Impl>().get(), SIGNAL(onChange()),
                         this, SLOT(updateYearDescription()));
+  OS_ASSERT(isConnected);
 
   createWidgets();
   attachAll();
@@ -417,12 +418,10 @@ QWidget * SimSettingsView::createRunControlWidget()
   layout->setSpacing(0);
   mainLayout->addLayout(layout);
 
-  bool isConnected = false;
-
   m_runSimWeatherFiles = new QCheckBox("Run Simulation for Weather File");
   layout->addWidget(m_runSimWeatherFiles);
 
-  isConnected = connect(m_runSimWeatherFiles, SIGNAL(stateChanged(int)),
+  bool isConnected = connect(m_runSimWeatherFiles, SIGNAL(stateChanged(int)),
     this, SLOT(on_runSimWeatherFiles(int)));
   OS_ASSERT(isConnected);
 
@@ -857,11 +856,9 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
 {
   QVBoxLayout * vLayout = new QVBoxLayout();
 
-  bool isConnected = false;
-
   m_radianceGroup = new QButtonGroup(this);
 
-  isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
+  bool isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(on_radianceGroupClicked(int)));
   OS_ASSERT(isConnected);
 

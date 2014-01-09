@@ -367,8 +367,7 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setMultiplier(int multiplier) {
-    bool result = false;
-    result = setInt(OS_ThermalZoneFields::Multiplier, multiplier);
+    bool result = setInt(OS_ThermalZoneFields::Multiplier, multiplier);
     return result;
   }
 
@@ -388,8 +387,7 @@ namespace detail {
   }
 
   void ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
-    bool result = false;
-    result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight);
+    bool result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight);
     OS_ASSERT(result);
   }
   
@@ -424,8 +422,7 @@ namespace detail {
   }
 
   void ThermalZone_Impl::setVolume(double volume) {
-    bool result = false;
-    result = setDouble(OS_ThermalZoneFields::Volume, volume);
+    bool result = setDouble(OS_ThermalZoneFields::Volume, volume);
     OS_ASSERT(result);
   }
   
@@ -460,8 +457,7 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm) {
-    bool result = false;
-    result = setString(OS_ThermalZoneFields::ZoneInsideConvectionAlgorithm, zoneInsideConvectionAlgorithm);
+    bool result = setString(OS_ThermalZoneFields::ZoneInsideConvectionAlgorithm, zoneInsideConvectionAlgorithm);
     return result;
   }
 
@@ -481,8 +477,7 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm) {
-    bool result = false;
-    result = setString(OS_ThermalZoneFields::ZoneOutsideConvectionAlgorithm, zoneOutsideConvectionAlgorithm);
+    bool result = setString(OS_ThermalZoneFields::ZoneOutsideConvectionAlgorithm, zoneOutsideConvectionAlgorithm);
     return result;
   }
 
@@ -492,14 +487,12 @@ namespace detail {
   }
 
   void ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
-    bool result = false;
-    result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
+    bool result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
     OS_ASSERT(result);
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
-    bool result = false;
-    result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl, fractionofZoneControlledbyPrimaryDaylightingControl);
+    bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl, fractionofZoneControlledbyPrimaryDaylightingControl);
     return result;
   }
   
@@ -513,8 +506,7 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl) {
-    bool result = false;
-    result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl, fractionofZoneControlledbySecondaryDaylightingControl);
+    bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl, fractionofZoneControlledbySecondaryDaylightingControl);
     return result;
   }
   
@@ -1261,7 +1253,7 @@ namespace detail {
 
     for( std::vector<ModelObject>::iterator it = comps.begin();
          it < comps.end();
-         it++ )
+         ++it )
     {
       it->remove();
     }
@@ -1318,7 +1310,7 @@ namespace detail {
 
       for( std::vector<ModelObject>::iterator it = comps.begin();
            it < comps.end();
-           it++ )
+           ++it )
       {
         it->remove();
       }
@@ -1514,7 +1506,7 @@ namespace detail {
 
     for( std::vector<SizingZone>::iterator it = sizingObjects.begin();
          it < sizingObjects.end();
-         it++ )
+         ++it )
     {
       if( it->thermalZone().handle() == this->handle() )
       {
@@ -1638,7 +1630,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACEquipmentList>::iterator it = list.begin();
          it != list.end();
-         it++ )
+         ++it )
     {
       if( it->thermalZone().handle() == handle() )
       {

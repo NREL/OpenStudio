@@ -136,8 +136,7 @@ ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& m
   this->setText(0, toQString(modelObject.name().get()));
   this->setStyle(0, "");
 
-  bool isConnected = false;
-  isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
+  bool isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onNameChange()),
                         this, 
                         SLOT(changeName()));

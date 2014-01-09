@@ -64,8 +64,6 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   // collapsible header
   m_mainLayout->addWidget(m_collapsibleItemHeader);
 
-  bool isConnected = false;
-
   m_filterWidget = new QWidget();
   m_filterWidget->setObjectName("GrayWidget");
 
@@ -81,7 +79,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_filtersOnBtn = new QRadioButton(this);
   m_filtersOnBtn->setText(FILTERS_ON);
   m_filtersOnBtn->setChecked(true);
-  isConnected = connect(m_filtersOnBtn,SIGNAL(clicked()),this,SLOT(filtersOnClicked()));
+  bool isConnected = connect(m_filtersOnBtn,SIGNAL(clicked()),this,SLOT(filtersOnClicked()));
   OS_ASSERT(isConnected);
 
   m_filtersOffBtn = new QRadioButton(this);

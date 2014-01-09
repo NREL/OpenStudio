@@ -68,7 +68,6 @@ namespace detail {
 
     protected:
       virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_creator);
-      virtual void timerEvent(QTimerEvent *e);
       virtual void basePathChanged() {}
       virtual void standardCleanImpl() { /* nothing to do here */ }
 
@@ -76,9 +75,6 @@ namespace detail {
       REGISTER_LOGGER("openstudio.runmanager.Null");
 
       mutable QMutex m_mutex;
-
-      JobErrors m_errors;
-      int m_timerId;
 
       boost::optional<QDateTime> m_lastRun; //< time of last job run
   }; 

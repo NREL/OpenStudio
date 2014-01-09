@@ -820,22 +820,14 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
 
     std::sort(names.begin(), names.end(), IstringCompare());
 
-    if (!prop.required){
-      combo->addItem("");
-    }else{
-      combo->addItem("");
-    }
+    combo->addItem("");
     BOOST_FOREACH(const std::string& name, names){
       combo->addItem(name.c_str());   
     }
   }
   else
   {
-    if (!prop.required){
-      combo->addItem("");
-    }else{
-      combo->addItem("");
-    }
+    combo->addItem("");
     BOOST_FOREACH(IddKey key, field.keys()){
       combo->addItem(key.name().c_str());
     }

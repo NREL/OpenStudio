@@ -2331,7 +2331,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
@@ -2370,7 +2370,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
@@ -2395,7 +2395,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
     for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
        it != fluidObjects.end();
-       it++ )
+       ++it )
     {
       if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
         idfObject = *it;

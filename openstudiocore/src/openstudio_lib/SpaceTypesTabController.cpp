@@ -32,12 +32,10 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
 {
   m_spaceTypesController = boost::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
 
-  bool isConnected = false;
-
-  isConnected = connect(m_spaceTypesController.get(),
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-                        this,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
+  bool isConnected = connect(m_spaceTypesController.get(),
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
+                             this,
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(openBclDlgClicked()),

@@ -84,9 +84,8 @@ OSItemList::OSItemList(OSVectorController* vectorController,
   m_vLayout->setSpacing(0);
   m_vLayout->addStretch();
 
-  bool isConnected = false;
-  isConnected = connect(this, SIGNAL(itemsRequested()),
-                        vectorController, SLOT(reportItems())); 
+  bool isConnected = connect(this, SIGNAL(itemsRequested()),
+                             vectorController, SLOT(reportItems())); 
   OS_ASSERT(isConnected);
 
   /* Vector controller does not handle removing items in list from model
@@ -135,13 +134,10 @@ std::vector<OSItem *> OSItemList::items()
 {
   std::vector<OSItem *> result;
 
-  QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
-  OSItem * item = NULL;
   for (int i = 0; i < m_vLayout->count(); ++i){
-    layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
-    item = qobject_cast<OSItem*>(widget);
+    QLayoutItem * layoutItem = m_vLayout->itemAt(i);
+    QWidget * widget = layoutItem->widget();
+    OSItem * item = qobject_cast<OSItem*>(widget);
 
     if (item){
       result.push_back(item);
@@ -242,9 +238,8 @@ void OSItemList::addItem(OSItem* item, bool selectItem)
 
   item->setType(m_type);
 
-  bool isConnected = false;
-  isConnected = connect(item, SIGNAL(itemClicked(OSItem*)),
-                        this, SLOT(selectItem(OSItem*)));
+  bool isConnected = connect(item, SIGNAL(itemClicked(OSItem*)),
+                             this, SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(item, SIGNAL(itemRemoveClicked(OSItem*)),
@@ -277,14 +272,10 @@ void OSItemList::selectItem(OSItem* selectItem)
     return;
   }
 
-  QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
-  OSItem * item = NULL;
-
   for (int i = 0; i < m_vLayout->count(); ++i){
-    layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
-    item = qobject_cast<OSItem*>(widget);
+    QLayoutItem * layoutItem = m_vLayout->itemAt(i);
+    QWidget * widget = layoutItem->widget();
+    OSItem * item = qobject_cast<OSItem*>(widget);
 
     if (item){
       if (selectItem->equal(item)){
@@ -336,13 +327,10 @@ void OSItemList::clearSelection()
 {
   m_selectedItem = NULL;
 
-  QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
-  OSItem * item = NULL;
   for (int i = 0; i < m_vLayout->count(); ++i){
-    layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
-    item = qobject_cast<OSItem*>(widget);
+    QLayoutItem * layoutItem = m_vLayout->itemAt(i);
+    QWidget * widget = layoutItem->widget();
+    OSItem * item = qobject_cast<OSItem*>(widget);
     if (item){
       item->setSelected(false);
     }
