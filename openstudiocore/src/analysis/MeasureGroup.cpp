@@ -268,9 +268,14 @@ namespace detail {
   }
 
   bool MeasureGroup_Impl::insert(int index, const Measure& measure) {
-    if ((index < 0) || (index >= int(numMeasures(false)))) {
+    if ((index < 0) || (index > int(numMeasures(false)))) {
       return false;
     }
+
+    if (index == int(numMeasures(false))) {
+      return push(measure);
+    }
+
     // position does not matter for compatibility checking
     MeasureVector candidates = measures(false);
     candidates.push_back(measure);
