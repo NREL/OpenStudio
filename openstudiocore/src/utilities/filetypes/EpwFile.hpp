@@ -251,6 +251,9 @@ public:
   /// will throw if path does not exist or file is incorrect
   EpwFile(const openstudio::path& p, bool storeData=false);
 
+  /// static load method
+  static boost::optional<EpwFile> load(const openstudio::path& p, bool storeData=false);
+
   /// get the path
   openstudio::path path() const;
 

@@ -91,7 +91,6 @@ namespace detail {
 
     {
       QMutexLocker l(&m_mutex);
-      m_lastRun = QDateTime::currentDateTime();
     }
 
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Starting));

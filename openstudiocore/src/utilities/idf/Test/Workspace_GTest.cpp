@@ -1884,3 +1884,78 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
   EXPECT_EQ("Zone 1", daylightingControl->getString(0,false,true).get());
 
 }
+
+TEST_F(IdfFixture, Workspace_NextName) 
+{
+  Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+
+  EXPECT_EQ("Zone 1", ws.nextName(IddObjectType::Zone, false));
+  EXPECT_EQ("Zone 1", ws.nextName(IddObjectType::Zone, true));
+
+  boost::optional<WorkspaceObject> zone = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(zone);
+  EXPECT_EQ("Zone 1", zone->name().get());
+  EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, false));
+  EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, true));
+
+  zone->setName("Zone 2");
+  EXPECT_EQ("Zone 2", zone->name().get());
+  EXPECT_EQ("Zone 3", ws.nextName(IddObjectType::Zone, false));
+  EXPECT_EQ("Zone 1", ws.nextName(IddObjectType::Zone, true));
+
+  zone->setName("{af63d539-6e16-4fd1-a10e-dafe3793373b}");
+  EXPECT_EQ("{af63d539-6e16-4fd1-a10e-dafe3793373b}", zone->name().get());
+  EXPECT_EQ("Zone 1", ws.nextName(IddObjectType::Zone, false));
+  EXPECT_EQ("Zone 1", ws.nextName(IddObjectType::Zone, true));
+
+  zone->setName("Zone 1");
+
+  zone = ws.addObject(IdfObject(IddObjectType::Zone));
+  zone->setName("Zone 2");
+  EXPECT_EQ("Zone 2", zone->name().get());
+  EXPECT_EQ("Zone 3", ws.nextName(IddObjectType::Zone, false));
+  EXPECT_EQ("Zone 3", ws.nextName(IddObjectType::Zone, true));
+
+  zone->setName("{af63d539-6e16-4fd1-a10e-dafe3793373b}");
+  EXPECT_EQ("{af63d539-6e16-4fd1-a10e-dafe3793373b}", zone->name().get());
+  EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, false));
+  EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, true));
+}
+
+TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID) 
+{
+  Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+
+  boost::optional<WorkspaceObject> zone = ws.addObject(IdfObject(IddObjectType::Zone));
+  EXPECT_EQ("Zone 1", zone->name().get());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone", true).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone", false).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone 1", true).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone 1", false).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone 2", true).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone 2", false).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", true).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", false).size());
+
+  zone->setName("Zone 2");
+  EXPECT_EQ("Zone 2", zone->name().get());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone", true).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone", false).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone 1", true).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone 1", false).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone 2", true).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("Zone 2", false).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", true).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", false).size());
+
+  zone->setName("{af63d539-6e16-4fd1-a10e-dafe3793373b}");
+  EXPECT_EQ("{af63d539-6e16-4fd1-a10e-dafe3793373b}", zone->name().get());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone", true).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone", false).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone 1", true).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone 1", false).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone 2", true).size());
+  EXPECT_EQ(0u, ws.getObjectsByName("Zone 2", false).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", true).size());
+  EXPECT_EQ(1u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", false).size());
+}
