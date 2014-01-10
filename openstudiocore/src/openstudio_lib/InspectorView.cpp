@@ -179,7 +179,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -201,7 +201,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new AirTerminalSingleDuctConstantVolumeReheatInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -292,7 +292,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new ZoneHVACLowTempRadiantConstFlowInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -316,7 +316,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new ZoneHVACLowTempRadiantVarFlowInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -667,7 +667,7 @@ AirTerminalInspectorView::AirTerminalInspectorView( QWidget * parent )
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_loopChooserView = new LoopChooserView();
 
@@ -760,7 +760,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::AirTerminalSingleDuc
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_coolingLoopChooserView = new LoopChooserView();
 
@@ -995,7 +995,7 @@ ZoneHVACLowTempRadiantConstFlowInspectorView::ZoneHVACLowTempRadiantConstFlowIns
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_heatingLoopChooserView = new LoopChooserView();
   m_coolingLoopChooserView = new LoopChooserView();
@@ -1099,7 +1099,7 @@ ZoneHVACLowTempRadiantVarFlowInspectorView::ZoneHVACLowTempRadiantVarFlowInspect
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_heatingLoopChooserView = new LoopChooserView();
   m_coolingLoopChooserView = new LoopChooserView();
