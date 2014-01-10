@@ -146,9 +146,9 @@ namespace openstudio {
  *         (oError->type() == DataErrorType::NullAndRequired)) 
  *     {
  *       OptionalIddObjectType oType = oError->objectType();
- *       BOOST_ASSERT(oType);
+ *       OS_ASSERT(oType);
  *       OptionalWorkspaceObject oNewObject = workspace.addObject(IdfObject(*oType));
- *       BOOST_ASSERT(oNewObject);
+ *       OS_ASSERT(oNewObject);
  *     }
  *     oError = report.nextError();
  *   }
