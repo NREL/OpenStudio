@@ -93,7 +93,7 @@ RX Zone::relHt() const
   return d->relHt;
 }
 
-void Zone::setRelHt(const RX &relHt)
+void Zone::setRelHt(const RX relHt)
 {
   d->relHt = relHt;
 }
@@ -103,7 +103,7 @@ RX Zone::Vol() const
   return d->Vol;
 }
 
-void Zone::setVol(const RX &Vol)
+void Zone::setVol(const RX Vol)
 {
   d->Vol = Vol;
 }
@@ -113,7 +113,7 @@ RX Zone::T0() const
   return d->T0;
 }
 
-void Zone::setT0(const RX &T0)
+void Zone::setT0(const RX T0)
 {
   d->T0 = T0;
 }
@@ -123,7 +123,7 @@ RX Zone::P0() const
   return d->P0;
 }
 
-void Zone::setP0(const RX &P0)
+void Zone::setP0(const RX P0)
 {
   d->P0 = P0;
 }
@@ -133,7 +133,7 @@ std::string Zone::name() const
   return d->name;
 }
 
-void Zone::setName(const std::string &name)
+void Zone::setName(const std::string name)
 {
   d->name = name;
 }
@@ -213,7 +213,7 @@ std::string Zone::cfdname() const
   return d->cfdname;
 }
 
-void Zone::setCfdname(const std::string &cfdname)
+void Zone::setCfdname(const std::string cfdname)
 {
   d->cfdname = cfdname;
 }
@@ -223,7 +223,7 @@ RX Zone::X1() const
   return d->X1;
 }
 
-void Zone::setX1(const RX &X1)
+void Zone::setX1(const RX X1)
 {
   d->X1 = X1;
 }
@@ -233,7 +233,7 @@ RX Zone::Y1() const
   return d->Y1;
 }
 
-void Zone::setY1(const RX &Y1)
+void Zone::setY1(const RX Y1)
 {
   d->Y1 = Y1;
 }
@@ -243,7 +243,7 @@ RX Zone::H1() const
   return d->H1;
 }
 
-void Zone::setH1(const RX &H1)
+void Zone::setH1(const RX H1)
 {
   d->H1 = H1;
 }
@@ -253,7 +253,7 @@ RX Zone::X2() const
   return d->X2;
 }
 
-void Zone::setX2(const RX &X2)
+void Zone::setX2(const RX X2)
 {
   d->X2 = X2;
 }
@@ -263,7 +263,7 @@ RX Zone::Y2() const
   return d->Y2;
 }
 
-void Zone::setY2(const RX &Y2)
+void Zone::setY2(const RX Y2)
 {
   d->Y2 = Y2;
 }
@@ -273,7 +273,7 @@ RX Zone::H2() const
   return d->H2;
 }
 
-void Zone::setH2(const RX &H2)
+void Zone::setH2(const RX H2)
 {
   d->H2 = H2;
 }
@@ -283,7 +283,7 @@ RX Zone::celldx() const
   return d->celldx;
 }
 
-void Zone::setCelldx(const RX &celldx)
+void Zone::setCelldx(const RX celldx)
 {
   d->celldx = celldx;
 }
@@ -293,7 +293,7 @@ RX Zone::axialD() const
   return d->axialD;
 }
 
-void Zone::setAxialD(const RX &axialD)
+void Zone::setAxialD(const RX axialD)
 {
   d->axialD = axialD;
 }
@@ -377,12 +377,12 @@ std::vector<RX> Zone::ic() const
   return d->ic;
 }
 
-void Zone::setIc(const int i, const RX &value)
+void Zone::setIc(const int i, const RX value)
 {
   d->ic[i] = value;
 }
 
-void Zone::setIc(const std::vector<RX> &ic)
+void Zone::setIc(std::vector<RX> ic)
 {
   d->ic = ic;
 }
@@ -437,7 +437,7 @@ RX Species::molwt() const
   return d->molwt;
 }
 
-void Species::setMolwt(const RX &molwt)
+void Species::setMolwt(const RX molwt)
 {
   d->molwt = molwt;
 }
@@ -447,7 +447,7 @@ RX Species::mdiam() const
   return d->mdiam;
 }
 
-void Species::setMdiam(const RX &mdiam)
+void Species::setMdiam(const RX mdiam)
 {
   d->mdiam = mdiam;
 }
@@ -457,7 +457,7 @@ RX Species::edens() const
   return d->edens;
 }
 
-void Species::setEdens(const RX &edens)
+void Species::setEdens(const RX edens)
 {
   d->edens = edens;
 }
@@ -467,7 +467,7 @@ RX Species::decay() const
   return d->decay;
 }
 
-void Species::setDecay(const RX &decay)
+void Species::setDecay(const RX decay)
 {
   d->decay = decay;
 }
@@ -477,7 +477,7 @@ RX Species::Dm() const
   return d->Dm;
 }
 
-void Species::setDm(const RX &Dm)
+void Species::setDm(const RX Dm)
 {
   d->Dm = Dm;
 }
@@ -487,7 +487,7 @@ RX Species::ccdef() const
   return d->ccdef;
 }
 
-void Species::setCcdef(const RX &ccdef)
+void Species::setCcdef(const RX ccdef)
 {
   d->ccdef = ccdef;
 }
@@ -497,7 +497,7 @@ RX Species::Cp() const
   return d->Cp;
 }
 
-void Species::setCp(const RX &Cp)
+void Species::setCp(const RX Cp)
 {
   d->Cp = Cp;
 }
@@ -557,7 +557,7 @@ std::string Species::name() const
   return d->name;
 }
 
-void Species::setName(const std::string &name)
+void Species::setName(const std::string name)
 {
   d->name = name;
 }
@@ -567,7 +567,7 @@ std::string Species::desc() const
   return d->desc;
 }
 
-void Species::setDesc(const std::string &desc)
+void Species::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -652,7 +652,7 @@ std::string Ahs::name() const
   return d->name;
 }
 
-void Ahs::setName(const std::string &name)
+void Ahs::setName(const std::string name)
 {
   d->name = name;
 }
@@ -662,7 +662,7 @@ std::string Ahs::desc() const
   return d->desc;
 }
 
-void Ahs::setDesc(const std::string &desc)
+void Ahs::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -797,7 +797,7 @@ RX Path::X() const
   return d->X;
 }
 
-void Path::setX(const RX &X)
+void Path::setX(const RX X)
 {
   d->X = X;
 }
@@ -807,7 +807,7 @@ RX Path::Y() const
   return d->Y;
 }
 
-void Path::setY(const RX &Y)
+void Path::setY(const RX Y)
 {
   d->Y = Y;
 }
@@ -817,7 +817,7 @@ RX Path::relHt() const
   return d->relHt;
 }
 
-void Path::setRelHt(const RX &relHt)
+void Path::setRelHt(const RX relHt)
 {
   d->relHt = relHt;
 }
@@ -827,7 +827,7 @@ RX Path::mult() const
   return d->mult;
 }
 
-void Path::setMult(const RX &mult)
+void Path::setMult(const RX mult)
 {
   d->mult = mult;
 }
@@ -837,7 +837,7 @@ RX Path::wPset() const
   return d->wPset;
 }
 
-void Path::setWPset(const RX &wPset)
+void Path::setWPset(const RX wPset)
 {
   d->wPset = wPset;
 }
@@ -847,7 +847,7 @@ RX Path::wPmod() const
   return d->wPmod;
 }
 
-void Path::setWPmod(const RX &wPmod)
+void Path::setWPmod(const RX wPmod)
 {
   d->wPmod = wPmod;
 }
@@ -857,7 +857,7 @@ RX Path::wazm() const
   return d->wazm;
 }
 
-void Path::setWazm(const RX &wazm)
+void Path::setWazm(const RX wazm)
 {
   d->wazm = wazm;
 }
@@ -867,7 +867,7 @@ RX Path::Fahs() const
   return d->Fahs;
 }
 
-void Path::setFahs(const RX &Fahs)
+void Path::setFahs(const RX Fahs)
 {
   d->Fahs = Fahs;
 }
@@ -877,7 +877,7 @@ RX Path::Xmax() const
   return d->Xmax;
 }
 
-void Path::setXmax(const RX &Xmax)
+void Path::setXmax(const RX Xmax)
 {
   d->Xmax = Xmax;
 }
@@ -887,7 +887,7 @@ RX Path::Xmin() const
   return d->Xmin;
 }
 
-void Path::setXmin(const RX &Xmin)
+void Path::setXmin(const RX Xmin)
 {
   d->Xmin = Xmin;
 }
@@ -967,7 +967,7 @@ std::string Path::cfd_name() const
   return d->cfd_name;
 }
 
-void Path::setCfd_name(const std::string &cfd_name)
+void Path::setCfd_name(const std::string cfd_name)
 {
   d->cfd_name = cfd_name;
 }
@@ -1090,7 +1090,7 @@ std::string RunControl::name() const
   return d->name;
 }
 
-void RunControl::setName(const std::string &name)
+void RunControl::setName(const std::string name)
 {
   d->name = name;
 }
@@ -1100,7 +1100,7 @@ std::string RunControl::version() const
   return d->version;
 }
 
-void RunControl::setVersion(const std::string &version)
+void RunControl::setVersion(const std::string version)
 {
   d->version = version;
 }
@@ -1120,7 +1120,7 @@ std::string RunControl::prjdesc() const
   return d->prjdesc;
 }
 
-void RunControl::setPrjdesc(const std::string &prjdesc)
+void RunControl::setPrjdesc(const std::string prjdesc)
 {
   d->prjdesc = prjdesc;
 }
@@ -1170,7 +1170,7 @@ RX RunControl::def_T() const
   return d->def_T;
 }
 
-void RunControl::setDef_T(const RX &def_T)
+void RunControl::setDef_T(const RX def_T)
 {
   d->def_T = def_T;
 }
@@ -1190,7 +1190,7 @@ RX RunControl::rel_N() const
   return d->rel_N;
 }
 
-void RunControl::setRel_N(const RX &rel_N)
+void RunControl::setRel_N(const RX rel_N)
 {
   d->rel_N = rel_N;
 }
@@ -1200,7 +1200,7 @@ RX RunControl::wind_H() const
   return d->wind_H;
 }
 
-void RunControl::setWind_H(const RX &wind_H)
+void RunControl::setWind_H(const RX wind_H)
 {
   d->wind_H = wind_H;
 }
@@ -1220,7 +1220,7 @@ RX RunControl::wind_Ao() const
   return d->wind_Ao;
 }
 
-void RunControl::setWind_Ao(const RX &wind_Ao)
+void RunControl::setWind_Ao(const RX wind_Ao)
 {
   d->wind_Ao = wind_Ao;
 }
@@ -1230,7 +1230,7 @@ RX RunControl::wind_a() const
   return d->wind_a;
 }
 
-void RunControl::setWind_a(const RX &wind_a)
+void RunControl::setWind_a(const RX wind_a)
 {
   d->wind_a = wind_a;
 }
@@ -1240,7 +1240,7 @@ RX RunControl::scale() const
   return d->scale;
 }
 
-void RunControl::setScale(const RX &scale)
+void RunControl::setScale(const RX scale)
 {
   d->scale = scale;
 }
@@ -1300,7 +1300,7 @@ WeatherData RunControl::ssWeather() const
   return d->ssWeather;
 }
 
-void RunControl::setSsWeather(const WeatherData &ssWeather)
+void RunControl::setSsWeather(const WeatherData ssWeather)
 {
   d->ssWeather = ssWeather;
 }
@@ -1310,7 +1310,7 @@ WeatherData RunControl::wptWeather() const
   return d->wptWeather;
 }
 
-void RunControl::setWptWeather(const WeatherData &wptWeather)
+void RunControl::setWptWeather(const WeatherData wptWeather)
 {
   d->wptWeather = wptWeather;
 }
@@ -1320,7 +1320,7 @@ std::string RunControl::WTHpath() const
   return d->WTHpath;
 }
 
-void RunControl::setWTHpath(const std::string &WTHpath)
+void RunControl::setWTHpath(const std::string WTHpath)
 {
   d->WTHpath = WTHpath;
 }
@@ -1330,7 +1330,7 @@ std::string RunControl::CTMpath() const
   return d->CTMpath;
 }
 
-void RunControl::setCTMpath(const std::string &CTMpath)
+void RunControl::setCTMpath(const std::string CTMpath)
 {
   d->CTMpath = CTMpath;
 }
@@ -1340,7 +1340,7 @@ std::string RunControl::CVFpath() const
   return d->CVFpath;
 }
 
-void RunControl::setCVFpath(const std::string &CVFpath)
+void RunControl::setCVFpath(const std::string CVFpath)
 {
   d->CVFpath = CVFpath;
 }
@@ -1350,7 +1350,7 @@ std::string RunControl::DVFpath() const
   return d->DVFpath;
 }
 
-void RunControl::setDVFpath(const std::string &DVFpath)
+void RunControl::setDVFpath(const std::string DVFpath)
 {
   d->DVFpath = DVFpath;
 }
@@ -1360,7 +1360,7 @@ std::string RunControl::WPCfile() const
   return d->WPCfile;
 }
 
-void RunControl::setWPCfile(const std::string &WPCfile)
+void RunControl::setWPCfile(const std::string WPCfile)
 {
   d->WPCfile = WPCfile;
 }
@@ -1370,7 +1370,7 @@ std::string RunControl::EWCfile() const
   return d->EWCfile;
 }
 
-void RunControl::setEWCfile(const std::string &EWCfile)
+void RunControl::setEWCfile(const std::string EWCfile)
 {
   d->EWCfile = EWCfile;
 }
@@ -1380,7 +1380,7 @@ std::string RunControl::WPCdesc() const
   return d->WPCdesc;
 }
 
-void RunControl::setWPCdesc(const std::string &WPCdesc)
+void RunControl::setWPCdesc(const std::string WPCdesc)
 {
   d->WPCdesc = WPCdesc;
 }
@@ -1390,7 +1390,7 @@ RX RunControl::X0() const
   return d->X0;
 }
 
-void RunControl::setX0(const RX &X0)
+void RunControl::setX0(const RX X0)
 {
   d->X0 = X0;
 }
@@ -1400,7 +1400,7 @@ RX RunControl::Y0() const
   return d->Y0;
 }
 
-void RunControl::setY0(const RX &Y0)
+void RunControl::setY0(const RX Y0)
 {
   d->Y0 = Y0;
 }
@@ -1410,7 +1410,7 @@ RX RunControl::Z0() const
   return d->Z0;
 }
 
-void RunControl::setZ0(const RX &Z0)
+void RunControl::setZ0(const RX Z0)
 {
   d->Z0 = Z0;
 }
@@ -1420,7 +1420,7 @@ RX RunControl::angle() const
   return d->angle;
 }
 
-void RunControl::setAngle(const RX &angle)
+void RunControl::setAngle(const RX angle)
 {
   d->angle = angle;
 }
@@ -1440,7 +1440,7 @@ RX RunControl::epsPath() const
   return d->epsPath;
 }
 
-void RunControl::setEpsPath(const RX &epsPath)
+void RunControl::setEpsPath(const RX epsPath)
 {
   d->epsPath = epsPath;
 }
@@ -1450,7 +1450,7 @@ RX RunControl::epsSpcs() const
   return d->epsSpcs;
 }
 
-void RunControl::setEpsSpcs(const RX &epsSpcs)
+void RunControl::setEpsSpcs(const RX epsSpcs)
 {
   d->epsSpcs = epsSpcs;
 }
@@ -1460,7 +1460,7 @@ std::string RunControl::tShift() const
   return d->tShift;
 }
 
-void RunControl::setTShift(const std::string &tShift)
+void RunControl::setTShift(const std::string tShift)
 {
   d->tShift = tShift;
 }
@@ -1470,7 +1470,7 @@ std::string RunControl::dStart() const
   return d->dStart;
 }
 
-void RunControl::setDStart(const std::string &dStart)
+void RunControl::setDStart(const std::string dStart)
 {
   d->dStart = dStart;
 }
@@ -1480,7 +1480,7 @@ std::string RunControl::dEnd() const
   return d->dEnd;
 }
 
-void RunControl::setDEnd(const std::string &dEnd)
+void RunControl::setDEnd(const std::string dEnd)
 {
   d->dEnd = dEnd;
 }
@@ -1520,7 +1520,7 @@ RX RunControl::latd() const
   return d->latd;
 }
 
-void RunControl::setLatd(const RX &latd)
+void RunControl::setLatd(const RX latd)
 {
   d->latd = latd;
 }
@@ -1530,7 +1530,7 @@ RX RunControl::lgtd() const
   return d->lgtd;
 }
 
-void RunControl::setLgtd(const RX &lgtd)
+void RunControl::setLgtd(const RX lgtd)
 {
   d->lgtd = lgtd;
 }
@@ -1540,7 +1540,7 @@ RX RunControl::Tznr() const
   return d->Tznr;
 }
 
-void RunControl::setTznr(const RX &Tznr)
+void RunControl::setTznr(const RX Tznr)
 {
   d->Tznr = Tznr;
 }
@@ -1550,7 +1550,7 @@ RX RunControl::altd() const
   return d->altd;
 }
 
-void RunControl::setAltd(const RX &altd)
+void RunControl::setAltd(const RX altd)
 {
   d->altd = altd;
 }
@@ -1560,7 +1560,7 @@ RX RunControl::Tgrnd() const
   return d->Tgrnd;
 }
 
-void RunControl::setTgrnd(const RX &Tgrnd)
+void RunControl::setTgrnd(const RX Tgrnd)
 {
   d->Tgrnd = Tgrnd;
 }
@@ -1620,7 +1620,7 @@ RX RunControl::afrcnvg() const
   return d->afrcnvg;
 }
 
-void RunControl::setAfrcnvg(const RX &afrcnvg)
+void RunControl::setAfrcnvg(const RX afrcnvg)
 {
   d->afrcnvg = afrcnvg;
 }
@@ -1630,7 +1630,7 @@ RX RunControl::afacnvg() const
   return d->afacnvg;
 }
 
-void RunControl::setAfacnvg(const RX &afacnvg)
+void RunControl::setAfacnvg(const RX afacnvg)
 {
   d->afacnvg = afacnvg;
 }
@@ -1640,7 +1640,7 @@ RX RunControl::afrelax() const
   return d->afrelax;
 }
 
-void RunControl::setAfrelax(const RX &afrelax)
+void RunControl::setAfrelax(const RX afrelax)
 {
   d->afrelax = afrelax;
 }
@@ -1660,7 +1660,7 @@ RX RunControl::Pres() const
   return d->Pres;
 }
 
-void RunControl::setPres(const RX &Pres)
+void RunControl::setPres(const RX Pres)
 {
   d->Pres = Pres;
 }
@@ -1710,7 +1710,7 @@ RX RunControl::aflcnvg() const
   return d->aflcnvg;
 }
 
-void RunControl::setAflcnvg(const RX &aflcnvg)
+void RunControl::setAflcnvg(const RX aflcnvg)
 {
   d->aflcnvg = aflcnvg;
 }
@@ -1760,7 +1760,7 @@ RX RunControl::ccrcnvg() const
   return d->ccrcnvg;
 }
 
-void RunControl::setCcrcnvg(const RX &ccrcnvg)
+void RunControl::setCcrcnvg(const RX ccrcnvg)
 {
   d->ccrcnvg = ccrcnvg;
 }
@@ -1770,7 +1770,7 @@ RX RunControl::ccacnvg() const
   return d->ccacnvg;
 }
 
-void RunControl::setCcacnvg(const RX &ccacnvg)
+void RunControl::setCcacnvg(const RX ccacnvg)
 {
   d->ccacnvg = ccacnvg;
 }
@@ -1780,7 +1780,7 @@ RX RunControl::ccrelax() const
   return d->ccrelax;
 }
 
-void RunControl::setCcrelax(const RX &ccrelax)
+void RunControl::setCcrelax(const RX ccrelax)
 {
   d->ccrelax = ccrelax;
 }
@@ -1830,7 +1830,7 @@ RX RunControl::mfnrcnvg() const
   return d->mfnrcnvg;
 }
 
-void RunControl::setMfnrcnvg(const RX &mfnrcnvg)
+void RunControl::setMfnrcnvg(const RX mfnrcnvg)
 {
   d->mfnrcnvg = mfnrcnvg;
 }
@@ -1840,7 +1840,7 @@ RX RunControl::mfnacnvg() const
   return d->mfnacnvg;
 }
 
-void RunControl::setMfnacnvg(const RX &mfnacnvg)
+void RunControl::setMfnacnvg(const RX mfnacnvg)
 {
   d->mfnacnvg = mfnacnvg;
 }
@@ -1850,7 +1850,7 @@ RX RunControl::mfnrelax() const
   return d->mfnrelax;
 }
 
-void RunControl::setMfnrelax(const RX &mfnrelax)
+void RunControl::setMfnrelax(const RX mfnrelax)
 {
   d->mfnrelax = mfnrelax;
 }
@@ -1860,7 +1860,7 @@ RX RunControl::mfngamma() const
   return d->mfngamma;
 }
 
-void RunControl::setMfngamma(const RX &mfngamma)
+void RunControl::setMfngamma(const RX mfngamma)
 {
   d->mfngamma = mfngamma;
 }
@@ -1910,7 +1910,7 @@ RX RunControl::mftrcnvg() const
   return d->mftrcnvg;
 }
 
-void RunControl::setMftrcnvg(const RX &mftrcnvg)
+void RunControl::setMftrcnvg(const RX mftrcnvg)
 {
   d->mftrcnvg = mftrcnvg;
 }
@@ -1920,7 +1920,7 @@ RX RunControl::mftacnvg() const
   return d->mftacnvg;
 }
 
-void RunControl::setMftacnvg(const RX &mftacnvg)
+void RunControl::setMftacnvg(const RX mftacnvg)
 {
   d->mftacnvg = mftacnvg;
 }
@@ -1930,7 +1930,7 @@ RX RunControl::mftrelax() const
   return d->mftrelax;
 }
 
-void RunControl::setMftrelax(const RX &mftrelax)
+void RunControl::setMftrelax(const RX mftrelax)
 {
   d->mftrelax = mftrelax;
 }
@@ -1940,7 +1940,7 @@ RX RunControl::mftgamma() const
   return d->mftgamma;
 }
 
-void RunControl::setMftgamma(const RX &mftgamma)
+void RunControl::setMftgamma(const RX mftgamma)
 {
   d->mftgamma = mftgamma;
 }
@@ -1990,7 +1990,7 @@ RX RunControl::mfvrcnvg() const
   return d->mfvrcnvg;
 }
 
-void RunControl::setMfvrcnvg(const RX &mfvrcnvg)
+void RunControl::setMfvrcnvg(const RX mfvrcnvg)
 {
   d->mfvrcnvg = mfvrcnvg;
 }
@@ -2000,7 +2000,7 @@ RX RunControl::mfvacnvg() const
   return d->mfvacnvg;
 }
 
-void RunControl::setMfvacnvg(const RX &mfvacnvg)
+void RunControl::setMfvacnvg(const RX mfvacnvg)
 {
   d->mfvacnvg = mfvacnvg;
 }
@@ -2010,7 +2010,7 @@ RX RunControl::mfvrelax() const
   return d->mfvrelax;
 }
 
-void RunControl::setMfvrelax(const RX &mfvrelax)
+void RunControl::setMfvrelax(const RX mfvrelax)
 {
   d->mfvrelax = mfvrelax;
 }
@@ -2060,7 +2060,7 @@ RX RunControl::celldx() const
   return d->celldx;
 }
 
-void RunControl::setCelldx(const RX &celldx)
+void RunControl::setCelldx(const RX celldx)
 {
   d->celldx = celldx;
 }
@@ -2100,7 +2100,7 @@ RX RunControl::cvode_rcnvg() const
   return d->cvode_rcnvg;
 }
 
-void RunControl::setCvode_rcnvg(const RX &cvode_rcnvg)
+void RunControl::setCvode_rcnvg(const RX cvode_rcnvg)
 {
   d->cvode_rcnvg = cvode_rcnvg;
 }
@@ -2110,7 +2110,7 @@ RX RunControl::cvode_acnvg() const
   return d->cvode_acnvg;
 }
 
-void RunControl::setCvode_acnvg(const RX &cvode_acnvg)
+void RunControl::setCvode_acnvg(const RX cvode_acnvg)
 {
   d->cvode_acnvg = cvode_acnvg;
 }
@@ -2120,7 +2120,7 @@ RX RunControl::cvode_dtmax() const
   return d->cvode_dtmax;
 }
 
-void RunControl::setCvode_dtmax(const RX &cvode_dtmax)
+void RunControl::setCvode_dtmax(const RX cvode_dtmax)
 {
   d->cvode_dtmax = cvode_dtmax;
 }
@@ -2140,7 +2140,7 @@ RX RunControl::tsrelax() const
   return d->tsrelax;
 }
 
-void RunControl::setTsrelax(const RX &tsrelax)
+void RunControl::setTsrelax(const RX tsrelax)
 {
   d->tsrelax = tsrelax;
 }
@@ -2200,7 +2200,7 @@ std::string RunControl::date_st() const
   return d->date_st;
 }
 
-void RunControl::setDate_st(const std::string &date_st)
+void RunControl::setDate_st(const std::string date_st)
 {
   d->date_st = date_st;
 }
@@ -2210,7 +2210,7 @@ std::string RunControl::time_st() const
   return d->time_st;
 }
 
-void RunControl::setTime_st(const std::string &time_st)
+void RunControl::setTime_st(const std::string time_st)
 {
   d->time_st = time_st;
 }
@@ -2220,7 +2220,7 @@ std::string RunControl::date_0() const
   return d->date_0;
 }
 
-void RunControl::setDate_0(const std::string &date_0)
+void RunControl::setDate_0(const std::string date_0)
 {
   d->date_0 = date_0;
 }
@@ -2230,7 +2230,7 @@ std::string RunControl::time_0() const
   return d->time_0;
 }
 
-void RunControl::setTime_0(const std::string &time_0)
+void RunControl::setTime_0(const std::string time_0)
 {
   d->time_0 = time_0;
 }
@@ -2240,7 +2240,7 @@ std::string RunControl::date_1() const
   return d->date_1;
 }
 
-void RunControl::setDate_1(const std::string &date_1)
+void RunControl::setDate_1(const std::string date_1)
 {
   d->date_1 = date_1;
 }
@@ -2250,7 +2250,7 @@ std::string RunControl::time_1() const
   return d->time_1;
 }
 
-void RunControl::setTime_1(const std::string &time_1)
+void RunControl::setTime_1(const std::string time_1)
 {
   d->time_1 = time_1;
 }
@@ -2260,7 +2260,7 @@ std::string RunControl::time_step() const
   return d->time_step;
 }
 
-void RunControl::setTime_step(const std::string &time_step)
+void RunControl::setTime_step(const std::string time_step)
 {
   d->time_step = time_step;
 }
@@ -2270,7 +2270,7 @@ std::string RunControl::time_list() const
   return d->time_list;
 }
 
-void RunControl::setTime_list(const std::string &time_list)
+void RunControl::setTime_list(const std::string time_list)
 {
   d->time_list = time_list;
 }
@@ -2280,7 +2280,7 @@ std::string RunControl::time_scrn() const
   return d->time_scrn;
 }
 
-void RunControl::setTime_scrn(const std::string &time_scrn)
+void RunControl::setTime_scrn(const std::string time_scrn)
 {
   d->time_scrn = time_scrn;
 }
@@ -2300,7 +2300,7 @@ std::string RunControl::rstdate() const
   return d->rstdate;
 }
 
-void RunControl::setRstdate(const std::string &rstdate)
+void RunControl::setRstdate(const std::string rstdate)
 {
   d->rstdate = rstdate;
 }
@@ -2310,7 +2310,7 @@ std::string RunControl::rsttime() const
   return d->rsttime;
 }
 
-void RunControl::setRsttime(const std::string &rsttime)
+void RunControl::setRsttime(const std::string rsttime)
 {
   d->rsttime = rsttime;
 }
@@ -2510,7 +2510,7 @@ std::vector<int> RunControl::save() const
   return d->save;
 }
 
-void RunControl::setSave(const std::vector<int> &save)
+void RunControl::setSave(const std::vector<int> save)
 {
   d->save = save;
 }
@@ -2520,7 +2520,7 @@ std::vector<RX> RunControl::rvals() const
   return d->rvals;
 }
 
-void RunControl::setRvals(const std::vector<RX> &rvals)
+void RunControl::setRvals(const std::vector<RX> rvals)
 {
   d->rvals = rvals;
 }
@@ -2570,7 +2570,7 @@ RX RunControl::cfd_convcpl() const
   return d->cfd_convcpl;
 }
 
-void RunControl::setCfd_convcpl(const RX &cfd_convcpl)
+void RunControl::setCfd_convcpl(const RX cfd_convcpl)
 {
   d->cfd_convcpl = cfd_convcpl;
 }
@@ -2645,7 +2645,7 @@ RX Level::refht() const
   return d->refht;
 }
 
-void Level::setRefht(const RX &refht)
+void Level::setRefht(const RX refht)
 {
   d->refht = refht;
 }
@@ -2655,7 +2655,7 @@ RX Level::delht() const
   return d->delht;
 }
 
-void Level::setDelht(const RX &delht)
+void Level::setDelht(const RX delht)
 {
   d->delht = delht;
 }
@@ -2685,7 +2685,7 @@ std::string Level::name() const
   return d->name;
 }
 
-void Level::setName(const std::string &name)
+void Level::setName(const std::string name)
 {
   d->name = name;
 }
@@ -2695,7 +2695,7 @@ std::vector<Icon> Level::icons() const
   return d->icons;
 }
 
-void Level::setIcons(const std::vector<Icon> &icons)
+void Level::setIcons(const std::vector<Icon> icons)
 {
   d->icons = icons;
 }
@@ -2760,7 +2760,7 @@ std::string DaySchedule::name() const
   return d->name;
 }
 
-void DaySchedule::setName(const std::string &name)
+void DaySchedule::setName(const std::string name)
 {
   d->name = name;
 }
@@ -2770,7 +2770,7 @@ std::string DaySchedule::desc() const
   return d->desc;
 }
 
-void DaySchedule::setDesc(const std::string &desc)
+void DaySchedule::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -2780,7 +2780,7 @@ std::vector<SchedulePoint> DaySchedule::points() const
   return d->points;
 }
 
-void DaySchedule::setPoints(const std::vector<SchedulePoint> &points)
+void DaySchedule::setPoints(const std::vector<SchedulePoint> points)
 {
   d->points = points;
 }
@@ -2835,7 +2835,7 @@ std::string WeekSchedule::name() const
   return d->name;
 }
 
-void WeekSchedule::setName(const std::string &name)
+void WeekSchedule::setName(const std::string name)
 {
   d->name = name;
 }
@@ -2845,7 +2845,7 @@ std::string WeekSchedule::desc() const
   return d->desc;
 }
 
-void WeekSchedule::setDesc(const std::string &desc)
+void WeekSchedule::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -2855,7 +2855,7 @@ std::vector<int> WeekSchedule::j() const
   return d->j;
 }
 
-void WeekSchedule::setJ(const std::vector<int> &j)
+void WeekSchedule::setJ(const std::vector<int> j)
 {
   d->j = j;
 }
@@ -2900,7 +2900,7 @@ std::string WindPressureProfile::name() const
   return d->name;
 }
 
-void WindPressureProfile::setName(const std::string &name)
+void WindPressureProfile::setName(const std::string name)
 {
   d->name = name;
 }
@@ -2910,7 +2910,7 @@ std::string WindPressureProfile::desc() const
   return d->desc;
 }
 
-void WindPressureProfile::setDesc(const std::string &desc)
+void WindPressureProfile::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -2920,7 +2920,7 @@ std::vector<PressureCoefficientPoint> WindPressureProfile::coeffs() const
   return d->coeffs;
 }
 
-void WindPressureProfile::setCoeffs(const std::vector<PressureCoefficientPoint> &coeffs)
+void WindPressureProfile::setCoeffs(const std::vector<PressureCoefficientPoint> coeffs)
 {
   d->coeffs = coeffs;
 }
@@ -2953,243 +2953,243 @@ ControlNode* ControlNode::readElement(Reader &input)
   case ControlNode::CT_PAS:
     {
       PasDat *obj = new PasDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_ABS:
     {
       AbsDat *obj = new AbsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_BIN:
     {
       BinDat *obj = new BinDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_INT:
     {
       IntDat *obj = new IntDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_INV:
     {
       InvDat *obj = new InvDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_AND:
     {
       AndDat *obj = new AndDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_OR:
     {
       OrDat *obj = new OrDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_XOR:
     {
       XorDat *obj = new XorDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_ADD:
     {
       AddDat *obj = new AddDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_SUB:
     {
       SubDat *obj = new SubDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_MUL:
     {
       MulDat *obj = new MulDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_DIV:
     {
       DivDat *obj = new DivDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_LLS:
     {
       LlsDat *obj = new LlsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_ULS:
     {
       UlsDat *obj = new UlsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_LLC:
     {
       LlcDat *obj = new LlcDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_ULC:
     {
       UlcDat *obj = new UlcDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_SPH:
     {
       SphDat *obj = new SphDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_SNS:
     {
       SnsDat *obj = new SnsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_SCH:
     {
       SchDat *obj = new SchDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_SET:
     {
       SetDat *obj = new SetDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_CVF:
     {
       CvfDat *obj = new CvfDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_DVF:
     {
       DvfDat *obj = new DvfDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_LOG:
     {
       LogDat *obj = new LogDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_MOD:
     {
       ModDat *obj = new ModDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_HYS:
     {
       HysDat *obj = new HysDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_DLS:
     {
       DlsDat *obj = new DlsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_DLX:
     {
       DlxDat *obj = new DlxDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_RAV:
     {
       RavDat *obj = new RavDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_SUM:
     {
       SumAvg *obj = new SumAvg(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_AVG:
     {
       AvgDat *obj = new AvgDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_MAX:
     {
       MaxDat *obj = new MaxDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_MIN:
     {
       MinDat *obj = new MinDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_LBS:
     {
       LbsDat *obj = new LbsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_UBS:
     {
       UbsDat *obj = new UbsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_PC1:
     {
       PcDat *obj = new PcDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_PI1:
     {
       PicDat *obj = new PicDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::CT_SUP:
     {
       SupDat *obj = new SupDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
       obj->readDetails(input);
-      out = static_cast<ControlNode*>(obj);
+      out = (ControlNode*)obj;
       break;
     }
   case ControlNode::UNKNOWN:
@@ -3283,7 +3283,7 @@ std::string CtrlDat::name() const
   return d->name;
 }
 
-void CtrlDat::setName(const std::string &name)
+void CtrlDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -3293,7 +3293,7 @@ std::string CtrlDat::desc() const
   return d->desc;
 }
 
-void CtrlDat::setDesc(const std::string &desc)
+void CtrlDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3384,7 +3384,7 @@ std::string SnsDat::name() const
   return d->name;
 }
 
-void SnsDat::setName(const std::string &name)
+void SnsDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -3394,7 +3394,7 @@ std::string SnsDat::desc() const
   return d->desc;
 }
 
-void SnsDat::setDesc(const std::string &desc)
+void SnsDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3404,7 +3404,7 @@ RX SnsDat::offset() const
   return d->offset;
 }
 
-void SnsDat::setOffset(const RX &offset)
+void SnsDat::setOffset(const RX offset)
 {
   d->offset = offset;
 }
@@ -3414,7 +3414,7 @@ RX SnsDat::scale() const
   return d->scale;
 }
 
-void SnsDat::setScale(const RX &scale)
+void SnsDat::setScale(const RX scale)
 {
   d->scale = scale;
 }
@@ -3424,7 +3424,7 @@ RX SnsDat::tau() const
   return d->tau;
 }
 
-void SnsDat::setTau(const RX &tau)
+void SnsDat::setTau(const RX tau)
 {
   d->tau = tau;
 }
@@ -3434,7 +3434,7 @@ RX SnsDat::oldsig() const
   return d->oldsig;
 }
 
-void SnsDat::setOldsig(const RX &oldsig)
+void SnsDat::setOldsig(const RX oldsig)
 {
   d->oldsig = oldsig;
 }
@@ -3474,7 +3474,7 @@ RX SnsDat::X() const
   return d->X;
 }
 
-void SnsDat::setX(const RX &X)
+void SnsDat::setX(const RX X)
 {
   d->X = X;
 }
@@ -3484,7 +3484,7 @@ RX SnsDat::Y() const
   return d->Y;
 }
 
-void SnsDat::setY(const RX &Y)
+void SnsDat::setY(const RX Y)
 {
   d->Y = Y;
 }
@@ -3494,7 +3494,7 @@ RX SnsDat::relHt() const
   return d->relHt;
 }
 
-void SnsDat::setRelHt(const RX &relHt)
+void SnsDat::setRelHt(const RX relHt)
 {
   d->relHt = relHt;
 }
@@ -3504,7 +3504,7 @@ std::string SnsDat::units() const
   return d->units;
 }
 
-void SnsDat::setUnits(const std::string &units)
+void SnsDat::setUnits(const std::string units)
 {
   d->units = units;
 }
@@ -3514,7 +3514,7 @@ std::string SnsDat::species() const
   return d->species;
 }
 
-void SnsDat::setSpecies(const std::string &species)
+void SnsDat::setSpecies(const std::string species)
 {
   d->species = species;
 }
@@ -3605,7 +3605,7 @@ std::string SchDat::name() const
   return d->name;
 }
 
-void SchDat::setName(const std::string &name)
+void SchDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -3615,7 +3615,7 @@ std::string SchDat::desc() const
   return d->desc;
 }
 
-void SchDat::setDesc(const std::string &desc)
+void SchDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3716,7 +3716,7 @@ std::string SetDat::name() const
   return d->name;
 }
 
-void SetDat::setName(const std::string &name)
+void SetDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -3726,7 +3726,7 @@ std::string SetDat::desc() const
   return d->desc;
 }
 
-void SetDat::setDesc(const std::string &desc)
+void SetDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3736,7 +3736,7 @@ RX SetDat::value() const
   return d->value;
 }
 
-void SetDat::setValue(const RX &value)
+void SetDat::setValue(const RX value)
 {
   d->value = value;
 }
@@ -3827,7 +3827,7 @@ std::string CdvDat::name() const
   return d->name;
 }
 
-void CdvDat::setName(const std::string &name)
+void CdvDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -3837,7 +3837,7 @@ std::string CdvDat::desc() const
   return d->desc;
 }
 
-void CdvDat::setDesc(const std::string &desc)
+void CdvDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3847,7 +3847,7 @@ std::string CdvDat::valuename() const
   return d->valuename;
 }
 
-void CdvDat::setValuename(const std::string &valuename)
+void CdvDat::setValuename(const std::string valuename)
 {
   d->valuename = valuename;
 }
@@ -3938,7 +3938,7 @@ std::string LogDat::name() const
   return d->name;
 }
 
-void LogDat::setName(const std::string &name)
+void LogDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -3948,7 +3948,7 @@ std::string LogDat::desc() const
   return d->desc;
 }
 
-void LogDat::setDesc(const std::string &desc)
+void LogDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -3958,7 +3958,7 @@ RX LogDat::offset() const
   return d->offset;
 }
 
-void LogDat::setOffset(const RX &offset)
+void LogDat::setOffset(const RX offset)
 {
   d->offset = offset;
 }
@@ -3968,7 +3968,7 @@ RX LogDat::scale() const
   return d->scale;
 }
 
-void LogDat::setScale(const RX &scale)
+void LogDat::setScale(const RX scale)
 {
   d->scale = scale;
 }
@@ -3988,7 +3988,7 @@ std::string LogDat::header() const
   return d->header;
 }
 
-void LogDat::setHeader(const std::string &header)
+void LogDat::setHeader(const std::string header)
 {
   d->header = header;
 }
@@ -3998,7 +3998,7 @@ std::string LogDat::units() const
   return d->units;
 }
 
-void LogDat::setUnits(const std::string &units)
+void LogDat::setUnits(const std::string units)
 {
   d->units = units;
 }
@@ -4089,7 +4089,7 @@ std::string ModDat::name() const
   return d->name;
 }
 
-void ModDat::setName(const std::string &name)
+void ModDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4099,7 +4099,7 @@ std::string ModDat::desc() const
   return d->desc;
 }
 
-void ModDat::setDesc(const std::string &desc)
+void ModDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4109,7 +4109,7 @@ RX ModDat::offset() const
   return d->offset;
 }
 
-void ModDat::setOffset(const RX &offset)
+void ModDat::setOffset(const RX offset)
 {
   d->offset = offset;
 }
@@ -4119,7 +4119,7 @@ RX ModDat::scale() const
   return d->scale;
 }
 
-void ModDat::setScale(const RX &scale)
+void ModDat::setScale(const RX scale)
 {
   d->scale = scale;
 }
@@ -4210,7 +4210,7 @@ std::string HysDat::name() const
   return d->name;
 }
 
-void HysDat::setName(const std::string &name)
+void HysDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4220,7 +4220,7 @@ std::string HysDat::desc() const
   return d->desc;
 }
 
-void HysDat::setDesc(const std::string &desc)
+void HysDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4230,7 +4230,7 @@ RX HysDat::slack() const
   return d->slack;
 }
 
-void HysDat::setSlack(const RX &slack)
+void HysDat::setSlack(const RX slack)
 {
   d->slack = slack;
 }
@@ -4240,7 +4240,7 @@ RX HysDat::slope() const
   return d->slope;
 }
 
-void HysDat::setSlope(const RX &slope)
+void HysDat::setSlope(const RX slope)
 {
   d->slope = slope;
 }
@@ -4250,7 +4250,7 @@ RX HysDat::oldsig() const
   return d->oldsig;
 }
 
-void HysDat::setOldsig(const RX &oldsig)
+void HysDat::setOldsig(const RX oldsig)
 {
   d->oldsig = oldsig;
 }
@@ -4341,7 +4341,7 @@ std::string DlsDat::name() const
   return d->name;
 }
 
-void DlsDat::setName(const std::string &name)
+void DlsDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4351,7 +4351,7 @@ std::string DlsDat::desc() const
   return d->desc;
 }
 
-void DlsDat::setDesc(const std::string &desc)
+void DlsDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4462,7 +4462,7 @@ std::string DlxDat::name() const
   return d->name;
 }
 
-void DlxDat::setName(const std::string &name)
+void DlxDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4472,7 +4472,7 @@ std::string DlxDat::desc() const
   return d->desc;
 }
 
-void DlxDat::setDesc(const std::string &desc)
+void DlxDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4583,7 +4583,7 @@ std::string RavDat::name() const
   return d->name;
 }
 
-void RavDat::setName(const std::string &name)
+void RavDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4593,7 +4593,7 @@ std::string RavDat::desc() const
   return d->desc;
 }
 
-void RavDat::setDesc(const std::string &desc)
+void RavDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4694,7 +4694,7 @@ std::string SumAvg::name() const
   return d->name;
 }
 
-void SumAvg::setName(const std::string &name)
+void SumAvg::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4704,7 +4704,7 @@ std::string SumAvg::desc() const
   return d->desc;
 }
 
-void SumAvg::setDesc(const std::string &desc)
+void SumAvg::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4714,7 +4714,7 @@ std::vector<int> SumAvg::pc() const
   return d->pc;
 }
 
-void SumAvg::setPc(const std::vector<int> &pc)
+void SumAvg::setPc(const std::vector<int> pc)
 {
   d->pc = pc;
 }
@@ -4805,7 +4805,7 @@ std::string BanDat::name() const
   return d->name;
 }
 
-void BanDat::setName(const std::string &name)
+void BanDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4815,7 +4815,7 @@ std::string BanDat::desc() const
   return d->desc;
 }
 
-void BanDat::setDesc(const std::string &desc)
+void BanDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4825,7 +4825,7 @@ RX BanDat::band() const
   return d->band;
 }
 
-void BanDat::setBand(const RX &band)
+void BanDat::setBand(const RX band)
 {
   d->band = band;
 }
@@ -4916,7 +4916,7 @@ std::string PcDat::name() const
   return d->name;
 }
 
-void PcDat::setName(const std::string &name)
+void PcDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -4926,7 +4926,7 @@ std::string PcDat::desc() const
   return d->desc;
 }
 
-void PcDat::setDesc(const std::string &desc)
+void PcDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -4936,7 +4936,7 @@ RX PcDat::kp() const
   return d->kp;
 }
 
-void PcDat::setKp(const RX &kp)
+void PcDat::setKp(const RX kp)
 {
   d->kp = kp;
 }
@@ -5027,7 +5027,7 @@ std::string PicDat::name() const
   return d->name;
 }
 
-void PicDat::setName(const std::string &name)
+void PicDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -5037,7 +5037,7 @@ std::string PicDat::desc() const
   return d->desc;
 }
 
-void PicDat::setDesc(const std::string &desc)
+void PicDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5047,7 +5047,7 @@ RX PicDat::kp() const
   return d->kp;
 }
 
-void PicDat::setKp(const RX &kp)
+void PicDat::setKp(const RX kp)
 {
   d->kp = kp;
 }
@@ -5057,7 +5057,7 @@ RX PicDat::ki() const
   return d->ki;
 }
 
-void PicDat::setKi(const RX &ki)
+void PicDat::setKi(const RX ki)
 {
   d->ki = ki;
 }
@@ -5067,7 +5067,7 @@ RX PicDat::oldsig() const
   return d->oldsig;
 }
 
-void PicDat::setOldsig(const RX &oldsig)
+void PicDat::setOldsig(const RX oldsig)
 {
   d->oldsig = oldsig;
 }
@@ -5077,7 +5077,7 @@ RX PicDat::olderr() const
   return d->olderr;
 }
 
-void PicDat::setOlderr(const RX &olderr)
+void PicDat::setOlderr(const RX olderr)
 {
   d->olderr = olderr;
 }
@@ -5168,7 +5168,7 @@ std::string SupDat::name() const
   return d->name;
 }
 
-void SupDat::setName(const std::string &name)
+void SupDat::setName(const std::string name)
 {
   d->name = name;
 }
@@ -5178,7 +5178,7 @@ std::string SupDat::desc() const
   return d->desc;
 }
 
-void SupDat::setDesc(const std::string &desc)
+void SupDat::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5249,196 +5249,196 @@ AirflowElement* AirflowElement::readElement(Reader &input)
     {
       PlrOrf *obj = new PlrOrf(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_LEAK1:
     {
       PlrLeak1 *obj = new PlrLeak1(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_LEAK2:
     {
       PlrLeak2 *obj = new PlrLeak2(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_LEAK3:
     {
       PlrLeak3 *obj = new PlrLeak3(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_CONN:
     {
       PlrConn *obj = new PlrConn(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_QCN:
     {
       PlrQcn *obj = new PlrQcn(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_FCN:
     {
       PlrFcn *obj = new PlrFcn(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_TEST1:
     {
       PlrTest1 *obj = new PlrTest1(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_TEST2:
     {
       PlrTest2 *obj = new PlrTest2(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_CRACK:
     {
       PlrCrack *obj = new PlrCrack(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_STAIR:
     {
       PlrStair *obj = new PlrStair(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_SHAFT:
     {
       PlrShaft *obj = new PlrShaft(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_BDQ:
     {
       PlrBdq *obj = new PlrBdq(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::PL_BDF:
     {
       PlrBdf *obj = new PlrBdf(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::QFR_QAB:
     {
       QfrQab *obj = new QfrQab(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::QFR_QAF:
     {
       QfrFab *obj = new QfrFab(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::QFR_CRACK:
     {
       QfrCrack *obj = new QfrCrack(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::QFR_TEST2:
     {
       QfrTest2 *obj = new QfrTest2(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::DR_DOOR:
     {
       AfeDor *obj = new AfeDor(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::DR_PL2:
     {
       DrPl2 *obj = new DrPl2(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::FN_CMF:
     {
       AfeCmf *obj = new AfeCmf(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::FN_CVF:
     {
       AfeCvf *obj = new AfeCvf(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::FN_FAN:
     {
       AfeFan *obj = new AfeFan(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::CS_FSP:
     {
       AfeFsp *obj = new AfeFsp(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::CS_QSP:
     {
       AfeQsp *obj = new AfeQsp(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::CS_PSF:
     {
       AfePsf *obj = new AfePsf(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::CS_PSQ:
     {
       AfePsq *obj = new AfePsq(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::AF_SUP:
     {
       AfeSup *obj = new AfeSup(nr,icon,name,desc);
       obj->readDetails(input);
-      out = static_cast<AirflowElement*>(obj);
+      out = (AirflowElement*)obj;
       break;
     }
   case AirflowElement::UNKNOWN:
@@ -5497,7 +5497,7 @@ std::string PlrOrf::name() const
   return d->name;
 }
 
-void PlrOrf::setName(const std::string &name)
+void PlrOrf::setName(const std::string name)
 {
   d->name = name;
 }
@@ -5507,7 +5507,7 @@ std::string PlrOrf::desc() const
   return d->desc;
 }
 
-void PlrOrf::setDesc(const std::string &desc)
+void PlrOrf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5517,7 +5517,7 @@ RX PlrOrf::lam() const
   return d->lam;
 }
 
-void PlrOrf::setLam(const RX &lam)
+void PlrOrf::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -5527,7 +5527,7 @@ RX PlrOrf::turb() const
   return d->turb;
 }
 
-void PlrOrf::setTurb(const RX &turb)
+void PlrOrf::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -5537,7 +5537,7 @@ RX PlrOrf::expt() const
   return d->expt;
 }
 
-void PlrOrf::setExpt(const RX &expt)
+void PlrOrf::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -5547,7 +5547,7 @@ RX PlrOrf::area() const
   return d->area;
 }
 
-void PlrOrf::setArea(const RX &area)
+void PlrOrf::setArea(const RX area)
 {
   d->area = area;
 }
@@ -5557,7 +5557,7 @@ RX PlrOrf::dia() const
   return d->dia;
 }
 
-void PlrOrf::setDia(const RX &dia)
+void PlrOrf::setDia(const RX dia)
 {
   d->dia = dia;
 }
@@ -5567,7 +5567,7 @@ RX PlrOrf::coef() const
   return d->coef;
 }
 
-void PlrOrf::setCoef(const RX &coef)
+void PlrOrf::setCoef(const RX coef)
 {
   d->coef = coef;
 }
@@ -5577,7 +5577,7 @@ RX PlrOrf::Re() const
   return d->Re;
 }
 
-void PlrOrf::setRe(const RX &Re)
+void PlrOrf::setRe(const RX Re)
 {
   d->Re = Re;
 }
@@ -5653,7 +5653,7 @@ std::string PlrLeak::name() const
   return d->name;
 }
 
-void PlrLeak::setName(const std::string &name)
+void PlrLeak::setName(const std::string name)
 {
   d->name = name;
 }
@@ -5663,7 +5663,7 @@ std::string PlrLeak::desc() const
   return d->desc;
 }
 
-void PlrLeak::setDesc(const std::string &desc)
+void PlrLeak::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5673,7 +5673,7 @@ RX PlrLeak::lam() const
   return d->lam;
 }
 
-void PlrLeak::setLam(const RX &lam)
+void PlrLeak::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -5683,7 +5683,7 @@ RX PlrLeak::turb() const
   return d->turb;
 }
 
-void PlrLeak::setTurb(const RX &turb)
+void PlrLeak::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -5693,7 +5693,7 @@ RX PlrLeak::expt() const
   return d->expt;
 }
 
-void PlrLeak::setExpt(const RX &expt)
+void PlrLeak::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -5703,7 +5703,7 @@ RX PlrLeak::coef() const
   return d->coef;
 }
 
-void PlrLeak::setCoef(const RX &coef)
+void PlrLeak::setCoef(const RX coef)
 {
   d->coef = coef;
 }
@@ -5713,7 +5713,7 @@ RX PlrLeak::pres() const
   return d->pres;
 }
 
-void PlrLeak::setPres(const RX &pres)
+void PlrLeak::setPres(const RX pres)
 {
   d->pres = pres;
 }
@@ -5723,7 +5723,7 @@ RX PlrLeak::area1() const
   return d->area1;
 }
 
-void PlrLeak::setArea1(const RX &area1)
+void PlrLeak::setArea1(const RX area1)
 {
   d->area1 = area1;
 }
@@ -5733,7 +5733,7 @@ RX PlrLeak::area2() const
   return d->area2;
 }
 
-void PlrLeak::setArea2(const RX &area2)
+void PlrLeak::setArea2(const RX area2)
 {
   d->area2 = area2;
 }
@@ -5743,7 +5743,7 @@ RX PlrLeak::area3() const
   return d->area3;
 }
 
-void PlrLeak::setArea3(const RX &area3)
+void PlrLeak::setArea3(const RX area3)
 {
   d->area3 = area3;
 }
@@ -5834,7 +5834,7 @@ std::string PlrConn::name() const
   return d->name;
 }
 
-void PlrConn::setName(const std::string &name)
+void PlrConn::setName(const std::string name)
 {
   d->name = name;
 }
@@ -5844,7 +5844,7 @@ std::string PlrConn::desc() const
   return d->desc;
 }
 
-void PlrConn::setDesc(const std::string &desc)
+void PlrConn::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5854,7 +5854,7 @@ RX PlrConn::lam() const
   return d->lam;
 }
 
-void PlrConn::setLam(const RX &lam)
+void PlrConn::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -5864,7 +5864,7 @@ RX PlrConn::turb() const
   return d->turb;
 }
 
-void PlrConn::setTurb(const RX &turb)
+void PlrConn::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -5874,7 +5874,7 @@ RX PlrConn::expt() const
   return d->expt;
 }
 
-void PlrConn::setExpt(const RX &expt)
+void PlrConn::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -5884,7 +5884,7 @@ RX PlrConn::area() const
   return d->area;
 }
 
-void PlrConn::setArea(const RX &area)
+void PlrConn::setArea(const RX area)
 {
   d->area = area;
 }
@@ -5894,7 +5894,7 @@ RX PlrConn::coef() const
   return d->coef;
 }
 
-void PlrConn::setCoef(const RX &coef)
+void PlrConn::setCoef(const RX coef)
 {
   d->coef = coef;
 }
@@ -5955,7 +5955,7 @@ std::string PlrQcn::name() const
   return d->name;
 }
 
-void PlrQcn::setName(const std::string &name)
+void PlrQcn::setName(const std::string name)
 {
   d->name = name;
 }
@@ -5965,7 +5965,7 @@ std::string PlrQcn::desc() const
   return d->desc;
 }
 
-void PlrQcn::setDesc(const std::string &desc)
+void PlrQcn::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -5975,7 +5975,7 @@ RX PlrQcn::lam() const
   return d->lam;
 }
 
-void PlrQcn::setLam(const RX &lam)
+void PlrQcn::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -5985,7 +5985,7 @@ RX PlrQcn::turb() const
   return d->turb;
 }
 
-void PlrQcn::setTurb(const RX &turb)
+void PlrQcn::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -5995,7 +5995,7 @@ RX PlrQcn::expt() const
   return d->expt;
 }
 
-void PlrQcn::setExpt(const RX &expt)
+void PlrQcn::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -6046,7 +6046,7 @@ std::string PlrFcn::name() const
   return d->name;
 }
 
-void PlrFcn::setName(const std::string &name)
+void PlrFcn::setName(const std::string name)
 {
   d->name = name;
 }
@@ -6056,7 +6056,7 @@ std::string PlrFcn::desc() const
   return d->desc;
 }
 
-void PlrFcn::setDesc(const std::string &desc)
+void PlrFcn::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6066,7 +6066,7 @@ RX PlrFcn::lam() const
   return d->lam;
 }
 
-void PlrFcn::setLam(const RX &lam)
+void PlrFcn::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -6076,7 +6076,7 @@ RX PlrFcn::turb() const
   return d->turb;
 }
 
-void PlrFcn::setTurb(const RX &turb)
+void PlrFcn::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -6086,7 +6086,7 @@ RX PlrFcn::expt() const
   return d->expt;
 }
 
-void PlrFcn::setExpt(const RX &expt)
+void PlrFcn::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -6137,7 +6137,7 @@ std::string PlrTest1::name() const
   return d->name;
 }
 
-void PlrTest1::setName(const std::string &name)
+void PlrTest1::setName(const std::string name)
 {
   d->name = name;
 }
@@ -6147,7 +6147,7 @@ std::string PlrTest1::desc() const
   return d->desc;
 }
 
-void PlrTest1::setDesc(const std::string &desc)
+void PlrTest1::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6157,7 +6157,7 @@ RX PlrTest1::lam() const
   return d->lam;
 }
 
-void PlrTest1::setLam(const RX &lam)
+void PlrTest1::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -6167,7 +6167,7 @@ RX PlrTest1::turb() const
   return d->turb;
 }
 
-void PlrTest1::setTurb(const RX &turb)
+void PlrTest1::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -6177,7 +6177,7 @@ RX PlrTest1::expt() const
   return d->expt;
 }
 
-void PlrTest1::setExpt(const RX &expt)
+void PlrTest1::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -6187,7 +6187,7 @@ RX PlrTest1::dP() const
   return d->dP;
 }
 
-void PlrTest1::setDP(const RX &dP)
+void PlrTest1::setDP(const RX dP)
 {
   d->dP = dP;
 }
@@ -6197,7 +6197,7 @@ RX PlrTest1::Flow() const
   return d->Flow;
 }
 
-void PlrTest1::setFlow(const RX &Flow)
+void PlrTest1::setFlow(const RX Flow)
 {
   d->Flow = Flow;
 }
@@ -6268,7 +6268,7 @@ std::string PlrTest2::name() const
   return d->name;
 }
 
-void PlrTest2::setName(const std::string &name)
+void PlrTest2::setName(const std::string name)
 {
   d->name = name;
 }
@@ -6278,7 +6278,7 @@ std::string PlrTest2::desc() const
   return d->desc;
 }
 
-void PlrTest2::setDesc(const std::string &desc)
+void PlrTest2::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6288,7 +6288,7 @@ RX PlrTest2::lam() const
   return d->lam;
 }
 
-void PlrTest2::setLam(const RX &lam)
+void PlrTest2::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -6298,7 +6298,7 @@ RX PlrTest2::turb() const
   return d->turb;
 }
 
-void PlrTest2::setTurb(const RX &turb)
+void PlrTest2::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -6308,7 +6308,7 @@ RX PlrTest2::expt() const
   return d->expt;
 }
 
-void PlrTest2::setExpt(const RX &expt)
+void PlrTest2::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -6318,7 +6318,7 @@ RX PlrTest2::dP1() const
   return d->dP1;
 }
 
-void PlrTest2::setDP1(const RX &dP1)
+void PlrTest2::setDP1(const RX dP1)
 {
   d->dP1 = dP1;
 }
@@ -6328,7 +6328,7 @@ RX PlrTest2::F1() const
   return d->F1;
 }
 
-void PlrTest2::setF1(const RX &F1)
+void PlrTest2::setF1(const RX F1)
 {
   d->F1 = F1;
 }
@@ -6338,7 +6338,7 @@ RX PlrTest2::dP2() const
   return d->dP2;
 }
 
-void PlrTest2::setDP2(const RX &dP2)
+void PlrTest2::setDP2(const RX dP2)
 {
   d->dP2 = dP2;
 }
@@ -6348,7 +6348,7 @@ RX PlrTest2::F2() const
   return d->F2;
 }
 
-void PlrTest2::setF2(const RX &F2)
+void PlrTest2::setF2(const RX F2)
 {
   d->F2 = F2;
 }
@@ -6439,7 +6439,7 @@ std::string PlrCrack::name() const
   return d->name;
 }
 
-void PlrCrack::setName(const std::string &name)
+void PlrCrack::setName(const std::string name)
 {
   d->name = name;
 }
@@ -6449,7 +6449,7 @@ std::string PlrCrack::desc() const
   return d->desc;
 }
 
-void PlrCrack::setDesc(const std::string &desc)
+void PlrCrack::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6459,7 +6459,7 @@ RX PlrCrack::lam() const
   return d->lam;
 }
 
-void PlrCrack::setLam(const RX &lam)
+void PlrCrack::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -6469,7 +6469,7 @@ RX PlrCrack::turb() const
   return d->turb;
 }
 
-void PlrCrack::setTurb(const RX &turb)
+void PlrCrack::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -6479,7 +6479,7 @@ RX PlrCrack::expt() const
   return d->expt;
 }
 
-void PlrCrack::setExpt(const RX &expt)
+void PlrCrack::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -6489,7 +6489,7 @@ RX PlrCrack::length() const
   return d->length;
 }
 
-void PlrCrack::setLength(const RX &length)
+void PlrCrack::setLength(const RX length)
 {
   d->length = length;
 }
@@ -6499,7 +6499,7 @@ RX PlrCrack::width() const
   return d->width;
 }
 
-void PlrCrack::setWidth(const RX &width)
+void PlrCrack::setWidth(const RX width)
 {
   d->width = width;
 }
@@ -6570,7 +6570,7 @@ std::string PlrStair::name() const
   return d->name;
 }
 
-void PlrStair::setName(const std::string &name)
+void PlrStair::setName(const std::string name)
 {
   d->name = name;
 }
@@ -6580,7 +6580,7 @@ std::string PlrStair::desc() const
   return d->desc;
 }
 
-void PlrStair::setDesc(const std::string &desc)
+void PlrStair::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6590,7 +6590,7 @@ RX PlrStair::lam() const
   return d->lam;
 }
 
-void PlrStair::setLam(const RX &lam)
+void PlrStair::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -6600,7 +6600,7 @@ RX PlrStair::turb() const
   return d->turb;
 }
 
-void PlrStair::setTurb(const RX &turb)
+void PlrStair::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -6610,7 +6610,7 @@ RX PlrStair::expt() const
   return d->expt;
 }
 
-void PlrStair::setExpt(const RX &expt)
+void PlrStair::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -6620,7 +6620,7 @@ RX PlrStair::Ht() const
   return d->Ht;
 }
 
-void PlrStair::setHt(const RX &Ht)
+void PlrStair::setHt(const RX Ht)
 {
   d->Ht = Ht;
 }
@@ -6630,7 +6630,7 @@ RX PlrStair::Area() const
   return d->Area;
 }
 
-void PlrStair::setArea(const RX &Area)
+void PlrStair::setArea(const RX Area)
 {
   d->Area = Area;
 }
@@ -6640,7 +6640,7 @@ RX PlrStair::peo() const
   return d->peo;
 }
 
-void PlrStair::setPeo(const RX &peo)
+void PlrStair::setPeo(const RX peo)
 {
   d->peo = peo;
 }
@@ -6721,7 +6721,7 @@ std::string PlrShaft::name() const
   return d->name;
 }
 
-void PlrShaft::setName(const std::string &name)
+void PlrShaft::setName(const std::string name)
 {
   d->name = name;
 }
@@ -6731,7 +6731,7 @@ std::string PlrShaft::desc() const
   return d->desc;
 }
 
-void PlrShaft::setDesc(const std::string &desc)
+void PlrShaft::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6741,7 +6741,7 @@ RX PlrShaft::lam() const
   return d->lam;
 }
 
-void PlrShaft::setLam(const RX &lam)
+void PlrShaft::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -6751,7 +6751,7 @@ RX PlrShaft::turb() const
   return d->turb;
 }
 
-void PlrShaft::setTurb(const RX &turb)
+void PlrShaft::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -6761,7 +6761,7 @@ RX PlrShaft::expt() const
   return d->expt;
 }
 
-void PlrShaft::setExpt(const RX &expt)
+void PlrShaft::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -6771,7 +6771,7 @@ RX PlrShaft::Ht() const
   return d->Ht;
 }
 
-void PlrShaft::setHt(const RX &Ht)
+void PlrShaft::setHt(const RX Ht)
 {
   d->Ht = Ht;
 }
@@ -6781,7 +6781,7 @@ RX PlrShaft::area() const
   return d->area;
 }
 
-void PlrShaft::setArea(const RX &area)
+void PlrShaft::setArea(const RX area)
 {
   d->area = area;
 }
@@ -6791,7 +6791,7 @@ RX PlrShaft::perim() const
   return d->perim;
 }
 
-void PlrShaft::setPerim(const RX &perim)
+void PlrShaft::setPerim(const RX perim)
 {
   d->perim = perim;
 }
@@ -6801,7 +6801,7 @@ RX PlrShaft::rough() const
   return d->rough;
 }
 
-void PlrShaft::setRough(const RX &rough)
+void PlrShaft::setRough(const RX rough)
 {
   d->rough = rough;
 }
@@ -6892,7 +6892,7 @@ std::string PlrBdq::name() const
   return d->name;
 }
 
-void PlrBdq::setName(const std::string &name)
+void PlrBdq::setName(const std::string name)
 {
   d->name = name;
 }
@@ -6902,7 +6902,7 @@ std::string PlrBdq::desc() const
   return d->desc;
 }
 
-void PlrBdq::setDesc(const std::string &desc)
+void PlrBdq::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -6912,7 +6912,7 @@ RX PlrBdq::lam() const
   return d->lam;
 }
 
-void PlrBdq::setLam(const RX &lam)
+void PlrBdq::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -6922,7 +6922,7 @@ RX PlrBdq::Cp() const
   return d->Cp;
 }
 
-void PlrBdq::setCp(const RX &Cp)
+void PlrBdq::setCp(const RX Cp)
 {
   d->Cp = Cp;
 }
@@ -6932,7 +6932,7 @@ RX PlrBdq::xp() const
   return d->xp;
 }
 
-void PlrBdq::setXp(const RX &xp)
+void PlrBdq::setXp(const RX xp)
 {
   d->xp = xp;
 }
@@ -6942,7 +6942,7 @@ RX PlrBdq::Cn() const
   return d->Cn;
 }
 
-void PlrBdq::setCn(const RX &Cn)
+void PlrBdq::setCn(const RX Cn)
 {
   d->Cn = Cn;
 }
@@ -6952,7 +6952,7 @@ RX PlrBdq::xn() const
   return d->xn;
 }
 
-void PlrBdq::setXn(const RX &xn)
+void PlrBdq::setXn(const RX xn)
 {
   d->xn = xn;
 }
@@ -7003,7 +7003,7 @@ std::string PlrBdf::name() const
   return d->name;
 }
 
-void PlrBdf::setName(const std::string &name)
+void PlrBdf::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7013,7 +7013,7 @@ std::string PlrBdf::desc() const
   return d->desc;
 }
 
-void PlrBdf::setDesc(const std::string &desc)
+void PlrBdf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7023,7 +7023,7 @@ RX PlrBdf::lam() const
   return d->lam;
 }
 
-void PlrBdf::setLam(const RX &lam)
+void PlrBdf::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -7033,7 +7033,7 @@ RX PlrBdf::Cp() const
   return d->Cp;
 }
 
-void PlrBdf::setCp(const RX &Cp)
+void PlrBdf::setCp(const RX Cp)
 {
   d->Cp = Cp;
 }
@@ -7043,7 +7043,7 @@ RX PlrBdf::xp() const
   return d->xp;
 }
 
-void PlrBdf::setXp(const RX &xp)
+void PlrBdf::setXp(const RX xp)
 {
   d->xp = xp;
 }
@@ -7053,7 +7053,7 @@ RX PlrBdf::Cn() const
   return d->Cn;
 }
 
-void PlrBdf::setCn(const RX &Cn)
+void PlrBdf::setCn(const RX Cn)
 {
   d->Cn = Cn;
 }
@@ -7063,7 +7063,7 @@ RX PlrBdf::xn() const
   return d->xn;
 }
 
-void PlrBdf::setXn(const RX &xn)
+void PlrBdf::setXn(const RX xn)
 {
   d->xn = xn;
 }
@@ -7114,7 +7114,7 @@ std::string QfrQab::name() const
   return d->name;
 }
 
-void QfrQab::setName(const std::string &name)
+void QfrQab::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7124,7 +7124,7 @@ std::string QfrQab::desc() const
   return d->desc;
 }
 
-void QfrQab::setDesc(const std::string &desc)
+void QfrQab::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7134,7 +7134,7 @@ RX QfrQab::a() const
   return d->a;
 }
 
-void QfrQab::setA(const RX &a)
+void QfrQab::setA(const RX a)
 {
   d->a = a;
 }
@@ -7144,7 +7144,7 @@ RX QfrQab::b() const
   return d->b;
 }
 
-void QfrQab::setB(const RX &b)
+void QfrQab::setB(const RX b)
 {
   d->b = b;
 }
@@ -7195,7 +7195,7 @@ std::string QfrFab::name() const
   return d->name;
 }
 
-void QfrFab::setName(const std::string &name)
+void QfrFab::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7205,7 +7205,7 @@ std::string QfrFab::desc() const
   return d->desc;
 }
 
-void QfrFab::setDesc(const std::string &desc)
+void QfrFab::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7215,7 +7215,7 @@ RX QfrFab::a() const
   return d->a;
 }
 
-void QfrFab::setA(const RX &a)
+void QfrFab::setA(const RX a)
 {
   d->a = a;
 }
@@ -7225,7 +7225,7 @@ RX QfrFab::b() const
   return d->b;
 }
 
-void QfrFab::setB(const RX &b)
+void QfrFab::setB(const RX b)
 {
   d->b = b;
 }
@@ -7276,7 +7276,7 @@ std::string QfrCrack::name() const
   return d->name;
 }
 
-void QfrCrack::setName(const std::string &name)
+void QfrCrack::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7286,7 +7286,7 @@ std::string QfrCrack::desc() const
   return d->desc;
 }
 
-void QfrCrack::setDesc(const std::string &desc)
+void QfrCrack::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7296,7 +7296,7 @@ RX QfrCrack::a() const
   return d->a;
 }
 
-void QfrCrack::setA(const RX &a)
+void QfrCrack::setA(const RX a)
 {
   d->a = a;
 }
@@ -7306,7 +7306,7 @@ RX QfrCrack::b() const
   return d->b;
 }
 
-void QfrCrack::setB(const RX &b)
+void QfrCrack::setB(const RX b)
 {
   d->b = b;
 }
@@ -7316,7 +7316,7 @@ RX QfrCrack::length() const
   return d->length;
 }
 
-void QfrCrack::setLength(const RX &length)
+void QfrCrack::setLength(const RX length)
 {
   d->length = length;
 }
@@ -7326,7 +7326,7 @@ RX QfrCrack::width() const
   return d->width;
 }
 
-void QfrCrack::setWidth(const RX &width)
+void QfrCrack::setWidth(const RX width)
 {
   d->width = width;
 }
@@ -7336,7 +7336,7 @@ RX QfrCrack::depth() const
   return d->depth;
 }
 
-void QfrCrack::setDepth(const RX &depth)
+void QfrCrack::setDepth(const RX depth)
 {
   d->depth = depth;
 }
@@ -7427,7 +7427,7 @@ std::string QfrTest2::name() const
   return d->name;
 }
 
-void QfrTest2::setName(const std::string &name)
+void QfrTest2::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7437,7 +7437,7 @@ std::string QfrTest2::desc() const
   return d->desc;
 }
 
-void QfrTest2::setDesc(const std::string &desc)
+void QfrTest2::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7447,7 +7447,7 @@ RX QfrTest2::a() const
   return d->a;
 }
 
-void QfrTest2::setA(const RX &a)
+void QfrTest2::setA(const RX a)
 {
   d->a = a;
 }
@@ -7457,7 +7457,7 @@ RX QfrTest2::b() const
   return d->b;
 }
 
-void QfrTest2::setB(const RX &b)
+void QfrTest2::setB(const RX b)
 {
   d->b = b;
 }
@@ -7467,7 +7467,7 @@ RX QfrTest2::dP1() const
   return d->dP1;
 }
 
-void QfrTest2::setDP1(const RX &dP1)
+void QfrTest2::setDP1(const RX dP1)
 {
   d->dP1 = dP1;
 }
@@ -7477,7 +7477,7 @@ RX QfrTest2::F1() const
   return d->F1;
 }
 
-void QfrTest2::setF1(const RX &F1)
+void QfrTest2::setF1(const RX F1)
 {
   d->F1 = F1;
 }
@@ -7487,7 +7487,7 @@ RX QfrTest2::dP2() const
   return d->dP2;
 }
 
-void QfrTest2::setDP2(const RX &dP2)
+void QfrTest2::setDP2(const RX dP2)
 {
   d->dP2 = dP2;
 }
@@ -7497,7 +7497,7 @@ RX QfrTest2::F2() const
   return d->F2;
 }
 
-void QfrTest2::setF2(const RX &F2)
+void QfrTest2::setF2(const RX F2)
 {
   d->F2 = F2;
 }
@@ -7588,7 +7588,7 @@ std::string AfeDor::name() const
   return d->name;
 }
 
-void AfeDor::setName(const std::string &name)
+void AfeDor::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7598,7 +7598,7 @@ std::string AfeDor::desc() const
   return d->desc;
 }
 
-void AfeDor::setDesc(const std::string &desc)
+void AfeDor::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7608,7 +7608,7 @@ RX AfeDor::lam() const
   return d->lam;
 }
 
-void AfeDor::setLam(const RX &lam)
+void AfeDor::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -7618,7 +7618,7 @@ RX AfeDor::turb() const
   return d->turb;
 }
 
-void AfeDor::setTurb(const RX &turb)
+void AfeDor::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -7628,7 +7628,7 @@ RX AfeDor::expt() const
   return d->expt;
 }
 
-void AfeDor::setExpt(const RX &expt)
+void AfeDor::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -7638,7 +7638,7 @@ RX AfeDor::dTmin() const
   return d->dTmin;
 }
 
-void AfeDor::setDTmin(const RX &dTmin)
+void AfeDor::setDTmin(const RX dTmin)
 {
   d->dTmin = dTmin;
 }
@@ -7648,7 +7648,7 @@ RX AfeDor::ht() const
   return d->ht;
 }
 
-void AfeDor::setHt(const RX &ht)
+void AfeDor::setHt(const RX ht)
 {
   d->ht = ht;
 }
@@ -7658,7 +7658,7 @@ RX AfeDor::wd() const
   return d->wd;
 }
 
-void AfeDor::setWd(const RX &wd)
+void AfeDor::setWd(const RX wd)
 {
   d->wd = wd;
 }
@@ -7668,7 +7668,7 @@ RX AfeDor::cd() const
   return d->cd;
 }
 
-void AfeDor::setCd(const RX &cd)
+void AfeDor::setCd(const RX cd)
 {
   d->cd = cd;
 }
@@ -7749,7 +7749,7 @@ std::string DrPl2::name() const
   return d->name;
 }
 
-void DrPl2::setName(const std::string &name)
+void DrPl2::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7759,7 +7759,7 @@ std::string DrPl2::desc() const
   return d->desc;
 }
 
-void DrPl2::setDesc(const std::string &desc)
+void DrPl2::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7769,7 +7769,7 @@ RX DrPl2::lam() const
   return d->lam;
 }
 
-void DrPl2::setLam(const RX &lam)
+void DrPl2::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -7779,7 +7779,7 @@ RX DrPl2::turb() const
   return d->turb;
 }
 
-void DrPl2::setTurb(const RX &turb)
+void DrPl2::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -7789,7 +7789,7 @@ RX DrPl2::expt() const
   return d->expt;
 }
 
-void DrPl2::setExpt(const RX &expt)
+void DrPl2::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -7799,7 +7799,7 @@ RX DrPl2::dH() const
   return d->dH;
 }
 
-void DrPl2::setDH(const RX &dH)
+void DrPl2::setDH(const RX dH)
 {
   d->dH = dH;
 }
@@ -7809,7 +7809,7 @@ RX DrPl2::ht() const
   return d->ht;
 }
 
-void DrPl2::setHt(const RX &ht)
+void DrPl2::setHt(const RX ht)
 {
   d->ht = ht;
 }
@@ -7819,7 +7819,7 @@ RX DrPl2::wd() const
   return d->wd;
 }
 
-void DrPl2::setWd(const RX &wd)
+void DrPl2::setWd(const RX wd)
 {
   d->wd = wd;
 }
@@ -7829,7 +7829,7 @@ RX DrPl2::cd() const
   return d->cd;
 }
 
-void DrPl2::setCd(const RX &cd)
+void DrPl2::setCd(const RX cd)
 {
   d->cd = cd;
 }
@@ -7900,7 +7900,7 @@ std::string AfeCmf::name() const
   return d->name;
 }
 
-void AfeCmf::setName(const std::string &name)
+void AfeCmf::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7910,7 +7910,7 @@ std::string AfeCmf::desc() const
   return d->desc;
 }
 
-void AfeCmf::setDesc(const std::string &desc)
+void AfeCmf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -7920,7 +7920,7 @@ RX AfeCmf::Flow() const
   return d->Flow;
 }
 
-void AfeCmf::setFlow(const RX &Flow)
+void AfeCmf::setFlow(const RX Flow)
 {
   d->Flow = Flow;
 }
@@ -7981,7 +7981,7 @@ std::string AfeCvf::name() const
   return d->name;
 }
 
-void AfeCvf::setName(const std::string &name)
+void AfeCvf::setName(const std::string name)
 {
   d->name = name;
 }
@@ -7991,7 +7991,7 @@ std::string AfeCvf::desc() const
   return d->desc;
 }
 
-void AfeCvf::setDesc(const std::string &desc)
+void AfeCvf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -8001,7 +8001,7 @@ RX AfeCvf::Flow() const
   return d->Flow;
 }
 
-void AfeCvf::setFlow(const RX &Flow)
+void AfeCvf::setFlow(const RX Flow)
 {
   d->Flow = Flow;
 }
@@ -8062,7 +8062,7 @@ std::string AfeFan::name() const
   return d->name;
 }
 
-void AfeFan::setName(const std::string &name)
+void AfeFan::setName(const std::string name)
 {
   d->name = name;
 }
@@ -8072,7 +8072,7 @@ std::string AfeFan::desc() const
   return d->desc;
 }
 
-void AfeFan::setDesc(const std::string &desc)
+void AfeFan::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -8082,7 +8082,7 @@ RX AfeFan::lam() const
   return d->lam;
 }
 
-void AfeFan::setLam(const RX &lam)
+void AfeFan::setLam(const RX lam)
 {
   d->lam = lam;
 }
@@ -8092,7 +8092,7 @@ RX AfeFan::turb() const
   return d->turb;
 }
 
-void AfeFan::setTurb(const RX &turb)
+void AfeFan::setTurb(const RX turb)
 {
   d->turb = turb;
 }
@@ -8102,7 +8102,7 @@ RX AfeFan::expt() const
   return d->expt;
 }
 
-void AfeFan::setExpt(const RX &expt)
+void AfeFan::setExpt(const RX expt)
 {
   d->expt = expt;
 }
@@ -8112,7 +8112,7 @@ RX AfeFan::rdens() const
   return d->rdens;
 }
 
-void AfeFan::setRdens(const RX &rdens)
+void AfeFan::setRdens(const RX rdens)
 {
   d->rdens = rdens;
 }
@@ -8122,7 +8122,7 @@ RX AfeFan::fdf() const
   return d->fdf;
 }
 
-void AfeFan::setFdf(const RX &fdf)
+void AfeFan::setFdf(const RX fdf)
 {
   d->fdf = fdf;
 }
@@ -8132,7 +8132,7 @@ RX AfeFan::sop() const
   return d->sop;
 }
 
-void AfeFan::setSop(const RX &sop)
+void AfeFan::setSop(const RX sop)
 {
   d->sop = sop;
 }
@@ -8142,7 +8142,7 @@ RX AfeFan::off() const
   return d->off;
 }
 
-void AfeFan::setOff(const RX &off)
+void AfeFan::setOff(const RX off)
 {
   d->off = off;
 }
@@ -8152,7 +8152,7 @@ std::vector<RX> AfeFan::fpc() const
   return d->fpc;
 }
 
-void AfeFan::setFpc(const std::vector<RX> &fpc)
+void AfeFan::setFpc(const std::vector<RX> fpc)
 {
   d->fpc = fpc;
 }
@@ -8162,7 +8162,7 @@ RX AfeFan::Sarea() const
   return d->Sarea;
 }
 
-void AfeFan::setSarea(const RX &Sarea)
+void AfeFan::setSarea(const RX Sarea)
 {
   d->Sarea = Sarea;
 }
@@ -8182,7 +8182,7 @@ std::vector<FanDataPoint> AfeFan::data() const
   return d->data;
 }
 
-void AfeFan::setData(const std::vector<FanDataPoint> &data)
+void AfeFan::setData(const std::vector<FanDataPoint> data)
 {
   d->data = data;
 }
@@ -8233,7 +8233,7 @@ std::string AfeCsf::name() const
   return d->name;
 }
 
-void AfeCsf::setName(const std::string &name)
+void AfeCsf::setName(const std::string name)
 {
   d->name = name;
 }
@@ -8243,7 +8243,7 @@ std::string AfeCsf::desc() const
   return d->desc;
 }
 
-void AfeCsf::setDesc(const std::string &desc)
+void AfeCsf::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -8273,7 +8273,7 @@ std::vector<DataPoint> AfeCsf::data() const
   return d->data;
 }
 
-void AfeCsf::setData(const std::vector<DataPoint> &data)
+void AfeCsf::setData(const std::vector<DataPoint> data)
 {
   d->data = data;
 }
@@ -8324,7 +8324,7 @@ std::string AfeSup::name() const
   return d->name;
 }
 
-void AfeSup::setName(const std::string &name)
+void AfeSup::setName(const std::string name)
 {
   d->name = name;
 }
@@ -8334,7 +8334,7 @@ std::string AfeSup::desc() const
   return d->desc;
 }
 
-void AfeSup::setDesc(const std::string &desc)
+void AfeSup::setDesc(const std::string desc)
 {
   d->desc = desc;
 }
@@ -8364,7 +8364,7 @@ std::vector<AirflowSubelementData> AfeSup::subelements() const
   return d->subelements;
 }
 
-void AfeSup::setSubelements(const std::vector<AirflowSubelementData> &subelements)
+void AfeSup::setSubelements(const std::vector<AirflowSubelementData> subelements)
 {
   d->subelements = subelements;
 }

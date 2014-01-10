@@ -436,7 +436,7 @@ std::string PrjModel::writeZoneIc(int start)
   return string  + "-999\n";
 }
 
-int PrjModel::airflowElementNrByName(std::string &name) const
+int PrjModel::airflowElementNrByName(std::string name) const
 {
   for(int i=0;i<d->airflowElements.size();i++)
   {
