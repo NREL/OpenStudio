@@ -513,9 +513,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   // Adjust Sizing:System Object
 
-  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
+  model::SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
 
-  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
+  // clgDsgnSupAirTemp
+
+  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
 
   bool ok;
 
@@ -523,17 +525,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   if( ok )
   {
-    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+    sizingSystem.setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
   }
   else
   {
-    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+    sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
   }
+
+  // HtgDsgnSupAirTemp
+
+  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgDsgnSupAirTemp");
 
   if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
       istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
   {
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(airLoopHVAC.sizingSystem().centralCoolingDesignSupplyAirTemperature());
+    sizingSystem.setCentralHeatingDesignSupplyAirTemperature(airLoopHVAC.sizingSystem().centralCoolingDesignSupplyAirTemperature());
   }
   else
   {
@@ -541,12 +547,156 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     if( ok )
     {
-      airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+      sizingSystem.setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
     }
     else
     {
-      airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+      sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     }
+  }
+
+  // DsgnAirFlowMin
+
+  QDomElement dsgnAirFlowMinElement = airSystemElement.firstChildElement("DsgnAirFlowMin");
+
+  value = dsgnAirFlowMinElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    sizingSystem.setMinimumSystemAirFlowRatio(value);
+  }
+  else
+  {
+    sizingSystem.setMinimumSystemAirFlowRatio(0.3);
+  }
+
+  // DsgnPrehtTemp
+
+  QDomElement dsgnPrehtTempElement = airSystemElement.firstChildElement("DsgnPrehtTemp");
+
+  value = dsgnPrehtTempElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    sizingSystem.setPreheatDesignTemperature(unitToUnit(value,"F","C").get());
+  }
+  else
+  {
+    sizingSystem.setPreheatDesignTemperature(7.0);
+  }
+
+  // DsgnPrehtHumidityRat
+
+  QDomElement dsgnPrehtHumidityRatElement = airSystemElement.firstChildElement("DsgnPrehtHumidityRat");
+
+  value = dsgnPrehtHumidityRatElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    sizingSystem.setPreheatDesignHumidityRatio(value);
+  }
+  else
+  {
+    sizingSystem.setPreheatDesignHumidityRatio(0.008);
+  }
+
+  // DsgnPreclTemp
+
+  QDomElement dsgnPreclTempElement = airSystemElement.firstChildElement("DsgnPreclTemp");
+
+  value = dsgnPreclTempElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    sizingSystem.setPrecoolDesignTemperature(unitToUnit(value,"F","C").get());
+  }
+  else
+  {
+    sizingSystem.setPrecoolDesignTemperature(12.8);
+  }
+
+  // DsgnPreclHumidityRat
+
+  QDomElement dsgnPreclHumidityRatElement = airSystemElement.firstChildElement("DsgnPreclHumidityRat");
+
+  value = dsgnPreclHumidityRatElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    sizingSystem.setPrecoolDesignHumidityRatio(value);
+  }
+  else
+  {
+    sizingSystem.setPrecoolDesignHumidityRatio(0.008);
+  }
+
+  // SizingOption
+
+  QDomElement sizingOptionElement = airSystemElement.firstChildElement("SizingOption");
+
+  if( sizingOptionElement.text().compare("NonCoincident",Qt::CaseInsensitive) == 0 )
+  {
+    sizingSystem.setSizingOption("NonCoincident");
+  }
+  else
+  {
+    sizingSystem.setSizingOption("Coincident");
+  }
+
+  // ClgFullOutsdAir
+
+  QDomElement clgFullOutsdAirElement = airSystemElement.firstChildElement("ClgFullOutsdAir");
+
+  if( clgFullOutsdAirElement.text().compare("Yes",Qt::CaseInsensitive) == 0 )
+  {
+    sizingSystem.setAllOutdoorAirinCooling(true);
+  }
+  else
+  {
+    sizingSystem.setAllOutdoorAirinCooling(false);
+  }
+
+  // HtgFullOutsdAir
+  
+  QDomElement htgFullOutsdAirElement = airSystemElement.firstChildElement("HtgFullOutsdAir");
+
+  if( htgFullOutsdAirElement.text().compare("Yes",Qt::CaseInsensitive) == 0 )
+  {
+    sizingSystem.setAllOutdoorAirinHeating(true);
+  }
+  else
+  {
+    sizingSystem.setAllOutdoorAirinHeating(false);
+  }
+
+  // ClgDsgnHumidityRat 
+
+  QDomElement clgDsgnHumidityRatElement = airSystemElement.firstChildElement("ClgDsgnHumidityRat");
+
+  value = clgDsgnHumidityRatElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(value);
+  }
+  else
+  {
+    sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.008);
+  }
+
+  // HtgDsgnHumidityRat
+
+  QDomElement htgDsgnHumidityRatElement = airSystemElement.firstChildElement("HtgDsgnHumidityRat");
+
+  value = htgDsgnHumidityRatElement.text().toDouble(&ok);
+
+  if( ok )
+  {
+    sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(value);
+  }
+  else
+  {
+    sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.008);
   }
 
   // Air Segments
