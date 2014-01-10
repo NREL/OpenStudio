@@ -32,7 +32,6 @@
 #include <model/Timestep.hpp>
 #include <model/Timestep_Impl.hpp>
 
-
 #include <model/Model.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
@@ -44,6 +43,8 @@
 #include <utilities/time/Date.hpp>
 
 #include <utilities/core/Assert.hpp>
+
+#include <QDate>
 
 namespace openstudio {
 namespace model {
@@ -921,12 +922,28 @@ Date BillingPeriod::startDate() const
   boost::optional<unsigned> beginYear = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear);
   OS_ASSERT(beginYear);
 
-  return Date(beginMonth.get(), beginDay.get(), beginYear.get());
+  // Do not allow an invalid day of month (ex: 2/31/2000)
+  QDate startDate(beginYear.get(),beginMonth.get(),1);
+ 
+  int daysToAdd = static_cast<int>(beginDay.get()) - 1;
+  // This will roll the month and year forward, if need be
+  startDate = startDate.addDays(daysToAdd);
+  OS_ASSERT(startDate.isValid());
+  
+  Date result(startDate.month(),startDate.day(),startDate.year());
+  return result;
 }
 
 Date BillingPeriod::endDate() const
 {
-  Date result = this->startDate() + Time(this->numberOfDays() - 1);
+  QDate endDate(startDate().year(),month(startDate().monthOfYear()),startDate().dayOfMonth());
+ 
+  int daysToAdd = static_cast<int>(this->numberOfDays()) - 1;
+  // This will roll the month and year forward, if need be
+  endDate = endDate.addDays(daysToAdd);
+  OS_ASSERT(endDate.isValid());
+  
+  Date result(endDate.month(),endDate.day(),endDate.year());
   return result;
 }
 
@@ -1265,9 +1282,13 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     double outOfRangeValue = std::numeric_limits<double>::min();
     timeseries->setOutOfRangeValue(outOfRangeValue);
 
+    // includes year in billing period start date
+    Date startDate = this->startDate();
+    Date endDate = this->endDate();
+
     // intentionally leave out calendar year
-    Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth());
-    Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth());
+    Date runPeriodStartDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
+    Date runPeriodEndDate = Date(endDate.monthOfYear(), endDate.dayOfMonth());
 
     DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
     DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));

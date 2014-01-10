@@ -352,6 +352,7 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
       itr != measures.end();
       ++itr)
   {
+    // DLM: this should not happen for BCL measures but ok to check anyway
     bool isNewVersion = itr->checkForUpdates();
     if (isNewVersion) {
       itr->save();
@@ -411,6 +412,7 @@ void MeasureManager::updateMyMeasures(analysisdriver::SimpleProject &t_project)
       itr != measures.end();
       ++itr)
   {
+    // DLM: this happens if user updates measure but does not update checksums, ok to save it for them
     bool isNewVersion = itr->checkForUpdates();
     if (isNewVersion) {
       itr->save();

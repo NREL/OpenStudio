@@ -25,13 +25,13 @@
 
 #include <QBoxLayout>
 #include <QComboBox>
+#include <QDesktopWidget>
 #include <QDomDocument>
 #include <QLabel>
 #include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
 #include <QString>
-#include <QWebView>
 
 #include <runmanager/lib/FileInfo.hpp>
 #include <runmanager/lib/JobStatusWidget.hpp>
@@ -109,9 +109,9 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
 
-  m_view = new QWebView(this);
+  m_view = new ResultsWebView(this);
   m_view->setContextMenuPolicy(Qt::NoContextMenu);
-  m_view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   mainLayout->addWidget(m_view, 0, Qt::AlignTop);
 
 //#if _DEBUG || (__GNUC__ && !NDEBUG)
@@ -121,7 +121,6 @@ ResultsView::ResultsView(QWidget *t_parent)
 //  inspector->setVisible(true);
 //#endif
 
-  mainLayout->addStretch();
 }
 
 void ResultsView::openResultsViewerClicked()
@@ -293,6 +292,20 @@ void ResultsView::comboBoxChanged(int index)
 {
   QString filename = m_comboBox->itemData(index).toString();
   m_view->load(QUrl(filename));
+}
+
+ResultsWebView::ResultsWebView(QWidget * parent)
+  : QWebView(parent)
+{
+}
+
+QSize ResultsWebView::sizeHint() const
+{
+  QDesktopWidget widget;
+  QRect mainScreenSize = widget.availableGeometry(widget.primaryScreen());
+  int w = mainScreenSize.width();
+  int h = mainScreenSize.height();
+  return QSize(w,h);
 }
 
 } // openstudio

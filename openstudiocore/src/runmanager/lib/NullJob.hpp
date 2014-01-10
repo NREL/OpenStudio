@@ -75,8 +75,6 @@ namespace detail {
       REGISTER_LOGGER("openstudio.runmanager.Null");
 
       mutable QMutex m_mutex;
-
-      boost::optional<QDateTime> m_lastRun; //< time of last job run
   }; 
 
 }

@@ -28,6 +28,7 @@
 #include <runmanager/lib/RunManager.hpp>
 
 #include <QWidget>
+#include <QWebView>
 
 class QComboBox;
 class QPushButton;
@@ -100,6 +101,17 @@ namespace openstudio {
     private:
       ResultsView * m_resultsView;
       REGISTER_LOGGER("openstudio::ResultsTabView");
+  };
+
+  class ResultsWebView : public QWebView
+  {
+    Q_OBJECT;
+
+    public:
+
+      ResultsWebView(QWidget * parent = 0);
+      
+      QSize sizeHint() const;
   };
 
 } // openstudio

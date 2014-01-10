@@ -39,6 +39,7 @@
 #include <analysisdriver/SimpleProject.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Compare.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/RubyException.hpp>
 
@@ -52,6 +53,8 @@
 #include <QMimeData>
 #include <QPushButton>
 #include <QRadioButton>
+
+#include <boost/bind.hpp>
 
 
 namespace openstudio{
@@ -667,6 +670,44 @@ int MeasureListController::count()
   return measures().size();
 }
 
+void MeasureListController::addItemForDuplicateMeasure(const analysis::Measure& measure) {
+  // create duplicate
+  analysis::RubyMeasure duplicateMeasure = measure.clone().cast<analysis::RubyMeasure>();
+
+  // set name
+  if (OptionalBCLMeasure projectMeasure = duplicateMeasure.bclMeasure()) {
+    std::string name = m_app->measureManager().suggestMeasureName(projectMeasure.get(), false);
+    duplicateMeasure.setName(name);
+    duplicateMeasure.setDisplayName(name);
+  }
+  else {
+    LOG(Debug,"Unable to retrieve BCLMeasure object.");
+  }
+
+  // add to variable
+  analysis::MeasureGroup measureGroup = m_variableItem->variable();
+  int n = measureGroup.numMeasures(false);
+  int index(0);
+  if (OptionalInt i = measureGroup.getIndexByUUID(measure)) {
+    index = i.get() + 1;
+  }
+  else {
+    index = n;
+    LOG(Debug,"Should not get here.");
+  }
+
+  bool ok = measureGroup.insert(index,duplicateMeasure);
+  OS_ASSERT(ok);
+  OS_ASSERT(measureGroup.numMeasures(false) == n + 1);
+  // let everyone know about the new item
+  analysis::RubyMeasureVector measuresInList = measures();
+  analysis::RubyMeasureVector::const_iterator it = std::find_if(
+      measuresInList.begin(),
+      measuresInList.end(),
+      boost::bind(uuidsEqual<analysis::RubyMeasure,analysis::RubyMeasure>,duplicateMeasure,_1));
+  emit itemInserted(int(it - measuresInList.begin()));
+}
+
 void MeasureListController::removeItemForMeasure(const analysis::Measure & measure)
 {
   std::vector<analysis::RubyMeasure> measures = this->measures();
@@ -860,6 +901,29 @@ void MeasureItem::setArgument(const ruleset::OSArgument& argument)
   emit argumentsChanged(hasIncompleteArguments());
 }
 
+void MeasureItem::duplicate()
+{
+  // check if we have data points other than the baseline
+  if (boost::optional<analysisdriver::SimpleProject> project = m_app->project()){
+    if (project->analysis().dataPoints().size() > 1){
+      // warn user that this will blow away their data points
+      QMessageBox::StandardButton test = QMessageBox::question( 
+        m_app->mainWidget(), 
+        "Duplicate Measure?", 
+        "Duplicating a measure will remove existing design alternatives and save your project, do you want to proceed?", 
+        QMessageBox::Yes |  QMessageBox::No, 
+        QMessageBox::No );
+      if (test == QMessageBox::No){
+        return;
+      }
+    }
+  }
+
+  m_app->editController()->reset();
+
+  qobject_cast<MeasureListController *>(controller())->addItemForDuplicateMeasure(m_measure);
+}
+
 void MeasureItem::remove()
 {
   // check if we have data points other than the baseline
@@ -918,6 +982,12 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     measureItemView->measureItemButton->nameLabel->setText(measureItem->name());
 
     bool bingo = connect(measureItem.data(),SIGNAL(nameChanged(const QString &)),measureItemView->measureItemButton->nameLabel,SLOT(setText(const QString &)));
+
+    OS_ASSERT(bingo);
+
+    // Duplicate
+
+    bingo = connect(measureItemView->duplicateButton,SIGNAL(clicked()),measureItem.data(),SLOT(duplicate()));
 
     OS_ASSERT(bingo);
 

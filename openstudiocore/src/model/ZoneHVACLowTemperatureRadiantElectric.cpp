@@ -360,19 +360,21 @@ namespace detail {
   
   boost::optional<ThermalZone> ZoneHVACLowTemperatureRadiantElectric_Impl::thermalZone() const
   {
-    boost::optional<ThermalZone> result;
     Model m = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    BOOST_FOREACH(ThermalZone& thermalZone, thermalZones){
-      std::vector<ModelObject> equipments = thermalZone.equipment(); 
-      BOOST_FOREACH(ModelObject& equipment, equipments){
-        if (equipment.handle() == this->handle()){
-          result = thermalZone;
-        }
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        return *it;
       }
     }
-
-    return result;
+    return boost::none;
   }
 
   //reimplemented to override the base-class method in ZoneHVACComponent
@@ -400,22 +402,8 @@ namespace detail {
   //and therefore doesn't need to be removed from them when removed from the zone
   void ZoneHVACLowTemperatureRadiantElectric_Impl::removeFromThermalZone()
   {
-    boost::optional<ThermalZone> thermalZone = this->thermalZone();
-    Model m = this->model();
-    ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         ++it )
-    {
-      std::vector<ModelObject> equipment = it->equipment();
-
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        it->removeEquipment(thisObject);
-
-        break;
-      }
+    if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
+      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
   }
 
