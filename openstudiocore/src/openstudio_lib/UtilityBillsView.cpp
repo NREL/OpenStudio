@@ -958,11 +958,19 @@ void BillingPeriodWidget::modelObjectChanged()
 
 void BillingPeriodWidget::startDateChanged(const QDate & newdate)
 { 
+  int m = newdate.month();
+  int d = newdate.day();
+  int y = newdate.year();
+  OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setStartDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 
 void BillingPeriodWidget::endDateChanged(const QDate & newdate)
 {
+  int m = newdate.month();
+  int d = newdate.day();
+  int y = newdate.year();
+  OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setEndDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 

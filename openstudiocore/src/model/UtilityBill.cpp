@@ -821,7 +821,14 @@ namespace detail {
       this->blockSignals(wasBlocked);
       this->emitChangeSignals();
     }else{
+      // TODO revert when utility::date class fixed
       Date startDate = billingPeriods.back().endDate() + Time(1);
+
+      QDate testDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth());
+      int m = testDate.month();
+      int d = testDate.day();
+      int y = testDate.year();
+      OS_ASSERT(testDate.isValid());
 
       bool wasBlocked = this->blockSignals(true);
       bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
@@ -923,28 +930,24 @@ Date BillingPeriod::startDate() const
   boost::optional<unsigned> beginYear = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear);
   OS_ASSERT(beginYear);
 
-  // Do not allow an invalid day of month (ex: 2/31/2000)
-  QDate startDate(beginYear.get(),beginMonth.get(),1);
- 
-  int daysToAdd = static_cast<int>(beginDay.get()) - 1;
-  // This will roll the month and year forward, if need be
-  startDate = startDate.addDays(daysToAdd);
-  OS_ASSERT(startDate.isValid());
-  
-  Date result(startDate.month(),startDate.day(),startDate.year());
-  return result;
+  // TODO revert when utility::date class fixed
+  QDate testDate(beginYear.get(),beginMonth.get(),beginDay.get());
+  OS_ASSERT(testDate.isValid());
+
+  return Date(beginMonth.get(), beginDay.get(), beginYear.get());
 }
 
 Date BillingPeriod::endDate() const
 {
-  QDate endDate(startDate().year(),month(startDate().monthOfYear()),startDate().dayOfMonth());
- 
+  // TODO revert when utility::date class fixed
+  QDate testDate(startDate().year(),month(startDate().monthOfYear()),startDate().dayOfMonth());
+
   int daysToAdd = static_cast<int>(this->numberOfDays()) - 1;
   // This will roll the month and year forward, if need be
-  endDate = endDate.addDays(daysToAdd);
-  OS_ASSERT(endDate.isValid());
+  testDate = testDate.addDays(daysToAdd);
+  OS_ASSERT(testDate.isValid());
   
-  Date result(endDate.month(),endDate.day(),endDate.year());
+  Date result(testDate.month(),testDate.day(),testDate.year());
   return result;
 }
 
@@ -972,8 +975,24 @@ boost::optional<double> BillingPeriod::totalCost() const
 
 bool BillingPeriod::setStartDate(const Date& startDate)
 {
+  // TODO revert when utility::date class fixed
   Date currentStartDate = this->startDate();
+  {
+    QDate testDate(currentStartDate.year(),month(currentStartDate.monthOfYear()),currentStartDate.dayOfMonth());
+    int m = testDate.month();
+    int d = testDate.day();
+    int y = testDate.year();
+    OS_ASSERT(testDate.isValid());
+  }
+
   Date currentEndDate = this->endDate();
+  {
+    QDate testDate(currentEndDate.year(),month(currentEndDate.monthOfYear()),currentEndDate.dayOfMonth());
+    int m = testDate.month();
+    int d = testDate.day();
+    int y = testDate.year();
+    OS_ASSERT(testDate.isValid());
+  }
 
   /* If startDate is before endDate then endDate is retained.
      If startDate is after endDate then numberOfDays is retained. */
@@ -996,10 +1015,27 @@ bool BillingPeriod::setStartDate(const Date& startDate)
 
 bool BillingPeriod::setEndDate(const Date& endDate)
 {
+  // TODO revert when utility::date class fixed
   Date currentStartDate = this->startDate();
-  unsigned currentNumberOfDays = this->numberOfDays();
-  Date currentEndDate = this->endDate();
+  {
+    QDate testDate(currentStartDate.year(),month(currentStartDate.monthOfYear()),currentStartDate.dayOfMonth());
+    int m = testDate.month();
+    int d = testDate.day();
+    int y = testDate.year();
+    OS_ASSERT(testDate.isValid());
+  }
 
+  Date currentEndDate = this->endDate();
+  {
+    QDate testDate(currentEndDate.year(),month(currentEndDate.monthOfYear()),currentEndDate.dayOfMonth());
+    int m = testDate.month();
+    int d = testDate.day();
+    int y = testDate.year();
+    OS_ASSERT(testDate.isValid());
+  }
+
+  unsigned currentNumberOfDays = this->numberOfDays();
+  
   /* If endDate is after startDate then startDate is retained.
      If endDate is before startDate then numberOfDays is retained. */
 
@@ -1011,6 +1047,13 @@ bool BillingPeriod::setEndDate(const Date& endDate)
     OS_ASSERT(test);
   }else{
     Date newStartDate = endDate - Time(currentNumberOfDays - 1);
+    {
+      QDate testDate(newStartDate.year(),month(newStartDate.monthOfYear()),newStartDate.dayOfMonth());
+      int m = testDate.month();
+      int d = testDate.day();
+      int y = testDate.year();
+      OS_ASSERT(testDate.isValid());
+    }
     test = this->setStartDate(newStartDate);
     OS_ASSERT(test);
     test = this->setNumberOfDays(currentNumberOfDays);
@@ -1222,7 +1265,16 @@ Vector BillingPeriod::modelConsumptionValues() const
       }
 
       ++i;
-      date += Time(1);
+
+      // TODO revert when utility::date class fixed
+      QDate testDate(startDate().year(),month(startDate().monthOfYear()),startDate().dayOfMonth());
+      // This will roll the month and year forward, if need be
+      testDate = testDate.addDays(1);
+      OS_ASSERT(testDate.isValid());
+  
+      Date result(testDate.month(),testDate.day(),testDate.year());
+
+      date = result;
     }
   }
 
