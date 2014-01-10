@@ -4567,7 +4567,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       value = wtrFlowCapElement.text().toDouble(&ok);
       if( ok )
       {
-        tower.setDesignWaterFlowRate(unitToUnit(value,"gal","m^3").get());
+        tower.setDesignWaterFlowRate(unitToUnit(value, "gal/min", "m^3/s").get());
       }
 
       QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
