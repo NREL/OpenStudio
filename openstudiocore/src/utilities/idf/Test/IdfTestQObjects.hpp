@@ -44,12 +44,12 @@ class WorkspaceReciever : public QObject {
     test = connect(impl.get(), SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this, SLOT(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    Qt::QueuedConnection);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     test = connect(impl.get(), SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this, SLOT(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    Qt::QueuedConnection);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void clear()

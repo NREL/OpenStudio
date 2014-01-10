@@ -167,14 +167,6 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
         return "<strong>" + d.name + ":</strong> <span style='color:red'>" + (d.y1 - d.y0).toFixed(2) + "</span>";
     });
 
-    var svg = d3.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    svg.call(tip);
-
     var charts = ["Electricity Consumption", "Natural Gas Consumption"];
 
     for (var c in charts) {
@@ -190,6 +182,7 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        svg.call(tip);
 
         data = [];
         for (var enduse in consumption[charts[c]].data) {

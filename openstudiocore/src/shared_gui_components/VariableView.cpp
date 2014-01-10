@@ -354,11 +354,15 @@ MeasureItemView::MeasureItemView(bool t_fixed)
   measureItemButton = new MeasureItemButton(t_fixed);
   mainHLayout->addWidget(measureItemButton);
 
+  duplicateButton = new SofterDuplicateButton();
+  mainHLayout->addWidget(duplicateButton);
+
   removeButton = new SofterRemoveButton();
   mainHLayout->addWidget(removeButton);
 
   if (t_fixed)
   {
+    duplicateButton->setVisible(false);
     removeButton->setVisible(false);
   }
 }

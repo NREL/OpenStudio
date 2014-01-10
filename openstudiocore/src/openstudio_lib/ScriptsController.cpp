@@ -27,6 +27,8 @@
 #include <model/BuildingStory_Impl.hpp>
 #include <model/Space.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 ScriptsController::ScriptsController(const openstudio::path &t_scriptsPath)
@@ -61,7 +63,7 @@ void ScriptsController::onAddItem()
 {
   const OSItem* item = subTabView()->itemSelector()->selectedItem();
   ScriptFolderListView *lv = qobject_cast<ScriptFolderListView *>(subTabView()->itemSelector());
-  BOOST_ASSERT(lv);
+  OS_ASSERT(lv);
 
   if (item)
   {

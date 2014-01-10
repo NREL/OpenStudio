@@ -514,7 +514,7 @@ namespace openstudio{
       double endSecondsFromFirstReport = (endDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
 
       unsigned numValues = m_values.size();
-      BOOST_ASSERT(numValues == m_secondsFromFirstReport.size());
+      OS_ASSERT(numValues == m_secondsFromFirstReport.size());
 
       Vector result(numValues);
       unsigned resultSize = 0;
