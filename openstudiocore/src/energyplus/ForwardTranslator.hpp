@@ -257,6 +257,10 @@ class ENERGYPLUS_API ForwardTranslator {
    */ 
   void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
 
+  /** If isIP, translate to a Workspace that requests Inch Pound tabular (HTML) reports from EnergyPlus
+   */
+  void setIPTabularOutput(bool isIP);
+
  private:
 
   REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -745,6 +749,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   // temp code
   bool m_keepRunControlSpecialDays;
+
+  bool m_ipTabularOutput;
 };
 
 namespace detail

@@ -139,6 +139,10 @@ void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialD
   m_keepRunControlSpecialDays = keepRunControlSpecialDays;
 }
 
+void ForwardTranslator::setIPTabularOutput(bool isIP)
+{
+  m_ipTabularOutput = isIP;
+}
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
 {
@@ -2294,6 +2298,10 @@ void ForwardTranslator::createStandardOutputRequests()
   IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
   m_idfObjects.push_back(tableStyle);
   tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator,"HTML");
+  if( m_ipTabularOutput )
+  {
+    tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion,"InchPound");
+  }
 
   IdfObject outputTableSummaryReport(IddObjectType::Output_Table_SummaryReports);
   IdfExtensibleGroup eg = outputTableSummaryReport.pushExtensibleGroup();
