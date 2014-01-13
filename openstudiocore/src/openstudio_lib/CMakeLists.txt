@@ -222,6 +222,10 @@ SET( ${target_name}_SRC
   RefrigerationController.hpp
   RefrigerationGraphicsItems.cpp
   RefrigerationGraphicsItems.hpp
+  RefrigerationGridController.cpp
+  RefrigerationGridController.hpp
+  RefrigerationGridView.cpp
+  RefrigerationGridView.hpp
   RefrigerationScene.cpp
   RefrigerationScene.hpp
   RenderingColorWidget.cpp
@@ -550,6 +554,8 @@ SET( ${target_name}_moc
   RadianceDialog.hpp
   RefrigerationController.hpp
   RefrigerationGraphicsItems.hpp
+  RefrigerationGridController.hpp
+  RefrigerationGridView.hpp
   RefrigerationScene.hpp
   RenderingColorWidget.hpp
   ResultsTabController.hpp

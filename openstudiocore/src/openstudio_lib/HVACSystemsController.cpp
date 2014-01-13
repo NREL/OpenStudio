@@ -20,6 +20,8 @@
 #include "HVACSystemsController.hpp"
 #include "RefrigerationController.hpp"
 #include "RefrigerationGraphicsItems.hpp"
+#include "RefrigerationGridController.hpp"
+#include "RefrigerationGridView.hpp"
 #include "LoopLibraryDialog.hpp"
 #include "HVACSystemsView.hpp"
 #include "LoopScene.hpp"
@@ -150,6 +152,10 @@ HVACSystemsController::HVACSystemsController(const model::Model & model)
                    this,SLOT(onShowControlsClicked()));
   OS_ASSERT(bingo);
 
+  bingo = connect( m_hvacSystemsView->hvacToolbarView->gridViewButton,SIGNAL(clicked()),
+                   this,SLOT(onShowGridClicked()));
+  OS_ASSERT(bingo);
+
   updateLater();
 }
 
@@ -251,9 +257,16 @@ void HVACSystemsController::update()
 
     // Show layout 
 
+    m_hvacSystemsView->hvacToolbarView->zoomInButton->show();
+    m_hvacSystemsView->hvacToolbarView->zoomOutButton->show();
+
+    m_hvacSystemsView->hvacToolbarView->addButton->show();
+    m_hvacSystemsView->hvacToolbarView->deleteButton->show();
+
     m_hvacLayoutController.reset();
     m_hvacControlsController.reset();
     m_refrigerationController.reset();
+    //m_refrigerationGridController.reset();
 
     if( handle == REFRIGERATION )
     {
@@ -265,6 +278,20 @@ void HVACSystemsController::update()
         m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
 
         m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationController->refrigerationView());
+      }  
+      else if( m_hvacSystemsView->hvacToolbarView->gridViewButton->isChecked() )
+      {
+        // TODO
+
+        m_hvacSystemsView->hvacToolbarView->zoomInButton->hide();
+        m_hvacSystemsView->hvacToolbarView->zoomOutButton->hide(); 
+        
+        m_hvacSystemsView->hvacToolbarView->addButton->hide();
+        m_hvacSystemsView->hvacToolbarView->deleteButton->hide();
+
+        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController());
+
+        // TODO m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
       }
       else
       {
@@ -284,6 +311,10 @@ void HVACSystemsController::update()
         m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(true);
 
         OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::LIBRARY);
+      }
+      else if( m_hvacSystemsView->hvacToolbarView->gridViewButton->isChecked() )
+      {
+        // TODO
       }
       else
       {
@@ -707,6 +738,11 @@ void HVACSystemsController::onShowTopologyClicked()
 }
 
 void HVACSystemsController::onShowControlsClicked()
+{
+  updateLater();
+}
+
+void HVACSystemsController::onShowGridClicked()
 {
   updateLater();
 }
