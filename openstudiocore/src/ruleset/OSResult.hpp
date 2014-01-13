@@ -103,7 +103,7 @@ class RULESET_API OSResult {
 
   void setFinalCondition(const std::string& channel, const std::string& message);
 
-  void appendAttribute(cosnt Attribute& attribute);
+  void appendAttribute(const Attribute& attribute);
 
   //@}
   /** @name Serialization */

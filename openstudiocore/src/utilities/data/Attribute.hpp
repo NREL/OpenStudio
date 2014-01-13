@@ -405,25 +405,33 @@ UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescri
 // DLM: can this be a member of Attribute?
 UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
 
-/** \relates Attribute */
+/** Saves attributes in a flat json file. Discards uuid and version_uuid information.
+ *  Recasts Unsigned attributes as Integer attributes, Quantity attributes as Double
+ *  attributes with units, Unit attributes as String attributes. \relates Attribute */
 UTILITIES_API bool saveJSON(const std::vector<Attribute>& attributes,
                             const openstudio::path& p,
                             bool overwrite=false);
 
-/** \relates Attribute */
+/** Puts attributes out to os in a flat json format. Discards uuid and version_uuid
+ *  information. Recasts Unsigned attributes as Integer attributes, Quantity attributes
+ *  as Double attributes with units, Unit attributes as String attributes.
+ *  \relates Attribute */
 UTILITIES_API std::ostream& toJSON(const std::vector<Attribute>& attributes,
                                    std::ostream& os);
 
-/** \relates Attribute */
+/** Returns attributes as a string in a flat json format. Discards uuid and version_uuid
+ *  information. Recasts Unsigned attributes as Integer attributes, Quantity attributes
+ *  as Double attributes with units, Unit attributes as String attributes.
+ *  \relates Attribute */
 UTILITIES_API std::string toJSON(const std::vector<Attribute>& attributes);
 
-/** \relates Attribute */
+/** Deserializes the flat attribute json format. \relates Attribute */
 UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson);
 
-/** \relates Attribute */
+/** Deserializes the flat attribute json format. \relates Attribute */
 UTILITIES_API std::vector<Attribute> toVectorOfAttribute(std::istream& json);
 
-/** \relates Attribute */
+/** Deserializes the flat attribute json format. \relates Attribute */
 UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const std::string& json);
 
 namespace detail {
@@ -432,6 +440,14 @@ namespace detail {
 
   /** Deserializes json variant to Attribute. */
   UTILITIES_API Attribute toAttribute(const QVariant& variant, const VersionString& version);
+
+  /** Places a vector of attributes' data in a flat QVariant for JSON serialization. Discards
+   *  uuid and version_uuid information. Recasts Unsigned attributes as Integer attributes,
+   *  Quantity attributes as Double attributes with units, Unit attributes as String attributes. */
+  UTILITIES_API QVariant toVariant(const std::vector<Attribute>& attributes);
+
+  /** Deserializes (flat) json variant to std::vector<Attribute>. */
+  UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const QVariant& variant, const VersionString& version);
 }
 
 } // openstudio

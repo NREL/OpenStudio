@@ -1652,6 +1652,103 @@ namespace detail {
                          map.contains("units") ? map["units"].toString().toStdString() :  OptionalString());
       default :
         LOG_FREE_AND_THROW("openstudio.Attribute","Unknown AttributeValueType " << valueType.valueName() << ".");
+    }    
+  }
+
+  QVariant toVariant(const std::vector<Attribute>& attributes) {
+    QVariantMap map;
+    std::set<std::string> attributeNames;
+
+    BOOST_FOREACH(const Attribute& attribute,attributes) {
+      std::pair<std::set<std::string>::iterator,bool> insertResult = attributeNames.insert(attribute.name());
+      if (!insertResult.second) {
+        LOG_FREE_AND_THROW("openstudio.Attribute","Asked to create a flat json serialization "
+                           << "of a vector of attributes with non-unique names.");
+      }
+      QString qName = toQString(attribute.name());
+
+      AttributeValueType valueType = attribute.valueType();
+      switch (valueType.value()) {
+        case AttributeValueType::Boolean :
+          map[qName] = attribute.valueAsBoolean();
+          break;
+        case AttributeValueType::Integer :
+          map[qName] = attribute.valueAsInteger();
+          break;
+        case AttributeValueType::Unsigned :
+          // designation as unsigned will be lost on deserialization
+          map[qName] = attribute.valueAsUnsigned();
+          break;
+        case AttributeValueType::Double :
+          map[qName] = attribute.valueAsDouble();
+          break;
+        case AttributeValueType::Quantity :
+          // designation as Quantity will be lost on deserialization
+          // (will be Double + units)
+          map[qName] = attribute.valueAsQuantity().value();
+          map[toQString(attribute.name() + std::string("_units"))] = toQString(attribute.valueAsQuantity().units().print());
+          break;
+        case AttributeValueType::Unit :
+          // designation as Unit will be lost on deserialization
+          // (will be of type String)
+          map[qName] = toQString(attribute.valueAsUnit().print());
+          break;
+        case AttributeValueType::String :
+          map[qName] = toQString(attirubute.valueAsString());
+          break;
+        case AttributeValueType::AttributeVector :
+          map[qName] = toVariant(attribute.valueAsAttributeVector());
+          break;
+        default:
+          LOG_FREE_AND_THROW("openstudio.Attribute","Unknown AttributeValueType " << valueType.valueName() << ".");
+      }
+      if (attribute.displayName()) {
+        map[toQString(attribute.name() + std::string("_display_name"))] = toQString(attribute.displayName().get());
+      }
+      if (attribute.units()) {
+        map[toQString(attribute.name() + std::string("_units"))] = toQString(attribute.units().get());
+      }
+    }
+
+    return QVariant(map);
+  }
+
+  std::vector<Attribute> toVectorOfAttribute(const QVariant& variant, const VersionString& version) {
+    AttributeVector result;
+    QVariantMap map = variant.toMap();
+    boost::regex displayNameRegex('(.*)_display_name');
+    boost::regex unitsRegex('(.*)_units');
+    boost::smatch matches;
+    std::set<std::string> processedAttributeNames; // serialization ensures uniqueness of names
+
+    Q_FOREACH(const Key& key,map.keys()) {
+      // determine attribute name
+      std::string attributeName;
+      if (boost::regex_match(toString(key),matches,displayNameRegex)) {
+        // ends in '_display_name'.
+        // pull attribute name off and make sure is in map.
+        attributeName = std::string(matches[1].first,matches[1].second);
+        if (!map.contains(toQString(attributeName))) {
+          // if it is not, attribute name actually ends in '_display_name'.
+          attributeName = toString(key);
+        }
+      }
+      else if (boost::regex_match(toString(key),matches,unitsRegex)) {
+        // ends in '_units'.
+        // pull attribute name off and make sure is in map.
+        attributeName = std::string(matches[1].first,matches[1].second);
+        if (!map.contains(toQString(attributeName))) {
+          // if it is not, attribute name actually ends in '_units'.
+          attributeName = toString(key);
+        }
+      }
+      else {
+        attributeName = toString(key);
+      }
+
+      // see if already processed
+      // HERE
+
     }
   }
 
