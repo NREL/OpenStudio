@@ -405,6 +405,27 @@ UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescri
 // DLM: can this be a member of Attribute?
 UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
 
+/** \relates Attribute */
+UTILITIES_API bool saveJSON(const std::vector<Attribute>& attributes,
+                            const openstudio::path& p,
+                            bool overwrite=false);
+
+/** \relates Attribute */
+UTILITIES_API std::ostream& toJSON(const std::vector<Attribute>& attributes,
+                                   std::ostream& os);
+
+/** \relates Attribute */
+UTILITIES_API std::string toJSON(const std::vector<Attribute>& attributes);
+
+/** \relates Attribute */
+UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson);
+
+/** \relates Attribute */
+UTILITIES_API std::vector<Attribute> toVectorOfAttribute(std::istream& json);
+
+/** \relates Attribute */
+UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const std::string& json);
+
 namespace detail {
   /** Places attribute's data in a QVariant for JSON serialization. */
   UTILITIES_API QVariant toVariant(const Attribute& attribute);
