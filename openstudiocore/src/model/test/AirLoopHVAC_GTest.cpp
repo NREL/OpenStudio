@@ -21,6 +21,10 @@
 #include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/CoilHeatingWater.hpp>
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
@@ -147,6 +151,25 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<openstudio::model::StraightComponent>()));
 
+}
+
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForHVACComponent)
+{
+  model::Model model = openstudio::model::Model();
+
+  model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
+
+  model::AirLoopHVACSupplyPlenum supplyPlenum(model);
+
+  bool result = airLoopHVAC.addBranchForHVACComponent(supplyPlenum);
+
+  EXPECT_TRUE(result);
+
+  model::AirLoopHVACReturnPlenum returnPlenum(model);
+
+  result = airLoopHVAC.addBranchForHVACComponent(returnPlenum);
+
+  EXPECT_TRUE(result);
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)

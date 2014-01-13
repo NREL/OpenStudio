@@ -29,6 +29,8 @@ class Node;
 class AirLoopHVACOutdoorAirSystem;
 class AirLoopHVACZoneSplitter;
 class AirLoopHVACZoneMixer;
+class AirLoopHVACSupplyPlenum;
+class AirLoopHVACReturnPlenum;
 class ThermalZone;
 class PlantLoop;
 class SizingSystem;
@@ -145,6 +147,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   bool setNightCycleControlType(std::string nightCycle);
 
   std::string nightCycleControlType() const;
+
+  bool addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum);
 
   private:
 

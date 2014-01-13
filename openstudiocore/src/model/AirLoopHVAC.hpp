@@ -39,6 +39,10 @@ class AirLoopHVACZoneSplitter;
 
 class AirLoopHVACZoneMixer;
 
+class AirLoopHVACSupplyPlenum;
+
+class AirLoopHVACReturnPlenum;
+
 class StraightComponent;
 
 class ThermalZone;
@@ -222,6 +226,8 @@ class MODEL_API AirLoopHVAC : public Loop
    * upon successful removal.
    **/
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
+
+  bool addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum);
 
   /** Returns the Sizing:System object associated with this air loop. **/
   SizingSystem sizingSystem() const;

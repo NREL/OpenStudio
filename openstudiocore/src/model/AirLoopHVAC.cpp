@@ -19,6 +19,10 @@
 
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/SizingSystem.hpp>
 #include <model/SizingSystem_Impl.hpp>
 #include <model/Node.hpp>
@@ -728,11 +732,11 @@ namespace detail {
     return addBranchForZone(thermalZone, comp);
   }
 
-  bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent airTerminal)
+  bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent hvacComponent)
   {
     Model _model = this->model();
 
-    if( airTerminal.model() != _model )
+    if( hvacComponent.model() != _model )
     {
       return false;
     }
@@ -749,7 +753,7 @@ namespace detail {
           if ( (node->outletModelObject().get() == mixer) &&
                 (node->inletModelObject().get() == splitter) )
           {
-            if( airTerminal.addToNode(node.get()) )
+            if( hvacComponent.addToNode(node.get()) )
             {
               return true;
             }
@@ -769,7 +773,7 @@ namespace detail {
     _model.connect(splitter,nextOutletPort,node,node.inletPort());
     _model.connect(node,node.outletPort(),mixer,nextInletPort);
 
-    if( airTerminal.addToNode(node) )
+    if( hvacComponent.addToNode(node) )
     {
       return true;
     }
@@ -924,6 +928,28 @@ namespace detail {
     OS_ASSERT(wo);
 
     return wo->cast<AvailabilityManagerAssignmentList>();
+  }
+
+  bool AirLoopHVAC_Impl::addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum)
+  {
+    bool result = true;
+
+    result = addBranchForHVACComponent(supplyPlenum);
+
+    if( result )
+    {
+      boost::optional<ModelObject> mo = supplyPlenum.lastOutletModelObject();
+
+      OS_ASSERT(mo);
+
+      boost::optional<Node> node = mo->optionalCast<Node>();
+
+      OS_ASSERT(node);
+
+      result = returnPlenum.addToNode(node.get());
+    }
+
+    return result;
   }
 
 } // detail
@@ -1206,6 +1232,11 @@ bool AirLoopHVAC::setNightCycleControlType(std::string controlType)
 std::string AirLoopHVAC::nightCycleControlType() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->nightCycleControlType();
+}
+
+bool AirLoopHVAC::addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForPlenums(supplyPlenum,returnPlenum);
 }
 
 } // model
