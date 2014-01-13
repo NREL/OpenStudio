@@ -82,6 +82,7 @@ ForwardTranslator::ForwardTranslator()
 
   // temp code 
   m_keepRunControlSpecialDays = false;
+  m_ipTabularOutput = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
