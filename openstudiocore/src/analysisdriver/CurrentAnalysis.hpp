@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -89,6 +89,9 @@ class ANALYSISDRIVER_API CurrentAnalysis {
 
   /** Returns numJobsInIteration() - numQueuedJobs(). */
   int numCompletedJobsInOSIteration() const;
+
+  /** Returns number of failed jobs. */
+  int numFailedJobsInOSIteration() const;
 
   /** Returns the total number of runmanager::Jobs that need to be queued and simulated to
    *  complete the current OpenStudio iteration. (All data points already present from calling

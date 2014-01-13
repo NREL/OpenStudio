@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ namespace detail {
                                                                                bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilHeatingLowTempRadiantVarFlow::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingLowTempRadiantVarFlow::iddObjectType());
   }
 
   CoilHeatingLowTempRadiantVarFlow_Impl::CoilHeatingLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                                                bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilHeatingLowTempRadiantVarFlow::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilHeatingLowTempRadiantVarFlow::iddObjectType());
   }
 
   CoilHeatingLowTempRadiantVarFlow_Impl::CoilHeatingLowTempRadiantVarFlow_Impl(const CoilHeatingLowTempRadiantVarFlow_Impl& other,
@@ -98,15 +98,15 @@ namespace detail {
     return result;
   }
   
-		unsigned CoilHeatingLowTempRadiantVarFlow_Impl::inletPort()
-		{
-				return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName;
-		}
+  unsigned CoilHeatingLowTempRadiantVarFlow_Impl::inletPort()
+  {
+    return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName;
+  }
 
   unsigned CoilHeatingLowTempRadiantVarFlow_Impl::outletPort()
-		{
-				return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName;
-		}
+  {
+    return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName;
+  }
 
   boost::optional<ZoneHVACComponent> CoilHeatingLowTempRadiantVarFlow_Impl::containingZoneHVACComponent() const
   {
@@ -153,7 +153,7 @@ namespace detail {
   double CoilHeatingLowTempRadiantVarFlow_Impl::heatingControlThrottlingRange() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -185,13 +185,13 @@ namespace detail {
   void CoilHeatingLowTempRadiantVarFlow_Impl::resetMaximumHotWaterFlow() 
   {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingLowTempRadiantVarFlow_Impl::autosizeMaximumHotWaterFlow() 
   {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingLowTempRadiantVarFlow_Impl::setHeatingControlThrottlingRange(double heatingControlThrottlingRange) 
@@ -203,7 +203,7 @@ namespace detail {
   void CoilHeatingLowTempRadiantVarFlow_Impl::resetHeatingControlThrottlingRange() 
   {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingLowTempRadiantVarFlow_Impl::setHeatingControlTemperatureSchedule(Schedule& schedule) 
@@ -218,7 +218,7 @@ namespace detail {
   void CoilHeatingLowTempRadiantVarFlow_Impl::resetHeatingControlTemperatureSchedule() 
   {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ModelObject> CoilHeatingLowTempRadiantVarFlow_Impl::heatingControlTemperatureScheduleAsModelObject() const 
@@ -257,15 +257,15 @@ namespace detail {
 } // detail
 
 CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(const Model& model,Schedule& heatingControlTemperature)
-																																																																			
+
   : StraightComponent(CoilHeatingLowTempRadiantVarFlow::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>());
+  OS_ASSERT(getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>());
 
   bool ok = true;
   
   ok = setHeatingControlTemperatureSchedule(heatingControlTemperature);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType CoilHeatingLowTempRadiantVarFlow::iddObjectType() 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -185,11 +185,11 @@ namespace detail {
 
     void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-    void setSupplyAirFan(HVACComponent& fansOnOff);
+    bool setSupplyAirFan(HVACComponent& fansOnOff);
 
-    void setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP);
+    bool setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP);
 
-    void setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP);
+    bool setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP);
 
     bool setMaximumCyclingRate(boost::optional<double> maximumCyclingRate);
 

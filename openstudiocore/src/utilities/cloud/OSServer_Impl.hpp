@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -233,6 +233,9 @@ namespace detail{
 
     void processDownloadDataPointComplete();
 
+    // slot provided for debugging
+    void logUploadProgress(qint64 bytesSent, qint64 bytesTotal);
+
   private:
 
     Url m_url;
@@ -271,6 +274,8 @@ namespace detail{
     void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;
     std::vector<UUID> processListOfUUID(const QByteArray& bytes, bool& success) const;
+
+    void resetNetworkReply();
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -22,7 +22,35 @@
 
 #include <QPushButton>
 
+#include <boost/smart_ptr.hpp>
+
+class QPaintEvent;
+
+class QPixmap;
+
+class QTimer;
+
 namespace openstudio {
+
+class ZoomOutButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  ZoomOutButton(QWidget * parent = 0);
+  virtual ~ZoomOutButton() {}
+};
+
+class OrangeButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  OrangeButton(QWidget * parent = 0);
+  virtual ~OrangeButton() {}
+};
 
 class GrayButton : public QPushButton
 {
@@ -83,6 +111,16 @@ class DuplicateButton : public QPushButton
 
   DuplicateButton(QWidget * parent = 0);
   virtual ~DuplicateButton() {}
+};
+
+class SofterDuplicateButton : public QPushButton
+{
+  Q_OBJECT
+ 
+ public:
+  
+  SofterDuplicateButton(QWidget * parent = 0);
+  virtual ~SofterDuplicateButton() {}
 };
 
 class UpButton : public QPushButton
@@ -155,16 +193,111 @@ class CreateFromFileButton : public GrayButton
   virtual ~CreateFromFileButton() {}
 };
 
+class CloudLostConnectionButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudLostConnectionButton(QWidget * parent = 0);
+  virtual ~CloudLostConnectionButton() {}
+};
+
+class CloudOffButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudOffButton(QWidget * parent = 0);
+  virtual ~CloudOffButton() {}
+};
+
+class CloudOnButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudOnButton(QWidget * parent = 0);
+  virtual ~CloudOnButton() {}
+};
+
+class CloudStartingButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudStartingButton(QWidget * parent = 0);
+  virtual ~CloudStartingButton() {}
+
+  public slots:
+
+  void rotate();
+
+  protected:
+
+  void paintEvent ( QPaintEvent * event );
+
+  private:
+
+  QPixmap * m_background;
+
+  QPixmap * m_arrow;
+
+  float m_rotation;
+
+  QTimer * m_timer;
+};
+
+class CloudStoppingButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+
+  CloudStoppingButton(QWidget * parent = 0);
+  virtual ~CloudStoppingButton() {}
+
+  public slots:
+
+  void rotate();
+
+  protected:
+
+  void paintEvent ( QPaintEvent * event );
+
+  private:
+
+  QPixmap * m_background;
+
+  QPixmap * m_arrow;
+
+  float m_rotation;
+
+  QTimer * m_timer;
+
+};
+
 class PlayButton : public QPushButton
 {
   Q_OBJECT
 
   public:
 
+  enum Status { IDLE, IDLEDISABLED, STARTING, RUNNING, STOPPING, ERROR };
+
   PlayButton(QWidget * parent = 0);
   virtual ~PlayButton() {}
-};
 
+  Status status() const;
+  void setStatus(const Status & status);
+
+  private:
+
+  Status m_status;
+};
 
 } // openstudio
 

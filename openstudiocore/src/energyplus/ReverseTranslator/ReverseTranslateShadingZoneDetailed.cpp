@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -42,18 +42,24 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateShadingZoneDetailed( const WorkspaceObject & workspaceObject )
 {
- if( workspaceObject.iddObject().type() != IddObjectType::Shading_Zone_Detailed ){
-   LOG(Error, "WorkspaceObject is not IddObjectType: Shading:Zone:Detailed");
+  if( workspaceObject.iddObject().type() != IddObjectType::Shading_Zone_Detailed ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: Shading:Zone:Detailed");
     return boost::none;
   }
 
   openstudio::Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, workspaceObject);
  
-  ShadingSurface shadingSurface(vertices, m_model);
+  boost::optional<ShadingSurface> shadingSurface;
+  try{
+    shadingSurface = ShadingSurface(vertices, m_model);
+  }catch(const std::exception&){
+    LOG(Error, "Cannot create ShadingSurface for object: " << workspaceObject);
+    return boost::none;
+  }
 
   OptionalString s = workspaceObject.name();
-  if(s) {
-    shadingSurface.setName(*s);
+  if (s) {
+    shadingSurface->setName(*s);
   }
 
   OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::Shading_Zone_DetailedFields::BaseSurfaceName);
@@ -69,7 +75,7 @@ OptionalModelObject ReverseTranslator::translateShadingZoneDetailed( const Works
             shadingSurfaceGroup.setSpace(*space);
             groups.push_back(shadingSurfaceGroup);
           }
-          shadingSurface.setShadingSurfaceGroup(groups[0]);
+          shadingSurface->setShadingSurfaceGroup(groups[0]);
         }
       }
     }
@@ -81,12 +87,12 @@ OptionalModelObject ReverseTranslator::translateShadingZoneDetailed( const Works
     if (modelObject){
       if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
         Schedule schedule(*intermediate);
-        shadingSurface.setTransmittanceSchedule(schedule);
+        shadingSurface->setTransmittanceSchedule(schedule);
       }
     }
   }
 
-  return shadingSurface;
+  return shadingSurface.get();
 }
 
 } // energyplus

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -32,7 +32,6 @@ class Material;
 namespace detail {
 
   class MODEL_API ConstructionBaseStandardsInformation_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** Constructors and Destructors */
     //@{

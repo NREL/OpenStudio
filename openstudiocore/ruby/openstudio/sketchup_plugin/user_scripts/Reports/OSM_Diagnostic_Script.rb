@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 #  All rights reserved.
 #
 #  This library is free software; you can redistribute it and/or
@@ -34,6 +34,16 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     open_path.setDisplayName("Select OSM File to Run Diagnostics On ")
     result << open_path
 
+    remove_errors = OpenStudio::Ruleset::OSArgument::makeBoolArgument("remove_errors",false)
+    remove_errors.setDisplayName("Remove Objects with Errors? ")
+    remove_errors.setDefaultValue(true)
+    result << remove_errors
+
+    remove_warnings = OpenStudio::Ruleset::OSArgument::makeBoolArgument("remove_warnings",false)
+    remove_warnings.setDisplayName("Remove Objects with Warnings? ")
+    remove_warnings.setDefaultValue(false)
+    result << remove_warnings
+
     begin
       Sketchup.send_action("showRubyPanel:")
     rescue => e
@@ -52,6 +62,8 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     end
     
     open_path = runner.getStringArgumentValue("open_path",user_arguments)
+    remove_errors = runner.getBoolArgumentValue("remove_errors",user_arguments)
+    remove_warnings = runner.getBoolArgumentValue("remove_warnings",user_arguments)
 
     require 'openstudio'
 
@@ -105,9 +117,6 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
 #    puts "Outputting Final Validity Report (note: some errors are expected here)"
 #    puts workspace.validityReport("Final".to_StrictnessLevel)
 
-    remove_errors = true # set to false if you don't want to create a diagnostic copy of your file
-    remove_warnings = true # set to false if you don't want to create a diagnostic copy of your file
-
     savediagnostic = false # this will change to true later in script if necessary
 
     puts ""
@@ -140,20 +149,20 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
       end
     end
     if switch == 0 then puts "none" end
-    
+
     base_surfaces = model.getSurfaces
-    # Find base surfaces with area < 0.1
+    # Find base surfaces with less than three vertices
     puts ""
-    puts "Surfaces with area less than 0.1 m^2"
+    puts "Surfaces with less than three vertices"
     switch = 0
     base_surfaces.each do |base_surface|
-      grossarea = base_surface.grossArea
-      if grossarea < 0.1
-        puts "*(warning) '" + base_surface.name.to_s + "' has area of " + grossarea.to_s + " m^2"
+      vertices = base_surface.vertices
+      if vertices.size < 3
+        puts "*(warning) '" + base_surface.name.to_s + "' has less than three vertices"
         switch = 1
-        if remove_warnings
+        if remove_errors
           puts "**(removing object) '#{base_surface.name.to_s}'"
-          # remove surfaces with area < 0.1
+          # remove surfaces with less than three vertices
           remove = base_surface.remove
           savediagnostic = true
         end
@@ -162,18 +171,18 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     if switch == 0 then puts "none" end
 
     sub_surfaces = model.getSubSurfaces
-    # Find sub surfaces with area < 0.1
+    # Find base sub-surfaces with less than three vertices
     puts ""
-    puts "SubSurfaces with area less than 0.1 m^2"
+    puts "Surfaces with less than three vertices"
     switch = 0
     sub_surfaces.each do |sub_surface|
-      grossarea = sub_surface.grossArea
-      if grossarea < 0.1
-        puts "*(warning) '" + sub_surface.name.to_s + "' has area of " + grossarea.to_s + " m^2"
+      vertices = sub_surface.vertices
+      if vertices.size < 3
+        puts "*(warning) '" + sub_surface.name.to_s + "' has less than three vertices"
         switch = 1
-        if remove_warnings
+        if remove_errors
           puts "**(removing object) '#{sub_surface.name.to_s}'"
-          # remove surfaces with area < 0.1
+          # remove sub-surfaces with less than three vertices
           remove = sub_surface.remove
           savediagnostic = true
         end
@@ -189,8 +198,48 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     surfaces.each do |surface|
       vertexcount = surface.vertices.size
       if vertexcount > 25
-        puts "*(warning) '" + surface.name.to_s + "' has " + vertexcount.to_s + " vertices"
+        puts "*(info) '" + surface.name.to_s + "' has " + vertexcount.to_s + " vertices"
         switch = 1
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    base_surfaces = model.getSurfaces
+    # Find base surfaces with area < 0.1
+    puts ""
+    puts "Surfaces with area less than 0.1 m^2"
+    switch = 0
+    base_surfaces.each do |base_surface|
+      grossarea = base_surface.grossArea
+      if grossarea < 0.1
+        puts "*(warning) '" + base_surface.name.to_s + "' has area of " + grossarea.to_s + " m^2"
+        switch = 1
+        if remove_warnings
+          puts "**(removing object) '#{base_surface.name.to_s}'"
+          # remove base surfaces with less than 0.1 m^2
+          remove = base_surface.remove
+          savediagnostic = true
+        end
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    sub_surfaces = model.getSubSurfaces
+    # Find sub-surfaces with area < 0.1
+    puts ""
+    puts "Surfaces with area less than 0.1 m^2"
+    switch = 0
+    sub_surfaces.each do |sub_surface|
+      grossarea = sub_surface.grossArea
+      if grossarea < 0.1
+        puts "*(warning) '" + sub_surface.name.to_s + "' has area of " + grossarea.to_s + " m^2"
+        switch = 1
+        if remove_warnings
+          puts "**(removing object) '#{sub_surface.name.to_s}'"
+          # remove sub-surfaces with less than three vertices
+          remove = sub_surface.remove
+          savediagnostic = true
+        end
       end
     end
     if switch == 0 then puts "none" end
@@ -229,7 +278,7 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
       end
 
       n2 = all_surfaces.size # updated with sub-surfaces added at the beginning
-
+      surfaces_to_remove = Hash.new
       (0...n2).each do |i|
         (i+1...n2).each do |j|
 
@@ -239,13 +288,16 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
           if p1.equalVertices(p2) or p1.reverseEqualVertices(p2)
             switch = 1
             puts "*(error) '#{p1.name.to_s}' has similar geometry to '#{p2.name.to_s}' in the surface group named '#{planar_surface_group.name.to_s}'"
-            puts "**(removing object) '#{p1.name.to_s}'" # remove p1 vs. p2 to avoid failure if three or more similar surfaces in a group
-            remove = p1.remove
-            savediagnostic = true
+            if remove_errors
+              puts "**(removing object) '#{p1.name.to_s}'" # remove p1 vs. p2 to avoid failure if three or more similar surfaces in a group
+              # don't remove here, just mark to remove
+              surfaces_to_remove[p1.handle.to_s] = p1
+              savediagnostic = true
+            end
           end
-
         end
       end
+      surfaces_to_remove.each_pair {|handle, surface| surface.remove}
 
     end
     if switch == 0 then puts "none" end
@@ -307,11 +359,13 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
       end
     
       if switch2 == 1
-      puts "*(error) '#{surface.name.to_s}' has duplicate vertices"
-      puts "**(removing object) '#{surface.name.to_s}'" # remove p1 vs. p2 to avoid failure if three or more similar surfaces in a group
-      remove = surface.remove
-      savediagnostic = true
-      switch == 1
+        switch == 1
+        puts "*(error) '#{surface.name.to_s}' has duplicate vertices"
+        if remove_errors
+          puts "**(removing object) '#{surface.name.to_s}'" # remove p1 vs. p2 to avoid failure if three or more similar surfaces in a group
+          remove = surface.remove
+          savediagnostic = true
+        end
       end
     
     end
@@ -321,7 +375,7 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     
       # find and remove orphan sizing:zone objects
       puts ""
-      puts "Removing sizing:zone objects that aren't connected to any thermal zone"
+      puts "Removing sizing:zone objects that are not connected to any thermal zone"
       #get all sizing:zone objects in the model
       sizing_zones = model.getObjectsByType("OS:Sizing:Zone".to_IddObjectType)
       #make an array to store the names of the orphan sizing:zone objects
@@ -331,13 +385,17 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
         sizing_zone = sizing_zone.to_SizingZone.get
         if sizing_zone.isEmpty(1)
           orphaned_sizing_zones << sizing_zone.handle
-          sizing_zone.remove
+          puts "*(error)#{sizing_zone.name} is not connected to a thermal zone"
+          if remove_errors
+            puts "**(removing object)#{sizing_zone.name} is not connected to a thermal zone"
+            sizing_zone.remove
+            savediagnostic = true
+          end
         end
       end
       #summarize the results
       if orphaned_sizing_zones.length > 0
-        savediagnostic = true
-        puts "#{orphaned_sizing_zones.length} orphaned sizing:zone objects were found and deleted"
+        puts "#{orphaned_sizing_zones.length} orphaned sizing:zone objects were found"
       else
         puts "no orphaned sizing:zone objects were found"
       end

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -24,25 +24,53 @@ require("openstudio/sketchup_plugin/sketchup/Geom")
 # Everything in this module should be strictly based on entities and not drawing interfaces.
 module DrawingUtils
 
-
+  # returns true if entity is the base face of face
+  def DrawingUtils.is_base_face(face, face_normal, face_points, entity)
+    if (entity.class == Sketchup::Face and not entity.equal?(face))
+      # Eliminate faces that are not parallel.
+      # Another test would be to check if both are in the same plane.
+      # There are some precision issues with 'face.plane' however.
+      if (entity.normal.parallel?(face_normal))
+        # Detect if the vertices of the entity are a subset of this face.
+        if (face_points.is_subset_of?(entity.full_polygon.reduce.points))
+          return true
+        end
+      end
+    end  
+    return false
+  end
+  
   # Strictly determined using Faces, not drawing interfaces.
   # Tries to match a face to a base face.
   def DrawingUtils.detect_base_face(face)
     base_face = nil
-    face_points = face.full_polygon.reduce.points
-
-    for child_entity in face.all_connected
-      if (child_entity.class == Sketchup::Face and not child_entity.equal?(face))
-        # Eliminate faces that are not parallel.
-        # Another test would be to check if both are in the same plane.
-        # There are some precision issues with 'face.plane' however.
-        if (child_entity.normal.parallel?(face.normal))
-          # Detect if the vertices of the entity are a subset of this face.
-          if (face_points.is_subset_of?(child_entity.full_polygon.reduce.points))
-            base_face = child_entity
-            break
+    first_guess = nil
+    
+    # try the current parent as a first guess
+    if drawing_interface = face.drawing_interface
+      if drawing_interface.class == OpenStudio::SubSurface
+        if parent = drawing_interface.parent
+          if temp = parent.entity and temp.class == Sketchup::Face
+            first_guess = temp
           end
         end
+      end
+    end
+    
+    face_normal = face.normal
+    face_points = face.full_polygon.reduce.points
+    
+    all_connected = face.all_connected
+    if first_guess
+      if all_connected.reject!{|e| e == first_guess}
+        all_connected = [first_guess].concat(all_connected)
+      end
+    end
+    
+    for entity in all_connected
+      if is_base_face(face, face_normal, face_points, entity)
+        base_face = entity
+        break
       end
     end
     return(base_face)

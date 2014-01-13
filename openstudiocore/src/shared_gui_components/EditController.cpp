@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -249,7 +249,7 @@ InputController::InputController(EditController * editController,const ruleset::
     }
     else {
       boolInputView->checkBox->setChecked(false);
-      setValue(false);
+      m_argument.setValue(false);
     }
 
     bool bingo = connect(boolInputView->checkBox,SIGNAL(clicked(bool)),this,SLOT(setValue(bool)));

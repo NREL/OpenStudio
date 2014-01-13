@@ -34,8 +34,6 @@ namespace detail {
 
 class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 {
-  Q_OBJECT;
-
   public:
 
   WaterToWaterComponent_Impl(IddObjectType type, Model_Impl* model);

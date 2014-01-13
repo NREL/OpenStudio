@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 
 #include <utilities/time/DateTime.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <QDir>
 #include <QDateTime>
@@ -285,6 +286,7 @@ namespace detail {
 
   std::vector<FileInfo> LocalProcess::outputFiles() const
   {
+
     return std::vector<FileInfo>(m_outfiles.begin(), m_outfiles.end());
   }
 
@@ -389,7 +391,26 @@ namespace detail {
          ++itr)
     {
       LOG(Debug, "cleanUpRequiredFiles: " << openstudio::toString(*itr));
-      boost::filesystem::remove_all(*itr);
+	    try {
+        boost::filesystem::remove(*itr);
+	    } catch (const std::exception &e) {
+        LOG(Trace, "Unable to remove file: " << e.what());
+		    // no error if it doesn't manage to delete it
+	    }
+
+	    try {
+        openstudio::path p = itr->parent_path();
+
+        while (!p.empty() && !relativePath(p, m_outdir).empty() && m_outdir != p)
+        {
+          // remove the directory if it happens to be empty. 
+          boost::filesystem::remove(p);
+          p = p.parent_path();
+        }
+	    } catch (const std::exception &e) {
+        LOG(Trace, "Unable to remove directory: " << e.what());
+		    // no error if it doesn't manage to delete it
+	    }
     }
   }
 
@@ -445,6 +466,8 @@ namespace detail {
       handleOutput(m_process.readAllStandardOutput(), false);
       handleOutput(m_process.readAllStandardError(), true);
     }
+
+    QCoreApplication::processEvents();
     directoryChanged(openstudio::toQString(m_outdir));
 
     emit finished(t_exitCode, t_exitStatus);

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ TEST_F(AnalysisFixture,UncertaintyDescription_ConstructionCopyingAndCasting) {
   }
 
   {
-	  GenericUncertaintyDescription genericCopy = stdNormal.cast<GenericUncertaintyDescription>();
+    GenericUncertaintyDescription genericCopy = stdNormal.cast<GenericUncertaintyDescription>();
     EXPECT_EQ(2u,genericCopy.attributes().size());
   }
 

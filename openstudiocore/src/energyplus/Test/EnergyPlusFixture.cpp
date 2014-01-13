@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ void EnergyPlusFixture::SetUpTestCase() {
   idfComponents.push_back(std::pair<openstudio::path,std::string>(basePath/openstudio::toPath("idf_designday_4"),"designday"));
   idfComponents.push_back(std::pair<openstudio::path,std::string>(basePath/openstudio::toPath("idf_designday_5"),"designday"));
 
-  // delete tranlated components
+  // delete translated components
   BOOST_FOREACH(const ComponentDirectoryAndType& idfComponent,idfComponents) {
     // delete any *.osc and oscomponent.xml files in the directory
     for (openstudio::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {

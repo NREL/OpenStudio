@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include <QScrollArea>
 #include <QStyleOption>
 #include <QPainter>
+#include <QGraphicsObject>
 
 namespace openstudio {
 
@@ -157,7 +158,7 @@ void OSListView::refreshAllViews()
 
   if( m_listController )
   {
-    for( int i = 0; i < m_listController->count(); i++ )
+    for( int i = 0, n = m_listController->count(); i < n; i++ )
     {
       insertItemView(i);
     }
@@ -210,11 +211,6 @@ void OSListView::refreshItemView(int i)
   removeItemView(i);
 
   insertItemView(i);
-}
-
-QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
-  return new QWidget();
 }
 
 } // openstudio

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -261,6 +261,88 @@ TEST(Date, NthDayOfWeekInMonthQualifiedYear)
   EXPECT_EQ(MonthOfYear(MonthOfYear::Jan), secondSundayInJanuary.monthOfYear());
   EXPECT_TRUE(secondSundayInJanuary == Date(MonthOfYear::Jan, 13, 2008));
 };
+
+TEST(Date, DatePlusTime_2008)
+{
+  // 2008 is a leap year
+  Date startDate(MonthOfYear::Feb,1,2008);
+
+  Date testDate = startDate + Time(0);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(1, testDate.dayOfMonth());
+  EXPECT_EQ(2008, testDate.year());
+
+  testDate = startDate + Time(1);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(2, testDate.dayOfMonth());
+  EXPECT_EQ(2008, testDate.year());
+
+  testDate = startDate + Time(28);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(29, testDate.dayOfMonth());
+  EXPECT_EQ(2008, testDate.year());
+
+  testDate = startDate + Time(29);
+  EXPECT_EQ(MonthOfYear::Mar, testDate.monthOfYear().value());
+  EXPECT_EQ(1, testDate.dayOfMonth());
+  EXPECT_EQ(2008, testDate.year());
+
+  testDate = startDate + Time(365);
+  EXPECT_EQ(MonthOfYear::Jan, testDate.monthOfYear().value());
+  EXPECT_EQ(31, testDate.dayOfMonth());
+  EXPECT_EQ(2009, testDate.year());
+
+  testDate = startDate + Time(366);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(1, testDate.dayOfMonth());
+  EXPECT_EQ(2009, testDate.year());
+
+  testDate = startDate + Time(-1);
+  EXPECT_EQ(MonthOfYear::Jan, testDate.monthOfYear().value());
+  EXPECT_EQ(31, testDate.dayOfMonth());
+  EXPECT_EQ(2008, testDate.year());
+}
+
+TEST(Date, DatePlusTime_2009)
+{
+  // 2008 is not a leap year
+  Date startDate(MonthOfYear::Feb,1,2009);
+
+  Date testDate = startDate + Time(0);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(1, testDate.dayOfMonth());
+  EXPECT_EQ(2009, testDate.year());
+
+  testDate = startDate + Time(1);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(2, testDate.dayOfMonth());
+  EXPECT_EQ(2009, testDate.year());
+
+  testDate = startDate + Time(28);
+  EXPECT_EQ(MonthOfYear::Mar, testDate.monthOfYear().value());
+  EXPECT_EQ(1, testDate.dayOfMonth());
+  EXPECT_EQ(2009, testDate.year());
+
+  testDate = startDate + Time(29);
+  EXPECT_EQ(MonthOfYear::Mar, testDate.monthOfYear().value());
+  EXPECT_EQ(2, testDate.dayOfMonth());
+  EXPECT_EQ(2009, testDate.year());
+
+  testDate = startDate + Time(365);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(1, testDate.dayOfMonth());
+  EXPECT_EQ(2010, testDate.year());
+
+  testDate = startDate + Time(366);
+  EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
+  EXPECT_EQ(2, testDate.dayOfMonth());
+  EXPECT_EQ(2010, testDate.year());
+
+  testDate = startDate + Time(-1);
+  EXPECT_EQ(MonthOfYear::Jan, testDate.monthOfYear().value());
+  EXPECT_EQ(31, testDate.dayOfMonth());
+  EXPECT_EQ(2009, testDate.year());
+}
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2008.  Format is day of month, day of year //

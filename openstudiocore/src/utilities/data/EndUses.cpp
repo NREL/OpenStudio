@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -214,7 +214,7 @@ namespace openstudio {
     categoryAttribute->setValue(QVariant::fromValue(newSubCategories));
   }
 
-  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory)
+  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory) const
   {
     double result = 0;
 
@@ -235,7 +235,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category)
+  double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category) const
   {
     double result = 0;
 
@@ -253,7 +253,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory)
+  double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory) const
   {
     double result = 0;
     std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
@@ -267,7 +267,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUseByCategory(const EndUseCategoryType& category)
+  double EndUses::getEndUseByCategory(const EndUseCategoryType& category) const
   {
     double result = 0;
     std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
@@ -281,7 +281,7 @@ namespace openstudio {
     return result;
   }
 
-  double EndUses::getEndUseByFuelType(const EndUseFuelType& fuelType)
+  double EndUses::getEndUseByFuelType(const EndUseFuelType& fuelType) const
   {
     double result = 0;
     std::map<int, std::string> endUseCategoryTypes = EndUseCategoryType::getNames();

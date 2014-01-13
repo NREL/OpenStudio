@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,6 +38,8 @@
 #include <model/CoilHeatingGas_Impl.hpp>
 #include <model/FanConstantVolume.hpp>
 #include <model/FanConstantVolume_Impl.hpp>
+#include <model/FanOnOff.hpp>
+#include <model/FanOnOff_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 
@@ -389,7 +391,7 @@ namespace detail {
 
   void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplyAirFan( HVACComponent & hvacComponent )
   {
-    if( ! hvacComponent.optionalCast<FanConstantVolume>() ) { return; };
+    if( ! hvacComponent.optionalCast<FanConstantVolume>() && ! hvacComponent.optionalCast<FanOnOff>() ) { return; };
 
     setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName,hvacComponent.handle());
   }

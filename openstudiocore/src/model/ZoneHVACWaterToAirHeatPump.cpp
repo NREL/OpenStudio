@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -494,7 +494,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFan(HVACComponent& fansOnOff) {
+  bool ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFan(HVACComponent& fansOnOff) {
     bool isAllowedType = false;
     if( fansOnOff.iddObjectType() == IddObjectType::OS_Fan_OnOff)
     {
@@ -503,11 +503,12 @@ namespace detail {
 
     if( isAllowedType )
     {
-      setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName,fansOnOff.handle());
+      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName,fansOnOff.handle());
     }
+    return false;
   }
 
-  void ZoneHVACWaterToAirHeatPump_Impl::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) 
+  bool ZoneHVACWaterToAirHeatPump_Impl::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) 
   {
     bool isAllowedType = false;
 
@@ -518,11 +519,12 @@ namespace detail {
 
     if( isAllowedType )
     {
-      setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,heatingCoilsWaterToAirHP.handle());
+      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,heatingCoilsWaterToAirHP.handle());
     }
+    return false;
   }
 
-  void ZoneHVACWaterToAirHeatPump_Impl::setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP) {
+  bool ZoneHVACWaterToAirHeatPump_Impl::setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP) {
     bool isAllowedType = false;
 
     if( coolingCoilsWaterToAirHP.iddObjectType() == IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit )
@@ -532,8 +534,9 @@ namespace detail {
 
     if( isAllowedType )
     {
-      setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName,coolingCoilsWaterToAirHP.handle());
+      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName,coolingCoilsWaterToAirHP.handle());
     }
+    return false;
   }
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {
@@ -779,10 +782,14 @@ ZoneHVACWaterToAirHeatPump::ZoneHVACWaterToAirHeatPump(const Model& model,
                   << availabilitySchedule.briefDescription() << ".");
   }
 
-  setSupplyAirFan(supplyAirFan);
-  setHeatingCoil(heatingCoil);
-  setCoolingCoil(coolingCoil);
-  setSupplementalHeatingCoil(supplementalHeatingCoil);
+  ok = setSupplyAirFan(supplyAirFan);
+  OS_ASSERT(ok);
+  ok = setHeatingCoil(heatingCoil);
+  OS_ASSERT(ok);
+  ok = setCoolingCoil(coolingCoil);
+  OS_ASSERT(ok);
+  ok = setSupplementalHeatingCoil(supplementalHeatingCoil);
+  OS_ASSERT(ok);
 
   autosizeSupplyAirFlowRateDuringCoolingOperation();
   autosizeSupplyAirFlowRateDuringHeatingOperation();
@@ -1008,16 +1015,16 @@ void ZoneHVACWaterToAirHeatPump::autosizeOutdoorAirFlowRateWhenNoCoolingorHeatin
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 }
 
-void ZoneHVACWaterToAirHeatPump::setSupplyAirFan(HVACComponent& fansOnOff) {
-  getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFan(fansOnOff);
+bool ZoneHVACWaterToAirHeatPump::setSupplyAirFan(HVACComponent& fansOnOff) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setSupplyAirFan(fansOnOff);
 }
 
-void ZoneHVACWaterToAirHeatPump::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) {
-  getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatingCoil(heatingCoilsWaterToAirHP);
+bool ZoneHVACWaterToAirHeatPump::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatingCoil(heatingCoilsWaterToAirHP);
 }
 
-void ZoneHVACWaterToAirHeatPump::setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP) {
-  getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setCoolingCoil(coolingCoilsWaterToAirHP);
+bool ZoneHVACWaterToAirHeatPump::setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setCoolingCoil(coolingCoilsWaterToAirHP);
 }
 
 bool ZoneHVACWaterToAirHeatPump::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include <model/Node_Impl.hpp>
 #include <model/FanOnOff.hpp>
 #include <model/FanOnOff_Impl.hpp>
+#include <model/FanConstantVolume.hpp>
+#include <model/FanConstantVolume_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
 #include <model/CurveExponent.hpp>
@@ -45,6 +47,8 @@
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/ScheduleConstant.hpp>
 #include <model/ScheduleConstant_Impl.hpp>
+#include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 //#include <utilities/units/Quantity.hpp>
@@ -53,7 +57,63 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(ZoneHVACWaterToAirHeatPump,ZoneHVACWaterToAirHeatPump_SetGetFields) {
+TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_FanOnOff)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT ( 
+  {  
+    Model model;
+    Schedule availabilitySched = model.alwaysOnDiscreteSchedule();
+    CurveExponent fanPowerFtSpeedCurve(model);
+    CurveCubic fanEfficiencyFtSpeedCurve(model);
+
+    fanPowerFtSpeedCurve.setCoefficient1Constant(0.0);
+    fanPowerFtSpeedCurve.setCoefficient2Constant(1.0);
+    fanPowerFtSpeedCurve.setCoefficient3Constant(3.0);
+    fanPowerFtSpeedCurve.setMinimumValueofx(0.0);
+    fanPowerFtSpeedCurve.setMaximumValueofx(1.5);
+    fanPowerFtSpeedCurve.setMinimumCurveOutput(0.01);
+    fanPowerFtSpeedCurve.setMaximumCurveOutput(1.5);
+
+    fanEfficiencyFtSpeedCurve.setCoefficient1Constant(0.33856828);
+    fanEfficiencyFtSpeedCurve.setCoefficient2x(1.72644131);
+    fanEfficiencyFtSpeedCurve.setCoefficient3xPOW2(-1.49280132);
+    fanEfficiencyFtSpeedCurve.setCoefficient4xPOW3(0.42776208);
+    fanEfficiencyFtSpeedCurve.setMinimumValueofx(0.5);
+    fanEfficiencyFtSpeedCurve.setMaximumValueofx(1.5);
+    fanEfficiencyFtSpeedCurve.setMinimumCurveOutput(0.3);
+    fanEfficiencyFtSpeedCurve.setMaximumCurveOutput(1.0);
+
+    FanOnOff supplyFan(model,availabilitySched,fanPowerFtSpeedCurve,fanEfficiencyFtSpeedCurve);
+    CoilHeatingWaterToAirHeatPumpEquationFit coilHeatingWaterToAirHP(model);
+    CoilCoolingWaterToAirHeatPumpEquationFit coilCoolingWaterToAirHP(model);
+    CoilHeatingElectric supplementalHC(model,availabilitySched);
+    ZoneHVACWaterToAirHeatPump testHP(model,availabilitySched,supplyFan,coilHeatingWaterToAirHP,coilCoolingWaterToAirHP,supplementalHC);
+
+    exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_FanConstantVolume)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_DEATH (
+  {
+    Model model;
+    Schedule availabilitySched = model.alwaysOnDiscreteSchedule();
+    FanConstantVolume supplyFan(model,availabilitySched);
+    CoilHeatingWaterToAirHeatPumpEquationFit coilHeatingWaterToAirHP(model);
+    CoilCoolingWaterToAirHeatPumpEquationFit coilCoolingWaterToAirHP(model);
+    CoilHeatingElectric supplementalHC(model,availabilitySched);
+
+    ZoneHVACWaterToAirHeatPump testHP(model,availabilitySched,supplyFan,coilHeatingWaterToAirHP,coilCoolingWaterToAirHP,supplementalHC);
+  }, ".*" );
+}
+
+TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   Model model;
 
   CurveExponent fanPowerFtSpeedCurve(model);

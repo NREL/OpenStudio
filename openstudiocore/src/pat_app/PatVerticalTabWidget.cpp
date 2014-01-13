@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -83,6 +83,13 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
   QShortcut* previousTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab), this);
   isConnected = connect(previousTabShortcut, SIGNAL(activated()), this, SLOT(previousTab()));
   OS_ASSERT(isConnected);
+}
+
+PatVerticalTabWidget::~PatVerticalTabWidget() 
+{ 
+  if (mainViewSwitcher){
+    mainViewSwitcher->clear(); 
+  }
 }
 
 void PatVerticalTabWidget::addTab( int id,
@@ -225,8 +232,7 @@ void PatVerticalTabWidget::refreshIcons()
       imagePath = m_unSelectedPixmaps[i];
     }
     else if(!button->isEnabled() && button->isChecked()){
-      // you should not be here
-      OS_ASSERT(false);
+      imagePath = m_selectedPixmaps[i];
     }
     else if(!button->isEnabled() && !button->isChecked()){
       imagePath = m_disabledPixmaps[i];

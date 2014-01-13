@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -56,19 +56,19 @@ class UTILITIES_API EndUses {
   void addEndUse(double value, const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory = "General");
 
   /// get end use value
-  double getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory);
+  double getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory) const;
 
   /// get end use value across sub categories
-  double getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category);
+  double getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category) const;
 
    /// get end use value across fuel types
-  double getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory);
+  double getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory) const;
 
    /// get end use value across fuel types and sub categories
-  double getEndUseByCategory(const EndUseCategoryType& category);
+  double getEndUseByCategory(const EndUseCategoryType& category) const;
 
    /// get end use value across categories and sub categories
-  double getEndUseByFuelType(const EndUseFuelType& fuelType);
+  double getEndUseByFuelType(const EndUseFuelType& fuelType) const;
 
   /// get list of all sub cateogories
   std::vector<std::string> subCategories() const;

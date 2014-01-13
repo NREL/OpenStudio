@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,6 @@ namespace detail {
 
   /** Measure_Impl is a AnalysisObject_Impl that is the implementation class for Measure.*/
   class ANALYSIS_API Measure_Impl : public AnalysisObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

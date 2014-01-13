@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -24,6 +24,8 @@
 #include <energyplus/ReverseTranslator.hpp>
 
 #include <model/Model.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/Space.hpp>
 #include <model/People.hpp>
 #include <model/People_Impl.hpp>
 #include <model/PeopleDefinition.hpp>
@@ -42,6 +44,38 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture,ForwardTranslator_People)
 {
   Model model;
+
+  ThermalZone zone(model);
+
+  Space space(model);
+  space.setThermalZone(zone);
+
+  PeopleDefinition def(model);
+
+  People people(def);
+  people.setSpace(space);
+  
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> peopleObjects = workspace.getObjectsByType(IddObjectType::People);
+  ASSERT_EQ(1u, peopleObjects.size());
+}
+
+TEST_F(EnergyPlusFixture,ForwardTranslator_People_NoSpace)
+{
+  Model model;
+
+  PeopleDefinition def(model);
+
+  People people(def);
+  
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> peopleObjects = workspace.getObjectsByType(IddObjectType::People);
+  //ASSERT_EQ(0u, peopleObjects.size()); // for now we will let the object come through, this will cause an error in E+
+  ASSERT_EQ(1u, peopleObjects.size());
 }
 
 

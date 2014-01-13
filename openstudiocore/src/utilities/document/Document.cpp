@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -35,7 +35,6 @@
 #include <boost/foreach.hpp>
 #include <boost/archive/archive_exception.hpp>
 
-#ifndef __APPLE__
 BOOST_CLASS_EXPORT(openstudio::SectionHeading);
 BOOST_CLASS_EXPORT(openstudio::Section);
 BOOST_CLASS_EXPORT(openstudio::Text);
@@ -44,7 +43,6 @@ BOOST_CLASS_EXPORT(openstudio::detail::SectionHeading_Impl);
 BOOST_CLASS_EXPORT(openstudio::detail::Section_Impl);
 BOOST_CLASS_EXPORT(openstudio::detail::Text_Impl);
 BOOST_CLASS_EXPORT(openstudio::detail::Table_Impl);
-#endif
 
 namespace openstudio {
 

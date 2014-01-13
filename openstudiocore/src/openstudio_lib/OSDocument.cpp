@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -177,6 +177,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening
+  options.setInitializeRunManagerUI(true);
   options.setLogLevel(Debug);
 
   // initialize project object
@@ -222,9 +223,37 @@ OSDocument::OSDocument( openstudio::model::Model library,
       }
     
     }
-  } else {
+    else {
+      // save copy of databases about to be overwritten
+      openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
+      boost::filesystem::copy_file(projectDir / toPath("run.db"),
+                                   projectDir / toPath("bad-run.db"),
+                                   boost::filesystem::copy_option::overwrite_if_exists);
+      boost::filesystem::copy_file(projectDir / toPath("project.osp"),
+                                   projectDir / toPath("bad-project.osp"),
+                                   boost::filesystem::copy_option::overwrite_if_exists);
+      // throw up warning message
+      std::stringstream ss;
+      ss << "The project.osp and run.db associated with this model could not be opened. ";
+      ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
+      ss << "will be created. Compared to the original, the model will no longer contain any ";
+      ss << "measures or run data. If that data was present and is critical, it can be mined ";
+      ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
+      ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
+      ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
+      ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
+      ss << "you, and sorry for the inconvenience.";
+      LOG(Warn,ss.str());
+      QMessageBox::warning(0, 
+                           QString("Error opening measure and run data."),
+                           toQString(ss.str()),
+                           QMessageBox::Ok);
+    }
+  }
+  if (!m_simpleProject) {
     LOG(Debug, "Creating new project");
-    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
+    m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
+        openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), 
         options,
         true);
 
@@ -241,6 +270,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
     problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
     problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
   }
+
+  OS_ASSERT(m_simpleProject);
   
   // make sure project has baseline stuff setup
   analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
@@ -530,9 +561,15 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(m_runTabController.get(), SIGNAL(useRadianceStateChanged(bool)),
           this, SLOT(markAsModified()));
 
+  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)), 
+      m_resultsTabController.get(), SLOT(resultsGenerated(const openstudio::path &, const openstudio::path &)));
+
+  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)),
+      this, SLOT(runComplete())); 
+  
   // Results
 
-  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController(m_model) );
+  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController() );
   m_mainWindow->addVerticalTab( m_resultsTabController->mainContentWidget(),
                                 RESULTS_SUMMARY,
                                 "Results Summary",
@@ -544,11 +581,9 @@ OSDocument::OSDocument( openstudio::model::Model library,
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_resultsTabController.get(), SLOT(onUnitSystemChange(bool)));
 
-  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)), 
-      m_resultsTabController.get(), SLOT(resultsGenerated(const openstudio::path &, const openstudio::path &)));
-
-  connect(m_runTabController.get(), SIGNAL(resultsGenerated(const openstudio::path &, const openstudio::path &)),
-      this, SLOT(runComplete()));
+  isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
+    m_resultsTabController->mainContentWidget(), SIGNAL(treeChanged(const openstudio::UUID &)));
+  OS_ASSERT(isConnected);
 
   m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 

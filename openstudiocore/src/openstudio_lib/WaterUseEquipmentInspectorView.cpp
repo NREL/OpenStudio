@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -323,7 +323,7 @@ void WaterUseEquipmentDefinitionInspectorView::attach(openstudio::model::WaterUs
 {
   m_nameEdit->bind(waterUseEquipmentDefinition,"name");
   m_endUseSubcategoryEdit->bind(waterUseEquipmentDefinition,"endUseSubcategory");
-  m_peakFlowRateEdit->bind(waterUseEquipmentDefinition,"peakFlowRate",false);
+  m_peakFlowRateEdit->bind(waterUseEquipmentDefinition,"peakFlowRate",m_isIP);
 
   m_targetTemperatureScheduleVC->attach(waterUseEquipmentDefinition);
   m_targetTemperatureScheduleVC->reportItems();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -324,7 +324,7 @@ namespace detail {
 
     bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-	virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
   };
 
 } // detail

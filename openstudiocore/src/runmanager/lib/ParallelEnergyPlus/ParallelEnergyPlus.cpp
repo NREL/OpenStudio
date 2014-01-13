@@ -161,10 +161,10 @@ std::vector<std::pair<boost::gregorian::date, boost::gregorian::date> > Parallel
   // Start with ranks 0... x
   boost::gregorian::date d1(sd);
 
-  //	std::cout << boost::gregorian::to_simple_string(d1) << std::endl;
+  //std::cout << boost::gregorian::to_simple_string(d1) << std::endl;
   createPartitions(d1, ed, A, 0, X, t_offset, sd, partitions);
 
-  //	std::cout << boost::gregorian::to_simple_string(d1) << std::endl;
+  //std::cout << boost::gregorian::to_simple_string(d1) << std::endl;
   createPartitions(d1, ed, B, X, t_numPartitions, t_offset, sd, partitions);
 
   return partitions;
@@ -212,8 +212,8 @@ void ParallelEnergyPlus::writePartition(int t_partition, const openstudio::path 
 
   ws.toIdfFile().save(t_path, true);
 
-  //	building.remove("output");
-  //	building.update("simulationcontrol,yes,yes,yes, no, yes;");
+  //building.remove("output");
+  //building.update("simulationcontrol,yes,yes,yes, no, yes;");
   //building.update("simulationcontrol, yes, yes, no, no, yes;");
   //building.update(createRunPeriod(m_runPeriod.second, m_partitions[t_partition].first, m_partitions[t_partition].second));
 
@@ -222,7 +222,7 @@ void ParallelEnergyPlus::writePartition(int t_partition, const openstudio::path 
 /*
   // remove summary reports since they dont make sense anymore //-BLB
   building.remove("Output:Table:");
-  //	building.remove("Output:meter:cumulative"); //-BLB  doesnt work, removes all output:meter
+  //building.remove("Output:meter:cumulative"); //-BLB  doesnt work, removes all output:meter
   building.remove("Output:environmentalimpactfactors");
   building.remove2("Output:VariableDictionary,regular");
   building.remove2("Output:VariableDictionary,IDF");
@@ -307,20 +307,20 @@ void ParallelEnergyPlus::writePartition(int t_partition, const openstudio::path 
   building.add2("Output:Meter,Cogeneration:Gas,hourly;");
 
 
-  //	building.add("Output:SQLite, Simple;");
-  //	building.add("Output:Meter, Electricity:Facility,  Daily;");
-  //	building.add("Output:Meter, Gas:Facility,  Daily;");
+  //building.add("Output:SQLite, Simple;");
+  //building.add("Output:Meter, Electricity:Facility,  Daily;");
+  //building.add("Output:Meter, Gas:Facility,  Daily;");
 
-  //	building.add("Output:Meter, Electricity:Facility,  hourly;");
-  //	building.add("Output:Meter, Gas:Facility,  hourly;");
-  //	building.add("Output:Meter, Electricity:Building,  hourly;");
-  //	building.add("Output:Meter, Electricity:HVAC,  hourly;");
-  //	building.add("Output:Variable,*,Zone Mean Air Temperature,hourly;");
-  //	building.add("Output:Variable,*,Cooling Coil Electric Power,hourly;");
-  //	building.add("Output:Variable,*,Site Outdoor Air Drybulb Temperature,HOURLY;");
+  //building.add("Output:Meter, Electricity:Facility,  hourly;");
+  //building.add("Output:Meter, Gas:Facility,  hourly;");
+  //building.add("Output:Meter, Electricity:Building,  hourly;");
+  //building.add("Output:Meter, Electricity:HVAC,  hourly;");
+  //building.add("Output:Variable,*,Zone Mean Air Temperature,hourly;");
+  //building.add("Output:Variable,*,Cooling Coil Electric Power,hourly;");
+  //building.add("Output:Variable,*,Site Outdoor Air Drybulb Temperature,HOURLY;");
   //building.add("Output:Variable,*,Site Outdoor Air Relative Humidity,HOURLY;");
   //building.add("OutputControl:Table:Style,HTML;");
-  //	building.add("Output:Table:SummaryReports,AllSummary;");
+  //building.add("Output:Table:SummaryReports,AllSummary;");
 */
 
   /*

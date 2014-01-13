@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -352,7 +352,7 @@ namespace detail{
 
   double AirTerminalSingleDuctVAVReheat_Impl::fixedMinimumAirFlowRate()
   {
-    return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction).get();
+    return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate).get();
   }
 
   void AirTerminalSingleDuctVAVReheat_Impl::setFixedMinimumAirFlowRate( double value )

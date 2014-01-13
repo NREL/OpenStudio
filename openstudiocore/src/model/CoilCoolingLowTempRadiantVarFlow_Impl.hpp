@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -127,7 +127,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantVarFlow");
-							
+
     std::vector<std::string> condensationControlTypeValues() const;
 
     //boost::optional<ModelObject> coolingWaterInletNodeAsModelObject() const;

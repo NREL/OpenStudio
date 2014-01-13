@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,9 +30,7 @@ namespace detail {
 
 class MODEL_API ConnectorMixer_Impl : public Mixer_Impl 
 {
-  Q_OBJECT;
-
-  public:
+ public:
 
   ConnectorMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 

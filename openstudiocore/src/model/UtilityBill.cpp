@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -32,7 +32,6 @@
 #include <model/Timestep.hpp>
 #include <model/Timestep_Impl.hpp>
 
-
 #include <model/Model.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
@@ -44,6 +43,8 @@
 #include <utilities/time/Date.hpp>
 
 #include <utilities/core/Assert.hpp>
+
+#include <QDate>
 
 namespace openstudio {
 namespace model {
@@ -798,9 +799,8 @@ namespace detail {
   {
     std::vector<BillingPeriod> billingPeriods = this->billingPeriods();
 
-    IdfExtensibleGroup eg = pushExtensibleGroup(StringVector(), false);
-    BillingPeriod result = eg.cast<BillingPeriod>();
-    
+    std::vector<std::string> values;
+
     if (billingPeriods.empty()){
       boost::optional<model::YearDescription> yd = this->model().yearDescription();
       //DLM: we could assert yd and also yd->calendarYear here
@@ -808,33 +808,34 @@ namespace detail {
         yd = this->model().getUniqueModelObject<model::YearDescription>();
       }
 
-      bool wasBlocked = this->blockSignals(true);
-      bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, 1);
-      OS_ASSERT(test);
-      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, 1);
-      OS_ASSERT(test);
-      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, yd->assumedYear());
-      OS_ASSERT(test);
-      test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, 30);
-      OS_ASSERT(test);
-      this->blockSignals(wasBlocked);
-      this->emitChangeSignals();
+      values.push_back(toString(1)); // month
+      values.push_back(toString(1)); // day
+      values.push_back(toString(yd->assumedYear())); // year
+      values.push_back(toString(30)); // number of days
+      values.push_back(""); // consumption
+      values.push_back(""); // peak demand
+      values.push_back(""); // cost
+
     }else{
       Date startDate = billingPeriods.back().endDate() + Time(1);
 
-      bool wasBlocked = this->blockSignals(true);
-      bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
-      OS_ASSERT(test);
-      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, startDate.dayOfMonth());
-      OS_ASSERT(test);
-      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, startDate.year());
-      OS_ASSERT(test);
-      test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, billingPeriods.back().numberOfDays());
-      OS_ASSERT(test);
-      this->blockSignals(wasBlocked);
-      this->emitChangeSignals();
+      values.push_back(toString(startDate.monthOfYear().value())); // month
+      values.push_back(toString(startDate.dayOfMonth())); // day
+      values.push_back(toString(startDate.year())); // year
+      values.push_back(toString(billingPeriods.back().numberOfDays())); // number of days
+      values.push_back(""); // consumption
+      values.push_back(""); // peak demand
+      values.push_back(""); // cost
+
     }
-      
+
+    IdfExtensibleGroup eg = pushExtensibleGroup(values, false);
+    OS_ASSERT(!eg.empty());
+
+    this->emitChangeSignals();
+
+    BillingPeriod result = eg.cast<BillingPeriod>();
+
     return result;
   }
 
@@ -956,24 +957,26 @@ boost::optional<double> BillingPeriod::totalCost() const
 bool BillingPeriod::setStartDate(const Date& startDate)
 {
   Date currentStartDate = this->startDate();
-  unsigned currentNumberOfDays = this->numberOfDays();
   Date currentEndDate = this->endDate();
 
   /* If startDate is before endDate then endDate is retained.
      If startDate is after endDate then numberOfDays is retained. */
 
-  bool test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
-  OS_ASSERT(test);
-  test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, startDate.dayOfMonth());
-  OS_ASSERT(test);
-  test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, startDate.assumedBaseYear());
-  OS_ASSERT(test);
+  std::vector<std::string> fields = this->fields();
+  OS_ASSERT(fields.size() == 7);
+
+  fields[0] = toString(startDate.monthOfYear().value());
+  fields[1] = toString(startDate.dayOfMonth());
+  fields[2] = toString(startDate.assumedBaseYear());
 
   if (startDate < currentEndDate){
     Time newNumberOfDays = currentEndDate - startDate;
-    test = this->setNumberOfDays(newNumberOfDays.days() + 1);
-    OS_ASSERT(test);
+    fields[3] = toString(newNumberOfDays.days() + 1);
   }
+
+  bool test = this->setFields(fields, false);
+  OS_ASSERT(test);
+  m_impl->emitChangeSignals();
 
   return test;
 }
@@ -981,9 +984,10 @@ bool BillingPeriod::setStartDate(const Date& startDate)
 bool BillingPeriod::setEndDate(const Date& endDate)
 {
   Date currentStartDate = this->startDate();
-  unsigned currentNumberOfDays = this->numberOfDays();
   Date currentEndDate = this->endDate();
 
+  unsigned currentNumberOfDays = this->numberOfDays();
+  
   /* If endDate is after startDate then startDate is retained.
      If endDate is before startDate then numberOfDays is retained. */
 
@@ -995,6 +999,7 @@ bool BillingPeriod::setEndDate(const Date& endDate)
     OS_ASSERT(test);
   }else{
     Date newStartDate = endDate - Time(currentNumberOfDays - 1);
+
     test = this->setStartDate(newStartDate);
     OS_ASSERT(test);
     test = this->setNumberOfDays(currentNumberOfDays);
@@ -1086,7 +1091,7 @@ bool BillingPeriod::withinPeriodicRunPeriod() const
   }
 
   bool overlapsRunPeriod = this->overlapsRunPeriod();
-  if (!withinRunPeriod){
+  if (!overlapsRunPeriod){
     return false;
   }
 
@@ -1267,9 +1272,13 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     double outOfRangeValue = std::numeric_limits<double>::min();
     timeseries->setOutOfRangeValue(outOfRangeValue);
 
+    // includes year in billing period start date
+    Date startDate = this->startDate();
+    Date endDate = this->endDate();
+
     // intentionally leave out calendar year
-    Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth());
-    Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth());
+    Date runPeriodStartDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
+    Date runPeriodEndDate = Date(endDate.monthOfYear(), endDate.dayOfMonth());
 
     DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
     DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));

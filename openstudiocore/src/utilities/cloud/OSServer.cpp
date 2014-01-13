@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -79,11 +79,7 @@ namespace openstudio{
 
     OSServer_Impl::~OSServer_Impl()
     {
-      if (m_networkReply){
-        m_networkReply->blockSignals(true);
-        m_networkReply->deleteLater();
-        m_networkReply = 0;
-      };
+      resetNetworkReply();
     }
  
     bool OSServer_Impl::available(int msec)
@@ -412,9 +408,7 @@ namespace openstudio{
       }
 
       QObject::disconnect(m_networkReply, 0, this, 0);
-      m_networkReply->blockSignals(true);
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(false);
@@ -586,6 +580,9 @@ namespace openstudio{
       bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostAnalysisJSON()));
       OS_ASSERT(test);
 
+      test = QObject::connect(m_networkReply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(logUploadProgress(qint64,qint64)));
+      OS_ASSERT(test);
+
       return true;
     }
 
@@ -601,7 +598,10 @@ namespace openstudio{
       }
 
       QString id = toQString(removeBraces(analysisUUID));
-      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+      // ETH: We are only using batch_upload now. Should rails application also just make 
+      // data_points.json be a batch upload. (Deprecate old, single point functionality, and move
+      // data_points/batch_upload.json to be data_points.json?)
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points/batch_upload.json"));
 
       QByteArray postData; 
       postData.append(toQString(dataPointJSON)); 
@@ -612,6 +612,9 @@ namespace openstudio{
       m_networkReply = m_networkAccessManager->post(request, postData);
 
       bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostDataPointJSON()));
+      OS_ASSERT(test);
+
+      test = QObject::connect(m_networkReply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(logUploadProgress(qint64,qint64)));
       OS_ASSERT(test);
 
       return true;
@@ -636,7 +639,7 @@ namespace openstudio{
           QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
 
           QByteArray data(QString("--" + bound + "\r\n").toAscii());
-          data += "Content-Disposition: form-data; name=\"file\"; filename=\"seed_zip.zip\"\r\n";
+          data += "Content-Disposition: form-data; name=\"file\"; filename=\"project.zip\"\r\n";
           data += "Content-Type: application/x-zip-compressed\r\n\r\n";
           data.append(file.readAll());
           data += "\r\n";
@@ -651,10 +654,13 @@ namespace openstudio{
           request.setRawHeader(QString("Cache-Control").toAscii(),QString("no-cache").toAscii());
           request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
           request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
-         
+
           m_networkReply = m_networkAccessManager->post(request, data);
 
           bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+          OS_ASSERT(test);
+
+          test = QObject::connect(m_networkReply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(logUploadProgress(qint64,qint64)));
           OS_ASSERT(test);
 
           return true;
@@ -975,9 +981,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -995,9 +999,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1016,12 +1018,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processDeleteProject()
@@ -1037,9 +1037,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1083,9 +1081,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1104,9 +1100,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1125,9 +1119,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1146,12 +1138,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processStart()
@@ -1167,12 +1157,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processIsAnalysisQueued()
@@ -1218,12 +1206,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processIsAnalysisRunning()
@@ -1269,12 +1255,10 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
-      emit requestProcessed(success);
+      emit requestProcessed(success);     
     }
 
     void OSServer_Impl::processIsAnalysisComplete()
@@ -1320,9 +1304,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1341,9 +1323,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1386,9 +1366,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1431,9 +1409,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1476,9 +1452,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1521,9 +1495,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1566,9 +1538,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1596,9 +1566,7 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
@@ -1624,12 +1592,20 @@ namespace openstudio{
         logNetworkError(m_networkReply->error());
       }
 
-      m_networkReply->deleteLater();
-      m_networkReply = 0;
-
+      resetNetworkReply();
       m_mutex->unlock();
 
       emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::logUploadProgress(qint64 bytesSent, qint64 bytesTotal) {
+      if (bytesTotal == -1) {
+        LOG(Debug,"Unknown number of bytes in upload.");
+      }
+      else {
+        double percentComplete = 100.0 * (double(bytesSent)/double(bytesTotal));
+        LOG(Debug,"Upload is " << percentComplete << "% complete, " << bytesSent << " of " << bytesTotal << " bytes.");
+      }
     }
 
     void OSServer_Impl::clearErrorsAndWarnings()
@@ -1798,6 +1774,14 @@ namespace openstudio{
       }
 
       return result;
+    }
+
+    void OSServer_Impl::resetNetworkReply() {
+      if (m_networkReply) {
+        m_networkReply->blockSignals(true);
+        m_networkReply->deleteLater();
+        m_networkReply = 0;
+      };
     }
 
   }

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -115,7 +115,7 @@ end
 
 fileHeader = String.new
 fileHeader << "/**********************************************************************\n"
-fileHeader << " *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.\n"
+fileHeader << " *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.\n"
 fileHeader << " *  All rights reserved.\n"
 fileHeader << " *\n"
 fileHeader << " *  This library is free software; you can redistribute it and/or\n"

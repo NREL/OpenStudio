@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -41,12 +41,12 @@ TEST_F(ModelFixture, RunPeriodControlSpecialDays)
   yd.setCalendarYear(2008);
 
   /* February 2008
-  Su	Mo	Tu	We	Th	Fr	Sa
-  										1		2
-  3		4		5		6		7		8		9
-  10	11	12	13	14	15	16
-  17	18	19	20	21	22	23
-  24	25	26	27	28	29
+  Su Mo Tu We Th Fr Sa
+                  1  2
+   3  4  5  6  7  8  9
+  10 11 12 13 14 15 16
+  17 18 19 20 21 22 23
+  24 25 26 27 28 29
   */
 
   RunPeriodControlSpecialDays day(MonthOfYear::Feb, 14, model);

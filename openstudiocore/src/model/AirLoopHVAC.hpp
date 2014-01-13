@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -208,6 +208,9 @@ class MODEL_API AirLoopHVAC : public Loop
 
   /** Overloaded version of addBranchForZone() **/
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
+
+  /** Overloaded version of addBranchForZone() **/
+  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
 
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
    *  Returns true if the airTerminal was accepted, otherwise false.  The demand side

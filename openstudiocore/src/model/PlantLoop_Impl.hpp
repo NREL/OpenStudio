@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -41,8 +41,6 @@ namespace detail {
 class Model_Impl;
 
 class MODEL_API PlantLoop_Impl : public Loop_Impl {
-  Q_OBJECT;
-
  public:
 
   PlantLoop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

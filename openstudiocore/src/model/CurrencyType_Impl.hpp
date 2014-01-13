@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,10 +30,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API CurrencyType_Impl : public ParentObject_Impl{
-  
-  Q_OBJECT;
-
-public:
+ public:
   // constructor
   CurrencyType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 

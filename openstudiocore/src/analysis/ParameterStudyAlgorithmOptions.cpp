@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -120,10 +120,10 @@ namespace detail {
   }
 
   bool ParameterStudyAlgorithmOptions_Impl::setNumSteps(int value) {
-	  if (value < 1) {
+    if (value < 1) {
       LOG(Warn,"Cannot set ParameterStudyAlgorithmOptions numSteps to a value less than one.");
       return false;
-	  }
+    }
     OptionalAttribute option;
     if ((option = getOption("numSteps"))) {
       option->setValue(value);
@@ -150,7 +150,7 @@ namespace detail {
     if (minValue < 0) {
       LOG(Warn,"Cannot set ParameterStudyAlgorithmOptions stepsPerVariable to a value less than zero.");
       return false;
-	  }
+    }
     Attribute option = createAttributeFromVector("stepsPerVariable",value);
     if (OptionalAttribute currentOption = getOption("stepsPerVariable")) {
       currentOption->setValue(option.valueAsAttributeVector());
@@ -166,7 +166,7 @@ namespace detail {
     if (minValue < 0) {
       LOG(Warn,"Cannot set ParameterStudyAlgorithmOptions partitions to a value less than zero.");
       return false;
-	  }
+    }
     Attribute option = createAttributeFromVector("partitions",value);
     if (OptionalAttribute currentOption = getOption("partitions")) {
       currentOption->setValue(option.valueAsAttributeVector());

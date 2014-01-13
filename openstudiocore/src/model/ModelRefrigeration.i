@@ -11,6 +11,7 @@
 %import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
+%import <model/ModelHVAC.i>
 
 #if defined SWIGCSHARP
 
@@ -19,14 +20,36 @@
   
 #endif
 
+MODELOBJECT_TEMPLATES(RefrigerationAirChiller);
 MODELOBJECT_TEMPLATES(RefrigerationCase);
 MODELOBJECT_TEMPLATES(RefrigerationCompressor);
 MODELOBJECT_TEMPLATES(RefrigerationCondenserAirCooled);
+MODELOBJECT_TEMPLATES(RefrigerationCondenserCascade);
+MODELOBJECT_TEMPLATES(RefrigerationCondenserEvaporativeCooled);
+MODELOBJECT_TEMPLATES(RefrigerationCondenserWaterCooled);
+MODELOBJECT_TEMPLATES(RefrigerationGasCoolerAirCooled);
+MODELOBJECT_TEMPLATES(RefrigerationSubcoolerLiquidSuction);
+MODELOBJECT_TEMPLATES(RefrigerationSubcoolerMechanical);
+MODELOBJECT_TEMPLATES(RefrigerationSecondarySystem);
 MODELOBJECT_TEMPLATES(RefrigerationSystem);
+MODELOBJECT_TEMPLATES(RefrigerationTranscriticalSystem);
+MODELOBJECT_TEMPLATES(RefrigerationWalkIn);
+MODELOBJECT_TEMPLATES(RefrigerationWalkInZoneBoundary);
 
+SWIG_MODELOBJECT(RefrigerationAirChiller);
 SWIG_MODELOBJECT(RefrigerationCase);
 SWIG_MODELOBJECT(RefrigerationCompressor);
 SWIG_MODELOBJECT(RefrigerationCondenserAirCooled);
+SWIG_MODELOBJECT(RefrigerationCondenserCascade);
+SWIG_MODELOBJECT(RefrigerationCondenserEvaporativeCooled);
+SWIG_MODELOBJECT(RefrigerationCondenserWaterCooled);
+SWIG_MODELOBJECT(RefrigerationGasCoolerAirCooled);
+SWIG_MODELOBJECT(RefrigerationSubcoolerLiquidSuction);
+SWIG_MODELOBJECT(RefrigerationSubcoolerMechanical);
+SWIG_MODELOBJECT(RefrigerationSecondarySystem);
 SWIG_MODELOBJECT(RefrigerationSystem);
+SWIG_MODELOBJECT(RefrigerationTranscriticalSystem);
+SWIG_MODELOBJECT(RefrigerationWalkIn);
+SWIG_MODELOBJECT(RefrigerationWalkInZoneBoundary);
 
 #endif 

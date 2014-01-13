@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -45,6 +45,8 @@ class BCLMeasureDialog : public OSDialog
     BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent = 0);
 
     virtual ~BCLMeasureDialog();
+
+    QSize sizeHint() const;
 
     /// After calling exec() and getting appropriate return code
     /// Call createMeasure to create the new measure

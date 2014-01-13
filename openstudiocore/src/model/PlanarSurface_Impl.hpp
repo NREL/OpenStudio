@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -190,6 +190,9 @@ namespace detail {
     /// Get the plane, throws openstudio::Exception if cannot compute plane for this surface.
     Plane plane() const;
 
+    /// Get a triangulation of this surface, subsurfaces will be replaced by holes in the triangulation
+    std::vector<std::vector<Point3d> > triangulation() const;
+
     //@}
    protected:
 
@@ -211,6 +214,7 @@ namespace detail {
     mutable boost::optional<std::vector<Point3d> > m_cachedVertices;
     mutable boost::optional<Plane> m_cachedPlane;
     mutable boost::optional<Vector3d> m_cachedOutwardNormal;
+    mutable std::vector<std::vector<Point3d> > m_cachedTriangulation;
 
   };
 

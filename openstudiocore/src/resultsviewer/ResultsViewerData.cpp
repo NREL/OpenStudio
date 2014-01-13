@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -44,6 +44,9 @@ namespace resultsviewer{
     if (isFileOpen(sqlFile)) return RVD_FILEALREADYOPENED;
 
     m_sqlFileMap[sqlFile] = alias;
+
+    if (!sqlFile.supportedVersion()) return RVD_UNSUPPORTEDVERSION;
+
     return RVD_SUCCESS;
   }
 

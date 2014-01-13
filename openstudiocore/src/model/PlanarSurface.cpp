@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -227,8 +227,10 @@ namespace model {
           MaterialVector layers = construction.layers();
           OS_ASSERT(layers.size() == 1u);
           result = layers[0].optionalCast<AirWallMaterial>();
-        }
-        else {
+        }else if (construction.numLayers() == 0) {
+          LOG(Error, "Air wall detected with zero layers, classifying as air wall");
+          result = true;
+        }else {
           LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
           result = false;
         }
@@ -277,7 +279,12 @@ namespace model {
         Point3dVector vertices = this->vertices();
         m_cachedOutwardNormal = getOutwardNormal(vertices);
         if(!m_cachedOutwardNormal){
-          LOG_AND_THROW("Cannot compute outward normal for vertices " << vertices);
+          std::string surfaceNameMsg;
+          boost::optional<std::string> name = this->name();
+          if (name){
+            surfaceNameMsg = ", surface name = '" + *name + "'";
+          }
+          LOG_AND_THROW("Cannot compute outward normal for vertices " << vertices << surfaceNameMsg);
         }
       }
       return m_cachedOutwardNormal.get();
@@ -502,6 +509,34 @@ namespace model {
       return m_cachedPlane.get();
     }
 
+    std::vector<std::vector<Point3d> > PlanarSurface_Impl::triangulation() const
+    {
+      if (m_cachedTriangulation.empty()){
+        Transformation faceTransformation = Transformation::alignFace(this->vertices());
+        Transformation faceTransformationInverse = faceTransformation.inverse();
+
+        std::vector<Point3d> faceVertices = faceTransformationInverse*this->vertices();
+
+        std::vector<std::vector<Point3d> > faceHoles;
+        BOOST_FOREACH(const ModelObject& child, this->children()){
+          OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
+          if (surface){
+            if (surface->subtractFromGrossArea()){
+              faceHoles.push_back(faceTransformationInverse*surface->vertices());
+            }
+          }
+        }
+
+        std::vector<std::vector<Point3d> > faceTriangulation = computeTriangulation(faceVertices, faceHoles);
+
+        BOOST_FOREACH(const std::vector<Point3d>& faceTriangle, faceTriangulation){
+          m_cachedTriangulation.push_back(faceTransformation*faceTriangle);
+        }
+      }
+      return m_cachedTriangulation;
+    }
+
+
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
       return static_cast<boost::optional<ModelObject> >(this->construction());
@@ -530,6 +565,7 @@ namespace model {
       m_cachedVertices.reset();
       m_cachedPlane.reset();
       m_cachedOutwardNormal.reset();
+      m_cachedTriangulation.clear();
     }
 
     bool PlanarSurface_Impl::setConstructionAsModelObject(boost::optional<ModelObject> modelObject)
@@ -703,6 +739,11 @@ bool PlanarSurface::reverseEqualVertices(const PlanarSurface& other) const
 Plane PlanarSurface::plane() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->plane();
+}
+
+std::vector<std::vector<Point3d> > PlanarSurface::triangulation() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->triangulation();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

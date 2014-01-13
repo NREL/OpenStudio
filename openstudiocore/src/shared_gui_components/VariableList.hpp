@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -208,6 +208,8 @@ class MeasureListController : public OSListController
 
   int count();
 
+  void addItemForDuplicateMeasure(const analysis::Measure& measure);
+
   void removeItemForMeasure(const analysis::Measure & measure);
 
   public slots:
@@ -255,6 +257,8 @@ class MeasureItem : public OSListItem
   void setName(const QString & name);
 
   void setDescription(const QString & description);
+
+  void duplicate();
 
   void remove();
 

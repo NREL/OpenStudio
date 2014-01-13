@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -95,12 +95,12 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       super
-	  
-	  if @entity.deleted?
-		# how did this happen?
-	    return nil
-	  end
-	  
+      
+      if @entity.deleted?
+        # how did this happen?
+        return nil
+      end
+      
       faces = @entity.entities.find_all { |this_entity| this_entity.class == Sketchup::Face }
 
       for face in faces

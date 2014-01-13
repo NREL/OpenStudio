@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -17,7 +17,11 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-require("openstudio/sketchup_plugin/stdruby/fileutils")
+if Sketchup.version_number > 14000000
+  require("fileutils")
+else
+  require("openstudio/sketchup_plugin/stdruby/fileutils")
+end
 
 module OpenStudio
 

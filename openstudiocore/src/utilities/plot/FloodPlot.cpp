@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -210,6 +210,7 @@ QwtDoubleRect TimeSeriesFloodPlotData::boundingRect() const
 
 double TimeSeriesFloodPlotData::value(double fractionalDay, double hourOfDay) const
 {
+  // DLM: we are flooring the day because we want to plot day vs hour in flood plot
   double fracDays = floor(fractionalDay) + hourOfDay/24.0;
   return m_timeSeries.value(fracDays-m_startFractionalDay);
 }

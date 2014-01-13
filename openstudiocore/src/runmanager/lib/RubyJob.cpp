@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -45,11 +45,11 @@ namespace detail {
       const JobState &t_restoreData)
     : ToolBasedJob(t_uuid, JobType::Ruby, t_tools, "ruby", t_params, t_files, false, t_restoreData)
   {
-    LOG(Debug, "Creating a RubyJob");
+    LOG(Trace, "Creating a RubyJob");
 
     m_description = buildDescription("rb");
 
-    LOG(Debug, "RubyJob Created");
+    LOG(Trace, "RubyJob Created");
   }
 
   RubyJob::RubyJob(const UUID &t_uuid,
@@ -60,11 +60,11 @@ namespace detail {
       const JobState &t_restoreData)
     : ToolBasedJob(t_uuid, t_jobType, t_tools, "ruby", t_params, t_files, false, t_restoreData)
   {
-    LOG(Debug, "Creating a RubyJob");
+    LOG(Trace, "Creating a RubyJob");
 
     m_description = buildDescription("rb");
 
-    LOG(Debug, "RubyJob Created");
+    LOG(Trace, "RubyJob Created");
   }
 
 

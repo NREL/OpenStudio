@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -497,35 +497,6 @@ module OpenStudio
       end
 
       return result, errors, warnings
-    end    
-    
-    # load a SimXML from path and convert to model
-    def model_from_SimXML_path(path)
-      Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-
-      result = nil
-
-      if (path.nil?)
-        Sketchup.status_text = "Could not read file at #{path}"
-        Plugin.log(OpenStudio::Error, "model_from_SimXML_path: path is nil")
-
-      elsif (not File.exist?(path))
-        Sketchup.status_text = "Could not read file at #{path}"
-        Plugin.log(OpenStudio::Error, "model_from_SimXML_path: #{path} does not exist")
-
-      else
-
-        model = OpenStudio::SimXML::ReverseTranslator::SimXmlToModel(OpenStudio::Path.new(path))
-
-        if model.empty? 
-          Sketchup.status_text = "Could not read file at #{path}"
-          Plugin.log(OpenStudio::Error, "model_from_SimXML_path: could not read file at #{path}")
-        else
-          result = model.get
-        end
-      end
-
-      return(result)
     end    
     
 =begin

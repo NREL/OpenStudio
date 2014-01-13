@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -38,7 +38,6 @@ namespace detail {
 
   /** SequentialSearch_Impl is a Algorithm_Impl that is the implementation class for SequentialSearch.*/
   class ANALYSIS_API SequentialSearch_Impl : public OpenStudioAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

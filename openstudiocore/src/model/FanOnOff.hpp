@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -44,10 +44,12 @@ class MODEL_API FanOnOff : public StraightComponent {
   //@{
 
   explicit FanOnOff(const Model& model,
-																										Schedule& schedule,
-																										Curve& fanPowerRatioFunctionofSpeedRatioCurve,
-																										Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
-																			 );
+                          Schedule& availabilitySchedule,
+                          Curve& fanPowerRatioFunctionofSpeedRatioCurve,
+                          Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
+                    );
+
+  explicit FanOnOff(const Model& model, Schedule& availabilitySchedule);
 
   virtual ~FanOnOff() {}
 
@@ -79,7 +81,7 @@ class MODEL_API FanOnOff : public StraightComponent {
   std::string endUseSubcategory() const;
 
   bool isEndUseSubcategoryDefaulted() const;
-  
+
 
   /** @name Setters */
 

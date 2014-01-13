@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -804,7 +804,7 @@ namespace detail {
 
   boost::optional<ZoneHVACComponent> FanVariableVolume_Impl::containingZoneHVACComponent() const
   {
-	// ZoneHVACFourPipeFanCoil
+    // ZoneHVACFourPipeFanCoil
 
     std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
 
@@ -821,9 +821,9 @@ namespace detail {
           return *it;
         }
       }
-    }	
+    }
 
-	// ZoneHVACUnitHeater
+    // ZoneHVACUnitHeater
 
     std::vector<ZoneHVACUnitHeater> zoneHVACUnitHeater;
 
@@ -840,7 +840,7 @@ namespace detail {
           return *it;
         }
       }
-    }	
+    }
 
     return boost::none;
   }

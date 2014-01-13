@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -95,6 +95,9 @@ class UTILITIES_API SqlFile {
 
   /// get the path
   openstudio::path path() const;
+
+  /// \returns true if the sqlfile is of a version that's in our supported range
+  bool supportedVersion() const;
 
   /// close the file
   bool close();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -29,8 +29,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API PipeAdiabatic_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
-
   public:
 
     // constructor

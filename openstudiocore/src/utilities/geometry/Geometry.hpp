@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -58,6 +58,14 @@ namespace openstudio{
   /// return distance between two points
   UTILITIES_API double getDistance(const Point3d& point1, const Point3d& point2);
 
+  /// return distance between a point and a line segment
+  /// returns 0 if lineSegment does not have length 2
+  UTILITIES_API double getDistancePointToLineSegment(const Point3d& point, const std::vector<Point3d>& lineSegment);
+
+  /// return distance between a point and a triangle
+  /// returns 0 if triangle does not have length 3
+  UTILITIES_API double getDistancePointToTriangle(const Point3d& point, const std::vector<Point3d>& triangle);
+
   /// return angle (in radians) between two vectors
   UTILITIES_API double getAngle(const Vector3d& vector1, const Vector3d& vector2);
   
@@ -67,6 +75,14 @@ namespace openstudio{
 
   /// check if two vectors of points are equal (within tolerance) irregardless of initial ordering.
   UTILITIES_API bool circularEqual(const Point3dVector& points1, const Point3dVector& points2, double tol = 0.001);
+
+  /// if point3d is within tol of any existing points then returns existing point
+  /// otherwise adds point3d to allPoints and returns point3d
+  UTILITIES_API Point3d getCombinedPoint(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001);
+
+  /// compute triangulation of vertices, holes are removed in the triangulation
+  /// requires that vertices and holes are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  UTILITIES_API std::vector<std::vector<Point3d> > computeTriangulation(const Point3dVector& vertices, const std::vector<std::vector<Point3d> >& holes, double tol = 0.001);
 
 } // openstudio
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -449,8 +449,8 @@ namespace detail {
     /** Emitted on any change to this Workspace and its contents. */
     void onChange() const;
 
-    /** Send an object being deleted from the workspace. BOOST_ASSERT(!object.initialized())
-     *  should pass, as should BOOST_ASSERT(object.handle().isNull()). */
+    /** Send an object being deleted from the workspace. OS_ASSERT(!object.initialized())
+     *  should pass, as should OS_ASSERT(object.handle().isNull()). */
     void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
 
     // DLM: deprecate this version

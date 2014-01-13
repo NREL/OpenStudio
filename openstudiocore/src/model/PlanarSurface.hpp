@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -200,6 +200,9 @@ class MODEL_API PlanarSurface : public ParentObject {
 
   /// Get the plane, throws openstudio::Exception if cannot compute plane for this surface.
   Plane plane() const;
+
+  /// Get a triangulation of this surface, subsurfaces will be replaced by holes in the triangulation
+  virtual std::vector<std::vector<Point3d> > triangulation() const;
 
  protected:
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -34,7 +34,6 @@ namespace detail {
 
   /** LightingSimulationZone_Impl is a ModelObject_Impl that is the implementation class for LightingSimulationZone.*/
   class MODEL_API LightingSimulationZone_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

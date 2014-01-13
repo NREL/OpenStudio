@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -33,7 +33,6 @@ namespace detail {
   /** DiscreteVariable_Impl is an InputVariable_Impl that is the implementation class
    *  for DiscreteVariable. */
   class ANALYSIS_API DiscreteVariable_Impl : public InputVariable_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

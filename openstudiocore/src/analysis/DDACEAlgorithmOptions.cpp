@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -90,10 +90,10 @@ namespace detail {
   }
 
   bool DDACEAlgorithmOptions_Impl::setSamples(int value) {
-	  if (value < 0) {
+    if (value < 0) {
       LOG(Warn,"Cannot set DDACEAlgorithmOptions samples to a value less than zero.");
       return false;
-	  }
+    }
     OptionalAttribute option;
     if ((option = getOption("samples"))) {
       option->setValue(value);

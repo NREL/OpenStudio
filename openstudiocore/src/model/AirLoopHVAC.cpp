@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -721,6 +721,13 @@ namespace detail {
     return addBranchForZone(thermalZone,comp);
   }
 
+  bool AirLoopHVAC_Impl::addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal)
+  {
+    boost::optional<StraightComponent> comp = airTerminal;
+
+    return addBranchForZone(thermalZone, comp);
+  }
+
   bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent airTerminal)
   {
     Model _model = this->model();
@@ -919,6 +926,21 @@ namespace detail {
     return wo->cast<AvailabilityManagerAssignmentList>();
   }
 
+  boost::optional<Node> AirLoopHVAC_Impl::mixedAirNode()
+  {
+    boost::optional<Node> result;
+
+    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
+    {
+      if( boost::optional<ModelObject> mo = oaSystem->mixedAirModelObject() )
+      {
+        result = mo->optionalCast<Node>();
+      }
+    }
+
+    return result;
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
@@ -1078,8 +1100,7 @@ boost::optional<Node> AirLoopHVAC::reliefAirNode()
 
 boost::optional<Node> AirLoopHVAC::mixedAirNode()
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->mixedAirNode();
 }
 
 boost::optional<Node> AirLoopHVAC::returnAirNode()
@@ -1131,6 +1152,11 @@ IddObjectType AirLoopHVAC::iddObjectType() {
 bool AirLoopHVAC::addBranchForZone(openstudio::model::ThermalZone & thermalZone)
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone);
+}
+
+bool AirLoopHVAC::addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
 }
 
 bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent airTerminal)

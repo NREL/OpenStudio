@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -114,6 +114,11 @@ namespace detail {
     // check the interval
     double intervalLength = intervalTime->totalMinutes();
     if (intervalLength - floor(intervalLength) > 0){
+      return false;
+    }
+
+    // check the interval
+    if (intervalTime->totalDays() > 1){
       return false;
     }
 

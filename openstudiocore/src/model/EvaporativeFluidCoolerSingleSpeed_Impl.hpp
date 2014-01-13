@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -33,8 +33,6 @@ namespace detail {
 
   /** EvaporativeFluidCoolerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for EvaporativeFluidCoolerSingleSpeed.*/
   class MODEL_API EvaporativeFluidCoolerSingleSpeed_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
-
    public:
     /** @name Constructors and Destructors */
     //@{

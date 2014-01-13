@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/CurveBicubic.hpp>
 #include <model/CurveBicubic_Impl.hpp>
 #include <model/Model.hpp>
@@ -82,6 +81,14 @@ namespace detail {
     CurveBicubic refCapacitryCurve = refrigerationCompressorCapacityCurve();
     modelObjectClone.setRefrigerationCompressorCapacityCurve(refCapacitryCurve.clone(model).cast<CurveBicubic>());
 
+    if ( boost::optional<CurveBicubic> transPowerCurve = transcriticalCompressorPowerCurve() ) {
+      modelObjectClone.setTranscriticalCompressorPowerCurve(transPowerCurve.get().clone(model).cast<CurveBicubic>());
+    }
+
+    if ( boost::optional<CurveBicubic> transCapacitryCurve = transcriticalCompressorCapacityCurve() ) {
+      modelObjectClone.setTranscriticalCompressorCapacityCurve(transCapacitryCurve.get().clone(model).cast<CurveBicubic>());
+    }
+
     return modelObjectClone;
   }
 
@@ -102,12 +109,12 @@ namespace detail {
     if ( (intermediate = refrigerationCompressorCapacityCurve()) ) {
       result.push_back(*intermediate);
     }
-    /*if ( (intermediate = transcriticalCompressorPowerCurve()) ) {
+    if ( (intermediate = transcriticalCompressorPowerCurve()) ) {
       result.push_back(*intermediate);
     }
     if ( (intermediate = transcriticalCompressorCapacityCurve()) ) {
       result.push_back(*intermediate);
-    }*/
+    }
     return result;
   }
 
@@ -154,21 +161,27 @@ namespace detail {
   }
 
   std::string RefrigerationCompressor_Impl::modeofOperation() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_CompressorFields::ModeofOperation,true);
-    OS_ASSERT(value);
-    return value.get();
+    if ( transcriticalCompressorPowerCurve() && transcriticalCompressorCapacityCurve() ) {
+      return "Transcritical";
+    }
+    else {
+      return "Subcritical";
+    }
+   // boost::optional<std::string> value = getString(OS_Refrigeration_CompressorFields::ModeofOperation,true);
+   // OS_ASSERT(value);
+   // return value.get();
   }
 
-  bool RefrigerationCompressor_Impl::isModeofOperationDefaulted() const {
-    return isEmpty(OS_Refrigeration_CompressorFields::ModeofOperation);
-  }
+  // bool RefrigerationCompressor_Impl::isModeofOperationDefaulted() const {
+  //  return isEmpty(OS_Refrigeration_CompressorFields::ModeofOperation);
+  // }
 
   boost::optional<CurveBicubic> RefrigerationCompressor_Impl::transcriticalCompressorPowerCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBicubic>(OS_Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName);
+   return getObject<ModelObject>().getModelObjectTarget<CurveBicubic>(OS_Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName);
   }
 
   boost::optional<CurveBicubic> RefrigerationCompressor_Impl::transcriticalCompressorCapacityCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBicubic>(OS_Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName);
+   return getObject<ModelObject>().getModelObjectTarget<CurveBicubic>(OS_Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName);
   }
 
   bool RefrigerationCompressor_Impl::setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic) {
@@ -259,15 +272,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool RefrigerationCompressor_Impl::setModeofOperation(std::string modeofOperation) {
-    bool result = setString(OS_Refrigeration_CompressorFields::ModeofOperation, modeofOperation);
-    return result;
-  }
+  // bool RefrigerationCompressor_Impl::setModeofOperation(std::string modeofOperation) {
+  //  bool result = setString(OS_Refrigeration_CompressorFields::ModeofOperation, modeofOperation);
+  //  return result;
+  // }
 
-  void RefrigerationCompressor_Impl::resetModeofOperation() {
-    bool result = setString(OS_Refrigeration_CompressorFields::ModeofOperation, "");
-    OS_ASSERT(result);
-  }
+  // void RefrigerationCompressor_Impl::resetModeofOperation() {
+  //  bool result = setString(OS_Refrigeration_CompressorFields::ModeofOperation, "");
+  //  OS_ASSERT(result);
+  // }
 
   bool RefrigerationCompressor_Impl::setTranscriticalCompressorPowerCurve(const boost::optional<CurveBicubic>& curveBicubic) {
     bool result(false);
@@ -415,9 +428,9 @@ std::string RefrigerationCompressor::modeofOperation() const {
   return getImpl<detail::RefrigerationCompressor_Impl>()->modeofOperation();
 }
 
-bool RefrigerationCompressor::isModeofOperationDefaulted() const {
-  return getImpl<detail::RefrigerationCompressor_Impl>()->isModeofOperationDefaulted();
-}
+// bool RefrigerationCompressor::isModeofOperationDefaulted() const {
+//   return getImpl<detail::RefrigerationCompressor_Impl>()->isModeofOperationDefaulted();
+// }
 
 boost::optional<CurveBicubic> RefrigerationCompressor::transcriticalCompressorPowerCurve() const {
   return getImpl<detail::RefrigerationCompressor_Impl>()->transcriticalCompressorPowerCurve();
@@ -475,13 +488,13 @@ void RefrigerationCompressor::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetEndUseSubcategory();
 }
 
-bool RefrigerationCompressor::setModeofOperation(std::string modeofOperation) {
-  return getImpl<detail::RefrigerationCompressor_Impl>()->setModeofOperation(modeofOperation);
-}
+// bool RefrigerationCompressor::setModeofOperation(std::string modeofOperation) {
+//   return getImpl<detail::RefrigerationCompressor_Impl>()->setModeofOperation(modeofOperation);
+// }
 
-void RefrigerationCompressor::resetModeofOperation() {
-  getImpl<detail::RefrigerationCompressor_Impl>()->resetModeofOperation();
-}
+// void RefrigerationCompressor::resetModeofOperation() {
+//   getImpl<detail::RefrigerationCompressor_Impl>()->resetModeofOperation();
+// }
 
 bool RefrigerationCompressor::setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic) {
   return getImpl<detail::RefrigerationCompressor_Impl>()->setTranscriticalCompressorPowerCurve(curveBicubic);

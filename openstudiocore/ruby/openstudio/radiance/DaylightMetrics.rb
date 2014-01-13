@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 #  All rights reserved.
 #
 #  This library is free software; you can redistribute it and/or
@@ -344,7 +344,7 @@ building.spaces.each do |space|
     end
   end
   annual_udi_daylit = udi_daylit_sum.to_f / udi_daylit_num.to_f
-  summary_report += "#{space_name}: UDI(#{daylightSetpoint}) Daylit Hours, #{udi_daylit_sum}, #{udi_daylit_num}, #{annual_udi_daylit}\n"
+  summary_report += "#{space_name}: UDI Daylit Hours, #{udi_daylit_sum}, #{udi_daylit_num}, #{annual_udi_daylit}\n"
   
   udi_occupied_sum = 0
   udi_occupied_num = 0
@@ -355,7 +355,7 @@ building.spaces.each do |space|
     end
   end
   annual_udi_occupied = udi_occupied_sum.to_f / udi_occupied_num.to_f
-  summary_report += "#{space_name}: UDI(#{daylightSetpoint}) Occupied Hours, #{udi_occupied_sum}, #{udi_occupied_num}, #{annual_udi_occupied}\n"
+  summary_report += "#{space_name}: UDI Occupied Hours, #{udi_occupied_sum}, #{udi_occupied_num}, #{annual_udi_occupied}\n"
   
   udi_daylit_occupied_sum = 0
   udi_daylit_occupied_num = 0
@@ -366,7 +366,7 @@ building.spaces.each do |space|
     end
   end
   annual_udi_daylit_occupied = udi_daylit_occupied_sum.to_f / cda_daylit_occupied_num.to_f
-  summary_report += "#{space_name}: UDI(#{daylightSetpoint}) Daylit and Occupied Hours, #{cda_daylit_occupied_sum}, #{cda_daylit_occupied_num}, #{annual_udi_daylit_occupied}\n"
+  summary_report += "#{space_name}: UDI Daylit and Occupied Hours, #{cda_daylit_occupied_sum}, #{cda_daylit_occupied_num}, #{annual_udi_daylit_occupied}\n"
 
   # now replace nil with 0 in each timeseries to radout.sql for plotting
   

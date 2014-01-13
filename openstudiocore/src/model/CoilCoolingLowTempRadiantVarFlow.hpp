@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
   bool isMaximumColdWaterFlowDefaulted() const;
 
   bool isMaximumColdWaterFlowAutosized() const;
-	
+
   double coolingControlThrottlingRange() const;
 
   bool isCoolingControlThrottlingRangeDefaulted() const;

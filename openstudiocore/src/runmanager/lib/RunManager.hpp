@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -80,7 +80,8 @@ namespace detail {
       /// \param[in] t_paused If true the processor is started in paused mode.
       /// \param[in] t_initializeui If true the application's UI subsystem is initialized. Used in a standalone
       ///                           application that utilized RunManager
-      RunManager(bool t_paused = false, bool t_initializeui = true);
+      /// \param[in] t_useStatusGUI Enable the use of Job status GUI elements
+      RunManager(bool t_paused = false, bool t_initializeui = true, bool t_useStatusGUI = true);
 
       /// Construct a RunManager from a given database file path
       /// \param[in] DB The file location for the database storing prefs and job queue
@@ -88,7 +89,8 @@ namespace detail {
       /// \param[in] t_paused If true the processor is started in paused mode.
       /// \param[in] t_initializeui If true the application's UI subsystem is initialized. Used in a standalone
       ///                           application that utilized RunManager
-      RunManager(const openstudio::path &DB, bool t_new = false, bool t_paused = false, bool t_initializeui=true);
+      /// \param[in] t_useStatusGUI Enable the use of Job status GUI elements
+      RunManager(const openstudio::path &DB, bool t_new = false, bool t_paused = false, bool t_initializeui=true, bool t_useStatusGUI = true);
       ~RunManager();
 
       /// Return tue if the given job is out of date
@@ -126,14 +128,20 @@ namespace detail {
       /// \param[in] force Process job even if it is out of date
       /// \param[in] t_basePath Path by which relative paths in this job should be evaluated. If not provided,
       ///                       the path of the runmanager db is used.
-      void enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &t_basePath = openstudio::path());
+      bool enqueue(const Job &job,
+                   bool force,
+                   const openstudio::path &basePath = openstudio::path());
+
+      boost::optional<Job> enqueueOrReturnExisting(const Job &job,
+                                                   bool force,
+                                                   const openstudio::path &basePath = openstudio::path());
 
       /// Queue up a job (and all children) for processing
       /// \param[in] jobs Vector of Jobs to enqueue
       /// \param[in] force Process job even if it is out of date
       /// \param[in] t_basePath Path by which relative paths in this job should be evaluated. If not provided,
       ///                       the path of the runmanager db is used.
-      void enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath = openstudio::path());
+      bool enqueue(const std::vector<openstudio::runmanager::Job> &jobs, bool force, const openstudio::path &t_basePath = openstudio::path());
 
       /// Remove the given job and all child jobs from the queue
       void remove(const openstudio::runmanager::Job &job);

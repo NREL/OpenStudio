@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -251,6 +251,7 @@ AWSSessionRecord::AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase
         database)
 {
   OS_ASSERT(getImpl<detail::AWSSessionRecord_Impl>());
+  constructRelatedRecords(awsSession,database);
 }
 
 AWSSessionRecord::AWSSessionRecord(const QSqlQuery& query, ProjectDatabase& database)

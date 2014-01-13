@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -158,7 +158,7 @@ ShadingControl::ShadingControl(const Construction& construction)
   }
 
   std::string position;
-  if (i == layers.size() - 1){
+  if (i == int(layers.size()) - 1){
     position = "Interior";
   }else if (i == 0){
     position = "Exterior";

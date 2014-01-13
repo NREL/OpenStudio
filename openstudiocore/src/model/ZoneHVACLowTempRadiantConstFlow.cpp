@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ namespace detail {
                                                                              bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneHVACLowTempRadiantConstFlow::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACLowTempRadiantConstFlow::iddObjectType());
   }
 
   ZoneHVACLowTempRadiantConstFlow_Impl::ZoneHVACLowTempRadiantConstFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -65,7 +65,7 @@ namespace detail {
                                                                              bool keepHandle)
     : ZoneHVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ZoneHVACLowTempRadiantConstFlow::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneHVACLowTempRadiantConstFlow::iddObjectType());
   }
 
   ZoneHVACLowTempRadiantConstFlow_Impl::ZoneHVACLowTempRadiantConstFlow_Impl(const ZoneHVACLowTempRadiantConstFlow_Impl& other,
@@ -167,11 +167,11 @@ namespace detail {
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<ZoneHVACLowTempRadiantConstFlow_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -224,7 +224,7 @@ namespace detail {
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::hydronicTubingInsideDiameter() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -234,13 +234,13 @@ namespace detail {
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::hydronicTubingLength() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string ZoneHVACLowTempRadiantConstFlow_Impl::temperatureControlType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::TemperatureControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -250,13 +250,13 @@ namespace detail {
 
   HVACComponent ZoneHVACLowTempRadiantConstFlow_Impl::heatingCoil() const {
     boost::optional<HVACComponent> coil = optionalHeatingCoil();
-    BOOST_ASSERT(coil);
+    OS_ASSERT(coil);
     return coil.get();
   }
 
   HVACComponent ZoneHVACLowTempRadiantConstFlow_Impl::coolingCoil() const {
     boost::optional<HVACComponent> coil = optionalCoolingCoil();
-    BOOST_ASSERT(coil);
+    OS_ASSERT(coil);
     return coil.get();
   }
 
@@ -270,7 +270,7 @@ namespace detail {
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::ratedPumpHead() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -284,7 +284,7 @@ namespace detail {
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::motorEfficiency() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::MotorEfficiency,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -294,7 +294,7 @@ namespace detail {
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::fractionofMotorInefficienciestoFluidStream() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FractionofMotorInefficienciestoFluidStream,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -304,13 +304,13 @@ namespace detail {
 
   std::string ZoneHVACLowTempRadiantConstFlow_Impl::numberofCircuits() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::NumberofCircuits,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();    
   }
 
   double ZoneHVACLowTempRadiantConstFlow_Impl::circuitLength() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -336,7 +336,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRadiantSurfaceType() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RadiantSurfaceType, "Ceilings");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter) {
@@ -346,7 +346,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetHydronicTubingInsideDiameter() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setHydronicTubingLength(boost::optional<double> hydronicTubingLength) {
@@ -363,7 +363,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetHydronicTubingLength() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setTemperatureControlType(std::string temperatureControlType) {
@@ -373,7 +373,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetTemperatureControlType() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::TemperatureControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setHeatingCoil(HVACComponent& heatingCoil) {
@@ -395,12 +395,12 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedFlowRate() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setPumpFlowRateSchedule(Schedule& schedule) {
@@ -413,17 +413,17 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetPumpFlowRateSchedule() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::PumpFlowRateScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead, ratedPumpHead);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedPumpHead() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
@@ -435,12 +435,12 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedPowerConsumption() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPowerConsumption, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setMotorEfficiency(double motorEfficiency) {
@@ -450,7 +450,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetMotorEfficiency() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::MotorEfficiency, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream) {
@@ -460,7 +460,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::resetFractionofMotorInefficienciestoFluidStream() {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FractionofMotorInefficienciestoFluidStream, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setNumberofCircuits(std::string numberofCircuits) {
@@ -470,6 +470,7 @@ namespace detail {
 
   void ZoneHVACLowTempRadiantConstFlow_Impl::setCircuitLength(double circuitLength) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength, circuitLength);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantConstFlow_Impl::optionalAvailabilitySchedule() const {
@@ -494,19 +495,21 @@ namespace detail {
 
   boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow_Impl::thermalZone() const
   {
-    boost::optional<ThermalZone> result;
     Model m = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    BOOST_FOREACH(ThermalZone& thermalZone, thermalZones){
-      std::vector<ModelObject> equipments = thermalZone.equipment(); 
-      BOOST_FOREACH(ModelObject& equipment, equipments){
-        if (equipment.handle() == this->handle()){
-          result = thermalZone;
-        }
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        return *it;
       }
     }
-
-    return result;
+    return boost::none;
   }
 
   //reimplemented to override the base-class method in ZoneHVACComponent
@@ -534,22 +537,8 @@ namespace detail {
   //and therefore doesn't need to be removed from them when removed from the zone
   void ZoneHVACLowTempRadiantConstFlow_Impl::removeFromThermalZone()
   {
-    boost::optional<ThermalZone> thermalZone = this->thermalZone();
-    Model m = this->model();
-    ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         it++ )
-    {
-      std::vector<ModelObject> equipment = it->equipment();
-
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        it->removeEquipment(thisObject);
-
-        break;
-      }
+    if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
+      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
   }
 } // detail
@@ -557,10 +546,11 @@ namespace detail {
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model, 
                                                                  Schedule& availabilitySchedule,
                                                                  HVACComponent& heatingCoil,
-                                                                 HVACComponent& coolingCoil)
+                                                                 HVACComponent& coolingCoil,
+                                                                 double hydronicTubingLength)
   : ZoneHVACComponent(ZoneHVACLowTempRadiantConstFlow::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>());
 
   bool ok = setAvailabilitySchedule(availabilitySchedule);
   if (!ok) {
@@ -569,10 +559,13 @@ ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& mo
                   << availabilitySchedule.briefDescription() << ".");
   }
   ok = setHeatingCoil(heatingCoil);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setCoolingCoil(coolingCoil);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
+
+  ok = setHydronicTubingLength(hydronicTubingLength);
+  OS_ASSERT(ok);
 
 }
 

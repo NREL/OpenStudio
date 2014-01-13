@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -71,6 +71,11 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
                                        new UtilityBillsInspectorView(model,parent),
                                        parent)
 {
+  bool isConnected = false;
+
+  isConnected = connect(modelObjectInspectorView(),SIGNAL(enableAddNewObjectButton( bool )),
+    this,SIGNAL(enableAddNewObjectButton( bool )) );
+  OS_ASSERT(isConnected);
 }
 
 std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuelTypesAndNames()
@@ -173,20 +178,18 @@ boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
 
 void UtilityBillsInspectorView::createWidgets()
 {
+  bool isConnected = false;
+
+  QLabel * label = NULL;
+
+  QVBoxLayout * vLayout = NULL;
+
   QWidget* hiddenWidget = new QWidget();
   m_hiddenWidgetIndex = this->stackedWidget()->insertWidget(0, hiddenWidget);
 
   QWidget* visibleWidget = new QWidget();
   m_visibleWidgetIndex = this->stackedWidget()->addWidget(visibleWidget);
 
-  setCorrectInspectorView();
-
-  bool isConnected = false;
-
-  QLabel * label = NULL;
-
-  QVBoxLayout * vLayout = NULL;
-  
   boost::optional<model::YearDescription> yd = m_model.yearDescription();
   if (!yd){
     yd = m_model.getUniqueModelObject<model::YearDescription>();
@@ -309,8 +312,6 @@ void UtilityBillsInspectorView::createWidgets()
 
   mainLayout->addLayout(vLayout);
 
-  updateRunPeriodDatesLabel();
-
   // Billing Period
 
   vLayout = new QVBoxLayout();
@@ -386,17 +387,8 @@ void UtilityBillsInspectorView::createWidgets()
   mainLayout->addLayout(hLayout);
 
   mainLayout->addStretch();
-}
 
-void UtilityBillsInspectorView::updateRunPeriodDatesLabel()
-{
-  boost::optional<QString> dates;
-  dates = runPeriodDates();
-  if(dates){
-    m_runPeriodDatesLabel->setText(*dates);
-  } else {
-    m_runPeriodDatesLabel->setText("N/A");
-  }
+  refresh();
 }
 
 void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityBill)
@@ -435,9 +427,6 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
     m_windowTimestepsLabel->setVisible(false);
     m_windowTimesteps->setVisible(false);
   }
-  
-  updateRunPeriodDatesLabel();
-  setCorrectInspectorView();
 
   static bool initUnits = true;
   if(initUnits && m_energyUseLabel){
@@ -454,15 +443,7 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
 
   deleteBillingPeriodWidgets();
   addBillingPeriodWidgets();
-}
-
-void UtilityBillsInspectorView::setCorrectInspectorView()
-{
-  if(runPeriodDates()){
-    this->stackedWidget()->setCurrentIndex(m_visibleWidgetIndex);
-  } else {
-    this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
-  }
+  refresh();
 }
 
 void UtilityBillsInspectorView::detach()
@@ -473,10 +454,6 @@ void UtilityBillsInspectorView::detach()
   m_consumptionUnits->unbind();
   m_peakDemandUnits->unbind();
   m_windowTimesteps->unbind();
-}
-
-void UtilityBillsInspectorView::refresh()
-{
 }
 
 void UtilityBillsInspectorView::onSelectItem(OSItem *item)
@@ -583,14 +560,14 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
   m_energyUseLabel = new QLabel();
   m_energyUseLabel->setFixedWidth(WIDTH);
   m_energyUseLabel->setObjectName("H2"); 
-  m_energyUseLabel->setText(getEnergyUseLabelText());
+  updateEnergyUseLabelText();
   hLayout->addWidget(m_energyUseLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
   if(m_utilityBill.get().fuelType() == FuelType::Electricity){
     m_peakLabel = new QLabel();
     m_peakLabel->setFixedWidth(WIDTH);
     m_peakLabel->setObjectName("H2"); 
-    m_peakLabel->setText(getPeakLabelText());
+    updatePeakLabelText();
     hLayout->addWidget(m_peakLabel, 0, Qt::AlignLeft | Qt::AlignTop);
   } else {
     m_peakLabel = 0;
@@ -606,10 +583,6 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
   label->setObjectName("H2"); 
   label->setText("");
   hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
-
-  updateEnergyUseLabelText();
-
-  updatePeakLabelText();
 }
 
 void UtilityBillsInspectorView::addBillingPeriodWidget(model::BillingPeriod & billingPeriod)
@@ -652,6 +625,9 @@ void UtilityBillsInspectorView::deleteBillingPeriodWidgets()
 
   delete m_billingPeriodHeaderWidget;
   m_billingPeriodHeaderWidget = 0;
+  // Set m_billingPeriodHeaderWidget's labels to null, which were deleted above
+  m_energyUseLabel = 0;
+  m_peakLabel = 0;
 }
 
 void UtilityBillsInspectorView::deleteAllWidgetsAndLayoutItems(QLayout * layout, bool deleteWidgets)
@@ -685,6 +661,32 @@ QString UtilityBillsInspectorView::getPeakLabelText()
   string += m_peakUnits;
   string += ")";
   return string;
+}
+
+void UtilityBillsInspectorView::refresh()
+{
+  bool modelObjectSelected = false;
+  UtilityBillsView * utilityBillsView = qobject_cast<UtilityBillsView *>(this->parent());
+  if(utilityBillsView){
+    UtilityBillAllFuelTypesListView * utilityBillAllFuelTypesListView = qobject_cast<UtilityBillAllFuelTypesListView *>(utilityBillsView->itemSelector());
+    boost::optional<openstudio::model::ModelObject> modelObject = utilityBillAllFuelTypesListView->selectedModelObject();
+    if(modelObject.is_initialized()){
+      modelObjectSelected = true;
+    }
+  }
+
+  boost::optional<QString> dates = runPeriodDates();
+
+  if(dates && modelObjectSelected){
+    m_runPeriodDatesLabel->setText(*dates);
+    this->stackedWidget()->setCurrentIndex(m_visibleWidgetIndex);
+    emit enableAddNewObjectButton(false);
+  } else {
+    m_runPeriodDatesLabel->setText("N/A");
+    this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
+    emit enableAddNewObjectButton(true);
+  }
+  showSubTabView(dates);
 }
 
 ////// SLOTS ///////
@@ -763,11 +765,7 @@ void UtilityBillsInspectorView::updatePeakLabelText(const QString& text)
 
 void UtilityBillsInspectorView::updateRunPeriodDates()
 {
-  updateRunPeriodDatesLabel();
-
-  showSubTabView(runPeriodDates());
-
-  setCorrectInspectorView();
+  refresh();
 }
 
 
@@ -959,11 +957,19 @@ void BillingPeriodWidget::modelObjectChanged()
 
 void BillingPeriodWidget::startDateChanged(const QDate & newdate)
 { 
+  int m = newdate.month();
+  int d = newdate.day();
+  int y = newdate.year();
+  OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setStartDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 
 void BillingPeriodWidget::endDateChanged(const QDate & newdate)
 {
+  int m = newdate.month();
+  int d = newdate.day();
+  int y = newdate.year();
+  OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setEndDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_EQ(1999, yearDescription.calendarYear().get());
   EXPECT_EQ(1999, yearDescription.assumedYear());
   EXPECT_EQ("Friday", yearDescription.dayofWeekforStartDay());
-  EXPECT_EQ(false, yearDescription.isLeapYear());
+  EXPECT_FALSE(yearDescription.isLeapYear());
 
   UtilityBill utilityBill(FuelType::Electricity, model);
   EXPECT_EQ(FuelType::Electricity, utilityBill.fuelType().value());
@@ -144,6 +144,87 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   ASSERT_TRUE(meter9);
   EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
 
+}
+
+TEST_F(ModelFixture, UtilityBill_Gas_Issue765) {
+  Model model;
+
+  model::YearDescription yearDescription = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_FALSE(yearDescription.calendarYear());
+  yearDescription.setCalendarYear(2011);
+  ASSERT_TRUE(yearDescription.calendarYear());
+  EXPECT_EQ(2011, yearDescription.calendarYear().get());
+  EXPECT_EQ(2011, yearDescription.assumedYear());
+  EXPECT_EQ("Saturday", yearDescription.dayofWeekforStartDay());
+  EXPECT_FALSE(yearDescription.isLeapYear());
+
+  UtilityBill utilityBill(FuelType::Gas, model);
+  EXPECT_EQ(FuelType::Gas, utilityBill.fuelType().value());
+  EXPECT_EQ(InstallLocationType::Facility, utilityBill.meterInstallLocation().value());
+  EXPECT_TRUE(utilityBill.isMeterInstallLocationDefaulted());
+  EXPECT_FALSE(utilityBill.meterSpecificInstallLocation());
+  EXPECT_FALSE(utilityBill.meterEndUseCategory());
+  EXPECT_FALSE(utilityBill.meterSpecificEndUse());
+  EXPECT_EQ("therms", utilityBill.consumptionUnit());
+  EXPECT_NEAR(105505585, utilityBill.consumptionUnitConversionFactor(), 1);
+  EXPECT_FALSE(utilityBill.peakDemandUnit());
+  EXPECT_EQ(0, utilityBill.billingPeriods().size());
+
+  BillingPeriod bp1 = utilityBill.addBillingPeriod();
+  EXPECT_EQ(Date(1,1,2011), bp1.startDate());
+  EXPECT_EQ(30, bp1.numberOfDays());
+  EXPECT_EQ(Date(1,30,2011), bp1.endDate());
+
+  BillingPeriod bp2 = utilityBill.addBillingPeriod();
+  EXPECT_EQ(Date(1,31,2011), bp2.startDate());
+  EXPECT_EQ(30, bp2.numberOfDays());
+  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
+
+  EXPECT_TRUE(bp2.setStartDate(Date(2,1,2011)));
+  EXPECT_EQ(Date(2,1,2011), bp2.startDate());
+  EXPECT_EQ(29, bp2.numberOfDays());
+  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
+}
+
+TEST_F(ModelFixture, UtilityBill_Electricity_Issue765) {
+  Model model;
+
+  model::YearDescription yearDescription = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_FALSE(yearDescription.calendarYear());
+  yearDescription.setCalendarYear(2011);
+  ASSERT_TRUE(yearDescription.calendarYear());
+  EXPECT_EQ(2011, yearDescription.calendarYear().get());
+  EXPECT_EQ(2011, yearDescription.assumedYear());
+  EXPECT_EQ("Saturday", yearDescription.dayofWeekforStartDay());
+  EXPECT_FALSE(yearDescription.isLeapYear());
+
+  UtilityBill utilityBill(FuelType::Electricity, model);
+  EXPECT_EQ(FuelType::Electricity, utilityBill.fuelType().value());
+  EXPECT_EQ(InstallLocationType::Facility, utilityBill.meterInstallLocation().value());
+  EXPECT_TRUE(utilityBill.isMeterInstallLocationDefaulted());
+  EXPECT_FALSE(utilityBill.meterSpecificInstallLocation());
+  EXPECT_FALSE(utilityBill.meterEndUseCategory());
+  EXPECT_FALSE(utilityBill.meterSpecificEndUse());
+  EXPECT_EQ("kWh", utilityBill.consumptionUnit());
+  EXPECT_NEAR(3600000, utilityBill.consumptionUnitConversionFactor(), 1);
+  ASSERT_TRUE(utilityBill.peakDemandUnit());
+  EXPECT_EQ("kW", utilityBill.peakDemandUnit().get());
+  EXPECT_EQ(0, utilityBill.billingPeriods().size());
+
+  BillingPeriod bp1 = utilityBill.addBillingPeriod();
+  EXPECT_EQ(Date(1,1,2011), bp1.startDate());
+  EXPECT_EQ(30, bp1.numberOfDays());
+  EXPECT_EQ(Date(1,30,2011), bp1.endDate());
+
+  BillingPeriod bp2 = utilityBill.addBillingPeriod();
+  EXPECT_EQ(Date(1,31,2011), bp2.startDate());
+  EXPECT_EQ(30, bp2.numberOfDays());
+  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
+
+  EXPECT_TRUE(bp2.setStartDate(Date(2,1,2011)));
+  EXPECT_EQ(Date(2,1,2011), bp2.startDate());
+  EXPECT_EQ(29, bp2.numberOfDays());
+  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
 }
 
 TEST_F(ModelFixture, UtilityBill_Coverage) {

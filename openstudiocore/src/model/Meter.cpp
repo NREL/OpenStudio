@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -410,7 +410,7 @@ namespace detail {
           frequency = "Zone Timestep";
       }else if (openstudio::istringEqual(frequency, "Detailed")){
           frequency = "HVAC System Timestep"; 
-	  }
+      }
 
       // currently the key value is not associated with the meter, it is part of the name
       result = sqlFile->timeSeries(envPeriod, frequency, name, "");

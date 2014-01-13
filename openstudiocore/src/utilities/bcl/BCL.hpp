@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -86,6 +86,7 @@ namespace openstudio{
     std::string softwareProgram() const;
     std::string identifier() const;
     std::string filename() const;
+    std::string url() const;
     std::string filetype() const;
     std::string usageType() const;
     std::string checksum() const;
@@ -94,6 +95,7 @@ namespace openstudio{
     std::string m_softwareProgram;
     std::string m_identifier;
     std::string m_filename;
+    std::string m_url;
     std::string m_filetype;
     std::string m_usageType;
     std::string m_checksum;

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,6 +65,11 @@ namespace runmanager {
 namespace project {
   class ProjectDatabase;
   class AnalysisRecord;
+}
+
+namespace pat {
+  class PatApp;
+  class RunTabController;
 }
 
 namespace analysisdriver {
@@ -213,6 +218,20 @@ class ANALYSISDRIVER_API SimpleProject {
    *  use of a specific BCLMeasure (identified by UUID). */
   boost::optional<analysis::MeasureGroup> getAlternativeModelVariable() const;
 
+  /** Returns the WorkflowStep in analysis().problem() that runs the standard OpenStudio
+   *  Application reports, if it exists. The step is identified by being a runmanager::WorkItem
+   *  of runmanager::JobType::Ruby that uses a specific BCLMeasure (identified by UUID). */
+  boost::optional<analysis::WorkflowStep> getStandardReportWorkflowStep() const;
+
+  /** Returns true if the calibration report should be included in the PAT workflow, that is,
+   *  if the seed model contains utility bill data. */
+  bool shouldIncludeCalibrationReports() const;
+
+  /** Returns the WorkflowStep in analysis().problem() that runs the OpenStudio Application
+   *  calibration reports, if it exists. The step is identified by being a runmanager::WorkItem
+   *  of runmanager::JobType::Ruby that uses a specific BCLMeasure (identified by UUID). */
+  boost::optional<analysis::WorkflowStep> getCalibrationReportWorkflowStep() const;
+
   //@}
   /** @name Actions */
   //@{
@@ -337,6 +356,17 @@ class ANALYSISDRIVER_API SimpleProject {
    *  getAlternativeModelVariable() will return an initialized value after this method is called. */
   bool insertAlternativeModelVariable();
 
+  /** Returns false if cannot insert the workflow step in between EnergyPlus and
+   *  OpenStudioPostProcess. */
+  bool insertStandardReportWorkflowStep();
+
+  /** Returns false if cannot insert the workflow step in between the standard report and
+   *  OpenStudioPostProcess. */
+  bool insertCalibrationReportWorkflowStep();
+
+  /** Returns false if nothing to clear. */
+  bool clearCalibrationReportWorkflowStep();
+
   //@}
   /** @name Serialization */
   //@{
@@ -357,6 +387,8 @@ class ANALYSISDRIVER_API SimpleProject {
   /// @cond
   typedef detail::SimpleProject_Impl ImplType;
   friend class detail::SimpleProject_Impl;
+  friend class openstudio::pat::PatApp;
+  friend class openstudio::pat::RunTabController;
 
   explicit SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl);
 

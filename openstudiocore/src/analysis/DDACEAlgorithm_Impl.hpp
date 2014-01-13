@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -33,7 +33,6 @@ namespace detail {
 
   /** DDACEAlgorithm_Impl is a DakotaAlgorithm_Impl that is the implementation class for DDACEAlgorithm.*/
   class ANALYSIS_API DDACEAlgorithm_Impl : public DakotaAlgorithm_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -84,6 +84,8 @@ namespace detail {
     int numQueuedDakotaJobs() const;
 
     int numCompletedJobsInOSIteration() const;
+
+    int numFailedJobsInOSIteration() const;
 
     int totalNumJobsInOSIteration() const;
 
@@ -177,6 +179,7 @@ namespace detail {
 
     int m_numOSJobsInIteration;
     int m_numOSJobsComplete;
+    int m_numOSJobsFailed;
     std::vector<analysis::DataPoint> m_queuedOSDataPoints;
 
     bool m_dakotaStarted;

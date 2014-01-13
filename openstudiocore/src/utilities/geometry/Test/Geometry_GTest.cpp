@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -274,6 +274,87 @@ TEST_F(GeometryFixture, GetDistance)
 
 }
 
+TEST_F(GeometryFixture, GetDistancePointToLineSegment)
+{
+  Point3d point1(0,0,0);
+  Point3d point2(1,0,0);
+  std::vector<Point3d> line;
+  line.push_back(point1);
+  line.push_back(point2);
+  EXPECT_EQ(2u, line.size());
+
+  EXPECT_DOUBLE_EQ(0, getDistancePointToLineSegment(Point3d(0,0,0), line));
+
+  EXPECT_DOUBLE_EQ(0, getDistancePointToLineSegment(Point3d(1,0,0), line));
+
+  EXPECT_DOUBLE_EQ(0, getDistancePointToLineSegment(Point3d(0.5,0,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(2,0,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(-1,0,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(0,1,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(1,1,0), line));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToLineSegment(Point3d(0.5,1,0), line));
+
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToLineSegment(Point3d(2,1,0), line));
+
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToLineSegment(Point3d(-1,1,0), line));
+
+  line.push_back(Point3d(2,0,0));
+  EXPECT_EQ(3u, line.size());
+  EXPECT_EQ(0, getDistancePointToLineSegment(Point3d(3,0,0), line));
+}
+
+TEST_F(GeometryFixture, GetDistancePointToTriangle)
+{
+  Point3d point1(0,0,0);
+  Point3d point2(1,0,0);
+  Point3d point3(0,1,0);
+  std::vector<Point3d> triangle;
+  triangle.push_back(point1);
+  triangle.push_back(point2);
+  triangle.push_back(point3);
+  EXPECT_EQ(3u, triangle.size());
+
+  EXPECT_DOUBLE_EQ(0, getDistancePointToTriangle(Point3d(0,0,0), triangle));
+  EXPECT_DOUBLE_EQ(0, getDistancePointToTriangle(Point3d(1,0,0), triangle));
+  EXPECT_DOUBLE_EQ(0, getDistancePointToTriangle(Point3d(0.5,0,0), triangle));
+  EXPECT_DOUBLE_EQ(0, getDistancePointToTriangle(Point3d(0,1,0), triangle));
+  EXPECT_DOUBLE_EQ(0, getDistancePointToTriangle(Point3d(0,0.5,0), triangle));
+  EXPECT_DOUBLE_EQ(0, getDistancePointToTriangle(Point3d(0.1,0.1,0), triangle));
+  EXPECT_DOUBLE_EQ(0, getDistancePointToTriangle(Point3d(0.5,0.5,0), triangle));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(2,0,0), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(-1,0,0), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(-1,1,0), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0,2,0), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0,-1,0), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(1,-1,0), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToTriangle(Point3d(-1,-1,0), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0)/2.0, getDistancePointToTriangle(Point3d(1,1,0), triangle));
+
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0,0,1), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(1,0,1), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0.5,0,1), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0,1,1), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0,0.5,1), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0.1,0.1,1), triangle));
+  EXPECT_DOUBLE_EQ(1, getDistancePointToTriangle(Point3d(0.5,0.5,1), triangle));
+
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToTriangle(Point3d(2,0,1), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToTriangle(Point3d(-1,0,1), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToTriangle(Point3d(-1,1,1), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToTriangle(Point3d(0,2,1), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToTriangle(Point3d(0,-1,1), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(2.0), getDistancePointToTriangle(Point3d(1,-1,1), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(3.0), getDistancePointToTriangle(Point3d(-1,-1,1), triangle));
+  EXPECT_DOUBLE_EQ(std::sqrt(6.0)/2.0, getDistancePointToTriangle(Point3d(1,1,1), triangle));
+}
+
+
 TEST_F(GeometryFixture, CircularEqual)
 {
   Point3dVector points1;
@@ -444,3 +525,47 @@ TEST_F(GeometryFixture, RemoveColinear)
   EXPECT_TRUE(pointEqual(Point3d(2,2,0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(0,2,0), testPoints[3]));
 }
+/*
+TEST_F(GeometryFixture, RemoveSpikes)
+{
+  Point3dVector points;
+  Point3dVector resultPoints;
+  Point3dVector testPoints;
+
+  points.clear();
+  points.push_back(Point3d(3,2,0));
+  points.push_back(Point3d(2,2,0));
+  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(3,0,0));
+
+  resultPoints.clear();
+  resultPoints.push_back(Point3d(3,2,0));
+  resultPoints.push_back(Point3d(2,2,0));
+  resultPoints.push_back(Point3d(0,0,0));
+  resultPoints.push_back(Point3d(3,0,0));
+
+  testPoints = removeSpikes(points);
+  ASSERT_EQ(4u, testPoints.size()) << testPoints;
+  EXPECT_TRUE(circularEqual(resultPoints, testPoints));
+
+  points.clear();
+  points.push_back(Point3d(5,0,0)); // spike
+  points.push_back(Point3d(3,2,0));
+  points.push_back(Point3d(2,2,0));
+  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(5,0,0)); // spike
+  points.push_back(Point3d(3,0,0));
+  points.push_back(Point3d(3,2,0));
+
+  resultPoints.clear();
+  resultPoints.push_back(Point3d(3,2,0));
+  resultPoints.push_back(Point3d(2,2,0));
+  resultPoints.push_back(Point3d(0,0,0));
+  resultPoints.push_back(Point3d(3,0,0));
+  resultPoints.push_back(Point3d(3,2,0));
+
+  testPoints = removeSpikes(points);
+  ASSERT_EQ(5u, testPoints.size()) << testPoints;
+  EXPECT_TRUE(circularEqual(resultPoints, testPoints));
+}
+*/

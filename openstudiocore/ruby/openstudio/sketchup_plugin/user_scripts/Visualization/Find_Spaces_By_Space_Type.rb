@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ class FindBySpaceType < OpenStudio::Ruleset::ModelUserScript
     end
     
     space_type_handle = runner.getStringArgumentValue("space_type_name",user_arguments)
-	# if the user doesn't pick a space type this part of script wont run. Model visibility is left in current state
+    # if the user doesn't pick a space type this part of script wont run. Model visibility is left in current state
     
     # get all spaces
     spaces = model.getSpaces
@@ -62,13 +62,13 @@ class FindBySpaceType < OpenStudio::Ruleset::ModelUserScript
         if entity = drawing_interface.entity
 
           space_type = space.spaceType
-		  
+          
           if space_type_handle == space_type.get.handle.to_s
             entity.visible = true
           else
             entity.visible = false
           end
-		  
+          
         end
       end
     end

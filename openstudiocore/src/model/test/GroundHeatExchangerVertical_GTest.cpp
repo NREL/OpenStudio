@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
 
   EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
-				
+
   // inlet and outlet ports
   EXPECT_TRUE(testObject.inletPort());
   EXPECT_TRUE(testObject.outletPort());

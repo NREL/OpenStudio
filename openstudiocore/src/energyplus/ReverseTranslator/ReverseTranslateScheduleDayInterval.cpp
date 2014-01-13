@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ OptionalModelObject ReverseTranslator::translateScheduleDayInterval(const Worksp
       catch (std::exception& e) {
         LOG(Warn,"Could not add value (" << *timeString << ", " << *valueUntilTime
             << ") to ScheduleDay being created from " << workspaceObject.briefDescription()
-			<< ", because " << e.what() << ".");
+            << ", because " << e.what() << ".");
       }
     }
     else {

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -43,7 +43,6 @@ require 'optparse'
 require 'ostruct'
 
 if ARGV.length < 2
-
   puts "Usage: ruby MakeSchedules.rb 'C:\\path\\to\\model.osm' 'C:\\path\\to\\eplusout.sql'"
   exit -1
 end
@@ -52,7 +51,7 @@ modelPath = OpenStudio::Path.new(ARGV[0])
 modelPath = OpenStudio::system_complete(modelPath)
 sqlPath = OpenStudio::Path.new(ARGV[1])
 
-class OptparseExample
+class Optparse
 
   #
   # Return a structure describing the options.
@@ -69,12 +68,6 @@ class OptparseExample
       opts.separator ""
       opts.separator " Options:"
 
-      ## Set dimming setpoint, in lux (deprecated; setpoint is pulled from the daylight sensor now) RPG 20120717
-      #options.setpoint = 300
-      #opts.on("-s, --setpoint <lux>", Float, "Dimming setpoint (300 lux default)") do |n|
-      #  options.setpoint = n
-      #end
-
       # Optionally keep original osm input file (and schedule)
       options.keep = false
       opts.on( '-k', '--keep', "Keep original osm file and schedule" ) do
@@ -87,7 +80,7 @@ class OptparseExample
         options.setpointInput = true
       end      
 
-      # Goldwasser-style output
+      # Goldwasser-style stdout
       options.verbose = false
       opts.on( '-v', '--verbose', "Verbose mode" ) do
         options.verbose = true
@@ -105,9 +98,9 @@ class OptparseExample
     options
   end  # parse()
 
-end  # class OptparseExample
+end  # class Optparse
 
-options = OptparseExample.parse(ARGV)
+options = Optparse.parse(ARGV)
 
 if options.verbose == true
   puts "Dimming setpoint is #{options.setpoint} lux"
@@ -204,7 +197,7 @@ model.getThermalZones.each do |thermalZone|
   radSqlFile = OpenStudio::SqlFile.new(radSqlPath)
 
   if options.verbose == true
-    puts "Loading radiances sql file from " + radSqlPath.to_s
+    puts "Loading radiance data file from " + radSqlPath.to_s
   end
 
   if options.setpointInput == true
@@ -241,7 +234,7 @@ model.getThermalZones.each do |thermalZone|
       averageIlluminances << sum/illuminances.size.to_f
     end
   else 
-    # use the sensor input
+    # use the daylight sensor input
     spacename = space.name.get.gsub(' ', '_').gsub(':', '_')
     envPeriods = radSqlFile.availableEnvPeriods
 

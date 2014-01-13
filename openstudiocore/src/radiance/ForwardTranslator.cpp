@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -290,7 +290,7 @@ namespace radiance {
 
       // get Radiance sim settings
       openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
-
+      
 
       // write daylightsim options to files
       //
@@ -316,8 +316,6 @@ namespace radiance {
         //
         /// \todo rgp777 also, we only want to group windows if they share the same shadinggroup
       }
-
-
 
       // write Radiance options to file(s)
       // view matrix options
@@ -349,21 +347,19 @@ namespace radiance {
                 << "-lw " << radianceParameters.limitWeightDMX() << " ";
 
       // Tregenza/Klems resolution options
+      openstudio::path tregoptpath = radDir / openstudio::toPath("options/treg.opt");
+      outfiles.push_back(tregoptpath);
+      std::ofstream tregopt(openstudio::toString(tregoptpath).c_str());
+      tregopt << "-c " << (int)radianceParameters.klemsSamplingDensity() << " ";
 
-    openstudio::path tregoptpath = radDir / openstudio::toPath("options/treg.opt");
-    outfiles.push_back(tregoptpath);
-    std::ofstream tregopt(openstudio::toString(tregoptpath).c_str());
-    tregopt << "-c " << (int)radianceParameters.klemsSamplingDensity() << " ";			
-    
-    if (radianceParameters.skyDiscretizationResolution() == "146"){
-      tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
-    } else if (radianceParameters.skyDiscretizationResolution() == "578"){
-      tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
-    } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-      tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";	
-    }
-    // TODO: make these values into a pulldown choice, add support for out of bounds
-
+      if (radianceParameters.skyDiscretizationResolution() == "146"){
+        tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
+      } else if (radianceParameters.skyDiscretizationResolution() == "578"){
+        tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
+      } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+        tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";
+      }
+      // TODO: make these values into a pulldown choice, add support for out of bounds
 
 
     // Hi Qual options (illumimance maps)

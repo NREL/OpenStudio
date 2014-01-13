@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -153,6 +153,7 @@ namespace openstudio{
     QDomElement softwareProgramElement = fileElement.firstChildElement("version").firstChildElement("software_program");
     QDomElement identifierElement = fileElement.firstChildElement("version").firstChildElement("identifier");
     QDomElement filenameElement = fileElement.firstChildElement("filename");
+    QDomElement urlElement = fileElement.firstChildElement("url");
     QDomElement filetypeElement = fileElement.firstChildElement("filetype");
     QDomElement usageTypeElement = fileElement.firstChildElement("usage_type");
     QDomElement checksumElement = fileElement.firstChildElement("checksum");
@@ -160,6 +161,7 @@ namespace openstudio{
     m_softwareProgram = softwareProgramElement.firstChild().nodeValue().toStdString();
     m_identifier = identifierElement.firstChild().nodeValue().toStdString();
     m_filename = filenameElement.firstChild().nodeValue().toStdString();
+    m_url = urlElement.firstChild().nodeValue().toStdString();
     m_filetype = filetypeElement.firstChild().nodeValue().toStdString();
     m_usageType = usageTypeElement.firstChild().nodeValue().toStdString();
     m_checksum = checksumElement.firstChild().nodeValue().toStdString();
@@ -178,6 +180,11 @@ namespace openstudio{
   std::string BCLFile::filename() const
   {
     return m_filename;
+  }
+
+  std::string BCLFile::url() const
+  {
+    return m_url;
   }
 
   std::string BCLFile::filetype() const
@@ -344,8 +351,8 @@ namespace openstudio{
   {
     m_componentType = componentElement.tagName().toStdString();
 
-    QDomElement uidElement = componentElement.firstChildElement("uid");
-    QDomElement versionIdElement = componentElement.firstChildElement("version_id");
+    QDomElement uidElement = componentElement.firstChildElement("uuid");
+    QDomElement versionIdElement = componentElement.firstChildElement("vuuid");
     QDomElement nameElement = componentElement.firstChildElement("name");
     QDomElement descriptionElement = componentElement.firstChildElement("description");
     QDomElement modelerDescriptionElement = componentElement.firstChildElement("modeler_description");

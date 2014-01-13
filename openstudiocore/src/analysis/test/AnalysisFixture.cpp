@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -431,6 +431,50 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
                         attributes);
     EXPECT_TRUE(analysis.addDataPoint(dataPoint));
   }
+
+  return analysis;
+}
+
+openstudio::analysis::Analysis AnalysisFixture::analysis2(bool simulate) {
+  // Create problem and analysis
+  Problem problem("My Problem");
+
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  RubyMeasure measure(bclMeasure);
+  StringVector choices;
+  choices.push_back("North");
+  choices.push_back("South");
+  choices.push_back("East");
+  choices.push_back("West");
+  OSArgument facade = OSArgument::makeChoiceArgument("facade",choices);
+  OSArgument wwr = OSArgument::makeDoubleArgument("wwr");
+
+  // RubyContinuousVariable for South Facade
+  measure = measure.clone().cast<RubyMeasure>();
+  OSArgument arg = facade.clone();
+  arg.setValue("South");  
+  measure.setArgument(arg);
+  arg = wwr.clone();
+  RubyContinuousVariable southWWR("South Window to Wall Ratio",arg,measure);
+  problem.push(southWWR);
+
+  // RubyContinuousVariable for North Facade
+  measure = measure.clone().cast<RubyMeasure>();
+  arg = facade.clone();
+  arg.setValue("North");
+  measure.setArgument(arg);
+  arg = wwr.clone();
+  RubyContinuousVariable northWWR("North Window to Wall Ratio",arg,measure);
+  problem.push(northWWR);
+
+  if (simulate) {
+    problem.push(WorkItem(JobType::ModelToIdf));
+    problem.push(WorkItem(JobType::EnergyPlusPreProcess));
+    problem.push(WorkItem(JobType::EnergyPlus));
+    problem.push(WorkItem(JobType::OpenStudioPostProcess));
+  }
+
+  Analysis analysis("My Analysis",problem,FileReferenceType::OSM);
 
   return analysis;
 }

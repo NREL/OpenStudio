@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -63,6 +63,49 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem)
 
 
   initializeFromParams(t_workItem.params);
+}
+
+RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem, 
+                               const openstudio::path& t_originalBasePath,
+                               const openstudio::path& t_newBasePath)
+  : m_userScriptJob(false)
+{
+  try {
+    FileInfo fi = t_workItem.files.getLastByKey("rb");
+    m_script = fi.fullPath;
+    if (toString(m_script.filename()) == "UserScriptAdapter.rb") {
+      openstudio::path adapterPath = toPath("openstudio/runmanager/rubyscripts/UserScriptAdapter.rb");
+      setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
+    }
+    else {
+      openstudio::path temp = relocatePath(m_script,t_originalBasePath,t_newBasePath);
+      if (!temp.empty()) {
+        m_script = temp;
+      }
+    }
+
+    std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = fi.requiredFiles;
+
+    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
+        itr != requiredFiles.end();
+        ++itr)
+    {
+      openstudio::path source = toPath(itr->first.toLocalFile());
+      openstudio::path temp = relocatePath(source,t_originalBasePath,t_newBasePath);
+      if (!temp.empty()) {
+        source = temp;
+      }
+      m_requiredFiles.push_back(std::make_pair(source, itr->second));
+    }
+
+  } catch (const std::exception &) {
+    // carry on
+  }
+
+  initializeFromParams(t_workItem.params);
+  if (userScriptJob()) {
+    setIncludeDir(getOpenStudioRubyIncludePath());
+  }
 }
 
 RubyJobBuilder::RubyJobBuilder(const JobParams &t_params)
@@ -175,6 +218,20 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
       m_userScriptJob = true;
     }
   } catch (const std::exception &) {}
+
+  try {
+    JobParam parameters = t_params.get("ruby_bclmeasureparameters");
+
+    for (std::vector<JobParam>::const_iterator itr = parameters.children.begin();
+         itr != parameters.children.end();
+         ++itr)
+    {
+      if (itr->value == "bcl_measure_uuid"){
+        openstudio::UUID bclMeasureUUID = openstudio::toUUID(itr->children.at(0).value);
+        m_bclMeasureUUID = bclMeasureUUID;
+      }
+    }
+  } catch (const std::exception &) {}
 }
 
 
@@ -236,6 +293,9 @@ void RubyJobBuilder::addScriptArgument(const std::string &name)
 
 void RubyJobBuilder::setIncludeDir(const openstudio::path &value)
 {
+  // ETH@20140108 - Should this also clear any existing -I toolparams, 
+  // or should there be a separate method for clearning all such toolparams?
+  // I am asking because of line 107.
   if (!value.empty()){
     m_toolparams.push_back("-I");
     m_toolparams.push_back(toString(value));
@@ -353,7 +413,6 @@ JobParams RubyJobBuilder::toParams() const
   }
 
   JobParam toolparams("ruby_toolparameters");
-
   for(std::vector<std::string>::const_iterator itr = m_toolparams.begin();
       itr != m_toolparams.end();
       ++itr)
@@ -361,7 +420,6 @@ JobParams RubyJobBuilder::toParams() const
     JobParam p(*itr);
     toolparams.children.push_back(p);
   }
-
 
   JobParams params;
   params.append(scriptparams);
@@ -374,6 +432,14 @@ JobParams RubyJobBuilder::toParams() const
     params.append("ruby_isuserscriptjob", "true");
   } else {
     params.append("ruby_isuserscriptjob", "false");
+  }
+
+  if (m_bclMeasureUUID){
+    JobParam bclmeasureparams("ruby_bclmeasureparameters");
+    JobParam p("bcl_measure_uuid");
+    p.children.push_back(openstudio::toString(*m_bclMeasureUUID));
+    bclmeasureparams.children.push_back(p);
+    params.append(bclmeasureparams);
   }
 
   return params;
@@ -937,6 +1003,8 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
     throw std::runtime_error("Passed in measure does not have a primaryRubyScriptPath set, which is required for RubyJobBuilder");
   }
 
+  m_bclMeasureUUID = t_measure.uuid();
+
   setAsUserScriptRubyJob(*script, t_args, t_relativeTo, t_copyFileTrue);
 
   std::vector<BCLFileReference> files = t_measure.files();
@@ -945,7 +1013,28 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
        itr != files.end();
        ++itr)
   {
-    addRequiredFile(itr->path(), itr->path().filename());
+    openstudio::path relativePath = openstudio::relativePath(itr->path(), t_measure.directory());
+
+    bool isTestPath = false;
+    for (openstudio::path::const_iterator pathitr = relativePath.begin();
+         pathitr != relativePath.end();
+         ++pathitr)
+    {
+      if (boost::iequals(openstudio::toString(*pathitr), "tests"))
+      {
+        isTestPath = true;
+        break;
+      }
+    }
+
+    if (!isTestPath)
+    {
+      LOG(Trace, "Adding required file from measure: " << openstudio::toString(itr->path()) << " to: " << openstudio::toString(relativePath));
+      addRequiredFile(itr->path(), relativePath);
+    } else {
+      LOG(Trace, "Skipping test file from measure: " << openstudio::toString(itr->path()));
+    }
+
   }
 
   FileReferenceType infile = t_measure.inputFileType();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -35,7 +35,6 @@ namespace detail {
 
   class MODEL_API SpaceLoadDefinition_Impl : public ResourceObject_Impl
   {
-    Q_OBJECT;
    public:
 
     // Construct completely new object.

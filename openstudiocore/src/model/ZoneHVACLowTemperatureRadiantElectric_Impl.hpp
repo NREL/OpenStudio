@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -34,9 +34,7 @@ class HVACComponent;
 namespace detail {
 
   /** ZoneHVACLowTemperatureRadiantElectric_Impl is a ZoneHVAC_Impl that is the implementation class for ZoneHVACLowTemperatureRadiantElectric.*/
-  class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl {
-    Q_OBJECT;
-   
+  class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl {   
    public:
     /** @name Constructors and Destructors */
 

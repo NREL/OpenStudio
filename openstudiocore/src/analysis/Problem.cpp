@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -1731,13 +1731,13 @@ namespace detail {
     QVariantList variablesList;
 
     // create workflow list
-    Q_FOREACH(const WorkflowStep& step, workflow()) {
+    BOOST_FOREACH(const WorkflowStep& step, workflow()) {
 
       if (compoundRubyMeasure) {
         // see if chain is still going
         if (step.isInputVariable()) {
           if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
-            if (rcv->measure() == compoundRubyMeasure.get()) {
+            if (rcv->measure().uuidAndVersionEqual(compoundRubyMeasure.get())) {
               // still going -- add this variable to list
               QVariantMap variableMap = step.toVariant().toMap();
               variableMap["variable_index"] = variableIndex;
@@ -1777,6 +1777,14 @@ namespace detail {
       }
 
       ++index;
+    }
+    if (compoundRubyMeasure) {
+      // save out last RubyMeasure step
+      stepMap["variables"] = QVariant(variablesList);
+      workflowList.push_back(stepMap);
+      variablesList.clear();
+      variableIndex = 0;
+      compoundRubyMeasure.reset();
     }
     problemData["workflow"] = QVariant(workflowList);
 
@@ -1894,13 +1902,18 @@ namespace detail {
     QVariantMap map;
 
     InputVariableVector vars = variables();
-    QVariantList varsList;
+    unsigned mgCnt(0), rcvCnt(0);
     for (unsigned i = 0, n = vars.size(); i < n; ++i) {
-      QVariantMap varMap = vars[i].toServerFormulationVariant().toMap();
-      varMap["variable_index"] = i;
-      varsList.push_back(varMap);
+      if (vars[i].optionalCast<MeasureGroup>()) {
+        ++mgCnt;
+        continue;
+      }
+      if (vars[i].optionalCast<RubyContinuousVariable>()) {
+        ++rcvCnt;
+      }
     }
-    map["variables"] = varsList;
+    map["num_measure_groups"] = QVariant(mgCnt);
+    map["num_ruby_continuous_variables"] = QVariant(rcvCnt);
 
     return QVariant(map);
   }
@@ -1941,7 +1954,7 @@ namespace detail {
         // see if chain is still going
         if (step.isInputVariable()) {
           if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
-            if (rcv->measure() == compoundRubyMeasure.get()) {
+            if (rcv->measure().uuidAndVersionEqual(compoundRubyMeasure.get())) {
               continue;
             }
           }
@@ -2025,7 +2038,7 @@ namespace detail {
         rcv = step.inputVariable().optionalCast<RubyContinuousVariable>();
         nrcv = nextStep->inputVariable().optionalCast<RubyContinuousVariable>();
         if (rcv && nrcv) {
-          if (rcv->measure() == nrcv->measure()) {
+          if (rcv->measure().uuidAndVersionEqual(nrcv->measure())) {
             return true;
           }
         }

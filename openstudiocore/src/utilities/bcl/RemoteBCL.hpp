@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -195,6 +195,8 @@ namespace openstudio{
     /// Returns the download if it completed in the allowable time
     std::vector<BCLSearchResult> waitForSearch(int msec = 50000) const;
 
+    static bool initializeSSL(const openstudio::path &t_pathToSSLLibraries = openstudio::path());
+    
     //@}
     /** @name Non-blocking class members */
     //@{

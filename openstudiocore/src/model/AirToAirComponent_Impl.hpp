@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,9 +30,6 @@ class AirLoopHVAC;
 namespace detail {
 
   class MODEL_API AirToAirComponent_Impl : public HVACComponent_Impl {
-
-    Q_OBJECT;
-
    public:
 
     AirToAirComponent_Impl(IddObjectType type, Model_Impl* model);

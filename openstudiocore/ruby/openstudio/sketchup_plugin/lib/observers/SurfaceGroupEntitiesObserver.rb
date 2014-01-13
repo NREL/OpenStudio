@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -86,7 +86,12 @@ module OpenStudio
             
               if (base_face.nil?)
                 Plugin.log(OpenStudio::Info, "New Surface in Space")  
-                Surface.new_from_entity(entity)
+                surface = Surface.new_from_entity(entity)
+                
+                if not surface.model_object
+                  # model object was not created
+                  surface.on_delete_model_object
+                end
               else
               
                 # add a second proc to ensure that surfaces will be drawn before sub surfaces
@@ -96,7 +101,12 @@ module OpenStudio
                     Plugin.log(OpenStudio::Error, "New SubSurface in Space, no Surface found!")  
                   else
                     Plugin.log(OpenStudio::Info, "New SubSurface in Space") 
-                    SubSurface.new_from_entity(entity)
+                    subSurface = SubSurface.new_from_entity(entity)
+                    
+                    if not subSurface.model_object
+                      # model object was not created
+                      subSurface.on_delete_model_object
+                    end
                   
                     # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                     surface.on_change_entity
@@ -225,6 +235,8 @@ module OpenStudio
                 original_surface.add_observers
 
                 new_surface = SubSurface.new_from_entity(original_entity)
+                #puts "new_surface = #{new_surface}, #{new_surface.model_object.name}, #{new_surface.entity}"
+                #puts "new_surface.parent = #{new_surface.parent}, #{new_surface.parent.model_object.name}, #{new_surface.parent.entity}"
                 
                 # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                 original_surface.on_change_entity
@@ -234,8 +246,10 @@ module OpenStudio
                 Plugin.log(OpenStudio::Info, "Copy-paste/divide surface:  new sub surface no swap") 
                 original_surface = entity.drawing_interface
 
-                SubSurface.new_from_entity(entity)
-
+                new_surface = SubSurface.new_from_entity(entity)
+                #puts "new_surface = #{new_surface}, #{new_surface.model_object.name}, #{new_surface.entity}"
+                #puts "new_surface.parent = #{new_surface.parent}, #{new_surface.parent.model_object.name}, #{new_surface.parent.entity}"
+                
                 # Must trigger the base surface to recalculate vertices to account for the new sub surface.
                 original_surface.on_change_entity
 

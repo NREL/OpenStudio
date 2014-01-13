@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -891,6 +891,9 @@ namespace detail {
       return spaces[0];
     }
 
+    // sort by space name 
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+
     // if these variables are set, then they are not defaulted and are common to all spaces
     boost::optional<BuildingStory> buildingStory = spaces[0].buildingStory();
     boost::optional<SpaceType> spaceType = spaces[0].spaceType();
@@ -913,10 +916,23 @@ namespace detail {
     boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = spaces[0].designSpecificationOutdoorAir();
     bool allDesignSpecificationOutdoorAirDefaulted = spaces[0].isDesignSpecificationOutdoorAirDefaulted();
     bool anyDesignSpecificationOutdoorAirSchedules = false;
+    bool anyMaxOutdoorAirMethod = false;
+    bool anySumOutdoorAirMethod = false;
     double sumOutdoorAirForPeople = 0.0;
     double sumOutdoorAirForFloorArea = 0.0;
     double sumOutdoorAirRate = 0.0;
     double sumOutdoorAirForVolume = 0.0;
+
+    // Quick check to see what kind of ventilation methods are used
+    BOOST_FOREACH(Space space, spaces){
+      if (boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = space.designSpecificationOutdoorAir()) {
+        if (istringEqual("Maximum", designSpecificationOutdoorAir->outdoorAirMethod())){
+          anyMaxOutdoorAirMethod = true;
+        } else if(istringEqual("Sum", designSpecificationOutdoorAir->outdoorAirMethod())) {
+          anySumOutdoorAirMethod = true;
+        }
+      }
+    }
 
     // find common variables for the new space
     BOOST_FOREACH(Space space, spaces){
@@ -1007,9 +1023,13 @@ namespace detail {
         double outdoorAirRate = thisDesignSpecificationOutdoorAir->outdoorAirFlowRate();
         double outdoorAirForVolume = volume*thisDesignSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
 
-        if (istringEqual("Max", thisDesignSpecificationOutdoorAir->outdoorAirMethod())){
-          sumOutdoorAirRate += std::max(outdoorAirForPeople, std::max(outdoorAirForFloorArea, std::max(outdoorAirRate, outdoorAirForVolume)));
-        }else{
+        // First check if this space uses the Maximum method and other spaces do not
+        if (istringEqual("Maximum", thisDesignSpecificationOutdoorAir->outdoorAirMethod()) && anySumOutdoorAirMethod ){
+          sumOutdoorAirRate += std::max(outdoorAirForPeople, 
+                                        std::max(outdoorAirForFloorArea, 
+                                        std::max(outdoorAirRate, 
+                                        outdoorAirForVolume)));
+        }else{ 
           sumOutdoorAirForPeople += outdoorAirForPeople;
           sumOutdoorAirForFloorArea += outdoorAirForFloorArea;
           sumOutdoorAirRate += outdoorAirRate;
@@ -1120,7 +1140,12 @@ namespace detail {
     // merge surfaces
     boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup;
     std::set<Surface> mergedSurfaces;
-    BOOST_FOREACH(Surface surface, newSpace.surfaces()){
+
+    // sort by surface name 
+    std::vector<Surface> surfaces = newSpace.surfaces();
+    std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
+
+    BOOST_FOREACH(Surface surface, surfaces){
 
       std::set<Surface>::iterator it = mergedSurfaces.find(surface);
       if (it != mergedSurfaces.end()){
@@ -1136,7 +1161,9 @@ namespace detail {
             interiorPartitionSurfaceGroup->setSpace(newSpace);
           }
 
+          // DLM: is there a better way to pick which vertices to keep based on outward normal?
           InteriorPartitionSurface interiorPartitionSurface(surface.vertices(), model);
+          interiorPartitionSurface.setName("Merged " + surface.name().get() + " - " + adjacentSurface->name().get());
           interiorPartitionSurface.setInteriorPartitionSurfaceGroup(*interiorPartitionSurfaceGroup);
     
           boost::optional<ConstructionBase> construction = surface.construction();
@@ -1193,7 +1220,13 @@ namespace detail {
 
       // make a new designSpecificationOutdoorAir
       designSpecificationOutdoorAir = DesignSpecificationOutdoorAir(model);
-      designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      if( anySumOutdoorAirMethod && anyMaxOutdoorAirMethod ) {
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      }else if( anyMaxOutdoorAirMethod ) {
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Maximum");
+      }else{
+        designSpecificationOutdoorAir->setOutdoorAirMethod("Sum");
+      }
       designSpecificationOutdoorAir->setOutdoorAirFlowperPerson(outdoorAirForPeople);
       designSpecificationOutdoorAir->setOutdoorAirFlowperFloorArea(outdoorAirForFloorArea);
       designSpecificationOutdoorAir->setOutdoorAirFlowRate(sumOutdoorAirRate);
@@ -1556,13 +1589,18 @@ namespace detail {
           // If there is a single zone reheat spm, see if the control zone is set.
           // If not set, then set it to this zone.
 
-          Node supplyOutletNode = airLoop->supplyOutletNode();
+          std::vector<ModelObject> supplyNodes = airLoop->supplyComponents(Node::iddObjectType());
 
-          if( boost::optional<SetpointManagerSingleZoneReheat> spm = supplyOutletNode.getSetpointManagerSingleZoneReheat() )
+          for( std::vector<ModelObject>::iterator it = supplyNodes.begin();
+               it != supplyNodes.end();
+               it++ )
           {
-            if( ! spm->controlZone() )
+            if( boost::optional<SetpointManagerSingleZoneReheat> spm = it->cast<Node>().getSetpointManagerSingleZoneReheat() )
             {
-              spm->setControlZone(thisobj);
+              if( ! spm->controlZone() )
+              {
+                spm->setControlZone(thisobj);
+              }
             }
           }
 

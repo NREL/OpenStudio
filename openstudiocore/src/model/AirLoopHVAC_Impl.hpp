@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -128,6 +128,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
+  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+
   bool addBranchForHVACComponent(HVACComponent airTerminal);
 
   SizingSystem sizingSystem() const;
@@ -143,6 +145,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   bool setNightCycleControlType(std::string nightCycle);
 
   std::string nightCycleControlType() const;
+
+  boost::optional<Node> mixedAirNode();
 
   private:
 

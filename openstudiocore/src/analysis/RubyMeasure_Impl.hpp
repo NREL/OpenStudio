@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -38,7 +38,6 @@ namespace detail {
 
   /** RubyMeasure_Impl is a Measure_Impl that is the implementation class for RubyMeasure.*/
   class ANALYSIS_API RubyMeasure_Impl : public Measure_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

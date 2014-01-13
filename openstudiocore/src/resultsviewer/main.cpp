@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -33,10 +33,13 @@ static const char *logfilepath = "/var/log/resultsviewer.log";
 
 int main(int argc, char *argv[])
 {
-  openstudio::Logger::instance().standardOutLogger().disable();
-
-  openstudio::FileLogSink logFile(openstudio::toPath(logfilepath));
-  logFile.setLogLevel(Warn);
+#if _DEBUG || (__GNUC__ && !NDEBUG)
+  openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+  openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));
+  fileLog.setLogLevel(Debug);
+#else
+  openstudio::Logger::instance().standardOutLogger().setLogLevel(Warn);
+#endif
 
   bool cont = true;
   while(cont) {

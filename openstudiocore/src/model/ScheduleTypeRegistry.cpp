@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -130,7 +130,10 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
 ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
 {
   const ScheduleType scheduleTypes[] =
-  { 
+  {
+    {"AirConditionerVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"AirConditionerVariableRefrigerantFlow","Thermostat Priority Schedule","thermostatPrioritySchedule",false,"ControlMode",0.0,1.0},
+    {"AirConditionerVariableRefrigerantFlow","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -148,13 +151,16 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilCoolingDXSingleSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDXVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingLowTempRadiantConstFlow","Cooling High Water Temperature","coolingHighWaterTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingLowTempRadiantConstFlow","Cooling Low Water Temperature","coolingLowWaterTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingLowTempRadiantConstFlow","Cooling High Control Temperature","coolingHighControlTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingLowTempRadiantConstFlow","Cooling Low Control Temperature","coolingLowControlTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingLowTempRadiantVarFlow","Cooling Control Temperature Schedule","coolingControlTemperatureSchedule",false,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingDXSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilHeatingDXVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingGas","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingLowTempRadiantConstFlow","Heating High Water Temperature","heatingHighWaterTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -164,6 +170,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilHeatingLowTempRadiantVarFlow","Heating Control Temperature","heatingControlTemperature",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilHeatingWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingWaterBaseboard","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilWaterHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilWaterHeatingDesuperheater","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ControllerOutdoorAir","Minimum Outdoor Air","minimumOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Minimum Fraction of Outdoor Air","minimumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Maximum Fraction of Outdoor Air","maximumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
@@ -171,6 +179,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ControllerMechanicalVentilation","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoolingTowerSingleSpeed","Basin Heater Operating","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoolingTowerSingleSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
+    {"CoolingTowerVariableSpeed","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
+    {"CoolingTowerVariableSpeed","Blowdown Makeup Water Usage Schedule","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
     {"DefaultScheduleSet","Hours of Operation","hoursofOperationSchedule",false,"Availability",0.0,1.0},
     {"DefaultScheduleSet","Number of People","numberofPeopleSchedule",true,"",0.0,1.0},
     {"DefaultScheduleSet","People Activity Level","peopleActivityLevelSchedule",true,"ActivityLevel",0.0,OptionalDouble()},
@@ -212,8 +222,18 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"RefrigerationCase","Case Lighting","caseLightingSchedule",true,"",0.0,1.0},
     {"RefrigerationCase","Case Defrost","caseDefrostSchedule",true,"",0.0,1.0},
     {"RefrigerationCase","Case Defrost Drip-Down","caseDefrostDripDownSchedule",true,"",0.0,1.0},
-    {"RefrigerationCase","Refrigerated Case Restocking","refrigeratedCaseRestockingSchedule",true,"WattsPerMeter",0.0,OptionalDouble()},
+    {"RefrigerationCase","Refrigerated Case Restocking","refrigeratedCaseRestockingSchedule",true,"LinearPowerDensity",0.0,OptionalDouble()},
     {"RefrigerationCase","Case Credit Fraction","caseCreditFractionSchedule",true,"",0.0,1.0,},
+    {"RefrigerationCondenserEvaporativeCooled","Evaporative Condenser Availability","evaporativeCondenserAvailabilitySchedule",false,"Availability",0.0,1.0},
+    {"RefrigerationCondenserWaterCooled","Water Outlet Temperature","waterOutletTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"RefrigerationWalkIn","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"RefrigerationWalkIn","Heating Power","heatingPowerSchedule",true,"",0.0,1.0},
+    {"RefrigerationWalkIn","Lighting","lightingSchedule",true,"",0.0,1.0},
+    {"RefrigerationWalkIn","Defrost","defrostSchedule",true,"",0.0,1.0},
+    {"RefrigerationWalkIn","Defrost Drip-Down","defrostDripDownSchedule",true,"",0.0,1.0},
+    {"RefrigerationWalkIn","Restocking","restockingSchedule",true,"Capacity",0.0,OptionalDouble()},
+    {"RefrigerationWalkInZoneBoundary","Glass Reach In Door Opening  Facing Zone","glassReachInDoorOpeningScheduleFacingZone",true,"",0.0,1.0},
+    {"RefrigerationWalkInZoneBoundary","Stocking Door Opening  Facing Zone","stockingDoorOpeningScheduleFacingZone",true,"",0.0,1.0},
     {"SetpointManagerScheduled","(Exact, Min, Max) Temperature","schedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"SetpointManagerScheduled","(Exact, Min, Max) Humidity Ratio","schedule",true,"",0.0,OptionalDouble()},
     {"SetpointManagerScheduled","(Exact, Min, Max) Mass Flow Rate","schedule",true,"MassFlowRate",OptionalDouble(),OptionalDouble()},
@@ -253,6 +273,12 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACPackagedTerminalAirConditioner","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"RefrigerationAirChiller","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"RefrigerationAirChiller","Heating Power","heatingPowerSchedule",true,"",0.0,1.0},
+    {"RefrigerationAirChiller","Defrost","defrostSchedule",true,"",0.0,1.0},
+    {"RefrigerationAirChiller","Defrost Drip-Down","defrostDripDownSchedule",true,"",0.0,1.0},
+    {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Terminal Unit Availability schedule","terminalUnitAvailabilityschedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACUnitHeater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

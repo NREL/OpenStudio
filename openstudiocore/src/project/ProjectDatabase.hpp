@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -189,23 +189,23 @@ class PROJECT_API ProjectDatabase {
   template<typename T>
   T getFromQuery(const QSqlQuery& query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value = query.value(T::ColumnsType::handle);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     UUID handle = toUUID(value.toString().toStdString());
 
     boost::optional<Record> record = this->findLoadedRecord(handle);
     if (record){
       boost::optional<T> result = record->optionalCast<T>();
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
       return *result;
     }
 
     boost::optional<T> result = T::factoryFromQuery(query, *this);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return *result;
   }
 
@@ -237,7 +237,7 @@ class PROJECT_API ProjectDatabase {
     boost::optional<Record> record = this->findLoadedRecord(handle);
     if (record){
       result = record->optionalCast<T>();
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
       return *result;
     }
 

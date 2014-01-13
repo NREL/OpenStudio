@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -43,6 +43,9 @@ typedef VectorStruct::ScalarVectorType ScalarVector;
 
 /// Helper function to construct Vector from std::vector<double>.
 UTILITIES_API Vector createVector(const std::vector<double>& values);
+
+/// Helper function to construct Vector from std::vector<long>
+UTILITIES_API Vector createVector(const std::vector<long>& values);
 
 UTILITIES_API std::vector<double> toStandardVector(const Vector& values);
 

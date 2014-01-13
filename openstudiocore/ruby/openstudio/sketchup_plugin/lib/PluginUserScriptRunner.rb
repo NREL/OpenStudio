@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -339,8 +339,8 @@ module OpenStudio
       model_interface.materials_interface.rendering_mode = RenderWaiting
 
       error_msg = ""
-	  has_errors = false
-	  has_warnings = false
+      has_errors = false
+      has_warnings = false
     
       # open ruby console to show any errors
       #Sketchup.send_action("showRubyPanel:")
@@ -360,9 +360,9 @@ module OpenStudio
       # canceling passes back empty map
       if arguments.size == narg
 
-        begin  
-		
-		  error_msg += "Running #{user_script.name}\n"
+        begin
+
+          error_msg += "Running #{user_script.name}\n"
 
           if user_script.is_a?(OpenStudio::Ruleset::ModelUserScript)
             user_script.run(model_interface.openstudio_model, self, arguments)
@@ -372,36 +372,36 @@ module OpenStudio
 
         rescue => error
        
-		  has_errors = true
+          has_errors = true
           error_msg += "Error occurred while running user script:\n"
           error_msg += "#{error.message} (#{error.class})\n\n"
           error_msg += "#{error.backtrace}\n"
         
         end  
 
-		result = self.result
-		if not result.errors.empty?
-		  has_errors = true
-		  error_msg += "Errors: \n"
-		  result.errors.each { |error|
-			error_msg += "  " + error.logMessage + "\n"
-		  }
-		end
-		if not result.warnings.empty?
-		  has_warnings = true
-		  error_msg += "Warnings: \n"
-		  result.warnings.each { |warn|
-			error_msg += "  " + warn.logMessage + "\n"
-		  }
-		end
-		if not result.info.empty?
-		  # error_msg += "Info: "
-		  result.info.each { |info|
-			# error_msg += "  " + info.logMessage + "\n"
-		  }
-		  # error_msg += "\n"
-		end
-			
+        result = self.result
+        if not result.errors.empty?
+          has_errors = true
+          error_msg += "Errors: \n"
+          result.errors.each { |error|
+            error_msg += "  " + error.logMessage + "\n"
+          }
+        end
+        if not result.warnings.empty?
+          has_warnings = true
+          error_msg += "Warnings: \n"
+          result.warnings.each { |warn|
+            error_msg += "  " + warn.logMessage + "\n"
+          }
+        end
+        if not result.info.empty?
+          # error_msg += "Info: "
+          result.info.each { |info|
+            # error_msg += "  " + info.logMessage + "\n"
+          }
+          # error_msg += "\n"
+        end
+            
       end
       
       # switch render mode back to original
@@ -421,9 +421,9 @@ module OpenStudio
           error_msg += "User script #{user_script.name} completed\n\n"
         end
         
-		# for some reason "\n" is showing up as <br> in the ruby console
-		error_msg.split("\n").each {|part| puts part}
-		
+        # for some reason "\n" is showing up as <br> in the ruby console
+        error_msg.split("\n").each {|part| puts part}
+        
         #UI.messagebox(error_msg, MB_MULTILINE)
       }
       Plugin.add_event( proc )

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -198,4 +198,54 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_SetParent)
   ASSERT_TRUE(group.parent());
   EXPECT_EQ(building.handle(), group.parent()->handle());
   EXPECT_FALSE(group.space());
+}
+
+TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy)
+{
+  Model model;
+  Space space(model);
+
+  ShadingSurfaceGroup siteGroup(model);
+  EXPECT_TRUE(siteGroup.setShadingSurfaceType("Site"));
+
+  ShadingSurfaceGroup buildingGroup(model);
+  EXPECT_TRUE(buildingGroup.setShadingSurfaceType("Building"));
+
+  ShadingSurfaceGroup spaceGroup(model);
+  EXPECT_TRUE(spaceGroup.setSpace(space));
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 2, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+
+  // add site shading surface 
+  ShadingSurface siteSurface(points, model);
+  EXPECT_TRUE(siteSurface.setShadingSurfaceGroup(siteGroup));
+  ASSERT_TRUE(siteSurface.shadingSurfaceGroup());
+  EXPECT_EQ(siteGroup.handle(), siteSurface.shadingSurfaceGroup()->handle());
+
+  EXPECT_EQ(1u, siteGroup.shadingSurfaces().size());
+  EXPECT_EQ(0u, buildingGroup.shadingSurfaces().size());
+  EXPECT_EQ(0u, spaceGroup.shadingSurfaces().size());
+
+  // add building shading surface 
+  ShadingSurface buildingSurface(points, model);
+  EXPECT_TRUE(buildingSurface.setShadingSurfaceGroup(buildingGroup));
+  ASSERT_TRUE(buildingSurface.shadingSurfaceGroup());
+  EXPECT_EQ(buildingGroup.handle(), buildingSurface.shadingSurfaceGroup()->handle());
+
+  EXPECT_EQ(1u, siteGroup.shadingSurfaces().size());
+  EXPECT_EQ(1u, buildingGroup.shadingSurfaces().size());
+  EXPECT_EQ(0u, spaceGroup.shadingSurfaces().size());
+
+   // add space shading surface 
+  ShadingSurface spaceSurface(points, model);
+  EXPECT_TRUE(spaceSurface.setShadingSurfaceGroup(spaceGroup));
+  ASSERT_TRUE(spaceSurface.shadingSurfaceGroup());
+  EXPECT_EQ(spaceGroup.handle(), spaceSurface.shadingSurfaceGroup()->handle());
+
+  EXPECT_EQ(1u, siteGroup.shadingSurfaces().size());
+  EXPECT_EQ(1u, buildingGroup.shadingSurfaces().size());
+  EXPECT_EQ(1u, spaceGroup.shadingSurfaces().size());
 }
