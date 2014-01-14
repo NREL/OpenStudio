@@ -93,29 +93,23 @@ namespace detail {
     }
     else
     {
-      AirLoopHVACVector airLoops = this->model().getModelObjects<AirLoopHVAC>();
+      AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>();
 
       for( AirLoopHVACVector::iterator it = airLoops.begin(),itEnd=airLoops.end();
       it != itEnd;
       ++it )
       {
-        OptionalAirLoopHVAC airLoop = it->optionalCast<AirLoopHVAC>();
-        if(airLoop)
+        if( it->component(this->handle()) )
         {
-          if( airLoop->component(this->handle()) )
+          m_airLoopHVAC = *it;
+          return *it;
+        }
+        if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = it->airLoopHVACOutdoorAirSystem() )
+        {
+          if( oaSystem->component(this->handle()) )
           {
-            m_airLoopHVAC = airLoop;
-
-            return airLoop;
-          }
-          if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem() )
-          {
-            if( oaSystem->component(this->handle()) )
-            {
-              m_airLoopHVAC = airLoop;
-
-              return airLoop;
-            }
+            m_airLoopHVAC = *it;
+            return *it;
           }
         }
       }
@@ -132,7 +126,7 @@ namespace detail {
     }
     else
     {
-      AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getModelObjects<AirLoopHVACOutdoorAirSystem>();
+      AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>();
 
       for( AirLoopHVACOutdoorAirSystemVector::iterator it = oaLoops.begin(),itEnd=oaLoops.end();
       it != itEnd;
@@ -158,21 +152,16 @@ namespace detail {
     }
     else
     {
-      std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
+      std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
       for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
       it != itEnd;
       ++it )
       {
-        OptionalPlantLoop plantLoop = it->optionalCast<PlantLoop>();
-        if(plantLoop)
+        if( it->component(this->handle()) )
         {
-          if( plantLoop->component(this->handle()) )
-          {
-            m_plantLoop = plantLoop;
-
-            return plantLoop;
-          }
+          m_plantLoop = *it;
+          return *it;
         }
       }
     }

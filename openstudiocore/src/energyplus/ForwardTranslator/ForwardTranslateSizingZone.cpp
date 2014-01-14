@@ -263,14 +263,11 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   boost::optional<model::ControllerMechanicalVentilation> controllerMechanicalVentilation;
   boost::optional<IdfObject> _controllerMechanicalVentilation;
 
-  if( boost::optional<model::AirLoopHVAC> airLoopHVAC = thermalZone.airLoopHVAC() )
+  if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = thermalZone.airLoopHVACOutdoorAirSystem() )
   {
-    if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
-    {
-      model::ControllerOutdoorAir controllerOutdoorAir = oaSystem->getControllerOutdoorAir(); 
+    model::ControllerOutdoorAir controllerOutdoorAir = oaSystem->getControllerOutdoorAir(); 
 
-      controllerMechanicalVentilation = controllerOutdoorAir.controllerMechanicalVentilation();
-    }
+    controllerMechanicalVentilation = controllerOutdoorAir.controllerMechanicalVentilation();
   }
   
   if( controllerMechanicalVentilation )
