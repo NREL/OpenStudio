@@ -37,6 +37,7 @@
 #include <QProgressBar>
 
 class QPushButton;
+class QRadioButton;
 
 namespace openstudio{
 
@@ -92,6 +93,7 @@ class RunStatusView : public QWidget
 
    QString m_runText;
 
+
    CloudOnButton * cloudOnButton;
 
    CloudStartingButton * cloudStartingButton;
@@ -139,6 +141,8 @@ class RunStatusView : public QWidget
   QLabel * m_cloudTime;
   QLabel * m_cloudInstances;
   QTimer * m_timer;
+  QRadioButton *m_energyPlus;
+  QRadioButton *m_radiance;
 };
 
 class DataPointRunHeaderView : public OSHeader

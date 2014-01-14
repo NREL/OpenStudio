@@ -52,6 +52,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QRadioButton>
 
 #include <fstream>
 
@@ -107,6 +108,11 @@ RunStatusView::RunStatusView()
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
   mainVLayout->addLayout(mainHLayout);
+
+  QHBoxLayout * radianceHLayout = new QHBoxLayout(); 
+  radianceHLayout->setContentsMargins(5,5,5,5);
+  radianceHLayout->setSpacing(0);
+  mainVLayout->addLayout(radianceHLayout);
 
   QHBoxLayout * buttonHLayout = new QHBoxLayout(); 
   buttonHLayout->setContentsMargins(5,5,5,5);
@@ -187,6 +193,18 @@ RunStatusView::RunStatusView()
                         this, SLOT(updateCloudData()));
   OS_ASSERT(isConnected);
   mainHLayout->addWidget(statusContainer);
+
+  // "Radiance" Button Layout
+ 
+  QLabel *radianceLabel = new QLabel("Select Daylight Simulation Engine");
+  m_energyPlus = new QRadioButton("EnergyPlus");
+  m_radiance = new QRadioButton("Radiance");
+
+  radianceHLayout->addWidget(radianceLabel);
+  radianceHLayout->addStretch();
+  radianceHLayout->addWidget(m_energyPlus);
+  radianceHLayout->addWidget(m_radiance);
+
 
   // "Select All" Button Layout
 
