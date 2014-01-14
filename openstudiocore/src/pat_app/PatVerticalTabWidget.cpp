@@ -46,8 +46,10 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
   m_buttonGroup = new QButtonGroup(this);
   m_buttonGroup->setExclusive(true);
 
-  bool isConnected = connect(m_buttonGroup,SIGNAL(buttonClicked(int)),
-                             this,SLOT(on_buttonClicked(int)));
+  bool isConnected = false;
+
+  isConnected = connect(m_buttonGroup,SIGNAL(buttonClicked(int)),
+                        this,SLOT(on_buttonClicked(int)));
   OS_ASSERT(isConnected);
 
   QHBoxLayout * mainLayout = new QHBoxLayout();

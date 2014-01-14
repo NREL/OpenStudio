@@ -48,7 +48,8 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
   
   m_vLayout->addWidget(m_treeWidget);
 
-  bool isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
+  bool isConnected = false;
+  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
                         SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),

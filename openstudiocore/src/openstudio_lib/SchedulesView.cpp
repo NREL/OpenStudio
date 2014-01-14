@@ -132,7 +132,9 @@ SchedulesView::SchedulesView(bool isIP,
   selectorButtons->enablePurgeButton();
   selectorButtons->enableRemoveButton();
 
-  bool isConnected = connect(selectorButtons,SIGNAL(itemDropped(const OSItemId &)),
+  bool isConnected = false;
+
+  isConnected = connect(selectorButtons,SIGNAL(itemDropped(const OSItemId &)),
                         this,SIGNAL(itemDropped(const OSItemId &)));
   OS_ASSERT(isConnected);
 
@@ -821,8 +823,10 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   m_scheduleDayView = new ScheduleDayView(isIP,m_scheduleRule.daySchedule(),m_schedulesView);
     
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                             m_scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
+  bool isConnected = false;
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        m_scheduleDayView, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);  
   
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
@@ -3446,8 +3450,10 @@ DefaultTab::DefaultTab( ScheduleTab * scheduleTab, TabType type  )
 {
   setFixedHeight(25);
   
-  bool isConnected = connect( this,SIGNAL(defaultClicked(model::ScheduleRuleset)),
-                              m_scheduleTab->schedulesView(),SLOT(showDefaultScheduleDay(const model::ScheduleRuleset)) );
+  bool isConnected = false;
+
+  isConnected = connect( this,SIGNAL(defaultClicked(model::ScheduleRuleset)),
+                         m_scheduleTab->schedulesView(),SLOT(showDefaultScheduleDay(const model::ScheduleRuleset)) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( this,SIGNAL(winterClicked(model::ScheduleRuleset)),

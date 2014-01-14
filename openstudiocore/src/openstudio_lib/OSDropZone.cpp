@@ -112,7 +112,9 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
   m_mainBoxLayout->setSpacing(10);
   mainBox->setLayout(m_mainBoxLayout);
 
-  bool isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addButtonClicked()));
+  bool isConnected = false;
+
+  isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addButtonClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(itemsRequested()),
@@ -278,7 +280,8 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
 
     ++numItems;
 
-    bool isConnected = connect( item,SIGNAL(itemRemoveClicked(OSItem*)),
+    bool isConnected = false;
+    isConnected = connect( item,SIGNAL(itemRemoveClicked(OSItem*)),
                            this,SIGNAL(itemRemoveClicked(OSItem*)) );
     OS_ASSERT(isConnected);
 

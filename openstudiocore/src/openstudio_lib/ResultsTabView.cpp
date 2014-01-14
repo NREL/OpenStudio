@@ -84,10 +84,12 @@ ResultsView::ResultsView(QWidget *t_parent)
     m_isIP(true),
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
+  bool isConnected = false;
+
   QVBoxLayout * mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
-  bool isConnected = connect(m_openResultsViewerBtn, SIGNAL(clicked()),
+  isConnected = connect(m_openResultsViewerBtn, SIGNAL(clicked()),
       this, SLOT(openResultsViewerClicked()));
   OS_ASSERT(isConnected);
   

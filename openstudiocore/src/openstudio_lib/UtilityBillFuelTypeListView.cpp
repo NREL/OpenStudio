@@ -37,11 +37,12 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
   openstudio::FuelType fuelType)
   : m_iddObjectType(model::UtilityBill::iddObjectType()), m_model(model), m_fuelType(fuelType)
 {
-  bool isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                             SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                             this,
-                             SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                             Qt::QueuedConnection);
+  bool isConnected = false;
+  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
+                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        this,
+                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 

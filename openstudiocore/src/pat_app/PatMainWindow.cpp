@@ -80,6 +80,8 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
 
   verticalTabWidget = new PatVerticalTabWidget();
 
+  bool isConnected = false;
+
   m_mainSplitter->addWidget(verticalTabWidget);
 
   m_mainRightColumnContainer = new QStackedWidget();
@@ -94,7 +96,7 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
 
   this->setMenuBar(mainMenu);
 
-  bool isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
+  isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainMenu, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));

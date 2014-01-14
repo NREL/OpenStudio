@@ -339,6 +339,8 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
+  bool isConnected = false;
+
   m_numberofPeopleEdit = new OSDoubleEdit2();
   vLayout->addWidget(m_numberofPeopleEdit);
 
@@ -351,7 +353,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
   vLayout->addWidget(label);
 
   m_peopleperSpaceFloorAreaEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_peopleperSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_peopleperSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   vLayout->addWidget(m_peopleperSpaceFloorAreaEdit);
 

@@ -77,13 +77,15 @@ void BuildingComponentDialogCentralWidget::init()
 
 void BuildingComponentDialogCentralWidget::createLayout()
 {
+  bool isConnected = false;
+
   QLabel * label = new QLabel("Sort by:");
   label->hide(); // TODO remove this hack when we have sorts to do
 
   QComboBox * comboBox = new QComboBox(this);
   comboBox->hide(); // TODO remove this hack when we have sorts to do
 
-  bool isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
+  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
                              this, SLOT(comboBoxIndexChanged(const QString &)));
   OS_ASSERT(isConnected);
 

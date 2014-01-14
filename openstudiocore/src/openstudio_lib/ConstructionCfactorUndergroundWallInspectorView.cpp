@@ -68,8 +68,10 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
+  bool isConnected = false;
+
   m_cfactorEdit = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_cfactorEdit, SLOT(onUnitSystemChange(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_cfactorEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_cfactorEdit,3,0);
 

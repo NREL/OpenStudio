@@ -239,8 +239,9 @@ void OSComboBox2::completeBind() {
 
   // Connections
 
-  bool isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                              this,SLOT(onModelObjectChanged()) );
+  bool isConnected = false;
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+                         this,SLOT(onModelObjectChanged()) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
@@ -306,7 +307,8 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   // Connections
 
-  bool isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+  bool isConnected = false;
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                               this,SLOT(onModelObjectChanged()) );
   OS_ASSERT(isConnected);
 

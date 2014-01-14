@@ -84,8 +84,9 @@ OSItemList::OSItemList(OSVectorController* vectorController,
   m_vLayout->setSpacing(0);
   m_vLayout->addStretch();
 
-  bool isConnected = connect(this, SIGNAL(itemsRequested()),
-                             vectorController, SLOT(reportItems())); 
+  bool isConnected = false;
+  isConnected = connect(this, SIGNAL(itemsRequested()),
+                        vectorController, SLOT(reportItems())); 
   OS_ASSERT(isConnected);
 
   /* Vector controller does not handle removing items in list from model
@@ -238,8 +239,9 @@ void OSItemList::addItem(OSItem* item, bool selectItem)
 
   item->setType(m_type);
 
-  bool isConnected = connect(item, SIGNAL(itemClicked(OSItem*)),
-                             this, SLOT(selectItem(OSItem*)));
+  bool isConnected = false;
+  isConnected = connect(item, SIGNAL(itemClicked(OSItem*)),
+                        this, SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(item, SIGNAL(itemRemoveClicked(OSItem*)),

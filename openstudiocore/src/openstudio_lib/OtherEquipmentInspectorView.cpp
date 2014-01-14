@@ -61,8 +61,10 @@ OtherEquipmentDefinitionInspectorView::OtherEquipmentDefinitionInspectorView(boo
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,2,0);
 
+  bool isConnected = false;
+
   m_designLevelEdit = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designLevelEdit, SLOT(onUnitSystemChange(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_designLevelEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_designLevelEdit,3,0);
 

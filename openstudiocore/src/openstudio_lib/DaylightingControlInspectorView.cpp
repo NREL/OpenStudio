@@ -75,8 +75,10 @@ DaylightingControlInspectorView::DaylightingControlInspectorView(bool isIP, cons
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
+  bool isConnected = false;
+
   m_xCoordinateEdit = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xCoordinateEdit, SLOT(onUnitSystemChange(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xCoordinateEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   vLayout->addWidget(m_xCoordinateEdit);
 

@@ -418,10 +418,12 @@ QWidget * SimSettingsView::createRunControlWidget()
   layout->setSpacing(0);
   mainLayout->addLayout(layout);
 
+  bool isConnected = false;
+
   m_runSimWeatherFiles = new QCheckBox("Run Simulation for Weather File");
   layout->addWidget(m_runSimWeatherFiles);
 
-  bool isConnected = connect(m_runSimWeatherFiles, SIGNAL(stateChanged(int)),
+  isConnected = connect(m_runSimWeatherFiles, SIGNAL(stateChanged(int)),
     this, SLOT(on_runSimWeatherFiles(int)));
   OS_ASSERT(isConnected);
 

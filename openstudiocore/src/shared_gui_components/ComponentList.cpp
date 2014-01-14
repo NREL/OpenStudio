@@ -113,7 +113,9 @@ void ComponentList::addComponent(Component * component)
   m_mainLayout->addWidget(component);
   m_componentGroup->addButton(component,m_componentGroup->buttons().size());
 
-  bool isConnected = connect(component, SIGNAL(clicked(bool)),
+  bool isConnected = false;
+
+  isConnected = connect(component, SIGNAL(clicked(bool)),
                         this, SIGNAL(componentClicked(bool)));
   OS_ASSERT(isConnected);
 

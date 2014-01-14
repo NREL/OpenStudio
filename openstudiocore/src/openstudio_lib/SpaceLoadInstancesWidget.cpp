@@ -755,11 +755,12 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
   m_space = space;
   m_model = space.model();
 
-  bool isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                             SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                             this,
-                             SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                             Qt::QueuedConnection);
+  bool isConnected = false;
+  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
+                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        this,
+                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
@@ -801,11 +802,12 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
   m_spaceType = spaceType;
   m_model = spaceType.model();
 
-  bool isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                             SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                             this,
-                             SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
-                             Qt::QueuedConnection);
+  bool isConnected = false;
+  isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
+                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        this,
+                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 

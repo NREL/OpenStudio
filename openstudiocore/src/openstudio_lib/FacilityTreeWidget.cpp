@@ -86,8 +86,10 @@ FacilityTreeWidget::FacilityTreeWidget(const model::Model& model, QWidget* paren
 
   vLayout->addLayout(hLayout);
 
-  bool isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString&)),
-                             this, SLOT(onSortByChanged(const QString&)));
+  bool isConnected = false;
+
+  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString&)),
+                        this, SLOT(onSortByChanged(const QString&)));
   OS_ASSERT(isConnected);
 
   this->vLayout()->insertLayout(0, vLayout);

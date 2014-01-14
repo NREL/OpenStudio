@@ -51,7 +51,9 @@ ResultsTabController::ResultsTabController()
 {
   resultsView = new ResultsView();
 
-  bool test = connect(resultsView, SIGNAL(openButtonClicked(bool)), this, SLOT(onOpenButtonClicked()));
+  bool test = false;
+
+  test = connect(resultsView, SIGNAL(openButtonClicked(bool)), this, SLOT(onOpenButtonClicked()));
   OS_ASSERT(test);
 
   test = connect(resultsView, SIGNAL(openDirButtonClicked(bool)), this, SLOT(openDirectory()));
@@ -79,7 +81,9 @@ ResultsTabController::ResultsTabController()
     // can only select one item between both lists
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
 
-    bool bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
+    bool bingo = false;
+
+    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
     OS_ASSERT(bingo);
 
     // want to reset the list after changing the delegate

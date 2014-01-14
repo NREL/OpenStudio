@@ -54,6 +54,8 @@ LifeCycleCostsView::LifeCycleCostsView(const model::Model & model)
 
 void LifeCycleCostsView::createWidgets()
 {
+  bool isConnected = false;
+
   QRadioButton * radioButton = NULL; 
 
   QLabel * label = NULL;
@@ -97,7 +99,7 @@ void LifeCycleCostsView::createWidgets()
 
   m_fempGroup = new QButtonGroup(this);
 
-  bool isConnected = connect(m_fempGroup, SIGNAL(buttonClicked(int)),
+  isConnected = connect(m_fempGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(fempGroupClicked(int)));
   OS_ASSERT(isConnected);
 
@@ -389,6 +391,8 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
 
 QWidget * LifeCycleCostsView::createNistWidget()
 {
+  bool isConnected = false;
+
   QLabel * label = NULL;
 
   QVBoxLayout * vLayout = NULL;
@@ -412,8 +416,8 @@ QWidget * LifeCycleCostsView::createNistWidget()
   m_nistRegionComboBox->addItem("region 2");
   vLayout->addWidget(m_nistRegionComboBox);
 
-  bool isConnected = connect(m_nistRegionComboBox, SIGNAL(currentIndexChanged(const QString&)),
-                                             this, SLOT(nistRegionChanged(const QString&)));
+  isConnected = connect(m_nistRegionComboBox, SIGNAL(currentIndexChanged(const QString&)),
+                                        this, SLOT(nistRegionChanged(const QString&)));
   OS_ASSERT(isConnected);
 
   vLayout->addStretch();

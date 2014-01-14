@@ -592,6 +592,8 @@ void VagrantProviderWidget::createSettingsWidget()
   QHBoxLayout * hLayout = 0;
   QLabel * label = 0;
   QPushButton * pushButton = 0;
+  bool isConnected = false;
+
   // LEFT SETTINGS PAGE
 
   label = new QLabel;
@@ -611,7 +613,7 @@ void VagrantProviderWidget::createSettingsWidget()
   pushButton = new QPushButton("Browse");
   pushButton->setCheckable(false);
   hLayout->addWidget(pushButton,0,Qt::AlignTop | Qt::AlignLeft);
-  bool isConnected = connect(pushButton, SIGNAL(clicked(bool)),
+  isConnected = connect(pushButton, SIGNAL(clicked(bool)),
     this, SLOT(serverDirButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
@@ -854,6 +856,8 @@ void AmazonProviderWidget::createSettingsWidget()
 
   QLabel * label = 0;
 
+  bool isConnected = false;
+
   // LEFT SETTINGS PAGE
 
   label = new QLabel;
@@ -893,7 +897,7 @@ void AmazonProviderWidget::createSettingsWidget()
   m_serverInstanceTypeComboBox = new QComboBox();
   vLayout->addWidget(m_serverInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
 
-  bool isConnected = connect(m_serverInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
+  isConnected = connect(m_serverInstanceTypeComboBox, SIGNAL(currentIndexChanged(const QString &)),
     this, SLOT(on_serverInstanceTypeComboBox(const QString &)));
   OS_ASSERT(isConnected); 
 

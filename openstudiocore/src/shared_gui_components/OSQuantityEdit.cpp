@@ -136,7 +136,8 @@ void OSQuantityEdit2::bindCommon(bool isIP,
 
   setEnabled(true);
   
-  bool isConnected = connect( m_lineEdit, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
+  bool isConnected = false;
+  isConnected = connect( m_lineEdit, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
@@ -394,7 +395,8 @@ void OSQuantityEdit::bind(model::ModelObject& modelObject,
   
   setEnabled(true);
   
-  bool isConnected = connect( m_lineEdit, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
+  bool isConnected = false;
+  isConnected = connect( m_lineEdit, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),

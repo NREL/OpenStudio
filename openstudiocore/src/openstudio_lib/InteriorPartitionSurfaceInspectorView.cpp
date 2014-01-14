@@ -112,7 +112,7 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
   vLayout = new QVBoxLayout();
 
   //label = new QLabel();
-  //label->setText("Constructio: ");
+  //label->setText("Construction: ");
   //label->setStyleSheet("QLabel { font: bold; }");
   //vLayout->addWidget(label);
 
@@ -130,8 +130,10 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
+  bool isConnected = false;
+
   m_surfaceAreaEdit = new OSQuantityEdit(this);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_surfaceAreaEdit, SLOT(onUnitSystemChange(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_surfaceAreaEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   vLayout->addWidget(m_surfaceAreaEdit);
 

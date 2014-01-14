@@ -59,6 +59,8 @@ void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
   unsigned row = 0;
   unsigned col = 0;
 
+  bool isConnected = false;
+
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -75,7 +77,7 @@ void WindowMaterialSimpleGlazingSystemInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_uFactor = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_uFactor, SLOT(onUnitSystemChange(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_uFactor, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_uFactor,row++,0,1,3);
 

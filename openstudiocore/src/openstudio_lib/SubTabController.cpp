@@ -41,8 +41,9 @@ SubTabController::SubTabController(SubTabView* subTabView)
 {
   addQObject(subTabView);
 
-  bool isConnected = connect(subTabView, SIGNAL(itemSelected(OSItem*)),
-                             this, SLOT(selectItem(OSItem*)));
+  bool isConnected = false;
+  isConnected = connect(subTabView, SIGNAL(itemSelected(OSItem*)),
+                        this, SLOT(selectItem(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(itemRemoveClicked(OSItem*)),

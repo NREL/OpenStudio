@@ -63,9 +63,11 @@ void OSDialog::createLayout()
 
   lowerLayout->addStretch();
 
+  bool isConnected = false;
+
   m_backButton = new QPushButton("Back",this);
-  bool isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
-                             this, SLOT(on_backButton(bool))) ;
+  isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
+                        this, SLOT(on_backButton(bool))) ;
   OS_ASSERT(isConnected);
   isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
                         this, SIGNAL(backButtonClicked(bool))) ;

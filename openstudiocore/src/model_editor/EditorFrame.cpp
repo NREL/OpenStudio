@@ -136,10 +136,12 @@ void EditorFrame::setModels()
 
 void EditorFrame::createActions()
 {
+  bool connected = false;
+
   mNewIdkAction = new QAction(QIcon(":/images/new.png"), tr("New OSM"), this);
   //mNewIdkAction->setShortcuts(QKeySequence::New);
   mNewIdkAction->setStatusTip(tr("Create a new OSM file"));
-  bool connected = connect(mNewIdkAction, SIGNAL(triggered()), this, SLOT(newIdk()));
+  connected = connect(mNewIdkAction, SIGNAL(triggered()), this, SLOT(newIdk()));
   OS_ASSERT(connected);
 
   mOpenIdkAction = new QAction(QIcon(":/images/open.png"), tr("Open OSM..."), this);
@@ -321,7 +323,9 @@ void EditorFrame::createStatusBar()
 
 void EditorFrame::connectSignalsAndSlots()
 {
-  bool connected = connect(mModelExplorer,SIGNAL(modelDirty()),
+  bool connected = false;
+
+  connected = connect(mModelExplorer,SIGNAL(modelDirty()),
     this,SLOT(on_modelDirty()));
   OS_ASSERT(connected);
 

@@ -70,6 +70,8 @@ void WindowMaterialScreenInspectorView::createLayout()
   unsigned row = 0;
   unsigned col = 0;
 
+  bool isConnected = false;
+
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -98,7 +100,7 @@ void WindowMaterialScreenInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_diffuseSolarReflectance = new OSQuantityEdit(m_isIP);
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_diffuseSolarReflectance, SLOT(onUnitSystemChange(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_diffuseSolarReflectance, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_diffuseSolarReflectance,row++,0,1,3);
 

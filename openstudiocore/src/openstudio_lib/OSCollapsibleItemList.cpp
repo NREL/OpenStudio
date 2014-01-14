@@ -163,7 +163,9 @@ void OSCollapsibleItemList::addCollapsibleItem(OSCollapsibleItem * collapsibleIt
 
   collapsibleItem->setStyleSheet(style);
 
-  bool isConnected = connect(collapsibleItem, SIGNAL(collapsableItemSelected(OSCollapsibleItem *)),
+  bool isConnected = false;
+
+  isConnected = connect(collapsibleItem, SIGNAL(collapsableItemSelected(OSCollapsibleItem *)),
                         this, SLOT(onCollapsableItemSelected(OSCollapsibleItem *)));
   OS_ASSERT(isConnected);
 

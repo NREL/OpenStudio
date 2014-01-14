@@ -79,7 +79,9 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   addQObject(m_schedulesView);
   this->mainContentWidget()->addSubTab("Schedules",m_schedulesView,SCHEDULES);
 
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
+  bool isConnected = false;
+
+  isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         this,SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
@@ -181,7 +183,7 @@ void SchedulesTabController::showScheduleDialog()
     m_scheduleDialog = new ScheduleDialog(m_isIP,m_model);
 
     bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                          m_scheduleDialog, SIGNAL(toggleUnitsClicked(bool)));
+                               m_scheduleDialog, SIGNAL(toggleUnitsClicked(bool)));
     OS_ASSERT(isConnected);
   }
   m_scheduleDialog->show();

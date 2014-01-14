@@ -57,9 +57,11 @@ void PageNavigator::createLayout()
 
   setLayout(layout);
 
+  bool isConnected = false;
+
   m_buttonGroup = new QButtonGroup(this);
-  bool isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(QAbstractButton *)), 
-                             this, SLOT(on_buttonClicked(QAbstractButton *)));
+  isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(QAbstractButton *)), 
+                        this, SLOT(on_buttonClicked(QAbstractButton *)));
   OS_ASSERT(isConnected);
 
   QPushButton * button = NULL;

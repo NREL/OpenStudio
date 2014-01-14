@@ -44,8 +44,10 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 
   QWidget * utilityBillsView = subTabView()->inspectorView(); 
 
-  bool isConnected = connect(this,SIGNAL(toggleUnitsClicked( bool )),
-                             utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
+  bool isConnected = false;
+
+  isConnected = connect(this,SIGNAL(toggleUnitsClicked( bool )),
+                        utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( utilityBillsView,SIGNAL(enableAddNewObjectButton( bool )),

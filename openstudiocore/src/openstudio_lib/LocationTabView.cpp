@@ -79,6 +79,7 @@ LocationView::LocationView(const model::Model & model,
     m_model(model),
     m_modelTempDir(modelTempDir)
 {
+  bool isConnected = false;
   QLabel * label = 0;
   QPushButton * btn = 0;
   QHBoxLayout * hLayout = 0;
@@ -103,7 +104,7 @@ LocationView::LocationView(const model::Model & model,
   btn = new QPushButton("Browse",this);
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
-  bool isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onWeatherFileBtnClicked()));
+  isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onWeatherFileBtnClicked()));
   OS_ASSERT(isConnected);
 
   hLayout = new QHBoxLayout();

@@ -57,10 +57,11 @@ ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
   : SubTabView(itemSelector, modelObjectInspectorView, parent),
     m_modelObjectInspectorView(modelObjectInspectorView)
 {
-  bool bingo = connect(this, 
-                       SIGNAL(dropZoneItemClicked(OSItem*)),
-                       this, 
-                       SLOT(dropZoneItemClicked(OSItem*)));
+  bool bingo = false;
+  bingo = connect(this, 
+                  SIGNAL(dropZoneItemClicked(OSItem*)),
+                  this, 
+                  SLOT(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(bingo);
 
   // DLM: can we remove this?
