@@ -704,6 +704,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         // TODO: we could remove all this code if we used ZoneHVAC:IdealLoadsAirSystem instead of HVACTemplate:Zone:IdealLoadsAirSystem
         if (zoneEquipment.empty()){
 
+          // DLM: Kyle can this code avoid having to put in the ventilation objects below?
+          // would we have to wrap ZoneHVAC:IdealLoadsAirSystem to do that?
+          //if (idealAirLoadsIdf){
+          // idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir->name().get()); 
+          //}
+
           double outdoorAirFlowperPerson = designSpecificationOutdoorAir->outdoorAirFlowperPerson();
           double outdoorAirFlowperFloorArea = designSpecificationOutdoorAir->outdoorAirFlowperFloorArea();
           double outdoorAirFlowRate = designSpecificationOutdoorAir->outdoorAirFlowRate();
