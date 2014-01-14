@@ -545,7 +545,10 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
   Node node = modelObject.zoneAirNode();
 
+  ModelObjectVector zoneEquipment = modelObject.equipment();
+
   // Ideal air loads
+  boost::optional<IdfObject> idealAirLoadsIdf;
   if( modelObject.useIdealAirLoads() )
   {
     //IdfObject idealLoadsAirSystem(IddObjectType::HVACTemplate_Zone_IdealLoadsAirSystem);
@@ -555,6 +558,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     std::string thermalZoneName = idfObject.name().get();
 
     // API should have enforced that zone does not have any equipment attached to it, check that here
+    OS_ASSERT(zoneEquipment.empty());
 
     IdfObject equipmentConnections(IddObjectType::ZoneHVAC_EquipmentConnections);
     equipmentConnections.setString(ZoneHVAC_EquipmentConnectionsFields::ZoneName, thermalZoneName);
@@ -562,7 +566,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     equipmentConnections.setString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName, thermalZoneName + " Supply Inlet");
     equipmentConnections.setString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirExhaustNodeorNodeListName, "");
     equipmentConnections.setString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirNodeName, node.name().get());
-    equipmentConnections.setString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName, " Return Outlet");
+    equipmentConnections.setString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName, thermalZoneName + " Return Outlet");
+    m_idfObjects.push_back(equipmentConnections);
 
     IdfObject equipmentList(IddObjectType::ZoneHVAC_EquipmentList);
     equipmentList.setString(ZoneHVAC_EquipmentListFields::Name, thermalZoneName + " Equipment");
@@ -571,41 +576,40 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName, thermalZoneName + " ZoneHVAC:IdealLoadsAirSystem");
     eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, 1);
     eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, 1);
+    m_idfObjects.push_back(equipmentList);
 
     // DLM: Kyle do i need to check the sizing object for any of these fields? how about economizer? other stuff?
-    IdfObject idealLoads(IddObjectType::ZoneHVAC_IdealLoadsAirSystem);
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::Name, thermalZoneName + " ZoneHVAC:IdealLoadsAirSystem");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::AvailabilityScheduleName, "");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneSupplyAirNodeName, thermalZoneName + " Supply Inlet");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName, "");
-    idealLoads.setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, 50.0);
-    idealLoads.setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, 13.0);
-    idealLoads.setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, 0.008);
-    idealLoads.setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, 0.009);
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::HeatingLimit, "NoLimit");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate, "");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity, "");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::CoolingLimit, "NoLimit");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate, "");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity, "");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::HeatingAvailabilityScheduleName, "");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::CoolingAvailabilityScheduleName, "");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::DehumidificationControlType, "ConstantSensibleHeatRatio");
-    idealLoads.setDouble(ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, 0.7);
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::HumidificationControlType, "ConstantSupplyHumidityRatio");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::DesignSpecificationOutdoorAirObjectName, ""); 
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirInletNodeName, ""); 
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::DemandControlledVentilationType, "None"); 
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirEconomizerType, "NoEconomizer");
-    idealLoads.setString(ZoneHVAC_IdealLoadsAirSystemFields::HeatRecoveryType, "HeatRecoveryType");
-    idealLoads.setDouble(ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, 0.7);
-    idealLoads.setDouble(ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, 0.65);
-  }
+    idealAirLoadsIdf = IdfObject(IddObjectType::ZoneHVAC_IdealLoadsAirSystem);
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::Name, thermalZoneName + " ZoneHVAC:IdealLoadsAirSystem");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::AvailabilityScheduleName, "");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneSupplyAirNodeName, thermalZoneName + " Supply Inlet");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName, "");
+    idealAirLoadsIdf->setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, 50.0);
+    idealAirLoadsIdf->setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, 13.0);
+    idealAirLoadsIdf->setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, 0.008);
+    idealAirLoadsIdf->setDouble(ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, 0.009);
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::HeatingLimit, "NoLimit");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate, "");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity, "");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::CoolingLimit, "NoLimit");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate, "");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity, "");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::HeatingAvailabilityScheduleName, "");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::CoolingAvailabilityScheduleName, "");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::DehumidificationControlType, "ConstantSensibleHeatRatio");
+    idealAirLoadsIdf->setDouble(ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, 0.7);
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::HumidificationControlType, "ConstantSupplyHumidityRatio");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::DesignSpecificationOutdoorAirObjectName, ""); // DLM: this will be set below
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirInletNodeName, ""); // DLM: Kyle how do/should i get this?
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::DemandControlledVentilationType, "None"); 
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirEconomizerType, "NoEconomizer");
+    idealAirLoadsIdf->setString(ZoneHVAC_IdealLoadsAirSystemFields::HeatRecoveryType, "None");
+    idealAirLoadsIdf->setDouble(ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, 0.7);
+    idealAirLoadsIdf->setDouble(ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, 0.65);
+    m_idfObjects.push_back(*idealAirLoadsIdf);
 
-  ModelObjectVector zoneEquipment = modelObject.equipment();
+  }else if( zoneEquipment.size() > 0 ){
 
-  if( zoneEquipment.size() > 0 )
-  {
     // ZoneHVAC_EquipmentConnections
 
     IdfObject connectionsObject(openstudio::IddObjectType::ZoneHVAC_EquipmentConnections);
