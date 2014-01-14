@@ -337,10 +337,13 @@ namespace detail {
     }
     else if( (! lastThermalZone) && lastAirTerminal )
     {
-      terminal = lastAirTerminal->clone(_model).cast<HVACComponent>();
-      plant = plantForAirTerminal(lastAirTerminal.get());
-      //  setPlantForAirTerminal(lastAirTerminalClone,plantLoop.get());
-      lastAirTerminal->remove();
+      if( !optAirTerminal )
+        {
+          terminal = lastAirTerminal->clone(_model).cast<HVACComponent>();
+          plant = plantForAirTerminal(lastAirTerminal.get());
+          //  setPlantForAirTerminal(lastAirTerminalClone,plantLoop.get());
+          // lastAirTerminal->remove();
+        }
 
       boost::optional<ModelObject> mo = _zoneSplitter.outletModelObject(0);
       if( mo )
@@ -366,7 +369,7 @@ namespace detail {
 
       node = newNode;
 
-      if( lastAirTerminal )
+      if( lastAirTerminal && !optAirTerminal)
       {
         terminal = lastAirTerminal->clone(_model).cast<HVACComponent>();
         plant = plantForAirTerminal(lastAirTerminal.get());
@@ -377,11 +380,6 @@ namespace detail {
 
     if( optAirTerminal )
     {
-      if( terminal )
-      {
-        terminal->remove();
-      }
-
       terminal = optAirTerminal;
     }
 
@@ -638,9 +636,10 @@ namespace detail {
 
   std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType type)
   {
-    if( airLoopHVACOutdoorAirSystem() )
+    OptionalAirLoopHVACOutdoorAirSystem airLoopHVACOutdoorAirSystem = this->airLoopHVACOutdoorAirSystem();
+    if( airLoopHVACOutdoorAirSystem )
     {
-      return airLoopHVACOutdoorAirSystem()->components();
+      return airLoopHVACOutdoorAirSystem->components();
     }
     else
     {
@@ -650,9 +649,10 @@ namespace detail {
 
   boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode()
   {
-    if( airLoopHVACOutdoorAirSystem() )
+    OptionalAirLoopHVACOutdoorAirSystem airLoopHVACOutdoorAirSystem = this->airLoopHVACOutdoorAirSystem();
+    if( airLoopHVACOutdoorAirSystem )
     {
-      return airLoopHVACOutdoorAirSystem()->outboardReliefNode();
+      return airLoopHVACOutdoorAirSystem->outboardReliefNode();
     }
     else
     {
