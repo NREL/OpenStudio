@@ -660,7 +660,7 @@ namespace sdd {
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
-      if( ! result->getModelObjects<model::PlantLoop>().empty() )
+      if( ! result->getConcreteModelObjects<model::PlantLoop>().empty() )
       {
         model::OutputVariable var("Plant Supply Side Cooling Demand Rate",*result);
         var.setReportingFrequency("hourly");
@@ -669,19 +669,19 @@ namespace sdd {
         var2.setReportingFrequency("hourly");
       }
 
-      if( ! result->getModelObjects<model::ChillerElectricEIR>().empty() )
+      if( ! result->getConcreteModelObjects<model::ChillerElectricEIR>().empty() )
       {
         model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
         var.setReportingFrequency("hourly");
       }
 
-      if( ! result->getModelObjects<model::CoolingTowerSingleSpeed>().empty() )
+      if( ! result->getConcreteModelObjects<model::CoolingTowerSingleSpeed>().empty() )
       {
         model::OutputVariable var("Cooling Tower Heat Transfer Rate",*result);
         var.setReportingFrequency("hourly");
       }
 
-      if( ! result->getModelObjects<model::BoilerHotWater>().empty() )
+      if( ! result->getConcreteModelObjects<model::BoilerHotWater>().empty() )
       {
         model::OutputVariable var("Boiler Heating Rate",*result);
         var.setReportingFrequency("hourly");

@@ -794,7 +794,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
 
 
   // deal with component data
-  model::ComponentDataVector allComponentData = model.getModelObjects<model::ComponentData>();
+  model::ComponentDataVector allComponentData = model.getConcreteModelObjects<model::ComponentData>();
   std::vector<IdfObject> allIdfComponentData; // make sure idf versions share data
   std::vector<model::ModelObjectVector> allComponentDataObjects;
   BOOST_FOREACH(const model::ComponentData& cd,allComponentData) {
@@ -887,7 +887,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
     boost::dynamic_pointer_cast<InterobjectIssueInformation_0_8_3_to_0_8_4>(info);
 
   // make sure ScheduleDays are owned by their ScheduleRules and ScheduleRulesets
-  model::ScheduleDayVector daySchedules = model.getModelObjects<model::ScheduleDay>();
+  model::ScheduleDayVector daySchedules = model.getConcreteModelObjects<model::ScheduleDay>();
   BOOST_FOREACH(model::ScheduleDay& daySchedule,daySchedules) {
     model::ScheduleRulesetVector rulesetUsers = daySchedule.getModelObjectSources<model::ScheduleRuleset>();
     model::ScheduleRuleVector ruleUsers = daySchedule.getModelObjectSources<model::ScheduleRule>();

@@ -80,7 +80,7 @@ namespace detail {
       result.push_back(*dst);
     }
 
-    BOOST_FOREACH(RunPeriodControlSpecialDays day, model.getModelObjects<RunPeriodControlSpecialDays>()){
+    BOOST_FOREACH(RunPeriodControlSpecialDays day, model.getConcreteModelObjects<RunPeriodControlSpecialDays>()){
       result.push_back(day);
     }
 

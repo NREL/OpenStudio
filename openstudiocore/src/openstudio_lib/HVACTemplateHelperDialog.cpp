@@ -65,7 +65,7 @@ HVACTemplateHelperDialog::HVACTemplateHelperDialog(const model::Model & model, Q
   m_buttonGroup = new QButtonGroup();
   m_buttonGroup->setExclusive(false);
 
-  m_zones = m_model.getModelObjects<model::ThermalZone>();
+  m_zones = m_model.getConcreteModelObjects<model::ThermalZone>();
 
   int i = 1;
 

@@ -171,7 +171,7 @@ namespace detail {
   {
     boost::optional<ControllerOutdoorAir> result;
 
-    std::vector<ControllerOutdoorAir>  controllers = model().getModelObjects<ControllerOutdoorAir>();
+    std::vector<ControllerOutdoorAir>  controllers = model().getConcreteModelObjects<ControllerOutdoorAir>();
 
     for( std::vector<ControllerOutdoorAir>::const_iterator it = controllers.begin();
          it != controllers.end();

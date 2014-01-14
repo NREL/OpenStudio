@@ -139,7 +139,7 @@ namespace detail {
   std::vector<Meter> Facility_Impl::meters() const
   {
     MeterVector result;
-    MeterVector meters = this->model().getModelObjects<Meter>();
+    MeterVector meters = this->model().getConcreteModelObjects<Meter>();
     BOOST_FOREACH(const Meter& meter, meters){
       if (meter.installLocationType() && (InstallLocationType::Facility == meter.installLocationType().get().value())){
         result.push_back(meter);
@@ -181,7 +181,7 @@ namespace detail {
   }
 
   std::vector<ExteriorLights> Facility_Impl::exteriorLights() const {
-    return model().getModelObjects<ExteriorLights>();
+    return model().getConcreteModelObjects<ExteriorLights>();
   }
 
   OptionalDouble Facility_Impl::totalSiteEnergy() const
@@ -1553,7 +1553,7 @@ namespace detail {
     if (mySqlFile && mySqlFile->connectionOpen())
     {
       result = CalibrationResult();
-      BOOST_FOREACH(const model::UtilityBill& utilityBill, this->model().getModelObjects<model::UtilityBill>()){
+      BOOST_FOREACH(const model::UtilityBill& utilityBill, this->model().getConcreteModelObjects<model::UtilityBill>()){
         CalibrationUtilityBill calibrationUtilityBill(utilityBill.name().get(), utilityBill.fuelType(),
           utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(), 
           utilityBill.meterEndUseCategory(), utilityBill.meterSpecificEndUse(), utilityBill.consumptionUnit(),

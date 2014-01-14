@@ -252,7 +252,7 @@ namespace openstudio {
     }
 
     // add all variables to map, allow only one variable per variable name in this application 
-    BOOST_FOREACH(openstudio::model::OutputVariable outputVariable, m_model.getModelObjects<openstudio::model::OutputVariable>())
+    BOOST_FOREACH(openstudio::model::OutputVariable outputVariable, m_model.getConcreteModelObjects<openstudio::model::OutputVariable>())
     {
       if (outputVariableMap.count(outputVariable.variableName()) == 0)
       {

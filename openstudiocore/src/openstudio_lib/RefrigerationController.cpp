@@ -659,7 +659,7 @@ std::vector<model::RefrigerationSystem> RefrigerationSystemListController::syste
 
   if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
   {
-    result = model->getModelObjects<model::RefrigerationSystem>();
+    result = model->getConcreteModelObjects<model::RefrigerationSystem>();
   }
 
   std::sort(result.begin(), result.end(), WorkspaceObjectNameLess());

@@ -184,7 +184,7 @@ namespace detail {
   OptionalAirLoopHVACOutdoorAirSystem ControllerOutdoorAir_Impl::airLoopHVACOutdoorAirSystem() const
   {
     AirLoopHVACOutdoorAirSystemVector oaSystems;
-    oaSystems = this->model().getModelObjects<AirLoopHVACOutdoorAirSystem>();
+    oaSystems = this->model().getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>();
     AirLoopHVACOutdoorAirSystemVector::iterator it;
     for( it = oaSystems.begin();
     it != oaSystems.end();

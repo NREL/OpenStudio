@@ -434,7 +434,7 @@ boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
 
   }else if (modelObject.optionalCast<Building>()){
     result = 0;
-    BOOST_FOREACH(const ThermalZone& thermalZone, this->model().getModelObjects<ThermalZone>()){
+    BOOST_FOREACH(const ThermalZone& thermalZone, this->model().getConcreteModelObjects<ThermalZone>()){
       result = result.get() + thermalZone.multiplier();
     }
 

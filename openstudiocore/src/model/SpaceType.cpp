@@ -258,7 +258,7 @@ namespace detail {
     std::vector<Space> result;
 
     Handle handle = this->handle();
-    BOOST_FOREACH(const Space& space, this->model().getModelObjects<Space>()){
+    BOOST_FOREACH(const Space& space, this->model().getConcreteModelObjects<Space>()){
       OptionalSpaceType spaceType = space.spaceType();
       if (spaceType){
         if (spaceType->handle() == handle){
@@ -976,7 +976,7 @@ namespace detail {
   double SpaceType_Impl::floorArea() const
   {
     double result = 0;
-    BOOST_FOREACH(const Space& space, this->model().getModelObjects<Space>()){
+    BOOST_FOREACH(const Space& space, this->model().getConcreteModelObjects<Space>()){
       boost::optional<SpaceType> spaceType = space.spaceType();
       if (spaceType && spaceType->handle() == this->handle()){
         result += space.multiplier()*space.floorArea();

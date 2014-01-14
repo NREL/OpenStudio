@@ -57,7 +57,7 @@ void BuildingStoriesController::onReplaceObject(openstudio::model::ModelObject m
 
 void BuildingStoriesController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
 {
-  BOOST_FOREACH(model::BuildingStory buildingStory, this->model().getModelObjects<model::BuildingStory>()){
+  BOOST_FOREACH(model::BuildingStory buildingStory, this->model().getConcreteModelObjects<model::BuildingStory>()){
     if (buildingStory.spaces().empty()){
       buildingStory.remove();
     }

@@ -232,7 +232,7 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
   #endif
 
   // ThermalZone
-  std::vector<model::ThermalZone> thermalZones = m_model.getModelObjects<model::ThermalZone>();
+  std::vector<model::ThermalZone> thermalZones = m_model.getConcreteModelObjects<model::ThermalZone>();
   if(thermalZones.size() > 0){
     //BOOST_FOREACH(model::ThermalZone thermalZone, thermalZones){
     //  std::vector<model::Space> spaces = thermalZone.spaces();
@@ -251,13 +251,13 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
   }
 
   // Space
-  std::vector<model::Space> spaces = m_model.getModelObjects<model::Space>();
+  std::vector<model::Space> spaces = m_model.getConcreteModelObjects<model::Space>();
   if(spaces.size() == 0){
     errors.push_back("The OpenStudio model has no Space objects.");
   }
 
   // IlluminanceMap
-  std::vector<model::IlluminanceMap> illuminanceMaps = m_model.getModelObjects<model::IlluminanceMap>();
+  std::vector<model::IlluminanceMap> illuminanceMaps = m_model.getConcreteModelObjects<model::IlluminanceMap>();
   if(illuminanceMaps.size() > 0){
     BOOST_FOREACH(model::IlluminanceMap illuminanceMap, illuminanceMaps){
       boost::optional<model::Space> space = illuminanceMap.space();
@@ -278,7 +278,7 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
   }
 
   // DaylightingControl
-  std::vector<model::DaylightingControl> daylightingControls = m_model.getModelObjects<model::DaylightingControl>();
+  std::vector<model::DaylightingControl> daylightingControls = m_model.getConcreteModelObjects<model::DaylightingControl>();
   if(daylightingControls.size() > 0){
     BOOST_FOREACH(model::DaylightingControl daylightingControl, daylightingControls){
       boost::optional<model::Space> space = daylightingControl.space();
@@ -293,7 +293,7 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
   }
 
   // GlareSensor
-  std::vector<model::GlareSensor> glareSensors = m_model.getModelObjects<model::GlareSensor>();
+  std::vector<model::GlareSensor> glareSensors = m_model.getConcreteModelObjects<model::GlareSensor>();
   if(glareSensors.size() == 0){
     warnings.push_back("The OpenStudio model has no GlareSensor objects.");
   }
@@ -561,7 +561,7 @@ void RunView::playButtonClicked(bool t_checked)
     m_canceling = false;
     m_outputWindow->clear();
 
-    bool requireCalibrationReports = (osdocument->model().getModelObjects<model::UtilityBill>().size() > 0);
+    bool requireCalibrationReports = (osdocument->model().getConcreteModelObjects<model::UtilityBill>().size() > 0);
 
     // reset the model's sqlFile
     osdocument->model().resetSqlFile();
