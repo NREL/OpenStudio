@@ -408,14 +408,7 @@ AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
 }
 
 AnalysisJSONLoadResult loadJSON(std::istream& json) {
-  // istream -> string code from
-  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
-  std::string contents;
-  json.seekg(0, std::ios::end);
-  contents.resize(json.tellg());
-  json.seekg(0, std::ios::beg);
-  json.read(&contents[0], contents.size());
-  return loadJSON(contents);
+  return loadJSON(toString(json));
 }
 
 AnalysisJSONLoadResult loadJSON(const std::string& json) {

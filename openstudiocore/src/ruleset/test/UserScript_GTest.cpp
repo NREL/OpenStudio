@@ -298,8 +298,10 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(0u,result.info().size());
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
-  EXPECT_TRUE(result.attributes().empty());
+  EXPECT_EQ(2u,result.attributes().size()); // registers argument values
   result.save(fileDir / toPath("TestModelUserScript2_2.ossr"),true);
+  // save attributes json for inspection
+  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_2.json"),true);
 
   // call properly using default multiplier, but lights definition not Watts/Area
   lightsDef = LightsDefinition(model);
@@ -422,6 +424,21 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   NameFinder<Attribute> lightsDefinitionFloorAreaIPFinder("lights_definition_floor_area_ip",true);
   AttributeVector::const_iterator it;
 
+  // lights definition not in model - load attributes
+  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_2.json"));
+  EXPECT_EQ(2u,loadedAttributes.size());
+  // lights_definition
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+  // multiplier
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(0.8,it->valueAsDouble());
+  EXPECT_FALSE(it->units());
+
   // run with bad lights definition type - load attributes
   loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_3.json"));
   EXPECT_EQ(3u,loadedAttributes.size());
@@ -444,7 +461,7 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
 
   // good run, default multiplier
   loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_4.json"));
-  EXPECT_EQ(7u,loadedAttributes.size());
+  EXPECT_EQ(8u,loadedAttributes.size());
   // lights_definition
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
@@ -498,7 +515,7 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
 
   // good run, different multiplier
   loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_5.json"));
-  EXPECT_EQ(7u,loadedAttributes.size());
+  EXPECT_EQ(8u,loadedAttributes.size());
   // lights_definition
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
@@ -519,18 +536,18 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdInFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
   EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(10.0,it->valueAsDouble());
+  EXPECT_DOUBLE_EQ(8.0,it->valueAsDouble()); // uses previous example _out as _in
   ASSERT_TRUE(it->units());
   EXPECT_EQ("W/m^2",it->units().get());
   // -- unit conversion example --
-  OptionalDouble ipValue = convert(it->valueAsDouble(),it->units().get(),"W/ft^2");
+  ipValue = convert(it->valueAsDouble(),it->units().get(),"W/ft^2");
   ASSERT_TRUE(ipValue);
-  EXPECT_DOUBLE_EQ(0.9290304,*ipValue);
+  EXPECT_DOUBLE_EQ(0.74322432,*ipValue);
   // lpd_out
   it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdOutFinder);
   ASSERT_FALSE(it == loadedAttributes.end());
   EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(5.0,it->valueAsDouble());
+  EXPECT_DOUBLE_EQ(4.0,it->valueAsDouble());
   ASSERT_TRUE(it->units());
   EXPECT_EQ("W/m^2",it->units().get());
   // lights_definition_num_instances

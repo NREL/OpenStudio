@@ -1525,6 +1525,46 @@ bool prepareForDisplay(Attribute& attribute, const AttributeDescription& descrip
   return false;
 }
 
+bool saveJSON(const std::vector<Attribute>& attributes,
+              const openstudio::path& p,
+              bool overwrite)
+{
+  QVariantMap result = jsonMetadata().toMap();
+  result["attributes"] = detail::toVariant(attributes);
+  return openstudio::saveJSON(QVariant(result),p,overwrite);
+}
+
+std::ostream& toJSON(const std::vector<Attribute>& attributes,
+                     std::ostream& os)
+{
+  os << toJSON(attributes);
+  return os;
+}
+
+std::string toJSON(const std::vector<Attribute>& attributes) {
+  QVariantMap result = jsonMetadata().toMap();
+  result["attributes"] = detail::toVariant(attributes);
+  return openstudio::toJSON(QVariant(result));
+}
+
+std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson) {
+  QVariant variant = loadJSON(pathToJson);
+  VersionString version = extractOpenStudioVersion(variant);
+  QVariant attributesData = variant.toMap()["attributes"];
+  return detail::toVectorOfAttribute(attributesData,version);
+}
+
+std::vector<Attribute> toVectorOfAttribute(std::istream& json) {
+  return toVectorOfAttribute(toString(json));
+}
+
+std::vector<Attribute> toVectorOfAttribute(const std::string& json) {
+  QVariant variant = loadJSON(json);
+  VersionString version = extractOpenStudioVersion(variant);
+  QVariant attributesData = variant.toMap()["attributes"];
+  return detail::toVectorOfAttribute(attributesData,version);
+}
+
 namespace detail {
 
   QVariant toVariant(const Attribute& attribute) {
@@ -1694,7 +1734,7 @@ namespace detail {
           map[qName] = toQString(attribute.valueAsUnit().print());
           break;
         case AttributeValueType::String :
-          map[qName] = toQString(attirubute.valueAsString());
+          map[qName] = toQString(attribute.valueAsString());
           break;
         case AttributeValueType::AttributeVector :
           map[qName] = toVariant(attribute.valueAsAttributeVector());
@@ -1716,12 +1756,13 @@ namespace detail {
   std::vector<Attribute> toVectorOfAttribute(const QVariant& variant, const VersionString& version) {
     AttributeVector result;
     QVariantMap map = variant.toMap();
-    boost::regex displayNameRegex('(.*)_display_name');
-    boost::regex unitsRegex('(.*)_units');
+    boost::regex displayNameRegex("(.*)_display_name");
+    boost::regex unitsRegex("(.*)_units");
     boost::smatch matches;
     std::set<std::string> processedAttributeNames; // serialization ensures uniqueness of names
 
-    Q_FOREACH(const Key& key,map.keys()) {
+    int itemCount(0);
+    Q_FOREACH(const QString& key,map.keys()) {
       // determine attribute name
       std::string attributeName;
       if (boost::regex_match(toString(key),matches,displayNameRegex)) {
@@ -1747,9 +1788,53 @@ namespace detail {
       }
 
       // see if already processed
-      // HERE
-
+      std::pair<std::set<std::string>::iterator, bool> insertResult = processedAttributeNames.insert(attributeName);
+      if (insertResult.second) {
+        // not processed yet
+        QVariant value = map[toQString(attributeName)];
+        ++itemCount;
+        // determine type
+        switch (value.type()) {
+          case QVariant::Bool:
+            result.push_back(Attribute(attributeName,value.toBool()));
+           break;
+          case QVariant::Int:
+          case QVariant::LongLong:
+          case QVariant::UInt:
+          case QVariant::ULongLong:
+            result.push_back(Attribute(attributeName,value.toInt()));
+           break;
+          case QVariant::Double:
+            result.push_back(Attribute(attributeName,value.toDouble()));
+           break;
+          case QVariant::String:
+            result.push_back(Attribute(attributeName,value.toString().toStdString()));
+           break;
+          case QVariant::Map:
+            result.push_back(Attribute(attributeName,toVectorOfAttribute(value,version)));
+           break;
+          default:
+            LOG_FREE_AND_THROW("openstudio.Attribute","Unexpected QVariant::Type " << value.typeName() << ".");
+        }
+        // set displayName
+        QString key = toQString(attributeName + std::string("_display_name"));
+        if (map.contains(key)) {
+          result.back().setDisplayName(map[key].toString().toStdString());
+          ++itemCount;
+        }
+        // set units
+        key = toQString(attributeName + std::string("_units"));
+        if (map.contains(key)) {
+          result.back().setUnits(map[key].toString().toStdString());
+          ++itemCount;
+        }
+      }
     }
+
+    OS_ASSERT(result.size() == processedAttributeNames.size());
+    OS_ASSERT(map.keys().size() == itemCount);
+
+    return result;
   }
 
 } // detail
