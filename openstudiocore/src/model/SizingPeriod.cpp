@@ -93,5 +93,11 @@ SizingPeriod::SizingPeriod(boost::shared_ptr<detail::SizingPeriod_Impl> impl)
   : ParentObject(impl)
 {}
 
+// ensure that this object does not contain the date 2/29
+void SizingPeriod::ensureNoLeapDays()
+{
+  getImpl<detail::SizingPeriod_Impl>()->ensureNoLeapDays();
+}
+
 } // model
 } // openstudio
