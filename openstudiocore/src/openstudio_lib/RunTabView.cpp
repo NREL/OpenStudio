@@ -71,9 +71,9 @@
 #include <QVBoxLayout>
 
 #define ENERGYPLUS_TEXT "EnergyPlus"
-#define STD_RADIANCE_TEXT "Radiance (increases simulation time, but provides more accurate results)"
-#define WARNING_RADIANCE_TEXT "Radiance (with warnings)"
-#define ERROR_RADIANCE_TEXT "Radiance (has errors, unable to use)"
+#define STD_RADIANCE_TEXT "Radiance"
+#define WARNING_RADIANCE_TEXT "Radiance"
+#define ERROR_RADIANCE_TEXT "Radiance"
 
 namespace openstudio {
 
@@ -150,6 +150,33 @@ RunView::RunView(const model::Model & model,
   m_radianceButton = new QRadioButton(STD_RADIANCE_TEXT);
   m_radianceGroup->addButton(m_radianceButton,buttonCount++);
 
+
+  // "Radiance" Button Layout
+ 
+  QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
+
+  QWidget *radianceWidget = new QWidget();
+  radianceWidget->setObjectName("RunStatusViewRadiance");
+  QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
+
+  radianceWidget->setLayout(radianceInteriorLayout);
+  radianceInteriorLayout->addWidget(radianceLabel);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_energyPlusButton);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_radianceButton);
+
+/*
+  radianceHLayout->addSpacing(100);
+  radianceHLayout->addWidget(radianceWidget, 3);
+  radianceHLayout->addStretch(2);
+  */
+  radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
+
+
+
+/*
+
   m_radianceWarningsAndErrorsButton = new QPushButton();
   m_radianceWarningsAndErrorsButton->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
   m_radianceWarningsAndErrorsButton->hide();
@@ -169,8 +196,9 @@ RunView::RunView(const model::Model & model,
 
   QGroupBox * groupBox = new QGroupBox("For Daylighting Calculation use");
   groupBox->setLayout(radianceVLayout);
+*/
 
-  mainLayout->addWidget(groupBox, 1, 1);
+  mainLayout->addWidget(radianceWidget, 1, 1);
 
   if (usesRadianceForDaylightCalculations(t_runManager))
   {
@@ -329,23 +357,8 @@ void RunView::updateToolsWarnings()
   QString buttonText;
 
   if(m_radianceErrors.size() > 0){
-    checkBoxText = ERROR_RADIANCE_TEXT;
     m_energyPlusButton->setChecked(true);
-    buttonText = "View errors";
-    m_radianceWarningsAndErrorsButton->show();
   }
-  else if(m_radianceWarnings.size() > 0){
-    checkBoxText = WARNING_RADIANCE_TEXT;
-    buttonText = "View warnings";
-    m_radianceWarningsAndErrorsButton->show();
-  }
-  else{
-    checkBoxText = STD_RADIANCE_TEXT;
-    m_radianceWarningsAndErrorsButton->hide();
-  }
-
-  m_radianceWarningsAndErrorsButton->setText(buttonText);
-  m_radianceButton->setText(checkBoxText);
 
   locateEnergyPlus();
 }
@@ -519,6 +532,8 @@ void RunView::playButtonClicked(bool t_checked)
     };
   }
 
+  updateToolsWarnings();
+
   if (!t_checked)
   {
     m_playButton->setChecked(true);
@@ -545,12 +560,11 @@ void RunView::playButtonClicked(bool t_checked)
       m_playButton->setChecked(false);
       return;
     }
+
     // TODO call Dan's ModelToRad translator to determine if there are problems
-    std::vector<std::string> warnings;
-    std::vector<std::string> errors;
-    if(warnings.size() || errors.size()){
-      showRadianceWarningsAndErrors(warnings,errors);
-      if(errors.size()){
+    if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
+      showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
+      if(m_radianceErrors.size()){
         return;
       }
       else{
@@ -625,7 +639,7 @@ void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & war
   QMessageBox::critical(this, "Radiance Warnings and Errors", errorsAndWarnings);
 }
 
-void RunView::on_radianceWarningsAndErrorsClicked(bool checked)
+void RunView::on_radianceWarningsAndErrorsClicked(bool /*checked*/)
 {
   showRadianceWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
 }

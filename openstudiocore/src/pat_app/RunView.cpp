@@ -196,15 +196,27 @@ RunStatusView::RunStatusView()
 
   // "Radiance" Button Layout
  
-  QLabel *radianceLabel = new QLabel("Select Daylight Simulation Engine");
+  QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
   m_energyPlus = new QRadioButton("EnergyPlus");
   m_radiance = new QRadioButton("Radiance");
 
-  radianceHLayout->addWidget(radianceLabel);
-  radianceHLayout->addStretch();
-  radianceHLayout->addWidget(m_energyPlus);
-  radianceHLayout->addWidget(m_radiance);
+  QWidget *radianceWidget = new QWidget();
+  radianceWidget->setObjectName("RunStatusViewRadiance");
+  QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
 
+
+  radianceWidget->setLayout(radianceInteriorLayout);
+  radianceInteriorLayout->addWidget(radianceLabel);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_energyPlus);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_radiance);
+
+
+  radianceHLayout->addSpacing(100);
+  radianceHLayout->addWidget(radianceWidget, 3);
+  radianceHLayout->addStretch(2);
+  radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
 
   // "Select All" Button Layout
 
