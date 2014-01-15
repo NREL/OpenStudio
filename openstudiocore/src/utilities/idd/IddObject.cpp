@@ -258,11 +258,10 @@ namespace detail {
     }
     OS_ASSERT(m_nameFieldCache);
 
-    OptionalUnsigned result;
     if (m_nameFieldCache->first) {
-      result = m_nameFieldCache->second;
+      return m_nameFieldCache->second;
     }
-    return result;
+    return boost::none;
   }
 
   bool IddObject_Impl::isRequiredField(unsigned index) const {
