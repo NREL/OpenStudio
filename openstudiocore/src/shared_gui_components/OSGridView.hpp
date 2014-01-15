@@ -40,21 +40,34 @@ class OSGridView : public QWidget
 
   public:
 
+    //void addComboBoxColumn(std::string property, QString label);
+
+    //void addCheckBoxColumn(std::string property, QString label);
+
+    //void selectRow(model::ModelObject & modelObject);
+
+    //void addRows(std::vector<model::ModelObject> modelObjects);
+
+    //void addWidget(int row, int column, QWidget * widget );
+
     OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
+
+    void setGridController(QSharedPointer<OSGridController> gridController);
 
     virtual ~OSGridView() {};
 
-    bool bindComboBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
-    bool bindDouble(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
+    //bool bindComboBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
-    bool bindInteger(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
+    //bool bindDouble(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
 
-    bool bindLineEdit(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
+    //bool bindInteger(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
 
-    bool bindCheckBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
+    //bool bindLineEdit(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
+
+    //bool bindCheckBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
   
-    bool bindUnsigned(int row, int column, model::ModelObject mo, std::string property, QString label = "");
+    //bool bindUnsigned(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
     //void setCategories(std::vector<std::string>);
 
@@ -63,6 +76,14 @@ class OSGridView : public QWidget
     //void addWidget(int row, int column);
 
     //void removeWidget(int row, int column);
+
+  signals:
+
+    void rowClicked(int row);
+
+    void columnClicked(int column);
+
+    void cellClicked(int row, int column);
 
   private:
 
@@ -78,32 +99,12 @@ class OSGridView : public QWidget
 
     std::vector<std::string> m_categories;
 
-    void addComboBoxColumn(std::string property, QString label);
-
-    void addCheckBoxColumn(std::string property, QString label);
-
-    void selectRow(model::ModelObject & modelObject);
-
-    void addRows(std::vector<model::ModelObject> modelObjects);
-
-    void addWidget(int row, int column, QWidget * widget );
-
     // Caller's job to delete
     void removeWidget( QWidget * widget );
 
     void selectRow(int row);
 
     void selectColumn(int row);
-
-  signals:
-
-    void rowClicked(int row);
-
-    void columnClicked(int column);
-
-    void cellClicked(int row, int column);
-
-  private:
 
     std::vector<model::ModelObject> m_modelObjects;
 
