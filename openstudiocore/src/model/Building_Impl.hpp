@@ -255,6 +255,30 @@ namespace detail {
     /** Returns the gas equipment power per person (W/person) of this building. */
     double gasEquipmentPowerPerPerson() const;
 
+    /** Returns the infiltration design flow rate (m^3/s) of this building. Ignores
+     *  SpaceInfiltrationEffectiveLeakageArea objects. */
+    double infiltrationDesignFlowRate() const;
+
+    /** Returns the infiltration design flow per space floor area (m^3/m^2*s) of this building.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    double infiltrationDesignFlowPerSpaceFloorArea() const;
+
+    /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) of this building.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    double infiltrationDesignFlowPerExteriorSurfaceArea() const;
+
+    /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) of this building.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    double infiltrationDesignFlowPerExteriorWallArea() const;
+
+    /** Returns the infiltration design flow per space floor area (m^3/m^2*s) of this building.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    double infiltrationDesignFlowPerSpaceFloorArea() const;
+
+    /** Returns the infiltration design air changes per hour (1/h) of this building.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    double infiltrationDesignAirChangesPerHour() const;
+
     /** Returns the number of stories in this building. This is a user-set standards attribute. 
      *  It is not inferred from underlying data. */
     boost::optional<int> numberOfStories() const;

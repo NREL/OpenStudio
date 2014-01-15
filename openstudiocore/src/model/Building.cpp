@@ -521,6 +521,39 @@ namespace detail {
     return ep / np;
   }
 
+  double Building_Impl::infiltrationDesignFlowRate() const {
+    double result(0.0);
+    BOOST_FOREACH(const Space& space, spaces()){
+      result += space.multiplier() * space.infiltrationDesignFlowRate();
+    }
+    return result;
+  }
+
+  double Building_Impl::infiltrationDesignFlowPerSpaceFloorArea() const {
+    double area = floorArea();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(area,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces.size() == 1u) {
+        return spaces()[0].infiltrationDesignFlowRate();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return idfr/area;
+  }
+
+  double Building_Impl::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+
+  }
+
+  double Building_Impl::infiltrationDesignFlowPerExteriorWallArea() const;
+
+  double Building_Impl::infiltrationDesignFlowPerSpaceFloorArea() const;
+
+  double Building_Impl::infiltrationDesignAirChangesPerHour() const;
+
   boost::optional<int> Building_Impl::numberOfStories() const {
     OptionalBuildingStandardsInformation standardsInformation = this->standardsInformation();
     if (standardsInformation) {
@@ -912,6 +945,30 @@ double Building::gasEquipmentPowerPerFloorArea() const {
 
 double Building::gasEquipmentPowerPerPerson() const {
   return getImpl<detail::Building_Impl>()->gasEquipmentPowerPerPerson();
+}
+
+double Building::infiltrationDesignFlowRate() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowRate();
+}
+
+double Building::infiltrationDesignFlowPerSpaceFloorArea() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
+}
+
+double Building::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorSurfaceArea();
+}
+
+double Building::infiltrationDesignFlowPerExteriorWallArea() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorWallArea();
+}
+
+double Building::infiltrationDesignFlowPerSpaceFloorArea() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
+}
+
+double Building::infiltrationDesignAirChangesPerHour() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignAirChangesPerHour();
 }
 
 boost::optional<int> Building::numberOfStories() const {
