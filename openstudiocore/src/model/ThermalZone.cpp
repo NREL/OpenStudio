@@ -1589,13 +1589,18 @@ namespace detail {
           // If there is a single zone reheat spm, see if the control zone is set.
           // If not set, then set it to this zone.
 
-          Node supplyOutletNode = airLoop->supplyOutletNode();
+          std::vector<ModelObject> supplyNodes = airLoop->supplyComponents(Node::iddObjectType());
 
-          if( boost::optional<SetpointManagerSingleZoneReheat> spm = supplyOutletNode.getSetpointManagerSingleZoneReheat() )
+          for( std::vector<ModelObject>::iterator it = supplyNodes.begin();
+               it != supplyNodes.end();
+               it++ )
           {
-            if( ! spm->controlZone() )
+            if( boost::optional<SetpointManagerSingleZoneReheat> spm = it->cast<Node>().getSetpointManagerSingleZoneReheat() )
             {
-              spm->setControlZone(thisobj);
+              if( ! spm->controlZone() )
+              {
+                spm->setControlZone(thisobj);
+              }
             }
           }
 

@@ -26,6 +26,7 @@
 #include <model/OpaqueMaterial.hpp>
 #include <model/ModelExtensibleGroup.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
 
 #include <boost/foreach.hpp>
@@ -39,14 +40,14 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : LayeredConstruction_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
   }
 
   ConstructionWithInternalSource_Impl::ConstructionWithInternalSource_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : LayeredConstruction_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
   }
 
   ConstructionWithInternalSource_Impl::ConstructionWithInternalSource_Impl(
@@ -103,7 +104,7 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::sourcePresentAfterLayerNumber() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::SourcePresentAfterLayerNumber,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -118,7 +119,7 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::temperatureCalculationRequestedAfterLayerNumber() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -133,7 +134,7 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::dimensionsForTheCTFCalculation() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::DimensionsfortheCTFCalculation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -148,13 +149,13 @@ namespace detail {
   double ConstructionWithInternalSource_Impl::tubeSpacing() const
   {
     boost::optional<double> value = getDouble(OS_Construction_InternalSourceFields::TubeSpacing,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ConstructionWithInternalSource_Impl::getTubeSpacing(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_InternalSourceFields::TubeSpacing,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -246,11 +247,11 @@ namespace detail {
     int numLayers = (int)this->numLayers();
     if (this->sourcePresentAfterLayerNumber() > numLayers-1){
       bool test = setString(OS_Construction_InternalSourceFields::SourcePresentAfterLayerNumber, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
     if (this->temperatureCalculationRequestedAfterLayerNumber() > numLayers-1){
       bool test = setString(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -260,7 +261,7 @@ namespace detail {
 ConstructionWithInternalSource::ConstructionWithInternalSource(const Model& model)
   : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
+  OS_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
 }
 
 ConstructionWithInternalSource::ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials)
@@ -272,7 +273,7 @@ ConstructionWithInternalSource::ConstructionWithInternalSource(const std::vector
   }
   std::vector<Material> materials = castVector<Material>(opaqueMaterials);
   bool ok = setLayers(materials);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType ConstructionWithInternalSource::iddObjectType() {

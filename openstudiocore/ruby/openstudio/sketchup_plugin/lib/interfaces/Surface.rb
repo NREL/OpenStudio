@@ -370,13 +370,21 @@ module OpenStudio
         # This is more dynamic than looking at @children which may not be up-to-date yet.
         child_faces = []
         
+        #puts "face_polygon = #{self}, #{@entity}"
+        
         # DLM: detect_base_face can be expensive, do we have to search all_connected?  is there a way to cache the result of detect_base_face?
         for face in @entity.all_connected 
-          if (face.class == Sketchup::Face and @entity == DrawingUtils.detect_base_face(face, true))
-            #puts "found child face->" + face.to_s
-            child_faces << face
+          if face.class == Sketchup::Face
+            face_normal = face.normal
+            face_points = face.full_polygon.reduce.points
+            if DrawingUtils.is_base_face(face, face_normal, face_points, @entity)
+              #puts "found child face->" + face.to_s
+              child_faces << face
+            end
           end
         end
+        
+        #puts "child_faces = #{child_faces}"
 
         reduced_polygon = Geom::Polygon.new(@entity.full_polygon.outer_loop.reduce)  # Removes colinear points
         new_points = []

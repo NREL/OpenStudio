@@ -926,6 +926,21 @@ namespace detail {
     return wo->cast<AvailabilityManagerAssignmentList>();
   }
 
+  boost::optional<Node> AirLoopHVAC_Impl::mixedAirNode()
+  {
+    boost::optional<Node> result;
+
+    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
+    {
+      if( boost::optional<ModelObject> mo = oaSystem->mixedAirModelObject() )
+      {
+        result = mo->optionalCast<Node>();
+      }
+    }
+
+    return result;
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
@@ -1085,8 +1100,7 @@ boost::optional<Node> AirLoopHVAC::reliefAirNode()
 
 boost::optional<Node> AirLoopHVAC::mixedAirNode()
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->mixedAirNode();
 }
 
 boost::optional<Node> AirLoopHVAC::returnAirNode()

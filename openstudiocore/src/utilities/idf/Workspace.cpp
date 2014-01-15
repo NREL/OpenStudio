@@ -1919,6 +1919,7 @@ namespace detail {
     return boost::none;
   }
 
+<<<<<<< HEAD
   std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
     std::size_t found = objectName.find_last_of(' ');
     if ( found != string::npos ) {
@@ -1936,6 +1937,18 @@ namespace detail {
       }
     }
     return objectName;
+=======
+  boost::regex Workspace_Impl::getBaseNameRegex(std::string baseName) const {
+    std::stringstream ss;
+    boost::to_lower(baseName);
+    //ss << baseName << "( \\d+)?";
+    // DLM: Making more accepting of different characters in object names, e.g. '(', ')', etc
+    const boost::regex esc("[\\^\\.\\$\\|\\(\\)\\[\\]\\*\\+\\?\\{\\}\\/\\\\]");
+    const std::string rep("\\\\\\1&");
+    std::string escapedBaseName = regex_replace(baseName, esc, rep, boost::match_default | boost::format_sed);
+    ss << escapedBaseName << "( \\d+)?$";
+    return boost::regex(ss.str());
+>>>>>>> develop
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getEquivalentObject(

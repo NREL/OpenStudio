@@ -878,7 +878,9 @@ IF (NOT UNIX)
     
   install( DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION . )
   
-  install( DIRECTORY "${CMAKE_BINARY_DIR}/../../../Ruby-prefix/src/Ruby/" DESTINATION "ruby-install/ruby" )
+  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" PATH )
+  get_filename_component(RubyPath "${RubyEXEPath}" PATH )
+  install( DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby" )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   INCLUDE(InstallRequiredSystemLibraries)
@@ -889,6 +891,9 @@ IF (NOT UNIX)
     # Install the system libraries to the ruby dir
     INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION "Ruby/openstudio")
+      
+    INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+      DESTINATION "ruby-install/ruby/bin")
   ENDIF(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 ENDIF()
 

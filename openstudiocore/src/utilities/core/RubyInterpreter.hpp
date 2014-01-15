@@ -646,6 +646,17 @@ namespace openstudio
 #ifdef RUBY_ARCHLIB
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_ARCHLIB))).external_file_string()).c_str());
 #endif
+
+#if defined(WIN32) && (defined(_M_X64) || defined(__amd64__))
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/x64-msvcr100"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).external_file_string()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))).external_file_string()).c_str());
+#endif
           }
 
           ruby_init_loadpath();

@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class CurveBicubic;
 
 namespace detail {
@@ -69,10 +68,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
     CurveBicubic refrigerationCompressorPowerCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
     CurveBicubic refrigerationCompressorCapacityCurve() const;
 
     boost::optional<double> ratedSuperheat() const;
@@ -89,22 +86,18 @@ namespace detail {
 
     std::string modeofOperation() const;
 
-    bool isModeofOperationDefaulted() const;
+    // bool isModeofOperationDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
     boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
     boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
     bool setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
     bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
     void setRatedSuperheat(boost::optional<double> ratedSuperheat);
@@ -127,16 +120,14 @@ namespace detail {
 
     void resetEndUseSubcategory();
 
-    bool setModeofOperation(std::string modeofOperation);
+    // bool setModeofOperation(std::string modeofOperation);
 
-    void resetModeofOperation();
+    // void resetModeofOperation();
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
     bool setTranscriticalCompressorPowerCurve(const boost::optional<CurveBicubic>& curveBicubic);
 
     void resetTranscriticalCompressorPowerCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
     bool setTranscriticalCompressorCapacityCurve(const boost::optional<CurveBicubic>& curveBicubic);
 
     void resetTranscriticalCompressorCapacityCurve();
@@ -150,7 +141,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RefrigerationCompressor");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals

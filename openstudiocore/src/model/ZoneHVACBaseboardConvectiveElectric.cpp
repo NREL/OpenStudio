@@ -228,6 +228,7 @@ namespace detail {
   
   boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone()
   {
+<<<<<<< HEAD
     boost::optional<ThermalZone> result;
     std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
     BOOST_FOREACH(ThermalZone& thermalZone, thermalZones){
@@ -236,10 +237,23 @@ namespace detail {
         if (equipment.handle() == this->handle()){
           result = thermalZone;
         }
+=======
+    Model m = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        return *it;
+>>>>>>> develop
       }
     }
-
-    return result;
+    return boost::none;
   }
   
   bool ZoneHVACBaseboardConvectiveElectric_Impl::addToThermalZone(ThermalZone & thermalZone)
@@ -262,6 +276,7 @@ namespace detail {
   
   void ZoneHVACBaseboardConvectiveElectric_Impl::removeFromThermalZone()
   {
+<<<<<<< HEAD
     boost::optional<ThermalZone> thermalZone = this->thermalZone();
     ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
@@ -277,6 +292,10 @@ namespace detail {
 
         break;
       }
+=======
+    if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
+      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+>>>>>>> develop
     }
   }
 

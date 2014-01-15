@@ -1,4 +1,4 @@
-!IDD_Version 1.2.0
+!IDD_Version 1.2.2
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -5983,8 +5983,7 @@ OS:Refrigeration:Condenser:EvaporativeCooled,
         \default 5.0
         \note Taken from manufacturer's Heat Rejection Capacity Factor Table
   A4,   \field Air Inlet Node Name
-        \type object-list
-        \object-list ThermalZoneNames
+        \type alpha
         \note If field is left blank,
         \note then the model assumes that the inlet air
         \note conditions are the outdoor air conditions for the current timestep
@@ -6262,6 +6261,91 @@ OS:Refrigeration:Compressor,
         \type object-list
         \object-list BicubicCurves
 
+OS:Refrigeration:GasCooler:AirCooled,
+        \memo The transcritical refrigeration system requires a single gas cooler to reject the
+        \memo system heat.
+        \min-fields 3
+  A1,   \field Handle
+        \type handle
+  A2,   \field Name
+        \required-field
+        \type alpha
+        \reference RefrigerationAllTypesGasCoolerNames
+  A3,   \field Rated Total Heat Rejection Rate Curve Name
+        \required-field
+        \type object-list
+        \object-list LinearCurves
+        \note Be sure the rating corresponds to the correct refrigerant (R744)
+        \note HeatRejection(W)=C1 +C2(Gas Cooler Outlet Temp - Entering Air Temp, deg C)
+        \note Will be adjusted for elevation automatically
+  A4,   \field Gas Cooler Fan Speed Control Type
+        \type choice
+        \key Fixed
+        \key FixedLinear
+        \key VariableSpeed
+        \key TwoSpeed
+        \default Fixed
+  N1,   \field Rated Fan Power
+        \note Power for gas cooler fan(s) corresponding to rated total heat rejection effect.
+        \type real
+        \units W
+        \minimum 0.0
+        \default 5000.0
+        \required-field
+  N2,   \field Minimum Fan Air Flow Ratio
+        \note Minimum air flow fraction through gas cooler fan
+        \type real
+        \units dimensionless
+        \minimum 0.0
+        \default 0.2
+  N3,   \field Transition Temperature
+        \note Temperature at which system transitions between subcritical and transcritical operation.
+        \type real
+        \units C
+        \default 27.0
+  N4,   \field Transcritical Approach Temperature
+        \note Temperature difference between the CO2 exiting the gas cooler and the air entering the
+        \note gas cooler during transcritical operation.
+        \type real
+        \units DeltaC
+        \default 3.0
+  N5,   \field Subcritical Temperature Difference
+        \note Temperature difference between the saturated condensing temperature and the air
+        \note temperature during subcritical operation.
+        \type real
+        \units DeltaC
+        \default 10.0
+  N6,   \field Minimum Condensing Temperature
+        \note Minimum saturated condensing temperature during subcritical operation.
+        \type real
+        \units C
+        \default 10.0
+  A5,   \field Air Inlet Node Name
+        \type alpha
+        \note If field is left blank,
+        \note then the model assumes that the inlet air
+        \note conditions are the outdoor air conditions for the current timestep
+        \note (e.g., no adjustment for height above ground).
+  A6,   \field End-Use Subcategory
+        \type alpha
+        \retaincase
+        \default General
+  N7,   \field Gas Cooler Refrigerant Operating Charge Inventory
+        \type real
+        \units kg
+        \default 0.0
+        \note optional input
+  N8,   \field Gas Cooler Receiver Refrigerant Inventory
+        \type real
+        \units kg
+        \default 0.0
+        \note optional input
+  N9;   \field Gas Cooler Outlet Piping Refrigerant Inventory
+        \type real
+        \units kg
+        \default 0.0
+        \note optional input
+
 OS:Refrigeration:Subcooler:Mechanical,
         \min-fields 4
   A1,   \field Handle
@@ -6308,7 +6392,7 @@ OS:Refrigeration:Subcooler:LiquidSuction,
         \note Applicable only and required for liquid suction heat exchangers (LSHX)
         \note Design vapor inlet temperature must be less than or equal to
         \note      the Liquid inlet design temp
-    
+
 OS:Refrigeration:System,
         \min-fields 8
   A1,   \field Handle
@@ -6402,6 +6486,94 @@ OS:Refrigeration:System,
   A14;  \field High-Stage CompressorList Name
         \type object-list
         \object-list ModelObjectLists
+
+OS:Refrigeration:TranscriticalSystem,
+        \min-fields 7
+        \memo Detailed transcritical carbon dioxide (CO2) booster refrigeration systems used in
+        \memo supermarkets.  The object allows for modeling either a single stage system with
+        \memo medium-temperature loads or a two stage system with both medium- and low-temperature
+        \memo loads.
+  A1,   \field Handle
+        \type handle
+  A2,   \field Name
+        \required-field
+        \type alpha
+        \reference RefrigerationSystemNames
+  A3,   \field Medium Temperature Refrigerated CaseAndWalkInList Name
+        \note Enter the name of a Refrigeration:Case or Refrigeration:WalkIn object.
+        \note If there is more than one refrigerated case or walkin served by this system,
+        \note enter the name of a Refrigeration:CaseAndWalkInList object.
+        \note Only medium temperature cases and walkins served directly by the system should
+        \note be included in this list.
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+  A4,   \field Low Temperature Refrigerated CaseAndWalkInList Name
+        \note Enter the name of a Refrigeration:Case or Refrigeration:WalkIn object.
+        \note If there is more than one refrigerated case or walkin served by this system,
+        \note enter the name of a Refrigeration:CaseAndWalkInList object.
+        \note Only low temperature cases and walkins served directly by the system should be
+        \note included in this list.
+        \type object-list
+        \object-list ModelObjectLists
+  A5,   \field Refrigeration Gas Cooler Name
+        \required-field
+        \type object-list
+        \object-list RefrigerationAllTypesGasCoolerNames
+  A6,   \field High Pressure CompressorList Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+  A7,   \field Low Pressure CompressorList Name
+        \type object-list
+        \object-list ModelObjectLists
+  N1,   \field Receiver Pressure
+        \type real
+        \default 4000000
+        \units Pa
+  N2,   \field Subcooler Effectiveness
+        \type real
+        \default 0.4
+  A8,   \field Refrigeration System Working Fluid Type
+        \required-field
+        \type choice
+        \key R11
+        \key R12
+        \key R22
+        \key R123
+        \key R134a
+        \key R404a
+        \key R407a
+        \key R410a
+        \key NH3
+        \key R507a
+        \key R744
+  N3,   \field Sum UA Suction Piping for Medium Temperature Loads
+        \type real
+        \default 0.0
+        \units W/K
+        \note Use only if you want to include suction piping heat gain in refrigeration load
+  A9,   \field Medium Temperature Suction Piping Zone Name
+        \note This will be used to determine the temperature used for distribution piping heat
+        \note gain and the pipe heat gains as cooling credit for the zone.
+        \note Required only if Sum UA Distribution Piping for Medium Temperature Loads > 0.0
+        \type object-list
+        \object-list ThermalZoneNames
+  N4,   \field Sum UA Suction Piping for Low Temperature Loads
+        \type real
+        \default 0.0
+        \units W/K
+        \note Use only if you want to include suction piping heat gain in refrigeration load
+  A10,  \field Low Temperature Suction Piping Zone Name
+        \note This will be used to determine the temperature used for distribution piping heat
+        \note gain and the pipe heat gains as cooling credit for the zone.
+        \note Required only if Sum UA Distribution Piping for Low Temperature Loads > 0.0
+        \type object-list
+        \object-list ThermalZoneNames
+  A11;  \field End-Use Subcategory
+        \type alpha
+        \retaincase
+        \default General
 
 OS:Refrigeration:SecondarySystem,
         \min-fields 15
@@ -6785,6 +6957,215 @@ OS:Refrigeration:WalkIn:ZoneBoundary,
         \key StripCurtain
         \default AirCurtain
         \note Use StripCurtain for hanging strips or airlock vestibules
+
+OS:Refrigeration:AirChiller,
+        \memo Works in conjunction with a refrigeration chiller set, compressor rack, a
+        \memo refrigeration system, or a refrigeration secondary system to simulate the performance
+        \memo of an air chiller, similar to one found in a refrigerated warehouse. Energy use for
+        \memo fans and heaters is modeled based on inputs for nominal power, schedules, and control
+        \memo type. The air chiller model accounts for the sensible and latent heat exchange
+        \memo with the surrounding environment.
+        \min-fields 24
+  A1,   \field Handle
+        \type handle
+        \required-field
+  A2,   \field Name
+        \required-field
+        \type alpha
+        \reference AllObjects
+        \reference RefrigerationAirChillerNames
+  A3,   \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+  A4,   \field Capacity Rating Type
+        \required-field
+        \note In each case, select the rating option that corresponds to the expected service conditions.
+        \note For example, U.S. manufacturers quote a separate Unit Load Factor for wet or frosted coils.
+        \note If the evaporating temperature is less than 0C, input the frosted coil value.
+        \note Within the European convention, select SC1, 2, 3, 4, or 5 depending upon the expected evaporating temperature.        
+        \type choice
+        \key UnitLoadFactorSensibleOnly
+        \key EuropeanSC1Standard
+        \key EuropeanSC1NominalWet
+        \key EuropeanSC2Standard
+        \key EuropeanSC2NominalWet
+        \key EuropeanSC3Standard
+        \key EuropeanSC3NominalWet
+        \key EuropeanSC4Standard
+        \key EuropeanSC4NominalWet
+        \key EuropeanSC5Standard
+        \key EuropeanSC5NominalWet
+        \default UnitLoadFactorSensibleOnly
+  N1,   \field Rated Unit Load Factor
+        \type real
+        \units W/K
+        \note The sensible cooling capacity in watts (W/C) at rated conditions.
+        \note  The value entered for this field must be greater than zero, with no default value.
+        \note This value is only used if the Capacity Rating Type is UnitLoadFactorSensibleOnly.
+        \note The value given must be based upon the difference between the chiller inlet and
+        \note outlet air temperatures, not on the difference between the zone mean temperature
+        \note and the outlet air temperature
+  N2,   \field Rated Capacity
+        \type real
+        \units W
+        \note This value is only used if the Capacity Rating Type is NOT UnitLoadFactorSensibleOnly.
+        \note For CapacityTotalSpecificConditions, this capacity includes both sensible and latent
+        \note at the conditions given in the next two fields.
+        \note Note that the European Standard ratings are sensible only and
+        \note the European Nominal ratings include latent capacity as well.
+        \note The value given here must correspond to the capacity rating type given previously
+  N3,   \field Rated Relative Humidity
+        \type real
+        \units percent
+        \maximum 100
+        \default 85
+        \note This field is ONLY used if the Capacity Rating Type is CapacityTotalSpecificConditions and
+        \note represents the relative humidity at rated conditions. The default is 85.
+  N4,   \field Rated Cooling Source Temperature
+        \note If DXEvaporator, use evaporating temperature (saturated suction temperature)
+        \note If BrineCoil, use Brine entering temperature
+        \required-field
+        \type real
+        \units C
+        \minimum -70.0
+        \maximum 40.
+        \note used to set minimum suction pressure for DX systems and
+        \note    minimum brine temp for secondary systems
+  N5,   \field Rated Temperature Difference DT1
+        \required-field
+        \type real
+        \units deltaC
+        \minimum 0.0
+        \maximum 20.
+        \note The rated difference between the air entering the refrigeration chiller and the
+        \note cooling source temperature in degree C.
+  N6,   \field Maximum Temperature Difference Between Inlet Air and Evaporating Temperature
+        \type real
+        \units deltaC
+        \minimum 0.0
+        \maximum 25.
+        \note The maximum difference between the air entering the refrigeration chiller and the
+        \note cooling source temperature in degree C used to limit capacity during pull-down.
+        \note defaults to 1.3 times the Rated Temperature Difference DT1
+  N7,   \field Coil Material Correction Factor
+        \type real
+        \units dimensionless
+        \default 1.0
+        \note This is the manufacturer's correction factor for coil material corresponding to rating
+  N8,   \field Refrigerant Correction Factor
+        \type real
+        \units dimensionless
+        \default 1.0
+        \note This is the manufacturer's correction factor for refrigerant corresponding to rating
+  A5,   \field Capacity Correction Curve Type
+        \note In each case, select the correction curve type that corresponds to the rating type.
+        \type choice
+        \key LinearSHR60
+        \key QuadraticSHR
+        \key European
+        \key TabularRHxDT1xTRoom
+        \default LinearSHR60
+        \note default LinearSHR60 unless Capcity Rating Type = CapacityTotalSpecificConditions
+  A6,   \field Capacity Correction Curve Name
+        \type object-list
+        \object-list LinearCurves
+        \object-list QuadraticCurves
+        \note Can also be the name of a "Table:OneIndependentVariable" or a "Table:MultiVariableLookup"
+        \note Should be blank for LinearSHR60 correction curve type
+  N9,   \field SHR60 Correction Factor
+        \type real
+        \units dimensionless
+        \default 1.48
+        \maximum 1.67
+        \note only used when the capacity correction curve type is LinearSHR60
+  N10,  \field Rated Total Heating Power
+        \type real
+        \units W
+        \required-field
+        \note Include total for all heater power
+        \note Do not include defrost heater power
+  A7,   \field Heating Power Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note Values will be used to multiply the total heating power
+        \note Values in the schedule should be between 0.0 and 1.0
+        \note Defaults to always on if schedule name left blank.
+  A8,   \field Fan Speed Control Type
+        \type choice
+        \key Fixed
+        \key FixedLinear
+        \key VariableSpeed
+        \key TwoSpeed
+        \default Fixed
+  N11,  \field Rated Fan Power
+        \type real
+        \units W
+        \default 375.0
+        \minimum 0.
+  N12,  \field Rated Air Flow
+        \required-field
+        \type real
+        \units m3/s
+  N13,  \field Minimum Fan Air Flow Ratio
+        \note Minimum air flow fraction through fan
+        \type real
+        \units dimensionless
+        \minimum 0.0
+        \default 0.2
+  A9,   \field Defrost Type
+        \type choice
+        \key HotFluid
+        \key Electric
+        \key None
+        \key OffCycle
+        \default Electric
+        \note HotFluid includes either hot gas defrost for a DX system or
+        \note   Hot Brine defrost if this walk in is cooled by brine from a secondary chiller
+  A10,  \field Defrost Control Type
+        \type choice
+        \key TimeSchedule
+        \key TemperatureTermination
+        \default TimeSchedule
+  A11,  \field Defrost Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \required-field
+        \note The schedule values should be 0 (off) or 1 (on)
+  A12,  \field Defrost Drip-Down Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note The schedule values should be 0 (off) or 1 (on)
+        \note The start time for each defrost period in this drip-down schedule should coincide with
+        \note the start time for each defrost period in the defrost schedule (previous input
+        \note field).The length of each defrost drip-down period must be greater than or equal to the
+        \note corresponding defrost period specified in the defrost schedule. This extra time
+        \note allows the melted frost to drip from the coil before refrigeration is restarted.
+  N14,  \field Defrost Power
+        \type real
+        \units W
+        \minimum 0.0
+        \note needed for all defrost types except none and offcycle
+  N15,  \field Temperature Termination Defrost Fraction to Ice
+        \type real
+        \units dimensionless
+        \minimum> 0.0
+        \maximum 1.0
+        \note This is the portion of the defrost energy that is available to melt frost
+        \note     Needed only for defrost control type TemperatureTermination
+        \note     defaults to 0.7 for electric defrost and to 0.3 for hot fluid defrost
+  A13,  \field Vertical Location
+        \type choice
+        \key Ceiling
+        \key Middle
+        \key Floor
+        \default Middle
+  N16;  \field Average Refrigerant Charge Inventory
+        \Units kg
+        \type real
+        \default 0.0
+        \note This value is only used if the Cooling Source Type is DXEvaporator
 
 \group OpenStudio HVAC
 
@@ -10228,6 +10609,174 @@ OS:Coil:Heating:Gas,
        \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
        \type real
        \units W
+
+OS:Coil:Heating:Desuperheater,
+       \memo Desuperheater air heating coil. The heating energy provided by this coil is reclaimed
+       \memo from the superheated refrigerant gas leaving a compressor and does not impact the
+       \memo performance of the compressor.
+       \min-fields 7
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference HeatingCoilsGasElecDesup
+       \reference HeatingCoilsDesuperheater
+       \reference AFNCoilNames
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N1,  \field Heat Reclaim Recovery Efficiency
+       \type real
+       \minimum 0.0
+  A4,  \field Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5,  \field Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6,  \field Heating Source Name
+       \required-field
+       \type object-list
+       \object-list DesuperHeatingCoilSources
+  N2;  \field Parasitic Electric Load
+       \type real
+       \units W
+       \minimum 0
+       \note parasitic electric load associated with the desuperheater coil operation
+       \note such as solenoid valves, etc.
+       \ip-units W
+
+OS:Coil:WaterHeating:Desuperheater,
+       \memo Desuperheater air heating coil. The heating energy provided by this coil is reclaimed
+       \memo from the superheated refrigerant gas leaving a compressor and does not impact the
+       \memo performance of the compressor. This coil must be used with a water heater tank, see
+       \memo Water Heater:Mixed.
+       \min-fields 16
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference WaterHeatingCoilsDesuperheater
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values of 0 denote the desuperheater heating coil is off and the parasitic electric
+       \note energy is also off.
+  A4,  \field Setpoint Temperature Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note Defines the cut-out temperature where the desuperheater water heating coil turns off.
+       \note The desuperheater heating coil setpoint temperature should always be greater
+       \note than the water tank's heater (element or burner) setpoint temperature. Temperature
+       \note schedule values should be in degrees C.
+  N1,  \field Dead Band Temperature Difference
+       \type real
+       \units deltaC
+       \minimum> 0
+       \maximum 20
+       \default 5
+       \note Setpoint temperature minus the dead band temperature difference defines
+       \note the cut-in temperature where the desuperheater water heating coil turns on.
+       \note The water tank's heater (element or burner) setpoint temperature
+       \note should always be less than the desuperheater heating coil cut-in temperature.
+  N2,  \field Rated Heat Reclaim Recovery Efficiency
+       \type real
+       \minimum> 0.0
+       \note Enter the fraction of waste heat reclaimed by the desuperheater water heating coil.
+  N3,  \field Rated Inlet Water Temperature
+       \required-field
+       \type real
+       \units C
+       \note The inlet water temperature corresponding to the rated heat reclaim recovery efficiency.
+  N4,  \field Rated Outdoor Air Temperature
+       \required-field
+       \type real
+       \units C
+       \note The outdoor air dry-bulb temperature corresponding to the
+       \note rated heat reclaim recovery efficiency.
+  N5,  \field Maximum Inlet Water Temperature for Heat Reclaim
+       \required-field
+       \type real
+       \units C
+       \note The desuperheater water heating coil is off when the inlet water temperature is above
+       \note the maximum inlet water temperature for heat reclaim.
+  A5,  \field Heat Reclaim Efficiency Function of Temperature Curve Name
+       \type object-list
+       \object-list BiquadraticCurves
+       \note A biquadratic curve defining the performance of the desuperheater heating coil.
+       \note Performance can be specified as a function of inlet water temperature, outdoor air
+       \note dry-bulb temperature, or both.
+       \note Curve = a + b*Tw + c*Tw**2 + d*odb + e*odb**2 + f*Tw*odb.
+       \note Tw = desuperheater heating coil entering water temperature (C).
+       \note Odb = outdoor dry-bulb temperature at DX system condenser (C).
+  A6,  \field Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+       \note The node from which the desuperheater heating coil draws its inlet water.
+       \note This name should match the source side outlet node name in the associated
+       \note water heater tank object.
+  A7,  \field Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+       \note The node to which the desuperheater heating coil sends its outlet water.
+       \note This name should match the source side inlet node name in the associated
+       \note water heater tank object.
+  A8,  \field Heating Source Name
+       \required-field
+       \type object-list
+       \object-list DesuperHeatingCoilSources
+       \note The name of the DX system used for heat reclaim.
+  N6,  \field Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0
+       \note The operating water flow rate.
+  N7,  \field Water Pump Power
+       \type real
+       \units W
+       \minimum 0.0
+       \default 0.0
+       \note The water circulation pump electric power.
+  N8,  \field Fraction of Pump Heat to Water
+       \type real
+       \minimum 0
+       \maximum 1
+       \default 0.2
+       \note The fraction of pump heat transferred to the water. The pump is assumed to be downstream of
+       \note the desuperheater water heating coil.
+  N9,  \field On-Cycle Parasitic Electric Load
+       \type real
+       \units W
+       \minimum 0
+       \default 0
+       \note Parasitic electric power consumed when the desuperheater water heating coil operates.
+       \note Parasitic electric load does not contribute to water heating or the zone air heat balance.
+       \ip-units W
+  N10; \field Off-Cycle Parasitic Electric Load
+       \type real
+       \units W
+       \minimum 0
+       \default 0
+       \note Parasitic electric load consumed when the desuperheater water heating coil is off.
+       \note Parasitic electric load does not contribute to water heating or the zone air heat balance.
+       \note Off-cycle parasitic power is 0 when the availability schedule is 0.
+       \ip-units W
 
 OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
         \min-fields 8
