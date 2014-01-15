@@ -19,6 +19,9 @@
 
 #include <openstudio_lib/ResultsTabView.hpp>
 
+
+#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
+
 #include <openstudio_lib/OSDocument.hpp>
 
 #include "OSAppBase.hpp"

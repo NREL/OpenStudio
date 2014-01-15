@@ -20,83 +20,128 @@
 #ifndef OPENSTUDIO_OSGRIDVIEW_H
 #define OPENSTUDIO_OSGRIDVIEW_H
 
-#include "OSGridController.hpp"
-
-#include <QSharedPointer>
+#include <QAbstractButton>
 #include <QWidget>
 
-#include <map>
+#include <model/Model.hpp>
+#include <model/ModelObject.hpp>
 
-class QGraphicsObject;
-class QScrollArea;
 class QGridLayout;
+class QLabel;
+class QString;
 
 namespace openstudio{
 
-class OSGridItem;
-class OSGridItemDelegate;
+class CollapsibleHeader;
 
-/** The purpose of OSGridView is to display a group of items in a grid view.
- *  Data is provided to OSGridView by a subclass of OSGridController.
- *  For each item provided by the OSGridController, OSGridView draws a view provided by OSGridItemDelegate.
- *  It should be uncommon to subclass OSGridView.
- */
 class OSGridView : public QWidget
 {
   Q_OBJECT
 
- public:
+  public:
 
-  OSGridView(bool scrollable = false, QWidget * parent = 0);
+    OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
 
-  virtual ~OSGridView() {}
+    virtual ~OSGridView() {};
 
-  void setDelegate(QSharedPointer<OSGridItemDelegate> delegate);
+    bool bindComboBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
-  void setGridController(QSharedPointer<OSGridController> gridController);
+    bool bindDouble(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
 
-  QSharedPointer<OSGridController> gridController() const;
+    bool bindInteger(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
 
-  void setSpacing(int spacing);
+    bool bindLineEdit(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
 
-  void setContentsMargins(int left,int top,int right,int bottom);
+    bool bindCheckBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
+  
+    bool bindUnsigned(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
-  void setHorizontalScrollBarAlwaysOn(bool alwaysOn);
+    //void setCategories(std::vector<std::string>);
 
-  void setVerticalScrollBarAlwaysOn(bool alwaysOn);
+    //std::vector<std::string> categories();
 
- public slots:
+    //void addWidget(int row, int column);
 
-  void refreshAllViews(); // Note: Use sparingly for best performance
+    //void removeWidget(int row, int column);
 
- protected:
+  private:
 
-  void paintEvent(QPaintEvent *);
+    void OSGridView::refresh(int row, int column);
 
- private slots:
+    void OSGridView::refreshAll();
 
-  void insertItemView(int row, int column);
+    CollapsibleHeader * m_collapsibleHeader;
 
-  void removeItemView(int row, int column);
+    QWidget * m_body;
 
-  void removePair(QObject * object);
+    QGridLayout * m_gridLayout;
 
-  void refreshItemView(int row, int column);
+    std::vector<std::string> m_categories;
 
- private:
+    void addComboBoxColumn(std::string property, QString label);
 
-  QSharedPointer<OSGridItemDelegate> m_delegate;
+    void addCheckBoxColumn(std::string property, QString label);
 
-  QSharedPointer<OSGridController> m_gridController;
+    void selectRow(model::ModelObject & modelObject);
 
-  QGridLayout * m_gridLayout;
+    void addRows(std::vector<model::ModelObject> modelObjects);
 
-  // Use this to keep the OSGridItem classes around for the life of the widget
-  std::map<QObject *,QSharedPointer<OSGridItem> > m_widgetItemPairs;
+    void addWidget(int row, int column, QWidget * widget );
 
-  bool m_scrollable;
+    // Caller's job to delete
+    void removeWidget( QWidget * widget );
 
-  QScrollArea * m_scrollArea;
+    void selectRow(int row);
+
+    void selectColumn(int row);
+
+  signals:
+
+    void rowClicked(int row);
+
+    void columnClicked(int column);
+
+    void cellClicked(int row, int column);
+
+  private:
+
+    std::vector<model::ModelObject> m_modelObjects;
+
+    // A vector with pair for each column 
+    // One item in the pair is property to bind to
+    // The other item in the pair is the type of widget to show for that property
+    // ComboBox, CheckBox, IntBox, etc
+    std::vector< std::pair<std::string,std::string> > m_columnPropertyAndTypes;
+
+    void refresh();
+
+    void refreshRow(model::ModelObject modelObject);
+
+    void refreshColumn(int columnId);
+
+};
+
+class CollapsibleHeader : public QAbstractButton
+{
+  Q_OBJECT
+
+public:
+  CollapsibleHeader(const std::string& text,
+    QWidget * parent = 0);
+  virtual ~CollapsibleHeader() {}
+  void setChecked(bool isChecked);
+  void setText(const QString& text);
+
+protected:
+  void paintEvent(QPaintEvent * event);
+  QSize sizeHint() const;
+
+private:
+  void createLayout(const std::string& text);
+  void setImage(bool isChecked);
+
+  QLabel * m_text;
+  QLabel * m_arrowLabel;
 };
 
 } // openstudio
