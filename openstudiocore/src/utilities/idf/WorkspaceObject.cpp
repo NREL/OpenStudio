@@ -1189,10 +1189,11 @@ namespace detail {
     if (!oName) {
       return true;
     }
-    WorkspaceObjectVector candidates = m_workspace->getObjectsByReference(iddObject().references());
+    WorkspaceObjectVector candidates = m_workspace->getObjectsByType(iddObject().type());
     BOOST_FOREACH(const WorkspaceObject& candidate,candidates) {
-      OS_ASSERT(candidate.name());
-      if ((istringEqual(*oName,*(candidate.name())) &&
+      OptionalString candidateName = candidate.name();
+      OS_ASSERT(candidateName);
+      if ((istringEqual(*oName,*candidateName) &&
           (!initialized() || (getObject<WorkspaceObject>() != candidate))))
       {
         return false;
