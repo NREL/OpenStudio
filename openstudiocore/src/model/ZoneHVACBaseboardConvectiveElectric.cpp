@@ -228,29 +228,17 @@ namespace detail {
   
   boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone()
   {
-<<<<<<< HEAD
-    boost::optional<ThermalZone> result;
-    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
-    BOOST_FOREACH(ThermalZone& thermalZone, thermalZones){
-      std::vector<ModelObject> equipments = thermalZone.equipment(); 
-      BOOST_FOREACH(ModelObject& equipment, equipments){
-        if (equipment.handle() == this->handle()){
-          result = thermalZone;
-        }
-=======
-    Model m = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
         return *it;
->>>>>>> develop
       }
     }
     return boost::none;
@@ -276,26 +264,8 @@ namespace detail {
   
   void ZoneHVACBaseboardConvectiveElectric_Impl::removeFromThermalZone()
   {
-<<<<<<< HEAD
-    boost::optional<ThermalZone> thermalZone = this->thermalZone();
-    ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         it++ )
-    {
-      std::vector<ModelObject> equipment = it->equipment();
-
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        it->removeEquipment(thisObject);
-
-        break;
-      }
-=======
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
       thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
->>>>>>> develop
     }
   }
 

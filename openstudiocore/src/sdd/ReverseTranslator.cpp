@@ -664,9 +664,6 @@ namespace sdd {
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
-<<<<<<< HEAD
-      if( ! result->getConcreteModelObjects<model::PlantLoop>().empty() )
-=======
       // Output Variables
 
       QDomElement simVarsIntervalElement = projectElement.firstChildElement("SimVarsInterval");
@@ -678,7 +675,6 @@ namespace sdd {
       QDomElement simVarsSiteElement = projectElement.firstChildElement("SimVarsSite");
 
       if( simVarsSiteElement.text().toInt() == 1 )
->>>>>>> develop
       {
         model::OutputVariable var("Site Outdoor Air Drybulb Temperature",*result);
         var.setReportingFrequency(interval);
@@ -690,15 +686,11 @@ namespace sdd {
         var.setReportingFrequency(interval);
       }
 
-<<<<<<< HEAD
-      if( ! result->getConcreteModelObjects<model::ChillerElectricEIR>().empty() )
-=======
       // SimVarsThrmlZn
 
       QDomElement simVarsThrmlZnElement = projectElement.firstChildElement("SimVarsThrmlZn");      
 
       if( simVarsThrmlZnElement.text().toInt() == 1 )
->>>>>>> develop
       {
         model::OutputVariable var("Zone Air Temperature",*result);
         var.setReportingFrequency(interval);
@@ -716,15 +708,11 @@ namespace sdd {
         var.setReportingFrequency(interval);
       }
 
-<<<<<<< HEAD
-      if( ! result->getConcreteModelObjects<model::CoolingTowerSingleSpeed>().empty() )
-=======
       // SimVarsHVACZn
 
       QDomElement simVarsHVACZnElement = projectElement.firstChildElement("SimVarsHVACZn");
 
       if( simVarsHVACZnElement.text().toInt() == 1 )
->>>>>>> develop
       {
         model::OutputVariable var("Zone Air Terminal VAV Damper Position",*result);
         var.setReportingFrequency(interval);
@@ -748,15 +736,11 @@ namespace sdd {
         var.setReportingFrequency(interval);
       }
 
-<<<<<<< HEAD
-      if( ! result->getConcreteModelObjects<model::BoilerHotWater>().empty() )
-=======
       // SimVarsHVACSec
 
       QDomElement simVarsHVACSecElement = projectElement.firstChildElement("SimVarsHVACSec");
 
       if( simVarsHVACSecElement.text().toInt() == 1 )
->>>>>>> develop
       {
         model::OutputVariable var("Heating Coil Heating Rate",*result);
         var.setReportingFrequency(interval);
