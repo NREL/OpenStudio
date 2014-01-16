@@ -269,12 +269,14 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 
   m_comboBox->clear();
   Q_FOREACH(openstudio::path report, reports){
+
+    fullPathString = toQString(report.string());
+    QFile file(fullPathString);
+    fullPathString.prepend("file:///");
+
     if (openstudio::toString(report.filename()) == "eplustbl.htm"){
       m_comboBox->addItem("EnergyPlus Results",fullPathString);
     }else{
-      fullPathString = toQString(report.string());
-      QFile file(fullPathString);
-      fullPathString.prepend("file:///");
       if (file.open(QFile::ReadOnly)){
         QDomDocument doc;
         doc.setContent(&file);
@@ -294,6 +296,12 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
   }
   if(m_comboBox->count()){
     m_comboBox->setCurrentIndex(0);
+    for (int i = 0; i < m_comboBox->count(); ++i){
+      if (m_comboBox->itemText(i) == QString("Results | OpenStudio")){
+        m_comboBox->setCurrentIndex(i);
+        break;
+      }
+    }
     int width = m_comboBox->minimumSizeHint().width();
     m_comboBox->setMinimumWidth(width + 20);
   }
