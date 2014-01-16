@@ -35,5 +35,55 @@ OSGridController::~OSGridController()
 {
 }
 
+QSharedPointer<OSListItem> OSGridController::itemAt(int i, int j)
+{
+  QSharedPointer<OSListItem> result;
+
+  std::vector<ModelObject> modelObjects = m_model.getModelObjectsByType(m_iddObjectType).sortSomewayortheother();
+
+  ModelObject mo = modelObjects[i];
+
+  if( m_columnType[j] == COMBO )
+  {
+    result = QSharedPointer<OSListComboItem>(new OSListComboItem(mo,.....));
+  }
+  else if( m_columnType[j] == DOUBLE )
+  {
+  }
+
+  return result;
+}
+
+QWidget * OSGridItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
+  QWidget * result = NULL;
+
+  if(QSharedPointer<OSListComboItem> comboItem = dataSource.objectCast<OSListComboItem>())
+  {
+    OSComboBox2 * comboBox = new OSComboBox2();
+
+    comboBox.bind(comboItem->modelObject(),
+                  comboItem->choices(),
+                  comboItem->getter(),
+                  comboItem->setter());
+
+    result = comboBox;
+
+    // void bind(model::ModelObject& modelObject,
+    //           ChoicesGetter choices,
+    //           StringGetter get,
+    //           boost::optional<StringSetter> set=boost::none,
+    //           boost::optional<NoFailAction> reset=boost::none,
+    //           boost::optional<BasicQuery> isDefaulted=boost::none);
+
+    // some bind/connection between combobox and comboItem
+  }
+  else if(QSharedPointer<OSDoubleItem> doubleItem  .... )
+  {
+  }
+
+  return result;
+}
+
 } // openstudio
 

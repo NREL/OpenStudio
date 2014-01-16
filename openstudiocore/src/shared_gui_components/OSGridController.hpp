@@ -45,15 +45,22 @@ class OSGridController : public QObject
 
   bool addComboBoxColumn(QString title, string property, QString label, QSharedPointer<OSListController> choicesController)
 
-  bool addDoubleColumn(QString property,QString ipunits, QString siunits);
+    // void bind(model::ModelObject& modelObject,
+    //           ChoicesGetter choices,
+    //           StringGetter get,
+    //           boost::optional<StringSetter> set=boost::none,
+    //           boost::optional<NoFailAction> reset=boost::none,
+    //           boost::optional<BasicQuery> isDefaulted=boost::none);
 
-  bool addIntegerColumn(std::string property,QString ipunits, QString siunits);
+  bool addDoubleColumn(QString property);
+
+  bool addIntegerColumn(std::string property);
 
   bool addLineEditColumn(std::string property);
 
   bool addCheckBoxColumn(std::string property);
 
-  bool addUnsignedColumn(std::string property,QString ipunits, QString siunits);
+  bool addUnsignedColumn(std::string property);
 
   // Maybe
   bool addColumn(QString title, QSharedPointer<OSListController> columnController, QSharedPointer<OSItemDelegate> columnDelegate);
@@ -87,6 +94,30 @@ class OSGridController : public QObject
 
   // Nuclear reset of everything
   void modelReset();
+};
+
+class OSGridItemDelegate : public OSItemDelegate
+{
+  OSGridItemDelegate();
+
+  virtual ~OSGridItemDelegate() {}
+
+  QWidget * view(QSharedPointer<OSListItem> dataSource);
+};
+
+class OSListComboItem : public OSItem
+{
+  OSListComboItem(model::ModelObject,ChoicesGetter,StringSetter,StringGetter);
+
+  virtual ~OSListComboItem() {}
+
+  model::ModelObject modelObject();
+
+  ChoicesGetter choices();
+
+  StringSetter setter();
+
+  StringGetter getter();
 };
 
   m_choicesController = new OSListControllerDerivedClass(); 
