@@ -261,6 +261,25 @@ namespace gbxml {
       }
     }
 
+    // do thermal zones before spaces
+    QDomNodeList zoneElements = element.elementsByTagName("Zone");
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Zones"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(zoneElements.count()); 
+      m_progressBar->setValue(0);
+    }
+
+    for (int i = 0; i < zoneElements.count(); i++){
+      QDomElement zoneElement = zoneElements.at(i).toElement();
+      boost::optional<model::ModelObject> zone = translateThermalZone(zoneElement, doc, model);
+      OS_ASSERT(zone); // Krishnan, what type of error handling do you want?
+      
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
     QDomNodeList campusElements = element.elementsByTagName("Campus");
     OS_ASSERT(campusElements.count() == 1);
     QDomElement campusElement = campusElements.at(0).toElement();
@@ -363,7 +382,20 @@ namespace gbxml {
 
     return story;
   }
- 
+
+  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  {
+    openstudio::model::ThermalZone zone(model);
+
+    QString id = element.attribute("id");
+    zone.setName(escapeName(id));
+
+    // DLM: we need to better support separate name from id in this translator
+
+    // DLM: todo, translate setpoints
+
+    return zone;
+  }
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
     openstudio::model::Space space(model);
@@ -380,10 +412,23 @@ namespace gbxml {
       }
     }
 
-    //DLM: we should be translating the thermal zone elements and find that here
-    openstudio::model::ThermalZone thermalZone(model);
-    thermalZone.setName(escapeName(id) + " ThermalZone");
-    space.setThermalZone(thermalZone);
+    // if space doesn't have story assigned should we warn the user?
+
+    QString zoneId = element.attribute("zoneIdRef");
+    boost::optional<WorkspaceObject> zone = model.getObjectByTypeAndName(openstudio::model::ThermalZone::iddObjectType(), escapeName(zoneId));
+    if (zone){
+      if (zone->optionalCast<openstudio::model::ThermalZone>()){
+        space.setThermalZone(zone->cast<openstudio::model::ThermalZone>());
+      }
+    }
+
+    if (!space.thermalZone()){
+      // DLM: may want to revisit this
+      // create a new thermal zone if none assigned
+      openstudio::model::ThermalZone thermalZone(model);
+      thermalZone.setName(escapeName(id) + " ThermalZone");
+      space.setThermalZone(thermalZone);
+    }
 
     return space;
   }
