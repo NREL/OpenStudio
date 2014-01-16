@@ -42,15 +42,15 @@ class OSGridController : public QObject
   OSGridController(IddObjectType iddObjectType, model::Model model);
 
   virtual ~OSGridController() {};
+  
+  bool addComboBoxColumn(QString title, ChoicesGetter choices, StringGetter getter, boost::optional<StringSetter> setter, QString label)
 
-  bool addComboBoxColumn(QString title, string property, QString label, QSharedPointer<OSListController> choicesController)
+  // 
+  addComboBox("foo",&ModelObject::foos,&ModelObject::foo,&ModelObject::getFoo)
 
-    // void bind(model::ModelObject& modelObject,
-    //           ChoicesGetter choices,
-    //           StringGetter get,
-    //           boost::optional<StringSetter> set=boost::none,
-    //           boost::optional<NoFailAction> reset=boost::none,
-    //           boost::optional<BasicQuery> isDefaulted=boost::none);
+  private:
+
+  std::vector<> m_comboColumns;
 
   bool addDoubleColumn(QString property);
 
@@ -75,7 +75,9 @@ class OSGridController : public QObject
 
   virtual int columnCount() const;
 
-  virtual QSharedPointer<OSListItem> itemAt(int i, int j);
+  virtual QWidget * widgetAt(int i, int j);
+
+  virtual std::vector<QWidget> row(int i);
 
   signals:
 
@@ -120,27 +122,6 @@ class OSListComboItem : public OSItem
   StringGetter getter();
 };
 
-  m_choicesController = new OSListControllerDerivedClass(); 
-
-  ModelObjectGridInspector * mogi = new ModelObjectGridInspector();
-
-  mogi.addRows(someVectorOfModelObjects);
-
-  mogi.addRows(someOtherVectorOfModelObjects);
-
-  mogi.addComboBoxColumn("Bar","Bar Label");
-
-  mogi.addCheckBoxColumn("Foo","Foo Label");
-
-  // OR // 
-
-  ModelObjectGridInspector * mogi = new ModelObjectGridInspector();
-
-  mogi.addComboBoxColumn<OSListControllerDerivedClass>("Bar","Bar Label");
-
-  mogi.addCheckBoxColumn("Foo","Foo Label");
-
-  mogi.addRows(someOtherVectorOfModelObjects);
 
 } // openstudio
 
