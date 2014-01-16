@@ -782,9 +782,9 @@ Section "-Core installation"
     IntOp $sketchupFound $sketchupFound + 1
     SetOutPath "$APPDATA\SketchUp\SketchUp 2014\SketchUp\Plugins"
     file /oname=OpenStudio.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio.rb"
-    SetOutPath "$sketchup14Dir\Plugins\OpenStudio"
+    SetOutPath "$APPDATA\SketchUp\SketchUp 2014\SketchUp\Plugins\OpenStudio"
     file /oname=Startup.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio\Startup.rb"
-    FileOpen $0 "$sketchup14Dir\Plugins\OpenStudio\OpenStudio-config.rb" w
+    FileOpen $0 "$APPDATA\SketchUp\SketchUp 2014\SketchUp\Plugins\OpenStudio\OpenStudio-config.rb" w
     FileWrite $0 "require '$INSTDIR\Ruby\openstudio'$\n"
     FileClose $0
     su14skipped:
