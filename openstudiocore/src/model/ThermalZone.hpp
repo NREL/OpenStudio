@@ -213,8 +213,22 @@ class MODEL_API ThermalZone : public HVACComponent {
   /// returns all spaces in this thermal zone
   std::vector<Space> spaces() const;
 
-  /** Accumulates the floorArea of spaces. Does not include space multiplier. */
+  /** Accumulates the floorArea (m^2) of spaces. Does not include space multiplier. */
   double floorArea() const;
+
+  /** Accumulates the exterior surface area (m^2) of spaces. Does not include space
+   *  multiplier. */
+  double exteriorSurfaceArea() const;
+
+  /** Accumulates the exterior wall area (m^2) of spaces. Does not include space
+   *  multiplier. */
+  double exteriorWallArea() const;
+
+  // TODO: How should this interact with the volume field. If there is an interaction,
+  // how should Building calculate its airVolume and accumulate infiltration design
+  // flow rate?
+  /** Accumulates the air volume (m^3) of spaces. Does not include space multiplier. */
+  double airVolume() const;
 
   /** Returns the number of people in the thermal zone. Does not include space multiplier. Does include people multiplier. */
   double numberOfPeople() const;
@@ -267,10 +281,6 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in this thermal zone.
    *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
   double infiltrationDesignFlowPerExteriorWallArea() const;
-
-  /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in this thermal zone.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
-  double infiltrationDesignFlowPerSpaceFloorArea() const;
 
   /** Returns the infiltration design air changes per hour (1/h) in this thermal zone.
    *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */

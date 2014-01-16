@@ -140,7 +140,7 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
   double getDesignFlowRate(double floorArea,
                            double exteriorSurfaceArea,
                            double exteriorWallArea,
-                           double airVolume);
+                           double airVolume) const;
 
   /** Returns the design flow per space floor area (m^3/m^2*s) based on the
    *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
@@ -148,7 +148,7 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
   double getFlowPerSpaceFloorArea(double floorArea,
                                   double exteriorSurfaceArea,
                                   double exteriorWallArea,
-                                  double airVolume);
+                                  double airVolume) const;
 
   /** Returns the design flow per exterior surface area (m^3/m^2*s) based on the
    *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
@@ -156,7 +156,7 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
   double getFlowPerExteriorSurfaceArea(double floorArea,
                                        double exteriorSurfaceArea,
                                        double exteriorWallArea,
-                                       double airVolume);
+                                       double airVolume) const;
 
   /** Returns the design flow per exterior wall area (m^3/m^2*s) based on the
    *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
@@ -164,14 +164,14 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
   double getFlowPerExteriorWallArea(double floorArea,
                                     double exteriorSurfaceArea,
                                     double exteriorWallArea,
-                                    double airVolume);
+                                    double airVolume) const;
 
   /** Returns the design air changes per hour (1/h) based on the floorArea (m^2),
    *  exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and airVolume (m^3). */
   double getAirChangesPerHour(double floorArea,
                               double exteriorSurfaceArea,
                               double exteriorWallArea,
-                              double airVolume);
+                              double airVolume) const;
 
   //@}
  protected:

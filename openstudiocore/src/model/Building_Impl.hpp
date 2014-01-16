@@ -219,6 +219,24 @@ namespace detail {
     // get total conditioned floor area, requires sql file for now
     boost::optional<double> conditionedFloorArea() const;
 
+    // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+    // "not in floor area".
+    /** Returns the total exterior surface area (m^2). Includes space multipliers in
+     *  calculation. */
+    double exteriorSurfaceArea() const;
+
+    // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+    // "not in floor area".
+    /** Returns the total exterior wall area (m^2). Includes space multipliers in the
+     *  calculation. */
+    double exteriorWallArea() const;
+
+    // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+    // "not in floor area".
+    /** Returns the total air volume (m^3) in the building. Includes space multipliers
+     *  in the calculation. */
+    double airVolume() const;
+
     /** Returns the number of people in the building. */
     double numberOfPeople() const;
 
@@ -270,10 +288,6 @@ namespace detail {
     /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) of this building.
      *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
     double infiltrationDesignFlowPerExteriorWallArea() const;
-
-    /** Returns the infiltration design flow per space floor area (m^3/m^2*s) of this building.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
-    double infiltrationDesignFlowPerSpaceFloorArea() const;
 
     /** Returns the infiltration design air changes per hour (1/h) of this building.
      *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */

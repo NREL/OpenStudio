@@ -495,11 +495,6 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does not include space multiplier in calculation.
   double infiltrationDesignFlowPerExteriorWallArea() const;
 
-  /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in the space.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
-  /// Does not include space multiplier in calculation.
-  double infiltrationDesignFlowPerSpaceFloorArea() const;
-
   /** Returns the infiltration design air changes per hour (1/h) in the space.
    *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
   /// Does not include space multiplier in calculation.
