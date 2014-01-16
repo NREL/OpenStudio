@@ -126,6 +126,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.cpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WorkflowTools.cpp
+  ../shared_gui_components/WorkflowTools.hpp
 )
 
 ## ui files

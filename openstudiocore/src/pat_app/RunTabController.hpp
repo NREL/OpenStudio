@@ -73,6 +73,8 @@ class RunTabController : public QObject
 
     void refresh();
 
+    void onRadianceEnabledChanged(bool t_radianceEnabled);
+
   private:
 
     bool m_refreshScheduled;

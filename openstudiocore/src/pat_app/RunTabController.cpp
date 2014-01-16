@@ -63,6 +63,9 @@ RunTabController::RunTabController()
   bingo = connect(runView->runStatusView->playButton, SIGNAL(clicked()), this, SLOT(onPlayButtonClicked()));
   OS_ASSERT(bingo);
 
+  bingo = connect(runView->runStatusView, SIGNAL(radianceEnabledChanged(bool)), this, SLOT(onRadianceEnabledChanged(bool)));
+  OS_ASSERT(bingo);
+
   bingo = connect(runView->runStatusView->cloudOnButton,SIGNAL(clicked()),
                   PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
   OS_ASSERT(bingo);
@@ -140,6 +143,14 @@ RunTabController::RunTabController()
 RunTabController::~RunTabController()
 {
   if( runView ) { delete runView; }
+}
+
+void RunTabController::onRadianceEnabledChanged(bool t_radianceEnabled)
+{
+  if (t_radianceEnabled)
+  {
+
+  }
 }
 
 void RunTabController::onPlayButtonClicked()

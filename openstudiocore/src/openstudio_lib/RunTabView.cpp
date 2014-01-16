@@ -47,6 +47,8 @@
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/Assert.hpp>
 
+#include "../shared_gui_components/WorkflowTools.hpp"
+
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
@@ -69,11 +71,6 @@
 #include <QSysInfo>
 #include <QToolButton>
 #include <QVBoxLayout>
-
-#define ENERGYPLUS_TEXT "EnergyPlus"
-#define STD_RADIANCE_TEXT "Radiance"
-#define WARNING_RADIANCE_TEXT "Radiance"
-#define ERROR_RADIANCE_TEXT "Radiance"
 
 namespace openstudio {
 
@@ -144,10 +141,10 @@ RunView::RunView(const model::Model & model,
 
   int buttonCount = 0;
 
-  m_energyPlusButton = new QRadioButton(ENERGYPLUS_TEXT);
+  m_energyPlusButton = new QRadioButton("EnergyPlus");
   m_radianceGroup->addButton(m_energyPlusButton,buttonCount++);
 
-  m_radianceButton = new QRadioButton(STD_RADIANCE_TEXT);
+  m_radianceButton = new QRadioButton("Radiance");
   m_radianceGroup->addButton(m_radianceButton,buttonCount++);
 
 
@@ -233,99 +230,12 @@ RunView::RunView(const model::Model & model,
   updateRunManagerStats(t_runManager);
 }
 
+
 void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
                                                  std::vector<std::string> & errors)
 {
-  warnings.clear();
-  errors.clear();
-
-  openstudio::runmanager::ConfigOptions co(true);
-  runManager().setConfigOptions(co);
-  bool ruby_not_installed = co.getTools().getAllByName("ruby").tools().size() == 0;
-  bool radiance_not_installed = co.getTools().getAllByName("rtrace").tools().size() == 0;
-  
-  if(radiance_not_installed){
-    errors.push_back("Radiance is required, but not installed.");
-  }
-
-  if(ruby_not_installed){
-    errors.push_back("Ruby is required, but not installed.");
-  }
-  
-  // TODO remove when fixed
-  #if defined(Q_OS_WIN)
-  if(QSysInfo::windowsVersion() == QSysInfo::WV_XP){
-    errors.push_back("OpenStudio is currently unable to run Radiance on XP operating systems.");
-  }
-  #endif
-
-  // ThermalZone
-  std::vector<model::ThermalZone> thermalZones = m_model.getModelObjects<model::ThermalZone>();
-  if(thermalZones.size() > 0){
-    //BOOST_FOREACH(model::ThermalZone thermalZone, thermalZones){
-    //  std::vector<model::Space> spaces = thermalZone.spaces();
-    //  if(spaces.size() > 0){
-    //  }
-    //  boost::optional<model::IlluminanceMap> illuminanceMap = thermalZone.illuminanceMap();
-    //  if(illuminanceMap){
-    //  }
-    //  boost::optional<model::DaylightingControl> primaryDaylightingControl = thermalZone.primaryDaylightingControl();
-    //  if(primaryDaylightingControl){
-    //  }
-    //}
-  }
-  else{
-    errors.push_back("The OpenStudio model has no ThermalZone objects.");
-  }
-
-  // Space
-  std::vector<model::Space> spaces = m_model.getModelObjects<model::Space>();
-  if(spaces.size() == 0){
-    errors.push_back("The OpenStudio model has no Space objects.");
-  }
-
-  // IlluminanceMap
-  std::vector<model::IlluminanceMap> illuminanceMaps = m_model.getModelObjects<model::IlluminanceMap>();
-  if(illuminanceMaps.size() > 0){
-    BOOST_FOREACH(model::IlluminanceMap illuminanceMap, illuminanceMaps){
-      boost::optional<model::Space> space = illuminanceMap.space();
-      if(!space){
-        errors.push_back("An OpenStudio model IlluminanceMap object is not assigned to a Space object.");
-        break;
-      }
-      else{
-        //boost::optional<model::ThermalZone> thermalZone = space->thermalZone();
-        //std::vector<model::DaylightingControl> daylightingControls = space->daylightingControls();
-        //std::vector<model::IlluminanceMap> illuminanceMaps = space->illuminanceMaps();
-        //std::vector<model::GlareSensor> glareSensors = space->glareSensors();
-      }
-    }
-  }
-  else{
-    errors.push_back("The OpenStudio model has no IlluminanceMap objects.");
-  }
-
-  // DaylightingControl
-  std::vector<model::DaylightingControl> daylightingControls = m_model.getModelObjects<model::DaylightingControl>();
-  if(daylightingControls.size() > 0){
-    BOOST_FOREACH(model::DaylightingControl daylightingControl, daylightingControls){
-      boost::optional<model::Space> space = daylightingControl.space();
-      if(!space){
-        errors.push_back("An OpenStudio model DaylightingControl object is not assigned to a Space object.");
-        break;
-      }
-    }
-  }
-  else{
-    errors.push_back("The OpenStudio model has no DaylightingControl objects.");
-  }
-
-  // GlareSensor
-  std::vector<model::GlareSensor> glareSensors = m_model.getModelObjects<model::GlareSensor>();
-  if(glareSensors.size() == 0){
-    warnings.push_back("The OpenStudio model has no GlareSensor objects.");
-  }
-
+  openstudio::runmanager::RunManager rm = runManager();
+  openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, rm, m_model);
 }
 
 void RunView::locateEnergyPlus()
