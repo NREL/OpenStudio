@@ -135,6 +135,8 @@ class MODEL_API Building : public ParentObject {
   /// Returns the parent Facility object if it exists.
   boost::optional<Facility> facility() const;
 
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
   /// Returns all of the \link Space Spaces\endlink in the Building.
   std::vector<Space> spaces() const;
 
@@ -154,6 +156,8 @@ class MODEL_API Building : public ParentObject {
   /// Constructs a new object if necessary.
   BuildingStandardsInformation standardsInformation() const;
 
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
   /// Returns the total floor area in square meters.  
   /// Includes only spaces marked as included in floor area.
   /// Includes space multipliers in calculation.
@@ -165,6 +169,26 @@ class MODEL_API Building : public ParentObject {
   /// Attribute name: conditionedFloorArea
   boost::optional<double> conditionedFloorArea() const;
 
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
+  /** Returns the total exterior surface area (m^2). Includes space multipliers in
+   *  calculation. */
+  double exteriorSurfaceArea() const;
+
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
+  /** Returns the total exterior wall area (m^2). Includes space multipliers in the
+   *  calculation. */
+  double exteriorWallArea() const;
+
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
+  /** Returns the total air volume (m^3) in the building. Includes space multipliers
+   *  in the calculation. */
+  double airVolume() const;
+
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area". (Etc. for the rest of the getters like this.)
   /** Returns the number of people in the building. */
   double numberOfPeople() const;
 
@@ -200,6 +224,26 @@ class MODEL_API Building : public ParentObject {
 
   /** Returns the gas equipment power per person (W/person) of this building. */
   double gasEquipmentPowerPerPerson() const;
+
+  /** Returns the infiltration design flow rate (m^3/s) of this building. Ignores
+   *  SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowRate() const;
+
+  /** Returns the infiltration design flow per space floor area (m^3/m^2*s) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowPerSpaceFloorArea() const;
+
+  /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowPerExteriorSurfaceArea() const;
+
+  /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowPerExteriorWallArea() const;
+
+  /** Returns the infiltration design air changes per hour (1/h) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignAirChangesPerHour() const;
 
   /// Returns the number of stories in this Building if set in the child BuildingStandardsInformation
   /// object.  This value is not inferred from Building geometry. 
