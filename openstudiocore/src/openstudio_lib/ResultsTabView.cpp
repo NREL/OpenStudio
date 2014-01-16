@@ -191,7 +191,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
       radout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "report.html") {
       reports.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "eplusout.html") {
+    } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
       reports.push_back(p);
     }
   }
@@ -240,7 +240,7 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
           reports.push_back(file.fullPath);
         }
-        f = j.treeAllFiles().getAllByFilename("eplusout.html");
+        f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
         t_files = f.files();
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
           reports.push_back(file.fullPath);
@@ -269,22 +269,26 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 
   m_comboBox->clear();
   Q_FOREACH(openstudio::path report, reports){
-    fullPathString = toQString(report.string());
-    QFile file(fullPathString);
-    fullPathString.prepend("file:///");
-    if (file.open(QFile::ReadOnly)){
-      QDomDocument doc;
-      doc.setContent(&file);
-      file.close();
-      QString string = doc.toString();
-      int startingIndex = string.indexOf("<title>");
-      int endingIndex = string.indexOf("</title>");
-      if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
-        m_comboBox->addItem(num.setNum(m_comboBox->count() + 1),fullPathString);
-      } else {
-        // length of "<title>" = 7
-        QString title = string.mid(startingIndex+7, endingIndex-startingIndex-7);
-        m_comboBox->addItem(title,fullPathString);
+    if (openstudio::toString(report.filename()) == "eplustbl.htm"){
+      m_comboBox->addItem("EnergyPlus Results",fullPathString);
+    }else{
+      fullPathString = toQString(report.string());
+      QFile file(fullPathString);
+      fullPathString.prepend("file:///");
+      if (file.open(QFile::ReadOnly)){
+        QDomDocument doc;
+        doc.setContent(&file);
+        file.close();
+        QString string = doc.toString();
+        int startingIndex = string.indexOf("<title>");
+        int endingIndex = string.indexOf("</title>");
+        if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
+          m_comboBox->addItem(num.setNum(m_comboBox->count() + 1),fullPathString);
+        } else {
+          // length of "<title>" = 7
+          QString title = string.mid(startingIndex+7, endingIndex-startingIndex-7);
+          m_comboBox->addItem(title,fullPathString);
+        }
       }
     }
   }

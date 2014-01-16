@@ -490,7 +490,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
       openstudio::path p = *dir;
       if (openstudio::toString(p.filename()) == "report.html") {
         reports.push_back(p);
-      } else if (openstudio::toString(p.filename()) == "eplusout.html") {
+      } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
         reports.push_back(p);
       }
     }
@@ -500,34 +500,42 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
   if (!reports.empty()){
     unsigned num = 0;
     Q_FOREACH(openstudio::path report, reports){
-      num += 1;
+
       QString fullPathString = toQString(report.string());
-      QFile file(fullPathString);
-      fullPathString.prepend("file:///");
-      if (file.open(QFile::ReadOnly)){
-        QDomDocument doc;
-        doc.setContent(&file);
-        file.close();
-        QString string = doc.toString();
-        int startingIndex = string.indexOf("<title>");
-        int endingIndex = string.indexOf("</title>");
+      QString name;
 
-        QString name;
-        if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
-          name = toQString("Report ") + QString::number(num);
-        } else {
-          // length of "<title>" = 7
-          name = string.mid(startingIndex+7, endingIndex-startingIndex-7);
+      if (openstudio::toString(report.filename()) == "eplustbl.htm"){
+
+        name = "EnergyPlus Results";
+
+      }else{
+
+        num += 1;
+        
+        QFile file(fullPathString);
+        fullPathString.prepend("file:///");
+        if (file.open(QFile::ReadOnly)){
+          QDomDocument doc;
+          doc.setContent(&file);
+          file.close();
+          QString string = doc.toString();
+          int startingIndex = string.indexOf("<title>");
+          int endingIndex = string.indexOf("</title>");
+          if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
+            name = toQString("Custom Report ") + QString::number(num);
+          } else {
+            // length of "<title>" = 7
+            name = string.mid(startingIndex+7, endingIndex-startingIndex-7);
+          }
         }
-
-        QAction* openAct = new QAction(name, &menu);
-        openAct->setToolTip(fullPathString);
-        openAct->setData(fullPathString);
-        bool test = connect(openAct, SIGNAL(triggered()), this, SLOT(openReport()));
-        OS_ASSERT(test);
-
-        menu.addAction(openAct);
       }
+
+      QAction* openAct = new QAction(name, &menu);
+      openAct->setToolTip(fullPathString);
+      openAct->setData(fullPathString);
+      bool test = connect(openAct, SIGNAL(triggered()), this, SLOT(openReport()));
+      OS_ASSERT(test);
+      menu.addAction(openAct);
     }
   }else{
     labelAction = new QAction("None available", &menu);

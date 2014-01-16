@@ -186,7 +186,7 @@ StartupView::StartupView(QWidget *parent) :
   // Create Reports
 
   QString reportDescription;
-  reportDescription.append("Compare results from Design Alternatives.  Currently only one report is available.  ");
+  reportDescription.append("Compare results from Design Alternatives.  Currently standard and calibration reports are available.  ");
   reportDescription.append("More reports are being developed.");
   QLabel * reportImageLabel = new QLabel();
   reportImageLabel->setFixedSize(54,65);
