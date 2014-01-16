@@ -659,10 +659,13 @@ namespace detail {
       return;
     }
     
-    openstudio::path outpath = outdir();
-    boost::filesystem::create_directories(outpath);
-    openstudio::path stdoutpath = outpath / toPath("stdout");
-    //std::ofstream ofs(toString(stdoutpath).c_str(), std::ios_base::out | std::ios_base::trunc);
+    {
+      openstudio::path outpath = outdir();
+      boost::filesystem::create_directories(outpath);
+      openstudio::path stdoutpath = outpath / toPath("stdout");
+      // this ofstream exists to handle a corner case timing issue, to ensure that stdout is created no matter what
+      std::ofstream(toString(stdoutpath).c_str(), std::ios_base::out | std::ios_base::trunc);
+    }
 
     QWriteLocker l(&m_mutex);
     m_currentToolIndex=0;
