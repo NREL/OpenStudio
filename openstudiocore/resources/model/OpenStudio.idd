@@ -6307,13 +6307,13 @@ OS:Refrigeration:GasCooler:AirCooled,
         \note Temperature difference between the CO2 exiting the gas cooler and the air entering the
         \note gas cooler during transcritical operation.
         \type real
-        \units DeltaC
+        \units deltaC
         \default 3.0
   N5,   \field Subcritical Temperature Difference
         \note Temperature difference between the saturated condensing temperature and the air
         \note temperature during subcritical operation.
         \type real
-        \units DeltaC
+        \units deltaC
         \default 10.0
   N6,   \field Minimum Condensing Temperature
         \note Minimum saturated condensing temperature during subcritical operation.

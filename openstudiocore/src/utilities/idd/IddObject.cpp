@@ -253,12 +253,7 @@ namespace detail {
   }
 
   boost::optional<unsigned> IddObject_Impl::nameFieldIndex() const {
-    if (!m_nameFieldCache) {
-      hasNameField();
-    }
-    OS_ASSERT(m_nameFieldCache);
-
-    if (m_nameFieldCache->first) {
+    if (hasNameField()) {
       return m_nameFieldCache->second;
     }
     return boost::none;

@@ -175,19 +175,20 @@ namespace detail {
 
   boost::optional<std::string> IdfObject_Impl::name(bool returnDefault) const
   {
-    OptionalString result;
     if (OptionalUnsigned oi = m_iddObject.nameFieldIndex()) {
       unsigned index = *oi;
-      if (m_fields.size() > index) {
-        result = m_fields[index];
-      }
-      if (returnDefault && result->empty()) {
+      bool validIndex = m_fields.size() > index;
+      if (returnDefault && validIndex && m_fields[index].empty()) {
         if (OptionalString stringDefault = m_iddObject.nonextensibleFields()[index].properties().stringDefault) {
           return stringDefault;
         }
+        return m_fields[index];
+      }
+      else if (validIndex) {
+        return m_fields[index];
       }
     }
-    return result;
+    return boost::none;
   }
 
   std::string IdfObject_Impl::briefDescription() const {

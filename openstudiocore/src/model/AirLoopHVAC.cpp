@@ -265,7 +265,6 @@ namespace detail {
 
   OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC_Impl::airLoopHVACOutdoorAirSystem()
   {
-    OptionalAirLoopHVACOutdoorAirSystem result;
     ModelObjectVector modelObjects;
     modelObjects = supplyComponents( this->supplyInletNode(),
                                      this->supplyOutletNodes().front(),
@@ -275,11 +274,11 @@ namespace detail {
       if( OptionalAirLoopHVACOutdoorAirSystem oaSystem
           = modelObjects.front().optionalCast<AirLoopHVACOutdoorAirSystem>() )
       {
-        result = oaSystem;
+        return oaSystem;
       }
     }
 
-    return result;
+    return boost::none;
   }
 
   bool AirLoopHVAC_Impl::addBranchForZone(ThermalZone & thermalZone, OptionalStraightComponent optAirTerminal)
@@ -342,7 +341,7 @@ namespace detail {
           terminal = lastAirTerminal->clone(_model).cast<HVACComponent>();
           plant = plantForAirTerminal(lastAirTerminal.get());
           //  setPlantForAirTerminal(lastAirTerminalClone,plantLoop.get());
-          // lastAirTerminal->remove();
+          lastAirTerminal->remove();
         }
 
       boost::optional<ModelObject> mo = _zoneSplitter.outletModelObject(0);
