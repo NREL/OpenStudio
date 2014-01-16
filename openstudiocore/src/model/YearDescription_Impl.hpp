@@ -115,6 +115,9 @@ namespace detail {
 
    protected:
    private:
+
+    void updateModelLeapYear(bool wasLeapYear, bool isLeapYear);
+
     REGISTER_LOGGER("openstudio.model.YearDescription");
   };
 
