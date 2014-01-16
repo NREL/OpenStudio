@@ -44,7 +44,7 @@ def show_output(result)
 
   if os_version >= min_version_registerValue
     puts "***Machine-Readable Attributes**"
-    puts OpenStudio::toJSON(result.attributes)
+    puts OpenStudio::toJSON(result.attributes) if not result.attributes.empty?
   end
 
   puts "" #space between measures for readability in output
