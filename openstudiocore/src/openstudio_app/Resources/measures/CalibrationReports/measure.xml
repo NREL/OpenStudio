@@ -1,7 +1,7 @@
 <measure>
   <name>Calibration Reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>8087c388-cd66-48ed-8280-fd6eeb30c2c9</version_id>
+  <version_id>e39c1479-5cc7-4c57-8abc-f40c432dbde5</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -22,16 +22,22 @@
   </attributes>
   <files>
     <file>
-      <filename>ExampleModel.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>396AF667</checksum>
-    </file>
-    <file>
       <filename>CalibrationReports_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>56A6FA5A</checksum>
+      <checksum>DB3AF2D5</checksum>
+    </file>
+    <file>
+      <filename>report.html.in</filename>
+      <filetype>in</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C40272C0</checksum>
+    </file>
+    <file>
+      <filename>report.html</filename>
+      <filetype>html</filetype>
+      <usage_type>test</usage_type>
+      <checksum>1C100950</checksum>
     </file>
     <file>
       <version>
@@ -41,19 +47,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>7A4BE629</checksum>
+      <checksum>FDB7B975</checksum>
     </file>
     <file>
-      <filename>report.html.in</filename>
-      <filetype>in</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>F2A860F8</checksum>
-    </file>
-    <file>
-      <filename>report.html</filename>
-      <filetype>html</filetype>
+      <filename>ExampleModel.osm</filename>
+      <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>FD19ECBA</checksum>
+      <checksum>396AF667</checksum>
     </file>
   </files>
 </measure>

@@ -249,6 +249,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void ScheduleFixedInterval_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_Schedule_FixedIntervalFields::StartMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_Schedule_FixedIntervalFields::StartDay);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_Schedule_FixedIntervalFields::StartDay, 28);
+      }
+    }
+  }
+
+
 } // detail
 
 ScheduleFixedInterval::ScheduleFixedInterval(const Model& model)

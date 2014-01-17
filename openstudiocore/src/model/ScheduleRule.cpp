@@ -408,6 +408,40 @@ namespace detail {
     return true;
   }
 
+  void ScheduleRule_Impl::ensureNoLeapDays(){
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_Schedule_RuleFields::StartMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_Schedule_RuleFields::StartDay);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_Schedule_RuleFields::StartDay, 28);
+      }
+    }
+
+    month = getInt(OS_Schedule_RuleFields::EndMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_Schedule_RuleFields::EndDay);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_Schedule_RuleFields::EndDay, 28);
+      }
+    }
+
+    BOOST_FOREACH(IdfExtensibleGroup group, this->extensibleGroups()){
+      boost::optional<int> month;
+      boost::optional<int> day;
+
+      month = group.getInt(OS_Schedule_RuleExtensibleFields::SpecificMonth);
+      if (month && (month.get() == 2)){
+        day = group.getInt(OS_Schedule_RuleExtensibleFields::SpecificDay);
+        if (day && (day.get() == 29)){
+          this->setInt(OS_Schedule_RuleExtensibleFields::SpecificDay, 28);
+        }
+      }
+    }
+
+  }
 
   bool ScheduleRule_Impl::containsDate(const openstudio::Date& date) {
     bool result = false;
@@ -714,6 +748,9 @@ bool ScheduleRule::addSpecificDate(const openstudio::Date& date) {
   return getImpl<detail::ScheduleRule_Impl>()->addSpecificDate(date);
 }
 
+void ScheduleRule::ensureNoLeapDays(){
+  return getImpl<detail::ScheduleRule_Impl>()->ensureNoLeapDays();
+}
 
 bool ScheduleRule::containsDate(const openstudio::Date& date) {
   return getImpl<detail::ScheduleRule_Impl>()->containsDate(date);

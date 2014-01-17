@@ -63,6 +63,11 @@ namespace detail {
     return WeatherFileConditionType::iddObjectType();
   }
 
+  void WeatherFileConditionType_Impl::ensureNoLeapDays()
+  {
+    // nothing to do
+  }
+
 } // detail
 
 /// constructor

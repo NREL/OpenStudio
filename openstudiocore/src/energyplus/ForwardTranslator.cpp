@@ -82,6 +82,7 @@ ForwardTranslator::ForwardTranslator()
 
   // temp code 
   m_keepRunControlSpecialDays = false;
+  m_ipTabularOutput = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -139,6 +140,10 @@ void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialD
   m_keepRunControlSpecialDays = keepRunControlSpecialDays;
 }
 
+void ForwardTranslator::setIPTabularOutput(bool isIP)
+{
+  m_ipTabularOutput = isIP;
+}
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
 {
@@ -225,6 +230,19 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   if (fullModelTranslation){
 
+    // translate life cycle cost parameters
+    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
+    if (!lifeCycleCostParameters){
+      // only warn if costs are present
+      if (!model.getModelObjects<LifeCycleCost>().empty()){
+        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
+      }
+      
+      // always add this object so E+ results section exists
+      lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
+    }
+    translateAndMapModelObject(*lifeCycleCostParameters);
+
     // ensure that building exists
     boost::optional<model::Building> building = model.building();
     if (!building){
@@ -267,19 +285,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
     m_idfObjects.push_back(globalGeometryRules);
-
-    // translate life cycle cost parameters
-    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
-    if (!lifeCycleCostParameters){
-      // only warn if costs are present
-      if (!model.getModelObjects<LifeCycleCost>().empty()){
-        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
-      }
-      
-      // always add this object so E+ results section exists
-      lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
-    }
-    translateAndMapModelObject(*lifeCycleCostParameters);
   
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
@@ -2294,6 +2299,10 @@ void ForwardTranslator::createStandardOutputRequests()
   IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
   m_idfObjects.push_back(tableStyle);
   tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator,"HTML");
+  if( m_ipTabularOutput )
+  {
+    tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion,"InchPound");
+  }
 
   IdfObject outputTableSummaryReport(IddObjectType::Output_Table_SummaryReports);
   IdfExtensibleGroup eg = outputTableSummaryReport.pushExtensibleGroup();

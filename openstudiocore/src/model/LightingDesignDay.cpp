@@ -128,8 +128,8 @@ namespace detail {
 
     BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
-      OptionalInt hour = group.getInt(0, true);
-      OptionalInt minute = group.getInt(1, true);
+      OptionalInt hour = group.getInt(OS_LightingDesignDayExtensibleFields::HourtoSimulate, true);
+      OptionalInt minute = group.getInt(OS_LightingDesignDayExtensibleFields::MinutetoSimulate, true);
       OS_ASSERT(hour);
       OS_ASSERT(minute);
       result.push_back(Time(0, *hour, *minute));
@@ -145,8 +145,8 @@ namespace detail {
 
     BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
-      OptionalInt hour = group.getInt(0, true);
-      OptionalInt minute = group.getInt(1, true);
+      OptionalInt hour = group.getInt(OS_LightingDesignDayExtensibleFields::HourtoSimulate, true);
+      OptionalInt minute = group.getInt(OS_LightingDesignDayExtensibleFields::MinutetoSimulate, true);
       OS_ASSERT(hour);
       OS_ASSERT(minute);
       result.push_back(DateTime(date, Time(0, *hour, *minute)));
@@ -180,6 +180,20 @@ namespace detail {
   void LightingDesignDay_Impl::clearSimulationTimes()
   {
     clearExtensibleGroups();
+  }
+
+  void LightingDesignDay_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_LightingDesignDayFields::Month);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_LightingDesignDayFields::DayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_LightingDesignDayFields::DayofMonth, 28);
+      }
+    }
   }
 
 } // detail
@@ -254,6 +268,11 @@ bool LightingDesignDay::addSimulationTime(const openstudio::Time& time)
 void LightingDesignDay::clearSimulationTimes()
 {
   return getImpl<detail::LightingDesignDay_Impl>()->clearSimulationTimes();
+}
+
+void LightingDesignDay::ensureNoLeapDays()
+{
+  getImpl<detail::LightingDesignDay_Impl>()->ensureNoLeapDays();
 }
 
 /// @cond

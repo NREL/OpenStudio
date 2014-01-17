@@ -79,6 +79,9 @@ class MODEL_API RunPeriod : public ParentObject {
   void setUseWeatherFileSnowInd(bool snowInd);
   void setNumTimePeriodRepeats(int numRepeats);
 
+  // ensure that this object does not contain the date 2/29
+  void ensureNoLeapDays();
+
   //@}
 
   /// Returns the IddObjectType.
