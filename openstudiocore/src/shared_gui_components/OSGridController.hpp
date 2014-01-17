@@ -20,11 +20,16 @@
 #ifndef OPENSTUDIO_OSGRIDCONTROLLER_H
 #define OPENSTUDIO_OSGRIDCONTROLLER_H
 
-#include <openstudio_lib/OSItem.hpp>
+#include <openstudio_lib/OSDropZone.hpp>
 
-#include "../shared_gui_components/OSListController.hpp"
 #include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include <shared_gui_components/OSCheckBox.hpp>
 #include <shared_gui_components/OSComboBox.hpp>
+#include <shared_gui_components/OSDoubleEdit.hpp>
+#include <shared_gui_components/OSIntegerEdit.hpp>
+#include <shared_gui_components/OSLineEdit.hpp>
+#include <shared_gui_components/OSQuantityEdit.hpp>
+#include <shared_gui_components/OSUnsignedEdit.hpp>
 
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
@@ -62,20 +67,36 @@ class OSGridController : public QObject
 
   private:
 
-  //std::vector<> m_comboColumns;
+  enum ColumnType
+  {
+    CHECKBOX,
+    COMBOBOX,
+    DOUBLE,
+    DROPZONE,
+    INTEGER,
+    LINEEDIT,
+    QUANTITY,
+    UNSIGNED,
+    NOTVALID
+  };
 
-  bool addDoubleColumn(QString property);
+  std::vector<ColumnType> m_columnTypes;
 
-  bool addIntegerColumn(std::string property);
+  bool addCheckBoxColumn(std::string property);  
+  
+  bool addComboBoxColumn(std::string property); 
+  
+  bool addDoubleEditColumn(QString property);
+
+  bool addDropZoneColumn(QString property);
+
+  bool addIntegerEditColumn(std::string property);
 
   bool addLineEditColumn(std::string property);
 
-  bool addCheckBoxColumn(std::string property);
+  bool addQuantityEditColumn(std::string property);
 
-  bool addUnsignedColumn(std::string property);
-
-  // Maybe
-  bool addColumn(QString title, QSharedPointer<OSListController> columnController, QSharedPointer<OSItemDelegate> columnDelegate);
+  bool addUnsignedEditColumn(std::string property);
 
   void setVerticalHeader(bool visible, QString title);
 
@@ -83,15 +104,13 @@ class OSGridController : public QObject
 
   void setHorizontalHeader(std::vector<QString> names);
 
+  QSharedPointer<QWidget> OSGridController::widgetAt(int i, int j);
+
   virtual int rowCount() const;
 
   virtual int columnCount() const;
 
-  //virtual QWidget * widgetAt(int i, int j);
-
-  virtual QSharedPointer<OSListItem> OSGridController::itemAt(int i, int j);
-
-  //virtual std::vector<QWidget> row(int i);
+  virtual std::vector<QWidget> row(int i);
 
   model::Model m_model;
 
@@ -100,7 +119,6 @@ class OSGridController : public QObject
   signals:
 
   // These signals will be used by the GridView to update
-  // An update will involve calls to itemAt() and maybe rowCount and columnCount()
 
   // Emit this signal when an item has been added to the underlying model or data structure.
   void itemInserted(int row, int column); 
@@ -115,31 +133,6 @@ class OSGridController : public QObject
   // Nuclear reset of everything
   void modelReset();
 };
-
-class OSGridItemDelegate : public OSItemDelegate
-{
-  OSGridItemDelegate();
-
-  virtual ~OSGridItemDelegate() {}
-
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
-};
-
-class OSListComboItem : public OSItem
-{
-  //OSListComboItem(model::ModelObject,ChoicesGetter,StringSetter,StringGetter);
-
-  //virtual ~OSListComboItem() {}
-
-  //model::ModelObject modelObject();
-
-  //ChoicesGetter choices();
-
-  //StringSetter setter();
-
-  //StringGetter getter();
-};
-
 
 } // openstudio
 

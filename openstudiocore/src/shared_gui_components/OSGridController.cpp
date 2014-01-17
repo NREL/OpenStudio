@@ -24,7 +24,7 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <algorithm>
+//#include <algorithm>
 
 #include <QWidget>
 
@@ -46,67 +46,32 @@ OSGridController::~OSGridController()
 {
 }
 
-QSharedPointer<OSListItem> OSGridController::itemAt(int i, int j)
+QSharedPointer<QWidget> OSGridController::widgetAt(int i, int j)
 {
-  QSharedPointer<OSListItem> result;
+  QSharedPointer<QWidget> result;
 
+  result = QSharedPointer<QWidget>(new QLabel());
+  
   //std::vector<model::ModelObject> modelObjects = m_model.getModelObjectsByType(m_iddObjectType).sortSomewayortheother(); TODO
   //std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<m_iddObjectType>();
 
   //model::ModelObject mo = modelObjects[i];
 
-  //if( m_columnType[j] == COMBO )
-  //{
-  //  result = QSharedPointer<OSListComboItem>(new OSListComboItem(mo,.....));
-  //}
-  //else if( m_columnType[j] == DOUBLE )
-  //{
-  //}
+  if( m_columnTypes.at(j) == OSGridController::COMBOBOX )
+  {
+  }
 
   return result;
 }
 
 int OSGridController::rowCount() const
 {
-  return 0; // TODO
+  return 5; // TODO
 }
    
 int OSGridController::columnCount() const
 {
-  return 0; // TODO
-}
-
-
-
-QWidget * OSGridItemDelegate::view(QSharedPointer<OSListItem> dataSource)
-{
-  QWidget * result = NULL;
-
-  //if(QSharedPointer<OSListComboItem> comboItem = dataSource.objectCast<OSListComboItem>())
-  //{
-  //  OSComboBox2 * comboBox = new OSComboBox2();
-
-    //comboBox.bind(comboItem->modelObject(),
-    //              comboItem->choices(),
-    //              comboItem->getter(),
-    //              comboItem->setter());
-
-    //result = comboBox;
-
-    // void bind(model::ModelObject& modelObject,
-    //           ChoicesGetter choices,
-    //           StringGetter get,
-    //           boost::optional<StringSetter> set=boost::none,
-    //           boost::optional<NoFailAction> reset=boost::none,
-    //           boost::optional<BasicQuery> isDefaulted=boost::none);
-
-    // some bind/connection between combobox and comboItem
- // }
-  //else if(QSharedPointer<OSDoubleItem> doubleItem  .... )
-  //{
-  //}
-
-  return result;
+  return 5; // TODO
 }
 
 } // openstudio
