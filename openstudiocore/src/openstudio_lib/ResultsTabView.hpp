@@ -32,7 +32,6 @@
 
 class QComboBox;
 class QPushButton;
-class QWebView;
 
 namespace openstudio {
 
@@ -44,7 +43,7 @@ namespace openstudio {
 
     public:
       ResultsView(QWidget *t_parent = 0);
-      virtual ~ResultsView() {}
+      virtual ~ResultsView();
       void searchForExistingResults(const openstudio::path &t_runDir);
 
     public slots:
