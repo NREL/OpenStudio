@@ -417,8 +417,8 @@ namespace gbxml {
     QString zoneId = element.attribute("zoneIdRef");
     boost::optional<WorkspaceObject> zone = model.getObjectByTypeAndName(openstudio::model::ThermalZone::iddObjectType(), escapeName(zoneId));
     if (zone){
-      if (zone->optionalCast<openstudio::model::ThermalZone>()){
-        space.setThermalZone(zone->cast<openstudio::model::ThermalZone>());
+      if (boost::optional<openstudio::model::ThermalZone> thermalZone = zone->optionalCast<openstudio::model::ThermalZone>()){
+        space.setThermalZone(thermalZone.get());
       }
     }
 
