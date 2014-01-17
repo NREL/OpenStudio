@@ -48,8 +48,6 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     
     open_path = runner.getStringArgumentValue("open_path",user_arguments)
 
-    require 'openstudio'
-
     puts ""
     puts ">>import start"
 
