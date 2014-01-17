@@ -361,6 +361,7 @@ namespace detail {
     IddObjectTypeMap::const_iterator loc = m_iddObjectTypeMap.find(objectType);
     if (loc == m_iddObjectTypeMap.end()) { return WorkspaceObjectVector(); }
     std::vector<WorkspaceObject> result;
+    result.reserve(loc->second.size());
     for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
       result.push_back( it->second );
     }
@@ -368,7 +369,13 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByType(const IddObject& objectType) const {
-    return getObjectsByType(objectType.type());
+    WorkspaceObjectVector result;
+    BOOST_FOREACH(const WorkspaceObject& object,objects()) {
+      if (object.iddObject() == objectType) {
+        result.push_back(object);
+      }
+    }
+    return result;
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObjectByTypeAndName(
@@ -421,7 +428,7 @@ namespace detail {
         }
       }
     }
-    return getObjects(hv); // convert set to vector, then getObjects
+    return getObjects(hv);
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(
