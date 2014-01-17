@@ -172,6 +172,21 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForHVACComponent)
   EXPECT_TRUE(result);
 }
 
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForPlenums)
+{
+  model::Model model = openstudio::model::Model();
+
+  model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
+
+  model::AirLoopHVACSupplyPlenum supplyPlenum(model);
+
+  model::AirLoopHVACReturnPlenum returnPlenum(model);
+
+  bool result = airLoopHVAC.addBranchForPlenums(supplyPlenum,returnPlenum);
+
+  EXPECT_TRUE(result);
+}
+
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 {
   openstudio::model::Model model = openstudio::model::Model();
