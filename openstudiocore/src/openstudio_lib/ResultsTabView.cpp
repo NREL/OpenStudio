@@ -130,6 +130,12 @@ ResultsView::ResultsView(QWidget *t_parent)
 
 }
 
+ResultsView::~ResultsView()
+{
+  delete m_view;
+  QWebSettings::clearMemoryCaches();
+}
+
 void ResultsView::openResultsViewerClicked()
 {
   LOG(Debug, "openResultsViewerClicked");

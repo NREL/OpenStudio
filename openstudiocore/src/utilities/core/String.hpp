@@ -54,6 +54,9 @@ namespace openstudio {
   /** Double to std::string at full precision. */
   UTILITIES_API std::string toString(double v);
 
+  /** Load data in istream into string. */
+  UTILITIES_API std::string toString(std::istream& s);
+
   /** QString to wstring. */
   UTILITIES_API std::wstring toWString(const QString& q);
 

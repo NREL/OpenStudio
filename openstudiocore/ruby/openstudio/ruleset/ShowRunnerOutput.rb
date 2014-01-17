@@ -39,6 +39,14 @@ def show_output(result)
     puts "#{info_msg.logMessage}"
   end
 
+  os_version = OpenStudio::VersionString.new(OpenStudio::openStudioVersion())
+  min_version_registerValue = OpenStudio::VersionString.new("1.2.2")
+
+  if os_version >= min_version_registerValue
+    puts "***Machine-Readable Attributes**"
+    puts OpenStudio::toJSON(result.attributes) if not result.attributes.empty?
+  end
+
   puts "" #space between measures for readability in output
   puts ""
   
