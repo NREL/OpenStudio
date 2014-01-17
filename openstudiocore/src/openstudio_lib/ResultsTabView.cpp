@@ -49,7 +49,6 @@
 #include <QStyleOption>
 #include <QTableWidget>
 #include <QTimer>
-#include <QWebInspector>
 #include <QWebView>
 
 #include <iostream>

@@ -37,8 +37,8 @@ OSGridController::OSGridController()
 
 OSGridController::OSGridController(IddObjectType iddObjectType, model::Model model)
   : QObject(),
-  m_iddObjectType(iddObjectType),
-  m_model(model)
+  m_model(model),
+  m_iddObjectType(iddObjectType)
 {
 }
 

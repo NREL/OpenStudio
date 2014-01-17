@@ -43,6 +43,62 @@ class QWidget;
 
 namespace openstudio {
 
+// TODO Move these ComboBoxConcept classes to another file.
+class ComboBoxConcept
+{
+  public:
+
+  virtual std::vector<std::string> choices(const model::ModelObject & obj) = 0;
+  virtual std::string get(const model::ModelObject & obj) = 0;
+  virtual bool set(const model::ModelObject & obj, std::string) = 0;
+}; 
+
+template<typename DataSourceType>
+class ComboBoxConceptImpl : public ComboBoxConcept
+{
+  public:
+
+  ComboBoxConceptImpl(QString t_headingLabel, 
+    boost::function<std::vector<std::string> (const DataSourceType &)> t_choices, 
+    boost::function<std::string (const DataSourceType &)>  t_getter, 
+    boost::function<bool (const DataSourceType &, std::string)> t_setter)
+
+    : m_headingLabel(t_headingLabel),
+      m_choices(t_choices),
+      m_getter(t_getter),
+      m_setter(t_setter)
+
+  {
+  }
+
+  QString headingLabel() const { return m_headingLabel; }
+
+  virtual std::vector<std::string> choices(const model::ModelObject & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_choices(obj);
+  }
+
+  virtual std::string get(const model::ModelObject & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(obj);
+  }
+
+  virtual bool set(const model::ModelObject & t_obj, std::string value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(obj,value);
+  }
+
+  private:
+
+  boost::function<std::vector<std::string> (const DataSourceType &)> m_choices;
+  boost::function<std::string (const DataSourceType &)>  m_getter;
+  boost::function<bool (const DataSourceType &, std::string)> m_setter;
+  QString m_headingLabel;
+};
+
 class OSGridController : public QObject
 {
   Q_OBJECT
@@ -60,12 +116,18 @@ class OSGridController : public QObject
 
   virtual ~OSGridController();
   
-  //bool addComboBoxColumn(QString title, ChoicesGetter choices, StringGetter getter, boost::optional<StringSetter> setter, QString label)
-
-  // 
-  //addComboBox("foo",&ModelObject::foos,&ModelObject::foo,&ModelObject::getFoo)
+  template<typename DataSourceType>
+  bool addComboBoxColumn(QString headingLabel, 
+                         boost::function<std::vector<std::string> (const DataSourceType &)> choices, 
+                         boost::function<std::string (const DataSourceType &)>  getter, 
+                         boost::function<bool (const DataSourceType &, std::string)> setter)
+  {
+    m_comboBoxConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
+  }
 
   private:
+
+  std::vector<QSharedPointer<ComboBoxConcept> > m_comboBoxConcepts;
 
   enum ColumnType
   {
@@ -82,7 +144,7 @@ class OSGridController : public QObject
 
   std::vector<ColumnType> m_columnTypes;
 
-  bool addCheckBoxColumn(std::string property);  
+  //bool addCheckBoxColumn(std::string property);  
   
   bool addComboBoxColumn(std::string property); 
   
@@ -104,13 +166,13 @@ class OSGridController : public QObject
 
   void setHorizontalHeader(std::vector<QString> names);
 
-  QSharedPointer<QWidget> OSGridController::widgetAt(int i, int j);
+  QSharedPointer<QWidget> widgetAt(int i, int j);
 
   virtual int rowCount() const;
 
   virtual int columnCount() const;
 
-  virtual std::vector<QWidget> row(int i);
+  // virtual std::vector<QWidget> row(int i);
 
   model::Model m_model;
 

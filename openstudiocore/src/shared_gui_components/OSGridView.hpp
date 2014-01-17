@@ -92,9 +92,9 @@ class OSGridView : public QWidget
 
   private:
 
-    void OSGridView::refresh(int row, int column);
+    void refresh(int row, int column);
 
-    void OSGridView::refreshAll();
+    void refreshAll();
 
     OSCollapsibleView * m_CollapsibleView;
 
