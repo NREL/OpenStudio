@@ -23,6 +23,7 @@
 #include <openstudio_lib/RefrigerationGridView.hpp>
 
 #include <QObject>
+#include <QSharedPointer>
 
 namespace openstudio {
 
@@ -42,7 +43,7 @@ class RefrigerationGridController : public QObject
 
   private:
 
-  QPointer<RefrigerationGridView> m_refrigerationGridView;
+  //QPointer<RefrigerationGridView> m_refrigerationGridView;
 
 };
 

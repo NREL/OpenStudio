@@ -20,7 +20,19 @@
 #ifndef OPENSTUDIO_OSGRIDCONTROLLER_H
 #define OPENSTUDIO_OSGRIDCONTROLLER_H
 
+#include <openstudio_lib/OSItem.hpp>
+
+#include "../shared_gui_components/OSListController.hpp"
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include <shared_gui_components/OSComboBox.hpp>
+
+#include <model/Model.hpp>
+#include <model/ModelObject.hpp>
+
+#include <utilities/idd/IddObject.hpp>
+
 #include <QObject>
+#include <QSharedPointer>
 
 class QWidget;
 
@@ -41,16 +53,16 @@ class OSGridController : public QObject
   // in the model that is iddObjectType
   OSGridController(IddObjectType iddObjectType, model::Model model);
 
-  virtual ~OSGridController() {};
+  virtual ~OSGridController();
   
-  bool addComboBoxColumn(QString title, ChoicesGetter choices, StringGetter getter, boost::optional<StringSetter> setter, QString label)
+  //bool addComboBoxColumn(QString title, ChoicesGetter choices, StringGetter getter, boost::optional<StringSetter> setter, QString label)
 
   // 
-  addComboBox("foo",&ModelObject::foos,&ModelObject::foo,&ModelObject::getFoo)
+  //addComboBox("foo",&ModelObject::foos,&ModelObject::foo,&ModelObject::getFoo)
 
   private:
 
-  std::vector<> m_comboColumns;
+  //std::vector<> m_comboColumns;
 
   bool addDoubleColumn(QString property);
 
@@ -75,9 +87,15 @@ class OSGridController : public QObject
 
   virtual int columnCount() const;
 
-  virtual QWidget * widgetAt(int i, int j);
+  //virtual QWidget * widgetAt(int i, int j);
 
-  virtual std::vector<QWidget> row(int i);
+  virtual QSharedPointer<OSListItem> OSGridController::itemAt(int i, int j);
+
+  //virtual std::vector<QWidget> row(int i);
+
+  model::Model m_model;
+
+  IddObjectType m_iddObjectType;
 
   signals:
 
@@ -109,17 +127,17 @@ class OSGridItemDelegate : public OSItemDelegate
 
 class OSListComboItem : public OSItem
 {
-  OSListComboItem(model::ModelObject,ChoicesGetter,StringSetter,StringGetter);
+  //OSListComboItem(model::ModelObject,ChoicesGetter,StringSetter,StringGetter);
 
-  virtual ~OSListComboItem() {}
+  //virtual ~OSListComboItem() {}
 
-  model::ModelObject modelObject();
+  //model::ModelObject modelObject();
 
-  ChoicesGetter choices();
+  //ChoicesGetter choices();
 
-  StringSetter setter();
+  //StringSetter setter();
 
-  StringGetter getter();
+  //StringGetter getter();
 };
 
 

@@ -23,6 +23,8 @@
 #include <QAbstractButton>
 #include <QWidget>
 
+//#include "OSGridController.hpp"
+
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
 
@@ -32,7 +34,10 @@ class QString;
 
 namespace openstudio{
 
-class CollapsibleHeader;
+  
+
+
+class OSCollapsibleView;
 
 class OSGridView : public QWidget
 {
@@ -52,7 +57,7 @@ class OSGridView : public QWidget
 
     OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
 
-    void setGridController(QSharedPointer<OSGridController> gridController);
+    //void setGridController(QSharedPointer<OSGridController> gridController);
 
     virtual ~OSGridView() {};
 
@@ -91,9 +96,7 @@ class OSGridView : public QWidget
 
     void OSGridView::refreshAll();
 
-    CollapsibleHeader * m_collapsibleHeader;
-
-    QWidget * m_body;
+    OSCollapsibleView * m_CollapsibleView;
 
     QGridLayout * m_gridLayout;
 
@@ -120,29 +123,6 @@ class OSGridView : public QWidget
 
     void refreshColumn(int columnId);
 
-};
-
-class CollapsibleHeader : public QAbstractButton
-{
-  Q_OBJECT
-
-public:
-  CollapsibleHeader(const std::string& text,
-    QWidget * parent = 0);
-  virtual ~CollapsibleHeader() {}
-  void setChecked(bool isChecked);
-  void setText(const QString& text);
-
-protected:
-  void paintEvent(QPaintEvent * event);
-  QSize sizeHint() const;
-
-private:
-  void createLayout(const std::string& text);
-  void setImage(bool isChecked);
-
-  QLabel * m_text;
-  QLabel * m_arrowLabel;
 };
 
 } // openstudio

@@ -23,15 +23,18 @@
 #include "../shared_gui_components/OSGridView.hpp"
 #include "../shared_gui_components/OSGridController.hpp"
 
+#include <QSharedPointer>
+#include <QWidget>
+
 namespace openstudio{
 
-class RefrigerationGridView : public OSGridView
+class RefrigerationGridView : public QWidget
 {
   Q_OBJECT
 
  public:
 
-  RefrigerationGridView(bool scrollable = false, QWidget * parent = 0);
+  RefrigerationGridView(QWidget * parent = 0);
 
   virtual ~RefrigerationGridView() {}
 

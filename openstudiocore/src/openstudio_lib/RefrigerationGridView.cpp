@@ -21,8 +21,8 @@
 
 namespace openstudio {
 
-RefrigerationGridView::RefrigerationGridView(bool scrollable, QWidget * parent)
-  : OSGridView(scrollable,parent)
+RefrigerationGridView::RefrigerationGridView(QWidget * parent)
+  : QWidget(parent)
 {
 }
 
