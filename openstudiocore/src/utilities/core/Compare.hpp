@@ -48,7 +48,6 @@ struct UTILITIES_API IcharCompare{
 inline UTILITIES_API bool istringEqual(const std::string& x, const std::string& y){
   return x.size() == y.size() &&
          std::equal(x.begin(), x.end(), y.begin(), IcharCompare());
-  // return boost::iequals(x, y);
 };
 
 /** Compare two strings without regard to case. */

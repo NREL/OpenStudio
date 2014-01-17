@@ -1910,7 +1910,7 @@ namespace detail {
       int suffix = 0;
       int count = 0;
       while (*p >= '0' && *p <= '9') {
-          suffix = (suffix*10) + (*p - '0');
+          suffix = (suffix * 10) + (*p - '0');
           ++p;
           ++count;
       }
@@ -1927,7 +1927,7 @@ namespace detail {
       int suffix = 0;
       int count = 0;
       while (*p >= '0' && *p <= '9') {
-          suffix = (suffix*10) + (*p - '0');
+          suffix = (suffix * 10) + (*p - '0');
           ++p;
           ++count;
       }
