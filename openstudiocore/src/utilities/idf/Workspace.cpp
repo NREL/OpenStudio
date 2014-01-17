@@ -2494,12 +2494,14 @@ namespace detail {
                                                 const std::vector<WorkspaceObject>& objectsInTheSeries,
                                                 bool fillIn) const
   {
-    IntSet takenValues;
+    vector<int> takenValues;
     BOOST_FOREACH(const WorkspaceObject& object,objectsInTheSeries) {
       if (boost::optional<int> takenSuffix = getNameSuffix(*(object.name()))) {
-        takenValues.insert(takenValues.end(), *takenSuffix);
+        takenValues.push_back(*takenSuffix);
       }
     }
+    std::sort(takenValues.begin(), takenValues.end());
+    takenValues.erase(std::unique(takenValues.begin(), takenValues.end()), takenValues.end());
 
     int suffix(1);
     if (fillIn) {
