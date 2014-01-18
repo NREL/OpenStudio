@@ -95,7 +95,7 @@ RunView::RunView()
 }
 
 RunStatusView::RunStatusView()
-  : QWidget()
+  : QWidget(), m_disableRadianceEvents(false)
 {
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
 
@@ -204,6 +204,9 @@ RunStatusView::RunStatusView()
   radianceWidget->setObjectName("RunStatusViewRadiance");
   QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
 
+  isConnected = connect(m_radiance, SIGNAL(toggled(bool)),
+                        this, SLOT(radianceToggled(bool)));
+  OS_ASSERT(isConnected);
 
   radianceWidget->setLayout(radianceInteriorLayout);
   radianceInteriorLayout->addWidget(radianceLabel);
@@ -298,6 +301,22 @@ RunStatusView::RunStatusView()
   analysisdriver::AnalysisStatus analysisStatus = project->status();
 
   setStatus(cloudStatus, analysisStatus);
+}
+
+void RunStatusView::setRadianceEnabled(bool t_radianceEnabled)
+{
+  m_disableRadianceEvents = true;
+  m_radiance->setChecked(t_radianceEnabled);
+  m_energyPlus->setChecked(!t_radianceEnabled);
+  m_disableRadianceEvents = false;
+}
+
+void RunStatusView::radianceToggled(bool t_checked)
+{
+  if (!m_disableRadianceEvents)
+  {
+    emit radianceEnabledChanged(t_checked);
+  }
 }
 
 void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus)

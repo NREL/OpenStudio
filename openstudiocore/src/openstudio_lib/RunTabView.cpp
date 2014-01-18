@@ -235,7 +235,8 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
                                                  std::vector<std::string> & errors)
 {
   openstudio::runmanager::RunManager rm = runManager();
-  openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, rm, m_model);
+  boost::optional<model::Model> model(m_model);
+  openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, rm, model);
 }
 
 void RunView::locateEnergyPlus()

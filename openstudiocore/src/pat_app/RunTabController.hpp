@@ -79,6 +79,8 @@ class RunTabController : public QObject
 
     bool m_refreshScheduled;
 
+    bool m_radianceEnabled;
+
     QSharedPointer<DataPointRunListController> m_dataPointRunListController;
 
     QSharedPointer<DataPointRunItemDelegate> m_dataPointRunItemDelegate;
@@ -87,6 +89,9 @@ class RunTabController : public QObject
 
     // converts UUID to index i and emits signal to get DataPoint job details to refresh
     void emitDataPointChanged(const openstudio::UUID& dataPoint);
+
+    void showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
+                                            const std::vector<std::string> & errors);
 };
 
 /// Controller class for the list of data points on the run tab

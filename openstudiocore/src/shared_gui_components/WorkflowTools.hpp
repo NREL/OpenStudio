@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <boost/optional.hpp>
 
 namespace openstudio
 {
@@ -16,9 +17,21 @@ namespace openstudio
     class Model;
   }
 
-  void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &_warnings, std::vector<std::string> &t_errors,
+  namespace analysisdriver
+  {
+    class SimpleProject;
+  }
+
+  void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 
+      std::vector<std::string> &t_errors,
       openstudio::runmanager::RunManager &t_runManager,
-      openstudio::model::Model &t_model);
+      boost::optional<openstudio::model::Model> &t_model);
+
+  bool projectHasRadiance(const openstudio::analysisdriver::SimpleProject &t_project);
+
+  void addRadianceToProject(openstudio::analysisdriver::SimpleProject &t_project);
+
+  void removeRadianceFromProject(openstudio::analysisdriver::SimpleProject &t_project);
 }
 
 #endif

@@ -44,6 +44,7 @@
 #include <utilities/core/Path.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
+#include "../shared_gui_components/WorkflowTools.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -137,6 +138,11 @@ RunTabController::RunTabController()
     if ((project->status() == analysisdriver::AnalysisStatus::Running)){
       onIterationProgress();
     }
+
+ 
+    bool radianceEnabled = openstudio::projectHasRadiance(*project); 
+    runView->runStatusView->setRadianceEnabled(radianceEnabled);
+    m_radianceEnabled = radianceEnabled;
   }
 }
 
@@ -147,10 +153,89 @@ RunTabController::~RunTabController()
 
 void RunTabController::onRadianceEnabledChanged(bool t_radianceEnabled)
 {
-  if (t_radianceEnabled)
-  {
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  OS_ASSERT(project);
 
+  if (m_radianceEnabled != t_radianceEnabled)
+  {
+    if (!(project->analysis().completeDataPoints().empty())) {
+      QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", "Simulation results must be cleared when changing daylight simulation engine.", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (test == QMessageBox::Yes) {
+        bool completeRemoval = project->clearAllResults();
+        if (!completeRemoval) {
+          QMessageBox::critical( runView, "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files.") );
+        }
+      } else {
+        // user canceled results clearing, so returning
+        if (runView) {
+          runView->runStatusView->setRadianceEnabled(m_radianceEnabled);
+        }
+        return;
+      }
+    }
+
+    // if we got here, then the user wants to continue
+    if (t_radianceEnabled)
+    {
+      boost::optional<model::Model> seedModel = project->seedModel();
+      runmanager::RunManager runManager = project->runManager();
+
+      std::vector<std::string> warnings;
+      std::vector<std::string> errors;
+
+      openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, runManager, seedModel);
+
+
+      if (!warnings.empty() || !errors.empty())
+      {
+        showRadianceWarningsAndErrors(warnings, errors);
+      }
+
+      if (!errors.empty())
+      {
+        runView->runStatusView->setRadianceEnabled(false);
+        return; // cannot use radiance
+      }
+    }
+
+    m_radianceEnabled = t_radianceEnabled;
+
+    if (m_radianceEnabled)
+    {
+      openstudio::removeRadianceFromProject(*project);
+    } else {
+      openstudio::addRadianceToProject(*project);
+    }
+  } 
+
+}
+
+void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
+                                            const std::vector<std::string> & errors)
+{
+  QString errorsAndWarnings;
+  QString text;
+  
+  if(warnings.size()){
+    errorsAndWarnings += "WARNINGS:\n";
+    BOOST_FOREACH(std::string warning, warnings){
+      text = warning.c_str();
+      errorsAndWarnings += text;
+      errorsAndWarnings += '\n';
+    }
+    errorsAndWarnings += '\n';
   }
+
+  if(errors.size()){
+    errorsAndWarnings += "ERRORS:\n";
+    BOOST_FOREACH(std::string error, errors){
+      text = error.c_str();
+      errorsAndWarnings += text;
+      errorsAndWarnings += '\n';
+    }
+  }
+
+  QMessageBox::critical(runView, "Radiance Warnings and Errors", errorsAndWarnings);
 }
 
 void RunTabController::onPlayButtonClicked()
