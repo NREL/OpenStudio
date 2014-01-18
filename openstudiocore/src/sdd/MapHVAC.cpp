@@ -1133,7 +1133,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"Scheduled") )
   {
-    QDomElement clgSetPtSchRefElement = airSystemElement.firstChildElement("ClgSetPtSchRef");
+    QDomElement clgSetPtSchRefElement = airSystemElement.firstChildElement("ClgSetptSchRef");
 
     boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(clgSetPtSchRefElement.text().toStdString());
 
@@ -2922,7 +2922,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   QDomElement ventSysRefElement = thermalZoneElement.firstChildElement("VentSysRef");
 
   // PrimaryAirConditioningSystemReference
-  QDomElement primAirCondSysRefElement = thermalZoneElement.firstChildElement("PrimAirCondgSysRef");
+  QDomElement primAirCondSysRefElement = thermalZoneElement.firstChildElement("PriAirCondgSysRef");
 
   QDomElement znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
 
