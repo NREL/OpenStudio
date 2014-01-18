@@ -1189,7 +1189,7 @@ namespace detail {
     if (!oName) {
       return true;
     }
-    WorkspaceObjectVector candidates = m_workspace->getObjectsByType(iddObject().type());
+    WorkspaceObjectVector candidates = m_workspace->getObjectsByReference(iddObject().references());
     BOOST_FOREACH(const WorkspaceObject& candidate,candidates) {
       OptionalString candidateName = candidate.name();
       OS_ASSERT(candidateName);

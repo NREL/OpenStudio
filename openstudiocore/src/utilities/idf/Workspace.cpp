@@ -410,25 +410,31 @@ namespace detail {
       const std::string& referenceName) const
   {
     IdfReferencesMap::const_iterator loc = m_idfReferencesMap.find(referenceName);
-    if (loc == m_idfReferencesMap.end()) {
-      return WorkspaceObjectVector();
+    if (loc == m_idfReferencesMap.end()) { return WorkspaceObjectVector(); }
+    std::vector<WorkspaceObject> result;
+    result.reserve(loc->second.size());
+    for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
+      result.push_back( it->second );
     }
-    return getObjects(handles(loc->second)); // convert set to vector, then getObjects
+    return result;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByReference(
       const std::vector<std::string>& referenceNames) const
   {
-    std::vector<Handle> hv;
+    WorkspaceObjectMap objectMap;
     BOOST_FOREACH(const std::string& referenceName,referenceNames) {
       IdfReferencesMap::const_iterator loc = m_idfReferencesMap.find(referenceName);
       if (loc != m_idfReferencesMap.end()) {
-        BOOST_FOREACH(const Handle& h,loc->second) {
-          hv.push_back(h);
-        }
+        objectMap.insert(loc->second.begin(),loc->second.end());
       }
     }
-    return getObjects(hv);
+    std::vector<WorkspaceObject> result;
+    result.reserve(objectMap.size());
+    for( WorkspaceObjectMap::const_iterator it = objectMap.begin(); it != objectMap.end(); ++it ) {
+      result.push_back( it->second );
+    }
+    return result;
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(
@@ -1544,7 +1550,7 @@ namespace detail {
     OptionalIddField iddField = sourceObject.iddObject().getField(index);
     OS_ASSERT(iddField);
     BOOST_FOREACH(const std::string& referenceName,iddField->properties().references) {
-      m_idfReferencesMap[referenceName].insert(targetHandle);
+      m_idfReferencesMap[referenceName].insert(std::make_pair(targetHandle,getObject(targetHandle)->getImpl<WorkspaceObject_Impl>()));
     }
   }
 
@@ -1591,7 +1597,7 @@ namespace detail {
         }
         // if not, erase the reference
         if (!found) {
-          HandleSet::iterator it = m_idfReferencesMap[referenceName].find(targetObject.handle());
+          WorkspaceObjectMap::iterator it = m_idfReferencesMap[referenceName].find(targetObject.handle());
           OS_ASSERT(it != m_idfReferencesMap[referenceName].end());
           m_idfReferencesMap[referenceName].erase(it);
         }
@@ -1658,7 +1664,7 @@ namespace detail {
       }
       IdfReferencesMap::const_iterator irmLoc = m_idfReferencesMap.find(referenceName);
       if (irmLoc != m_idfReferencesMap.end()) {
-        HandleSet::const_iterator it = irmLoc->second.find(handle);
+        WorkspaceObjectMap::const_iterator it = irmLoc->second.find(handle);
         if (it != irmLoc->second.end()) {
           return true;
         }
@@ -2043,7 +2049,7 @@ namespace detail {
   {
     StringVector references = objectImplPtr->iddObject().references();
     BOOST_FOREACH(const std::string& referenceName, references) {
-      m_idfReferencesMap[referenceName].insert(objectImplPtr->handle());
+      m_idfReferencesMap[referenceName].insert(std::make_pair(objectImplPtr->handle(), objectImplPtr));
     }
   }
   bool Workspace_Impl::resolvePotentialNameConflicts(Workspace& other) {
@@ -2235,7 +2241,7 @@ namespace detail {
     BOOST_FOREACH(const std::string& reference,references) {
       IdfReferencesMap::iterator irmLoc = m_idfReferencesMap.find(reference);
       OS_ASSERT(irmLoc != m_idfReferencesMap.end());
-      HandleSet::iterator loc = irmLoc->second.find(handle);
+      WorkspaceObjectMap::iterator loc = irmLoc->second.find(handle);
       OS_ASSERT(loc != irmLoc->second.end());
       irmLoc->second.erase(loc);
       // erase entry if set is emtpy

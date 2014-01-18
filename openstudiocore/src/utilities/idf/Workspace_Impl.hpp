@@ -499,7 +499,7 @@ namespace detail {
     IddObjectTypeMap m_iddObjectTypeMap;
 
     // map of reference to set of objects identified by UUID
-    typedef std::map<std::string, HandleSet> IdfReferencesMap; // , IstringCompare
+    typedef std::map<std::string, WorkspaceObjectMap> IdfReferencesMap; // , IstringCompare
     IdfReferencesMap m_idfReferencesMap;
 
     // data object for undos
