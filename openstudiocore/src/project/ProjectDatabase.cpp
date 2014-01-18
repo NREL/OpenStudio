@@ -450,7 +450,8 @@ namespace detail {
 
     // remove undo struct for this record
     HandleFinder finder(record.handle());
-    std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
+    std::vector<RemoveUndo>::iterator ruit = std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
+    m_removeUndos.erase(ruit,m_removeUndos.end());
 
     // delete removed object
     it = m_handleRemovedRecordMap.find(record.handle());
