@@ -30,18 +30,19 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
   def arguments()
     result = OpenStudio::Ruleset::OSArgumentVector.new
 
-    # todo - eventually I want ao way to save as a new OSM if the user didn't start by importing one
-    #save_path = OpenStudio::Ruleset::OSArgument::makePathArgument("save_path", true, "osm")
-    #save_path.setDisplayName("Save New OSM")
-    #result << save_path
+    save_path = OpenStudio::Ruleset::OSArgument::makePathArgument("save_path", true, "osm")
+    save_path.setDisplayName("Save New OSM")
+    result << save_path
 
     # todo - expose layers as arguments mapped to type of SO objects?
+    # todo - have way to pull in background model from other script.
+    # todo - support save as to another or a new osm.
 
     return result
   end
 
   # override run to implement the functionality of your script
-  # background_osm_model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
+  # @background_osm_model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(runner, user_arguments)
     super(runner, user_arguments)
     
@@ -49,41 +50,74 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       return false
     end
     
-    #save_path = runner.getStringArgumentValue("save_path",user_arguments)
+    #get path
+    save_path = runner.getStringArgumentValue("save_path",user_arguments)
+
+    # Open OSM file
+    @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(save_path)).get
+
+    # get surface groups from osm
+    @spaces = @background_osm_model.getSpaces
+    @shading_groups = @background_osm_model.getShadingSurfaceGroups
+    @interior_partition_groups = @background_osm_model.getInteriorPartitionSurfaceGroups
+
 
     puts ""
     puts ">>merge start"
 
     puts ""
-    #puts "File - " + save_path
-
-    #puts "File - #{open_path}"
-
-    #get OSM model from import script or ask user to create a new one.
 
     # get SketchUp model and entities
     skp_model = Sketchup.active_model
     entities = skp_model.active_entities
 
-    # use north direction in SketchUp to set building rotation
+    #use north direction in SketchUp to set building rotation
 
     #get spaces shading groups and interior partition groups
 
-    # create def to make space
+    #create def to make space
     def make_space(name,xOrigin,yOrigin,zOrigin,rotation)
 
-      space = name
-      puts "making space named #{space}."
+      # todo - SketchUp doesn't enforce unique names but OpenStudio will handle that.
 
-      # loop through spaces in model
+      #flag to create new space
+      need_space = true
 
-      # if find a match then delete surfaces from space and return the space
-      # if don't find a match then make a new space with group name and return it
+      #loop through spaces in model
+      @spaces.each do |space|
 
-      # in either case set transformation from SU group.
+        if space.name.to_s == name
+
+          #delete existing OSM surfaces
+          puts "removing surfaces from existing space named #{space.name}."
+          surfaces = space.surfaces
+          surfaces.each do |surface|
+            surface.remove
+          end
+
+          need_space = false
+          space.setXOrigin(xOrigin.to_f)
+          space.setYOrigin(yOrigin.to_f)
+          space.setZOrigin(zOrigin.to_f)
+
+        end #end of if space.name = name
+
+      end #end of spaces.each do
+
+      #make space and set name
+      if need_space
+
+        #add a space to the model without any geometry or loads, want to make sure measure works or fails gracefully
+        puts "making new space named #{name}"
+        space = OpenStudio::Model::Space.new(@background_osm_model)
+        space.setName(name)
+        space.setXOrigin(xOrigin.to_f)
+        space.setYOrigin(yOrigin.to_f)
+        space.setZOrigin(zOrigin.to_f)
+      end
 
       return space
-    end
+    end #end of def make_space
 
     # create def to make space surface
     def make_space_surfaces(space, vertices)
@@ -97,49 +131,155 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
     end
 
-    # create def to make shading surface group
+    #create def to make shading surface group
     def make_shading_surface_group(name,xOrigin,yOrigin,zOrigin,rotation,parent)
 
-      shading_surface_group = name
-      puts "making shading surface group named named #{shading_surface_group}."
+      # todo - SketchUp doesn't enforce unique names but OpenStudio will handle that.
 
-      # loop through shading surface groups in model
+      #flag to create new group
+      need_group = true
 
-      # if find a match then delete surfaces from space and return the group
-      # if don't find a match then make a new space with group name and return it
+      #loop through groups in model
+      @shading_groups.each do |shading_surface_group|
 
-      # in either case set transformation from SU group.
+        if shading_surface_group.name.to_s == name
 
-      return shading_surface_group
+          #delete existing OSM surfaces
+          puts "removing surfaces from existing shading surface group named #{shading_surface_group.name}."
+          surfaces = shading_surface_group.shadingSurfaces
+          surfaces.each do |surface|
+            surface.remove
+          end
+
+          need_group = false
+          shading_surface_group.setXOrigin(xOrigin.to_f)
+          shading_surface_group.setYOrigin(yOrigin.to_f)
+          shading_surface_group.setZOrigin(zOrigin.to_f)
+          @result = shading_surface_group
+
+          # todo - in addition to rotation, no I need to see if these should be re-parented?
+
+        end #end of if space.name = name
+
+      end #end of spaces.each do
+
+      #make group and set name
+      if need_group
+
+        #add a space to the model without any geometry or loads, want to make sure measure works or fails gracefully
+        puts "making new shading surface group named #{name}"
+        shading_surface_group = OpenStudio::Model::ShadingSurfaceGroup.new(@background_osm_model)  #this can be at top level or in space
+        shading_surface_group.setName(name)
+        if not parent.to_s == ""
+          shading_surface_group.setSpace(parent)
+        end
+        shading_surface_group.setXOrigin(xOrigin.to_f)
+        shading_surface_group.setYOrigin(yOrigin.to_f)
+        shading_surface_group.setZOrigin(zOrigin.to_f)
+        @result = shading_surface_group
+      end
+
+      return @result
     end
 
     # create def to make shading surface
-    def make_shading_surfaces(group, vertices)
+    def make_shading_surfaces(shading_surface_group, group)
 
       #loop through surfaces to make OS surfaces
+      group.entities.each do |entity|
+        if entity.class.to_s == "Sketchup::Face"
+          vertices = entity.vertices
+
+          # make an OpenStudio vector of of Point3d objects
+          newVertices = []
+
+          vertices.each do |vertex|  #todo - convert to metric
+            x = vertex.position[0].to_m
+            y = vertex.position[1].to_m
+            z = vertex.position[2].to_m
+            newVertices << OpenStudio::Point3d.new(x,y,z)
+          end
+          new_surface = OpenStudio::Model::ShadingSurface.new(newVertices,@background_osm_model)
+          new_surface.setShadingSurfaceGroup(shading_surface_group)
+
+          # todo - set group if necessary
+        end
+      end #end of entities.each.do
 
     end
 
     # create def to make interior partition group
     def make_interior_partition_group(name,xOrigin,yOrigin,zOrigin,rotation,parent)
 
-      interior_partition_group = name
-      puts "making interior partition surface group named #{interior_partition_group}."
+      # todo - SketchUp doesn't enforce unique names but OpenStudio will handle that.
 
-      # loop through interior partition groups in model
+      #flag to create new group
+      need_group = true
 
-      # if find a match then delete surfaces from space and return the group
-      # if don't find a match then make a new space with group name and return it
+      #loop through spaces in model
+      @interior_partition_groups.each do |interior_partition_group|
 
-      # in either case set transformation from SU group.
+        if interior_partition_group.name.to_s == name
 
-      return interior_partition_group
+          #delete existing OSM surfaces
+          puts "removing surfaces from existing interior partition group named #{interior_partition_group.name}."
+          surfaces = interior_partition_group.interiorPartitionSurfaces
+          surfaces.each do |surface|
+            surface.remove
+          end
+
+          need_group = false
+          interior_partition_group.setXOrigin(xOrigin.to_f)
+          interior_partition_group.setYOrigin(yOrigin.to_f)
+          interior_partition_group.setZOrigin(zOrigin.to_f)
+          @result = interior_partition_group
+
+          # todo - in addition to rotation, no I need to see if these should be re-parented?
+
+        end #end of if space.name = name
+
+      end #end of spaces.each do
+
+      #make group and set name
+      if need_group
+
+        #add a space to the model without any geometry or loads, want to make sure measure works or fails gracefully
+        puts "making new interior partition surface group named #{name}"
+        interior_partition_group = OpenStudio::Model::InteriorPartitionSurfaceGroup.new(@background_osm_model)  #this needs to be the space it is in
+        interior_partition_group.setName(name)
+        interior_partition_group.setSpace(parent)
+        interior_partition_group.setXOrigin(xOrigin.to_f)
+        interior_partition_group.setYOrigin(yOrigin.to_f)
+        interior_partition_group.setZOrigin(zOrigin.to_f)
+        @result = interior_partition_group
+      end
+
+      return @result
     end
 
     # create def to make interior partition surface
-    def make_interior_partition_surfaces(group, vertices)
+    def make_interior_partition_surfaces(interior_partition_group, group)
 
       #loop through surfaces to make OS surfaces
+      group.entities.each do |entity|
+        if entity.class.to_s == "Sketchup::Face"
+          vertices = entity.vertices
+
+          # make an OpenStudio vector of of Point3d objects
+          newVertices = []
+
+          vertices.each do |vertex|  #todo - convert to metric
+            x = vertex.position[0].to_m
+            y = vertex.position[1].to_m
+            z = vertex.position[2].to_m
+            newVertices << OpenStudio::Point3d.new(x,y,z)
+          end
+          new_surface = OpenStudio::Model::InteriorPartitionSurface.new(newVertices,@background_osm_model)
+          new_surface.setInteriorPartitionSurfaceGroup(interior_partition_group)
+
+          # todo - set group if necessary
+        end
+      end #end of entities.each.do
 
     end
 
@@ -148,11 +288,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     current_make_shading_surface_groups = []
     current_interior_partition_groups = []
 
-    #todo - convert components to groups using make unique
+    #todo - address scaling and other group transformation
 
-    #todo - address scaling of groups
-
-    # Making array of groups and components
+    #making array of groups and components
     groups = []
     entities.each do |entity|
       if entity.class.to_s == "Sketchup::Group" or entity.class.to_s == "Sketchup::ComponentInstance"
@@ -161,6 +299,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       end
     end #end of entities.each.do
 
+    #loop through groups in SketchUp model
     groups.each do |group|
 
       # get transformation
@@ -169,21 +308,20 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       if group.layer.name == "OpenStudio BackgroundModel ShadingGroup"
 
         #make or update group
-        make_shading_surface_group(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation",group.parent)
-
+        shading_surface_group = make_shading_surface_group(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation","") #no parent for site and building shading
         #make surfaces
-        #make_shading_surfaces()
+        shading_surfaces = make_shading_surfaces(shading_surface_group,group)
 
         #add to array of shading groups
         current_make_shading_surface_groups << "group name"
 
-      elsif group.layer.name == "OpenStudio BackgroundModel InteriorPartitionGroup"
+      elsif group.layer.name == "OpenStudio BackgroundModel InteriorPartitionSurfaceGroup"
         # somehow warn the user that these need to be in a space, not at the top level
         puts "Top level group on interior partition layer is not valid. It will not be translated"
       elsif group.layer.name == "OpenStudio BackgroundModel Space"
 
         #make or update space
-        make_space(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation")
+        space = make_space(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation")
 
         #make surfaces
         #make_space_surfaces()
@@ -209,21 +347,20 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           if nested_group.layer.name == "OpenStudio BackgroundModel ShadingGroup"
 
             #make or update group
-            make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",nested_group.parent)
-
+            space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",space)
             #make surfaces
-            #make_shading_surfaces()
+            shading_surfaces = make_shading_surfaces(space_shading_group,nested_group)
 
             #add to array of shading groups
             current_make_shading_surface_groups << "group name"
 
-          elsif nested_group.layer.name == "OpenStudio BackgroundModel InteriorPartitionGroup"
+          elsif nested_group.layer.name == "OpenStudio BackgroundModel InteriorPartitionSurfaceGroup"
 
             #make or update group
-            make_interior_partition_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",nested_group.parent)
+            interior_partition_group = make_interior_partition_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",space)
 
             #make surfaces
-            #make_interior_partition_surfaces()
+            interior_partition_surfaces = make_interior_partition_surfaces(interior_partition_group,nested_group)
 
             #add to array of shading groups
             current_interior_partition_groups << "group name"
@@ -251,6 +388,18 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     #todo - could be nice to highlight things that are not valid by painting them or moving them to layer?
 
     #todo - would be nice to keep check similar to know if file was saved elsewhere since the import happened, offer to reload or cancel operation.
+
+    #todo - close the model after saving. In the future I think I will try and leave it open all the time. As it is now if I run over and over seems slower, I assume due to bad cleanup.
+
+    #save the model
+    @spaces.each do |space|
+      puts space.name
+    end
+
+    output_file_path = OpenStudio::Path.new('C:\Users\dgoldwas\Documents\aaaWorking\test.osm')  #todo - later change this to save over the original file.
+    @background_osm_model.save(output_file_path,true)
+    puts "model saved to #{output_file_path}"
+
 
   end # end of run
 

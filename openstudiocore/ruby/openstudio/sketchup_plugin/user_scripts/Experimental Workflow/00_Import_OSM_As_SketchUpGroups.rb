@@ -41,11 +41,11 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
   # background_osm_model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(runner, user_arguments)
     super(runner, user_arguments)
-    
+
     if not runner.validateUserArguments(arguments,user_arguments)
       return false
     end
-    
+
     open_path = runner.getStringArgumentValue("open_path",user_arguments)
 
     puts ""
@@ -85,7 +85,7 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     layers = skp_model.layers
     new_layer = layers.add("OpenStudio BackgroundModel Space")
     new_layer = layers.add("OpenStudio BackgroundModel ShadingGroup")
-    new_layer = layers.add("OpenStudio BackgroundModel InteriorPartitionGroup")
+    new_layer = layers.add("OpenStudio BackgroundModel InteriorPartitionSurfaceGroup")
 
     # set render mode to color by layers (interior partition and shading can match OpenStudio, spaces should be something unique)?
 
@@ -164,7 +164,7 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
       interior_partition_groups.each do |interior_partition_group|
         # create group
         # puts "interior partition group name: #{interior_partition_group.name}"
-        sub_group = make_group(group,interior_partition_group.name.get,"OpenStudio BackgroundModel InteriorPartitionGroup",interior_partition_group.xOrigin,interior_partition_group.yOrigin,interior_partition_group.zOrigin,interior_partition_group.directionofRelativeNorth*-1)
+        sub_group = make_group(group,interior_partition_group.name.get,"OpenStudio BackgroundModel InteriorPartitionSurfaceGroup",interior_partition_group.xOrigin,interior_partition_group.yOrigin,interior_partition_group.zOrigin,interior_partition_group.directionofRelativeNorth*-1)
 
         #loop through interior partition surfaces
         interior_partition_surfaces = interior_partition_group.interiorPartitionSurfaces
