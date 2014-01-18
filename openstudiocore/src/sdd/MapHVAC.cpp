@@ -699,13 +699,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.008);
   }
 
+  // FanPos
+
+  bool isFanDrawthrough = false;
+  QDomElement fanPosElement = airSystemElement.firstChildElement("FanPos");
+
+  if( fanPosElement.text().compare("DrawThrough",Qt::CaseInsensitive) == 0 )
+  {
+    isFanDrawthrough = true;
+  }
+
   // Air Segments
   QDomNodeList airSegmentElements = airSystemElement.elementsByTagName("AirSeg");
 
   // Save the fan to add last
   boost::optional<model::Node> dropNode;
-
-  bool isFanDrawthrough = true;
 
   for (int i = 0; i < airSegmentElements.count(); i++)
   {
@@ -738,21 +746,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
               QDomElement posElement = airSegmentChildElement.firstChildElement("Pos");
 
-              //fan = hvacComponent;
-
               hvacComponent->addToNode(supplyOutletNode);
 
-              if( posElement.text().compare("DrawThrough",Qt::CaseInsensitive) == 0 )
+              if( isFanDrawthrough )
               {
                 dropNode = hvacComponent->inletModelObject()->cast<model::Node>();
-
-                isFanDrawthrough = true;
               }
               else
               {
                 dropNode = supplyOutletNode;
-
-                isFanDrawthrough = false;
               }
 
               if( availabilitySchedule )
