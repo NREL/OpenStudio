@@ -37,6 +37,8 @@
 #include <model/WaterToWaterComponent_Impl.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
+#include <model/ConnectorSplitter.hpp>
+#include <model/ConnectorSplitter_Impl.hpp>
 #include <model/Model.hpp>
 
 #include <utilities/core/Assert.hpp>
@@ -46,6 +48,152 @@ namespace openstudio {
 namespace model {
 
 namespace detail {
+
+  // Returns the next ModelObject, appends to modelObjects vector
+  // Stops at the mixer or when outletComp is found
+  boost::optional<ModelObject> traceDemandSplitter(Splitter & splitter,boost::optional<HVACComponent> outletComp, std::vector<ModelObject> & modelObjects, bool & outletNodeFound)
+  {
+    outletNodeFound = false;
+    boost::optional<ModelObject> nextModelObject = boost::none;
+    boost::optional<Mixer> mixer = boost::none;
+    
+    std::vector<ModelObject> allBranchModelObjects;
+    std::vector<ModelObject> thisBranchModelObjects;
+
+    modelObjects.push_back(splitter);
+    if( outletComp && splitter == *outletComp )
+    {
+      outletNodeFound = true;
+    }
+
+    std::vector<ModelObject> outletModelObjects = splitter.outletModelObjects();
+
+    for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
+         it != outletModelObjects.end();
+         it++ )
+    {
+      thisBranchModelObjects.clear();
+      nextModelObject = OptionalModelObject(*it);
+
+      while(nextModelObject && (! outletNodeFound))
+      {
+        if( OptionalNode node = nextModelObject->optionalCast<Node>() )
+        {
+          thisBranchModelObjects.push_back( node.get() );
+          allBranchModelObjects.push_back( node.get() );
+          if( outletComp && *node == *outletComp )
+          {
+            outletNodeFound = true;
+            nextModelObject = boost::none;
+            break;
+          }
+          else
+          {
+            nextModelObject = node->outletModelObject();
+          }
+        }
+        else if(OptionalStraightComponent comp = nextModelObject->optionalCast<StraightComponent>())
+        {
+          thisBranchModelObjects.push_back( comp.get() );
+          allBranchModelObjects.push_back( comp.get() );
+          if( outletComp && *comp == *outletComp )
+          {
+            outletNodeFound = true;
+            nextModelObject = boost::none;
+            break;
+          }
+          else
+          {
+            nextModelObject = comp->outletModelObject();
+          }
+        }
+        else if(OptionalPortList comp = nextModelObject->optionalCast<PortList>())
+        {
+          if( boost::optional<ThermalZone> tz = comp->thermalZone() )
+          {
+            thisBranchModelObjects.push_back( tz.get() );
+            allBranchModelObjects.push_back( tz.get() );
+            if( outletComp && *tz == *outletComp )
+            {
+              outletNodeFound = true;
+              nextModelObject = boost::none;
+              break;
+            }
+            else
+            {
+              nextModelObject = tz->returnAirModelObject();
+            }
+          }
+        }
+        else if(OptionalWaterToAirComponent comp = nextModelObject->optionalCast<WaterToAirComponent>())
+        {
+          thisBranchModelObjects.push_back( comp.get() );
+          allBranchModelObjects.push_back( comp.get() );
+          if( outletComp && *comp == *outletComp )
+          {
+            outletNodeFound = true;
+            nextModelObject = boost::none;
+            break;
+          }
+          else
+          {
+            nextModelObject = comp->waterOutletModelObject();
+          }
+        }
+        else if(OptionalWaterToWaterComponent comp = nextModelObject->optionalCast<WaterToWaterComponent>())
+        {
+          thisBranchModelObjects.push_back( comp.get() );
+          allBranchModelObjects.push_back( comp.get() );
+          if( outletComp && *comp == *outletComp )
+          {
+            outletNodeFound = true;
+            nextModelObject = boost::none;
+            break;
+          }
+          else
+          {
+            nextModelObject = comp->demandOutletModelObject();
+          }
+        }
+        else if(OptionalMixer comp = nextModelObject->optionalCast<Mixer>() )
+        {
+          mixer = comp;
+          nextModelObject = boost::none;
+          break;
+        }
+        else
+        {
+          outletNodeFound = false;
+          nextModelObject = boost::none;
+          break;
+          // Log unhandled component
+        }
+      } // end while branch object
+      if( outletNodeFound ) { break; }
+    } // end for splitter outlet objects
+    if( outletNodeFound )
+    {
+      modelObjects.insert( modelObjects.end(),thisBranchModelObjects.begin(), thisBranchModelObjects.end() );
+    }
+    else
+    {
+      modelObjects.insert( modelObjects.end(),allBranchModelObjects.begin(), allBranchModelObjects.end() );
+    }
+
+    if( mixer && ! outletNodeFound )
+    {
+      modelObjects.push_back(*mixer);
+      nextModelObject = mixer->outletModelObject();
+
+      if( outletComp && *mixer == *outletComp )
+      {
+        outletNodeFound = true;
+        nextModelObject = boost::none;
+      }
+    }
+
+    return nextModelObject;
+  }
 
   Loop_Impl::Loop_Impl(IddObjectType type, Model_Impl* model)
     : ParentObject_Impl(type,model)
@@ -233,13 +381,6 @@ namespace detail {
 
     bool outletNodeFound = false;
 
-    bool isPlantLoop = false;
-
-    if( this->iddObject().type() == IddObjectType::OS_PlantLoop )
-    {
-      isPlantLoop = true;
-    }
-
     while(modelObject)
     {
       if(OptionalNode node = modelObject->optionalCast<Node>())
@@ -307,14 +448,7 @@ namespace detail {
         }
         else
         {
-          if( isPlantLoop )
-          {
-            modelObject = comp->waterOutletModelObject();
-          }
-          else
-          {
-            modelObject = comp->airOutletModelObject();
-          }
+          modelObject = comp->waterOutletModelObject();
         }
       }
       else if(OptionalWaterToWaterComponent comp = modelObject->optionalCast<WaterToWaterComponent>())
@@ -332,132 +466,11 @@ namespace detail {
       }
       else if(OptionalSplitter splitter = modelObject->optionalCast<Splitter>())
       {
-        modelObject = boost::none;
-  
-        std::vector<ModelObject> allBranchModelObjects;
-        std::vector<ModelObject> thisBranchModelObjects;
+        modelObject = traceDemandSplitter(*splitter,outletComp,modelObjects,outletNodeFound);
 
-        modelObjects.push_back(*splitter);
-        if( *splitter == outletComp )
-        {
-          outletNodeFound = true;
-          break;
-        }
-
-        std::vector<ModelObject> outletModelObjects = splitter->outletModelObjects();
-
-        for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-             it != outletModelObjects.end();
-             it++ )
-        {
-          thisBranchModelObjects.clear();
-          OptionalModelObject branchObject = OptionalModelObject(*it);
-
-          while(branchObject)
-          {
-            if( OptionalNode node = branchObject->optionalCast<Node>() )
-            {
-              thisBranchModelObjects.push_back( node.get() );
-              allBranchModelObjects.push_back( node.get() );
-              if( *node == outletComp )
-              {
-                outletNodeFound = true;
-                break;
-              }
-              else
-              {
-                branchObject = node->outletModelObject();
-              }
-            }
-            else if(OptionalStraightComponent comp = branchObject->optionalCast<StraightComponent>())
-            {
-              thisBranchModelObjects.push_back( comp.get() );
-              allBranchModelObjects.push_back( comp.get() );
-              if( *comp == outletComp )
-              {
-                outletNodeFound = true;
-                break;
-              }
-              else
-              {
-                branchObject = comp->outletModelObject();
-              }
-            }
-            else if(OptionalPortList comp = branchObject->optionalCast<PortList>())
-            {
-              if( boost::optional<ThermalZone> tz = comp->thermalZone() )
-              {
-                thisBranchModelObjects.push_back( tz.get() );
-                allBranchModelObjects.push_back( tz.get() );
-                if( *tz == outletComp )
-                {
-                  outletNodeFound = true;
-                  break;
-                }
-                else
-                {
-                  branchObject = tz->returnAirModelObject();
-                }
-              }
-            }
-            else if(OptionalWaterToAirComponent comp = branchObject->optionalCast<WaterToAirComponent>())
-            {
-              thisBranchModelObjects.push_back( comp.get() );
-              allBranchModelObjects.push_back( comp.get() );
-              if( *comp == outletComp )
-              {
-                outletNodeFound = true;
-                break;
-              }
-              else
-              {
-                if( isPlantLoop )
-                {
-                  branchObject = comp->waterOutletModelObject();
-                }
-                else
-                {
-                  branchObject = comp->airOutletModelObject();
-                }
-              }
-            }
-            else if(OptionalWaterToWaterComponent comp = branchObject->optionalCast<WaterToWaterComponent>())
-            {
-              thisBranchModelObjects.push_back( comp.get() );
-              allBranchModelObjects.push_back( comp.get() );
-              if( *comp == outletComp )
-              {
-                outletNodeFound = true;
-                break;
-              }
-              else
-              {
-                branchObject = comp->demandOutletModelObject();
-              }
-            }
-            else if(OptionalMixer mixer = branchObject->optionalCast<Mixer>() )
-            {
-              modelObject = mixer;
-              break;
-            }
-            else
-            {
-              break;
-
-              // Log unhandled component
-            }
-          }
-          if( outletNodeFound ) { break; }
-        }
         if( outletNodeFound )
         {
-          modelObjects.insert( modelObjects.end(),thisBranchModelObjects.begin(), thisBranchModelObjects.end() );
-
           break;
-        }
-        else
-        {
-          modelObjects.insert( modelObjects.end(),allBranchModelObjects.begin(), allBranchModelObjects.end() );
         }
       }
       else
