@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -469,6 +469,13 @@ namespace detail {
   {
     std::vector<ScheduleRule> scheduleRules = this->scheduleRules();
     return setScheduleRuleIndex(scheduleRule, scheduleRules.size() - 1);
+  }
+
+  void ScheduleRuleset_Impl::ensureNoLeapDays()
+  {
+    BOOST_FOREACH(ScheduleRule scheduleRule, this->scheduleRules()){
+      scheduleRule.ensureNoLeapDays();
+    }
   }
 
   boost::optional<ScheduleDay> ScheduleRuleset_Impl::optionalDefaultDaySchedule() const {

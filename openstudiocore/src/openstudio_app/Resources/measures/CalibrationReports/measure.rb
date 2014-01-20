@@ -94,7 +94,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     energy << ";\n"
 
     energyElec = "var consumption = {\n\t\"Electricity Consumption\":{\n\t\t\"units\":\"kWh\",\n"
-    energyDemand =  "\t\"Electricity Demand Consumption\":{\n\t\t\"units\":\"kWh\",\n"
+    energyDemand =  "\t\"Electricity Demand\":{\n\t\t\"units\":\"kW\",\n"
     energyGas = "\t\"Natural Gas Consumption\":{\n\t\t\"units\":\"therms\",\n"
     tempStartDate = ""
     tempEndDate = ""
@@ -200,13 +200,14 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           peakDemand = billingPeriod.modelPeakDemand
           if not peakDemand.empty?
             temp = peakDemand.get / 1000
-            modelPeakDemand << temp.round.to_s
+            temp = sprintf "%.1f", temp
+            modelPeakDemand << temp.to_s
           else
             modelPeakDemand << "0"
           end
           modelPeakDemand << ","
 
-          if not billingPeriod.peakDemand.empty? and not billingPeriod.modelPeakDemand.empty?
+          if not billingPeriod.peakDemand.empty? and not billingPeriod.modelPeakDemand.empty? and not billingPeriod.consumption.get == 0
             percent = 100 * ((billingPeriod.modelPeakDemand.get / 1000) - billingPeriod.peakDemand.get) / billingPeriod.peakDemand.get
             percent = sprintf "%.2f", percent
             demandNMBE << percent.to_s
@@ -215,7 +216,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           end
           demandNMBE << ","
           
-          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty?
+          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty? and not billingPeriod.consumption.get == 0
             percent = 100 * ((billingPeriod.modelConsumption.get / consumptionUnitConversionFactor) - billingPeriod.consumption.get) / billingPeriod.consumption.get
             percent = sprintf "%.2f", percent
             elecNMBE << percent.to_s
@@ -245,7 +246,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           end
           gasModelConsumption << ","
 
-          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty? # and not billingPeriod.consumption.get = 0
+          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty? and not billingPeriod.consumption.get == 0
             percent = 100 * ((billingPeriod.modelConsumption.get / consumptionUnitConversionFactor) - billingPeriod.consumption.get) / billingPeriod.consumption.get
             percent = sprintf "%.2f", percent
             gasNMBE << percent.to_s

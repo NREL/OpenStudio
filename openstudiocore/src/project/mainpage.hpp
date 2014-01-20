@@ -168,7 +168,7 @@ namespace project {
  *
  * if (didStartTransaction){
  *   bool didCommitTransaction = database.commitTransaction();
- *   BOOST_ASSERT(didCommitTransaction);
+ *   OS_ASSERT(didCommitTransaction);
  * }
  *
  * // in this case a new transaction is started and committed within database.save()

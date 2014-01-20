@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -111,17 +111,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserEva
   }
 
 //Air Inlet Node Name
-  boost::optional<ThermalZone> airInletNode = modelObject.airInletNode();
-
-  if(airInletNode)
-  {
-    boost::optional<IdfObject> _airInletNode = translateAndMapModelObject(airInletNode.get());
-
-    if( _airInletNode && _airInletNode->name() )
-    {
-      object.setString(Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName,_airInletNode->name().get());
-    }
-  }
+  object.setString(Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName,"");
 
 //Rated Air Flow Rate
   d = modelObject.ratedAirFlowRate();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -369,6 +369,11 @@ namespace detail {
     this->clearExtensibleGroups();
 
     addValue(Time(1,0),0.0);
+  }
+
+  void ScheduleDay_Impl::ensureNoLeapDays()
+  {
+    // nothing to do
   }
 
   bool ScheduleDay_Impl::candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const {

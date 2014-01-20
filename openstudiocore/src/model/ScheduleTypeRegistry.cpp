@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -158,6 +158,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilCoolingLowTempRadiantConstFlow","Cooling Low Control Temperature","coolingLowControlTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingLowTempRadiantVarFlow","Cooling Control Temperature Schedule","coolingControlTemperatureSchedule",false,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingDXSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingDXVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -169,6 +170,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilHeatingLowTempRadiantVarFlow","Heating Control Temperature","heatingControlTemperature",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilHeatingWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingWaterBaseboard","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilWaterHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilWaterHeatingDesuperheater","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ControllerOutdoorAir","Minimum Outdoor Air","minimumOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Minimum Fraction of Outdoor Air","minimumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Maximum Fraction of Outdoor Air","maximumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
@@ -270,6 +273,10 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACPackagedTerminalAirConditioner","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"RefrigerationAirChiller","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"RefrigerationAirChiller","Heating Power","heatingPowerSchedule",true,"",0.0,1.0},
+    {"RefrigerationAirChiller","Defrost","defrostSchedule",true,"",0.0,1.0},
+    {"RefrigerationAirChiller","Defrost Drip-Down","defrostDripDownSchedule",true,"",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Terminal Unit Availability schedule","terminalUnitAvailabilityschedule",false,"Availability",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

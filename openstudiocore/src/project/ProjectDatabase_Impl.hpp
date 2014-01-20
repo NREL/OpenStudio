@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -214,7 +214,7 @@ namespace project {
           int expectedValue = 0;
           for (std::set<int>::const_iterator it = values.begin(), itend = values.end(); it != itend; ++it){
             // require 0 based columns, don't skip any
-            BOOST_ASSERT(*it == expectedValue);
+            OS_ASSERT(*it == expectedValue);
 
             // column name is name, type is description
             ss << T::ColumnsType::valueName(*it) << " " << T::ColumnsType::valueDescription(*it);

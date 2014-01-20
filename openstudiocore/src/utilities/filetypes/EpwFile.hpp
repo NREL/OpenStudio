@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -250,6 +250,9 @@ public:
   /// constructor with path
   /// will throw if path does not exist or file is incorrect
   EpwFile(const openstudio::path& p, bool storeData=false);
+
+  /// static load method
+  static boost::optional<EpwFile> load(const openstudio::path& p, bool storeData=false);
 
   /// get the path
   openstudio::path path() const;

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@
 #include <analysis/OptimizationProblem_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
+#include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/WorkItem.hpp>
 
@@ -222,6 +223,15 @@ namespace detail {
 
     analysis::WorkflowStepVector workflow;
 
+    // fix-up UserScript WorkItem paths
+    ProjectDatabase database = projectDatabase();
+    openstudio::path originalBasePath = database.originalBasePath();
+    openstudio::path newBasePath = database.newBasePath();
+    bool fixupPaths = false;
+    if (originalBasePath != newBasePath) {
+      fixupPaths = true;
+    }
+
     // mesh InputVariables and WorkItems together to form overall workflow
     int ivrIndex(0); // index into input variable records
     int wrIndex(0);  // index into workflow records
@@ -259,7 +269,17 @@ namespace detail {
         OS_ASSERT(temp == wIndex); // saved index into workflow should match expected value
         OS_ASSERT(wrIndex < wrN);  // there is a workflow record to deserialize
         std::vector<runmanager::WorkItem> workItems = workflowRecords[wrIndex].workflow().toWorkItems();
-        workflow.insert(workflow.end(),workItems.begin(),workItems.end());
+        BOOST_FOREACH(const runmanager::WorkItem& workItem,workItems) {
+          if (fixupPaths && (workItem.type == runmanager::JobType::UserScript)) {
+            // hoping that this resets the location of UserScriptAdapter.rb
+            runmanager::RubyJobBuilder rjb(workItem,originalBasePath,newBasePath);
+            runmanager::WorkItem refreshedWorkItem = rjb.toWorkItem();
+            workflow.push_back(refreshedWorkItem);
+          }
+          else {
+            workflow.push_back(workItem);
+          }
+        }
         ++wrIndex; // go to next workflow record
         wIndex += workItems.size(); // update next expected workflow index
         OS_ASSERT(wIndex == int(workflow.size())); // next index into workflow should match current size

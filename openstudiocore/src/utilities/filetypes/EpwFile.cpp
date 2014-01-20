@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -1545,6 +1545,17 @@ EpwFile::EpwFile(const openstudio::path& p, bool storeData)
     LOG_AND_THROW("EpwFile '" << toString(p) << "' cannot be processed");
   }
 }
+
+boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData)
+{
+  boost::optional<EpwFile> result;
+  try{
+    result = EpwFile(p, storeData);
+  }catch(const std::exception&){
+  }
+  return result;
+}
+
 
 openstudio::path EpwFile::path() const
 {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -199,6 +199,11 @@ bool ScheduleBase::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeL
 
 bool ScheduleBase::resetScheduleTypeLimits() {
   return getImpl<detail::ScheduleBase_Impl>()->resetScheduleTypeLimits();
+}
+
+void ScheduleBase::ensureNoLeapDays()
+{
+  getImpl<detail::ScheduleBase_Impl>()->ensureNoLeapDays();
 }
 
 /// @cond

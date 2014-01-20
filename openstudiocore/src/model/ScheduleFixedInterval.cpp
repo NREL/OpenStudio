@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -252,6 +252,21 @@ namespace detail {
     bool result = setString(OS_Schedule_FixedIntervalFields::OutOfRangeValue, "", driverMethod);
     OS_ASSERT(result);
   }
+
+  void ScheduleFixedInterval_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_Schedule_FixedIntervalFields::StartMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_Schedule_FixedIntervalFields::StartDay);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_Schedule_FixedIntervalFields::StartDay, 28);
+      }
+    }
+  }
+
 
 } // detail
 

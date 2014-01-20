@@ -38,7 +38,7 @@
   VIProductVersion "@CPACK_PACKAGE_VERSION@.0"
   VIAddVersionKey ProductName "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey CompanyName "NREL"
-  VIAddVersionKey LegalCopyright "Copyright (c) 2013 National Renewable Energy Laboratory"
+  VIAddVersionKey LegalCopyright "Copyright (c) 2014 National Renewable Energy Laboratory"
   VIAddVersionKey FileDescription "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey FileVersion "@CPACK_PACKAGE_VERSION@"
   VIAddVersionKey ProductVersion "@CPACK_PACKAGE_VERSION@"
@@ -769,6 +769,7 @@ Section "-Core installation"
   Var /GLOBAL sketchup7Dir
   Var /GLOBAL sketchup8Dir
   Var /GLOBAL sketchup13Dir
+  Var /GLOBAL sketchup14Dir
   Var /GLOBAL sketchupFound
   StrCpy $sketchupFound "0"
   Push $OUTDIR
@@ -804,7 +805,7 @@ Section "-Core installation"
   ; Also try to install the plugin for SketchUp 13
   ; check to see if sketchup 13 has been installed
   ReadRegStr $sketchup13Dir HKLM "Software\SketchUp\SketchUp 2013\InstallLocation" ""
-  ; if SketchUp 13 not installed, install plugin to default Google location
+  ; if SketchUp 13 not installed, install plugin to default SketchUp location
   ; NOTE StrCmp string1 string2 jump-if-equal jump-if-not-equal (+2 skips 1 line)
   StrCmp $sketchup13Dir "" su13skipped +1
   IntOp $sketchupFound $sketchupFound + 1
@@ -816,6 +817,21 @@ Section "-Core installation"
   FileWrite $0 "require '$INSTDIR\Ruby\openstudio'$\n"
   FileClose $0
   su13skipped:
+  ; Also try to install the plugin for SketchUp 14
+  ; check to see if sketchup 14 has been installed
+  ReadRegStr $sketchup14Dir HKLM "Software\SketchUp\SketchUp 2014\InstallLocation" ""
+  ; if SketchUp 14 not installed, install plugin to default SketchUp location
+  ; NOTE StrCmp string1 string2 jump-if-equal jump-if-not-equal (+2 skips 1 line)
+  StrCmp $sketchup14Dir "" su14skipped +1
+  IntOp $sketchupFound $sketchupFound + 1
+  SetOutPath "$sketchup14Dir\Plugins"
+  file /oname=OpenStudio.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio.rb"
+  SetOutPath "$sketchup14Dir\Plugins\OpenStudio"
+  file /oname=Startup.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio\Startup.rb"
+  FileOpen $0 "$sketchup14Dir\Plugins\OpenStudio\OpenStudio-config.rb" w
+  FileWrite $0 "require '$INSTDIR\Ruby\openstudio'$\n"
+  FileClose $0
+  su14skipped:
   IntCmp $sketchupFound 0 +1 suFound suFound 
     MessageBox MB_OK "Unable to locate your SketchUp installation.  SketchUp is freely available at http://www.sketchup.com/ and is required to use the OpenStudio SketchUp Plug-in.  If you wish to use the OpenStudio SketchUp Plug-in please download and install SketchUp now, the OpenStudio Google SketchUp Plug-in will launch automatically when you start SketchUp."
   suFound:

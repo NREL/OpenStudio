@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -48,6 +48,7 @@
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 
 
@@ -121,7 +122,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
   //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
   BOOST_FOREACH(const Surface& surface, modelObject.surfaces()){
     IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
-    BOOST_ASSERT(group.numFields() == 2);
+    OS_ASSERT(group.numFields() == 2);
     group.setString(0, surface.name().get());
     group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) );
   }

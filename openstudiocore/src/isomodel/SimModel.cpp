@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -32,9 +32,9 @@ namespace isomodel {
   double ISOResults::totalEnergyUse() const
   {
     double sum = 0;
-    std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
-    for (std::vector<EndUses>::const_iterator itr = monthlyResults.begin();
-        itr != monthlyResults.end();
+    std::vector<EndUseFuelType> fuelTypes = openstudio::EndUses::fuelTypes();
+    for (std::vector<EndUses>::const_iterator itr = this->monthlyResults.begin();
+        itr != this->monthlyResults.end();
         ++itr)
     {
       for (std::vector<EndUseFuelType>::const_iterator itr2 = fuelTypes.begin();

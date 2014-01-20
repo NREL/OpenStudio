@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,10 +27,9 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ModelObjectList;
 class CurveCubic;
 class ThermalZone;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationWalkIn;
 
@@ -74,11 +73,16 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   std::vector<RefrigerationWalkIn> walkins() const;
 
+  bool addAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAirChiller( const RefrigerationAirChiller & airChiller);
+
+  void removeAllAirChillers();
+
+  std::vector<RefrigerationAirChiller> airChillers() const;
+
   /** @name Getters */
   //@{
-
-  // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
-  //boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
   std::string circulatingFluidName() const;
 
@@ -112,7 +116,6 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   bool isPumpDriveTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CurveCubic.
   boost::optional<CurveCubic> variableSpeedPumpCubicCurve() const;
 
   double pumpMotorHeattoFluid() const;
@@ -123,14 +126,12 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   bool isSumUADistributionPipingDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> distributionPipingZone() const;
 
   double sumUAReceiverSeparatorShell() const;
 
   bool isSumUAReceiverSeparatorShellDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> receiverSeparatorZone() const;
 
   double evaporatorRefrigerantInventory() const;
@@ -144,9 +145,6 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   //@}
   /** @name Setters */
   //@{
-
-  // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  //bool setRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList);
 
   void resetRefrigeratedCaseAndWalkInList();
 
@@ -196,7 +194,6 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetPumpDriveType();
 
-  // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
   bool setVariableSpeedPumpCubicCurve(const CurveCubic& curveCubic);
 
   void resetVariableSpeedPumpCubicCurve();
@@ -209,7 +206,6 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetSumUADistributionPiping();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setDistributionPipingZone(const ThermalZone& thermalZone);
 
   void resetDistributionPipingZone();
@@ -218,7 +214,6 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   void resetSumUAReceiverSeparatorShell();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setReceiverSeparatorZone(const ThermalZone& thermalZone);
 
   void resetReceiverSeparatorZone();

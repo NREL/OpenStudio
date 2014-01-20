@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -802,7 +802,7 @@ namespace openstudio{
       boost::optional<Date> timeSeriesStartDate(const DataDictionaryItem& dataDictionary);
 
       // return first date in time table used for start date of run period variables
-      openstudio::DateTime firstDateTime();
+      openstudio::DateTime firstDateTime(bool includeHourAndMinute);
 
       boost::optional<Time> timeSeriesInterval(const DataDictionaryItem& dataDictionary);
       std::vector<DateTime> dateTimeVec(const DataDictionaryItem& dataDictionary);

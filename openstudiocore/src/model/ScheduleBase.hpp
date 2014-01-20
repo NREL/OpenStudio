@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -70,6 +70,9 @@ class MODEL_API ScheduleBase : public ResourceObject {
   /** Returns true if the scheduleTypeLimits() of this object is successfully cleared. Will fail
    *  if this object is being used by an object that expects it to have a ScheduleTypeLimits. */
   bool resetScheduleTypeLimits();
+
+  // ensure that this object does not contain the date 2/29
+  void ensureNoLeapDays();
 
   //@}
  protected:

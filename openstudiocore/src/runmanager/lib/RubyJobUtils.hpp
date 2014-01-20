@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -113,6 +113,11 @@ namespace runmanager {
 
       /// Create from the workflow WorkItem
       RubyJobBuilder(const WorkItem &t_workItem);
+
+      /// Create from the workflow WorkItem
+      RubyJobBuilder(const WorkItem &t_workItem,
+                     const openstudio::path& t_originalBasePath,
+                     const openstudio::path& t_newBasePath);
 
       /// Create from a BCLMeasure by:
       ///   Setting scriptFile to t_measure.primaryRubyScriptPath()

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -172,5 +172,17 @@ class RubyOperations_Test < Test::Unit::TestCase
     
   end
   
+  def test_ImplicitPathSaveLoad
+  
+    model = OpenStudio::Model::Model.new
+    
+    model.save("./test.osm")
+    
+    model.save("./test.osm", true)
+    
+    m2 = OpenStudio::Model::Model::load("./test.osm")
+    assert((not m2.empty?))
+    
+  end
   
 end

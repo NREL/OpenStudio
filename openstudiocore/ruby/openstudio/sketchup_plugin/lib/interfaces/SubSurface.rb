@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -353,7 +353,7 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       if (valid_entity?)
-        if (base_face = DrawingUtils.detect_base_face(@entity, true))
+        if (base_face = DrawingUtils.detect_base_face(@entity))
           return(base_face.drawing_interface)
         else
           return(super)  # Return the space interface

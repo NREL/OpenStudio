@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -640,6 +640,20 @@ namespace detail {
   void DesignDay_Impl::resetDailyWetBulbTemperatureRange() {
     bool result = setString(OS_SizingPeriod_DesignDayFields::DailyWetBulbTemperatureRange, "");
     OS_ASSERT(result);
+  }
+
+  void DesignDay_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_SizingPeriod_DesignDayFields::Month);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_SizingPeriod_DesignDayFields::DayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_SizingPeriod_DesignDayFields::DayofMonth, 28);
+      }
+    }
   }
 
 } // detail

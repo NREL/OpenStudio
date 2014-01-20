@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -569,7 +569,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   
   // Results
 
-  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController(m_model) );
+  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController() );
   m_mainWindow->addVerticalTab( m_resultsTabController->mainContentWidget(),
                                 RESULTS_SUMMARY,
                                 "Results Summary",
