@@ -178,11 +178,13 @@ runmanager.waitForFinished()
 runmanager.getJobs.each { |job| 
 
   if not job.errors.succeeded   
-    puts "The EnergyPlusjob in '" + job.outdir.to_s + "' did not finish successfully."
+    puts "The job in '" + job.outdir.to_s + "' did not finish successfully."
     job.errors.errors.each { |err|
       puts "ERROR: " + err
       puts "Radiance export aborted."
-      exit
+      #make sure it gets to the error log
+      $stderr.puts err
+      abort
     }
   elsif not job.errors.warnings.empty?
     puts "The job in '" + job.outdir.to_s + "' has warnings."
