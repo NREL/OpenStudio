@@ -1202,6 +1202,7 @@ void DataPointJobItemView::update()
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
     openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
+    // give it a special name instead of just "Ruby" when we find the radiance job
     if (wi.jobkeyname == "pat-radiance-job")
     {
       dataPointJobHeaderView->setName("Radiance Daylighting");

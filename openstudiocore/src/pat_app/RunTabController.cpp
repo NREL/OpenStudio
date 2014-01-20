@@ -159,12 +159,16 @@ void RunTabController::onRadianceEnabledChanged(bool t_radianceEnabled)
   if (m_radianceEnabled != t_radianceEnabled)
   {
     if (!(project->analysis().completeDataPoints().empty())) {
-      QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", "Simulation results must be cleared when changing daylight simulation engine.", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", "Simulation results must be cleared when changing daylight simulation engine. Continue with change of daylight simulation engine?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
       if (test == QMessageBox::Yes) {
         bool completeRemoval = project->clearAllResults();
         if (!completeRemoval) {
           QMessageBox::critical( runView, "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files.") );
         }
+        project->save();
+        // force refresh after selecting all or clearing results
+        refresh();
+        PatApp::instance()->processEvents();
       } else {
         // user canceled results clearing, so returning
         if (runView) {
