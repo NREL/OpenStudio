@@ -511,6 +511,72 @@ namespace detail {
     }
   }
 
+  typedef std::pair<ModelObject,ModelObject> Edge;
+
+  std::vector<Edge> getDemandEdges(ModelObject & mo)
+  {
+    std::vector<Edge> result;
+
+    if( boost::optional<StraightComponent> straightComponent = mo.optionalCast<StraightComponent>() )
+    {
+      if( boost::optional<ModelObject> mo = straightComponent->outletModelObject() )
+      {
+        result.push_back(Edge(straightComponent.get(),mo.get()));
+      }      
+    }
+    else if( boost::optional<Splitter> splitter = mo.optionalCast<Splitter>() )
+    {
+      std::vector<ModelObject> outletModelObjects = splitter->outletModelObjects();
+
+      for(std::vector<ModelObject>::iterator it = outletModelObjects.begin();
+          it != outletModelObjects.end();
+          it++)
+      {
+        result.push_back(Edge(splitter.get(),*it));
+      }
+    }
+    else if( boost::optional<Mixer> mixer = mo.optionalCast<Mixer>() )
+    {
+      if( boost::optional<ModelObject> mo = mixer->outletModelObject() )
+      {
+        result.push_back(Edge(mixer.get(),mo.get()));
+      }
+    }
+    else if( boost::optional<WaterToWaterComponent> comp = mo.optionalCast<WaterToWaterComponent>() )
+    {
+      if( boost::optional<ModelObject> mo = comp->demandOutletModelObject() )
+      {
+        result.push_back(Edge(comp.get(),mo.get()));
+      }
+    }
+
+    return result;
+  }
+
+  void findDemandPath(ModelObject & source, ModelObject & sink, std::vector<Edge> & path)
+  {
+    if( source == sink )
+    {
+      return;
+    }
+
+    std::vector<Edge> edges = getDemandEdges(source);
+
+    // If there is nowhere to go, and we have not found sink, reset the path
+    if( edges.empty() )
+    {
+      path.clear();
+      return;
+    }
+
+    for( std::vector<Edge>::iterator it = edges.begin();
+         it != edges.end();
+         it++ )
+    {
+      findDemandPath(it->second,sink,path);
+    }
+  }
+
   std::vector<ModelObject> Loop_Impl::supplyComponents(openstudio::IddObjectType type)
   {
     return supplyComponents( supplyInletNode(),
