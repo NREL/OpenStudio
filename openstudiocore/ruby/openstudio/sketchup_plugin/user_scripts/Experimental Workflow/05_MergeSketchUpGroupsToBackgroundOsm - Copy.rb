@@ -22,7 +22,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
   # override name to return the name of your script
   def name
-    return "Merge SketchUp Groups to OSM"
+    return "Merge SketchUp Groups to OSM in background"
   end
 
   # returns a vector of arguments, the runner will present these arguments to the user
@@ -30,9 +30,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
   def arguments()
     result = OpenStudio::Ruleset::OSArgumentVector.new
 
-    save_path = OpenStudio::Ruleset::OSArgument::makePathArgument("save_path", true, "osm")
-    save_path.setDisplayName("Save New OSM")
-    result << save_path
+    open_path = OpenStudio::Ruleset::OSArgument::makePathArgument("open_path", true, "osm")
+    open_path.setDisplayName("Select OSM File to Merge SketchUp objects to.")
+    result << open_path
 
     # todo - expose layers as arguments mapped to type of SO objects?
     # todo - have way to pull in background model from other script.
@@ -51,16 +51,15 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     end
     
     #get path
-    save_path = runner.getStringArgumentValue("save_path",user_arguments)
+    open_path = runner.getStringArgumentValue("open_path",user_arguments)
 
     # Open OSM file
-    @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(save_path)).get
+    @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).get
 
     # get surface groups from osm
     @spaces = @background_osm_model.getSpaces
     @shading_groups = @background_osm_model.getShadingSurfaceGroups
     @interior_partition_groups = @background_osm_model.getInteriorPartitionSurfaceGroups
-
 
     puts ""
     puts ">>merge start"
@@ -89,7 +88,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         if space.name.to_s == name
 
           #delete existing OSM surfaces
-          puts "removing surfaces from existing space named #{space.name}."
+          #puts "removing surfaces from existing space named #{space.name}."
           surfaces = space.surfaces
           surfaces.each do |surface|
             surface.remove
@@ -100,6 +99,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           space.setYOrigin(yOrigin.to_f)
           space.setZOrigin(zOrigin.to_f)
           @result = space
+          @current_spaces << space
 
         end #end of if space.name = name
 
@@ -109,7 +109,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       if need_space
 
         #add a space to the model without any geometry or loads, want to make sure measure works or fails gracefully
-        puts "making new space named #{name}"
+        #puts "making new space named #{name}"
         space = OpenStudio::Model::Space.new(@background_osm_model)
         space.setName(name)
         space.setXOrigin(xOrigin.to_f)
@@ -133,7 +133,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       door_hash = Hash.new
 
       #categorize surfaces
-      # todo - my logic is flawed here. some base surfaces don't show as base surfaces and some doors show as base surfaces
       group.entities.each do |entity|
         if entity.class.to_s == "Sketchup::Face"
 
@@ -153,23 +152,27 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           if edge_faces.uniq.size >= 3
             #this is a base surface
             base_surface_array << entity #later make hash that includes value of an array of sub surfaces?
-          elsif edge_faces.uniq.size == 1
+          elsif edge_faces.uniq.size == 1 and edge_faces.size == edges.size #this second test checks for edge that doesn't match to any faces
             #this is a window
             window_hash[entity] = edge_faces[0] #the value here is the parent
           else #this could be a door or base surface. Need further testing
 
             #test to see if all but one edges have the same adjacent face
             number_of_matches = 0
+            number_of_matches_alt = 0
             edge_faces.each do |edge_face|
               if edge_faces[0] == edge_face
                 number_of_matches += 1
               end
+              if edge_faces[1] == edge_face
+                number_of_matches_alt += 1
+              end
             end #end of edge_faces.each do
 
-            if number_of_matches == 0
+            if number_of_matches_alt == edges.size - 1
               #this is a door
               door_hash[entity] = edge_faces[1] #any face but the first one is the parent
-            elsif number_of_matches == edge_faces.size - 1
+            elsif number_of_matches == edges.size - 1
               #this is a door
               door_hash[entity] = edge_faces[0] #the first face is the parent
             else
@@ -178,8 +181,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
             end
 
           end #end of edge_faces.uniq.size
-
-          #todo - to find all doors I need to merge colinear points to single edge
 
           #todo - should test that sub-surfaces don't have inner loop. If it does warn and ignore?
 
@@ -190,9 +191,8 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
       #todo - update base surfaces to include area from doors
 
-      #create base surfaces  #todo - need to update creating of base and then sub surfaces
+      #create base surfaces
       base_surface_array.each do |entity|
-        if entity.class.to_s == "Sketchup::Face"
 
           # get outer loop to remove windows (unless fixed above where doors are fixed)
           loop = entity.outer_loop
@@ -208,19 +208,112 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
             y = vertex.position[1].to_m
             z = vertex.position[2].to_m
             newVertices << OpenStudio::Point3d.new(x,y,z)
-          end
+          end  #end of vertices.each do
+
+          #make new surface and assign space
           new_surface = OpenStudio::Model::Surface.new(newVertices,@background_osm_model)
           new_surface.setSpace(space)
 
-        end
+          #use hash to identify windows of this new base surface
+          window_hash.each do |k,v|
+            if v == entity
+
+              # get vertices for OpenStudio base surface
+              loop = k.outer_loop
+              vertices = loop.vertices
+
+              # make an OpenStudio vector of of Point3d objects
+              newVertices = []
+
+              vertices.each do |vertex|
+                x = vertex.position[0].to_m
+                y = vertex.position[1].to_m
+                z = vertex.position[2].to_m
+                newVertices << OpenStudio::Point3d.new(x,y,z)
+              end  #end of vertices.each do
+
+              #make new surface and assign space
+              new_sub_surface = OpenStudio::Model::SubSurface.new(newVertices,@background_osm_model)
+              new_sub_surface.setSurface(new_surface)
+
+            end
+          end #end of window_hash.each do
+
+          remake_base_surface = false
+          possible_source_surfaces = [entity]
+
+          #use hash to identify doors of this new base surface
+          door_hash.each do |k,v|
+            if v == entity
+
+              # temp array to fix base surface
+              possible_source_surfaces << k
+
+              # get vertices for OpenStudio base surface
+              loop = k.outer_loop
+              vertices = loop.vertices
+
+              # make an OpenStudio vector of of Point3d objects
+              newVertices = []
+
+              vertices.each do |vertex|
+                x = vertex.position[0].to_m
+                y = vertex.position[1].to_m
+                z = vertex.position[2].to_m
+                newVertices << OpenStudio::Point3d.new(x,y,z)
+              end  #end of vertices.each do
+
+              #make new surface and assign space
+              new_sub_surface = OpenStudio::Model::SubSurface.new(newVertices,@background_osm_model)
+              new_sub_surface.setSurface(new_surface)
+
+              #remove edges from door if shared with base surface
+              edges = loop.edges
+              edges.each do |edge|
+                if edge.faces.include? v
+                  edge.erase!
+                  remake_base_surface = true
+                end
+              end
+
+            end
+          end #end of door_hash.each do
+
+          #re-make base surfaces with doors
+          if remake_base_surface
+
+            # get outer loop to remove windows (unless fixed above where doors are fixed)
+            possible_source_surfaces.each do |updated_face|
+              if not updated_face.deleted?
+                loop = updated_face.outer_loop
+                next #once I find a face I should be done.
+              end
+            end
+
+            # get vertices for OpenStudio base surface
+            vertices = loop.vertices
+
+            # make an OpenStudio vector of of Point3d objects
+            newVertices = []
+
+            vertices.each do |vertex|
+              x = vertex.position[0].to_m
+              y = vertex.position[1].to_m
+              z = vertex.position[2].to_m
+              newVertices << OpenStudio::Point3d.new(x,y,z)
+            end  #end of vertices.each do
+
+            #make update surface
+            new_surface.setVertices(newVertices)
+
+          end  #end of if remake_base_surface
+
       end #end of base_surfaces_array.each.do
 
-      #create windows and doors
-
-    end
+    end #end of make_space_surfaces(space,group)
 
     #create def to make shading surface group
-    def make_shading_surface_group(name,xOrigin,yOrigin,zOrigin,rotation,parent)
+    def make_shading_surface_group(name,xOrigin,yOrigin,zOrigin,rotation,shadingSurfaceType,parent)
 
       # todo - SketchUp doesn't enforce unique names but OpenStudio will handle that.
 
@@ -233,7 +326,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         if shading_surface_group.name.to_s == name
 
           #delete existing OSM surfaces
-          puts "removing surfaces from existing shading surface group named #{shading_surface_group.name}."
+          #puts "removing surfaces from existing shading surface group named #{shading_surface_group.name}."
           surfaces = shading_surface_group.shadingSurfaces
           surfaces.each do |surface|
             surface.remove
@@ -244,8 +337,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           shading_surface_group.setYOrigin(yOrigin.to_f)
           shading_surface_group.setZOrigin(zOrigin.to_f)
           @result = shading_surface_group
+          @current_shading_surface_groups << shading_surface_group
 
-          # todo - in addition to rotation, no I need to see if these should be re-parented?
+          # todo - in addition to rotation, no I need to see if these should be re-parented and classified?
 
         end #end of if space.name = name
 
@@ -255,9 +349,10 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       if need_group
 
         #add a space to the model without any geometry or loads, want to make sure measure works or fails gracefully
-        puts "making new shading surface group named #{name}"
+        #puts "making new shading surface group named #{name}"
         shading_surface_group = OpenStudio::Model::ShadingSurfaceGroup.new(@background_osm_model)  #this can be at top level or in space
         shading_surface_group.setName(name)
+        shading_surface_group.setShadingSurfaceType(shadingSurfaceType)
         if not parent.to_s == ""
           shading_surface_group.setSpace(parent)
         end
@@ -268,7 +363,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       end
 
       return @result
-    end
+    end #end of make_shading_surface_group(name,xOrigin,yOrigin,zOrigin,rotation,parent)
 
     # create def to make shading surface
     def make_shading_surfaces(shading_surface_group, group)
@@ -293,7 +388,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         end
       end #end of entities.each.do
 
-    end
+    end #end of make_shading_surfaces
 
     # create def to make interior partition group
     def make_interior_partition_group(name,xOrigin,yOrigin,zOrigin,rotation,parent)
@@ -309,7 +404,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         if interior_partition_group.name.to_s == name
 
           #delete existing OSM surfaces
-          puts "removing surfaces from existing interior partition group named #{interior_partition_group.name}."
+          #puts "removing surfaces from existing interior partition group named #{interior_partition_group.name}."
           surfaces = interior_partition_group.interiorPartitionSurfaces
           surfaces.each do |surface|
             surface.remove
@@ -320,6 +415,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           interior_partition_group.setYOrigin(yOrigin.to_f)
           interior_partition_group.setZOrigin(zOrigin.to_f)
           @result = interior_partition_group
+          @current_interior_partition_groups << interior_partition_group
 
           # todo - in addition to rotation, no I need to see if these should be re-parented?
 
@@ -331,7 +427,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       if need_group
 
         #add a space to the model without any geometry or loads, want to make sure measure works or fails gracefully
-        puts "making new interior partition surface group named #{name}"
+        #puts "making new interior partition surface group named #{name}"
         interior_partition_group = OpenStudio::Model::InteriorPartitionSurfaceGroup.new(@background_osm_model)  #this needs to be the space it is in
         interior_partition_group.setName(name)
         interior_partition_group.setSpace(parent)
@@ -342,7 +438,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       end
 
       return @result
-    end
+    end #end of make_interior_partition_group
 
     # create def to make interior partition surface
     def make_interior_partition_surfaces(interior_partition_group, group)
@@ -367,12 +463,12 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         end
       end #end of entities.each.do
 
-    end
+    end #end of make_interior_partition_surfaces
 
     #array of space, shading groups, and interior partition groups. Later will delete objects in OSM that don't exist in SKP
-    current_spaces = []
-    current_shading_surface_groups = []
-    current_interior_partition_groups = []
+    @current_spaces = []
+    @current_shading_surface_groups = []
+    @current_interior_partition_groups = []
 
     #todo - address scaling and other group transformation
 
@@ -391,12 +487,17 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       # get transformation
       t = group.transformation
 
-      if group.layer.name == "OpenStudio BackgroundModel ShadingGroup"
+      if group.layer.name == "OpenStudio BackgroundModel BuildingAndSpaceShadingGroup" or group.layer.name == "OpenStudio BackgroundModel SiteShadingGroup"
 
         #make or update group
-        shading_surface_group = make_shading_surface_group(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation","") #no parent for site and building shading
+        if group.layer.name == "OpenStudio BackgroundModel BuildingAndSpaceShadingGroup"
+          shadingSurfaceType = "Building"
+        else
+          shadingSurfaceType = "Site"
+        end
+
+        shading_surface_group = make_shading_surface_group(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation",shadingSurfaceType,"") #no parent for site and building shading
         #add to array of shading groups
-        current_shading_surface_groups << shading_surface_group.name
         #make surfaces
         shading_surfaces = make_shading_surfaces(shading_surface_group,group)
 
@@ -408,7 +509,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         #make or update space
         space = make_space(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation")
         #add to array of shading groups
-        current_spaces << space.name
         #make surfaces
         make_space_surfaces(space,group)
 
@@ -432,7 +532,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
             #make or update group
             space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",space)
             #add to array of shading groups
-            current_shading_surface_groups << space_shading_group.name
             #make surfaces
             shading_surfaces = make_shading_surfaces(space_shading_group,nested_group)
 
@@ -441,7 +540,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
             #make or update group
             interior_partition_group = make_interior_partition_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",space)
             #add to array of shading groups
-            current_interior_partition_groups << interior_partition_group.name
             #make surfaces
             interior_partition_surfaces = make_interior_partition_surfaces(interior_partition_group,nested_group)
 
@@ -460,6 +558,28 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     end #end of groups.each do
 
     #todo - delete spaces that were no long in the SketchUp model
+    @spaces.each do |space|
+      if not @current_spaces.include? space
+        puts "removing #{space.name}"
+        space.remove
+      end
+    end
+
+    @shading_groups.each do |shading_group|
+      if not @current_shading_surface_groups.include? shading_group
+        puts "removing #{shading_group.name}"
+        shading_group.remove
+      end
+    end
+
+    @interior_partition_groups.each do |interior_partition_group|
+      if not @current_interior_partition_groups.include? interior_partition_group
+        puts "removing #{interior_partition_group.name}"
+        interior_partition_group.remove
+      end
+    end
+
+    #todo - confirm behavior with components
 
     #todo - warn user about loose top level surfaces
 
@@ -469,17 +589,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
     #todo - would be nice to keep check similar to know if file was saved elsewhere since the import happened, offer to reload or cancel operation.
 
-    #todo - close the model after saving. In the future I think I will try and leave it open all the time. As it is now if I run over and over seems slower, I assume due to bad cleanup.
-
     #save the model
-    @spaces.each do |space|
-      puts space.name
-    end
-
-    output_file_path = OpenStudio::Path.new('C:\Users\dgoldwas\Documents\aaaWorking\test.osm')  #todo - later change this to save over the original file.
-    @background_osm_model.save(output_file_path,true)
-    puts "model saved to #{output_file_path}"
-
+    @background_osm_model.save(open_path,true)
+    puts "model saved to #{open_path}"
 
   end # end of run
 

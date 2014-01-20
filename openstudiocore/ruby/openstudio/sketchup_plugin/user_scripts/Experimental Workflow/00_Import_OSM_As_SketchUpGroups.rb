@@ -83,8 +83,9 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
 
     # create layers matched to OpenStudio surface group types
     layers = skp_model.layers
+    new_layer = layers.add("OpenStudio BackgroundModel SiteShadingGroup")
+    new_layer = layers.add("OpenStudio BackgroundModel BuildingAndSpaceShadingGroup")
     new_layer = layers.add("OpenStudio BackgroundModel Space")
-    new_layer = layers.add("OpenStudio BackgroundModel ShadingGroup")
     new_layer = layers.add("OpenStudio BackgroundModel InteriorPartitionSurfaceGroup")
 
     # set render mode to color by layers (interior partition and shading can match OpenStudio, spaces should be something unique)?
@@ -146,7 +147,7 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
       space_shading_groups.each do |space_shading_group|
         # create group
         # puts "space shading group name: #{space_shading_group.name}"
-        sub_group = make_group(group,space_shading_group.name.get,"OpenStudio BackgroundModel ShadingGroup",space_shading_group.xOrigin,space_shading_group.yOrigin,space_shading_group.zOrigin,space_shading_group.directionofRelativeNorth*-1)
+        sub_group = make_group(group,space_shading_group.name.get,"OpenStudio BackgroundModel BuildingAndSpaceShadingGroup",space_shading_group.xOrigin,space_shading_group.yOrigin,space_shading_group.zOrigin,space_shading_group.directionofRelativeNorth*-1)
 
         #loop through shading surfaces
         shading_surfaces = space_shading_group.shadingSurfaces
@@ -182,10 +183,13 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     #loop through shading surface groups, skip if space shading, those are imported with spaces
     shading_surface_groups = background_osm_model.getShadingSurfaceGroups
     shading_surface_groups.each do |shading_surface_group|
+      # create group
       if not shading_surface_group.shadingSurfaceType == "Space"
-        # create group
-        #puts "shading surface group name: #{shading_surface_group.name}"
-        group = make_group(Sketchup.active_model,shading_surface_group.name.get,"OpenStudio BackgroundModel ShadingGroup",shading_surface_group.xOrigin,shading_surface_group.yOrigin,shading_surface_group.zOrigin,shading_surface_group.directionofRelativeNorth*-1)
+        if shading_surface_group.shadingSurfaceType == "Building"
+          group = make_group(Sketchup.active_model,shading_surface_group.name.get,"OpenStudio BackgroundModel BuildingAndSpaceShadingGroup",shading_surface_group.xOrigin,shading_surface_group.yOrigin,shading_surface_group.zOrigin,shading_surface_group.directionofRelativeNorth*-1)
+        else
+          group = make_group(Sketchup.active_model,shading_surface_group.name.get,"OpenStudio BackgroundModel SiteShadingGroup",shading_surface_group.xOrigin,shading_surface_group.yOrigin,shading_surface_group.zOrigin,shading_surface_group.directionofRelativeNorth*-1)
+        end
 
         #loop through shading surfaces
         shading_surfaces = shading_surface_group.shadingSurfaces
@@ -201,6 +205,10 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     end #end of shading_surface_groups.each do
 
     #todo - see why spaces are not passing manifold solid test. Seems like old SketchUp issue where if I explosed and re-make it then shows as solid. Maybe even just re-open it.
+
+    #zoom extents
+    view = Sketchup.active_model.active_view
+    new_view = view.zoom_extents
 
   end # end of run
 
