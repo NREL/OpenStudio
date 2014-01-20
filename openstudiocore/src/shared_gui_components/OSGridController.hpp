@@ -125,6 +125,12 @@ class OSGridController : public QObject
     m_comboBoxConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
   }
 
+  virtual int rowCount() const;
+
+  virtual int columnCount() const;
+
+  virtual std::vector<QWidget> row(int i);
+
   private:
 
   std::vector<QSharedPointer<ComboBoxConcept> > m_comboBoxConcepts;
@@ -167,12 +173,6 @@ class OSGridController : public QObject
   void setHorizontalHeader(std::vector<QString> names);
 
   QSharedPointer<QWidget> widgetAt(int i, int j);
-
-  virtual int rowCount() const;
-
-  virtual int columnCount() const;
-
-  // virtual std::vector<QWidget> row(int i);
 
   model::Model m_model;
 

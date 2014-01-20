@@ -74,5 +74,10 @@ int OSGridController::columnCount() const
   return 5; // TODO
 }
 
+std::vector<QWidget> OSGridController::row(int i)
+{
+  return std::vector<QWidget>();
+}
+
 } // openstudio
 
