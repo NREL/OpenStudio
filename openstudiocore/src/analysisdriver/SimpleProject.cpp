@@ -422,6 +422,7 @@ namespace detail {
 
     // has to have placeholder variable for swapping entire model
     if (!getAlternativeModelVariable()) {
+      LOG(Trace, "project does not contain alternative model variable");
       return false;
     }
 
@@ -440,17 +441,20 @@ namespace detail {
           if (!measure.optionalCast<NullMeasure>() &&
               !measure.optionalCast<RubyMeasure>())
           {
+            LOG(Trace, "measure group contains non-ruby measure");
             return false; // no ruleset measures
           }
           if (OptionalRubyMeasure rpert = measure.optionalCast<RubyMeasure>()) {
             // must be BCLMeasure RubyMeasure
             if (!rpert->usesBCLMeasure()) {
+              LOG(Trace, "measure is not a bcl measure");
               return false;
             }
           }
         }
       }
       else {
+        LOG(Trace, "no continuous variables");
         return false; // no continuous variables
       }
     }
@@ -464,6 +468,20 @@ namespace detail {
         return false;
       }
       if (step.isWorkItem()) {
+        if (nextWorkItemType.get() == JobType(JobType::ModelToIdf))
+        {
+          WorkItem wi = step.workItem();
+          if (wi.type == JobType(JobType::Ruby)
+              && wi.jobkeyname == "pat-radiance-job")
+          {
+            // we thought we were looking for ModelToIdf, but found
+            // the radiance script instead. That's OK, it means this is a project
+            // that uses radiance for its daylighting calculations
+            // continue to the next job in the loop
+            continue;
+          }
+        }
+
         if ((!nextWorkItemType) || (step.workItemType() != nextWorkItemType.get())) {
           return false;
         }
@@ -2428,8 +2446,10 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
 
     // check for swap variable, try to add if not present
     if (!result->getAlternativeModelVariable()) {
+      LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain alternative model variable");
       ok = result->insertAlternativeModelVariable();
       if (!ok) {
+        LOG_FREE(Error, "openPATProject", "Unable to insert alternative model variable");
         result.reset();
         return result;
       }
@@ -2437,6 +2457,7 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
     }
 
     if (!result->isPATProject()) {
+      LOG_FREE(Error, "openPATProject", "Project is not a pat project");
       result.reset();
       return result;
     }

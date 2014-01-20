@@ -202,9 +202,10 @@ void RunTabController::onRadianceEnabledChanged(bool t_radianceEnabled)
 
     if (m_radianceEnabled)
     {
-      openstudio::removeRadianceFromProject(*project);
-    } else {
+      LOG(Debug, "Adding radiance to project");
       openstudio::addRadianceToProject(*project);
+    } else {
+      openstudio::removeRadianceFromProject(*project);
     }
   } 
 

@@ -132,7 +132,7 @@ OptionalInt getProjectRadianceJobIndex(const openstudio::analysisdriver::SimpleP
 {
   openstudio::analysis::Problem problem = t_project.analysis().problem();
   OptionalInt index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-  if (index && *index > 0) {
+  if (index && *index > 0 && problem.workflow()[*index - 1].isWorkItem()) {
     openstudio::runmanager::WorkItem wi = problem.workflow()[*index - 1].workItem();
     if (wi.jobkeyname == "pat-radiance-job")
     {
@@ -177,6 +177,7 @@ void addRadianceToProject(openstudio::analysisdriver::SimpleProject &t_project)
 
     if (index)
     {
+      LOG_FREE(Debug, "WorkflowTools", "Adding radiance job at location " << *index);
       openstudio::runmanager::WorkItem wi = runmanager::Workflow::radianceDaylightCalculations(getOpenStudioRubyIncludePath(), radiancePath);
       wi.jobkeyname = "pat-radiance-job";
       problem.insert(*index, wi);

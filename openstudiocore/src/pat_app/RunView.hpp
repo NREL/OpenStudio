@@ -294,8 +294,9 @@ class DataPointJobContentView : public QWidget
   void addStdErrorMessage(const std::string& message);
 
  private:
+  static QString formatMessageForHTML(const std::string &t_message);
 
-   QLabel * m_textEdit;
+  QLabel * m_textEdit;
 
 };
 

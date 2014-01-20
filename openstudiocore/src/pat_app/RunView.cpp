@@ -34,6 +34,7 @@
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
+#include <runmanager/lib/WorkItem.hpp>
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
@@ -1110,45 +1111,52 @@ void DataPointJobContentView::clear()
   m_textEdit->setText("");
 }
 
+QString DataPointJobContentView::formatMessageForHTML(const std::string &t_message)
+{
+  QString str = QString::fromStdString(t_message);
+  str.replace("\n", "<br>");
+  return str;
+}
+
 void DataPointJobContentView::addInitialConditionMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:blue\">Initial Condition</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:blue\">Initial Condition</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addFinalConditionMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:blue\">Final Condition</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:blue\">Final Condition</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addInfoMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:green\">Info</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:green\">Info</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addWarningMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:#C47B06\">Warning</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:#C47B06\">Warning</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addErrorMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:red\">Error</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:red\">Error</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addStdErrorMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString::fromStdString(message) + QString("<br></br>");
+  html += formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
@@ -1193,7 +1201,13 @@ void DataPointJobItemView::update()
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
-    dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
+    openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
+    if (wi.jobkeyname == "pat-radiance-job")
+    {
+      dataPointJobHeaderView->setName("Radiance Daylighting");
+    } else {
+      dataPointJobHeaderView->setName(wi.type.valueName());
+    }
   }
 
   OS_ASSERT(m_workflowStepJob.job);
