@@ -39,17 +39,6 @@ namespace openstudio {
 OSGridView::OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent)
   : QWidget(parent)
 {
-  //QButtonGroup * buttonGroup = new QButtonGroup();
-
-  //HBoxLayout * buttonLayout = new HBoxLayout();
-
-  //QPushButton * button = 0;
-
-  //for(unsigned i=0; i<m_categories.size(); i++){
-  //  button = new QPushButton();
-  //  buttonLayout->addWidget(button);
-  //}
-
   m_gridLayout = new QGridLayout();
   m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
   m_gridLayout->setAlignment(Qt::AlignTop);
@@ -58,6 +47,27 @@ OSGridView::OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * p
   setContentsMargins(5,5,5,5);
 }
 
+void OSGridView::setGridController(QSharedPointer<OSGridController> gridController)
+{
+  if( m_gridController )
+  {
+    m_gridController->disconnect(this);
+  }
+
+  m_gridController = gridController;
+
+  connect(m_gridController.data(),SIGNAL(itemInserted(int,int)),this,SLOT(insertItemView(int,int)));
+  connect(m_gridController.data(),SIGNAL(itemRemoved(int,int)),this,SLOT(removeItemView(int,int)));
+  connect(m_gridController.data(),SIGNAL(itemChanged(int,int)),this,SLOT(refreshItemView(int,int)));
+  connect(m_gridController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllViews()));
+
+  refreshAll();
+}
+
+QSharedPointer<OSGridController> OSGridView::gridController() const
+{
+  return m_gridController;
+}
 void OSGridView::refreshAll()
 {
   QLayoutItem *child;
@@ -71,6 +81,51 @@ void OSGridView::refreshAll()
 
       delete child;
   }
+
+  if( m_gridController )
+  {
+    for( int i = 0, n = m_gridController->rowCount(); i < n; i++ )
+    {
+      for( int j = 0, n = m_gridController->columnCount(); i < n; i++ )
+      {
+        addWidget(i,j);
+      }
+    }
+  }
+}
+
+void OSGridView::addWidget(int row, int column)
+{
+  OS_ASSERT(m_gridController);
+
+  //QSharedPointer<QWidget> widget = m_gridController->itemAt(row,column);
+
+  //OS_ASSERT(itemData);
+
+  //QWidget * itemView = m_delegate->view(itemData);
+
+  //itemView->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Fixed);
+
+  //m_gridLayout->insertWidget(i,itemView);
+
+  //m_widgetItemPairs.insert( std::make_pair<QObject *,QSharedPointer<OSGridItem> >(itemView,itemData) );
+
+  //bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
+
+  //OS_ASSERT(bingo);
+}
+
+void OSGridView::removeWidget(int row, int column)
+{
+  int index = 0; // TODO
+
+  m_gridLayout->takeAt(index);
+
+  QWidget * widget = 0;
+
+  OS_ASSERT(widget);
+
+  delete widget;
 }
 
 void OSGridView::refresh(int row, int column)

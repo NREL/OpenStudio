@@ -23,7 +23,7 @@
 #include <QAbstractButton>
 #include <QWidget>
 
-//#include "OSGridController.hpp"
+#include "OSGridController.hpp"
 
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
@@ -34,9 +34,6 @@ class QString;
 
 namespace openstudio{
 
-  
-
-
 class OSCollapsibleView;
 
 class OSGridView : public QWidget
@@ -45,22 +42,19 @@ class OSGridView : public QWidget
 
   public:
 
+    OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
+
+    void setGridController(QSharedPointer<OSGridController> gridController);
+
+    QSharedPointer<OSGridController> gridController() const;
+
+    virtual ~OSGridView() {};
+
     //void addComboBoxColumn(std::string property, QString label);
 
     //void addCheckBoxColumn(std::string property, QString label);
 
-    //void selectRow(model::ModelObject & modelObject);
-
     //void addRows(std::vector<model::ModelObject> modelObjects);
-
-    //void addWidget(int row, int column, QWidget * widget );
-
-    OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
-
-    //void setGridController(QSharedPointer<OSGridController> gridController);
-
-    virtual ~OSGridView() {};
-
 
     //bool bindComboBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
@@ -74,55 +68,41 @@ class OSGridView : public QWidget
   
     //bool bindUnsigned(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
-    //void setCategories(std::vector<std::string>);
+    void addWidget(int row, int column);
 
-    //std::vector<std::string> categories();
-
-    //void addWidget(int row, int column);
-
-    //void removeWidget(int row, int column);
+    void removeWidget(int row, int column);
 
   signals:
+
+    void cellClicked(int row, int column);
 
     void rowClicked(int row);
 
     void columnClicked(int column);
 
-    void cellClicked(int row, int column);
-
   private:
 
     void refresh(int row, int column);
-
-    void refreshAll();
-
-    OSCollapsibleView * m_CollapsibleView;
-
-    QGridLayout * m_gridLayout;
-
-    std::vector<std::string> m_categories;
-
-    // Caller's job to delete
-    void removeWidget( QWidget * widget );
-
-    void selectRow(int row);
-
-    void selectColumn(int row);
-
-    std::vector<model::ModelObject> m_modelObjects;
-
-    // A vector with pair for each column 
-    // One item in the pair is property to bind to
-    // The other item in the pair is the type of widget to show for that property
-    // ComboBox, CheckBox, IntBox, etc
-    std::vector< std::pair<std::string,std::string> > m_columnPropertyAndTypes;
-
-    void refresh();
 
     void refreshRow(model::ModelObject modelObject);
 
     void refreshColumn(int columnId);
 
+    void refreshAll(); 
+
+    void selectCell(int row, int column);
+
+    void selectRow(int row);
+
+    void selectColumn(int column);
+
+    //OSCollapsibleView * m_CollapsibleView;
+
+    QGridLayout * m_gridLayout;
+
+    QSharedPointer<OSGridController> m_gridController;
+
+    std::vector<model::ModelObject> m_modelObjects;
 };
 
 } // openstudio
