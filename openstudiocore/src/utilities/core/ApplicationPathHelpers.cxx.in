@@ -185,6 +185,14 @@ namespace openstudio {
         // are going to reset to a known application path
         rundir = rundir.parent_path().parent_path() / openstudio::toPath("OpenStudio.app/Contents/MacOS");
       }
+
+      if (openstudio::toString(rundir.filename()) == "openstudio" &&
+          openstudio::toString(rundir.parent_path().filename()) == "node")
+      {
+        // It looks like our DLL was loaded from the installed node dir, so we
+        // are going to reset to a known application path
+        rundir = rundir.parent_path().parent_path() / openstudio::toPath("OpenStudio.app/Contents/MacOS");
+      }
 #endif
       
       std::string filename = openstudio::toString(rundir.filename());
