@@ -63,6 +63,17 @@ std::string toString(double v) {
   return ss.str();
 }
 
+std::string toString(std::istream& s) {
+  // istream -> string code from
+  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
+  std::string contents;
+  s.seekg(0, std::ios::end);
+  contents.resize(s.tellg());
+  s.seekg(0, std::ios::beg);
+  s.read(&contents[0], contents.size());
+  return contents;
+}
+
 /** QString to wstring. */
 std::wstring toWString(const QString& q)
 {

@@ -113,6 +113,16 @@ class DuplicateButton : public QPushButton
   virtual ~DuplicateButton() {}
 };
 
+class SofterDuplicateButton : public QPushButton
+{
+  Q_OBJECT
+ 
+ public:
+  
+  SofterDuplicateButton(QWidget * parent = 0);
+  virtual ~SofterDuplicateButton() {}
+};
+
 class UpButton : public QPushButton
 {
   Q_OBJECT

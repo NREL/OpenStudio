@@ -130,6 +130,90 @@ void OSRunner::registerFinalCondition(const std::string& message) {
   m_result.setFinalCondition(m_channel, message);
 }
 
+void OSRunner::registerAttribute(const Attribute& attribute) {
+  m_result.appendAttribute(attribute);
+}
+
+void OSRunner::registerValue(const std::string& name, bool value) {
+  registerAttribute(Attribute(name,value));
+}
+
+void OSRunner::registerValue(const std::string& name,
+                             const std::string& displayName,
+                             bool value)
+{
+  Attribute attribute = Attribute(name,value);
+  attribute.setDisplayName(displayName);
+  registerAttribute(attribute);
+}
+
+void OSRunner::registerValue(const std::string& name, double value) {
+  registerAttribute(Attribute(name,value));
+}
+
+void OSRunner::registerValue(const std::string& name, double value, const std::string& units) {
+  registerAttribute(Attribute(name,value,units));
+}
+
+void OSRunner::registerValue(const std::string& name,
+                             const std::string& displayName,
+                             double value)
+{
+  Attribute attribute = Attribute(name,value);
+  attribute.setDisplayName(displayName);
+  registerAttribute(attribute);
+}
+
+void OSRunner::registerValue(const std::string& name,
+                             const std::string& displayName,
+                             double value,
+                             const std::string& units)
+{
+  Attribute attribute = Attribute(name,value,units);
+  attribute.setDisplayName(displayName);
+  registerAttribute(attribute);
+}
+
+void OSRunner::registerValue(const std::string& name, int value) {
+  registerAttribute(Attribute(name,value));
+}
+
+void OSRunner::registerValue(const std::string& name, int value, const std::string& units) {
+  registerAttribute(Attribute(name,value,units));
+}
+
+void OSRunner::registerValue(const std::string& name,
+                             const std::string& displayName,
+                             int value)
+{
+  Attribute attribute = Attribute(name,value);
+  attribute.setDisplayName(displayName);
+  registerAttribute(attribute);
+}
+
+void OSRunner::registerValue(const std::string& name,
+                             const std::string& displayName,
+                             int value,
+                             const std::string& units)
+{
+  Attribute attribute = Attribute(name,value,units);
+  attribute.setDisplayName(displayName);
+  registerAttribute(attribute);
+}
+
+void OSRunner::registerValue(const std::string& name, const std::string& value) {
+  registerAttribute(Attribute(name,value));
+}
+
+void OSRunner::registerValue(const std::string& name,
+                             const std::string& displayName,
+                             const std::string& value)
+{
+  Attribute attribute = Attribute(name,value);
+  attribute.setDisplayName(displayName);
+  registerAttribute(attribute);
+}
+
 void OSRunner::createProgressBar(const std::string& text) const {
 }
 
@@ -144,6 +228,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
 {
   bool result(true);
   std::stringstream ss;
+  AttributeVector argumentValueAttributes;
   BOOST_FOREACH(const OSArgument& script_argument,script_arguments) {
     OSArgumentMap::const_iterator it = user_arguments.find(script_argument.name());
     if (it == user_arguments.end()) {
@@ -226,6 +311,62 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
         }
         ss.str("");
       }
+      if (result) {
+        Quantity q;
+        switch(user_argument.type().value()) {
+          case OSArgumentType::Boolean :
+            if (user_argument.hasValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsBool()));
+            }
+            else if (user_argument.hasDefaultValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsBool()));
+            }
+           break;
+          case OSArgumentType::Double :
+            if (user_argument.hasValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsDouble()));
+            }
+            else if (user_argument.hasDefaultValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsDouble()));
+            }
+           break;
+          case OSArgumentType::Quantity :
+            if (user_argument.hasValue()) {
+              q = user_argument.valueAsQuantity();
+            }
+            else if (user_argument.hasDefaultValue()) {
+              q = user_argument.defaultValueAsQuantity();
+            }
+            argumentValueAttributes.push_back(Attribute(user_argument.name(),q.value(),q.units().print()));
+           break;
+          case OSArgumentType::Integer :
+            if (user_argument.hasValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsInteger()));
+            }
+            else if (user_argument.hasDefaultValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsInteger()));
+            }
+           break;
+          case OSArgumentType::String :
+          case OSArgumentType::Choice :
+          case OSArgumentType::Path :
+            if (user_argument.hasValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsString()));
+            }
+            else if (user_argument.hasDefaultValue()) {
+              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsString()));
+            }
+           break;
+          default:
+            OS_ASSERT(false);
+        }
+      }
+    }
+  }
+
+  if (result) {
+    BOOST_FOREACH(const Attribute& attribute,argumentValueAttributes) {
+      registerAttribute(attribute);
     }
   }
 

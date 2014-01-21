@@ -104,6 +104,9 @@ namespace detail {
 
     void resetOutOfRangeValue(bool driverMethod = true);
 
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays();
+
     //@}
    protected:
    private:

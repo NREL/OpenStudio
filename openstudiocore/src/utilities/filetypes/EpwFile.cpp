@@ -1546,6 +1546,17 @@ EpwFile::EpwFile(const openstudio::path& p, bool storeData)
   }
 }
 
+boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData)
+{
+  boost::optional<EpwFile> result;
+  try{
+    result = EpwFile(p, storeData);
+  }catch(const std::exception&){
+  }
+  return result;
+}
+
+
 openstudio::path EpwFile::path() const
 {
   return m_path;

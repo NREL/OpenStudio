@@ -117,6 +117,11 @@ namespace runmanager {
       /// Create from the workflow WorkItem
       RubyJobBuilder(const WorkItem &t_workItem);
 
+      /// Create from the workflow WorkItem
+      RubyJobBuilder(const WorkItem &t_workItem,
+                     const openstudio::path& t_originalBasePath,
+                     const openstudio::path& t_newBasePath);
+
       /// Create from a BCLMeasure by:
       ///   Setting scriptFile to t_measure.primaryRubyScriptPath()
       ///   Calling addRequiredFile for each t_measure.files()

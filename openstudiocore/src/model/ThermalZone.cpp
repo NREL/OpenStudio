@@ -83,6 +83,7 @@
 #include <utilities/geometry/Vector3d.hpp>
 
 #include <utilities/units/Unit.hpp>
+#include <utilities/units/QuantityConverter.hpp>
 
 #include <utilities/math/FloatCompare.hpp>
 
@@ -668,6 +669,30 @@ namespace detail {
     return result;
   }
 
+  double ThermalZone_Impl::exteriorSurfaceArea() const {
+    double result(0.0);
+    BOOST_FOREACH(const Space& space,spaces()) {
+      result += space.exteriorArea();
+    }
+    return result;
+  }
+
+  double ThermalZone_Impl::exteriorWallArea() const {
+    double result(0.0);
+    BOOST_FOREACH(const Space& space,spaces()) {
+      result += space.exteriorWallArea();
+    }
+    return result;
+  }
+
+  double ThermalZone_Impl::airVolume() const {
+    double result(0.0);
+    BOOST_FOREACH(const Space& space, spaces()) {
+      result += space.volume();
+    }
+    return result;
+  }
+
   double ThermalZone_Impl::numberOfPeople() const {
     double result(0.0);
     BOOST_FOREACH(const Space& space, spaces()) {
@@ -817,6 +842,73 @@ namespace detail {
     return ep / np;
   }
 
+  double ThermalZone_Impl::infiltrationDesignFlowRate() const {
+    double result(0.0);
+    BOOST_FOREACH(const Space& space, spaces()) {
+      result += space.infiltrationDesignFlowRate();
+    }
+    return result;
+  }
+
+  double ThermalZone_Impl::infiltrationDesignFlowPerSpaceFloorArea() const {
+    double area = floorArea();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(area,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignFlowPerSpaceFloorArea();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return idfr/area;
+  }
+
+  double ThermalZone_Impl::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+    double area = exteriorSurfaceArea();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(area,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignFlowPerExteriorSurfaceArea();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return idfr/area;
+  }
+
+  double ThermalZone_Impl::infiltrationDesignFlowPerExteriorWallArea() const {
+    double area = exteriorWallArea();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(area,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignFlowPerExteriorWallArea();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return idfr/area;
+  }
+
+  double ThermalZone_Impl::infiltrationDesignAirChangesPerHour() const {
+    double volume = airVolume();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(volume,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignAirChangesPerHour();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return convert(idfr/volume,"1/s","1/h").get();
+  }
 
   boost::optional<std::string> ThermalZone_Impl::isConditioned() const {
     boost::optional<std::string> result;
@@ -2015,6 +2107,18 @@ double ThermalZone::floorArea() const {
   return getImpl<detail::ThermalZone_Impl>()->floorArea();
 }
 
+double ThermalZone::exteriorSurfaceArea() const {
+  return getImpl<detail::ThermalZone_Impl>()->exteriorSurfaceArea();
+}
+
+double ThermalZone::exteriorWallArea() const {
+  return getImpl<detail::ThermalZone_Impl>()->exteriorWallArea();
+}
+
+double ThermalZone::airVolume() const {
+  return getImpl<detail::ThermalZone_Impl>()->airVolume();
+}
+
 double ThermalZone::numberOfPeople() const {
   return getImpl<detail::ThermalZone_Impl>()->numberOfPeople();
 }
@@ -2061,6 +2165,26 @@ double ThermalZone::gasEquipmentPowerPerFloorArea() const {
 
 double ThermalZone::gasEquipmentPowerPerPerson() const {
   return getImpl<detail::ThermalZone_Impl>()->gasEquipmentPowerPerPerson();
+}
+
+double ThermalZone::infiltrationDesignFlowRate() const {
+  return getImpl<detail::ThermalZone_Impl>()->infiltrationDesignFlowRate();
+}
+
+double ThermalZone::infiltrationDesignFlowPerSpaceFloorArea() const {
+  return getImpl<detail::ThermalZone_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
+}
+
+double ThermalZone::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+  return getImpl<detail::ThermalZone_Impl>()->infiltrationDesignFlowPerExteriorSurfaceArea();
+}
+
+double ThermalZone::infiltrationDesignFlowPerExteriorWallArea() const {
+  return getImpl<detail::ThermalZone_Impl>()->infiltrationDesignFlowPerExteriorWallArea();
+}
+
+double ThermalZone::infiltrationDesignAirChangesPerHour() const {
+  return getImpl<detail::ThermalZone_Impl>()->infiltrationDesignAirChangesPerHour();
 }
 
 boost::optional<std::string> ThermalZone::isConditioned() const {

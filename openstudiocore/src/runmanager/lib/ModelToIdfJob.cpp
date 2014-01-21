@@ -164,6 +164,11 @@ namespace detail {
           ft.setKeepRunControlSpecialDays(true);
         }
 
+        if (allParams().has("IPTabularOutput"))
+        {
+          ft.setIPTabularOutput(true);
+        }
+
         openstudio::Workspace workspace = ft.translateModel(*m);
 
         if (workspace.numObjects() > 0){
