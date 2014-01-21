@@ -258,18 +258,12 @@ namespace detail {
 
   boost::optional<std::string> SpaceType_Impl::standardsBuildingType() const
   {
-    return getString(OS_SpaceTypeFields::StandardsBuildingType, false, false);
+    return getString(OS_SpaceTypeFields::StandardsBuildingType, false, true);
   }
 
   std::vector<std::string> SpaceType_Impl::suggestedStandardsBuildingTypes() const
   {
     std::vector<std::string> result;
-
-    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
-    if (standardsBuildingType){
-      result.push_back(*standardsBuildingType);
-      return result;
-    }
   
     static QMap<QString, QVariant> map;
     if (map.isEmpty()){
@@ -278,6 +272,7 @@ namespace detail {
         QJson::Parser parser;
         bool ok(false);
         QVariant variant = parser.parse(&file,&ok);
+        OS_ASSERT(ok);
         file.close();
         map = variant.toMap();
       }
@@ -285,11 +280,24 @@ namespace detail {
 
     // DLM: should this include values from the model?
 
+    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+
     QMap<QString, QVariant>::const_iterator i = map.constBegin();
     for (; i != map.constEnd(); ++i) {
+      std::string key = toString(i.key());
+      if (standardsBuildingType){
+        if (standardsBuildingType.get() == key){
+          // this will get added to the front of the result later
+          continue;
+        }
+      }
       result.push_back(toString(i.key()));
     }
     std::sort(result.begin(), result.end(), IstringCompare());
+
+    if (standardsBuildingType){
+      result.insert(result.begin(), *standardsBuildingType);
+    }
 
     return result;
   }
@@ -309,18 +317,12 @@ namespace detail {
 
   boost::optional<std::string> SpaceType_Impl::standardsSpaceType() const
   {
-    return getString(OS_SpaceTypeFields::StandardsSpaceType, false, false);
+    return getString(OS_SpaceTypeFields::StandardsSpaceType, false, true);
   }
 
   std::vector<std::string> SpaceType_Impl::suggestedStandardsSpaceTypes() const
   {
     std::vector<std::string> result;
-
-    boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
-    if (standardsSpaceType){
-      result.push_back(*standardsSpaceType);
-      return result;
-    }
 
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
     if (!standardsBuildingType){
@@ -341,12 +343,25 @@ namespace detail {
 
     // DLM: should this include values from the model?
 
+    boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
+
     QList<QVariant> values = map[toQString(*standardsBuildingType)].toList();
     QList<QVariant>::const_iterator i = values.constBegin();
     for (; i != values.constEnd(); ++i) {
+      std::string key = toString(i->toString());
+      if (standardsSpaceType){
+        if (standardsSpaceType.get() == key){
+          // this will get added to the front of the result later
+          continue;
+        }
+      }
       result.push_back(toString(i->toString()));
     }
     std::sort(result.begin(), result.end(), IstringCompare());
+    
+    if (standardsSpaceType){
+      result.insert(result.begin(), *standardsSpaceType);
+    }
 
     return result;
   }
