@@ -33,8 +33,26 @@
 #include <model/ModelObject_impl.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/idd/IddObject.hpp>
 
 namespace openstudio {
+
+OSGridView::OSGridView(const model::Model & model, QWidget * parent)
+  : QWidget(parent),
+  m_model(model),
+  m_gridController(0)
+{
+  m_gridLayout = new QGridLayout();
+  m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  m_gridLayout->setAlignment(Qt::AlignTop);
+  setLayout(m_gridLayout);
+
+  setContentsMargins(5,5,5,5);
+
+  setGridController(new OSGridController(openstudio::IddObjectType::Refrigeration_Case, model));
+
+  refreshAll();
+}
 
 OSGridView::OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent)
   : QWidget(parent)
@@ -47,7 +65,7 @@ OSGridView::OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * p
   setContentsMargins(5,5,5,5);
 }
 
-void OSGridView::setGridController(QSharedPointer<OSGridController> gridController)
+void OSGridView::setGridController(OSGridController * gridController)
 {
   if( m_gridController )
   {
@@ -56,21 +74,53 @@ void OSGridView::setGridController(QSharedPointer<OSGridController> gridControll
 
   m_gridController = gridController;
 
-  connect(m_gridController.data(),SIGNAL(itemInserted(int,int)),this,SLOT(insertItemView(int,int)));
-  connect(m_gridController.data(),SIGNAL(itemRemoved(int,int)),this,SLOT(removeItemView(int,int)));
-  connect(m_gridController.data(),SIGNAL(itemChanged(int,int)),this,SLOT(refreshItemView(int,int)));
-  connect(m_gridController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllViews()));
+  bool isConnected = false;
 
+  isConnected = connect(m_gridController,SIGNAL(itemInserted(int,int)),this,SLOT(addWidget(int,int)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(m_gridController,SIGNAL(itemRemoved(int,int)),this,SLOT(removeWidget(int,int)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(m_gridController,SIGNAL(itemChanged(int,int)),this,SLOT(refresh(int,int)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(m_gridController,SIGNAL(modelReset()),this,SLOT(refreshAll()));
+  OS_ASSERT(isConnected);
+    
   refreshAll();
 }
 
-QSharedPointer<OSGridController> OSGridView::gridController() const
+OSGridController * OSGridView::gridController() const
 {
   return m_gridController;
 }
+
+void OSGridView::refresh(int row, int column)
+{
+  removeWidget(row,column);
+
+  addWidget(row,column);
+}
+
+void OSGridView::removeWidget(int row, int column)
+{
+  QLayoutItem * item = m_gridLayout->itemAtPosition(row,column);
+
+  OS_ASSERT(item);
+
+  QWidget * widget = item->widget();
+
+  OS_ASSERT(widget);
+
+  delete widget;
+
+  delete item;
+}
+
 void OSGridView::refreshAll()
 {
-  QLayoutItem *child;
+  QLayoutItem * child;
   while((child = m_gridLayout->takeAt(0)) != 0)
   {
       QWidget * widget = child->widget();
@@ -84,9 +134,9 @@ void OSGridView::refreshAll()
 
   if( m_gridController )
   {
-    for( int i = 0, n = m_gridController->rowCount(); i < n; i++ )
+    for( int i = 0; i < m_gridController->rowCount(); i++ )
     {
-      for( int j = 0, n = m_gridController->columnCount(); i < n; i++ )
+      for( int j = 0; j < m_gridController->columnCount(); j++ )
       {
         addWidget(i,j);
       }
@@ -98,38 +148,11 @@ void OSGridView::addWidget(int row, int column)
 {
   OS_ASSERT(m_gridController);
 
-  //QSharedPointer<QWidget> widget = m_gridController->itemAt(row,column);
+  QWidget * widget = m_gridController->widgetAt(row,column);
 
-  //OS_ASSERT(itemData);
-
-  //QWidget * itemView = m_delegate->view(itemData);
-
-  //itemView->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Fixed);
-
-  //m_gridLayout->insertWidget(i,itemView);
-
-  //m_widgetItemPairs.insert( std::make_pair<QObject *,QSharedPointer<OSGridItem> >(itemView,itemData) );
-
-  //bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
-
-  //OS_ASSERT(bingo);
-}
-
-void OSGridView::removeWidget(int row, int column)
-{
-  int index = 0; // TODO
-
-  m_gridLayout->takeAt(index);
-
-  QWidget * widget = 0;
-
-  OS_ASSERT(widget);
-
-  delete widget;
-}
-
-void OSGridView::refresh(int row, int column)
-{
+  OS_ASSERT(m_gridLayout);
+  
+  m_gridLayout->addWidget(widget,row,column);
 }
 
 } // openstudio

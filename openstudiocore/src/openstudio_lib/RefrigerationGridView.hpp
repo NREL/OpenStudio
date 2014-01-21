@@ -23,6 +23,8 @@
 #include "../shared_gui_components/OSGridView.hpp"
 #include "../shared_gui_components/OSGridController.hpp"
 
+#include <model/Model.hpp>
+
 #include <QSharedPointer>
 #include <QWidget>
 
@@ -34,7 +36,7 @@ class RefrigerationGridView : public QWidget
 
  public:
 
-  RefrigerationGridView(QWidget * parent = 0);
+  RefrigerationGridView(const model::Model & model, QWidget * parent = 0);
 
   virtual ~RefrigerationGridView() {}
 

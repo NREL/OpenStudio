@@ -42,11 +42,13 @@ class OSGridView : public QWidget
 
   public:
 
+    OSGridView(const model::Model & model, QWidget * parent = 0); 
+
     OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
 
-    void setGridController(QSharedPointer<OSGridController> gridController);
+    void setGridController(OSGridController * gridController);
 
-    QSharedPointer<OSGridController> gridController() const;
+   OSGridController * gridController() const;
 
     virtual ~OSGridView() {};
 
@@ -68,11 +70,7 @@ class OSGridView : public QWidget
   
     //bool bindUnsigned(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
-    void addWidget(int row, int column);
-
-    void removeWidget(int row, int column);
-
-  signals:
+    signals:
 
     void cellClicked(int row, int column);
 
@@ -80,15 +78,21 @@ class OSGridView : public QWidget
 
     void columnClicked(int column);
 
-  private:
+    private slots:
 
     void refresh(int row, int column);
+
+    void refreshAll(); 
+
+    void addWidget(int row, int column);
+
+    void removeWidget(int row, int column);
+
+    private:
 
     void refreshRow(model::ModelObject modelObject);
 
     void refreshColumn(int columnId);
-
-    void refreshAll(); 
 
     void selectCell(int row, int column);
 
@@ -96,13 +100,14 @@ class OSGridView : public QWidget
 
     void selectColumn(int column);
 
-    //OSCollapsibleView * m_CollapsibleView;
-
     QGridLayout * m_gridLayout;
 
-    QSharedPointer<OSGridController> m_gridController;
+    OSGridController * m_gridController;
 
     std::vector<model::ModelObject> m_modelObjects;
+
+    model::Model m_model;
+
 };
 
 } // openstudio

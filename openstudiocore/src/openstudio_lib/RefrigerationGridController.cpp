@@ -19,15 +19,23 @@
 
 #include "RefrigerationGridController.hpp"
 
+#include "RefrigerationGridView.hpp"
+
 namespace openstudio {
 
-RefrigerationGridController::RefrigerationGridController()
-  : QObject()
+RefrigerationGridController::RefrigerationGridController(const model::Model & model)
+  : QObject(),
+  m_refrigerationGridView(new RefrigerationGridView(model))
 {
 }
 
 RefrigerationGridController::~RefrigerationGridController()
 {
+}
+
+RefrigerationGridView * RefrigerationGridController::refrigerationGridView() const
+{
+  return m_refrigerationGridView;
 }
 
 } // openstudio

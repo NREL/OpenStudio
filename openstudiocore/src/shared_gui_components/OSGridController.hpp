@@ -131,9 +131,9 @@ class OSGridController : public QObject
 
   virtual std::vector<QWidget> row(int i);
 
-  private:
+  QWidget * widgetAt(int i, int j);
 
-  std::vector<QSharedPointer<ComboBoxConcept> > m_comboBoxConcepts;
+  private:
 
   enum ColumnType
   {
@@ -147,8 +147,6 @@ class OSGridController : public QObject
     UNSIGNED,
     NOTVALID
   };
-
-  std::vector<ColumnType> m_columnTypes;
 
   //bool addCheckBoxColumn(std::string property);  
   
@@ -172,11 +170,13 @@ class OSGridController : public QObject
 
   void setHorizontalHeader(std::vector<QString> names);
 
-  QSharedPointer<QWidget> widgetAt(int i, int j);
-
   model::Model m_model;
 
   IddObjectType m_iddObjectType;
+
+  std::vector<ColumnType> m_columnTypes; 
+
+  std::vector<QSharedPointer<ComboBoxConcept> > m_comboBoxConcepts;
 
   signals:
 

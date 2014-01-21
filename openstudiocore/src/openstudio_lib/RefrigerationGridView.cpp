@@ -19,11 +19,19 @@
 
 #include "RefrigerationGridView.hpp"
 
+#include "shared_gui_components/OSGridView.hpp"
+
+#include <QBoxLayout>
+
 namespace openstudio {
 
-RefrigerationGridView::RefrigerationGridView(QWidget * parent)
+RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget * parent)
   : QWidget(parent)
 {
+  OSGridView * gridView = new OSGridView(model,parent);
+  QHBoxLayout * layout = new QHBoxLayout();
+  layout->addWidget(gridView);
+  setLayout(layout);
 }
 
 } // openstudio

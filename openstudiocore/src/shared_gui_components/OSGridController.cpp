@@ -24,8 +24,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-//#include <algorithm>
-
 #include <QWidget>
 
 namespace openstudio {
@@ -38,7 +36,8 @@ OSGridController::OSGridController()
 OSGridController::OSGridController(IddObjectType iddObjectType, model::Model model)
   : QObject(),
   m_model(model),
-  m_iddObjectType(iddObjectType)
+  m_iddObjectType(iddObjectType),
+  m_columnTypes(std::vector<ColumnType>())
 {
 }
 
@@ -46,20 +45,27 @@ OSGridController::~OSGridController()
 {
 }
 
-QSharedPointer<QWidget> OSGridController::widgetAt(int i, int j)
+QWidget * OSGridController::widgetAt(int i, int j)
 {
-  QSharedPointer<QWidget> result;
+  QWidget * result = 0;
 
-  result = QSharedPointer<QWidget>(new QLabel());
+  QString string("Hello ");
+  QString temp;
+  string += "row: ";
+  string += temp.setNum(i);  
+  string += ", column: ";
+  string += temp.setNum(j);
+
+  result = new QLabel(string);
   
   //std::vector<model::ModelObject> modelObjects = m_model.getModelObjectsByType(m_iddObjectType).sortSomewayortheother(); TODO
   //std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<m_iddObjectType>();
 
   //model::ModelObject mo = modelObjects[i];
 
-  if( m_columnTypes.at(j) == OSGridController::COMBOBOX )
-  {
-  }
+  //if( m_columnTypes.size() > j && m_columnTypes.at(j) == OSGridController::COMBOBOX )
+  //{
+  //}
 
   return result;
 }

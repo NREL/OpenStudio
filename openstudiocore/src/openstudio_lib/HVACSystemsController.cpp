@@ -289,7 +289,7 @@ void HVACSystemsController::update()
         m_hvacSystemsView->hvacToolbarView->addButton->hide();
         m_hvacSystemsView->hvacToolbarView->deleteButton->hide();
 
-        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController());
+        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_model));
 
         // TODO m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
       }
@@ -315,6 +315,9 @@ void HVACSystemsController::update()
       else if( m_hvacSystemsView->hvacToolbarView->gridViewButton->isChecked() )
       {
         // TODO
+        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_model));
+
+        m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
       }
       else
       {

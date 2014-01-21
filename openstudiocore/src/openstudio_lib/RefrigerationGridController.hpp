@@ -20,9 +20,10 @@
 #ifndef OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_H
 #define OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_H
 
-#include <openstudio_lib/RefrigerationGridView.hpp>
+#include <model/Model.hpp>
 
 #include <QObject>
+#include <QPointer>
 #include <QSharedPointer>
 
 namespace openstudio {
@@ -35,7 +36,7 @@ class RefrigerationGridController : public QObject
 
   public:
 
-  RefrigerationGridController();
+  RefrigerationGridController(const model::Model & model);
 
   virtual ~RefrigerationGridController();
 
@@ -43,7 +44,7 @@ class RefrigerationGridController : public QObject
 
   private:
 
-  //QPointer<RefrigerationGridView> m_refrigerationGridView;
+  QPointer<RefrigerationGridView> m_refrigerationGridView;
 
 };
 
