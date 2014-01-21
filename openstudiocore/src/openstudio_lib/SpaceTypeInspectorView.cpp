@@ -566,7 +566,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_standardsBuildingTypeComboBox = new QComboBox();
   m_standardsBuildingTypeComboBox->setEditable(true);
   m_standardsBuildingTypeComboBox->setDuplicatesEnabled(false);
-  //m_standardsBuildingTypeComboBox->setStretch(100);
+  m_standardsBuildingTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsBuildingTypeComboBox);
 
   mainGridLayout->addLayout(vLayout,row,0);
@@ -581,7 +581,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_standardsSpaceTypeComboBox = new QComboBox();
   m_standardsSpaceTypeComboBox->setEditable(true);
   m_standardsSpaceTypeComboBox->setDuplicatesEnabled(false);
-  //m_standardsSpaceTypeComboBox->setStretch(100);
+  m_standardsSpaceTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsSpaceTypeComboBox);
 
   mainGridLayout->addLayout(vLayout,row,1);

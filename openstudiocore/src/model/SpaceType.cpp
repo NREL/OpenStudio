@@ -288,10 +288,12 @@ namespace detail {
       if (other.handle() == this->handle()){
         continue;
       }
+
       boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
       if (!otherBuildingType){
         continue;
       }
+
       if (standardsBuildingType){
         if (standardsBuildingType.get() == otherBuildingType.get()){
           // this will get added to the front of the result later
@@ -339,26 +341,24 @@ namespace detail {
     std::vector<std::string> result;
 
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
-    if (!standardsBuildingType){
-      return result;
-    }
-
     boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
 
     // include values from json
     parseStandardsSpaceTypeMap();
-    if (m_standardsSpaceTypeMap.contains(toQString(*standardsBuildingType))){
-      QList<QVariant> values = m_standardsSpaceTypeMap[toQString(*standardsBuildingType)].toList();
-      QList<QVariant>::const_iterator i = values.constBegin();
-      for (; i != values.constEnd(); ++i) {
-        std::string key = toString(i->toString());
-        if (standardsSpaceType){
-          if (standardsSpaceType.get() == key){
-            // this will get added to the front of the result later
-            continue;
+    if (standardsBuildingType){
+      if (m_standardsSpaceTypeMap.contains(toQString(*standardsBuildingType))){
+        QList<QVariant> values = m_standardsSpaceTypeMap[toQString(*standardsBuildingType)].toList();
+        QList<QVariant>::const_iterator i = values.constBegin();
+        for (; i != values.constEnd(); ++i) {
+          std::string key = toString(i->toString());
+          if (standardsSpaceType){
+            if (standardsSpaceType.get() == key){
+              // this will get added to the front of the result later
+              continue;
+            }
           }
+          result.push_back(toString(i->toString()));
         }
-        result.push_back(toString(i->toString()));
       }
     }
 
@@ -367,17 +367,25 @@ namespace detail {
       if (other.handle() == this->handle()){
         continue;
       }
+
       boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
-      if (!otherBuildingType){
+      if (standardsBuildingType && otherBuildingType){
+        // need to be the same
+        if (standardsBuildingType.get() != otherBuildingType.get()){
+          continue;
+        }
+      }else if (!standardsBuildingType && !otherBuildingType){
+        // both empty
+      }else{
+        // different
         continue;
       }
-      if (standardsBuildingType.get() != otherBuildingType.get()){
-        continue;
-      }
+
       boost::optional<std::string> otherSpaceType = other.standardsSpaceType();
       if (!otherSpaceType){
         continue;
       }
+
       if (standardsSpaceType){
         if (standardsSpaceType.get() == otherSpaceType.get()){
           // this will get added to the front of the result later
