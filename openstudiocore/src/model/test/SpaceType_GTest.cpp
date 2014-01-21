@@ -118,3 +118,22 @@ TEST_F(ModelFixture, SpaceType_FloorArea) {
   EXPECT_DOUBLE_EQ(200, spaceType1.floorArea());
   EXPECT_DOUBLE_EQ(100, spaceType2.floorArea());
 }
+
+
+TEST_F(ModelFixture, SpaceType_StandardsTypes) {
+  Model model;
+  SpaceType spaceType(model);
+
+  EXPECT_FALSE(spaceType.standardsBuildingType());
+  EXPECT_FALSE(spaceType.suggestedStandardsBuildingTypes().empty());
+  EXPECT_FALSE(spaceType.standardsSpaceType());
+  EXPECT_TRUE(spaceType.suggestedStandardsSpaceTypes().empty());
+
+  EXPECT_TRUE(spaceType.setStandardsBuildingType("SecondarySchool"));
+  ASSERT_TRUE(spaceType.standardsBuildingType());
+  EXPECT_EQ("SecondarySchool", spaceType.standardsBuildingType().get());
+  ASSERT_EQ(1u, spaceType.suggestedStandardsBuildingTypes().size());
+  EXPECT_EQ("SecondarySchool", spaceType.suggestedStandardsBuildingTypes()[0]);
+  EXPECT_FALSE(spaceType.standardsSpaceType());
+  EXPECT_FALSE(spaceType.suggestedStandardsSpaceTypes().empty());
+} 

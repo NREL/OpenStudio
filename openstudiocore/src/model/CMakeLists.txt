@@ -1077,12 +1077,19 @@ SET( ${target_name}_moc
 
 qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
+SET( ${target_name}_qrc
+  Model.qrc
+)
+
+# generate rules for building source files from the resources
+qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+
 
 SET( ${target_name}_depends
   openstudio_utilities
 )
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} )
+ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs} )
 TARGET_LINK_LIBRARIES(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 

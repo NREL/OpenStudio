@@ -1999,10 +1999,20 @@ OS:SpaceType,
   A5, \field Group Rendering Name
        \type object-list
        \object-list GroupRenderingNames
-  A6; \field Design Specification Outdoor Air Object Name
+  A6, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-
+  A7, \field Standards Building Type
+       \type alpha
+       \note This is a freeform field used to identify the building type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8; \field Standards Space Type
+       \type alpha
+       \note This is a freeform field used to identify the space type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+        
 OS:ModelObjectList,
        \min-fields 1
        \extensible:1 Just duplicate last field and comments (changing numbering, please)

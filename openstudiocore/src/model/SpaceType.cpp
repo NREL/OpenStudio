@@ -77,6 +77,9 @@
 
 #include <utilities/core/Assert.hpp>
 
+#include <QFile>
+#include <qjson/parser.h>
+
 namespace openstudio {
 namespace model {
 
@@ -251,6 +254,114 @@ namespace detail {
   void SpaceType_Impl::resetRenderingColor()
   {
     setString(OS_SpaceTypeFields::GroupRenderingName, "");
+  }
+
+  boost::optional<std::string> SpaceType_Impl::standardsBuildingType() const
+  {
+    return getString(OS_SpaceTypeFields::StandardsBuildingType, false, false);
+  }
+
+  std::vector<std::string> SpaceType_Impl::suggestedStandardsBuildingTypes() const
+  {
+    std::vector<std::string> result;
+
+    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+    if (standardsBuildingType){
+      result.push_back(*standardsBuildingType);
+      return result;
+    }
+  
+    static QMap<QString, QVariant> map;
+    if (map.isEmpty()){
+      QFile file(":/resources/standards/nrel_space_types.json");
+      if (file.open(QFile::ReadOnly)) {
+        QJson::Parser parser;
+        bool ok(false);
+        QVariant variant = parser.parse(&file,&ok);
+        file.close();
+        map = variant.toMap();
+      }
+    }
+
+    // DLM: should this include values from the model?
+
+    QMap<QString, QVariant>::const_iterator i = map.constBegin();
+    for (; i != map.constEnd(); ++i) {
+      result.push_back(toString(i.key()));
+    }
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    return result;
+  }
+
+  bool SpaceType_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsBuildingType, standardsBuildingType);
+    OS_ASSERT(test);
+    return test;
+  }
+
+  void SpaceType_Impl::resetStandardsBuildingType()
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsBuildingType, "");
+    OS_ASSERT(test);
+  }
+
+  boost::optional<std::string> SpaceType_Impl::standardsSpaceType() const
+  {
+    return getString(OS_SpaceTypeFields::StandardsSpaceType, false, false);
+  }
+
+  std::vector<std::string> SpaceType_Impl::suggestedStandardsSpaceTypes() const
+  {
+    std::vector<std::string> result;
+
+    boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
+    if (standardsSpaceType){
+      result.push_back(*standardsSpaceType);
+      return result;
+    }
+
+    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+    if (!standardsBuildingType){
+      return result;
+    }
+  
+    static QMap<QString, QVariant> map;
+    if (map.isEmpty()){
+      QFile file(":/resources/standards/nrel_space_types.json");
+      if (file.open(QFile::ReadOnly)) {
+        QJson::Parser parser;
+        bool ok(false);
+        QVariant variant = parser.parse(&file,&ok);
+        file.close();
+        map = variant.toMap();
+      }
+    }
+
+    // DLM: should this include values from the model?
+
+    QList<QVariant> values = map[toQString(*standardsBuildingType)].toList();
+    QList<QVariant>::const_iterator i = values.constBegin();
+    for (; i != values.constEnd(); ++i) {
+      result.push_back(toString(i->toString()));
+    }
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    return result;
+  }
+
+  bool SpaceType_Impl::setStandardsSpaceType(const std::string& standardsSpaceType)
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsSpaceType, standardsSpaceType);
+    OS_ASSERT(test);
+    return test;
+  }
+
+  void SpaceType_Impl::resetStandardsSpaceType()
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsSpaceType, "");
+    OS_ASSERT(test);
   }
 
   std::vector<Space> SpaceType_Impl::spaces() const
@@ -1219,6 +1330,46 @@ bool SpaceType::setRenderingColor(const RenderingColor& renderingColor)
 void SpaceType::resetRenderingColor()
 {
   getImpl<detail::SpaceType_Impl>()->resetRenderingColor();
+}
+
+boost::optional<std::string> SpaceType::standardsBuildingType() const
+{
+  return getImpl<detail::SpaceType_Impl>()->standardsBuildingType();
+}
+
+std::vector<std::string> SpaceType::suggestedStandardsBuildingTypes() const
+{
+  return getImpl<detail::SpaceType_Impl>()->suggestedStandardsBuildingTypes();
+}
+
+bool SpaceType::setStandardsBuildingType(const std::string& standardsBuildingType)
+{
+  return getImpl<detail::SpaceType_Impl>()->setStandardsBuildingType(standardsBuildingType);
+}
+
+void SpaceType::resetStandardsBuildingType()
+{
+  getImpl<detail::SpaceType_Impl>()->resetStandardsBuildingType();
+}
+
+boost::optional<std::string> SpaceType::standardsSpaceType() const
+{
+  return getImpl<detail::SpaceType_Impl>()->standardsSpaceType();
+}
+
+std::vector<std::string> SpaceType::suggestedStandardsSpaceTypes() const
+{
+  return getImpl<detail::SpaceType_Impl>()->suggestedStandardsSpaceTypes();
+}
+
+bool SpaceType::setStandardsSpaceType(const std::string& standardsSpaceType)
+{
+  return getImpl<detail::SpaceType_Impl>()->setStandardsSpaceType(standardsSpaceType);
+}
+
+void SpaceType::resetStandardsSpaceType()
+{
+  getImpl<detail::SpaceType_Impl>()->resetStandardsSpaceType();
 }
 
 std::vector<Space> SpaceType::spaces() const
