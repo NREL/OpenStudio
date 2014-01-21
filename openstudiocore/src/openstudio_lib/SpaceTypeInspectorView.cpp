@@ -568,12 +568,6 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_standardsBuildingTypeComboBox->setDuplicatesEnabled(false);
   //m_standardsBuildingTypeComboBox->setStretch(100);
   vLayout->addWidget(m_standardsBuildingTypeComboBox);
-  
-  bool isConnected = false;
-  //isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(setStandardsBuildingType(const QString&)));
-  //OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(setStandardsBuildingType(const QString&)));
-  OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,row,0);
 
@@ -589,11 +583,6 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_standardsSpaceTypeComboBox->setDuplicatesEnabled(false);
   //m_standardsSpaceTypeComboBox->setStretch(100);
   vLayout->addWidget(m_standardsSpaceTypeComboBox);
-  
-  //isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(setStandardsSpaceType(const QString&)));
-  //OS_ASSERT(isConnected);
-  isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(setStandardsSpaceType(const QString&)));
-  OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,row,1);
 
@@ -658,10 +647,10 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_designSpecificationOutdoorAirDropZone->showAddButton();
   vLayout->addWidget(m_designSpecificationOutdoorAirDropZone);
 
-  isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
+  bool isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
+                             SIGNAL(itemClicked(OSItem*)),
+                             this, 
+                             SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,row,0,1,2);
@@ -773,7 +762,7 @@ void SpaceTypeInspectorView::onUpdate()
 {
 }
 
-void SpaceTypeInspectorView::setStandardsBuildingType(const QString & text)
+void SpaceTypeInspectorView::editStandardsBuildingType(const QString & text)
 {
   if (m_spaceType){
     std::string standardsBuildingType = toString(text);
@@ -783,16 +772,28 @@ void SpaceTypeInspectorView::setStandardsBuildingType(const QString & text)
       m_spaceType->setStandardsBuildingType(standardsBuildingType);
     }
 
-    //if (m_standardsBuildingTypeComboBox->findText(text) == -1){
-      populateStandardsBuildingTypes();
-    //}
+    m_spaceType->resetStandardsSpaceType();
+    populateStandardsSpaceTypes();
+  }
+}
+
+void SpaceTypeInspectorView::standardsBuildingTypeChanged(const QString & text)
+{
+  if (m_spaceType){
+    std::string standardsBuildingType = toString(text);
+    if (standardsBuildingType.empty()){
+      m_spaceType->resetStandardsBuildingType();
+    }else{
+      m_spaceType->setStandardsBuildingType(standardsBuildingType);
+    }
+    populateStandardsBuildingTypes();
 
     m_spaceType->resetStandardsSpaceType();
     populateStandardsSpaceTypes();
   }
 }
 
-void SpaceTypeInspectorView::setStandardsSpaceType(const QString & text)
+void SpaceTypeInspectorView::editStandardsSpaceType(const QString & text)
 {
   if (m_spaceType){
     std::string standardsSpaceType = toString(text);
@@ -801,10 +802,19 @@ void SpaceTypeInspectorView::setStandardsSpaceType(const QString & text)
     }else{
       m_spaceType->setStandardsSpaceType(standardsSpaceType);
     }
+  }
+}
 
-    //if (m_standardsSpaceTypeComboBox->findText(text) == -1){
-      populateStandardsSpaceTypes();
-    //}
+void SpaceTypeInspectorView::standardsSpaceTypeChanged(const QString & text)
+{
+  if (m_spaceType){
+    std::string standardsSpaceType = toString(text);
+    if (standardsSpaceType.empty()){
+      m_spaceType->resetStandardsSpaceType();
+    }else{
+      m_spaceType->setStandardsSpaceType(standardsSpaceType);
+    }
+    populateStandardsSpaceTypes();
   }
 }
 
@@ -859,10 +869,13 @@ void SpaceTypeInspectorView::detach()
   m_defaultConstructionSetVectorController->detach();
   m_defaultScheduleSetVectorController->detach();
   m_renderingColorWidget->detach();
+
+  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
   m_standardsBuildingTypeComboBox->clear();
-  m_standardsBuildingTypeComboBox->blockSignals(true);
+
+  disconnect(m_standardsSpaceTypeComboBox, 0, this, 0);
   m_standardsSpaceTypeComboBox->clear();
-  m_standardsSpaceTypeComboBox->blockSignals(true);
+
   m_designSpecificationOutdoorAirVectorController->detach();
   m_spaceInfiltrationDesignFlowRateVectorController->detach();
   m_spaceInfiltrationEffectiveLeakageAreaVectorController->detach();
@@ -872,7 +885,8 @@ void SpaceTypeInspectorView::detach()
 
 void SpaceTypeInspectorView::populateStandardsBuildingTypes()
 {
-  m_standardsBuildingTypeComboBox->blockSignals(true);
+  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+
   m_standardsBuildingTypeComboBox->clear();
   if (m_spaceType){
     m_standardsBuildingTypeComboBox->addItem("");
@@ -889,12 +903,18 @@ void SpaceTypeInspectorView::populateStandardsBuildingTypes()
     }
   }
   QCompleter* c = m_standardsSpaceTypeComboBox->completer();
-  m_standardsBuildingTypeComboBox->blockSignals(false);
+
+  bool isConnected = false;
+  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsBuildingTypeChanged(const QString&)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsBuildingType(const QString&)));
+  OS_ASSERT(isConnected);
 }
 
 void SpaceTypeInspectorView::populateStandardsSpaceTypes()
 {
-  m_standardsSpaceTypeComboBox->blockSignals(true);
+  disconnect(m_standardsSpaceTypeComboBox, 0, this, 0);
+
   m_standardsSpaceTypeComboBox->clear();
   if (m_spaceType){
     m_standardsSpaceTypeComboBox->addItem("");
@@ -911,7 +931,12 @@ void SpaceTypeInspectorView::populateStandardsSpaceTypes()
     }
   }
   QCompleter* c = m_standardsSpaceTypeComboBox->completer();
-  m_standardsSpaceTypeComboBox->blockSignals(false);
+
+  bool isConnected = false;
+  isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsSpaceTypeChanged(const QString&)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsSpaceType(const QString&)));
+  OS_ASSERT(isConnected);
 }
 
 

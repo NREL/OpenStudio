@@ -223,9 +223,11 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
   protected slots:
 
-    void setStandardsBuildingType(const QString & text);
+    void editStandardsBuildingType(const QString & text);
+    void standardsBuildingTypeChanged(const QString & text);
 
-    void setStandardsSpaceType(const QString & text);
+    void editStandardsSpaceType(const QString & text);
+    void standardsSpaceTypeChanged(const QString & text);
 
   private:
 

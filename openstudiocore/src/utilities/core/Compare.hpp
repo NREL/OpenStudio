@@ -41,6 +41,13 @@ inline UTILITIES_API bool istringEqual(const std::string& x, const std::string& 
   return boost::iequals(x, y);
 };
 
+/** Small functor object for case insensitive std::string equality. */
+struct UTILITIES_API IstringEqual{
+  bool operator()(const std::string& x, const std::string& y) const{
+    return boost::iequals(x, y);;
+  };
+};
+
 /** Compare two strings without regard to case. */
 inline UTILITIES_API bool istringLess(const std::string& x, const std::string& y) {
   return boost::lexicographical_compare(x, y, boost::is_iless());

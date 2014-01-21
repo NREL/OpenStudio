@@ -85,6 +85,8 @@ namespace model {
 
 namespace detail {
 
+  QMap<QString, QVariant> SpaceType_Impl::m_standardsSpaceTypeMap;
+
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
@@ -265,25 +267,12 @@ namespace detail {
   {
     std::vector<std::string> result;
   
-    static QMap<QString, QVariant> map;
-    if (map.isEmpty()){
-      QFile file(":/resources/standards/nrel_space_types.json");
-      if (file.open(QFile::ReadOnly)) {
-        QJson::Parser parser;
-        bool ok(false);
-        QVariant variant = parser.parse(&file,&ok);
-        OS_ASSERT(ok);
-        file.close();
-        map = variant.toMap();
-      }
-    }
-
-    // DLM: should this include values from the model?
-
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
-    QMap<QString, QVariant>::const_iterator i = map.constBegin();
-    for (; i != map.constEnd(); ++i) {
+    // include values from json
+    parseStandardsSpaceTypeMap();
+    QMap<QString, QVariant>::const_iterator i = m_standardsSpaceTypeMap.constBegin();
+    for (; i != m_standardsSpaceTypeMap.constEnd(); ++i) {
       std::string key = toString(i.key());
       if (standardsBuildingType){
         if (standardsBuildingType.get() == key){
@@ -293,8 +282,33 @@ namespace detail {
       }
       result.push_back(toString(i.key()));
     }
+
+    // include values from model
+    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+      boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
+      if (!otherBuildingType){
+        continue;
+      }
+      if (standardsBuildingType){
+        if (standardsBuildingType.get() == otherBuildingType.get()){
+          // this will get added to the front of the result later
+          continue;
+        }
+      }
+      result.push_back(*otherBuildingType);
+    }
+
+    // make unique
+    std::vector<std::string>::iterator it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
+
+    // sort
     std::sort(result.begin(), result.end(), IstringCompare());
 
+    // add current to front
     if (standardsBuildingType){
       result.insert(result.begin(), *standardsBuildingType);
     }
@@ -328,37 +342,59 @@ namespace detail {
     if (!standardsBuildingType){
       return result;
     }
-  
-    static QMap<QString, QVariant> map;
-    if (map.isEmpty()){
-      QFile file(":/resources/standards/nrel_space_types.json");
-      if (file.open(QFile::ReadOnly)) {
-        QJson::Parser parser;
-        bool ok(false);
-        QVariant variant = parser.parse(&file,&ok);
-        file.close();
-        map = variant.toMap();
-      }
-    }
-
-    // DLM: should this include values from the model?
 
     boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
 
-    QList<QVariant> values = map[toQString(*standardsBuildingType)].toList();
-    QList<QVariant>::const_iterator i = values.constBegin();
-    for (; i != values.constEnd(); ++i) {
-      std::string key = toString(i->toString());
+    // include values from json
+    parseStandardsSpaceTypeMap();
+    if (m_standardsSpaceTypeMap.contains(toQString(*standardsBuildingType))){
+      QList<QVariant> values = m_standardsSpaceTypeMap[toQString(*standardsBuildingType)].toList();
+      QList<QVariant>::const_iterator i = values.constBegin();
+      for (; i != values.constEnd(); ++i) {
+        std::string key = toString(i->toString());
+        if (standardsSpaceType){
+          if (standardsSpaceType.get() == key){
+            // this will get added to the front of the result later
+            continue;
+          }
+        }
+        result.push_back(toString(i->toString()));
+      }
+    }
+
+    // include values from model
+    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+      boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
+      if (!otherBuildingType){
+        continue;
+      }
+      if (standardsBuildingType.get() != otherBuildingType.get()){
+        continue;
+      }
+      boost::optional<std::string> otherSpaceType = other.standardsSpaceType();
+      if (!otherSpaceType){
+        continue;
+      }
       if (standardsSpaceType){
-        if (standardsSpaceType.get() == key){
+        if (standardsSpaceType.get() == otherSpaceType.get()){
           // this will get added to the front of the result later
           continue;
         }
       }
-      result.push_back(toString(i->toString()));
+      result.push_back(*otherSpaceType);
     }
+
+    // make unique
+    std::vector<std::string>::iterator it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
+
+    // sort
     std::sort(result.begin(), result.end(), IstringCompare());
-    
+
+    // add current to front
     if (standardsSpaceType){
       result.insert(result.begin(), *standardsSpaceType);
     }
@@ -1282,6 +1318,21 @@ namespace detail {
       it->remove();
     }
     OS_ASSERT(count == 1);
+  }
+
+  void SpaceType_Impl::parseStandardsSpaceTypeMap() const
+  {
+    if (m_standardsSpaceTypeMap.empty()){
+      QFile file(":/resources/standards/nrel_space_types.json");
+      if (file.open(QFile::ReadOnly)) {
+        QJson::Parser parser;
+        bool ok(false);
+        QVariant variant = parser.parse(&file,&ok);
+        OS_ASSERT(ok);
+        file.close();
+        m_standardsSpaceTypeMap = variant.toMap();
+      }
+    }
   }
 
 } // detail
