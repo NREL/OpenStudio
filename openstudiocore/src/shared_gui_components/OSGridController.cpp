@@ -21,6 +21,10 @@
 
 #include <model/Model_impl.hpp>
 #include <model/ModelObject_impl.hpp>
+#include <model/RefrigerationCase.hpp>
+#include <model/RefrigerationCase_Impl.hpp>
+#include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -39,6 +43,19 @@ OSGridController::OSGridController(IddObjectType iddObjectType, model::Model mod
   m_iddObjectType(iddObjectType),
   m_columnTypes(std::vector<ColumnType>())
 {
+
+  model::Schedule schedule = m_model.alwaysOnDiscreteSchedule();
+  m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
+  m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
+  m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
+  m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
+  m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
+  
+  addComboBoxColumn(QString("Defrost Type"),
+                    &model::RefrigerationCase::caseDefrostTypeValues,
+                    &model::RefrigerationCase::caseDefrostType,
+                    &model::RefrigerationCase::setCaseDefrostType);
+                    
 }
 
 OSGridController::~OSGridController()
@@ -49,14 +66,37 @@ QWidget * OSGridController::widgetAt(int i, int j)
 {
   QWidget * result = 0;
 
-  QString string("Hello ");
-  QString temp;
-  string += "row: ";
-  string += temp.setNum(i);  
-  string += ", column: ";
-  string += temp.setNum(j);
+  
+  if( j < m_comboBoxConcepts.size() )
+  {
+    if( i < m_modelObjects.size() )
+    {
+      QSharedPointer<ComboBoxConcept> comboBoxConcept = m_comboBoxConcepts[j];
+      OSComboBox2 * cb2 = new OSComboBox2();
 
-  result = new QLabel(string);
+      model::ModelObject mo = m_modelObjects[i];
+      cb2->bindRequired(mo,
+                boost::bind(&ComboBoxConcept::choices,comboBoxConcept.data()),
+                boost::bind(&ComboBoxConcept::get,comboBoxConcept.data(),mo),
+                boost::optional<StringSetter>(boost::bind(&ComboBoxConcept::set,comboBoxConcept.data(),mo,_1)),
+                boost::none,
+                boost::none);
+
+      result = cb2;
+    }
+  }
+  else
+  {
+    QString string("Hello ");
+    QString temp;
+    string += "row: ";
+    string += temp.setNum(i);  
+    string += ", column: ";
+    string += temp.setNum(j);
+
+    result = new QLabel(string);
+  }
+  
   
   //std::vector<model::ModelObject> modelObjects = m_model.getModelObjectsByType(m_iddObjectType).sortSomewayortheother(); TODO
   //std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<m_iddObjectType>();
@@ -80,9 +120,9 @@ int OSGridController::columnCount() const
   return 5; // TODO
 }
 
-std::vector<QWidget> OSGridController::row(int i)
+std::vector<QWidget *> OSGridController::row(int i)
 {
-  return std::vector<QWidget>();
+  return std::vector<QWidget *>();
 }
 
 } // openstudio

@@ -48,7 +48,7 @@ bool OSComboBox2::event( QEvent * e )
   }
 }
 
-void OSComboBox2::bind(model::ModelObject& modelObject,
+void OSComboBox2::bindRequired(model::ModelObject& modelObject,
                        ChoicesGetter choices, 
                        StringGetter get,
                        boost::optional<StringSetter> set,

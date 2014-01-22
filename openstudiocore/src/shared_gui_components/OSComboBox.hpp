@@ -103,12 +103,12 @@ class OSComboBox2 : public QComboBox {
   virtual ~OSComboBox2() {}
 
   // Bind for required or defaulted fields.
-  void bind(model::ModelObject& modelObject,
-            ChoicesGetter choices,
-            StringGetter get,
-            boost::optional<StringSetter> set=boost::none,
-            boost::optional<NoFailAction> reset=boost::none,
-            boost::optional<BasicQuery> isDefaulted=boost::none);
+  void bindRequired(model::ModelObject& modelObject,
+                    ChoicesGetter choices,
+                    StringGetter get,
+                    boost::optional<StringSetter> set=boost::none,
+                    boost::optional<NoFailAction> reset=boost::none,
+                    boost::optional<BasicQuery> isDefaulted=boost::none);
 
   // Bind for optional fields without defaults.
   void bind(model::ModelObject& modelObject,
