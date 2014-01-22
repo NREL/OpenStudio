@@ -85,7 +85,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
     JobErrors treeErrors = job.treeErrors(); // get all tree errors now, test later
-    JobErrors errors = job.errors();
+    JobErrors errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::NA),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -102,7 +102,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Success),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -117,7 +117,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_FALSE(errors.errors().empty());
@@ -134,7 +134,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_TRUE(job.outOfDate()); // never run
     EXPECT_FALSE(job.canceled());
     EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -150,7 +150,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_TRUE(job.outOfDate()); // never run
     EXPECT_FALSE(job.canceled());
     EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -190,7 +190,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
     JobErrors treeErrors = job.treeErrors(); // get all tree errors now, test later
-    JobErrors errors = job.errors();
+    JobErrors errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::NA),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -207,7 +207,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Success),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -222,7 +222,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_FALSE(errors.errors().empty());
@@ -239,7 +239,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_TRUE(job.outOfDate()); // never run
     EXPECT_FALSE(job.canceled());
     EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -255,7 +255,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_TRUE(job.outOfDate()); // never run
     EXPECT_FALSE(job.canceled());
     EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
