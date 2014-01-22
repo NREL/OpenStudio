@@ -167,10 +167,10 @@ namespace detail {
 
     void resetNominalFloortoFloorHeight();
 
-    bool setStandardsNumberOfStories(boost::optional<int> value);
+    bool setStandardsNumberOfStories(int value);
     void resetStandardsNumberOfStories();
 
-    bool setStandardsNumberOfAboveGroundStories(boost::optional<int> value);
+    bool setStandardsNumberOfAboveGroundStories(int value);
     void resetStandardsNumberOfAboveGroundStories();
 
     /// Sets the standards building type. This is a freeform field used to identify the building type for standards.

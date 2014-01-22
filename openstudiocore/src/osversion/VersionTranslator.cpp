@@ -88,7 +88,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("0.11.6")] = &VersionTranslator::update_0_11_5_to_0_11_6;
   m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
-  m_updateMethods[VersionString("1.2.2")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.2.2")] = &VersionTranslator::update_1_2_1_to_1_2_2; //&VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2109,6 +2109,117 @@ std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, c
       }
     } else {
       ss << object;
+    }
+  }
+    
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_2_1_to_1_2_2(const IdfFile& idf_1_2_1, const IddFileAndFactoryWrapper& idd_1_2_2)
+{
+  std::stringstream ss;
+
+  ss << idf_1_2_1.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_2_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  boost::optional<int> numberOfStories;
+  boost::optional<int> numberOfAboveGroundStories;
+  boost::optional<IdfObject> buildingObject;
+
+  BOOST_FOREACH(const IdfObject& object,idf_1_2_1.objects()) {
+
+    if( object.iddObject().name() == "OS:StandardsInformation:Construction" ) {
+      boost::optional<std::string> value = object.getString(2); // Intended Surface Type
+
+      if (value && (istringEqual(*value, "ExteriorFloor") || istringEqual(*value, "ExposedExteriorFloor"))){
+        IdfObject newObject = object.clone(true);
+        if (istringEqual(*value, "ExteriorFloor")){
+          newObject.setString(2, "GroundContactFloor");
+        }else {
+          newObject.setString(2, "ExteriorFloor");
+        }
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        ss << newObject;
+      } else {
+        ss << object;
+      }
+
+    } else if( object.iddObject().name() == "OS:Building" ) {
+
+      buildingObject = object;
+
+    } else if( object.iddObject().name() == "OS:StandardsInformation:Building" ) {
+
+      m_deprecated.push_back(object);
+
+    } else {
+      ss << object;
+    }
+
+    if (buildingObject){
+      boost::optional<IddObject> buildingIdd = idd_1_2_2.getObject("OS:Building");
+      OS_ASSERT(buildingIdd);
+      IdfObject newBuildingObject(*buildingIdd);
+
+      // Handle
+      boost::optional<std::string> s = buildingObject->getString(0);
+      OS_ASSERT(s);
+      bool test = newBuildingObject.setString(0, *s);
+      OS_ASSERT(test);
+
+      // Name
+      s = buildingObject->getString(1);
+      OS_ASSERT(s);
+      test = newBuildingObject.setString(1, *s);
+      OS_ASSERT(test);
+      
+      // Building Sector Type
+      s = buildingObject->getString(2);
+      OS_ASSERT(s);
+      test = newBuildingObject.setString(2, *s);
+      OS_ASSERT(test);
+
+      // North Axis
+      s = buildingObject->getString(3);
+      OS_ASSERT(s);
+      test = newBuildingObject.setString(3, *s);
+      OS_ASSERT(test);
+
+      // Nominal Floor to Floor Height
+      s = buildingObject->getString(4);
+      OS_ASSERT(s);
+      test = newBuildingObject.setString(4, *s);
+      OS_ASSERT(test);
+
+      // Space Type Name
+      s = buildingObject->getString(5);
+      OS_ASSERT(s);
+      test = newBuildingObject.setString(5, *s);
+      OS_ASSERT(test);
+
+      // Default Schedule Set Name
+      s = buildingObject->getString(6);
+      OS_ASSERT(s);
+      test = newBuildingObject.setString(6, *s);
+      OS_ASSERT(test);
+
+      // Standards Number of Stories
+      if (numberOfStories){
+        test = newBuildingObject.setInt(7, *numberOfStories);
+        OS_ASSERT(test);
+      }
+
+      /// Standards Number of Above Ground Stories
+      if (numberOfAboveGroundStories){
+        test = newBuildingObject.setInt(8, *numberOfAboveGroundStories);
+        OS_ASSERT(test);
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(*buildingObject, newBuildingObject) );
+      ss << newBuildingObject;
     }
   }
     

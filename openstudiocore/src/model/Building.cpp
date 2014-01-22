@@ -181,6 +181,75 @@ namespace detail {
     return isEmpty(OS_BuildingFields::NominalFloortoFloorHeight);
   }
 
+  boost::optional<int> Building_Impl::standardsNumberOfStories() const
+  {
+    boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofStories, false);
+    return value;
+  }
+
+  boost::optional<int> Building_Impl::standardsNumberOfAboveGroundStories() const
+  {
+    boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofAboveGroundStories, false);
+    return value;
+  }
+
+  boost::optional<std::string> Building_Impl::standardsBuildingType() const
+  {
+    return getString(OS_BuildingFields::StandardsBuildingType, false, true);
+  }
+
+  std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const
+  {
+    std::vector<std::string> result;
+  
+    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+
+    // DLM: temp code, eventually get from StandardsLibrary
+    Model tempModel;
+    SpaceType tempSpaceType(tempModel);
+    std::vector<std::string> tempSuggestions = tempSpaceType.suggestedStandardsBuildingTypes();
+    BOOST_FOREACH(const std::string& suggestion, tempSuggestions){
+      if (standardsBuildingType){
+        if (standardsBuildingType.get() == suggestion){
+          // this will get added to the front of the result later
+          continue;
+        }
+      }
+      result.push_back(suggestion);
+    }
+
+    // include values from model
+    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+
+      boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
+      if (!otherBuildingType){
+        continue;
+      }
+
+      if (standardsBuildingType){
+        if (standardsBuildingType.get() == otherBuildingType.get()){
+          // this will get added to the front of the result later
+          continue;
+        }
+      }
+      result.push_back(*otherBuildingType);
+    }
+
+    // make unique
+    std::vector<std::string>::iterator it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // add current to front
+    if (standardsBuildingType){
+      result.insert(result.begin(), *standardsBuildingType);
+    }
+
+    return result;
+  }
+
   bool Building_Impl::setBuildingSectorType(const std::string& buildingSectorType) {
     bool result = false;
     result = setString(OS_BuildingFields::BuildingSectorType, buildingSectorType);
@@ -212,6 +281,43 @@ namespace detail {
   void Building_Impl::resetNominalFloortoFloorHeight() {
     bool result = setString(OS_BuildingFields::NominalFloortoFloorHeight, "");
     OS_ASSERT(result);
+  }
+
+  bool Building_Impl::setStandardsNumberOfStories(int value)
+  {
+    bool test = setInt(OS_BuildingFields::StandardsNumberofStories, value);
+    return test;
+  }
+
+  void Building_Impl::resetStandardsNumberOfStories()
+  {
+    bool test = setString(OS_BuildingFields::StandardsNumberofStories, "");
+    OS_ASSERT(test);
+  }
+
+  bool Building_Impl::setStandardsNumberOfAboveGroundStories(int value)
+  {
+    bool test = setInt(OS_BuildingFields::StandardsNumberofAboveGroundStories, value);
+    return test;
+  }
+
+  void Building_Impl::resetStandardsNumberOfAboveGroundStories()
+  {
+    bool test = setString(OS_BuildingFields::StandardsNumberofAboveGroundStories, "");
+    OS_ASSERT(test);
+  }
+
+  bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
+  {
+    bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void Building_Impl::resetStandardsBuildingType()
+  {
+    bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
+    OS_ASSERT(test);
   }
 
   boost::optional<SpaceType> Building_Impl::spaceType() const
@@ -807,6 +913,22 @@ bool Building::isNominalFloortoFloorHeightDefaulted() const {
   return getImpl<detail::Building_Impl>()->isNominalFloortoFloorHeightDefaulted();
 }
 
+boost::optional<int> Building::standardsNumberOfStories() const{
+  return getImpl<detail::Building_Impl>()->standardsNumberOfStories();
+}
+
+boost::optional<int> Building::standardsNumberOfAboveGroundStories() const{
+  return getImpl<detail::Building_Impl>()->standardsNumberOfAboveGroundStories();
+}
+
+boost::optional<std::string> Building::standardsBuildingType() const{
+  return getImpl<detail::Building_Impl>()->standardsBuildingType();
+}
+
+std::vector<std::string> Building::suggestedStandardsBuildingTypes() const{
+  return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
+}
+
 bool Building::setBuildingSectorType(const std::string& buildingSectorType) {
   return getImpl<detail::Building_Impl>()->setBuildingSectorType(buildingSectorType);
 }
@@ -829,6 +951,30 @@ bool Building::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
 
 void Building::resetNominalFloortoFloorHeight() {
   getImpl<detail::Building_Impl>()->resetNominalFloortoFloorHeight();
+}
+
+bool Building::setStandardsNumberOfStories(int value){
+  return getImpl<detail::Building_Impl>()->setStandardsNumberOfStories(value);
+}
+
+void Building::resetStandardsNumberOfStories(){
+  getImpl<detail::Building_Impl>()->resetStandardsNumberOfStories();
+}
+
+bool Building::setStandardsNumberOfAboveGroundStories(int value){
+  return getImpl<detail::Building_Impl>()->setStandardsNumberOfAboveGroundStories(value);
+}
+
+void Building::resetStandardsNumberOfAboveGroundStories(){
+  getImpl<detail::Building_Impl>()->resetStandardsNumberOfAboveGroundStories();
+}
+
+bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){
+  return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
+}
+
+void Building::resetStandardsBuildingType(){
+  getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
 }
 
 boost::optional<SpaceType> Building::spaceType() const
