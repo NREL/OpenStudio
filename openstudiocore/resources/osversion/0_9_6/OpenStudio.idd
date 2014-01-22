@@ -710,9 +710,6 @@ OS:RadianceParameters,
        \note Sets sky discretization resolution for daylight coefficient calculations.
        \type real
        \default 146
-       \key 146
-       \key 581
-       \key 2321
 
 \group OpenStudio Site
 
