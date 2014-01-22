@@ -731,6 +731,8 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_spaceLoadInstancesWidget = new SpaceLoadInstancesWidget();
   mainGridLayout->addWidget(m_spaceLoadInstancesWidget,row,0,1,2);
 
+  ++row;
+
   mainGridLayout->setColumnStretch(2,100);
 
   //mainGridLayout->setColumnMinimumWidth(0, 100);
@@ -742,7 +744,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   //mainGridLayout->setRowMinimumHeight(3, 30);
   //mainGridLayout->setRowMinimumHeight(4, 30);
   //mainGridLayout->setRowMinimumHeight(5, 30);
-  mainGridLayout->setRowStretch(row, 1);
+  mainGridLayout->setRowStretch(row, 100);
 }
 
 void SpaceTypeInspectorView::onClearSelection()
@@ -902,7 +904,6 @@ void SpaceTypeInspectorView::populateStandardsBuildingTypes()
       m_standardsBuildingTypeComboBox->setCurrentIndex(0);
     }
   }
-  QCompleter* c = m_standardsSpaceTypeComboBox->completer();
 
   bool isConnected = false;
   isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsBuildingTypeChanged(const QString&)));

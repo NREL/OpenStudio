@@ -255,12 +255,15 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Building Type: ");
+  label->setText("Standards Building Type: ");
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  m_buildingTypeComboBox = new OSComboBox();
-  vLayout->addWidget(m_buildingTypeComboBox);
+  m_standardsBuildingTypeComboBox = new QComboBox();
+  m_standardsBuildingTypeComboBox->setEditable(true);
+  m_standardsBuildingTypeComboBox->setDuplicatesEnabled(false);
+  m_standardsBuildingTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardsBuildingTypeComboBox);
 
   vLayout->addStretch();
 
@@ -378,19 +381,50 @@ void BuildingInspectorView::onSelectModelObject(const openstudio::model::ModelOb
   detach();
   model::Building building = modelObject.cast<model::Building>();
   attach(building);
-  refresh();
 }
 
 void BuildingInspectorView::onUpdate()
 {
-  refresh();
+}
+
+void BuildingInspectorView::editStandardsBuildingType(const QString & text)
+{
+  if (m_building){
+    std::string standardsBuildingType = toString(text);
+    if (standardsBuildingType.empty()){
+      m_building->resetStandardsBuildingType();
+    }else{
+      m_building->setStandardsBuildingType(standardsBuildingType);
+    }
+
+    //m_building->resetStandardsSpaceType();
+    //populateStandardsSpaceTypes();
+  }
+}
+
+void BuildingInspectorView::standardsBuildingTypeChanged(const QString & text)
+{
+  if (m_building){
+    std::string standardsBuildingType = toString(text);
+    if (standardsBuildingType.empty()){
+      m_building->resetStandardsBuildingType();
+    }else{
+      m_building->setStandardsBuildingType(standardsBuildingType);
+    }
+    populateStandardsBuildingTypes();
+
+    //m_spaceType->resetStandardsSpaceType();
+    //populateStandardsSpaceTypes();
+  }
 }
 
 void BuildingInspectorView::attach(openstudio::model::Building& building)
 {
+  m_building = building;
+
   m_nameEdit->bind(building, "name");
 
-  //m_buildingTypeComboBox->bind(building, "buildingSectorType");
+  populateStandardsBuildingTypes();
 
   m_spaceTypeVectorController->attach(building);
   m_spaceTypeVectorController->reportItems();
@@ -410,10 +444,15 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 
 void BuildingInspectorView::detach()
 {
+  m_building.reset();
+
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
-  m_buildingTypeComboBox->unbind();
+
+  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  m_standardsBuildingTypeComboBox->clear();
+
   m_spaceTypeVectorController->detach();
   m_defaultConstructionSetVectorController->detach();
   m_defaultScheduleSetVectorController->detach();
@@ -421,8 +460,31 @@ void BuildingInspectorView::detach()
   //m_floorToFloorHeightEdit->unbind();
 }
 
-void BuildingInspectorView::refresh()
+void BuildingInspectorView::populateStandardsBuildingTypes()
 {
+  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+
+  m_standardsBuildingTypeComboBox->clear();
+  if (m_building){
+    m_standardsBuildingTypeComboBox->addItem("");
+    std::vector<std::string> suggestedStandardsBuildingTypes = m_building->suggestedStandardsBuildingTypes();
+    Q_FOREACH(const std::string& standardsBuildingType, suggestedStandardsBuildingTypes){
+      m_standardsBuildingTypeComboBox->addItem(toQString(standardsBuildingType));
+    }
+    boost::optional<std::string> standardsBuildingType = m_building->standardsBuildingType();
+    if (standardsBuildingType){
+      OS_ASSERT(!suggestedStandardsBuildingTypes.empty());
+      m_standardsBuildingTypeComboBox->setCurrentIndex(1);
+    }else{
+      m_standardsBuildingTypeComboBox->setCurrentIndex(0);
+    }
+  }
+
+  bool isConnected = false;
+  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsBuildingTypeChanged(const QString&)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsBuildingType(const QString&)));
+  OS_ASSERT(isConnected);
 }
 
 void BuildingInspectorView::toggleUnits(bool displayIP)

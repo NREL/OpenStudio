@@ -195,34 +195,27 @@ namespace detail {
     SpaceType tempSpaceType(tempModel);
     std::vector<std::string> tempSuggestions = tempSpaceType.suggestedStandardsBuildingTypes();
     BOOST_FOREACH(const std::string& suggestion, tempSuggestions){
-      if (standardsBuildingType){
-        if (standardsBuildingType.get() == suggestion){
-          // this will get added to the front of the result later
-          continue;
-        }
-      }
       result.push_back(suggestion);
     }
 
     // include values from model
     BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
-
       boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
-      if (!otherBuildingType){
-        continue;
+      if (otherBuildingType){
+        result.push_back(*otherBuildingType);
       }
-
-      if (standardsBuildingType){
-        if (standardsBuildingType.get() == otherBuildingType.get()){
-          // this will get added to the front of the result later
-          continue;
-        }
-      }
-      result.push_back(*otherBuildingType);
     }
 
+    // remove standardsBuildingType
+    IstringFind finder;
+    if (standardsBuildingType){
+      finder.addTarget(*standardsBuildingType);
+    }
+    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    result.resize( std::distance(result.begin(),it) ); 
+
     // make unique
-    std::vector<std::string>::iterator it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort

@@ -273,42 +273,49 @@ namespace detail {
     parseStandardsSpaceTypeMap();
     QMap<QString, QVariant>::const_iterator i = m_standardsSpaceTypeMap.constBegin();
     for (; i != m_standardsSpaceTypeMap.constEnd(); ++i) {
-      std::string key = toString(i.key());
-      if (standardsBuildingType){
-        if (standardsBuildingType.get() == key){
-          // this will get added to the front of the result later
-          continue;
-        }
-      }
       result.push_back(toString(i.key()));
     }
 
     // include values from model
+
+    boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+    boost::optional<std::string> buildingStandardsBuildingType;
+    if (building){
+      buildingStandardsBuildingType = building->standardsBuildingType();
+    }
+
     BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
       if (other.handle() == this->handle()){
         continue;
       }
-
       boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
-      if (!otherBuildingType){
-        continue;
+      if (otherBuildingType){
+        result.push_back(*otherBuildingType);
       }
-
-      if (standardsBuildingType){
-        if (standardsBuildingType.get() == otherBuildingType.get()){
-          // this will get added to the front of the result later
-          continue;
-        }
-      }
-      result.push_back(*otherBuildingType);
     }
 
+    // remove buildingStandardsBuildingType and standardsBuildingType
+    IstringFind finder;
+    if (buildingStandardsBuildingType){
+      finder.addTarget(*buildingStandardsBuildingType);
+    }
+    if (standardsBuildingType){
+      finder.addTarget(*standardsBuildingType);
+    }
+    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    result.resize( std::distance(result.begin(),it) ); 
+
     // make unique
-    std::vector<std::string>::iterator it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
+
+    // add building value to front
+    if (buildingStandardsBuildingType){
+      result.insert(result.begin(), *buildingStandardsBuildingType);
+    }
 
     // add current to front
     if (standardsBuildingType){
@@ -350,13 +357,6 @@ namespace detail {
         QList<QVariant> values = m_standardsSpaceTypeMap[toQString(*standardsBuildingType)].toList();
         QList<QVariant>::const_iterator i = values.constBegin();
         for (; i != values.constEnd(); ++i) {
-          std::string key = toString(i->toString());
-          if (standardsSpaceType){
-            if (standardsSpaceType.get() == key){
-              // this will get added to the front of the result later
-              continue;
-            }
-          }
           result.push_back(toString(i->toString()));
         }
       }
@@ -382,21 +382,21 @@ namespace detail {
       }
 
       boost::optional<std::string> otherSpaceType = other.standardsSpaceType();
-      if (!otherSpaceType){
-        continue;
+      if (otherSpaceType){
+        result.push_back(*otherSpaceType);
       }
-
-      if (standardsSpaceType){
-        if (standardsSpaceType.get() == otherSpaceType.get()){
-          // this will get added to the front of the result later
-          continue;
-        }
-      }
-      result.push_back(*otherSpaceType);
     }
 
+    // remove buildingStandardsBuildingType and standardsBuildingType
+    IstringFind finder;
+    if (standardsSpaceType){
+      finder.addTarget(*standardsSpaceType);
+    }
+    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    result.resize( std::distance(result.begin(),it) ); 
+
     // make unique
-    std::vector<std::string>::iterator it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort

@@ -48,6 +48,16 @@ struct UTILITIES_API IstringEqual{
   };
 };
 
+/** Small functor object for case insensitive std::string equality. */
+struct UTILITIES_API IstringFind{
+  IstringFind();
+  IstringFind(const std::string& target);
+  void addTarget(const std::string& target);
+  bool operator()(const std::string& other) const;
+private:
+  std::vector<std::string> m_targets;
+};
+
 /** Compare two strings without regard to case. */
 inline UTILITIES_API bool istringLess(const std::string& x, const std::string& y) {
   return boost::lexicographical_compare(x, y, boost::is_iless());
