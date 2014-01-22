@@ -60,7 +60,6 @@ TEST_F(ModelFixture, Building)
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
-  EXPECT_EQ("Commercial", building.buildingSectorType());
   EXPECT_EQ(0, building.northAxis());
   EXPECT_FALSE(building.getDouble(2));
   EXPECT_TRUE(building.isNorthAxisDefaulted());

@@ -46,9 +46,6 @@ namespace detail {
   /** Building_Impl is a ParentObject_Impl that is the implementation class for Building.*/
   class MODEL_API Building_Impl : public ParentObject_Impl {
     Q_OBJECT;
-    Q_PROPERTY(std::string buildingSectorType READ buildingSectorType WRITE setBuildingSectorType RESET resetBuildingSectorType);
-    Q_PROPERTY(bool isBuildingSectorTypeDefaulted READ isBuildingSectorTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> buildingSectorTypeValues READ buildingSectorTypeValues);
 
     Q_PROPERTY(double northAxis READ northAxis WRITE setNorthAxis RESET resetNorthAxis);
     Q_PROPERTY(openstudio::Quantity northAxis_SI READ northAxis_SI WRITE setNorthAxis RESET resetNorthAxis);
@@ -124,12 +121,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    std::string buildingSectorType() const;
-
-    bool isBuildingSectorTypeDefaulted() const;
-
-    std::vector<std::string> buildingSectorTypeValues() const;
-
     double northAxis() const;
 
     bool isNorthAxisDefaulted() const;
@@ -154,10 +145,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    bool setBuildingSectorType(const std::string& buildingSectorType);
-
-    void resetBuildingSectorType();
 
     void setNorthAxis(double northAxis);
 

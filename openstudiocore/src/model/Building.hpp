@@ -64,14 +64,8 @@ class MODEL_API Building : public ParentObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validBuildingSectorTypeValues();
-
   /** @name Getters */
   //@{
-
-  std::string buildingSectorType() const;
-
-  bool isBuildingSectorTypeDefaulted() const;
 
   double northAxis() const;
 
@@ -97,10 +91,6 @@ class MODEL_API Building : public ParentObject {
   //@}
   /** @name Setters */
   //@{
-
-  bool setBuildingSectorType(const std::string& buildingSectorType);
-
-  void resetBuildingSectorType();
 
   void setNorthAxis(double northAxis);
 

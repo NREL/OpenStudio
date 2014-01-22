@@ -147,20 +147,6 @@ namespace detail {
     return Building::iddObjectType();
   }
 
-  std::string Building_Impl::buildingSectorType() const {
-    boost::optional<std::string> result = getString(OS_BuildingFields::BuildingSectorType,true);
-    OS_ASSERT(result);
-    return *result;
-  }
-
-  bool Building_Impl::isBuildingSectorTypeDefaulted() const {
-    return isEmpty(OS_BuildingFields::BuildingSectorType);
-  }
-
-  std::vector<std::string> Building_Impl::buildingSectorTypeValues() const {
-    return Building::validBuildingSectorTypeValues();
-  }
-
   double Building_Impl::northAxis() const {
     boost::optional<double> value = getDouble(OS_BuildingFields::NorthAxis,true);
     OS_ASSERT(value);
@@ -248,17 +234,6 @@ namespace detail {
     }
 
     return result;
-  }
-
-  bool Building_Impl::setBuildingSectorType(const std::string& buildingSectorType) {
-    bool result = false;
-    result = setString(OS_BuildingFields::BuildingSectorType, buildingSectorType);
-    return result;
-  }
-
-  void Building_Impl::resetBuildingSectorType() {
-    bool result = setString(OS_BuildingFields::BuildingSectorType, "");
-    OS_ASSERT(result);
   }
 
   void Building_Impl::setNorthAxis(double northAxis) {
@@ -884,19 +859,6 @@ IddObjectType Building::iddObjectType() {
   return result;
 }
 
-std::vector<std::string> Building::validBuildingSectorTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_BuildingFields::BuildingSectorType);
-}
-
-std::string Building::buildingSectorType() const {
-  return getImpl<detail::Building_Impl>()->buildingSectorType();
-}
-
-bool Building::isBuildingSectorTypeDefaulted() const {
-  return getImpl<detail::Building_Impl>()->isBuildingSectorTypeDefaulted();
-}
-
 double Building::northAxis() const {
   return getImpl<detail::Building_Impl>()->northAxis();
 }
@@ -927,14 +889,6 @@ boost::optional<std::string> Building::standardsBuildingType() const{
 
 std::vector<std::string> Building::suggestedStandardsBuildingTypes() const{
   return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
-}
-
-bool Building::setBuildingSectorType(const std::string& buildingSectorType) {
-  return getImpl<detail::Building_Impl>()->setBuildingSectorType(buildingSectorType);
-}
-
-void Building::resetBuildingSectorType() {
-  getImpl<detail::Building_Impl>()->resetBuildingSectorType();
 }
 
 void Building::setNorthAxis(double northAxis) {

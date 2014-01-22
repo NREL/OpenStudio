@@ -390,7 +390,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 {
   m_nameEdit->bind(building, "name");
 
-  m_buildingTypeComboBox->bind(building, "buildingType");
+  //m_buildingTypeComboBox->bind(building, "buildingSectorType");
 
   m_spaceTypeVectorController->attach(building);
   m_spaceTypeVectorController->reportItems();
