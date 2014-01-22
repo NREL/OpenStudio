@@ -30,7 +30,6 @@ class Transformation;
 
 namespace model {
 
-class BuildingStandardsInformation;
 class Facility;
 class Meter;
 class ShadingSurfaceGroup;
@@ -47,9 +46,9 @@ namespace detail {
   /** Building_Impl is a ParentObject_Impl that is the implementation class for Building.*/
   class MODEL_API Building_Impl : public ParentObject_Impl {
     Q_OBJECT;
-    Q_PROPERTY(std::string buildingType READ buildingType WRITE setBuildingType RESET resetBuildingType);
-    Q_PROPERTY(bool isBuildingTypeDefaulted READ isBuildingTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> buildingTypeValues READ buildingTypeValues);
+    Q_PROPERTY(std::string buildingSectorType READ buildingSectorType WRITE setBuildingSectorType RESET resetBuildingSectorType);
+    Q_PROPERTY(bool isBuildingSectorTypeDefaulted READ isBuildingSectorTypeDefaulted);
+    Q_PROPERTY(std::vector<std::string> buildingSectorTypeValues READ buildingSectorTypeValues);
 
     Q_PROPERTY(double northAxis READ northAxis WRITE setNorthAxis RESET resetNorthAxis);
     Q_PROPERTY(openstudio::Quantity northAxis_SI READ northAxis_SI WRITE setNorthAxis RESET resetNorthAxis);
@@ -75,8 +74,6 @@ namespace detail {
     Q_PROPERTY(double gasEquipmentPower READ gasEquipmentPower);
     Q_PROPERTY(double gasEquipmentPowerPerFloorArea READ gasEquipmentPowerPerFloorArea);
     Q_PROPERTY(double gasEquipmentPowerPerPerson READ gasEquipmentPowerPerPerson);
-    Q_PROPERTY(boost::optional<int> numberOfStories READ numberOfStories WRITE setNumberOfStories);
-    Q_PROPERTY(boost::optional<int> numberOfAboveGroundStories READ numberOfAboveGroundStories WRITE setNumberOfAboveGroundStories);
 
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> spaceType READ spaceTypeAsModelObject WRITE setSpaceTypeAsModelObject RESET resetSpaceType);
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> defaultConstructionSet READ defaultConstructionSetAsModelObject WRITE setDefaultConstructionSetAsModelObject RESET resetDefaultConstructionSet);
@@ -88,7 +85,6 @@ namespace detail {
     Q_PROPERTY(std::vector<openstudio::model::ModelObject> thermalZones READ thermalZonesAsModelObjects);
     Q_PROPERTY(std::vector<openstudio::model::ModelObject> exteriorWalls READ exteriorWallsAsModelObjects);
     Q_PROPERTY(std::vector<openstudio::model::ModelObject> roofs READ roofsAsModelObjects);
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> standardsInformation READ standardsInformationAsModelObject);
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -128,11 +124,11 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    std::string buildingType() const;
+    std::string buildingSectorType() const;
 
-    bool isBuildingTypeDefaulted() const;
+    bool isBuildingSectorTypeDefaulted() const;
 
-    std::vector<std::string> buildingTypeValues() const;
+    std::vector<std::string> buildingSectorTypeValues() const;
 
     double northAxis() const;
 
@@ -142,13 +138,26 @@ namespace detail {
 
     bool isNominalFloortoFloorHeightDefaulted() const;
 
+    boost::optional<int> standardsNumberOfStories() const;
+
+    boost::optional<int> standardsNumberOfAboveGroundStories() const;
+
+    /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
+    /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+    /// More information can be found at https://github.com/NREL/openstudio-standards.
+    boost::optional<std::string> standardsBuildingType() const;
+
+    /// If standardsBuildingType is empty, returns a list of suggestions.  If standardsBuildingType is not empty,
+    /// returns standardsBuildingType.
+    std::vector<std::string> suggestedStandardsBuildingTypes() const;
+
     //@}
     /** @name Setters */
     //@{
 
-    bool setBuildingType(const std::string& buildingType);
+    bool setBuildingSectorType(const std::string& buildingSectorType);
 
-    void resetBuildingType();
+    void resetBuildingSectorType();
 
     void setNorthAxis(double northAxis);
 
@@ -157,6 +166,18 @@ namespace detail {
     bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
 
     void resetNominalFloortoFloorHeight();
+
+    bool setStandardsNumberOfStories(boost::optional<int> value);
+    void resetStandardsNumberOfStories();
+
+    bool setStandardsNumberOfAboveGroundStories(boost::optional<int> value);
+    void resetStandardsNumberOfAboveGroundStories();
+
+    /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
+    /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+    /// More information can be found at https://github.com/NREL/openstudio-standards.
+    bool setStandardsBuildingType(const std::string& standardsBuildingType);
+    void resetStandardsBuildingType();
 
     //@}
 
@@ -207,9 +228,6 @@ namespace detail {
 
     /** Returns all roof surfaces. */
     std::vector<Surface> roofs() const;
-
-    /** Get the standards information associated with the overall building. */
-    BuildingStandardsInformation standardsInformation() const;
 
     // get total floor area
     /// Includes only spaces marked as included in floor area.
@@ -293,22 +311,6 @@ namespace detail {
      *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
     double infiltrationDesignAirChangesPerHour() const;
 
-    /** Returns the number of stories in this building. This is a user-set standards attribute. 
-     *  It is not inferred from underlying data. */
-    boost::optional<int> numberOfStories() const;
-
-    /** Returns the number of above ground stories in this building. This is a user-set standards
-     *  attribute. It is not inferred from underlying data. */
-    boost::optional<int> numberOfAboveGroundStories() const;
-
-    /** Sets the number of stories in this building. This is a user-set standards attribute. It 
-     *  is not inferred from underlying data. */
-    bool setNumberOfStories(boost::optional<int> value);
-
-    /** Sets the number of above ground stories in this building. This is a user-set standards
-     *  attribute. It is not inferred from underlying data. */
-    bool setNumberOfAboveGroundStories(boost::optional<int> value);
-
     // get the transformation from building coordinates to world coordinates
     Transformation transformation() const;
   
@@ -334,7 +336,6 @@ namespace detail {
     std::vector<ModelObject> thermalZonesAsModelObjects() const;
     std::vector<ModelObject> exteriorWallsAsModelObjects() const;
     std::vector<ModelObject> roofsAsModelObjects() const;
-    boost::optional<ModelObject> standardsInformationAsModelObject() const;
 
     bool setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setDefaultConstructionSetAsModelObject(const boost::optional<ModelObject>& modelObject);

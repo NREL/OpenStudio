@@ -98,9 +98,6 @@ SET( ${target_name}_src
   Building.hpp
   Building_Impl.hpp
   Building.cpp
-  BuildingStandardsInformation.hpp
-  BuildingStandardsInformation_Impl.hpp
-  BuildingStandardsInformation.cpp
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
@@ -191,9 +188,6 @@ SET( ${target_name}_src
   ConstructionBase.hpp
   ConstructionBase_Impl.hpp
   ConstructionBase.cpp
-  ConstructionBaseStandardsInformation.hpp
-  ConstructionBaseStandardsInformation_Impl.hpp
-  ConstructionBaseStandardsInformation.cpp
   ConstructionWithInternalSource.hpp
   ConstructionWithInternalSource_Impl.hpp
   ConstructionWithInternalSource.cpp
@@ -733,6 +727,9 @@ SET( ${target_name}_src
   StandardOpaqueMaterial.hpp
   StandardOpaqueMaterial_Impl.hpp
   StandardOpaqueMaterial.cpp
+  StandardsInformationConstruction.hpp
+  StandardsInformationConstruction_Impl.hpp
+  StandardsInformationConstruction.cpp  
   SteamEquipment.hpp
   SteamEquipment_Impl.hpp
   SteamEquipment.cpp

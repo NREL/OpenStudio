@@ -22,8 +22,6 @@
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
-#include <model/BuildingStandardsInformation.hpp>
-#include <model/BuildingStandardsInformation_Impl.hpp>
 #include <model/BuildingStory.hpp>
 #include <model/BuildingStory_Impl.hpp>
 #include <model/Facility.hpp>
@@ -97,11 +95,6 @@ namespace detail {
   {
     std::vector<ModelObject> result;
 
-    OptionalBuildingStandardsInformation stdsInfo = model().getOptionalUniqueModelObject<BuildingStandardsInformation>();
-    if (stdsInfo) {
-      result.push_back(*stdsInfo);
-    }
-
     // meters
     MeterVector meters = this->meters();
     result.insert(result.end(),meters.begin(),meters.end());
@@ -154,18 +147,18 @@ namespace detail {
     return Building::iddObjectType();
   }
 
-  std::string Building_Impl::buildingType() const {
-    boost::optional<std::string> result = getString(OS_BuildingFields::BuildingType,true);
+  std::string Building_Impl::buildingSectorType() const {
+    boost::optional<std::string> result = getString(OS_BuildingFields::BuildingSectorType,true);
     OS_ASSERT(result);
     return *result;
   }
 
-  bool Building_Impl::isBuildingTypeDefaulted() const {
-    return isEmpty(OS_BuildingFields::BuildingType);
+  bool Building_Impl::isBuildingSectorTypeDefaulted() const {
+    return isEmpty(OS_BuildingFields::BuildingSectorType);
   }
 
-  std::vector<std::string> Building_Impl::buildingTypeValues() const {
-    return Building::validBuildingTypeValues();
+  std::vector<std::string> Building_Impl::buildingSectorTypeValues() const {
+    return Building::validBuildingSectorTypeValues();
   }
 
   double Building_Impl::northAxis() const {
@@ -188,14 +181,14 @@ namespace detail {
     return isEmpty(OS_BuildingFields::NominalFloortoFloorHeight);
   }
 
-  bool Building_Impl::setBuildingType(const std::string& buildingType) {
+  bool Building_Impl::setBuildingSectorType(const std::string& buildingSectorType) {
     bool result = false;
-    result = setString(OS_BuildingFields::BuildingType, buildingType);
+    result = setString(OS_BuildingFields::BuildingSectorType, buildingSectorType);
     return result;
   }
 
-  void Building_Impl::resetBuildingType() {
-    bool result = setString(OS_BuildingFields::BuildingType, "");
+  void Building_Impl::resetBuildingSectorType() {
+    bool result = setString(OS_BuildingFields::BuildingSectorType, "");
     OS_ASSERT(result);
   }
 
@@ -331,10 +324,6 @@ namespace detail {
       }
     }
     return result;
-  }
-
-  BuildingStandardsInformation Building_Impl::standardsInformation() const {
-    return model().getUniqueModelObject<BuildingStandardsInformation>();
   }
 
   double Building_Impl::floorArea() const
@@ -620,32 +609,6 @@ namespace detail {
     return convert(idfr/volume,"1/s","1/h").get();
   }
 
-  boost::optional<int> Building_Impl::numberOfStories() const {
-    OptionalBuildingStandardsInformation standardsInformation = this->standardsInformation();
-    if (standardsInformation) {
-      return standardsInformation->numberOfStories();
-    }
-    return boost::none;
-  }
-
-  boost::optional<int> Building_Impl::numberOfAboveGroundStories() const {
-    OptionalBuildingStandardsInformation standardsInformation = this->standardsInformation();
-    if (standardsInformation) {
-      return standardsInformation->numberOfAboveGroundStories();
-    }
-    return boost::none;
-  }
-
-  bool Building_Impl::setNumberOfStories(boost::optional<int> value) {
-    BuildingStandardsInformation standardsInformation = model().getUniqueModelObject<BuildingStandardsInformation>();
-    return standardsInformation.setNumberOfStories(value);
-  }
-
-  bool Building_Impl::setNumberOfAboveGroundStories(boost::optional<int> value) {
-    BuildingStandardsInformation standardsInformation = model().getUniqueModelObject<BuildingStandardsInformation>();
-    return standardsInformation.setNumberOfAboveGroundStories(value);
-  }
-
   Transformation Building_Impl::transformation() const
   {
     // rotate negative amount around the z axis, EnergyPlus defines rotation clockwise
@@ -760,11 +723,6 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ModelObject> Building_Impl::standardsInformationAsModelObject() const {
-    OptionalModelObject result = standardsInformation();
-    return result;
-  }
-
   bool Building_Impl::setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject) {
     if (modelObject) {
       OptionalSpaceType intermediate = modelObject->optionalCast<SpaceType>();
@@ -820,17 +778,17 @@ IddObjectType Building::iddObjectType() {
   return result;
 }
 
-std::vector<std::string> Building::validBuildingTypeValues() {
+std::vector<std::string> Building::validBuildingSectorTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_BuildingFields::BuildingType);
+                        OS_BuildingFields::BuildingSectorType);
 }
 
-std::string Building::buildingType() const {
-  return getImpl<detail::Building_Impl>()->buildingType();
+std::string Building::buildingSectorType() const {
+  return getImpl<detail::Building_Impl>()->buildingSectorType();
 }
 
-bool Building::isBuildingTypeDefaulted() const {
-  return getImpl<detail::Building_Impl>()->isBuildingTypeDefaulted();
+bool Building::isBuildingSectorTypeDefaulted() const {
+  return getImpl<detail::Building_Impl>()->isBuildingSectorTypeDefaulted();
 }
 
 double Building::northAxis() const {
@@ -849,12 +807,12 @@ bool Building::isNominalFloortoFloorHeightDefaulted() const {
   return getImpl<detail::Building_Impl>()->isNominalFloortoFloorHeightDefaulted();
 }
 
-bool Building::setBuildingType(const std::string& buildingType) {
-  return getImpl<detail::Building_Impl>()->setBuildingType(buildingType);
+bool Building::setBuildingSectorType(const std::string& buildingSectorType) {
+  return getImpl<detail::Building_Impl>()->setBuildingSectorType(buildingSectorType);
 }
 
-void Building::resetBuildingType() {
-  getImpl<detail::Building_Impl>()->resetBuildingType();
+void Building::resetBuildingSectorType() {
+  getImpl<detail::Building_Impl>()->resetBuildingSectorType();
 }
 
 void Building::setNorthAxis(double northAxis) {
@@ -951,10 +909,6 @@ std::vector<Surface> Building::roofs() const {
   return getImpl<detail::Building_Impl>()->roofs();
 }
 
-BuildingStandardsInformation Building::standardsInformation() const {
-  return getImpl<detail::Building_Impl>()->standardsInformation();
-}
-
 double Building::floorArea() const
 {
   return getImpl<detail::Building_Impl>()->floorArea();
@@ -1043,22 +997,6 @@ double Building::infiltrationDesignFlowPerExteriorWallArea() const {
 
 double Building::infiltrationDesignAirChangesPerHour() const {
   return getImpl<detail::Building_Impl>()->infiltrationDesignAirChangesPerHour();
-}
-
-boost::optional<int> Building::numberOfStories() const {
-  return getImpl<detail::Building_Impl>()->numberOfStories();
-}
-
-boost::optional<int> Building::numberOfAboveGroundStories() const {
-  return getImpl<detail::Building_Impl>()->numberOfAboveGroundStories();
-}
-
-bool Building::setNumberOfStories(boost::optional<int> value) {
-  return getImpl<detail::Building_Impl>()->setNumberOfStories(value);
-}
-
-bool Building::setNumberOfAboveGroundStories(boost::optional<int> value) {
-  return getImpl<detail::Building_Impl>()->setNumberOfAboveGroundStories(value);
 }
 
 Transformation Building::transformation() const

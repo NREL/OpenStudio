@@ -380,7 +380,7 @@ TEST_F(IdfFixture, IdfObject_IddObjectTypeInitialization) {
   IdfObject idfObject(IddObjectType::OS_Building);
   
   // get string should not return empty, initialized optional string
-  EXPECT_FALSE(idfObject.getString(OS_BuildingFields::BuildingType, false, true));
+  EXPECT_FALSE(idfObject.getString(OS_BuildingFields::BuildingSectorType, false, true));
   EXPECT_FALSE(idfObject.getDouble(OS_BuildingFields::NorthAxis));
   EXPECT_FALSE(idfObject.getDouble(OS_BuildingFields::NominalFloortoFloorHeight));
 }

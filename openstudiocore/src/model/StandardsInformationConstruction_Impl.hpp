@@ -17,43 +17,43 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef MODEL_CONSTRUCTIONBASESTANDARDSINFORMATION_IMPL_HPP
-#define MODEL_CONSTRUCTIONBASESTANDARDSINFORMATION_IMPL_HPP
+#ifndef MODEL_STANDARDSINFORMATIONCONSTRUCTION_IMPL_HPP
+#define MODEL_STANDARDSINFORMATIONCONSTRUCTION_IMPL_HPP
 
 #include <model/ModelObject_Impl.hpp>
 
 namespace openstudio {
 namespace model {
 
-class ConstructionBaseStandardsInformation;
+class StandardsInformationConstruction;
 class ConstructionBase;
 class Material;
 
 namespace detail {
 
-  class MODEL_API ConstructionBaseStandardsInformation_Impl : public ModelObject_Impl {
+  class MODEL_API StandardsInformationConstruction_Impl : public ModelObject_Impl {
    public:
     /** Constructors and Destructors */
     //@{
 
     // constructor
-    ConstructionBaseStandardsInformation_Impl(const IdfObject& idfObject,
+    StandardsInformationConstruction_Impl(const IdfObject& idfObject,
                                               Model_Impl* model,
                                               bool keepHandle);
 
     // construct from workspace
-    ConstructionBaseStandardsInformation_Impl(
+    StandardsInformationConstruction_Impl(
         const openstudio::detail::WorkspaceObject_Impl& other,
         Model_Impl* model,
         bool keepHandle);
 
-    ConstructionBaseStandardsInformation_Impl(
-        const ConstructionBaseStandardsInformation_Impl& other,
+    StandardsInformationConstruction_Impl(
+        const StandardsInformationConstruction_Impl& other,
         Model_Impl* model,
         bool keepHandle);
 
     // virtual destructor
-    virtual ~ConstructionBaseStandardsInformation_Impl(){}
+    virtual ~StandardsInformationConstruction_Impl(){}
 
     //@}
     /** @name Getters */
@@ -63,7 +63,7 @@ namespace detail {
 
     std::string intendedSurfaceType() const;
 
-    std::string constructionType() const;
+    std::string standardsConstructionType() const;
 
     boost::optional<Material> perturbableLayer() const;
 
@@ -87,7 +87,7 @@ namespace detail {
 
     bool setIntendedSurfaceType(const std::string& type);
 
-    void setConstructionType(const std::string& type);
+    void setStandardsConstructionType(const std::string& type);
 
     bool setPerturbableLayer(unsigned layerIndex);
 
@@ -104,7 +104,7 @@ namespace detail {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.ConstructionBaseStandardsInformation");
+    REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
   };
   
 } // detail
@@ -112,4 +112,4 @@ namespace detail {
 } // model
 } // openstudio 
 
-#endif // MODEL_CONSTRUCTIONBASESTANDARDSINFORMATION_IMPL_HPP
+#endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_IMPL_HPP

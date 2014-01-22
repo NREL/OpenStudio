@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ConstructionBaseStandardsInformation.hpp>
-#include <model/ConstructionBaseStandardsInformation_Impl.hpp>
+#include <model/StandardsInformationConstruction.hpp>
+#include <model/StandardsInformationConstruction_Impl.hpp>
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/LayeredConstruction.hpp>
@@ -37,43 +37,43 @@ namespace model {
 
 namespace detail {
 
-  ConstructionBaseStandardsInformation_Impl::ConstructionBaseStandardsInformation_Impl(
+  StandardsInformationConstruction_Impl::StandardsInformationConstruction_Impl(
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    OS_ASSERT(idfObject.iddObject().type() == ConstructionBaseStandardsInformation::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == StandardsInformationConstruction::iddObjectType());
   }
 
-  ConstructionBaseStandardsInformation_Impl::ConstructionBaseStandardsInformation_Impl(
+  StandardsInformationConstruction_Impl::StandardsInformationConstruction_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    OS_ASSERT(other.iddObject().type() == ConstructionBaseStandardsInformation::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == StandardsInformationConstruction::iddObjectType());
   }
 
-  ConstructionBaseStandardsInformation_Impl::ConstructionBaseStandardsInformation_Impl(
-      const ConstructionBaseStandardsInformation_Impl& other,Model_Impl* model,bool keepHandle)
+  StandardsInformationConstruction_Impl::StandardsInformationConstruction_Impl(
+      const StandardsInformationConstruction_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
 
-  boost::optional<ConstructionBase> ConstructionBaseStandardsInformation_Impl::construction() const {
-    return getObject<ConstructionBaseStandardsInformation>().getModelObjectTarget<ConstructionBase>(
+  boost::optional<ConstructionBase> StandardsInformationConstruction_Impl::construction() const {
+    return getObject<StandardsInformationConstruction>().getModelObjectTarget<ConstructionBase>(
         OS_StandardsInformation_ConstructionFields::ConstructionName);
   }
 
-  std::string ConstructionBaseStandardsInformation_Impl::intendedSurfaceType() const {
+  std::string StandardsInformationConstruction_Impl::intendedSurfaceType() const {
     OptionalString oResult = getString(OS_StandardsInformation_ConstructionFields::IntendedSurfaceType,true);
     if (oResult) { return *oResult; }
     return std::string();
   }
 
-  std::string ConstructionBaseStandardsInformation_Impl::constructionType() const {
-    OptionalString oResult = getString(OS_StandardsInformation_ConstructionFields::ConstructionType,true);
+  std::string StandardsInformationConstruction_Impl::standardsConstructionType() const {
+    OptionalString oResult = getString(OS_StandardsInformation_ConstructionFields::StandardsConstructionType,true);
     if (oResult) { return *oResult; }
     return std::string();
   }
 
-  boost::optional<Material> ConstructionBaseStandardsInformation_Impl::perturbableLayer() const {
+  boost::optional<Material> StandardsInformationConstruction_Impl::perturbableLayer() const {
     OptionalUnsigned oLayerIndex = getUnsigned(OS_StandardsInformation_ConstructionFields::PerturbableLayer);
     if (!oLayerIndex) { return boost::none; }
     unsigned layerIndex(*oLayerIndex);
@@ -89,7 +89,7 @@ namespace detail {
     return boost::none;
   }
 
-  std::string ConstructionBaseStandardsInformation_Impl::perturbableLayerType() const {
+  std::string StandardsInformationConstruction_Impl::perturbableLayerType() const {
     std::string result;
     OptionalString choiceValue = getString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,true);
     OS_ASSERT(choiceValue);
@@ -102,13 +102,13 @@ namespace detail {
     return result; 
   }
 
-  boost::optional<ParentObject> ConstructionBaseStandardsInformation_Impl::parent() const {
+  boost::optional<ParentObject> StandardsInformationConstruction_Impl::parent() const {
     OptionalConstructionBase candidate = construction();
     if (candidate) { return candidate->cast<ParentObject>(); }
     return boost::none;
   }
 
-  const std::vector<std::string>& ConstructionBaseStandardsInformation_Impl::outputVariableNames() const
+  const std::vector<std::string>& StandardsInformationConstruction_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
     if (result.empty()){
@@ -116,11 +116,11 @@ namespace detail {
     return result;
   }
 
-  IddObjectType ConstructionBaseStandardsInformation_Impl::iddObjectType() const {
-    return ConstructionBaseStandardsInformation::iddObjectType();
+  IddObjectType StandardsInformationConstruction_Impl::iddObjectType() const {
+    return StandardsInformationConstruction::iddObjectType();
   }
 
-  void ConstructionBaseStandardsInformation_Impl::setConstruction(
+  void StandardsInformationConstruction_Impl::setConstruction(
       const ConstructionBase& construction) 
   {
     bool ok = setPointer(OS_StandardsInformation_ConstructionFields::ConstructionName,
@@ -128,16 +128,16 @@ namespace detail {
     OS_ASSERT(ok);
   }
 
-  bool ConstructionBaseStandardsInformation_Impl::setIntendedSurfaceType(const std::string& type) {
+  bool StandardsInformationConstruction_Impl::setIntendedSurfaceType(const std::string& type) {
     return setString(OS_StandardsInformation_ConstructionFields::IntendedSurfaceType,type);
   }
 
-  void ConstructionBaseStandardsInformation_Impl::setConstructionType(const std::string& type) {
-    bool ok = setString(OS_StandardsInformation_ConstructionFields::ConstructionType,type);
+  void StandardsInformationConstruction_Impl::setStandardsConstructionType(const std::string& type) {
+    bool ok = setString(OS_StandardsInformation_ConstructionFields::StandardsConstructionType,type);
     OS_ASSERT(ok);
   }
 
-  bool ConstructionBaseStandardsInformation_Impl::setPerturbableLayer(unsigned layerIndex) {
+  bool StandardsInformationConstruction_Impl::setPerturbableLayer(unsigned layerIndex) {
     bool ok(true);
 
     OptionalConstructionBase oConstructionBase = construction();
@@ -153,7 +153,7 @@ namespace detail {
     return true;
   }
 
-  bool ConstructionBaseStandardsInformation_Impl::setPerturbableLayer(const Material& material) {
+  bool StandardsInformationConstruction_Impl::setPerturbableLayer(const Material& material) {
     bool ok(true);
 
     OptionalConstructionBase oConstructionBase = construction();
@@ -170,14 +170,14 @@ namespace detail {
     return true;
   }
 
-  void ConstructionBaseStandardsInformation_Impl::resetPerturbableLayer() {
+  void StandardsInformationConstruction_Impl::resetPerturbableLayer() {
     bool ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayer,"");
     OS_ASSERT(ok);
     ok = setString(OS_StandardsInformation_ConstructionFields::PerturbableLayerType,"");
     OS_ASSERT(ok);
   }
 
-  void ConstructionBaseStandardsInformation_Impl::setPerturbableLayerType(const std::string& type) 
+  void StandardsInformationConstruction_Impl::setPerturbableLayerType(const std::string& type) 
   {
     bool ok(true);
 
@@ -203,7 +203,7 @@ namespace detail {
     }
   }
 
-  bool ConstructionBaseStandardsInformation_Impl::setParent(ParentObject& newParent) {
+  bool StandardsInformationConstruction_Impl::setParent(ParentObject& newParent) {
     OptionalConstructionBase candidate = newParent.optionalCast<ConstructionBase>();
     if (candidate) { 
       setConstruction(*candidate);
@@ -214,21 +214,15 @@ namespace detail {
 
 } // detail
 
-ConstructionBaseStandardsInformation::ConstructionBaseStandardsInformation(Model& model)
-  : ModelObject(ConstructionBaseStandardsInformation::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ConstructionBaseStandardsInformation_Impl>());
-}
-
-ConstructionBaseStandardsInformation::ConstructionBaseStandardsInformation(
+StandardsInformationConstruction::StandardsInformationConstruction(
     const ConstructionBase& construction)
-  : ModelObject(ConstructionBaseStandardsInformation::iddObjectType(),construction.model())
+  : ModelObject(StandardsInformationConstruction::iddObjectType(),construction.model())
 {
-  OS_ASSERT(getImpl<detail::ConstructionBaseStandardsInformation_Impl>());
+  OS_ASSERT(getImpl<detail::StandardsInformationConstruction_Impl>());
   setConstruction(construction);
 }
 
-std::vector<std::string> ConstructionBaseStandardsInformation::standardPerturbableLayerTypeValues() {
+std::vector<std::string> StandardsInformationConstruction::standardPerturbableLayerTypeValues() {
   StringVector result;
   StringVector candidates = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                                            OS_StandardsInformation_ConstructionFields::PerturbableLayerType);
@@ -239,67 +233,67 @@ std::vector<std::string> ConstructionBaseStandardsInformation::standardPerturbab
   return result;
 }
 
-std::vector<std::string> ConstructionBaseStandardsInformation::intendedSurfaceTypeValues() {
+std::vector<std::string> StandardsInformationConstruction::intendedSurfaceTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_StandardsInformation_ConstructionFields::IntendedSurfaceType);
 }
 
-IddObjectType ConstructionBaseStandardsInformation::iddObjectType() {
+IddObjectType StandardsInformationConstruction::iddObjectType() {
   IddObjectType result(IddObjectType::OS_StandardsInformation_Construction);
   return result;
 }
 
-boost::optional<ConstructionBase> ConstructionBaseStandardsInformation::construction() const {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->construction();
+boost::optional<ConstructionBase> StandardsInformationConstruction::construction() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->construction();
 }
 
-std::string ConstructionBaseStandardsInformation::intendedSurfaceType() const {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->intendedSurfaceType();
+std::string StandardsInformationConstruction::intendedSurfaceType() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->intendedSurfaceType();
 }
 
-std::string ConstructionBaseStandardsInformation::constructionType() const {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->constructionType();
+std::string StandardsInformationConstruction::standardsConstructionType() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->standardsConstructionType();
 }
 
-boost::optional<Material> ConstructionBaseStandardsInformation::perturbableLayer() const {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->perturbableLayer();
+boost::optional<Material> StandardsInformationConstruction::perturbableLayer() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->perturbableLayer();
 }
 
-std::string ConstructionBaseStandardsInformation::perturbableLayerType() const {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->perturbableLayerType();
+std::string StandardsInformationConstruction::perturbableLayerType() const {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->perturbableLayerType();
 }
 
-void ConstructionBaseStandardsInformation::setConstruction(const ConstructionBase& construction) {
-  getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->setConstruction(construction);
+void StandardsInformationConstruction::setConstruction(const ConstructionBase& construction) {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->setConstruction(construction);
 }
 
-bool ConstructionBaseStandardsInformation::setIntendedSurfaceType(const std::string& type) {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->setIntendedSurfaceType(type);
+bool StandardsInformationConstruction::setIntendedSurfaceType(const std::string& type) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setIntendedSurfaceType(type);
 }
 
-void ConstructionBaseStandardsInformation::setConstructionType(const std::string& type) {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->setConstructionType(type);
+void StandardsInformationConstruction::setStandardsConstructionType(const std::string& type) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setStandardsConstructionType(type);
 }
 
-bool ConstructionBaseStandardsInformation::setPerturbableLayer(unsigned layerIndex) {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->setPerturbableLayer(layerIndex);
+bool StandardsInformationConstruction::setPerturbableLayer(unsigned layerIndex) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setPerturbableLayer(layerIndex);
 }
 
-bool ConstructionBaseStandardsInformation::setPerturbableLayer(const Material& material) {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->setPerturbableLayer(material);
+bool StandardsInformationConstruction::setPerturbableLayer(const Material& material) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setPerturbableLayer(material);
 }
 
-void ConstructionBaseStandardsInformation::resetPerturbableLayer() {
-  getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->resetPerturbableLayer();
+void StandardsInformationConstruction::resetPerturbableLayer() {
+  getImpl<detail::StandardsInformationConstruction_Impl>()->resetPerturbableLayer();
 }
 
-void ConstructionBaseStandardsInformation::setPerturbableLayerType(const std::string& type) {
-  return getImpl<detail::ConstructionBaseStandardsInformation_Impl>()->setPerturbableLayerType(type);
+void StandardsInformationConstruction::setPerturbableLayerType(const std::string& type) {
+  return getImpl<detail::StandardsInformationConstruction_Impl>()->setPerturbableLayerType(type);
 }
 
 /// @cond
-ConstructionBaseStandardsInformation::ConstructionBaseStandardsInformation(
-    boost::shared_ptr<detail::ConstructionBaseStandardsInformation_Impl> impl)
+StandardsInformationConstruction::StandardsInformationConstruction(
+    boost::shared_ptr<detail::StandardsInformationConstruction_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond
