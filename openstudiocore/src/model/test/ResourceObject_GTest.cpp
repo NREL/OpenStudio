@@ -26,8 +26,8 @@
 
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
-#include <model/ConstructionBaseStandardsInformation.hpp>
-#include <model/ConstructionBaseStandardsInformation_Impl.hpp>
+#include <model/StandardsInformationConstruction.hpp>
+#include <model/StandardsInformationConstruction_Impl.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
 
@@ -99,7 +99,7 @@ TEST_F(ModelFixture,ResourceObject_Clone) {
   EXPECT_FALSE(newConstruction == construction);
   EXPECT_TRUE(newConstruction.model() == construction.model());
   // child cloned
-  EXPECT_EQ(2u,original.getModelObjects<ConstructionBaseStandardsInformation>().size());
+  EXPECT_EQ(2u,original.getModelObjects<StandardsInformationConstruction>().size());
   EXPECT_FALSE(newConstruction.standardsInformation() == construction.standardsInformation());
   // resource not cloned
   EXPECT_EQ(1u,newConstruction.numLayers());

@@ -1748,7 +1748,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 
   result.push_back(IddObjectType::OS_Facility);
   result.push_back(IddObjectType::OS_Building);
-  result.push_back(IddObjectType::OS_StandardsInformation_Building);
   result.push_back(IddObjectType::OS_BuildingStory);
   result.push_back(IddObjectType::OS_LightingSimulationZone);
 
