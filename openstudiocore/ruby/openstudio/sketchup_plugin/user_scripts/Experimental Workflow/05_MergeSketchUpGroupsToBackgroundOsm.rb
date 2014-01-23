@@ -34,6 +34,11 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     open_path.setDisplayName("Select OSM File to Merge SketchUp objects to.")
     result << open_path
 
+    merge_selected_only = OpenStudio::Ruleset::OSArgument::makeBoolArgument("merge_selected_only",false)
+    merge_selected_only.setDisplayName("Merge Selected Spaces Only? ")
+    merge_selected_only.setDefaultValue(false)
+    result << merge_selected_only
+        
     # todo - expose layers as arguments mapped to type of SO objects?
     # todo - have way to pull in background model from other script.
     # todo - support save as to another or a new osm.
@@ -52,6 +57,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     
     #get path
     open_path = runner.getStringArgumentValue("open_path",user_arguments)
+    merge_selected_only = runner.getBoolArgumentValue("merge_selected_only",user_arguments)
 
     # Open OSM file
     @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).get
@@ -68,7 +74,11 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
     # get SketchUp model and entities
     skp_model = Sketchup.active_model
-    entities = skp_model.active_entities
+    if not merge_selected_only
+      entities = skp_model.active_entities
+    else
+      entities = skp_model.selection
+    end
 
     #use north direction in SketchUp to set building rotation
 
@@ -132,15 +142,8 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       skylight_hash = Hash.new
       door_hash = Hash.new
 
-      #adding code to address components
-      if group.class.to_s == "Sketchup::Group"
-        group_entities = group.entities
-      elsif group.class.to_s == "Sketchup::ComponentInstance"
-        group_entities = group.definition.entities
-      end
-
       #categorize surfaces
-      group_entities.each do |entity|
+      group.entities.each do |entity|
         if entity.class.to_s == "Sketchup::Face"
 
           #array to help find identify sub-surfaces
@@ -375,15 +378,8 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     # create def to make shading surface
     def make_shading_surfaces(shading_surface_group, group)
 
-      #adding code to address components
-      if group.class.to_s == "Sketchup::Group"
-        group_entities = group.entities
-      elsif group.class.to_s == "Sketchup::ComponentInstance"
-        group_entities = group.definition.entities
-      end
-
       #loop through surfaces to make OS surfaces
-      group_entities.each do |entity|
+      group.entities.each do |entity|
         if entity.class.to_s == "Sketchup::Face"
           vertices = entity.vertices
 
@@ -457,15 +453,8 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     # create def to make interior partition surface
     def make_interior_partition_surfaces(interior_partition_group, group)
 
-      #adding code to address components
-      if group.class.to_s == "Sketchup::Group"
-        group_entities = group.entities
-      elsif group.class.to_s == "Sketchup::ComponentInstance"
-        group_entities = group.definition.entities
-      end
-
       #loop through surfaces to make OS surfaces
-      group_entities.each do |entity|
+      group.entities.each do |entity|
         if entity.class.to_s == "Sketchup::Face"
           vertices = entity.vertices
 
@@ -485,8 +474,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       end #end of entities.each.do
 
     end #end of make_interior_partition_surfaces
-
-    #start of main workflow code all defs are above here.
 
     #array of space, shading groups, and interior partition groups. Later will delete objects in OSM that don't exist in SKP
     @current_spaces = []
@@ -536,15 +523,8 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         make_space_surfaces(space,group)
 
         #Making array of nested groups
-        #adding code to address components
-        if group.class.to_s == "Sketchup::Group"
-          group_entities = group.entities
-        elsif group.class.to_s == "Sketchup::ComponentInstance"
-          group_entities = group.definition.entities
-        end
-
         nested_groups = []
-        group_entities.each do |group_entity|
+        group.entities.each do |group_entity|
           if group_entity.class.to_s == "Sketchup::Group" or group_entity.class.to_s == "Sketchup::ComponentInstance"
             group_entity.make_unique #this is only needed if a group was copied.
             nested_groups << group_entity
@@ -557,16 +537,10 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           # get transformation
           nested_t = nested_group.transformation
 
-          if nested_group.layer.name == "OpenStudio BackgroundModel BuildingAndSpaceShadingGroup"
+          if nested_group.layer.name == "OpenStudio BackgroundModel ShadingGroup"
 
             #make or update group
-            if group.layer.name == "OpenStudio BackgroundModel BuildingAndSpaceShadingGroup"
-              shadingSurfaceType = "Building"
-            else
-              shadingSurfaceType = "Site"
-            end
-
-            space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",shadingSurfaceType,space)
+            space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",space)
             #add to array of shading groups
             #make surfaces
             shading_surfaces = make_shading_surfaces(space_shading_group,nested_group)
@@ -593,29 +567,33 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
     end #end of groups.each do
 
-    #delete spaces that were no long in the SketchUp model todo - I need to add some protection to avoid error below
-    #Error occurred while running user script:  ..\..\..\..\..\..\openstudiocore\src\utilities\idf\WorkspaceObject.cpp@824 : Attempt to write a disconnected WorkspaceObject out to Idf. (RuntimeError)
+    # delete spaces that were no long in the SketchUp model. Don't perform this if merging selection only
 
-    @spaces.each do |space|
-      if not @current_spaces.include? space
-        puts "removing #{space.name}"
-        space.remove
-      end
-    end
+    if not merge_selected_only
 
-    @shading_groups.each do |shading_group|
-      if not @current_shading_surface_groups.include? shading_group
-        puts "removing #{shading_group.name}"
-        shading_group.remove
+      @shading_groups.each do |shading_group|
+        if not @current_shading_surface_groups.include? shading_group
+          puts "removing #{shading_group.name}"
+          shading_group.remove
+        end
       end
-    end
 
-    @interior_partition_groups.each do |interior_partition_group|
-      if not @current_interior_partition_groups.include? interior_partition_group
-        puts "removing #{interior_partition_group.name}"
-        interior_partition_group.remove
+      @interior_partition_groups.each do |interior_partition_group|
+        if not @current_interior_partition_groups.include? interior_partition_group
+          puts "removing #{interior_partition_group.name}"
+          interior_partition_group.remove
+        end
       end
-    end
+
+      # I'm doing spaces last to avoid error about removing disconnected objects for nested groups.
+      @spaces.each do |space|
+        if not @current_spaces.include? space
+          puts "removing #{space.name}"
+          space.remove
+        end
+      end
+
+    end #end of if not merge_selected_only
 
     #todo - confirm behavior with components
 
