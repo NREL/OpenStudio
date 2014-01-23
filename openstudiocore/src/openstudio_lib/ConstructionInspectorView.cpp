@@ -73,7 +73,7 @@ void ConstructionInspectorView::createLayout()
 
   QLabel* label = new QLabel("Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,0,0);
+  mainGridLayout->addWidget(label,row,0);
 
   ++row;
 
@@ -83,6 +83,7 @@ void ConstructionInspectorView::createLayout()
   ++row;
 
   // Standards
+
   QVBoxLayout* vLayout = new QVBoxLayout();
 
   label = new QLabel();
@@ -263,7 +264,6 @@ void ConstructionInspectorView::detach()
   m_intendedSurfaceType->unbind();
 
   disconnect(m_standardsConstructionType, 0, this, 0);
-  m_standardsConstructionType->clear();
   m_standardsConstructionType->setEnabled(false);
 }
 

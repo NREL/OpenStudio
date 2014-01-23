@@ -27,6 +27,7 @@
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
+#include "../shared_gui_components/OSComboBox.hpp"
 
 #include <model/ConstructionWithInternalSource.hpp>
 #include <model/ConstructionWithInternalSource_Impl.hpp>
@@ -39,6 +40,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QStackedWidget>
+#include <QComboBox>
 
 namespace openstudio {
 
@@ -67,24 +69,66 @@ void ConstructionInternalSourceInspectorView::createLayout()
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
+  int row = 0;
+
   // Name
 
   QLabel* label = new QLabel("Name: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,0,0);
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
+  mainGridLayout->addWidget(m_nameEdit,row,0,1,3);
+
+  ++row;
+
+  // Standards
+
+  QVBoxLayout* vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Intended Surface Type: ");
+  label->setObjectName("H2");
+  vLayout->addWidget(label);
+
+  m_intendedSurfaceType = new OSComboBox2();
+  m_intendedSurfaceType->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_intendedSurfaceType);
+
+  mainGridLayout->addLayout(vLayout,row,0);
+
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Construction Type: ");
+  label->setObjectName("H2");
+  vLayout->addWidget(label);
+
+  m_standardsConstructionType = new QComboBox();
+  m_standardsConstructionType->setEditable(true);
+  m_standardsConstructionType->setDuplicatesEnabled(false);
+  m_standardsConstructionType->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardsConstructionType);
+
+  mainGridLayout->addLayout(vLayout,row,1);
+
+  ++row;
 
   // Layer
 
   label = new QLabel("Layer: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,2,0);
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   label = new QLabel("Outside");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,3,0);
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   m_constructionVC = new ConstructionObjectVectorController(this);
   m_constructionDZ = new OSDropZone(m_constructionVC,false);
@@ -92,55 +136,75 @@ void ConstructionInternalSourceInspectorView::createLayout()
   m_constructionDZ->setMaxItems(16);
   m_constructionDZ->setItemsAcceptDrops(true);
   m_constructionDZ->setFixedSize(QSize(OSItem::ITEM_WIDTH + 20,600));
-  mainGridLayout->addWidget(m_constructionDZ,4,0);
+  mainGridLayout->addWidget(m_constructionDZ,row,0);
+
+  ++row;
 
   label = new QLabel("Inside");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,5,0);
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   // Source Present After Layer
 
   label = new QLabel("Source Present After Layer: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,6,0);
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   bool isConnected = false;
 
   m_sourcePresentAfterLayerNumberEdit = new OSIntegerEdit();
-  mainGridLayout->addWidget(m_sourcePresentAfterLayerNumberEdit,7,0);
+  mainGridLayout->addWidget(m_sourcePresentAfterLayerNumberEdit,row,0);
+
+  ++row;
 
   // Temperature Calculation Requested After Layer Number
 
   label = new QLabel("Temperature Calculation Requested After Layer Number: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,8,0);
+  mainGridLayout->addWidget(label,row,0,1,3);
+
+  ++row;
 
   m_temperatureCalculationRequestedAfterLayerNumberEdit = new OSIntegerEdit();
-  mainGridLayout->addWidget(m_temperatureCalculationRequestedAfterLayerNumberEdit,9,0);
+  mainGridLayout->addWidget(m_temperatureCalculationRequestedAfterLayerNumberEdit,row,0);
+
+  ++row;
 
   // Dimensions for the CTF Calculation
 
   label = new QLabel("Dimensions for the CTF Calculation: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,10,0);
+  mainGridLayout->addWidget(label,row,0,1,3);
+
+  ++row;
 
   m_dimensionsForTheCTFCalculationEdit = new OSIntegerEdit();
-  mainGridLayout->addWidget(m_dimensionsForTheCTFCalculationEdit,11,0);
+  mainGridLayout->addWidget(m_dimensionsForTheCTFCalculationEdit,row,0);
+
+  ++row;
 
   // Tube Spacing
 
   label = new QLabel("Tube Spacing: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,12,0);
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   m_tubeSpacingEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_tubeSpacingEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
-  mainGridLayout->addWidget(m_tubeSpacingEdit,13,0);
+  mainGridLayout->addWidget(m_tubeSpacingEdit,row,0);
+
+  ++row;
 
   // Stretch
 
-  mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(row,100);
 
   mainGridLayout->setColumnStretch(100,100);
 }
@@ -164,6 +228,59 @@ void ConstructionInternalSourceInspectorView::onUpdate()
   refresh();
 }
 
+void ConstructionInternalSourceInspectorView::standardsConstructionTypeChanged(const QString & text)
+{
+  if (m_standardsInformation){
+    std::string standardsConstructionType = toString(text);
+    if (standardsConstructionType.empty()){
+      m_standardsInformation->resetStandardsConstructionType();
+    }else{
+      m_standardsInformation->setStandardsConstructionType(standardsConstructionType);
+    }
+    populateStandardsConstructionType();
+  }
+}
+
+void ConstructionInternalSourceInspectorView::editStandardsConstructionType(const QString & text)
+{
+  if (m_standardsInformation){
+    std::string standardsConstructionType = toString(text);
+    if (standardsConstructionType.empty()){
+      m_standardsInformation->resetStandardsConstructionType();
+    }else{
+      m_standardsInformation->setStandardsConstructionType(standardsConstructionType);
+    }
+  }
+}
+
+void ConstructionInternalSourceInspectorView::populateStandardsConstructionType()
+{
+
+  disconnect(m_standardsConstructionType, 0, this, 0);
+
+  m_standardsConstructionType->clear();
+  if (m_standardsInformation){
+    m_standardsConstructionType->addItem("");
+    std::vector<std::string> suggestedStandardsConstructionTypes = m_standardsInformation->suggestedStandardsConstructionTypes();
+    Q_FOREACH(const std::string& standardsConstructionType, suggestedStandardsConstructionTypes){
+        m_standardsConstructionType->addItem(toQString(standardsConstructionType));
+    }
+    boost::optional<std::string> standardsConstructionType = m_standardsInformation->standardsConstructionType();
+    if (standardsConstructionType){
+      OS_ASSERT(!suggestedStandardsConstructionTypes.empty());
+      m_standardsConstructionType->setCurrentIndex(1);
+    }else{
+      m_standardsConstructionType->setCurrentIndex(0);
+    }
+  }
+
+  bool isConnected = false;
+  isConnected = connect(m_standardsConstructionType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsConstructionTypeChanged(const QString&)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_standardsConstructionType, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsConstructionType(const QString&)));
+  OS_ASSERT(isConnected);
+}
+
 void ConstructionInternalSourceInspectorView::attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource)
 {
   m_nameEdit->bind(constructionWithInternalSource,"name");
@@ -176,6 +293,21 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
 
   m_constructionVC->attach(constructionWithInternalSource);
   m_constructionVC->reportItems();
+
+  m_standardsInformation = constructionWithInternalSource.standardsInformation();
+
+  m_intendedSurfaceType->bind(
+      *m_standardsInformation,
+      boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
+      OptionalStringGetter(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
+      boost::optional<StringSetter>(boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+
+  bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
+  OS_ASSERT(test);
+
+  m_standardsConstructionType->setEnabled(true);
+  populateStandardsConstructionType();
 
   this->stackedWidget()->setCurrentIndex(1);
 }
@@ -191,6 +323,16 @@ void ConstructionInternalSourceInspectorView::detach()
   m_temperatureCalculationRequestedAfterLayerNumberEdit->unbind();
   m_dimensionsForTheCTFCalculationEdit->unbind();
   m_tubeSpacingEdit->unbind();
+
+  if (m_standardsInformation){
+    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
+    m_standardsInformation.reset();
+  }
+
+  m_intendedSurfaceType->unbind();
+
+  disconnect(m_standardsConstructionType, 0, this, 0);
+  m_standardsConstructionType->setEnabled(false);
 }
 
 void ConstructionInternalSourceInspectorView::refresh()

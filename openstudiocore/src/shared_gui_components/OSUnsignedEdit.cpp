@@ -34,6 +34,7 @@ namespace openstudio {
 OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }
@@ -317,6 +318,7 @@ void OSUnsignedEdit2::setPrecision(const std::string& str) {
 OSUnsignedEdit::OSUnsignedEdit( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }

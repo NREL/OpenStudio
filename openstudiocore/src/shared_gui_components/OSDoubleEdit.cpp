@@ -34,6 +34,7 @@ namespace openstudio {
 OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }
@@ -322,6 +323,7 @@ void OSDoubleEdit2::setPrecision(const std::string& str) {
 OSDoubleEdit::OSDoubleEdit( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }
