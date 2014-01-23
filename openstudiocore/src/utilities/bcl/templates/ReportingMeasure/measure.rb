@@ -46,7 +46,7 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     
     output =  "Measure Name = " << name << "<br>"
     output << "Building Name = " << model.getBuilding.name.get << "<br>"                       # optional variable
-    output << "Building Type = " << model.getBuilding.buildingType << "<br>"                   # string variable
+    output << "Floor Area = " << model.getBuilding.floorArea.to_s << "<br>"                   # double variable
     output << "Floor to Floor Height = " << model.getBuilding.nominalFloortoFloorHeight.to_s << " (m)<br>" # double variable
     output << "Net Site Energy = " << sqlFile.netSiteEnergy.to_s << " (GJ)<br>" # double variable
     
