@@ -98,19 +98,25 @@ LocationView::LocationView(const model::Model & model,
   setLayout(mainVLayout);
 
   // ***** Climate Zones *****
-  label = new QLabel("ASHRAE Climate Zone:");
+  label = new QLabel("Climate Zone:");
   label->setObjectName("H2");
   mainVLayout->addWidget(label);
-
-  m_ashraeClimateZone = new QComboBox();
-  m_ashraeClimateZone->setFixedWidth(100);
 
   hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,5,0,5);
   hLayout->setSpacing(5);
-  hLayout->addWidget(m_ashraeClimateZone,0,Qt::AlignLeft);
-  hLayout->addStretch();
-  mainVLayout->addLayout(hLayout);
+
+  vLayout = new QVBoxLayout();
+  vLayout->setContentsMargins(10,0,10,0);
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel("ASHRAE Climate Zone");
+  vLayout->addWidget(label);
+
+  m_ashraeClimateZone = new QComboBox();
+  m_ashraeClimateZone->setFixedWidth(200);
+  vLayout->addWidget(m_ashraeClimateZone);
 
   m_ashraeClimateZone->addItem("");
   std::vector<std::string> ashraeClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
@@ -122,6 +128,7 @@ LocationView::LocationView(const model::Model & model,
   if (ashraeClimateZone.empty()){
     ashraeClimateZone = climateZones.appendClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear(), "");
   }
+  ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
   
   std::string ashraeClimateZoneValue = ashraeClimateZone.value();
   int i = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
@@ -131,19 +138,17 @@ LocationView::LocationView(const model::Model & model,
   isConnected = connect(m_ashraeClimateZone, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onASHRAEClimateZoneChanged(const QString&)));
   OS_ASSERT(isConnected);
 
-  label = new QLabel("CEC Climate Zone:");
-  label->setObjectName("H2");
-  mainVLayout->addWidget(label);
+  vLayout = new QVBoxLayout();
+  vLayout->setContentsMargins(10,0,10,0);
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel("CEC Climate Zone");
+  vLayout->addWidget(label);
 
   m_cecClimateZone = new QComboBox();
-  m_cecClimateZone->setFixedWidth(100);
-
-  hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0,5,0,5);
-  hLayout->setSpacing(5);
-  hLayout->addWidget(m_cecClimateZone,0,Qt::AlignLeft);
-  hLayout->addStretch();
-  mainVLayout->addLayout(hLayout);
+  m_cecClimateZone->setFixedWidth(200);
+  vLayout->addWidget(m_cecClimateZone);
 
   m_cecClimateZone->addItem("");
   std::vector<std::string> cecClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
@@ -155,6 +160,7 @@ LocationView::LocationView(const model::Model & model,
    if (cecClimateZone.empty()){
     cecClimateZone = climateZones.appendClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear(), "");
   }
+  cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
 
   std::string cecClimateZoneValue = cecClimateZone.value();
   i = m_cecClimateZone->findText(toQString(cecClimateZoneValue));
@@ -163,6 +169,9 @@ LocationView::LocationView(const model::Model & model,
 
   isConnected = connect(m_cecClimateZone, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCECClimateZoneChanged(const QString&)));
   OS_ASSERT(isConnected);
+
+  hLayout->addStretch();
+  mainVLayout->addLayout(hLayout);
 
   // ***** Weather File *****
   label = new QLabel("Weather File");

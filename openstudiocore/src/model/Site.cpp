@@ -315,7 +315,7 @@ namespace detail {
     }
     return result;
   }
-
+/*
   std::string Site_Impl::activeClimateZoneValue() const {
     std::string result;
     OptionalClimateZones oClimateZones = climateZones();
@@ -348,7 +348,7 @@ namespace detail {
     ClimateZones climateZones = this->model().getUniqueModelObject<ClimateZones>();
     return !climateZones.setActiveClimateZone(institution).empty();
   }
-
+*/
 } // detail
 
 IddObjectType Site::iddObjectType() {
@@ -473,7 +473,7 @@ ShadingSurfaceGroupVector Site::shadingSurfaceGroups() const
 {
   return getImpl<detail::Site_Impl>()->shadingSurfaceGroups();
 }
-
+/*
 std::string Site::activeClimateZoneValue() const {
   return getImpl<detail::Site_Impl>()->activeClimateZoneValue();
 }
@@ -489,7 +489,7 @@ bool Site::setActiveClimateZoneValue(const std::string& value) {
 bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
   return getImpl<detail::Site_Impl>()->setActiveClimateZoneInstitution(institution);
 }
-
+*/
 /// @cond
 Site::Site(boost::shared_ptr<detail::Site_Impl> impl)
   : ParentObject(impl)
