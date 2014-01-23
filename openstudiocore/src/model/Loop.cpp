@@ -371,157 +371,16 @@ namespace detail {
     return result;
   }
 
-  std::vector<ModelObject> Loop_Impl::demandComponents( HVACComponent inletComp,
-                                                        HVACComponent outletComp,
-                                                        openstudio::IddObjectType type )
+  // Return a vector of the immediate down stream neighbors for a particular hvac component
+  std::vector<ModelObject> getDemandOutletModelObjects(ModelObject & mo)
   {
-    std::vector<ModelObject> modelObjects;
-
-    OptionalModelObject modelObject(inletComp);
-
-    bool outletNodeFound = false;
-
-    while(modelObject)
-    {
-      if(OptionalNode node = modelObject->optionalCast<Node>())
-      {
-        modelObjects.push_back(*node);
-        if( *node == outletComp )
-        {
-          outletNodeFound = true;
-          break;
-        }
-        else
-        {
-          modelObject = node->outletModelObject();
-        }
-      }
-      else if(OptionalStraightComponent comp = modelObject->optionalCast<StraightComponent>())
-      {
-        modelObjects.push_back(*comp);
-        if( *comp == outletComp )
-        {
-          outletNodeFound = true;
-          break;
-        }
-        else
-        {
-          modelObject = comp->outletModelObject();
-        }
-      }
-      else if(OptionalPortList comp = modelObject->optionalCast<PortList>())
-      {
-        if( boost::optional<ThermalZone> tz = comp->thermalZone() )
-        {
-          modelObjects.push_back(*tz);
-          if( *tz == outletComp )
-          {
-            outletNodeFound = true;
-            break;
-          }
-          else
-          {
-            modelObject = tz->returnAirModelObject();
-          }
-        }
-      }
-      else if(OptionalMixer mixer = modelObject->optionalCast<Mixer>())
-      {
-        modelObjects.push_back(*mixer);
-        if( *mixer == outletComp )
-        {
-          outletNodeFound = true;
-          break;
-        }
-        else
-        {
-          modelObject = mixer->outletModelObject();
-        }
-      }
-      else if(OptionalWaterToAirComponent comp = modelObject->optionalCast<WaterToAirComponent>())
-      {
-        modelObjects.push_back(*comp);
-        if( *comp == outletComp )
-        {
-          outletNodeFound = true;
-          break;
-        }
-        else
-        {
-          modelObject = comp->waterOutletModelObject();
-        }
-      }
-      else if(OptionalWaterToWaterComponent comp = modelObject->optionalCast<WaterToWaterComponent>())
-      {
-        modelObjects.push_back(*comp);
-        if( *comp == outletComp )
-        {
-          outletNodeFound = true;
-          break;
-        }
-        else
-        {
-          modelObject = comp->demandOutletModelObject();
-        }
-      }
-      else if(OptionalSplitter splitter = modelObject->optionalCast<Splitter>())
-      {
-        modelObject = traceDemandSplitter(*splitter,outletComp,modelObjects,outletNodeFound);
-
-        if( outletNodeFound )
-        {
-          break;
-        }
-      }
-      else
-      {
-        modelObject = boost::none;
-
-        break;
-
-        // Log unhandled component
-      }
-    }
-
-    // Filter modelObjects for type
-    if( type != IddObjectType::Catchall )
-    {
-      std::vector<ModelObject> reducedModelObjects;
-      std::vector<ModelObject>::iterator it;
-
-      for(it = modelObjects.begin();
-          it != modelObjects.end();
-          it++)
-      {
-        if(it->iddObject().type() == type)
-        {
-          reducedModelObjects.push_back(*it);
-        }
-      }
-      modelObjects = reducedModelObjects;
-    }
-
-    if( outletNodeFound )
-    {
-      return modelObjects;
-    }
-    else
-    {
-      return std::vector<ModelObject>();
-    }
-  }
-
-  typedef std::pair<ModelObject,ModelObject> Edge;
-
-  std::vector<Edge> getDemandEdges(ModelObject & mo)
-  {
-    std::vector<Edge> result;
+    std::vector<ModelObject> result;
 
     if( boost::optional<StraightComponent> straightComponent = mo.optionalCast<StraightComponent>() )
     {
       if( boost::optional<ModelObject> mo = straightComponent->outletModelObject() )
       {
-        result.push_back(Edge(straightComponent.get(),mo.get()));
+        result.push_back(mo.get());
       }      
     }
     else if( boost::optional<Splitter> splitter = mo.optionalCast<Splitter>() )
@@ -532,49 +391,130 @@ namespace detail {
           it != outletModelObjects.end();
           it++)
       {
-        result.push_back(Edge(splitter.get(),*it));
+        result.push_back(*it);
       }
     }
     else if( boost::optional<Mixer> mixer = mo.optionalCast<Mixer>() )
     {
       if( boost::optional<ModelObject> mo = mixer->outletModelObject() )
       {
-        result.push_back(Edge(mixer.get(),mo.get()));
+        result.push_back(mo.get());
       }
     }
     else if( boost::optional<WaterToWaterComponent> comp = mo.optionalCast<WaterToWaterComponent>() )
     {
       if( boost::optional<ModelObject> mo = comp->demandOutletModelObject() )
       {
-        result.push_back(Edge(comp.get(),mo.get()));
+        result.push_back(mo.get());
+      }
+    }
+    else if( boost::optional<WaterToAirComponent> comp = mo.optionalCast<WaterToAirComponent>() )
+    {
+      if( boost::optional<ModelObject> mo = comp->waterOutletModelObject() )
+      {
+        result.push_back(mo.get());
+      }
+    }
+    else if( boost::optional<ThermalZone> comp = mo.optionalCast<ThermalZone>() )
+    {
+      if( boost::optional<ModelObject> mo = comp->returnAirModelObject() )
+      {
+        result.push_back(mo.get());
+      }
+    }
+    else if( boost::optional<PortList> comp = mo.optionalCast<PortList>() )
+    {
+      if( boost::optional<ModelObject> mo = comp->thermalZone() )
+      {
+        result.push_back(mo.get());
       }
     }
 
     return result;
   }
 
-  void findDemandPath(ModelObject & source, ModelObject & sink, std::vector<Edge> & path)
+  // Recursive depth first search
+  // start algorithm with one source node in the visited vector
+  // when complete, paths will be populated with all nodes between the source node and sink
+  void findDemandModelObjects(ModelObject & sink, std::vector<ModelObject> & visited,std::vector<ModelObject> & paths)
   {
-    if( source == sink )
+    std::vector<ModelObject> nodes = getDemandOutletModelObjects(visited.back());
+
+    for(std::vector<ModelObject>::iterator it = nodes.begin();
+        it != nodes.end();
+        it++)
     {
-      return;
+      // if it node has already been visited then continue
+      if( std::find(visited.begin(),visited.end(),*it) != visited.end() )
+      {
+        continue; 
+      }
+      if( *it == sink )
+      {
+        visited.push_back(*it);
+        // Avoid pushing duplicate nodes into paths
+        if( paths.empty() )
+        {
+          paths.insert(paths.end(),visited.begin(),visited.end());
+        }
+        else
+        {
+          for( std::vector<ModelObject>::iterator visitedit = visited.begin();
+               visitedit != visited.end();
+               visitedit++ )
+          {
+            if( std::find(paths.begin(),paths.end(),*visitedit) == paths.end() )
+            {
+              paths.push_back(*visitedit);
+            }
+          }
+        }
+        visited.pop_back();
+      }
     }
 
-    std::vector<Edge> edges = getDemandEdges(source);
-
-    // If there is nowhere to go, and we have not found sink, reset the path
-    if( edges.empty() )
+    for(std::vector<ModelObject>::iterator it = nodes.begin();
+        it != nodes.end();
+        it++)
     {
-      path.clear();
-      return;
+      // if it node has already been visited or node is sink then continue
+      if( std::find(visited.begin(),visited.end(),*it) != visited.end() ||
+          *it == sink )
+      {
+        continue; 
+      }
+      visited.push_back(*it);
+      findDemandModelObjects(sink,visited,paths);
+      visited.pop_back();
+    }
+  }
+
+  std::vector<ModelObject> Loop_Impl::demandComponents( HVACComponent inletComp,
+                                                        HVACComponent outletComp,
+                                                        openstudio::IddObjectType type )
+  {
+    std::vector<ModelObject> visited;
+    visited.push_back(inletComp);
+
+    std::vector<ModelObject> allPaths;
+    findDemandModelObjects(outletComp,visited,allPaths);
+
+    // Filter modelObjects for type
+    std::vector<ModelObject> reducedModelObjects;
+
+    for(std::vector<ModelObject>::iterator it = allPaths.begin();
+        it != allPaths.end();
+        it++)
+    {
+      if(((type == IddObjectType::Catchall) || 
+         (it->iddObject().type() == type)) &&
+         (it->iddObject().type() != PortList::iddObjectType()))
+      {
+        reducedModelObjects.push_back(*it);
+      }
     }
 
-    for( std::vector<Edge>::iterator it = edges.begin();
-         it != edges.end();
-         it++ )
-    {
-      findDemandPath(it->second,sink,path);
-    }
+    return reducedModelObjects;
   }
 
   std::vector<ModelObject> Loop_Impl::supplyComponents(openstudio::IddObjectType type)

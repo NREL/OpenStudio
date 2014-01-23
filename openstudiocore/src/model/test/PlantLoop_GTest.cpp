@@ -140,8 +140,25 @@ TEST(PlantLoop,PlantLoop_demandComponents)
   model::Model m; 
   
   model::PlantLoop plantLoop(m); 
-
   ASSERT_EQ( 5u,plantLoop.demandComponents().size() );
+
+  model::Schedule s = m.alwaysOnDiscreteSchedule();
+
+  model::CoilHeatingWater coil(m,s);
+  plantLoop.addDemandBranchForComponent(coil);
+  ASSERT_EQ( 7u,plantLoop.demandComponents().size() );
+
+  model::CoilHeatingWater coil2(m,s);
+  plantLoop.addDemandBranchForComponent(coil2);
+  ASSERT_EQ( 10u,plantLoop.demandComponents().size() );
+
+  model::Splitter splitter = plantLoop.demandSplitter();
+  ASSERT_EQ( 3u,plantLoop.demandComponents(splitter,coil).size() );
+  ASSERT_EQ( 3u,plantLoop.demandComponents(splitter,coil2).size() );
+
+  model::Mixer mixer = plantLoop.demandMixer();
+  ASSERT_EQ( 3u,plantLoop.demandComponents(coil,mixer).size() );
+  ASSERT_EQ( 3u,plantLoop.demandComponents(coil2,mixer).size() );
 }
 
 TEST(PlantLoop,PlantLoop_addDemandBranchForComponent)
