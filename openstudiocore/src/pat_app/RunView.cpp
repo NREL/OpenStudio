@@ -1152,7 +1152,7 @@ void DataPointJobItemView::update()
   dataPointJobHeaderView->setLastRunTime(m_workflowStepJob.job->lastRun());
   dataPointJobHeaderView->setStatus(m_workflowStepJob.job->status(), m_workflowStepJob.job->canceled());
 
-  openstudio::runmanager::JobErrors jobErrors = m_workflowStepJob.job->errors();
+  openstudio::runmanager::JobErrors jobErrors = m_workflowStepJob.errors().get();
 
   // DLM: would we rather put these in order of when they were logged?
 
@@ -1177,7 +1177,7 @@ void DataPointJobItemView::update()
   // also display std err if job failed and it exists and is not empty
   if (m_workflowStepJob.job->lastRun() && !m_workflowStepJob.job->running() && !jobErrors.succeeded()){
     try{
-      runmanager::Files files(m_workflowStepJob.job->outputFiles());
+      runmanager::Files files(m_workflowStepJob.outputFiles().get());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
       std::ifstream ifs(toString(stdErrPath).c_str());
       std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
