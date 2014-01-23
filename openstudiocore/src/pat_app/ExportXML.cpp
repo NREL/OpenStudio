@@ -379,11 +379,11 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
       }
 
       //get the job errors
-      runmanager::JobErrors jobErrs = wfJob.errors();
+      runmanager::JobErrors jobErrs = wfJob.errors().get();
       
       //initial_condition
       std::string initCondMsg = "";
-      std::vector<std::string> initConds =  jobErrs->initialConditions();
+      std::vector<std::string> initConds =  jobErrs.initialConditions();
       Q_FOREACH(std::string initCond, initConds) {
         boost::regex re("^\\[.*\\]");
         initCond = boost::regex_replace(initCond,re,"");
@@ -395,7 +395,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
   
       //final_condition
       std::string finCondMsg = "";
-      std::vector<std::string> finConds =  jobErrs->finalConditions();
+      std::vector<std::string> finConds =  jobErrs.finalConditions();
       Q_FOREACH(std::string finCond, finConds) {
         boost::regex re("^\\[.*\\]");
         finCond = boost::regex_replace(finCond,re,"");

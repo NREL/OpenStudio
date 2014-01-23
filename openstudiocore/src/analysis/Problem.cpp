@@ -1631,7 +1631,7 @@ namespace detail {
             OS_ASSERT(currentJob);
             OS_ASSERT(currentJob->jobType() == workItem.type);
             if (numMergedJobs > 0u) {
-              result.push_back(WorkflowStepJob(*currentJob,currentStep,mergedJobIndex));
+              result.push_back(WorkflowStepJob(*currentJob,currentStep,OptionalUnsigned(mergedJobIndex)));
               ++mergedJobIndex;
             }
             else {
@@ -2208,7 +2208,7 @@ boost::optional<runmanager::Files> WorkflowStepJob::outputFiles() const {
       return job->mergedJobResults()[*mergedJobIndex].outputFiles;
     }
     else {
-      return job->outputFiles();
+      return runmanager::Files(job->outputFiles());
     }
   }
   return boost::none;
