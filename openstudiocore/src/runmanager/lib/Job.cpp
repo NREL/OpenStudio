@@ -22,7 +22,6 @@
 #include "Job.hpp"
 #include "Job_Impl.hpp"
 #include "JSON.hpp"
-#include "MergedJobResults.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -515,17 +514,6 @@ namespace runmanager {
   {
     m_impl->setStatus(t_status);
   }
-
-  bool Job::hasMergedJobs() const
-  {
-    return m_impl->hasMergedJobs();
-  }
-
-  std::vector<MergedJobResults> Job::mergedJobResults() const
-  {
-    return m_impl->mergedJobResults();
-  }
-
 
 }
 }

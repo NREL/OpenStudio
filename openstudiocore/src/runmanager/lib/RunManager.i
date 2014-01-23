@@ -36,7 +36,6 @@
   #include <runmanager/lib/WorkItem.hpp>
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
-  #include <runmanager/lib/MergedJobResults.hpp>
   
   #include <ruleset/OSArgument.hpp>
   #include <utilities/core/Path.hpp>
@@ -163,7 +162,7 @@
 %template(ToolInfoPair) std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo>;
 %template(ToolInfoPairVector) std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >;
 %template(ErrorTypeStringPairVector) std::vector<std::pair<openstudio::runmanager::ErrorType, std::string> >;
-%template(MergedJobResultsVector) std::vector<openstudio::runmanager::MergedJobResults>;
+
 
 %include <runmanager/lib/SimulationEngine.hpp>
 %include <runmanager/lib/ErrorEstimation.hpp>
@@ -176,7 +175,6 @@
 %include <runmanager/lib/FileInfo.hpp>
 %include <runmanager/lib/AdvancedStatus.hpp>
 %include <runmanager/lib/JobState.hpp>
-%include <runmanager/lib/MergedJobResults.hpp>
 %include <runmanager/lib/Job.hpp>
 %include <runmanager/lib/JobFactory.hpp>
 %include <runmanager/lib/RunManager.hpp>

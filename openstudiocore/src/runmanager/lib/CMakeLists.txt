@@ -139,8 +139,6 @@ SET( runmanager_src
   SimulationEngine.cpp
   JSON.cpp
   JSON.hpp
-  
-  MergedJobResults.hpp
 )
 
 IF( BUILD_TESTING OR BUILD_PACKAGE )

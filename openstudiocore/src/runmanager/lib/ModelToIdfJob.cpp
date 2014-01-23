@@ -156,8 +156,6 @@ namespace detail {
         errors.result = ruleset::OSResultValue::Fail;
       } else {
 
-        outputFilesImpl_Internal(*m);
-
         // temp code
         if (allParams().has("keepRunControlSpecialDays"))
         {
@@ -238,166 +236,6 @@ namespace detail {
   }
   */
 
-
-  void ModelToIdfJob::outputFilesImpl_Internal(openstudio::model::Model &t_model)
-  {
-    // check if model has a weather file object
-    boost::optional<QUrl> weatherFilePath;
-    try {
-      FileInfo modelFile = this->modelFile();
-
-
-      if (modelFile.hasRequiredFile(toPath("in.epw")))
-      {
-        std::pair<QUrl, openstudio::path> f = modelFile.getRequiredFile(toPath("in.epw"));
-        LOG(Debug, "Setting user defined epw: " << toString(f.first.toString()));
-        weatherFilePath = f.first;
-      }
-
-      // check if model has a weather file object
-      model::OptionalWeatherFile weatherFile = t_model.getOptionalUniqueModelObject<model::WeatherFile>();
-      if (weatherFile){
-        // check if model has a weather file url
-        boost::optional<openstudio::path> p = weatherFile->path();
-        if (p){
-          LOG(Debug, "Looking for weather file at ModelObject specified location: " << openstudio::toString(*p));
-          openstudio::path wp = *p;
-          openstudio::path basepath = getBasePath();
-          if (!basepath.empty())
-          {
-            wp = boost::filesystem::complete(wp, basepath);
-          } 
-          LOG(Debug, "Completed weatherfile location: " << openstudio::toString(wp));
-
-          if (!boost::filesystem::exists(wp)) {
-            if (allParams().has("epwdir"))
-            {
-              // try prepending params "epwdir"
-              JobParam epwDirParam = allParams().get("epwdir");
-              if (epwDirParam.children.size() == 1) {
-                wp = toPath(epwDirParam.children[0].value) / *p;
-              }
-            }
-          }
-
-          if (!boost::filesystem::exists(wp))
-          {
-            if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
-            {
-              openstudio::path osmdir = modelFile.fullPath.parent_path() / boost::filesystem::basename(modelFile.fullPath);
-              LOG(Debug, "Attempting to use OSM base path to find weather file");
-              wp = osmdir / *p;
-            }
-          }
-
-          if (!boost::filesystem::exists(wp))
-          {
-            if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
-            {
-              openstudio::path osmdir = modelFile.fullPath.parent_path() / openstudio::toPath("resources");
-              LOG(Debug, "Attempting to use OSM parent path / resources to find weather file");
-              wp = osmdir / *p;
-            }
-          }
-
-          if (!boost::filesystem::exists(wp))
-          {
-            if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
-            {
-              openstudio::path osmdir = modelFile.fullPath.parent_path();
-              LOG(Debug, "Attempting to use OSM parent path to find weather file");
-              wp = osmdir / *p;
-            }
-          }
-
-          if (!boost::filesystem::exists(wp))
-          {
-            if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
-            {
-              openstudio::path osmdir = modelFile.fullPath.parent_path();
-              LOG(Debug, "Attempting to use required files to find weather file");
-              std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = modelFile.requiredFiles;
-
-              for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
-                  itr != requiredFiles.end();
-                  ++itr)
-              {
-                LOG(Debug, "Trying required file: " << openstudio::toString(itr->second) << " for " << openstudio::toString(p->filename()));
-                if (itr->second.filename() == p->filename())
-                {
-                  openstudio::path requiredFile = openstudio::toPath(itr->first.toLocalFile());
-                  wp = openstudio::toPath(itr->first.toLocalFile()).parent_path().parent_path() / *p;
-                  break;
-                }
-              }
-
-            }
-          }
-
-          if (!boost::filesystem::exists(wp))
-          {
-            if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
-            {
-              openstudio::path osmdir = modelFile.fullPath.parent_path();
-              LOG(Debug, "Attempting to find weather file that already exists as in.epw");
-              wp /= openstudio::toPath("in.epw");
-            }
-          }
-
-          if (boost::filesystem::exists(wp)){
-            if (weatherFilePath && (checksum(*weatherFilePath) != checksum(wp))){
-              LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "' which was specified by the user");
-            } else {
-              weatherFilePath = toURL(wp);
-            }
-          }
-        }
-      }
-
-      // check if there is an existing epw with same basename
-      path existingWeatherFilePath = modelFile.fullPath;
-      existingWeatherFilePath.replace_extension(toPath("epw").string());
-      if (boost::filesystem::exists(existingWeatherFilePath)){
-        if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
-          LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
-        }else{
-          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
-        }
-      }
-
-      // check if there is an existing epw named in.epw
-      existingWeatherFilePath.remove_filename();
-      existingWeatherFilePath = existingWeatherFilePath / toPath("in.epw");
-      if (boost::filesystem::exists(existingWeatherFilePath)){
-        if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
-          LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
-        }else{
-          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
-        }
-      }
-
-      // Specify the set of files we created so that the next Job in the chain (if there is one)
-      // is able to pick them up
-      Files outfiles;
-
-      FileInfo idf(outdir() / toPath("in.idf"), "idf");
-
-      if (weatherFilePath){
-        LOG(Debug, "Final selected weatherFile: " << openstudio::toString(*weatherFilePath));
-        idf.addRequiredFile(*weatherFilePath, toPath("in.epw"));
-      }else{
-        LOG(Warn, "No weather file specified");
-      }
-
-      outfiles.append(idf);
-      m_outputfiles = outfiles;
-    } catch (const std::runtime_error &) {
-      LOG(Warn, "OSM file not yet available, outputfiles not known");
-    } catch (const std::exception &) {
-      LOG(Warn, "OSM file not yet available, outputfiles not known");
-    }
-  }
-
   Files ModelToIdfJob::outputFilesImpl() const
   {
     openstudio::path outpath = outdir();
@@ -408,14 +246,182 @@ namespace detail {
       return Files();
     }
 
-    QReadLocker l(&m_mutex);
+    QWriteLocker l(&m_mutex);
 
     if (!m_outputfiles)
     {
-      return Files();
-    } else {
-      return *m_outputfiles;
+      // check if model has a weather file object
+      boost::optional<QUrl> weatherFilePath;
+      try {
+        FileInfo modelFile = this->modelFile();
+
+
+        if (modelFile.hasRequiredFile(toPath("in.epw")))
+        {
+          std::pair<QUrl, openstudio::path> f = modelFile.getRequiredFile(toPath("in.epw"));
+          LOG(Debug, "Setting user defined epw: " << toString(f.first.toString()));
+          weatherFilePath = f.first;
+        }
+
+
+        if (modelFile.exists){
+          // read model file
+          OptionalIdfFile osm = IdfFile::load(modelFile.fullPath);
+          if (osm){
+            // create model
+            Workspace workspace(*osm);
+            model::Model model(workspace);
+            // check if model has a weather file object
+            model::OptionalWeatherFile weatherFile = model.getOptionalUniqueModelObject<model::WeatherFile>();
+            if (weatherFile){
+              // check if model has a weather file url
+              boost::optional<openstudio::path> p = weatherFile->path();
+              if (p){
+                LOG(Debug, "Looking for weather file at ModelObject specified location: " << openstudio::toString(*p));
+                openstudio::path wp = *p;
+                openstudio::path basepath = getBasePath();
+                if (!basepath.empty())
+                {
+                  wp = boost::filesystem::complete(wp, basepath);
+                } 
+                LOG(Debug, "Completed weatherfile location: " << openstudio::toString(wp));
+
+                if (!boost::filesystem::exists(wp)) {
+                  if (allParams().has("epwdir"))
+                  {
+                    // try prepending params "epwdir"
+                    JobParam epwDirParam = allParams().get("epwdir");
+                    if (epwDirParam.children.size() == 1) {
+                      wp = toPath(epwDirParam.children[0].value) / *p;
+                    }
+                  }
+                }
+
+                if (!boost::filesystem::exists(wp))
+                {
+                  if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
+                  {
+                    openstudio::path osmdir = modelFile.fullPath.parent_path() / boost::filesystem::basename(modelFile.fullPath);
+                    LOG(Debug, "Attempting to use OSM base path to find weather file");
+                    wp = osmdir / *p;
+                  }
+                }
+
+                if (!boost::filesystem::exists(wp))
+                {
+                  if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
+                  {
+                    openstudio::path osmdir = modelFile.fullPath.parent_path() / openstudio::toPath("resources");
+                    LOG(Debug, "Attempting to use OSM parent path / resources to find weather file");
+                    wp = osmdir / *p;
+                  }
+                }
+
+                if (!boost::filesystem::exists(wp))
+                {
+                  if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
+                  {
+                    openstudio::path osmdir = modelFile.fullPath.parent_path();
+                    LOG(Debug, "Attempting to use OSM parent path to find weather file");
+                    wp = osmdir / *p;
+                  }
+                }
+
+                if (!boost::filesystem::exists(wp))
+                {
+                  if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
+                  {
+                    openstudio::path osmdir = modelFile.fullPath.parent_path();
+                    LOG(Debug, "Attempting to use required files to find weather file");
+                    std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = modelFile.requiredFiles;
+
+                    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
+                         itr != requiredFiles.end();
+                         ++itr)
+                    {
+                      LOG(Debug, "Trying required file: " << openstudio::toString(itr->second) << " for " << openstudio::toString(p->filename()));
+                      if (itr->second.filename() == p->filename())
+                      {
+                        openstudio::path requiredFile = openstudio::toPath(itr->first.toLocalFile());
+                        wp = openstudio::toPath(itr->first.toLocalFile()).parent_path().parent_path() / *p;
+                        break;
+                      }
+                    }
+
+                  }
+                }
+
+                if (!boost::filesystem::exists(wp))
+                {
+                  if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
+                  {
+                    openstudio::path osmdir = modelFile.fullPath.parent_path();
+                    LOG(Debug, "Attempting to find weather file that already exists as in.epw");
+                    wp /= openstudio::toPath("in.epw");
+                  }
+                }
+
+                if (boost::filesystem::exists(wp)){
+                  if (weatherFilePath && (checksum(*weatherFilePath) != checksum(wp))){
+                    LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "' which was specified by the user");
+                  } else {
+                    weatherFilePath = toURL(wp);
+                  }
+                }
+
+
+              }
+            }
+          }
+        }
+
+        // check if there is an existing epw with same basename
+        path existingWeatherFilePath = modelFile.fullPath;
+        existingWeatherFilePath.replace_extension(toPath("epw").string());
+        if (boost::filesystem::exists(existingWeatherFilePath)){
+          if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
+            LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
+          }else{
+            weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
+          }
+        }
+
+        // check if there is an existing epw named in.epw
+        existingWeatherFilePath.remove_filename();
+        existingWeatherFilePath = existingWeatherFilePath / toPath("in.epw");
+        if (boost::filesystem::exists(existingWeatherFilePath)){
+          if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
+            LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
+          }else{
+            weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
+          }
+        }
+
+        // Specify the set of files we created so that the next Job in the chain (if there is one)
+        // is able to pick them up
+        Files outfiles;
+
+        FileInfo idf(outpath / toPath("in.idf"), "idf");
+
+        if (weatherFilePath){
+          LOG(Debug, "Final selected weatherFile: " << openstudio::toString(*weatherFilePath));
+          idf.addRequiredFile(*weatherFilePath, toPath("in.epw"));
+        }else{
+          LOG(Warn, "No weather file specified");
+        }
+
+        outfiles.append(idf);
+        m_outputfiles = outfiles;
+      } catch (const std::runtime_error &) {
+        LOG(Warn, "OSM file not yet available, outputfiles not known");
+        return Files();
+      } catch (const std::exception &) {
+        LOG(Warn, "OSM file not yet available, outputfiles not known");
+        return Files();
+      }
     }
+
+    return *m_outputfiles;
   }
 
 

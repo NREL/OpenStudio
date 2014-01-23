@@ -43,8 +43,7 @@ namespace detail {
   
   class JobFactory;
 
-  class MergedJobResults;
-  
+
   /// A handle to a job that must be created with the JobFactory class.
   /// Jobs are reference counted objects can may be safely copied
   class RUNMANAGER_API Job 
@@ -376,12 +375,6 @@ namespace detail {
 
       /// Sets the advancedstatus of the current job. Only allowed on externally managed jobs
       void setStatus(const AdvancedStatus &t_status);
-
-      /// \returns true if the job has merged jobs
-      bool hasMergedJobs() const;
-
-      /// \returns the breakout of completed merged jobs
-      std::vector<MergedJobResults> mergedJobResults() const;
 
     protected:
       Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);

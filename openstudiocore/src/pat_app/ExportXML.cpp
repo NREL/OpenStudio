@@ -336,7 +336,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
     }
 
     //this is a measure we want to record
-    if (wfJob.job) {
+    if ( boost::optional<runmanager::Job> job = wfJob.job ) {
     
       //start the measure
       QDomElement measureElem = doc.createElement("measure");   
@@ -377,9 +377,9 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
         QString desc = toQString(measure->description());
         descElem.appendChild(doc.createTextNode(desc));          
       }
-
+        
       //get the job errors
-      runmanager::JobErrors jobErrs = wfJob.errors().get();
+      runmanager::JobErrors jobErrs = job->errors();
       
       //initial_condition
       std::string initCondMsg = "";

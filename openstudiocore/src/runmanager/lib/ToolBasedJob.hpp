@@ -178,6 +178,7 @@ namespace detail {
 
       virtual void standardCleanImpl();
 
+     private:
       /// Holds and handles all errors generated during a toolbasedjob run and returns them as a JobErrors
       /// object after the job has completed.
       class ErrorInfo
@@ -191,7 +192,6 @@ namespace detail {
           void processError(QProcess::ProcessError, const std::string &t_description);
           void errorFile(const openstudio::energyplus::ErrorFile &);
           void osResult(const openstudio::ruleset::OSResult &);
-          void osResult(const std::vector<openstudio::ruleset::OSResult> &);
 
           /// Return a JobErrors object that represents all currently collected error information
           JobErrors errors();
@@ -213,7 +213,6 @@ namespace detail {
           boost::optional<std::pair<QProcess::ProcessError, std::string> > m_process_error;
       };
 
-     private:
       /// Called internally when the job is in a runnable state and we are ready to get
       /// the version of the tool required to run the job, just in case it is dependent on 
       /// input files

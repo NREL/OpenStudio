@@ -24,7 +24,6 @@
 #include <QWidget>
 #include <QSharedPointer>
 #include <map>
-#include <utilities/core/Logger.hpp>
 
 class QScrollArea;
 class QVBoxLayout;
@@ -97,8 +96,6 @@ class OSListView : public QWidget
   bool m_scrollable;
 
   QScrollArea * m_scrollArea;
-
-  REGISTER_LOGGER("openstudio.shared_gui_components.OSListView");
 };
 
 } // openstudio

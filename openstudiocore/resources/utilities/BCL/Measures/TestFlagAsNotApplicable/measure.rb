@@ -17,7 +17,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-class TestFlagAsNotApplicable < OpenStudio::Ruleset::ModelUserScript
+class TestCreateErrorMsgs < OpenStudio::Ruleset::ModelUserScript
 
   #override name to return the name of your script
   def name
@@ -60,4 +60,4 @@ class TestFlagAsNotApplicable < OpenStudio::Ruleset::ModelUserScript
   
 end
 
-TestFlagAsNotApplicable.new.registerWithApplication
+TestCreateErrorMsgs.new.registerWithApplication

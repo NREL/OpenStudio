@@ -21,7 +21,6 @@
 #include "JobErrorsDisplay.hpp"
 #include "RunManager_Impl.hpp"
 #include "MergeJobError.hpp"
-#include "MergedJobResults.hpp"
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -29,8 +28,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <QDir>
-
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -730,31 +727,10 @@ namespace detail {
     return ret.complete(m_basePath);
   }
 
-  void Job_Impl::setParams(const JobParams &t_newParams)
-  {
-    QWriteLocker l(&m_mutex);
-    m_params = t_newParams;
-    m_allTools.reset();
-    m_allParams.reset();
-    m_allInputFiles.reset();
-    m_outdir.reset();
-  }
-
-  void Job_Impl::setFiles(const Files &t_newFiles)
-  {
-    QWriteLocker l(&m_mutex);
-    m_inputFiles = t_newFiles;
-    m_allTools.reset();
-    m_allParams.reset();
-    m_allInputFiles.reset();
-    m_outdir.reset();
-  }
-
-
   Files Job_Impl::rawInputFiles() const
   {
     QReadLocker l(&m_mutex);
-    return m_inputFiles;
+    return m_inputFiles.complete(m_basePath);
   }
 
 
@@ -1511,22 +1487,7 @@ namespace detail {
 
   JobErrors Job_Impl::treeErrors() const
   {
-    boost::optional<JobErrors> temp;
-    if (hasMergedJobs()) {
-      BOOST_FOREACH(const MergedJobResults& mergedJob,mergedJobResults()) {
-        if (temp) {
-          temp = temp.get() + mergedJob.errors;
-        }
-        else {
-          temp = mergedJob.errors;
-        }
-      }
-    }
-    else {
-      temp = errors();
-    }
-    JobErrors err = *temp;
-
+    JobErrors err = errors();
     QReadLocker l(&m_mutex);
 
     //err.result = ruleset::OSResultValue::Success; // assume we succeeded until we failed
@@ -2011,27 +1972,6 @@ namespace detail {
       m_finishedJob->makeExternallyManaged();
     }
   }
-
-  bool Job_Impl::hasMergedJobs() const
-  {
-    return hasMergedJobsImpl();
-  }
-
-  std::vector<MergedJobResults> Job_Impl::mergedJobResults() const 
-  {
-    return mergedJobResultsImpl();
-  }
-
-  bool Job_Impl::hasMergedJobsImpl() const
-  {
-    return false;
-  }
-
-  std::vector<MergedJobResults> Job_Impl::mergedJobResultsImpl() const
-  {
-    return std::vector<MergedJobResults>();
-  }
-
 
 }
 }

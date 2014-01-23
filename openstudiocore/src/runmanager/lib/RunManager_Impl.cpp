@@ -1286,7 +1286,7 @@ namespace detail {
       template<typename JobFileType, typename RequiredFileType>
       void persistJobFiles(const openstudio::runmanager::Job &t_job)
       {
-        persistJobFiles<JobFileType, RequiredFileType>(t_job.uuid(), t_job.inputFiles());
+        persistJobFiles<JobFileType, RequiredFileType>(t_job.uuid(), t_job.rawInputFiles());
       }
 
       template<typename JobFileType, typename RequiredFileType>

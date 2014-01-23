@@ -208,12 +208,7 @@ void OSListView::removePair(QObject * object)
 
 void OSListView::refreshItemView(int i)
 {
-  if (i < int(m_widgetItemPairs.size())) {
-    removeItemView(i);
-  }
-  else {
-    LOG(Trace,"Not calling removeItemView(" << i << "), because the list is not that long.");
-  }
+  removeItemView(i);
 
   insertItemView(i);
 }

@@ -31,10 +31,6 @@
 require 'openstudio'
 require 'optparse'
 
-scriptfolder = File.expand_path(File.dirname(File.dirname(__FILE__)))
-originalwd = Dir.pwd()
-puts "Script executing from: " + scriptfolder
-
 options = Hash.new
 options[:arguments] = []
 
@@ -78,11 +74,6 @@ end
 
 optparse.parse!
 
-if File.directory?(scriptfolder + "/mergedjob-0")
-  # if the 0th job has been merged in, switch to it
-  Dir.chdir("#{scriptfolder}/mergedjob-0") 
-end
-
 # GET THE USER SCRIPT
 
 if options[:userScript]
@@ -91,33 +82,26 @@ else
   user_script_path = OpenStudio::Path.new("./user_script.rb")
 end
 
-# Check list of objects in memory before loading the script
-currentObjects = Hash.new
-ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
-
-ObjectSpace.garbage_collect
-load user_script_path.to_s # need load in case have seen this script before
+require user_script_path.to_s
 
 userScript = nil
 type = String.new
 ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
-  if not currentObjects[obj]
-    if obj.is_a? OpenStudio::Ruleset::ModelUserScript
-      userScript = obj
-      type = "model"
-    elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
-      userScript = obj
-      type = "workspace"
-    elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
-      userScript = obj
-      type = "translation"
-    elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
-      userScript = obj
-      type = "utility"    
-    elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
-      userScript = obj
-      type = "report"    
-    end
+  if obj.is_a? OpenStudio::Ruleset::ModelUserScript
+    userScript = obj
+    type = "model"
+  elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
+    userScript = obj
+    type = "workspace"
+  elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
+    userScript = obj
+    type = "translation"
+  elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
+    userScript = obj
+    type = "utility"    
+  elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
+    userScript = obj
+    type = "report"    
   end
 }
 
@@ -201,146 +185,76 @@ else
 
 end
 
-##### Begin section to loop for merged user scripts
-scriptindex = 0
+# GET THE ARGUMENTS
 
-while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + scriptindex.to_s))
-  # GET THE ARGUMENTS
-
-  if (scriptindex != 0)
-    user_script_path = OpenStudio::Path.new("#{scriptfolder}/mergedjob-#{scriptindex}/user_script.rb")
-    
-    # The 0th case is already set up, it was the script loaded and parsed up above
-    
-    # Check list of objects in memory before loading the script
-    currentObjects = Hash.new
-    ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
-
-    ObjectSpace.garbage_collect
-    load user_script_path.to_s # need load in case have seen this script before    
-
-    userScript = nil
-    ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
-      if not currentObjects[obj]
-        if obj.is_a? OpenStudio::Ruleset::ModelUserScript
-          userScript = obj
-          raise "Mismatched merged script type " unless type == "model"
-        elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
-          userScript = obj
-          raise "Mismatched merged script type " unless type == "workspace"
-        elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
-          userScript = obj
-          raise "Mismatched merged script type " unless type == "translation"
-        elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
-          userScript = obj
-          raise "Mismatched merged script type " unless type == "utility"
-        elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
-          userScript = obj
-          raise "Mismatched merged script type " unless type == "report"
-        end
+userArguments = options[:arguments]
+arguments = OpenStudio::Ruleset::OSArgumentMap.new
+if (input_data)
+  userScript.arguments(input_data).each { |arg|
+    # look for arg.name() in options
+    userArg = nil
+    userArguments.each { |candidate|
+      if candidate[0] == arg.name
+        userArg = candidate
+        break
       end
     }
-
-    if not userScript
-      raise "Unable to locate merged UserScript class in " + user_script_path.to_s 
-    else
-      puts "Found merged UserScript '" + userScript.name + "'."
+    
+    # if found, set
+    if userArg
+      arg.setValue(userArg[1])
     end
-
-    options[:arguments] = []
-
-    paramspath = OpenStudio::Path.new("#{scriptfolder}/mergedjob-#{scriptindex}/params.json")
-    Dir.chdir("#{scriptfolder}/mergedjob-#{scriptindex}")
-
-    optparse.parse(OpenStudio::Runmanager::RubyJobBuilder.new(paramspath).getScriptParameters())
-  end
-
-  userArguments = options[:arguments]
-  arguments = OpenStudio::Ruleset::OSArgumentMap.new
-
-  if (input_data)
-    userScript.arguments(input_data).each { |arg|
-      # look for arg.name() in options
-      userArg = nil
-      userArguments.each { |candidate|
-        if candidate[0] == arg.name
-          userArg = candidate
-          break
-        end
-      }
-      
-      # if found, set
-      if userArg
-        arg.setValue(userArg[1])
-      end
-      
-      arguments[arg.name] = arg
-    }
-  else
-    userScript.arguments().each { |arg|
-      # look for arg.name() in options
-      userArg = nil
-      userArguments.each { |candidate|
-        if candidate[0] == arg.name
-          userArg = candidate
-          break
-        end
-      }
-      
-      # if found, set
-      if userArg
-        arg.setValue(userArg[1])
-      end
-      
-      arguments[arg.name] = arg
-    }
-  end
-
-  # RUN SCRIPT WITH DEFAULT RUNNER AND SAVE OUTPUT
-
-  runner = OpenStudio::Ruleset::OSRunner.new
-
-  if lastOpenStudioModelPath = options[:lastOpenStudioModelPath]
-    runner.setLastOpenStudioModelPath(OpenStudio::Path.new(lastOpenStudioModelPath))
-  end 
     
-  if lastEnergyPlusWorkspacePath = options[:lastEnergyPlusWorkspacePath]
-    runner.setLastEnergyPlusWorkspacePath(OpenStudio::Path.new(lastEnergyPlusWorkspacePath))
-  end
-
-  if lastEnergyPlusSqlFilePath = options[:lastEnergyPlusSqlFilePath]
-    runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(lastEnergyPlusSqlFilePath))
-  end
-
-  result = false
-  if type == "model"
-    result = userScript.run(model,runner,arguments)
-  elsif type == "workspace"
-    result = userScript.run(workspace,runner,arguments)
-  elsif type == "translation"
-    result = userScript.run(workspace,model,runner,arguments)
-  elsif type == "utility"
-    result = userScript.run(runner,arguments)
-  elsif type == "report"
-    result = userScript.run(runner,arguments)  
-  end
-
-  scriptindex += 1
-  # SAVE SCRIPT RESULT
-
-  runner.result.save(OpenStudio::Path.new("result.ossr"),true)
-  
-  # stop executing scripts once an error is encountered
-  break if not result
-
+    arguments[arg.name] = arg
+  }
+else
+  userScript.arguments().each { |arg|
+    # look for arg.name() in options
+    userArg = nil
+    userArguments.each { |candidate|
+      if candidate[0] == arg.name
+        userArg = candidate
+        break
+      end
+    }
+    
+    # if found, set
+    if userArg
+      arg.setValue(userArg[1])
+    end
+    
+    arguments[arg.name] = arg
+  }
 end
 
-### end looping code
+# RUN SCRIPT WITH DEFAULT RUNNER AND SAVE OUTPUT
 
-Dir.chdir(originalwd)
+runner = OpenStudio::Ruleset::OSRunner.new
 
-puts "Processed 1 base script and #{scriptindex - 1} merged scripts"
+if lastOpenStudioModelPath = options[:lastOpenStudioModelPath]
+  runner.setLastOpenStudioModelPath(OpenStudio::Path.new(lastOpenStudioModelPath))
+end 
+  
+if lastEnergyPlusWorkspacePath = options[:lastEnergyPlusWorkspacePath]
+  runner.setLastEnergyPlusWorkspacePath(OpenStudio::Path.new(lastEnergyPlusWorkspacePath))
+end
 
+if lastEnergyPlusSqlFilePath = options[:lastEnergyPlusSqlFilePath]
+  runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(lastEnergyPlusSqlFilePath))
+end
+
+result = false
+if type == "model"
+  result = userScript.run(model,runner,arguments)
+elsif type == "workspace"
+  result = userScript.run(workspace,runner,arguments)
+elsif type == "translation"
+  result = userScript.run(workspace,model,runner,arguments)
+elsif type == "utility"
+  result = userScript.run(runner,arguments)
+elsif type == "report"
+  result = userScript.run(runner,arguments)  
+end
 
 # SAVE OUTPUT MODEL
 
@@ -359,6 +273,9 @@ elsif save_workspace
   workspace.save(output_path,true)
 end
 
+# SAVE SCRIPT RESULT
+
+runner.result.save(OpenStudio::Path.new("result.ossr"),true)
 
 # make doubly sure RunManager flags this job as failed
 raise "Error encountered. See result.ossr." if not result

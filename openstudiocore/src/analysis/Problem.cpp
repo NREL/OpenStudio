@@ -48,7 +48,6 @@
 
 #include <runmanager/lib/WorkItem.hpp>
 #include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/MergedJobResults.hpp>
 
 #include <ruleset/OSArgument.hpp>
 
@@ -1501,10 +1500,6 @@ namespace detail {
     if (boost::optional<runmanager::Job> topJob = dataPoint.topLevelJob()) {
       WorkflowStepVector workflow = this->workflow();
       boost::optional<runmanager::Job> currentJob = *topJob;
-      unsigned numMergedJobs(0), mergedJobIndex(0);
-      if (currentJob->hasMergedJobs()) {
-        numMergedJobs = currentJob->mergedJobResults().size();
-      }
       for (WorkflowStepVector::const_iterator it = workflow.begin(), itEnd = workflow.end();
            it != itEnd; ++it)
       {
@@ -1550,13 +1545,6 @@ namespace detail {
                 else {
                   OS_ASSERT(childJobs.size() == 1u);
                   currentJob = childJobs[0];
-                  if (currentJob->hasMergedJobs()) {
-                    numMergedJobs = currentJob->mergedJobResults().size();
-                  }
-                  else {
-                    numMergedJobs = 0;
-                  }
-                  mergedJobIndex = 0;
                 }
               }
             }
@@ -1574,42 +1562,21 @@ namespace detail {
                   getNextJob = false;
                 }
                 else {
-                  if (numMergedJobs > 0u) {
-                    result.push_back(WorkflowStepJob(*currentJob,currentStep,measure,mergedJobIndex));
-                    ++mergedJobIndex;
-                  }
-                  else {
-                    result.push_back(WorkflowStepJob(*currentJob,currentStep,measure));
-                  }
+                  result.push_back(WorkflowStepJob(*currentJob,currentStep,measure));
                 }
               }
               else {
-                if (numMergedJobs > 0u) {
-                  result.push_back(WorkflowStepJob(*currentJob,currentStep,QVariant(var.getValue(dataPoint)),mergedJobIndex));
-                  ++mergedJobIndex;
-                }
-                else {
-                  result.push_back(WorkflowStepJob(*currentJob,currentStep,QVariant(var.getValue(dataPoint))));
-                }
+                result.push_back(WorkflowStepJob(*currentJob,currentStep,QVariant(var.getValue(dataPoint))));
               }
 
               if (getNextJob) {
-                if ((numMergedJobs == 0) || (mergedJobIndex == numMergedJobs)) {
-                  std::vector<runmanager::Job> childJobs = currentJob->children();
-                  if (childJobs.empty()) {
-                    currentJob.reset();
-                  }
-                  else {
-                    OS_ASSERT(childJobs.size() == 1u);
-                    currentJob = childJobs[0];
-                    if (currentJob->hasMergedJobs()) {
-                      numMergedJobs = currentJob->mergedJobResults().size();
-                    }
-                    else {
-                      numMergedJobs = 0;
-                    }
-                    mergedJobIndex = 0;
-                  }
+                std::vector<runmanager::Job> childJobs = currentJob->children();
+                if (childJobs.empty()) {
+                  currentJob.reset();
+                }
+                else {
+                  OS_ASSERT(childJobs.size() == 1u);
+                  currentJob = childJobs[0];
                 }
               }
             }
@@ -1637,34 +1604,20 @@ namespace detail {
             // non-null work item
             OS_ASSERT(currentJob);
             OS_ASSERT(currentJob->jobType() == workItem.type);
-            if (numMergedJobs > 0u) {
-              result.push_back(WorkflowStepJob(*currentJob,currentStep,OptionalUnsigned(mergedJobIndex)));
-              ++mergedJobIndex;
-            }
-            else {
-              result.push_back(WorkflowStepJob(*currentJob,currentStep));
-            }
+            result.push_back(WorkflowStepJob(*currentJob,currentStep));
           }
 
           if (getNextJob) {
-            if ((numMergedJobs == 0) || (mergedJobIndex == numMergedJobs)) {
-              std::vector<runmanager::Job> childJobs = currentJob->children();
-              if (childJobs.empty()) {
-                currentJob.reset();
-              }
-              else {
-                OS_ASSERT(childJobs.size() == 1u);
-                currentJob = childJobs[0];
-                if (currentJob->hasMergedJobs()) {
-                  numMergedJobs = currentJob->mergedJobResults().size();
-                }
-                else {
-                  numMergedJobs = 0;
-                }
-                mergedJobIndex = 0;
-              }
+            std::vector<runmanager::Job> childJobs = currentJob->children();
+            if (childJobs.empty()) {
+              currentJob.reset();
+            }
+            else {
+              OS_ASSERT(childJobs.size() == 1u);
+              currentJob = childJobs[0];
             }
           }
+
         }
       }
     }
@@ -2152,11 +2105,9 @@ namespace detail {
 } // detail
 
 WorkflowStepJob::WorkflowStepJob(const runmanager::Job& t_job,
-                                 const WorkflowStep& t_step,
-                                 boost::optional<unsigned> t_mergedJobIndex)
+                                 const WorkflowStep& t_step)
   : job(t_job),
-    step(t_step),
-    mergedJobIndex(t_mergedJobIndex)
+    step(t_step)
 {}
 
 WorkflowStepJob::WorkflowStepJob(const WorkflowStep& t_step)
@@ -2165,12 +2116,10 @@ WorkflowStepJob::WorkflowStepJob(const WorkflowStep& t_step)
 
 WorkflowStepJob::WorkflowStepJob(const runmanager::Job& t_job,
                                  const WorkflowStep& t_step,
-                                 const Measure& t_measure,
-                                 boost::optional<unsigned> t_mergedJobIndex)
+                                 const Measure& t_measure)
   : job(t_job),
     step(t_step),
-    measure(t_measure),
-    mergedJobIndex(t_mergedJobIndex)
+    measure(t_measure)
 {}
 
 WorkflowStepJob::WorkflowStepJob(const WorkflowStep& t_step,
@@ -2181,12 +2130,10 @@ WorkflowStepJob::WorkflowStepJob(const WorkflowStep& t_step,
 
 WorkflowStepJob::WorkflowStepJob(const runmanager::Job& t_job,
                                  const WorkflowStep &t_step,
-                                 const QVariant& t_value,
-                                 boost::optional<unsigned> t_mergedJobIndex)
+                                 const QVariant& t_value)
   : job(t_job),
     step(t_step),
-    value(t_value),
-    mergedJobIndex(t_mergedJobIndex)
+    value(t_value)
 {}
 
 WorkflowStepJob::WorkflowStepJob(const WorkflowStep &t_step,
@@ -2194,32 +2141,6 @@ WorkflowStepJob::WorkflowStepJob(const WorkflowStep &t_step,
   : step(t_step),
     value(t_value)
 {}
-
-boost::optional<runmanager::JobErrors> WorkflowStepJob::errors() const {
-  if (job) {
-    if (job->hasMergedJobs()) {
-      OS_ASSERT(mergedJobIndex);
-      return job->mergedJobResults()[*mergedJobIndex].errors;
-    }
-    else {
-      return job->errors();
-    }
-  }
-  return boost::none;
-}
-
-boost::optional<runmanager::Files> WorkflowStepJob::outputFiles() const {
-  if (job) {
-    if (job->hasMergedJobs()) {
-      OS_ASSERT(mergedJobIndex);
-      return job->mergedJobResults()[*mergedJobIndex].outputFiles;
-    }
-    else {
-      return runmanager::Files(job->outputFiles());
-    }
-  }
-  return boost::none;
-}
 
 Problem::Problem(const std::string& name,
                  const std::vector<WorkflowStep>& workflow)
