@@ -537,10 +537,13 @@ namespace detail {
 
   boost::optional<OpaqueMaterial> LayeredConstruction_Impl::insulation() const {
     StandardsInformationConstruction stdsInfo = standardsInformation();
-    if (istringEqual(stdsInfo.perturbableLayerType(),"Insulation")) {
-      OptionalMaterial result = stdsInfo.perturbableLayer();
-      if (result) {
-        return result->optionalCast<OpaqueMaterial>();
+    boost::optional<std::string> perturbableLayerType = stdsInfo.perturbableLayerType();
+    if (perturbableLayerType){
+      if (istringEqual(*perturbableLayerType,"Insulation")) {
+        OptionalMaterial result = stdsInfo.perturbableLayer();
+        if (result) {
+          return result->optionalCast<OpaqueMaterial>();
+        }
       }
     }
     return boost::none;
@@ -559,8 +562,11 @@ namespace detail {
 
   void LayeredConstruction_Impl::resetInsulation() {
     StandardsInformationConstruction stdsInfo = standardsInformation();
-    if (istringEqual(stdsInfo.perturbableLayerType(),"Insulation")) {
-      stdsInfo.resetPerturbableLayer();
+    boost::optional<std::string> perturbableLayerType = stdsInfo.perturbableLayerType();
+    if (perturbableLayerType){
+      if (istringEqual(*perturbableLayerType,"Insulation")) {
+        stdsInfo.resetPerturbableLayer();
+      }
     }
   }
 

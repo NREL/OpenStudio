@@ -61,17 +61,18 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   //@{
 
   /** Return the ConstructionBase object that this object describes. */
-  boost::optional<ConstructionBase> construction() const;
+  ConstructionBase construction() const;
 
   /** Return the surface type to which this construction should be applied. */
-  std::string intendedSurfaceType() const;
+  boost::optional<std::string> intendedSurfaceType() const;
 
-  /** Return the construction type, that is, a descriptor like 'Mass' or 'Wood-Framed' that 
-   *  describes the basic type of construction. To be used with standardsinterface, this 
-   *  string should match an appropriate enumeration value in the 
-   *  standardsinterface::DataDictionary. The enumeration for which this should be a value
-   *  generally varies by intendedSurfaceType(). */
-  std::string standardsConstructionType() const;
+  /** This is a freeform field used to identify the construction type for standards.
+       \note Standards applied to this model will use this field to determine correct constructions.
+       \note More information can be found at https://github.com/NREL/openstudio-standards. */
+  boost::optional<std::string> standardsConstructionType() const;
+
+  /** Returns a list of suggestions for standards construction type based on intendedSurfaceType. */
+  std::vector<std::string> suggestedStandardsConstructionTypes() const;
 
   /** Return the layer of construction() whose thickness can be perturbed (usually to reach a 
    *  certain property value for the overall construction), if the construction() exists and is a 
@@ -79,25 +80,21 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   boost::optional<Material> perturbableLayer() const;
 
   /** Return a description of the perturbableLayer(), for instance, 'Insulation'.*/
-  std::string perturbableLayerType() const;
+  boost::optional<std::string> perturbableLayerType() const;
 
   //@}
   /** @name Setters */
-  //@{
-
-  /** Point this object to construction. If this object already points to (a different) construction,
-   *  then that relationship will be lost. If you want the two constructions to have the same 
-   *  standards information, you will need to clone the original StandardsInformationConstruction,
-   *  then point the clone to the other construction. */
-  void setConstruction(const ConstructionBase& construction);
+  //@
 
   /** Sets the intendedSurfaceType to type. \sa intendedSurfaceTypeValues */
   bool setIntendedSurfaceType(const std::string& type);
+  void resetIntendedSurfaceType();
 
   /** Set the constructionType to type. To be used with standardsinterface, this string should 
    *  match an appropriate enumeration value in the standardsinterface::DataDictionary. The 
    *  enumeration for which this should be a value generally varies by intendedSurfaceType(). */
   void setStandardsConstructionType(const std::string& type);
+  void resetStandardsConstructionType();
 
   /** Set the perturbableLayer to the one at layerIndex. Returns false if construction() is not a 
    *  LayeredConstruction or 
@@ -122,6 +119,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   /** Set the perturbableLayerType to type. Can be one of the provided types, or a free-form 
    *  string. \sa standardPerturbableLayerTypeValues */
   void setPerturbableLayerType(const std::string& type);
+  void resetPerturbableLayerType();
 
   //@}
  protected:

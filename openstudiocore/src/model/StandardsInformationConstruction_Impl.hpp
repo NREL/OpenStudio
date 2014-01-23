@@ -59,11 +59,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<ConstructionBase> construction() const;
+    ConstructionBase construction() const;
 
-    std::string intendedSurfaceType() const;
+    boost::optional<std::string> intendedSurfaceType() const;
 
-    std::string standardsConstructionType() const;
+    boost::optional<std::string> standardsConstructionType() const;
+
+    std::vector<std::string> suggestedStandardsConstructionTypes() const;
 
     boost::optional<Material> perturbableLayer() const;
 
@@ -83,11 +85,11 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setConstruction(const ConstructionBase& construction);
-
     bool setIntendedSurfaceType(const std::string& type);
+    void resetIntendedSurfaceType();
 
     void setStandardsConstructionType(const std::string& type);
+    void resetStandardsConstructionType();
 
     bool setPerturbableLayer(unsigned layerIndex);
 
@@ -97,9 +99,7 @@ namespace detail {
     void resetPerturbableLayer();
 
     void setPerturbableLayerType(const std::string& type);
-
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent);
+    void resetPerturbableLayerType();
 
     //@}
    protected:

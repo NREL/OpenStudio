@@ -22,6 +22,10 @@
 
 #include <openstudio_lib/ModelObjectInspectorView.hpp>
 
+#include <model/StandardsInformationConstruction.hpp>
+
+class QComboBox;
+
 namespace openstudio {
 
 namespace model {
@@ -35,6 +39,8 @@ class ConstructionObjectVectorController;
 class OSDropZone;
 
 class OSLineEdit;
+
+class OSComboBox2;
 
 class ConstructionInspectorView : public ModelObjectInspectorView
 {
@@ -54,6 +60,14 @@ class ConstructionInspectorView : public ModelObjectInspectorView
 
     virtual void onUpdate();
 
+  protected slots:
+
+    void standardsConstructionTypeChanged(const QString& text);
+
+    void editStandardsConstructionType(const QString& text);
+
+    void populateStandardsConstructionType();
+
   private:
 
     void createLayout();
@@ -69,6 +83,12 @@ class ConstructionInspectorView : public ModelObjectInspectorView
     ConstructionObjectVectorController * m_constructionVC;
 
     OSLineEdit * m_nameEdit;
+
+    OSComboBox2 * m_intendedSurfaceType;
+
+    QComboBox * m_standardsConstructionType;
+
+    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
 
     bool m_isIP;
 
