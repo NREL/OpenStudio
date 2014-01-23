@@ -79,8 +79,6 @@ namespace detail {
 
       JobErrors m_errors;
       int m_timerId;
-
-      boost::optional<QDateTime> m_lastRun; //< time of last job run
   }; 
 
 }

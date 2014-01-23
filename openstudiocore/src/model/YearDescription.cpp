@@ -19,10 +19,20 @@
 
 #include <model/YearDescription.hpp>
 #include <model/YearDescription_Impl.hpp>
+#include <model/RunPeriod.hpp>
+#include <model/RunPeriod_Impl.hpp>
 #include <model/RunPeriodControlDaylightSavingTime.hpp>
 #include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
 #include <model/RunPeriodControlSpecialDays.hpp>
 #include <model/RunPeriodControlSpecialDays_Impl.hpp>
+#include <model/SizingPeriod.hpp>
+#include <model/SizingPeriod_Impl.hpp>
+#include <model/ScheduleBase.hpp>
+#include <model/ScheduleBase_Impl.hpp>
+#include <model/ScheduleRule.hpp>
+#include <model/ScheduleRule_Impl.hpp>
+#include <model/LightingDesignDay.hpp>
+#include <model/LightingDesignDay_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
@@ -136,6 +146,8 @@ namespace detail {
   }
 
   void YearDescription_Impl::setCalendarYear(boost::optional<int> calendarYear) {
+    bool wasLeapYear = this->isLeapYear();
+
     bool result = false;
     if (calendarYear) {
       result = setInt(OS_YearDescriptionFields::CalendarYear, calendarYear.get());
@@ -145,11 +157,19 @@ namespace detail {
       result = setString(OS_YearDescriptionFields::CalendarYear, "");
     }
     OS_ASSERT(result);
+
+    bool isLeapYear = this->isLeapYear();
+    updateModelLeapYear(wasLeapYear, isLeapYear);
   }
 
   void YearDescription_Impl::resetCalendarYear() {
+    bool wasLeapYear = this->isLeapYear();
+
     bool result = setString(OS_YearDescriptionFields::CalendarYear, "");
     OS_ASSERT(result);
+
+    bool isLeapYear = this->isLeapYear();
+    updateModelLeapYear(wasLeapYear, isLeapYear);
   }
 
   bool YearDescription_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
@@ -167,6 +187,8 @@ namespace detail {
 
   bool YearDescription_Impl::setIsLeapYear(bool isLeapYear) {
     bool result = false;
+    bool wasLeapYear = this->isLeapYear();
+
     if (!this->calendarYear()){
       if (isLeapYear) {
         result = setString(OS_YearDescriptionFields::IsLeapYear, "Yes");
@@ -174,12 +196,22 @@ namespace detail {
         result = setString(OS_YearDescriptionFields::IsLeapYear, "No");
       }
     }
+
+    if (result){
+      updateModelLeapYear(wasLeapYear, isLeapYear);
+    }
+
     return result;
   }
 
   void YearDescription_Impl::resetIsLeapYear() {
+    bool wasLeapYear = this->isLeapYear();
+
     bool result = setString(OS_YearDescriptionFields::IsLeapYear, "");
     OS_ASSERT(result);
+
+    bool isLeapYear = this->isLeapYear();
+    updateModelLeapYear(wasLeapYear, isLeapYear);
   }
 
   int YearDescription_Impl::assumedYear() const
@@ -253,6 +285,48 @@ namespace detail {
     }
 
     return openstudio::Date::fromDayOfYear(dayOfYear, *year);
+  }
+
+  void YearDescription_Impl::updateModelLeapYear(bool wasLeapYear, bool isLeapYear)
+  {
+    if (wasLeapYear == isLeapYear){
+      return;
+    }
+
+    if (!wasLeapYear && isLeapYear){
+      return;
+    }
+
+    model::Model model = this->model();
+    if (wasLeapYear && !isLeapYear){
+      BOOST_FOREACH(RunPeriod runPeriod, model.getModelObjects<RunPeriod>()){
+        runPeriod.ensureNoLeapDays();
+      }
+
+      BOOST_FOREACH(RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime, model.getModelObjects<RunPeriodControlDaylightSavingTime>()){
+        runPeriodControlDaylightSavingTime.ensureNoLeapDays();
+      }
+
+      BOOST_FOREACH(RunPeriodControlSpecialDays runPeriodControlSpecialDays, model.getModelObjects<RunPeriodControlSpecialDays>()){
+        runPeriodControlSpecialDays.ensureNoLeapDays();
+      }
+
+      BOOST_FOREACH(SizingPeriod sizingPeriod, model.getModelObjects<SizingPeriod>()){
+        sizingPeriod.ensureNoLeapDays();
+      }
+
+      BOOST_FOREACH(ScheduleBase scheduleBase, model.getModelObjects<ScheduleBase>()){
+        scheduleBase.ensureNoLeapDays();
+      } 
+
+      BOOST_FOREACH(ScheduleRule scheduleRule, model.getModelObjects<ScheduleRule>()){
+        scheduleRule.ensureNoLeapDays();
+      }
+
+      BOOST_FOREACH(LightingDesignDay lightingDesignDay, model.getModelObjects<LightingDesignDay>()){
+        lightingDesignDay.ensureNoLeapDays();
+      }
+    }
   }
 
 } // detail

@@ -95,9 +95,58 @@ class CalibrationReports_Test < Test::Unit::TestCase
     show_output(result)
     assert(result.value.valueName == "Success")
     assert(result.warnings.size == 0)
-    #assert(result.info.size == 1)
+    assert(result.info.size == 0)
 
     assert(File.exist?(reportPath()))
+
+    # get the last model and sql file
+
+    model = runner.lastOpenStudioModel
+    assert((not model.empty?))
+    model = model.get
+
+    sqlFile = runner.lastEnergyPlusSqlFile
+    assert((not sqlFile.empty?))
+    sqlFile = sqlFile.get
+
+    model.setSqlFile(sqlFile)
+
+    # must have a runPeriod
+    runPeriod = model.runPeriod
+    assert((not runPeriod.empty?))
+
+    # must have a calendarYear
+    yearDescription = model.yearDescription
+    assert((not yearDescription.empty?))
+    calendarYear = yearDescription.get.calendarYear
+    assert((not calendarYear.empty?))
+
+    # check for varying demand
+    model.getUtilityBills.each do |utilityBill|
+        if not utilityBill.peakDemandUnitConversionFactor.empty?
+            hasVaryingDemand = false
+            modelPeakDemand = 0.0
+            count = 0
+            utilityBill.billingPeriods.each do |billingPeriod|
+                peakDemand = billingPeriod.modelPeakDemand
+                if not peakDemand.empty?
+                    temp = peakDemand.get
+                    if count == 0
+                        modelPeakDemand = temp
+                    else
+                        if modelPeakDemand != temp
+                            hasVaryingDemand = true
+                            break
+                        end
+                    end
+                    count = count + 1
+                end
+            end
+            if count > 1
+                assert(hasVaryingDemand)
+            end
+        end
+    end
 
   end
 

@@ -72,13 +72,20 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
 
   // DesignWaterFlowRate 
 
-  if( (d = modelObject.designWaterFlowRate()) )
+  if( istringEqual(modelObject.performanceInputMethod(),"NominalCapacity") )
   {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::DesignWaterFlowRate,d.get());
+    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::DesignWaterFlowRate,"");
   }
-  else if( modelObject.isDesignAirFlowRateAutosized() )
+  else
   {
-    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::DesignWaterFlowRate,"Autosize");
+    if( (d = modelObject.designWaterFlowRate()) )
+    {
+      idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::DesignWaterFlowRate,d.get());
+    }
+    else if( modelObject.isDesignAirFlowRateAutosized() )
+    {
+      idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::DesignWaterFlowRate,"Autosize");
+    }
   }
 
   // DesignAirFlowRate 

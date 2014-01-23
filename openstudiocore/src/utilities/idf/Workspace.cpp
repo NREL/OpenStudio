@@ -1930,7 +1930,7 @@ namespace detail {
     boost::to_lower(baseName);
     //ss << baseName << "( \\d+)?";
     // DLM: Making more accepting of different characters in object names, e.g. '(', ')', etc
-    const boost::regex esc("[\\^\\.\\$\\|\\(\\)\\[\\]\\*\\+\\?\\/\\\\]");
+    const boost::regex esc("[\\^\\.\\$\\|\\(\\)\\[\\]\\*\\+\\?\\{\\}\\/\\\\]");
     const std::string rep("\\\\\\1&");
     std::string escapedBaseName = regex_replace(baseName, esc, rep, boost::match_default | boost::format_sed);
     ss << escapedBaseName << "( \\d+)?$";

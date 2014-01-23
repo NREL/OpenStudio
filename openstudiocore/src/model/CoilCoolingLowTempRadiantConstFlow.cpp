@@ -47,7 +47,7 @@ namespace detail {
                                                                                    bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilCoolingLowTempRadiantConstFlow::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilCoolingLowTempRadiantConstFlow::iddObjectType());
   }
 
   CoilCoolingLowTempRadiantConstFlow_Impl::CoilCoolingLowTempRadiantConstFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                                                    bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilCoolingLowTempRadiantConstFlow::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilCoolingLowTempRadiantConstFlow::iddObjectType());
   }
 
   CoilCoolingLowTempRadiantConstFlow_Impl::CoilCoolingLowTempRadiantConstFlow_Impl(const CoilCoolingLowTempRadiantConstFlow_Impl& other,
@@ -150,7 +150,7 @@ namespace detail {
 
   std::string CoilCoolingLowTempRadiantConstFlow_Impl::condensationControlType() const {
     boost::optional<std::string> value = getString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -160,7 +160,7 @@ namespace detail {
 
   double CoilCoolingLowTempRadiantConstFlow_Impl::condensationControlDewpointOffset() const {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -178,7 +178,7 @@ namespace detail {
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::resetCoolingHighWaterTemperatureSchedule() {
     bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CoolingHighWaterTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingLowTempRadiantConstFlow_Impl::setCoolingLowWaterTemperatureSchedule(Schedule& schedule) {
@@ -191,7 +191,7 @@ namespace detail {
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::resetCoolingLowWaterTemperatureSchedule() {
     bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CoolingLowWaterTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingLowTempRadiantConstFlow_Impl::setCoolingHighControlTemperatureSchedule(Schedule& schedule) {
@@ -204,7 +204,7 @@ namespace detail {
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::resetCoolingHighControlTemperatureSchedule() {
     bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CoolingHighControlTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingLowTempRadiantConstFlow_Impl::setCoolingLowControlTemperatureSchedule(Schedule& schedule) {
@@ -217,7 +217,7 @@ namespace detail {
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::resetCoolingLowControlTemperatureSchedule() {
     bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CoolingLowControlTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlType(std::string condensationControlType) {
@@ -227,17 +227,17 @@ namespace detail {
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::resetCondensationControlType() {
     bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset) {
     bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset, condensationControlDewpointOffset);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::resetCondensationControlDewpointOffset() {
     bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> CoilCoolingLowTempRadiantConstFlow_Impl::condensationControlTypeValues() const {
@@ -357,19 +357,19 @@ namespace detail {
                                                                        Schedule& coolingLowControlTemperatureSchedule)
   : StraightComponent(CoilCoolingLowTempRadiantConstFlow::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>());
+  OS_ASSERT(getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>());
 
   bool ok = setCoolingHighWaterTemperatureSchedule(coolingHighWaterTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setCoolingLowWaterTemperatureSchedule(coolingLowWaterTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setCoolingHighControlTemperatureSchedule(coolingHighControlTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setCoolingLowControlTemperatureSchedule(coolingLowControlTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
 }
 

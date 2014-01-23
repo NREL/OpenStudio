@@ -201,6 +201,11 @@ bool ScheduleBase::resetScheduleTypeLimits() {
   return getImpl<detail::ScheduleBase_Impl>()->resetScheduleTypeLimits();
 }
 
+void ScheduleBase::ensureNoLeapDays()
+{
+  getImpl<detail::ScheduleBase_Impl>()->ensureNoLeapDays();
+}
+
 /// @cond
 ScheduleBase::ScheduleBase(boost::shared_ptr<detail::ScheduleBase_Impl> impl)
   : ResourceObject(impl)

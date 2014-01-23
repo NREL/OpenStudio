@@ -211,6 +211,32 @@ DuplicateButton::DuplicateButton(QWidget * parent)
   setStyleSheet(style);
 }
 
+SofterDuplicateButton::SofterDuplicateButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  setFixedSize(16,16);
+
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/duplicate_softer_off.png');"
+               "  border:none;"
+               "}");
+  style.append("QPushButton:hover {"
+               "  background-image:url(':/shared_gui_components/images/duplicate_softer_over.png');"
+               "}");
+  style.append("QPushButton:pressed {"
+               "  background-image:url(':/shared_gui_components/images/duplicate_softer_press.png');"
+               "}");
+  style.append("QPushButton:disabled {"
+               "  background-image:url(':/shared_gui_components/images/duplicate_disabled.png');"
+               "}");
+
+  setStyleSheet(style);
+}
+
+
 UpButton::UpButton(QWidget * parent)
   : QPushButton(parent)
 {

@@ -48,6 +48,9 @@ class MODEL_API SpaceLoadDefinition : public ResourceObject {
   /** Returns all instances of this definition. */
   std::vector<SpaceLoadInstance> instances() const;
 
+  // ETH@20140113 - No units mark-up here. What is the pattern we are trying to move toward?
+  // (Programmatically available, but string-based, right?)
+
   /** Returns the floor area associated with instances of this space load definition.  
   If two instances are in the same space then that floor area will be double counted.
   If two instances used in the same space type then that floor area will be double counted.
