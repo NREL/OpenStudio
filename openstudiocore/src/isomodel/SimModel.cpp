@@ -37,8 +37,6 @@ namespace isomodel {
         itr != this->monthlyResults.end();
         ++itr)
     {
-
-
       for (std::vector<EndUseFuelType>::const_iterator itr2 = fuelTypes.begin();
           itr2 != fuelTypes.end();
           ++itr2)
