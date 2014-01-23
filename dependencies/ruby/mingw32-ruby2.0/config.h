@@ -1,7 +1,7 @@
 #ifndef INCLUDE_RUBY_CONFIG_H
 #define INCLUDE_RUBY_CONFIG_H 1
-#if _MSC_VER != 1600
-#error MSC version unmatch: _MSC_VER: 1600 is expected.
+#if _MSC_VER < 1500
+  #error MSC version unmatch: _MSC_VER: >= 1500 is expected.
 #endif
 #define RUBY_MSVCRT_VERSION 100
 #define STDC_HEADERS 1
@@ -51,7 +51,9 @@
 #define rb_uid_t int
 #define HAVE_STRUCT_STAT_ST_RDEV 1
 #define HAVE_ST_RDEV 1
-#define HAVE_STDINT_H 1
+#if _MSC_VER >= 1600
+  #define HAVE_STDINT_H 1
+#endif
 #define HAVE_INT8_T 1
 #define HAVE_UINT8_T 1
 #define SIZEOF_INT8_T 1

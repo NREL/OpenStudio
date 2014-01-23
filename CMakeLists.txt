@@ -382,7 +382,7 @@ IF(BUILD_RUBY)
         ExternalProject_Add(Ruby
           URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip
           URL_MD5 1f6e4348099b26e92909db62dcd3b173
-          PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby 
+          PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/ruby.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby
           CONFIGURE_COMMAND ""
           BUILD_COMMAND ""
           INSTALL_COMMAND ""
