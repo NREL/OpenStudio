@@ -1550,6 +1550,13 @@ namespace detail {
                 else {
                   OS_ASSERT(childJobs.size() == 1u);
                   currentJob = childJobs[0];
+                  if (currentJob->hasMergedJobs()) {
+                    numMergedJobs = currentJob->mergedJobResults().size();
+                  }
+                  else {
+                    numMergedJobs = 0;
+                  }
+                  mergedJobIndex = 0;
                 }
               }
             }
