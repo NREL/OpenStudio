@@ -109,7 +109,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
     // carry on
   }
 
-  initializeFromParams(t_workItem.params);
+  initializeFromParams(t_workItem.params,t_originalBasePath,t_newBasePath);
   if (userScriptJob()) {
     setIncludeDir(getOpenStudioRubyIncludePath());
   }
@@ -156,7 +156,9 @@ const std::vector<RubyJobBuilder> &RubyJobBuilder::mergedJobs() const
   return m_mergedJobs;
 }
 
-void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
+void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
+                                          const openstudio::path& t_originalBasePath,
+                                          const openstudio::path& t_newBasePath)
 {
 
   if (t_params.has("merged_ruby_jobs"))
@@ -244,7 +246,22 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
          itr != parameters.children.end();
          ++itr)
     {
-      m_requiredFiles.push_back(std::make_pair(openstudio::toPath(itr->value), openstudio::toPath(itr->children.at(0).value)));
+      openstudio::path source = openstudio::toPath(itr->value);
+      openstudio::path destination = openstudio::toPath(itr->children.at(0).value);
+      // in constructor from WorkItem, files listed here may have already been added, so see if there already
+      std::vector<std::pair<openstudio::path,openstudio::path> >::const_iterator finderIt = 
+          std::find_if(m_requiredFiles.begin(),
+                       m_requiredFiles.end(),
+                       boost::bind(secondOfPairEqual<openstudio::path,openstudio::path>,_1,destination));
+      if (finderIt == m_requiredFiles.end()) {
+        if (!(t_originalBasePath.empty() || t_newBasePath.empty())) {
+          openstudio::path temp = relocatePath(source,t_originalBasePath,t_newBasePath);
+          if (!temp.empty()) {
+            source = temp;
+          }
+        }
+        m_requiredFiles.push_back(std::make_pair(source, destination));
+      }
     }
   } catch (const std::exception &) {}
 
@@ -260,10 +277,12 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params)
     }
   } catch (const std::exception &) {}
 
-  try {
-    JobParam parameters = t_params.get("ruby_scriptfile");
-    m_script = openstudio::toPath(parameters.children.at(0).value);
-  } catch (const std::exception &) {}
+  if (m_script.empty()) {
+    try {
+      JobParam parameters = t_params.get("ruby_scriptfile");
+      m_script = openstudio::toPath(parameters.children.at(0).value);
+    } catch (const std::exception &) {}
+  }
 
   try {
     JobParam parameters = t_params.get("ruby_bclmeasureparameters");

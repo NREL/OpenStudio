@@ -91,26 +91,33 @@ else
   user_script_path = OpenStudio::Path.new("./user_script.rb")
 end
 
-require user_script_path.to_s
+# Check list of objects in memory before loading the script
+currentObjects = Hash.new
+ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
+
+ObjectSpace.garbage_collect
+load user_script_path.to_s # need load in case have seen this script before
 
 userScript = nil
 type = String.new
 ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
-  if obj.is_a? OpenStudio::Ruleset::ModelUserScript
-    userScript = obj
-    type = "model"
-  elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
-    userScript = obj
-    type = "workspace"
-  elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
-    userScript = obj
-    type = "translation"
-  elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
-    userScript = obj
-    type = "utility"    
-  elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
-    userScript = obj
-    type = "report"    
+  if not currentObjects[obj]
+    if obj.is_a? OpenStudio::Ruleset::ModelUserScript
+      userScript = obj
+      type = "model"
+    elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
+      userScript = obj
+      type = "workspace"
+    elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
+      userScript = obj
+      type = "translation"
+    elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
+      userScript = obj
+      type = "utility"    
+    elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
+      userScript = obj
+      type = "report"    
+    end
   end
 }
 
@@ -194,9 +201,6 @@ else
 
 end
 
-
-
-
 ##### Begin section to loop for merged user scripts
 scriptindex = 0
 
@@ -205,27 +209,35 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + script
 
   if (scriptindex != 0)
     user_script_path = OpenStudio::Path.new("#{scriptfolder}/mergedjob-#{scriptindex}/user_script.rb")
-
+    
     # The 0th case is already set up, it was the script loaded and parsed up above
-    require user_script_path.to_s
+    
+    # Check list of objects in memory before loading the script
+    currentObjects = Hash.new
+    ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
+
+    ObjectSpace.garbage_collect
+    load user_script_path.to_s # need load in case have seen this script before    
 
     userScript = nil
     ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
-      if obj.is_a? OpenStudio::Ruleset::ModelUserScript
-        userScript = obj
-        raise "Mismatched merged script type " unless type == "model"
-      elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
-        userScript = obj
-        raise "Mismatched merged script type " unless type == "workspace"
-      elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
-        userScript = obj
-        raise "Mismatched merged script type " unless type == "translation"
-      elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
-        userScript = obj
-        raise "Mismatched merged script type " unless type == "utility"
-      elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
-        userScript = obj
-        raise "Mismatched merged script type " unless type == "report"
+      if not currentObjects[obj]
+        if obj.is_a? OpenStudio::Ruleset::ModelUserScript
+          userScript = obj
+          raise "Mismatched merged script type " unless type == "model"
+        elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
+          userScript = obj
+          raise "Mismatched merged script type " unless type == "workspace"
+        elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
+          userScript = obj
+          raise "Mismatched merged script type " unless type == "translation"
+        elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
+          userScript = obj
+          raise "Mismatched merged script type " unless type == "utility"
+        elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
+          userScript = obj
+          raise "Mismatched merged script type " unless type == "report"
+        end
       end
     }
 
@@ -317,6 +329,9 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + script
   # SAVE SCRIPT RESULT
 
   runner.result.save(OpenStudio::Path.new("result.ossr"),true)
+  
+  # stop executing scripts once an error is encountered
+  break if not result
 
 end
 

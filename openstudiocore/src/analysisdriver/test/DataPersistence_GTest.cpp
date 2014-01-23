@@ -139,10 +139,11 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     ASSERT_TRUE(jobResult.mergedJobIndex);
     EXPECT_EQ(3u,jobResult.mergedJobIndex.get());
     EXPECT_FALSE(job.running());
-    EXPECT_TRUE(job.outOfDate()); // never run
+    EXPECT_FALSE(job.outOfDate()); // now all four scripts are in same job
     EXPECT_FALSE(job.canceled());
-    EXPECT_FALSE(job.lastRun());
+    EXPECT_TRUE(job.lastRun());    // now all four scripts are in same job
     errors = jobResult.errors().get();
+    // this script not actually run, so result in default state
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -245,9 +246,9 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
     EXPECT_FALSE(job.running());
-    EXPECT_TRUE(job.outOfDate()); // never run
+    EXPECT_FALSE(job.outOfDate()); // now all four scripts are in same job
     EXPECT_FALSE(job.canceled());
-    EXPECT_FALSE(job.lastRun());
+    EXPECT_TRUE(job.lastRun());    // now all four scripts are in same job
     errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());

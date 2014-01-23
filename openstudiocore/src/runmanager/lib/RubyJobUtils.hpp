@@ -261,7 +261,9 @@ namespace runmanager {
 
       static bool stringToBool(const std::string &t_val);
       static std::string boolToString(bool t_val);
-      void initializeFromParams(const JobParams &t_params);
+      void initializeFromParams(const JobParams &t_params,
+                                const openstudio::path& t_originalBasePath = openstudio::path(),
+                                const openstudio::path& t_newBasePath = openstudio::path());
 
       // used internally to initialize userScriptRuby jobs and RubyJobs created from BCLMeasures
       void setAsUserScriptRubyJob(const openstudio::path& t_userScriptPath,
