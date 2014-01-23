@@ -724,9 +724,11 @@ OS:ClimateZones,
        \type handle
        \required-field
   A2, \field Active Institution
+       \deprecated
        \type alpha
        \default ASHRAE
   N1, \field Active Year
+       \deprecated
        \type integer
        \minimum 0
        \default 2006
