@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,20 +17,34 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include "RunManagerTestFixture.hpp"
+#ifndef OPENSTUDIO_MERGEDJOBRESULTS_HPP__
+#define OPENSTUDIO_MERGEDJOBRESULTS_HPP__
 
-using openstudio::FileLogSink;
-using openstudio::toPath;
+#include "RunManagerAPI.hpp"
+#include <utilities/core/UUID.hpp>
+#include "FileInfo.hpp"
+#include "JobParam.hpp"
+#include "JobErrors.hpp"
 
-void RunManagerTestFixture::SetUpTestCase() {
-  // set up logging
-  logFile = FileLogSink(toPath("./RunManagerTestFixture.log"));
-  logFile->setLogLevel(Trace);
-  openstudio::Logger::instance().standardOutLogger().disable();
+
+namespace openstudio {
+namespace runmanager {
+
+  class RUNMANAGER_API MergedJobResults
+  {
+    public:
+      MergedJobResults(const openstudio::UUID &t_uuid, const JobErrors &t_errors, const Files &t_outputFiles)
+        : uuid(t_uuid), errors(t_errors), outputFiles(t_outputFiles) {}
+      MergedJobResults() {}
+
+      openstudio::UUID uuid;
+      JobErrors errors;
+      Files outputFiles;
+  };
+
+}
 }
 
-void RunManagerTestFixture::TearDownTestCase() {
-  logFile->disable();
-}
 
-boost::optional<openstudio::FileLogSink> RunManagerTestFixture::logFile;
+#endif
+
