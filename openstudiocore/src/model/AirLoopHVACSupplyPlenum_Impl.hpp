@@ -69,6 +69,8 @@ class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
+  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
+
  private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVACSupplyPlenum");
