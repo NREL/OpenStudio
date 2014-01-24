@@ -37,7 +37,7 @@ class OSLineEdit2 : public QLineEdit {
 
   virtual ~OSLineEdit2() {}
 
-  void bind(model::ModelObject& modelObject, 
+  void bindRequired(model::ModelObject& modelObject, 
             StringGetter get,
             boost::optional<StringSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,

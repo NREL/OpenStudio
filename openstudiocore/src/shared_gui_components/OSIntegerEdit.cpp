@@ -38,7 +38,7 @@ OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
   setEnabled(false);
 }
 
-void OSIntegerEdit2::bind(model::ModelObject& modelObject,
+void OSIntegerEdit2::bindRequired(model::ModelObject& modelObject,
                           IntGetter get,
                           boost::optional<IntSetter> set,
                           boost::optional<NoFailAction> reset,
@@ -84,7 +84,7 @@ void OSIntegerEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSIntegerEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+void OSIntegerEdit2::bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
                           IntGetter get,
                           boost::optional<IntSetter> set,
                           boost::optional<NoFailAction> reset,

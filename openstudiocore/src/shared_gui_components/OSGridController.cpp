@@ -51,11 +51,34 @@ OSGridController::OSGridController(IddObjectType iddObjectType, model::Model mod
   m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
   m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
   
+  //addCheckBoxColumn(QString(""),
+  //                  &model::RefrigerationCase::,
+  //                  &model::RefrigerationCase::);
+
   addComboBoxColumn(QString("Defrost Type"),
                     &model::RefrigerationCase::caseDefrostTypeValues,
                     &model::RefrigerationCase::caseDefrostType,
                     &model::RefrigerationCase::setCaseDefrostType);
-                    
+             
+  addDoubleEditColumn(QString("Operating Temperature"),
+                    &model::RefrigerationCase::caseOperatingTemperature,
+                    &model::RefrigerationCase::setCaseOperatingTemperature);
+    
+  //addIntegerEditColumn(QString(""),
+  //                  &model::RefrigerationCase::,
+  //                  &model::RefrigerationCase::);
+
+  addLineEditColumn(QString("Curve Type"),
+                    &model::RefrigerationCase::latentCaseCreditCurveType,
+                    &model::RefrigerationCase::setLatentCaseCreditCurveType);
+             
+  //addQuantityEditColumn(QString(""),
+  //                  &model::RefrigerationCase::,
+  //                  &model::RefrigerationCase::,  
+             
+  //addUnsignedEditColumn(QString(""),
+  //                  &model::RefrigerationCase::,
+  //                  &model::RefrigerationCase::);
 }
 
 OSGridController::~OSGridController()
@@ -66,23 +89,114 @@ QWidget * OSGridController::widgetAt(int i, int j)
 {
   QWidget * result = 0;
 
-  
-  if( j < m_comboBoxConcepts.size() )
+  if( j < static_cast<int>(m_checkBoxConcepts.size()) )
   {
-    if( i < m_modelObjects.size() )
+    if( i < static_cast<int>(m_modelObjects.size()) )
     {
-      QSharedPointer<ComboBoxConcept> comboBoxConcept = m_comboBoxConcepts[j];
-      OSComboBox2 * cb2 = new OSComboBox2();
-
       model::ModelObject mo = m_modelObjects[i];
-      cb2->bindRequired(mo,
+
+
+      QSharedPointer<CheckBoxConcept> checkBoxConcept = m_checkBoxConcepts[j];
+      OSCheckBox2 * checkBox = new OSCheckBox2();
+
+      checkBox->bind(mo,
+                boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
+                boost::optional<BoolSetter>(boost::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)),
+                boost::none,
+                boost::none);
+
+      result = checkBox;
+
+
+      QSharedPointer<ComboBoxConcept> comboBoxConcept = m_comboBoxConcepts[j];
+      OSComboBox2 * comboBox = new OSComboBox2();
+
+      comboBox->bindRequired(mo,
                 boost::bind(&ComboBoxConcept::choices,comboBoxConcept.data()),
                 boost::bind(&ComboBoxConcept::get,comboBoxConcept.data(),mo),
                 boost::optional<StringSetter>(boost::bind(&ComboBoxConcept::set,comboBoxConcept.data(),mo,_1)),
                 boost::none,
                 boost::none);
 
-      result = cb2;
+      result = comboBox;
+
+
+      QSharedPointer<DoubleEditConcept> doubleEdiConcept = m_doubleEditConcepts[j];
+      OSDoubleEdit2 * doubleEdit = new OSDoubleEdit2();
+
+      doubleEdit->bindRequired(mo,
+                boost::bind(&DoubleEditConcept::get,doubleEdiConcept.data(),mo),
+                boost::optional<DoubleSetter>(boost::bind(&DoubleEditConcept::set,doubleEdiConcept.data(),mo,_1)),
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none);
+
+      result = doubleEdit;
+
+
+      QSharedPointer<IntegerEditConcept> integerEditConcept = m_integerEditConcepts[j];
+      OSIntegerEdit2 * integerEdit = new OSIntegerEdit2();
+
+      integerEdit->bindRequired(mo,
+                boost::bind(&IntegerEditConcept::get,integerEditConcept.data(),mo),
+                boost::optional<IntSetter>(boost::bind(&IntegerEditConcept::set,integerEditConcept.data(),mo,_1)),
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none);
+
+      result = integerEdit;
+
+S
+      QSharedPointer<LineEditConcept> lineEditConcept = m_lineEditConcepts[j];
+      OSLineEdit2 * lineEdit = new OSLineEdit2();
+
+      lineEdit->bindRequired(mo,
+                boost::bind(&LineEditConcept::get,lineEditConcept.data(),mo),
+                boost::optional<StringSetter>(boost::bind(&LineEditConcept::set,lineEditConcept.data(),mo,_1)),
+                boost::none,
+                boost::none);
+
+      result = lineEdit;
+
+
+      QSharedPointer<QuantityEditConcept> quantityEditConcept = m_quantityEditConcepts[j];
+      OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", true);
+
+      quantityEdit->bindRequired(true,
+                mo,
+                boost::bind(&QuantityEditConcept::get,quantityEditConcept.data(),mo),
+                boost::optional<DoubleSetter>(boost::bind(&QuantityEditConcept::set,quantityEditConcept.data(),mo,_1)),
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none);
+
+      result = quantityEdit;
+
+
+      QSharedPointer<UnsignedEditConcept> unsignedEdiConcept = m_unsignedEditConcepts[j];
+      OSUnsignedEdit2 * unsignedEdit = new OSUnsignedEdit2();
+
+      unsignedEdit->bind(mo,
+                boost::bind(&UnsignedEditConcept::get,unsignedEdiConcept.data(),mo),
+                boost::optional<UnsignedSetter>(boost::bind(&UnsignedEditConcept::set,unsignedEdiConcept.data(),mo,_1)),
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none,
+                boost::none);
+
+      result = unsignedEdit;
+
     }
   }
   else
@@ -97,12 +211,6 @@ QWidget * OSGridController::widgetAt(int i, int j)
     result = new QLabel(string);
   }
   
-  
-  //std::vector<model::ModelObject> modelObjects = m_model.getModelObjectsByType(m_iddObjectType).sortSomewayortheother(); TODO
-  //std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<m_iddObjectType>();
-
-  //model::ModelObject mo = modelObjects[i];
-
   //if( m_columnTypes.size() > j && m_columnTypes.at(j) == OSGridController::COMBOBOX )
   //{
   //}

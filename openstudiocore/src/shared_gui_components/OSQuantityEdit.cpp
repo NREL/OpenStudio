@@ -70,7 +70,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
 }
 
-void OSQuantityEdit2::bind(bool isIP,
+void OSQuantityEdit2::bindRequired(bool isIP,
                            model::ModelObject& modelObject,
                            DoubleGetter get,
                            boost::optional<DoubleSetter> set,

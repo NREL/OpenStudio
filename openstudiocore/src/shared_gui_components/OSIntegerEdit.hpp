@@ -40,7 +40,7 @@ class OSIntegerEdit2: public QLineEdit {
 
   virtual ~OSIntegerEdit2() {}
 
-  void bind(model::ModelObject& modelObject,
+  void bindRequired(model::ModelObject& modelObject,
             IntGetter get,
             boost::optional<IntSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
@@ -60,7 +60,7 @@ class OSIntegerEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
-  void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+  void bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
             IntGetter get,
             boost::optional<IntSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,

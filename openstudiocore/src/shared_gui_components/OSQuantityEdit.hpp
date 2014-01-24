@@ -43,7 +43,7 @@ class OSQuantityEdit2: public QWidget {
 
   virtual ~OSQuantityEdit2() {}
 
-  void bind(bool isIP,
+  void bindRequired(bool isIP,
             model::ModelObject& modelObject,
             DoubleGetter get,
             boost::optional<DoubleSetter> set=boost::none,

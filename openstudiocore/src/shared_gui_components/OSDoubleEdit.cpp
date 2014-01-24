@@ -38,7 +38,7 @@ OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   setEnabled(false);
 }
 
-void OSDoubleEdit2::bind(model::ModelObject& modelObject,
+void OSDoubleEdit2::bindRequired(model::ModelObject& modelObject,
                          DoubleGetter get,
                          boost::optional<DoubleSetter> set,
                          boost::optional<NoFailAction> reset,
@@ -84,7 +84,7 @@ void OSDoubleEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSDoubleEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+void OSDoubleEdit2::bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
                          DoubleGetter get,
                          boost::optional<DoubleSetter> set,
                          boost::optional<NoFailAction> reset,

@@ -38,7 +38,7 @@ OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   setEnabled(false);
 }
 
-void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
+void OSUnsignedEdit2::bindRequired(model::ModelObject& modelObject,
                           UnsignedGetter get,
                           boost::optional<UnsignedSetter> set,
                           boost::optional<NoFailAction> reset,
@@ -84,7 +84,7 @@ void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+void OSUnsignedEdit2::bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
                          UnsignedGetter get,
                          boost::optional<UnsignedSetter> set,
                          boost::optional<NoFailAction> reset,
