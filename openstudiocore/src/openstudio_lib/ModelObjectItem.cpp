@@ -55,11 +55,10 @@ ModelObjectItem::ModelObjectItem(const openstudio::model::ModelObject& modelObje
 {
   this->setText(QString::fromStdString(m_modelObject.name().get()));
 
-  bool isConnected = false;
-  isConnected = connect( m_modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
-                         SIGNAL(onChange()),
-                         this,
-                         SLOT(onObjectChanged()) );
+  bool isConnected = connect( m_modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
+                              SIGNAL(onChange()),
+                              this,
+                              SLOT(onObjectChanged()) );
   OS_ASSERT(isConnected);
 
   if (!modelObject.getModelObjectSources<model::ComponentData>().empty()){

@@ -1213,7 +1213,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
               std::vector<IdfObject> connections = idf_0_9_1.getObjectsByType(idf_0_9_1.iddFile().getObject("OS:Connection").get());
               for( std::vector<IdfObject>::iterator connection = connections.begin();
                    connection != connections.end();
-                   connection++ )
+                   ++connection )
               {
                 if( connection->getString(0).get() == s.get() )
                 {
@@ -1227,7 +1227,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
                     std::vector<IdfObject> nodes = idf_0_9_1.getObjectsByType(idf_0_9_1.iddFile().getObject("OS:Node").get());
                     for( std::vector<IdfObject>::iterator node = nodes.begin();
                          node != nodes.end();
-                         node++ )
+                         ++node )
                     {
                       if( sourceObject1Handle.get() == node->getString(0).get() )
                       {
@@ -1236,7 +1236,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
                         {
                           for( std::vector<IdfObject>::iterator connection2 = connections.begin();
                                connection2 != connections.end();
-                               connection2++ )
+                               ++connection2 )
                           {
                             if( nodeInletConnectionHandle.get() == connection2->getString(0).get() )
                             {
@@ -1246,7 +1246,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
                                 std::vector<IdfObject> objects = idf_0_9_1.objects();
                                 for( std::vector<IdfObject>::iterator object2 = objects.begin();
                                     object2 != objects.end();
-                                    object2++ )
+                                    ++object2 )
                                 {
                                   if( object2->getString(0).get() == sourceObject2Handle.get() )
                                   {
@@ -1289,7 +1289,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
               std::vector<IdfObject> connections = idf_0_9_1.getObjectsByType(idf_0_9_1.iddFile().getObject("OS:Connection").get());
               for( std::vector<IdfObject>::iterator connection = connections.begin();
                    connection != connections.end();
-                   connection++ )
+                   ++connection )
               {
                 if( connection->getString(0).get() == s.get() )
                 {
@@ -1299,7 +1299,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
                     std::vector<IdfObject> nodes = idf_0_9_1.getObjectsByType(idf_0_9_1.iddFile().getObject("OS:Node").get());
                     for( std::vector<IdfObject>::iterator node = nodes.begin();
                          node != nodes.end();
-                         node++ )
+                         ++node )
                     {
                       if( target1Handle.get() == node->getString(0).get() )
                       {

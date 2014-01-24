@@ -246,9 +246,8 @@ void OSItem::createLayout()
     this->setRemoveable(false);
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_removeButton,SIGNAL(clicked()),
-                        this,SLOT(onRemoveClicked()));
+  bool isConnected = connect(m_removeButton,SIGNAL(clicked()),
+                             this,SLOT(onRemoveClicked()));
   OS_ASSERT(isConnected);
 }
 

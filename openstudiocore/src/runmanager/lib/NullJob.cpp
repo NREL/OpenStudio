@@ -50,12 +50,11 @@ namespace detail {
 
 
   NullJob::NullJob(const UUID &t_uuid,
-          const Tools &tools,
-          const JobParams &params,
-          const Files &files,
-      const JobState &t_restoreData)
-    : Job_Impl(t_uuid, JobType::Null, tools, params, files, t_restoreData),
-      m_errors()
+                   const Tools &tools,
+                   const JobParams &params,
+                   const Files &files,
+                   const JobState &t_restoreData)
+    : Job_Impl(t_uuid, JobType::Null, tools, params, files, t_restoreData)
   {
   }
 
@@ -111,17 +110,6 @@ namespace detail {
       setErrors(JobErrors(ruleset::OSResultValue::Fail, err));
     }
 
-  }
-
-  void NullJob::timerEvent(QTimerEvent *e)
-  {
-    QMutexLocker l(&m_mutex);
-    if (e->timerId() == m_timerId)
-    {
-      killTimer(m_timerId);
-      setErrors(m_errors);
-      quit();
-    }
   }
 
   std::string NullJob::getOutput() const

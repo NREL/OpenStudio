@@ -526,9 +526,6 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
   }else if (modelObject.optionalCast<HVACComponent>()){
     test = setString(OS_LifeCycleCostFields::ItemType, "HVACComponent");
     OS_ASSERT(test);
-  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "ZoneHVACComponent");
-    OS_ASSERT(test);
   }else{
     this->remove();
     throw openstudio::Exception("Cannot add cost to unknown model object type '" + modelObject.iddObject().name() + "'");

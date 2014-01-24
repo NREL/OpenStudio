@@ -470,7 +470,7 @@ namespace detail {
 
     for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
          it != groups.end();
-         it++ )
+         ++it )
     {
       boost::optional<double> gFunctionLN = it->cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value);
       boost::optional<double> gFunctionGValue = it->cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue);

@@ -55,7 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWaterToAirHeat
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit,modelObject);
   
   // Object Name
-  std::string baseName = idfObject.name().get();
+  //std::string baseName = idfObject.name().get();
 
   //  A3 ,Field Water Inlet Node Name
   

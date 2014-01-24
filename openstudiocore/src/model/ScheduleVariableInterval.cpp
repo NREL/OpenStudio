@@ -125,20 +125,17 @@ namespace detail {
   }
 
   bool ScheduleVariableInterval_Impl::setStartMonth(int startMonth, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_VariableIntervalFields::StartMonth, startMonth, driverMethod);
+    bool result = setInt(OS_Schedule_VariableIntervalFields::StartMonth, startMonth, driverMethod);
     return result;
   }
 
   bool ScheduleVariableInterval_Impl::setStartDay(int startDay, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_VariableIntervalFields::StartDay, startDay, driverMethod);
+    bool result = setInt(OS_Schedule_VariableIntervalFields::StartDay, startDay, driverMethod);
     return result;
   }
 
   void ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
+    bool result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
     OS_ASSERT(result);
   }
 

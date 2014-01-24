@@ -135,13 +135,10 @@ std::vector<OSItem *> OSItemList::items()
 {
   std::vector<OSItem *> result;
 
-  QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
-  OSItem * item = NULL;
   for (int i = 0; i < m_vLayout->count(); ++i){
-    layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
-    item = qobject_cast<OSItem*>(widget);
+    QLayoutItem * layoutItem = m_vLayout->itemAt(i);
+    QWidget * widget = layoutItem->widget();
+    OSItem * item = qobject_cast<OSItem*>(widget);
 
     if (item){
       result.push_back(item);
@@ -277,14 +274,10 @@ void OSItemList::selectItem(OSItem* selectItem)
     return;
   }
 
-  QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
-  OSItem * item = NULL;
-
   for (int i = 0; i < m_vLayout->count(); ++i){
-    layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
-    item = qobject_cast<OSItem*>(widget);
+    QLayoutItem * layoutItem = m_vLayout->itemAt(i);
+    QWidget * widget = layoutItem->widget();
+    OSItem * item = qobject_cast<OSItem*>(widget);
 
     if (item){
       if (selectItem->equal(item)){
@@ -336,13 +329,10 @@ void OSItemList::clearSelection()
 {
   m_selectedItem = NULL;
 
-  QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
-  OSItem * item = NULL;
   for (int i = 0; i < m_vLayout->count(); ++i){
-    layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
-    item = qobject_cast<OSItem*>(widget);
+    QLayoutItem * layoutItem = m_vLayout->itemAt(i);
+    QWidget * widget = layoutItem->widget();
+    OSItem * item = qobject_cast<OSItem*>(widget);
     if (item){
       item->setSelected(false);
     }

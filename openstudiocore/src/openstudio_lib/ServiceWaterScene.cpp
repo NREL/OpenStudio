@@ -57,7 +57,7 @@ void ServiceWaterScene::layout()
   QList<QGraphicsItem *> itemList = items();
   for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
        it < itemList.end(); 
-       it++ )
+       ++it )
   {
     removeItem(*it);
     delete *it;
@@ -125,7 +125,7 @@ void WaterUseConnectionsDetailScene::layout()
   QList<QGraphicsItem *> itemList = items();
   for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
        it < itemList.end(); 
-       it++ )
+       ++it )
   {
     removeItem(*it);
     delete *it;

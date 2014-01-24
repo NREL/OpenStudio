@@ -64,7 +64,7 @@ namespace resultsviewer{
     if (isFileOpen(filename))
     {
       std::map<openstudio::SqlFile, QString>::iterator iter;
-      for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); iter++) 
+      for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); ++iter) 
       {
         if ( filename.toUpper() == toQString((*iter).first.energyPlusSqliteFile()).toUpper() ) 
         {
@@ -81,7 +81,7 @@ namespace resultsviewer{
 
     bool isOpen = false;
     std::map<openstudio::SqlFile, QString>::iterator iter;
-    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); iter++) 
+    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); ++iter) 
     {
       if ( filename.toUpper() == toQString((*iter).first.energyPlusSqliteFile()).toUpper() ) 
       {
@@ -99,7 +99,7 @@ namespace resultsviewer{
 
     bool isOpen = false;
     std::map<openstudio::SqlFile, QString>::iterator iter;
-    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); iter++) {
+    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); ++iter) {
       if (sqlFile.energyPlusSqliteFile() == (*iter).first.energyPlusSqliteFile()) {
         isOpen = true;
         break;
@@ -113,7 +113,7 @@ namespace resultsviewer{
   {
     openstudio::SqlFile sqlFP;
     std::map<openstudio::SqlFile, QString>::iterator iter;
-    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); iter++) {
+    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); ++iter) {
       if (filename == toQString((*iter).first.energyPlusSqliteFile()) ) {
         sqlFP = (*iter).first;
         break;
@@ -126,7 +126,7 @@ namespace resultsviewer{
   {
     QString aliasValue = "";
     std::map<openstudio::SqlFile, QString>::iterator iter;
-    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); iter++) {
+    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); ++iter) {
       if (filename == toQString((*iter).first.energyPlusSqliteFile()) ) {
         aliasValue = (*iter).second;
         break;
@@ -159,7 +159,7 @@ namespace resultsviewer{
   {
     bool exists = false;
     std::map<openstudio::SqlFile, QString>::iterator iter;
-    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); iter++) 
+    for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); ++iter) 
     {
       if (alias.toUpper() == ((*iter).second.toUpper()) ) 
       {
@@ -176,7 +176,7 @@ namespace resultsviewer{
     if (m_sqlFileMap.size() > 0)
     {
       std::map<openstudio::SqlFile, QString>::iterator iter;
-      for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); iter++) 
+      for(iter=m_sqlFileMap.begin(); iter!=m_sqlFileMap.end(); ++iter) 
       {
         if ( filename.toUpper() == toQString((*iter).first.energyPlusSqliteFile()).toUpper() ) 
         {

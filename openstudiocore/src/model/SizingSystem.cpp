@@ -235,8 +235,7 @@ bool SizingSystem_Impl::isSystemOutdoorAirMethodDefaulted() const {
 }
 
 bool SizingSystem_Impl::setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn) {
-  bool result = false;
-  result = setString(OS_Sizing_SystemFields::TypeofLoadtoSizeOn, typeofLoadtoSizeOn);
+  bool result = setString(OS_Sizing_SystemFields::TypeofLoadtoSizeOn, typeofLoadtoSizeOn);
   return result;
 }
 
@@ -266,50 +265,42 @@ void SizingSystem_Impl::autosizeDesignOutdoorAirFlowRate() {
 }
 
 bool SizingSystem_Impl::setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::MinimumSystemAirFlowRatio, minimumSystemAirFlowRatio);
+  bool result = setDouble(OS_Sizing_SystemFields::MinimumSystemAirFlowRatio, minimumSystemAirFlowRatio);
   return result;
 }
 
 void SizingSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::PreheatDesignTemperature, preheatDesignTemperature);
+  bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignTemperature, preheatDesignTemperature);
   OS_ASSERT(result);
 }
 
 void SizingSystem_Impl::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::PreheatDesignHumidityRatio, preheatDesignHumidityRatio);
+  bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignHumidityRatio, preheatDesignHumidityRatio);
   OS_ASSERT(result);
 }
 
 void SizingSystem_Impl::setPrecoolDesignTemperature(double precoolDesignTemperature) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::PrecoolDesignTemperature, precoolDesignTemperature);
+  bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignTemperature, precoolDesignTemperature);
   OS_ASSERT(result);
 }
 
 void SizingSystem_Impl::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::PrecoolDesignHumidityRatio, precoolDesignHumidityRatio);
+  bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignHumidityRatio, precoolDesignHumidityRatio);
   OS_ASSERT(result);
 }
 
 void SizingSystem_Impl::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, centralCoolingDesignSupplyAirTemperature);
+  bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, centralCoolingDesignSupplyAirTemperature);
   OS_ASSERT(result);
 }
 
 void SizingSystem_Impl::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, centralHeatingDesignSupplyAirTemperature);
+  bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, centralHeatingDesignSupplyAirTemperature);
   OS_ASSERT(result);
 }
 
 bool SizingSystem_Impl::setSizingOption(std::string sizingOption) {
-  bool result = false;
-  result = setString(OS_Sizing_SystemFields::SizingOption, sizingOption);
+  bool result = setString(OS_Sizing_SystemFields::SizingOption, sizingOption);
   return result;
 }
 
@@ -349,8 +340,7 @@ void SizingSystem_Impl::resetAllOutdoorAirinHeating() {
 }
 
 void SizingSystem_Impl::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, centralCoolingDesignSupplyAirHumidityRatio);
+  bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, centralCoolingDesignSupplyAirHumidityRatio);
   OS_ASSERT(result);
 }
 
@@ -360,8 +350,7 @@ void SizingSystem_Impl::resetCentralCoolingDesignSupplyAirHumidityRatio() {
 }
 
 void SizingSystem_Impl::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, centralHeatingDesignSupplyAirHumidityRatio);
+  bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, centralHeatingDesignSupplyAirHumidityRatio);
   OS_ASSERT(result);
 }
 
@@ -371,8 +360,7 @@ void SizingSystem_Impl::resetCentralHeatingDesignSupplyAirHumidityRatio() {
 }
 
 bool SizingSystem_Impl::setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod) {
-  bool result = false;
-  result = setString(OS_Sizing_SystemFields::CoolingDesignAirFlowMethod, coolingDesignAirFlowMethod);
+  bool result = setString(OS_Sizing_SystemFields::CoolingDesignAirFlowMethod, coolingDesignAirFlowMethod);
   return result;
 }
 
@@ -382,8 +370,7 @@ void SizingSystem_Impl::resetCoolingDesignAirFlowMethod() {
 }
 
 bool SizingSystem_Impl::setCoolingDesignAirFlowRate(double coolingDesignAirFlowRate) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::CoolingDesignAirFlowRate, coolingDesignAirFlowRate);
+  bool result = setDouble(OS_Sizing_SystemFields::CoolingDesignAirFlowRate, coolingDesignAirFlowRate);
   return result;
 }
 
@@ -393,8 +380,7 @@ void SizingSystem_Impl::resetCoolingDesignAirFlowRate() {
 }
 
 bool SizingSystem_Impl::setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod) {
-  bool result = false;
-  result = setString(OS_Sizing_SystemFields::HeatingDesignAirFlowMethod, heatingDesignAirFlowMethod);
+  bool result = setString(OS_Sizing_SystemFields::HeatingDesignAirFlowMethod, heatingDesignAirFlowMethod);
   return result;
 }
 
@@ -404,8 +390,7 @@ void SizingSystem_Impl::resetHeatingDesignAirFlowMethod() {
 }
 
 bool SizingSystem_Impl::setHeatingDesignAirFlowRate(double heatingDesignAirFlowRate) {
-  bool result = false;
-  result = setDouble(OS_Sizing_SystemFields::HeatingDesignAirFlowRate, heatingDesignAirFlowRate);
+  bool result = setDouble(OS_Sizing_SystemFields::HeatingDesignAirFlowRate, heatingDesignAirFlowRate);
   return result;
 }
 
@@ -415,8 +400,7 @@ void SizingSystem_Impl::resetHeatingDesignAirFlowRate() {
 }
 
 bool SizingSystem_Impl::setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod) {
-  bool result = false;
-  result = setString(OS_Sizing_SystemFields::SystemOutdoorAirMethod, systemOutdoorAirMethod);
+  bool result = setString(OS_Sizing_SystemFields::SystemOutdoorAirMethod, systemOutdoorAirMethod);
   return result;
 }
 

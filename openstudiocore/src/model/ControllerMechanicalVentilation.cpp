@@ -175,7 +175,7 @@ namespace detail {
 
     for( std::vector<ControllerOutdoorAir>::const_iterator it = controllers.begin();
          it != controllers.end();
-         it++
+         ++it
        )
     {
       if( it->controllerMechanicalVentilation().handle() == handle() )
