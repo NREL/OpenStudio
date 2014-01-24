@@ -118,7 +118,7 @@ namespace openstudio {
 
     if (srcDir.canonicalPath() == dstDir.canonicalPath()){
       LOG_FREE(Warn, "synchDirStructures", "Cannot synch destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "' because they resolve to the same location");
-      return false;
+      return true; // already synched
     }
 
     LOG_FREE(Info, "synchDirStructures", "Synching destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "'");
