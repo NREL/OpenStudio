@@ -418,8 +418,7 @@ namespace detail {
   }
 
   void Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    bool result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -429,8 +428,7 @@ namespace detail {
   }
 
   void Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -440,8 +438,7 @@ namespace detail {
   }
 
   void Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -451,8 +448,7 @@ namespace detail {
   }
 
   void Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
   }
 

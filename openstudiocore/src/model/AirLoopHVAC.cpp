@@ -210,7 +210,7 @@ namespace detail {
 
     for(it = modelObjects.begin();
         it != modelObjects.end();
-        it++)
+        ++it)
     {
       if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
       {
@@ -233,7 +233,7 @@ namespace detail {
 
     for(it = modelObjects.begin();
         it != modelObjects.end();
-        it++)
+        ++it)
     {
       if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
       {
@@ -408,7 +408,7 @@ namespace detail {
 
     for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
          it < comps.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
       {
@@ -435,7 +435,7 @@ namespace detail {
 
     for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
          it < comps.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
       {
@@ -536,7 +536,7 @@ namespace detail {
         _zoneMixer.removePortForBranch(i);
         for( std::vector<ModelObject>::iterator it = allModelObjects.begin();
              it < allModelObjects.end();
-             it++ )
+             ++it )
         {
           it->cast<HVACComponent>().disconnect();
         }
@@ -550,11 +550,11 @@ namespace detail {
           _model.connect(newNode,newNode.outletPort(),_zoneMixer,_zoneMixer.nextInletPort());
         }
 
-        std::vector<ModelObject> zoneEquipment = thermalZone.equipment();
+        //std::vector<ModelObject> zoneEquipment = thermalZone.equipment();
 
         for( std::vector<ModelObject>::iterator it = allModelObjects.begin();
              it < allModelObjects.end();
-             it++ )
+             ++it )
         {
           if( ! it->optionalCast<ThermalZone>() )
           {
@@ -791,7 +791,7 @@ namespace detail {
 
     for( std::vector<SizingSystem>::iterator it = sizingObjects.begin();
          it < sizingObjects.end();
-         it++ )
+         ++it )
     {
       try {
         if( it->airLoopHVAC().handle() == this->handle() )
@@ -823,7 +823,7 @@ namespace detail {
 
     for( std::vector<ModelObject>::iterator it = objects.begin();
          it != objects.end();
-         it++ )
+         ++it )
     {
       result.push_back(it->cast<ThermalZone>());
     }

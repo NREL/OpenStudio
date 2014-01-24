@@ -518,7 +518,7 @@ std::vector<OSItemId> ZoneEquipmentVectorController::makeVector()
 
     for( std::vector<model::ModelObject>::iterator it = zoneEquipment.begin();
          it != zoneEquipment.end();
-         it++ )
+         ++it )
     {
       result.push_back(modelObjectToItemId(*it, false));
     }
@@ -877,7 +877,7 @@ void ModelObjectPropertyView::bind(model::ModelObject& modelObject)
 
   for( std::vector<QWidget *>::iterator it = m_views.begin();
        it != m_views.end();
-       it++ )
+       ++it )
   {
     const char* propertyName = m_propertyNames[i];
 
@@ -898,7 +898,7 @@ void ModelObjectPropertyView::unbind()
 {
   for( std::vector<QWidget *>::iterator it = m_views.begin();
        it != m_views.end();
-       it++ )
+       ++it )
   {
     if( OSQuantityEdit * qe = qobject_cast<OSQuantityEdit *>(*it) )
     {

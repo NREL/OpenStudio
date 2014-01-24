@@ -54,8 +54,7 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
-  bool isConnected = false;
-  isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
+  bool isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
     m_resultsView, SLOT(treeChanged(const openstudio::UUID &)));
   OS_ASSERT(isConnected);
 
@@ -91,15 +90,11 @@ ResultsView::ResultsView(QWidget *t_parent)
   QVBoxLayout * mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
-  QHBoxLayout * hLayout = 0;
-
-  QWidget * widget = 0;
-
   isConnected = connect(m_openResultsViewerBtn, SIGNAL(clicked()),
       this, SLOT(openResultsViewerClicked()));
   OS_ASSERT(isConnected);
   
-  hLayout = new QHBoxLayout(this);
+  QHBoxLayout * hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
 
   m_reportLabel = new QLabel("Reports: ",this);

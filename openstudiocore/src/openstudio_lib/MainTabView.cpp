@@ -158,7 +158,7 @@ void MainTabView::select()
 
   for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
        it < m_tabButtons.end();
-       it++ ){
+       ++it ){
     if( *it == button ){
       break;
     }

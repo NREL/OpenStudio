@@ -65,11 +65,10 @@ void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelO
 
   m_modelObject = modelObject;
 
-  bool isConnected = false;
-  isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onChange()),
-                        this,
-                        SLOT(update()));
+  bool isConnected = connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
+                             SIGNAL(onChange()),
+                             this,
+                             SLOT(update()));
   OS_ASSERT(isConnected);
 
   onSelectModelObject(*m_modelObject);

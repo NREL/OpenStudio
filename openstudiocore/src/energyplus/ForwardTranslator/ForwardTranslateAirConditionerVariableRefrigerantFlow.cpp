@@ -750,7 +750,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
 
   for( std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow>::iterator it = terminals.begin();
        it != terminals.end();
-       it++ )
+       ++it )
   {
     boost::optional<IdfObject> _terminal = translateAndMapModelObject(*it);
 

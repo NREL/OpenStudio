@@ -190,7 +190,7 @@ namespace detail {
 
     for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
          it != groups.end();
-         it++ )
+         ++it )
     {
       WorkspaceExtensibleGroup group = it->cast<WorkspaceExtensibleGroup>();
 
@@ -231,7 +231,7 @@ namespace detail {
 
     for( std::vector<WaterUseEquipment>::iterator it = equipment.begin();
          it != equipment.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == _waterUseEquipment.handle() )
       {

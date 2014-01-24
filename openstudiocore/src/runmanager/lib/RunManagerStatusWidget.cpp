@@ -241,7 +241,7 @@ namespace runmanager {
   void RunManagerStatusWidget::updateActions(const QModelIndexList &selection)
   {
     bool multipleselection = selection.size() > 1;
-    std::vector<Job> jobs = m_runmanager->getJobs(selection);
+    //std::vector<Job> jobs = m_runmanager->getJobs(selection);
 
     ui.actionRaisePriority->setEnabled(true);
     ui.actionLowerPriority->setEnabled(true);
