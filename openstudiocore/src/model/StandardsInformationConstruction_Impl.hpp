@@ -74,6 +74,9 @@ namespace detail {
     // return the parent object in the hierarchy
     virtual boost::optional<ParentObject> parent() const;
 
+    /// set the parent, child may have to call non-const methods on the parent
+    virtual bool setParent(ParentObject& newParent);
+
     /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary
      *  to see if the variable is available. Each concrete class should override this method.*/

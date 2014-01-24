@@ -170,6 +170,17 @@ namespace detail {
     return boost::none;
   }
 
+  bool StandardsInformationConstruction_Impl::setParent(ParentObject& newParent) {
+    OptionalConstructionBase candidate = newParent.optionalCast<ConstructionBase>();
+    if (candidate){
+      if (candidate->getModelObjectSources<StandardsInformationConstruction>().empty()){
+        bool test = this->setPointer(OS_StandardsInformation_ConstructionFields::ConstructionName, candidate->handle());
+        return test;
+      }
+    }
+    return false;
+  }
+
   const std::vector<std::string>& StandardsInformationConstruction_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
