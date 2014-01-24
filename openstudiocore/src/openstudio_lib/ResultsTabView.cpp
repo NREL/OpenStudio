@@ -196,6 +196,11 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
     }
   }
 
+  // sort paths as directory iterator order is undefined
+  std::sort(eplusout.begin(), eplusout.end());
+  std::sort(radout.begin(), radout.end());
+  std::sort(reports.begin(), reports.end());
+
   openstudio::path eplus = eplusout.empty()?openstudio::path():eplusout.back();
   openstudio::path rad = radout.empty()?openstudio::path():radout.back();
 
@@ -263,7 +268,7 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
 
 void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 {
-  QString num;
+  unsigned num = 0;
   QString fullPathString;
   openstudio::path path;
 
@@ -275,8 +280,13 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
     fullPathString.prepend("file:///");
 
     if (openstudio::toString(report.filename()) == "eplustbl.htm"){
+      
       m_comboBox->addItem("EnergyPlus Results",fullPathString);
+
     }else{
+      
+      ++num;
+
       if (file.open(QFile::ReadOnly)){
         QDomDocument doc;
         doc.setContent(&file);
@@ -285,7 +295,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
         int startingIndex = string.indexOf("<title>");
         int endingIndex = string.indexOf("</title>");
         if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
-          m_comboBox->addItem(num.setNum(m_comboBox->count() + 1),fullPathString);
+          m_comboBox->addItem(QString("Custom Report ") + QString::number(num), fullPathString);
         } else {
           // length of "<title>" = 7
           QString title = string.mid(startingIndex+7, endingIndex-startingIndex-7);

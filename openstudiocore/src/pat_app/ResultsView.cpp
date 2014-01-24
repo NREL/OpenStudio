@@ -496,6 +496,9 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
     }
   }
 
+  // sort paths as directory iterator order is undefined
+  std::sort(reports.begin(), reports.end());
+  
   // mirrors ResultsView::populateComboBox
   if (!reports.empty()){
     unsigned num = 0;
@@ -510,7 +513,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
 
       }else{
 
-        num += 1;
+        ++num;
         
         QFile file(fullPathString);
         fullPathString.prepend("file:///");
