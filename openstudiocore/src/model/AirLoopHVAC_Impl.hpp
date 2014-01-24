@@ -120,10 +120,6 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const;
 
-  boost::optional<ThermalZone> zoneForLastBranch();
-
-  boost::optional<HVACComponent> terminalForLastBranch();
-
   Splitter demandSplitter();
 
   Mixer demandMixer();
@@ -150,11 +146,19 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum);
 
+  static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
+
+  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
+
+  static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
+
+  static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
+
+  static bool addBranchForZone(ThermalZone & thermalZone, 
+                               boost::optional<StraightComponent> & optAirTerminal,
+                               Splitter & splitter,
+                               Mixer & mixer);
   private:
-
-  boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
-
-  void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
 
   AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
 

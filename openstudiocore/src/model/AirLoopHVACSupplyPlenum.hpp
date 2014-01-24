@@ -56,7 +56,13 @@ class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
 
   unsigned nextOutletPort();
 
+  /** Insert this AirLoopHVACSupplyPlenum into HVAC system at node.
+   *  Node must be immediatly after AirLoopHVACZoneSplitter and there
+   *  cannot be an existing AirLoopHVACSupplyPlenum on the node's branch
+   */
   bool addToNode(Node & node);
+
+  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
  protected:
   /// @cond

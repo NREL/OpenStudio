@@ -17,8 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 #include <model/AirLoopHVACSupplyPlenum.hpp>
 #include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
+#include <model/AirLoopHVACZoneMixer.hpp>
+#include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Model.hpp>
@@ -206,6 +212,38 @@ namespace detail {
     return result;
   }
 
+  bool AirLoopHVACSupplyPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone)
+  {
+    boost::optional<Splitter> splitter = getObject<AirLoopHVACSupplyPlenum>();
+    boost::optional<Mixer> mixer;
+
+    boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
+
+    if( ! t_airLoopHVAC )
+    {
+      return false;
+    }
+
+    std::vector<ModelObject> returnPlenums;
+    returnPlenums = t_airLoopHVAC->demandComponents(splitter.get(),
+                                                    t_airLoopHVAC->demandOutletNode(),
+                                                    AirLoopHVACReturnPlenum::iddObjectType());
+
+    if( returnPlenums.size() == 1u )
+    {
+      mixer = returnPlenums.front().cast<Mixer>();
+    }
+    else
+    {
+      mixer = t_airLoopHVAC->zoneMixer();
+    }
+
+    BOOST_ASSERT(splitter);
+    BOOST_ASSERT(mixer);
+
+    boost::optional<StraightComponent> terminal;
+    return AirLoopHVAC_Impl::addBranchForZone(thermalZone,terminal,splitter.get(),mixer.get());
+  }
 
 } // detail
 
@@ -250,6 +288,12 @@ bool AirLoopHVACSupplyPlenum::addToNode(Node & node)
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->addToNode(node);
 }
+
+bool AirLoopHVACSupplyPlenum::addBranchForZone(openstudio::model::ThermalZone & thermalZone)
+{
+  return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->addBranchForZone(thermalZone);
+}
+
 
 /// @cond
 AirLoopHVACSupplyPlenum::AirLoopHVACSupplyPlenum(boost::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl)

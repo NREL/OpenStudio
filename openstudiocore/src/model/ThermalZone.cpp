@@ -1558,15 +1558,12 @@ namespace detail {
         currentAirLoopHVAC->removeBranchForZone(thisObject);
       }
 
-      Splitter splitter = airLoop->demandSplitter();
-      Mixer mixer = airLoop->demandMixer();
-
       boost::optional<ModelObject> inletObj = node.inletModelObject();
       boost::optional<ModelObject> outletObj = node.outletModelObject();
 
       if( inletObj && outletObj )
       {
-        if( (inletObj.get() == splitter) && (outletObj.get() == mixer) )
+        if( inletObj->optionalCast<Splitter>() && outletObj->optionalCast<Mixer>() )
         {
           Node newNode(_model);
           ThermalZone thisobj = getObject<ThermalZone>();
@@ -1582,7 +1579,7 @@ namespace detail {
                           newNode, newNode.inletPort() );
 
           _model.connect( newNode, newNode.outletPort(),
-                          mixer, oldMixerPort );
+                          outletObj.get(), oldMixerPort );
 
           setUseIdealAirLoads(false);
 
