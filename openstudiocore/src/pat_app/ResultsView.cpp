@@ -505,6 +505,8 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
     Q_FOREACH(openstudio::path report, reports){
 
       QString fullPathString = toQString(report.string());
+      QFile file(fullPathString);
+      fullPathString.prepend("file:///");
       QString name;
 
       if (openstudio::toString(report.filename()) == "eplustbl.htm"){
@@ -515,8 +517,6 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
 
         ++num;
         
-        QFile file(fullPathString);
-        fullPathString.prepend("file:///");
         if (file.open(QFile::ReadOnly)){
           QDomDocument doc;
           doc.setContent(&file);
@@ -559,6 +559,7 @@ void ResultsView::openReport()
     QAction* openAct = qobject_cast<QAction*>(sender);
     if (openAct){
       QString fullPathString = openAct->data().toString();
+      // Might need error handling - If this returns false, it failed to open
       QDesktopServices::openUrl(fullPathString);
     }
   }
