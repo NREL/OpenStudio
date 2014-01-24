@@ -113,9 +113,15 @@ namespace openstudio {
     bool result = true;
     bool test = true;
 
-    LOG_FREE(Info, "synchDirStructures", "Synching destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "'");
-
+    QDir srcDir(srcPath);
     QDir dstDir(dstPath);
+
+    if (srcDir.canonicalPath() == dstDir.canonicalPath()){
+      LOG_FREE(Warn, "synchDirStructures", "Cannot synch destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "' because they resolve to the same location");
+      return false;
+    }
+
+    LOG_FREE(Info, "synchDirStructures", "Synching destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "'");
 
     // remove all files in dst as well as any directories in dst that are not in src
     Q_FOREACH(const QFileInfo &dstItemInfo, dstDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
