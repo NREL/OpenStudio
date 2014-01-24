@@ -32,6 +32,7 @@
 #include <QProcess>
 #include <QPushButton>
 #include <QString>
+#include <QRegExp>
 
 #include <runmanager/lib/FileInfo.hpp>
 #include <runmanager/lib/JobStatusWidget.hpp>
@@ -171,6 +172,41 @@ void ResultsView::onUnitSystemChange(bool t_isIP)
   resultsGenerated(m_sqlFilePath, m_radianceResultsPath);
 }
 
+// need to sort paths by number so 8-UserScript-0, shows up before 11-UserScript-0
+struct ResultsPathSorter
+{
+  bool operator()(const openstudio::path& left, const openstudio::path& right){
+    openstudio::path leftParent = left.parent_path().stem();
+    openstudio::path rightParent = right.parent_path().stem();
+
+    QRegExp regexp("^(\\d)+.*");
+
+    boost::optional<int> leftInt;
+    if (regexp.exactMatch(toQString(leftParent))){
+      QStringList leftParts = regexp.capturedTexts();
+      OS_ASSERT(leftParts.size() == 2);
+      leftInt = leftParts[1].toInt();
+    }
+
+    boost::optional<int> rightInt;
+    if (regexp.exactMatch(toQString(rightParent))){
+      QStringList rightParts = regexp.capturedTexts();
+      OS_ASSERT(rightParts.size() == 2);
+      rightInt = rightParts[1].toInt();
+    }
+
+    if (leftInt && rightInt){
+      return leftInt.get() < rightInt.get();
+    }else if (leftInt){
+      return true;
+    }else if (rightInt){
+      return false;
+    }
+
+    return (left < right);
+  }
+};
+
 void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
 {
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_runDir));
@@ -197,9 +233,9 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   }
 
   // sort paths as directory iterator order is undefined
-  std::sort(eplusout.begin(), eplusout.end());
-  std::sort(radout.begin(), radout.end());
-  std::sort(reports.begin(), reports.end());
+  std::sort(eplusout.begin(), eplusout.end(), ResultsPathSorter());
+  std::sort(radout.begin(), radout.end(), ResultsPathSorter());
+  std::sort(reports.begin(), reports.end(), ResultsPathSorter());
 
   openstudio::path eplus = eplusout.empty()?openstudio::path():eplusout.back();
   openstudio::path rad = radout.empty()?openstudio::path():radout.back();
