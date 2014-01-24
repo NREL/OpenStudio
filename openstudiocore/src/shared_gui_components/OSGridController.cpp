@@ -87,6 +87,7 @@ OSGridController::~OSGridController()
 
 QWidget * OSGridController::widgetAt(int i, int j)
 {
+
   QWidget * result = 0;
 
   if( j < static_cast<int>(m_checkBoxConcepts.size()) )
@@ -152,7 +153,7 @@ QWidget * OSGridController::widgetAt(int i, int j)
 
       result = integerEdit;
 
-S
+
       QSharedPointer<LineEditConcept> lineEditConcept = m_lineEditConcepts[j];
       OSLineEdit2 * lineEdit = new OSLineEdit2();
 
@@ -211,9 +212,29 @@ S
     result = new QLabel(string);
   }
   
-  //if( m_columnTypes.size() > j && m_columnTypes.at(j) == OSGridController::COMBOBOX )
-  //{
-  //}
+
+  return result;
+
+    
+  OS_ASSERT(i >= 0);
+  OS_ASSERT(j >= 0);
+  OS_ASSERT(m_columnTypes.size() > static_cast<unsigned>(j));  
+  OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(i));
+
+  if( m_columnTypes.at(j) == OSGridController::CHECKBOX ){
+  } else if( m_columnTypes.at(j) == OSGridController::COMBOBOX ){
+  } else if( m_columnTypes.at(j) == OSGridController::DOUBLE ){
+  } else if( m_columnTypes.at(j) == OSGridController::DROPZONE ){
+  } else if( m_columnTypes.at(j) == OSGridController::INTEGER ){
+  } else if( m_columnTypes.at(j) == OSGridController::LINEEDIT ){
+  } else if( m_columnTypes.at(j) == OSGridController::QUANTITY ){
+  } else if( m_columnTypes.at(j) == OSGridController::UNSIGNED ){
+  } else if( m_columnTypes.at(j) == OSGridController::NOTVALID ){
+    OS_ASSERT(false);
+  } else {
+    OS_ASSERT(false);
+  }
+
 
   return result;
 }

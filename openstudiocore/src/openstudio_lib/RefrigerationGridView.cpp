@@ -21,6 +21,9 @@
 
 #include "shared_gui_components/OSGridView.hpp"
 
+#include <model/RefrigerationCase.hpp>
+#include <model/RefrigerationCase_impl.hpp>
+
 #include <QBoxLayout>
 
 namespace openstudio {
@@ -28,7 +31,7 @@ namespace openstudio {
 RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget * parent)
   : QWidget(parent)
 {
-  OSGridView * gridView = new OSGridView(model,parent);
+  OSGridView * gridView = new OSGridView(model::RefrigerationCase::iddObjectType(),model,parent);
   QHBoxLayout * layout = new QHBoxLayout();
   layout->addWidget(gridView);
   setLayout(layout);

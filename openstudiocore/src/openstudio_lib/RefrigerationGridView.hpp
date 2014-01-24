@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_REFRIGERATIONGRIDVIEW_H
 #define OPENSTUDIO_REFRIGERATIONGRIDVIEW_H
 
-#include "../shared_gui_components/OSGridView.hpp"
+#include "../shared_gui_components/OSGridView.hpp" // TODO remove
 #include "../shared_gui_components/OSGridController.hpp"
 
 #include <model/Model.hpp>

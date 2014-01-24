@@ -42,15 +42,23 @@ class OSGridView : public QWidget
 
   public:
 
-    OSGridView(const model::Model & model, QWidget * parent = 0); 
+    OSGridView(IddObjectType iddObjectType, const model::Model & model, QWidget * parent = 0); 
 
     OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
 
+    virtual ~OSGridView() {}; 
+     
     void setGridController(OSGridController * gridController);
 
-   OSGridController * gridController() const;
+    OSGridController * gridController() const;
 
-    virtual ~OSGridView() {};
+    void setCategories(std::vector<QString> categories);
+
+    std::vector<QString> categories();
+
+    void setCategoryFields(const QString & category, std::vector<QString> fields);
+
+    std::vector<QString> categoryFields(const QString & category);
 
     //void addComboBoxColumn(std::string property, QString label);
 
@@ -70,7 +78,7 @@ class OSGridView : public QWidget
   
     //bool bindUnsigned(int row, int column, model::ModelObject mo, std::string property, QString label = "");
 
-    signals:
+  signals:
 
     void cellClicked(int row, int column);
 
@@ -78,7 +86,7 @@ class OSGridView : public QWidget
 
     void columnClicked(int column);
 
-    private slots:
+  private slots:
 
     void refresh(int row, int column);
 
@@ -87,8 +95,16 @@ class OSGridView : public QWidget
     void addWidget(int row, int column);
 
     void removeWidget(int row, int column);
+    
+    void setVerticalHeader(bool visible, QString title);
 
-    private:
+    void setHorizontalHeader(std::vector<QWidget *> widgets);
+
+    void setHorizontalHeader(std::vector<QString> names);
+
+    void selectCategory(int category);
+
+  private:
 
     void refreshRow(model::ModelObject modelObject);
 
@@ -100,6 +116,8 @@ class OSGridView : public QWidget
 
     void selectColumn(int column);
 
+    OSCollapsibleView * m_CollapsibleView;
+
     QGridLayout * m_gridLayout;
 
     OSGridController * m_gridController;
@@ -107,6 +125,8 @@ class OSGridView : public QWidget
     std::vector<model::ModelObject> m_modelObjects;
 
     model::Model m_model;
+
+    std::map<QString,std::vector<QString>> m_categoriesAndFields;
 
 };
 
