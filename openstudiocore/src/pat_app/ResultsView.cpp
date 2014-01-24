@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include <pat_app/ResultsView.hpp>
+#include <pat_app/ResultsTabController.hpp>
 #include <pat_app/CloudMonitor.hpp>
 #include <pat_app/PatApp.hpp>
 
@@ -48,6 +49,7 @@
 
 #include <utilities/data/Attribute.hpp>
 #include <utilities/data/CalibrationResult.hpp>
+#include <utilities/core/Path.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/Unit.hpp>
@@ -69,6 +71,12 @@
 #include <QButtonGroup>
 #include <QStackedWidget>
 #include <QComboBox>
+#include <QPoint>
+#include <QMenu>
+#include <QFont>
+#include <QDesktopServices>
+
+#include <boost/filesystem.hpp>
 
 #define NAME_LABEL_WIDTH 90
 #define SPACER_WIDTH 3
@@ -464,6 +472,134 @@ void ResultsView::selectCalibrationMethod(const QString& value)
   emit calibrationThresholdsChanged(m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
 }
 
+// need to sort paths by number so 8-UserScript-0, shows up before 11-UserScript-0
+struct ResultsPathSorter
+{
+  bool operator()(const openstudio::path& left, const openstudio::path& right){
+    openstudio::path leftParent = left.parent_path().stem();
+    openstudio::path rightParent = right.parent_path().stem();
+
+    QRegExp regexp("^(\\d)+.*");
+
+    boost::optional<int> leftInt;
+    if (regexp.exactMatch(toQString(leftParent))){
+      QStringList leftParts = regexp.capturedTexts();
+      OS_ASSERT(leftParts.size() == 2);
+      leftInt = leftParts[1].toInt();
+    }
+
+    boost::optional<int> rightInt;
+    if (regexp.exactMatch(toQString(rightParent))){
+      QStringList rightParts = regexp.capturedTexts();
+      OS_ASSERT(rightParts.size() == 2);
+      rightInt = rightParts[1].toInt();
+    }
+
+    if (leftInt && rightInt){
+      return leftInt.get() < rightInt.get();
+    }else if (leftInt){
+      return true;
+    }else if (rightInt){
+      return false;
+    }
+
+    return (left < right);
+  }
+};
+
+void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
+{
+  menu.setTitle("Detailed Reports:");
+
+  QAction* labelAction = new QAction("Detailed Reports:", &menu);
+  labelAction->setCheckable(false);
+  labelAction->setEnabled(false);
+  menu.addAction(labelAction);
+
+  menu.addSeparator();
+
+  // mirroring code in ResultsView::searchForExistingResults
+  std::vector<openstudio::path> reports;
+  if (exists(directory) && !directory.empty()){
+    for ( boost::filesystem::basic_recursive_directory_iterator<openstudio::path> end, dir(directory); dir != end; ++dir ) {
+      openstudio::path p = *dir;
+      if (openstudio::toString(p.filename()) == "report.html") {
+        reports.push_back(p);
+      } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
+        reports.push_back(p);
+      }
+    }
+  }
+
+  // sort paths as directory iterator order is undefined
+  std::sort(reports.begin(), reports.end(), ResultsPathSorter());
+  
+  // mirrors ResultsView::populateComboBox
+  if (!reports.empty()){
+    unsigned num = 0;
+    Q_FOREACH(openstudio::path report, reports){
+
+      QString fullPathString = toQString(report.string());
+      QFile file(fullPathString);
+      fullPathString.prepend("file:///");
+      QString name;
+
+      if (openstudio::toString(report.filename()) == "eplustbl.htm"){
+
+        name = "EnergyPlus Results";
+
+      }else{
+
+        ++num;
+        
+        if (file.open(QFile::ReadOnly)){
+          QDomDocument doc;
+          doc.setContent(&file);
+          file.close();
+          QString string = doc.toString();
+          int startingIndex = string.indexOf("<title>");
+          int endingIndex = string.indexOf("</title>");
+          if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
+            name = toQString("Custom Report ") + QString::number(num);
+          } else {
+            // length of "<title>" = 7
+            name = string.mid(startingIndex+7, endingIndex-startingIndex-7);
+          }
+        }
+      }
+
+      QAction* openAct = new QAction(name, &menu);
+      openAct->setToolTip(fullPathString);
+      openAct->setData(fullPathString);
+      bool test = connect(openAct, SIGNAL(triggered()), this, SLOT(openReport()));
+      OS_ASSERT(test);
+      menu.addAction(openAct);
+    }
+  }else{
+    labelAction = new QAction("None available", &menu);
+    QFont font = labelAction->font();
+    font.setItalic(true);
+    labelAction->setFont(font);
+    labelAction->setCheckable(false);
+    labelAction->setEnabled(false);
+    menu.addAction(labelAction);
+  }
+
+}
+
+void ResultsView::openReport()
+{
+  QObject* sender = this->sender();
+  if (sender){
+    QAction* openAct = qobject_cast<QAction*>(sender);
+    if (openAct){
+      QString fullPathString = openAct->data().toString();
+      // Might need error handling - If this returns false, it failed to open
+      QDesktopServices::openUrl(fullPathString);
+    }
+  }
+}
+
 ResultsHeader::ResultsHeader(bool isBaseline)
   : QWidget()
 {
@@ -612,7 +748,7 @@ ResultsHeader::ResultsHeader(bool isBaseline)
 DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint& dataPoint,
                                            const openstudio::analysis::DataPoint& baselineDataPoint, 
                                            bool alternateRow)
-  : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
+  : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow), m_hasEmphasis(false)
 {
   this->setMinimumHeight(75);
 
@@ -800,6 +936,11 @@ DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint
   OS_ASSERT(test);
 
   test = baselineDataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
+  OS_ASSERT(test);
+
+  this->setContextMenuPolicy(Qt::CustomContextMenu);
+  test = connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+    this, SLOT(showContextMenu(const QPoint&)));
   OS_ASSERT(test);
 
   update();
@@ -1051,6 +1192,8 @@ void DataPointResultsView::setResultPctLabelText(QLabel * label, const boost::op
 
 void DataPointResultsView::setHasEmphasis(bool hasEmphasis)
 {
+  m_hasEmphasis = hasEmphasis;
+
   if( hasEmphasis ){
     setStyleSheet("openstudio--pat--DataPointResultsView { background: #FECD60; border: 2px solid #EE641A; }");
   }else{
@@ -1062,6 +1205,24 @@ void DataPointResultsView::setHasEmphasis(bool hasEmphasis)
       setStyleSheet("openstudio--pat--DataPointResultsView {background: #D0D0D0;}");
     }
   }
+}
+
+void DataPointResultsView::showContextMenu(const QPoint& pos)
+{
+  if (!m_hasEmphasis){
+    return;
+  }
+
+  openstudio::path directory = m_dataPoint.directory();
+
+  ResultsView* resultsView = PatApp::instance()->resultsTabController()->resultsView;
+  OS_ASSERT(resultsView);
+
+  QMenu menu;
+  resultsView->populateMenu(menu, directory);
+
+  QPoint globalPos = this->mapToGlobal(pos);
+  menu.exec(globalPos);
 }
 
 void DataPointResultsView::paintEvent(QPaintEvent * e)
@@ -1274,9 +1435,15 @@ DataPointCalibrationView::DataPointCalibrationView(const openstudio::analysis::D
                                                    const openstudio::analysis::DataPoint& baselineDataPoint,
                                                    bool alternateRow, double maxNMBE, double maxCVRMSE)
   : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), 
-    m_alternateRow(alternateRow), m_calibrationMaxNMBE(maxNMBE), m_calibrationMaxCVRMSE(maxCVRMSE)
+    m_alternateRow(alternateRow), m_hasEmphasis(false), m_calibrationMaxNMBE(maxNMBE), m_calibrationMaxCVRMSE(maxCVRMSE)
 {
   this->setMinimumHeight(75);
+
+  this->setContextMenuPolicy(Qt::CustomContextMenu);
+
+  bool test = connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+    this, SLOT(showContextMenu(const QPoint&)));
+  OS_ASSERT(test);
 
   update();
 }
@@ -1350,6 +1517,8 @@ void DataPointCalibrationView::update()
 
 void DataPointCalibrationView::setHasEmphasis(bool hasEmphasis)
 {
+  m_hasEmphasis = hasEmphasis;
+
   if( hasEmphasis ){
     setStyleSheet("openstudio--pat--DataPointCalibrationView { background: #FECD60; border: 2px solid #EE641A; }");
   }else{
@@ -1361,6 +1530,24 @@ void DataPointCalibrationView::setHasEmphasis(bool hasEmphasis)
       setStyleSheet("openstudio--pat--DataPointCalibrationView {background: #D0D0D0;}");
     }
   }
+}
+
+void DataPointCalibrationView::showContextMenu(const QPoint& pos)
+{
+  if (!m_hasEmphasis){
+    return;
+  }
+
+  openstudio::path directory = m_dataPoint.directory();
+
+  ResultsView* resultsView = PatApp::instance()->resultsTabController()->resultsView;
+  OS_ASSERT(resultsView);
+
+  QMenu menu;
+  resultsView->populateMenu(menu, directory);
+
+  QPoint globalPos = this->mapToGlobal(pos);
+  menu.exec(globalPos);
 }
 
 void DataPointCalibrationView::paintEvent(QPaintEvent * e)
