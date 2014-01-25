@@ -406,6 +406,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVAC(airLoopHVAC);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_SupplyPlenum :
+    {
+      model::AirLoopHVACSupplyPlenum airLoopHVACSupplyPlenum = modelObject.cast<AirLoopHVACSupplyPlenum>();
+      retVal = translateAirLoopHVACSupplyPlenum(airLoopHVACSupplyPlenum);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat :
     {
       model::AirTerminalSingleDuctConstantVolumeReheat airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeReheat>();
