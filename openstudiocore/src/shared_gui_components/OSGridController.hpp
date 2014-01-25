@@ -501,6 +501,20 @@ class OSGridController : public QObject
 
   void setHorizontalHeader(std::vector<QString> names);
 
+
+
+  // Call this function with the fields required,
+  // and it adds the columns and does the binds.
+  // This provides a mechinism to easily manage
+  // a dynamic, user-preference column.
+  // This function will be called from the slot
+  // connected to the QButtonGroup signal
+  //virtual void addColumns(const std::vector<QString> & fields) = 0;
+  void DisplayCaseColumns(const std::vector<QString> & fields); // TODO rename to "addColumns" and move to derived class
+  void WalkInColumns(const std::vector<QString> & fields);      // TODO rename to "addColumns" and move to derived class
+
+
+
   std::vector<QSharedPointer<CheckBoxConcept> > m_checkBoxConcepts;
 
   std::vector<QSharedPointer<ComboBoxConcept> > m_comboBoxConcepts;
