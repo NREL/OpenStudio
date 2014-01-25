@@ -560,7 +560,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
           int startingIndex = string.indexOf("<title>");
           int endingIndex = string.indexOf("</title>");
           if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
-            name = toQString("Custom Report ") + QString::number(num);
+            name = QString("Custom Report ") + QString::number(num);
           } else {
             // length of "<title>" = 7
             name = string.mid(startingIndex+7, endingIndex-startingIndex-7);
