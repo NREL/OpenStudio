@@ -422,53 +422,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   idfObject.setString(openstudio::AirLoopHVACFields::DemandSideOutletNodeName,
                       airLoopHVAC.demandOutletNode().name().get());
 
-  // Convert supply side components
-  supplyComponents = airLoopHVAC.supplyComponents( airLoopHVAC.supplyInletNode(),
-                                                   *airLoopHVAC.supplyOutletNodes().begin() );
-  ModelObjectVector::iterator it;
-
   // Convert demand side components
+  createAirLoopHVACSupplyPath(airLoopHVAC);
+  createAirLoopHVACReturnPath(airLoopHVAC);
 
-  boost::optional<IdfObject> tempIdf = createAirLoopHVACSupplyPath( airLoopHVAC);
-  tempIdf = createAirLoopHVACReturnPath( airLoopHVAC);
-
-  AirLoopHVACZoneSplitter zoneSplitter = airLoopHVAC.zoneSplitter();
-  AirLoopHVACZoneMixer zoneMixer = airLoopHVAC.zoneMixer();
-
-  ModelObjectVector demandComponents;
-
-  demandComponents = airLoopHVAC.demandComponents( airLoopHVAC.demandInletNode(), zoneSplitter );
-  for( it = demandComponents.begin();
-       it < demandComponents.end();
-       it++ )
-  {
-    translateAndMapModelObject(*it);
-  }
-
-  std::vector<model::ModelObject> splitterOutletObjects = zoneSplitter.outletModelObjects();
-  std::vector<model::ModelObject> mixerInletObjects = zoneMixer.inletModelObjects();
-
-  std::vector<model::ModelObject>::iterator it2 = mixerInletObjects.begin();
-  for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin();
-       it1 < splitterOutletObjects.end();
-       it1++ )
-  {
-    model::HVACComponent comp1 = it1->optionalCast<model::HVACComponent>().get();
-    model::HVACComponent comp2 = it2->optionalCast<model::HVACComponent>().get();
-    std::vector<model::ModelObject> branchComponents = airLoopHVAC.demandComponents(comp1,comp2);
-    for( std::vector<model::ModelObject>::iterator it = branchComponents.begin();
-         it < branchComponents.end(); it++ )
-    {
-      if( ! it->optionalCast<ThermalZone>() )
-      {
-        translateAndMapModelObject(*it);
-      }
-    }
-    it2++;
-  }
-
-  demandComponents = airLoopHVAC.demandComponents( zoneMixer, airLoopHVAC.demandOutletNode() );
-  for( it = demandComponents.begin();
+  std::vector<ModelObject> demandComponents = airLoopHVAC.demandComponents();
+  for( std::vector<ModelObject>::iterator it = demandComponents.begin();
        it < demandComponents.end();
        it++ )
   {
