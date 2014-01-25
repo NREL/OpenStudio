@@ -19,6 +19,10 @@
 
 #include <model/AirLoopHVACReturnPlenum.hpp>
 #include <model/AirLoopHVACReturnPlenum_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Model.hpp>
@@ -183,6 +187,50 @@ namespace detail {
     return result;
   }
 
+  bool AirLoopHVACReturnPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone)
+  {
+    boost::optional<StraightComponent> terminal;
+
+    return addBranchForZone(thermalZone,terminal);
+  }
+  
+  bool AirLoopHVACReturnPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal)
+  {
+    return addBranchForZone(thermalZone,terminal);
+  }
+
+  bool AirLoopHVACReturnPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal)
+  {
+    boost::optional<Splitter> splitter;
+    boost::optional<Mixer> mixer = getObject<AirLoopHVACReturnPlenum>();
+
+    boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
+
+    if( ! t_airLoopHVAC )
+    {
+      return false;
+    }
+
+    std::vector<ModelObject> supplyPlenums;
+    supplyPlenums = t_airLoopHVAC->demandComponents(t_airLoopHVAC->demandInletNode(),
+                                                    mixer.get(),
+                                                    AirLoopHVACSupplyPlenum::iddObjectType());
+
+    if( supplyPlenums.size() == 1u )
+    {
+      splitter = supplyPlenums.front().cast<Splitter>();
+    }
+    else
+    {
+      splitter = t_airLoopHVAC->zoneSplitter();
+    }
+
+    BOOST_ASSERT(splitter);
+    BOOST_ASSERT(mixer);
+
+    return AirLoopHVAC_Impl::addBranchForZone(thermalZone,terminal,splitter.get(),mixer.get());
+  }
+
 } // detail
 
 AirLoopHVACReturnPlenum::AirLoopHVACReturnPlenum(const Model& model)
@@ -225,6 +273,16 @@ unsigned AirLoopHVACReturnPlenum::nextInletPort()
 bool AirLoopHVACReturnPlenum::addToNode(Node & node)
 {
   return getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->addToNode(node);
+}
+
+bool AirLoopHVACReturnPlenum::addBranchForZone(openstudio::model::ThermalZone & thermalZone)
+{
+  return getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->addBranchForZone(thermalZone);
+}
+
+bool AirLoopHVACReturnPlenum::addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal)
+{
+  return getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->addBranchForZone(thermalZone,terminal);
 }
 
 /// @cond

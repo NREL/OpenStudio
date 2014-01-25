@@ -67,6 +67,12 @@ namespace detail {
 
     bool addToNode(Node & node);
 
+    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
+
+    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
+
+    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirLoopHVACReturnPlenum");
