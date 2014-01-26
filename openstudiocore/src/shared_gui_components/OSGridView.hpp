@@ -52,32 +52,6 @@ class OSGridView : public QWidget
 
     OSGridController * gridController() const;
 
-    void setCategories(std::vector<QString> categories);
-
-    std::vector<QString> categories();
-
-    void setCategoryFields(const QString & category, std::vector<QString> fields);
-
-    std::vector<QString> categoryFields(const QString & category);
-
-    //void addComboBoxColumn(std::string property, QString label);
-
-    //void addCheckBoxColumn(std::string property, QString label);
-
-    //void addRows(std::vector<model::ModelObject> modelObjects);
-
-    //bool bindComboBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
-
-    //bool bindDouble(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
-
-    //bool bindInteger(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
-
-    //bool bindLineEdit(int row, int column, model::ModelObject mo, std::string property,std::string ipunits, std::string siunits);
-
-    //bool bindCheckBox(int row, int column, model::ModelObject mo, std::string property, QString label = "");
-  
-    //bool bindUnsigned(int row, int column, model::ModelObject mo, std::string property, QString label = "");
-
   signals:
 
     void cellClicked(int row, int column);
@@ -102,7 +76,7 @@ class OSGridView : public QWidget
 
     void setHorizontalHeader(std::vector<QString> names);
 
-    void selectCategory(int category);
+    void selectCategory(int index);
 
   private:
 
@@ -122,11 +96,7 @@ class OSGridView : public QWidget
 
     OSGridController * m_gridController;
 
-    std::vector<model::ModelObject> m_modelObjects;
-
     model::Model m_model;
-
-    std::map<QString,std::vector<QString>> m_categoriesAndFields;
 
 };
 

@@ -104,10 +104,28 @@ OSGridController::OSGridController()
 
 OSGridController::OSGridController(IddObjectType iddObjectType, model::Model model)
   : QObject(),
+  m_checkBoxConcepts(std::vector<QSharedPointer<CheckBoxConcept> >()),
+  m_comboBoxConcepts(std::vector<QSharedPointer<ComboBoxConcept> >()),
+  m_doubleEditConcepts(std::vector<QSharedPointer<DoubleEditConcept> >()),
+  m_integerEditConcepts(std::vector<QSharedPointer<IntegerEditConcept> >()),
+  m_lineEditConcepts(std::vector<QSharedPointer<LineEditConcept> >()),
+  m_quantityEditConcepts(std::vector<QSharedPointer<QuantityEditConcept> >()),
+  m_unsignedEditConcepts(std::vector<QSharedPointer<UnsignedEditConcept> >()),
   m_model(model),
+  m_modelObjects(std::vector<model::ModelObject>()),
   m_iddObjectType(iddObjectType),
-  m_columnTypes(std::vector<ColumnType>())
+  m_categories(std::vector<QString>()),
+  m_categoriesAndFields(std::map<QString,std::vector<QString>>())
 {
+  m_categories.push_back("General");
+  m_categories.push_back("Dimensions");
+  m_categories.push_back("Operation");
+  m_categories.push_back("Fan");
+  m_categories.push_back("Lighting");
+  m_categories.push_back("Case Anti-Sweat Heaters");
+  m_categories.push_back("Defrost");
+  m_categories.push_back("Restocking");
+  m_categories.push_back("Custom");
 
   model::Schedule schedule = m_model.alwaysOnDiscreteSchedule();
   m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
@@ -135,7 +153,223 @@ OSGridController::~OSGridController()
 {
 }
 
-void OSGridController::DisplayCaseColumns(const std::vector<QString> & fields)
+void OSGridController::setCaseCategoriesAndFields()
+{
+  // TODO strings below should be replaced with the tokens defined above
+
+  {
+    std::vector<QString> fields;
+    fields.push_back(CASEDEFROSTTYPE);
+    fields.push_back(CASEHEIGHT);
+    fields.push_back(CASELENGTH);
+    fields.push_back(LATENTCASECREDITCURVETYPE);
+    setCategoryFields("Custom",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Rack Name");
+    fields.push_back("Rack Saturated Suction Temperature (F)");
+    fields.push_back("Fixture Name");
+    fields.push_back("Manufacturer & Model No.");
+    fields.push_back("Zone Location");
+    fields.push_back("Fixture Type");
+    setCategoryFields("General",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Case Length (ft)");
+    fields.push_back("# of Doors");
+    fields.push_back("Door Width (ft)");
+    setCategoryFields("Dimensions",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Under Case Return Air Fraction");
+    fields.push_back("Case Operating Temperature (F)");
+    fields.push_back("Design Evaporator Temperature (F)");
+    fields.push_back("Rated Runtime Fraction");
+    setCategoryFields("Operation",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Rated Cooling Capacity (Btu/hr/ft or Btu/hr/dr)");
+    fields.push_back("Actual Cooling Capacity (Btu/hr/ft or Btu/hr/dr)");
+    fields.push_back("Case Credit Fraction Schedule Name");
+    fields.push_back("Rated Latent Heat Ratio");
+    setCategoryFields("Cooling Capacity",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Case Fan Rated (W/ft or W/dr))");
+    fields.push_back("Case Fan Operating (W/ft or W/dr)");
+    setCategoryFields("Fan",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Case Lighting Rated (W/ft or W/dr)");
+    fields.push_back("Case Lighting Installed (W/ft or W/dr)");
+    fields.push_back("Case Lighting Fraction to Case");
+    fields.push_back("Case Lighting Schedule");
+    setCategoryFields("Lighting",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Anti-Sweat Heaters Rated (W/ft or W/dr)");
+    fields.push_back("Anti-Sweat Heaters Actual (W/ft or W/dr)");
+    fields.push_back("Anti-Sweat Heaters Control Type");
+    fields.push_back("Anti-Sweat Heaters Minimum (W/ft or W/dr)");
+    fields.push_back("Humidity At Zero Anti-Sweat Heater Energy (%)");
+    fields.push_back("Anti-Sweat Heaters Fraction to Case");
+    setCategoryFields("Case Anti-Sweat Heaters",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Electric Defrost (W/ft or W/dr)");
+    fields.push_back("Duration of Cycle (mins)");
+    fields.push_back("Drip Time (mins)");
+    fields.push_back("Defrost 1 Start Time");
+    fields.push_back("Defrost 2 Start Time");
+    fields.push_back("Defrost 3 Start Time");
+    fields.push_back("Defrost 4 Start Time");
+    fields.push_back("Defrost 5 Start Time");
+    fields.push_back("Defrost 6 Start Time");
+    fields.push_back("Defrost Correction Curve Type");
+    setCategoryFields("Defrost",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Restocking Schedule");
+    setCategoryFields("Restocking",fields);
+  }
+}
+
+void OSGridController::setWalkInCategoriesAndFields()
+{
+  // TODO strings below should be replaced with the tokens defined above
+
+  {
+    std::vector<QString> fields;
+    fields.push_back(DEFROSTCONTROLTYPEVALUES);
+    fields.push_back(DEFROSTPOWER);
+    setCategoryFields("Custom",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Rack Name");
+    fields.push_back("Rack Saturated Suction Temperature (F)");
+    fields.push_back("Walk-in Name");
+    fields.push_back("Walk-in Type");
+    fields.push_back("Manufacturer & Model No.");
+    fields.push_back("Zone Adjacent");
+    setCategoryFields("General",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Length (ft)");
+    fields.push_back("Width (ft)");
+    fields.push_back("Height (ft)");
+    setCategoryFields("Dimensions",fields);
+  }
+  
+  {
+    std::vector<QString> fields;
+    fields.push_back("Floor R-Value");
+    fields.push_back("Wall/Roof R-Value");
+    setCategoryFields("Construction",fields);
+  }
+  
+  {
+    std::vector<QString> fields;
+    fields.push_back("Stocking Door Area (ft2)");
+    fields.push_back("Stocking Door Height (ft)");
+    fields.push_back("Stocking Door R-Value (hr-ft2-F/Btu)");
+    fields.push_back("Stocking Door Opening Schedule");
+    fields.push_back("Stocking Door Opening Protection");
+    setCategoryFields("Stocking Doors",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Availability Schedule");
+    fields.push_back("Operating Temperature (F)");
+    fields.push_back("Walk-In Rated Cooling Source Temperature (F)");
+    fields.push_back("Walk-In Rated Cooling Capacity (Btu/hr)");
+    setCategoryFields("Operation",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Walk-In Rated Cooling Coil Fan Power (W)");
+    fields.push_back("Circulation Fan Power (W)");
+    setCategoryFields("Fans",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Walk-In Rated Total Lighting Power (W)");
+    fields.push_back("Lighting Schedule");
+    setCategoryFields("Lighting",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("WalkIn Rated Total Heating Power (W)");
+    fields.push_back("WalkIn Heating Power Schedule");
+    setCategoryFields("Heating",fields);
+  }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back("Walk-In Defrost Type");
+    fields.push_back("Walk-In Defrost Control Type");
+    fields.push_back("Drain/Supplemental (Drain and Drip-Pan only) Heaters (W)");
+    fields.push_back("Electric Defrost (W)");
+    fields.push_back("Duraction of Cycle (mins)");
+    fields.push_back("Drip Time (mins)");
+    fields.push_back("Defrost 1 Start Time");
+    fields.push_back("Defrost 2 Start Time");
+    fields.push_back("Defrost 3 Start Time");
+    fields.push_back("Defrost 4 Start Time");
+    fields.push_back("Defrost 5 Start Time");
+    fields.push_back("Defrost 6 Start Time");
+    fields.push_back("Temperature Termination Defrost Fraction to Ice");
+    setCategoryFields("Defrost",fields);
+  }
+  
+  {
+    std::vector<QString> fields;
+    fields.push_back("Restocking Schedule");
+    setCategoryFields("Restocking",fields);
+  }
+}
+
+std::vector<QString> OSGridController::categories()
+{
+  return m_categories;
+}
+
+void OSGridController::setCategoryFields(const QString & category, std::vector<QString> fields)
+{
+  m_categoriesAndFields[category] = fields;
+}
+
+std::vector<QString> OSGridController::categoryFields(const QString & category)
+{
+  return m_categoriesAndFields[category];
+}
+
+void OSGridController::addDisplayCaseColumns(const std::vector<QString> & fields)
 {
   Q_FOREACH(QString field, fields){
     if(field == RATEDAMBIENTTEMPERATURE){
@@ -261,7 +495,7 @@ void OSGridController::DisplayCaseColumns(const std::vector<QString> & fields)
   }
 }
 
-void OSGridController::WalkInColumns(const std::vector<QString> & fields)
+void OSGridController::addWalkInColumns(const std::vector<QString> & fields)
 {
   Q_FOREACH(QString field, fields){
     if(field == DEFROSTTYPEVALUES){
@@ -341,6 +575,13 @@ void OSGridController::WalkInColumns(const std::vector<QString> & fields)
 
 QWidget * OSGridController::widgetAt(int i, int j)
 {
+  // TODO in the future, all concepts (ex: combo, double, etc) will derive from a base concept
+  // and will all be pushed into a common vector of concept items, which will be read here.
+  // For now, there are separate vectors for each concept type.
+
+  OS_ASSERT(i >= 0);
+  OS_ASSERT(j >= 0);
+  OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(i));
 
   QWidget * result = 0;
 
@@ -349,7 +590,6 @@ QWidget * OSGridController::widgetAt(int i, int j)
     if( i < static_cast<int>(m_modelObjects.size()) )
     {
       model::ModelObject mo = m_modelObjects[i];
-
 
       QSharedPointer<CheckBoxConcept> checkBoxConcept = m_checkBoxConcepts[j];
       OSCheckBox2 * checkBox = new OSCheckBox2();
@@ -465,30 +705,6 @@ QWidget * OSGridController::widgetAt(int i, int j)
 
     result = new QLabel(string);
   }
-  
-
-  return result;
-
-    
-  OS_ASSERT(i >= 0);
-  OS_ASSERT(j >= 0);
-  OS_ASSERT(m_columnTypes.size() > static_cast<unsigned>(j));  
-  OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(i));
-
-  if( m_columnTypes.at(j) == OSGridController::CHECKBOX ){
-  } else if( m_columnTypes.at(j) == OSGridController::COMBOBOX ){
-  } else if( m_columnTypes.at(j) == OSGridController::DOUBLE ){
-  } else if( m_columnTypes.at(j) == OSGridController::DROPZONE ){
-  } else if( m_columnTypes.at(j) == OSGridController::INTEGER ){
-  } else if( m_columnTypes.at(j) == OSGridController::LINEEDIT ){
-  } else if( m_columnTypes.at(j) == OSGridController::QUANTITY ){
-  } else if( m_columnTypes.at(j) == OSGridController::UNSIGNED ){
-  } else if( m_columnTypes.at(j) == OSGridController::NOTVALID ){
-    OS_ASSERT(false);
-  } else {
-    OS_ASSERT(false);
-  }
-
 
   return result;
 }

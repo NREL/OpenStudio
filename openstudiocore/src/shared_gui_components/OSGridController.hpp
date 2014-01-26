@@ -472,6 +472,12 @@ class OSGridController : public QObject
     m_unsignedEditConcepts.push_back(QSharedPointer<UnsignedEditConcept>(new UnsignedEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
+  //virtual void setCategoriesAndFields() = 0;
+  void setCaseCategoriesAndFields();
+  void setWalkInCategoriesAndFields();
+
+  std::vector<QString> categories();
+
   virtual int rowCount() const;
 
   virtual int columnCount() const;
@@ -482,26 +488,11 @@ class OSGridController : public QObject
 
   private:
 
-  enum ColumnType
-  {
-    CHECKBOX,
-    COMBOBOX,
-    DOUBLE,
-    DROPZONE,
-    INTEGER,
-    LINEEDIT,
-    QUANTITY,
-    UNSIGNED,
-    NOTVALID
-  };
-
   void setVerticalHeader(bool visible, QString title);
 
   void setHorizontalHeader(std::vector<QWidget> widgets);
 
   void setHorizontalHeader(std::vector<QString> names);
-
-
 
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
@@ -510,10 +501,12 @@ class OSGridController : public QObject
   // This function will be called from the slot
   // connected to the QButtonGroup signal
   //virtual void addColumns(const std::vector<QString> & fields) = 0;
-  void DisplayCaseColumns(const std::vector<QString> & fields); // TODO rename to "addColumns" and move to derived class
-  void WalkInColumns(const std::vector<QString> & fields);      // TODO rename to "addColumns" and move to derived class
+  void addDisplayCaseColumns(const std::vector<QString> & fields); // TODO rename to "addColumns" and move to derived class
+  void addWalkInColumns(const std::vector<QString> & fields);      // TODO rename to "addColumns" and move to derived class
 
+  void setCategoryFields(const QString & category, std::vector<QString> fields);
 
+  std::vector<QString> categoryFields(const QString & category); 
 
   std::vector<QSharedPointer<CheckBoxConcept> > m_checkBoxConcepts;
 
@@ -535,7 +528,10 @@ class OSGridController : public QObject
 
   IddObjectType m_iddObjectType;
 
-  std::vector<ColumnType> m_columnTypes; 
+  std::vector<QString> m_categories;
+
+  std::map<QString,std::vector<QString>> m_categoriesAndFields;
+
   signals:
 
   // These signals will be used by the GridView to update
@@ -552,6 +548,7 @@ class OSGridController : public QObject
 
   // Nuclear reset of everything
   void modelReset();
+
 };
 
 } // openstudio

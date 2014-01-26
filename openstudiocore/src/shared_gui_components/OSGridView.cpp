@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include "OSGridView.hpp"
+
 #include <shared_gui_components/OSCollapsibleView.hpp>
 #include <shared_gui_components/HeaderViews.hpp>
-
 #include <shared_gui_components/FieldMethodTypedefs.hpp>
 #include <shared_gui_components/OSCheckBox.hpp>
 #include <shared_gui_components/OSComboBox.hpp>
@@ -50,8 +50,10 @@ namespace openstudio {
 
 OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, QWidget * parent)
   : QWidget(parent),
-  m_model(model),
-  m_gridController(0)
+  m_CollapsibleView(0),
+  m_gridLayout(0),
+  m_gridController(0),
+  m_model(model)
 {
   QVBoxLayout * layout = 0;
   
@@ -60,31 +62,26 @@ OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, 
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
+  m_gridLayout = new QGridLayout();
+  m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+  DarkGradientHeader * header = new DarkGradientHeader();
+  header->label->setText("Display Cases");
+  
+  QWidget * widget = new QWidget;  
+  
   OSCollapsibleView * collabsibleView = new OSCollapsibleView(this);
   layout->addWidget(collabsibleView);
-
-  DarkGradientHeader * header = new DarkGradientHeader(); 
-  header->label->setText("Display Cases");
   collabsibleView->setHeader(header);
-
-  QWidget * widget = new QWidget;
   collabsibleView->setContent(widget);
-
   collabsibleView->setExpanded(true);
   
-  QVBoxLayout * m_contentLayout = 0;
-  m_contentLayout = new QVBoxLayout();
-  m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  m_contentLayout->setSpacing(0);
-  m_contentLayout->setContentsMargins(0,0,0,0);
-  widget->setLayout(m_contentLayout);
+  setGridController(new OSGridController(iddObjectType, model));
 
-  std::vector<QString> fields;
-  fields.push_back("a");
-  fields.push_back("b");
-  fields.push_back("c");
-  this->setCategoryFields("1",fields);
-  this->setCategoryFields("2",fields);
+  // call setCategoriesAndFileds
+  // TODO for now, before deriving the controller for each application, just call the following:
+  gridController()->setCaseCategoriesAndFields();
 
   QButtonGroup * buttonGroup = new QButtonGroup();
   bool isConnected = false;
@@ -94,9 +91,8 @@ OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, 
   
   QHBoxLayout * buttonLayout = new QHBoxLayout();
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  m_contentLayout->addLayout(buttonLayout);
 
-  std::vector<QString> categories = this->categories();
+  std::vector<QString> categories = gridController()->categories();
   QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
     button = new QPushButton(categories.at(i));
@@ -105,14 +101,16 @@ OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, 
   }
   buttonLayout->addStretch();
 
-  m_gridLayout = new QGridLayout();
-  m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
-  m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  QVBoxLayout * m_contentLayout = 0;
+  m_contentLayout = new QVBoxLayout();
+  m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  m_contentLayout->setSpacing(0);
+  m_contentLayout->setContentsMargins(0,0,0,0);
+  widget->setLayout(m_contentLayout);
+  m_contentLayout->addLayout(buttonLayout);
   m_contentLayout->addLayout(m_gridLayout);
 
   setContentsMargins(5,5,5,5);
-
-  setGridController(new OSGridController(iddObjectType, model));
 
   refreshAll();
 }
@@ -164,36 +162,6 @@ void OSGridView::refresh(int row, int column)
   removeWidget(row,column);
 
   addWidget(row,column);
-}
-
-void OSGridView::setCategories(std::vector<QString> categories)
-{
-  m_categoriesAndFields.clear();
-
-  Q_FOREACH(QString category, categories) {
-     m_categoriesAndFields[category] = std::vector<QString>();
-  }
-}
-
-std::vector<QString> OSGridView::categories()
-{
-  std::vector<QString> categories;
-
-  for( std::map<QString,std::vector<QString>>::iterator iter = m_categoriesAndFields.begin(); iter != m_categoriesAndFields.end(); iter++ ) {
-    categories.push_back( iter->first );
-  }
-
-  return categories;
-}
-
-void OSGridView::setCategoryFields(const QString & category, std::vector<QString> fields)
-{
-  m_categoriesAndFields[category] = fields;
-}
-
-std::vector<QString> OSGridView::categoryFields(const QString & category)
-{
-  return m_categoriesAndFields[category];
 }
 
 void OSGridView::removeWidget(int row, int column)
@@ -279,8 +247,17 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
   }
 }
 
-void OSGridView::selectCategory(int category)
+void OSGridView::selectCategory(int index)
 {
+  std::vector<QString> categories = gridController->categories();
+
+  std::vector<QString> fields = categoryFields(categories.at(index)); 
+ 
+  //gridController()->addColumns(fields); // TODO use this after derived classes exist
+  gridController()->addDisplayCaseColumns(fields);
+
+  refreshAll();
+  
 }
 
 } // openstudio
