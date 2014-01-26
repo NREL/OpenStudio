@@ -831,29 +831,86 @@ namespace sdd {
 
     //***** Elevator Loads *****
     {
-      //<ElevEscalPwrDens>0</ElevEscalPwrDens> - W per ft2
-      //<ElevEscalSchRef>Office Elevator Sched</ElevEscalSchRef>
+      //<ElevPwr>20000</ElevPwr> 
+			//<ElevSchRef>OfficeElevator</ElevSchRef>
+			//<ElevRadFrac>0</ElevRadFrac>
+			//<ElevLatFrac>0</ElevLatFrac>
+			//<ElevLostFrac>0.8</ElevLostFrac>
 
-      QDomElement elevEscalPwrDensElement = element.firstChildElement("ElevEscalPwrDens");
-      QDomElement elevEscalSchRefElement = element.firstChildElement("ElevEscalSchRef");
-      if (!elevEscalPwrDensElement.isNull() && (elevEscalPwrDensElement.text().toDouble() > 0)){
-
-        openstudio::Quantity electricalDensityIP(elevEscalPwrDensElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
-        OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
-        OS_ASSERT(electricalDensitySI);
-        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+      QDomElement elevPwrElement = element.firstChildElement("ElevPwr");
+      QDomElement elevSchRefElement = element.firstChildElement("ElevSchRef");
+      QDomElement elevRadFracElement = element.firstChildElement("ElevRadFrac");
+      QDomElement elevLatFracElement = element.firstChildElement("ElevLatFrac");
+      QDomElement elevLostFracElement = element.firstChildElement("ElevLostFrac");
+      if (!elevPwrElement.isNull() && (elevPwrElement.text().toDouble() > 0)){
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
-        electricEquipmentDefinition.setName(name + " Elevator and Escalator Loads Definition");
-        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value()); // W/m2
+        electricEquipmentDefinition.setName(name + " Elevator Definition");
+        electricEquipmentDefinition.setDesignLevel(elevPwrElement.text().toDouble()); 
+
+        if (!elevRadFracElement.isNull()){
+          electricEquipmentDefinition.setFractionRadiant(elevRadFracElement.text().toDouble());
+        }
+        if (!elevLatFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLatent(elevLatFracElement.text().toDouble());
+        }
+        if (!elevLostFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLost(elevLostFracElement.text().toDouble());
+        }
 
         openstudio::model::ElectricEquipment electricEquipment(electricEquipmentDefinition);
-        electricEquipment.setName(name + " Elevator and Escalator Loads");
+        electricEquipment.setName(name + " Elevator");
         electricEquipment.setSpace(space);
-        electricEquipment.setEndUseSubcategory("Process");
+        electricEquipment.setEndUseSubcategory("Internal Transport");
 
-        if (!elevEscalSchRefElement.isNull()){
-          std::string scheduleName = escapeName(elevEscalSchRefElement.text());
+        if (!elevSchRefElement.isNull()){
+          std::string scheduleName = escapeName(elevSchRefElement.text());
+          boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
+          if (schedule){
+            electricEquipment.setSchedule(*schedule);
+          }else{
+            LOG(Error, "Could not find schedule '" << scheduleName << "'");
+          }
+        }
+      }
+    }
+
+    //***** Escalator Loads *****
+    {
+			//<EscalPwr>7860</EscalPwr>
+			//<EscalSchRef>OfficeEscalator Sch</EscalSchRef>
+			//<EscalRadFrac>0</EscalRadFrac>
+			//<EscalLatFrac>0</EscalLatFrac>
+			//<EscalLostFrac>0.2</EscalLostFrac>
+
+      QDomElement escalPwrElement = element.firstChildElement("EscalPwr");
+      QDomElement escalSchRefElement = element.firstChildElement("EscalSchRef");
+      QDomElement escalRadFracElement = element.firstChildElement("EscalRadFrac");
+      QDomElement escalLatFracElement = element.firstChildElement("EscalLatFrac");
+      QDomElement escalLostFracElement = element.firstChildElement("EscalLostFrac");
+      if (!escalPwrElement.isNull() && (escalPwrElement.text().toDouble() > 0)){
+
+        openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
+        electricEquipmentDefinition.setName(name + " Escalator Definition");
+        electricEquipmentDefinition.setDesignLevel(escalPwrElement.text().toDouble()); 
+
+        if (!escalRadFracElement.isNull()){
+          electricEquipmentDefinition.setFractionRadiant(escalRadFracElement.text().toDouble());
+        }
+        if (!escalLatFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLatent(escalLatFracElement.text().toDouble());
+        }
+        if (!escalLostFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLost(escalLostFracElement.text().toDouble());
+        }
+
+        openstudio::model::ElectricEquipment electricEquipment(electricEquipmentDefinition);
+        electricEquipment.setName(name + " Escalator");
+        electricEquipment.setSpace(space);
+        electricEquipment.setEndUseSubcategory("Internal Transport");
+
+        if (!escalSchRefElement.isNull()){
+          std::string scheduleName = escapeName(escalSchRefElement.text());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
           if (schedule){
             electricEquipment.setSchedule(*schedule);

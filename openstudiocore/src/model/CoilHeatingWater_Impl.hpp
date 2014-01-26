@@ -56,6 +56,8 @@ namespace detail {
 
     virtual std::vector<openstudio::IdfObject> remove();
 
+    virtual bool removeFromPlantLoop();
+
     virtual ModelObject clone(Model model) const;
 
     virtual IddObjectType iddObjectType() const;

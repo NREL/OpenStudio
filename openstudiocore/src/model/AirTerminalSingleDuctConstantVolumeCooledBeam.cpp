@@ -150,11 +150,11 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
         thermalZone = portList->thermalZone();
       }
 
-      if( thermalZone || outlet->optionalCast<AirLoopHVACZoneMixer>() )
+      if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
       {
         if( boost::optional<ModelObject> inlet = node.inletModelObject() )
         {
-          if( boost::optional<AirLoopHVACZoneSplitter> splitter = inlet->optionalCast<AirLoopHVACZoneSplitter>() )
+          if( boost::optional<Splitter> splitter = inlet->optionalCast<Splitter>() )
           {
             boost::optional<ModelObject> sourceModelObject = inlet;
             boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
@@ -183,7 +183,6 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
                 AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
                 thermalZone->addEquipment(mo);
- //               thermalZone->setHeatingPriority(mo,1);
                 thermalZone->setCoolingPriority(mo,1);
               }
 

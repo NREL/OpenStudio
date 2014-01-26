@@ -55,6 +55,7 @@ class ModelObject;
 class Component;
 class ComponentData;
 class Schedule;
+class SpaceType;
 
 namespace detail {
 
@@ -139,6 +140,8 @@ namespace detail {
     boost::optional<WeatherFile> weatherFile() const;
 
     Schedule alwaysOnDiscreteSchedule() const;
+
+    SpaceType plenumSpaceType() const;
 
     //@}
     /** @name Setters */

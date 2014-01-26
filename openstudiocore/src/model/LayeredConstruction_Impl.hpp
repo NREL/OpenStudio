@@ -195,6 +195,8 @@ namespace detail {
      *  of the construction. */
     void resetInsulation();
 
+    void ensureUniqueLayers(); 
+
     //@}
 
    protected:

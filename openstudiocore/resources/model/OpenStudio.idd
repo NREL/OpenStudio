@@ -1,4 +1,4 @@
-!IDD_Version 1.2.4
+!IDD_Version 1.2.5
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -6398,7 +6398,7 @@ OS:Refrigeration:Subcooler:LiquidSuction,
         \note Applicable only and required for liquid suction heat exchangers (LSHX)
         \note Design vapor inlet temperature must be less than or equal to
         \note      the Liquid inlet design temp
-
+    
 OS:Refrigeration:System,
         \min-fields 8
   A1,   \field Handle
@@ -7618,6 +7618,56 @@ OS:AirLoopHVAC:OutdoorAirSystem,
        \required-field
        \object-list ConnectionNames
   A9; \field Return Air Stream Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+
+OS:AirLoopHVAC:ReturnPlenum,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \min-fields 1
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \reference ReturnPathComponentNames
+       \reference ConnectionObject
+   A3, \field ThermalZone
+       \type object-list
+       \object-list ThermalZoneNames
+   A4, \field Outlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5, \field Induced Air Outlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A6; \field Inlet 1 Node
+       \begin-extensible
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+
+OS:AirLoopHVAC:SupplyPlenum,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \min-fields 1
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \reference SupplyPathComponentNames
+       \reference ConnectionObject
+   A3, \field Thermal Zone
+       \type object-list
+       \object-list ThermalZoneNames
+   A4, \field Inlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5; \field Outlet 1 Node
+       \begin-extensible
        \type object-list
        \required-field
        \object-list ConnectionNames

@@ -19,6 +19,8 @@
 
 #include <model/PortList.hpp>
 #include <model/PortList_Impl.hpp>
+#include <model/Connection.hpp>
+#include <model/Connection_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Model.hpp>
@@ -133,6 +135,14 @@ unsigned PortList_Impl::port(unsigned portIndex)
   return result;
 }
 
+unsigned PortList_Impl::portIndex(unsigned port)
+{
+  unsigned result;
+  result = numNonextensibleFields();
+  result = port - result;
+  return result;
+}
+
 unsigned PortList_Impl::nextPort()
 {
   return port( nextPortIndex() );
@@ -184,15 +194,17 @@ unsigned PortList_Impl::newPortAfterIndex(unsigned portIndex)
   return this->port(portIndex++);
 }
 
-unsigned PortList_Impl::portIndexForModelObject( ModelObject modelObject )
+unsigned PortList_Impl::portIndexForModelObject( ModelObject & modelObject, bool * ok )
 {
-  for(int i = 0; i < (int)nextPortIndex(); i++)
+  for(unsigned i = 0; i < nextPortIndex(); i++)
   {
     if( this->modelObject(i) == modelObject )
     {
+      if( ok ) { *ok = true; }
       return i;
     }
   }
+  if( ok ) { *ok = false; }
   return 0;
 }
 
@@ -209,18 +221,33 @@ unsigned PortList_Impl::nextPortIndex()
   return i;
 }
 
-void PortList_Impl::removePortForIndex(unsigned portIndex)
+void PortList_Impl::removePort(unsigned port)
 {
-  int _nextPortIndex = nextPortIndex();
-  model().disconnect(getObject<ModelObject>(),this->port(portIndex));
-  //std::vector<ModelObject> modelObjects = this->modelObjects();
-  for(int i = portIndex + 1; i < _nextPortIndex; i++ )
+  unsigned t_numFields = numFields();
+  for(unsigned i = port + 1; i < t_numFields; i++ )
   {
-    ModelObject mo = modelObject(i).get();
-    unsigned port = connectedObjectPort( this->port(i) ).get();
-    model().disconnect(getObject<ModelObject>(),this->port(i));
-    model().connect(getObject<ModelObject>(),this->port(i-1),mo,port);
+    if( boost::optional<Connection> connection = getObject<ModelObject>().getModelObjectTarget<Connection>(i) )
+    {
+      if( boost::optional<ModelObject> targetObject = connection->targetObject() )
+      {
+        if( targetObject->handle() == handle() )
+        {
+          connection->setTargetObjectPort(i - 1);
+          continue;
+        }
+      }
+
+      if( boost::optional<ModelObject> sourceObject = connection->sourceObject() )
+      {
+        if( sourceObject->handle() == handle() )
+        {
+          connection->setSourceObjectPort(i - 1);
+          continue;
+        }
+      }
+    }
   }
+  eraseExtensibleGroup(port - numNonextensibleFields());
 }
 
 unsigned PortList_Impl::airLoopHVACPort()
@@ -300,6 +327,11 @@ unsigned PortList::port(unsigned portIndex)
   return getImpl<detail::PortList_Impl>()->port(portIndex);
 }
 
+unsigned PortList::portIndex(unsigned port)
+{
+  return getImpl<detail::PortList_Impl>()->portIndex(port);
+}
+
 unsigned PortList::nextPort()
 {
   return getImpl<detail::PortList_Impl>()->nextPort();
@@ -320,12 +352,7 @@ std::vector<ModelObject> PortList::modelObjects()
   return getImpl<detail::PortList_Impl>()->modelObjects();
 }
 
-unsigned PortList::newPortAfterIndex(unsigned portIndex)
-{
-  return getImpl<detail::PortList_Impl>()->newPortAfterIndex(portIndex);
-}
-
-unsigned PortList::portIndexForModelObject( ModelObject modelObject )
+unsigned PortList::portIndexForModelObject( ModelObject & modelObject )
 {
   return getImpl<detail::PortList_Impl>()->portIndexForModelObject(modelObject);
 }
@@ -333,11 +360,6 @@ unsigned PortList::portIndexForModelObject( ModelObject modelObject )
 unsigned PortList::nextPortIndex()
 {
   return getImpl<detail::PortList_Impl>()->nextPortIndex();
-}
-
-void PortList::removePortForIndex(unsigned portIndex)
-{
-  return getImpl<detail::PortList_Impl>()->removePortForIndex(portIndex);
 }
 
 ThermalZone PortList::thermalZone() const

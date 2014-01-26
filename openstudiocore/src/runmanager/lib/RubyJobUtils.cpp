@@ -570,6 +570,10 @@ boost::optional<openstudio::UUID> RubyJobBuilder::originalUUID() const
   return m_originalUUID;
 }
 
+boost::optional<openstudio::UUID> RubyJobBuilder::bclMeasureUUID() const {
+  return m_bclMeasureUUID;
+}
+
 std::vector<boost::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const
 {
   return m_copyRequiredFiles;
@@ -794,7 +798,13 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
 {
   std::vector<ruleset::OSArgument> retval;
 
-  std::vector<JobParam> args = t_params.get("user_script_params").children;
+  std::vector<JobParam> args;
+  try {
+    args = t_params.get("user_script_params").children;
+  }
+  catch (...) {
+    return retval;
+  }
 
   LOG(Debug, "Params found: " << args.size());
   for (std::vector<JobParam>::const_iterator itr = args.begin();

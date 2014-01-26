@@ -38,6 +38,8 @@ class AirConditionerVariableRefrigerantFlow;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
+class AirLoopHVACReturnPlenum;
+class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeReheat;
@@ -302,6 +304,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem( model::AirLoopHVACOutdoorAirSystem & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatPumpAirToAir( model::AirLoopHVACUnitaryHeatPumpAirToAir & modelObject );
+
+  boost::optional<IdfObject> translateAirLoopHVACReturnPlenum( model::AirLoopHVACReturnPlenum & airLoopHVACReturnPlenum );
+
+  boost::optional<IdfObject> translateAirLoopHVACSupplyPlenum( model::AirLoopHVACSupplyPlenum & airLoopHVACSupplyPlenum );
 
   boost::optional<IdfObject> translateAirLoopHVACZoneMixer( model::AirLoopHVACZoneMixer & modelObject  );
 

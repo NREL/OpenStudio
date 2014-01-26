@@ -254,6 +254,11 @@ namespace detail {
       return false;
     }
 
+    if( thermalZone.isPlenum() )
+    {
+      return false;
+    }
+
     removeFromThermalZone();
 
     thermalZone.setUseIdealAirLoads(false);
