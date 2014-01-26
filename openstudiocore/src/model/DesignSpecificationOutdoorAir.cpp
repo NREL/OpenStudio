@@ -158,8 +158,7 @@ namespace detail {
   }
 
   bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirMethod(std::string outdoorAirMethod) {
-    bool result = false;
-    result = setString(OS_DesignSpecification_OutdoorAirFields::OutdoorAirMethod, outdoorAirMethod);
+    bool result = setString(OS_DesignSpecification_OutdoorAirFields::OutdoorAirMethod, outdoorAirMethod);
     return result;
   }
 
@@ -169,8 +168,7 @@ namespace detail {
   }
 
   bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowperPerson(double outdoorAirFlowperPerson) {
-    bool result = false;
-    result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson, outdoorAirFlowperPerson);
+    bool result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson, outdoorAirFlowperPerson);
     return result;
   }
 
@@ -188,8 +186,7 @@ namespace detail {
   }
 
   bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea) {
-    bool result = false;
-    result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperFloorArea, outdoorAirFlowperFloorArea);
+    bool result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperFloorArea, outdoorAirFlowperFloorArea);
     return result;
   }
 
@@ -207,8 +204,7 @@ namespace detail {
   }
 
   bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowRate(double outdoorAirFlowRate) {
-    bool result = false;
-    result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowRate, outdoorAirFlowRate);
+    bool result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowRate, outdoorAirFlowRate);
     return result;
   }
 
@@ -226,8 +222,7 @@ namespace detail {
   }
 
   bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour) {
-    bool result = false;
-    result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour, outdoorAirFlowAirChangesperHour);
+    bool result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour, outdoorAirFlowAirChangesperHour);
     return result;
   }
 

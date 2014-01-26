@@ -377,7 +377,7 @@ namespace detail {
     try{
       std::transform(filtered.begin(), filtered.end(), std::inserter(out, out.end()), 
           static_cast<filetransform>(&RunManager_Util::dirFile));
-    } catch(openstudio::Exception e) {
+    } catch(openstudio::Exception& e) {
       LOG_AND_THROW("Exception caught " << e.what());
     }
 

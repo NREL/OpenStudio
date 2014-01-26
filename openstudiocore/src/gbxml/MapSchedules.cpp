@@ -129,9 +129,8 @@ namespace gbxml {
                 result.setFridaySchedule(*scheduleDay);
               }else if (dayType == "Sat"){
                 result.setSaturdaySchedule(*scheduleDay);
-              }else if (dayType == "All"){
-                result.setAllSchedules(*scheduleDay);
               }else{
+                // dayType can be "All"
                 result.setAllSchedules(*scheduleDay);
               }
             }

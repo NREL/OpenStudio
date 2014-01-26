@@ -680,10 +680,6 @@ namespace openstudio{
           dt -= openstudio::Time(0,0,0,1);
         }
 
-
-
-        std::stringstream insertReportVariableDataDictionary;
-
         int month = dt.date().monthOfYear().value();
         int day = dt.date().dayOfMonth();
         int hour = dt.time().hours();
@@ -761,10 +757,10 @@ namespace openstudio{
     void SqlFile_Impl::retrieveDataDictionary()
     {
       std::string table, name, keyValue, units, rf;
-      int dictionaryIndex, code;
 
       if (m_db)
       {
+        int dictionaryIndex, code;
 
         std::stringstream s;
         sqlite3_stmt* sqlStmtPtr;
@@ -800,7 +796,7 @@ namespace openstudio{
 
           for(envPeriodsItr = envPeriods.begin();
               envPeriodsItr != envPeriods.end();
-              envPeriodsItr++)
+              ++envPeriodsItr)
           {
             std::string queryEnvPeriod = boost::to_upper_copy(envPeriodsItr->second);
             m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,envPeriodsItr->first,name,keyValue,queryEnvPeriod,rf,units,table));
@@ -831,7 +827,7 @@ namespace openstudio{
 
           for(envPeriodsItr = envPeriods.begin();
               envPeriodsItr != envPeriods.end();
-              envPeriodsItr++)
+              ++envPeriodsItr)
           {
             std::string queryEnvPeriod = boost::to_upper_copy(envPeriodsItr->second);
             m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,envPeriodsItr->first,name,keyValue,queryEnvPeriod,rf,units,table));
@@ -896,7 +892,18 @@ namespace openstudio{
                               TableName='General' AND \
                               RowName='Hours Simulated' AND \
                               Units='hrs'";
-      return execAndReturnFirstDouble(s);
+      boost::optional<double> ret = execAndReturnFirstDouble(s);
+
+      if (ret) return ret;
+
+      // Otherwise, let's try to calculate it:
+      return execAndReturnFirstDouble(
+        "select "
+        "    (select max(t.hour + ((t.simulationdays-1) * 24)) as mintime from time t join reportmeterdata r on (t.timeindex=r.timeindex))"
+        "  - (select min(t.hour + ((t.simulationdays-1) * 24)) as mintime from time t join reportmeterdata r on (t.timeindex=r.timeindex))"
+        "  + 1;"
+       );
+
     }
 
     boost::optional<double> SqlFile_Impl::netSiteEnergy() const
@@ -1774,7 +1781,7 @@ namespace openstudio{
 
       std::vector<std::string> vecKeyValues = availableKeyValues(envPeriod, reportingFrequency, timeSeriesName);
       std::vector<std::string>::iterator iter;
-      for (iter=vecKeyValues.begin();iter!=vecKeyValues.end();iter++)
+      for (iter=vecKeyValues.begin();iter!=vecKeyValues.end();++iter)
       {
         ts = timeSeries(envPeriod, reportingFrequency, timeSeriesName, *iter);
         if (ts){
@@ -2089,8 +2096,9 @@ namespace openstudio{
         sqlite3_finalize(sqlStmtPtr);
       }
       try {
-        // DLM@20100707: RunPeriod timeseries return 0, 0.
+        // DLM@20100707: RunPeriod timeseries return month=0, day=0.
         // what is a sensible value to put here? is this a bug in E+?
+        // DLM: potential leap year problem
         return openstudio::Date(openstudio::monthOfYear(month), day);
       } catch (...){
         //return min date in time table.
@@ -2107,6 +2115,8 @@ namespace openstudio{
           day = sqlite3_column_int(sqlStmtPtr, 1);
         }
         sqlite3_finalize(sqlStmtPtr);
+
+        // DLM: potential leap year problem
         return openstudio::Date(openstudio::monthOfYear(month), day);
       }
     }
@@ -2178,10 +2188,14 @@ namespace openstudio{
       }
     }
 
-    openstudio::DateTime SqlFile_Impl::firstDateTime()
+    openstudio::DateTime SqlFile_Impl::firstDateTime(bool includeHourAndMinute)
     {
       // default until added to eplusout.sql from energy plus
       unsigned month=1, day=1, hour=1, minute=0;
+
+      openstudio::YearDescription yd;
+      yd.isLeapYear = false;
+
       if (m_db)
       {
         std::stringstream s;
@@ -2195,24 +2209,43 @@ namespace openstudio{
         {
           month = sqlite3_column_int(sqlStmtPtr, 0);
           day = sqlite3_column_int(sqlStmtPtr, 1);
-          hour = sqlite3_column_int(sqlStmtPtr, 2);
-          minute = sqlite3_column_int(sqlStmtPtr, 3);
+          if (includeHourAndMinute){
+            hour = sqlite3_column_int(sqlStmtPtr, 2);
+            minute = sqlite3_column_int(sqlStmtPtr, 3);
+          }
         }
         sqlite3_finalize(sqlStmtPtr);
+
+        // DLM: could also try to check DayType to find yearStartsOnDayOfWeek
+        if ((month == 2) && (day == 29)){
+          yd.isLeapYear = true;
+        }
       }
-      return openstudio::DateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0, hour, minute, 0));
+      // DLM: potential leap year problem
+      openstudio::Date date(monthOfYear(month), day, yd);
+      openstudio::Time time(0, hour, minute, 0);
+      return openstudio::DateTime(date, time);
     }
 
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const DataDictionaryItem& dataDictionary)
     {
       openstudio::OptionalTimeSeries ts;
-      openstudio::DateTime startDate;
-      std::vector<long> stdSecondsFromFirstReport;
-      std::vector<double> stdValues;
-      unsigned month, day, hour, minute, interval;
-      double value;
       std::string units = dataDictionary.units;
-      int count = 0;
+
+      boost::optional<openstudio::DateTime> startDateTime; 
+      std::vector<long> stdSecondsFromFirstReport;
+      stdSecondsFromFirstReport.reserve(8760);
+
+      std::vector<double> stdValues;
+      stdValues.reserve(8760);
+      boost::optional<unsigned> reportingIntervalMinutes;
+
+      bool isIntervalTimeSeries = false;
+      try {
+        ReportingFrequency reportingFrequency(dataDictionary.reportingFrequency);
+        isIntervalTimeSeries = (reportingFrequency != ReportingFrequency::Detailed);
+      }catch(const std::exception&){
+      }
 
       if (m_db) 
       {
@@ -2245,62 +2278,66 @@ namespace openstudio{
         s2 << code;
         LOG(Debug, s2.str());
 
-        DateTime lastDateTime;
-
-        int year = openstudio::Date().year();
+        long cumulativeSeconds = 0;
 
         while (code == SQLITE_ROW) 
         {
-          value = sqlite3_column_double(sqlStmtPtr, 0);
+          double value = sqlite3_column_double(sqlStmtPtr, 0);
           stdValues.push_back(value);
-          month = sqlite3_column_int(sqlStmtPtr, 1);
-          day = sqlite3_column_int(sqlStmtPtr, 2);
-          hour = sqlite3_column_int(sqlStmtPtr, 3);
-          minute = sqlite3_column_int(sqlStmtPtr, 4);
-          interval = sqlite3_column_int(sqlStmtPtr, 5); // used for run periods
-          if ((month==0) || (day==0)) // then values in db are null - assumed run period
-          {
-            startDate=firstDateTime();
-            openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0));
-            stdSecondsFromFirstReport.push_back((dateTime-startDate).totalSeconds());
-            lastDateTime = dateTime;
-          }
-          else
-          {
-            openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
-            if (count==0) { 
-              startDate=dateTime;
-            } else {
-              // DateTime is < lastdatetime, we must assume that year has wrapped around
-              if (dateTime < lastDateTime)
-              {
-                ++year;
-                dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
-              }
+
+          unsigned month = sqlite3_column_int(sqlStmtPtr, 1);
+          unsigned day = sqlite3_column_int(sqlStmtPtr, 2);
+          unsigned hour = sqlite3_column_int(sqlStmtPtr, 3);
+          unsigned minute = sqlite3_column_int(sqlStmtPtr, 4);
+          unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, 5); // used for run periods
+
+          if (!startDateTime){
+            if ((month==0) || (day==0)){
+              // gets called for RunPeriod reports, just returns the first date in the time table, not sure if this is right
+              startDateTime = firstDateTime(false);
+            }else{
+              // DLM: potential leap year problem
+              startDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0,0,intervalMinutes,0));
             }
-            stdSecondsFromFirstReport.push_back((dateTime-startDate).totalSeconds());
-            lastDateTime = dateTime;
           }
+
+          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
+
+          cumulativeSeconds += 60*intervalMinutes;
+
+          // check if this interval is same as the others
+          if (isIntervalTimeSeries && !reportingIntervalMinutes){
+            reportingIntervalMinutes = intervalMinutes;
+          }else if (reportingIntervalMinutes && (reportingIntervalMinutes.get() != intervalMinutes)){
+            isIntervalTimeSeries = false;
+            reportingIntervalMinutes.reset();
+          }
+
           // step to next row
-          ++count;
           code = sqlite3_step(sqlStmtPtr);
         }
+
         // must finalize to prevent memory leaks
         sqlite3_finalize(sqlStmtPtr);
 
-        // remove year before passing to TimeSeries
-        startDate = DateTime(Date(startDate.date().monthOfYear(), startDate.date().dayOfMonth()), startDate.time());
-        
-        Vector values = createVector(stdValues);
-        ts = openstudio::TimeSeries(startDate, stdSecondsFromFirstReport, values, units);
+        if (startDateTime && !stdSecondsFromFirstReport.empty()){
+          if (isIntervalTimeSeries){
+            openstudio::Time intervalTime(0,0,*reportingIntervalMinutes,0);
+            openstudio::Vector values = createVector(stdValues);
+            ts = openstudio::TimeSeries(*startDateTime, intervalTime, values, units);
+          }else{
+            openstudio::Vector values = createVector(stdValues);
+            ts = openstudio::TimeSeries(*startDateTime, stdSecondsFromFirstReport, values, units);
+          }
+        }
       }
+
       return ts;
     }
 
     openstudio::DateTimeVector SqlFile_Impl::dateTimeVec(const DataDictionaryItem& dataDictionary)
     {
       openstudio::DateTimeVector dateTimes;
-      unsigned month, day, hour, minute;//, simulationDay;
 
       if (m_db) {
         std::stringstream s;
@@ -2332,10 +2369,13 @@ namespace openstudio{
         s2 << code;
         LOG(Debug, s2.str());
         while (code == SQLITE_ROW) {
+          unsigned month, day, hour, minute;//, simulationDay;
           month = sqlite3_column_int(sqlStmtPtr, 0);
           day = sqlite3_column_int(sqlStmtPtr, 1);
           hour = sqlite3_column_int(sqlStmtPtr, 2);
           minute = sqlite3_column_int(sqlStmtPtr, 3);
+
+          // DLM: potential leap year problem
           openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0));
           dateTimes.push_back(dateTime);
 
@@ -2705,6 +2745,7 @@ namespace openstudio{
         sqlite3_finalize(sqlStmtPtr);
       }
 
+      // DLM: potential leap year problem
       DateTime dstStart(Date(openstudio::monthOfYear(startMonth),startDay), Time(startDay, startHour, startMinute,0));
       DateTime dstEnd(Date(openstudio::monthOfYear(endMonth),endDay), Time(endDay, endHour, endMinute,0));
 
@@ -3131,6 +3172,8 @@ namespace openstudio{
       {
         std::pair<int, DateTime> pair;
         pair.first = sqlite3_column_int(sqlStmtPtr,0);
+
+        // DLM: potential leap year problem
         pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0) );
         reportIndicesDates.push_back( pair );
         // step to next row
@@ -3168,6 +3211,7 @@ namespace openstudio{
       /// must finalize to prevent memory leaks
       sqlite3_finalize(sqlStmtPtr);
 
+      // DLM: potential leap year problem
       return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0));
     }
 

@@ -102,7 +102,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections(
 
   for( std::vector<WaterUseEquipment>::iterator it = equipment.begin();
        it != equipment.end();
-       it++ )
+       ++it )
   {
     boost::optional<IdfObject> _equipment = translateAndMapModelObject(*it); 
 

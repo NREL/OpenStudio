@@ -230,6 +230,19 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   if (fullModelTranslation){
 
+    // translate life cycle cost parameters
+    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
+    if (!lifeCycleCostParameters){
+      // only warn if costs are present
+      if (!model.getModelObjects<LifeCycleCost>().empty()){
+        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
+      }
+      
+      // always add this object so E+ results section exists
+      lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
+    }
+    translateAndMapModelObject(*lifeCycleCostParameters);
+
     // ensure that building exists
     boost::optional<model::Building> building = model.building();
     if (!building){
@@ -272,19 +285,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
     m_idfObjects.push_back(globalGeometryRules);
-
-    // translate life cycle cost parameters
-    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
-    if (!lifeCycleCostParameters){
-      // only warn if costs are present
-      if (!model.getModelObjects<LifeCycleCost>().empty()){
-        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
-      }
-      
-      // always add this object so E+ results section exists
-      lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
-    }
-    translateAndMapModelObject(*lifeCycleCostParameters);
   
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
@@ -2373,7 +2373,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
@@ -2412,7 +2412,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
@@ -2437,7 +2437,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
     for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
        it != fluidObjects.end();
-       it++ )
+       ++it )
     {
       if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
         idfObject = *it;

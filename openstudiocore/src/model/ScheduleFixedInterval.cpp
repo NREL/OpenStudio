@@ -225,26 +225,22 @@ namespace detail {
   }
 
   bool ScheduleFixedInterval_Impl::setStartMonth(int startMonth, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_FixedIntervalFields::StartMonth, startMonth, driverMethod);
+    bool result = setInt(OS_Schedule_FixedIntervalFields::StartMonth, startMonth, driverMethod);
     return result;
   }
 
   bool ScheduleFixedInterval_Impl::setStartDay(int startDay, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_FixedIntervalFields::StartDay, startDay, driverMethod);
+    bool result = setInt(OS_Schedule_FixedIntervalFields::StartDay, startDay, driverMethod);
     return result;
   }
 
   bool ScheduleFixedInterval_Impl::setIntervalLength(double intervalLength, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_Schedule_FixedIntervalFields::IntervalLength, intervalLength, driverMethod);
+    bool result = setDouble(OS_Schedule_FixedIntervalFields::IntervalLength, intervalLength, driverMethod);
     return result;
   }
 
   void ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
+    bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -252,6 +248,21 @@ namespace detail {
     bool result = setString(OS_Schedule_FixedIntervalFields::OutOfRangeValue, "", driverMethod);
     OS_ASSERT(result);
   }
+
+  void ScheduleFixedInterval_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_Schedule_FixedIntervalFields::StartMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_Schedule_FixedIntervalFields::StartDay);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_Schedule_FixedIntervalFields::StartDay, 28);
+      }
+    }
+  }
+
 
 } // detail
 

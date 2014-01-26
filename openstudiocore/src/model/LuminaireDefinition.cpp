@@ -146,8 +146,7 @@ namespace detail {
   }
 
   bool LuminaireDefinition_Impl::setLightingPower(double lightingPower) {
-    bool result = false;
-    result = setDouble(OS_Luminaire_DefinitionFields::LightingPower, lightingPower);
+    bool result = setDouble(OS_Luminaire_DefinitionFields::LightingPower, lightingPower);
     return result;
   }
 
@@ -157,8 +156,7 @@ namespace detail {
   //}
 
   bool LuminaireDefinition_Impl::setFractionRadiant(double fractionRadiant) {
-    bool result = false;
-    result = setDouble(OS_Luminaire_DefinitionFields::FractionRadiant, fractionRadiant);
+    bool result = setDouble(OS_Luminaire_DefinitionFields::FractionRadiant, fractionRadiant);
     return result;
   }
 
@@ -168,8 +166,7 @@ namespace detail {
   //}
 
   bool LuminaireDefinition_Impl::setFractionVisible(double fractionVisible) {
-    bool result = false;
-    result = setDouble(OS_Luminaire_DefinitionFields::FractionVisible, fractionVisible);
+    bool result = setDouble(OS_Luminaire_DefinitionFields::FractionVisible, fractionVisible);
     return result;
   }
 
@@ -179,8 +176,7 @@ namespace detail {
   //}
 
   bool LuminaireDefinition_Impl::setReturnAirFraction(double returnAirFraction) {
-    bool result = false;
-    result = setDouble(OS_Luminaire_DefinitionFields::ReturnAirFraction, returnAirFraction);
+    bool result = setDouble(OS_Luminaire_DefinitionFields::ReturnAirFraction, returnAirFraction);
     return result;
   }
 
@@ -205,8 +201,7 @@ namespace detail {
   }
 
   bool LuminaireDefinition_Impl::setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(double returnAirFractionFunctionofPlenumTemperatureCoefficient1) {
-    bool result = false;
-    result = setDouble(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1, returnAirFractionFunctionofPlenumTemperatureCoefficient1);
+    bool result = setDouble(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1, returnAirFractionFunctionofPlenumTemperatureCoefficient1);
     return result;
   }
 
@@ -216,8 +211,7 @@ namespace detail {
   }
 
   bool LuminaireDefinition_Impl::setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(double returnAirFractionFunctionofPlenumTemperatureCoefficient2) {
-    bool result = false;
-    result = setDouble(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2, returnAirFractionFunctionofPlenumTemperatureCoefficient2);
+    bool result = setDouble(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2, returnAirFractionFunctionofPlenumTemperatureCoefficient2);
     return result;
   }
 

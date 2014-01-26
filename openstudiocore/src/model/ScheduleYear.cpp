@@ -255,6 +255,22 @@ namespace detail {
     this->clearExtensibleGroups();
   }
 
+  void ScheduleYear_Impl::ensureNoLeapDays()
+  {
+    BOOST_FOREACH(IdfExtensibleGroup group, this->extensibleGroups()){
+      boost::optional<int> month;
+      boost::optional<int> day;
+
+      month = group.getInt(OS_Schedule_YearExtensibleFields::Month);
+      if (month && (month.get() == 2)){
+        day = group.getInt(OS_Schedule_YearExtensibleFields::Day);
+        if (day && (day.get() == 29)){
+          this->setInt(OS_Schedule_YearExtensibleFields::Day, 28);
+        }
+      }
+    }
+  }
+
 } // detail
 
 ScheduleYear::ScheduleYear(const Model& model)

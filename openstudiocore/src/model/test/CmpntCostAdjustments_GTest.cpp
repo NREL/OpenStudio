@@ -68,9 +68,9 @@ TEST_F(ModelFixture, ComponentCostAdj)
 
 //  EXPECT_EQ(static_cast<size_t>(10), ComponentCostAdjustments::getComponentCostAdjustments_All().size()) << "size of ComponentCostAdjustments vector is !=10"; //<<ComponentCostAdjustments::getComponentCostAdjustments_All(model).size();
 //not sure I need foreach.  I think it only does this once.
-/*  BOOST_FOREACH(const ComponentCostAdjustments& adjItem, ComponentCostAdjustments::getComponentCostAdjustments_All()){
-    checkObject(adjItem);
-  }*/
+//  BOOST_FOREACH(const ComponentCostAdjustments& adjItem, ComponentCostAdjustments::getComponentCostAdjustments_All()){
+//    checkObject(adjItem);
+//  }
 }
 
 

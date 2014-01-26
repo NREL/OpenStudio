@@ -131,8 +131,6 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   QPushButton * button = 0;
 
-  QString style;
-
   bool isConnected = false;
 
   QLabel * label = 0;

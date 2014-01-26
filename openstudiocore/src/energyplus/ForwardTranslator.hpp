@@ -258,6 +258,8 @@ class ENERGYPLUS_API ForwardTranslator {
   void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
 
   /** If isIP, translate to a Workspace that requests Inch Pound tabular (HTML) reports from EnergyPlus
+    * Use this interface with extreme caution and understanding of the impacts of reporting IP units.  
+    * Some assumptions in OpenStudio results processing may fail.
    */
   void setIPTabularOutput(bool isIP);
 

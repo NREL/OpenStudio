@@ -187,8 +187,7 @@ namespace detail {
   }
 
   bool SteamEquipment_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_SteamEquipmentFields::Multiplier, multiplier);
+    bool result = setDouble(OS_SteamEquipmentFields::Multiplier, multiplier);
     return result;
   }
 
@@ -198,8 +197,7 @@ namespace detail {
   }
 
   void SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_SteamEquipmentFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_SteamEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 

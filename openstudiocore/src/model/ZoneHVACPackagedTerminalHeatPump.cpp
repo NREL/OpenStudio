@@ -354,14 +354,12 @@ namespace detail {
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
+    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
     return result;
   }
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
+    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
     OS_ASSERT(result);
   }
 
@@ -500,8 +498,7 @@ namespace detail {
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance, heatingConvergenceTolerance);
+    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance, heatingConvergenceTolerance);
     return result;
   }
 
@@ -511,8 +508,7 @@ namespace detail {
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
     return result;
   }
 
@@ -537,8 +533,7 @@ namespace detail {
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance, coolingConvergenceTolerance);
+    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance, coolingConvergenceTolerance);
     return result;
   }
 
@@ -582,8 +577,7 @@ namespace detail {
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
     return result;
   }
 
@@ -593,8 +587,7 @@ namespace detail {
   }
 
   bool ZoneHVACPackagedTerminalHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, fanPlacement);
+    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, fanPlacement);
     return result;
   }
 

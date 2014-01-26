@@ -1162,7 +1162,7 @@ namespace detail {
     //   children are not out of date. Also, none of those deps can be running themselves
     //
 
-    bool amFinishedJob = false;
+    
     bool parentRunning = false;
     bool parentChildrenRunning = false;
     bool parentFailed = false;
@@ -1172,6 +1172,8 @@ namespace detail {
 
     if (p)
     {
+      bool amFinishedJob = false;
+
       if (!p->endTime()) return false; // parent has not yet finished, nip this in the bud
 
       parentRunning = p->isRunning();

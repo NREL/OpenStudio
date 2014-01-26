@@ -102,8 +102,7 @@ namespace detail {
   }
 
   void WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 
@@ -113,8 +112,7 @@ namespace detail {
   }
 
   bool WaterUseEquipmentDefinition_Impl::setPeakFlowRate(double peakFlowRate) {
-    bool result = false;
-    result = setDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate, peakFlowRate);
+    bool result = setDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate, peakFlowRate);
     return result;
   }
 
