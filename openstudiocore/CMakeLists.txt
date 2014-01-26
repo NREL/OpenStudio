@@ -883,9 +883,11 @@ SET(all_exe_targets
   Pat
   )
 
-FOREACH( targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
-  SET_TARGET_PROPERTIES(${targ} PROPERTIES VERSION ${OPENSTUDIO_VERSION})
-ENDFOREACH()
+IF ( UNIX AND NOT APPLE )
+  FOREACH( targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
+    SET_TARGET_PROPERTIES(${targ} PROPERTIES VERSION ${OPENSTUDIO_VERSION})
+  ENDFOREACH()
+ENDIF()
 
 configure_file("${CMAKE_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${CMAKE_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
