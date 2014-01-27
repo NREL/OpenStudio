@@ -1270,7 +1270,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       {
         supplyNodes.erase(supplyNodes.begin());
 
-        supplyNodes.erase(supplyNodes.end());
+        supplyNodes.erase(supplyNodes.end() - 1);
 
         for( std::vector<model::ModelObject>::iterator it = supplyNodes.begin();
              it != supplyNodes.end();
