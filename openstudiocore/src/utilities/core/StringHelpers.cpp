@@ -19,6 +19,7 @@
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/StringHelpers.hpp>
+#include <utilities/math/FloatCompare.hpp>
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
@@ -79,6 +80,10 @@ std::string iddObjectNameToIdfObjectName(const std::string& s) {
 }
 
 double toNumSigFigs(double value, unsigned numSigFigs) {
+  if (equal<double>(value,0.0)) {
+    return value;
+  }
+
   double absValue = fabs(value);
   bool negative = (value != absValue);
   
