@@ -214,7 +214,8 @@ namespace detail {
 
   bool AirLoopHVACSupplyPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal)
   {
-    return AirLoopHVACSupplyPlenum_Impl::addBranchForZone(thermalZone,terminal);
+    boost::optional<StraightComponent> o_terminal = terminal;
+    return AirLoopHVACSupplyPlenum_Impl::addBranchForZone(thermalZone,o_terminal);
   }
 
   bool AirLoopHVACSupplyPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone)

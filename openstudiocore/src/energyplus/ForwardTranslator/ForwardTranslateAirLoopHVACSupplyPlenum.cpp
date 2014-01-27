@@ -55,9 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
   // Inlet Node Name
   if( boost::optional<model::ModelObject> node = modelObject.inletModelObject() )
   {
-    boost::optional<IdfObject> _node = translateAndMapModelObject(node.get());
-    OS_ASSERT(_node);
-    idfObject.setString(openstudio::AirLoopHVAC_SupplyPlenumFields::InletNodeName,_node->name().get());
+    idfObject.setString(openstudio::AirLoopHVAC_SupplyPlenumFields::InletNodeName,node->name().get());
   }
 
   // ZoneName
@@ -71,9 +69,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
       idfObject.setString(AirLoopHVAC_SupplyPlenumFields::ZoneName,_zone->name().get());
 
       model::Node node = zone->zoneAirNode();
-      boost::optional<IdfObject> _node = translateAndMapModelObject(node);
-      OS_ASSERT(_node);
-      idfObject.setString(AirLoopHVAC_SupplyPlenumFields::ZoneNodeName,_node->name().get());
+      idfObject.setString(AirLoopHVAC_SupplyPlenumFields::ZoneNodeName,node.name().get());
     }
   }
 
@@ -90,16 +86,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
     {
       if( boost::optional<model::ModelObject> node = airTerminal->outletModelObject() )
       {
-        boost::optional<IdfObject> _node = translateAndMapModelObject(node.get());
         IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-        eg.setString(AirLoopHVAC_SupplyPlenumExtensibleFields::OutletNodeName,_node->name().get());
+        eg.setString(AirLoopHVAC_SupplyPlenumExtensibleFields::OutletNodeName,node->name().get());
       }
     }
     else
     {
-      boost::optional<IdfObject> _node = translateAndMapModelObject(*it);
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-      eg.setString(AirLoopHVAC_SupplyPlenumExtensibleFields::OutletNodeName,_node->name().get());
+      eg.setString(AirLoopHVAC_SupplyPlenumExtensibleFields::OutletNodeName,it->name().get());
     }
   }
 
