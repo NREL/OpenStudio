@@ -19,6 +19,7 @@
 
 #include <gtest/gtest.h>
 
+#include <utilities/core/Containers.hpp>
 #include <utilities/core/String.hpp>
 #include <utilities/core/StringHelpers.hpp>
 #include <utilities/core/Path.hpp>
@@ -251,6 +252,8 @@ TEST(String,NeatStrings) {
   // too many significant figures -- cut down to 5 and see how it looks
   str = toString(toNumSigFigs(value,5));
   EXPECT_EQ("16892000000000",str);
+  str = toNeatStringBySigFigs(value,6);
+  EXPECT_EQ("16,891,700,000,000",str);
   EXPECT_EQ(0u,numFractionalDigits(str));
   str = toNeatString(toNumSigFigs(value,5));
   EXPECT_EQ("16,892,000,000,000",str);
@@ -258,6 +261,8 @@ TEST(String,NeatStrings) {
 
   value = -0.0001892962;
   str = toString(toNumSigFigs(value,2));
+  EXPECT_EQ("-0.00019",str);
+  str = toNeatStringBySigFigs(value,2);
   EXPECT_EQ("-0.00019",str);
   EXPECT_EQ(5u,numFractionalDigits(str));
   str = toNeatString(value,5);
@@ -269,3 +274,56 @@ TEST(String,NeatStrings) {
   EXPECT_EQ("-1,330.0",str);
   EXPECT_EQ(1u,numFractionalDigits(str));
 }
+
+TEST(String,NumFractionalDigits) {
+  DoubleVector values;
+  values.push_back(128196.198);
+  values.push_back(19671.281);
+  values.push_back(218528.28);
+  values.push_back(192.186);
+
+  std::pair<unsigned,unsigned> result = numFractionalDigits(values,3u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(0u,result.second);
+
+  result = numFractionalDigits(values,4u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(1u,result.second);
+
+  result = numFractionalDigits(values,7u);
+  EXPECT_EQ(1u,result.first); EXPECT_EQ(4u,result.second);
+
+  values.clear();
+  values.push_back(0.189678);
+  values.push_back(0.001869168);
+  values.push_back(0.7198);
+
+  result = numFractionalDigits(values,2u);
+  EXPECT_EQ(2u,result.first); EXPECT_EQ(4u,result.second);
+
+  result = numFractionalDigits(values,8u);
+  EXPECT_EQ(8u,result.first); EXPECT_EQ(10u,result.second);
+
+  values.clear();
+  values.push_back(0.07592);
+  values.push_back(198.82);
+  values.push_back(210.28);
+  values.push_back(0.628);
+
+  result = numFractionalDigits(values,2u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(3u,result.second);
+
+  result = numFractionalDigits(values,3u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(4u,result.second);
+
+  result = numFractionalDigits(values,5u);
+  EXPECT_EQ(2u,result.first); EXPECT_EQ(6u,result.second);  
+
+  values.clear();
+  values.push_back(0.0);
+
+  result = numFractionalDigits(values,2u);
+  EXPECT_EQ(1u,result.first); EXPECT_EQ(1u,result.second);
+
+  result = numFractionalDigits(values,5u);
+  EXPECT_EQ(4u,result.first); EXPECT_EQ(4u,result.second);
+}
+
