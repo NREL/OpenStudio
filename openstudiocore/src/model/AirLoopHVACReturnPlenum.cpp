@@ -85,9 +85,9 @@ namespace detail {
       resetThermalZone();
       result = true;
     }
-    else if( (! thermalZone->getImpl<ThermalZone>()->airLoopHVACSupplyPlenum()) &&
-             (! thermalZone->getImpl<thermalZone>()->airLoopHVACReturnPlenum()) &&
-             (thermalZone.equipment().size() == 0) )
+    else if( (! thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACSupplyPlenum()) &&
+             (! thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum()) &&
+             (thermalZone->equipment().size() == 0) )
     {
       result = setPointer(OS_AirLoopHVAC_ReturnPlenumFields::ThermalZone, thermalZone.get().handle());
     }

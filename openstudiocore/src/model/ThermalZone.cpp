@@ -2184,7 +2184,7 @@ void ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned pri
   getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
 }
 
-std::vector<ModelObject> ThermalZone::equipment()
+std::vector<ModelObject> ThermalZone::equipment() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipment();
 }

@@ -19,6 +19,8 @@
 
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/airLoopHVACZoneSplitter.hpp>
+#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirLoopHVACSupplyPlenum.hpp>
 #include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
 #include <model/AirLoopHVACReturnPlenum.hpp>
@@ -87,9 +89,9 @@ namespace detail {
       resetThermalZone();
       result = true;
     }
-    else if( (! thermalZone->getImpl<ThermalZone>()->airLoopHVACSupplyPlenum()) &&
-             (! thermalZone->getImpl<thermalZone>()->airLoopHVACReturnPlenum()) &&
-             (thermalZone.equipment().size() == 0) )
+    else if( (! thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACSupplyPlenum()) &&
+             (! thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum()) &&
+             (thermalZone->equipment().size() == 0) )
     {
       result = setPointer(OS_AirLoopHVAC_SupplyPlenumFields::ThermalZone, thermalZone.get().handle());
     }
@@ -261,6 +263,30 @@ namespace detail {
     BOOST_ASSERT(mixer);
 
     return AirLoopHVAC_Impl::addBranchForZone(thermalZone,terminal,splitter.get(),mixer.get());
+  }
+
+  std::vector<IdfObject> AirLoopHVACSupplyPlenum_Impl::remove()
+  {
+    Model t_model = model();
+
+    if( boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC() )
+    {
+      AirLoopHVACZoneSplitter zoneSplitter= t_airLoopHVAC->zoneSplitter();
+      std::vector<ModelObject> t_outletModelObjects = outletModelObjects();
+
+      for( std::vector<ModelObject>::iterator it = t_outletModelObjects.begin();
+           it != t_outletModelObjects.end();
+           it++ )
+      {
+        unsigned branchIndex = branchIndexForOutletModelObject(*it); 
+        unsigned t_outletPort = outletPort(branchIndex);
+        unsigned connectedObjectInletPort = connectedObjectPort(t_outletPort).get();
+
+        t_model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),*it,connectedObjectInletPort);
+      }
+    }
+
+    return Splitter_Impl::remove();
   }
 
 } // detail
