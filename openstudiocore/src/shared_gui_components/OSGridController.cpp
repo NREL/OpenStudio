@@ -104,29 +104,12 @@ OSGridController::OSGridController()
 
 OSGridController::OSGridController(IddObjectType iddObjectType, model::Model model)
   : QObject(),
-  m_checkBoxConcepts(std::vector<QSharedPointer<CheckBoxConcept> >()),
-  m_comboBoxConcepts(std::vector<QSharedPointer<ComboBoxConcept> >()),
-  m_doubleEditConcepts(std::vector<QSharedPointer<DoubleEditConcept> >()),
-  m_integerEditConcepts(std::vector<QSharedPointer<IntegerEditConcept> >()),
-  m_lineEditConcepts(std::vector<QSharedPointer<LineEditConcept> >()),
-  m_quantityEditConcepts(std::vector<QSharedPointer<QuantityEditConcept> >()),
-  m_unsignedEditConcepts(std::vector<QSharedPointer<UnsignedEditConcept> >()),
+  m_baseConcepts(std::vector<QSharedPointer<BaseConcept> >()),
   m_model(model),
   m_modelObjects(std::vector<model::ModelObject>()),
   m_iddObjectType(iddObjectType),
-  m_categories(std::vector<QString>()),
-  m_categoriesAndFields(std::map<QString,std::vector<QString>>())
+  m_categoriesAndFields(std::vector<std::pair<QString,std::vector<QString>>>())
 {
-  m_categories.push_back("General");
-  m_categories.push_back("Dimensions");
-  m_categories.push_back("Operation");
-  m_categories.push_back("Fan");
-  m_categories.push_back("Lighting");
-  m_categories.push_back("Case Anti-Sweat Heaters");
-  m_categories.push_back("Defrost");
-  m_categories.push_back("Restocking");
-  m_categories.push_back("Custom");
-
   model::Schedule schedule = m_model.alwaysOnDiscreteSchedule();
   m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
   m_modelObjects.push_back(model::RefrigerationCase(m_model,schedule));
@@ -159,22 +142,14 @@ void OSGridController::setCaseCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back(CASEDEFROSTTYPE);
-    fields.push_back(CASEHEIGHT);
-    fields.push_back(CASELENGTH);
-    fields.push_back(LATENTCASECREDITCURVETYPE);
-    setCategoryFields("Custom",fields);
-  }
-
-  {
-    std::vector<QString> fields;
     fields.push_back("Rack Name");
     fields.push_back("Rack Saturated Suction Temperature (F)");
     fields.push_back("Fixture Name");
     fields.push_back("Manufacturer & Model No.");
     fields.push_back("Zone Location");
     fields.push_back("Fixture Type");
-    setCategoryFields("General",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("General"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -182,7 +157,8 @@ void OSGridController::setCaseCategoriesAndFields()
     fields.push_back("Case Length (ft)");
     fields.push_back("# of Doors");
     fields.push_back("Door Width (ft)");
-    setCategoryFields("Dimensions",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Dimensions"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -191,7 +167,8 @@ void OSGridController::setCaseCategoriesAndFields()
     fields.push_back("Case Operating Temperature (F)");
     fields.push_back("Design Evaporator Temperature (F)");
     fields.push_back("Rated Runtime Fraction");
-    setCategoryFields("Operation",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Operation"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -200,14 +177,16 @@ void OSGridController::setCaseCategoriesAndFields()
     fields.push_back("Actual Cooling Capacity (Btu/hr/ft or Btu/hr/dr)");
     fields.push_back("Case Credit Fraction Schedule Name");
     fields.push_back("Rated Latent Heat Ratio");
-    setCategoryFields("Cooling Capacity",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Cooling Capacity"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
     fields.push_back("Case Fan Rated (W/ft or W/dr))");
     fields.push_back("Case Fan Operating (W/ft or W/dr)");
-    setCategoryFields("Fan",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Fan"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -216,7 +195,8 @@ void OSGridController::setCaseCategoriesAndFields()
     fields.push_back("Case Lighting Installed (W/ft or W/dr)");
     fields.push_back("Case Lighting Fraction to Case");
     fields.push_back("Case Lighting Schedule");
-    setCategoryFields("Lighting",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Lighting"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -227,7 +207,8 @@ void OSGridController::setCaseCategoriesAndFields()
     fields.push_back("Anti-Sweat Heaters Minimum (W/ft or W/dr)");
     fields.push_back("Humidity At Zero Anti-Sweat Heater Energy (%)");
     fields.push_back("Anti-Sweat Heaters Fraction to Case");
-    setCategoryFields("Case Anti-Sweat Heaters",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Case Anti-Sweat Heaters"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -242,26 +223,32 @@ void OSGridController::setCaseCategoriesAndFields()
     fields.push_back("Defrost 5 Start Time");
     fields.push_back("Defrost 6 Start Time");
     fields.push_back("Defrost Correction Curve Type");
-    setCategoryFields("Defrost",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Defrost"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
     fields.push_back("Restocking Schedule");
-    setCategoryFields("Restocking",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Restocking"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back(CASEDEFROSTTYPE);
+    fields.push_back(CASEHEIGHT);
+    fields.push_back(CASELENGTH);
+    fields.push_back(LATENTCASECREDITCURVETYPE);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
+  }
+
 }
 
 void OSGridController::setWalkInCategoriesAndFields()
 {
   // TODO strings below should be replaced with the tokens defined above
-
-  {
-    std::vector<QString> fields;
-    fields.push_back(DEFROSTCONTROLTYPEVALUES);
-    fields.push_back(DEFROSTPOWER);
-    setCategoryFields("Custom",fields);
-  }
 
   {
     std::vector<QString> fields;
@@ -271,7 +258,8 @@ void OSGridController::setWalkInCategoriesAndFields()
     fields.push_back("Walk-in Type");
     fields.push_back("Manufacturer & Model No.");
     fields.push_back("Zone Adjacent");
-    setCategoryFields("General",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("General"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -279,14 +267,16 @@ void OSGridController::setWalkInCategoriesAndFields()
     fields.push_back("Length (ft)");
     fields.push_back("Width (ft)");
     fields.push_back("Height (ft)");
-    setCategoryFields("Dimensions",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Dimensions"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
   
   {
     std::vector<QString> fields;
     fields.push_back("Floor R-Value");
     fields.push_back("Wall/Roof R-Value");
-    setCategoryFields("Construction",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Construction"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
   
   {
@@ -296,7 +286,8 @@ void OSGridController::setWalkInCategoriesAndFields()
     fields.push_back("Stocking Door R-Value (hr-ft2-F/Btu)");
     fields.push_back("Stocking Door Opening Schedule");
     fields.push_back("Stocking Door Opening Protection");
-    setCategoryFields("Stocking Doors",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Stocking Doors"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -305,28 +296,32 @@ void OSGridController::setWalkInCategoriesAndFields()
     fields.push_back("Operating Temperature (F)");
     fields.push_back("Walk-In Rated Cooling Source Temperature (F)");
     fields.push_back("Walk-In Rated Cooling Capacity (Btu/hr)");
-    setCategoryFields("Operation",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Operation"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
     fields.push_back("Walk-In Rated Cooling Coil Fan Power (W)");
     fields.push_back("Circulation Fan Power (W)");
-    setCategoryFields("Fans",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Fans"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
     fields.push_back("Walk-In Rated Total Lighting Power (W)");
     fields.push_back("Lighting Schedule");
-    setCategoryFields("Lighting",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Lighting"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
     fields.push_back("WalkIn Rated Total Heating Power (W)");
     fields.push_back("WalkIn Heating Power Schedule");
-    setCategoryFields("Heating",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Heating"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
@@ -344,33 +339,55 @@ void OSGridController::setWalkInCategoriesAndFields()
     fields.push_back("Defrost 5 Start Time");
     fields.push_back("Defrost 6 Start Time");
     fields.push_back("Temperature Termination Defrost Fraction to Ice");
-    setCategoryFields("Defrost",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Defrost"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
   
   {
     std::vector<QString> fields;
     fields.push_back("Restocking Schedule");
-    setCategoryFields("Restocking",fields);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Restocking"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
   }
+
+  {
+    std::vector<QString> fields;
+    fields.push_back(DEFROSTCONTROLTYPEVALUES);
+    fields.push_back(DEFROSTPOWER);
+    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),fields);
+    m_categoriesAndFields.push_back(categoryAndFields);
+  }
+
 }
 
 std::vector<QString> OSGridController::categories()
 {
-  return m_categories;
+  std::vector<QString> categories;
+
+  for(unsigned i = 0; i < m_categoriesAndFields.size(); i++){
+    categories.push_back(m_categoriesAndFields.at(i).first);
+  }
+
+  return categories;
 }
 
-void OSGridController::setCategoryFields(const QString & category, std::vector<QString> fields)
+std::vector<std::pair<QString,std::vector<QString>>> OSGridController::categoriesAndFields()
 {
-  m_categoriesAndFields[category] = fields;
+  return m_categoriesAndFields;
 }
 
-std::vector<QString> OSGridController::categoryFields(const QString & category)
+void OSGridController::categorySelected(int index)
 {
-  return m_categoriesAndFields[category];
+  std::vector<QString> fields = m_categoriesAndFields.at(index).second;
+ 
+  //addColumns(fields); // TODO use this after derived classes exist
+  addDisplayCaseColumns(fields);
 }
 
 void OSGridController::addDisplayCaseColumns(const std::vector<QString> & fields)
 {
+  m_baseConcepts.clear();
+
   Q_FOREACH(QString field, fields){
     if(field == RATEDAMBIENTTEMPERATURE){
       addDoubleEditColumn(QString(RATEDAMBIENTTEMPERATURE),
@@ -490,7 +507,7 @@ void OSGridController::addDisplayCaseColumns(const std::vector<QString> & fields
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
     }else{
       // unhandled
-      OS_ASSERT(false);
+//      OS_ASSERT(false); TODO add this back at a later time
     }
   }
 }
@@ -575,35 +592,29 @@ void OSGridController::addWalkInColumns(const std::vector<QString> & fields)
 
 QWidget * OSGridController::widgetAt(int i, int j)
 {
-  // TODO in the future, all concepts (ex: combo, double, etc) will derive from a base concept
-  // and will all be pushed into a common vector of concept items, which will be read here.
-  // For now, there are separate vectors for each concept type.
-
   OS_ASSERT(i >= 0);
   OS_ASSERT(j >= 0);
   OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(i));
+  OS_ASSERT(m_baseConcepts.size() > static_cast<unsigned>(j));
 
-  QWidget * result = 0;
+  model::ModelObject mo = m_modelObjects[i];
 
-  if( j < static_cast<int>(m_checkBoxConcepts.size()) )
-  {
-    if( i < static_cast<int>(m_modelObjects.size()) )
-    {
-      model::ModelObject mo = m_modelObjects[i];
+  QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[j];
 
-      QSharedPointer<CheckBoxConcept> checkBoxConcept = m_checkBoxConcepts[j];
-      OSCheckBox2 * checkBox = new OSCheckBox2();
+  if(QSharedPointer<CheckBoxConcept> checkBoxConcept = baseConcept.dynamicCast<CheckBoxConcept>()){
 
-      checkBox->bind(mo,
-                boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
-                boost::optional<BoolSetter>(boost::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)),
-                boost::none,
-                boost::none);
+    OSCheckBox2 * checkBox = new OSCheckBox2();
 
-      result = checkBox;
+    checkBox->bind(mo,
+              boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
+              boost::optional<BoolSetter>(boost::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)),
+              boost::none,
+              boost::none);
 
+    return checkBox;
 
-      QSharedPointer<ComboBoxConcept> comboBoxConcept = m_comboBoxConcepts[j];
+  } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = baseConcept.dynamicCast<ComboBoxConcept>()) {
+
       OSComboBox2 * comboBox = new OSComboBox2();
 
       comboBox->bindRequired(mo,
@@ -613,10 +624,10 @@ QWidget * OSGridController::widgetAt(int i, int j)
                 boost::none,
                 boost::none);
 
-      result = comboBox;
+      return comboBox;
 
+  } else if(QSharedPointer<DoubleEditConcept> doubleEditConcept = baseConcept.dynamicCast<DoubleEditConcept>()) {
 
-      QSharedPointer<DoubleEditConcept> doubleEditConcept = m_doubleEditConcepts[j];
       OSDoubleEdit2 * doubleEdit = new OSDoubleEdit2();
 
       doubleEdit->bindRequired(mo,
@@ -629,10 +640,10 @@ QWidget * OSGridController::widgetAt(int i, int j)
                 boost::none,
                 boost::none);
 
-      result = doubleEdit;
+      return doubleEdit;
 
+  } else if(QSharedPointer<IntegerEditConcept> integerEditConcept = baseConcept.dynamicCast<IntegerEditConcept>()) {
 
-      QSharedPointer<IntegerEditConcept> integerEditConcept = m_integerEditConcepts[j];
       OSIntegerEdit2 * integerEdit = new OSIntegerEdit2();
 
       integerEdit->bindRequired(mo,
@@ -645,10 +656,10 @@ QWidget * OSGridController::widgetAt(int i, int j)
                 boost::none,
                 boost::none);
 
-      result = integerEdit;
+      return integerEdit;
 
+  } else if(QSharedPointer<LineEditConcept> lineEditConcept = baseConcept.dynamicCast<LineEditConcept>()) {
 
-      QSharedPointer<LineEditConcept> lineEditConcept = m_lineEditConcepts[j];
       OSLineEdit2 * lineEdit = new OSLineEdit2();
 
       lineEdit->bindRequired(mo,
@@ -657,10 +668,10 @@ QWidget * OSGridController::widgetAt(int i, int j)
                 boost::none,
                 boost::none);
 
-      result = lineEdit;
+      return lineEdit;
 
+  } else if(QSharedPointer<QuantityEditConcept> quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept>()) {
 
-      QSharedPointer<QuantityEditConcept> quantityEditConcept = m_quantityEditConcepts[j];
       OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", true);
 
       quantityEdit->bindRequired(true,
@@ -674,10 +685,10 @@ QWidget * OSGridController::widgetAt(int i, int j)
                 boost::none,
                 boost::none);
 
-      result = quantityEdit;
+      return quantityEdit;
 
+  } else if(QSharedPointer<UnsignedEditConcept> unsignedEdiConcept = baseConcept.dynamicCast<UnsignedEditConcept>()) {
 
-      QSharedPointer<UnsignedEditConcept> unsignedEdiConcept = m_unsignedEditConcepts[j];
       OSUnsignedEdit2 * unsignedEdit = new OSUnsignedEdit2();
 
       unsignedEdit->bind(mo,
@@ -690,33 +701,23 @@ QWidget * OSGridController::widgetAt(int i, int j)
                 boost::none,
                 boost::none);
 
-      result = unsignedEdit;
+      return unsignedEdit;
 
-    }
+  } else {
+    // Unknown type
+    OS_ASSERT(false);
+    return new QWidget();
   }
-  else
-  {
-    QString string("Hello ");
-    QString temp;
-    string += "row: ";
-    string += temp.setNum(i);  
-    string += ", column: ";
-    string += temp.setNum(j);
-
-    result = new QLabel(string);
-  }
-
-  return result;
 }
 
 int OSGridController::rowCount() const
 {
-  return 5; // TODO
+  return m_modelObjects.size();
 }
    
 int OSGridController::columnCount() const
 {
-  return 5; // TODO
+  return m_baseConcepts.size();
 }
 
 std::vector<QWidget *> OSGridController::row(int i)

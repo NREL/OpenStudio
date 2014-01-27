@@ -64,6 +64,8 @@ class OSGridView : public QWidget
 
     void refresh(int row, int column);
 
+    void deleteAll();
+
     void refreshAll(); 
 
     void addWidget(int row, int column);

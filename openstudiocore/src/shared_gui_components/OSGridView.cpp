@@ -179,7 +179,7 @@ void OSGridView::removeWidget(int row, int column)
   delete item;
 }
 
-void OSGridView::refreshAll()
+void OSGridView::deleteAll()
 {
   QLayoutItem * child;
   while((child = m_gridLayout->takeAt(0)) != 0)
@@ -192,6 +192,11 @@ void OSGridView::refreshAll()
 
       delete child;
   }
+}
+
+void OSGridView::refreshAll()
+{
+  deleteAll();
 
   if( m_gridController )
   {
@@ -249,12 +254,9 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
 
 void OSGridView::selectCategory(int index)
 {
-  std::vector<QString> categories = gridController->categories();
+  deleteAll();
 
-  std::vector<QString> fields = categoryFields(categories.at(index)); 
- 
-  //gridController()->addColumns(fields); // TODO use this after derived classes exist
-  gridController()->addDisplayCaseColumns(fields);
+  gridController()->categorySelected(index);
 
   refreshAll();
   

@@ -46,7 +46,38 @@ namespace openstudio {
 
 // TODO Move these Concept classes to another file.
 
-class CheckBoxConcept
+class BaseConcept
+{
+  public:
+
+  virtual ~BaseConcept() {}
+}; 
+
+template<typename DataSourceType>
+class BaseConceptImpl : public BaseConcept
+{
+  public:
+
+  BaseConceptImpl(QString t_headingLabel)
+
+    : m_headingLabel(t_headingLabel)
+
+  {
+  }
+
+  QString headingLabel() const { return m_headingLabel; }
+
+  private:
+
+  QString m_headingLabel;
+
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
+class CheckBoxConcept : public BaseConcept
 {
   public:
 
@@ -63,14 +94,11 @@ class CheckBoxConceptImpl : public CheckBoxConcept
     boost::function<bool (DataSourceType *)>  t_getter, 
     boost::function<void (DataSourceType *, bool)> t_setter)
 
-    : m_headingLabel(t_headingLabel),
-      m_getter(t_getter),
+    : m_getter(t_getter),
       m_setter(t_setter)
 
   {
   }
-
-  QString headingLabel() const { return m_headingLabel; }
 
   virtual bool get(const model::ModelObject & t_obj)
   {
@@ -86,7 +114,6 @@ class CheckBoxConceptImpl : public CheckBoxConcept
 
   private:
 
-  QString m_headingLabel;
   boost::function<bool (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, bool)> m_setter;
 };
@@ -95,7 +122,7 @@ class CheckBoxConceptImpl : public CheckBoxConcept
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-class ComboBoxConcept
+class ComboBoxConcept : public BaseConcept
 {
   public:
 
@@ -114,15 +141,12 @@ class ComboBoxConceptImpl : public ComboBoxConcept
     boost::function<std::string (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, std::string)> t_setter)
 
-    : m_headingLabel(t_headingLabel),
-      m_choices(t_choices),
+    : m_choices(t_choices),
       m_getter(t_getter),
       m_setter(t_setter)
 
   {
   }
-
-  QString headingLabel() const { return m_headingLabel; }
 
   virtual std::vector<std::string> choices()
   {
@@ -143,7 +167,6 @@ class ComboBoxConceptImpl : public ComboBoxConcept
 
   private:
 
-  QString m_headingLabel;
   boost::function<std::vector<std::string> (void)> m_choices;
   boost::function<std::string (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, std::string)> m_setter;
@@ -153,7 +176,7 @@ class ComboBoxConceptImpl : public ComboBoxConcept
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-class DoubleEditConcept
+class DoubleEditConcept : public BaseConcept
 {
   public:
 
@@ -170,14 +193,11 @@ class DoubleEditConceptImpl : public DoubleEditConcept
     boost::function<double (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, double)> t_setter)
 
-    : m_headingLabel(t_headingLabel),
-      m_getter(t_getter),
+    : m_getter(t_getter),
       m_setter(t_setter)
 
   {
   }
-
-  QString headingLabel() const { return m_headingLabel; }
 
   virtual double get(const model::ModelObject & t_obj)
   {
@@ -193,7 +213,6 @@ class DoubleEditConceptImpl : public DoubleEditConcept
 
   private:
 
-  QString m_headingLabel;
   boost::function<double (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, double)> m_setter;
 };
@@ -202,7 +221,7 @@ class DoubleEditConceptImpl : public DoubleEditConcept
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-class IntegerEditConcept
+class IntegerEditConcept : public BaseConcept
 {
   public:
 
@@ -219,14 +238,11 @@ class IntegerEditConceptImpl : public IntegerEditConcept
     boost::function<int (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, int)> t_setter)
 
-    : m_headingLabel(t_headingLabel),
-      m_getter(t_getter),
+    : m_getter(t_getter),
       m_setter(t_setter)
 
   {
   }
-
-  QString headingLabel() const { return m_headingLabel; }
 
   virtual int get(const model::ModelObject & t_obj)
   {
@@ -242,7 +258,6 @@ class IntegerEditConceptImpl : public IntegerEditConcept
 
   private:
 
-  QString m_headingLabel;
   boost::function<int (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, int)> m_setter;
 };
@@ -251,7 +266,7 @@ class IntegerEditConceptImpl : public IntegerEditConcept
 ///////////////////////////////////////////////////////////////////////////////////
   
 
-class LineEditConcept
+class LineEditConcept : public BaseConcept
 {
   public:
 
@@ -268,14 +283,11 @@ class LineEditConceptImpl : public LineEditConcept
     boost::function<std::string (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, std::string)> t_setter)
 
-    : m_headingLabel(t_headingLabel),
-      m_getter(t_getter),
+    : m_getter(t_getter),
       m_setter(t_setter)
 
   {
   }
-
-  QString headingLabel() const { return m_headingLabel; }
 
   virtual std::string get(const model::ModelObject & t_obj)
   {
@@ -291,7 +303,6 @@ class LineEditConceptImpl : public LineEditConcept
 
   private:
 
-  QString m_headingLabel;
   boost::function<std::string (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, std::string)> m_setter;
 };
@@ -300,7 +311,7 @@ class LineEditConceptImpl : public LineEditConcept
 ///////////////////////////////////////////////////////////////////////////////////
   
 
-class QuantityEditConcept
+class QuantityEditConcept : public BaseConcept
 {
   public:
 
@@ -317,14 +328,11 @@ class QuantityEditConceptImpl : public QuantityEditConcept
     boost::function<double (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, double)> t_setter)
 
-    : m_headingLabel(t_headingLabel),
-      m_getter(t_getter),
+    : m_getter(t_getter),
       m_setter(t_setter)
 
   {
   }
-
-  QString headingLabel() const { return m_headingLabel; }
 
   virtual double get(const model::ModelObject & t_obj)
   {
@@ -340,7 +348,6 @@ class QuantityEditConceptImpl : public QuantityEditConcept
 
   private:
 
-  QString m_headingLabel;
   boost::function<double (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, double)> m_setter;
 };
@@ -349,7 +356,7 @@ class QuantityEditConceptImpl : public QuantityEditConcept
 ///////////////////////////////////////////////////////////////////////////////////
   
 
-class UnsignedEditConcept
+class UnsignedEditConcept : public BaseConcept
 {
   public:
 
@@ -366,14 +373,11 @@ class UnsignedEditConceptImpl : public UnsignedEditConcept
     boost::function<unsigned (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, unsigned)> t_setter)
 
-    : m_headingLabel(t_headingLabel),
-      m_getter(t_getter),
+    : m_getter(t_getter),
       m_setter(t_setter)
 
   {
   }
-
-  QString headingLabel() const { return m_headingLabel; }
 
   virtual unsigned get(const model::ModelObject & t_obj)
   {
@@ -389,7 +393,6 @@ class UnsignedEditConceptImpl : public UnsignedEditConcept
 
   private:
 
-  QString m_headingLabel;
   boost::function<unsigned (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, unsigned)> m_setter;
 };
@@ -420,7 +423,7 @@ class OSGridController : public QObject
                          bool (DataSourceType::* getter)(void) const, 
                          void (DataSourceType::* setter)(bool))
   {
-    m_checkBoxConcepts.push_back(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
   template<typename DataSourceType>
@@ -429,7 +432,7 @@ class OSGridController : public QObject
                          std::string (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(std::string))
   {
-    m_comboBoxConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
   }
 
   template<typename DataSourceType>
@@ -437,7 +440,7 @@ class OSGridController : public QObject
                          double (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(double))
   {
-    m_doubleEditConcepts.push_back(QSharedPointer<DoubleEditConcept>(new DoubleEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<DoubleEditConcept>(new DoubleEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
   template<typename DataSourceType>
@@ -445,7 +448,7 @@ class OSGridController : public QObject
                          int (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(int))
   {
-    m_integerEditConcepts.push_back(QSharedPointer<IntegerEditConcept>(new IntegerEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<IntegerEditConcept>(new IntegerEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
   template<typename DataSourceType>
@@ -453,7 +456,7 @@ class OSGridController : public QObject
                          std::string (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(std::string))
   {
-    m_lineEditConcepts.push_back(QSharedPointer<LineEditConcept>(new LineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<LineEditConcept>(new LineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
   template<typename DataSourceType>
@@ -461,7 +464,7 @@ class OSGridController : public QObject
                          double (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(double))
   {
-    m_quantityEditConcepts.push_back(QSharedPointer<QuantityEditConcept>(new QuantityEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept>(new QuantityEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
   template<typename DataSourceType>
@@ -469,7 +472,7 @@ class OSGridController : public QObject
                          unsigned (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(unsigned))
   {
-    m_unsignedEditConcepts.push_back(QSharedPointer<UnsignedEditConcept>(new UnsignedEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<UnsignedEditConcept>(new UnsignedEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
   //virtual void setCategoriesAndFields() = 0;
@@ -477,6 +480,10 @@ class OSGridController : public QObject
   void setWalkInCategoriesAndFields();
 
   std::vector<QString> categories();
+
+  std::vector<std::pair<QString,std::vector<QString>>> categoriesAndFields(); 
+
+  void categorySelected(int index);
 
   virtual int rowCount() const;
 
@@ -504,23 +511,7 @@ class OSGridController : public QObject
   void addDisplayCaseColumns(const std::vector<QString> & fields); // TODO rename to "addColumns" and move to derived class
   void addWalkInColumns(const std::vector<QString> & fields);      // TODO rename to "addColumns" and move to derived class
 
-  void setCategoryFields(const QString & category, std::vector<QString> fields);
-
-  std::vector<QString> categoryFields(const QString & category); 
-
-  std::vector<QSharedPointer<CheckBoxConcept> > m_checkBoxConcepts;
-
-  std::vector<QSharedPointer<ComboBoxConcept> > m_comboBoxConcepts;
-
-  std::vector<QSharedPointer<DoubleEditConcept> > m_doubleEditConcepts;
-
-  std::vector<QSharedPointer<IntegerEditConcept> > m_integerEditConcepts;
-
-  std::vector<QSharedPointer<LineEditConcept> > m_lineEditConcepts; 
-  
-  std::vector<QSharedPointer<QuantityEditConcept> > m_quantityEditConcepts;
-
-  std::vector<QSharedPointer<UnsignedEditConcept> > m_unsignedEditConcepts;
+  std::vector<QSharedPointer<BaseConcept> > m_baseConcepts;
 
   model::Model m_model;
 
@@ -528,9 +519,7 @@ class OSGridController : public QObject
 
   IddObjectType m_iddObjectType;
 
-  std::vector<QString> m_categories;
-
-  std::map<QString,std::vector<QString>> m_categoriesAndFields;
+  std::vector<std::pair<QString,std::vector<QString>>> m_categoriesAndFields;
 
   signals:
 
