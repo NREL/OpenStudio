@@ -52,8 +52,7 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( AirLo
   supplyPathIdf.setName(airLoopHVAC.name().get() + " Supply Path");
 
   model::Node node = airLoopHVAC.demandInletNode();
-  boost::optional<IdfObject> _node = translateAndMapModelObject(node);
-  supplyPathIdf.setString(openstudio::AirLoopHVAC_SupplyPathFields::SupplyAirPathInletNodeName,_node->name().get());
+  supplyPathIdf.setString(openstudio::AirLoopHVAC_SupplyPathFields::SupplyAirPathInletNodeName,node.name().get());
 
   model::AirLoopHVACZoneSplitter zoneSplitter = airLoopHVAC.zoneSplitter();
 

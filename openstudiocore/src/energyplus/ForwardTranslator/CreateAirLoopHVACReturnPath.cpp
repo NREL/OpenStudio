@@ -57,9 +57,7 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath( AirLo
   returnPathIdf.setName(airLoopHVAC.name().get() + " Return Path");
 
   Node node = airLoopHVAC.demandOutletNode();
-  boost::optional<IdfObject> _node = translateAndMapModelObject(node);
-  OS_ASSERT(_node);
-  returnPathIdf.setString(openstudio::AirLoopHVAC_ReturnPathFields::ReturnAirPathOutletNodeName,_node->name().get());
+  returnPathIdf.setString(openstudio::AirLoopHVAC_ReturnPathFields::ReturnAirPathOutletNodeName,node.name().get());
 
   AirLoopHVACZoneMixer zoneMixer = airLoopHVAC.zoneMixer();
   boost::optional<IdfObject> _zoneMixer = translateAndMapModelObject(zoneMixer);
