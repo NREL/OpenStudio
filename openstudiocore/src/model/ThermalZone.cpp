@@ -19,6 +19,10 @@
 
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/ZoneHVACEquipmentList.hpp>
 #include <model/ZoneHVACEquipmentList_Impl.hpp>
 #include <model/Model.hpp>
@@ -1698,6 +1702,52 @@ namespace detail {
     ZoneHVACEquipmentList equipmentList(tz);
 
     return tz;
+  }
+
+  boost::optional<AirLoopHVACSupplyPlenum> ThermalZone_Impl::airLoopHVACSupplyPlenum() const
+  {
+    boost::optional<AirLoopHVACSupplyPlenum> result;
+
+    std::vector<AirLoopHVACSupplyPlenum> plenums = model().getModelObjects<AirLoopHVACSupplyPlenum>();
+
+    for(std::vector<AirLoopHVACSupplyPlenum>::iterator it = plenums.begin();
+        it != plenums.end();
+        it++)
+    {
+      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      {
+        if( tz->handle() == handle() )
+        {
+          result = *it;
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<AirLoopHVACReturnPlenum> ThermalZone_Impl::airLoopHVACReturnPlenum() const
+  {
+    boost::optional<AirLoopHVACReturnPlenum> result;
+
+    std::vector<AirLoopHVACReturnPlenum> plenums = model().getModelObjects<AirLoopHVACReturnPlenum>();
+
+    for(std::vector<AirLoopHVACReturnPlenum>::iterator it = plenums.begin();
+        it != plenums.end();
+        it++)
+    {
+      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      {
+        if( tz->handle() == handle() )
+        {
+          return *it;
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
 } // detail

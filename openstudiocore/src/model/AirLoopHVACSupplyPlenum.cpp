@@ -81,13 +81,19 @@ namespace detail {
 
   bool AirLoopHVACSupplyPlenum_Impl::setThermalZone(const boost::optional<ThermalZone>& thermalZone) {
     bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_AirLoopHVAC_SupplyPlenumFields::ThermalZone, thermalZone.get().handle());
-    }
-    else {
+
+    if( ! thermalZone )
+    {
       resetThermalZone();
       result = true;
     }
+    else if( (! thermalZone->getImpl<ThermalZone>()->airLoopHVACSupplyPlenum()) &&
+             (! thermalZone->getImpl<thermalZone>()->airLoopHVACReturnPlenum()) &&
+             (thermalZone.equipment().size() == 0) )
+    {
+      result = setPointer(OS_AirLoopHVAC_SupplyPlenumFields::ThermalZone, thermalZone.get().handle());
+    }
+
     return result;
   }
 

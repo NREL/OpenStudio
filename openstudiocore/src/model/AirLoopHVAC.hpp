@@ -217,16 +217,19 @@ class MODEL_API AirLoopHVAC : public Loop
   bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
 
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
-   *  Returns true if the airTerminal was accepted, otherwise false.  The demand side
-   *  of the air loop must be empty for this operation to succeed.
+   *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,
+   *  can be an air terminal, AirLoopHVACSupplyPlenum, or airLoopHVACReturnPlenum.
    **/
-  bool addBranchForHVACComponent(HVACComponent airTerminal);
+  bool addBranchForHVACComponent(HVACComponent hvacComponent);
 
   /** Removes the Zone identified by zoneLabel from the air loop and returns true
    * upon successful removal.
    **/
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
+  /** This is a convenience to add matched supply and return plenums in one method
+   *  Single supply or return plenums can be added with addBranchForHVACComponent.
+  **/
   bool addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum);
 
   /** Returns the Sizing:System object associated with this air loop. **/

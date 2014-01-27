@@ -374,6 +374,10 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const;
 
+    boost::optional<AirLoopHVACSupplyPlenum> airLoopHVACSupplyPlenum() const;
+
+    boost::optional<AirLoopHVACReturnPlenum> airLoopHVACReturnPlenum() const;
+
    protected:
 
    private:

@@ -46,6 +46,12 @@ class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
 
   boost::optional<ThermalZone> thermalZone() const;
 
+  /** Establish thermalZone as the plenum zone.
+   *  If thermalZone is already conditioned by ThermalZone::equipment(),
+   *  then this method will return false.  A ThermalZone cannot be conditioned 
+   *  by equipment and and be a plenum zone.  Remove any existing ZoneHVACComponent objects,
+   *  and associated AirLoopHVAC objects before using this method on thermalZone.
+  **/
   bool setThermalZone(const ThermalZone& thermalZone);
 
   void resetThermalZone();

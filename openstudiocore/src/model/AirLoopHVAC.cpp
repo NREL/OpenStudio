@@ -1221,9 +1221,9 @@ bool AirLoopHVAC::addBranchForZone(ThermalZone & thermalZone, StraightComponent 
   return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
 }
 
-bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent airTerminal)
+bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent component)
 {
-  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForHVACComponent(airTerminal);
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForHVACComponent(component);
 }
 
 SizingSystem AirLoopHVAC::sizingSystem() const
