@@ -412,6 +412,8 @@ namespace detail {
 
     boost::optional<AirLoopHVACReturnPlenum> airLoopHVACReturnPlenum() const;
 
+    bool isPlenum() const;
+
    protected:
 
    private:

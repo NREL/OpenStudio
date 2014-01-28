@@ -355,6 +355,11 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Return all equipment.  Order is determined by coooling priority */
   std::vector<ModelObject> equipmentInCoolingOrder();
 
+  /** Return true of the ThermalZone is attached to 
+  *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
+  */
+  bool isPlenum() const;
+
   //@}
  protected:
   /// @cond

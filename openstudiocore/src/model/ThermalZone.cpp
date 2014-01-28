@@ -1839,6 +1839,16 @@ namespace detail {
     return result;
   }
 
+  bool ThermalZone_Impl::isPlenum() const
+  {
+    bool result = false;
+    if( airLoopHVACReturnPlenum() || airLoopHVACSupplyPlenum() )
+    {
+      result = true;
+    }
+    return result;
+  }
+
 } // detail
 
 ThermalZone::ThermalZone(const Model& model)
@@ -2323,6 +2333,11 @@ std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder()
 void ThermalZone::removeEquipment(const ModelObject & equipment)
 {
   getImpl<detail::ThermalZone_Impl>()->removeEquipment(equipment);
+}
+
+bool ThermalZone::isPlenum() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->isPlenum();
 }
 
 /// @cond
