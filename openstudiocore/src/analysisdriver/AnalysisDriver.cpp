@@ -386,7 +386,6 @@ namespace detail {
       OS_ASSERT(dataPoint->isComplete());
 
       // create new data points as appropriate
-      int n(0);
       bool callQueueJobs(false);
       int nTot = currentAnalysis.totalNumJobsInOSIteration();
       int nQueued = currentAnalysis.numQueuedOSJobs();
@@ -399,7 +398,7 @@ namespace detail {
                               // that method will check to see if Dakota is running
         if (OptionalOpenStudioAlgorithm osAlgorithm = getOpenStudioAlgorithm(analysis))
         {
-          n = osAlgorithm->createNextIteration(analysis);
+          int n = osAlgorithm->createNextIteration(analysis);
           LOG(Info,"OpenStudioAlgorithm '" << osAlgorithm->name() << "' created " << n
               << " new DataPoints.");
         }

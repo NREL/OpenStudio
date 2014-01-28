@@ -148,8 +148,7 @@ namespace detail {
   }
 
   bool GasEquipment_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_GasEquipmentFields::Multiplier, multiplier);
+    bool result = setDouble(OS_GasEquipmentFields::Multiplier, multiplier);
     return result;
   }
 
@@ -159,8 +158,7 @@ namespace detail {
   }
 
   void GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 

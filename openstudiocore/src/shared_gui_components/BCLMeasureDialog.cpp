@@ -255,10 +255,10 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 
 void BCLMeasureDialog::init()
 {
-  int btnHeight = 34;
-
 #ifdef Q_OS_MAC
-  btnHeight = 44;
+  int btnHeight = 44;
+#else
+  int btnHeight = 34;
 #endif
 
   QPushButton* cancelButton = this->cancelButton();

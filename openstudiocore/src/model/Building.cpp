@@ -189,8 +189,7 @@ namespace detail {
   }
 
   bool Building_Impl::setBuildingType(const std::string& buildingType) {
-    bool result = false;
-    result = setString(OS_BuildingFields::BuildingType, buildingType);
+    bool result = setString(OS_BuildingFields::BuildingType, buildingType);
     return result;
   }
 
@@ -200,8 +199,7 @@ namespace detail {
   }
 
   void Building_Impl::setNorthAxis(double northAxis) {
-    bool result = false;
-    result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
+    bool result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
     OS_ASSERT(result);
   }
 
@@ -211,8 +209,7 @@ namespace detail {
   }
 
   bool Building_Impl::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
-    bool result = false;
-    result = setDouble(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
+    bool result = setDouble(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
     return result;
   }
 
@@ -668,8 +665,7 @@ namespace detail {
 
   bool Building_Impl::setNorthAxis(const Quantity& northAxis)
   {
-    bool result = false;
-    result = setQuantity(OS_BuildingFields::NorthAxis, northAxis);
+    bool result = setQuantity(OS_BuildingFields::NorthAxis, northAxis);
     return result;
   }
 
@@ -689,8 +685,7 @@ namespace detail {
 
   bool Building_Impl::setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight)
   {
-    bool result = false;
-    result = setQuantity(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
+    bool result = setQuantity(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
     return result;
   }
 

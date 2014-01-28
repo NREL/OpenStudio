@@ -75,7 +75,7 @@ namespace detail {
     if ( !modelObjects.empty() ){
       for( std::vector<ModelObject>::iterator it = modelObjects.begin();
        it != modelObjects.end();
-       it++ )
+       ++it )
       {
         std::vector<IdfObject> removedModelObject = it->remove();
         result.insert(result.end(), removedModelObject.begin(), removedModelObject.end());
@@ -98,7 +98,7 @@ namespace detail {
       modelObjectListClone.removeAllModelObjects();
       for( std::vector<ModelObject>::iterator it = modelObjects.begin();
        it != modelObjects.end();
-       it++ )
+       ++it )
       {
         ModelObject modelObjectClone = it->clone(model);
         modelObjectListClone.addModelObject(modelObjectClone);
@@ -115,7 +115,7 @@ namespace detail {
 
     for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
          it != groups.end();
-         it++ )
+         ++it )
     {
       boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
 
@@ -156,7 +156,7 @@ namespace detail {
 
     for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
          it != groups.end();
-         it++ )
+         ++it )
     {
       boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
 

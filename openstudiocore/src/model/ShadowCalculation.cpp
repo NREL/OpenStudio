@@ -112,8 +112,7 @@ namespace detail {
   }
 
   bool ShadowCalculation_Impl::setCalculationFrequency(int calculationFrequency) {
-    bool result = false;
-    result = setInt(OS_ShadowCalculationFields::CalculationFrequency, calculationFrequency);
+    bool result = setInt(OS_ShadowCalculationFields::CalculationFrequency, calculationFrequency);
     return result;
   }
 
@@ -123,8 +122,7 @@ namespace detail {
   }
 
   bool ShadowCalculation_Impl::setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations) {
-    bool result = false;
-    result = setInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, maximumFiguresInShadowOverlapCalculations);
+    bool result = setInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, maximumFiguresInShadowOverlapCalculations);
     return result;
   }
 

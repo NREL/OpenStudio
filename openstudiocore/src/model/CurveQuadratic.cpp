@@ -137,32 +137,27 @@ namespace detail {
   }
 
   void CurveQuadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_QuadraticFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
   }
 
   void CurveQuadratic_Impl::setCoefficient2x(double coefficient2x) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticFields::Coefficient2x, coefficient2x);
+    bool result = setDouble(OS_Curve_QuadraticFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
   }
 
   void CurveQuadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    bool result = setDouble(OS_Curve_QuadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
   }
 
   void CurveQuadratic_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_QuadraticFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveQuadratic_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_QuadraticFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
@@ -197,8 +192,7 @@ namespace detail {
   }
 
   bool CurveQuadratic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_QuadraticFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_QuadraticFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -208,8 +202,7 @@ namespace detail {
   }
 
   bool CurveQuadratic_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_QuadraticFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_QuadraticFields::OutputUnitType, outputUnitType);
     return result;
   }
 

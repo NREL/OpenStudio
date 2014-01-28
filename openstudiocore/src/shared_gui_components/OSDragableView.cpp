@@ -30,7 +30,8 @@ OSDragPixmapData::OSDragPixmapData(const QPixmap & t_pixmap, const QPoint & t_ho
 }
 
 OSDragableView::OSDragableView(QWidget * parent)
-  : QWidget(parent)
+  : QWidget(parent),
+    m_mouseDown(false)
 {
 }
 

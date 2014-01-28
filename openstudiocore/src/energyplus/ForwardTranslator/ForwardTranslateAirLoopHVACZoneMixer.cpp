@@ -140,7 +140,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneMixer( Air
   int i = 2;
   for( std::vector<ModelObject>::iterator it = inletModelObjects.begin();
        it < inletModelObjects.end();
-       it++ )
+       ++it )
   {
     optS = it->name();
     if(optS)

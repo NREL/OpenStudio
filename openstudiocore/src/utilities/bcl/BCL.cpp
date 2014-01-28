@@ -435,8 +435,8 @@ namespace openstudio{
           .nodeValue().toStdString();
         std::string value = attributeElement.firstChildElement("value").firstChild()
           .nodeValue().toStdString();
-        std::string datatype = attributeElement.firstChildElement("datatype").firstChild()
-          .nodeValue().toStdString();
+        //std::string datatype = attributeElement.firstChildElement("datatype").firstChild()
+        //  .nodeValue().toStdString();
 
         // Units are optional
         std::string units = attributeElement.firstChildElement("units").firstChild()

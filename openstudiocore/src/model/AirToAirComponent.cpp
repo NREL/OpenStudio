@@ -224,7 +224,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       for( std::vector<ModelObject>::iterator it = dropNodeLocation;
            it != oaComponents.end();
-           it++ )
+           ++it )
       {
         n++;
 
@@ -248,7 +248,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
            it != oaComponents.rend();
-           it++ )
+           ++it )
       {
         if( (prevSupplyComponent = it->optionalCast<AirToAirComponent>()) )
         {
@@ -282,7 +282,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       for( std::vector<ModelObject>::iterator it = prevReliefComponentLocation;
            it != reliefComponents.end();
-           it++ )
+           ++it )
       {
         bigNPrime++;
 
@@ -353,7 +353,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       for( std::vector<ModelObject>::iterator it = dropNodeLocation;
            it != reliefComponents.end();
-           it++ )
+           ++it )
       {
         n++;
 
@@ -377,7 +377,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
            it != reliefComponents.rend();
-           it++ )
+           ++it )
       {
         if( (prevReliefComponent = it->optionalCast<AirToAirComponent>()) )
         {
@@ -411,7 +411,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       for( std::vector<ModelObject>::iterator it = prevSupplyComponentLocation;
            it != oaComponents.end();
-           it++ )
+           ++it )
       {
         bigNPrime++;
 

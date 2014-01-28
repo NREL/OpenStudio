@@ -160,9 +160,8 @@ void ObjectExplorer::updateIddFile()
 
 void ObjectExplorer::groupTextEdited(const QString& text)
 {
-  QListWidgetItem * item = NULL;
   for(int i=0; i<mGroupList->count(); i++){
-    item = mGroupList->item(i);
+    QListWidgetItem * item = mGroupList->item(i);
     item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
   }
 }

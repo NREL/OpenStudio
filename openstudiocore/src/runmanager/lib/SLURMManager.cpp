@@ -547,8 +547,6 @@ namespace runmanager {
 
   void SLURMManager::handleRunningJobsStdOut(const std::string &data)
   {
-    std::set<int> runningjobs;
-
     std::vector<std::string> lines;
     boost::split(lines, data, boost::is_any_of("\r\n"), boost::algorithm::token_compress_on);
     /* procnum ws numnum tab data */

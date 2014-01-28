@@ -278,10 +278,9 @@ void EditorFrame::createMenus()
   mHelpMenu = menuBar()->addMenu(tr("&Help"));
   mHelpMenu->addAction(mAboutAction);
 
-  bool connected = false;
   mContextMenu = new QMenu(this);
   ///! Use context menu signal to inform addObject() the text of the action clicked
-  connected = connect(mContextMenu, SIGNAL(triggered(QAction *)), this, SLOT(addObject(QAction *)));
+  bool connected = connect(mContextMenu, SIGNAL(triggered(QAction *)), this, SLOT(addObject(QAction *)));
   OS_ASSERT(connected);
 }
 
@@ -325,6 +324,7 @@ void EditorFrame::createStatusBar()
 void EditorFrame::connectSignalsAndSlots()
 {
   bool connected = false;
+
   connected = connect(mModelExplorer,SIGNAL(modelDirty()),
     this,SLOT(on_modelDirty()));
   OS_ASSERT(connected);
@@ -383,13 +383,12 @@ bool EditorFrame::addClassViewContextMenuAddActions(bool clearMenu)
   QAction * newAddAction = NULL;
   QString name;
   QString string;
-  QMenu * subMenu = NULL;
   QMenu * addSubMenu = NULL;
 
   for(unsigned i=0 ; i<groups.size(); i++){
     group = groups.at(i);
     objects = iddFile.getObjectsInGroup(group);
-    subMenu = new QMenu(group.c_str());
+    QMenu * subMenu = new QMenu(group.c_str());
     subMenu->setIcon(QIcon(":/images/edit_add.png"));
     for(unsigned j=0 ; j<objects.size(); j++){
       object = objects.at(j);
@@ -435,7 +434,6 @@ bool EditorFrame::addTreeViewContextMenuAddActions(bool clearMenu)
 
   mAllowableChildTypes.clear();
   mAllowableChildTypes = mModelExplorer->getAllowableChildTypes();
-  QAction * newAddAction = NULL;
   QMenu * addSubMenu = NULL;
   //bool connected = false;
   QString name;
@@ -449,7 +447,7 @@ bool EditorFrame::addTreeViewContextMenuAddActions(bool clearMenu)
     }
     name = mAllowableChildTypes.at(i).valueName().c_str();
     string = mActionDescriptionPrefix + name;
-    newAddAction = new QAction(QIcon(":/images/edit_add.png"), tr(string.toStdString().c_str()), this);
+    QAction * newAddAction = new QAction(QIcon(":/images/edit_add.png"), tr(string.toStdString().c_str()), this);
     ///! No connection required as the context menu will always call addObject()
     ///! Context menu signal has QAction->text() to pass to addObject()
     addSubMenu->addAction(newAddAction);

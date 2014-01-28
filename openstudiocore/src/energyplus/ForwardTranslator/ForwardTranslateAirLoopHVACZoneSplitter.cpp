@@ -67,7 +67,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneSplitter( 
   int i = 2;
   for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
        it < outletModelObjects.end();
-       it++ )
+       ++it )
   {
     if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
         it->optionalCast<AirTerminalSingleDuctUncontrolled>() )
