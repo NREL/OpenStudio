@@ -1761,7 +1761,7 @@ namespace detail {
     zoneHVACEquipmentList().setHeatingPriority(equipment,priority);
   }
   
-  std::vector<ModelObject> ThermalZone_Impl::equipment()
+  std::vector<ModelObject> ThermalZone_Impl::equipment() const
   {
     return zoneHVACEquipmentList().equipment();
   }

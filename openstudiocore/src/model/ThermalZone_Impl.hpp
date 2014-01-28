@@ -278,7 +278,7 @@ namespace detail {
     /// Resets the rendering color.
     void resetRenderingColor();
 
-    std::vector<ModelObject> equipment();
+    std::vector<ModelObject> equipment() const;
 
     /// returns all spaces in this thermal zone
     std::vector<Space> spaces() const;
