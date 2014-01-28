@@ -26,6 +26,8 @@ class QStackedWidget;
 
 class QSplitter;
 
+class QNetworkProxy;
+
 namespace openstudio{
   
 namespace pat {
@@ -107,6 +109,8 @@ class PatMainWindow : public QMainWindow
   void readSettings();
 
   void writeSettings();
+
+  void setRubyProxyEnvironment(const QNetworkProxy &t_proxy);
 
   QStackedWidget * m_mainRightColumnContainer;
 

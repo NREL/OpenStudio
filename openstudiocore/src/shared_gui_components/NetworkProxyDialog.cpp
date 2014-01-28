@@ -30,7 +30,8 @@ namespace openstudio
     // NoProxy, DefaultProxy, Socks5Proxy, HttpProxy, HttpCachingProxy, FtpCachingProxy
     m_proxyType = new QComboBox();
     m_proxyType->addItem("No Proxy", QNetworkProxy::NoProxy);
-    m_proxyType->addItem("Socks5 Proxy", QNetworkProxy::Socks5Proxy);
+    // Allow http only for now since that's known to be supported by ruby / aws
+    // m_proxyType->addItem("Socks5 Proxy", QNetworkProxy::Socks5Proxy);
     m_proxyType->addItem("Http Proxy", QNetworkProxy::HttpProxy);
 
     m_hostName = new QLineEdit(this);
@@ -106,10 +107,7 @@ namespace openstudio
   {
     std::cout << "testProxyConnection" << std::endl;
     QNetworkAccessManager nam;
-//    QNetworkProxy prox(t_proxy);
-//    prox.setType(QNetworkProxy::NoProxy);
     nam.setProxy(t_proxy);
-//    std::cout << "testProxyConnection " << toString(nam.proxy().host()) << " " << toString(nam.proxy().user()) << std::endl;
     QNetworkReply *head = nam.head(QNetworkRequest(QUrl("https://bcl.nrel.gov/")));
     std::cout << " errorString " << toString(head->errorString()) << std::endl;
 

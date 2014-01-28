@@ -142,6 +142,36 @@ def find_processors(instance)
   return processors
 end
 
+def get_proxy()
+  proxy_uri = ENV["HTTP_PROXY"]
+  if proxy_uri.empty?
+    proxy_uri = ENV["http_proxy"]
+  end
+
+  if proxy_uri.empty?
+    return nil
+  end
+
+  uri = URI::parse(proxy_uri)
+
+  host = uri.host
+  port = uri.port
+  user = uri.user
+  password = uri.password
+
+  if not ENV["HTTP_USER"].empty?
+    user = ENV["HTTP_USER"]
+  end
+
+  if not ENV["HTTP_PASS"].empty?
+    password = ENV["HTTP_PASS"]
+  end
+
+  proxy = Net::SSH::Proxy::HTTP.new(host, port, :user => user, :password => password)
+  return proxy
+end
+
+
 def launch_server
   user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/server_script.sh')
   @logger.info("server user_data #{user_data.inspect}")
@@ -193,7 +223,8 @@ end
 def upload_file(host, local_path, remote_path)
   retries = 0
   begin
-    Net::SCP.start(host, 'ubuntu', :key_data => [@private_key]) do |scp|
+    proxy = get_proxy
+    Net::SCP.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |scp|
       scp.upload! local_path, remote_path
     end
   rescue SystemCallError, Timeout::Error => e
@@ -216,7 +247,8 @@ def send_command(host, command)
   #retries = 0
   begin
     output = ''
-    Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+    proxy = get_proxy
+    Net::SSH.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |ssh|
       response = ssh.exec!(command)
       output += response if !response.nil?
     end
@@ -248,7 +280,9 @@ end
 def shell_command(host, command)
   begin
     @logger.info("ssh_command #{command}")
-    Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+
+    proxy = get_proxy
+    Net::SSH.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |ssh|
       channel = ssh.open_channel do |ch|
         ch.exec "#{command}" do |ch, success|
           raise "could not execute #{command}" unless success
@@ -285,7 +319,8 @@ def wait_command(host, command)
     flag = 0
     while flag == 0 do
       @logger.info("wait_command #{command}")
-      Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+      proxy = get_proxy
+      Net::SSH.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |ssh|
         channel = ssh.open_channel do |ch|
           ch.exec "#{command}" do |ch, success|
             raise "could not execute #{command}" unless success
@@ -331,7 +366,8 @@ end
 def download_file(host, remote_path, local_path)
   retries = 0
   begin
-    Net::SCP.start(host, 'ubuntu', :key_data => [@private_key]) do |scp|
+    proxy = get_proxy
+    Net::SCP.start(host, 'ubuntu',  :proxy => proxy, :key_data => [@private_key]) do |scp|
       scp.download! remote_path, local_path
     end
   rescue SystemCallError, Timeout::Error => e

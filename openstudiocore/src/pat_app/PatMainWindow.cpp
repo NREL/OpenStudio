@@ -284,6 +284,26 @@ void PatMainWindow::openSidebar()
   m_mainSplitter->setSizes(sizeList);
 }
 
+void PatMainWindow::setRubyProxyEnvironment(const QNetworkProxy &t_proxy)
+{
+  OS_ASSERT(t_proxy.type() == QNetworkProxy::NoProxy || t_proxy.type() == QNetworkProxy::HttpProxy);
+
+  if (t_proxy.type() == QNetworkProxy::NoProxy)
+  {
+    qputenv("http_proxy", "");
+    qputenv("HTTP_PROXY", "");
+    qputenv("HTTP_PASS", "");
+    qputenv("HTTP_USER", "");
+  } else if (t_proxy.type() == QNetworkProxy::HttpProxy) {
+    qputenv("http_proxy", "");
+    std::stringstream ss;
+    ss << "http://" << t_proxy.hostName() << ":" << t_proxy.port() << "/";
+    qputenv("HTTP_PROXY", toQString(ss.str()).toAscii());
+    qputenv("HTTP_PASS", t_proxy.password().toAscii());
+    qputenv("HTTP_USER", t_proxy.user().toAscii());
+  }
+}
+
 void PatMainWindow::readSettings()
 {
   QString organizationName = QCoreApplication::organizationName();
@@ -324,6 +344,7 @@ void PatMainWindow::configureProxyClicked()
       if (dialog.testProxy(proxy))
       {
         QNetworkProxy::setApplicationProxy(proxy);
+        setRubyProxyEnvironment(proxy);
       } else {
         QMessageBox::critical(this, "Proxy Configuration Error", "There is an error in your proxy configuration.");
       }
@@ -342,6 +363,7 @@ void PatMainWindow::loadProxySettings()
     if (NetworkProxyDialog::testProxy(proxy, this))
     {
       QNetworkProxy::setApplicationProxy(proxy);
+      setRubyProxyEnvironment(proxy);
     } else {
       QMessageBox::critical(this, "Proxy Configuration Error", "There is an error in your proxy configuration.");
       configureProxyClicked();
