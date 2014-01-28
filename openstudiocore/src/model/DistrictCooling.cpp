@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -92,8 +92,7 @@ namespace detail {
   }
   
   bool DistrictCooling_Impl::setNominalCapacity(double nominalCapacity) {
-    bool result = false;
-    result = setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity);
+    bool result = setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity);
     return result;
   }
 

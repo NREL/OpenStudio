@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -61,6 +61,17 @@ std::string toString(double v) {
   std::stringstream ss;
   ss << std::setprecision(std::numeric_limits<double>::digits10) << v;
   return ss.str();
+}
+
+std::string toString(std::istream& s) {
+  // istream -> string code from
+  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
+  std::string contents;
+  s.seekg(0, std::ios::end);
+  contents.resize(s.tellg());
+  s.seekg(0, std::ios::beg);
+  s.read(&contents[0], contents.size());
+  return contents;
 }
 
 /** QString to wstring. */

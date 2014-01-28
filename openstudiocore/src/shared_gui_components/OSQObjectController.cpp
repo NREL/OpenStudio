@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -48,9 +48,7 @@ void OSQObjectController::addQObject(QObject * object)
 {
   m_objects.push_back(object);
 
-  bool isConnected = false;
-
-  isConnected = connect(object,SIGNAL(destroyed(QObject *)),this,SLOT(onObjectDestroyed(QObject *)));
+  bool isConnected = connect(object,SIGNAL(destroyed(QObject *)),this,SLOT(onObjectDestroyed(QObject *)));
   OS_ASSERT(isConnected);
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -514,7 +514,7 @@ namespace openstudio{
       double endSecondsFromFirstReport = (endDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
 
       unsigned numValues = m_values.size();
-      BOOST_ASSERT(numValues == m_secondsFromFirstReport.size());
+      OS_ASSERT(numValues == m_secondsFromFirstReport.size());
 
       Vector result(numValues);
       unsigned resultSize = 0;

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -135,7 +135,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
 
     for( std::vector<WorkspaceObject>::iterator it = _zoneControlThermostats.begin();
          it < _zoneControlThermostats.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<std::string> zoneName = it->getString( ZoneControl_ThermostatFields::ZoneorZoneListName ) )
       {
@@ -151,7 +151,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
 
           for( std::vector<IdfExtensibleGroup>::iterator zoneListGroupIt = zoneListGroup.begin();
                zoneListGroupIt < zoneListGroup.end();
-               zoneListGroupIt++ )
+               ++zoneListGroupIt )
           {
             boost::optional<std::string> zoneListZoneName = zoneListGroupIt->getString(ZoneListExtensibleFields::ZoneName);
             if( zoneListZoneName )
@@ -166,7 +166,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
           std::vector<IdfExtensibleGroup> extensibleGroups = it->extensibleGroups();
           for( std::vector<IdfExtensibleGroup>::iterator egIt = extensibleGroups.begin();
                egIt < extensibleGroups.end();
-               egIt++ )
+               ++egIt )
           {
             boost::optional<std::string> thermostatType = egIt->getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType);
             boost::optional<std::string> thermostatName = egIt->getString(ZoneControl_ThermostatExtensibleFields::ControlName);

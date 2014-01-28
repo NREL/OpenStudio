@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -162,56 +162,47 @@ namespace detail {
   }
 
   void WeatherFile_Impl::setCity(std::string city) {
-    bool result = false;
-    result = setString(OS_WeatherFileFields::City, city);
+    bool result = setString(OS_WeatherFileFields::City, city);
     OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setStateProvinceRegion(std::string stateProvinceRegion) {
-    bool result = false;
-    result = setString(OS_WeatherFileFields::StateProvinceRegion, stateProvinceRegion);
+    bool result = setString(OS_WeatherFileFields::StateProvinceRegion, stateProvinceRegion);
     OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setCountry(std::string country) {
-    bool result = false;
-    result = setString(OS_WeatherFileFields::Country, country);
+    bool result = setString(OS_WeatherFileFields::Country, country);
     OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setDataSource(std::string dataSource) {
-    bool result = false;
-    result = setString(OS_WeatherFileFields::DataSource, dataSource);
+    bool result = setString(OS_WeatherFileFields::DataSource, dataSource);
     OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setWMONumber(std::string wMONumber) {
-    bool result = false;
-    result = setString(OS_WeatherFileFields::WMONumber, wMONumber);
+    bool result = setString(OS_WeatherFileFields::WMONumber, wMONumber);
     OS_ASSERT(result);
   }
 
   bool WeatherFile_Impl::setLatitude(double latitude) {
-    bool result = false;
-    result = setDouble(OS_WeatherFileFields::Latitude, latitude);
+    bool result = setDouble(OS_WeatherFileFields::Latitude, latitude);
     return result;
   }
 
   bool WeatherFile_Impl::setLongitude(double longitude) {
-    bool result = false;
-    result = setDouble(OS_WeatherFileFields::Longitude, longitude);
+    bool result = setDouble(OS_WeatherFileFields::Longitude, longitude);
     return result;
   }
 
   bool WeatherFile_Impl::setTimeZone(double timeZone) {
-    bool result = false;
-    result = setDouble(OS_WeatherFileFields::TimeZone, timeZone);
+    bool result = setDouble(OS_WeatherFileFields::TimeZone, timeZone);
     return result;
   }
 
   bool WeatherFile_Impl::setElevation(double elevation) {
-    bool result = false;
-    result = setDouble(OS_WeatherFileFields::Elevation, elevation);
+    bool result = setDouble(OS_WeatherFileFields::Elevation, elevation);
     return result;
   }
 
@@ -231,8 +222,7 @@ namespace detail {
   }
 
   void WeatherFile_Impl::setUrl(std::string url) {
-    bool result = false;
-    result = setString(OS_WeatherFileFields::Url, url);
+    bool result = setString(OS_WeatherFileFields::Url, url);
     OS_ASSERT(result);
   }
 
@@ -252,8 +242,7 @@ namespace detail {
   }
 
   void WeatherFile_Impl::setChecksum(std::string checksum) {
-    bool result = false;
-    result = setString(OS_WeatherFileFields::Checksum, checksum);
+    bool result = setString(OS_WeatherFileFields::Checksum, checksum);
     OS_ASSERT(result);
   }
 

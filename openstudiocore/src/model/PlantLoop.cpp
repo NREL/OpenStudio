@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -91,7 +91,7 @@ std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 
   for(it = modelObjects.begin();
       it != modelObjects.end();
-      it++)
+      ++it)
   {
     if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
     {
@@ -107,7 +107,7 @@ std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 
   for(it = modelObjects.begin();
       it != modelObjects.end();
-      it++)
+      ++it)
   {
     if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
     {
@@ -349,7 +349,7 @@ bool PlantLoop_Impl::removeBranchWithComponent( HVACComponent component, Splitte
 
   for( std::vector<ModelObject>::iterator it = allComponents.begin();
        it < allComponents.end();
-       it++ )
+       ++it )
   {
     if( ! it->optionalCast<Node>() )
     {
@@ -575,7 +575,7 @@ SizingPlant PlantLoop_Impl::sizingPlant() const
 
   for( std::vector<SizingPlant>::iterator it = sizingObjects.begin();
        it < sizingObjects.end();
-       it++ )
+       ++it )
   {
     if( it->plantLoop().handle() == this->handle() )
     {

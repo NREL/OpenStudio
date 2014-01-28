@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -266,7 +266,7 @@ void ResultsTabController::downloadResults()
 
               bool sameSession = cloudAnalysisDriver->inSession(dataPoint);
               if (sameSession){
-                bool success = cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
+                cloudAnalysisDriver->requestDownloadDetailedResults(dataPoint);
               }else{
                 // DLM: should not get here
                 QMessageBox::information(resultsView, "Results Unavailable", "Cannot download results from a previous cloud session.");

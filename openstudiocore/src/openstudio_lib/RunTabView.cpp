@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -101,6 +101,7 @@ RunView::RunView(const model::Model & model,
 
 {
   bool isConnected = t_runManager.connect(SIGNAL(statsChanged()), this, SLOT(runManagerStatsChanged()));
+  OS_ASSERT(isConnected);
 
   QGridLayout *mainLayout = new QGridLayout();
   mainLayout->setContentsMargins(5,5,5,5);

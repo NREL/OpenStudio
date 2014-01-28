@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -454,6 +454,89 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone2)
   EXPECT_FALSE(schedule.scheduleRules()[1].handle() == schedule2.scheduleRules()[1].handle());
   EXPECT_FALSE(schedule.scheduleRules()[2].handle() == schedule2.scheduleRules()[2].handle());
   EXPECT_FALSE(schedule.scheduleRules()[3].handle() == schedule2.scheduleRules()[3].handle());
+}
+
+TEST_F(ModelFixture, ScheduleRuleset_Clone3)
+{
+  Model model;
+  ScheduleTypeLimits typeLimits(model);
+
+  ScheduleRuleset schedule(model);
+  schedule.setScheduleTypeLimits(typeLimits);
+
+  ScheduleRule scheduleRule1(schedule);
+  ASSERT_TRUE(scheduleRule1.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule1.daySchedule().scheduleTypeLimits()->handle());
+  ScheduleRule scheduleRule2(schedule);
+  ASSERT_TRUE(scheduleRule2.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule2.daySchedule().scheduleTypeLimits()->handle());
+  ScheduleRule scheduleRule3(schedule);
+  ASSERT_TRUE(scheduleRule3.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule3.daySchedule().scheduleTypeLimits()->handle());
+  ScheduleRule scheduleRule4(schedule);
+  ASSERT_TRUE(scheduleRule4.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule4.daySchedule().scheduleTypeLimits()->handle());
+
+  ASSERT_EQ(4u,schedule.scheduleRules().size());
+
+  ModelObject modelObject = schedule.clone(model);
+  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+
+  ASSERT_EQ(4u,schedule2.scheduleRules().size());
+
+  EXPECT_FALSE(schedule.handle() == schedule2.handle());
+  EXPECT_FALSE(schedule.scheduleRules()[0].handle() == schedule2.scheduleRules()[0].handle());
+  EXPECT_FALSE(schedule.scheduleRules()[1].handle() == schedule2.scheduleRules()[1].handle());
+  EXPECT_FALSE(schedule.scheduleRules()[2].handle() == schedule2.scheduleRules()[2].handle());
+  EXPECT_FALSE(schedule.scheduleRules()[3].handle() == schedule2.scheduleRules()[3].handle());
+
+  modelObject = schedule.clone(model);
+}
+
+TEST_F(ModelFixture, ScheduleRuleset_Clone4)
+{
+  Model model;
+  ScheduleTypeLimits typeLimits(model);
+  typeLimits.setName(toString(createUUID()));
+
+  ScheduleRuleset schedule(model);
+  schedule.setName(toString(createUUID()));
+  schedule.setScheduleTypeLimits(typeLimits);
+
+  ScheduleRule scheduleRule1(schedule);
+  scheduleRule1.setName(toString(createUUID()));
+  ASSERT_TRUE(scheduleRule1.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule1.daySchedule().scheduleTypeLimits()->handle());
+
+  ScheduleRule scheduleRule2(schedule);
+  scheduleRule2.setName(toString(createUUID()));
+  ASSERT_TRUE(scheduleRule2.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule2.daySchedule().scheduleTypeLimits()->handle());
+
+  ScheduleRule scheduleRule3(schedule);
+  scheduleRule3.setName(toString(createUUID()));
+  ASSERT_TRUE(scheduleRule3.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule3.daySchedule().scheduleTypeLimits()->handle());
+
+  ScheduleRule scheduleRule4(schedule);
+  scheduleRule4.setName(toString(createUUID()));
+  ASSERT_TRUE(scheduleRule4.daySchedule().scheduleTypeLimits());
+  EXPECT_EQ(typeLimits.handle(), scheduleRule4.daySchedule().scheduleTypeLimits()->handle());
+
+  ASSERT_EQ(4u,schedule.scheduleRules().size());
+
+  ModelObject modelObject = schedule.clone(model);
+  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+
+  ASSERT_EQ(4u,schedule2.scheduleRules().size());
+
+  EXPECT_FALSE(schedule.handle() == schedule2.handle());
+  EXPECT_FALSE(schedule.scheduleRules()[0].handle() == schedule2.scheduleRules()[0].handle());
+  EXPECT_FALSE(schedule.scheduleRules()[1].handle() == schedule2.scheduleRules()[1].handle());
+  EXPECT_FALSE(schedule.scheduleRules()[2].handle() == schedule2.scheduleRules()[2].handle());
+  EXPECT_FALSE(schedule.scheduleRules()[3].handle() == schedule2.scheduleRules()[3].handle());
+
+  modelObject = schedule.clone(model);
 }
 
 TEST_F(ModelFixture, ScheduleRuleset_DaySchedule)

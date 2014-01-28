@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -115,8 +115,7 @@ namespace detail {
   }
 
   bool InternalMass_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_InternalMassFields::Multiplier, multiplier);
+    bool result = setDouble(OS_InternalMassFields::Multiplier, multiplier);
     return result;
   }
 

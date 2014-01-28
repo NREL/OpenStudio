@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePortList( PortList & mode
 
   for( std::vector<ModelObject>::iterator it = modelObjects.begin();
        it != modelObjects.end();
-       it++ )
+       ++it )
   {
     if( boost::optional<Node> node = it->optionalCast<Node>() )
     {

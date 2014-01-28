@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -201,8 +201,7 @@ namespace detail {
   }
 
   bool BoilerHotWater_Impl::setFuelType(std::string fuelType) {
-    bool result = false;
-    result = setString(OS_Boiler_HotWaterFields::FuelType, fuelType);
+    bool result = setString(OS_Boiler_HotWaterFields::FuelType, fuelType);
     return result;
   }
 
@@ -227,8 +226,7 @@ namespace detail {
   }
 
   bool BoilerHotWater_Impl::setNominalThermalEfficiency(double nominalThermalEfficiency) {
-    bool result = false;
-    result = setDouble(OS_Boiler_HotWaterFields::NominalThermalEfficiency, nominalThermalEfficiency);
+    bool result = setDouble(OS_Boiler_HotWaterFields::NominalThermalEfficiency, nominalThermalEfficiency);
     return result;
   }
 
@@ -300,8 +298,7 @@ namespace detail {
   }
 
   bool BoilerHotWater_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
-    bool result = false;
-    result = setDouble(OS_Boiler_HotWaterFields::MinimumPartLoadRatio, minimumPartLoadRatio);
+    bool result = setDouble(OS_Boiler_HotWaterFields::MinimumPartLoadRatio, minimumPartLoadRatio);
     return result;
   }
 
@@ -311,8 +308,7 @@ namespace detail {
   }
 
   bool BoilerHotWater_Impl::setMaximumPartLoadRatio(double maximumPartLoadRatio) {
-    bool result = false;
-    result = setDouble(OS_Boiler_HotWaterFields::MaximumPartLoadRatio, maximumPartLoadRatio);
+    bool result = setDouble(OS_Boiler_HotWaterFields::MaximumPartLoadRatio, maximumPartLoadRatio);
     return result;
   }
 
@@ -322,8 +318,7 @@ namespace detail {
   }
 
   bool BoilerHotWater_Impl::setOptimumPartLoadRatio(double optimumPartLoadRatio) {
-    bool result = false;
-    result = setDouble(OS_Boiler_HotWaterFields::OptimumPartLoadRatio, optimumPartLoadRatio);
+    bool result = setDouble(OS_Boiler_HotWaterFields::OptimumPartLoadRatio, optimumPartLoadRatio);
     return result;
   }
 
@@ -333,8 +328,7 @@ namespace detail {
   }
 
   void BoilerHotWater_Impl::setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit) {
-    bool result = false;
-    result = setDouble(OS_Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit, waterOutletUpperTemperatureLimit);
+    bool result = setDouble(OS_Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit, waterOutletUpperTemperatureLimit);
     OS_ASSERT(result);
   }
 
@@ -378,8 +372,7 @@ namespace detail {
   }
 
   bool BoilerHotWater_Impl::setSizingFactor(double sizingFactor) {
-    bool result = false;
-    result = setDouble(OS_Boiler_HotWaterFields::SizingFactor, sizingFactor);
+    bool result = setDouble(OS_Boiler_HotWaterFields::SizingFactor, sizingFactor);
     return result;
   }
 

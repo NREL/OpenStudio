@@ -287,7 +287,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle)
+  boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
   {
     OptionalModelObject result;
 
@@ -318,7 +318,7 @@ namespace detail {
   std::vector<ModelObject> Loop_Impl::supplyComponents(std::vector<HVACComponent> inletComps, 
       std::vector<HVACComponent> outletComps,
       openstudio::IddObjectType type
-    )
+    ) const
   {
     return std::vector<ModelObject>();
   }
@@ -517,7 +517,7 @@ namespace detail {
     return reducedModelObjects;
   }
 
-  std::vector<ModelObject> Loop_Impl::supplyComponents(openstudio::IddObjectType type)
+  std::vector<ModelObject> Loop_Impl::supplyComponents(openstudio::IddObjectType type) const
   {
     return supplyComponents( supplyInletNode(),
                              supplyOutletNode(),
@@ -545,7 +545,7 @@ namespace detail {
 
   std::vector<ModelObject> Loop_Impl::supplyComponents( HVACComponent inletComp,
                                                         HVACComponent outletComp,
-                                                        openstudio::IddObjectType type)
+                                                        openstudio::IddObjectType type) const
   {
     std::vector<ModelObject> modelObjects;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -49,6 +49,7 @@ namespace openstudio {
         unsigned int seed;
         urandom = fopen ("/dev/urandom", "r");
         fread(&seed, sizeof (seed), 1, urandom);
+        fclose(urandom);
         qsrand(seed);
       }
     };

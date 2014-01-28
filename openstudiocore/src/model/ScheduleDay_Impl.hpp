@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -117,6 +117,9 @@ namespace detail {
 
     /// Clear all values from this schedule.
     void clearValues();
+
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays();
 
     //@}
    protected:

@@ -259,16 +259,18 @@ end
 
 total=electotal+gastotal
 
+isototal = simResults.totalEnergyUse();
 
 printf("Elec Total: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu \n",electotal,electotal*0.3171,electotal*floorArea,electotal*floorArea*3.412)
 printf("Gas Total: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu\n",gastotal,gastotal*0.3171,gastotal*floorArea,gastotal*floorArea*3.412)
 printf("All Total: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu\n",total,total*0.3171,total*floorArea,total*floorArea*3.412)
+printf("Total From ISOResults: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu\n", isototal, isototal*0.3171, isototal*floorArea,isototal*floorArea*3.412)
 
 logfile.printf("Elec Total: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu \n",electotal,electotal*0.3171,electotal*floorArea,electotal*floorArea*3.412)
 logfile.printf("Gas Total: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu\n",gastotal,gastotal*0.3171,gastotal*floorArea,gastotal*floorArea*3.412)
 logfile.printf("All Total: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu\n",total,total*0.3171,total*floorArea,total*floorArea*3.412)
 
-
+logfile.printf("Total From ISOResults: %4.2f kWh/m2, %4.2f kBtu/ft2, %4.2f kWh, %4.2f kBtu\n", isototal, isototal*0.3171, isototal*floorArea,isototal*floorArea*3.412)
 
 # save output file to CSV format
 

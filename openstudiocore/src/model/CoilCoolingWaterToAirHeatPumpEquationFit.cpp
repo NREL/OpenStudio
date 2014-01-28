@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -606,7 +606,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPumps.begin();
     it < zoneHVACWaterToAirHeatPumps.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->coolingCoil() )
       {

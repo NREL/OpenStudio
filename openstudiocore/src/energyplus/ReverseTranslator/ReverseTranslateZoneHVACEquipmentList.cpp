@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ OptionalModelObject ReverseTranslator::translateZoneHVACEquipmentList( const Wor
 
   for( std::vector<WorkspaceObject>::iterator it = zoneHVACEquipmentConnections.begin();
        it != zoneHVACEquipmentConnections.end();
-       it++ )
+       ++it )
   {
     if( boost::optional<std::string> name = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName) )
     {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -208,7 +208,12 @@ void OSListView::removePair(QObject * object)
 
 void OSListView::refreshItemView(int i)
 {
-  removeItemView(i);
+  if (i < int(m_widgetItemPairs.size())) {
+    removeItemView(i);
+  }
+  else {
+    LOG(Trace,"Not calling removeItemView(" << i << "), because the list is not that long.");
+  }
 
   insertItemView(i);
 }

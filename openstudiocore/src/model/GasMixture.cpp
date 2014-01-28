@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -222,12 +222,11 @@ namespace detail {
       return addGas(type,fraction);
     }
 
-    bool result = true;
     unsigned typeIndex = mf_getGasTypeFieldIndex(index);
     unsigned fractionIndex = mf_getGasFractionFieldIndex(index);
 
     OptionalString oldType = getString(typeIndex,true);
-    result = setString(typeIndex,type);
+    bool result = setString(typeIndex,type);
     if (!result) { return false; }
     result = setDouble(fractionIndex,fraction);
     if (!result) {
@@ -287,7 +286,6 @@ namespace detail {
     }
     bool result = true;
     double fullSum(0.0);
-    double minusOneSum(0.0);
     std::vector<std::string> rollbackValues;
     for (unsigned i = 0, n = numGases(); i < n; ++i) {
       // be able to rollback previously set values if necessary
@@ -296,7 +294,7 @@ namespace detail {
 
       // determine where we are with respect to adding up to 1.0
       double value = fractions[i];
-      minusOneSum = fullSum;
+      double minusOneSum = fullSum;
       fullSum += value;
       if (openstudio::greaterThanOrEqual(minusOneSum,1.0)) {
         LOG(Warn,"Unable to set gas fractions for GasMixture " << briefDescription()
@@ -356,7 +354,7 @@ namespace detail {
       // all gases must be defined
       for (unsigned i = 0, n = numGases(); i < n; ++i) {
         try {
-          std::string type = getGasType(i);
+          getGasType(i);
         }
         catch (...) {
           report.insertError(DataError(mf_getGasTypeFieldIndex(i),

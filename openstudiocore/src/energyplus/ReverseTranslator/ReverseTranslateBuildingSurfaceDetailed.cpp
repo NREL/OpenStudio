@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
     }
     surface->setSurfaceType(*s);
   }
-  std::string surfaceType = surface->surfaceType();
+  //std::string surfaceType = surface->surfaceType();
 
   s = workspaceObject.getString(BuildingSurface_DetailedFields::SunExposure);
   if (s) {

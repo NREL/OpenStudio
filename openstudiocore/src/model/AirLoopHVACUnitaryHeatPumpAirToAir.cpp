@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -445,8 +445,7 @@ namespace detail {
   }
 
   bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
-    bool result = false;
-    result = setDouble(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    bool result = setDouble(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
     return result;
   }
 
@@ -456,8 +455,7 @@ namespace detail {
   }
 
   bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setFanPlacement(std::string fanPlacement) {
-    bool result = false;
-    result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::FanPlacement, fanPlacement);
+    bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::FanPlacement, fanPlacement);
     return result;
   }
 
@@ -480,8 +478,7 @@ namespace detail {
   }
 
   bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
-    bool result = false;
-    result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::DehumidificationControlType, dehumidificationControlType);
+    bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::DehumidificationControlType, dehumidificationControlType);
     return result;
   }
 

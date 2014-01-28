@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 
 #include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationSecondarySystem_Impl.hpp>
+#include <model/RefrigerationAirChiller.hpp>
+#include <model/RefrigerationAirChiller_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationWalkIn.hpp>
@@ -286,6 +288,84 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCases)
 
   std::vector<RefrigerationCase> cases = testObject.cases();
   EXPECT_TRUE(cases.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSecondarySystem_AirChillers)
+{
+  Model model;
+  RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+
+  std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
+  EXPECT_TRUE(airChillers.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
+
+  testObject.addAirChiller(airChiller1);
+  airChillers = testObject.airChillers();
+  EXPECT_EQ(1, airChillers.size());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSecondarySystem_AddAirChiller)
+{
+  Model model;
+  RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+
+  EXPECT_TRUE(testObject.addAirChiller(airChiller1));
+}
+
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAirChiller)
+{
+  Model model;
+  RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+  RefrigerationAirChiller airChiller2 = RefrigerationAirChiller(model, s1);
+
+  testObject.addAirChiller(airChiller1);
+  testObject.addAirChiller(airChiller2);
+  testObject.removeAirChiller(airChiller1);
+
+  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  EXPECT_EQ(2, testRefrigerationAirChillers.size());
+
+  std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
+  EXPECT_EQ(1, airChillers.size());
+  EXPECT_EQ(airChiller2.handle(), airChillers[0].handle());
+
+  testObject.removeAirChiller(airChiller2);
+  testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  airChillers = testObject.airChillers();
+  EXPECT_EQ(2, testRefrigerationAirChillers.size());
+  EXPECT_TRUE(airChillers.empty());
+  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
+}
+
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllAirChillers)
+{
+  Model model;
+  RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
+  
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+  RefrigerationAirChiller airChiller2 = RefrigerationAirChiller(model, s1);
+
+  testObject.addAirChiller(airChiller1);
+  testObject.addAirChiller(airChiller2);
+  testObject.removeAllAirChillers();
+
+  std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
+  EXPECT_EQ(2, testRefrigerationAirChillers.size());
+
+  std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
+  EXPECT_TRUE(airChillers.empty());
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 

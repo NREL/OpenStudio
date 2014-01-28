@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -76,7 +76,7 @@ void CollapsibleComponentHeader::createLayout(const std::string& text, int numRe
   bool isConnected = false;
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
-                        this, SIGNAL(getComponentsByPage(int)));
+                             this, SIGNAL(getComponentsByPage(int)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),

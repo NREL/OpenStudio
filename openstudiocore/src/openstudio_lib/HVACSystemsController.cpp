@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -205,7 +205,7 @@ void HVACSystemsController::update()
 
     for( std::vector<model::Loop>::iterator it = loops.begin();
          it != loops.end();
-         it++ )
+         ++it )
     {
       systemComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
     }
@@ -1002,7 +1002,7 @@ void HVACControlsController::update()
 
         for( std::vector<model::ThermalZone>::const_iterator it = thermalZones.begin();
              it != thermalZones.end();
-             it++ )
+             ++it )
         {
           m_singleZoneReheatSPMView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
         }
@@ -1083,7 +1083,7 @@ void HVACControlsController::update()
 
         for( std::vector<model::ThermalZone>::const_iterator it = thermalZones.begin();
              it != thermalZones.end();
-             it++ )
+             ++it )
         {
           m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
         }

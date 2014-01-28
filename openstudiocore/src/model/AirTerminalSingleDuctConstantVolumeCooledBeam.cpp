@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -58,14 +58,14 @@ namespace detail {
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(const IdfObject& idfObject,Model_Impl* model,bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType());
   }
 
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(
   const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType());
   }
 
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(
@@ -111,11 +111,11 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
     if(!value){
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<AirTerminalSingleDuctConstantVolumeCooledBeam_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -203,8 +203,6 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     Model _model = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
 
-    std::vector<IdfObject> result;
-
     HVACComponent _coolingCoil = coilCoolingCooledBeam();
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
@@ -216,7 +214,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 
@@ -307,7 +305,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   std::string AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::cooledBeamType() const
   {
     boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CooledBeamType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -399,7 +397,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   double AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::designInletWaterTemperature() const
   {
     boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignInletWaterTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -411,7 +409,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   double AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::designOutletWaterTemperature() const
   {
     boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignOutletWaterTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -472,13 +470,13 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetSupplyAirVolumetricFlowRate()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirVolumetricFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizeSupplyAirVolumetricFlowRate()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirVolumetricFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setMaximumTotalChilledWaterVolumetricFlowRate(boost::optional<double> maximumTotalChilledWaterVolumetricFlowRate)
@@ -499,13 +497,13 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetMaximumTotalChilledWaterVolumetricFlowRate()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::MaximumTotalChilledWaterVolumetricFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizeMaximumTotalChilledWaterVolumetricFlowRate()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::MaximumTotalChilledWaterVolumetricFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setNumberofBeams(boost::optional<int> numberofBeams)
@@ -526,13 +524,13 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetNumberofBeams()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::NumberofBeams, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizeNumberofBeams()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::NumberofBeams, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setBeamLength(boost::optional<double> beamLength)
@@ -553,13 +551,13 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetBeamLength()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::BeamLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autosizeBeamLength()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::BeamLength, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setDesignInletWaterTemperature(double designInletWaterTemperature)
@@ -571,7 +569,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetDesignInletWaterTemperature()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignInletWaterTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setDesignOutletWaterTemperature(double designOutletWaterTemperature)
@@ -583,7 +581,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetDesignOutletWaterTemperature()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::DesignOutletWaterTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCoefficientofInductionKin(boost::optional<double> coefficientofInductionKin)
@@ -604,13 +602,13 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetCoefficientofInductionKin()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoefficientofInductionKin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::autocalculateCoefficientofInductionKin()
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoefficientofInductionKin, "autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::optionalAvailabilitySchedule() const
@@ -668,7 +666,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolu
                                                                                                    HVACComponent& coilCoolingCooledBeam)
   : StraightComponent(AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>());
+  OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>());
 
   bool ok = setAvailabilitySchedule(availabilitySchedule);
   if (!ok)
@@ -680,7 +678,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolu
 
   ok = setCoolingCoil(coilCoolingCooledBeam);
   this->setCooledBeamType("Passive");
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType()

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -71,13 +71,13 @@ namespace detail {
 
     virtual std::vector<ModelObject> supplyComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
-                                                       openstudio::IddObjectType type = IddObjectType::Catchall);
+                                                       openstudio::IddObjectType type = IddObjectType::Catchall) const;
 
     virtual std::vector<ModelObject> demandComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
                                                        openstudio::IddObjectType type = IddObjectType::Catchall);
 
-    virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=IddObjectType::Catchall);
+    virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=IddObjectType::Catchall) const;
 
     virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=IddObjectType::Catchall);
 
@@ -91,12 +91,12 @@ namespace detail {
 
     virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle);
 
-    virtual boost::optional<ModelObject> supplyComponent(openstudio::Handle handle);
+    virtual boost::optional<ModelObject> supplyComponent(openstudio::Handle handle) const;
 
     virtual std::vector<ModelObject> supplyComponents(std::vector<HVACComponent> inletComps,
                                                       std::vector<HVACComponent> outletComps,
                                                       openstudio::IddObjectType type
-                                                      );
+                                                      ) const;
 
     virtual std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
                                                       std::vector<HVACComponent> outletComps,

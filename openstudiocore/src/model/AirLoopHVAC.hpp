@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -201,7 +201,7 @@ class MODEL_API AirLoopHVAC : public Loop
    * A freshly constructed AirLoopHVAC object will not have an outdoor air system
    * and this method will return a false optional.
    */
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem();
+  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
   /** Adds a new branch on the demand side of the air loop for a zone labeled zoneLabel
    * and returns true if the operation was successful. The method will return false if the Zone

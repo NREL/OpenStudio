@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
   bool isConnected = false;
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked( bool )),
-    utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
+                        utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( utilityBillsView,SIGNAL(enableAddNewObjectButton( bool )),

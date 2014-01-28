@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -112,8 +112,7 @@ namespace detail {
   }
 
   bool ShadowCalculation_Impl::setCalculationFrequency(int calculationFrequency) {
-    bool result = false;
-    result = setInt(OS_ShadowCalculationFields::CalculationFrequency, calculationFrequency);
+    bool result = setInt(OS_ShadowCalculationFields::CalculationFrequency, calculationFrequency);
     return result;
   }
 
@@ -123,8 +122,7 @@ namespace detail {
   }
 
   bool ShadowCalculation_Impl::setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations) {
-    bool result = false;
-    result = setInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, maximumFiguresInShadowOverlapCalculations);
+    bool result = setInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, maximumFiguresInShadowOverlapCalculations);
     return result;
   }
 

@@ -27,6 +27,8 @@
 #include <utilities/core/LogMessage.hpp>
 #include <utilities/core/Path.hpp>
 
+#include <utilities/data/Attribute.hpp>
+
 class QDomDocument;
 class QDomElement;
 
@@ -79,6 +81,8 @@ class RULESET_API OSResult {
 
   boost::optional<LogMessage> finalCondition() const;
 
+  std::vector<Attribute> attributes() const;
+
   //@}
   /** @name Setters 
    *
@@ -98,6 +102,8 @@ class RULESET_API OSResult {
   void setInitialCondition(const std::string& channel, const std::string& message);
 
   void setFinalCondition(const std::string& channel, const std::string& message);
+
+  void appendAttribute(const Attribute& attribute);
 
   //@}
   /** @name Serialization */
@@ -120,6 +126,7 @@ class RULESET_API OSResult {
   std::vector<LogMessage> m_info;
   boost::optional<LogMessage> m_initialCondition;
   boost::optional<LogMessage> m_finalCondition;
+  std::vector<Attribute> m_attributes;
 
   LogMessage logMessageFromXML(LogLevel level, const QDomElement& element) const;
 

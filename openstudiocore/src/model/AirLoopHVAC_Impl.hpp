@@ -89,7 +89,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Node demandOutletNode() const;
 
-  boost::optional<Node> reliefAirNode();
+  boost::optional<Node> reliefAirNode() const;
+
+  boost::optional<Node> mixedAirNode() const;
 
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
 
@@ -101,7 +103,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void replaceAirLoopSupplyComp(ModelObject targetObj, ModelObject newObj);
 
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem();
+  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
   AirLoopHVACZoneMixer zoneMixer();
 

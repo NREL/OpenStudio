@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ namespace detail {
                                                                                bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirTerminalSingleDuctVAVNoReheat::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirTerminalSingleDuctVAVNoReheat::iddObjectType());
   }
 
   AirTerminalSingleDuctVAVNoReheat_Impl::AirTerminalSingleDuctVAVNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -67,7 +67,7 @@ namespace detail {
                                                                                bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirTerminalSingleDuctVAVNoReheat::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirTerminalSingleDuctVAVNoReheat::iddObjectType());
   }
 
   AirTerminalSingleDuctVAVNoReheat_Impl::AirTerminalSingleDuctVAVNoReheat_Impl(const AirTerminalSingleDuctVAVNoReheat_Impl& other,
@@ -112,11 +112,11 @@ namespace detail {
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<AirTerminalSingleDuctVAVNoReheat_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -193,12 +193,12 @@ namespace detail {
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetMaximumAirFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::autosizeMaximumAirFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setZoneMinimumAirFlowInputMethod(boost::optional<std::string> zoneMinimumAirFlowInputMethod) {
@@ -215,7 +215,7 @@ namespace detail {
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetZoneMinimumAirFlowInputMethod() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setConstantMinimumAirFlowFraction(boost::optional<double> constantMinimumAirFlowFraction) {
@@ -227,13 +227,13 @@ namespace detail {
       resetConstantMinimumAirFlowFraction();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result;
   }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetConstantMinimumAirFlowFraction() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setFixedMinimumAirFlowRate(boost::optional<double> fixedMinimumAirFlowRate) {
@@ -245,13 +245,13 @@ namespace detail {
       resetFixedMinimumAirFlowRate();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result;
   }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetFixedMinimumAirFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setMinimumAirFlowFractionSchedule(Schedule& schedule) {
@@ -264,7 +264,7 @@ namespace detail {
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetMinimumAirFlowFractionSchedule() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setDesignSpecificationOutdoorAirObject(const boost::optional<DesignSpecificationOutdoorAir>& designSpecificationOutdoorAir) {
@@ -281,7 +281,7 @@ namespace detail {
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetDesignSpecificationOutdoorAirObject() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat_Impl::optionalAvailabilitySchedule() const {
@@ -391,8 +391,6 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     Model _model = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
 
-    std::vector<IdfObject> result;
-
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
     
@@ -402,7 +400,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 
@@ -487,7 +485,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
 AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule)
   : StraightComponent(AirTerminalSingleDuctVAVNoReheat::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>());
+  OS_ASSERT(getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>());
 
   bool test = setAvailabilitySchedule(schedule);
   if (!test) {

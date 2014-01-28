@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -57,6 +57,7 @@
 #include <utilities/geometry/Transformation.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/units/QuantityConverter.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/optional.hpp>
@@ -188,8 +189,7 @@ namespace detail {
   }
 
   bool Building_Impl::setBuildingType(const std::string& buildingType) {
-    bool result = false;
-    result = setString(OS_BuildingFields::BuildingType, buildingType);
+    bool result = setString(OS_BuildingFields::BuildingType, buildingType);
     return result;
   }
 
@@ -199,8 +199,7 @@ namespace detail {
   }
 
   void Building_Impl::setNorthAxis(double northAxis) {
-    bool result = false;
-    result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
+    bool result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
     OS_ASSERT(result);
   }
 
@@ -210,8 +209,7 @@ namespace detail {
   }
 
   bool Building_Impl::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
-    bool result = false;
-    result = setDouble(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
+    bool result = setDouble(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
     return result;
   }
 
@@ -375,6 +373,36 @@ namespace detail {
     return result;
   }
 
+  double Building_Impl::exteriorSurfaceArea() const {
+    double result(0.0);
+    BOOST_FOREACH(const Surface& surface,model().getModelObjects<Surface>()) {
+      OptionalSpace space = surface.space();
+      std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
+      if (space && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
+        result += surface.grossArea() * space->multiplier();
+      }
+    }
+    return result;
+  }
+
+  double Building_Impl::exteriorWallArea() const {
+    double result(0.0);
+    BOOST_FOREACH(const Surface& exteriorWall,exteriorWalls()) {
+      if (OptionalSpace space = exteriorWall.space()) {
+        result += exteriorWall.grossArea() * space->multiplier();
+      }
+    }
+    return result;
+  }
+
+  double Building_Impl::airVolume() const {
+    double result(0.0);
+    BOOST_FOREACH(const Space& space, spaces()) {
+      result += space.volume() * space.multiplier();
+    }
+    return result;
+  }
+
   double Building_Impl::numberOfPeople() const {
     double result(0.0);
     BOOST_FOREACH(const Space& space, spaces()) {
@@ -521,6 +549,74 @@ namespace detail {
     return ep / np;
   }
 
+  double Building_Impl::infiltrationDesignFlowRate() const {
+    double result(0.0);
+    BOOST_FOREACH(const Space& space, spaces()){
+      result += space.multiplier() * space.infiltrationDesignFlowRate();
+    }
+    return result;
+  }
+
+  double Building_Impl::infiltrationDesignFlowPerSpaceFloorArea() const {
+    double area = floorArea();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(area,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignFlowPerSpaceFloorArea();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return idfr/area;
+  }
+
+  double Building_Impl::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+    double area = exteriorSurfaceArea();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(area,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignFlowPerExteriorSurfaceArea();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return idfr/area;
+  }
+
+  double Building_Impl::infiltrationDesignFlowPerExteriorWallArea() const {
+    double area = exteriorWallArea();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(area,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignFlowPerExteriorWallArea();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return idfr/area;
+  }
+
+  double Building_Impl::infiltrationDesignAirChangesPerHour() const {
+    double volume = airVolume();
+    double idfr = infiltrationDesignFlowRate();
+    if (equal(volume,0.0)) {
+      if (equal(idfr,0.0)) {
+        return 0.0;
+      }
+      if (spaces().size() == 1u) {
+        return spaces()[0].infiltrationDesignAirChangesPerHour();
+      }
+      LOG_AND_THROW("Calculation would require division by 0.");
+    }
+    return convert(idfr/volume,"1/s","1/h").get();
+  }
+
   boost::optional<int> Building_Impl::numberOfStories() const {
     OptionalBuildingStandardsInformation standardsInformation = this->standardsInformation();
     if (standardsInformation) {
@@ -569,8 +665,7 @@ namespace detail {
 
   bool Building_Impl::setNorthAxis(const Quantity& northAxis)
   {
-    bool result = false;
-    result = setQuantity(OS_BuildingFields::NorthAxis, northAxis);
+    bool result = setQuantity(OS_BuildingFields::NorthAxis, northAxis);
     return result;
   }
 
@@ -590,8 +685,7 @@ namespace detail {
 
   bool Building_Impl::setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight)
   {
-    bool result = false;
-    result = setQuantity(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
+    bool result = setQuantity(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
     return result;
   }
 
@@ -866,6 +960,18 @@ boost::optional<double> Building::conditionedFloorArea() const
   return getImpl<detail::Building_Impl>()->conditionedFloorArea();
 }
 
+double Building::exteriorSurfaceArea() const {
+  return getImpl<detail::Building_Impl>()->exteriorSurfaceArea();
+}
+
+double Building::exteriorWallArea() const {
+  return getImpl<detail::Building_Impl>()->exteriorWallArea();
+}
+
+double Building::airVolume() const {
+  return getImpl<detail::Building_Impl>()->airVolume();
+}
+
 double Building::numberOfPeople() const {
   return getImpl<detail::Building_Impl>()->numberOfPeople();
 }
@@ -912,6 +1018,26 @@ double Building::gasEquipmentPowerPerFloorArea() const {
 
 double Building::gasEquipmentPowerPerPerson() const {
   return getImpl<detail::Building_Impl>()->gasEquipmentPowerPerPerson();
+}
+
+double Building::infiltrationDesignFlowRate() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowRate();
+}
+
+double Building::infiltrationDesignFlowPerSpaceFloorArea() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
+}
+
+double Building::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorSurfaceArea();
+}
+
+double Building::infiltrationDesignFlowPerExteriorWallArea() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorWallArea();
+}
+
+double Building::infiltrationDesignAirChangesPerHour() const {
+  return getImpl<detail::Building_Impl>()->infiltrationDesignAirChangesPerHour();
 }
 
 boost::optional<int> Building::numberOfStories() const {

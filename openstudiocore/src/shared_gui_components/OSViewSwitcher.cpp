@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,7 +27,8 @@
 namespace openstudio {
 
 OSViewSwitcher::OSViewSwitcher(QWidget * parent)
-  : QWidget(parent)
+  : QWidget(parent),
+    m_view(NULL)
 {
   QVBoxLayout * layout = new QVBoxLayout();
   layout->setContentsMargins(0,0,0,0);

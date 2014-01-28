@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -413,7 +413,7 @@ void RefrigerationController::refreshNow()
 
       for( std::vector<model::RefrigerationCompressor>::iterator it = compressors.begin();
            it != compressors.end();
-           it++ )
+           ++it )
       {
         RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
 
@@ -442,7 +442,7 @@ void RefrigerationController::refreshNow()
 
       for( std::vector<model::RefrigerationCase>::iterator it = cases.begin();
            it != cases.end();
-           it++ )
+           ++it )
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
@@ -469,7 +469,7 @@ void RefrigerationController::refreshNow()
 
       for( std::vector<model::RefrigerationWalkIn>::iterator it = walkins.begin();
            it != walkins.end();
-           it++ )
+           ++it )
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
@@ -598,7 +598,7 @@ int RefrigerationSystemListController::systemIndex(const model::RefrigerationSys
 
   for( std::vector<model::RefrigerationSystem>::const_iterator it = _systems.begin();
        it != _systems.end();
-       it++ )
+       ++it )
   {
     if( *it == system )
     {

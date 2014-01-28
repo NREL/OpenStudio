@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ boost::optional<ModelObject> Mixer_Impl::lastInletModelObject()
 
 unsigned Mixer_Impl::newInletPortAfterBranch(unsigned branchIndex)
 {
-  std::vector<ModelObject> modelObjects = inletModelObjects();
+  //std::vector<ModelObject> modelObjects = inletModelObjects();
   unsigned stop = nextBranchIndex();
   for(unsigned i = branchIndex; i < stop; i++ )
   {

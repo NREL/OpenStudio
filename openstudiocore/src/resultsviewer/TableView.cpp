@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -130,7 +130,7 @@ namespace resultsviewer{
     /* illuminance maps */
     std::vector<std::string> mapNames(sqlFile.illuminanceMapNames());
     std::vector<std::string>::iterator nameIter;
-    for (nameIter=mapNames.begin(); nameIter!=mapNames.end(); nameIter++)
+    for (nameIter=mapNames.begin(); nameIter!=mapNames.end(); ++nameIter)
     {
       // retrieve mapIndex for map name to retrieve environment period and zone name
       QString envPeriod = "";

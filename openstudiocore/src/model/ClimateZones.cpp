@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -153,8 +153,7 @@ namespace detail {
       result = czs[0];
     }
     OS_ASSERT(!result.empty());
-    bool ok = true;
-    ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
+    bool ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
     OS_ASSERT(ok);
     ok = setUnsigned(OS_ClimateZonesFields::ActiveYear,result.year());
     OS_ASSERT(ok);
@@ -166,8 +165,7 @@ namespace detail {
     if (result.empty()) {
       result = appendClimateZone(institution,year,"");
     }
-    bool ok = true;
-    ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
+    bool ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
     OS_ASSERT(ok);
     ok = setUnsigned(OS_ClimateZonesFields::ActiveYear,result.year());
     OS_ASSERT(ok);

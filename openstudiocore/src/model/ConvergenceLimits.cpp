@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -127,8 +127,7 @@ namespace detail {
   }
 
   bool ConvergenceLimits_Impl::setMaximumHVACIterations(int maximumHVACIterations) {
-    bool result = false;
-    result = setInt(OS_ConvergenceLimitsFields::MaximumHVACIterations, maximumHVACIterations);
+    bool result = setInt(OS_ConvergenceLimitsFields::MaximumHVACIterations, maximumHVACIterations);
     return result;
   }
 
@@ -138,8 +137,7 @@ namespace detail {
   }
 
   bool ConvergenceLimits_Impl::setMinimumPlantIterations(int minimumPlantIterations) {
-    bool result = false;
-    result = setInt(OS_ConvergenceLimitsFields::MinimumPlantIterations, minimumPlantIterations);
+    bool result = setInt(OS_ConvergenceLimitsFields::MinimumPlantIterations, minimumPlantIterations);
     return result;
   }
 
@@ -149,8 +147,7 @@ namespace detail {
   }
 
   bool ConvergenceLimits_Impl::setMaximumPlantIterations(int maximumPlantIterations) {
-    bool result = false;
-    result = setInt(OS_ConvergenceLimitsFields::MaximumPlantIterations, maximumPlantIterations);
+    bool result = setInt(OS_ConvergenceLimitsFields::MaximumPlantIterations, maximumPlantIterations);
     return result;
   }
 

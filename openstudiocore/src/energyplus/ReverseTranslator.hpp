@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -182,6 +182,10 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translatePeople(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateRefrigerationCase(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateRefrigerationCompressor(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateRunPeriod(const WorkspaceObject & workspaceObject);
 

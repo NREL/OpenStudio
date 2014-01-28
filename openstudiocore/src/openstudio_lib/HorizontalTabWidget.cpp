@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -104,7 +104,7 @@ void HorizontalTabWidget::select()
 
   for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
        it < m_tabButtons.end();
-       it++ )
+       ++it )
   {
     if( *it == button )
     {

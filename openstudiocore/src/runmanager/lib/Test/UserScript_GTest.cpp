@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+
+#include <QElapsedTimer>
+
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 #include <runmanager/lib/JobFactory.hpp>
@@ -25,6 +28,7 @@
 #include <runmanager/lib/LocalProcessCreator.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/WorkItem.hpp>
+#include <runmanager/lib/MergedJobResults.hpp>
 
 #include <model/Model.hpp>
 #include <model/WeatherFile.hpp>
@@ -224,7 +228,210 @@ TEST_F(RunManagerTestFixture, UserScript_WorkItemWithArg)
 
 }
 
+openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t_outdir)
+{
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
+  openstudio::path osm = resourcesPath() / toPath("/runmanager/SimpleModel.osm");
+  openstudio::path epw = resourcesPath() / toPath("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
 
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
+
+  openstudio::runmanager::Workflow wf;
+
+  std::vector<openstudio::ruleset::OSArgument> args;
+  args.push_back(openstudio::ruleset::OSArgument::makeDoubleArgument("wwr"));
+  args.push_back(openstudio::ruleset::OSArgument::makeDoubleArgument("sillHeight"));
+  args.push_back(openstudio::ruleset::OSArgument::makeStringArgument("facade"));
+
+  args[0].setValue(0.1);
+  args[1].setValue(0.2);
+  args[2].setValue("North");
+
+  // Add job one
+  openstudio::runmanager::RubyJobBuilder rubyjobbuilder(*measure, args);
+  rubyjobbuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+  wf.addJob(rubyjobbuilder.toWorkItem());
+
+  // add job two
+  args[2].setValue("East");
+  openstudio::runmanager::RubyJobBuilder rubyjobbuilder2(*measure, args);
+  rubyjobbuilder2.setIncludeDir(getOpenStudioRubyIncludePath());
+  wf.addJob(rubyjobbuilder2.toWorkItem());
+  
+  // add job three, applying a new value for the "east" to make sure that the jobs
+  // are applied in the proper order
+  args[2].setValue("East");
+  args[1].setValue(0.3);
+  openstudio::runmanager::RubyJobBuilder rubyjobbuilder3(*measure, args);
+  rubyjobbuilder3.setIncludeDir(getOpenStudioRubyIncludePath());
+  wf.addJob(rubyjobbuilder3.toWorkItem());
+
+
+  wf.addJob(openstudio::runmanager::JobType::ModelToIdf);
+
+  openstudio::runmanager::Tools tools 
+    = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
+        rubyExePath().parent_path(), openstudio::path(),
+        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+
+  wf.add(tools);
+  wf.addParam(runmanager::JobParam("flatoutdir"));
+
+  openstudio::runmanager::Job j = wf.create(t_outdir, osm, epw);
+
+  return j;
+}
+
+TEST_F(RunManagerTestFixture, UserScriptJobMerging)
+{
+  std::string originalosm;
+  std::string mergedosm;
+  std::string unmergedosm;
+
+  std::string mergedidf;
+  std::string unmergedidf;
+
+  {
+    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(resourcesPath() / toPath("/runmanager/SimpleModel.osm"));
+    ASSERT_TRUE(m);
+    std::stringstream ss;
+    m->toIdfFile().print(ss);
+    originalosm = ss.str();
+  }
+
+
+  QElapsedTimer timer;
+  timer.start();
+
+  { 
+    openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged.db"), true, true);
+    openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeUnMerged");
+
+    boost::filesystem::remove_all(outdir); // Clean up test dir before starting
+
+    openstudio::runmanager::Job j = buildScriptMergingWorkflow(outdir);
+
+    ASSERT_EQ(1u, j.children().size());
+    ASSERT_EQ(1u, j.children()[0].children().size());
+    ASSERT_EQ(1u, j.children()[0].children()[0].children().size());
+    ASSERT_TRUE(j.children()[0].children()[0].children()[0].children().empty());
+
+    rm.enqueue(j, true);
+    EXPECT_EQ(4u, rm.getJobs().size());
+    rm.setPaused(false);
+    rm.waitForFinished();
+
+    EXPECT_TRUE(j.treeErrors().succeeded());
+    openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
+    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
+    ASSERT_TRUE(m);
+    std::stringstream ss;
+    m->toIdfFile().print(ss);
+    unmergedosm = ss.str();
+
+    openstudio::runmanager::FileInfo idf = j.treeOutputFiles().getLastByExtension("idf");
+    boost::optional<openstudio::IdfFile> f = openstudio::IdfFile::load(idf.fullPath);
+    EXPECT_TRUE(f);
+
+    if (f)
+    {
+      ss.str("");
+      f->print(ss);
+      unmergedidf = ss.str();
+    }
+
+    EXPECT_EQ(3u, j.treeOutputFiles().getAllByFilename("result.ossr").files().size());
+  }
+
+  qint64 unmergedtime = timer.restart();
+
+  { 
+    openstudio::runmanager::RunManager rm(openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeMerged.db"), true, true);
+    openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("UserScriptJobMergeMerged");
+
+    boost::filesystem::remove_all(outdir); // Clean up test dir before starting
+
+    openstudio::runmanager::Job j = buildScriptMergingWorkflow(outdir);
+
+    ASSERT_EQ(1u, j.children().size());
+    ASSERT_EQ(1u, j.children()[0].children().size());
+    ASSERT_EQ(1u, j.children()[0].children()[0].children().size());
+    ASSERT_TRUE(j.children()[0].children()[0].children()[0].children().empty());
+
+    openstudio::UUID job1uuid = j.uuid();
+    openstudio::UUID job2uuid = j.children()[0].uuid();
+    openstudio::UUID job3uuid = j.children()[0].children()[0].uuid();
+
+    openstudio::runmanager::JobFactory::optimizeJobTree(j);
+
+    EXPECT_EQ(1u, j.children().size());
+    EXPECT_TRUE(j.children()[0].children().empty());
+
+    rm.enqueue(j, true);
+    EXPECT_EQ(2u, rm.getJobs().size());
+    rm.setPaused(false);
+    rm.waitForFinished();
+
+    EXPECT_TRUE(j.treeErrors().succeeded());
+    openstudio::runmanager::FileInfo fi = j.treeOutputFiles().getLastByExtension("osm");
+    boost::optional<openstudio::model::Model> m = openstudio::model::Model::load(fi.fullPath);
+    ASSERT_TRUE(m);
+    std::stringstream ss;
+    m->toIdfFile().print(ss);
+    mergedosm = ss.str();
+
+    openstudio::runmanager::FileInfo idf = j.treeOutputFiles().getLastByExtension("idf");
+    boost::optional<openstudio::IdfFile> f = openstudio::IdfFile::load(idf.fullPath);
+    EXPECT_TRUE(f);
+    if (f)
+    {
+      ss.str("");
+      f->print(ss);
+      mergedidf = ss.str();
+    }
+
+
+    EXPECT_EQ(3u, j.treeOutputFiles().getAllByFilename("result.ossr").files().size());
+
+    ASSERT_TRUE(j.hasMergedJobs());
+    
+    std::vector<openstudio::runmanager::MergedJobResults> mergedResults = j.mergedJobResults();
+    ASSERT_EQ(3u, mergedResults.size());
+
+    EXPECT_EQ(job1uuid, mergedResults[0].uuid);
+    EXPECT_EQ(job2uuid, mergedResults[1].uuid);
+    EXPECT_EQ(job3uuid, mergedResults[2].uuid);
+
+    EXPECT_TRUE(mergedResults[0].errors.succeeded());
+    EXPECT_TRUE(mergedResults[1].errors.succeeded());
+    EXPECT_TRUE(mergedResults[2].errors.succeeded());
+
+    ASSERT_FALSE(mergedResults[0].outputFiles.files().empty());
+    ASSERT_FALSE(mergedResults[1].outputFiles.files().empty());
+    ASSERT_FALSE(mergedResults[2].outputFiles.files().empty());
+
+    EXPECT_EQ(openstudio::toPath("mergedjob-0"), mergedResults[0].outputFiles.getLastByFilename("result.ossr").fullPath.parent_path().filename());
+    EXPECT_EQ(openstudio::toPath("mergedjob-1"), mergedResults[1].outputFiles.getLastByFilename("result.ossr").fullPath.parent_path().filename());
+    EXPECT_EQ(openstudio::toPath("mergedjob-2"), mergedResults[2].outputFiles.getLastByFilename("result.ossr").fullPath.parent_path().filename());
+  }
+
+  qint64 mergedtime = timer.restart();
+
+  EXPECT_FALSE(originalosm.empty());
+  EXPECT_FALSE(mergedosm.empty());
+  EXPECT_FALSE(unmergedosm.empty());
+
+  EXPECT_NE(originalosm, unmergedosm);
+  EXPECT_NE(originalosm, mergedosm);
+
+  EXPECT_FALSE(mergedidf.empty());
+  EXPECT_FALSE(unmergedidf.empty());
+
+  // expected a merged run to be at least 2x faster than an unmerged run
+  EXPECT_LT(2*mergedtime, unmergedtime);
+
+  std::cout << "MergedTime: " << mergedtime << " UnmergedTime " << unmergedtime << std::endl;
+}
 
 TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
 {
@@ -270,7 +477,7 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
 
   // DLM: is this failing because we are in normal cleanup mode?
   std::vector<openstudio::runmanager::FileInfo> outfiles = j.outputFiles();
-  ASSERT_EQ(3u, outfiles.size());
+  ASSERT_EQ(4u, outfiles.size());
   
   openstudio::runmanager::FileInfo fi2 = outfiles[0];
   //Make sure epw got copied from input to output

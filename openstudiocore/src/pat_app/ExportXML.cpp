@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   Problem problem = analysis.problem();
 
   //get the input variables from the problem
-  std::vector<InputVariable> variables = problem.variables();
+  //std::vector<InputVariable> variables = problem.variables();
 
   //alternatives
   int numErrors = 0;
@@ -336,7 +336,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
     }
 
     //this is a measure we want to record
-    if ( boost::optional<runmanager::Job> job = wfJob.job ) {
+    if (wfJob.job) {
     
       //start the measure
       QDomElement measureElem = doc.createElement("measure");   
@@ -377,9 +377,9 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
         QString desc = toQString(measure->description());
         descElem.appendChild(doc.createTextNode(desc));          
       }
-        
+
       //get the job errors
-      runmanager::JobErrors jobErrs = job->errors();
+      runmanager::JobErrors jobErrs = wfJob.errors().get();
       
       //initial_condition
       std::string initCondMsg = "";

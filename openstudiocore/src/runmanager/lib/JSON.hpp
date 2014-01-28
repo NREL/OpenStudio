@@ -79,12 +79,18 @@ namespace openstudio {
                                const openstudio::path &t_p,
                                bool t_overwrite=false);
 
+          static bool saveJSON(const std::vector<JobParam> &t_jobParams,
+                               const openstudio::path &t_p,
+                               bool t_overwrite=false);
+
           static std::string toJSON(const std::vector<WorkItem> &t_workItems);
 
           static std::vector<WorkItem> toVectorOfWorkItem(const QVariant &t_variant,
                                                           const VersionString& version);
 
           static std::vector<WorkItem> toVectorOfWorkItem(const openstudio::path &t_pathToJson);
+
+          static std::vector<JobParam> toVectorOfJobParam(const openstudio::path &t_pathToJson);
 
           static std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_json);
 

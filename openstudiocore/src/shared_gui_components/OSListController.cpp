@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -215,7 +215,7 @@ void OSItemSelectionController::unselectAllItems()
 
   for( std::vector<QPointer<OSListItem> >::const_iterator it = selectedItems.begin();
        it != selectedItems.end();
-       it++ )
+       ++it )
   {
     (*it)->setSelected(false);
   }
@@ -227,13 +227,13 @@ void OSItemSelectionController::selectAllItems()
   {
     for( std::vector<QPointer<OSListController> >::iterator listIt = m_listControllers.begin(); 
          listIt != m_listControllers.end();
-         listIt++ )
+         ++listIt )
     {
       QPointer<OSListController> t_listController = (*listIt);
 
       for( std::vector<QPointer<OSListItem> >::iterator itemit = t_listController->m_registeredItems.begin();
            itemit != t_listController->m_registeredItems.end();
-           itemit++ )
+           ++itemit )
       {
         (*itemit)->setSelected(true);
       }

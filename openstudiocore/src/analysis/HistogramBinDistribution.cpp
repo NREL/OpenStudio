@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,11 +65,9 @@ boost::optional<int> HistogramBinDistribution::numPairs() const {
 }
 
 bool HistogramBinDistribution::setAbscissas(const std::vector<double>& value) {
-  double previousValue;
-  double currentValue;
   for(std::vector<double>::size_type i = 1; i != value.size(); i++) {
-    previousValue = value[i-1];
-    currentValue = value[i];
+    double previousValue = value[i-1];
+    double currentValue = value[i];
     if (previousValue >= currentValue) {
       LOG(Warn,"Abscissas values must be strictly increasing.");
       return false;

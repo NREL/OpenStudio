@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -297,7 +297,7 @@ void LocationView::onWeatherFileBtnClicked()
         boost::optional<openstudio::path> temp = weatherFile->path();
         if (temp){
           openstudio::path previousEPWName = temp->filename();
-          std::string ex = toString(previousEPWName.extension());
+          //std::string ex = toString(previousEPWName.extension());
           if (!previousEPWName.empty() && previousEPWName.extension() == toPath(".epw")){
             previousEPWPath = toPath(m_modelTempDir) / toPath("resources/files") / previousEPWName;
           }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,8 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ThermalZone;
 // WaterStorageTank object not used
 //class WaterStorageTank;
 class Schedule;
@@ -98,8 +96,7 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   bool isMaximumCapacityFactorDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-  boost::optional<ThermalZone> airInletNode() const;
+  //std::string airInletNode() const;
 
   boost::optional<double> ratedAirFlowRate() const;
 
@@ -121,10 +118,8 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   bool isRatedWaterPumpPowerAutocalculated() const;
 
-  // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
   //boost::optional<WaterStorageTank> evaporativeWaterSupplyTank() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule() const;
 
   std::string endUseSubcategory() const;
@@ -187,10 +182,9 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   void resetMaximumCapacityFactor();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-  bool setAirInletNode(const ThermalZone& thermalZone);
+  //bool setAirInletNode(std::string airInletNode);
 
-  void resetAirInletNode();
+  //void resetAirInletNode();
 
   void setRatedAirFlowRate(double ratedAirFlowRate);
 
@@ -212,12 +206,10 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
 
   void autocalculateRatedWaterPumpPower();
 
-  // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
   //bool setEvaporativeWaterSupplyTank(const WaterStorageTank& waterStorageTank);
 
   //void resetEvaporativeWaterSupplyTank();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule);
 
   void resetEvaporativeCondenserAvailabilitySchedule();

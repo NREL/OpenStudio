@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -51,11 +51,10 @@ void PlanarSurfaceWidget::attach(const openstudio::model::PlanarSurface& planarS
 
   m_planarSurface = planarSurface;
 
-  bool isConnected = false;
-  isConnected = connect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get(),
-                        SIGNAL(onChange()),
-                        this, 
-                        SLOT(refresh()));
+  bool isConnected = connect(m_planarSurface->getImpl<model::detail::ModelObject_Impl>().get(),
+                             SIGNAL(onChange()),
+                             this, 
+                             SLOT(refresh()));
   OS_ASSERT(isConnected);
 
   refresh();

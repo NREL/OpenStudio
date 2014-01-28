@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <QSharedPointer>
 #include <map>
+#include <utilities/core/Logger.hpp>
 
 class QScrollArea;
 class QVBoxLayout;
@@ -96,6 +97,8 @@ class OSListView : public QWidget
   bool m_scrollable;
 
   QScrollArea * m_scrollArea;
+
+  REGISTER_LOGGER("openstudio.shared_gui_components.OSListView");
 };
 
 } // openstudio

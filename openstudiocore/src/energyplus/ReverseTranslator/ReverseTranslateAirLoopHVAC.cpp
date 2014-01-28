@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -60,7 +60,6 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
   }
 
   OptionalModelObject result;
-  std::string s;
   boost::optional<double> val;
   boost::optional<std::string> optionalString;
   Workspace _workspace = workspaceObject.workspace();
@@ -198,7 +197,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
     boost::optional<WorkspaceObject> _airLoopHVACZoneMixer;
     for( std::vector<WorkspaceObject>::iterator it = _airLoopHVACZoneMixers.begin();
          it < _airLoopHVACZoneMixers.end();
-         it++ )
+         ++it )
     {
       boost::optional<std::string> mixerOutletNodeName;
       mixerOutletNodeName = it->getString(AirLoopHVAC_ZoneMixerFields::OutletNodeName);

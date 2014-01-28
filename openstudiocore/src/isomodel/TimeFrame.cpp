@@ -7,10 +7,10 @@ namespace isomodel {
 
   TimeFrame::TimeFrame()
   {
-    int i = 0,j = 0, dim;
+    int i = 0,j = 0;
     for(int I = 1; I <= 12;I++)
     {
-      dim = monthLength(I);
+      int dim = monthLength(I);
       for(int J = 1;J<=dim;J++)
       {
         j++;

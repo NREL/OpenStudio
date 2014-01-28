@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -214,7 +214,7 @@ namespace detail {
 
     for(it = modelObjects.begin();
         it != modelObjects.end();
-        it++)
+        ++it)
     {
       if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
       {
@@ -237,7 +237,7 @@ namespace detail {
 
     for(it = modelObjects.begin();
         it != modelObjects.end();
-        it++)
+        ++it)
     {
       if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
       {
@@ -267,7 +267,7 @@ namespace detail {
     return result;
   }
 
-  OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC_Impl::airLoopHVACOutdoorAirSystem()
+  OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC_Impl::airLoopHVACOutdoorAirSystem() const
   {
     OptionalAirLoopHVACOutdoorAirSystem result;
     ModelObjectVector modelObjects;
@@ -493,7 +493,7 @@ namespace detail {
 
     for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
          it < comps.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
       {
@@ -520,7 +520,7 @@ namespace detail {
 
     for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
          it < comps.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
       {
@@ -625,7 +625,6 @@ namespace detail {
       _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
 
       _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
-      
     }
 
     return true;
@@ -702,7 +701,7 @@ namespace detail {
     }
   }
 
-  boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode()
+  boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode() const
   {
     if( airLoopHVACOutdoorAirSystem() )
     {
@@ -845,7 +844,7 @@ namespace detail {
 
     for( std::vector<SizingSystem>::iterator it = sizingObjects.begin();
          it < sizingObjects.end();
-         it++ )
+         ++it )
     {
       try {
         if( it->airLoopHVAC().handle() == this->handle() )
@@ -877,7 +876,7 @@ namespace detail {
 
     for( std::vector<ModelObject>::iterator it = objects.begin();
          it != objects.end();
-         it++ )
+         ++it )
     {
       result.push_back(it->cast<ThermalZone>());
     }
@@ -1002,6 +1001,21 @@ namespace detail {
     return result;
   }
 
+  boost::optional<Node> AirLoopHVAC_Impl::mixedAirNode() const
+  {
+    boost::optional<Node> result;
+
+    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
+    {
+      if( boost::optional<ModelObject> mo = oaSystem->mixedAirModelObject() )
+      {
+        result = mo->optionalCast<Node>();
+      }
+    }
+
+    return result;
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
@@ -1093,7 +1107,7 @@ std::vector<IdfObject> AirLoopHVAC::remove()
   return getImpl<detail::AirLoopHVAC_Impl>()->remove();
 }
 
-OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC::airLoopHVACOutdoorAirSystem()
+OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC::airLoopHVACOutdoorAirSystem() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->airLoopHVACOutdoorAirSystem();
 }
@@ -1161,8 +1175,7 @@ boost::optional<Node> AirLoopHVAC::reliefAirNode()
 
 boost::optional<Node> AirLoopHVAC::mixedAirNode()
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->mixedAirNode();
 }
 
 boost::optional<Node> AirLoopHVAC::returnAirNode()

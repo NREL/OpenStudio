@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -180,62 +180,52 @@ namespace detail {
   }
 
   void CurveBiquadratic_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient2x(double coefficient2x) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::Coefficient2x, coefficient2x);
+    bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient4y(double coefficient4y) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::Coefficient4y, coefficient4y);
+    bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient4y, coefficient4y);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient5yPOW2(double coefficient5yPOW2) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::Coefficient5y_POW_2, coefficient5yPOW2);
+    bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient5y_POW_2, coefficient5yPOW2);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setCoefficient6xTIMESY(double coefficient6xTIMESY) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y, coefficient6xTIMESY);
+    bool result = setDouble(OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y, coefficient6xTIMESY);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMinimumValueofy(double minimumValueofy) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofy, minimumValueofy);
+    bool result = setDouble(OS_Curve_BiquadraticFields::MinimumValueofy, minimumValueofy);
     OS_ASSERT(result);
   }
 
   void CurveBiquadratic_Impl::setMaximumValueofy(double maximumValueofy) {
-    bool result = false;
-    result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofy, maximumValueofy);
+    bool result = setDouble(OS_Curve_BiquadraticFields::MaximumValueofy, maximumValueofy);
     OS_ASSERT(result);
   }
 
@@ -270,8 +260,7 @@ namespace detail {
   }
 
   bool CurveBiquadratic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -281,8 +270,7 @@ namespace detail {
   }
 
   bool CurveBiquadratic_Impl::setInputUnitTypeforY(std::string inputUnitTypeforY) {
-    bool result = false;
-    result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforY, inputUnitTypeforY);
+    bool result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforY, inputUnitTypeforY);
     return result;
   }
 
@@ -292,8 +280,7 @@ namespace detail {
   }
 
   bool CurveBiquadratic_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_BiquadraticFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_BiquadraticFields::OutputUnitType, outputUnitType);
     return result;
   }
 

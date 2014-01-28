@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -360,7 +360,7 @@ void LibraryTypeListController::reset()
 {
   for( QList<QSharedPointer<LibraryTypeItem> >::iterator it = m_items.begin();
        it != m_items.end();
-       it++ )
+       ++it )
   {
     (*it)->libraryGroupListController()->reset();
   }
@@ -435,7 +435,7 @@ void LibraryGroupListController::reset()
 {
   for( QList<QSharedPointer<LibraryGroupItem> >::iterator it = m_items.begin();
        it != m_items.end();
-       it++ )
+       ++it )
   {
     (*it)->librarySubGroupListController()->reset();    
   }
@@ -522,7 +522,7 @@ void LibrarySubGroupListController::reset()
 
   for( QList<QSharedPointer<LibrarySubGroupItem> >::iterator it = m_items.begin();
        it != m_items.end();
-       it++ )
+       ++it )
   {
     (*it)->libraryListController()->reset();
     count = count + (*it)->libraryListController()->count();
@@ -696,7 +696,7 @@ void LibraryListController::createItems()
 
   for( std::vector<BCLMeasure>::iterator it = measures.begin();
        it != measures.end();
-       it++ )
+       ++it )
   {
     if( m_taxonomyTag.compare(QString::fromStdString(it->taxonomyTag()),Qt::CaseInsensitive) == 0 )
     {

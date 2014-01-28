@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -123,10 +123,9 @@ void PageNavigator::makeNumberedButtons()
 
   int id = 0;
   QString num;
-  QPushButton * button = NULL;
-  for(int i = 0; i < m_numPagesListed; i++)
+  for(int i = 0; i < m_numPagesListed; ++i)
   {
-    button = new QPushButton();
+    QPushButton * button = new QPushButton();
     button->setText(num.setNum(i+1));
     button->setFixedSize(40,20);
     button->setCheckable(true);
@@ -144,9 +143,8 @@ void PageNavigator::setButtonPageNumbers(int lowestPageNum)
 {
   OS_ASSERT(lowestPageNum > 0 && lowestPageNum <= m_numPages);
   QString num;
-  QAbstractButton * button = NULL;
-  for(int i = 0; i < m_numPagesListed; i++){
-    button = m_buttonGroup->button(i);
+  for(int i = 0; i < m_numPagesListed; ++i){
+    QAbstractButton * button = m_buttonGroup->button(i);
     button->setText(num.setNum(lowestPageNum + i));
     if(i == m_numPages) break;
   }

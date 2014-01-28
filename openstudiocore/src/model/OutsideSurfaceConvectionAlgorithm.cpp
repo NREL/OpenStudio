@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -94,8 +94,7 @@ namespace detail {
   }
 
   bool OutsideSurfaceConvectionAlgorithm_Impl::setAlgorithm(std::string algorithm) {
-    bool result = false;
-    result = setString(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm, algorithm);
+    bool result = setString(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm, algorithm);
     return result;
   }
 

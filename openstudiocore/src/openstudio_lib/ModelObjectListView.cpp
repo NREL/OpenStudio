@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -103,7 +103,7 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
 
     for( std::vector<BCLComponent>::iterator it = bclresults.begin(); 
          it != bclresults.end();
-         it++ )
+         ++it )
     {
       result.push_back(bclComponentToItemId(*it));
     }

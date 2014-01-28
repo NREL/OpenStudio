@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -200,6 +200,7 @@ SimSettingsView::SimSettingsView(bool isIP,
   model::YearDescription yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
   isConnected = connect(yearDescription.getImpl<model::detail::YearDescription_Impl>().get(), SIGNAL(onChange()),
                         this, SLOT(updateYearDescription()));
+  OS_ASSERT(isConnected);
 
   createWidgets();
   attachAll();
@@ -857,11 +858,9 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
 {
   QVBoxLayout * vLayout = new QVBoxLayout();
 
-  bool isConnected = false;
-
   m_radianceGroup = new QButtonGroup(this);
 
-  isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
+  bool isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(on_radianceGroupClicked(int)));
   OS_ASSERT(isConnected);
 

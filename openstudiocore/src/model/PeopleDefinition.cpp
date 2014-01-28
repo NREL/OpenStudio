@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -266,8 +266,7 @@ namespace detail {
   }
 
   bool PeopleDefinition_Impl::setMeanRadiantTemperatureCalculationType(std::string meanRadiantTemperatureCalculationType) {
-    bool result = false;
-    result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, meanRadiantTemperatureCalculationType);
+    bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, meanRadiantTemperatureCalculationType);
     return result;
   }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -241,7 +241,7 @@ namespace runmanager {
   void RunManagerStatusWidget::updateActions(const QModelIndexList &selection)
   {
     bool multipleselection = selection.size() > 1;
-    std::vector<Job> jobs = m_runmanager->getJobs(selection);
+    //std::vector<Job> jobs = m_runmanager->getJobs(selection);
 
     ui.actionRaisePriority->setEnabled(true);
     ui.actionLowerPriority->setEnabled(true);

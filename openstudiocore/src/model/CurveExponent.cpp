@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -136,32 +136,27 @@ namespace detail {
   }
 
   void CurveExponent_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_ExponentFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setCoefficient2Constant(double coefficient2Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentFields::Coefficient2Constant, coefficient2Constant);
+    bool result = setDouble(OS_Curve_ExponentFields::Coefficient2Constant, coefficient2Constant);
     OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setCoefficient3Constant(double coefficient3Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentFields::Coefficient3Constant, coefficient3Constant);
+    bool result = setDouble(OS_Curve_ExponentFields::Coefficient3Constant, coefficient3Constant);
     OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_ExponentFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_ExponentFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
@@ -196,8 +191,7 @@ namespace detail {
   }
 
   bool CurveExponent_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_ExponentFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_ExponentFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -207,8 +201,7 @@ namespace detail {
   }
 
   bool CurveExponent_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_ExponentFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_ExponentFields::OutputUnitType, outputUnitType);
     return result;
   }
 

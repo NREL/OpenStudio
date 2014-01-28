@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -111,6 +111,16 @@ class DuplicateButton : public QPushButton
 
   DuplicateButton(QWidget * parent = 0);
   virtual ~DuplicateButton() {}
+};
+
+class SofterDuplicateButton : public QPushButton
+{
+  Q_OBJECT
+ 
+ public:
+  
+  SofterDuplicateButton(QWidget * parent = 0);
+  virtual ~SofterDuplicateButton() {}
 };
 
 class UpButton : public QPushButton

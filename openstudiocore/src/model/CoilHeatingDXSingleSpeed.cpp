@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -225,8 +225,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setRatedCOP(double ratedCOP) {
-    bool result = false;
-    result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedCOP, ratedCOP);
+    bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedCOP, ratedCOP);
     return result;
   }
 
@@ -246,8 +245,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-    bool result = false;
-    result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
     return result;
   }
 
@@ -257,8 +255,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation) {
-    bool result = false;
-    result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation, maximumOutdoorDryBulbTemperatureforDefrostOperation);
+    bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation, maximumOutdoorDryBulbTemperatureforDefrostOperation);
     return result;
   }
 
@@ -268,8 +265,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
-    bool result = false;
-    result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacity, crankcaseHeaterCapacity);
+    bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacity, crankcaseHeaterCapacity);
     return result;
   }
 
@@ -279,8 +275,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation) {
-    bool result = false;
-    result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+    bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
     return result;
   }
 
@@ -290,8 +285,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setDefrostStrategy(std::string defrostStrategy) {
-    bool result = false;
-    result = setString(OS_Coil_Heating_DX_SingleSpeedFields::DefrostStrategy, defrostStrategy);
+    bool result = setString(OS_Coil_Heating_DX_SingleSpeedFields::DefrostStrategy, defrostStrategy);
     return result;
   }
 
@@ -301,8 +295,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setDefrostControl(std::string defrostControl) {
-    bool result = false;
-    result = setString(OS_Coil_Heating_DX_SingleSpeedFields::DefrostControl, defrostControl);
+    bool result = setString(OS_Coil_Heating_DX_SingleSpeedFields::DefrostControl, defrostControl);
     return result;
   }
 
@@ -312,8 +305,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXSingleSpeed_Impl::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
-    bool result = false;
-    result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
+    bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
     return result;
   }
 
@@ -646,7 +638,7 @@ namespace detail {
 
     for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
     it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->heatingCoil() )
       {
@@ -670,7 +662,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACPackagedTerminalHeatPump>::iterator it = zoneHVACPackagedTerminalHeatPumps.begin();
     it < zoneHVACPackagedTerminalHeatPumps.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->heatingCoil() )
       {
