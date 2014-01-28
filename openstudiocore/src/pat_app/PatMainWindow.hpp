@@ -112,6 +112,11 @@ class PatMainWindow : public QMainWindow
 
   QSplitter * m_mainSplitter;
 
+  private slots:
+  
+  void configureProxyClicked();
+  void loadProxySettings();
+
 };
 
 }

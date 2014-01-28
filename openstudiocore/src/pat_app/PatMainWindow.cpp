@@ -46,6 +46,9 @@
 #include <QStatusBar>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QTimer>
+
+#include "../shared_gui_components/NetworkProxyDialog.hpp"
 
 namespace openstudio{
 
@@ -140,6 +143,11 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
 
   isConnected = connect(mainMenu, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
   OS_ASSERT(isConnected);
+
+  isConnected = connect(mainMenu, SIGNAL(configureProxyClicked()),this,SLOT(configureProxyClicked()));
+  OS_ASSERT(isConnected);
+
+  QTimer::singleShot(0, this, SLOT(loadProxySettings()));
 }
 
 void PatMainWindow::showRightColumn()
@@ -298,6 +306,48 @@ void PatMainWindow::writeSettings()
   settings.setValue("size", size());
   settings.setValue("geometry", saveGeometry());
   settings.setValue("state", saveState());
+}
+
+void PatMainWindow::configureProxyClicked()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  NetworkProxyDialog dialog(settings, this);
+  QDialog::DialogCode result = static_cast<QDialog::DialogCode>(dialog.exec());
+
+  if (result == QDialog::Accepted)
+  {
+    QNetworkProxy proxy = dialog.createProxy();
+    if (proxy.type() != QNetworkProxy::NoProxy)
+    {
+      if (dialog.testProxy(proxy))
+      {
+        QNetworkProxy::setApplicationProxy(proxy);
+      } else {
+        QMessageBox::critical(this, "Proxy Configuration Error", "There is an error in your proxy configuration.");
+      }
+    }
+  }
+}
+
+void PatMainWindow::loadProxySettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  QNetworkProxy proxy = NetworkProxyDialog::createProxy(settings);
+  if (proxy.type() != QNetworkProxy::NoProxy)
+  {
+    if (NetworkProxyDialog::testProxy(proxy, this))
+    {
+      QNetworkProxy::setApplicationProxy(proxy);
+    } else {
+      QMessageBox::critical(this, "Proxy Configuration Error", "There is an error in your proxy configuration.");
+      configureProxyClicked();
+    }
+
+  }
 }
 
 }

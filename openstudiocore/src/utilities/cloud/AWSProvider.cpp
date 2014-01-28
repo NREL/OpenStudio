@@ -1375,6 +1375,29 @@ namespace openstudio{
       args << toQString(m_awsSettings.accessKey());
       args << toQString(m_awsSettings.secretKey());
       args << toQString(m_awsSettings.region());
+
+      QNetworkProxy proxy = QNetworkProxy::applicationProxy();
+
+      switch (proxy.type())
+      {
+        case QNetworkProxy::Socks5Proxy:
+          args << "socks5";
+          break;
+        case QNetworkProxy::HTTPProxy:
+          args << "http";
+          break;
+        case QNetworkProxy::NoProxy:
+          args << "none";
+          break;
+        default:
+          args << "none";
+          LOG(Error, "Unknown proxy type");
+          return;
+      }
+
+      args << proxy.host();
+      args << QString(proxy.user().toAscii().toHex());
+      args << QString(proxy.password().toAscii().toHex());
     }
 
     bool AWSProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f) {
