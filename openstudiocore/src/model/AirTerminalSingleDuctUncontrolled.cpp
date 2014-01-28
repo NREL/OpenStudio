@@ -138,7 +138,7 @@ namespace detail{
         thermalZone = portList->thermalZone(); 
       }
 
-      if( thermalZone || outlet->optionalCast<Mixer>() )
+      if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
       {
         if( boost::optional<ModelObject> inlet = node.inletModelObject() )
         {

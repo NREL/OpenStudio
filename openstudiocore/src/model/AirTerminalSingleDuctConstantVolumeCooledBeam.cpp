@@ -150,7 +150,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
         thermalZone = portList->thermalZone();
       }
 
-      if( thermalZone || outlet->optionalCast<Mixer>() )
+      if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
       {
         if( boost::optional<ModelObject> inlet = node.inletModelObject() )
         {
@@ -183,7 +183,6 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
                 AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
                 thermalZone->addEquipment(mo);
- //               thermalZone->setHeatingPriority(mo,1);
                 thermalZone->setCoolingPriority(mo,1);
               }
 
