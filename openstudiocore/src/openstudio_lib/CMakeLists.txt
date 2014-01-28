@@ -401,6 +401,7 @@ SET( ${target_name}_SRC
   ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSComboBox.cpp
   ../shared_gui_components/OSComboBox.hpp
+  ../shared_gui_components/OSConcepts.hpp
   ../shared_gui_components/OSDialog.cpp
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/OSDoubleEdit.cpp

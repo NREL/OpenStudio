@@ -17,43 +17,30 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "OSGridView.hpp"
+#include <shared_gui_components/OSGridView.hpp>
 
-#include <shared_gui_components/OSCollapsibleView.hpp>
 #include <shared_gui_components/HeaderViews.hpp>
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
-#include <shared_gui_components/OSCheckBox.hpp>
-#include <shared_gui_components/OSComboBox.hpp>
-#include <shared_gui_components/OSDoubleEdit.hpp>
-#include <shared_gui_components/OSIntegerEdit.hpp>
-#include <shared_gui_components/OSLineEdit.hpp>
-#include <shared_gui_components/OSQuantityEdit.hpp>
-#include <shared_gui_components/OSUnsignedEdit.hpp>
+#include <shared_gui_components/OSCollapsibleView.hpp>
+#include <shared_gui_components/OSGridController.hpp>
 
 #include <model/Model_impl.hpp>
 #include <model/ModelObject_impl.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/IddObject.hpp>
 
-#include <QAbstractButton>
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QLabel>
-#include <QPainter>
 #include <QPushButton>
-#include <QStyleOption>
 
 namespace openstudio {
 
-OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, QWidget * parent)
+OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, QWidget * parent)
   : QWidget(parent),
   m_CollapsibleView(0),
   m_gridLayout(0),
-  m_gridController(0),
-  m_model(model)
+  m_gridController(gridController)
 {
   QVBoxLayout * layout = 0;
   
@@ -67,7 +54,7 @@ OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, 
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   DarkGradientHeader * header = new DarkGradientHeader();
-  header->label->setText("Display Cases");
+  header->label->setText(headerText);
   
   QWidget * widget = new QWidget;  
   
@@ -77,11 +64,7 @@ OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, 
   collabsibleView->setContent(widget);
   collabsibleView->setExpanded(true);
   
-  setGridController(new OSGridController(iddObjectType, model));
-
-  // call setCategoriesAndFileds
-  // TODO for now, before deriving the controller for each application, just call the following:
-  gridController()->setCaseCategoriesAndFields();
+  setGridController(m_gridController);
 
   QButtonGroup * buttonGroup = new QButtonGroup();
   bool isConnected = false;
@@ -92,7 +75,7 @@ OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, 
   QHBoxLayout * buttonLayout = new QHBoxLayout();
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-  std::vector<QString> categories = gridController()->categories();
+  std::vector<QString> categories = m_gridController->categories();
   QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
     button = new QPushButton(categories.at(i));
@@ -113,17 +96,6 @@ OSGridView::OSGridView(IddObjectType iddObjectType, const model::Model & model, 
   setContentsMargins(5,5,5,5);
 
   refreshAll();
-}
-
-OSGridView::OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent)
-  : QWidget(parent)
-{
-  m_gridLayout = new QGridLayout();
-  m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
-  m_gridLayout->setAlignment(Qt::AlignTop);
-  setLayout(m_gridLayout);
-
-  setContentsMargins(5,5,5,5);
 }
 
 void OSGridView::setGridController(OSGridController * gridController)
@@ -150,11 +122,6 @@ void OSGridView::setGridController(OSGridController * gridController)
   OS_ASSERT(isConnected);
     
   refreshAll();
-}
-
-OSGridController * OSGridView::gridController() const
-{
-  return m_gridController;
 }
 
 void OSGridView::refresh(int row, int column)
@@ -256,7 +223,7 @@ void OSGridView::selectCategory(int index)
 {
   deleteAll();
 
-  gridController()->categorySelected(index);
+  m_gridController->categorySelected(index);
 
   refreshAll();
   

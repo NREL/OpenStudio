@@ -20,12 +20,8 @@
 #ifndef OPENSTUDIO_OSGRIDVIEW_H
 #define OPENSTUDIO_OSGRIDVIEW_H
 
-#include <QAbstractButton>
 #include <QWidget>
 
-#include "OSGridController.hpp"
-
-#include <model/Model.hpp>
 #include <model/ModelObject.hpp>
 
 class QGridLayout;
@@ -35,70 +31,67 @@ class QString;
 namespace openstudio{
 
 class OSCollapsibleView;
+class OSGridController;
 
 class OSGridView : public QWidget
 {
   Q_OBJECT
 
-  public:
+public:
 
-    OSGridView(IddObjectType iddObjectType, const model::Model & model, QWidget * parent = 0); 
+  OSGridView(OSGridController * gridController,  const QString & headerText, QWidget * parent = 0); 
 
-    OSGridView(std::vector<model::ModelObject> modelObjects, QWidget * parent = 0);
-
-    virtual ~OSGridView() {}; 
+  virtual ~OSGridView() {}; 
      
-    void setGridController(OSGridController * gridController);
 
-    OSGridController * gridController() const;
 
-  signals:
+signals:
 
-    void cellClicked(int row, int column);
+  void cellClicked(int row, int column);
 
-    void rowClicked(int row);
+  void rowClicked(int row);
 
-    void columnClicked(int column);
+  void columnClicked(int column);
 
-  private slots:
+private slots:
 
-    void refresh(int row, int column);
+  void refresh(int row, int column);
 
-    void deleteAll();
+  void deleteAll();
 
-    void refreshAll(); 
+  void refreshAll(); 
 
-    void addWidget(int row, int column);
+  void addWidget(int row, int column);
 
-    void removeWidget(int row, int column);
+  void removeWidget(int row, int column);
     
-    void setVerticalHeader(bool visible, QString title);
+  void setVerticalHeader(bool visible, QString title);
 
-    void setHorizontalHeader(std::vector<QWidget *> widgets);
+  void setHorizontalHeader(std::vector<QWidget *> widgets);
 
-    void setHorizontalHeader(std::vector<QString> names);
+  void setHorizontalHeader(std::vector<QString> names);
 
-    void selectCategory(int index);
+  void selectCategory(int index);
 
-  private:
+private:
 
-    void refreshRow(model::ModelObject modelObject);
+  void setGridController(OSGridController * gridController);
 
-    void refreshColumn(int columnId);
+  void refreshRow(model::ModelObject modelObject);
 
-    void selectCell(int row, int column);
+  void refreshColumn(int columnId);
 
-    void selectRow(int row);
+  void selectCell(int row, int column);
 
-    void selectColumn(int column);
+  void selectRow(int row);
 
-    OSCollapsibleView * m_CollapsibleView;
+  void selectColumn(int column);
 
-    QGridLayout * m_gridLayout;
+  OSCollapsibleView * m_CollapsibleView;
 
-    OSGridController * m_gridController;
+  QGridLayout * m_gridLayout;
 
-    model::Model m_model;
+  OSGridController * m_gridController;
 
 };
 
