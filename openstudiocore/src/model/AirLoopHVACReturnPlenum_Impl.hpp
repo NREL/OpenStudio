@@ -73,6 +73,8 @@ namespace detail {
 
     bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
 
+    std::vector<IdfObject> remove();
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirLoopHVACReturnPlenum");

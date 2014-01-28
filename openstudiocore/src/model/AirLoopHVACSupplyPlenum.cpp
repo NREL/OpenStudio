@@ -275,8 +275,8 @@ namespace detail {
       AirLoopHVACZoneSplitter zoneSplitter= t_airLoopHVAC->zoneSplitter();
       std::vector<ModelObject> t_outletModelObjects = outletModelObjects();
 
-      for( std::vector<ModelObject>::iterator it = t_outletModelObjects.begin();
-           it != t_outletModelObjects.end();
+      for( std::vector<ModelObject>::reverse_iterator it = t_outletModelObjects.rbegin();
+           it != t_outletModelObjects.rend();
            it++ )
       {
         unsigned branchIndex = branchIndexForOutletModelObject(*it); 

@@ -19,6 +19,8 @@
 
 #include <model/AirLoopHVACReturnPlenum.hpp>
 #include <model/AirLoopHVACReturnPlenum_Impl.hpp>
+#include <model/AirLoopHVACZoneMixer.hpp>
+#include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/AirLoopHVACSupplyPlenum.hpp>
 #include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
@@ -236,6 +238,30 @@ namespace detail {
     BOOST_ASSERT(mixer);
 
     return AirLoopHVAC_Impl::addBranchForZone(thermalZone,terminal,splitter.get(),mixer.get());
+  }
+
+  std::vector<IdfObject> AirLoopHVACReturnPlenum_Impl::remove()
+  {
+    Model t_model = model();
+
+    if( boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC() )
+    {
+      AirLoopHVACZoneMixer zoneMixer = t_airLoopHVAC->zoneMixer();
+      std::vector<ModelObject> t_inletModelObjects = inletModelObjects();
+
+      for( std::vector<ModelObject>::reverse_iterator it = t_inletModelObjects.rbegin();
+           it != t_inletModelObjects.rend();
+           it++ )
+      {
+        unsigned branchIndex = branchIndexForInletModelObject(*it); 
+        unsigned t_inletPort = inletPort(branchIndex);
+        unsigned connectedObjectOutletPort = connectedObjectPort(t_inletPort).get();
+
+        t_model.connect(*it,connectedObjectOutletPort,zoneMixer,zoneMixer.nextInletPort());
+      }
+    }
+
+    return Mixer_Impl::remove();
   }
 
 } // detail
