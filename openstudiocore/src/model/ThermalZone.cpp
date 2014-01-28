@@ -1631,6 +1631,11 @@ namespace detail {
       return false;
     }
 
+    if( isPlenum() )
+    {
+      return false;
+    }
+
     boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC();
 
     if( airLoop )

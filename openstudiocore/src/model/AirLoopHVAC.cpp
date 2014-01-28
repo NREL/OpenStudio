@@ -358,6 +358,11 @@ namespace detail {
       return false;
     }
 
+    if( thermalZone.isPlenum() )
+    {
+      return false;
+    }
+
     thermalZone.setUseIdealAirLoads(false);
 
     if( OptionalAirLoopHVAC airLoopHVAC = thermalZone.airLoopHVAC() )
