@@ -4259,7 +4259,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setMotorEfficiency(mtrEff.get());
     }
 
-    if( ! autosize() )
+    if( autosize() )
+    {
+      QDomElement totHdElement = pumpElement.firstChildElement("TotHd");
+      value = totHdElement.text().toDouble(&ok);
+      if( ok )
+      {
+        // ft water to Pa
+        double totHd = value * 2989.067;
+        pump.setRatedPumpHead(totHd);
+      }
+    }
+    else
     {
       boost::optional<double> flowCap;
       boost::optional<double> pwr;
@@ -4307,7 +4318,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setMotorEfficiency(mtrEff.get());
     }
 
-    if( ! autosize() )
+    if( autosize() )
+    {
+      QDomElement totHdElement = pumpElement.firstChildElement("TotHd");
+      value = totHdElement.text().toDouble(&ok);
+      if( ok )
+      {
+        // ft water to Pa
+        double totHd = value * 2989.067;
+        pump.setRatedPumpHead(totHd);
+      }
+    }
+    else
     {
       boost::optional<double> flowCap;
       boost::optional<double> flowMin;
