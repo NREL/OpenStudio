@@ -118,7 +118,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
   for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
        it < supplyComponents.end();
-       it++ )
+       ++it )
   {
     boost::optional<ControllerWaterCoil> controller;
 
@@ -159,7 +159,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
     for( std::vector<ModelObject>::iterator it = controllers.begin();
          it < controllers.end();
-         it++ )
+         ++it )
     {
       boost::optional<IdfObject> _controller = translateAndMapModelObject(*it);
 
@@ -295,7 +295,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   ModelObjectVector::iterator branchCompIt;
   for( branchCompIt = branchComponents.begin();
        branchCompIt != branchComponents.end();
-       branchCompIt++ )
+       ++branchCompIt )
   {
     boost::optional<IdfObject> branchIdfObject = translateAndMapModelObject(*branchCompIt);
     if( branchIdfObject )
@@ -440,7 +440,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   demandComponents = airLoopHVAC.demandComponents( airLoopHVAC.demandInletNode(), zoneSplitter );
   for( it = demandComponents.begin();
        it < demandComponents.end();
-       it++ )
+       ++it )
   {
     translateAndMapModelObject(*it);
   }
@@ -451,26 +451,26 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   std::vector<model::ModelObject>::iterator it2 = mixerInletObjects.begin();
   for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin();
        it1 < splitterOutletObjects.end();
-       it1++ )
+       ++it1 )
   {
     model::HVACComponent comp1 = it1->optionalCast<model::HVACComponent>().get();
     model::HVACComponent comp2 = it2->optionalCast<model::HVACComponent>().get();
     std::vector<model::ModelObject> branchComponents = airLoopHVAC.demandComponents(comp1,comp2);
     for( std::vector<model::ModelObject>::iterator it = branchComponents.begin();
-         it < branchComponents.end(); it++ )
+         it < branchComponents.end(); ++it )
     {
       if( ! it->optionalCast<ThermalZone>() )
       {
         translateAndMapModelObject(*it);
       }
     }
-    it2++;
+    ++it2;
   }
 
   demandComponents = airLoopHVAC.demandComponents( zoneMixer, airLoopHVAC.demandOutletNode() );
   for( it = demandComponents.begin();
        it < demandComponents.end();
-       it++ )
+       ++it )
   {
     translateAndMapModelObject(*it);
   }

@@ -580,6 +580,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_resultsTabController.get(), SLOT(onUnitSystemChange(bool)));
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
     m_resultsTabController->mainContentWidget(), SIGNAL(treeChanged(const openstudio::UUID &)));
@@ -1209,9 +1210,7 @@ void OSDocument::openBclDlg()
     std::string filterType = "components";
     m_onlineBclDialog = new BuildingComponentDialog(filterType, true, m_mainWindow);
 
-    bool isConnected = false;
-
-    isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
+    bool isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeBclDlg()));
     OS_ASSERT(isConnected);
   }
@@ -1286,9 +1285,7 @@ void OSDocument::openMeasuresBclDlg()
     std::string filterType = "measures";
     m_onlineMeasuresBclDialog = new BuildingComponentDialog(filterType, true, m_mainWindow);
 
-    bool isConnected = false;
-
-    isConnected = connect(m_onlineMeasuresBclDialog, SIGNAL(rejected()),
+    bool isConnected = connect(m_onlineMeasuresBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeMeasuresBclDlg()));
     OS_ASSERT(isConnected);
   }

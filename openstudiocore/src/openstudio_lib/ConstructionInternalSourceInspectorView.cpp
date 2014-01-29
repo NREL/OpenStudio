@@ -154,8 +154,6 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   ++row;
 
-  bool isConnected = false;
-
   m_sourcePresentAfterLayerNumberEdit = new OSIntegerEdit();
   mainGridLayout->addWidget(m_sourcePresentAfterLayerNumberEdit,row,0);
 
@@ -196,7 +194,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
   ++row;
 
   m_tubeSpacingEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_tubeSpacingEdit, SLOT(onUnitSystemChange(bool)));
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_tubeSpacingEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_tubeSpacingEdit,row,0);
 

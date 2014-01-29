@@ -100,8 +100,7 @@ namespace detail {
   }
 
   void CurveFunctionalPressureDrop_Impl::setDiameter(double diameter) {
-    bool result = false;
-    result = setDouble(OS_Curve_Functional_PressureDropFields::Diameter, diameter);
+    bool result = setDouble(OS_Curve_Functional_PressureDropFields::Diameter, diameter);
     OS_ASSERT(result);
   }
 

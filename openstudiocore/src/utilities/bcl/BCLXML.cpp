@@ -96,7 +96,7 @@ namespace openstudio{
           softwareProgramVersion = versionElement.firstChildElement("identifier").firstChild().nodeValue().toStdString();
         }
         std::string fileName = fileElement.firstChildElement("filename").firstChild().nodeValue().toStdString();
-        std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
+        //std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
         std::string usageType = fileElement.firstChildElement("usage_type").firstChild().nodeValue().toStdString();
         std::string checksum = fileElement.firstChildElement("checksum").firstChild().nodeValue().toStdString();
 

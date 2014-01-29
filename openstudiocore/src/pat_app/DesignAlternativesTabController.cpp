@@ -112,7 +112,7 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
     std::vector<QPointer<OSListItem> > items = m_variableGroupListController->selectionController()->selectedItems();
 
     bool measuresSelected = false;
-    for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); it != items.end(); it++ ) {
+    for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); it != items.end(); ++it ) {
       if( qobject_cast<measuretab::MeasureItem *>(*it) ){
         measuresSelected = true;
         break;
@@ -136,7 +136,7 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
 
         for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); 
              it != items.end();
-             it++ )
+             ++it )
         {
           if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
           {
@@ -157,7 +157,7 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
 
         for( std::vector<analysis::MeasureGroup>::const_iterator varit = measureGroups.begin();
              varit != measureGroups.end();
-             varit++ )
+             ++varit )
         {
 
           int varSelections = 0;
@@ -166,7 +166,7 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
 
           for( std::vector<analysis::Measure>::const_iterator varPertIt = varperts.begin();
                varPertIt != varperts.end();
-               varPertIt++ )
+               ++varPertIt )
           {
             std::vector<analysis::Measure>::iterator match = std::find(selectedperts.begin(),selectedperts.end(),*varPertIt);
 
@@ -409,7 +409,7 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
 
     for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); 
          it != items.end();
-         it++ )
+         ++it )
     {
       if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
       {
@@ -424,13 +424,13 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
     // Loop over the selected perts
     for( std::vector<analysis::Measure>::const_iterator pertIter = selectedperts.begin();
          pertIter != selectedperts.end();
-         pertIter++ )
+         ++pertIter )
     {
       std::vector<analysis::Measure> newPointPerts;
 
       for( std::vector<analysis::MeasureGroup>::const_iterator varIter = measureGroups.begin();
            varIter != measureGroups.end();
-           varIter++ )
+           ++varIter )
       {
         std::vector<analysis::Measure> varperts = varIter->measures(false);
 
@@ -513,7 +513,7 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
 
     for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); 
          it != items.end();
-         it++ )
+         ++it )
     {
       if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
       {
@@ -529,7 +529,7 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
 
     for( std::vector<analysis::MeasureGroup>::const_iterator it = measureGroups.begin();
         it != measureGroups.end();
-        it++ )
+        ++it )
     {
       std::vector<analysis::Measure> varperts = it->measures(false);
 
@@ -712,7 +712,7 @@ std::vector<analysis::Measure> PerturbationListController::measures() const
 
     for( std::vector<boost::optional<analysis::Measure> >::iterator it = measures.begin();
          it != measures.end();
-         it++ )
+         ++it )
     {
       if( *it && (! (*it)->optionalCast<analysis::NullMeasure>()) )
       {

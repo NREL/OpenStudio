@@ -107,6 +107,9 @@ namespace runmanager {
     public:
       RubyJobBuilder(bool t_userScriptJob = false);
 
+      /// Construct a RubyJobBuilder from a json file
+      RubyJobBuilder(const openstudio::path &t_json);
+
       /// Construct a RubyJobBuilder from an existing set of JobParams (useful when loading from
       /// the database).
       RubyJobBuilder(const JobParams &t_params);
@@ -207,6 +210,11 @@ namespace runmanager {
       /// Returns the collection of required files to copy for this job
       std::vector<boost::tuple<std::string, std::string, std::string> > copyRequiredFiles() const;
 
+
+      const std::vector<RubyJobBuilder> &mergedJobs() const;
+
+      boost::optional<openstudio::UUID> originalUUID() const;
+
       static JobParams toJobParams(const std::vector<ruleset::OSArgument> &t_args,
           const openstudio::path &t_basePath=openstudio::path());
 
@@ -245,12 +253,17 @@ namespace runmanager {
       std::vector<std::string> m_params;
       std::vector<std::string> m_toolparams;
       openstudio::path m_script;
+      std::vector<RubyJobBuilder> m_mergedJobs;
+      boost::optional<openstudio::UUID> m_originalUUID;
+
       bool m_userScriptJob;
       boost::optional<openstudio::UUID> m_bclMeasureUUID;
 
       static bool stringToBool(const std::string &t_val);
       static std::string boolToString(bool t_val);
-      void initializeFromParams(const JobParams &t_params);
+      void initializeFromParams(const JobParams &t_params,
+                                const openstudio::path& t_originalBasePath = openstudio::path(),
+                                const openstudio::path& t_newBasePath = openstudio::path());
 
       // used internally to initialize userScriptRuby jobs and RubyJobs created from BCLMeasures
       void setAsUserScriptRubyJob(const openstudio::path& t_userScriptPath,

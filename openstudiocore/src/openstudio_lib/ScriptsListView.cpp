@@ -99,7 +99,7 @@ namespace openstudio {
       // ooh, it was us.
       QStringList files = QDir(openstudio::toQString(m_path)).entryList(QDir::Files, QDir::Name);
 
-      std::vector<OSItemId> items, newItems;
+      std::vector<OSItemId> items;
       for (QStringList::const_iterator itr = files.begin();
            itr != files.end();
            ++itr)

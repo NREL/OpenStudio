@@ -57,7 +57,7 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
   m_mainLayout->addWidget(m_collapsibleComponentHeader);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
-                        this, SIGNAL(headerClicked(bool)));
+                             this, SIGNAL(headerClicked(bool)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),

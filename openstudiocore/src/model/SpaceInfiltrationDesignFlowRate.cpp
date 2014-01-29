@@ -349,8 +349,7 @@ namespace detail {
   }
 
   bool SpaceInfiltrationDesignFlowRate_Impl::setConstantTermCoefficient(double constantTermCoefficient) {
-    bool result = false;
-    result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::ConstantTermCoefficient, constantTermCoefficient);
+    bool result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::ConstantTermCoefficient, constantTermCoefficient);
     return result;
   }
 
@@ -360,8 +359,7 @@ namespace detail {
   }
 
   bool SpaceInfiltrationDesignFlowRate_Impl::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
-    bool result = false;
-    result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::TemperatureTermCoefficient, temperatureTermCoefficient);
+    bool result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::TemperatureTermCoefficient, temperatureTermCoefficient);
     return result;
   }
 
@@ -371,8 +369,7 @@ namespace detail {
   }
 
   bool SpaceInfiltrationDesignFlowRate_Impl::setVelocityTermCoefficient(double velocityTermCoefficient) {
-    bool result = false;
-    result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::VelocityTermCoefficient, velocityTermCoefficient);
+    bool result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::VelocityTermCoefficient, velocityTermCoefficient);
     return result;
   }
 
@@ -382,8 +379,7 @@ namespace detail {
   }
 
   bool SpaceInfiltrationDesignFlowRate_Impl::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
-    bool result = false;
-    result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::VelocitySquaredTermCoefficient, velocitySquaredTermCoefficient);
+    bool result = setDouble(OS_SpaceInfiltration_DesignFlowRateFields::VelocitySquaredTermCoefficient, velocitySquaredTermCoefficient);
     return result;
   }
 

@@ -378,7 +378,7 @@ void LocationView::onWeatherFileBtnClicked()
         boost::optional<openstudio::path> temp = weatherFile->path();
         if (temp){
           openstudio::path previousEPWName = temp->filename();
-          std::string ex = toString(previousEPWName.extension());
+          //std::string ex = toString(previousEPWName.extension());
           if (!previousEPWName.empty() && previousEPWName.extension() == toPath(".epw")){
             previousEPWPath = toPath(m_modelTempDir) / toPath("resources/files") / previousEPWName;
           }

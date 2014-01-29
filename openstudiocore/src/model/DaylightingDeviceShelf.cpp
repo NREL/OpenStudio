@@ -81,8 +81,7 @@ namespace detail {
   }
 
   bool DaylightingDeviceShelf_Impl::setViewFactortoOutsideShelf(double viewFactortoOutsideShelf) {
-    bool result = false;
-    result = setDouble(OS_DaylightingDevice_ShelfFields::ViewFactortoOutsideShelf, viewFactortoOutsideShelf);
+    bool result = setDouble(OS_DaylightingDevice_ShelfFields::ViewFactortoOutsideShelf, viewFactortoOutsideShelf);
     return result;
   }
 

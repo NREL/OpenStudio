@@ -283,8 +283,7 @@ namespace detail {
   }
 
   bool FanVariableVolume_Impl::setFanEfficiency(double fanEfficiency) {
-    bool result = false;
-    result = setDouble(OS_Fan_VariableVolumeFields::FanEfficiency, fanEfficiency);
+    bool result = setDouble(OS_Fan_VariableVolumeFields::FanEfficiency, fanEfficiency);
     return result;
   }
 
@@ -302,8 +301,7 @@ namespace detail {
   }
 
   void FanVariableVolume_Impl::setPressureRise(double pressureRise) {
-    bool result = false;
-    result = setDouble(OS_Fan_VariableVolumeFields::PressureRise, pressureRise);
+    bool result = setDouble(OS_Fan_VariableVolumeFields::PressureRise, pressureRise);
     OS_ASSERT(result);
   }
 
@@ -352,8 +350,7 @@ namespace detail {
   }
 
   bool FanVariableVolume_Impl::setFanPowerMinimumFlowRateInputMethod(std::string fanPowerMinimumFlowRateInputMethod) {
-    bool result = false;
-    result = setString(OS_Fan_VariableVolumeFields::FanPowerMinimumFlowRateInputMethod, fanPowerMinimumFlowRateInputMethod);
+    bool result = setString(OS_Fan_VariableVolumeFields::FanPowerMinimumFlowRateInputMethod, fanPowerMinimumFlowRateInputMethod);
     return result;
   }
 
@@ -363,8 +360,7 @@ namespace detail {
   }
 
   bool FanVariableVolume_Impl::setFanPowerMinimumFlowFraction(double fanPowerMinimumFlowFraction) {
-    bool result = false;
-    result = setDouble(OS_Fan_VariableVolumeFields::FanPowerMinimumFlowFraction, fanPowerMinimumFlowFraction);
+    bool result = setDouble(OS_Fan_VariableVolumeFields::FanPowerMinimumFlowFraction, fanPowerMinimumFlowFraction);
     return result;
   }
 
@@ -414,8 +410,7 @@ namespace detail {
   }
 
   bool FanVariableVolume_Impl::setMotorEfficiency(double motorEfficiency) {
-    bool result = false;
-    result = setDouble(OS_Fan_VariableVolumeFields::MotorEfficiency, motorEfficiency);
+    bool result = setDouble(OS_Fan_VariableVolumeFields::MotorEfficiency, motorEfficiency);
     return result;
   }
 
@@ -433,8 +428,7 @@ namespace detail {
   }
 
   bool FanVariableVolume_Impl::setMotorInAirstreamFraction(double motorInAirstreamFraction) {
-    bool result = false;
-    result = setDouble(OS_Fan_VariableVolumeFields::MotorInAirstreamFraction, motorInAirstreamFraction);
+    bool result = setDouble(OS_Fan_VariableVolumeFields::MotorInAirstreamFraction, motorInAirstreamFraction);
     return result;
   }
 
@@ -622,8 +616,7 @@ namespace detail {
   }
 
   void FanVariableVolume_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_Fan_VariableVolumeFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_Fan_VariableVolumeFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 
@@ -812,7 +805,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
       {
@@ -831,7 +824,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
     it < zoneHVACUnitHeater.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
       {

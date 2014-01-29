@@ -761,7 +761,7 @@ namespace sdd {
 
         for( std::vector<model::AirLoopHVAC>::iterator it = airloops.begin();
              it != airloops.end();
-             it++ )
+             ++it )
         {
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);

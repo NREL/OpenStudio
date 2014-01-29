@@ -115,8 +115,7 @@ namespace detail {
   }
 
   bool InternalMass_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_InternalMassFields::Multiplier, multiplier);
+    bool result = setDouble(OS_InternalMassFields::Multiplier, multiplier);
     return result;
   }
 

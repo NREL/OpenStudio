@@ -32,8 +32,8 @@ static int rowCount(void *r, int argc, char **argv, char **azColName) {
 
 
 SqliteMerge::SqliteMerge()
+  : m_final("final")  //name of final database
 {
-  m_final = "final";  //name of final database
 }
 
 SqliteMerge::~SqliteMerge()

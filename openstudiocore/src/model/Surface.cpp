@@ -367,8 +367,7 @@ namespace detail {
   }
 
   bool Surface_Impl::setSurfaceType(std::string surfaceType, bool driverMethod) {
-    bool result = false;
-    result = setString(OS_SurfaceFields::SurfaceType, surfaceType, true);
+    bool result = setString(OS_SurfaceFields::SurfaceType, surfaceType, true);
     if (driverMethod){
       this->emitChangeSignals(); // emit signals here
     }
@@ -413,8 +412,7 @@ namespace detail {
   }
 
   bool Surface_Impl::setSunExposure(std::string sunExposure, bool driverMethod) {
-    bool result = false;
-    result = setString(OS_SurfaceFields::SunExposure, sunExposure, true);
+    bool result = setString(OS_SurfaceFields::SunExposure, sunExposure, true);
     if (driverMethod){
       this->emitChangeSignals(); // emit signals here
     }
@@ -431,8 +429,7 @@ namespace detail {
   }
 
   bool Surface_Impl::setWindExposure(std::string windExposure, bool driverMethod) {
-    bool result = false;
-    result = setString(OS_SurfaceFields::WindExposure, windExposure, true);
+    bool result = setString(OS_SurfaceFields::WindExposure, windExposure, true);
     if (driverMethod){
       this->emitChangeSignals(); // emit signals here
     }
@@ -455,8 +452,7 @@ namespace detail {
   }
 
   bool Surface_Impl::setViewFactortoGround(double viewFactortoGround) {
-    bool result = false;
-    result = setDouble(OS_SurfaceFields::ViewFactortoGround, viewFactortoGround);
+    bool result = setDouble(OS_SurfaceFields::ViewFactortoGround, viewFactortoGround);
     return result;
   }
 
@@ -481,8 +477,7 @@ namespace detail {
   }
 
   bool Surface_Impl::setNumberofVertices(double numberofVertices) {
-    bool result = false;
-    result = setDouble(OS_SurfaceFields::NumberofVertices, numberofVertices);
+    bool result = setDouble(OS_SurfaceFields::NumberofVertices, numberofVertices);
     return result;
   }
 
@@ -1050,7 +1045,7 @@ namespace detail {
 
   void Surface_Impl::assignDefaultSunExposure(bool driverMethod)
   {
-    std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
+    //std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
     if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
       bool test = this->setSunExposure("SunExposed", driverMethod);
       OS_ASSERT(test);
@@ -1067,7 +1062,7 @@ namespace detail {
 
   void Surface_Impl::assignDefaultWindExposure(bool driverMethod)
   {
-    std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
+    //std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
     if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
       bool test = setWindExposure("WindExposed", driverMethod);
       OS_ASSERT(test);

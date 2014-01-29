@@ -201,8 +201,7 @@ void ControllerWaterCoil_Impl::autosizeMaximumActuatedFlow() {
 }
 
 void ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
-  bool result = false;
-  result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
+  bool result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
   OS_ASSERT(result);
 }
 
