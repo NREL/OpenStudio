@@ -198,17 +198,19 @@ namespace detail {
 
   bool AirLoopHVACReturnPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone)
   {
-    boost::optional<StraightComponent> terminal;
+    boost::optional<StraightComponent> t_terminal;
 
-    return addBranchForZone(thermalZone,terminal);
+    return addBranchForZoneImpl(thermalZone,t_terminal);
   }
   
   bool AirLoopHVACReturnPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal)
   {
-    return addBranchForZone(thermalZone,terminal);
+    boost::optional<StraightComponent> t_terminal = terminal;
+
+    return addBranchForZoneImpl(thermalZone,t_terminal);
   }
 
-  bool AirLoopHVACReturnPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal)
+  bool AirLoopHVACReturnPlenum_Impl::addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal)
   {
     boost::optional<Splitter> splitter;
     boost::optional<Mixer> mixer = getObject<AirLoopHVACReturnPlenum>();

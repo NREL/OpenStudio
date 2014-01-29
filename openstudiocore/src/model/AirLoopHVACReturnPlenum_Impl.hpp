@@ -71,7 +71,7 @@ namespace detail {
 
     bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
 
-    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
+    bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
 
     std::vector<IdfObject> remove();
 
