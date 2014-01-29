@@ -123,37 +123,41 @@ public:
 
   virtual std::vector<QWidget *> row(int i);
 
-  QWidget * widgetAt(int i, int j);
+  QWidget * widgetAt(int row, int column);
 
 protected:
 
   virtual void setCategoriesAndFields() = 0; 
   
-  std::vector<std::pair<QString,std::vector<QString>>> m_categoriesAndFields;
-
-  std::vector<QSharedPointer<BaseConcept> > m_baseConcepts;
-
-private:
-
-  void setVerticalHeader(bool visible, QString title);
-
-  void setHorizontalHeader(std::vector<QWidget> widgets);
-
-  void setHorizontalHeader(std::vector<QString> names);
-
+  virtual void setHorizontalHeader();
+  
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
   // This provides a mechinism to easily manage
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal
-  virtual void addColumns(const std::vector<QString> & fields) = 0;
+  virtual void addColumns(const std::vector<QString> & fields) = 0; 
+  
+  std::vector<std::pair<QString,std::vector<QString>>> m_categoriesAndFields;
+
+  std::vector<QSharedPointer<BaseConcept> > m_baseConcepts;
+
+  std::vector<QWidget *> m_horizontalHeader;
+
+  bool m_hasHorizontalHeader;
+
+  QString m_currentCategory;
+
+  std::vector<QString> m_currentFields;
+
+private:
 
   model::Model m_model;
 
   std::vector<model::ModelObject> m_modelObjects;
 
-  IddObjectType m_iddObjectType;
+  IddObjectType m_iddObjectType; // TODO this is not currently needed
 
 signals:
 

@@ -31,6 +31,7 @@
 #include <model/Schedule_Impl.hpp>
 
 #include <QBoxLayout>
+#include <QLabel>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
@@ -58,6 +59,7 @@
 #define INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH "Installed Case Lighting Power per Unit Length"
 #define LATENTCASECREDITCURVETYPE "Latent Case Credit Curve Type"
 #define MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH "Minimum Anti Sweat Heater Power per Unit Length"
+#define NAME "Name"
 #define OPERATINGCASEFANPOWERPERUNITLENGTH "Operating Case Fan Power per Unit Length"
 #define RATEDAMBIENTRELATIVEHUMIDITY "Rated Ambient Relative Humidity"
 #define RATEDAMBIENTTEMPERATURE "Rated Ambient Temperature"
@@ -73,15 +75,16 @@
 // Walk In Fields
 #define AVAILABILITYSCHEDULE "Availability Schedule"
 #define AVERAGEREFRIGERANTCHARGEINVENTORY "Average Refrigerant Charge Inventory"
-#define DEFROSTCONTROLTYPEVALUES "Defrost Control Type"
+#define DEFROSTCONTROLTYPE "Defrost Control Type"
 #define DEFROSTDRIPDOWNSCHEDULE "Defrost Drip Down Schedule"
 #define DEFROSTPOWER "Defrost Power"
 #define DEFROSTSCHEDULE "Defrost Schedule"
-#define DEFROSTTYPEVALUES "Defrost Type"
+#define DEFROSTTYPE "Defrost Type"
 #define HEATINGPOWERSCHEDULE "Heating Power Schedule"
 #define INSULATEDFLOORSURFACEAREA "Insulated Floor Surface Area"
 #define INSULATEDFLOORUVALUE "Insulated Floor U Value"
 #define LIGHTINGSCHEDULE "Lighting Schedule"
+#define NAME "Name"
 #define OPERATINGTEMPERATURE "Operating Temperature"
 #define RATEDCIRCULATIONFANPOWER "Rated Circulation Fan Power"
 #define RATEDCOILCOOLINGCAPACITY "Rated Coil Cooling Capacity"
@@ -119,15 +122,13 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   layout->addWidget(caseGridView);
 
   std::vector<model::ModelObject> walkInModelObjects;
-  walkInModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  walkInModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  walkInModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  walkInModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  walkInModelObjects.push_back(model::RefrigerationCase(model,schedule));
+  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
+  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
+  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
 
-  //RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
-  //OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
-  //layout->addWidget(walkInView);
+  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
+  OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
+  layout->addWidget(walkInView);
 
 }
 
@@ -145,94 +146,88 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back("Rack Name");
-    fields.push_back("Rack Saturated Suction Temperature (F)");
-    fields.push_back("Fixture Name");
-    fields.push_back("Manufacturer & Model No.");
-    fields.push_back("Zone Location");
-    fields.push_back("Fixture Type");
+    //fields.push_back("Rack Name");
+    //fields.push_back("Rack Saturated Suction Temperature (F)");
+    //fields.push_back("Fixture Name");
+    fields.push_back(THERMALZONE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Case Length (ft)");
-    fields.push_back("# of Doors");
-    fields.push_back("Door Width (ft)");
+    fields.push_back(CASELENGTH);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Dimensions"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Under Case Return Air Fraction");
-    fields.push_back("Case Operating Temperature (F)");
-    fields.push_back("Design Evaporator Temperature (F)");
-    fields.push_back("Rated Runtime Fraction");
+    fields.push_back(UNDERCASEHVACRETURNAIRFRACTION);
+    fields.push_back(CASEOPERATINGTEMPERATURE);
+    fields.push_back(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE);
+    fields.push_back(RATEDRUNTIMEFRACTION);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Operation"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Rated Cooling Capacity (Btu/hr/ft or Btu/hr/dr)");
-    fields.push_back("Actual Cooling Capacity (Btu/hr/ft or Btu/hr/dr)");
-    fields.push_back("Case Credit Fraction Schedule Name");
-    fields.push_back("Rated Latent Heat Ratio");
+    fields.push_back(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH);
+    fields.push_back(CASECREDITFRACTIONSCHEDULE);
+    fields.push_back(RATEDLATENTHEATRATIO);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Cooling Capacity"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Case Fan Rated (W/ft or W/dr))");
-    fields.push_back("Case Fan Operating (W/ft or W/dr)");
+    fields.push_back(STANDARDCASEFANPOWERPERUNITLENGTH);
+    fields.push_back(OPERATINGCASEFANPOWERPERUNITLENGTH);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Fan"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Case Lighting Rated (W/ft or W/dr)");
-    fields.push_back("Case Lighting Installed (W/ft or W/dr)");
-    fields.push_back("Case Lighting Fraction to Case");
-    fields.push_back("Case Lighting Schedule");
+    fields.push_back(STANDARDCASELIGHTINGPOWERPERUNITLENGTH);
+    fields.push_back(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH);
+    fields.push_back(FRACTIONOFLIGHTINGENERGYTOCASE);
+    fields.push_back(CASELIGHTINGSCHEDULE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Lighting"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Anti-Sweat Heaters Rated (W/ft or W/dr)");
-    fields.push_back("Anti-Sweat Heaters Actual (W/ft or W/dr)");
-    fields.push_back("Anti-Sweat Heaters Control Type");
-    fields.push_back("Anti-Sweat Heaters Minimum (W/ft or W/dr)");
-    fields.push_back("Humidity At Zero Anti-Sweat Heater Energy (%)");
-    fields.push_back("Anti-Sweat Heaters Fraction to Case");
+    fields.push_back(CASEANTISWEATHEATERPOWERPERUNITLENGTH);
+    fields.push_back(ANTISWEATHEATERCONTROLTYPE);
+    fields.push_back(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH);
+    fields.push_back(HUMIDITYATZEROANTISWEATHEATERENERGY);
+    fields.push_back(FRACTIONOFANTISWEATHEATERENERGYTOCASE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Case Anti-Sweat Heaters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Electric Defrost (W/ft or W/dr)");
-    fields.push_back("Duration of Cycle (mins)");
-    fields.push_back("Drip Time (mins)");
-    fields.push_back("Defrost 1 Start Time");
-    fields.push_back("Defrost 2 Start Time");
-    fields.push_back("Defrost 3 Start Time");
-    fields.push_back("Defrost 4 Start Time");
-    fields.push_back("Defrost 5 Start Time");
-    fields.push_back("Defrost 6 Start Time");
-    fields.push_back("Defrost Correction Curve Type");
+    fields.push_back(CASEDEFROSTPOWERPERUNITLENGTH);
+    //fields.push_back("Duration of Cycle (mins)");
+    //fields.push_back("Drip Time (mins)");
+    //fields.push_back("Defrost 1 Start Time");
+    //fields.push_back("Defrost 2 Start Time");
+    //fields.push_back("Defrost 3 Start Time");
+    //fields.push_back("Defrost 4 Start Time");
+    //fields.push_back("Defrost 5 Start Time");
+    //fields.push_back("Defrost 6 Start Time");
+    fields.push_back(DEFROSTENERGYCORRECTIONCURVE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Restocking Schedule");
+    fields.push_back(REFRIGERATEDCASERESTOCKINGSCHEDULE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Restocking"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -352,22 +347,28 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
       //boost::optional<double> installedCaseLightingPowerperUnitLength() const;
     }else if(field == DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE){
+      // TODO required
       //boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature() const;
     }else if(field == CASELIGHTINGSCHEDULE){
+      // TODO required
       //boost::optional<Schedule> caseLightingSchedule() const;
     }else if(field == CASEDEFROSTSCHEDULE){
       //boost::optional<Schedule> caseDefrostSchedule() const;
     }else if(field == CASEDEFROSTDRIPDOWNSCHEDULE){
       //boost::optional<Schedule> caseDefrostDripDownSchedule() const;
     }else if(field == REFRIGERATEDCASERESTOCKINGSCHEDULE){
+      // TODO required
       //boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const;
     }else if(field == CASECREDITFRACTIONSCHEDULE){
       //boost::optional<Schedule> caseCreditFractionSchedule() const;
     }else if(field == AVAILABILITYSCHEDULE){
+      // TODO required
       //boost::optional<Schedule> availabilitySchedule() const;
     }else if(field == THERMALZONE){
+      // TODO required
       //boost::optional<ThermalZone> thermalZone() const;
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
+      // TODO required
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
     }else{
       // unhandled
@@ -390,107 +391,107 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back("Rack Name");
-    fields.push_back("Rack Saturated Suction Temperature (F)");
-    fields.push_back("Walk-in Name");
-    fields.push_back("Walk-in Type");
-    fields.push_back("Manufacturer & Model No.");
-    fields.push_back("Zone Adjacent");
+    //fields.push_back("Rack Name");
+    //fields.push_back("Rack Saturated Suction Temperature (F)");
+    fields.push_back(NAME);
+    //fields.push_back("Walk-in Type");
+    //fields.push_back("Manufacturer & Model No.");
+    //fields.push_back("Zone Adjacent");
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Length (ft)");
-    fields.push_back("Width (ft)");
-    fields.push_back("Height (ft)");
+    //fields.push_back("Length (ft)");
+    //fields.push_back("Width (ft)");
+    //fields.push_back("Height (ft)");
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Dimensions"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
   
   {
     std::vector<QString> fields;
-    fields.push_back("Floor R-Value");
-    fields.push_back("Wall/Roof R-Value");
+    fields.push_back(INSULATEDFLOORUVALUE);
+    //fields.push_back("Wall/Roof R-Value");
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Construction"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
   
   {
     std::vector<QString> fields;
-    fields.push_back("Stocking Door Area (ft2)");
-    fields.push_back("Stocking Door Height (ft)");
-    fields.push_back("Stocking Door R-Value (hr-ft2-F/Btu)");
-    fields.push_back("Stocking Door Opening Schedule");
-    fields.push_back("Stocking Door Opening Protection");
+    //fields.push_back("Stocking Door Area (ft2)");
+    //fields.push_back("Stocking Door Height (ft)");
+    //fields.push_back("Stocking Door R-Value (hr-ft2-F/Btu)");
+    //fields.push_back("Stocking Door Opening Schedule");
+    //fields.push_back("Stocking Door Opening Protection");
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Stocking Doors"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Availability Schedule");
-    fields.push_back("Operating Temperature (F)");
-    fields.push_back("Walk-In Rated Cooling Source Temperature (F)");
-    fields.push_back("Walk-In Rated Cooling Capacity (Btu/hr)");
+    fields.push_back(AVAILABILITYSCHEDULE);
+    fields.push_back(OPERATINGTEMPERATURE);
+    fields.push_back(RATEDCOOLINGSOURCETEMPERATURE);
+    fields.push_back(RATEDCOILCOOLINGCAPACITY);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Operation"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Walk-In Rated Cooling Coil Fan Power (W)");
-    fields.push_back("Circulation Fan Power (W)");
+    fields.push_back(RATEDCOOLINGCOILFANPOWER);
+    fields.push_back(RATEDCIRCULATIONFANPOWER);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Fans"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Walk-In Rated Total Lighting Power (W)");
-    fields.push_back("Lighting Schedule");
+    fields.push_back(RATEDTOTALLIGHTINGPOWER);
+    fields.push_back(LIGHTINGSCHEDULE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Lighting"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("WalkIn Rated Total Heating Power (W)");
-    fields.push_back("WalkIn Heating Power Schedule");
+    fields.push_back(RATEDTOTALHEATINGPOWER);
+    fields.push_back(HEATINGPOWERSCHEDULE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Heating"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back("Walk-In Defrost Type");
-    fields.push_back("Walk-In Defrost Control Type");
-    fields.push_back("Drain/Supplemental (Drain and Drip-Pan only) Heaters (W)");
-    fields.push_back("Electric Defrost (W)");
-    fields.push_back("Duraction of Cycle (mins)");
-    fields.push_back("Drip Time (mins)");
-    fields.push_back("Defrost 1 Start Time");
-    fields.push_back("Defrost 2 Start Time");
-    fields.push_back("Defrost 3 Start Time");
-    fields.push_back("Defrost 4 Start Time");
-    fields.push_back("Defrost 5 Start Time");
-    fields.push_back("Defrost 6 Start Time");
-    fields.push_back("Temperature Termination Defrost Fraction to Ice");
+    fields.push_back(DEFROSTTYPE);
+    fields.push_back(DEFROSTCONTROLTYPE);
+    //fields.push_back("Drain/Supplemental (Drain and Drip-Pan only) Heaters (W)");
+    fields.push_back(DEFROSTPOWER);
+    //fields.push_back("Duraction of Cycle (mins)");
+    //fields.push_back("Drip Time (mins)");
+    //fields.push_back("Defrost 1 Start Time");
+    //fields.push_back("Defrost 2 Start Time");
+    //fields.push_back("Defrost 3 Start Time");
+    //fields.push_back("Defrost 4 Start Time");
+    //fields.push_back("Defrost 5 Start Time");
+    //fields.push_back("Defrost 6 Start Time");
+    fields.push_back(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
   
   {
     std::vector<QString> fields;
-    fields.push_back("Restocking Schedule");
+    fields.push_back(RESTOCKINGSCHEDULE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Restocking"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back(DEFROSTCONTROLTYPEVALUES);
+    fields.push_back(DEFROSTCONTROLTYPE);
     fields.push_back(INSULATEDFLOORUVALUE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -503,13 +504,13 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
-    if(field == DEFROSTTYPEVALUES){
-      addComboBoxColumn(QString(DEFROSTTYPEVALUES),
+    if(field == DEFROSTTYPE){
+      addComboBoxColumn(QString(DEFROSTTYPE),
                       &model::RefrigerationWalkIn::defrostTypeValues,
                       &model::RefrigerationWalkIn::defrostType,
                       &model::RefrigerationWalkIn::setDefrostType);
-    }else if(field == DEFROSTCONTROLTYPEVALUES){
-      addComboBoxColumn(QString(DEFROSTCONTROLTYPEVALUES),
+    }else if(field == DEFROSTCONTROLTYPE){
+      addComboBoxColumn(QString(DEFROSTCONTROLTYPE),
                       &model::RefrigerationWalkIn::defrostControlTypeValues,
                       &model::RefrigerationWalkIn::defrostControlType,
                       &model::RefrigerationWalkIn::setDefrostControlType);
@@ -546,6 +547,7 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
       //                    &model::RefrigerationWalkIn::ratedTotalHeatingPower,
       //                    &model::RefrigerationWalkIn::setRatedTotalHeatingPower); // TODO does not return bool
     }else if(field == RATEDTOTALLIGHTINGPOWER){
+      // TODO required
       //addDoubleEditColumn(QString(RATEDTOTALLIGHTINGPOWER),
       //                    &model::RefrigerationWalkIn::ratedTotalLightingPower,
       //                    &model::RefrigerationWalkIn::setRatedTotalLightingPower); // TODO does not return bool
@@ -556,18 +558,24 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
     }else if(field == DEFROSTSCHEDULE){
       //Schedule defrostSchedule() const;
     }else if(field == DEFROSTPOWER){
+      // TODO required
       //boost::optional<double> defrostPower() const;
     }else if(field == TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE){
+      // TODO required
       //boost::optional<double> temperatureTerminationDefrostFractiontoIce() const;
     }else if(field == AVAILABILITYSCHEDULE){
+      // TODO required
       //boost::optional<Schedule> availabilitySchedule() const;
     }else if(field == HEATINGPOWERSCHEDULE){
+      // TODO required
       //boost::optional<Schedule> heatingPowerSchedule() const;
     }else if(field == LIGHTINGSCHEDULE){
+      // TODO required
       //boost::optional<Schedule> lightingSchedule() const;
     }else if(field == DEFROSTDRIPDOWNSCHEDULE){
       //boost::optional<Schedule> defrostDripDownSchedule() const;
     }else if(field == RESTOCKINGSCHEDULE){
+      // TODO required
       //boost::optional<Schedule> restockingSchedule() const;
     }else if(field == ZONEBOUNDARIES){
       //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const;

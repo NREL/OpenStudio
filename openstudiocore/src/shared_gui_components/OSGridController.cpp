@@ -45,11 +45,15 @@ OSGridController::OSGridController(IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects)
   : QObject(),
+  m_categoriesAndFields(std::vector<std::pair<QString,std::vector<QString>>>()),
   m_baseConcepts(std::vector<QSharedPointer<BaseConcept> >()),
+  m_horizontalHeader(std::vector<QWidget *>()),
+  m_hasHorizontalHeader(true),
+  m_currentCategory(QString()),
+  m_currentFields(std::vector<QString> ()),
   m_model(model),
   m_modelObjects(modelObjects),
-  m_iddObjectType(iddObjectType),
-  m_categoriesAndFields(std::vector<std::pair<QString,std::vector<QString>>>())
+  m_iddObjectType(iddObjectType)
 {
 }
 
@@ -75,21 +79,47 @@ std::vector<std::pair<QString,std::vector<QString>>> OSGridController::categorie
 
 void OSGridController::categorySelected(int index)
 {
-  std::vector<QString> fields = m_categoriesAndFields.at(index).second;
+  m_currentCategory = m_categoriesAndFields.at(index).first;
+
+  m_currentFields = m_categoriesAndFields.at(index).second;
  
-  addColumns(fields);
+  addColumns(m_currentFields);
 }
 
-QWidget * OSGridController::widgetAt(int i, int j)
+void OSGridController::setHorizontalHeader()
 {
-  OS_ASSERT(i >= 0);
-  OS_ASSERT(j >= 0);
-  OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(i));
-  OS_ASSERT(m_baseConcepts.size() > static_cast<unsigned>(j));
+  m_horizontalHeader.clear();
 
-  model::ModelObject mo = m_modelObjects[i];
+  QLabel * label = 0;
+  Q_FOREACH(QString field, m_currentFields){
+    label = new QLabel(field);
+    m_horizontalHeader.push_back(label);
+  }
+}
 
-  QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[j];
+QWidget * OSGridController::widgetAt(int row, int column)
+{
+  OS_ASSERT(row >= 0);
+  OS_ASSERT(column >= 0);
+
+  OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(row));
+  OS_ASSERT(m_baseConcepts.size() > static_cast<unsigned>(column));    
+
+  if(m_hasHorizontalHeader){
+    if(row == 0){
+      if(column == 0){
+        setHorizontalHeader();
+        //OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size()); TODO uncomment this later
+      }
+      return m_horizontalHeader.at(column);
+    } else {
+      --row; 
+    }
+  }
+
+  model::ModelObject mo = m_modelObjects[row];
+
+  QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
   if(QSharedPointer<CheckBoxConcept> checkBoxConcept = baseConcept.dynamicCast<CheckBoxConcept>()){
 
