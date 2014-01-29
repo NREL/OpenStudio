@@ -3225,6 +3225,9 @@ OS:StandardsInformation:Construction,
        \object-list ConstructionNames
   A3, \field Intended Surface Type
        \type choice
+       \key AtticFloor
+       \key AtticWall
+       \key AtticRoof
        \key DemisingFloor
        \key DemisingWall
        \key DemisingRoof
