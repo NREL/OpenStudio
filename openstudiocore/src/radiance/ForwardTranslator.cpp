@@ -140,6 +140,7 @@ namespace radiance {
 
     m_logSink.resetStringStream();
 
+    // TODO: check for shading controls, set m_shadingControls
 
     std::vector<openstudio::path> outfiles;
 
@@ -221,6 +222,8 @@ namespace radiance {
 
       // get the site
       openstudio::model::Site site = m_model.getUniqueModelObject<openstudio::model::Site>();
+
+      // DLM: the purpose of this was to bin windows with similar azimuths, for now we do no binning
 
   //     aperture_headings.push_back("WG00");
   //     aperture_headings.push_back("WG01");
@@ -309,10 +312,12 @@ namespace radiance {
         // copy required bsdf files into place
         openstudio::path bsdfoutpath = radDir/ openstudio::toPath("bsdf");
 
+        // TODO: find all the bsdfs associated with the model and copy them all over now
+
         boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/clear_100.xml"), bsdfoutpath / openstudio::toPath("clear_100.xml"), boost::filesystem::copy_option::overwrite_if_exists);
         boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/shade_020.xml"), bsdfoutpath / openstudio::toPath("shade_020.xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
-        /// \todo rpg777 do we need reference these files in the materias.rad file?
+        /// \todo rpg777 do we need reference these files in the materials.rad file?
         //
         /// \todo rgp777 also, we only want to group windows if they share the same shadinggroup
       }
@@ -957,6 +962,12 @@ namespace radiance {
         // std::string aperture_heading = boost::lexical_cast<std::string>(azi);
         std::string aperture_heading = formatString(azi, 4);
 
+        // DLM: do we append shading control name to aperture_header?
+
+        // create window_group by azimuth, space, tvis, and shading control name
+
+        // for single phase there can be one window group
+
         if (std::find(aperture_headings.begin(),aperture_headings.end(),aperture_heading) == aperture_headings.end())
         {
           aperture_headings.push_back(aperture_heading);
@@ -1068,6 +1079,7 @@ namespace radiance {
             // write material
             m_radMaterials.insert("void glass glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n"+formatString(tn, 4)+" "+formatString(tn, 4)+" "+ formatString(tn, 4) +"\n");
             m_radMaterialsDC.insert("void light glaz_spc-"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
+            // DLM TODO: substitute real bsdf names for glazing.xml,glazing_blind.xml
             m_radDCmats.insert("glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + ".dmx,\n");
             // polygon header
             m_radApertures[aperture_heading] += "#--SubSurface = " + subSurface_name + "\n";
@@ -1083,6 +1095,9 @@ namespace radiance {
             {
               m_radApertures[aperture_heading] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
             }
+
+            // TODO: for each window group store representative points for control
+            // append these to the end of the points file
 
           } else if (subSurfaceUpCase == "DOOR") {
 
@@ -1398,6 +1413,9 @@ namespace radiance {
       };
 
       // write radiance vmx materials list
+
+      // DLM: format of this file is, approximately VMX, bsdf1, bsdf2, DMX
+
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       t_outfiles.push_back(materials_dcfilename);
       std::ofstream materials_dcfile(openstudio::toString(materials_dcfilename).c_str());
