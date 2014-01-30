@@ -679,19 +679,12 @@ void OSArgumentRecord::createIndices(QSqlDatabase& qSqlDatabase, const std::stri
 }
 
 void OSArgumentRecord::updatePathData(ProjectDatabase database,
-                                              const openstudio::path& originalBase,
-                                              const openstudio::path& newBase)
+                                      const openstudio::path& originalBase,
+                                      const openstudio::path& newBase)
 {
-  bool didStartTransaction = database.startTransaction();
-
   OSArgumentRecordVector records = getOSArgumentRecords(database);
   BOOST_FOREACH(OSArgumentRecord& record,records) {
     record.getImpl<detail::OSArgumentRecord_Impl>()->updatePathData(originalBase,newBase);
-  }
-
-  if (didStartTransaction) {
-    bool test = database.commitTransaction();
-    OS_ASSERT(test);
   }
 }
 
