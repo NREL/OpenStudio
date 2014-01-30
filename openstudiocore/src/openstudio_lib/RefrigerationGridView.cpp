@@ -32,6 +32,7 @@
 
 #include <QBoxLayout>
 #include <QLabel>
+#include <QSettings>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
@@ -117,7 +118,7 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
   caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
 
-  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
+  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController("Display Cases", model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
   layout->addWidget(caseGridView);
 
@@ -126,16 +127,17 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
   walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
 
-  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
+  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController("Walk Ins", model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
   layout->addWidget(walkInView);
 
 }
 
-RefrigerationCaseGridController::RefrigerationCaseGridController(IddObjectType iddObjectType,
+RefrigerationCaseGridController::RefrigerationCaseGridController(const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(iddObjectType, model, modelObjects)
+  OSGridController(headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -377,10 +379,11 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
   }
 }
 
-RefrigerationWalkInGridController::RefrigerationWalkInGridController(IddObjectType iddObjectType,
+RefrigerationWalkInGridController::RefrigerationWalkInGridController(const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(iddObjectType, model, modelObjects)
+  OSGridController(headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }

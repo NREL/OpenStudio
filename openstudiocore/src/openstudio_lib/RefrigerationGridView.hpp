@@ -45,7 +45,8 @@ class RefrigerationCaseGridController : public OSGridController
 
 public:
 
-  RefrigerationCaseGridController(IddObjectType iddObjectType,
+  RefrigerationCaseGridController(const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -64,7 +65,8 @@ class RefrigerationWalkInGridController : public OSGridController
 
 public:
 
-  RefrigerationWalkInGridController(IddObjectType iddObjectType,
+  RefrigerationWalkInGridController(const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 

@@ -27,21 +27,31 @@
 #include <shared_gui_components/OSQuantityEdit.hpp>
 #include <shared_gui_components/OSUnsignedEdit.hpp>
 
+#include <openstudio_lib/SchedulesView.hpp>
+
 #include <model/Model_impl.hpp>
 #include <model/ModelObject_impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
+#include <QBoxLayout>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QColor>
+#include <QSettings>
 #include <QWidget>
 
 namespace openstudio {
+
+const std::vector<QColor> OSGridController::m_colors = SchedulesView::initializeColors();
 
 OSGridController::OSGridController()
   : QObject()
 {
 }
 
-OSGridController::OSGridController(IddObjectType iddObjectType,
+OSGridController::OSGridController(const QString & headerText,
+  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects)
   : QObject(),
@@ -53,12 +63,39 @@ OSGridController::OSGridController(IddObjectType iddObjectType,
   m_currentFields(std::vector<QString> ()),
   m_model(model),
   m_modelObjects(modelObjects),
-  m_iddObjectType(iddObjectType)
+  m_iddObjectType(iddObjectType),
+  m_horizontalHeaderBtnGrp(0),
+  m_verticalHeaderBtnGrp(0),
+  m_customCategories(std::vector<QString>()),
+  m_headerText(headerText)
 {
+  m_verticalHeaderBtnGrp = new QButtonGroup();
+  m_verticalHeaderBtnGrp->setExclusive(false);
+
+  loadQSettings();
 }
 
 OSGridController::~OSGridController()
 {
+  saveQSettings();
+}
+
+void OSGridController::loadQSettings()
+{
+  QSettings settings("OpenStudio", m_headerText);
+  m_customCategories = settings.value("customCategories").toStringList().toVector().toStdVector();
+}
+
+void OSGridController::saveQSettings() const
+{
+  QSettings settings("OpenStudio", m_headerText);
+  QVector<QVariant> vector;
+  for(unsigned i = 0; i < m_customCategories.size(); i++){
+    QVariant variant = m_customCategories.at(i);
+    vector.push_back(variant);
+  }
+  QList<QVariant> list = vector.toList();
+  settings.setValue("customCategories", list);
 }
 
 std::vector<QString> OSGridController::categories()
@@ -90,10 +127,36 @@ void OSGridController::setHorizontalHeader()
 {
   m_horizontalHeader.clear();
 
+  if(m_horizontalHeaderBtnGrp == 0){
+    m_horizontalHeaderBtnGrp = new QButtonGroup();
+    m_horizontalHeaderBtnGrp->setExclusive(false);
+  } else {
+    QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();
+    for(int i = 0; i < buttons.size(); i++){
+      m_horizontalHeaderBtnGrp->removeButton(buttons.at(i));
+    }
+  }
+
+  bool isConnected = false;
+  isConnected = connect(m_horizontalHeaderBtnGrp, SIGNAL(buttonClicked(int)),
+    this, SLOT(horizontalHeaderChecked(int)));
+  OS_ASSERT(isConnected);
+
+  QWidget * widget = 0;
   QLabel * label = 0;
+  QCheckBox * checkBox = 0;
+  QHBoxLayout * layout = 0;
   Q_FOREACH(QString field, m_currentFields){
     label = new QLabel(field);
-    m_horizontalHeader.push_back(label);
+    label->setWordWrap(true);
+    checkBox = new QCheckBox();
+    m_horizontalHeaderBtnGrp->addButton(checkBox,m_horizontalHeaderBtnGrp->buttons().size());
+    layout = new QHBoxLayout();
+    layout->addWidget(label); 
+    layout->addWidget(checkBox);
+    widget = new QWidget();
+    widget->setLayout(layout);
+    m_horizontalHeader.push_back(widget);
   }
 }
 
@@ -121,6 +184,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
+  QWidget * widget = 0;
+
   if(QSharedPointer<CheckBoxConcept> checkBoxConcept = baseConcept.dynamicCast<CheckBoxConcept>()){
 
     OSCheckBox2 * checkBox = new OSCheckBox2();
@@ -131,7 +196,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
               boost::none,
               boost::none);
 
-    return checkBox;
+    widget = checkBox;
 
   } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = baseConcept.dynamicCast<ComboBoxConcept>()) {
 
@@ -144,7 +209,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                 boost::none,
                 boost::none);
 
-      return comboBox;
+      widget = comboBox;
 
   } else if(QSharedPointer<DoubleEditConcept> doubleEditConcept = baseConcept.dynamicCast<DoubleEditConcept>()) {
 
@@ -160,7 +225,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                 boost::none,
                 boost::none);
 
-      return doubleEdit;
+      widget = doubleEdit;
 
   } else if(QSharedPointer<IntegerEditConcept> integerEditConcept = baseConcept.dynamicCast<IntegerEditConcept>()) {
 
@@ -176,7 +241,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                 boost::none,
                 boost::none);
 
-      return integerEdit;
+      widget = integerEdit;
 
   } else if(QSharedPointer<LineEditConcept> lineEditConcept = baseConcept.dynamicCast<LineEditConcept>()) {
 
@@ -188,7 +253,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                 boost::none,
                 boost::none);
 
-      return lineEdit;
+      widget = lineEdit;
 
   } else if(QSharedPointer<QuantityEditConcept> quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept>()) {
 
@@ -205,7 +270,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                 boost::none,
                 boost::none);
 
-      return quantityEdit;
+      widget = quantityEdit;
 
   } else if(QSharedPointer<UnsignedEditConcept> unsignedEdiConcept = baseConcept.dynamicCast<UnsignedEditConcept>()) {
 
@@ -221,13 +286,35 @@ QWidget * OSGridController::widgetAt(int row, int column)
                 boost::none,
                 boost::none);
 
-      return unsignedEdit;
+      widget = unsignedEdit;
 
   } else {
     // Unknown type
     OS_ASSERT(false);
-    return new QWidget();
   }
+
+  QWidget * wrapper = new QWidget();
+  wrapper->setFixedSize(QSize(200,70));
+  wrapper->setObjectName("TableCell");
+
+  QString style;
+  style.append("QWidget#TableCell {");
+  if(column < 2){
+    style.append("  background-color: ");
+    if(row >= static_cast<int>(m_colors.size())) row = m_colors.size() - 1; // similar to scheduleView's approach
+    style.append(this->m_colors.at(row).name());
+    style.append(";");
+  }
+  style.append("  border-bottom: 1px solid black;");
+  style.append("  border-right: 1px solid black;");
+  style.append("}");
+  wrapper->setStyleSheet(style);
+
+  QVBoxLayout * layout = new QVBoxLayout();
+  layout->addWidget(widget);
+  wrapper->setLayout(layout);
+
+  return wrapper;
 }
 
 int OSGridController::rowCount() const
@@ -243,6 +330,23 @@ int OSGridController::columnCount() const
 std::vector<QWidget *> OSGridController::row(int i)
 {
   return std::vector<QWidget *>();
+}
+
+void OSGridController::horizontalHeaderChecked(int index)
+{
+}
+
+void OSGridController::verticalHeaderChecked(int index)
+{
+  if(m_verticalHeaderBtnGrp->button(index)->isChecked()){
+    m_customCategories.push_back(m_currentFields.at(index));
+  } else {
+    std::vector<QString>::iterator it;
+    it = std::find(m_customCategories.begin(), m_customCategories.end(), m_currentFields.at(index));
+    if( it != m_customCategories.end() ){
+      m_customCategories.erase(it);
+    }
+  }
 }
 
 } // openstudio

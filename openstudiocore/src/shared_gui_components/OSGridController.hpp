@@ -30,6 +30,8 @@
 #include <QObject>
 #include <QSharedPointer>
 
+class QButtonGroup;
+class QColor;
 class QWidget;
 
 namespace openstudio {
@@ -48,7 +50,8 @@ public:
   // This form utilizes the default implementations of 
   // rowCount() and itemAt(), showing one row for each object 
   // in the model that is iddObjectType
-  OSGridController(IddObjectType iddObjectType,
+  OSGridController(const QString & headerText,
+    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -151,13 +154,27 @@ protected:
 
   std::vector<QString> m_currentFields;
 
+  std::vector<QString> m_customCategories;
+
 private:
+
+  virtual void loadQSettings();
+
+  virtual void saveQSettings() const;
 
   model::Model m_model;
 
   std::vector<model::ModelObject> m_modelObjects;
 
   IddObjectType m_iddObjectType; // TODO this is not currently needed
+
+  QButtonGroup * m_horizontalHeaderBtnGrp;
+
+  QButtonGroup * m_verticalHeaderBtnGrp;
+
+  static const std::vector<QColor> m_colors;
+
+  QString m_headerText;
 
 signals:
 
@@ -175,6 +192,12 @@ signals:
 
   // Nuclear reset of everything
   void modelReset();
+
+private slots:
+
+  void horizontalHeaderChecked(int index);
+
+  void verticalHeaderChecked(int index);
 
 };
 
