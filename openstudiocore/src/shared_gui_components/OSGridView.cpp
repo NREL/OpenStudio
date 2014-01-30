@@ -33,6 +33,7 @@
 #include <QButtonGroup>
 #include <QLabel>
 #include <QPushButton>
+#include <QScrollArea>
 
 namespace openstudio {
 
@@ -42,16 +43,50 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridLayout(0),
   m_gridController(gridController)
 {
+  m_gridLayout = new QGridLayout();
+  m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+  QWidget * scrollWidget = new QWidget();
+  scrollWidget->setObjectName("ScrollWidget");
+  scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
+  scrollWidget->setLayout(m_gridLayout);
+
+  QScrollArea * scrollArea = new QScrollArea();
+  scrollArea->setFrameStyle(QFrame::NoFrame);
+  scrollArea->setWidget(scrollWidget);
+  scrollArea->setWidgetResizable(true);
+  scrollArea->setBackgroundRole(QPalette::NoRole);
+    
+  QButtonGroup * buttonGroup = new QButtonGroup();
+  bool isConnected = false;
+  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
+    this, SLOT(selectCategory(int)));
+  OS_ASSERT(isConnected);
+
+  QHBoxLayout * buttonLayout = new QHBoxLayout();
+  buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+  std::vector<QString> categories = m_gridController->categories();
+  QPushButton * button = 0;
+  for(unsigned i=0; i<categories.size(); i++){
+    button = new QPushButton(categories.at(i));
+    buttonLayout->addWidget(button,0,Qt::AlignLeft);
+    buttonGroup->addButton(button,buttonGroup->buttons().size());
+  }
+  buttonLayout->addStretch();
+
+  QVBoxLayout * scrollLayout = new QVBoxLayout();
+  scrollLayout->setContentsMargins(0,0,0,0);
+  scrollLayout->addLayout(buttonLayout);
+  scrollLayout->addWidget(scrollArea);
+
   QVBoxLayout * layout = 0;
   
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
-
-  m_gridLayout = new QGridLayout();
-  m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
-  m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   DarkGradientHeader * header = new DarkGradientHeader();
   header->label->setText(headerText);
@@ -66,32 +101,13 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   
   setGridController(m_gridController);
 
-  QButtonGroup * buttonGroup = new QButtonGroup();
-  bool isConnected = false;
-  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(selectCategory(int)));
-  OS_ASSERT(isConnected);
-  
-  QHBoxLayout * buttonLayout = new QHBoxLayout();
-  buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-
-  std::vector<QString> categories = m_gridController->categories();
-  QPushButton * button = 0;
-  for(unsigned i=0; i<categories.size(); i++){
-    button = new QPushButton(categories.at(i));
-    buttonLayout->addWidget(button,0,Qt::AlignLeft);
-    buttonGroup->addButton(button,buttonGroup->buttons().size());
-  }
-  buttonLayout->addStretch();
-
   QVBoxLayout * m_contentLayout = 0;
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(0);
   m_contentLayout->setContentsMargins(0,0,0,0);
   widget->setLayout(m_contentLayout);
-  m_contentLayout->addLayout(buttonLayout);
-  m_contentLayout->addLayout(m_gridLayout);
+  m_contentLayout->addLayout(scrollLayout);
 
   setContentsMargins(5,5,5,5);
 
