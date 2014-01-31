@@ -138,10 +138,13 @@ namespace detail {
 
       //query.prepare("PRAGMA journal_mode=DELETE");
       //query.prepare("PRAGMA journal_mode=TRUNCATE");
-      query.prepare("PRAGMA journal_mode=PERSIST");
-      //query.prepare("PRAGMA journal_mode=MEMORY");
+      //query.prepare("PRAGMA journal_mode=PERSIST");
+      query.prepare("PRAGMA journal_mode=MEMORY");
       //query.prepare("PRAGMA journal_mode=WAL");
       //query.prepare("PRAGMA journal_mode=OFF");
+      query.exec();
+
+      query.prepare("PRAGMA temp_store=MEMORY");
       query.exec();
     }
 
@@ -320,7 +323,7 @@ namespace detail {
       test = m_qSqlDatabase->transaction();
       if (!test)
       {
-        LOG(Error, "Db Error: " << openstudio::toString(m_qSqlDatabase->lastError().text()));
+        LOG(Info, "DB Message: " << openstudio::toString(m_qSqlDatabase->lastError().text()));
       }
     } else {
       LOG(Error, "DB Engine doesn't support transactions");
