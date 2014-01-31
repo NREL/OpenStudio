@@ -429,9 +429,7 @@ ZoneHVACUnitHeater::ZoneHVACUnitHeater(const Model& model,
 {
   OS_ASSERT(getImpl<detail::ZoneHVACUnitHeater_Impl>());
 
-  bool ok = true;
-      
-  ok = setAvailabilitySchedule(availabilitySchedule);
+  bool ok = setAvailabilitySchedule(availabilitySchedule);
      
   if (!ok) 
   {

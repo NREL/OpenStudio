@@ -86,7 +86,7 @@ void BuildingComponentDialogCentralWidget::createLayout()
   comboBox->hide(); // TODO remove this hack when we have sorts to do
 
   isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
-                        this, SLOT(comboBoxIndexChanged(const QString &)));
+                             this, SLOT(comboBoxIndexChanged(const QString &)));
   OS_ASSERT(isConnected);
 
   QPushButton * upperPushButton = new QPushButton("Check All");
@@ -206,7 +206,7 @@ void BuildingComponentDialogCentralWidget::setTid(const std::string& filterType,
 
   for( std::vector<Component *>::iterator it = components.begin();
        it != components.end();
-       it++ )
+       ++it )
   {
     delete *it;
   }
@@ -224,7 +224,7 @@ void BuildingComponentDialogCentralWidget::setTid(const std::string& filterType,
 
   for( std::vector<BCLSearchResult>::iterator it = responses.begin();
        it != responses.end();
-       it++ )
+       ++it )
   {
     Component * component = new Component(*it);
     

@@ -283,8 +283,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setMaximumDryBulbTemperature(double maximumDryBulbTemperature) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::MaximumDryBulbTemperature, maximumDryBulbTemperature);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::MaximumDryBulbTemperature, maximumDryBulbTemperature);
     return result;
   }
 
@@ -294,8 +293,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setDailyDryBulbTemperatureRange(double dailyDryBulbTemperatureRange) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::DailyDryBulbTemperatureRange, dailyDryBulbTemperatureRange);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::DailyDryBulbTemperatureRange, dailyDryBulbTemperatureRange);
     return result;
   }
 
@@ -305,8 +303,7 @@ namespace detail {
   }
 
   void DesignDay_Impl::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::HumidityIndicatingConditionsatMaximumDryBulb, humidityIndicatingConditionsAtMaximumDryBulb);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::HumidityIndicatingConditionsatMaximumDryBulb, humidityIndicatingConditionsAtMaximumDryBulb);
     OS_ASSERT(result);
   }
 
@@ -316,8 +313,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setBarometricPressure(double barometricPressure) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::BarometricPressure, barometricPressure);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::BarometricPressure, barometricPressure);
     return result;
   }
 
@@ -327,8 +323,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setWindSpeed(double windSpeed) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::WindSpeed, windSpeed);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::WindSpeed, windSpeed);
     return result;
   }
 
@@ -338,8 +333,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setWindDirection(double windDirection) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::WindDirection, windDirection);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::WindDirection, windDirection);
     return result;
   }
 
@@ -349,8 +343,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setSkyClearness(double skyClearness) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::SkyClearness, skyClearness);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::SkyClearness, skyClearness);
     return result;
   }
 
@@ -390,8 +383,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setDayOfMonth(int dayOfMonth) {
-    bool result = false;
-    result = setInt(OS_SizingPeriod_DesignDayFields::DayofMonth, dayOfMonth);
+    bool result = setInt(OS_SizingPeriod_DesignDayFields::DayofMonth, dayOfMonth);
     return result;
   }
 
@@ -401,8 +393,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setMonth(int month) {
-    bool result = false;
-    result = setInt(OS_SizingPeriod_DesignDayFields::Month, month);
+    bool result = setInt(OS_SizingPeriod_DesignDayFields::Month, month);
     return result;
   }
 
@@ -412,8 +403,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setDayType(std::string dayType) {
-    bool result = false;
-    result = setString(OS_SizingPeriod_DesignDayFields::DayType, dayType);
+    bool result = setString(OS_SizingPeriod_DesignDayFields::DayType, dayType);
     return result;
   }
 
@@ -438,8 +428,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setHumidityIndicatingType(std::string humidityIndicatingType) {
-    bool result = false;
-    result = setString(OS_SizingPeriod_DesignDayFields::HumidityIndicatingType, humidityIndicatingType);
+    bool result = setString(OS_SizingPeriod_DesignDayFields::HumidityIndicatingType, humidityIndicatingType);
     return result;
   }
 
@@ -458,8 +447,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setDryBulbTemperatureRangeModifierType(std::string dryBulbTemperatureRangeModifierType) {
-    bool result = false;
-    result = setString(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierType, dryBulbTemperatureRangeModifierType);
+    bool result = setString(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierType, dryBulbTemperatureRangeModifierType);
     return result;
   }
 
@@ -477,8 +465,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setSolarModelIndicator(std::string solarModelIndicator) {
-    bool result = false;
-    result = setString(OS_SizingPeriod_DesignDayFields::SolarModelIndicator, solarModelIndicator);
+    bool result = setString(OS_SizingPeriod_DesignDayFields::SolarModelIndicator, solarModelIndicator);
     return result;
   }
 
@@ -606,8 +593,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setAshraeTaub(double ashraeTaub) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::ASHRAETaub, ashraeTaub);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::ASHRAETaub, ashraeTaub);
     return result;
   }
 
@@ -617,8 +603,7 @@ namespace detail {
   }
 
   bool DesignDay_Impl::setAshraeTaud(double ashraeTaud) {
-    bool result = false;
-    result = setDouble(OS_SizingPeriod_DesignDayFields::ASHRAETaud, ashraeTaud);
+    bool result = setDouble(OS_SizingPeriod_DesignDayFields::ASHRAETaud, ashraeTaud);
     return result;
   }
 

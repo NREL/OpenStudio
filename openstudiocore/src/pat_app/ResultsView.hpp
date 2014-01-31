@@ -32,6 +32,8 @@ class QTableWidget;
 class QTimer;
 class QPaintEvent;
 class QStackedWidget;
+class QPoint;
+class QMenu;
 
 namespace openstudio{
 
@@ -63,6 +65,8 @@ class ResultsView : public PatMainTabView
 
     double calibrationMaxCVRMSE() const;
 
+    void populateMenu(QMenu& menu, const openstudio::path& directory);
+
   signals: 
 
     void viewSelected(int);
@@ -88,6 +92,10 @@ class ResultsView : public PatMainTabView
     void enableDownloadResultsButton(const DownloadResultsStatus& status);
 
     void selectCalibrationMethod(const QString &);
+
+  protected slots:
+
+    void openReport();
 
   private:
 
@@ -136,6 +144,8 @@ public slots:
   void update();
 
   void setHasEmphasis(bool hasEmphasis);
+
+  void showContextMenu(const QPoint& pos);
 
 protected:
 
@@ -197,6 +207,7 @@ private:
 
   openstudio::analysis::DataPoint m_dataPoint;
   openstudio::analysis::DataPoint m_baselineDataPoint;
+  bool m_hasEmphasis;
   bool m_alternateRow;
 };
 
@@ -229,6 +240,8 @@ public slots:
   void update();
 
   void setHasEmphasis(bool hasEmphasis);
+  
+  void showContextMenu(const QPoint& pos);
 
 protected:
 
@@ -241,6 +254,7 @@ private:
   openstudio::analysis::DataPoint m_dataPoint;
   openstudio::analysis::DataPoint m_baselineDataPoint;
   bool m_alternateRow;
+  bool m_hasEmphasis;
   double m_calibrationMaxNMBE;
   double m_calibrationMaxCVRMSE;
 };

@@ -60,11 +60,9 @@ boost::optional<int> HistogramPointDistribution::numPairs() const {
 }
 
 bool HistogramPointDistribution::setAbscissas(const std::vector<double>& value) {
-  double previousValue;
-  double currentValue;
   for(std::vector<double>::size_type i = 1; i != value.size(); i++) {
-    previousValue = value[i-1];
-    currentValue = value[i];
+    double previousValue = value[i-1];
+    double currentValue = value[i];
     if (previousValue >= currentValue) {
       LOG(Warn,"Abscissas values must be strictly increasing.");
       return false;

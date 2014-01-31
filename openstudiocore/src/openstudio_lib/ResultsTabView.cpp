@@ -32,6 +32,7 @@
 #include <QProcess>
 #include <QPushButton>
 #include <QString>
+#include <QRegExp>
 
 #include <runmanager/lib/FileInfo.hpp>
 #include <runmanager/lib/JobStatusWidget.hpp>
@@ -53,8 +54,7 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
 
-  bool isConnected = false;
-  isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
+  bool isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
     m_resultsView, SLOT(treeChanged(const openstudio::UUID &)));
   OS_ASSERT(isConnected);
 
@@ -90,15 +90,11 @@ ResultsView::ResultsView(QWidget *t_parent)
   QVBoxLayout * mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
-  QHBoxLayout * hLayout = 0;
-
-  QWidget * widget = 0;
-
   isConnected = connect(m_openResultsViewerBtn, SIGNAL(clicked()),
       this, SLOT(openResultsViewerClicked()));
   OS_ASSERT(isConnected);
   
-  hLayout = new QHBoxLayout(this);
+  QHBoxLayout * hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
 
   m_reportLabel = new QLabel("Reports: ",this);
@@ -177,6 +173,41 @@ void ResultsView::onUnitSystemChange(bool t_isIP)
   resultsGenerated(m_sqlFilePath, m_radianceResultsPath);
 }
 
+// need to sort paths by number so 8-UserScript-0, shows up before 11-UserScript-0
+struct ResultsPathSorter
+{
+  bool operator()(const openstudio::path& left, const openstudio::path& right){
+    openstudio::path leftParent = left.parent_path().stem();
+    openstudio::path rightParent = right.parent_path().stem();
+
+    QRegExp regexp("^(\\d)+.*");
+
+    boost::optional<int> leftInt;
+    if (regexp.exactMatch(toQString(leftParent))){
+      QStringList leftParts = regexp.capturedTexts();
+      OS_ASSERT(leftParts.size() == 2);
+      leftInt = leftParts[1].toInt();
+    }
+
+    boost::optional<int> rightInt;
+    if (regexp.exactMatch(toQString(rightParent))){
+      QStringList rightParts = regexp.capturedTexts();
+      OS_ASSERT(rightParts.size() == 2);
+      rightInt = rightParts[1].toInt();
+    }
+
+    if (leftInt && rightInt){
+      return leftInt.get() < rightInt.get();
+    }else if (leftInt){
+      return true;
+    }else if (rightInt){
+      return false;
+    }
+
+    return (left < right);
+  }
+};
+
 void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
 {
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_runDir));
@@ -197,10 +228,15 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
       radout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "report.html") {
       reports.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "eplusout.html") {
+    } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
       reports.push_back(p);
     }
   }
+
+  // sort paths as directory iterator order is undefined
+  std::sort(eplusout.begin(), eplusout.end(), ResultsPathSorter());
+  std::sort(radout.begin(), radout.end(), ResultsPathSorter());
+  std::sort(reports.begin(), reports.end(), ResultsPathSorter());
 
   openstudio::path eplus = eplusout.empty()?openstudio::path():eplusout.back();
   openstudio::path rad = radout.empty()?openstudio::path():radout.back();
@@ -246,7 +282,7 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
           reports.push_back(file.fullPath);
         }
-        f = j.treeAllFiles().getAllByFilename("eplusout.html");
+        f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
         t_files = f.files();
         Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
           reports.push_back(file.fullPath);
@@ -269,33 +305,50 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
 
 void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
 {
-  QString num;
+  unsigned num = 0;
   QString fullPathString;
   openstudio::path path;
 
   m_comboBox->clear();
   Q_FOREACH(openstudio::path report, reports){
+
     fullPathString = toQString(report.string());
     QFile file(fullPathString);
     fullPathString.prepend("file:///");
-    if (file.open(QFile::ReadOnly)){
-      QDomDocument doc;
-      doc.setContent(&file);
-      file.close();
-      QString string = doc.toString();
-      int startingIndex = string.indexOf("<title>");
-      int endingIndex = string.indexOf("</title>");
-      if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
-        m_comboBox->addItem(num.setNum(m_comboBox->count() + 1),fullPathString);
-      } else {
-        // length of "<title>" = 7
-        QString title = string.mid(startingIndex+7, endingIndex-startingIndex-7);
-        m_comboBox->addItem(title,fullPathString);
+
+    if (openstudio::toString(report.filename()) == "eplustbl.htm"){
+      
+      m_comboBox->addItem("EnergyPlus Results",fullPathString);
+
+    }else{
+      
+      ++num;
+
+      if (file.open(QFile::ReadOnly)){
+        QDomDocument doc;
+        doc.setContent(&file);
+        file.close();
+        QString string = doc.toString();
+        int startingIndex = string.indexOf("<title>");
+        int endingIndex = string.indexOf("</title>");
+        if((startingIndex == -1) | (endingIndex == -1) | (startingIndex >= endingIndex)){
+          m_comboBox->addItem(QString("Custom Report ") + QString::number(num), fullPathString);
+        } else {
+          // length of "<title>" = 7
+          QString title = string.mid(startingIndex+7, endingIndex-startingIndex-7);
+          m_comboBox->addItem(title,fullPathString);
+        }
       }
     }
   }
   if(m_comboBox->count()){
     m_comboBox->setCurrentIndex(0);
+    for (int i = 0; i < m_comboBox->count(); ++i){
+      if (m_comboBox->itemText(i) == QString("Results | OpenStudio")){
+        m_comboBox->setCurrentIndex(i);
+        break;
+      }
+    }
     int width = m_comboBox->minimumSizeHint().width();
     m_comboBox->setMinimumWidth(width + 20);
   }

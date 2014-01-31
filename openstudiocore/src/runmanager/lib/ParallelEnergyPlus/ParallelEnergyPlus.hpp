@@ -20,8 +20,6 @@ class ParallelEnergyPlus {
 
     void writePartition(int t_num, const openstudio::path &t_path) const;
 
-    double averageDays() const { return m_averageDays;}
-
   private:
     REGISTER_LOGGER("openstudio.runmanager.ParallelEnergyPlus");
 
@@ -47,15 +45,12 @@ class ParallelEnergyPlus {
 
     // How many days prior should the simulator run?
     int m_offset;
-    bool m_offset_applied;
 
 
     std::pair<openstudio::Workspace, openstudio::WorkspaceObject> m_runPeriod;
 
     // How many partitions?
     std::vector<std::pair<boost::gregorian::date, boost::gregorian::date> > m_partitions;
-
-    double m_averageDays;
 
     std::string m_remove_sql;
 

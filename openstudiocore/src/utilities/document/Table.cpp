@@ -565,7 +565,7 @@ namespace detail {
             outFile.close();
             return true;
           }
-          catch (boost::archive::archive_exception e) {
+          catch (boost::archive::archive_exception& e) {
             LOG(Error,"Boost archive exception while writing Table out to boost serialization text ("
                 << tableFileExtension() << "). Code " << e.code << ". Message: " << e.what());
           }
@@ -755,7 +755,6 @@ namespace detail {
                                      Table::Format tableSection,
                                      unsigned cell,
                                      const std::string& newUnitString) {
-    std::string result;
     std::pair<unsigned,unsigned> ij = toRowColumnIndices(index,tableSection,cell);
     std::stringstream ss;
     ss << element(ij.first,ij.second);
@@ -1298,7 +1297,7 @@ Table Table::loadFromBoostTextSerialization(boost::filesystem::ifstream& is) {
     in >> boost::serialization::make_nvp("table",tmp);
     result = tmp;
   }
-  catch (boost::archive::archive_exception e) {
+  catch (boost::archive::archive_exception& e) {
     LOG(Error,"Boost archive exception while loading Table from Text. Code " << e.code << ". Message: " << e.what());
   }
   catch (...) {

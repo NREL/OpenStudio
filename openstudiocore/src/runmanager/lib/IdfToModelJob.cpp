@@ -168,8 +168,8 @@ namespace detail {
       errors.addError(ErrorType::Warning, itr->logMessage());
     }
 
-    for (std::vector<openstudio::LogMessage>::const_iterator itr = logwarnings.begin();
-        itr != logwarnings.end();
+    for (std::vector<openstudio::LogMessage>::const_iterator itr = logerrors.begin();
+        itr != logerrors.end();
         ++itr)
     {
       errors.addError(ErrorType::Error, itr->logMessage());

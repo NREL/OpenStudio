@@ -39,7 +39,6 @@ SimFile::SimFile(openstudio::path path)
 
 bool SimFile::computeDateTimes(QVector<QString> day, QVector<QString> time)
 {
-  unsigned month,dayOfMonth;
   bool ok;
   QStringList split;
   int n = qMin(day.size(),time.size());
@@ -50,12 +49,12 @@ bool SimFile::computeDateTimes(QVector<QString> day, QVector<QString> time)
     {
       return false;
     }
-    month=split[0].toInt(&ok);
+    unsigned month=split[0].toInt(&ok);
     if(!ok || month > 12)
     {
       return false;
     }
-    dayOfMonth=split[1].toInt(&ok);
+    unsigned dayOfMonth=split[1].toInt(&ok);
     if(!ok)
     {
       return false;

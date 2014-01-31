@@ -143,7 +143,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVACOutdoorAirSystem( con
 
           for( std::vector<WorkspaceObject>::iterator it = equipmentVector.begin();
                it < equipmentVector.end();
-               it++ )
+               ++it )
           {
             switch(it->iddObject().type().value())
             {

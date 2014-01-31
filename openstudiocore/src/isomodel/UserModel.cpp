@@ -597,7 +597,6 @@ namespace isomodel {
   }
 
   boost::shared_ptr<WeatherData> UserModel::loadWeather(){
-    std::vector<std::string> linesplit;
     openstudio::path weatherFilename;
     //see if weather file path is absolute path
     //if so, use it, else assemble relative path

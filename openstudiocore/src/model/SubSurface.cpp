@@ -445,8 +445,7 @@ namespace detail {
   }
 
   bool SubSurface_Impl::setSubSurfaceType(std::string subSurfaceType) {
-    bool result = false;
-    result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
+    bool result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
     if (result){
 
       if (!(istringEqual("FixedWindow", subSurfaceType) ||
@@ -475,8 +474,7 @@ namespace detail {
   }
 
   bool SubSurface_Impl::setViewFactortoGround(double viewFactortoGround) {
-    bool result = false;
-    result = setDouble(OS_SubSurfaceFields::ViewFactortoGround, viewFactortoGround);
+    bool result = setDouble(OS_SubSurfaceFields::ViewFactortoGround, viewFactortoGround);
     return result;
   }
 
@@ -509,8 +507,7 @@ namespace detail {
   }
 
   bool SubSurface_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_SubSurfaceFields::Multiplier, multiplier);
+    bool result = setDouble(OS_SubSurfaceFields::Multiplier, multiplier);
 
     if (result){
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
@@ -545,8 +542,7 @@ namespace detail {
   }
 
   bool SubSurface_Impl::setNumberofVertices(double numberofVertices) {
-    bool result = false;
-    result = setDouble(OS_SubSurfaceFields::NumberofVertices, numberofVertices);
+    bool result = setDouble(OS_SubSurfaceFields::NumberofVertices, numberofVertices);
     return result;
   }
 

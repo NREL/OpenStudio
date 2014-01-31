@@ -216,7 +216,7 @@ void PatMainWindow::closeEvent(QCloseEvent *event)
       }
     }
 
-  } else if (status == CLOUD_RUNNING) {
+  } else if (status == CLOUD_STOPPED) {
 
     // DLM: check if running locally?
 
