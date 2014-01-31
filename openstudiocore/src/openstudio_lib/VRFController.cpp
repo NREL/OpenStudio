@@ -18,7 +18,6 @@
 **********************************************************************/
 
 #include "VRFController.hpp"
-//#include "RefrigerationGraphicsItems.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
@@ -39,15 +38,15 @@ namespace openstudio {
 VRFController::VRFController()
   : QObject()
 {
-  //m_refrigerationGridScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
-
-  //m_refrigerationView = new RefrigerationView();
+  m_vrfGridScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
 
   //bool bingo;
   //bingo = connect(m_refrigerationView->zoomOutButton,SIGNAL(clicked()),this,SLOT(zoomOutToSystemGridView()));
   //OS_ASSERT(bingo);
 
-  //// These get deleted with when the scene is deleted
+  // These get deleted with when the scene is deleted
+  m_vrfView = new QGraphicsView();
+
   //m_refrigerationSystemGridView = new RefrigerationSystemGridView();
 
   //m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController(this));
@@ -63,6 +62,8 @@ VRFController::VRFController()
 
 VRFController::~VRFController()
 {
+  delete m_vrfView;
+
   //if( m_refrigerationView )
   //{
   //  delete m_refrigerationView;
@@ -81,7 +82,7 @@ VRFController::~VRFController()
   //}
 }
 
-VRFView * RefrigerationController::vrfView() const
+QWidget * VRFController::vrfView() const
 {
   return m_vrfView;
 }
@@ -185,7 +186,7 @@ void VRFSystemListController::removeSystem(model::AirConditionerVariableRefriger
   emit itemRemoved(i);
 }
 
-std::vector<model::AirConditionerVariableRefrigerantFlow> vrfSystemListController::systems() const
+std::vector<model::AirConditionerVariableRefrigerantFlow> VRFSystemListController::systems() const
 {
   std::vector<model::AirConditionerVariableRefrigerantFlow> result;
 
@@ -212,7 +213,7 @@ QString VRFSystemListItem::systemName() const
 
 void VRFSystemListItem::remove()
 {
-  qobject_cast<RefrigerationSystemListController *>(controller())->removeSystem(m_refrigerationSystem);
+  qobject_cast<VRFSystemListController *>(controller())->removeSystem(m_vrfSystem);
 }
 
 void VRFSystemListItem::zoomInOnSystem()

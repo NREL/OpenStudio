@@ -26,6 +26,8 @@
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../shared_gui_components/OSListController.hpp"
 
+class QGraphicsScene;
+
 namespace openstudio {
 
 class OSItemId;
@@ -42,13 +44,15 @@ class VRFController : public QObject
 
   virtual ~VRFController();
 
-  VRFView * vrfView() const;
+  QWidget * vrfView() const;
 
   QSharedPointer<VRFSystemListController> vrfSystemListController() const;
 
   private:
 
-  QPointer<VRFView> m_vrfView;
+  QPointer<QWidget> m_vrfView;
+
+  QSharedPointer<QGraphicsScene> m_vrfGridScene;
 
   QSharedPointer<VRFSystemListController> m_vrfSystemListController;
 };
@@ -59,7 +63,7 @@ class VRFSystemListController : public OSListController
 
   public:
 
-  VRFSystemListController(RefrigerationController * refrigerationController);
+  VRFSystemListController(VRFController * vrfController);
 
   VRFController * vrfController() const;
 
@@ -79,9 +83,9 @@ class VRFSystemListController : public OSListController
 
   std::vector<model::AirConditionerVariableRefrigerantFlow> systems() const;
 
-  int systemIndex(const model::RefrigerationSystem & system) const;
+  int systemIndex(const model::AirConditionerVariableRefrigerantFlow & system) const;
 
-  QPointer<AirConditionerVariableRefrigerantFlow> m_refrigerationController;
+  QPointer<VRFController> m_vrfController;
 };
 
 // A delegate to provide cells of the vrf system grid

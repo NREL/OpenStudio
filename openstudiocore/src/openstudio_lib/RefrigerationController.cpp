@@ -60,7 +60,9 @@ RefrigerationController::RefrigerationController()
   OS_ASSERT(bingo);
 
   // These get deleted with when the scene is deleted
-  m_refrigerationSystemGridView = new RefrigerationSystemGridView();
+  m_refrigerationSystemGridView = new GridLayoutItem();
+  m_refrigerationSystemGridView->setCellSize(RefrigerationSystemMiniView::cellSize());
+  m_refrigerationSystemGridView->setMargin(RefrigerationSystemView::margin);
 
   m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController(this));
 
