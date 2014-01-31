@@ -15,6 +15,8 @@
 #include <QNetworkReply>
 #include <QEventLoop>
 
+#include <utility>
+
 #include "../utilities/time/Time.hpp"
 
 #include <iostream>
@@ -33,6 +35,8 @@ namespace openstudio
     // Allow http only for now since that's known to be supported by ruby / aws
     // m_proxyType->addItem("Socks5 Proxy", QNetworkProxy::Socks5Proxy);
     m_proxyType->addItem("Http Proxy", QNetworkProxy::HttpProxy);
+
+    connect(m_proxyType, SIGNAL(currentIndexChanged(int)), this, SLOT(proxyTypeChanged(int)));
 
     m_hostName = new QLineEdit(this);
     m_port = new QLineEdit(this);
@@ -77,6 +81,21 @@ namespace openstudio
     m_user->setText(user);
     m_hostName->setText(hostname);
     m_port->setText(QString::number(port));
+    proxyTypeChanged(m_proxyType->currentIndex());
+  }
+
+  void NetworkProxyDialog::proxyTypeChanged(int index)
+  {
+    if (QNetworkProxy::NoProxy == m_proxyType->itemData(index).toInt())
+    {
+      m_hostName->setEnabled(false);
+      m_port->setEnabled(false);
+      m_user->setEnabled(false);
+    } else {
+      m_hostName->setEnabled(true);
+      m_port->setEnabled(true);
+      m_user->setEnabled(true);
+    }
   }
 
   void NetworkProxyDialog::saveClicked()
@@ -103,18 +122,14 @@ namespace openstudio
     }
   }
 
-  bool NetworkProxyDialog::testProxyConnection(const QNetworkProxy &t_proxy)
+  std::pair<QNetworkReply::NetworkError, QString> NetworkProxyDialog::testProxyConnection(const QNetworkProxy &t_proxy)
   {
-    std::cout << "testProxyConnection" << std::endl;
     QNetworkAccessManager nam;
     nam.setProxy(t_proxy);
     QNetworkReply *head = nam.head(QNetworkRequest(QUrl("https://bcl.nrel.gov/")));
-    std::cout << " errorString " << toString(head->errorString()) << std::endl;
 
+    if (!head) return std::make_pair(QNetworkReply::UnknownNetworkError, QString("Unknown error creating connection to proxy."));
 
-    if (!head) return false;
-
-    std::cout << " processing event loop for proxy connection" << std::endl;
 
     boost::posix_time::ptime start = boost::posix_time::microsec_clock::universal_time();
 
@@ -129,49 +144,76 @@ namespace openstudio
     if (!head->isFinished()) 
     {
       head->abort();
-      return false;
+      return std::make_pair(QNetworkReply::TimeoutError, QString("Timed out while attempting to verify proxy connection"));
     }
 
-    std::cout << " errorString " << toString(head->errorString()) << " " << head->error() << std::endl;
+    LOG(Debug, " errorString from proxy test " << toString(head->errorString()) << " " << head->error());
 
-    if (head->error() == QNetworkReply::NoError)
-    {
-      return true;
-    } else {
-      return false;
-    }
+    return std::make_pair(head->error(), head->errorString());
   }
 
   bool NetworkProxyDialog::testProxy(QNetworkProxy &t_proxy, QWidget *t_parent)
   {
+    if (t_proxy.type() == QNetworkProxy::NoProxy) return true;
 
     t_parent->setEnabled(false);
-    if (testProxyConnection(t_proxy)) { 
-      t_parent->setEnabled(true);
-      return true; 
-    }
-
-    while (!testProxyConnection(t_proxy) && t_proxy.type() != QNetworkProxy::NoProxy)
+    
+    bool retval = false;
+    bool cont = true;
+    while (cont)
     {
-      if (t_proxy.user() != "") {
-        bool ok;
-        QString password = QInputDialog::getText(t_parent, "Proxy Password", "Proxy connection failed, please enter network proxy password.", QLineEdit::Password, "", &ok);
-
-        if (ok)
+      std::pair<QNetworkReply::NetworkError, QString> err = testProxyConnection(t_proxy);
+      switch (err.first)
+      {
+      case QNetworkReply::ProxyAuthenticationRequiredError:
         {
-          t_proxy.setPassword(password);
-        } else {
-          t_parent->setEnabled(true);
-          return false;
+          bool ok;
+          QString password = QInputDialog::getText(t_parent, "Proxy Password", "Proxy authentication failed, please enter network proxy password for user '" + t_proxy.user() + "'.", QLineEdit::Password, "", &ok);
+
+          if (ok)
+          {
+            t_proxy.setPassword(password);
+          } else {
+            t_parent->setEnabled(true);
+            retval = false;
+            cont = false;
+          }
         }
-      } else {
-        t_parent->setEnabled(true);
-        return false;
+        break;
+
+      case QNetworkReply::ProxyConnectionClosedError:
+      case QNetworkReply::ProxyConnectionRefusedError:
+      case QNetworkReply::ProxyNotFoundError:
+      case QNetworkReply::ProxyTimeoutError:
+      case QNetworkReply::UnknownProxyError:
+        {
+          QMessageBox::critical(t_parent, "Error Communicating with Proxy", "Proxy network error: " + err.second);
+          t_parent->setEnabled(true);
+          retval = false;
+          cont = false;
+          break;
+        }
+
+      case QNetworkReply::NoError:
+        {
+          t_parent->setEnabled(true);
+          retval = true;
+          cont = false;
+          break;
+        }
+
+      default:
+        {
+          QMessageBox::critical(t_parent, "Unknown Error While Checking Proxy", "Error: " + err.second);
+          t_parent->setEnabled(true);
+          retval = false;
+          cont = false;
+        }
+
       }
     }
 
-    t_parent->setEnabled(true);
-    return true;
+    return retval;
   }
 
 

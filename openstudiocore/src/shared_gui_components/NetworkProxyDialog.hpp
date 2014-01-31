@@ -4,6 +4,9 @@
 #include <QNetworkProxy>
 #include <QDialog>
 #include <QSettings>
+#include <QNetworkReply>
+
+#include "../utilities/core/Logger.hpp"
 
 class QComboBox;
 class QLineEdit;
@@ -13,6 +16,7 @@ namespace openstudio
   class NetworkProxyDialog : public QDialog
   {
     Q_OBJECT;
+    REGISTER_LOGGER("openstudio.NetworkProxyDialog");
 
     public:
       // Saves to / loads from the QSettings object passed in
@@ -29,9 +33,11 @@ namespace openstudio
       void saveClicked();
       void cancelClicked();
       void testClicked();
+      void proxyTypeChanged(int index);
+
 
     private:
-      static bool testProxyConnection(const QNetworkProxy &t_proxy);
+      static std::pair<QNetworkReply::NetworkError, QString> testProxyConnection(const QNetworkProxy &t_proxy);
 
       QSettings &m_settings;
 

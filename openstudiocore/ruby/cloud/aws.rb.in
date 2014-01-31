@@ -43,6 +43,8 @@ require 'net/scp'
 require 'net/ssh'
 require 'tempfile'
 require 'time'
+require 'cgi'
+require 'net/ssh/proxy/http'
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg},
@@ -69,12 +71,90 @@ end
 if ARGV[4].empty?
   error(-1, 'Missing command argument')
 end
+def get_proxy_user()
+  return ENV["HTTP_PROXY_USER"]
+end
+
+def get_proxy_user_escaped()
+  user = get_proxy_user()
+  if user
+    user = CGI.escape(user)
+  end
+  
+  return user
+end
+
+def get_proxy_pass()
+  return ENV["HTTP_PROXY_PASS"]
+end
+
+def get_proxy_pass_escaped()
+  pass = get_proxy_pass()
+  if pass
+    pass = CGI.escape(pass)
+  end
+  
+  return pass
+end
+
+def get_proxy_user_info_escaped()
+  user = get_proxy_user_escaped()
+  pass = get_proxy_pass_escaped()
+  
+  if user && pass && !pass.empty?
+    return "#{user}:#{pass}"
+  end
+  
+  if user 
+    return user
+  end
+  
+  return nil
+end
+
+def get_proxy_port()
+  proxy_uri = ENV["HTTP_PROXY"]
+  if proxy_uri
+    uri = URI.parse(proxy_uri)
+    return uri.port()
+  else
+    return nil
+  end
+end
+
+def get_proxy_host()
+  proxy_uri = ENV["HTTP_PROXY"]
+  if proxy_uri
+    uri = URI.parse(proxy_uri)
+    return uri.host()
+  else
+    return nil
+  end
+end
+
+def get_proxy_uri()
+  if get_proxy_host()
+    return URI::Generic.new("http", get_proxy_user_info_escaped(), get_proxy_host(), get_proxy_port(), nil, nil, nil, nil, nil).to_s()
+  else
+    return nil
+  end
+end  
+
+def get_proxy()
+  if get_proxy_host()
+    proxy = Net::SSH::Proxy::HTTP.new(get_proxy_host(), get_proxy_port(), :user => get_proxy_user(), :password => get_proxy_pass())
+    return proxy
+  else
+    return nil
+  end
+end
 
 AWS.config(
     :access_key_id => ARGV[0],
     :secret_access_key => ARGV[1],
     :region => ARGV[2],
-    :ssl_verify_peer => false
+    :ssl_verify_peer => false,
+    :proxy_uri => get_proxy_uri()
 )
 
 if ARGV[3] == 'EC2'
@@ -95,7 +175,7 @@ end
 OPENSTUDIO_VERSION = '${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}' unless defined?(OPENSTUDIO_VERSION)
 
 if (!defined?(@server_image_id) || !defined?(@worker_image_id))
-  resp = Net::HTTP.get_response('developer.nrel.gov','/downloads/buildings/openstudio/rsrc/amis.json')
+  resp = Net::HTTP.new('developer.nrel.gov', nil, get_proxy_host(), get_proxy_port(), get_proxy_user(), get_proxy_pass()).get('/downloads/buildings/openstudio/rsrc/amis.json')
   if resp.code == '200'
     result = JSON.parse(resp.body)
     version = result.has_key?(OPENSTUDIO_VERSION) ? OPENSTUDIO_VERSION : 'default'
@@ -142,34 +222,6 @@ def find_processors(instance)
   return processors
 end
 
-def get_proxy()
-  proxy_uri = ENV["HTTP_PROXY"]
-  if proxy_uri.empty?
-    proxy_uri = ENV["http_proxy"]
-  end
-
-  if proxy_uri.empty?
-    return nil
-  end
-
-  uri = URI::parse(proxy_uri)
-
-  host = uri.host
-  port = uri.port
-  user = uri.user
-  password = uri.password
-
-  if not ENV["HTTP_USER"].empty?
-    user = ENV["HTTP_USER"]
-  end
-
-  if not ENV["HTTP_PASS"].empty?
-    password = ENV["HTTP_PASS"]
-  end
-
-  proxy = Net::SSH::Proxy::HTTP.new(host, port, :user => user, :password => password)
-  return proxy
-end
 
 
 def launch_server

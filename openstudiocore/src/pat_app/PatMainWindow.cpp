@@ -290,17 +290,33 @@ void PatMainWindow::setRubyProxyEnvironment(const QNetworkProxy &t_proxy)
 
   if (t_proxy.type() == QNetworkProxy::NoProxy)
   {
-    qputenv("http_proxy", "");
-    qputenv("HTTP_PROXY", "");
-    qputenv("HTTP_PASS", "");
-    qputenv("HTTP_USER", "");
+    LOG(Info, "Clearing proxy environment variables");
+    bool set = qputenv("HTTP_PROXY", QByteArray());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_PROXY_USER", QByteArray());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_PROXY_PASS", QByteArray());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_USER", QByteArray());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_PASS", QByteArray());
+    OS_ASSERT(set);
   } else if (t_proxy.type() == QNetworkProxy::HttpProxy) {
-    qputenv("http_proxy", "");
-    std::stringstream ss;
-    ss << "http://" << t_proxy.hostName() << ":" << t_proxy.port() << "/";
-    qputenv("HTTP_PROXY", toQString(ss.str()).toAscii());
-    qputenv("HTTP_PASS", t_proxy.password().toAscii());
-    qputenv("HTTP_USER", t_proxy.user().toAscii());
+    LOG(Info, "Clearing proxy environment variables");
+    QUrl urlsimple;
+    urlsimple.setHost(t_proxy.hostName());
+    urlsimple.setPort(t_proxy.port());
+    urlsimple.setScheme("http");
+    bool set = qputenv("HTTP_PROXY", urlsimple.toString().toAscii());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_PROXY_USER", t_proxy.user().toAscii());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_PROXY_PASS", t_proxy.password().toAscii());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_USER", t_proxy.user().toAscii());
+    OS_ASSERT(set);
+    set = qputenv("HTTP_PASS", t_proxy.password().toAscii());
+    OS_ASSERT(set);
   }
 }
 

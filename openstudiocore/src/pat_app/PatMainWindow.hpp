@@ -21,6 +21,7 @@
 #define OPENSTUDIO_PATMAINWINDOW_H
 
 #include <QMainWindow>
+#include "../utilities/core/Logger.hpp"
 
 class QStackedWidget;
 
@@ -40,7 +41,8 @@ class PatMainMenu;
 
 class PatMainWindow : public QMainWindow
 {
-  Q_OBJECT
+  Q_OBJECT;
+  REGISTER_LOGGER("openstudio.pat.PatMainWindow");
 
   public:
 
