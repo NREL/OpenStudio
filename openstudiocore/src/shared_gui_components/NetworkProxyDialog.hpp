@@ -37,7 +37,7 @@ namespace openstudio
 
 
     private:
-      static std::pair<QNetworkReply::NetworkError, QString> testProxyConnection(const QNetworkProxy &t_proxy);
+      static std::pair<QNetworkReply::NetworkError, QString> testProxyConnection(const QNetworkProxy &t_proxy, QWidget *t_parent);
 
       QSettings &m_settings;
 
