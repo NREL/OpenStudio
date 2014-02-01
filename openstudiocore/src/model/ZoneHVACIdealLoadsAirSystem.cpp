@@ -392,8 +392,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingSupplyAirTemperature(double maximumHeatingSupplyAirTemperature) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, maximumHeatingSupplyAirTemperature);
+    bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, maximumHeatingSupplyAirTemperature);
     return result;
   }
 
@@ -411,8 +410,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirTemperature(double minimumCoolingSupplyAirTemperature) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, minimumCoolingSupplyAirTemperature);
+    bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, minimumCoolingSupplyAirTemperature);
     return result;
   }
 
@@ -430,8 +428,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingSupplyAirHumidityRatio(double maximumHeatingSupplyAirHumidityRatio) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, maximumHeatingSupplyAirHumidityRatio);
+    bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, maximumHeatingSupplyAirHumidityRatio);
     return result;
   }
 
@@ -449,8 +446,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirHumidityRatio(double minimumCoolingSupplyAirHumidityRatio) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, minimumCoolingSupplyAirHumidityRatio);
+    bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, minimumCoolingSupplyAirHumidityRatio);
     return result;
   }
 
@@ -468,8 +464,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatingLimit(std::string heatingLimit) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatingLimit, heatingLimit);
+    bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatingLimit, heatingLimit);
     return result;
   }
 
@@ -549,8 +544,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingLimit(std::string coolingLimit) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingLimit, coolingLimit);
+    bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingLimit, coolingLimit);
     return result;
   }
 
@@ -657,8 +651,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DehumidificationControlType, dehumidificationControlType);
+    bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DehumidificationControlType, dehumidificationControlType);
     return result;
   }
 
@@ -668,8 +661,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingSensibleHeatRatio(double coolingSensibleHeatRatio) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, coolingSensibleHeatRatio);
+    bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, coolingSensibleHeatRatio);
     return result;
   }
 
@@ -687,8 +679,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setHumidificationControlType(std::string humidificationControlType) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HumidificationControlType, humidificationControlType);
+    bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HumidificationControlType, humidificationControlType);
     return result;
   }
 
@@ -713,8 +704,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setDemandControlledVentilationType(std::string demandControlledVentilationType) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DemandControlledVentilationType, demandControlledVentilationType);
+    bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DemandControlledVentilationType, demandControlledVentilationType);
     return result;
   }
 
@@ -724,8 +714,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setOutdoorAirEconomizerType(std::string outdoorAirEconomizerType) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirEconomizerType, outdoorAirEconomizerType);
+    bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirEconomizerType, outdoorAirEconomizerType);
     return result;
   }
 
@@ -735,8 +724,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatRecoveryType(std::string heatRecoveryType) {
-    bool result = false;
-    result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatRecoveryType, heatRecoveryType);
+    bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatRecoveryType, heatRecoveryType);
     return result;
   }
 
@@ -746,8 +734,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setSensibleHeatRecoveryEffectiveness(double sensibleHeatRecoveryEffectiveness) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, sensibleHeatRecoveryEffectiveness);
+    bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, sensibleHeatRecoveryEffectiveness);
     return result;
   }
 
@@ -765,8 +752,7 @@ namespace detail {
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setLatentHeatRecoveryEffectiveness(double latentHeatRecoveryEffectiveness) {
-    bool result = false;
-    result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, latentHeatRecoveryEffectiveness);
+    bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, latentHeatRecoveryEffectiveness);
     return result;
   }
 

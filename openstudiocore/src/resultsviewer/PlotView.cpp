@@ -156,11 +156,10 @@ namespace resultsviewer{
     {
       /// multiple curves based on units
       const QwtPlotItemList &listPlotItem = m_plotView->plot()->itemList();
-      QwtPlotItem *plotItem;
       QwtPlotItemIterator itPlotItem;
       for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
       {
-        plotItem = *itPlotItem;
+        QwtPlotItem *plotItem = *itPlotItem;
         if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
           addLegendItem((LinePlotCurve*)plotItem);
       }
@@ -1109,7 +1108,6 @@ namespace resultsviewer{
 
   void PlotView::linePlotItem(resultsviewer::PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled)
   {
-    double offset=0.0, endOffset=0.0;
     if (m_plotViewTimeAxis == NULL)
     {
       m_startDateTime = _plotViewData.ts->firstReportDateTime();
@@ -1124,10 +1122,10 @@ namespace resultsviewer{
     }
     else
     {
-      offset = _plotViewData.ts->firstReportDateTime().date().dayOfYear() + _plotViewData.ts->firstReportDateTime().time().totalDays();
+      double offset = _plotViewData.ts->firstReportDateTime().date().dayOfYear() + _plotViewData.ts->firstReportDateTime().time().totalDays();
       if (offset < m_xAxisMin) m_xAxisMin = offset;
 
-      endOffset = ((_plotViewData.ts->firstReportDateTime() + Time(_plotViewData.ts->daysFromFirstReport(_plotViewData.ts->daysFromFirstReport().size()-1))) - _plotViewData.ts->firstReportDateTime()).totalDays() + offset;
+      double endOffset = ((_plotViewData.ts->firstReportDateTime() + Time(_plotViewData.ts->daysFromFirstReport(_plotViewData.ts->daysFromFirstReport().size()-1))) - _plotViewData.ts->firstReportDateTime()).totalDays() + offset;
       if ( endOffset > m_xAxisMax ) m_xAxisMax = endOffset;
     }
 
@@ -1216,7 +1214,7 @@ namespace resultsviewer{
     if ( (colorIt == m_colorVec.end()) ||  (*colorIt == m_colorVec.back()) ) {
       return (m_colorVec.at(0));
     } else {
-      colorIt++;
+      ++colorIt;
       return *colorIt;
     }
   }
@@ -1252,12 +1250,11 @@ namespace resultsviewer{
   {
     /// multiple curves based on units
     const QwtPlotItemList &listPlotItem = m_plot->itemList();
-    QwtPlotItem *plotItem;
     QwtPlotItemIterator itPlotItem;
     int curveCount = 0;
     for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
     {
-      plotItem = *itPlotItem;
+      QwtPlotItem *plotItem = *itPlotItem;
       if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
       {
         curveCount++;
@@ -1454,7 +1451,7 @@ namespace resultsviewer{
         switch (m_plotType)
         {
         case RVPV_LINEPLOT:
-          for (plotViewDataVecIt = plotViewDataVec.begin(); plotViewDataVecIt != plotViewDataVec.end(); plotViewDataVecIt++)
+          for (plotViewDataVecIt = plotViewDataVec.begin(); plotViewDataVecIt != plotViewDataVec.end(); ++plotViewDataVecIt)
           {
             plotViewData((*plotViewDataVecIt), boost::function<bool ()>());
           }
@@ -1529,7 +1526,6 @@ namespace resultsviewer{
     /// find min and max for x range for all curves
     if (maxX <= minX) return;
     const QwtPlotItemList &listPlotItem = m_plot->itemList();
-    QwtPlotItem *plotItem;
     LinePlotCurve *linePlotCurve;
     QwtPlotItemIterator itPlotItem;
     double yLeftMin = DBL_MAX;
@@ -1540,7 +1536,7 @@ namespace resultsviewer{
 
     for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
     {
-      plotItem = *itPlotItem;
+      QwtPlotItem *plotItem = *itPlotItem;
       if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
       {
         linePlotCurve = (LinePlotCurve *)plotItem;
@@ -1689,7 +1685,6 @@ namespace resultsviewer{
   {
     // ticket #146 - find closest point and then mark and display information
     const QwtPlotItemList &listPlotItem = m_plot->itemList();
-    QwtPlotItem *plotItem;
     QwtPlotItemIterator itPlotItem;
     double minDist = DBL_MAX;
     double dist;
@@ -1698,7 +1693,7 @@ namespace resultsviewer{
     LinePlotCurve *minCurve=NULL;
     for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
     {
-      plotItem = *itPlotItem;
+      QwtPlotItem *plotItem = *itPlotItem;
       if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
       {
         index = ((LinePlotCurve *)plotItem)->closestPoint(pos, &dist);
@@ -1873,7 +1868,6 @@ namespace resultsviewer{
 
 
     const QwtPlotItemList &listPlotItem = m_plot->itemList();
-    QwtPlotItem *plotItem;
     LinePlotCurve *linePlotCurve;
     QwtPlotItemIterator itPlotItem;
     switch (m_plotType)
@@ -1881,7 +1875,7 @@ namespace resultsviewer{
     case resultsviewer::RVPV_LINEPLOT: // update every line plot curve and refresh legend
       for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
       {
-        plotItem = *itPlotItem;
+        QwtPlotItem *plotItem = *itPlotItem;
         if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
         {
           found = false;

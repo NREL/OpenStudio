@@ -39,10 +39,9 @@ QMimeData * ListWidget::mimeData(const QList<QListWidgetItem *> items) const
   QMimeData * mimeData = QListWidget::mimeData(items);
   mimeData->setData(getMimeType(),QByteArray());
 
-  QListWidgetItem * item;
   QString string;
   for(int i=0; i<items.size(); i++){
-    item = items.at(i);
+    QListWidgetItem * item = items.at(i);
     string += item->text();
     if(i < items.size() -1){
       string += ",";

@@ -136,32 +136,27 @@ namespace detail {
   }
 
   void CurveExponentialDecay_Impl::setCoefficient1C1(double coefficient1C1) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient1C1, coefficient1C1);
+    bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient1C1, coefficient1C1);
     OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setCoefficient2C2(double coefficient2C2) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient2C2, coefficient2C2);
+    bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient2C2, coefficient2C2);
     OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setCoefficient3C3(double coefficient3C3) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient3C3, coefficient3C3);
+    bool result = setDouble(OS_Curve_ExponentialDecayFields::Coefficient3C3, coefficient3C3);
     OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentialDecayFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_ExponentialDecayFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveExponentialDecay_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_ExponentialDecayFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_ExponentialDecayFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
@@ -196,8 +191,7 @@ namespace detail {
   }
 
   bool CurveExponentialDecay_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
-    bool result = false;
-    result = setString(OS_Curve_ExponentialDecayFields::InputUnitTypeforx, inputUnitTypeforx);
+    bool result = setString(OS_Curve_ExponentialDecayFields::InputUnitTypeforx, inputUnitTypeforx);
     return result;
   }
 
@@ -207,8 +201,7 @@ namespace detail {
   }
 
   bool CurveExponentialDecay_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_ExponentialDecayFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_ExponentialDecayFields::OutputUnitType, outputUnitType);
     return result;
   }
 

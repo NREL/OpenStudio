@@ -73,6 +73,9 @@ namespace detail {
 
     virtual bool resetScheduleTypeLimits() = 0;
 
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays() = 0;
+
     //@}
    protected:
     boost::optional<Quantity> toQuantity(double value, bool returnIP=false) const;

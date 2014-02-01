@@ -543,8 +543,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setDeadbandTemperatureDifference(double deadbandTemperatureDifference) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::DeadbandTemperatureDifference, deadbandTemperatureDifference);
+    bool result = setDouble(OS_WaterHeater_MixedFields::DeadbandTemperatureDifference, deadbandTemperatureDifference);
     return result;
   }
 
@@ -596,8 +595,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setHeaterControlType(std::string heaterControlType) {
-    bool result = false;
-    result = setString(OS_WaterHeater_MixedFields::HeaterControlType, heaterControlType);
+    bool result = setString(OS_WaterHeater_MixedFields::HeaterControlType, heaterControlType);
     return result;
   }
 
@@ -672,8 +670,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setHeaterIgnitionMinimumFlowRate(double heaterIgnitionMinimumFlowRate) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::HeaterIgnitionMinimumFlowRate, heaterIgnitionMinimumFlowRate);
+    bool result = setDouble(OS_WaterHeater_MixedFields::HeaterIgnitionMinimumFlowRate, heaterIgnitionMinimumFlowRate);
     return result;
   }
 
@@ -691,8 +688,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setHeaterIgnitionDelay(double heaterIgnitionDelay) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::HeaterIgnitionDelay, heaterIgnitionDelay);
+    bool result = setDouble(OS_WaterHeater_MixedFields::HeaterIgnitionDelay, heaterIgnitionDelay);
     return result;
   }
 
@@ -710,8 +706,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setHeaterFuelType(std::string heaterFuelType) {
-    bool result = false;
-    result = setString(OS_WaterHeater_MixedFields::HeaterFuelType, heaterFuelType);
+    bool result = setString(OS_WaterHeater_MixedFields::HeaterFuelType, heaterFuelType);
     return result;
   }
 
@@ -761,8 +756,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::OffCycleParasiticFuelConsumptionRate, offCycleParasiticFuelConsumptionRate);
+    bool result = setDouble(OS_WaterHeater_MixedFields::OffCycleParasiticFuelConsumptionRate, offCycleParasiticFuelConsumptionRate);
     return result;
   }
 
@@ -795,8 +789,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::OffCycleParasiticHeatFractiontoTank, offCycleParasiticHeatFractiontoTank);
+    bool result = setDouble(OS_WaterHeater_MixedFields::OffCycleParasiticHeatFractiontoTank, offCycleParasiticHeatFractiontoTank);
     return result;
   }
 
@@ -814,8 +807,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::OnCycleParasiticFuelConsumptionRate, onCycleParasiticFuelConsumptionRate);
+    bool result = setDouble(OS_WaterHeater_MixedFields::OnCycleParasiticFuelConsumptionRate, onCycleParasiticFuelConsumptionRate);
     return result;
   }
 
@@ -848,8 +840,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::OnCycleParasiticHeatFractiontoTank, onCycleParasiticHeatFractiontoTank);
+    bool result = setDouble(OS_WaterHeater_MixedFields::OnCycleParasiticHeatFractiontoTank, onCycleParasiticHeatFractiontoTank);
     return result;
   }
 
@@ -867,8 +858,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator) {
-    bool result = false;
-    result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureIndicator, ambientTemperatureIndicator);
+    bool result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureIndicator, ambientTemperatureIndicator);
     return result;
   }
 
@@ -946,8 +936,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setOffCycleLossFractiontoThermalZone(double offCycleLossFractiontoThermalZone) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::OffCycleLossFractiontoThermalZone, offCycleLossFractiontoThermalZone);
+    bool result = setDouble(OS_WaterHeater_MixedFields::OffCycleLossFractiontoThermalZone, offCycleLossFractiontoThermalZone);
     return result;
   }
 
@@ -995,8 +984,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setOnCycleLossFractiontoThermalZone(double onCycleLossFractiontoThermalZone) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::OnCycleLossFractiontoThermalZone, onCycleLossFractiontoThermalZone);
+    bool result = setDouble(OS_WaterHeater_MixedFields::OnCycleLossFractiontoThermalZone, onCycleLossFractiontoThermalZone);
     return result;
   }
 
@@ -1070,8 +1058,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setUseSideEffectiveness(double useSideEffectiveness) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::UseSideEffectiveness, useSideEffectiveness);
+    bool result = setDouble(OS_WaterHeater_MixedFields::UseSideEffectiveness, useSideEffectiveness);
     return result;
   }
 
@@ -1089,8 +1076,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setSourceSideEffectiveness(double sourceSideEffectiveness) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::SourceSideEffectiveness, sourceSideEffectiveness);
+    bool result = setDouble(OS_WaterHeater_MixedFields::SourceSideEffectiveness, sourceSideEffectiveness);
     return result;
   }
 
@@ -1178,8 +1164,7 @@ namespace detail {
   }
 
   bool WaterHeaterMixed_Impl::setIndirectWaterHeatingRecoveryTime(double indirectWaterHeatingRecoveryTime) {
-    bool result = false;
-    result = setDouble(OS_WaterHeater_MixedFields::IndirectWaterHeatingRecoveryTime, indirectWaterHeatingRecoveryTime);
+    bool result = setDouble(OS_WaterHeater_MixedFields::IndirectWaterHeatingRecoveryTime, indirectWaterHeatingRecoveryTime);
     return result;
   }
 

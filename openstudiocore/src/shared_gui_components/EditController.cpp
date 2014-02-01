@@ -90,7 +90,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   for( std::vector<ruleset::OSArgument>::iterator it = arguments.begin();
        it != arguments.end();
-       it++ )
+       ++it )
   {
     QSharedPointer<InputController> inputController = QSharedPointer<InputController>(new InputController(this,*it,t_app));
 
@@ -184,7 +184,7 @@ InputController::InputController(EditController * editController,const ruleset::
     int i = 0;
     for( std::vector<std::string>::const_iterator it = choices.begin();
          it != choices.end();
-         it++ )
+         ++it )
     {
       choiceInputView->comboBox->addItem(QString::fromStdString(*it),QString::fromStdString(values[i]));
 

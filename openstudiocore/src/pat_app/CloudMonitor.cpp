@@ -114,8 +114,6 @@ bool checkInternetAvailable()
 // Return true if we can authenticate to cloud service
 bool checkAuthenticated() 
 {
-  bool authenticated = true;
-
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
   boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
 
@@ -124,7 +122,7 @@ bool checkAuthenticated()
 
   CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
 
-  authenticated = newProvider.validateCredentials();
+  bool authenticated = newProvider.validateCredentials();
 
   return authenticated;
 }
@@ -663,7 +661,8 @@ StartCloudWorker::StartCloudWorker(CloudMonitor * monitor)
     m_monitor(monitor),
     m_internetAvailable(false),
     m_validCredentials(false),
-    m_resourcesAvailableToStart(false)
+    m_resourcesAvailableToStart(false),
+    m_error(false)
 
 {
 }
@@ -831,7 +830,8 @@ std::vector<std::string> StartCloudWorker::warnings() const
 
 StopCloudWorker::StopCloudWorker(CloudMonitor * monitor)
   : QObject(),
-    m_monitor(monitor)
+    m_monitor(monitor),
+    m_error(false)
 {
 }
 
@@ -853,8 +853,13 @@ void StopCloudWorker::startWorking()
 
 ReconnectCloudWorker::ReconnectCloudWorker(CloudMonitor * monitor)
   : QObject(),
-    m_monitor(monitor) ,
-    m_status(CLOUD_STOPPED)
+    m_monitor(monitor),
+    m_status(CLOUD_STOPPED),
+    m_internetAvailable(false),
+    m_authenticated(false),
+    m_cloudRunning(false),
+    m_cloudServiceRunning(false),
+    m_projectIsOnCloud(false)
 {
 }
 
@@ -932,7 +937,11 @@ bool ReconnectCloudWorker::authenticated() const
 
 RecoverCloudWorker::RecoverCloudWorker(CloudMonitor * monitor)
   : QObject(),
-    m_monitor(monitor)
+    m_monitor(monitor),
+    m_internetAvailable(false),
+    m_authenticated(false),
+    m_cloudRunning(false),
+    m_cloudServiceRunning(false)
 {
 }
 
@@ -977,7 +986,11 @@ bool RecoverCloudWorker::authenticated() const
 CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor),
-    m_count(0)
+    m_count(0),
+    m_internetAvailable(false),
+    m_authenticated(false),
+    m_cloudRunning(false),
+    m_cloudServiceRunning(false)
 {
 }
 

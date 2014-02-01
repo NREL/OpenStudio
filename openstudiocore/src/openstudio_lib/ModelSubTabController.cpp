@@ -40,11 +40,10 @@ ModelSubTabController::ModelSubTabController(ModelSubTabView* subTabView, const 
   : SubTabController(subTabView),
     m_model(model)
 {
-  bool isConnected = false;
-  isConnected = connect(subTabView,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-                        this,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
+  bool isConnected = connect(subTabView,
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
+                             this,
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
   OS_ASSERT(isConnected);
 }
 

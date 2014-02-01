@@ -123,7 +123,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
   for( std::vector<ModelObject>::iterator it = stdEquipment.begin();
        it != stdEquipment.end();
-       it++ )
+       ++it )
   {
     unsigned coolingPriority = coolingMap[*it];
     unsigned heatingPriority = heatingMap[*it];

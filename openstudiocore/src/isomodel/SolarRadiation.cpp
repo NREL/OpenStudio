@@ -95,7 +95,6 @@ namespace isomodel {
   //average the data in the bins over the count or days
   void SolarRadiation::calculateMonthAvg(int midx, int cnt)
   {
-    int days=0;
     if(midx > -1)
     {
       //average rate by month
@@ -109,7 +108,7 @@ namespace isomodel {
         m_monthlySolarRadiation[midx][s] /= cnt;
       }
       //hours are averaged over days in the month
-      days = m_frame.monthLength(midx+1);
+      int days = m_frame.monthLength(midx+1);
       for(int h = 0;h<24;h++)
       {
         m_hourlyDryBulbTemp[midx][h] /= days;
@@ -144,7 +143,6 @@ namespace isomodel {
     int midx = -1;
     int cnt  = 0;
     // int days = 0;
-    int h = 0;
 
     const std::vector< std::vector<double> > &data = m_weatherData.data();
     const std::vector<double> &vecDBT = data[DBT];
@@ -180,7 +178,7 @@ namespace isomodel {
       }
       //LOG(Trace, "solarRad / eglobe " << ss.str());
 
-      h = m_frame.Hour[i]-1;
+      int h = m_frame.Hour[i]-1;
       m_hourlyDryBulbTemp[midx][h] += vecDBT[i];
       m_hourlyDewPointTemp[midx][h] += vecDPT[i];
       m_hourlyGlobalHorizontalRadiation[midx][h] += vecEGH[i];

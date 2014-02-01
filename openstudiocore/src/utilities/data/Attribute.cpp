@@ -757,7 +757,6 @@ namespace detail{
 
   void Attribute_Impl::writeValues(QDomDocument& doc, QDomElement& element) const
   {
-    std::stringstream ss;
     QDomElement childElement;
     QDomText text;
 
@@ -1525,6 +1524,46 @@ bool prepareForDisplay(Attribute& attribute, const AttributeDescription& descrip
   return false;
 }
 
+bool saveJSON(const std::vector<Attribute>& attributes,
+              const openstudio::path& p,
+              bool overwrite)
+{
+  QVariantMap result = jsonMetadata().toMap();
+  result["attributes"] = detail::toVariant(attributes);
+  return openstudio::saveJSON(QVariant(result),p,overwrite);
+}
+
+std::ostream& toJSON(const std::vector<Attribute>& attributes,
+                     std::ostream& os)
+{
+  os << toJSON(attributes);
+  return os;
+}
+
+std::string toJSON(const std::vector<Attribute>& attributes) {
+  QVariantMap result = jsonMetadata().toMap();
+  result["attributes"] = detail::toVariant(attributes);
+  return openstudio::toJSON(QVariant(result));
+}
+
+std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson) {
+  QVariant variant = loadJSON(pathToJson);
+  VersionString version = extractOpenStudioVersion(variant);
+  QVariant attributesData = variant.toMap()["attributes"];
+  return detail::toVectorOfAttribute(attributesData,version);
+}
+
+std::vector<Attribute> toVectorOfAttribute(std::istream& json) {
+  return toVectorOfAttribute(toString(json));
+}
+
+std::vector<Attribute> toVectorOfAttribute(const std::string& json) {
+  QVariant variant = loadJSON(json);
+  VersionString version = extractOpenStudioVersion(variant);
+  QVariant attributesData = variant.toMap()["attributes"];
+  return detail::toVectorOfAttribute(attributesData,version);
+}
+
 namespace detail {
 
   QVariant toVariant(const Attribute& attribute) {
@@ -1652,7 +1691,150 @@ namespace detail {
                          map.contains("units") ? map["units"].toString().toStdString() :  OptionalString());
       default :
         LOG_FREE_AND_THROW("openstudio.Attribute","Unknown AttributeValueType " << valueType.valueName() << ".");
+    }    
+  }
+
+  QVariant toVariant(const std::vector<Attribute>& attributes) {
+    QVariantMap map;
+    std::set<std::string> attributeNames;
+
+    BOOST_FOREACH(const Attribute& attribute,attributes) {
+      std::pair<std::set<std::string>::iterator,bool> insertResult = attributeNames.insert(attribute.name());
+      if (!insertResult.second) {
+        LOG_FREE_AND_THROW("openstudio.Attribute","Asked to create a flat json serialization "
+                           << "of a vector of attributes with non-unique names.");
+      }
+      QString qName = toQString(attribute.name());
+
+      AttributeValueType valueType = attribute.valueType();
+      switch (valueType.value()) {
+        case AttributeValueType::Boolean :
+          map[qName] = attribute.valueAsBoolean();
+          break;
+        case AttributeValueType::Integer :
+          map[qName] = attribute.valueAsInteger();
+          break;
+        case AttributeValueType::Unsigned :
+          // designation as unsigned will be lost on deserialization
+          map[qName] = attribute.valueAsUnsigned();
+          break;
+        case AttributeValueType::Double :
+          map[qName] = attribute.valueAsDouble();
+          break;
+        case AttributeValueType::Quantity :
+          // designation as Quantity will be lost on deserialization
+          // (will be Double + units)
+          map[qName] = attribute.valueAsQuantity().value();
+          map[toQString(attribute.name() + std::string("_units"))] = toQString(attribute.valueAsQuantity().units().print());
+          break;
+        case AttributeValueType::Unit :
+          // designation as Unit will be lost on deserialization
+          // (will be of type String)
+          map[qName] = toQString(attribute.valueAsUnit().print());
+          break;
+        case AttributeValueType::String :
+          map[qName] = toQString(attribute.valueAsString());
+          break;
+        case AttributeValueType::AttributeVector :
+          map[qName] = toVariant(attribute.valueAsAttributeVector());
+          break;
+        default:
+          LOG_FREE_AND_THROW("openstudio.Attribute","Unknown AttributeValueType " << valueType.valueName() << ".");
+      }
+      if (attribute.displayName()) {
+        map[toQString(attribute.name() + std::string("_display_name"))] = toQString(attribute.displayName().get());
+      }
+      if (attribute.units()) {
+        map[toQString(attribute.name() + std::string("_units"))] = toQString(attribute.units().get());
+      }
     }
+
+    return QVariant(map);
+  }
+
+  std::vector<Attribute> toVectorOfAttribute(const QVariant& variant, const VersionString& version) {
+    AttributeVector result;
+    QVariantMap map = variant.toMap();
+    boost::regex displayNameRegex("(.*)_display_name");
+    boost::regex unitsRegex("(.*)_units");
+    boost::smatch matches;
+    std::set<std::string> processedAttributeNames; // serialization ensures uniqueness of names
+
+    int itemCount(0);
+    Q_FOREACH(const QString& key,map.keys()) {
+      // determine attribute name
+      std::string attributeName;
+      std::string keyString = toString(key);
+      if (boost::regex_match(keyString,matches,displayNameRegex)) {
+        // ends in '_display_name'.
+        // pull attribute name off and make sure is in map.
+        attributeName = std::string(matches[1].first,matches[1].second);
+        if (!map.contains(toQString(attributeName))) {
+          // if it is not, attribute name actually ends in '_display_name'.
+          attributeName = toString(key);
+        }
+      }
+      else if (boost::regex_match(keyString,matches,unitsRegex)) {
+        // ends in '_units'.
+        // pull attribute name off and make sure is in map.
+        attributeName = std::string(matches[1].first,matches[1].second);
+        if (!map.contains(toQString(attributeName))) {
+          // if it is not, attribute name actually ends in '_units'.
+          attributeName = keyString;
+        }
+      }
+      else {
+        attributeName = keyString;
+      }
+
+      // see if already processed
+      std::pair<std::set<std::string>::iterator, bool> insertResult = processedAttributeNames.insert(attributeName);
+      if (insertResult.second) {
+        // not processed yet
+        QVariant value = map[toQString(attributeName)];
+        ++itemCount;
+        // determine type
+        switch (value.type()) {
+          case QVariant::Bool:
+            result.push_back(Attribute(attributeName,value.toBool()));
+           break;
+          case QVariant::Int:
+          case QVariant::LongLong:
+          case QVariant::UInt:
+          case QVariant::ULongLong:
+            result.push_back(Attribute(attributeName,value.toInt()));
+           break;
+          case QVariant::Double:
+            result.push_back(Attribute(attributeName,value.toDouble()));
+           break;
+          case QVariant::String:
+            result.push_back(Attribute(attributeName,value.toString().toStdString()));
+           break;
+          case QVariant::Map:
+            result.push_back(Attribute(attributeName,toVectorOfAttribute(value,version)));
+           break;
+          default:
+            LOG_FREE_AND_THROW("openstudio.Attribute","Unexpected QVariant::Type " << value.typeName() << ".");
+        }
+        // set displayName
+        QString key = toQString(attributeName + std::string("_display_name"));
+        if (map.contains(key)) {
+          result.back().setDisplayName(map[key].toString().toStdString());
+          ++itemCount;
+        }
+        // set units
+        key = toQString(attributeName + std::string("_units"));
+        if (map.contains(key)) {
+          result.back().setUnits(map[key].toString().toStdString());
+          ++itemCount;
+        }
+      }
+    }
+
+    OS_ASSERT(result.size() == processedAttributeNames.size());
+    OS_ASSERT(map.keys().size() == itemCount);
+
+    return result;
   }
 
 } // detail

@@ -1,4 +1,4 @@
-!IDD_Version 1.2.2
+!IDD_Version 1.2.3
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -724,9 +724,11 @@ OS:ClimateZones,
        \type handle
        \required-field
   A2, \field Active Institution
+       \deprecated
        \type alpha
        \default ASHRAE
   N1, \field Active Year
+       \deprecated
        \type integer
        \minimum 0
        \default 2006
@@ -1999,10 +2001,20 @@ OS:SpaceType,
   A5, \field Group Rendering Name
        \type object-list
        \object-list GroupRenderingNames
-  A6; \field Design Specification Outdoor Air Object Name
+  A6, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-
+  A7, \field Standards Building Type
+       \type alpha
+       \note This is a freeform field used to identify the building type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8; \field Standards Space Type
+       \type alpha
+       \note This is a freeform field used to identify the space type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+        
 OS:ModelObjectList,
        \min-fields 1
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
@@ -3213,26 +3225,32 @@ OS:StandardsInformation:Construction,
        \object-list ConstructionNames
   A3, \field Intended Surface Type
        \type choice
+       \key DemisingFloor
+       \key DemisingWall
+       \key DemisingRoof
        \key ExteriorFloor
-       \key ExposedExteriorFloor
        \key ExteriorWall
        \key ExteriorRoof
        \key ExteriorWindow
        \key ExteriorDoor
+       \key GlassDoor
+       \key GroundContactFloor
+       \key GroundContactWall
+       \key GroundContactRoof
        \key InteriorFloor
        \key InteriorWall
        \key InteriorCeiling
        \key InteriorPartition
        \key InteriorWindow
        \key InteriorDoor
-       \key GlassDoor
        \key OverheadDoor
        \key Skylight
        \key TubularDaylightDome
        \key TubularDaylightDiffuser
-  A4, \field Construction Type
-       \note Free-form field for use with relevant Data Dictionary enumerations.
-       \note Examples: "Metal building roof", "Wood-framed", "Mass Heavy", etc.
+  A4, \field Standards Construction Type
+       \note This is a freeform field used to identify the construction type for standards.
+       \note Standards applied to this model will use this field to determine correct constructions.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
   N1, \field Perturbable Layer
        \note If the construction is layered, this is the index (starting at 0)
@@ -4249,7 +4267,8 @@ OS:Building,
        \required-field
        \reference BuildingNames
        \reference SpaceAndSpaceGroupNames
-  A3, \field Building Type
+  A3, \field Building Sector Type
+       \deprecated
        \type choice
        \default Commercial
        \key Commercial
@@ -4272,9 +4291,20 @@ OS:Building,
   A5, \field Default Construction Set Name
        \type object-list
        \object-list DefaultConstructionSetNames
-  A6; \field Default Schedule Set Name
+  A6, \field Default Schedule Set Name
        \type object-list
        \object-list DefaultScheduleSetNames
+  N3, \field Standards Number of Stories
+       \type integer
+       \minimum 0
+  N4, \field Standards Number of Above Ground Stories
+       \type integer
+       \minimum 0
+  A7; \field Standards Building Type
+       \type alpha
+       \note This is a freeform field used to identify the building type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
 
 OS:DaylightingDevice:Shelf,
        \min-fields 1
@@ -4525,33 +4555,6 @@ OS:Space,
   A9; \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-
-OS:StandardsInformation:Building,
-       \unique-object
-       \extensible:4
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  N1, \field Number of Stories
-       \type integer
-       \minimum 0
-  N2, \field Number of Above Ground Stories
-       \type integer
-       \minimum 0
-  A2, \field Building Type Institution Name
-       \type alpha
-       \begin-extensible
-  A3, \field Building Type Document Name
-       \note List a Standard (ASHARE 90.1, ASHRAE 62.1), or other differentiator,
-       \note such as "occupancy", "ventilation", etc.
-       \type alpha
-  A4, \field Building Type Document Year
-       \type integer
-       \minimum 0
-  A5; \field Building Type Value
-       \type alpha
-       \required-field
 
 OS:Surface,
        \extensible:3
@@ -6307,13 +6310,13 @@ OS:Refrigeration:GasCooler:AirCooled,
         \note Temperature difference between the CO2 exiting the gas cooler and the air entering the
         \note gas cooler during transcritical operation.
         \type real
-        \units DeltaC
+        \units deltaC
         \default 3.0
   N5,   \field Subcritical Temperature Difference
         \note Temperature difference between the saturated condensing temperature and the air
         \note temperature during subcritical operation.
         \type real
-        \units DeltaC
+        \units deltaC
         \default 10.0
   N6,   \field Minimum Condensing Temperature
         \note Minimum saturated condensing temperature during subcritical operation.

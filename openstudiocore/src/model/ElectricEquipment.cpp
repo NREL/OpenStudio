@@ -148,8 +148,7 @@ namespace detail {
   }
 
   bool ElectricEquipment_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_ElectricEquipmentFields::Multiplier, multiplier);
+    bool result = setDouble(OS_ElectricEquipmentFields::Multiplier, multiplier);
     return result;
   }
 
@@ -159,8 +158,7 @@ namespace detail {
   }
 
   void ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 
