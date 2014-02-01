@@ -85,6 +85,7 @@ ForwardTranslator::ForwardTranslator()
   // temp code 
   m_keepRunControlSpecialDays = false;
   m_ipTabularOutput = false;
+  m_excludeLCCObjects = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -145,6 +146,11 @@ void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialD
 void ForwardTranslator::setIPTabularOutput(bool isIP)
 {
   m_ipTabularOutput = isIP;
+}
+
+void ForwardTranslator::setExcludeLCCObjects(bool excludeLCCObjects)
+{
+  m_excludeLCCObjects = excludeLCCObjects;
 }
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
@@ -233,17 +239,19 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (fullModelTranslation){
 
     // translate life cycle cost parameters
-    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
-    if (!lifeCycleCostParameters){
-      // only warn if costs are present
-      if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
-        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
+    if( ! m_excludeLCCObjects ){
+      boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
+      if (!lifeCycleCostParameters){
+        // only warn if costs are present
+        if (!model.getModelObjects<LifeCycleCost>().empty()){
+          LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
+        }
+        
+        // always add this object so E+ results section exists
+        lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
       }
-      
-      // always add this object so E+ results section exists
-      lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
+      translateAndMapModelObject(*lifeCycleCostParameters);
     }
-    translateAndMapModelObject(*lifeCycleCostParameters);
 
     // ensure that building exists
     boost::optional<model::Building> building = model.building();

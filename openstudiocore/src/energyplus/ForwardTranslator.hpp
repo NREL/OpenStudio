@@ -264,6 +264,12 @@ class ENERGYPLUS_API ForwardTranslator {
    */
   void setIPTabularOutput(bool isIP);
 
+  /** If excludeLCCObjects, skip translation of life cycle cost objects.
+    * Use this interface with extreme caution and understanding of the impacts.
+    * Some assumptions in OpenStudio will fail if you exclude life cycle costs
+    */
+  void setExcludeLCCObjects(bool excludeLCCObjects);
+
  private:
 
   REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -756,6 +762,8 @@ class ENERGYPLUS_API ForwardTranslator {
   bool m_keepRunControlSpecialDays;
 
   bool m_ipTabularOutput;
+
+  bool m_excludeLCCObjects;
 };
 
 namespace detail
