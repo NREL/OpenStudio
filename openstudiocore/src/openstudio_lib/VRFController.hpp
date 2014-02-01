@@ -32,7 +32,7 @@ namespace openstudio {
 
 class OSItemId;
 class VRFSystemListController;
-class VRFView;
+class GridLayoutItem;
 
 class VRFController : public QObject
 {
@@ -51,6 +51,8 @@ class VRFController : public QObject
   private:
 
   QPointer<QWidget> m_vrfView;
+
+  QPointer<GridLayoutItem> m_vrfSystemGridView;
 
   QSharedPointer<QGraphicsScene> m_vrfGridScene;
 
@@ -100,16 +102,16 @@ class VRFSystemItemDelegate : public OSGraphicsItemDelegate
   virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource);
 };
 
-//class RefrigerationSystemListDropZoneItem : public OSListItem
-//{
-//  Q_OBJECT
-//
-//  public:
-//
-//  RefrigerationSystemListDropZoneItem(OSListController * listController = 0);
-//
-//  ~RefrigerationSystemListDropZoneItem() {}
-//};
+class VRFSystemListDropZoneItem : public OSListItem
+{
+  Q_OBJECT
+
+  public:
+
+  VRFSystemListDropZoneItem(OSListController * listController = 0);
+
+  ~VRFSystemListDropZoneItem() {}
+};
 
 class VRFSystemListItem : public OSListItem
 {
@@ -126,8 +128,6 @@ class VRFSystemListItem : public OSListItem
   public slots:
 
   void remove();
-
-  void zoomInOnSystem();
 
   private:
 

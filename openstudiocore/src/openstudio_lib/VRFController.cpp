@@ -47,22 +47,22 @@ VRFController::VRFController()
   // These get deleted with when the scene is deleted
   m_vrfView = new QGraphicsView();
 
-  //m_refrigerationSystemGridView = new RefrigerationSystemGridView();
+  m_vrfSystemGridView = new GridLayoutItem();
 
-  //m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController(this));
+  m_vrfSystemListController = QSharedPointer<VRFSystemListController>(new VRFSystemListController(this));
 
-  //m_refrigerationSystemGridView->setListController(m_refrigerationSystemListController);
+  m_vrfSystemGridView->setListController(m_vrfSystemListController);
 
-  //m_refrigerationSystemGridView->setDelegate(QSharedPointer<RefrigerationSystemItemDelegate>(new RefrigerationSystemItemDelegate()));
+  m_vrfSystemGridView->setDelegate(QSharedPointer<VRFSystemItemDelegate>(new VRFSystemItemDelegate()));
 
-  //m_refrigerationGridScene->addItem(m_refrigerationSystemGridView);
-
-  //zoomOutToSystemGridView();
+  m_vrfGridScene->addItem(m_vrfSystemGridView);
 }
 
 VRFController::~VRFController()
 {
   delete m_vrfView;
+
+  delete m_vrfSystemGridView;
 
   //if( m_refrigerationView )
   //{
@@ -216,22 +216,17 @@ void VRFSystemListItem::remove()
   qobject_cast<VRFSystemListController *>(controller())->removeSystem(m_vrfSystem);
 }
 
-void VRFSystemListItem::zoomInOnSystem()
+VRFSystemListDropZoneItem::VRFSystemListDropZoneItem(OSListController * listController)
+  : OSListItem(listController)
 {
-  //qobject_cast<RefrigerationSystemListController *>(controller())->refrigerationController()->zoomInOnSystem(m_refrigerationSystem);
 }
-
-//RefrigerationSystemListDropZoneItem::RefrigerationSystemListDropZoneItem(OSListController * listController)
-//  : OSListItem(listController)
-//{
-//}
 
 QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   QGraphicsObject * itemView = NULL;
 
-  //if( QSharedPointer<RefrigerationSystemListItem> listItem = dataSource.dynamicCast<RefrigerationSystemListItem>() )
-  //{
+  if( QSharedPointer<VRFSystemListItem> listItem = dataSource.dynamicCast<VRFSystemListItem>() )
+  {
   //  RefrigerationSystemMiniView * refrigerationSystemMiniView = new RefrigerationSystemMiniView();
 
   //  bool bingo;
@@ -244,9 +239,9 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
   //  refrigerationSystemMiniView->setName(listItem->systemName());
 
   //  itemView = refrigerationSystemMiniView;
-  //}
-  //else if( dataSource.dynamicCast<RefrigerationSystemListDropZoneItem>() )
-  //{
+  }
+  else if( dataSource.dynamicCast<VRFSystemListDropZoneItem>() )
+  {
   //  RefrigerationSystemDropZoneView * refrigerationSystemDropZoneView = new RefrigerationSystemDropZoneView();
 
   //  bool bingo;
@@ -255,7 +250,7 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
   //  OS_ASSERT(bingo);
 
   //  itemView = refrigerationSystemDropZoneView;
-  //}
+  }
 
   return itemView;
 }
