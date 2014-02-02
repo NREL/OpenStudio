@@ -21,6 +21,8 @@
 
 #include <shared_gui_components/OSGridView.hpp>
 
+#include <openstudio_lib/ModelObjectItem.hpp>
+
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_impl.hpp>
 #include <model/RefrigerationCase.hpp>
@@ -29,6 +31,11 @@
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
+
+#include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
+#include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
 
 #include <QBoxLayout>
 #include <QLabel>
@@ -131,6 +138,58 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
   layout->addWidget(walkInView);
 
+}
+
+// CaseThermalZoneVectorController
+
+void CaseThermalZoneVectorController::onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle)
+{
+  if (index == Refrigeration_CaseFields::ZoneName){
+    emit itemIds(makeVector());
+  }
+}
+
+std::vector<OSItemId> CaseThermalZoneVectorController::makeVector()
+{
+  std::vector<OSItemId> result;
+  if (m_modelObject){
+    model::RefrigerationCase refrigerationCase = m_modelObject->cast<model::RefrigerationCase>();
+    boost::optional<model::ThermalZone> thermalZone = refrigerationCase.thermalZone();
+    if (thermalZone){
+      result.push_back(modelObjectToItemId(*thermalZone, false));
+    }
+  }
+  return result;
+}
+
+void CaseThermalZoneVectorController::onRemoveItem(OSItem* item)
+{
+  if (m_modelObject){
+    model::RefrigerationCase refrigerationCase = m_modelObject->cast<model::RefrigerationCase>();
+    refrigerationCase.resetThermalZone();
+  }
+}
+
+void CaseThermalZoneVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  onDrop(replacementItemId);
+}
+
+void CaseThermalZoneVectorController::onDrop(const OSItemId& itemId)
+{
+  if (m_modelObject){
+    model::RefrigerationCase refrigerationCase = m_modelObject->cast<model::RefrigerationCase>();
+    boost::optional<model::ModelObject> modelObject = this->getModelObject(itemId);
+    if (modelObject){
+      if (modelObject->optionalCast<model::ThermalZone>()){
+        if (this->fromComponentLibrary(itemId)){
+          modelObject = modelObject->clone(m_modelObject->model());
+        }
+        model::ThermalZone thermalZone = modelObject->cast<model::ThermalZone>();
+        refrigerationCase.setThermalZone(thermalZone);
+      }
+    }
+  }
 }
 
 RefrigerationCaseGridController::RefrigerationCaseGridController(const QString & headerText,

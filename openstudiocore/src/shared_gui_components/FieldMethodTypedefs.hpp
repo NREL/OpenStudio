@@ -20,6 +20,11 @@
 #ifndef OPENSTUDIO_FIELDMETHODTYPEDEFS_HPP
 #define OPENSTUDIO_FIELDMETHODTYPEDEFS_HPP
 
+#include <model/Model.hpp>
+#include <model/Model_impl.hpp>
+#include <model/ModelObject.hpp>
+#include <model/ModelObject_impl.hpp>
+
 #include <boost/function.hpp>
 #include <boost/optional.hpp>
 
@@ -32,11 +37,13 @@ typedef boost::function<double ()> DoubleGetter;
 typedef boost::function<int ()> IntGetter;
 typedef boost::function<std::string ()> StringGetter;
 typedef boost::function<unsigned ()> UnsignedGetter;
+typedef boost::function<model::ModelObject ()> ModelObjectGetter;
 
 typedef boost::function<boost::optional<double> ()> OptionalDoubleGetter;
 typedef boost::function<boost::optional<int> ()> OptionalIntGetter;
 typedef boost::function<boost::optional<std::string> ()> OptionalStringGetter;
 typedef boost::function<boost::optional<unsigned> ()> OptionalUnsignedGetter;
+typedef boost::function<boost::optional<model::ModelObject> ()> OptionalModelObjectGetter;
 
 typedef boost::function<std::vector<std::string> ()> ChoicesGetter;
 
@@ -45,6 +52,7 @@ typedef boost::function<bool (double)> DoubleSetter;
 typedef boost::function<bool (int)> IntSetter;
 typedef boost::function<bool (std::string)> StringSetter;
 typedef boost::function<bool (unsigned)> UnsignedSetter;
+typedef boost::function<model::ModelObject ()> ModelObjectSetter;
 
 typedef boost::function<void ()> NoFailAction;
 typedef boost::function<bool ()> BasicQuery;

@@ -114,6 +114,14 @@ public:
     m_baseConcepts.push_back(QSharedPointer<UnsignedEditConcept>(new UnsignedEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
+  //template<typename DataSourceType>
+  //void addDropZoneColumn(QString headingLabel, 
+  //                       model::modelObject (DataSourceType::* getter)(void) const, 
+  //                       bool (DataSourceType::* setter)(model::modelObject))
+  //{
+  //  m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+  //}
+
   std::vector<QString> categories();
 
   std::vector<std::pair<QString,std::vector<QString>>> categoriesAndFields(); 
