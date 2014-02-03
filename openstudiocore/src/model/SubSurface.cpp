@@ -222,7 +222,11 @@ namespace detail {
     bool result = PlanarSurface_Impl::setVertices(vertices);
 
     if (isEmpty(OS_SubSurfaceFields::SubSurfaceType)){
-      this->assignDefaultSubSurfaceType();
+      if (result){
+        this->assignDefaultSubSurfaceType();
+      }else{
+        LOG(Error, "Cannot compute default SubSurface properties.");
+      }
     }
 
     return result;

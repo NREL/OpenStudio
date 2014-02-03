@@ -237,11 +237,15 @@ namespace detail {
     bool result = PlanarSurface_Impl::setVertices(vertices);
 
     if (isEmpty(OS_SurfaceFields::SurfaceType)){
-      this->assignDefaultSurfaceType(false);
-      this->assignDefaultBoundaryCondition(false);
-      this->assignDefaultSunExposure(false);
-      this->assignDefaultWindExposure(false);
-      this->emitChangeSignals(); // emit signals here
+      if (result){
+        this->assignDefaultSurfaceType(false);
+        this->assignDefaultBoundaryCondition(false);
+        this->assignDefaultSunExposure(false);
+        this->assignDefaultWindExposure(false);
+        this->emitChangeSignals(); // emit signals here
+      }else{
+        LOG(Error, "Cannot compute default Surface properties.");
+      }
     }
 
     return result;
