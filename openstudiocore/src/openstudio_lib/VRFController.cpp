@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "VRFController.hpp"
+#include "VRFGraphicsItems.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
@@ -46,8 +47,12 @@ VRFController::VRFController()
 
   // These get deleted with when the scene is deleted
   m_vrfView = new QGraphicsView();
+  m_vrfView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  m_vrfView->setScene(m_vrfGridScene.data());
+  m_vrfView->setObjectName("GrayWidget");
 
   m_vrfSystemGridView = new GridLayoutItem();
+  m_vrfSystemGridView->setCellSize(VRFSystemView::cellSize());
 
   m_vrfSystemListController = QSharedPointer<VRFSystemListController>(new VRFSystemListController(this));
 
@@ -82,7 +87,7 @@ VRFController::~VRFController()
   //}
 }
 
-QWidget * VRFController::vrfView() const
+QGraphicsView * VRFController::vrfView() const
 {
   return m_vrfView;
 }
@@ -106,14 +111,14 @@ QSharedPointer<OSListItem> VRFSystemListController::itemAt(int i)
 {
   QSharedPointer<OSListItem> item;
 
-  //if( i == 0 )
-  //{
-  //  item = QSharedPointer<VRFSystemListDropZoneItem>(new RefrigerationSystemListDropZoneItem(this));
-  //}
-  //else if( i > 0 && i < count() )
-  //{
-  //  item = QSharedPointer<RefrigerationSystemListItem>(new RefrigerationSystemListItem(systems()[i - 1],this));
-  //}
+  if( i == 0 )
+  {
+    item = QSharedPointer<VRFSystemListDropZoneItem>(new VRFSystemListDropZoneItem(this));
+  }
+  else if( i > 0 && i < count() )
+  {
+    item = QSharedPointer<VRFSystemListItem>(new VRFSystemListItem(systems()[i - 1],this));
+  }
 
   return item;
 }
@@ -227,29 +232,29 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
 
   if( QSharedPointer<VRFSystemListItem> listItem = dataSource.dynamicCast<VRFSystemListItem>() )
   {
-  //  RefrigerationSystemMiniView * refrigerationSystemMiniView = new RefrigerationSystemMiniView();
+    VRFSystemView * vrfSystemView = new VRFSystemView();
 
-  //  bool bingo;
-  //  bingo = connect(refrigerationSystemMiniView->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
-  //  OS_ASSERT(bingo);
+    bool bingo;
+    bingo = connect(vrfSystemView->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
+    OS_ASSERT(bingo);
 
   //  bingo = connect(refrigerationSystemMiniView->zoomInButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(zoomInOnSystem()));
   //  OS_ASSERT(bingo);
 
   //  refrigerationSystemMiniView->setName(listItem->systemName());
 
-  //  itemView = refrigerationSystemMiniView;
+    itemView = vrfSystemView;
   }
   else if( dataSource.dynamicCast<VRFSystemListDropZoneItem>() )
   {
-  //  RefrigerationSystemDropZoneView * refrigerationSystemDropZoneView = new RefrigerationSystemDropZoneView();
+    VRFSystemDropZoneView * vrfSystemDropZoneView = new VRFSystemDropZoneView();
 
-  //  bool bingo;
-  //  bingo = connect(refrigerationSystemDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
-  //                  qobject_cast<RefrigerationSystemListController *>(dataSource->controller()),SLOT(addSystem(const OSItemId &)));
-  //  OS_ASSERT(bingo);
+    bool bingo;
+    bingo = connect(vrfSystemDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
+                    qobject_cast<VRFSystemListController *>(dataSource->controller()),SLOT(addSystem(const OSItemId &)));
+    OS_ASSERT(bingo);
 
-  //  itemView = refrigerationSystemDropZoneView;
+    itemView = vrfSystemDropZoneView;
   }
 
   return itemView;

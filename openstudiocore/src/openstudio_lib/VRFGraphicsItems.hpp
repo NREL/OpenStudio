@@ -32,6 +32,71 @@ class QLabel;
 
 namespace openstudio {
 
+class VRFSystemView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  VRFSystemView();
+
+  virtual ~VRFSystemView() {}
+
+  RemoveButtonItem * removeButtonItem;
+
+  QRectF boundingRect() const;
+
+  static QSize cellSize();
+
+  public slots:
+
+  void setName( const QString & name); 
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  private:
+
+  QString m_name;
+};
+
+class VRFSystemDropZoneView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  VRFSystemDropZoneView();
+
+  virtual ~VRFSystemDropZoneView() {}
+
+  QRectF boundingRect() const;
+
+  signals:
+
+  void mouseClicked();
+
+  void componentDropped(const OSItemId & itemid);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  void dropEvent(QGraphicsSceneDragDropEvent *event);
+
+  private:
+
+  bool m_mouseDown;
+};
 
 } // openstudio
 

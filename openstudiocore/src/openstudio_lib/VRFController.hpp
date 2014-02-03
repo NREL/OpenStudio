@@ -27,6 +27,7 @@
 #include "../shared_gui_components/OSListController.hpp"
 
 class QGraphicsScene;
+class QGraphicsView;
 
 namespace openstudio {
 
@@ -44,13 +45,13 @@ class VRFController : public QObject
 
   virtual ~VRFController();
 
-  QWidget * vrfView() const;
+  QGraphicsView * vrfView() const;
 
   QSharedPointer<VRFSystemListController> vrfSystemListController() const;
 
   private:
 
-  QPointer<QWidget> m_vrfView;
+  QPointer<QGraphicsView> m_vrfView;
 
   QPointer<GridLayoutItem> m_vrfSystemGridView;
 

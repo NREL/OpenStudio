@@ -328,6 +328,8 @@ SET( ${target_name}_SRC
   VerticalTabWidget.hpp
   VRFController.cpp
   VRFController.hpp
+  VRFGraphicsItems.cpp
+  VRFGraphicsItems.hpp
   WaterUseEquipmentInspectorView.cpp
   WaterUseEquipmentInspectorView.hpp
   WindowMaterialBlindInspectorView.cpp
@@ -601,6 +603,7 @@ SET( ${target_name}_moc
   VariablesTabView.hpp
   VerticalTabWidget.hpp
   VRFController.hpp
+  VRFGraphicsItems.hpp
   WaterUseEquipmentInspectorView.hpp
   WindowMaterialBlindInspectorView.hpp
   WindowMaterialGasInspectorView.hpp
