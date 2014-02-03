@@ -60,6 +60,14 @@ class VRFSystemView : public QGraphicsObject
 
   private:
 
+  QRectF contentRect() const;
+
+  QRectF headerRect() const;
+
+  static int cellWidth();
+
+  static int headerHeight();
+
   QString m_name;
 };
 

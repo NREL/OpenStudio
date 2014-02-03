@@ -3063,7 +3063,7 @@ OS:CoolingTowerPerformance:YorkCalc,
 
 OS:AirConditioner:VariableRefrigerantFlow,
   {8e372bc7-d7e7-4b5a-8a86-1743336eeb58}, !- Handle
-  Air Conditioner Variable Refrigerant Flow 1, !- Name
+  Air Conditioner Variable Refrigerant Flow, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Rated Total Cooling Capacity {W}
   3.3,                                    !- Rated Cooling COP {W/W}

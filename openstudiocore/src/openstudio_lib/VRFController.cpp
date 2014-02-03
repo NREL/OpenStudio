@@ -241,7 +241,7 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
   //  bingo = connect(refrigerationSystemMiniView->zoomInButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(zoomInOnSystem()));
   //  OS_ASSERT(bingo);
 
-  //  refrigerationSystemMiniView->setName(listItem->systemName());
+    vrfSystemView->setName(listItem->systemName());
 
     itemView = vrfSystemView;
   }

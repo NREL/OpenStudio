@@ -35,7 +35,7 @@ VRFSystemView::VRFSystemView()
 {
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
-  //removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,headerHeight() / 2.0 - removeButtonItem->boundingRect().height() / 2.0);
+  removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,headerHeight() / 2.0 - removeButtonItem->boundingRect().height() / 2.0);
 }
 
 QRectF VRFSystemView::boundingRect() const
@@ -45,7 +45,27 @@ QRectF VRFSystemView::boundingRect() const
 
 QSize VRFSystemView::cellSize()
 {
-  return QSize(350,400);
+  return QSize(cellWidth(),cellWidth() + headerHeight());
+}
+
+int VRFSystemView::cellWidth()
+{
+  return 350;
+}
+
+int VRFSystemView::headerHeight()
+{
+  return 50;
+}
+
+QRectF VRFSystemView::contentRect() const
+{
+  return QRectF(0,headerHeight(),cellWidth(),cellWidth());
+}
+
+QRectF VRFSystemView::headerRect() const
+{
+  return QRectF(0,0,cellWidth(),headerHeight());
 }
 
 void VRFSystemView::setName(const QString & name)
@@ -68,12 +88,10 @@ void VRFSystemView::paint( QPainter *painter,
   painter->drawRect(boundingRect());
 
   painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+  QRectF _headerRect = headerRect();
+  painter->drawRect(_headerRect);
 
-  //QRectF _headerRect = headerRect();
-
-  //painter->drawRect(_headerRect);
-
-  //painter->drawText(QRectF(_headerRect.x() + 5, _headerRect.y() + 5, _headerRect.width() - 10, _headerRect.height() - 10),Qt::AlignVCenter | Qt::AlignLeft,m_name);
+  painter->drawText(QRectF(_headerRect.x() + 5, _headerRect.y() + 5, _headerRect.width() - 10, _headerRect.height() - 10),Qt::AlignVCenter | Qt::AlignLeft,m_name);
 }
 
 VRFSystemDropZoneView::VRFSystemDropZoneView()
