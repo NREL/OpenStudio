@@ -39,55 +39,29 @@ namespace openstudio {
 VRFController::VRFController()
   : QObject()
 {
-  m_vrfGridScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
-
-  //bool bingo;
-  //bingo = connect(m_refrigerationView->zoomOutButton,SIGNAL(clicked()),this,SLOT(zoomOutToSystemGridView()));
-  //OS_ASSERT(bingo);
-
-  // These get deleted with when the scene is deleted
-  m_vrfView = new QGraphicsView();
-  m_vrfView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-  m_vrfView->setScene(m_vrfGridScene.data());
-  m_vrfView->setObjectName("GrayWidget");
+  m_vrfView = new VRFView();
+  bool bingo;
+  bingo = connect(m_vrfView->zoomOutButton,SIGNAL(clicked()),this,SLOT(zoomOutToSystemGridView()));
+  OS_ASSERT(bingo);
 
   m_vrfSystemGridView = new GridLayoutItem();
-  m_vrfSystemGridView->setCellSize(VRFSystemView::cellSize());
+  m_vrfSystemGridView->setCellSize(VRFSystemMiniView::cellSize());
+  m_vrfGridScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
+  m_vrfGridScene->addItem(m_vrfSystemGridView);
 
   m_vrfSystemListController = QSharedPointer<VRFSystemListController>(new VRFSystemListController(this));
-
   m_vrfSystemGridView->setListController(m_vrfSystemListController);
-
   m_vrfSystemGridView->setDelegate(QSharedPointer<VRFSystemItemDelegate>(new VRFSystemItemDelegate()));
 
-  m_vrfGridScene->addItem(m_vrfSystemGridView);
+  zoomOutToSystemGridView();
 }
 
 VRFController::~VRFController()
 {
   delete m_vrfView;
-
-  delete m_vrfSystemGridView;
-
-  //if( m_refrigerationView )
-  //{
-  //  delete m_refrigerationView;
-  //}
-
-  //// This is for completeness, but will be taken care of when the scene is deleted.
-  //if( m_refrigerationSystemGridView )
-  //{
-  //  delete m_refrigerationSystemGridView;
-  //}
-
-  //// This is for completeness, but will be taken care of when the scene is deleted.
-  //if( m_detailView )
-  //{
-  //  delete m_detailView;
-  //}
 }
 
-QGraphicsView * VRFController::vrfView() const
+VRFView * VRFController::vrfView() const
 {
   return m_vrfView;
 }
@@ -95,6 +69,37 @@ QGraphicsView * VRFController::vrfView() const
 QSharedPointer<VRFSystemListController> VRFController::vrfSystemListController() const
 {
   return m_vrfSystemListController;
+}
+
+void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow & system)
+{
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  model::OptionalModelObject mo;
+  doc->mainRightColumnController()->inspectModelObject(mo,false);
+
+  m_detailScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
+  m_detailView = new VRFSystemView();
+  m_detailScene->addItem(m_detailView);
+  m_vrfView->header->show();
+  m_vrfView->graphicsView->setScene(m_detailScene.data());
+  m_vrfView->graphicsView->setAlignment(Qt::AlignCenter);
+
+  m_currentSystem = system;
+  //refresh();
+}
+
+void VRFController::zoomOutToSystemGridView()
+{
+  model::OptionalModelObject mo;
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  doc->mainRightColumnController()->inspectModelObject(mo,false);
+
+  m_vrfView->graphicsView->setScene(m_vrfGridScene.data());
+  m_vrfView->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  m_vrfView->header->hide();
+
+  m_currentSystem = boost::none;
+  //refresh();
 }
 
 VRFSystemListController::VRFSystemListController(VRFController * vrfController)
@@ -191,6 +196,11 @@ void VRFSystemListController::removeSystem(model::AirConditionerVariableRefriger
   emit itemRemoved(i);
 }
 
+void VRFSystemListItem::zoomInOnSystem()
+{
+  qobject_cast<VRFSystemListController *>(controller())->vrfController()->zoomInOnSystem(m_vrfSystem);
+}
+
 std::vector<model::AirConditionerVariableRefrigerantFlow> VRFSystemListController::systems() const
 {
   std::vector<model::AirConditionerVariableRefrigerantFlow> result;
@@ -232,18 +242,18 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
 
   if( QSharedPointer<VRFSystemListItem> listItem = dataSource.dynamicCast<VRFSystemListItem>() )
   {
-    VRFSystemView * vrfSystemView = new VRFSystemView();
+    VRFSystemMiniView * vrfSystemMiniView = new VRFSystemMiniView();
 
     bool bingo;
-    bingo = connect(vrfSystemView->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
+    bingo = connect(vrfSystemMiniView->removeButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(remove()));
     OS_ASSERT(bingo);
 
-  //  bingo = connect(refrigerationSystemMiniView->zoomInButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(zoomInOnSystem()));
-  //  OS_ASSERT(bingo);
+    bingo = connect(vrfSystemMiniView->zoomInButtonItem,SIGNAL(mouseClicked()),dataSource.data(),SLOT(zoomInOnSystem()));
+    OS_ASSERT(bingo);
 
-    vrfSystemView->setName(listItem->systemName());
+    vrfSystemMiniView->setName(listItem->systemName());
 
-    itemView = vrfSystemView;
+    itemView = vrfSystemMiniView;
   }
   else if( dataSource.dynamicCast<VRFSystemListDropZoneItem>() )
   {

@@ -32,17 +32,38 @@ class QLabel;
 
 namespace openstudio {
 
-class VRFSystemView : public QGraphicsObject
+class VRFView : public QWidget
 {
   Q_OBJECT;
 
   public:
 
-  VRFSystemView();
+  VRFView();
 
-  virtual ~VRFSystemView() {}
+  virtual ~VRFView() {}
+
+  QWidget * header;
+
+  QGraphicsView * graphicsView;
+
+  QPushButton * zoomOutButton;
+
+  QLabel * nameLabel;
+};
+
+class VRFSystemMiniView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  VRFSystemMiniView();
+
+  virtual ~VRFSystemMiniView() {}
 
   RemoveButtonItem * removeButtonItem;
+
+  ZoomInButtonItem * zoomInButtonItem;
 
   QRectF boundingRect() const;
 
@@ -69,6 +90,25 @@ class VRFSystemView : public QGraphicsObject
   static int headerHeight();
 
   QString m_name;
+};
+
+class VRFSystemView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  VRFSystemView();
+
+  virtual ~VRFSystemView() {}
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget = 0 );
 };
 
 class VRFSystemDropZoneView : public QGraphicsObject

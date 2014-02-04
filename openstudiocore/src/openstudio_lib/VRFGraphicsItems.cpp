@@ -31,51 +31,111 @@
 
 namespace openstudio {
 
+VRFView::VRFView()
+  : QWidget()
+{
+  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  mainVLayout->setSpacing(0);
+  mainVLayout->setContentsMargins(0,0,0,0);
+  mainVLayout->setAlignment(Qt::AlignTop);
+  setLayout(mainVLayout);
+
+  header = new QWidget();
+  header->setObjectName("VRFHeader");
+  header->setStyleSheet("QWidget#VRFHeader { background: #C3C3C3; }");
+  header->setFixedHeight(35);
+  mainVLayout->addWidget(header);
+
+  QHBoxLayout * headerLayout = new QHBoxLayout();
+  headerLayout->setContentsMargins(5,5,5,5);
+  headerLayout->setSpacing(0);
+  header->setLayout(headerLayout);
+
+  nameLabel = new QLabel();
+  headerLayout->addWidget(nameLabel);
+
+  zoomOutButton = new ZoomOutButton();
+  headerLayout->addStretch();
+  headerLayout->addWidget(zoomOutButton);
+
+  graphicsView = new QGraphicsView();
+  graphicsView->setObjectName("GrayWidget");
+  mainVLayout->addWidget(graphicsView);
+}
+
 VRFSystemView::VRFSystemView()
 {
-  removeButtonItem = new RemoveButtonItem();
-  removeButtonItem->setParentItem(this);
-  removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,headerHeight() / 2.0 - removeButtonItem->boundingRect().height() / 2.0);
 }
 
 QRectF VRFSystemView::boundingRect() const
 {
+  return QRectF(0,0,100,100);
+}
+
+void VRFSystemView::paint( QPainter *painter, 
+                           const QStyleOptionGraphicsItem *option, 
+                           QWidget *widget )
+{
+  // Background and Border
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(QColor(206,206,206));
+  painter->setPen(Qt::NoPen);
+
+  QRectF _boudingRect = boundingRect();
+
+  painter->drawRoundedRect(_boudingRect.x(),_boudingRect.y() + 5,_boudingRect.width(),_boudingRect.height() - 10,5,5);
+}
+
+VRFSystemMiniView::VRFSystemMiniView()
+{
+  removeButtonItem = new RemoveButtonItem();
+  removeButtonItem->setParentItem(this);
+  removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,headerHeight() / 2.0 - removeButtonItem->boundingRect().height() / 2.0);
+
+  zoomInButtonItem = new ZoomInButtonItem();
+  zoomInButtonItem->setParentItem(this);
+  zoomInButtonItem->setPos(removeButtonItem->pos().x() - 10 - zoomInButtonItem->boundingRect().width(),headerHeight() / 2.0 - zoomInButtonItem->boundingRect().height() / 2.0);
+}
+
+QRectF VRFSystemMiniView::boundingRect() const
+{
   return QRectF(QPoint(0,0),cellSize());
 }
 
-QSize VRFSystemView::cellSize()
+QSize VRFSystemMiniView::cellSize()
 {
   return QSize(cellWidth(),cellWidth() + headerHeight());
 }
 
-int VRFSystemView::cellWidth()
+int VRFSystemMiniView::cellWidth()
 {
   return 350;
 }
 
-int VRFSystemView::headerHeight()
+int VRFSystemMiniView::headerHeight()
 {
   return 50;
 }
 
-QRectF VRFSystemView::contentRect() const
+QRectF VRFSystemMiniView::contentRect() const
 {
   return QRectF(0,headerHeight(),cellWidth(),cellWidth());
 }
 
-QRectF VRFSystemView::headerRect() const
+QRectF VRFSystemMiniView::headerRect() const
 {
   return QRectF(0,0,cellWidth(),headerHeight());
 }
 
-void VRFSystemView::setName(const QString & name)
+void VRFSystemMiniView::setName(const QString & name)
 {
   m_name = name;
 
   update();
 }
 
-void VRFSystemView::paint( QPainter *painter, 
+void VRFSystemMiniView::paint( QPainter *painter, 
                            const QStyleOptionGraphicsItem *option, 
                            QWidget *widget )
 {
@@ -116,7 +176,7 @@ void VRFSystemDropZoneView::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 QRectF VRFSystemDropZoneView::boundingRect() const
 {
-  return QRectF(QPoint(0,0),VRFSystemView::cellSize());
+  return QRectF(QPoint(0,0),VRFSystemMiniView::cellSize());
 }
 
 void VRFSystemDropZoneView::paint( QPainter *painter, 

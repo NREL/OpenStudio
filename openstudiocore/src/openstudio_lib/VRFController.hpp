@@ -25,6 +25,7 @@
 #include <boost/optional.hpp>
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../shared_gui_components/OSListController.hpp"
+#include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 
 class QGraphicsScene;
 class QGraphicsView;
@@ -34,6 +35,8 @@ namespace openstudio {
 class OSItemId;
 class VRFSystemListController;
 class GridLayoutItem;
+class VRFView;
+class VRFSystemView;
 
 class VRFController : public QObject
 {
@@ -45,19 +48,31 @@ class VRFController : public QObject
 
   virtual ~VRFController();
 
-  QGraphicsView * vrfView() const;
+  VRFView * vrfView() const;
 
   QSharedPointer<VRFSystemListController> vrfSystemListController() const;
 
+  public slots:
+
+  void zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow & system);
+
+  void zoomOutToSystemGridView();
+
   private:
 
-  QPointer<QGraphicsView> m_vrfView;
+  QPointer<VRFView> m_vrfView;
 
   QPointer<GridLayoutItem> m_vrfSystemGridView;
 
+  QPointer<VRFSystemView> m_detailView;
+
   QSharedPointer<QGraphicsScene> m_vrfGridScene;
 
+  QSharedPointer<QGraphicsScene> m_detailScene;
+
   QSharedPointer<VRFSystemListController> m_vrfSystemListController;
+
+  boost::optional<model::AirConditionerVariableRefrigerantFlow> m_currentSystem;
 };
 
 class VRFSystemListController : public OSListController
@@ -129,6 +144,8 @@ class VRFSystemListItem : public OSListItem
   public slots:
 
   void remove();
+
+  void zoomInOnSystem();
 
   private:
 
