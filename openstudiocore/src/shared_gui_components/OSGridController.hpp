@@ -36,6 +36,7 @@ class QWidget;
 
 namespace openstudio {
 
+class OSVectorController;
 
 class OSGridController : public QObject
 {
@@ -114,13 +115,13 @@ public:
     m_baseConcepts.push_back(QSharedPointer<UnsignedEditConcept>(new UnsignedEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
-  //template<typename DataSourceType>
-  //void addDropZoneColumn(QString headingLabel, 
-  //                       model::modelObject (DataSourceType::* getter)(void) const, 
-  //                       bool (DataSourceType::* setter)(model::modelObject))
-  //{
-  //  m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<DataSourceType>(headingLabel,getter,setter)));
-  //}
+  template<typename DataSourceType>
+  void addDropZoneColumn(QString headingLabel, 
+                         boost::optional<model::ModelObject> (DataSourceType::* getter)(void) const, 
+                         bool (DataSourceType::* setter)(const model::ModelObject &))
+  {
+    m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+  }
 
   std::vector<QString> categories();
 
@@ -163,6 +164,8 @@ protected:
   std::vector<QString> m_currentFields;
 
   std::vector<QString> m_customCategories;
+
+  OSVectorController * m_vectorController;
 
 private:
 

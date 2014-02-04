@@ -52,7 +52,7 @@ typedef boost::function<bool (double)> DoubleSetter;
 typedef boost::function<bool (int)> IntSetter;
 typedef boost::function<bool (std::string)> StringSetter;
 typedef boost::function<bool (unsigned)> UnsignedSetter;
-typedef boost::function<model::ModelObject ()> ModelObjectSetter;
+typedef boost::function<bool (const model::ModelObject &)> ModelObjectSetter;
 
 typedef boost::function<void ()> NoFailAction;
 typedef boost::function<bool ()> BasicQuery;

@@ -27,6 +27,8 @@
 #include <shared_gui_components/OSQuantityEdit.hpp>
 #include <shared_gui_components/OSUnsignedEdit.hpp>
 
+#include <openstudio_lib/OSDropZone.hpp>
+#include <openstudio_lib/OSVectorController.hpp>
 #include <openstudio_lib/SchedulesView.hpp>
 
 #include <model/Model_impl.hpp>
@@ -67,6 +69,7 @@ OSGridController::OSGridController(const QString & headerText,
   m_horizontalHeaderBtnGrp(0),
   m_verticalHeaderBtnGrp(0),
   m_customCategories(std::vector<QString>()),
+  m_vectorController(0),
   m_headerText(headerText)
 {
   m_verticalHeaderBtnGrp = new QButtonGroup();
@@ -272,13 +275,13 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
       widget = quantityEdit;
 
-  } else if(QSharedPointer<UnsignedEditConcept> unsignedEdiConcept = baseConcept.dynamicCast<UnsignedEditConcept>()) {
+  } else if(QSharedPointer<UnsignedEditConcept> unsignedEditConcept = baseConcept.dynamicCast<UnsignedEditConcept>()) {
 
       OSUnsignedEdit2 * unsignedEdit = new OSUnsignedEdit2();
 
       unsignedEdit->bind(mo,
-                boost::bind(&UnsignedEditConcept::get,unsignedEdiConcept.data(),mo),
-                boost::optional<UnsignedSetter>(boost::bind(&UnsignedEditConcept::set,unsignedEdiConcept.data(),mo,_1)),
+                boost::bind(&UnsignedEditConcept::get,unsignedEditConcept.data(),mo),
+                boost::optional<UnsignedSetter>(boost::bind(&UnsignedEditConcept::set,unsignedEditConcept.data(),mo,_1)),
                 boost::none,
                 boost::none,
                 boost::none,
@@ -287,7 +290,17 @@ QWidget * OSGridController::widgetAt(int row, int column)
                 boost::none);
 
       widget = unsignedEdit;
+  } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = baseConcept.dynamicCast<DropZoneConcept>()) {
 
+      OSDropZone2 * dropZone = new OSDropZone2(this->m_vectorController);
+
+      dropZone->bind(mo,
+                boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
+                boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
+                boost::none,
+                boost::none);
+
+      widget = dropZone;
   } else {
     // Unknown type
     OS_ASSERT(false);

@@ -198,6 +198,7 @@ RefrigerationCaseGridController::RefrigerationCaseGridController(const QString &
   std::vector<model::ModelObject> modelObjects) :
   OSGridController(headerText, iddObjectType, model, modelObjects)
 {
+  m_vectorController = new CaseThermalZoneVectorController();
   setCategoriesAndFields();
 }
 
@@ -426,8 +427,9 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
       // TODO required
       //boost::optional<Schedule> availabilitySchedule() const;
     }else if(field == THERMALZONE){
-      // TODO required
-      //boost::optional<ThermalZone> thermalZone() const;
+      //addDropZoneColumn(QString(THERMALZONE), // TODO Evan
+      //                  &model::RefrigerationCase::thermalZone,
+      //                  model::RefrigerationCase::setThermalZone);
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       // TODO required
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
