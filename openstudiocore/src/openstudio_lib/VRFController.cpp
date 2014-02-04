@@ -37,8 +37,12 @@
 namespace openstudio {
 
 VRFController::VRFController()
-  : QObject()
+  : QObject(),
+    m_detailView(0),
+    m_dirty(false)
 {
+  m_currentSystem = boost::none;
+
   m_vrfView = new VRFView();
   bool bingo;
   bingo = connect(m_vrfView->zoomOutButton,SIGNAL(clicked()),this,SLOT(zoomOutToSystemGridView()));
@@ -71,8 +75,37 @@ QSharedPointer<VRFSystemListController> VRFController::vrfSystemListController()
   return m_vrfSystemListController;
 }
 
+void VRFController::refresh()
+{
+  m_dirty = true;
+
+  QTimer::singleShot(0,this,SLOT(refreshNow()));
+}
+
+void VRFController::refreshNow()
+{
+  if( ! m_dirty ) return;
+
+  if( m_detailView )
+  {
+    m_detailView->setId(OSItemId());
+
+    if( m_currentSystem )
+    {
+      m_detailView->setId(OSItemId(m_currentSystem->handle(),QString(),false));
+
+      bool bingo;
+      bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                      this,SLOT(inspectOSItem(const OSItemId &)));
+      OS_ASSERT(bingo);
+    }
+  }
+}
+
 void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow & system)
 {
+  m_currentSystem = system;
+
   boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::OptionalModelObject mo;
   doc->mainRightColumnController()->inspectModelObject(mo,false);
@@ -84,12 +117,13 @@ void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow 
   m_vrfView->graphicsView->setScene(m_detailScene.data());
   m_vrfView->graphicsView->setAlignment(Qt::AlignCenter);
 
-  m_currentSystem = system;
-  //refresh();
+  refresh();
 }
 
 void VRFController::zoomOutToSystemGridView()
 {
+  m_currentSystem = boost::none;
+
   model::OptionalModelObject mo;
   boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   doc->mainRightColumnController()->inspectModelObject(mo,false);
@@ -98,8 +132,17 @@ void VRFController::zoomOutToSystemGridView()
   m_vrfView->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_vrfView->header->hide();
 
-  m_currentSystem = boost::none;
-  //refresh();
+  refresh();
+}
+
+void VRFController::inspectOSItem(const OSItemId & itemid)
+{
+  OS_ASSERT(m_currentSystem);
+  boost::optional<model::ModelObject> mo = m_currentSystem->model().getModelObject<model::ModelObject>(Handle(itemid.itemId()));
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  OS_ASSERT(doc);
+  doc->mainRightColumnController()->inspectModelObject(mo,false);
 }
 
 VRFSystemListController::VRFSystemListController(VRFController * vrfController)

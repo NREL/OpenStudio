@@ -104,11 +104,27 @@ class VRFSystemView : public QGraphicsObject
 
   QRectF boundingRect() const;
 
+  void setId(const OSItemId & id);
+
+  signals:
+
+  void inspectClicked(const OSItemId & id);
+
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+
+  bool m_mouseDown;
+
+  private:
+
+  OSItemId m_id;
 };
 
 class VRFSystemDropZoneView : public QGraphicsObject

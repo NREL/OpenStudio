@@ -58,6 +58,14 @@ class VRFController : public QObject
 
   void zoomOutToSystemGridView();
 
+  private slots:
+
+  void refresh();
+
+  void refreshNow();
+
+  void inspectOSItem(const OSItemId & itemid);
+
   private:
 
   QPointer<VRFView> m_vrfView;
@@ -73,6 +81,8 @@ class VRFController : public QObject
   QSharedPointer<VRFSystemListController> m_vrfSystemListController;
 
   boost::optional<model::AirConditionerVariableRefrigerantFlow> m_currentSystem;
+
+  bool m_dirty;
 };
 
 class VRFSystemListController : public OSListController

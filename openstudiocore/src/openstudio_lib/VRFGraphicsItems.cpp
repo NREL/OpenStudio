@@ -64,12 +64,42 @@ VRFView::VRFView()
 }
 
 VRFSystemView::VRFSystemView()
+  : m_mouseDown(false)
 {
+}
+
+void VRFSystemView::setId(const OSItemId & id)
+{
+  m_id = id;
 }
 
 QRectF VRFSystemView::boundingRect() const
 {
   return QRectF(0,0,100,100);
+}
+
+void VRFSystemView::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+  update();
+  event->accept();
+}
+
+void VRFSystemView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+    this->update();
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+      update();
+      emit inspectClicked(m_id);
+    }
+  }
 }
 
 void VRFSystemView::paint( QPainter *painter, 
