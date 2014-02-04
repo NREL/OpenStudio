@@ -1784,6 +1784,7 @@ namespace detail {
   boost::optional<openstudio::runmanager::Job> RunManager_Impl::enqueueImpl(openstudio::runmanager::Job job, bool force, const openstudio::path &t_basePath)
   {
     boost::optional<Job> result;
+    bool addedSignal = false;
 
     UUID uuid = job.uuid();
     LOG(Info, "Enqueing Job: " << toString(uuid) << " " << job.description());
@@ -1849,6 +1850,7 @@ namespace detail {
         job.setTreeRunnable(false);
         job.setRunnable(force);
         job.setTreeCanceled(false);
+        addedSignal = true;
       }
 
       // If the item does not already exist in queue, create it and
@@ -1904,6 +1906,11 @@ namespace detail {
     if (finishedjob)
     {
       enqueueImpl(*finishedjob, force, t_basePath);
+    }
+
+    if (addedSignal)
+    {
+      emit jobTreeAdded(job);
     }
 
     return result;

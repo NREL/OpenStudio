@@ -141,6 +141,9 @@ SET( runmanager_src
   JSON.hpp
   
   MergedJobResults.hpp
+
+  RunManagerWatcher.hpp
+  RunManagerWatcher.cpp
 )
 
 IF( BUILD_TESTING OR BUILD_PACKAGE )
@@ -210,6 +213,7 @@ SET( runmanager_moc
   ModelToRadPreProcessJob.hpp
   DakotaJob.hpp
   SimulationEngine.hpp
+  RunManagerWatcher.hpp
 )
 
 SET( runmanager_test_moc

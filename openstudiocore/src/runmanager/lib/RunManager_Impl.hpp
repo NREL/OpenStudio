@@ -226,11 +226,14 @@ namespace detail {
       std::map<std::string, double> statistics() const;
 
     signals:
-      /// Emitted when the job's state has changed
+      /// Emitted when the paused state has change
       void pausedChanged(bool);
 
       /// Stats changed
       void statsChanged();
+
+      /// Job tree added
+      void jobTreeAdded(const openstudio::runmanager::Job &t_job);
 
     protected:
       virtual void run();
