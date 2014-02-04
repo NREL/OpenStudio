@@ -230,7 +230,7 @@ SofterDuplicateButton::SofterDuplicateButton(QWidget * parent)
                "  background-image:url(':/shared_gui_components/images/duplicate_softer_press.png');"
                "}");
   style.append("QPushButton:disabled {"
-               "  background-image:url(':/shared_gui_components/images/duplicate_disabled.png');"
+               "  background-image:url(':/shared_gui_components/images/duplicate_softer_disabled.png');"
                "}");
 
   setStyleSheet(style);
