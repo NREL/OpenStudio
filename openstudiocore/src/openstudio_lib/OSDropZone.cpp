@@ -39,6 +39,9 @@
 #include <QScrollArea>
 #include <QStyleOption>
 #include <QTimer>
+#include <QGraphicsSceneDragDropEvent>
+#include <QGraphicsSceneMouseEvent>
+#include <QApplication>
 
 using namespace openstudio::model;
 
@@ -453,6 +456,76 @@ void OSItemDropZone::dropEvent(QDropEvent *event)
   event->accept();
   if(event->proposedAction() == Qt::CopyAction){
     emit dropped(event);
+  }
+}
+
+OSDropZoneItem::OSDropZoneItem()
+  : QGraphicsObject(), 
+    m_mouseDown(false)
+{
+  setAcceptHoverEvents(true);
+  setAcceptDrops(true);
+}
+
+void OSDropZoneItem::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+  event->accept();
+
+  if(event->proposedAction() == Qt::CopyAction)
+  {
+    OSItemId id = OSItemId(event->mimeData());
+
+    emit componentDropped(id);
+  }
+}
+
+QRectF OSDropZoneItem::boundingRect() const
+{
+  return QRectF(0,0,100,50);
+}
+
+void OSDropZoneItem::paint( QPainter *painter, 
+                                                 const QStyleOptionGraphicsItem *option, 
+                                                 QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::black,2,Qt::DashLine, Qt::RoundCap));
+
+  painter->drawRect(boundingRect());
+
+  QFont font = painter->font();
+  font.setPointSize(30);
+  painter->setFont(font);
+  painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drop Item");
+}
+
+void OSDropZoneItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  this->update();
+
+  event->accept();
+}
+
+void OSDropZoneItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      emit mouseClicked();
+    }
   }
 }
 

@@ -22,6 +22,7 @@
 
 #include <QGraphicsObject>
 #include "OSItem.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
@@ -169,39 +170,19 @@ class RefrigerationSystemDetailView : public QGraphicsObject
   // QString m_name;
 };
 
-class RefrigerationSystemDropZoneView : public QGraphicsObject
+class RefrigerationSystemDropZoneView : public OSDropZoneItem 
 {
   Q_OBJECT;
 
   public:
 
-  RefrigerationSystemDropZoneView();
-
-  virtual ~RefrigerationSystemDropZoneView() {}
-
   QRectF boundingRect() const;
-
-  signals:
-
-  void mouseClicked();
-
-  void componentDropped(const OSItemId & itemid);
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget );
-
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-
-  void dropEvent(QGraphicsSceneDragDropEvent *event);
-
-  private:
-
-  bool m_mouseDown;
 };
 
 class RefrigerationSystemView : public QGraphicsObject

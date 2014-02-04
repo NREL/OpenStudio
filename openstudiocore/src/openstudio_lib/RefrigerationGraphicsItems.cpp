@@ -1291,26 +1291,6 @@ QRectF RefrigerationSecondaryView::boundingRect() const
   return QRectF(0,0,150,RefrigerationSystemView::componentHeight);
 }
 
-RefrigerationSystemDropZoneView::RefrigerationSystemDropZoneView()
-  : QGraphicsObject(), 
-    m_mouseDown(false)
-{
-  setAcceptHoverEvents(true);
-  setAcceptDrops(true);
-}
-
-void RefrigerationSystemDropZoneView::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-  event->accept();
-
-  if(event->proposedAction() == Qt::CopyAction)
-  {
-    OSItemId id = OSItemId(event->mimeData());
-
-    emit componentDropped(id);
-  }
-}
-
 QRectF RefrigerationSystemDropZoneView::boundingRect() const
 {
   return QRectF(QPoint(0,0),RefrigerationSystemMiniView::cellSize());
@@ -1333,34 +1313,6 @@ void RefrigerationSystemDropZoneView::paint( QPainter *painter,
   painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drop Refrigeration System");
 }
 
-void RefrigerationSystemDropZoneView::mousePressEvent(QGraphicsSceneMouseEvent * event)
-{
-  m_mouseDown = true;
-
-  this->update();
-
-  event->accept();
-}
-
-void RefrigerationSystemDropZoneView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
-{
-  if( m_mouseDown )
-  {
-    m_mouseDown = false;
-
-    this->update();
-
-    QApplication::processEvents();
-
-    if( shape().contains(event->pos()) )
-    {
-      event->accept();
-
-      emit mouseClicked();
-    }
-  }
-}
-
 RefrigerationSystemDetailView::RefrigerationSystemDetailView()
   : QGraphicsObject()
 {
@@ -1372,7 +1324,6 @@ RefrigerationSystemDetailView::RefrigerationSystemDetailView()
   zoomOutButton->setParentItem(this);
   zoomOutButton->setPos(800 - zoomOutButton->boundingRect().width() - 10,10);
 }
-
 
 QRectF RefrigerationSystemDetailView::boundingRect() const
 {
