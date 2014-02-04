@@ -18,12 +18,51 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/FanZoneExhaust.hpp>
 #include <model/FanZoneExhaust_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
+TEST_F(ModelFixture, FanZoneExhaust_DefaultConstructor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT ( 
+  {  
+    Model model;
+    FanZoneExhaust testObject = FanZoneExhaust(model);
+
+    exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
+{
+  Model model;
+  FanZoneExhaust testObject = FanZoneExhaust(model);
+  ThermalZone thermalZone(model);
+  
+  // Add to thermal zone
+  EXPECT_TRUE(testObject.addToThermalZone(thermalZone));
+  boost::optional<ThermalZone> testThermalZone = testObject.thermalZone();
+  ASSERT_TRUE(testThermalZone);
+  EXPECT_EQ(*(testThermalZone),testObject.thermalZone());
+  EXPECT_EQ(1u, thermalZone.equipment().size());
+
+  // Check inlet and outlet nodes
+  EXPECT_TRUE(testObject.inletNode());
+  EXPECT_TRUE(testObject.outletNode());
+  
+  // Remove from thermal zone
+  testObject.removeFromThermalZone();
+  EXPECT_FALSE(testObject.thermalZone());
+  EXPECT_EQ(0u, thermalZone.equipment().size());
+}

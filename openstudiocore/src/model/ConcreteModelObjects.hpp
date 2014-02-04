@@ -121,6 +121,7 @@
 #include <model/FanConstantVolume.hpp>
 #include <model/FanOnOff.hpp>
 #include <model/FanVariableVolume.hpp>
+#include <model/FanZoneExhaust.hpp>
 #include <model/FFactorGroundFloorConstruction.hpp>
 #include <model/Gas.hpp>
 #include <model/GasEquipment.hpp>
@@ -372,6 +373,7 @@
 #include <model/FanConstantVolume_Impl.hpp>
 #include <model/FanOnOff_Impl.hpp>
 #include <model/FanVariableVolume_Impl.hpp>
+#include <model/FanZoneExhaust_Impl.hpp>
 #include <model/FFactorGroundFloorConstruction_Impl.hpp>
 #include <model/Gas_Impl.hpp>
 #include <model/GasEquipment_Impl.hpp>

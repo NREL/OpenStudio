@@ -12938,21 +12938,21 @@ OS:Fan:ZoneExhaust,
        \type alpha
        \retaincase
        \required-field
-  A6, \field Flow Fraction Schedule Name
+  A7, \field Flow Fraction Schedule Name
        \note If field is used, then when fan runs the exhausted air flow rate is controlled to be the scheduled fraction times the Maximum Flow Rate
        \type object-list
        \object-list ScheduleNames
-  A7, \field System Availability Manager Coupling Mode
+  A8, \field System Availability Manager Coupling Mode
        \note Control if fan is to be interlocked with HVAC system Availability Managers or not.
        \type choice
        \key Coupled
        \key Decoupled
        \required-field
-  A8, \field Minimum Zone Temperature Limit Schedule Name
+  A9, \field Minimum Zone Temperature Limit Schedule Name
        \note If field is used, the exhaust fan will not run if the zone temperature is lower than this limit
        \type object-list
        \object-list ScheduleNames
-  A9; \field Balanced Exhaust Fraction Schedule Name
+  A10; \field Balanced Exhaust Fraction Schedule Name
        \note Used to control fan's impact on flow at the return air node. Enter the portion of the exhaust that is balanced by simple airflows.
        \note
        \type object-list

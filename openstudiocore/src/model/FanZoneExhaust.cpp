@@ -20,21 +20,20 @@
 #include <model/FanZoneExhaust.hpp>
 #include <model/FanZoneExhaust_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PortList.hpp>
+#include <model/PortList_Impl.hpp>
+
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+// Delete? #include <model/ScheduleTypeLimits.hpp>
+// Delete? #include <model/ScheduleTypeRegistry.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Fan_ZoneExhaust_FieldEnums.hxx>
@@ -84,7 +83,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> FanZoneExhaust_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -105,6 +103,68 @@ namespace detail {
       result.push_back(ScheduleTypeKey("FanZoneExhaust","Balanced Exhaust Fraction"));
     }
     return result;
+  }
+  
+  boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone()
+  {
+    boost::optional<ThermalZone> result;
+
+    if( boost::optional<ModelObject> mo1 = connectedObject(inletPort()) )
+    {
+      if( boost::optional<Node> node = mo1->optionalCast<Node>() )
+      {
+        if( boost::optional<ModelObject> mo2 = node->inletModelObject() )
+        {
+          if( boost::optional<PortList> pl = mo2->optionalCast<PortList>() )
+          {
+            if( boost::optional<ThermalZone> tz = pl->thermalZone() )
+            {
+              result = tz;
+            }
+          }
+        }
+      }
+    }
+
+    return result;
+  }  
+  
+  bool FanZoneExhaust_Impl::addToThermalZone(ThermalZone & thermalZone)
+  {
+    Model m = this->model();
+
+    if( thermalZone.model() != m )
+    {
+      return false;
+    }
+
+    removeFromThermalZone();
+
+    thermalZone.setUseIdealAirLoads(false);
+
+    // Zone Exhaust Node (Exhaust Fan Inlet node)
+
+    Node exhaustNode(m);
+
+    PortList exhaustPortList = thermalZone.exhaustPortList();
+
+    unsigned nextPort = exhaustPortList.nextPort();
+
+    m.connect(exhaustPortList,nextPort,exhaustNode,exhaustNode.inletPort());
+
+    ModelObject mo = this->getObject<ModelObject>();
+
+    m.connect(exhaustNode,exhaustNode.outletPort(),mo,this->inletPort());
+
+    // Node (Exhaust Fan Outlet Node) 
+
+    Node exhaustFanOutletNode(m);
+
+    m.connect(mo,this->outletPort(),exhaustFanOutletNode,exhaustFanOutletNode.inletPort());
+
+    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+    return true;
   }
 
   boost::optional<Schedule> FanZoneExhaust_Impl::availabilitySchedule() const {
@@ -127,14 +187,16 @@ namespace detail {
     return getDouble(OS_Fan_ZoneExhaustFields::MaximumFlowRate,true);
   }
 
-  boost::optional<Connection> FanZoneExhaust_Impl::airInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Fan_ZoneExhaustFields::AirInletNodeName);
+  unsigned FanZoneExhaust_Impl::inletPort()
+  {
+    return OS_Fan_ZoneExhaustFields::AirInletNodeName;
   }
 
-  boost::optional<Connection> FanZoneExhaust_Impl::airOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Fan_ZoneExhaustFields::AirOutletNodeName);
+  unsigned FanZoneExhaust_Impl::outletPort()
+  {
+    return OS_Fan_ZoneExhaustFields::AirOutletNodeName;
   }
-
+  
   std::string FanZoneExhaust_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Fan_ZoneExhaustFields::EndUseSubcategory,true);
     OS_ASSERT(value);
@@ -199,40 +261,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool FanZoneExhaust_Impl::setAirInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Fan_ZoneExhaustFields::AirInletNodeName, connection.get().handle());
-    }
-    else {
-      resetAirInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void FanZoneExhaust_Impl::resetAirInletNode() {
-    bool result = setString(OS_Fan_ZoneExhaustFields::AirInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool FanZoneExhaust_Impl::setAirOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Fan_ZoneExhaustFields::AirOutletNodeName, connection.get().handle());
-    }
-    else {
-      resetAirOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void FanZoneExhaust_Impl::resetAirOutletNode() {
-    bool result = setString(OS_Fan_ZoneExhaustFields::AirOutletNodeName, "");
-    OS_ASSERT(result);
-  }
-
   void FanZoneExhaust_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Fan_ZoneExhaustFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
@@ -289,16 +317,10 @@ FanZoneExhaust::FanZoneExhaust(const Model& model)
 {
   OS_ASSERT(getImpl<detail::FanZoneExhaust_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setFanEfficiency();
-  OS_ASSERT(ok);
-  // setPressureRise();
-  // setEndUseSubcategory();
-  // ok = setSystemAvailabilityManagerCouplingMode();
-  OS_ASSERT(ok);
+  setFanEfficiency(0.60);
+  setPressureRise(0);
+  setEndUseSubcategory("General");
+  setSystemAvailabilityManagerCouplingMode("Decoupled");
 }
 
 IddObjectType FanZoneExhaust::iddObjectType() {
@@ -324,14 +346,6 @@ double FanZoneExhaust::pressureRise() const {
 
 boost::optional<double> FanZoneExhaust::maximumFlowRate() const {
   return getImpl<detail::FanZoneExhaust_Impl>()->maximumFlowRate();
-}
-
-boost::optional<Connection> FanZoneExhaust::airInletNode() const {
-  return getImpl<detail::FanZoneExhaust_Impl>()->airInletNode();
-}
-
-boost::optional<Connection> FanZoneExhaust::airOutletNode() const {
-  return getImpl<detail::FanZoneExhaust_Impl>()->airOutletNode();
 }
 
 std::string FanZoneExhaust::endUseSubcategory() const {
@@ -376,22 +390,6 @@ bool FanZoneExhaust::setMaximumFlowRate(double maximumFlowRate) {
 
 void FanZoneExhaust::resetMaximumFlowRate() {
   getImpl<detail::FanZoneExhaust_Impl>()->resetMaximumFlowRate();
-}
-
-bool FanZoneExhaust::setAirInletNode(const Connection& connection) {
-  return getImpl<detail::FanZoneExhaust_Impl>()->setAirInletNode(connection);
-}
-
-void FanZoneExhaust::resetAirInletNode() {
-  getImpl<detail::FanZoneExhaust_Impl>()->resetAirInletNode();
-}
-
-bool FanZoneExhaust::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::FanZoneExhaust_Impl>()->setAirOutletNode(connection);
-}
-
-void FanZoneExhaust::resetAirOutletNode() {
-  getImpl<detail::FanZoneExhaust_Impl>()->resetAirOutletNode();
 }
 
 void FanZoneExhaust::setEndUseSubcategory(std::string endUseSubcategory) {

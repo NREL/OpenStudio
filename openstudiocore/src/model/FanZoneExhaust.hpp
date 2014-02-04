@@ -27,12 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
-class Connection;
-class Connection;
-class Schedule;
-class Schedule;
 class Schedule;
 
 namespace detail {
@@ -56,11 +50,10 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> systemAvailabilityManagerCouplingModeValues();
-
+  
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
   double fanEfficiency() const;
@@ -69,30 +62,20 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   boost::optional<double> maximumFlowRate() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airOutletNode() const;
-
   std::string endUseSubcategory() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> flowFractionSchedule() const;
 
   std::string systemAvailabilityManagerCouplingMode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> minimumZoneTemperatureLimitSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> balancedExhaustFractionSchedule() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
@@ -105,31 +88,18 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   void resetMaximumFlowRate();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirInletNode(const Connection& connection);
-
-  void resetAirInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  void resetAirOutletNode();
-
   void setEndUseSubcategory(std::string endUseSubcategory);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setFlowFractionSchedule(Schedule& schedule);
 
   void resetFlowFractionSchedule();
 
   bool setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
 
   void resetMinimumZoneTemperatureLimitSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setBalancedExhaustFractionSchedule(Schedule& schedule);
 
   void resetBalancedExhaustFractionSchedule();
