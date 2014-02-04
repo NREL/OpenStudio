@@ -216,6 +216,30 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Overloaded version of addBranchForZone() **/
   bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
 
+  /** Overloaded version of addBranchForZone().
+    * This version will place the new branch between splitter and mixer.
+    * The splitter and mixer pair must be part of this AirLoopHVAC object, they can 
+    * be ZoneHVACZoneSpliiter/Mixer or AirLoopHVACSupply/Return Plenum. **/
+  bool addBranchForZone(ThermalZone & thermalZone, 
+                        Splitter & splitter,
+                        Mixer & mixer,
+                        StraightComponent & airTerminal);
+
+  /** Overloaded version of addBranchForZone() **/
+  bool addBranchForZone(ThermalZone & thermalZone, 
+                        Splitter & splitter,
+                        Mixer & mixer);
+
+  /** Move thermalZone from current splitter to newSplitter
+   *  thermalZone and newSplitter must be part of this AirLoopHVAC
+   **/
+  bool moveBranchForZone(ThermalZone & thermalZone,Splitter & newSplitter);
+
+  /** Move thermalZone from current mixer to newMixer
+   *  thermalZone and newMixer must be part of this AirLoopHVAC
+   **/
+  bool moveBranchForZone(ThermalZone & thermalZone,Mixer & newMixer);
+
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
    *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,
    *  can be an air terminal, AirLoopHVACSupplyPlenum, or airLoopHVACReturnPlenum.

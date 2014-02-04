@@ -495,9 +495,16 @@ namespace detail {
   {
     std::vector<ModelObject> visited;
     visited.push_back(inletComp);
-
     std::vector<ModelObject> allPaths;
-    findDemandModelObjects(outletComp,visited,allPaths);
+
+    if( inletComp == outletComp )
+    {
+      allPaths.push_back(inletComp);
+    }
+    else
+    {
+      findDemandModelObjects(outletComp,visited,allPaths);
+    }
 
     // Filter modelObjects for type
     std::vector<ModelObject> reducedModelObjects;

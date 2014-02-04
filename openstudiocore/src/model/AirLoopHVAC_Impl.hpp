@@ -25,6 +25,7 @@
 namespace openstudio {
 namespace model {
 
+class AirLoopHVAC;
 class Node;
 class AirLoopHVACOutdoorAirSystem;
 class AirLoopHVACZoneSplitter;
@@ -109,9 +110,6 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   AirLoopHVACZoneSplitter zoneSplitter();
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, 
-                        boost::optional<StraightComponent> optAirTerminal);
-
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
   virtual std::vector<openstudio::IdfObject> remove();
@@ -129,6 +127,24 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
   bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+
+  bool addBranchForZone(ThermalZone & thermalZone, 
+                        Splitter & splitter,
+                        Mixer & mixer,
+                        StraightComponent & airTerminal);
+
+  bool addBranchForZone(ThermalZone & thermalZone, 
+                        Splitter & splitter,
+                        Mixer & mixer);
+
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
+                            boost::optional<StraightComponent> optAirTerminal);
+
+  bool moveBranchForZone(ThermalZone & thermalZone,
+                         Splitter & newSplitter);
+
+  bool moveBranchForZone(ThermalZone & thermalZone,
+                         Mixer & newMixer);
 
   bool addBranchForHVACComponent(HVACComponent airTerminal);
 
@@ -148,18 +164,19 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum);
 
+  static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
+                                   AirLoopHVAC & airLoopHVAC,
+                                   Splitter & splitter,
+                                   Mixer & mixer,
+                                   boost::optional<StraightComponent> & optAirTerminal);
+
   static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
 
-  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
+  static boost::optional<StraightComponent> terminalForLastBranch(Mixer & mixer);
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
   static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
-
-  static bool addBranchForZone(ThermalZone & thermalZone, 
-                               boost::optional<StraightComponent> & optAirTerminal,
-                               Splitter & splitter,
-                               Mixer & mixer);
   private:
 
   AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;

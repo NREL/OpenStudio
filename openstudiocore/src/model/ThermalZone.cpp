@@ -1656,7 +1656,7 @@ namespace detail {
 
       if( inletObj && outletObj )
       {
-        if( inletObj->optionalCast<Splitter>() && outletObj->optionalCast<Mixer>() )
+        if( (! inletObj->optionalCast<ThermalZone>()) && outletObj->optionalCast<Mixer>() )
         {
           Node newNode(_model);
           ThermalZone thisobj = getObject<ThermalZone>();

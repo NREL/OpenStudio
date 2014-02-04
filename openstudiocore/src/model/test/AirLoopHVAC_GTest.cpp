@@ -182,38 +182,22 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForPlenums)
   model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
 
   model::AirLoopHVACSupplyPlenum supplyPlenum(model);
-  model::AirLoopHVACReturnPlenum returnPlenum(model);
-  bool result = airLoopHVAC.addBranchForPlenums(supplyPlenum,returnPlenum);
+  bool result = airLoopHVAC.addBranchForHVACComponent(supplyPlenum);
   EXPECT_TRUE(result);
+  EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
 
-  EXPECT_EQ(9u,airLoopHVAC.demandComponents().size());
+  model::AirLoopHVACReturnPlenum returnPlenum(model);
+  result = airLoopHVAC.addBranchForHVACComponent(returnPlenum);
+  EXPECT_TRUE(result);
+  EXPECT_EQ(10u,airLoopHVAC.demandComponents().size());
 
   model::ThermalZone zone1(model);
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone1));
-  EXPECT_EQ(11u,airLoopHVAC.demandComponents().size());
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone1,supplyPlenum,returnPlenum));
+  EXPECT_EQ(13u,airLoopHVAC.demandComponents().size());
 
   model::ThermalZone zone2(model);
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone2));
-  EXPECT_EQ(14u,airLoopHVAC.demandComponents().size());
-
-  model::AirLoopHVACSupplyPlenum supplyPlenum2(model);
-  model::AirLoopHVACReturnPlenum returnPlenum2(model);
-  result = airLoopHVAC.addBranchForPlenums(supplyPlenum2,returnPlenum2);
-  EXPECT_TRUE(result);
-  EXPECT_EQ(19u,airLoopHVAC.demandComponents().size());
-
-  model::ThermalZone zone3(model);
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone3));
-  EXPECT_EQ(22u,airLoopHVAC.demandComponents().size());
-
-  EXPECT_EQ(2u,returnPlenum.inletModelObjects().size());
-  EXPECT_EQ(2u,supplyPlenum.outletModelObjects().size());
-
-  returnPlenum.remove();
-  EXPECT_EQ(20u,airLoopHVAC.demandComponents().size());
-
-  supplyPlenum.remove();
-  EXPECT_EQ(18u,airLoopHVAC.demandComponents().size());
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone2,supplyPlenum,returnPlenum));
+  EXPECT_EQ(16u,airLoopHVAC.demandComponents().size());
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
