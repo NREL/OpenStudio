@@ -545,6 +545,11 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   */
   std::vector<Point3d> floorPrint() const;
 
+  /** Return true if the ThermalZone is a plenum, otherwise returns false.
+  */
+  bool isPlenum() const;
+
+
   //@}
  protected:
 

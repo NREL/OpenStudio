@@ -906,6 +906,32 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  SpaceType Model_Impl::plenumSpaceType() const
+  {
+    std::string plenumSpaceTypeName("Plenum Space Type");
+
+    std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
+
+    for( std::vector<SpaceType>::iterator it = spaceTypes.begin();
+         it != spaceTypes.end();
+         ++it )
+    {
+      if( boost::optional<std::string> name = it->name() )
+      {
+        if( istringEqual(name.get(),plenumSpaceTypeName) )
+        {
+          return *it;
+        }
+      }
+    }
+
+    SpaceType spaceType(model());
+
+    spaceType.setName(plenumSpaceTypeName);
+
+    return spaceType;
+  }
+
   /// get the sql file
   boost::optional<openstudio::SqlFile> Model_Impl::sqlFile() const
   {
@@ -1256,6 +1282,11 @@ boost::optional<WeatherFile> Model::weatherFile() const
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+SpaceType Model::plenumSpaceType() const
+{
+  return getImpl<detail::Model_Impl>()->plenumSpaceType();
 }
 
 openstudio::OptionalSqlFile Model::sqlFile() const

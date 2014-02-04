@@ -408,7 +408,13 @@ namespace detail {
   }
 
   bool Space_Impl::partofTotalFloorArea() const {
-    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,true);
+    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,false);
+    if (!value){
+      if (this->isPlenum()){
+        return false;
+      }
+      value = getString(OS_SpaceFields::PartofTotalFloorArea,true);
+    }
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
@@ -476,9 +482,13 @@ namespace detail {
   {
     boost::optional<SpaceType> result = getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_SpaceFields::SpaceTypeName);
     if (!result){
-      boost::optional<Building> building = this->model().building();
-      if (building){
-        result = building->spaceType();
+      if (this->isPlenum()){
+        result = this->model().plenumSpaceType();
+      }else{
+        boost::optional<Building> building = this->model().building();
+        if (building){
+          result = building->spaceType();
+        }
       }
     }
     return result;
@@ -2800,6 +2810,15 @@ namespace detail {
     return result;
   }
 
+  bool Space_Impl::isPlenum() const
+  {
+    bool result = false;
+    boost::optional<ThermalZone> thermalZone = this->thermalZone();
+    if (thermalZone){
+      result = thermalZone->isPlenum();
+    }
+    return result;
+  }
   
   // helper function to get a boost polygon point from a Point3d
   boost::tuple<double, double> Space_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const
@@ -3328,6 +3347,11 @@ std::vector <Surface> Space::findSurfaces(boost::optional<double> minDegreesFrom
 std::vector<Point3d> Space::floorPrint() const
 {
   return getImpl<detail::Space_Impl>()->floorPrint();
+}
+
+bool Space::isPlenum() const
+{
+  return getImpl<detail::Space_Impl>()->isPlenum();
 }
 
 /// @cond
