@@ -18,6 +18,7 @@
  **********************************************************************/
 
 #include "OSItem.hpp"
+#include "OSDropZone.hpp"
 #include "VRFGraphicsItems.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../shared_gui_components/Buttons.hpp"
@@ -30,6 +31,8 @@
 #include <QLabel>
 
 namespace openstudio {
+
+const int VRFSystemView::margin = 10;
 
 VRFView::VRFView()
   : QWidget()
@@ -64,8 +67,44 @@ VRFView::VRFView()
 }
 
 VRFSystemView::VRFSystemView()
-  : m_mouseDown(false)
+  : m_mouseDown(false),
+    m_width(0),
+    m_height(0)
 {
+  terminalDropZone = new OSDropZoneItem();
+  terminalDropZone->setParentItem(this);
+
+  zoneDropZone = new OSDropZoneItem();
+  zoneDropZone->setParentItem(this);
+
+  adjustLayout();
+}
+
+void VRFSystemView::adjustLayout()
+{
+  prepareGeometryChange();
+
+  double x = margin;
+  double y = margin;
+
+  terminalDropZone->setPos(x,y);
+
+  x = x + terminalDropZone->boundingRect().width() + margin;
+  zoneDropZone->setPos(x,y);
+
+  x = x + zoneDropZone->boundingRect().width() + margin;
+  y = y + zoneDropZone->boundingRect().height() + margin;
+
+  for(std::vector<VRFTerminalView *>::iterator it = m_terminalViews.begin();
+      it != m_terminalViews.end();
+      ++it)
+  {
+    (*it)->setPos(margin,y); 
+    y = y + (*it)->boundingRect().height() + margin;
+  }
+
+  m_width = x;
+  m_height = y;
 }
 
 void VRFSystemView::setId(const OSItemId & id)
@@ -75,7 +114,7 @@ void VRFSystemView::setId(const OSItemId & id)
 
 QRectF VRFSystemView::boundingRect() const
 {
-  return QRectF(0,0,100,100);
+  return QRectF(0,0,m_width,m_height);
 }
 
 void VRFSystemView::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -115,6 +154,39 @@ void VRFSystemView::paint( QPainter *painter,
   QRectF _boudingRect = boundingRect();
 
   painter->drawRoundedRect(_boudingRect.x(),_boudingRect.y() + 5,_boudingRect.width(),_boudingRect.height() - 10,5,5);
+}
+
+void VRFSystemView::addVRFTerminalView(VRFTerminalView * view)
+{
+  m_terminalViews.push_back(view);
+  view->setParentItem(this);
+  adjustLayout();
+}
+
+void VRFSystemView::removeAllVRFTerminalViews()
+{
+  m_terminalViews.clear();
+  adjustLayout();
+}
+
+VRFTerminalView::VRFTerminalView()
+{
+}
+
+QRectF VRFTerminalView::boundingRect() const
+{
+  return QRectF(0,0,210,50);
+}
+
+void VRFTerminalView::paint( QPainter *painter, 
+                           const QStyleOptionGraphicsItem *option, 
+                           QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+
+  painter->setPen(QPen(Qt::black,1,Qt::SolidLine, Qt::RoundCap));
+  painter->drawRect(boundingRect());
 }
 
 VRFSystemMiniView::VRFSystemMiniView()

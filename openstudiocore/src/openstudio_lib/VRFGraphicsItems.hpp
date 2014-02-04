@@ -32,6 +32,9 @@ class QLabel;
 
 namespace openstudio {
 
+class OSDropZoneItem;
+class VRFTerminalView;
+
 class VRFView : public QWidget
 {
   Q_OBJECT;
@@ -106,6 +109,17 @@ class VRFSystemView : public QGraphicsObject
 
   void setId(const OSItemId & id);
 
+  OSDropZoneItem * terminalDropZone;
+
+  OSDropZoneItem * zoneDropZone;
+
+  void adjustLayout();
+
+  static const int margin;
+
+  void addVRFTerminalView(VRFTerminalView * view);
+  void removeAllVRFTerminalViews();
+
   signals:
 
   void inspectClicked(const OSItemId & id);
@@ -117,14 +131,38 @@ class VRFSystemView : public QGraphicsObject
               QWidget *widget = 0 );
 
   void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
   void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-
   bool m_mouseDown;
 
   private:
 
+  double m_width;
+  double m_height;
+
+  std::vector<VRFTerminalView *> m_terminalViews;
+
   OSItemId m_id;
+};
+
+class VRFTerminalView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  VRFTerminalView();
+
+  virtual ~VRFTerminalView() {}
+
+  QRectF boundingRect() const;
+
+  OSDropZoneItem * zoneDropZone;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
 };
 
 class VRFSystemDropZoneView : public QGraphicsObject

@@ -22,11 +22,14 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
+#include "OSDropZone.hpp"
 #include "MainWindow.hpp"
 #include "MainRightColumnController.hpp"
 #include "../model/Model.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow_Impl.hpp"
+#include "../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 #include <QGraphicsScene>
@@ -89,6 +92,7 @@ void VRFController::refreshNow()
   if( m_detailView )
   {
     m_detailView->setId(OSItemId());
+    m_detailView->removeAllVRFTerminalViews();
 
     if( m_currentSystem )
     {
@@ -98,6 +102,39 @@ void VRFController::refreshNow()
       bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
                       this,SLOT(inspectOSItem(const OSItemId &)));
       OS_ASSERT(bingo);
+
+      std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = m_currentSystem->terminals();
+      for(std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>::iterator it = terminals.begin();
+          it != terminals.end();
+          ++it)
+      {
+        m_detailView->addVRFTerminalView(new VRFTerminalView());
+      }
+
+      bingo = connect(m_detailView->zoneDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onVRFSystemViewDrop(const OSItemId &)));
+      OS_ASSERT(bingo);
+    }
+  }
+}
+
+void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
+{
+  OS_ASSERT(m_currentSystem);
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  if( doc->fromComponentLibrary(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+    OS_ASSERT(mo); 
+
+    if( boost::optional<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminal 
+          = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() )
+    {
+      model::ZoneHVACTerminalUnitVariableRefrigerantFlow terminalClone = 
+        terminal->clone(m_currentSystem->model()).cast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+      m_currentSystem->addTerminal(terminalClone);
+
+      refresh();
     }
   }
 }

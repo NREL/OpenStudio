@@ -66,6 +66,8 @@ class VRFController : public QObject
 
   void inspectOSItem(const OSItemId & itemid);
 
+  void onVRFSystemViewDrop(const OSItemId & itemid);
+
   private:
 
   QPointer<VRFView> m_vrfView;
