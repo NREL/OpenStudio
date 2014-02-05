@@ -73,8 +73,14 @@ VRFView::VRFView()
 VRFSystemView::VRFSystemView()
   : m_mouseDown(false),
     m_width(0),
-    m_height(0)
+    m_height(0),
+    m_vrfPixmap(":images/vrf_outdoor.png")
 {
+  vrfIconButton = new ButtonItem(m_vrfPixmap,m_vrfPixmap,m_vrfPixmap);
+  vrfIconButton->setParentItem(this);
+  bool bingo = connect(vrfIconButton,SIGNAL(mouseClicked()),this,SLOT(onVRFIconClicked()));
+  OS_ASSERT(bingo);
+
   terminalDropZone = new OSDropZoneItem();
   terminalDropZone->setParentItem(this);
   terminalDropZone->setSize(terminalDropZoneWidth,dropZoneHeight);
@@ -95,7 +101,11 @@ void VRFSystemView::adjustLayout()
   double x = margin;
   double y = margin;
 
+  vrfIconButton->setPos(x,y + ((VRFSystemView::dropZoneHeight - vrfIconButton->boundingRect().height()) / 2.0));
+  x = x + vrfIconButton->boundingRect().width() + margin;
+
   terminalDropZone->setPos(x,y);
+  double terminalX = x;
 
   x = x + terminalDropZone->boundingRect().width() + margin;
   zoneDropZone->setPos(x,y);
@@ -107,7 +117,7 @@ void VRFSystemView::adjustLayout()
       it != m_terminalViews.end();
       ++it)
   {
-    (*it)->setPos(margin,y); 
+    (*it)->setPos(terminalX,y); 
     y = y + (*it)->boundingRect().height() + margin;
   }
 
@@ -128,6 +138,11 @@ void VRFSystemView::setId(const OSItemId & id)
 QRectF VRFSystemView::boundingRect() const
 {
   return QRectF(0,0,m_width,m_height);
+}
+
+void VRFSystemView::onVRFIconClicked()
+{
+  emit inspectClicked(m_id);
 }
 
 void VRFSystemView::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -165,8 +180,28 @@ void VRFSystemView::paint( QPainter *painter,
   painter->setPen(Qt::NoPen);
 
   QRectF _boudingRect = boundingRect();
-
   painter->drawRoundedRect(_boudingRect.x(),_boudingRect.y() + 5,_boudingRect.width(),_boudingRect.height() - 10,5,5);
+
+  if( ! m_terminalViews.empty() )
+  {
+    painter->setPen(QPen(Qt::black,1,Qt::SolidLine, Qt::RoundCap));
+    double line1X = vrfIconButton->x() + vrfIconButton->boundingRect().width() / 2.0;
+    double line1Y1 = vrfIconButton->y() + vrfIconButton->boundingRect().height() / 2.0;
+    QGraphicsObject * lastView = m_terminalViews.back();
+    double line1Y2 = lastView->y() + lastView->boundingRect().height() / 2.0;
+    painter->drawLine(line1X,line1Y1,
+                      line1X,line1Y2);
+
+    for(std::vector<QGraphicsObject *>::iterator it = m_terminalViews.begin();
+        it != m_terminalViews.end();
+        ++it)
+    {
+      double line2Y1 = (*it)->y() + (*it)->boundingRect().height() / 2.0;
+      double line2X2 = (*it)->x();
+      painter->drawLine(line1X,line2Y1,
+                        line2X2,line2Y1);
+    }
+  }
 }
 
 void VRFSystemView::addVRFTerminalView(VRFTerminalView * view)
@@ -196,6 +231,14 @@ VRFTerminalView::VRFTerminalView()
   bool bingo;
   double x = VRFSystemView::margin;
 
+  removeButtonItem = new RemoveButtonItem();
+  removeButtonItem->setParentItem(this);
+  removeButtonItem->setPos(x,(VRFSystemView::terminalViewHeight - removeButtonItem->boundingRect().height()) / 2.0);
+  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveTerminalClicked()));
+  OS_ASSERT(bingo);
+
+  x = x + removeButtonItem->boundingRect().width() + VRFSystemView::margin;
+
   terminalIconButton = new ButtonItem(m_terminalPixmap,m_terminalPixmap,m_terminalPixmap);
   terminalIconButton->setParentItem(this);
   terminalIconButton->setPos(x,(VRFSystemView::terminalViewHeight - terminalIconButton->boundingRect().height()) / 2.0);
@@ -203,14 +246,6 @@ VRFTerminalView::VRFTerminalView()
   OS_ASSERT(bingo);
 
   x = x + terminalIconButton->boundingRect().width() + VRFSystemView::margin;
-
-  removeButtonItem = new RemoveButtonItem();
-  removeButtonItem->setParentItem(this);
-  removeButtonItem->setPos(x,terminalIconButton->y());
-  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveTerminalClicked()));
-  OS_ASSERT(bingo);
-
-  x = x + removeButtonItem->boundingRect().width() + VRFSystemView::margin;
 
   zoneDropZone = new VRFThermalZoneDropZoneView();
   zoneDropZone->setParentItem(this);
@@ -222,7 +257,7 @@ VRFTerminalView::VRFTerminalView()
 
   removeZoneButtonItem = new RemoveButtonItem();
   removeZoneButtonItem->setParentItem(this);
-  removeZoneButtonItem->setPos(x,zoneDropZone->y());
+  removeZoneButtonItem->setPos(zoneDropZone->x() + zoneDropZone->boundingRect().width() - 10,zoneDropZone->y() - 10);
   bingo = connect(removeZoneButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveZoneClicked()));
   OS_ASSERT(bingo);
 }
@@ -274,11 +309,6 @@ void VRFTerminalView::paint( QPainter *painter,
 
   painter->setPen(QPen(Qt::black,1,Qt::SolidLine, Qt::RoundCap));
   painter->drawRect(boundingRect());
-
-  QRectF t_terminalPixmapRect = terminalPixmapRect();
-  painter->drawPixmap(t_terminalPixmapRect.x(),
-                      t_terminalPixmapRect.y(),
-                      m_terminalPixmap);
 }
 
 VRFThermalZoneDropZoneView::VRFThermalZoneDropZoneView()

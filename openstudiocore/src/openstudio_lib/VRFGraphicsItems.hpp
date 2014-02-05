@@ -115,6 +115,8 @@ class VRFSystemView : public QGraphicsObject
 
   OSDropZoneItem * zoneDropZone;
 
+  ButtonItem * vrfIconButton;
+
   void adjustLayout();
 
   static const int margin;
@@ -140,6 +142,10 @@ class VRFSystemView : public QGraphicsObject
   void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
   bool m_mouseDown;
 
+  private slots:
+
+  void onVRFIconClicked();
+
   private:
 
   double m_width;
@@ -148,6 +154,7 @@ class VRFSystemView : public QGraphicsObject
   std::vector<QGraphicsObject *> m_terminalViews;
 
   OSItemId m_id;
+  QPixmap m_vrfPixmap;
 };
 
 class VRFTerminalView : public QGraphicsObject
