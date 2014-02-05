@@ -971,7 +971,6 @@ SET( ${target_name}_moc
   Facility_Impl.hpp
   FanConstantVolume_Impl.hpp
   FanVariableVolume_Impl.hpp
-  FanZoneExhaust_Impl.hpp  
   FFactorGroundFloorConstruction_Impl.hpp
   Gas_Impl.hpp
   GasEquipment_Impl.hpp

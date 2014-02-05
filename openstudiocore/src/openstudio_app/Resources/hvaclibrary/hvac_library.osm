@@ -1,7 +1,7 @@
 
 OS:Version,
-  {17cd93d1-c4e9-47f6-b89a-1dd22016b52e}, !- Handle
-  1.2.0;                                  !- Version Identifier
+  {ee47be3f-b2c1-4def-99ef-7382a4f31c01}, !- Handle
+  1.2.2;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -2579,7 +2579,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
 
 OS:Refrigeration:Condenser:AirCooled,
   {825bada4-344f-4a1b-8e72-ce40833c0e9e}, !- Handle
-  Air Cooled Refrigeration Condenser,   !- Name
+  Air Cooled Refrigeration Condenser,     !- Name
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Rated Effective Total Heat Rejection Rate Curve Name
   0,                                      !- Rated Subcooling Temperature Difference {deltaC}
   VariableSpeed,                          !- Condenser Fan Speed Control Type
@@ -2587,9 +2587,9 @@ OS:Refrigeration:Condenser:AirCooled,
   0.25,                                   !- Minimum Fan Air Flow Ratio {dimensionless}
   ,                                       !- Air Inlet Zone Name
   ,                                       !- End-Use Subcategory
-  ,                                       !- Condenser Refrigerant Operating Charge Inventory
-  ,                                       !- Condensate Receiver Refrigerant Inventory
-  ;                                       !- Condensate Piping Refrigerant Inventory
+  ,                                       !- Condenser Refrigerant Operating Charge Inventory {kg}
+  ,                                       !- Condensate Receiver Refrigerant Inventory {kg}
+  ;                                       !- Condensate Piping Refrigerant Inventory {kg}
 
 OS:Curve:Linear,
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Handle
@@ -2598,16 +2598,14 @@ OS:Curve:Linear,
   22000,                                  !- Coefficient2 x
   5,                                      !- Minimum Value of x {BasedOnField A2}
   22.2,                                   !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Value of x
-  ,                                       !- Maximum Value of x
-  ,                                       !- Minimum Curve Output
-  ,                                       !- Maximum Curve Output
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
 OS:Refrigeration:Compressor,
   {56efd5d3-167b-4b77-b017-7704623596e1}, !- Handle
-  Refrigeration Compressor,             !- Name
+  Refrigeration Compressor,               !- Name
   {341b9403-ca2b-4895-a88f-57cf24eebda4}, !- Refrigeration Compressor Power Curve Name
   {fa8d1a11-1610-42d7-87bf-b9d29315c412}, !- Refrigeration Compressor Capacity Curve Name
   ,                                       !- Rated Superheat {deltaC}
@@ -2682,7 +2680,7 @@ OS:Schedule:Day,
 
 OS:Refrigeration:Case,
   {f2b4154e-97d8-492a-b1d1-1f2e7f9c1d34}, !- Handle
-  Refrigeration Case,                   !- Name
+  Refrigeration Case,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Zone Name
   24,                                     !- Rated Ambient Temperature {C}
@@ -2716,7 +2714,7 @@ OS:Refrigeration:Case,
   ,                                       !- Refrigerated Case Restocking Schedule Name
   ,                                       !- Case Credit Fraction Schedule Name
   -5.56,                                  !- Design Evaporator Temperature or Brine Inlet Temperature {C}
-  ;                                       !- Average Refrigerant Charge Inventory
+  ;                                       !- Average Refrigerant Charge Inventory {kg/m}
 
 OS:Curve:Cubic,
   {012a63c6-2590-4f3d-a487-c600bf72ad75}, !- Handle
@@ -2727,23 +2725,21 @@ OS:Curve:Cubic,
   1.23732e-06,                            !- Coefficient4 x**3
   -35,                                    !- Minimum Value of x {BasedOnField A2}
   20,                                     !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Value of x
-  ,                                       !- Maximum Value of x
-  ,                                       !- Minimum Curve Output
-  ,                                       !- Maximum Curve Output
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
 OS:ScheduleTypeLimits,
   {b753221d-2424-45d9-a74b-31494bf508ef}, !- Handle
-  Fractional,                             !- Name
+  Fractional 1,                           !- Name
   0,                                      !- Lower Limit Value {BasedOnField A4}
   1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous;                             !- Numeric Type
 
 OS:Refrigeration:System,
   {c5203f94-88c4-413e-af5c-938dee4249e2}, !- Handle
-  Refrigeration System,                 !- Name
+  Refrigeration System,                   !- Name
   {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Refrigerated CaseAndWalkInList Name
   ,                                       !- Refrigeration TransferLoad List Name
   ,                                       !- Refrigeration Condenser Name
@@ -2753,7 +2749,7 @@ OS:Refrigeration:System,
   ConstantSuctionTemperature,             !- Suction Temperature Control Type
   ,                                       !- Mechanical Subcooler Name
   ,                                       !- Liquid Suction Heat Exchanger Subcooler Name
-  ,                                       !- Sum UA Suction Piping
+  ,                                       !- Sum UA Suction Piping {W/K}
   ,                                       !- Suction Piping Zone Name
   ,                                       !- End-Use Subcategory
   ,                                       !- Intercooler Type
@@ -2766,11 +2762,11 @@ OS:ModelObjectList,
 
 OS:ModelObjectList,
   {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- Handle
-  Refrigeration System Compressor List; !- Name
+  Refrigeration System Compressor List;   !- Name
 
 OS:Refrigeration:Subcooler:Mechanical,
   {95085174-fabf-4659-a947-6ec9fc65c977}, !- Handle
-  Refrigeration Subcooler Mechanical,   !- Name
+  Refrigeration Subcooler Mechanical,     !- Name
   ,                                       !- Capacity-Providing System
   10;                                     !- Outlet Control Temperature {C}
 
@@ -2783,13 +2779,13 @@ OS:Refrigeration:Subcooler:LiquidSuction,
 
 OS:Schedule:Ruleset,
   {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Handle
-  Always Off Schedule,                     !- Name
+  Always Off Schedule,                    !- Name
   {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
   {cf531912-42db-457b-983b-bd936ad4f545}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {cf531912-42db-457b-983b-bd936ad4f545}, !- Handle
-  Always Off Schedule Day,                         !- Name
+  Always Off Schedule Day,                !- Name
   {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2798,7 +2794,7 @@ OS:Schedule:Day,
 
 OS:Refrigeration:WalkIn,
   {ee3d06e5-e4a3-4b2d-b500-c9622fffe03c}, !- Handle
-  Refrigeration Walk In,                !- Name
+  Refrigeration Walk In,                  !- Name
   ,                                       !- Availability Schedule Name
   4690,                                   !- Rated Coil Cooling Capacity {W}
   -2.22,                                  !- Operating Temperature {C}
@@ -2846,7 +2842,7 @@ OS:Refrigeration:WalkIn:ZoneBoundary,
 
 OS:CoolingTower:VariableSpeed,
   {2e6faa4b-6a62-40f1-b39f-d0100fe47857}, !- Handle
-  Cooling Tower Variable Speed,         !- Name
+  Cooling Tower Variable Speed,           !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   CoolToolsCrossFlow,                     !- Model Type
@@ -2885,11 +2881,11 @@ OS:Curve:Cubic,
   -0.0838,                                !- Coefficient3 x**2
   1.0419,                                 !- Coefficient4 x**3
   0.15,                                   !- Minimum Value of x {BasedOnField A2}
-  1;  
+  1;                                      !- Maximum Value of x {BasedOnField A2}
 
 OS:CoolingTower:VariableSpeed,
   {c297d8fd-cf34-420a-bd55-ea44c46983f3}, !- Handle
-  Cooling Tower Cool Tools,         !- Name
+  Cooling Tower Cool Tools,               !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   CoolToolsUserDefined,                   !- Model Type
@@ -2979,7 +2975,7 @@ OS:CoolingTowerPerformance:CoolTools,
 
 OS:CoolingTower:VariableSpeed,
   {3bef5e15-fbeb-44fb-9c20-dd99b0c36dab}, !- Handle
-  Cooling Tower York Calc,         !- Name
+  Cooling Tower York Calc,                !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   YorkCalcUserDefined,                    !- Model Type
@@ -3060,3 +3056,17 @@ OS:CoolingTowerPerformance:YorkCalc,
   8.56589904e-06,                         !- Coefficient 26
   -1.516821552e-06;                       !- Coefficient 27
 
+OS:Fan:ZoneExhaust,
+  {2d1f9bb9-ce2d-4f23-8f07-8b93615770b1}, !- Handle
+  Fan Zone Exhaust 1,                     !- Name
+  ,                                       !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  0,                                      !- Pressure Rise {Pa}
+  ,                                       !- Maximum Flow Rate {m3/s}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  General,                                !- End-Use Subcategory
+  ,                                       !- Flow Fraction Schedule Name
+  Decoupled,                              !- System Availability Manager Coupling Mode
+  ,
+  ;
