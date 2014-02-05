@@ -638,3 +638,48 @@ TEST_F(ModelFixture, Construction_NetArea_SubSurface) {
   EXPECT_DOUBLE_EQ(4*4.0, construction2.getNetArea());
   EXPECT_DOUBLE_EQ(4.0/100.0, surface.windowToWallRatio());
 }
+
+TEST_F(ModelFixture, Construction_EnsureUniqueLayers)
+{
+  Model model;
+
+  // Create some materials
+  StandardOpaqueMaterial exterior(model);
+  AirGap air(model);
+  StandardOpaqueMaterial interior1(model);
+  StandardOpaqueMaterial interior2(model);
+
+  OpaqueMaterialVector layers1;
+  layers1.push_back(exterior);
+  layers1.push_back(air);
+  layers1.push_back(interior1);
+
+  OpaqueMaterialVector layers2;
+  layers2.push_back(exterior);
+  layers2.push_back(air);
+  layers2.push_back(interior2);
+
+  EXPECT_EQ(4u, model.getModelObjects<Material>().size());
+
+  Construction construction1(layers1);
+  ASSERT_EQ(3u, construction1.layers().size());
+
+  Construction construction2(layers2);
+  ASSERT_EQ(3u, construction2.layers().size());
+
+  EXPECT_EQ(construction1.layers()[0].handle(), construction2.layers()[0].handle());
+  EXPECT_EQ(construction1.layers()[1].handle(), construction2.layers()[1].handle());
+  EXPECT_NE(construction1.layers()[2].handle(), construction2.layers()[2].handle());
+
+  construction1.ensureUniqueLayers();
+
+  EXPECT_EQ(6u, model.getModelObjects<Material>().size());
+
+  ASSERT_EQ(3u, construction1.layers().size());
+  ASSERT_EQ(3u, construction2.layers().size());
+
+  EXPECT_NE(construction1.layers()[0].handle(), construction2.layers()[0].handle());
+  EXPECT_NE(construction1.layers()[1].handle(), construction2.layers()[1].handle());
+  EXPECT_NE(construction1.layers()[2].handle(), construction2.layers()[2].handle());
+
+}
