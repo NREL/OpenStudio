@@ -1387,7 +1387,7 @@ namespace radiance {
 
   std::string cleanName(const std::string& name)
   {
-    std::string result = boost::algorithm::replace_all_regex_copy(name, boost::regex("\\.[ :]"),  std::string("_"));
+    std::string result = boost::algorithm::replace_all_regex_copy(name, boost::regex("[\\.\\s:]"),  std::string("_"));
     return result;
   }
 
