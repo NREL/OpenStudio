@@ -162,6 +162,8 @@ class OSDropZoneItem : public QGraphicsObject
 
   QRectF boundingRect() const;
 
+  void setSize(double width, double height);
+
   signals:
 
   void mouseClicked();
@@ -183,6 +185,9 @@ class OSDropZoneItem : public QGraphicsObject
   private:
 
   bool m_mouseDown;
+
+  double m_width;
+  double m_height;
 };
 
 } // openstudio

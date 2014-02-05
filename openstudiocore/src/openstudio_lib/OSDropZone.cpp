@@ -465,6 +465,8 @@ OSDropZoneItem::OSDropZoneItem()
 {
   setAcceptHoverEvents(true);
   setAcceptDrops(true);
+
+  setSize(100,50);
 }
 
 void OSDropZoneItem::dropEvent(QGraphicsSceneDragDropEvent *event)
@@ -481,7 +483,14 @@ void OSDropZoneItem::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 QRectF OSDropZoneItem::boundingRect() const
 {
-  return QRectF(0,0,100,50);
+  return QRectF(0,0,m_width,m_height);
+}
+
+void OSDropZoneItem::setSize(double width, double height)
+{
+  prepareGeometryChange();
+  m_width = width;
+  m_height = height;
 }
 
 void OSDropZoneItem::paint( QPainter *painter, 
@@ -490,7 +499,7 @@ void OSDropZoneItem::paint( QPainter *painter,
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setBrush(Qt::NoBrush);
-  painter->setPen(QPen(Qt::black,2,Qt::DashLine, Qt::RoundCap));
+  painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
 
   painter->drawRect(boundingRect());
 

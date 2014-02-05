@@ -77,22 +77,7 @@ RefrigerationController::RefrigerationController()
 
 RefrigerationController::~RefrigerationController()
 {
-  if( m_refrigerationView )
-  {
-    delete m_refrigerationView;
-  }
-
-  // This is for completeness, but will be taken care of when the scene is deleted.
-  if( m_refrigerationSystemGridView )
-  {
-    delete m_refrigerationSystemGridView;
-  }
-
-  // This is for completeness, but will be taken care of when the scene is deleted.
-  if( m_detailView )
-  {
-    delete m_detailView;
-  }
+  delete m_refrigerationView;
 }
 
 void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem)

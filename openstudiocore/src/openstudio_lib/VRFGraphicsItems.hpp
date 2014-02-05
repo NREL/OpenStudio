@@ -34,6 +34,7 @@ namespace openstudio {
 
 class OSDropZoneItem;
 class VRFTerminalView;
+class RemoveButtonItem;
 
 class VRFView : public QWidget
 {
@@ -116,6 +117,10 @@ class VRFSystemView : public QGraphicsObject
   void adjustLayout();
 
   static const int margin;
+  static const int terminalDropZoneWidth;
+  static const int zoneDropZoneWidth;
+  static const int dropZoneHeight;
+  static const int terminalViewHeight;
 
   void addVRFTerminalView(VRFTerminalView * view);
   void removeAllVRFTerminalViews();
@@ -158,11 +163,19 @@ class VRFTerminalView : public QGraphicsObject
 
   OSDropZoneItem * zoneDropZone;
 
+  RemoveButtonItem * removeButtonItem;
+
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget );
+
+  private:
+
+  QRectF terminalPixmapRect() const;
+
+  QPixmap m_terminalPixmap;
 };
 
 class VRFSystemDropZoneView : public QGraphicsObject

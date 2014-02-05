@@ -32,7 +32,11 @@
 
 namespace openstudio {
 
-const int VRFSystemView::margin = 10;
+const int VRFSystemView::margin = 20;
+const int VRFSystemView::terminalDropZoneWidth = 200;
+const int VRFSystemView::zoneDropZoneWidth = 300;
+const int VRFSystemView::dropZoneHeight = 150;
+const int VRFSystemView::terminalViewHeight = 100;
 
 VRFView::VRFView()
   : QWidget()
@@ -73,9 +77,11 @@ VRFSystemView::VRFSystemView()
 {
   terminalDropZone = new OSDropZoneItem();
   terminalDropZone->setParentItem(this);
+  terminalDropZone->setSize(terminalDropZoneWidth,dropZoneHeight);
 
   zoneDropZone = new OSDropZoneItem();
   zoneDropZone->setParentItem(this);
+  zoneDropZone->setSize(zoneDropZoneWidth,dropZoneHeight);
 
   adjustLayout();
 }
@@ -178,12 +184,25 @@ void VRFSystemView::removeAllVRFTerminalViews()
 }
 
 VRFTerminalView::VRFTerminalView()
+  : m_terminalPixmap(QPixmap(":images/vrf_unit.png"))
 {
+  removeButtonItem = new RemoveButtonItem();
+  removeButtonItem->setParentItem(this);
+  QRectF t_terminalPixmapRect = terminalPixmapRect();
+  removeButtonItem->setPos(t_terminalPixmapRect.x() + t_terminalPixmapRect.width(),t_terminalPixmapRect.y());
 }
 
 QRectF VRFTerminalView::boundingRect() const
 {
-  return QRectF(0,0,210,50);
+  return QRectF(0,0,
+                VRFSystemView::terminalDropZoneWidth + VRFSystemView::margin + VRFSystemView::zoneDropZoneWidth,
+                VRFSystemView::terminalViewHeight);
+}
+
+QRectF VRFTerminalView::terminalPixmapRect() const
+{
+  return QRectF(VRFSystemView::margin,(boundingRect().height() - m_terminalPixmap.height()) / 2.0,
+                m_terminalPixmap.width(),m_terminalPixmap.height());
 }
 
 void VRFTerminalView::paint( QPainter *painter, 
@@ -195,6 +214,11 @@ void VRFTerminalView::paint( QPainter *painter,
 
   painter->setPen(QPen(Qt::black,1,Qt::SolidLine, Qt::RoundCap));
   painter->drawRect(boundingRect());
+
+  QRectF t_terminalPixmapRect = terminalPixmapRect();
+  painter->drawPixmap(t_terminalPixmapRect.x(),
+                      t_terminalPixmapRect.y(),
+                      m_terminalPixmap);
 }
 
 VRFSystemMiniView::VRFSystemMiniView()
