@@ -155,8 +155,10 @@ void OSGridController::setHorizontalHeader()
     checkBox = new QCheckBox();
     m_horizontalHeaderBtnGrp->addButton(checkBox,m_horizontalHeaderBtnGrp->buttons().size());
     layout = new QHBoxLayout();
-    layout->addWidget(label); 
-    layout->addWidget(checkBox);
+    layout->setSpacing(20);
+    layout->setContentsMargins(20,20,20,20);
+    layout->addWidget(label,1,Qt::AlignVCenter | Qt::AlignHCenter); 
+    layout->addWidget(checkBox,0,Qt::AlignTop | Qt::AlignRight);
     widget = new QWidget();
     widget->setLayout(layout);
     m_horizontalHeader.push_back(widget);
@@ -171,159 +173,170 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(row));
   OS_ASSERT(m_baseConcepts.size() > static_cast<unsigned>(column));    
 
-  if(m_hasHorizontalHeader){
-    if(row == 0){
-      if(column == 0){
-        setHorizontalHeader();
-        //OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size()); TODO uncomment this later
-      }
-      return m_horizontalHeader.at(column);
-    } else {
-      --row; 
-    }
-  }
-
-  model::ModelObject mo = m_modelObjects[row];
-
-  QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
-
   QWidget * widget = 0;
 
-  if(QSharedPointer<CheckBoxConcept> checkBoxConcept = baseConcept.dynamicCast<CheckBoxConcept>()){
+  // Note: If there is a header row,  modelObject[0] starts on gridLayout[1]
+  int modelObjectRow = m_hasHorizontalHeader ? row - 1 : row;
 
-    OSCheckBox2 * checkBox = new OSCheckBox2();
-
-    checkBox->bind(mo,
-              boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
-              boost::optional<BoolSetter>(boost::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)),
-              boost::none,
-              boost::none);
-
-    widget = checkBox;
-
-  } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = baseConcept.dynamicCast<ComboBoxConcept>()) {
-
-      OSComboBox2 * comboBox = new OSComboBox2();
-
-      comboBox->bindRequired(mo,
-                boost::bind(&ComboBoxConcept::choices,comboBoxConcept.data()),
-                boost::bind(&ComboBoxConcept::get,comboBoxConcept.data(),mo),
-                boost::optional<StringSetter>(boost::bind(&ComboBoxConcept::set,comboBoxConcept.data(),mo,_1)),
-                boost::none,
-                boost::none);
-
-      widget = comboBox;
-
-  } else if(QSharedPointer<DoubleEditConcept> doubleEditConcept = baseConcept.dynamicCast<DoubleEditConcept>()) {
-
-      OSDoubleEdit2 * doubleEdit = new OSDoubleEdit2();
-
-      doubleEdit->bindRequired(mo,
-                boost::bind(&DoubleEditConcept::get,doubleEditConcept.data(),mo),
-                boost::optional<DoubleSetter>(boost::bind(&DoubleEditConcept::set,doubleEditConcept.data(),mo,_1)),
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none);
-
-      widget = doubleEdit;
-
-  } else if(QSharedPointer<IntegerEditConcept> integerEditConcept = baseConcept.dynamicCast<IntegerEditConcept>()) {
-
-      OSIntegerEdit2 * integerEdit = new OSIntegerEdit2();
-
-      integerEdit->bindRequired(mo,
-                boost::bind(&IntegerEditConcept::get,integerEditConcept.data(),mo),
-                boost::optional<IntSetter>(boost::bind(&IntegerEditConcept::set,integerEditConcept.data(),mo,_1)),
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none);
-
-      widget = integerEdit;
-
-  } else if(QSharedPointer<LineEditConcept> lineEditConcept = baseConcept.dynamicCast<LineEditConcept>()) {
-
-      OSLineEdit2 * lineEdit = new OSLineEdit2();
-
-      lineEdit->bindRequired(mo,
-                boost::bind(&LineEditConcept::get,lineEditConcept.data(),mo),
-                boost::optional<StringSetter>(boost::bind(&LineEditConcept::set,lineEditConcept.data(),mo,_1)),
-                boost::none,
-                boost::none);
-
-      widget = lineEdit;
-
-  } else if(QSharedPointer<QuantityEditConcept> quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept>()) {
-
-      OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", true);
-
-      quantityEdit->bindRequired(true,
-                mo,
-                boost::bind(&QuantityEditConcept::get,quantityEditConcept.data(),mo),
-                boost::optional<DoubleSetter>(boost::bind(&QuantityEditConcept::set,quantityEditConcept.data(),mo,_1)),
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none);
-
-      widget = quantityEdit;
-
-  } else if(QSharedPointer<UnsignedEditConcept> unsignedEditConcept = baseConcept.dynamicCast<UnsignedEditConcept>()) {
-
-      OSUnsignedEdit2 * unsignedEdit = new OSUnsignedEdit2();
-
-      unsignedEdit->bind(mo,
-                boost::bind(&UnsignedEditConcept::get,unsignedEditConcept.data(),mo),
-                boost::optional<UnsignedSetter>(boost::bind(&UnsignedEditConcept::set,unsignedEditConcept.data(),mo,_1)),
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none,
-                boost::none);
-
-      widget = unsignedEdit;
-  } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = baseConcept.dynamicCast<DropZoneConcept>()) {
-
-      OSDropZone2 * dropZone = new OSDropZone2(this->m_vectorController);
-
-      dropZone->bind(mo,
-                boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
-                boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
-                boost::none,
-                boost::none);
-
-      widget = dropZone;
+  if(m_hasHorizontalHeader && row == 0){
+    if(column == 0){
+      setHorizontalHeader();
+      //OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size()); TODO uncomment this later
+    }
+    widget = m_horizontalHeader.at(column);
   } else {
-    // Unknown type
-    OS_ASSERT(false);
+
+    model::ModelObject mo = m_modelObjects[modelObjectRow];
+
+    QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
+
+    if(QSharedPointer<CheckBoxConcept> checkBoxConcept = baseConcept.dynamicCast<CheckBoxConcept>()){
+
+      OSCheckBox2 * checkBox = new OSCheckBox2();
+
+      checkBox->bind(mo,
+                boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
+                boost::optional<BoolSetter>(boost::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)),
+                boost::none,
+                boost::none);
+
+      widget = checkBox;
+
+    } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = baseConcept.dynamicCast<ComboBoxConcept>()) {
+
+        OSComboBox2 * comboBox = new OSComboBox2();
+
+        comboBox->bindRequired(mo,
+                  boost::bind(&ComboBoxConcept::choices,comboBoxConcept.data()),
+                  boost::bind(&ComboBoxConcept::get,comboBoxConcept.data(),mo),
+                  boost::optional<StringSetter>(boost::bind(&ComboBoxConcept::set,comboBoxConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none);
+
+        widget = comboBox;
+
+    } else if(QSharedPointer<DoubleEditConcept> doubleEditConcept = baseConcept.dynamicCast<DoubleEditConcept>()) {
+
+        OSDoubleEdit2 * doubleEdit = new OSDoubleEdit2();
+
+        doubleEdit->bindRequired(mo,
+                  boost::bind(&DoubleEditConcept::get,doubleEditConcept.data(),mo),
+                  boost::optional<DoubleSetter>(boost::bind(&DoubleEditConcept::set,doubleEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = doubleEdit;
+
+    } else if(QSharedPointer<IntegerEditConcept> integerEditConcept = baseConcept.dynamicCast<IntegerEditConcept>()) {
+
+        OSIntegerEdit2 * integerEdit = new OSIntegerEdit2();
+
+        integerEdit->bindRequired(mo,
+                  boost::bind(&IntegerEditConcept::get,integerEditConcept.data(),mo),
+                  boost::optional<IntSetter>(boost::bind(&IntegerEditConcept::set,integerEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = integerEdit;
+
+    } else if(QSharedPointer<LineEditConcept> lineEditConcept = baseConcept.dynamicCast<LineEditConcept>()) {
+
+        OSLineEdit2 * lineEdit = new OSLineEdit2();
+
+        lineEdit->bindRequired(mo,
+                  boost::bind(&LineEditConcept::get,lineEditConcept.data(),mo),
+                  boost::optional<StringSetter>(boost::bind(&LineEditConcept::set,lineEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none);
+
+        widget = lineEdit;
+
+    } else if(QSharedPointer<QuantityEditConcept> quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept>()) {
+
+        OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", true);
+
+        quantityEdit->bindRequired(true,
+                  mo,
+                  boost::bind(&QuantityEditConcept::get,quantityEditConcept.data(),mo),
+                  boost::optional<DoubleSetter>(boost::bind(&QuantityEditConcept::set,quantityEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = quantityEdit;
+
+    } else if(QSharedPointer<UnsignedEditConcept> unsignedEditConcept = baseConcept.dynamicCast<UnsignedEditConcept>()) {
+
+        OSUnsignedEdit2 * unsignedEdit = new OSUnsignedEdit2();
+
+        unsignedEdit->bind(mo,
+                  boost::bind(&UnsignedEditConcept::get,unsignedEditConcept.data(),mo),
+                  boost::optional<UnsignedSetter>(boost::bind(&UnsignedEditConcept::set,unsignedEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = unsignedEdit;
+    } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = baseConcept.dynamicCast<DropZoneConcept>()) {
+
+        OSDropZone2 * dropZone = new OSDropZone2(this->m_vectorController);
+
+        dropZone->bind(mo,
+                  boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
+                  boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none);
+
+        widget = dropZone;
+    } else {
+      // Unknown type
+      OS_ASSERT(false);
+    }
   }
 
   QWidget * wrapper = new QWidget();
   wrapper->setFixedSize(QSize(200,70));
   wrapper->setObjectName("TableCell");
 
+  QString color;
+  if(modelObjectRow >= static_cast<int>(m_colors.size())) row = m_colors.size() - 1; // similar to scheduleView's approach
+  if(column < 2 && row > 0){
+    color = this->m_colors.at(modelObjectRow).name();
+  } else {
+    color = "#FFFFFF"; // white
+  }
+
   QString style;
   style.append("QWidget#TableCell {");
-  if(column < 2){
-    style.append("  background-color: ");
-    if(row >= static_cast<int>(m_colors.size())) row = m_colors.size() - 1; // similar to scheduleView's approach
-    style.append(this->m_colors.at(row).name());
-    style.append(";");
-  }
+  style.append("  background-color: ");
+  style.append(color);
+  style.append(";");
   style.append("  border-bottom: 1px solid black;");
   style.append("  border-right: 1px solid black;");
   style.append("}");
   wrapper->setStyleSheet(style);
 
   QVBoxLayout * layout = new QVBoxLayout();
+  layout->setSpacing(0);
+  if(row == 0){
+    layout->setContentsMargins(0,0,0,0);
+  } else {
+    layout->setContentsMargins(20,20,20,20);
+  }
   layout->addWidget(widget);
   wrapper->setLayout(layout);
 

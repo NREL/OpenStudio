@@ -33,7 +33,6 @@
 #include <QButtonGroup>
 #include <QLabel>
 #include <QPushButton>
-#include <QScrollArea>
 
 namespace openstudio {
 
@@ -44,19 +43,10 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridController(gridController)
 {
   m_gridLayout = new QGridLayout();
+  m_gridLayout->setSpacing(0);
+  m_gridLayout->setContentsMargins(0,0,0,0);
   m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-
-  QWidget * scrollWidget = new QWidget();
-  scrollWidget->setObjectName("ScrollWidget");
-  scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
-  scrollWidget->setLayout(m_gridLayout);
-
-  QScrollArea * scrollArea = new QScrollArea();
-  scrollArea->setFrameStyle(QFrame::NoFrame);
-  scrollArea->setWidget(scrollWidget);
-  scrollArea->setWidgetResizable(true);
-  scrollArea->setBackgroundRole(QPalette::NoRole);
     
   QButtonGroup * buttonGroup = new QButtonGroup();
   bool isConnected = false;
@@ -65,6 +55,8 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   OS_ASSERT(isConnected);
 
   QHBoxLayout * buttonLayout = new QHBoxLayout();
+  buttonLayout->setSpacing(10);
+  buttonLayout->setContentsMargins(0,0,0,0);
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
@@ -75,11 +67,6 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
     buttonGroup->addButton(button,buttonGroup->buttons().size());
   }
   buttonLayout->addStretch();
-
-  QVBoxLayout * scrollLayout = new QVBoxLayout();
-  scrollLayout->setContentsMargins(0,0,0,0);
-  scrollLayout->addLayout(buttonLayout);
-  scrollLayout->addWidget(scrollArea);
 
   QVBoxLayout * layout = 0;
   
@@ -104,10 +91,11 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   QVBoxLayout * m_contentLayout = 0;
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  m_contentLayout->setSpacing(0);
-  m_contentLayout->setContentsMargins(0,0,0,0);
+  m_contentLayout->setSpacing(10);
+  m_contentLayout->setContentsMargins(0,10,0,0);
   widget->setLayout(m_contentLayout);
-  m_contentLayout->addLayout(scrollLayout);
+  m_contentLayout->addLayout(buttonLayout);
+  m_contentLayout->addLayout(m_gridLayout);
 
   setContentsMargins(5,5,5,5);
 

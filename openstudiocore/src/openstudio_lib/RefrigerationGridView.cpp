@@ -39,6 +39,7 @@
 
 #include <QBoxLayout>
 #include <QLabel>
+#include <QScrollArea>
 #include <QSettings>
 
 // These defines provide a common area for field display names
@@ -116,6 +117,23 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
+  QVBoxLayout * scrollLayout = new QVBoxLayout();
+  scrollLayout->setSpacing(0);
+  scrollLayout->setContentsMargins(0,0,0,0);
+  
+  QWidget * scrollWidget = new QWidget();
+  scrollWidget->setObjectName("ScrollWidget");
+  scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
+  scrollWidget->setLayout(scrollLayout);
+
+  QScrollArea * scrollArea = new QScrollArea();
+  scrollArea->setContentsMargins(0,0,0,0);
+  scrollArea->setFrameStyle(QFrame::NoFrame);
+  scrollArea->setWidget(scrollWidget);
+  scrollArea->setWidgetResizable(true);
+  scrollArea->setBackgroundRole(QPalette::NoRole);
+  layout->addWidget(scrollArea);
+
   model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
   std::vector<model::ModelObject> caseModelObjects;
@@ -127,7 +145,7 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
 
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController("Display Cases", model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
-  layout->addWidget(caseGridView);
+  scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
   std::vector<model::ModelObject> walkInModelObjects;
   walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
@@ -136,7 +154,9 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
 
   RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController("Walk Ins", model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
-  layout->addWidget(walkInView);
+  scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
+
+  scrollLayout->addStretch(1);
 
 }
 
