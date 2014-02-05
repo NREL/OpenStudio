@@ -234,7 +234,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
     if (!lifeCycleCostParameters){
       // only warn if costs are present
-      if (!model.getModelObjects<LifeCycleCost>().empty()){
+      if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
         LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
       }
       
@@ -249,6 +249,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       building = model.getUniqueModelObject<model::Building>();
     }
     translateAndMapModelObject(*building);
+
+    // ensure at least one cost to avoid crash in E+ 8
+    if (model.getConcreteModelObjects<LifeCycleCost>().empty()){
+      boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Default cost", *building, 0.0, "CostPerEach", "Construction");
+      OS_ASSERT(cost);
+      translateAndMapModelObject(*cost);
+    }
 
     // ensure that simulation control exists
     boost::optional<model::SimulationControl> simulationControl = model.getOptionalUniqueModelObject<model::SimulationControl>();
