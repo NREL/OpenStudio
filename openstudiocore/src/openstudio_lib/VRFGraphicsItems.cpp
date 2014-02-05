@@ -95,7 +95,7 @@ void VRFSystemView::adjustLayout()
   x = x + zoneDropZone->boundingRect().width() + margin;
   y = y + zoneDropZone->boundingRect().height() + margin;
 
-  for(std::vector<VRFTerminalView *>::iterator it = m_terminalViews.begin();
+  for(std::vector<QGraphicsObject *>::iterator it = m_terminalViews.begin();
       it != m_terminalViews.end();
       ++it)
   {
@@ -165,7 +165,15 @@ void VRFSystemView::addVRFTerminalView(VRFTerminalView * view)
 
 void VRFSystemView::removeAllVRFTerminalViews()
 {
-  m_terminalViews.clear();
+  prepareGeometryChange();
+
+  for( std::vector<QGraphicsObject *>::iterator it = m_terminalViews.begin();
+       it != m_terminalViews.end(); )
+  {
+    delete * it;
+    it = m_terminalViews.erase(it);
+  }
+
   adjustLayout();
 }
 

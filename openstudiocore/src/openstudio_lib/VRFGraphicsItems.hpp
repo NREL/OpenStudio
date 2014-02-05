@@ -139,7 +139,7 @@ class VRFSystemView : public QGraphicsObject
   double m_width;
   double m_height;
 
-  std::vector<VRFTerminalView *> m_terminalViews;
+  std::vector<QGraphicsObject *> m_terminalViews;
 
   OSItemId m_id;
 };

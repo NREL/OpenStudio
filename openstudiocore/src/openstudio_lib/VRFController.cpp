@@ -110,11 +110,10 @@ void VRFController::refreshNow()
       {
         m_detailView->addVRFTerminalView(new VRFTerminalView());
       }
-
-      bingo = connect(m_detailView->zoneDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onVRFSystemViewDrop(const OSItemId &)));
-      OS_ASSERT(bingo);
     }
   }
+
+  m_dirty = false;
 }
 
 void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
@@ -149,6 +148,8 @@ void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow 
 
   m_detailScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
   m_detailView = new VRFSystemView();
+  bool bingo = connect(m_detailView->terminalDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onVRFSystemViewDrop(const OSItemId &)));
+  OS_ASSERT(bingo);
   m_detailScene->addItem(m_detailView);
   m_vrfView->header->show();
   m_vrfView->graphicsView->setScene(m_detailScene.data());

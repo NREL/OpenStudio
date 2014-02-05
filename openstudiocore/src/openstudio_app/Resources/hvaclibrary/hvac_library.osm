@@ -3385,3 +3385,146 @@ OS:ModelObjectList,
   {bc20ad14-7b22-411b-a875-722e21bb3b59}, !- Handle
   Model Object List 1;                    !- Name
 
+OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
+  {61b461bb-c165-4bd3-a212-fc1fb1023e9a}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Terminal Unit Availability schedule
+  ,                                       !- Terminal Unit Air Inlet Node
+  ,                                       !- Terminal Unit Air Outlet Node
+  autosize,                               !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Cooling is Needed {m3/s}
+  autosize,                               !- Supply Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Supply Air Fan Operating Mode Schedule
+  ,                                       !- Supply Air Fan placement
+  {de259b99-d14c-4c97-a714-fc200c52027a}, !- Supply Air Fan
+  ,                                       !- Outside Air Mixer
+  {8c84c0ac-6832-4444-a64f-9d88308c1b14}, !- Cooling Coil
+  {8e3a36fc-1c04-4c13-804d-32e93dec19b3}, !- Heating Coil
+  30,                                     !- Zone Terminal Unit On Parasitic Electric Energy Use {W}
+  20,                                     !- Zone Terminal Unit Off Parasitic Electric Energy Use {W}
+  1;                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
+
+OS:Schedule:Constant,
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Handle
+  Always On Discrete,                     !- Name
+  {c4b72eeb-4c4b-47c5-96c2-6f0d4a648825}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {c4b72eeb-4c4b-47c5-96c2-6f0d4a648825}, !- Handle
+  Schedule Type Limits 1,                 !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Coil:Cooling:DX:VariableRefrigerantFlow,
+  {8c84c0ac-6832-4444-a64f-9d88308c1b14}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Cooling Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
+  autosize,                               !- Rated Total Cooling Capacity {W}
+  autosize,                               !- Rated Sensible Heat Ratio
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  {96b4b685-7363-44cb-9fa5-9cb8ed3a9f1f}, !- Cooling Capacity Ratio Modifier Function of Temperature Curve
+  {ac2ce32e-576d-4ccf-ae23-19189d22b8c9}; !- Cooling Capacity Modifier Curve Function of Flow Fraction
+
+OS:Curve:Biquadratic,
+  {96b4b685-7363-44cb-9fa5-9cb8ed3a9f1f}, !- Handle
+  VRFTUCoolCapFT,                         !- Name
+  0.0585884077803259,                     !- Coefficient1 Constant
+  0.0587396532718384,                     !- Coefficient2 x
+  -0.000210274979759697,                  !- Coefficient3 x**2
+  0.0109370473889647,                     !- Coefficient4 y
+  -0.0001219549,                          !- Coefficient5 y**2
+  -0.0005246615,                          !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  23.89,                                  !- Maximum Value of x {BasedOnField A2}
+  20,                                     !- Minimum Value of y {BasedOnField A3}
+  43.33,                                  !- Maximum Value of y {BasedOnField A3}
+  0.8083,                                 !- Minimum Curve Output {BasedOnField A4}
+  1.2583;                                 !- Maximum Curve Output {BasedOnField A4}
+
+OS:Curve:Quadratic,
+  {ac2ce32e-576d-4ccf-ae23-19189d22b8c9}, !- Handle
+  VRFACCoolCapFFF,                        !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Coil:Heating:DX:VariableRefrigerantFlow,
+  {8e3a36fc-1c04-4c13-804d-32e93dec19b3}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Heating Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
+  autosize,                               !- Rated Total Heating Capacity {W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Coil Air Inlet Node
+  ,                                       !- Coil Air Outlet Node
+  {c22d0666-7bf7-4195-817f-e47b46ab062d}, !- Heating Capacity Ratio Modifier Function of Temperature Curve
+  {53670871-a743-4208-9001-454f29718f9d}; !- Heating Capacity Modifier Function of Flow Fraction Curve
+
+OS:Curve:Biquadratic,
+  {c22d0666-7bf7-4195-817f-e47b46ab062d}, !- Handle
+  Coil Heating DX Variable Refrigerant Flow 1 VRFTUHeatCAPFT, !- Name
+  0.375443994956127,                      !- Coefficient1 Constant
+  0.0668190645147821,                     !- Coefficient2 x
+  -0.00194171026482001,                   !- Coefficient3 x**2
+  0.0442618420640187,                     !- Coefficient4 y
+  -0.0004009578,                          !- Coefficient5 y**2
+  -0.0014819801,                          !- Coefficient6 x*y
+  21.11,                                  !- Minimum Value of x {BasedOnField A2}
+  27.22,                                  !- Maximum Value of x {BasedOnField A2}
+  -15,                                    !- Minimum Value of y {BasedOnField A3}
+  18.33,                                  !- Maximum Value of y {BasedOnField A3}
+  0.6074,                                 !- Minimum Curve Output {BasedOnField A4}
+  1;                                      !- Maximum Curve Output {BasedOnField A4}
+
+OS:Curve:Quadratic,
+  {53670871-a743-4208-9001-454f29718f9d}, !- Handle
+  Coil Heating DX Variable Refrigerant Flow 1 VRFACCoolCapFFF, !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Fan:OnOff,
+  {de259b99-d14c-4c97-a714-fc200c52027a}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Fan, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  300,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {308a59b2-8b09-4b80-94b3-75fca4d7a32f}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {5413cb3a-0ccc-4c95-bb3e-bf406f891d4d}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Curve:Exponent,
+  {308a59b2-8b09-4b80-94b3-75fca4d7a32f}, !- Handle
+  Fan On Off Power Curve,                 !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {5413cb3a-0ccc-4c95-bb3e-bf406f891d4d}, !- Handle
+  Fan On Off Efficiency Curve,            !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+
