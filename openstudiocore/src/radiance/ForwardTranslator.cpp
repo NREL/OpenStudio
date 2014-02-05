@@ -91,7 +91,7 @@ namespace openstudio {
 namespace radiance {
 
   // internal method used to format doubles as strings
-  std::string formatString(double t_d, unsigned t_prec = 15)
+  std::string formatString(double t_d, unsigned t_prec)
   {
     std::stringstream ss;
     ss << std::setprecision(t_prec) << std::showpoint << t_d;
@@ -139,6 +139,8 @@ namespace radiance {
     m_logSink.setThreadId(QThread::currentThread());
 
     m_logSink.resetStringStream();
+
+    clear();
 
     // TODO: check for shading controls, set m_shadingControls
 
@@ -222,34 +224,7 @@ namespace radiance {
 
       // get the site
       openstudio::model::Site site = m_model.getUniqueModelObject<openstudio::model::Site>();
-
-      // DLM: the purpose of this was to bin windows with similar azimuths, for now we do no binning
-
-  //     aperture_headings.push_back("WG00");
-  //     aperture_headings.push_back("WG01");
-  //     aperture_headings.push_back("WG02");
-  //     aperture_headings.push_back("WG03");
-  //     aperture_headings.push_back("WG04");
-  //     aperture_headings.push_back("WG05");
-  //     aperture_headings.push_back("WG06");
-  //     aperture_headings.push_back("WG07");
-  //     aperture_headings.push_back("WG08");
-  //     aperture_headings.push_back("WG09");
-  //     aperture_headings.push_back("WG10");
-  //     aperture_headings.push_back("WG11");
-  //     aperture_headings.push_back("WG12");
-  //     aperture_headings.push_back("WG13");
-  //     aperture_headings.push_back("WG14");
-  //     aperture_headings.push_back("WG15");
-  //     aperture_headings.push_back("WG16");
-  //     aperture_headings.push_back("WG17");
-  //     aperture_headings.push_back("WG18");
-  //     aperture_headings.push_back("WG19");
-  //     aperture_headings.push_back("WG20");
-  //     aperture_headings.push_back("WG21");
-  //     aperture_headings.push_back("WG22");
-  //     aperture_headings.push_back("WG23");
-  //
+    
       // get site and building shading
       LOG(Debug, "Processing site/building shading elements...");
 
@@ -740,6 +715,37 @@ namespace radiance {
     return buildingTransformation*spaceTransformation*map.transformation()*Vector3d(0,0,1);
   }
 
+  void ForwardTranslator::clear()
+  {
+    m_radMaterials.clear();
+    m_radMaterialsDC.clear();
+
+    m_radDCmats.clear();
+    
+    m_radSceneFiles.clear();
+
+    m_radSpaces.clear();
+    m_radSensors.clear();
+    m_radGlareSensors.clear();
+    m_radMaps.clear();
+    m_radMapHandles.clear();
+    m_radViewPoints.clear();
+    m_radWindowGroups.clear(); 
+  }
+
+  WindowGroup ForwardTranslator::getWindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
+    const boost::optional<model::ShadingControl>& shadingControl)
+  {
+    WindowGroup result(azimuth, space, construction, shadingControl);
+    std::vector<WindowGroup>::const_iterator it = std::find(m_windowGroups.begin(), m_windowGroups.end(), result);
+    if (it != m_windowGroups.end()){
+      return *it;
+    }
+
+    m_windowGroups.push_back(result);
+    return result;
+  }
+
   void ForwardTranslator::siteShadingSurfaceGroups(const openstudio::path &t_radDir,
       const std::vector<openstudio::model::ShadingSurfaceGroup> &radShadingSurfaceGroups,
       std::vector<openstudio::path> &t_outfiles)
@@ -760,8 +766,7 @@ namespace radiance {
             ++shadingSurface)
         {
           // clean name
-          std::string shadingSurface_name = boost::algorithm::replace_all_regex_copy(shadingSurface->name().get(),
-              boost::regex("[ :]"),  std::string("_"));
+          std::string shadingSurface_name = cleanName(shadingSurface->name().get());
 
           LOG(Debug, "Site shading surface: " << shadingSurface_name );
           // get reflectance
@@ -829,8 +834,7 @@ namespace radiance {
             ++shadingSurface)
         {
           // clean name
-          std::string shadingSurface_name = boost::algorithm::replace_all_regex_copy(shadingSurface->name().get(),
-              boost::regex("[ :]"),  std::string("_"));
+          std::string shadingSurface_name = cleanName(shadingSurface->name().get());
 
           LOG(Debug, "Building shading surface: " << shadingSurface_name);
           // get reflectance
@@ -882,19 +886,14 @@ namespace radiance {
         space != t_spaces.end();
         ++space)
     {
-      std::string space_name = boost::algorithm::replace_all_regex_copy(space->name().get(),
-          boost::regex("[ :]"),  std::string("_"));
+      std::string space_name = cleanName(space->name().get());
+
       space_names.push_back(space_name);
       LOG(Debug, "Processing space: " << space_name);
       openstudio::Transformation space_transformation = space->transformation();
 
       // split model into zone-based Radiance .rad files
       m_radSpaces[space_name] = "#Space = " + space_name + "\n";
-
-      // clear out apertures for space
-
-      //  aperture_headings.each {|aperture_heading| m_radApertures[aperture_heading] = nil}
-      m_radApertures.clear();
 
       // loop over surfaces in space
 
@@ -908,8 +907,7 @@ namespace radiance {
         // skip if air wall
         if (surface->isAirWall()) continue;
 
-        std::string surface_name = boost::algorithm::replace_all_regex_copy(surface->name().get(),
-            boost::regex("[ :]"),  std::string("_"));
+        std::string surface_name = cleanName(surface->name().get());
 
         // add surface to space geometry
         m_radSpaces[space_name] += "#-Surface = " + surface_name + "\n";
@@ -948,93 +946,36 @@ namespace radiance {
             + formatString(vertex->z()) +"\n";
         }
 
-
-        // figure out azimuth for window bins
-        // 15 degree bins per IES LM-83, currently under review (2012.01.20)
-        // changed to creating separate bins per heading (RPG 2012.02.21)
-        // TODO: allow grouping for highly discretized elevations
-
-        // trying to save some time here...
-        //
-        // double azi = surface->azimuth() * (180 / PI());
-        double azi = surface->azimuth();
-
-        // std::string aperture_heading = boost::lexical_cast<std::string>(azi);
-        std::string aperture_heading = formatString(azi, 4);
-
-        // DLM: do we append shading control name to aperture_header?
-
-        // create window_group by azimuth, space, tvis, and shading control name
-
-        // for single phase there can be one window group
-
-        if (std::find(aperture_headings.begin(),aperture_headings.end(),aperture_heading) == aperture_headings.end())
-        {
-          aperture_headings.push_back(aperture_heading);
-        }
-
-// keep for future feature (offer auto-binning to window groups for highly tesselated facades)
-//
-//         if (azi >= 352.50 && azi < 7.50)
-//         {
-//           aperture_heading = "WG00";
-//         } else if (azi >= 7.50 && azi < 22.50) {
-//           aperture_heading = "WG01";
-//         } else if (azi >= 22.50 && azi < 37.50) {
-//           aperture_heading = "WG02";
-//         } else if (azi >= 37.50 && azi < 52.50) {
-//           aperture_heading = "WG03";
-//         } else if (azi >= 52.50 && azi < 67.50) {
-//           aperture_heading = "WG04";
-//         } else if (azi >= 67.50 && azi < 82.50) {
-//           aperture_heading = "WG05";
-//         } else if (azi >= 82.50 && azi < 97.50) {
-//           aperture_heading = "WG06";
-//         } else if (azi >= 97.50 && azi < 112.50) {
-//           aperture_heading = "WG07";
-//         } else if (azi >= 112.50 && azi < 127.50) {
-//           aperture_heading = "WG08";
-//         } else if (azi >= 127.50 && azi < 142.50) {
-//           aperture_heading = "WG09";
-//         } else if (azi >= 142.50 && azi < 157.50) {
-//           aperture_heading = "WG10";
-//         } else if (azi >= 157.51 && azi < 172.50) {
-//           aperture_heading = "WG11";
-//         } else if (azi >= 172.50 && azi < 187.50) {
-//           aperture_heading = "WG12";
-//         } else if (azi >= 187.50 && azi < 202.50) {
-//           aperture_heading = "WG13";
-//         } else if (azi >= 202.50 && azi < 217.50) {
-//           aperture_heading = "WG14";
-//         } else if (azi >= 217.51 && azi < 232.50) {
-//           aperture_heading = "WG15";
-//         } else if (azi >= 232.50 && azi < 247.50) {
-//           aperture_heading = "WG16";
-//         } else if (azi >= 247.50 && azi < 262.50) {
-//           aperture_heading = "WG17";
-//         } else if (azi >= 262.50 && azi < 277.50) {
-//           aperture_heading = "WG18";
-//         } else if (azi >= 277.50 && azi < 292.50) {
-//           aperture_heading = "WG19";
-//         } else if (azi >= 292.50 && azi < 307.50) {
-//           aperture_heading = "WG20";
-//         } else if (azi >= 207.50 && azi < 322.50) {
-//           aperture_heading = "WG21";
-//         } else if (azi >= 322.50 && azi < 337.50) {
-//           aperture_heading = "WG22";
-//         } else {
-//           aperture_heading = "WG23";
-//         }
-
         std::vector<openstudio::model::SubSurface> subSurfaces = surface->subSurfaces();
 
         for (std::vector<openstudio::model::SubSurface>::const_iterator subSurface = subSurfaces.begin();
             subSurface != subSurfaces.end();
             ++subSurface)
         {
-          std::string subSurface_name = boost::algorithm::replace_all_regex_copy(subSurface->name().get(),
-              boost::regex("[ :]"),  std::string("_"));
 
+          boost::optional<model::ConstructionBase> construction = subSurface->construction();
+          if (!construction){
+            LOG(Warn, "SubSurface " << subSurface->name().get() << " is not associated with a Construction, it will not be translated.");
+            continue;
+          }
+
+          if (!subSurface->visibleTransmittance())
+          {
+            LOG(Warn, "Cannot determine visible transmittance for SubSurface " << subSurface->name().get() << ", it will not be translated.");
+            continue;
+          }
+
+          boost::optional<model::ShadingControl> shadingControl = subSurface->shadingControl();
+
+          // find window groupd
+          // double azi = surface->azimuth() * (180 / PI());
+          double azi = surface->azimuth();
+          
+          WindowGroup windowGroup = getWindowGroup(azi, *space, *construction, shadingControl);
+          std::string windowGroup_name = windowGroup.name();
+
+          std::string subSurface_name = cleanName(subSurface->name().get());
+        
           m_radSpaces[space_name] += "#--SubSurface = " + subSurface_name + "\n";
 
           std::string subSurfaceUpCase = boost::algorithm::to_upper_copy(subSurface->subSurfaceType());
@@ -1044,18 +985,12 @@ namespace radiance {
               || subSurfaceUpCase == "GLASSDOOR")
           {
 
-            if (m_radApertures.find(aperture_heading) == m_radApertures.end())
+            if (m_radWindowGroups.find(windowGroup_name) == m_radWindowGroups.end())
             {
-              m_radApertures[aperture_heading] = "#SpaceApertures = " + space_name + "_" + aperture_heading + "\n";
+              m_radWindowGroups[windowGroup_name] = "#WindowGroup = " + windowGroup_name + "\n";
             }
 
             LOG(Info, "found a "+subSurface->subSurfaceType()+", azimuth = "+formatString(azi)+ "("+subSurface_name+")");
-
-            if (!subSurface->visibleTransmittance())
-            {
-              LOG(Warn, "Cannot determine visible transmittance for SubSurface " << subSurface_name << ", it will not be translated.");
-              continue;
-            }
 
             double visibleTransmittance = subSurface->visibleTransmittance().get();
 
@@ -1075,25 +1010,29 @@ namespace radiance {
             }
 
             /// \todo add support for translucent materials
-            m_radApertures[aperture_heading] += "#---Tvis = " + formatString(tVis) + " (tn = "+formatString(tn)+")\n";
+            m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis) + " (tn = "+formatString(tn)+")\n";
             // write material
             m_radMaterials.insert("void glass glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n"+formatString(tn, 4)+" "+formatString(tn, 4)+" "+ formatString(tn, 4) +"\n");
             m_radMaterialsDC.insert("void light glaz_spc-"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
-            // DLM TODO: substitute real bsdf names for glazing.xml,glazing_blind.xml
-            m_radDCmats.insert("glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + ".dmx,\n");
+            // if shading control substitute real bsdf names for glazing.xml,glazing_blind.xml
+            if (shadingControl){
+              m_radDCmats.insert("glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + ".dmx,\n");
+            }else{
+              m_radDCmats.insert("glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + ".dmx,\n");
+            }
             // polygon header
-            m_radApertures[aperture_heading] += "#--SubSurface = " + subSurface_name + "\n";
-            m_radApertures[aperture_heading] += "#---Tvis = " + formatString(tVis, 4) + " (tn = " + formatString(tn, 4) + ")\n";
+            m_radWindowGroups[windowGroup_name] += "#--SubSurface = " + subSurface_name + "\n";
+            m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis, 4) + " (tn = " + formatString(tn, 4) + ")\n";
             // get/write the polygon
             openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(*subSurface);
-            m_radApertures[aperture_heading] += "glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + " polygon " + subSurface_name + "\n";
-            m_radApertures[aperture_heading] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
+            m_radWindowGroups[windowGroup_name] += "glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + " polygon " + subSurface_name + "\n";
+            m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
             for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
                 vertex != polygon.rend();
                 ++vertex)
             {
-              m_radApertures[aperture_heading] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
+              m_radWindowGroups[windowGroup_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
             }
 
             // TODO: for each window group store representative points for control
@@ -1187,8 +1126,7 @@ namespace radiance {
             shadingSurface != shadingSurfaces.end();
             ++shadingSurface)
         {
-          std::string shadingSurface_name = boost::algorithm::replace_all_regex_copy(shadingSurface->name().get(),
-              boost::regex("[ :]"),  std::string("_"));
+          std::string shadingSurface_name = cleanName(shadingSurface->name().get());
 
           //puts "found a shading surface"
           // add surface to zone geometry
@@ -1233,8 +1171,7 @@ namespace radiance {
             interiorPartitionSurface != interiorPartitionSurfaces.end();
             ++interiorPartitionSurface)
         {
-          std::string interiorPartitionSurface_name = boost::algorithm::replace_all_regex_copy(interiorPartitionSurface->name().get(),
-              boost::regex("[ :]"),  std::string("_"));
+          std::string interiorPartitionSurface_name = cleanName(interiorPartitionSurface->name().get());
 
           // add surface to zone geometry
           m_radSpaces[space_name] += "#-Surface = " + interiorPartitionSurface_name + "\n";
@@ -1373,18 +1310,20 @@ namespace radiance {
       std::ofstream file(toString(filename).c_str());
       file << m_radSpaces[space_name];
 
-      for (std::vector<std::string>::const_iterator aperture_heading = aperture_headings.begin();
-          aperture_heading != aperture_headings.end();
-          ++aperture_heading)
+      for (std::vector<WindowGroup>::const_iterator windowGroup = m_windowGroups.begin();
+          windowGroup != m_windowGroups.end();
+          ++windowGroup)
       {
+        std::string windowGroup_name = windowGroup->name();
+
         //write windows (and glazed doors)
-        if (m_radApertures.find(*aperture_heading) != m_radApertures.end())
+        if (m_radWindowGroups.find(windowGroup_name) != m_radWindowGroups.end())
         {
-          openstudio::path glazefilename = t_radDir / openstudio::toPath("scene/glazing") / openstudio::toPath(space_name + "_glaz_" + *aperture_heading + ".rad");
+          openstudio::path glazefilename = t_radDir / openstudio::toPath("scene/glazing") / openstudio::toPath(windowGroup_name + ".rad");
           m_radSceneFiles.push_back(glazefilename);
           std::ofstream glazefile(openstudio::toString(glazefilename).c_str());
           t_outfiles.push_back(glazefilename);
-          glazefile << m_radApertures[*aperture_heading];
+          glazefile << m_radWindowGroups[windowGroup_name];
         }
       }
 
@@ -1445,5 +1384,12 @@ namespace radiance {
 
     }
   }
+
+  std::string cleanName(const std::string& name)
+  {
+    std::string result = boost::algorithm::replace_all_regex_copy(name, boost::regex("\\.[ :]"),  std::string("_"));
+    return result;
+  }
+
 } // radiance
 } // openstudio

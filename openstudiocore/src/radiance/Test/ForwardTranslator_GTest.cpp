@@ -27,6 +27,8 @@
 #include <model/Space.hpp>
 #include <model/Surface.hpp>
 #include <model/SubSurface.hpp>
+#include <model/SubSurface_Impl.hpp>
+#include <model/ShadingControl.hpp>
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
 #include <model/DaylightingControl.hpp>
@@ -45,6 +47,7 @@
 
 #include <boost/foreach.hpp>
 #include <QTemporaryFile>
+#include <QDir>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -72,7 +75,6 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
   BOOST_FOREACH(const Point3d& vertex, polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
@@ -96,7 +98,6 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
   BOOST_FOREACH(const Point3d& vertex, polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
@@ -128,7 +129,6 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
   BOOST_FOREACH(const Point3d& vertex, polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
@@ -160,13 +160,39 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
   BOOST_FOREACH(const Point3d& vertex, polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 
 TEST(Radiance, ForwardTranslator_ExampleModel)
 {
   Model model = exampleModel();
+  
+  QTemporaryFile tempFile;
+  openstudio::path outpath = toPath(tempFile.fileName());//QDir::tempPath());//tempFile.fileName());
+
+  ForwardTranslator ft;
+  std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_FALSE(outpaths.empty());
+  EXPECT_TRUE(ft.errors().empty());
+  EXPECT_TRUE(ft.warnings().empty());
+
+  long removed = boost::filesystem::remove_all(outpath);
+  EXPECT_GT(removed, 0);
+}
+
+
+TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
+{
+  Model model = exampleModel();
+  Construction shadedConstruction(model);
+
+  model::ShadingControl shadingControl(shadedConstruction); 
+  BOOST_FOREACH(model::SubSurface subSurface, model.getConcreteModelObjects<model::SubSurface>()){
+    if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
+        istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
+      subSurface.setShadingControl(shadingControl);
+    }
+  }
   
   QTemporaryFile tempFile;
   openstudio::path outpath = toPath(tempFile.fileName());
@@ -177,8 +203,10 @@ TEST(Radiance, ForwardTranslator_ExampleModel)
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
 
-  boost::filesystem::remove_all(outpath);
+  long removed = boost::filesystem::remove_all(outpath);
+  EXPECT_GT(removed, 0);
 }
+
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
 {
@@ -197,7 +225,8 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
 
-  boost::filesystem::remove_all(outpath);
+  long removed = boost::filesystem::remove_all(outpath);
+  EXPECT_GT(removed, 0);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
@@ -217,7 +246,8 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
 
-  boost::filesystem::remove_all(outpath);
+  long removed = boost::filesystem::remove_all(outpath);
+  EXPECT_GT(removed, 0);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
@@ -237,7 +267,8 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
 
-  boost::filesystem::remove_all(outpath);
+  long removed = boost::filesystem::remove_all(outpath);
+  EXPECT_GT(removed, 0);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
@@ -259,5 +290,6 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
 
-  boost::filesystem::remove_all(outpath);
+  long removed = boost::filesystem::remove_all(outpath);
+  EXPECT_GT(removed, 0);
 }
