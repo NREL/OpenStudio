@@ -121,6 +121,8 @@ void VRFController::refreshNow()
         OS_ASSERT(bingo);
         bingo = connect(vrfTerminalView,SIGNAL(removeTerminalClicked(const OSItemId &)),this,SLOT(onRemoveTerminalClicked(const OSItemId &)));
         OS_ASSERT(bingo);
+        bingo = connect(vrfTerminalView,SIGNAL(terminalIconClicked(const OSItemId &)),this,SLOT(inspectOSItem(const OSItemId &)));
+        OS_ASSERT(bingo);
         if( boost::optional<model::ThermalZone> zone = it->thermalZone() )
         {
           vrfTerminalView->zoneDropZone->setHasZone(true);

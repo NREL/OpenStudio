@@ -403,7 +403,7 @@ namespace detail {
     return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoil,component.handle());
   }
 
-  ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model & model) const
+  ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model model) const
   {
     ModelObject terminalClone = ZoneHVACComponent_Impl::clone(model);
 

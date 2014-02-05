@@ -113,6 +113,11 @@ void VRFSystemView::adjustLayout()
 
   m_width = x;
   m_height = y;
+
+  if( QGraphicsScene * _scene = scene() )
+  {
+    _scene->setSceneRect(boundingRect());
+  }
 }
 
 void VRFSystemView::setId(const OSItemId & id)
@@ -188,13 +193,21 @@ void VRFSystemView::removeAllVRFTerminalViews()
 VRFTerminalView::VRFTerminalView()
   : m_terminalPixmap(QPixmap(":images/vrf_unit.png"))
 {
-  QRectF t_terminalPixmapRect = terminalPixmapRect();
-  double x = t_terminalPixmapRect.x() + t_terminalPixmapRect.width();
+  bool bingo;
+  double x = VRFSystemView::margin;
+
+  terminalIconButton = new ButtonItem(m_terminalPixmap,m_terminalPixmap,m_terminalPixmap);
+  terminalIconButton->setParentItem(this);
+  terminalIconButton->setPos(x,(VRFSystemView::terminalViewHeight - terminalIconButton->boundingRect().height()) / 2.0);
+  bingo = connect(terminalIconButton,SIGNAL(mouseClicked()),this,SLOT(onTerminalIconClicked()));
+  OS_ASSERT(bingo);
+
+  x = x + terminalIconButton->boundingRect().width() + VRFSystemView::margin;
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
-  removeButtonItem->setPos(x,t_terminalPixmapRect.y());
-  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveTerminalClicked()));
+  removeButtonItem->setPos(x,terminalIconButton->y());
+  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveTerminalClicked()));
   OS_ASSERT(bingo);
 
   x = x + removeButtonItem->boundingRect().width() + VRFSystemView::margin;
@@ -222,6 +235,11 @@ void VRFTerminalView::setId(const OSItemId & id)
 void VRFTerminalView::onComponenDroppedOnZone(const OSItemId & dropComponentID)
 {
   emit componentDroppedOnZone(m_id,dropComponentID);
+}
+
+void VRFTerminalView::onTerminalIconClicked()
+{
+  emit terminalIconClicked(m_id);
 }
 
 void VRFTerminalView::onRemoveZoneClicked()

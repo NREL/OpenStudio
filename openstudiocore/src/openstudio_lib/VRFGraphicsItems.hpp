@@ -164,6 +164,8 @@ class VRFTerminalView : public QGraphicsObject
 
   VRFThermalZoneDropZoneView * zoneDropZone;
 
+  ButtonItem * terminalIconButton;
+
   RemoveButtonItem * removeButtonItem;
 
   RemoveButtonItem * removeZoneButtonItem;
@@ -177,6 +179,8 @@ class VRFTerminalView : public QGraphicsObject
   void componentDroppedOnZone(const OSItemId & zoneHVACTerminalID, const OSItemId & dropComponentID); 
 
   void removeZoneClicked(const OSItemId & zoneHVACTerminalID); 
+
+  void terminalIconClicked(const OSItemId & zoneHVACTerminalID); 
 
   void removeTerminalClicked(const OSItemId & zoneHVACTerminalID); 
 
@@ -193,6 +197,8 @@ class VRFTerminalView : public QGraphicsObject
   void onRemoveZoneClicked();
 
   void onRemoveTerminalClicked();
+
+  void onTerminalIconClicked();
 
   private:
 
