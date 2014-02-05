@@ -68,6 +68,12 @@ class VRFController : public QObject
 
   void onVRFSystemViewDrop(const OSItemId & itemid);
 
+  void onVRFTerminalViewDrop(const OSItemId & terminalId, const OSItemId & thermalZoneId);
+
+  void onRemoveZoneClicked(const OSItemId & terminalId);
+
+  void onRemoveTerminalClicked(const OSItemId & terminalId);
+
   private:
 
   QPointer<VRFView> m_vrfView;

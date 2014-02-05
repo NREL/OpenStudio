@@ -78,10 +78,12 @@ VRFSystemView::VRFSystemView()
   terminalDropZone = new OSDropZoneItem();
   terminalDropZone->setParentItem(this);
   terminalDropZone->setSize(terminalDropZoneWidth,dropZoneHeight);
+  terminalDropZone->setText("Drop VRF Terminal");
 
   zoneDropZone = new OSDropZoneItem();
   zoneDropZone->setParentItem(this);
   zoneDropZone->setSize(zoneDropZoneWidth,dropZoneHeight);
+  zoneDropZone->setText("Drop Thermal Zone");
 
   adjustLayout();
 }
@@ -186,10 +188,50 @@ void VRFSystemView::removeAllVRFTerminalViews()
 VRFTerminalView::VRFTerminalView()
   : m_terminalPixmap(QPixmap(":images/vrf_unit.png"))
 {
+  QRectF t_terminalPixmapRect = terminalPixmapRect();
+  double x = t_terminalPixmapRect.x() + t_terminalPixmapRect.width();
+
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
-  QRectF t_terminalPixmapRect = terminalPixmapRect();
-  removeButtonItem->setPos(t_terminalPixmapRect.x() + t_terminalPixmapRect.width(),t_terminalPixmapRect.y());
+  removeButtonItem->setPos(x,t_terminalPixmapRect.y());
+  bool bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveTerminalClicked()));
+  OS_ASSERT(bingo);
+
+  x = x + removeButtonItem->boundingRect().width() + VRFSystemView::margin;
+
+  zoneDropZone = new VRFThermalZoneDropZoneView();
+  zoneDropZone->setParentItem(this);
+  zoneDropZone->setPos(x,(VRFSystemView::terminalViewHeight - zoneDropZone->boundingRect().height()) / 2.0);
+  bingo = connect(zoneDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onComponenDroppedOnZone(const OSItemId &)));
+  OS_ASSERT(bingo);
+
+  x = x + zoneDropZone->boundingRect().width() + VRFSystemView::margin;
+
+  removeZoneButtonItem = new RemoveButtonItem();
+  removeZoneButtonItem->setParentItem(this);
+  removeZoneButtonItem->setPos(x,zoneDropZone->y());
+  bingo = connect(removeZoneButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveZoneClicked()));
+  OS_ASSERT(bingo);
+}
+
+void VRFTerminalView::setId(const OSItemId & id)
+{
+  m_id = id;
+}
+
+void VRFTerminalView::onComponenDroppedOnZone(const OSItemId & dropComponentID)
+{
+  emit componentDroppedOnZone(m_id,dropComponentID);
+}
+
+void VRFTerminalView::onRemoveZoneClicked()
+{
+  emit removeZoneClicked(m_id);
+}
+
+void VRFTerminalView::onRemoveTerminalClicked()
+{
+  emit removeTerminalClicked(m_id);
 }
 
 QRectF VRFTerminalView::boundingRect() const
@@ -219,6 +261,43 @@ void VRFTerminalView::paint( QPainter *painter,
   painter->drawPixmap(t_terminalPixmapRect.x(),
                       t_terminalPixmapRect.y(),
                       m_terminalPixmap);
+}
+
+VRFThermalZoneDropZoneView::VRFThermalZoneDropZoneView()
+  : m_hasZone(false)
+{
+  setSize(300,50);
+  setText("Drop Thermal Zone");
+}
+
+void VRFThermalZoneDropZoneView::setHasZone(bool hasZone)
+{
+  m_hasZone = hasZone;
+  update();
+}
+
+void VRFThermalZoneDropZoneView::paint( QPainter *painter, 
+                                        const QStyleOptionGraphicsItem *option, 
+                                        QWidget *widget )
+{
+  if( m_hasZone )
+  {
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QColor(109,109,109),2,Qt::SolidLine, Qt::RoundCap));
+
+    painter->drawRect(boundingRect());
+
+    QFont font = painter->font();
+    font.setPointSize(30);
+    painter->setFont(font);
+    painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
+    painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,m_text);
+  }
+  else
+  {
+    OSDropZoneItem::paint(painter,option,widget);
+  }
 }
 
 VRFSystemMiniView::VRFSystemMiniView()

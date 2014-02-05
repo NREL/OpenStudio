@@ -164,6 +164,8 @@ class OSDropZoneItem : public QGraphicsObject
 
   void setSize(double width, double height);
 
+  void setText(const QString & text);
+
   signals:
 
   void mouseClicked();
@@ -177,10 +179,10 @@ class OSDropZoneItem : public QGraphicsObject
               QWidget *widget );
 
   void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
   void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-
   void dropEvent(QGraphicsSceneDragDropEvent *event);
+
+  QString m_text;
 
   private:
 

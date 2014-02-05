@@ -35,6 +35,7 @@ namespace openstudio {
 
 class VRFTerminalView;
 class RemoveButtonItem;
+class VRFThermalZoneDropZoneView;
 
 class VRFView : public QWidget
 {
@@ -161,9 +162,58 @@ class VRFTerminalView : public QGraphicsObject
 
   QRectF boundingRect() const;
 
-  OSDropZoneItem * zoneDropZone;
+  VRFThermalZoneDropZoneView * zoneDropZone;
 
   RemoveButtonItem * removeButtonItem;
+
+  RemoveButtonItem * removeZoneButtonItem;
+
+  VRFThermalZoneDropZoneView * vrfThermalZoneDropZoneView;
+
+  void setId(const OSItemId & id);
+
+  signals:
+
+  void componentDroppedOnZone(const OSItemId & zoneHVACTerminalID, const OSItemId & dropComponentID); 
+
+  void removeZoneClicked(const OSItemId & zoneHVACTerminalID); 
+
+  void removeTerminalClicked(const OSItemId & zoneHVACTerminalID); 
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  private slots:
+
+  void onComponenDroppedOnZone(const OSItemId & dropComponentID);
+
+  void onRemoveZoneClicked();
+
+  void onRemoveTerminalClicked();
+
+  private:
+
+  QRectF terminalPixmapRect() const;
+
+  QPixmap m_terminalPixmap;
+
+  OSItemId m_id;
+};
+
+class VRFThermalZoneDropZoneView : public OSDropZoneItem
+{
+  Q_OBJECT;
+
+  public:
+
+  VRFThermalZoneDropZoneView();
+
+  ~VRFThermalZoneDropZoneView() {}
+
+  void setHasZone(bool hasZone);
 
   protected:
 
@@ -173,9 +223,7 @@ class VRFTerminalView : public QGraphicsObject
 
   private:
 
-  QRectF terminalPixmapRect() const;
-
-  QPixmap m_terminalPixmap;
+  bool m_hasZone;
 };
 
 class VRFSystemDropZoneView : public OSDropZoneItem

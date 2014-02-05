@@ -22,6 +22,7 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
+#include "ModelObjectItem.hpp"
 #include "OSDropZone.hpp"
 #include "MainWindow.hpp"
 #include "MainRightColumnController.hpp"
@@ -30,6 +31,8 @@
 #include "../model/AirConditionerVariableRefrigerantFlow_Impl.hpp"
 #include "../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 #include <QGraphicsScene>
@@ -96,7 +99,7 @@ void VRFController::refreshNow()
 
     if( m_currentSystem )
     {
-      m_detailView->setId(OSItemId(m_currentSystem->handle(),QString(),false));
+      m_detailView->setId(OSItemId(m_currentSystem->handle(),modelToSourceId(m_currentSystem->model()),false));
 
       bool bingo;
       bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
@@ -108,7 +111,21 @@ void VRFController::refreshNow()
           it != terminals.end();
           ++it)
       {
-        m_detailView->addVRFTerminalView(new VRFTerminalView());
+        VRFTerminalView * vrfTerminalView = new VRFTerminalView();
+        vrfTerminalView->setId(OSItemId(it->handle(),modelToSourceId(it->model()),false));
+        m_detailView->addVRFTerminalView(vrfTerminalView);
+        bingo = connect(vrfTerminalView,SIGNAL(componentDroppedOnZone(const OSItemId &, const OSItemId &)),
+                        this,SLOT(onVRFTerminalViewDrop(const OSItemId &, const OSItemId &)));
+        OS_ASSERT(bingo);
+        bingo = connect(vrfTerminalView,SIGNAL(removeZoneClicked(const OSItemId &)),this,SLOT(onRemoveZoneClicked(const OSItemId &)));
+        OS_ASSERT(bingo);
+        bingo = connect(vrfTerminalView,SIGNAL(removeTerminalClicked(const OSItemId &)),this,SLOT(onRemoveTerminalClicked(const OSItemId &)));
+        OS_ASSERT(bingo);
+        if( boost::optional<model::ThermalZone> zone = it->thermalZone() )
+        {
+          vrfTerminalView->zoneDropZone->setHasZone(true);
+          vrfTerminalView->zoneDropZone->setText(QString::fromStdString(zone->name().get()));
+        }
       }
     }
   }
@@ -136,6 +153,56 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
       refresh();
     }
   }
+}
+
+void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSItemId & thermalZoneId)
+{
+  OS_ASSERT(m_currentSystem);
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  if( doc->fromModel(thermalZoneId) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(thermalZoneId);
+    OS_ASSERT(mo); 
+    if( boost::optional<model::ThermalZone> thermalZone = mo->optionalCast<model::ThermalZone>() )
+    {
+      mo = doc->getModelObject(terminalId);
+      OS_ASSERT(mo);
+      boost::optional<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminal = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+      OS_ASSERT(terminal);
+      terminal->addToThermalZone(thermalZone.get());
+
+      refresh();
+    }
+  }
+}
+
+void VRFController::onRemoveZoneClicked(const OSItemId & terminalId)
+{
+  OS_ASSERT(m_currentSystem);
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  boost::optional<model::ModelObject> mo = doc->getModelObject(terminalId);
+  OS_ASSERT(mo);
+  boost::optional<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminal = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+  OS_ASSERT(terminal);
+  terminal->removeFromThermalZone();
+
+  refresh();
+}
+
+void VRFController::onRemoveTerminalClicked(const OSItemId & terminalId)
+{
+  OS_ASSERT(m_currentSystem);
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  boost::optional<model::ModelObject> mo = doc->getModelObject(terminalId);
+  OS_ASSERT(mo);
+  boost::optional<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminal = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+  OS_ASSERT(terminal);
+  terminal->remove();
+
+  refresh();
 }
 
 void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow & system)

@@ -491,6 +491,13 @@ void OSDropZoneItem::setSize(double width, double height)
   prepareGeometryChange();
   m_width = width;
   m_height = height;
+  m_text = QString("Drop Item");
+}
+
+void OSDropZoneItem::setText(const QString & text)
+{
+  m_text = text;
+  update();
 }
 
 void OSDropZoneItem::paint( QPainter *painter, 
@@ -507,7 +514,7 @@ void OSDropZoneItem::paint( QPainter *painter,
   font.setPointSize(30);
   painter->setFont(font);
   painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
-  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drop Item");
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,m_text);
 }
 
 void OSDropZoneItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
