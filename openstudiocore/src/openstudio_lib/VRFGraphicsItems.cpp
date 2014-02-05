@@ -288,26 +288,6 @@ void VRFSystemMiniView::paint( QPainter *painter,
   painter->drawText(QRectF(_headerRect.x() + 5, _headerRect.y() + 5, _headerRect.width() - 10, _headerRect.height() - 10),Qt::AlignVCenter | Qt::AlignLeft,m_name);
 }
 
-VRFSystemDropZoneView::VRFSystemDropZoneView()
-  : QGraphicsObject(), 
-    m_mouseDown(false)
-{
-  setAcceptHoverEvents(true);
-  setAcceptDrops(true);
-}
-
-void VRFSystemDropZoneView::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-  event->accept();
-
-  if(event->proposedAction() == Qt::CopyAction)
-  {
-    OSItemId id = OSItemId(event->mimeData());
-
-    emit componentDropped(id);
-  }
-}
-
 QRectF VRFSystemDropZoneView::boundingRect() const
 {
   return QRectF(QPoint(0,0),VRFSystemMiniView::cellSize());
@@ -328,34 +308,6 @@ void VRFSystemDropZoneView::paint( QPainter *painter,
   painter->setFont(font);
   painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
   painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drop VRF System");
-}
-
-void VRFSystemDropZoneView::mousePressEvent(QGraphicsSceneMouseEvent * event)
-{
-  m_mouseDown = true;
-
-  this->update();
-
-  event->accept();
-}
-
-void VRFSystemDropZoneView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
-{
-  if( m_mouseDown )
-  {
-    m_mouseDown = false;
-
-    this->update();
-
-    QApplication::processEvents();
-
-    if( shape().contains(event->pos()) )
-    {
-      event->accept();
-
-      emit mouseClicked();
-    }
-  }
 }
 
 } // openstudio
