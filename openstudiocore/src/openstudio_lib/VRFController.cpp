@@ -381,8 +381,45 @@ void VRFSystemListController::addSystem(const OSItemId & itemid)
 
 void VRFSystemListController::removeSystem(model::AirConditionerVariableRefrigerantFlow & vrfSystem)
 {
+  std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = vrfSystem.terminals();
+  if( ! terminals.empty() )
+  {
+    QMessageBox message(m_vrfController->vrfView());
+    
+    QString text;
+    int size = terminals.size();
+    if( size == 1 )
+    {
+      text.append("There is ");
+      text.append(QString::number(size));
+      text.append( " terminal ");
+    }
+    else
+    {
+      text.append("There are ");
+      text.append(QString::number(size));
+      text.append( " terminals ");
+    }
+    text.append("attached to this system which will be removed if you continue.");
+    message.setText(text);
+    message.addButton(QMessageBox::Cancel);
+    message.addButton(QMessageBox::Ok);
+    int response = message.exec();
+
+    if( response != QMessageBox::Ok )
+    {
+      return;
+    }
+  }
+
   int i = systemIndex(vrfSystem);
 
+  for(std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>::iterator it = terminals.begin();
+      it != terminals.end();
+      ++it)
+  {
+    it->remove();
+  }
   vrfSystem.remove();
 
   emit itemRemoved(i);
