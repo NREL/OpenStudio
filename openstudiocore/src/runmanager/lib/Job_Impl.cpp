@@ -41,7 +41,7 @@ namespace detail {
       const JobParams &t_params,
       const Files &t_inputFiles,
       const JobState &t_jobState)
-    : m_id(t_id), m_jobType(t_jobType), m_index(-1),
+    : m_cleanTypeToRun(none), m_id(t_id), m_jobType(t_jobType), m_index(-1),
       m_tools(t_tools), m_params(t_params), m_inputFiles(t_inputFiles),
       m_canceled(false), m_runnable(true), m_force(false),
       m_basePath(boost::filesystem::initial_path<openstudio::path>()),
@@ -270,13 +270,6 @@ namespace detail {
 
   void Job_Impl::threadFinished()
   {
-
-    enum CleanType {
-      none,
-      standard,
-      maximum
-    };
-
     //LOG(Info, boost::posix_time::microsec_clock::local_time() << " threadFinished signal received: " << toString(m_id) << " " << QThread::currentThreadId());
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Idle));
     exit();
@@ -294,9 +287,10 @@ namespace detail {
 
     JobErrors errors = this->errors();
 
+    m_cleanTypeToRun = standard;
+
     if (errors.result == ruleset::OSResultValue::Success)
     {
-      CleanType type = standard;
 
       JobParams params = allParams();
       if (params.has("cleanoutfiles") && !params.get("cleanoutfiles").children.empty())
@@ -305,29 +299,51 @@ namespace detail {
 
         if (typestr == "none")
         {
-          type = none;
+          m_cleanTypeToRun = none;
         } else if (typestr == "standard") {
-          type = standard;
+          m_cleanTypeToRun = standard;
         } else if (typestr == "maximum") {
-          type = maximum;
+          m_cleanTypeToRun = maximum;
         } else {
           LOG(Error, "Unknown cleanoutfiles setting: " << typestr);
         }
       } 
 
-      if (type == standard)
-      {
-        standardClean();
-      } else if (type == maximum) {
-        maximumClean();
-      }
     } else {
+      m_cleanTypeToRun = none;
       LOG(Info, "Not running cleanup, job failed");
     }
+
+    doCleanUp();
 
     emitFinished(errors, lastRun(), outputFiles());
 
     //LOG(Info, boost::posix_time::microsec_clock::local_time() << " thread joined: " << toString(m_id));
+  }
+
+  void Job_Impl::doCleanUp()
+  {
+    boost::shared_ptr<Job_Impl> p = parent();
+    TreeStatusEnum treestatus = treeStatus();
+
+    if (treestatus == TreeStatusEnum::Finished)
+    {
+      if (p) p->doCleanUp();
+      switch (m_cleanTypeToRun)
+      {
+      case none:
+        return;
+      case standard:
+        m_cleanTypeToRun = none;
+        standardClean();
+        break;
+      case maximum:      
+        m_cleanTypeToRun = none;
+        maximumClean();
+        break;
+      };
+    }
+
   }
 
   bool Job_Impl::fileComparitor(const openstudio::path &t_lhs, const openstudio::path &t_rhs)
