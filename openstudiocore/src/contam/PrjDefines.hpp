@@ -28,6 +28,10 @@
 #define RX_INIT(v) std::string(#v)
 #endif
 
+#define RX7 QString
+#define STR_TO_RX7 QString::fromStdString
+#define ANY_TO_STR openstudio::toString
+
 #define NOFILELINE
 
 #ifdef NOFILELINE
