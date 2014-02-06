@@ -134,7 +134,7 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     sqlFile.close()
 
     #reporting final condition
-    runner.registerFinalCondition("Goodbye.")
+    runner.registerFinalCondition("Standard Report generated successfully.")
 
     return true
 
