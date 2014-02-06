@@ -258,6 +258,7 @@ VRFTerminalView::VRFTerminalView()
   removeZoneButtonItem = new RemoveButtonItem();
   removeZoneButtonItem->setParentItem(this);
   removeZoneButtonItem->setPos(zoneDropZone->x() + zoneDropZone->boundingRect().width() - 10,zoneDropZone->y() - 10);
+  removeZoneButtonItem->setVisible(false);
   bingo = connect(removeZoneButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveZoneClicked()));
   OS_ASSERT(bingo);
 }

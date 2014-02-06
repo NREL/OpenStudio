@@ -126,6 +126,7 @@ void VRFController::refreshNow()
         if( boost::optional<model::ThermalZone> zone = it->thermalZone() )
         {
           vrfTerminalView->zoneDropZone->setHasZone(true);
+          vrfTerminalView->removeZoneButtonItem->setVisible(true);
           vrfTerminalView->zoneDropZone->setText(QString::fromStdString(zone->name().get()));
         }
       }
@@ -153,6 +154,38 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
       m_currentSystem->addTerminal(terminalClone);
 
       refresh();
+    }
+  }
+}
+
+void VRFController::onVRFSystemViewZoneDrop(const OSItemId & itemid)
+{
+  OS_ASSERT(m_currentSystem);
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
+  if( doc->fromModel(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+    OS_ASSERT(mo); 
+    if( boost::optional<model::ThermalZone> thermalZone = mo->optionalCast<model::ThermalZone>() )
+    {
+      std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = m_currentSystem->terminals();
+      if(terminals.empty())
+      {
+        QMessageBox message(m_vrfView);
+        message.setText("You must add a VRF terminal before assigning zones.");
+        message.exec();
+      }
+      else
+      {
+        model::ZoneHVACTerminalUnitVariableRefrigerantFlow terminal = terminals.back();
+        model::Model t_model = m_currentSystem->model();
+        model::ZoneHVACTerminalUnitVariableRefrigerantFlow terminalClone = terminal.clone(t_model).cast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+        m_currentSystem->addTerminal(terminalClone);
+        terminalClone.addToThermalZone(thermalZone.get());
+
+        refresh();
+      }
     }
   }
 }
@@ -218,6 +251,8 @@ void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow 
   m_detailScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
   m_detailView = new VRFSystemView();
   bool bingo = connect(m_detailView->terminalDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onVRFSystemViewDrop(const OSItemId &)));
+  OS_ASSERT(bingo);
+  bingo = connect(m_detailView->zoneDropZone,SIGNAL(componentDropped(const OSItemId &)),this,SLOT(onVRFSystemViewZoneDrop(const OSItemId &)));
   OS_ASSERT(bingo);
   m_detailScene->addItem(m_detailView);
   m_vrfView->header->show();
