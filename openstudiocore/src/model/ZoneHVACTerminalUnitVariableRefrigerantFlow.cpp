@@ -419,6 +419,10 @@ namespace detail {
 
     terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoilClone);
 
+    // TODO Move this into base clase
+    terminalClone.setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNode,"");
+    terminalClone.setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNode,"");
+
     return terminalClone;
   }
 
