@@ -351,6 +351,15 @@ void VRFThermalZoneDropZoneView::paint( QPainter *painter,
 
 VRFSystemMiniView::VRFSystemMiniView()
 {
+  m_length = 75;
+  m_zones = 0;
+  m_terminals = 0;
+
+  m_vrfOutdoorPix = QPixmap(":images/vrf_outdoor.png").scaled(m_length,m_length);
+  m_vrfTransferPix = QPixmap(":images/vrf_transfer.png").scaled(m_length,m_length);
+  m_vrfTerminalPix = QPixmap(":images/vrf_unit.png").scaled(m_length,m_length);
+  m_vrfZonePix = QPixmap(":images/zone.png").scaled(m_length,m_length);
+
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
   removeButtonItem->setPos(cellWidth() - removeButtonItem->boundingRect().width() - 10,headerHeight() / 2.0 - removeButtonItem->boundingRect().height() / 2.0);
@@ -367,12 +376,17 @@ QRectF VRFSystemMiniView::boundingRect() const
 
 QSize VRFSystemMiniView::cellSize()
 {
-  return QSize(cellWidth(),cellWidth() + headerHeight());
+  return QSize(cellWidth(),cellHeight() + headerHeight());
 }
 
 int VRFSystemMiniView::cellWidth()
 {
-  return 350;
+  return 450;
+}
+
+int VRFSystemMiniView::cellHeight()
+{
+  return 100;
 }
 
 int VRFSystemMiniView::headerHeight()
@@ -382,7 +396,7 @@ int VRFSystemMiniView::headerHeight()
 
 QRectF VRFSystemMiniView::contentRect() const
 {
-  return QRectF(0,headerHeight(),cellWidth(),cellWidth());
+  return QRectF(0,headerHeight(),cellWidth(),cellHeight());
 }
 
 QRectF VRFSystemMiniView::headerRect() const
@@ -393,16 +407,23 @@ QRectF VRFSystemMiniView::headerRect() const
 void VRFSystemMiniView::setName(const QString & name)
 {
   m_name = name;
-
   update();
+}
+
+void VRFSystemMiniView::setNumberOfZones(int zones)
+{
+  m_zones = zones;
+}
+
+void VRFSystemMiniView::setNumberOfTerminals(int terminals)
+{
+  m_terminals = terminals;
 }
 
 void VRFSystemMiniView::paint( QPainter *painter, 
                            const QStyleOptionGraphicsItem *option, 
                            QWidget *widget )
 {
-  // Background and Border
-
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setBrush(Qt::NoBrush);
 
@@ -410,10 +431,48 @@ void VRFSystemMiniView::paint( QPainter *painter,
   painter->drawRect(boundingRect());
 
   painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+
   QRectF _headerRect = headerRect();
   painter->drawRect(_headerRect);
-
   painter->drawText(QRectF(_headerRect.x() + 5, _headerRect.y() + 5, _headerRect.width() - 10, _headerRect.height() - 10),Qt::AlignVCenter | Qt::AlignLeft,m_name);
+
+  QRectF _contentRect = contentRect();
+  double x = _contentRect.x() + 5;
+  double y = _contentRect.y() + 12;
+
+  painter->drawPixmap(x,y,m_vrfOutdoorPix);
+  x = x + m_vrfOutdoorPix.width() + 2;
+
+  painter->drawPixmap(x,y,m_vrfTransferPix);
+  x = x + m_vrfTerminalPix.width() + 2;
+
+  painter->drawPixmap(x,y,m_vrfTerminalPix);
+  x = x + m_vrfTerminalPix.width() + 2;
+
+  QFont font = painter->font();
+
+  font.setPointSize(24);
+  font.setWeight(QFont::Bold);
+  painter->setFont(font);
+  painter->drawText(QRectF(x,y,m_length,m_length / 2.0),Qt::AlignCenter,QString::number(m_terminals));
+  font.setPointSize(12);
+  font.setWeight(QFont::Normal);
+  painter->setFont(font);
+  painter->drawText(QRectF(x,y + m_length / 2.0,m_length,m_length / 2.0),Qt::AlignCenter,QString("Terminals"));
+  x = x + m_length;
+
+  painter->drawPixmap(x,y,m_vrfZonePix); 
+  x = x + m_vrfZonePix.width();
+
+  font.setPointSize(24);
+  font.setWeight(QFont::Bold);
+  painter->setFont(font);
+  painter->drawText(QRectF(x,y,m_length,m_length / 2.0),Qt::AlignCenter,QString::number(m_zones));
+  font.setPointSize(12);
+  font.setWeight(QFont::Normal);
+  painter->setFont(font);
+  painter->drawText(QRectF(x,y + m_length / 2.0,m_length,m_length / 2.0),Qt::AlignCenter,QString("Zones"));
+  x = x + m_length;
 }
 
 QRectF VRFSystemDropZoneView::boundingRect() const

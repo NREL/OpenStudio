@@ -270,6 +270,8 @@ void VRFController::zoomOutToSystemGridView()
   boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   doc->mainRightColumnController()->inspectModelObject(mo,false);
 
+  m_vrfSystemListController->reset();
+
   m_vrfView->graphicsView->setScene(m_vrfGridScene.data());
   m_vrfView->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_vrfView->header->hide();
@@ -290,6 +292,11 @@ void VRFController::inspectOSItem(const OSItemId & itemid)
 VRFSystemListController::VRFSystemListController(VRFController * vrfController)
   : m_vrfController(vrfController)
 {
+}
+
+void VRFSystemListController::reset()
+{
+  emit modelReset();
 }
 
 VRFController * VRFSystemListController::vrfController() const
@@ -411,6 +418,28 @@ QString VRFSystemListItem::systemName() const
   return QString::fromStdString(m_vrfSystem.name().get());
 }
 
+int VRFSystemListItem::numberOfConnectedZones() const
+{
+  int result = 0;
+  std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals;
+  terminals = m_vrfSystem.terminals();
+  for(std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>::iterator it = terminals.begin();
+      it != terminals.end();
+      ++it)
+  {
+    if( it->thermalZone() )
+    {
+      result++;
+    }
+  }
+  return result;
+}
+
+int VRFSystemListItem::numberOfConnectedTerminals() const
+{
+  return (int)m_vrfSystem.terminals().size();
+}
+
 void VRFSystemListItem::remove()
 {
   qobject_cast<VRFSystemListController *>(controller())->removeSystem(m_vrfSystem);
@@ -437,6 +466,8 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
     OS_ASSERT(bingo);
 
     vrfSystemMiniView->setName(listItem->systemName());
+    vrfSystemMiniView->setNumberOfZones(listItem->numberOfConnectedZones());
+    vrfSystemMiniView->setNumberOfTerminals(listItem->numberOfConnectedTerminals());
 
     itemView = vrfSystemMiniView;
   }

@@ -67,12 +67,13 @@ class VRFSystemMiniView : public QGraphicsObject
   virtual ~VRFSystemMiniView() {}
 
   RemoveButtonItem * removeButtonItem;
-
   ZoomInButtonItem * zoomInButtonItem;
 
   QRectF boundingRect() const;
-
   static QSize cellSize();
+
+  void setNumberOfZones(int zones);
+  void setNumberOfTerminals(int terminals);
 
   public slots:
 
@@ -92,9 +93,21 @@ class VRFSystemMiniView : public QGraphicsObject
 
   static int cellWidth();
 
+  static int cellHeight();
+
   static int headerHeight();
 
   QString m_name;
+
+  QPixmap m_vrfOutdoorPix;
+  QPixmap m_vrfTransferPix;
+  QPixmap m_vrfTerminalPix;
+  QPixmap m_vrfZonePix;
+
+  double m_length;
+
+  int m_zones;
+  int m_terminals;
 };
 
 class VRFSystemView : public QGraphicsObject

@@ -109,6 +109,8 @@ class VRFSystemListController : public OSListController
 
   int count();
 
+  void reset();
+
   public slots:
 
   void addSystem(const OSItemId & itemid);
@@ -160,6 +162,10 @@ class VRFSystemListItem : public OSListItem
   virtual ~VRFSystemListItem() {}
 
   QString systemName() const;
+
+  int numberOfConnectedZones() const;
+
+  int numberOfConnectedTerminals() const;
 
   public slots:
 
