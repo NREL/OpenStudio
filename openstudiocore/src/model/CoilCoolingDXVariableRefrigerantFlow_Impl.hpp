@@ -110,6 +110,10 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    
+    ModelObject clone(Model model) const;
+
+    std::vector<ModelObject> children() const;
 
     //@}
    protected:
