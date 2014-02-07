@@ -472,7 +472,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
     if(name)
       modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
   }
-  prjModel.rc().setPrjdesc(modelDescr.toStdString());
+  prjModel.setDesc(modelDescr.toStdString());
   // Set the simulation length to match the length of the E+ simulation
   boost::optional<openstudio::model::RunPeriod> rp = model.runPeriod();
   if(rp)
@@ -539,7 +539,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
       m_progressBar->setValue(m_progressBar->value() + 1);
     }
   }
-  prjModel.rc().setWind_H(QString().sprintf("%g",totalHeight).toStdString());
+  prjModel.setWind_H(QString().sprintf("%g",totalHeight).toStdString());
   // Check for levels - translation can't proceed without levels
   if(prjModel.levels().size() == 0)
   {
@@ -634,7 +634,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
   nr = 0;
   // Loop over surfaces and generate paths
   QList <openstudio::Handle>used;
-  double wind_H = QString().fromStdString(prjModel.rc().wind_H()).toDouble();
+  double wind_H = prjModel.wind_H();
   BOOST_FOREACH(model::Surface surface,surfaces)
   {
     contam::Path path;
@@ -684,9 +684,9 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
         averageZ += point.z();
       }
       // Now set the path info
-      path.setRelHt(QString().sprintf("%g",averageZ / numVertices - QString().fromStdString(prjModel.levels()[zone.pl()-1].refht()).toDouble()).toStdString());
+      path.setRelHt(averageZ/numVertices - prjModel.levels()[zone.pl()-1].refht());
       path.setPld(zone.pl());
-      path.setMult(QString().sprintf("%g",area).toStdString());
+      path.setMult(area);
       // Now for the type specific info
       if(bc == "Outdoors")
       {
@@ -694,9 +694,9 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
         path.setPzn(zone.nr());
         path.setPzm(-1);
         // Set the wind-related stuff here
-        path.setWazm(QString().sprintf("%g",openstudio::radToDeg(surface.azimuth())).toStdString());
+        path.setWazm(openstudio::radToDeg(surface.azimuth()));
         path.setWindPressure(true);
-        path.setWPmod(QString().sprintf("%g",openstudio::wind::pressureModifier(openstudio::wind::Default,wind_H)).toStdString());
+        path.setWPmod(openstudio::wind::pressureModifier(openstudio::wind::Default,wind_H));
         path.setPw(4); // Assume standard template
         // Set flow element
         if(type == "RoofCeiling")

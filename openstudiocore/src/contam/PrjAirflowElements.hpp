@@ -212,7 +212,7 @@ private:
 };
 
 /** The PlrLeak object is the base class of the leakage area airflow elements. */
-class PlrLeak : public AirflowElement
+class CONTAM_API PlrLeak : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */
@@ -2335,7 +2335,7 @@ private:
 };
 
 /** The AfeCvf object is the base class of airflow element representing cubic spline leakage. */
-class AfeCsf : public AirflowElement
+class CONTAM_API AfeCsf : public AirflowElement
 {
 public:
   /** @name Constructors and Destructors */

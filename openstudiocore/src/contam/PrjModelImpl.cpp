@@ -24,29 +24,83 @@
 namespace openstudio {
 namespace contam {
 
-PrjModel_Impl::PrjModel_Impl(openstudio::path path)
+void PrjModelImpl::setDefaults()
 {
+  m_programName = "ContamW";
+  m_echo = 0;
+  m_skheight = 0;
+  m_skwidth = 0;
+  m_def_units = 0;
+  m_def_flows = 0;
+  m_def_T = RX7("0.0");
+  m_udefT = 0;
+  m_rel_N = RX7("0.0");
+  m_wind_H = RX7("0.0");
+  m_uwH = 0;
+  m_wind_Ao = RX7("0.0");
+  m_wind_a = RX7("0.0");
+  m_scale = RX7("0.0");
+  m_uScale = 0;
+  m_orgRow = 0;
+  m_orgCol = 0;
+  m_invYaxis = 0;
+  m_showGeom = 0;
+  m_X0 = RX7("0.0");
+  m_Y0 = RX7("0.0");
+  m_Z0 = RX7("0.0");
+  m_angle = RX7("0.0");
+  m_u_XYZ = 0;
+  m_epsPath = RX7("0.0");
+  m_epsSpcs = RX7("0.0");
+  m_useWPCwp = 0;
+  m_useWPCmf = 0;
+  m_wpctrig = 0;
+  m_latd = RX7("0.0");
+  m_lgtd = RX7("0.0");
+  m_Tznr = RX7("0.0");
+  m_altd = RX7("0.0");
+  m_Tgrnd = RX7("0.0");
+  m_utg = 0;
+  m_u_a = 0;
+}
+
+PrjModelImpl::PrjModelImpl()
+{
+  setDefaults();
+  m_valid=false;
+}
+
+PrjModelImpl::PrjModelImpl(openstudio::path path)
+{
+  setDefaults();
   read(path);
 }
 
-PrjModel_Impl::PrjModel_Impl(std::string filename)
+PrjModelImpl::PrjModelImpl(std::string filename)
 {
+  setDefaults();
   read(filename);
 }
 
-PrjModel_Impl::PrjModel_Impl(Reader &input)
+PrjModelImpl::PrjModelImpl(Reader &input)
 {
+  setDefaults();
   read(input);
 }
 
-bool PrjModel_Impl::read(openstudio::path path)
+bool PrjModelImpl::read(openstudio::path path)
 {
   return read(openstudio::toString(path));
 }
 
-bool PrjModel_Impl::read(std::string filename)
+bool PrjModelImpl::read(std::string filename)
 {
+  setDefaults();
+#ifdef STD_STRING
   QFile fp(QString().fromStdString(filename));
+#else
+  QFile fp(filename);
+#endif
 
   m_valid = false;
   if (fp.open(QFile::ReadOnly))
@@ -59,10 +113,60 @@ bool PrjModel_Impl::read(std::string filename)
   return m_valid;
 }
 
-bool PrjModel_Impl::read(Reader &input)
+bool PrjModelImpl::read(Reader &input)
 {
   m_valid = false;
   // Section 1: Project, Weather, Simulation, and Output Controls
+  m_programName = input.readString(FILELINE);
+  m_programVersion = input.readString(FILELINE);
+  m_echo = input.read<int>(FILELINE);
+  m_desc = input.readLine(FILELINE);
+  setSkheight(input.read<int>(FILELINE));
+  setSkwidth(input.read<int>(FILELINE));
+  setDef_units(input.read<int>(FILELINE));
+  setDef_flows(input.read<int>(FILELINE));
+  setDef_T(input.readNumber<RX>(FILELINE));
+  setUdefT(input.read<int>(FILELINE));
+  setRel_N(input.readNumber<RX>(FILELINE));
+  setWind_H(input.readNumber<RX>(FILELINE));
+  setUwH(input.read<int>(FILELINE));
+  setWind_Ao(input.readNumber<RX>(FILELINE));
+  setWind_a(input.readNumber<RX>(FILELINE));
+  setScale(input.readNumber<RX>(FILELINE));
+  setUScale(input.read<int>(FILELINE));
+  setOrgRow(input.read<int>(FILELINE));
+  setOrgCol(input.read<int>(FILELINE));
+  setInvYaxis(input.read<int>(FILELINE));
+  setShowGeom(input.read<int>(FILELINE));
+  m_ssWeather.read(input);
+  m_wptWeather.read(input);
+  m_WTHpath = input.readLine(FILELINE);
+  m_CTMpath = input.readLine(FILELINE);
+  m_CVFpath = input.readLine(FILELINE);
+  m_DVFpath = input.readLine(FILELINE);
+  m_WPCfile = input.readLine(FILELINE);
+  m_EWCfile = input.readLine(FILELINE);
+  m_WPCdesc = input.readLine(FILELINE);
+  setX0(input.readNumber<RX>(FILELINE));
+  setY0(input.readNumber<RX>(FILELINE));
+  setZ0(input.readNumber<RX>(FILELINE));
+  setAngle(input.readNumber<RX>(FILELINE));
+  setU_XYZ(input.read<int>(FILELINE));
+  setEpsPath(input.readNumber<RX>(FILELINE));
+  setEpsSpcs(input.readNumber<RX>(FILELINE));
+  setTShift(input.readString(FILELINE));
+  setDStart(input.readString(FILELINE));
+  setDEnd(input.readString(FILELINE));
+  setUseWPCwp(input.read<int>(FILELINE));
+  setUseWPCmf(input.read<int>(FILELINE));
+  setWpctrig(input.read<int>(FILELINE));
+  setLatd(input.readNumber<RX>(FILELINE));
+  setLgtd(input.readNumber<RX>(FILELINE));
+  setTznr(input.readNumber<RX>(FILELINE));
+  setAltd(input.readNumber<RX>(FILELINE));
+  setTgrnd(input.readNumber<RX>(FILELINE));
+  setUtg(input.read<int>(FILELINE));
+  setU_a(input.read<int>(FILELINE));
   m_rc.read(input); // Read the run control section
   input.read999(FILELINE);
   // Section 2: Species and Contaminants
@@ -97,6 +201,8 @@ bool PrjModel_Impl::read(Reader &input)
   std::string selmt = input.readSection(FILELINE); // Skip it
   m_unsupported["ControlSuperElements"] = selmt;
   // Section 12b: Control Nodes
+  //std::string ctrl = input.readSection(FILELINE); // Skip it
+  //m_unsupported["ControlNode"] = ctrl;
   m_controlNodes = input.readElementVector<ControlNode>(FILELINEC "control node");
   // Section 13: Simple Air Handling System (AHS)
   m_ahs = input.readSectionVector<Ahs>(FILELINEC "ahs");
@@ -116,6 +222,7 @@ bool PrjModel_Impl::read(Reader &input)
   std::string dct = input.readSection(FILELINE); // Skip it
   m_unsupported["DuctSegment"] = dct;
   // Section 20: Source/Sinks
+  //m_sourceSinks = input.readSectionVector<SourceSink>(FILELINEC QString("source/sink"));
   std::string css = input.readSection(FILELINE); // Skip it
   m_unsupported["SourceSink"] = css;
   // Section 21: Occupancy Schedules
@@ -132,7 +239,7 @@ bool PrjModel_Impl::read(Reader &input)
   return true;
 }
 
-std::string PrjModel_Impl::toString()
+std::string PrjModelImpl::toString()
 {
   std::string output;
   if(!m_valid)
@@ -140,6 +247,31 @@ std::string PrjModel_Impl::toString()
     return output;
   }
   // Section 1: Project, Weather, Simulation, and Output Controls
+  output += m_programName + ' ' + m_programVersion + ' ' + ANY_TO_STR(m_echo) + '\n';
+  output += m_desc + '\n';
+  output += ANY_TO_STR(m_skheight) + ' ' + ANY_TO_STR(m_skwidth) + ' ' + ANY_TO_STR(m_def_units) + ' '
+    + ANY_TO_STR(m_def_flows) + ' ' + ANY_TO_STR(m_def_T) + ' ' + ANY_TO_STR(m_udefT) + ' '
+    + ANY_TO_STR(m_rel_N) + ' ' + ANY_TO_STR(m_wind_H) + ' ' + ANY_TO_STR(m_uwH) + ' '
+    + ANY_TO_STR(m_wind_Ao) + ' ' + ANY_TO_STR(m_wind_a) + '\n';
+  output += ANY_TO_STR(m_scale) + ' ' + ANY_TO_STR(m_uScale) + ' ' + ANY_TO_STR(m_orgRow) + ' '
+    + ANY_TO_STR(m_orgCol) + ' ' + ANY_TO_STR(m_invYaxis) + ' ' + ANY_TO_STR(m_showGeom) + '\n';
+  output += m_ssWeather.write();
+  output += m_wptWeather.write();
+  output += m_WTHpath + '\n';
+  output += m_CTMpath + '\n';
+  output += m_CVFpath + '\n';
+  output += m_DVFpath + '\n';
+  output += m_WPCfile + '\n';
+  output += m_EWCfile + '\n';
+  output += m_WPCdesc + '\n';
+  output += ANY_TO_STR(m_X0) + ' ' + ANY_TO_STR(m_Y0) + ' ' + ANY_TO_STR(m_Z0) + ' ' + ANY_TO_STR(m_angle)
+    + ' ' + ANY_TO_STR(m_u_XYZ) + '\n';
+  output += ANY_TO_STR(m_epsPath) + ' ' + ANY_TO_STR(m_epsSpcs) + ' ' + m_tShift + ' ' + m_dStart + ' '
+    + m_dEnd + ' ' + ANY_TO_STR(m_useWPCwp) + ' ' + ANY_TO_STR(m_useWPCmf) + ' ' + ANY_TO_STR(m_wpctrig)
+    + '\n';
+  output += ANY_TO_STR(m_latd) + ' ' + ANY_TO_STR(m_lgtd) + ' ' + ANY_TO_STR(m_Tznr) + ' '
+    + ANY_TO_STR(m_altd) + ' ' + ANY_TO_STR(m_Tgrnd) + ' ' + ANY_TO_STR(m_utg) + ' '
+    + ANY_TO_STR(m_u_a) + '\n';
   output += m_rc.write();
   output += "-999\n";
   // Section 2: Species and Contaminants
@@ -197,7 +329,995 @@ std::string PrjModel_Impl::toString()
   return output;
 }
 
-std::vector<std::vector<int> > PrjModel_Impl::zoneExteriorFlowPaths()
+std::string PrjModelImpl::programName() const
+{
+  return m_programName;
+}
+
+void PrjModelImpl::setProgramName(const std::string &name)
+{
+  m_programName = name;
+}
+
+std::string PrjModelImpl::version() const
+{
+  return m_programVersion;
+}
+
+void PrjModelImpl::setVersion(const std::string &version)
+{
+  m_programVersion = version;
+}
+
+int PrjModelImpl::echo() const
+{
+  return m_echo;
+}
+
+void PrjModelImpl::setEcho(const int echo)
+{
+  m_echo = echo;
+}
+
+std::string PrjModelImpl::desc() const
+{
+  return m_desc;
+}
+
+void PrjModelImpl::setDesc(const std::string &prjdesc)
+{
+  m_desc = prjdesc;
+}
+
+int PrjModelImpl::skheight() const
+{
+  return m_skheight;
+}
+
+void PrjModelImpl::setSkheight(const int skheight)
+{
+  m_skheight = skheight;
+}
+
+int PrjModelImpl::skwidth() const
+{
+  return m_skwidth;
+}
+
+void PrjModelImpl::setSkwidth(const int skwidth)
+{
+  m_skwidth = skwidth;
+}
+
+int PrjModelImpl::def_units() const
+{
+  return m_def_units;
+}
+
+void PrjModelImpl::setDef_units(const int def_units)
+{
+  m_def_units = def_units;
+}
+
+int PrjModelImpl::def_flows() const
+{
+  return m_def_flows;
+}
+
+void PrjModelImpl::setDef_flows(const int def_flows)
+{
+  m_def_flows = def_flows;
+}
+
+double PrjModelImpl::def_T() const
+{
+  return m_def_T.toDouble();
+}
+
+bool PrjModelImpl::setDef_T(const double def_T)
+{
+  m_def_T = QString::number(def_T);
+  return true;
+}
+
+bool PrjModelImpl::setDef_T(const std::string &def_T)
+{
+  bool ok;
+  STR_TO_RX7(def_T).toDouble(&ok);
+  if(ok)
+  {
+    m_def_T = STR_TO_RX7(def_T);
+    return true;
+  }
+  return false;
+}
+
+int PrjModelImpl::udefT() const
+{
+  return m_udefT;
+}
+
+void PrjModelImpl::setUdefT(const int udefT)
+{
+  m_udefT = udefT;
+}
+
+double PrjModelImpl::rel_N() const
+{
+  return m_rel_N.toDouble();
+}
+
+bool PrjModelImpl::setRel_N(const double rel_N)
+{
+  m_rel_N = QString::number(rel_N);
+  return true;
+}
+
+bool PrjModelImpl::setRel_N(const std::string &rel_N)
+{
+  bool ok;
+  STR_TO_RX7(rel_N).toDouble(&ok);
+  if(ok)
+  {
+    m_rel_N = STR_TO_RX7(rel_N);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::wind_H() const
+{
+  return m_wind_H.toDouble();
+}
+
+bool PrjModelImpl::setWind_H(const double wind_H)
+{
+  m_wind_H = QString::number(wind_H);
+  return true;
+}
+
+bool PrjModelImpl::setWind_H(const std::string &wind_H)
+{
+  bool ok;
+  STR_TO_RX7(wind_H).toDouble(&ok);
+  if(ok)
+  {
+    m_wind_H = STR_TO_RX7(wind_H);
+    return true;
+  }
+  return false;
+}
+
+int PrjModelImpl::uwH() const
+{
+  return m_uwH;
+}
+
+void PrjModelImpl::setUwH(const int uwH)
+{
+  m_uwH = uwH;
+}
+
+double PrjModelImpl::wind_Ao() const
+{
+  return m_wind_Ao.toDouble();
+}
+
+bool PrjModelImpl::setWind_Ao(const double wind_Ao)
+{
+  m_wind_Ao = QString::number(wind_Ao);
+  return true;
+}
+
+bool PrjModelImpl::setWind_Ao(const std::string &wind_Ao)
+{
+  bool ok;
+  STR_TO_RX7(wind_Ao).toDouble(&ok);
+  if(ok)
+  {
+    m_wind_Ao = STR_TO_RX7(wind_Ao);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::wind_a() const
+{
+  return m_wind_a.toDouble();
+}
+
+bool PrjModelImpl::setWind_a(const double wind_a)
+{
+  m_wind_a = QString::number(wind_a);
+  return true;
+}
+
+bool PrjModelImpl::setWind_a(const std::string &wind_a)
+{
+  bool ok;
+  STR_TO_RX7(wind_a).toDouble(&ok);
+  if(ok)
+  {
+    m_wind_a = STR_TO_RX7(wind_a);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::scale() const
+{
+  return m_scale.toDouble();
+}
+
+bool PrjModelImpl::setScale(const double scale)
+{
+  m_scale = QString::number(scale);
+  return true;
+}
+
+bool PrjModelImpl::setScale(const std::string &scale)
+{
+  bool ok;
+  STR_TO_RX7(scale).toDouble(&ok);
+  if(ok)
+  {
+    m_scale = STR_TO_RX7(scale);
+    return true;
+  }
+  return false;
+}
+
+int PrjModelImpl::uScale() const
+{
+  return m_uScale;
+}
+
+void PrjModelImpl::setUScale(const int uScale)
+{
+  m_uScale = uScale;
+}
+
+int PrjModelImpl::orgRow() const
+{
+  return m_orgRow;
+}
+
+void PrjModelImpl::setOrgRow(const int orgRow)
+{
+  m_orgRow = orgRow;
+}
+
+int PrjModelImpl::orgCol() const
+{
+  return m_orgCol;
+}
+
+void PrjModelImpl::setOrgCol(const int orgCol)
+{
+  m_orgCol = orgCol;
+}
+
+int PrjModelImpl::invYaxis() const
+{
+  return m_invYaxis;
+}
+
+void PrjModelImpl::setInvYaxis(const int invYaxis)
+{
+  m_invYaxis = invYaxis;
+}
+
+int PrjModelImpl::showGeom() const
+{
+  return m_showGeom;
+}
+
+void PrjModelImpl::setShowGeom(const int showGeom)
+{
+  m_showGeom = showGeom;
+}
+
+WeatherData PrjModelImpl::ssWeather() const
+{
+  return m_ssWeather;
+}
+
+void PrjModelImpl::setSsWeather(const WeatherData &ssWeather)
+{
+  m_ssWeather = ssWeather;
+}
+
+WeatherData PrjModelImpl::wptWeather() const
+{
+  return m_wptWeather;
+}
+
+void PrjModelImpl::setWptWeather(const WeatherData &wptWeather)
+{
+  m_wptWeather = wptWeather;
+}
+
+std::string PrjModelImpl::WTHpath() const
+{
+  return m_WTHpath;
+}
+
+void PrjModelImpl::setWTHpath(const std::string &WTHpath)
+{
+  m_WTHpath = WTHpath;
+}
+
+std::string PrjModelImpl::CTMpath() const
+{
+  return m_CTMpath;
+}
+
+void PrjModelImpl::setCTMpath(const std::string &CTMpath)
+{
+  m_CTMpath = CTMpath;
+}
+
+std::string PrjModelImpl::CVFpath() const
+{
+  return m_CVFpath;
+}
+
+void PrjModelImpl::setCVFpath(const std::string &CVFpath)
+{
+  m_CVFpath = CVFpath;
+}
+
+std::string PrjModelImpl::DVFpath() const
+{
+  return m_DVFpath;
+}
+
+void PrjModelImpl::setDVFpath(const std::string &DVFpath)
+{
+  m_DVFpath = DVFpath;
+}
+
+std::string PrjModelImpl::WPCfile() const
+{
+  return m_WPCfile;
+}
+
+void PrjModelImpl::setWPCfile(const std::string &WPCfile)
+{
+  m_WPCfile = WPCfile;
+}
+
+std::string PrjModelImpl::EWCfile() const
+{
+  return m_EWCfile;
+}
+
+void PrjModelImpl::setEWCfile(const std::string &EWCfile)
+{
+  m_EWCfile = EWCfile;
+}
+
+std::string PrjModelImpl::WPCdesc() const
+{
+  return m_WPCdesc;
+}
+
+void PrjModelImpl::setWPCdesc(const std::string &WPCdesc)
+{
+  m_WPCdesc = WPCdesc;
+}
+
+double PrjModelImpl::X0() const
+{
+  return m_X0.toDouble();
+}
+
+bool PrjModelImpl::setX0(const double X0)
+{
+  m_X0 = QString::number(X0);
+  return true;
+}
+
+bool PrjModelImpl::setX0(const std::string &X0)
+{
+  bool ok;
+  STR_TO_RX7(X0).toDouble(&ok);
+  if(ok)
+  {
+    m_X0 = STR_TO_RX7(X0);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::Y0() const
+{
+  return m_Y0.toDouble();
+}
+
+bool PrjModelImpl::setY0(const double Y0)
+{
+  m_Y0 = QString::number(Y0);
+  return true;
+}
+
+bool PrjModelImpl::setY0(const std::string &Y0)
+{
+  bool ok;
+  STR_TO_RX7(Y0).toDouble(&ok);
+  if(ok)
+  {
+    m_Y0 = STR_TO_RX7(Y0);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::Z0() const
+{
+  return m_Z0.toDouble();
+}
+
+bool PrjModelImpl::setZ0(const double Z0)
+{
+  m_Z0 = QString::number(Z0);
+  return true;
+}
+
+bool PrjModelImpl::setZ0(const std::string &Z0)
+{
+  bool ok;
+  STR_TO_RX7(Z0).toDouble(&ok);
+  if(ok)
+  {
+    m_Z0 = STR_TO_RX7(Z0);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::angle() const
+{
+  return m_angle.toDouble();
+}
+
+bool PrjModelImpl::setAngle(const double angle)
+{
+  m_angle = QString::number(angle);
+  return true;
+}
+
+bool PrjModelImpl::setAngle(const std::string &angle)
+{
+  bool ok;
+  STR_TO_RX7(angle).toDouble(&ok);
+  if(ok)
+  {
+    m_angle = STR_TO_RX7(angle);
+    return true;
+  }
+  return false;
+}
+
+int PrjModelImpl::u_XYZ() const
+{
+  return m_u_XYZ;
+}
+
+void PrjModelImpl::setU_XYZ(const int u_XYZ)
+{
+  m_u_XYZ = u_XYZ;
+}
+
+double PrjModelImpl::epsPath() const
+{
+  return m_epsPath.toDouble();
+}
+
+bool PrjModelImpl::setEpsPath(const double epsPath)
+{
+  m_epsPath = QString::number(epsPath);
+  return true;
+}
+
+bool PrjModelImpl::setEpsPath(const std::string &epsPath)
+{
+  bool ok;
+  STR_TO_RX7(epsPath).toDouble(&ok);
+  if(ok)
+  {
+    m_epsPath = STR_TO_RX7(epsPath);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::epsSpcs() const
+{
+  return m_epsSpcs.toDouble();
+}
+
+bool PrjModelImpl::setEpsSpcs(const double epsSpcs)
+{
+  m_epsSpcs = QString::number(epsSpcs);
+  return true;
+}
+
+bool PrjModelImpl::setEpsSpcs(const std::string &epsSpcs)
+{
+  bool ok;
+  STR_TO_RX7(epsSpcs).toDouble(&ok);
+  if(ok)
+  {
+    m_epsSpcs = STR_TO_RX7(epsSpcs);
+    return true;
+  }
+  return false;
+}
+
+std::string PrjModelImpl::tShift() const
+{
+  return m_tShift;
+}
+
+void PrjModelImpl::setTShift(const std::string &tShift)
+{
+  m_tShift = tShift;
+}
+
+std::string PrjModelImpl::dStart() const
+{
+  return m_dStart;
+}
+
+void PrjModelImpl::setDStart(const std::string &dStart)
+{
+  m_dStart = dStart;
+}
+
+std::string PrjModelImpl::dEnd() const
+{
+  return m_dEnd;
+}
+
+void PrjModelImpl::setDEnd(const std::string &dEnd)
+{
+  m_dEnd = dEnd;
+}
+
+int PrjModelImpl::useWPCwp() const
+{
+  return m_useWPCwp;
+}
+
+void PrjModelImpl::setUseWPCwp(const int useWPCwp)
+{
+  m_useWPCwp = useWPCwp;
+}
+
+int PrjModelImpl::useWPCmf() const
+{
+  return m_useWPCmf;
+}
+
+void PrjModelImpl::setUseWPCmf(const int useWPCmf)
+{
+  m_useWPCmf = useWPCmf;
+}
+
+int PrjModelImpl::wpctrig() const
+{
+  return m_wpctrig;
+}
+
+void PrjModelImpl::setWpctrig(const int wpctrig)
+{
+  m_wpctrig = wpctrig;
+}
+
+double PrjModelImpl::latd() const
+{
+  return m_latd.toDouble();
+}
+
+bool PrjModelImpl::setLatd(const double latd)
+{
+  m_latd = QString::number(latd);
+  return true;
+}
+
+bool PrjModelImpl::setLatd(const std::string &latd)
+{
+  bool ok;
+  STR_TO_RX7(latd).toDouble(&ok);
+  if(ok)
+  {
+    m_latd = STR_TO_RX7(latd);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::lgtd() const
+{
+  return m_lgtd.toDouble();
+}
+
+bool PrjModelImpl::setLgtd(const double lgtd)
+{
+  m_lgtd = QString::number(lgtd);
+  return true;
+}
+
+bool PrjModelImpl::setLgtd(const std::string &lgtd)
+{
+  bool ok;
+  STR_TO_RX7(lgtd).toDouble(&ok);
+  if(ok)
+  {
+    m_lgtd = STR_TO_RX7(lgtd);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::Tznr() const
+{
+  return m_Tznr.toDouble();
+}
+
+bool PrjModelImpl::setTznr(const double Tznr)
+{
+  m_Tznr = QString::number(Tznr);
+  return true;
+}
+
+bool PrjModelImpl::setTznr(const std::string &Tznr)
+{
+  bool ok;
+  STR_TO_RX7(Tznr).toDouble(&ok);
+  if(ok)
+  {
+    m_Tznr = STR_TO_RX7(Tznr);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::altd() const
+{
+  return m_altd.toDouble();
+}
+
+bool PrjModelImpl::setAltd(const double altd)
+{
+  m_altd = QString::number(altd);
+  return true;
+}
+
+bool PrjModelImpl::setAltd(const std::string &altd)
+{
+  bool ok;
+  STR_TO_RX7(altd).toDouble(&ok);
+  if(ok)
+  {
+    m_altd = STR_TO_RX7(altd);
+    return true;
+  }
+  return false;
+}
+
+double PrjModelImpl::Tgrnd() const
+{
+  return m_Tgrnd.toDouble();
+}
+
+bool PrjModelImpl::setTgrnd(const double Tgrnd)
+{
+  m_Tgrnd = QString::number(Tgrnd);
+  return true;
+}
+
+bool PrjModelImpl::setTgrnd(const std::string &Tgrnd)
+{
+  bool ok;
+  STR_TO_RX7(Tgrnd).toDouble(&ok);
+  if(ok)
+  {
+    m_Tgrnd = STR_TO_RX7(Tgrnd);
+    return true;
+  }
+  return false;
+}
+
+int PrjModelImpl::utg() const
+{
+  return m_utg;
+}
+
+void PrjModelImpl::setUtg(const int utg)
+{
+  m_utg = utg;
+}
+
+int PrjModelImpl::u_a() const
+{
+  return m_u_a;
+}
+
+void PrjModelImpl::setU_a(const int u_a)
+{
+  m_u_a = u_a;
+}
+
+RunControl PrjModelImpl::rc() const
+{
+  return m_rc;
+}
+void PrjModelImpl::setRc(const RunControl rc)
+{
+  m_rc = rc;
+}
+
+std::vector<int> PrjModelImpl::contaminants() const
+{
+  return m_contaminants;
+}
+
+std::vector<Species> PrjModelImpl::species() const
+{
+  return m_species;
+}
+
+void PrjModelImpl::setSpecies(const std::vector<Species> &species)
+{
+  m_species = species;
+  rebuildContaminants();
+}
+
+void PrjModelImpl::addSpecies(Species &species)
+{
+    species.setNr(m_species.size()+1);
+    m_species.push_back(species);
+}
+
+std::vector<Level> PrjModelImpl::levels() const
+{
+  return m_levels;
+}
+
+void PrjModelImpl::setLevels(const std::vector<Level> &levels)
+{
+  m_levels = levels;
+}
+
+void PrjModelImpl::addLevel(Level &level)
+{
+    level.setNr(m_levels.size()+1);
+    m_levels.push_back(level);
+}
+
+std::vector<DaySchedule> PrjModelImpl::daySchedules() const
+{
+  return m_daySchedules;
+}
+
+void PrjModelImpl::setDaySchedules(const std::vector<DaySchedule> &daySchedules)
+{
+  m_daySchedules = daySchedules;
+}
+
+std::vector<WeekSchedule> PrjModelImpl::weekSchedules() const
+{
+  return m_weekSchedules;
+}
+void PrjModelImpl::setWeekSchedules(const std::vector<WeekSchedule> &weekSchedules)
+{
+  m_weekSchedules = weekSchedules;
+}
+
+std::vector<WindPressureProfile> PrjModelImpl::windPressureProfiles() const
+{
+  return m_windPressureProfiles;
+}
+void PrjModelImpl::setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles)
+{
+  m_windPressureProfiles = windPressureProfiles;
+}
+
+std::vector<PlrLeak1> PrjModelImpl::getPlrLeak1()
+{
+  std::vector<PlrLeak1> afe;
+  for(int i=0;i<m_airflowElements.size();i++)
+  {
+    if(m_airflowElements[i]->dataType() == "plr_leak1")
+    {
+      afe.push_back(*(m_airflowElements[i].dynamicCast<PlrLeak1>().data()));
+    }
+  }
+  return afe;
+}
+
+std::vector<PlrLeak2> PrjModelImpl::getPlrLeak2()
+{
+  std::vector<PlrLeak2> afe;
+  for(int i=0;i<m_airflowElements.size();i++)
+  {
+    if(m_airflowElements[i]->dataType() == "plr_leak2")
+    {
+      afe.push_back(*(m_airflowElements[i].dynamicCast<PlrLeak2>().data()));
+    }
+  }
+  return afe;
+}
+
+std::vector<PlrTest1> PrjModelImpl::getPlrTest1()
+{
+  std::vector<PlrTest1> afe;
+  for(int i=0;i<m_airflowElements.size();i++)
+  {
+    if(m_airflowElements[i]->dataType() == "plr_test1")
+    {
+      afe.push_back(*(m_airflowElements[i].dynamicCast<PlrTest1>().data()));
+    }
+  }
+  return afe;
+}
+
+std::vector<CvfDat> PrjModelImpl::getCvfDat()
+{
+  std::vector<CvfDat> ctrl;
+  for(int i=0;i<m_controlNodes.size();i++)
+  {
+    QSharedPointer<CvfDat> cast = m_controlNodes[i].dynamicCast<CvfDat>();
+    if(!cast.isNull())
+    {
+      ctrl.push_back(*(cast.data()));
+    }
+  }
+  return ctrl;
+}
+
+std::vector<Ahs> PrjModelImpl::ahs() const
+{
+  return m_ahs;
+}
+
+void PrjModelImpl::setAhs(const std::vector<Ahs> &ahs)
+{
+  m_ahs = ahs;
+}
+
+void PrjModelImpl::addAhs(Ahs &ahs)
+{
+    ahs.setNr(m_ahs.size()+1);
+    m_ahs.push_back(ahs);
+}
+
+std::vector<Zone> PrjModelImpl::zones() const
+{
+  return m_zones;
+}
+
+void PrjModelImpl::setZones(const std::vector<Zone> &zones)
+{
+  m_zones = zones;
+}
+
+void PrjModelImpl::addZone(Zone &zone)
+{
+    zone.setNr(m_zones.size()+1);
+    m_zones.push_back(zone);
+}
+
+bool PrjModelImpl::valid() const
+{
+  return m_valid;
+}
+
+std::vector<Path> PrjModelImpl::paths() const
+{
+  return m_paths;
+}
+
+void PrjModelImpl::setPaths(const std::vector<Path> &paths)
+{
+  m_paths = paths;
+}
+
+void PrjModelImpl::addPath(Path &path)
+{
+    path.setNr(m_paths.size()+1);
+    m_paths.push_back(path);
+}
+
+void PrjModelImpl::rebuildContaminants()
+{
+  m_contaminants.clear();
+  for(unsigned i=1;i<=m_species.size();i++)
+  {
+    m_species[i].setNr(i);
+    if(m_species[i].sflag())
+    {
+      m_contaminants.push_back(i);
+    }
+  }
+}
+
+void PrjModelImpl::readZoneIc(Reader &input)
+{
+  unsigned int nn = input.readUInt(FILELINE);
+  if(nn != 0)
+  {
+    unsigned int nctm = m_contaminants.size();
+    if(nn != nctm*m_zones.size())
+    {
+      QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
+#ifndef NOFILELINE
+      mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
+#endif
+      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
+    }
+    for(unsigned int i=0;i<m_zones.size();i++)
+    {
+      unsigned int nr = input.readUInt(FILELINE);
+      if(nr != i+1)
+      {
+        QString mesg = QString("Mismatch between zone IC number and zone number at line %1 ")
+          .arg(input.lineNumber());
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
+#endif
+        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
+      }
+      std::vector<RX> ic;
+      for(unsigned int j=0;j<nctm;j++)
+      {
+        ic.push_back(input.readNumber<RX>(FILELINE));
+      }
+      m_zones[i].setIc(ic);
+    }
+  }
+  input.read999("Failed to find zone IC section termination" CFILELINE);
+}
+
+std::string PrjModelImpl::writeZoneIc(int start)
+{
+  int offset = 1;
+  if(start != 0)
+  {
+    offset = 1-start;
+  }
+  int nctm = m_contaminants.size()*(m_zones.size()-start);
+  std::string string = ANY_TO_STR(nctm) + " ! initial zone concentrations:\n";
+  if(nctm)
+  {
+    for(unsigned i=start;i<m_zones.size();i++)
+    {
+      string += ANY_TO_STR(i+offset);
+      for(unsigned j=0;j<m_contaminants.size();j++)
+      {
+        string += ' ' + ANY_TO_STR(m_zones[i].ic(j));
+      }
+      string += '\n';
+    }
+  }
+  return string  + "-999\n";
+}
+
+int PrjModelImpl::airflowElementNrByName(std::string name) const
+{
+  for(int i=0;i<m_airflowElements.size();i++)
+  {
+    if(m_airflowElements[i]->name() == name)
+    {
+      return m_airflowElements[i]->nr();
+    }
+  }
+  return 0;
+}
+
+std::vector<std::vector<int> > PrjModelImpl::zoneExteriorFlowPaths()
 {
   std::vector<std::vector<int> > paths(m_zones.size());
 
@@ -223,7 +1343,7 @@ std::vector<std::vector<int> > PrjModel_Impl::zoneExteriorFlowPaths()
   return paths;
 }
 
-std::vector<TimeSeries> PrjModel_Impl::zoneInfiltration(SimFile *sim)
+std::vector<TimeSeries> PrjModelImpl::zoneInfiltration(SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
@@ -283,7 +1403,7 @@ std::vector<TimeSeries> PrjModel_Impl::zoneInfiltration(SimFile *sim)
   return results;
 }
 
-std::vector<TimeSeries> PrjModel_Impl::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
+std::vector<TimeSeries> PrjModelImpl::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
@@ -338,8 +1458,8 @@ std::vector<TimeSeries> PrjModel_Impl::pathInfiltration(std::vector<int> pathNrs
           Vector flow = optFlow.get().values();
           for(unsigned int k=0; k<ntimes; k++)
           {
-              if(flow[k] > 0)
-              {
+            if(flow[k] > 0)
+            {
               inf[k] = flow[k];
             }
           }
@@ -360,104 +1480,6 @@ std::vector<TimeSeries> PrjModel_Impl::pathInfiltration(std::vector<int> pathNrs
     results.push_back(openstudio::TimeSeries(dateTimes,inf,"kg/s"));
   }
   return results;
-}
-
-void PrjModel_Impl::rebuildContaminants()
-{
-  m_contaminants.clear();
-  for(unsigned int i=1;i<=m_species.size();i++)
-  {
-    m_species[i].setNr(i);
-    if(m_species[i].sflag())
-    {
-      m_contaminants.push_back(i);
-    }
-  }
-}
-
-void PrjModel_Impl::readZoneIc(Reader &input)
-{
-  unsigned int nn = input.readUInt(FILELINE);
-  if(nn != 0)
-  {
-    unsigned int nctm = m_contaminants.size();
-    if(nn != nctm*m_zones.size())
-    {
-      QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
-#ifndef NOFILELINE
-      mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
-#endif
-      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
-    }
-    for(unsigned int i=0;i<m_zones.size();i++)
-    {
-      unsigned int nr = input.readUInt(FILELINE);
-      if(nr != i+1)
-      {
-        QString mesg = QString("Mismatch between zone IC number and zone number at line %1 ")
-          .arg(input.lineNumber());
-#ifndef NOFILELINE
-        mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
-#endif
-        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
-      }
-      std::vector<RX> ic;
-      for(unsigned int j=0;j<nctm;j++)
-      {
-        ic.push_back(input.readNumber<RX>(FILELINE));
-      }
-      m_zones[i].setIc(ic);
-    }
-  }
-  input.read999("Failed to find zone IC section termination" CFILELINE);
-}
-
-std::string PrjModel_Impl::writeZoneIc(int start)
-{
-  int offset = 1;
-  if(start != 0)
-  {
-    offset = 1-start;
-  }
-  int nctm = m_contaminants.size()*(m_zones.size()-start);
-  std::string string = openstudio::toString(nctm) + " ! initial zone concentrations:\n";
-  if(nctm)
-  {
-    for(unsigned int i=start;i<m_zones.size();i++)
-    {
-      string += openstudio::toString(i+offset);
-      for(unsigned int j=0;j<m_contaminants.size();j++)
-      {
-        string += ' ' + openstudio::toString(m_zones[i].ic(j));
-      }
-      string += '\n';
-    }
-  }
-  return string  + "-999\n";
-}
-
-int PrjModel_Impl::airflowElementNrByName(std::string name) const
-{
-  for(int i=0;i<m_airflowElements.size();i++)
-  {
-    if(m_airflowElements[i]->name() == name)
-    {
-      return m_airflowElements[i]->nr();
-    }
-  }
-  return 0;
-}
-
-bool PrjModel_Impl::setSteadyWeather(double windSpeed, double windDirection)
-{
-  if(windSpeed < 0)
-  {
-    windSpeed = -windSpeed; // Maybe should return false in this case?
-  }
-  // Is a negative wind direction allowed? Will have to check
-  m_rc.ssWeather().setWindspd(QString().sprintf("%g",windSpeed).toStdString());
-  m_rc.ssWeather().setWinddir(QString().sprintf("%g",windDirection).toStdString());
-  return true;
 }
 
 } // contam
