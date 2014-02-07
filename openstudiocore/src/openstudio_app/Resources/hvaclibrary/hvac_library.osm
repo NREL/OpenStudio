@@ -3058,7 +3058,7 @@ OS:CoolingTowerPerformance:YorkCalc,
 
 OS:Fan:ZoneExhaust,
   {2d1f9bb9-ce2d-4f23-8f07-8b93615770b1}, !- Handle
-  Fan Zone Exhaust 1,                     !- Name
+  Fan Zone Exhaust,                     !- Name
   ,                                       !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   0,                                      !- Pressure Rise {Pa}
