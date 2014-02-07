@@ -101,11 +101,10 @@ namespace openstudio{
       qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.file_string()).toUtf8());
     }
 
-    bool opensslloaded = false;
 #ifdef QT_NO_OPENSSL
-    // nothing to do
+    bool opensslloaded = false;
 #else
-    opensslloaded = QSslSocket::supportsSsl();
+    bool opensslloaded = QSslSocket::supportsSsl();
 #endif
 
     if (!t_pathToSSLLibraries.empty())
@@ -234,7 +233,7 @@ namespace openstudio{
 
   int RemoteBCL::checkForComponentUpdates()
   {
-    m_componentsWithUpdates.empty();
+    m_componentsWithUpdates.clear();
 
     Q_FOREACH(BCLComponent component, LocalBCL::instance().components()){
       // can't start another search until the last one is done
@@ -260,6 +259,7 @@ namespace openstudio{
 #ifndef QT_NO_OPENSSL
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
+      OS_ASSERT(test);
 #endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
@@ -277,7 +277,7 @@ namespace openstudio{
 
   int RemoteBCL::checkForMeasureUpdates()
   {
-    m_measuresWithUpdates.empty();
+    m_measuresWithUpdates.clear();
 
     Q_FOREACH(BCLMeasure measure, LocalBCL::instance().measures()){
       // can't start another search until the last one is done

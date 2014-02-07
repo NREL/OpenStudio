@@ -354,7 +354,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPumps.begin();
     it < zoneHVACWaterToAirHeatPumps.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->heatingCoil() )
       {

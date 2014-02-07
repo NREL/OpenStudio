@@ -416,7 +416,7 @@ void OpenStudioApp::importIdf()
                                                                      model) );
         m_osDocument->markAsModified();
         // ETH: parent should change now ...
-        parent = m_osDocument->mainWindow();
+        //parent = m_osDocument->mainWindow();
 
         connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
         connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
@@ -440,7 +440,7 @@ void OpenStudioApp::importIdf()
 
         for( std::vector<LogMessage>::iterator it = messages.begin();
              it < messages.end();
-             it++ )
+             ++it )
         {
           log.append(QString::fromStdString(it->logMessage()));
           log.append("\n");
@@ -451,7 +451,7 @@ void OpenStudioApp::importIdf()
 
         for( std::vector<LogMessage>::iterator it = messages.begin();
              it < messages.end();
-             it++ )
+             ++it )
         {
           log.append(QString::fromStdString(it->logMessage()));
           log.append("\n");
@@ -509,7 +509,7 @@ void OpenStudioApp::importSDD()
                                                                    *model) );
       m_osDocument->markAsModified();
       // ETH: parent should change now ...
-      parent = m_osDocument->mainWindow();
+      //parent = m_osDocument->mainWindow();
 
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
@@ -532,7 +532,7 @@ void OpenStudioApp::importSDD()
 
       for( std::vector<LogMessage>::iterator it = messages.begin();
            it < messages.end();
-           it++ )
+           ++it )
       {
         errorsOrWarnings = true;
 
@@ -545,7 +545,7 @@ void OpenStudioApp::importSDD()
 
       for( std::vector<LogMessage>::iterator it = messages.begin();
            it < messages.end();
-           it++ )
+           ++it )
       {
         errorsOrWarnings = true;
 
@@ -677,11 +677,9 @@ void OpenStudioApp::open()
 
 void OpenStudioApp::loadLibrary()
 {
-  QWidget * parent = NULL;
-
   if( this->currentDocument() )
   {
-    parent = this->currentDocument()->mainWindow();
+    QWidget * parent = this->currentDocument()->mainWindow();
   
 
     QString fileName = QFileDialog::getOpenFileName( parent,
@@ -780,7 +778,7 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
 
   for( std::vector<LogMessage>::iterator it = messages.begin();
        it < messages.end();
-       it++ )
+       ++it )
   {
     log.append(QString::fromStdString(it->logMessage()));
     log.append("\n");
@@ -791,7 +789,7 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
 
   for( std::vector<LogMessage>::iterator it = messages.begin();
        it < messages.end();
-       it++ )
+       ++it )
   {
     log.append(QString::fromStdString(it->logMessage()));
     log.append("\n");

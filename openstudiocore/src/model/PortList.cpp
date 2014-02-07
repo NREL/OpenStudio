@@ -168,7 +168,7 @@ std::vector<ModelObject> PortList_Impl::modelObjects()
 
 unsigned PortList_Impl::newPortAfterIndex(unsigned portIndex)
 {
-  std::vector<ModelObject> modelObjects = this->modelObjects();
+  //std::vector<ModelObject> modelObjects = this->modelObjects();
   for(int i = portIndex; i < int(nextPortIndex()) - 1; i++ )
   {
     ModelObject mo = modelObject(i).get();
@@ -213,7 +213,7 @@ void PortList_Impl::removePortForIndex(unsigned portIndex)
 {
   int _nextPortIndex = nextPortIndex();
   model().disconnect(getObject<ModelObject>(),this->port(portIndex));
-  std::vector<ModelObject> modelObjects = this->modelObjects();
+  //std::vector<ModelObject> modelObjects = this->modelObjects();
   for(int i = portIndex + 1; i < _nextPortIndex; i++ )
   {
     ModelObject mo = modelObject(i).get();
@@ -229,7 +229,7 @@ unsigned PortList_Impl::airLoopHVACPort()
 
   for( std::vector<ModelObject>::iterator it = objects.begin();
        it != objects.end();
-       it++ )
+       ++it )
   {
     if( boost::optional<HVACComponent> hvacComponent = it->optionalCast<HVACComponent>() )
     {
@@ -251,7 +251,7 @@ boost::optional<ModelObject> PortList_Impl::airLoopHVACModelObject()
 
   for( std::vector<ModelObject>::iterator it = objects.begin();
        it != objects.end();
-       it++ )
+       ++it )
   {
     if( boost::optional<HVACComponent> hvacComponent = it->optionalCast<HVACComponent>() )
     {

@@ -117,7 +117,7 @@ namespace detail {
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
          it != zoneBoundaries.end();
-         it++ )
+         ++it )
     {
       std::vector<IdfObject> removedZoneBoundaries = it->remove();
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
@@ -138,7 +138,7 @@ namespace detail {
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
          it != zoneBoundaries.end();
-         it++ )
+         ++it )
     {
       RefrigerationWalkInZoneBoundary zoneBoundaryClone = it->clone(model).cast<RefrigerationWalkInZoneBoundary>();
       modelObjectClone.addZoneBoundary(zoneBoundaryClone);
@@ -179,7 +179,7 @@ namespace detail {
 
     for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
          it != groups.end();
-         it++ )
+         ++it )
     {
         if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary)->optionalCast<RefrigerationWalkInZoneBoundary>()) {
           result.push_back( refrigerationWalkInZoneBoundary.get() );
@@ -529,9 +529,8 @@ RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDef
 {
   OS_ASSERT(getImpl<detail::RefrigerationWalkIn_Impl>());
 
-  bool ok = true;
   setRatedCoilCoolingCapacity(4690.0);
-  ok = setOperatingTemperature(-2.22);
+  bool ok = setOperatingTemperature(-2.22);
   OS_ASSERT(ok);
   ok = setRatedCoolingSourceTemperature(-6.67);
   OS_ASSERT(ok);

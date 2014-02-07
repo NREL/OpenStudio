@@ -27,7 +27,8 @@
 namespace openstudio {
 
 OSViewSwitcher::OSViewSwitcher(QWidget * parent)
-  : QWidget(parent)
+  : QWidget(parent),
+    m_view(NULL)
 {
   QVBoxLayout * layout = new QVBoxLayout();
   layout->setContentsMargins(0,0,0,0);

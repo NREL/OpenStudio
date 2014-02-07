@@ -114,20 +114,24 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     peakDemandUnitConversionFactor = 1.0
     consumptionUnitConversionFactor = 1.0
 
+    missingData = false
     # must have a runPeriod
     runPeriod = model.runPeriod
     if runPeriod.empty?
-      runner.registerError("Model has no run period.")
+      missingData = true
+      runner.registerWarning("Model has no run period and cannot generate all data.")
     end
     
-    # must have a calendarYear
+    # must have a calendarYear to generate model data
     yearDescription = model.yearDescription
     if yearDescription.empty?
-      runner.registerError("Model has no year description.")
+      missingData = true
+      runner.registerWarning("Model has no year description and cannot generate all data.")
     end
     calendarYear = yearDescription.get.calendarYear
     if calendarYear.empty?
-      runner.registerError("Model has no calendar year.")
+      missingData = true
+      runner.registerWarning("Model has no calendar year and cannot generate all data.")
     end
     
     model.getUtilityBills.each do |utilityBill|
@@ -331,7 +335,11 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     sqlFile.close()
 
     #reporting final condition
-    runner.registerFinalCondition("Goodbye.")
+    if missingData == true
+        runner.registerFinalCondition("Calibration Report was not generated successfully.")
+    else
+        runner.registerFinalCondition("Calibration Report generated successfully.")
+    end
 
     return true
 

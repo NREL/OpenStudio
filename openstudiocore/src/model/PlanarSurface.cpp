@@ -592,8 +592,8 @@ PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& ver
   OS_ASSERT(getImpl<detail::PlanarSurface_Impl>());
   bool ok = this->setVertices(vertices);
   if (!ok){
-    LOG_AND_THROW("Cannot create a surface with vertices " << vertices);
     this->remove();
+    LOG_AND_THROW("Cannot create a surface with vertices " << vertices);
   }
 }
 

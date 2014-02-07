@@ -346,7 +346,7 @@ void GridItem::dropEvent(QGraphicsSceneDragDropEvent *event)
 
         emit hvacComponentDropped(id,node);
       }
-      catch(std::bad_cast b)
+      catch(std::bad_cast&)
       {
         return;
       }
@@ -436,7 +436,7 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
     m_hasDualTwoRightSidePipes(false)
 {
   for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
-       it < modelObjects.end(); it++ )
+       it < modelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
     {
@@ -547,12 +547,11 @@ void HorizontalBranchItem::setIsDropZone(bool isDropZone)
 
 void HorizontalBranchItem::setPadding( unsigned padding )
 {
-  OneThreeStraightItem * straightItem;
   if( m_paddingItems.size() > padding )
   {
     for( std::vector<OneThreeStraightItem *>::iterator it = m_paddingItems.begin() + padding;
          it < m_paddingItems.end(); 
-         it++ )
+         ++it )
     {
       (*it)->scene()->removeItem(*it);
     } 
@@ -562,7 +561,7 @@ void HorizontalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      straightItem = new OneThreeStraightItem();
+      OneThreeStraightItem * straightItem = new OneThreeStraightItem();
       straightItem->setParentItem(this);
       m_paddingItems.push_back( straightItem );
     }
@@ -581,7 +580,7 @@ void HorizontalBranchItem::layout()
   int i = 0;
 
   for( std::vector<GridItem *>::iterator it = m_gridItems.begin();
-       it < m_gridItems.end(); it++ )
+       it < m_gridItems.end(); ++it )
   {
     if( m_isDropZone )
     {
@@ -595,7 +594,7 @@ void HorizontalBranchItem::layout()
     }
   }
   for( std::vector<OneThreeStraightItem *>::iterator it = m_paddingItems.begin();
-       it < m_paddingItems.end(); it++ )
+       it < m_paddingItems.end(); ++it )
   {
     if( m_isDropZone )
     {
@@ -661,7 +660,7 @@ VerticalBranchItem::VerticalBranchItem( std::vector<model::ModelObject> modelObj
   : GridItem( parent )
 {
   for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
-       it < modelObjects.end(); it++ )
+       it < modelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
     {
@@ -690,12 +689,11 @@ VerticalBranchItem::VerticalBranchItem( std::vector<model::ModelObject> modelObj
 
 void VerticalBranchItem::setPadding( unsigned padding )
 {
-  TwoFourStraightItem * straightItem;
   if( m_paddingItems.size() > padding )
   {
     for( std::vector<TwoFourStraightItem *>::iterator it = m_paddingItems.begin() + padding;
          it < m_paddingItems.end(); 
-         it++ )
+         ++it )
     {
       (*it)->scene()->removeItem(*it);
     } 
@@ -705,7 +703,7 @@ void VerticalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      straightItem = new TwoFourStraightItem();
+      TwoFourStraightItem * straightItem = new TwoFourStraightItem();
       straightItem->setParentItem(this);
       m_paddingItems.push_back( straightItem );
     }
@@ -718,13 +716,13 @@ void VerticalBranchItem::layout()
 {
   int j = 0;
   for( std::vector<GridItem *>::iterator it = m_gridItems.begin();
-       it < m_gridItems.end(); it++ )
+       it < m_gridItems.end(); ++it )
   {
     (*it)->setGridPos( 0, j );
     j = j + (*it)->getVGridLength();
   }
   for( std::vector<TwoFourStraightItem *>::iterator it = m_paddingItems.begin();
-       it < m_paddingItems.end(); it++ )
+       it < m_paddingItems.end(); ++it )
   {
     (*it)->setGridPos( 0, j );
     j = j + (*it)->getVGridLength();
@@ -741,7 +739,7 @@ ReverseVerticalBranchItem::ReverseVerticalBranchItem( std::vector<model::ModelOb
   : GridItem(parent)
 {
   for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
-       it < modelObjects.end(); it++ )
+       it < modelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
     {
@@ -770,12 +768,11 @@ ReverseVerticalBranchItem::ReverseVerticalBranchItem( std::vector<model::ModelOb
 
 void ReverseVerticalBranchItem::setPadding( unsigned padding )
 {
-  FourTwoStraightItem * straightItem;
   if( m_paddingItems.size() > padding )
   {
     for( std::vector<FourTwoStraightItem *>::iterator it = m_paddingItems.begin() + padding;
          it < m_paddingItems.end(); 
-         it++ )
+         ++it )
     {
       (*it)->scene()->removeItem(*it);
     } 
@@ -785,7 +782,7 @@ void ReverseVerticalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      straightItem = new FourTwoStraightItem();
+      FourTwoStraightItem * straightItem = new FourTwoStraightItem();
       straightItem->setParentItem(this);
       m_paddingItems.push_back( straightItem );
     }
@@ -798,14 +795,14 @@ void ReverseVerticalBranchItem::layout()
 {
   int j = 0;
   for( std::vector<FourTwoStraightItem *>::iterator it = m_paddingItems.begin();
-       it < m_paddingItems.end(); it++ )
+       it < m_paddingItems.end(); ++it )
   {
     (*it)->setGridPos( 0, j );
     j = j + (*it)->getVGridLength();
   }
 
   for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
-       it < m_gridItems.rend(); it++ )
+       it < m_gridItems.rend(); ++it )
   {
     (*it)->setGridPos( 0, j );
     j = j + (*it)->getVGridLength();
@@ -837,7 +834,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     std::vector<model::ModelObject>::iterator it2 = mixerInletObjects.begin();
     for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin(); 
          it1 < splitterOutletObjects.end();
-         it1++ )
+         ++it1 )
     {
       model::HVACComponent node1 = it1->optionalCast<model::HVACComponent>().get();
       model::HVACComponent node2 = it2->optionalCast<model::HVACComponent>().get();
@@ -856,18 +853,18 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
       if( isSupplySide )
       {
         m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
-        it2++;
+        ++it2;
       }
       else
       {
         std::vector<model::ModelObject> rBranchComponents;
         for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
-             rit < branchComponents.rend(); rit++ )
+             rit < branchComponents.rend(); ++rit )
         {
           rBranchComponents.push_back( *rit );
         }
         m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
-        it2++;
+        ++it2;
       }
     }
   }
@@ -920,7 +917,7 @@ void HorizontalBranchGroupItem::layout()
 
   int longestBranch = 0;
   for( std::vector<HorizontalBranchItem *>::iterator it = m_branchItems.begin();
-       it < m_branchItems.end(); it++ )
+       it < m_branchItems.end(); ++it )
   {
     if( (*it)->getHGridLength() > longestBranch )
     {
@@ -931,7 +928,7 @@ void HorizontalBranchGroupItem::layout()
   setHGridLength( longestBranch );
 
   for( std::vector<HorizontalBranchItem *>::iterator it = m_branchItems.begin();
-       it < m_branchItems.end(); it++ )
+       it < m_branchItems.end(); ++it )
   {
     unsigned padding = longestBranch - (*it)->getHGridLength(); 
     if( padding > 0 )
@@ -943,7 +940,7 @@ void HorizontalBranchGroupItem::layout()
   int j = 0;
   int lastj = 0;
   for( std::vector<HorizontalBranchItem *>::iterator it = m_branchItems.begin();
-       it < m_branchItems.end(); it++ )
+       it < m_branchItems.end(); ++it )
   {
     (*it)->setGridPos(0,j);
     lastj = j + (*it)->getVGridLength();
@@ -1491,7 +1488,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
   std::vector<model::ModelObject>::reverse_iterator it2 = reliefModelObjects.rbegin();
 
   for( std::vector<model::ModelObject>::iterator it = supplyModelObjects.begin();
-       it < supplyModelObjects.end(); it++ )
+       it < supplyModelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
     {
@@ -1525,7 +1522,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
         {
           GridItem * gridItem = new OASupplyStraightItem(this); 
           m_gridItems.push_back(gridItem);
-          it2++;
+          ++it2;
         }
       }
       m_gridItems.push_back(NULL);
@@ -1533,7 +1530,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 
     if( it2 != reliefModelObjects.rend() )
     {
-      it2++;
+      ++it2;
     }
   }
 
@@ -1541,7 +1538,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
   {
     GridItem * gridItem = new OASupplyStraightItem(this); 
     m_gridItems.insert(m_gridItems.begin(),gridItem);
-    it2++;
+    ++it2;
   }
 
   layout();
@@ -1551,7 +1548,7 @@ void OASupplyBranchItem::layout()
 {
   int j = 0;
   for( std::vector<GridItem *>::iterator it = m_gridItems.begin();
-       it < m_gridItems.end(); it++ )
+       it < m_gridItems.end(); ++it )
   {
     if( *it )
     {
@@ -1580,7 +1577,7 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
   std::vector<model::ModelObject>::reverse_iterator it2 = supplyModelObjects.rbegin();
 
   for( std::vector<model::ModelObject>::iterator it = reliefModelObjects.begin();
-       it < reliefModelObjects.end(); it++ )
+       it < reliefModelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
     {
@@ -1614,7 +1611,7 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
         {
           GridItem * gridItem = new OAReliefStraightItem(this); 
           m_gridItems.push_back(gridItem);
-          it2++;
+          ++it2;
         }
       }
       GridItem * gridItem = new OAAirToAirItem(this); 
@@ -1628,7 +1625,7 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
 
     if( it2 != supplyModelObjects.rend() )
     {
-      it2++;
+      ++it2;
     }
   }
 
@@ -1636,7 +1633,7 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
   {
     GridItem * gridItem = new OAReliefStraightItem(this); 
     m_gridItems.push_back(gridItem);
-    it2++;
+    ++it2;
   }
 
   layout();
@@ -1646,7 +1643,7 @@ void OAReliefBranchItem::layout()
 {
   int j = 0;
   for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
-       it < m_gridItems.rend(); it++ )
+       it < m_gridItems.rend(); ++it )
   {
     (*it)->setGridPos( 0, j );
     j = j + (*it)->getVGridLength();
@@ -2106,7 +2103,6 @@ OASystemItem::OASystemItem( model::AirLoopHVACOutdoorAirSystem & oaSystem,
 
 void OASystemItem::layout()
 {
-  unsigned oaVLength = m_oaBranch->getVGridLength();
   setHGridLength(2);
 
   m_reliefNodeItem->setGridPos(0,0);
@@ -2114,7 +2110,7 @@ void OASystemItem::layout()
   m_oaNodeItem->setGridPos(1,0);
   m_oaBranch->setGridPos(1,1);
 
-  oaVLength = m_oaBranch->getVGridLength();
+  unsigned oaVLength = m_oaBranch->getVGridLength();
   setVGridLength( oaVLength + 2 );
   m_oaMixerItem->setGridPos(0, oaVLength + 1);
 }
@@ -2364,7 +2360,7 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   inletComponents.erase( inletComponents.end() - 1 );
   std::vector<model::ModelObject> rInletComponents;
   for( std::vector<model::ModelObject>::reverse_iterator rit = inletComponents.rbegin();
-       rit < inletComponents.rend(); rit++ )
+       rit < inletComponents.rend(); ++rit )
   {
     rInletComponents.push_back( *rit );
   }
@@ -2376,7 +2372,7 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   outletComponents.erase( outletComponents.end() - 1 );
   std::vector<model::ModelObject> rOutletComponents;
   for( std::vector<model::ModelObject>::reverse_iterator rit = outletComponents.rbegin();
-       rit < outletComponents.rend(); rit++ )
+       rit < outletComponents.rend(); ++rit )
   {
     rOutletComponents.push_back( *rit );
   }

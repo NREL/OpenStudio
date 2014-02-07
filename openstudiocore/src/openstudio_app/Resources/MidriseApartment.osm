@@ -1,6 +1,6 @@
 
 OS:Version,
-  {dce7ea00-27cb-424b-ac8f-0b6200b18027}, !- Handle
+  {abd3876d-67d8-489e-b681-9f0ad6ce62fe}, !- Handle
   1.1.2;                                  !- Version Identifier
 
 OS:Schedule:Constant,
@@ -3340,7 +3340,7 @@ OS:DefaultSurfaceConstructions,
 OS:DefaultSurfaceConstructions,
   {08d59271-f6a8-4915-b503-10e66b6c8c68}, ! Handle
   000 Interior DefSurfCons,               ! Name
-  {8758b594-f1b3-4b59-9228-7e92b3e0d95d}, ! Floor Construction Name
+  {44ff3b49-9440-4330-b60c-c350f4db01be}, ! Floor Construction Name
   {38d66d23-0ae3-4202-a09c-445240a91cf2}, ! Wall Construction Name
   {abac3a72-9641-497d-a59c-b33d2c479b73}; ! Roof Ceiling Construction Name
 
@@ -11554,7 +11554,7 @@ OS:RunPeriod,
 OS:DefaultSurfaceConstructions,
   {48e22e8e-87a2-41b6-ae53-5e8e3d17a4c4}, ! Handle
   000 Interior DefSurfCons 1,             ! Name
-  {8758b594-f1b3-4b59-9228-7e92b3e0d95d}, ! Floor Construction Name
+  {44ff3b49-9440-4330-b60c-c350f4db01be}, ! Floor Construction Name
   {38d66d23-0ae3-4202-a09c-445240a91cf2}, ! Wall Construction Name
   {abac3a72-9641-497d-a59c-b33d2c479b73}; ! Roof Ceiling Construction Name
 

@@ -228,8 +228,7 @@ namespace detail {
   }
 
   bool GasEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
-    bool result = false;
-    result = setDouble(OS_GasEquipment_DefinitionFields::FractionLatent, fractionLatent);
+    bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionLatent, fractionLatent);
     return result;
   }
 
@@ -239,8 +238,7 @@ namespace detail {
   //}
 
   bool GasEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
-    bool result = false;
-    result = setDouble(OS_GasEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
+    bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
     return result;
   }
 
@@ -250,8 +248,7 @@ namespace detail {
   //}
 
   bool GasEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
-    bool result = false;
-    result = setDouble(OS_GasEquipment_DefinitionFields::FractionLost, fractionLost);
+    bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionLost, fractionLost);
     return result;
   }
 
@@ -261,8 +258,7 @@ namespace detail {
   //}
 
   bool GasEquipmentDefinition_Impl::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
-    bool result = false;
-    result = setDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, carbonDioxideGenerationRate);
+    bool result = setDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, carbonDioxideGenerationRate);
     return result;
   }
 

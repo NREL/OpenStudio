@@ -666,10 +666,9 @@ RefrigerationSecondarySystem::RefrigerationSecondarySystem(const Model& model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationSecondarySystem_Impl>());
 
-  bool ok = true;
   ModelObjectList caseAndWalkinList = ModelObjectList(model);
   caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
-  ok = getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
+  bool ok = getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
   OS_ASSERT(ok);
   ok = setCirculatingFluidName("PropyleneGlycol");
   OS_ASSERT(ok);

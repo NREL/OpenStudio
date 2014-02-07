@@ -618,8 +618,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setPerformanceInputMethod(std::string performanceInputMethod) {
-    bool result = false;
-    result = setString(OS_CoolingTower_SingleSpeedFields::PerformanceInputMethod, performanceInputMethod);
+    bool result = setString(OS_CoolingTower_SingleSpeedFields::PerformanceInputMethod, performanceInputMethod);
     return result;
   }
 
@@ -689,8 +688,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setBasinHeaterCapacity(double basinHeaterCapacity) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::BasinHeaterCapacity, basinHeaterCapacity);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::BasinHeaterCapacity, basinHeaterCapacity);
     return result;
   }
 
@@ -708,8 +706,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::BasinHeaterSetpointTemperature, basinHeaterSetpointTemperature);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::BasinHeaterSetpointTemperature, basinHeaterSetpointTemperature);
     return result;
   }
 
@@ -755,8 +752,7 @@ namespace detail {
   }
 
   void CoolingTowerSingleSpeed_Impl::setEvaporationLossFactor(double evaporationLossFactor) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::EvaporationLossFactor, evaporationLossFactor);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::EvaporationLossFactor, evaporationLossFactor);
     OS_ASSERT(result);
   }
 
@@ -776,8 +772,7 @@ namespace detail {
   }
 
   void CoolingTowerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::DriftLossPercent, driftLossPercent);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::DriftLossPercent, driftLossPercent);
     OS_ASSERT(result);
   }
 
@@ -813,8 +808,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setBlowdownConcentrationRatio(double blowdownConcentrationRatio) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::BlowdownConcentrationRatio, blowdownConcentrationRatio);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::BlowdownConcentrationRatio, blowdownConcentrationRatio);
     return result;
   }
 
@@ -845,8 +839,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setCapacityControl(std::string capacityControl) {
-    bool result = false;
-    result = setString(OS_CoolingTower_SingleSpeedFields::CapacityControl, capacityControl);
+    bool result = setString(OS_CoolingTower_SingleSpeedFields::CapacityControl, capacityControl);
     return result;
   }
 
@@ -856,8 +849,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setNumberofCells(int numberofCells) {
-    bool result = false;
-    result = setInt(OS_CoolingTower_SingleSpeedFields::NumberofCells, numberofCells);
+    bool result = setInt(OS_CoolingTower_SingleSpeedFields::NumberofCells, numberofCells);
     return result;
   }
 
@@ -867,8 +859,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setCellControl(std::string cellControl) {
-    bool result = false;
-    result = setString(OS_CoolingTower_SingleSpeedFields::CellControl, cellControl);
+    bool result = setString(OS_CoolingTower_SingleSpeedFields::CellControl, cellControl);
     return result;
   }
 
@@ -878,8 +869,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setCellMinimumWaterFlowRateFraction(double cellMinimumWaterFlowRateFraction) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::CellMinimumWaterFlowRateFraction, cellMinimumWaterFlowRateFraction);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::CellMinimumWaterFlowRateFraction, cellMinimumWaterFlowRateFraction);
     return result;
   }
 
@@ -897,8 +887,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setCellMaximumWaterFlowRateFraction(double cellMaximumWaterFlowRateFraction) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::CellMaximumWaterFlowRateFraction, cellMaximumWaterFlowRateFraction);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::CellMaximumWaterFlowRateFraction, cellMaximumWaterFlowRateFraction);
     return result;
   }
 
@@ -916,8 +905,7 @@ namespace detail {
   }
 
   bool CoolingTowerSingleSpeed_Impl::setSizingFactor(double sizingFactor) {
-    bool result = false;
-    result = setDouble(OS_CoolingTower_SingleSpeedFields::SizingFactor, sizingFactor);
+    bool result = setDouble(OS_CoolingTower_SingleSpeedFields::SizingFactor, sizingFactor);
     return result;
   }
 

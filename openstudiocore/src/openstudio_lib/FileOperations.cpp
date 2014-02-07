@@ -66,12 +66,12 @@ namespace openstudio {
   bool removeDir(const QString &dirName)
   {
     bool result = true;
-    bool test = true;
-
+    
     LOG_FREE(Info, "removeDir", "removeDir '" << toString(dirName) << "'");
 
     QDir dir(dirName);
     if (dir.exists(dirName)) {
+      bool test = true;
 
       Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
       {
@@ -259,19 +259,17 @@ namespace openstudio {
   bool initializeModelTempDir(const openstudio::path& osmPath, const openstudio::path& modelTempDir)
   {
     bool result = true;
-    bool test = true;
-
+    
     if( osmPath.empty() || !boost::filesystem::exists(osmPath)){
      
       LOG_FREE(Debug, "initializeModelTempDir", "OSM path '" << toString(osmPath) << "' is empty or does not exist");
       result = false;
 
     }else{
-
       LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(osmPath) << "' to '" << toString(modelTempDir / toPath("in.osm")) << "'");
    
       // copy osm file
-      test = QFile::copy(toQString(osmPath), toQString(modelTempDir / toPath("in.osm")));
+      bool test = QFile::copy(toQString(osmPath), toQString(modelTempDir / toPath("in.osm")));
       if (!test){
         LOG_FREE(Error, "initializeModelTempDir", "Could not copy '" << toString(osmPath) << "' to '" << toString(modelTempDir / toPath("in.osm")) << "'");
       }

@@ -790,8 +790,7 @@ RadianceParameters::RadianceParameters(Model& model,
 {
   OS_ASSERT(getImpl<detail::RadianceParameters_Impl>());
 
-  bool ok = true;
-  ok = setAccumulatedRaysperRecord(accumulatedRaysperRecord);
+  bool ok = setAccumulatedRaysperRecord(accumulatedRaysperRecord);
   OS_ASSERT(ok);
   ok = setDirectThreshold(directThreshold);
   OS_ASSERT(ok);

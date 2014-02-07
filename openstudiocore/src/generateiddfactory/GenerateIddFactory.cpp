@@ -42,8 +42,6 @@ IddFileFactoryDataVector constructIddFileObjects(const std::vector<std::string>&
 void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
                         const std::vector<IddFileFactoryData>& iddFiles) 
 {
-  std::stringstream ss;
-
   // start IddEnums.hxx
   outFiles.iddEnumsHxx.tempFile
     << "#ifndef UTILITIES_IDD_IDDENUMS_HXX" << std::endl

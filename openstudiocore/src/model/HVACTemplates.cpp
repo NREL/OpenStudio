@@ -265,7 +265,7 @@ void addSystemType1(Model & model, std::vector<ThermalZone> zones)
 
   for( std::vector<model::ThermalZone>::iterator it = zones.begin();
        it < zones.end();
-       it++ )
+       ++it )
   {
     if( it->model() == model )
     {
@@ -320,7 +320,7 @@ void addSystemType1(Model & model, std::vector<ThermalZone> zones)
 
     for( std::vector<model::ThermalZone>::iterator it = zonesToAddTo.begin();
          it < zonesToAddTo.end();
-         it++ )
+         ++it )
     {
         model::ZoneHVACPackagedTerminalAirConditioner ptac = addSystemType1(model);
 
@@ -456,7 +456,7 @@ void addSystemType2(Model & model, std::vector<ThermalZone> zones)
 {
   for( std::vector<model::ThermalZone>::iterator it = zones.begin();
        it < zones.end();
-       it++ )
+       ++it )
   {
     if( it->model() == model )
     {

@@ -34,6 +34,11 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     open_path.setDisplayName("Select OSM File to Merge SketchUp objects to.")
     result << open_path
 
+    merge_selected_only = OpenStudio::Ruleset::OSArgument::makeBoolArgument("merge_selected_only",false)
+    merge_selected_only.setDisplayName("Merge Selected Spaces Only? ")
+    merge_selected_only.setDefaultValue(false)
+    result << merge_selected_only
+        
     # todo - expose layers as arguments mapped to type of SO objects?
     # todo - have way to pull in background model from other script.
     # todo - support save as to another or a new osm.
@@ -52,6 +57,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     
     #get path
     open_path = runner.getStringArgumentValue("open_path",user_arguments)
+    merge_selected_only = runner.getBoolArgumentValue("merge_selected_only",user_arguments)
 
     # Open OSM file
     @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).get
@@ -68,7 +74,11 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
     # get SketchUp model and entities
     skp_model = Sketchup.active_model
-    entities = skp_model.active_entities
+    if not merge_selected_only
+      entities = skp_model.active_entities
+    else
+      entities = skp_model.selection
+    end
 
     #use north direction in SketchUp to set building rotation
 
@@ -557,27 +567,33 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
     end #end of groups.each do
 
-    #todo - delete spaces that were no long in the SketchUp model
-    @spaces.each do |space|
-      if not @current_spaces.include? space
-        puts "removing #{space.name}"
-        space.remove
-      end
-    end
+    # delete spaces that were no long in the SketchUp model. Don't perform this if merging selection only
 
-    @shading_groups.each do |shading_group|
-      if not @current_shading_surface_groups.include? shading_group
-        puts "removing #{shading_group.name}"
-        shading_group.remove
-      end
-    end
+    if not merge_selected_only
 
-    @interior_partition_groups.each do |interior_partition_group|
-      if not @current_interior_partition_groups.include? interior_partition_group
-        puts "removing #{interior_partition_group.name}"
-        interior_partition_group.remove
+      @shading_groups.each do |shading_group|
+        if not @current_shading_surface_groups.include? shading_group
+          puts "removing #{shading_group.name}"
+          shading_group.remove
+        end
       end
-    end
+
+      @interior_partition_groups.each do |interior_partition_group|
+        if not @current_interior_partition_groups.include? interior_partition_group
+          puts "removing #{interior_partition_group.name}"
+          interior_partition_group.remove
+        end
+      end
+
+      # I'm doing spaces last to avoid error about removing disconnected objects for nested groups.
+      @spaces.each do |space|
+        if not @current_spaces.include? space
+          puts "removing #{space.name}"
+          space.remove
+        end
+      end
+
+    end #end of if not merge_selected_only
 
     #todo - confirm behavior with components
 

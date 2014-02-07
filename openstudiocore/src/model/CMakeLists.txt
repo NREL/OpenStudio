@@ -98,9 +98,6 @@ SET( ${target_name}_src
   Building.hpp
   Building_Impl.hpp
   Building.cpp
-  BuildingStandardsInformation.hpp
-  BuildingStandardsInformation_Impl.hpp
-  BuildingStandardsInformation.cpp
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
@@ -191,9 +188,6 @@ SET( ${target_name}_src
   ConstructionBase.hpp
   ConstructionBase_Impl.hpp
   ConstructionBase.cpp
-  ConstructionBaseStandardsInformation.hpp
-  ConstructionBaseStandardsInformation_Impl.hpp
-  ConstructionBaseStandardsInformation.cpp
   ConstructionWithInternalSource.hpp
   ConstructionWithInternalSource_Impl.hpp
   ConstructionWithInternalSource.cpp
@@ -736,6 +730,9 @@ SET( ${target_name}_src
   StandardOpaqueMaterial.hpp
   StandardOpaqueMaterial_Impl.hpp
   StandardOpaqueMaterial.cpp
+  StandardsInformationConstruction.hpp
+  StandardsInformationConstruction_Impl.hpp
+  StandardsInformationConstruction.cpp  
   SteamEquipment.hpp
   SteamEquipment_Impl.hpp
   SteamEquipment.cpp
@@ -1080,12 +1077,19 @@ SET( ${target_name}_moc
 
 qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
+SET( ${target_name}_qrc
+  Model.qrc
+)
+
+# generate rules for building source files from the resources
+qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+
 
 SET( ${target_name}_depends
   openstudio_utilities
 )
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} )
+ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs} )
 TARGET_LINK_LIBRARIES(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
