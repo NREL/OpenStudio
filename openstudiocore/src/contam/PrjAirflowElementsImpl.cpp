@@ -21,941 +21,5346 @@
 namespace openstudio {
 namespace contam {
 
-PlrOrfPrivate::PlrOrfPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),dia(dia),coef(coef),Re(Re),u_A(u_A),u_D(u_D)
-{}
-
-void PlrOrfPrivate::read(Reader &input)
+void PlrOrfImpl::setDefaults()
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  area = input.readNumber<RX>(FILELINE);
-  dia = input.readNumber<RX>(FILELINE);
-  coef = input.readNumber<RX>(FILELINE);
-  Re = input.readNumber<RX>(FILELINE);
-  u_A = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_area = RX7("0.0");
+  m_dia = RX7("0.0");
+  m_coef = RX7("0.0");
+  m_Re = RX7("0.0");
+  m_u_A = 0;
+  m_u_D = 0;
 }
 
-std::string PlrOrfPrivate::write()
+PlrOrfImpl::PlrOrfImpl()
+{
+  setDefaults();
+}
+
+PlrOrfImpl::PlrOrfImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrOrfImpl::PlrOrfImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double area,
+                       double dia,double coef,double Re,int u_A,int u_D)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setArea(area);
+  setDia(dia);
+  setCoef(coef);
+  setRe(Re);
+  setU_A(u_A);
+  setU_D(u_D);
+}
+
+PlrOrfImpl::PlrOrfImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string area,
+                       std::string dia,std::string coef,std::string Re,int u_A,int u_D)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setArea(area);
+  setDia(dia);
+  setCoef(coef);
+  setRe(Re);
+  setU_A(u_A);
+  setU_D(u_D);
+}
+
+void PlrOrfImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setDia(input.readNumber<std::string>(FILELINE));
+  setCoef(input.readNumber<std::string>(FILELINE));
+  setRe(input.readNumber<std::string>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
+}
+
+std::string PlrOrfImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_orfc " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(area) + ' ' + openstudio::toString(dia) + ' ' + openstudio::toString(coef) + ' ' + openstudio::toString(Re) + ' ' + openstudio::toString(u_A) + ' ' + openstudio::toString(u_D) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " plr_orfc " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' ' + ANY_TO_STR(m_area)
+    + ' ' + ANY_TO_STR(m_dia) + ' ' + ANY_TO_STR(m_coef) + ' ' + ANY_TO_STR(m_Re) + ' '
+    + ANY_TO_STR(m_u_A) + ' ' + ANY_TO_STR(m_u_D) + '\n';
   return string;
 }
 
-void PlrOrfPrivate::readDetails(Reader &input)
+void PlrOrfImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  area = input.readNumber<RX>(FILELINE);
-  dia = input.readNumber<RX>(FILELINE);
-  coef = input.readNumber<RX>(FILELINE);
-  Re = input.readNumber<RX>(FILELINE);
-  u_A = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setDia(input.readNumber<std::string>(FILELINE));
+  setCoef(input.readNumber<std::string>(FILELINE));
+  setRe(input.readNumber<std::string>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
 }
 
-PlrLeakPrivate::PlrLeakPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),coef(coef),pres(pres),area1(area1),area2(area2),area3(area3),u_A1(u_A1),u_A2(u_A2),u_A3(u_A3),u_dP(u_dP)
-{}
-
-void PlrLeakPrivate::read(Reader &input)
+int PlrOrfImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  coef = input.readNumber<RX>(FILELINE);
-  pres = input.readNumber<RX>(FILELINE);
-  area1 = input.readNumber<RX>(FILELINE);
-  area2 = input.readNumber<RX>(FILELINE);
-  area3 = input.readNumber<RX>(FILELINE);
-  u_A1 = input.read<int>(FILELINE);
-  u_A2 = input.read<int>(FILELINE);
-  u_A3 = input.read<int>(FILELINE);
-  u_dP = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrLeakPrivate::write(std::string datatype)
+void PlrOrfImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrOrfImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrOrfImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrOrfImpl::name() const
+{
+  return m_name;
+}
+
+void PlrOrfImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrOrfImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrOrfImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrOrfImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrOrfImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrOrfImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrOrfImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrOrfImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrOrfImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrOrfImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrOrfImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrOrfImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrOrfImpl::area() const
+{
+  return m_area.toDouble();
+}
+
+bool PlrOrfImpl::setArea(const double area)
+{
+  m_area = QString::number(area);
+  return true;
+}
+
+bool PlrOrfImpl::setArea(const std::string &area)
+{
+  bool ok;
+  STR_TO_RX7(area).toDouble(&ok);
+  if(ok)
+  {
+    m_area = STR_TO_RX7(area);
+    return true;
+  }
+  return false;
+}
+
+double PlrOrfImpl::dia() const
+{
+  return m_dia.toDouble();
+}
+
+bool PlrOrfImpl::setDia(const double dia)
+{
+  m_dia = QString::number(dia);
+  return true;
+}
+
+bool PlrOrfImpl::setDia(const std::string &dia)
+{
+  bool ok;
+  STR_TO_RX7(dia).toDouble(&ok);
+  if(ok)
+  {
+    m_dia = STR_TO_RX7(dia);
+    return true;
+  }
+  return false;
+}
+
+double PlrOrfImpl::coef() const
+{
+  return m_coef.toDouble();
+}
+
+bool PlrOrfImpl::setCoef(const double coef)
+{
+  m_coef = QString::number(coef);
+  return true;
+}
+
+bool PlrOrfImpl::setCoef(const std::string &coef)
+{
+  bool ok;
+  STR_TO_RX7(coef).toDouble(&ok);
+  if(ok)
+  {
+    m_coef = STR_TO_RX7(coef);
+    return true;
+  }
+  return false;
+}
+
+double PlrOrfImpl::Re() const
+{
+  return m_Re.toDouble();
+}
+
+bool PlrOrfImpl::setRe(const double Re)
+{
+  m_Re = QString::number(Re);
+  return true;
+}
+
+bool PlrOrfImpl::setRe(const std::string &Re)
+{
+  bool ok;
+  STR_TO_RX7(Re).toDouble(&ok);
+  if(ok)
+  {
+    m_Re = STR_TO_RX7(Re);
+    return true;
+  }
+  return false;
+}
+
+int PlrOrfImpl::u_A() const
+{
+  return m_u_A;
+}
+
+void PlrOrfImpl::setU_A(const int u_A)
+{
+  m_u_A = u_A;
+}
+
+int PlrOrfImpl::u_D() const
+{
+  return m_u_D;
+}
+
+void PlrOrfImpl::setU_D(const int u_D)
+{
+  m_u_D = u_D;
+}
+
+void PlrLeakImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_coef = RX7("0.0");
+  m_pres = RX7("0.0");
+  m_area1 = RX7("0.0");
+  m_area2 = RX7("0.0");
+  m_area3 = RX7("0.0");
+  m_u_A1 = 0;
+  m_u_A2 = 0;
+  m_u_A3 = 0;
+  m_u_dP = 0;
+}
+
+PlrLeakImpl::PlrLeakImpl()
+{
+  setDefaults();
+}
+
+PlrLeakImpl::PlrLeakImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrLeakImpl::PlrLeakImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                         double coef,double pres,double area1,double area2,double area3,int u_A1,int u_A2,
+                         int u_A3,int u_dP)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setCoef(coef);
+  setPres(pres);
+  setArea1(area1);
+  setArea2(area2);
+  setArea3(area3);
+  setU_A1(u_A1);
+  setU_A2(u_A2);
+  setU_A3(u_A3);
+  setU_dP(u_dP);
+}
+
+PlrLeakImpl::PlrLeakImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                         std::string coef,std::string pres,std::string area1,std::string area2,std::string area3,int u_A1,int u_A2,
+                         int u_A3,int u_dP)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setCoef(coef);
+  setPres(pres);
+  setArea1(area1);
+  setArea2(area2);
+  setArea3(area3);
+  setU_A1(u_A1);
+  setU_A2(u_A2);
+  setU_A3(u_A3);
+  setU_dP(u_dP);
+}
+
+void PlrLeakImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setCoef(input.readNumber<std::string>(FILELINE));
+  setPres(input.readNumber<std::string>(FILELINE));
+  setArea1(input.readNumber<std::string>(FILELINE));
+  setArea2(input.readNumber<std::string>(FILELINE));
+  setArea3(input.readNumber<std::string>(FILELINE));
+  setU_A1(input.read<int>(FILELINE));
+  setU_A2(input.read<int>(FILELINE));
+  setU_A3(input.read<int>(FILELINE));
+  setU_dP(input.read<int>(FILELINE));
+}
+
+std::string PlrLeakImpl::write(std::string datatype)
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + ' ' + datatype + ' ' + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(coef) + ' ' + openstudio::toString(pres) + ' ' + openstudio::toString(area1) + ' ' + openstudio::toString(area2) + ' ' + openstudio::toString(area3) + ' ' + openstudio::toString(u_A1) + ' ' + openstudio::toString(u_A2) + ' ' + openstudio::toString(u_A3) + ' ' + openstudio::toString(u_dP) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + ' ' + datatype + ' ' + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' '
+    + ANY_TO_STR(m_coef) + ' ' + ANY_TO_STR(m_pres) + ' ' + ANY_TO_STR(m_area1) + ' '
+    + ANY_TO_STR(m_area2) + ' ' + ANY_TO_STR(m_area3) + ' ' + ANY_TO_STR(m_u_A1) + ' '
+    + ANY_TO_STR(m_u_A2) + ' ' + ANY_TO_STR(m_u_A3) + ' ' + ANY_TO_STR(m_u_dP) + '\n';
   return string;
 }
 
-void PlrLeakPrivate::readDetails(Reader &input)
+void PlrLeakImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  coef = input.readNumber<RX>(FILELINE);
-  pres = input.readNumber<RX>(FILELINE);
-  area1 = input.readNumber<RX>(FILELINE);
-  area2 = input.readNumber<RX>(FILELINE);
-  area3 = input.readNumber<RX>(FILELINE);
-  u_A1 = input.read<int>(FILELINE);
-  u_A2 = input.read<int>(FILELINE);
-  u_A3 = input.read<int>(FILELINE);
-  u_dP = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setCoef(input.readNumber<std::string>(FILELINE));
+  setPres(input.readNumber<std::string>(FILELINE));
+  setArea1(input.readNumber<std::string>(FILELINE));
+  setArea2(input.readNumber<std::string>(FILELINE));
+  setArea3(input.readNumber<std::string>(FILELINE));
+  setU_A1(input.read<int>(FILELINE));
+  setU_A2(input.read<int>(FILELINE));
+  setU_A3(input.read<int>(FILELINE));
+  setU_dP(input.read<int>(FILELINE));
 }
 
-PlrConnPrivate::PlrConnPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),coef(coef),u_A(u_A)
-{}
-
-void PlrConnPrivate::read(Reader &input)
+int PlrLeakImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  area = input.readNumber<RX>(FILELINE);
-  coef = input.readNumber<RX>(FILELINE);
-  u_A = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrConnPrivate::write()
+void PlrLeakImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrLeakImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrLeakImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrLeakImpl::name() const
+{
+  return m_name;
+}
+
+void PlrLeakImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrLeakImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrLeakImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrLeakImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrLeakImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrLeakImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrLeakImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrLeakImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrLeakImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrLeakImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrLeakImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrLeakImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrLeakImpl::coef() const
+{
+  return m_coef.toDouble();
+}
+
+bool PlrLeakImpl::setCoef(const double coef)
+{
+  m_coef = QString::number(coef);
+  return true;
+}
+
+bool PlrLeakImpl::setCoef(const std::string &coef)
+{
+  bool ok;
+  STR_TO_RX7(coef).toDouble(&ok);
+  if(ok)
+  {
+    m_coef = STR_TO_RX7(coef);
+    return true;
+  }
+  return false;
+}
+
+double PlrLeakImpl::pres() const
+{
+  return m_pres.toDouble();
+}
+
+bool PlrLeakImpl::setPres(const double pres)
+{
+  m_pres = QString::number(pres);
+  return true;
+}
+
+bool PlrLeakImpl::setPres(const std::string &pres)
+{
+  bool ok;
+  STR_TO_RX7(pres).toDouble(&ok);
+  if(ok)
+  {
+    m_pres = STR_TO_RX7(pres);
+    return true;
+  }
+  return false;
+}
+
+double PlrLeakImpl::area1() const
+{
+  return m_area1.toDouble();
+}
+
+bool PlrLeakImpl::setArea1(const double area1)
+{
+  m_area1 = QString::number(area1);
+  return true;
+}
+
+bool PlrLeakImpl::setArea1(const std::string &area1)
+{
+  bool ok;
+  STR_TO_RX7(area1).toDouble(&ok);
+  if(ok)
+  {
+    m_area1 = STR_TO_RX7(area1);
+    return true;
+  }
+  return false;
+}
+
+double PlrLeakImpl::area2() const
+{
+  return m_area2.toDouble();
+}
+
+bool PlrLeakImpl::setArea2(const double area2)
+{
+  m_area2 = QString::number(area2);
+  return true;
+}
+
+bool PlrLeakImpl::setArea2(const std::string &area2)
+{
+  bool ok;
+  STR_TO_RX7(area2).toDouble(&ok);
+  if(ok)
+  {
+    m_area2 = STR_TO_RX7(area2);
+    return true;
+  }
+  return false;
+}
+
+double PlrLeakImpl::area3() const
+{
+  return m_area3.toDouble();
+}
+
+bool PlrLeakImpl::setArea3(const double area3)
+{
+  m_area3 = QString::number(area3);
+  return true;
+}
+
+bool PlrLeakImpl::setArea3(const std::string &area3)
+{
+  bool ok;
+  STR_TO_RX7(area3).toDouble(&ok);
+  if(ok)
+  {
+    m_area3 = STR_TO_RX7(area3);
+    return true;
+  }
+  return false;
+}
+
+int PlrLeakImpl::u_A1() const
+{
+  return m_u_A1;
+}
+
+void PlrLeakImpl::setU_A1(const int u_A1)
+{
+  m_u_A1 = u_A1;
+}
+
+int PlrLeakImpl::u_A2() const
+{
+  return m_u_A2;
+}
+
+void PlrLeakImpl::setU_A2(const int u_A2)
+{
+  m_u_A2 = u_A2;
+}
+
+int PlrLeakImpl::u_A3() const
+{
+  return m_u_A3;
+}
+
+void PlrLeakImpl::setU_A3(const int u_A3)
+{
+  m_u_A3 = u_A3;
+}
+
+int PlrLeakImpl::u_dP() const
+{
+  return m_u_dP;
+}
+
+void PlrLeakImpl::setU_dP(const int u_dP)
+{
+  m_u_dP = u_dP;
+}
+
+void PlrConnImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_coef = RX7("0.0");
+  m_area = RX7("0.0");
+  m_u_A = 0;
+}
+
+PlrConnImpl::PlrConnImpl()
+{
+  setDefaults();
+}
+
+PlrConnImpl::PlrConnImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrConnImpl::PlrConnImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                         double area,double coef,int u_A)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setCoef(coef);
+  setArea(area);
+  setU_A(u_A);
+}
+
+PlrConnImpl::PlrConnImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                         std::string area,std::string coef,int u_A)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setCoef(coef);
+  setArea(area);
+  setU_A(u_A);
+}
+
+void PlrConnImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setCoef(input.readNumber<std::string>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
+}
+
+std::string PlrConnImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_conn " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(area) + ' ' + openstudio::toString(coef) + ' ' + openstudio::toString(u_A) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " plr_conn " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' ' + ANY_TO_STR(m_area)
+    + ' ' + ANY_TO_STR(m_coef) + ' ' + ANY_TO_STR(m_u_A) + '\n';
   return string;
 }
 
-void PlrConnPrivate::readDetails(Reader &input)
+void PlrConnImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  area = input.readNumber<RX>(FILELINE);
-  coef = input.readNumber<RX>(FILELINE);
-  u_A = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setCoef(input.readNumber<std::string>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
 }
 
-PlrQcnPrivate::PlrQcnPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
-{}
-
-void PlrQcnPrivate::read(Reader &input)
+int PlrConnImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrQcnPrivate::write()
+void PlrConnImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrConnImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrConnImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrConnImpl::name() const
+{
+  return m_name;
+}
+
+void PlrConnImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrConnImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrConnImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrConnImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrConnImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrConnImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrConnImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrConnImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrConnImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrConnImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrConnImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrConnImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrConnImpl::area() const
+{
+  return m_area.toDouble();
+}
+
+bool PlrConnImpl::setArea(const double area)
+{
+  m_area = QString::number(area);
+  return true;
+}
+
+bool PlrConnImpl::setArea(const std::string &area)
+{
+  bool ok;
+  STR_TO_RX7(area).toDouble(&ok);
+  if(ok)
+  {
+    m_area = STR_TO_RX7(area);
+    return true;
+  }
+  return false;
+}
+
+double PlrConnImpl::coef() const
+{
+  return m_coef.toDouble();
+}
+
+bool PlrConnImpl::setCoef(const double coef)
+{
+  m_coef = QString::number(coef);
+  return true;
+}
+
+bool PlrConnImpl::setCoef(const std::string &coef)
+{
+  bool ok;
+  STR_TO_RX7(coef).toDouble(&ok);
+  if(ok)
+  {
+    m_coef = STR_TO_RX7(coef);
+    return true;
+  }
+  return false;
+}
+
+int PlrConnImpl::u_A() const
+{
+  return m_u_A;
+}
+
+void PlrConnImpl::setU_A(const int u_A)
+{
+  m_u_A = u_A;
+}
+
+void PlrGeneralImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+}
+
+PlrGeneralImpl::PlrGeneralImpl()
+{
+  setDefaults();
+}
+
+PlrGeneralImpl::PlrGeneralImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrGeneralImpl::PlrGeneralImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+}
+
+PlrGeneralImpl::PlrGeneralImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+}
+
+void PlrGeneralImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+}
+
+std::string PlrGeneralImpl::write(std::string dataType)
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_qcn " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + ' ' + dataType + ' ' + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + '\n';
   return string;
 }
 
-void PlrQcnPrivate::readDetails(Reader &input)
+void PlrGeneralImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
 }
 
-PlrFcnPrivate::PlrFcnPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
-{}
-
-void PlrFcnPrivate::read(Reader &input)
+int PlrGeneralImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrFcnPrivate::write()
+void PlrGeneralImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrGeneralImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrGeneralImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrGeneralImpl::name() const
+{
+  return m_name;
+}
+
+void PlrGeneralImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrGeneralImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrGeneralImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrGeneralImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrGeneralImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrGeneralImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrGeneralImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrGeneralImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrGeneralImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrGeneralImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrGeneralImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrGeneralImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+void PlrTest1Impl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_dP = RX7("0.0");
+  m_Flow = RX7("0.0");
+  m_u_P = 0;
+  m_u_F = 0;
+}
+
+PlrTest1Impl::PlrTest1Impl()
+{
+  setDefaults();
+}
+
+PlrTest1Impl::PlrTest1Impl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrTest1Impl::PlrTest1Impl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                           double dP,double Flow,int u_P,int u_F)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDP(dP);
+  setFlow(Flow);
+  setU_P(u_P);
+  setU_F(u_F);
+}
+
+PlrTest1Impl::PlrTest1Impl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                           std::string dP,std::string Flow,int u_P,int u_F)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDP(dP);
+  setFlow(Flow);
+  setU_P(u_P);
+  setU_F(u_F);
+}
+
+void PlrTest1Impl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDP(input.readNumber<std::string>(FILELINE));
+  setFlow(input.readNumber<std::string>(FILELINE));
+  setU_P(input.read<int>(FILELINE));
+  setU_F(input.read<int>(FILELINE));
+}
+
+std::string PlrTest1Impl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_fcn " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " plr_test1 " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' '
+    + ANY_TO_STR(m_dP) + ' ' + ANY_TO_STR(m_Flow) + ' ' + ANY_TO_STR(m_u_P) + ' '
+    + ANY_TO_STR(m_u_F) + '\n';
   return string;
 }
 
-void PlrFcnPrivate::readDetails(Reader &input)
+void PlrTest1Impl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDP(input.readNumber<std::string>(FILELINE));
+  setFlow(input.readNumber<std::string>(FILELINE));
+  setU_P(input.read<int>(FILELINE));
+  setU_F(input.read<int>(FILELINE));
 }
 
-PlrTest1Private::PlrTest1Private(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP(dP),Flow(Flow),u_P(u_P),u_F(u_F)
-{}
-
-void PlrTest1Private::read(Reader &input)
+int PlrTest1Impl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dP = input.readNumber<RX>(FILELINE);
-  Flow = input.readNumber<RX>(FILELINE);
-  u_P = input.read<int>(FILELINE);
-  u_F = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrTest1Private::write()
+void PlrTest1Impl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrTest1Impl::icon() const
+{
+  return m_icon;
+}
+
+void PlrTest1Impl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrTest1Impl::name() const
+{
+  return m_name;
+}
+
+void PlrTest1Impl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrTest1Impl::desc() const
+{
+  return m_desc;
+}
+
+void PlrTest1Impl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrTest1Impl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrTest1Impl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrTest1Impl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest1Impl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrTest1Impl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrTest1Impl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest1Impl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrTest1Impl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrTest1Impl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest1Impl::dP() const
+{
+  return m_dP.toDouble();
+}
+
+bool PlrTest1Impl::setDP(const double dP)
+{
+  m_dP = QString::number(dP);
+  return true;
+}
+
+bool PlrTest1Impl::setDP(const std::string &dP)
+{
+  bool ok;
+  STR_TO_RX7(dP).toDouble(&ok);
+  if(ok)
+  {
+    m_dP = STR_TO_RX7(dP);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest1Impl::Flow() const
+{
+  return m_Flow.toDouble();
+}
+
+bool PlrTest1Impl::setFlow(const double Flow)
+{
+  m_Flow = QString::number(Flow);
+  return true;
+}
+
+bool PlrTest1Impl::setFlow(const std::string &Flow)
+{
+  bool ok;
+  STR_TO_RX7(Flow).toDouble(&ok);
+  if(ok)
+  {
+    m_Flow = STR_TO_RX7(Flow);
+    return true;
+  }
+  return false;
+}
+
+int PlrTest1Impl::u_P() const
+{
+  return m_u_P;
+}
+
+void PlrTest1Impl::setU_P(const int u_P)
+{
+  m_u_P = u_P;
+}
+
+int PlrTest1Impl::u_F() const
+{
+  return m_u_F;
+}
+
+void PlrTest1Impl::setU_F(const int u_F)
+{
+  m_u_F = u_F;
+}
+
+void PlrTest2Impl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_dP1 = RX7("0.0");
+  m_F1 = RX7("0.0");
+  m_dP2 = RX7("0.0");
+  m_F2 = RX7("0.0");
+  m_u_P1 = 0;
+  m_u_F1 = 0;
+  m_u_P2 = 0;
+  m_u_F2 = 0;
+}
+
+PlrTest2Impl::PlrTest2Impl()
+{
+  setDefaults();
+}
+
+PlrTest2Impl::PlrTest2Impl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrTest2Impl::PlrTest2Impl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                           double dP1,double F1,double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDP1(dP1);
+  setF1(F1);
+  setDP2(dP2);
+  setF2(F2);
+  setU_P1(u_P1);
+  setU_F1(u_F1);
+  setU_P2(u_P2);
+  setU_F2(u_F2);
+}
+
+PlrTest2Impl::PlrTest2Impl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                           std::string dP1,std::string F1,std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDP1(dP1);
+  setF1(F1);
+  setDP2(dP2);
+  setF2(F2);
+  setU_P1(u_P1);
+  setU_F1(u_F1);
+  setU_P2(u_P2);
+  setU_F2(u_F2);
+}
+
+void PlrTest2Impl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDP1(input.readNumber<std::string>(FILELINE));
+  setF1(input.readNumber<std::string>(FILELINE));
+  setDP2(input.readNumber<std::string>(FILELINE));
+  setF2(input.readNumber<std::string>(FILELINE));
+  setU_P1(input.read<int>(FILELINE));
+  setU_F1(input.read<int>(FILELINE));
+  setU_P2(input.read<int>(FILELINE));
+  setU_F2(input.read<int>(FILELINE));
+}
+
+std::string PlrTest2Impl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_test1 " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dP) + ' ' + openstudio::toString(Flow) + ' ' + openstudio::toString(u_P) + ' ' + openstudio::toString(u_F) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " plr_test2 " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' ' + ANY_TO_STR(m_dP1)
+    + ' ' + ANY_TO_STR(m_F1) + ' ' + ANY_TO_STR(m_dP2) + ' ' + ANY_TO_STR(m_F2) + ' '
+    + ANY_TO_STR(m_u_P1) + ' ' + ANY_TO_STR(m_u_F1) + ' ' + ANY_TO_STR(m_u_P2) + ' ' + ANY_TO_STR(m_u_F2)
+    + '\n';
   return string;
 }
 
-void PlrTest1Private::readDetails(Reader &input)
+void PlrTest2Impl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dP = input.readNumber<RX>(FILELINE);
-  Flow = input.readNumber<RX>(FILELINE);
-  u_P = input.read<int>(FILELINE);
-  u_F = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDP1(input.readNumber<std::string>(FILELINE));
+  setF1(input.readNumber<std::string>(FILELINE));
+  setDP2(input.readNumber<std::string>(FILELINE));
+  setF2(input.readNumber<std::string>(FILELINE));
+  setU_P1(input.read<int>(FILELINE));
+  setU_F1(input.read<int>(FILELINE));
+  setU_P2(input.read<int>(FILELINE));
+  setU_F2(input.read<int>(FILELINE));
 }
 
-PlrTest2Private::PlrTest2Private(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
-{}
-
-void PlrTest2Private::read(Reader &input)
+int PlrTest2Impl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dP1 = input.readNumber<RX>(FILELINE);
-  F1 = input.readNumber<RX>(FILELINE);
-  dP2 = input.readNumber<RX>(FILELINE);
-  F2 = input.readNumber<RX>(FILELINE);
-  u_P1 = input.read<int>(FILELINE);
-  u_F1 = input.read<int>(FILELINE);
-  u_P2 = input.read<int>(FILELINE);
-  u_F2 = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrTest2Private::write()
+void PlrTest2Impl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrTest2Impl::icon() const
+{
+  return m_icon;
+}
+
+void PlrTest2Impl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrTest2Impl::name() const
+{
+  return m_name;
+}
+
+void PlrTest2Impl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrTest2Impl::desc() const
+{
+  return m_desc;
+}
+
+void PlrTest2Impl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrTest2Impl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrTest2Impl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrTest2Impl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest2Impl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrTest2Impl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrTest2Impl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest2Impl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrTest2Impl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrTest2Impl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest2Impl::dP1() const
+{
+  return m_dP1.toDouble();
+}
+
+bool PlrTest2Impl::setDP1(const double dP1)
+{
+  m_dP1 = QString::number(dP1);
+  return true;
+}
+
+bool PlrTest2Impl::setDP1(const std::string &dP1)
+{
+  bool ok;
+  STR_TO_RX7(dP1).toDouble(&ok);
+  if(ok)
+  {
+    m_dP1 = STR_TO_RX7(dP1);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest2Impl::F1() const
+{
+  return m_F1.toDouble();
+}
+
+bool PlrTest2Impl::setF1(const double F1)
+{
+  m_F1 = QString::number(F1);
+  return true;
+}
+
+bool PlrTest2Impl::setF1(const std::string &F1)
+{
+  bool ok;
+  STR_TO_RX7(F1).toDouble(&ok);
+  if(ok)
+  {
+    m_F1 = STR_TO_RX7(F1);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest2Impl::dP2() const
+{
+  return m_dP2.toDouble();
+}
+
+bool PlrTest2Impl::setDP2(const double dP2)
+{
+  m_dP2 = QString::number(dP2);
+  return true;
+}
+
+bool PlrTest2Impl::setDP2(const std::string &dP2)
+{
+  bool ok;
+  STR_TO_RX7(dP2).toDouble(&ok);
+  if(ok)
+  {
+    m_dP2 = STR_TO_RX7(dP2);
+    return true;
+  }
+  return false;
+}
+
+double PlrTest2Impl::F2() const
+{
+  return m_F2.toDouble();
+}
+
+bool PlrTest2Impl::setF2(const double F2)
+{
+  m_F2 = QString::number(F2);
+  return true;
+}
+
+bool PlrTest2Impl::setF2(const std::string &F2)
+{
+  bool ok;
+  STR_TO_RX7(F2).toDouble(&ok);
+  if(ok)
+  {
+    m_F2 = STR_TO_RX7(F2);
+    return true;
+  }
+  return false;
+}
+
+int PlrTest2Impl::u_P1() const
+{
+  return m_u_P1;
+}
+
+void PlrTest2Impl::setU_P1(const int u_P1)
+{
+  m_u_P1 = u_P1;
+}
+
+int PlrTest2Impl::u_F1() const
+{
+  return m_u_F1;
+}
+
+void PlrTest2Impl::setU_F1(const int u_F1)
+{
+  m_u_F1 = u_F1;
+}
+
+int PlrTest2Impl::u_P2() const
+{
+  return m_u_P2;
+}
+
+void PlrTest2Impl::setU_P2(const int u_P2)
+{
+  m_u_P2 = u_P2;
+}
+
+int PlrTest2Impl::u_F2() const
+{
+  return m_u_F2;
+}
+
+void PlrTest2Impl::setU_F2(const int u_F2)
+{
+  m_u_F2 = u_F2;
+}
+
+void PlrCrackImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_length = RX7("0.0");
+  m_width = RX7("0.0");
+  m_u_L = 0;
+  m_u_W = 0;
+}
+
+PlrCrackImpl::PlrCrackImpl()
+{
+  setDefaults();
+}
+
+PlrCrackImpl::PlrCrackImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrCrackImpl::PlrCrackImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                           double length,double width,int u_L,int u_W)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setLength(length);
+  setWidth(width);
+  setU_L(u_L);
+  setU_W(u_W);
+}
+
+PlrCrackImpl::PlrCrackImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                           std::string length,std::string width,int u_L,int u_W)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setLength(length);
+  setWidth(width);
+  setU_L(u_L);
+  setU_W(u_W);
+}
+
+void PlrCrackImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setLength(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setU_L(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
+}
+
+std::string PlrCrackImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_test2 " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dP1) + ' ' + openstudio::toString(F1) + ' ' + openstudio::toString(dP2) + ' ' + openstudio::toString(F2) + ' ' + openstudio::toString(u_P1) + ' ' + openstudio::toString(u_F1) + ' ' + openstudio::toString(u_P2) + ' ' + openstudio::toString(u_F2) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " plr_crack " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' '
+    + ANY_TO_STR(m_length) + ' ' + ANY_TO_STR(m_width) + ' ' + ANY_TO_STR(m_u_L) + ' '
+    + ANY_TO_STR(m_u_W) + '\n';
   return string;
 }
 
-void PlrTest2Private::readDetails(Reader &input)
+void PlrCrackImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dP1 = input.readNumber<RX>(FILELINE);
-  F1 = input.readNumber<RX>(FILELINE);
-  dP2 = input.readNumber<RX>(FILELINE);
-  F2 = input.readNumber<RX>(FILELINE);
-  u_P1 = input.read<int>(FILELINE);
-  u_F1 = input.read<int>(FILELINE);
-  u_P2 = input.read<int>(FILELINE);
-  u_F2 = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setLength(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setU_L(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
 }
 
-PlrCrackPrivate::PlrCrackPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),length(length),width(width),u_L(u_L),u_W(u_W)
-{}
-
-void PlrCrackPrivate::read(Reader &input)
+int PlrCrackImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  length = input.readNumber<RX>(FILELINE);
-  width = input.readNumber<RX>(FILELINE);
-  u_L = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrCrackPrivate::write()
+void PlrCrackImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrCrackImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrCrackImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrCrackImpl::name() const
+{
+  return m_name;
+}
+
+void PlrCrackImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrCrackImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrCrackImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrCrackImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrCrackImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrCrackImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrCrackImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrCrackImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrCrackImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrCrackImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrCrackImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrCrackImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrCrackImpl::length() const
+{
+  return m_length.toDouble();
+}
+
+bool PlrCrackImpl::setLength(const double length)
+{
+  m_length = QString::number(length);
+  return true;
+}
+
+bool PlrCrackImpl::setLength(const std::string &length)
+{
+  bool ok;
+  STR_TO_RX7(length).toDouble(&ok);
+  if(ok)
+  {
+    m_length = STR_TO_RX7(length);
+    return true;
+  }
+  return false;
+}
+
+double PlrCrackImpl::width() const
+{
+  return m_width.toDouble();
+}
+
+bool PlrCrackImpl::setWidth(const double width)
+{
+  m_width = QString::number(width);
+  return true;
+}
+
+bool PlrCrackImpl::setWidth(const std::string &width)
+{
+  bool ok;
+  STR_TO_RX7(width).toDouble(&ok);
+  if(ok)
+  {
+    m_width = STR_TO_RX7(width);
+    return true;
+  }
+  return false;
+}
+
+int PlrCrackImpl::u_L() const
+{
+  return m_u_L;
+}
+
+void PlrCrackImpl::setU_L(const int u_L)
+{
+  m_u_L = u_L;
+}
+
+int PlrCrackImpl::u_W() const
+{
+  return m_u_W;
+}
+
+void PlrCrackImpl::setU_W(const int u_W)
+{
+  m_u_W = u_W;
+}
+
+void PlrStairImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_Ht = RX7("0.0");
+  m_Area = RX7("0.0");
+  m_peo = RX7("0.0");
+  m_tread = 0;
+  m_u_A = 0;
+  m_u_D = 0;
+}
+
+PlrStairImpl::PlrStairImpl()
+{
+  setDefaults();
+}
+
+PlrStairImpl::PlrStairImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrStairImpl::PlrStairImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,
+                           double expt,double Ht,double Area,double peo,int tread,int u_A,
+                           int u_D)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setHt(Ht);
+  setArea(Area);
+  setPeople(peo);
+  setTread(tread);
+  setU_A(u_A);
+  setU_D(u_D);
+}
+
+PlrStairImpl::PlrStairImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,
+                           std::string expt,std::string Ht,std::string Area,std::string peo,int tread,int u_A,
+                           int u_D)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setHt(Ht);
+  setArea(Area);
+  setPeople(peo);
+  setTread(tread);
+  setU_A(u_A);
+  setU_D(u_D);
+}
+
+
+void PlrStairImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setHt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setPeople(input.readNumber<std::string>(FILELINE));
+  setTread(input.read<int>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
+}
+
+std::string PlrStairImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_crack " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(length) + ' ' + openstudio::toString(width) + ' ' + openstudio::toString(u_L) + ' ' + openstudio::toString(u_W) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " plr_stair " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' '
+    + ANY_TO_STR(m_Ht) + ' ' + ANY_TO_STR(m_Area) + ' ' + ANY_TO_STR(m_peo) + ' '
+    + ANY_TO_STR(m_tread) + ' ' + ANY_TO_STR(m_u_A) + ' ' + ANY_TO_STR(m_u_D) + '\n';
   return string;
 }
 
-void PlrCrackPrivate::readDetails(Reader &input)
+void PlrStairImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  length = input.readNumber<RX>(FILELINE);
-  width = input.readNumber<RX>(FILELINE);
-  u_L = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setHt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setPeople(input.readNumber<std::string>(FILELINE));
+  setTread(input.read<int>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
 }
 
-PlrStairPrivate::PlrStairPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),Area(Area),peo(peo),tread(tread),u_A(u_A),u_D(u_D)
-{}
-
-void PlrStairPrivate::read(Reader &input)
+int PlrStairImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  Ht = input.readNumber<RX>(FILELINE);
-  Area = input.readNumber<RX>(FILELINE);
-  peo = input.readNumber<RX>(FILELINE);
-  tread = input.read<int>(FILELINE);
-  u_A = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrStairPrivate::write()
+void PlrStairImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrStairImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrStairImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrStairImpl::name() const
+{
+  return m_name;
+}
+
+void PlrStairImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrStairImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrStairImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrStairImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrStairImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrStairImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrStairImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrStairImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrStairImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrStairImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrStairImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrStairImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrStairImpl::Ht() const
+{
+  return m_Ht.toDouble();
+}
+
+bool PlrStairImpl::setHt(const double Ht)
+{
+  m_Ht = QString::number(Ht);
+  return true;
+}
+
+bool PlrStairImpl::setHt(const std::string &Ht)
+{
+  bool ok;
+  STR_TO_RX7(Ht).toDouble(&ok);
+  if(ok)
+  {
+    m_Ht = STR_TO_RX7(Ht);
+    return true;
+  }
+  return false;
+}
+
+double PlrStairImpl::area() const
+{
+  return m_Area.toDouble();
+}
+
+bool PlrStairImpl::setArea(const double Area)
+{
+  m_Area = QString::number(Area);
+  return true;
+}
+
+bool PlrStairImpl::setArea(const std::string &Area)
+{
+  bool ok;
+  STR_TO_RX7(Area).toDouble(&ok);
+  if(ok)
+  {
+    m_Area = STR_TO_RX7(Area);
+    return true;
+  }
+  return false;
+}
+
+double PlrStairImpl::people() const
+{
+  return m_peo.toDouble();
+}
+
+bool PlrStairImpl::setPeople(const double peo)
+{
+  m_peo = QString::number(peo);
+  return true;
+}
+
+bool PlrStairImpl::setPeople(const std::string &peo)
+{
+  bool ok;
+  STR_TO_RX7(peo).toDouble(&ok);
+  if(ok)
+  {
+    m_peo = STR_TO_RX7(peo);
+    return true;
+  }
+  return false;
+}
+
+int PlrStairImpl::tread() const
+{
+  return m_tread;
+}
+
+void PlrStairImpl::setTread(const int tread)
+{
+  m_tread = tread;
+}
+
+int PlrStairImpl::u_A() const
+{
+  return m_u_A;
+}
+
+void PlrStairImpl::setU_A(const int u_A)
+{
+  m_u_A = u_A;
+}
+
+int PlrStairImpl::u_D() const
+{
+  return m_u_D;
+}
+
+void PlrStairImpl::setU_D(const int u_D)
+{
+  m_u_D = u_D;
+}
+
+void PlrShaftImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_Ht = RX7("0.0");
+  m_area = RX7("0.0");
+  m_perim = RX7("0.0");
+  m_rough = RX7("0.0");
+  m_u_A = 0;
+  m_u_D = 0;
+  m_u_P = 0;
+  m_u_R = 0;
+}
+
+PlrShaftImpl::PlrShaftImpl()
+{
+  setDefaults();
+}
+
+PlrShaftImpl::PlrShaftImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrShaftImpl::PlrShaftImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                           double Ht,double area,double perim,double rough,int u_A,int u_D,int u_P,int u_R)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setHt(Ht);
+  setArea(area);
+  setPerim(perim);
+  setRough(rough);
+  setU_A(u_A);
+  setU_D(u_D);
+  setU_P(u_P);
+  setU_R(u_R);
+}
+
+PlrShaftImpl::PlrShaftImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                           std::string Ht,std::string area,std::string perim,std::string rough,int u_A,int u_D,int u_P,int u_R)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setHt(Ht);
+  setArea(area);
+  setPerim(perim);
+  setRough(rough);
+  setU_A(u_A);
+  setU_D(u_D);
+  setU_P(u_P);
+  setU_R(u_R);
+}
+
+void PlrShaftImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setHt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setPerim(input.readNumber<std::string>(FILELINE));
+  setRough(input.readNumber<std::string>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
+  setU_P(input.read<int>(FILELINE));
+  setU_R(input.read<int>(FILELINE));
+}
+
+std::string PlrShaftImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_stair " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(Ht) + ' ' + openstudio::toString(Area) + ' ' + openstudio::toString(peo) + ' ' + openstudio::toString(tread) + ' ' + openstudio::toString(u_A) + ' ' + openstudio::toString(u_D) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " plr_shaft " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' ' + ANY_TO_STR(m_Ht)
+    + ' ' + ANY_TO_STR(m_area) + ' ' + ANY_TO_STR(m_perim) + ' ' + ANY_TO_STR(m_rough) + ' '
+    + ANY_TO_STR(m_u_A) + ' ' + ANY_TO_STR(m_u_D) + ' ' + ANY_TO_STR(m_u_P) + ' ' + ANY_TO_STR(m_u_R)
+    + '\n';
   return string;
 }
 
-void PlrStairPrivate::readDetails(Reader &input)
+void PlrShaftImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  Ht = input.readNumber<RX>(FILELINE);
-  Area = input.readNumber<RX>(FILELINE);
-  peo = input.readNumber<RX>(FILELINE);
-  tread = input.read<int>(FILELINE);
-  u_A = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setHt(input.readNumber<std::string>(FILELINE));
+  setArea(input.readNumber<std::string>(FILELINE));
+  setPerim(input.readNumber<std::string>(FILELINE));
+  setRough(input.readNumber<std::string>(FILELINE));
+  setU_A(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
+  setU_P(input.read<int>(FILELINE));
+  setU_R(input.read<int>(FILELINE));
 }
 
-PlrShaftPrivate::PlrShaftPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),area(area),perim(perim),rough(rough),u_A(u_A),u_D(u_D),u_P(u_P),u_R(u_R)
-{}
-
-void PlrShaftPrivate::read(Reader &input)
+int PlrShaftImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  Ht = input.readNumber<RX>(FILELINE);
-  area = input.readNumber<RX>(FILELINE);
-  perim = input.readNumber<RX>(FILELINE);
-  rough = input.readNumber<RX>(FILELINE);
-  u_A = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
-  u_P = input.read<int>(FILELINE);
-  u_R = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrShaftPrivate::write()
+void PlrShaftImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrShaftImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrShaftImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrShaftImpl::name() const
+{
+  return m_name;
+}
+
+void PlrShaftImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrShaftImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrShaftImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrShaftImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrShaftImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrShaftImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrShaftImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool PlrShaftImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool PlrShaftImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double PlrShaftImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool PlrShaftImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool PlrShaftImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double PlrShaftImpl::Ht() const
+{
+  return m_Ht.toDouble();
+}
+
+bool PlrShaftImpl::setHt(const double Ht)
+{
+  m_Ht = QString::number(Ht);
+  return true;
+}
+
+bool PlrShaftImpl::setHt(const std::string &Ht)
+{
+  bool ok;
+  STR_TO_RX7(Ht).toDouble(&ok);
+  if(ok)
+  {
+    m_Ht = STR_TO_RX7(Ht);
+    return true;
+  }
+  return false;
+}
+
+double PlrShaftImpl::area() const
+{
+  return m_area.toDouble();
+}
+
+bool PlrShaftImpl::setArea(const double area)
+{
+  m_area = QString::number(area);
+  return true;
+}
+
+bool PlrShaftImpl::setArea(const std::string &area)
+{
+  bool ok;
+  STR_TO_RX7(area).toDouble(&ok);
+  if(ok)
+  {
+    m_area = STR_TO_RX7(area);
+    return true;
+  }
+  return false;
+}
+
+double PlrShaftImpl::perim() const
+{
+  return m_perim.toDouble();
+}
+
+bool PlrShaftImpl::setPerim(const double perim)
+{
+  m_perim = QString::number(perim);
+  return true;
+}
+
+bool PlrShaftImpl::setPerim(const std::string &perim)
+{
+  bool ok;
+  STR_TO_RX7(perim).toDouble(&ok);
+  if(ok)
+  {
+    m_perim = STR_TO_RX7(perim);
+    return true;
+  }
+  return false;
+}
+
+double PlrShaftImpl::rough() const
+{
+  return m_rough.toDouble();
+}
+
+bool PlrShaftImpl::setRough(const double rough)
+{
+  m_rough = QString::number(rough);
+  return true;
+}
+
+bool PlrShaftImpl::setRough(const std::string &rough)
+{
+  bool ok;
+  STR_TO_RX7(rough).toDouble(&ok);
+  if(ok)
+  {
+    m_rough = STR_TO_RX7(rough);
+    return true;
+  }
+  return false;
+}
+
+int PlrShaftImpl::u_A() const
+{
+  return m_u_A;
+}
+
+void PlrShaftImpl::setU_A(const int u_A)
+{
+  m_u_A = u_A;
+}
+
+int PlrShaftImpl::u_D() const
+{
+  return m_u_D;
+}
+
+void PlrShaftImpl::setU_D(const int u_D)
+{
+  m_u_D = u_D;
+}
+
+int PlrShaftImpl::u_P() const
+{
+  return m_u_P;
+}
+
+void PlrShaftImpl::setU_P(const int u_P)
+{
+  m_u_P = u_P;
+}
+
+int PlrShaftImpl::u_R() const
+{
+  return m_u_R;
+}
+
+void PlrShaftImpl::setU_R(const int u_R)
+{
+  m_u_R = u_R;
+}
+
+void PlrBackDamperImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_Cp = RX7("0.0");
+  m_xp = RX7("0.0");
+  m_Cn = RX7("0.0");
+  m_xn = RX7("0.0");
+}
+
+PlrBackDamperImpl::PlrBackDamperImpl()
+{
+  setDefaults();
+}
+
+PlrBackDamperImpl::PlrBackDamperImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+PlrBackDamperImpl::PlrBackDamperImpl(int nr,int icon,std::string name,std::string desc,double lam,double Cp,double xp,double Cn,
+                                     double xn)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setCp(Cp);
+  setXp(xp);
+  setCn(Cn);
+  setXn(xn);
+}
+
+PlrBackDamperImpl::PlrBackDamperImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string Cp,std::string xp,std::string Cn,
+                                     std::string xn)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setCp(Cp);
+  setXp(xp);
+  setCn(Cn);
+  setXn(xn);
+}
+
+void PlrBackDamperImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setCp(input.readNumber<std::string>(FILELINE));
+  setXp(input.readNumber<std::string>(FILELINE));
+  setCn(input.readNumber<std::string>(FILELINE));
+  setXn(input.readNumber<std::string>(FILELINE));
+}
+
+std::string PlrBackDamperImpl::write(std::string dataType)
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_shaft " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(Ht) + ' ' + openstudio::toString(area) + ' ' + openstudio::toString(perim) + ' ' + openstudio::toString(rough) + ' ' + openstudio::toString(u_A) + ' ' + openstudio::toString(u_D) + ' ' + openstudio::toString(u_P) + ' ' + openstudio::toString(u_R) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + ' ' + dataType + ' ' + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_Cp) + ' ' + ANY_TO_STR(m_xp) + ' ' + ANY_TO_STR(m_Cn)
+    + ' ' + ANY_TO_STR(m_xn) + '\n';
   return string;
 }
 
-void PlrShaftPrivate::readDetails(Reader &input)
+void PlrBackDamperImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  Ht = input.readNumber<RX>(FILELINE);
-  area = input.readNumber<RX>(FILELINE);
-  perim = input.readNumber<RX>(FILELINE);
-  rough = input.readNumber<RX>(FILELINE);
-  u_A = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
-  u_P = input.read<int>(FILELINE);
-  u_R = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setCp(input.readNumber<std::string>(FILELINE));
+  setXp(input.readNumber<std::string>(FILELINE));
+  setCn(input.readNumber<std::string>(FILELINE));
+  setXn(input.readNumber<std::string>(FILELINE));
 }
 
-PlrBdqPrivate::PlrBdqPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
-{}
-
-void PlrBdqPrivate::read(Reader &input)
+int PlrBackDamperImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  Cp = input.readNumber<RX>(FILELINE);
-  xp = input.readNumber<RX>(FILELINE);
-  Cn = input.readNumber<RX>(FILELINE);
-  xn = input.readNumber<RX>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrBdqPrivate::write()
+void PlrBackDamperImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int PlrBackDamperImpl::icon() const
+{
+  return m_icon;
+}
+
+void PlrBackDamperImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string PlrBackDamperImpl::name() const
+{
+  return m_name;
+}
+
+void PlrBackDamperImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string PlrBackDamperImpl::desc() const
+{
+  return m_desc;
+}
+
+void PlrBackDamperImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double PlrBackDamperImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool PlrBackDamperImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool PlrBackDamperImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double PlrBackDamperImpl::Cp() const
+{
+  return m_Cp.toDouble();
+}
+
+bool PlrBackDamperImpl::setCp(const double Cp)
+{
+  m_Cp = QString::number(Cp);
+  return true;
+}
+
+bool PlrBackDamperImpl::setCp(const std::string &Cp)
+{
+  bool ok;
+  STR_TO_RX7(Cp).toDouble(&ok);
+  if(ok)
+  {
+    m_Cp = STR_TO_RX7(Cp);
+    return true;
+  }
+  return false;
+}
+
+double PlrBackDamperImpl::xp() const
+{
+  return m_xp.toDouble();
+}
+
+bool PlrBackDamperImpl::setXp(const double xp)
+{
+  m_xp = QString::number(xp);
+  return true;
+}
+
+bool PlrBackDamperImpl::setXp(const std::string &xp)
+{
+  bool ok;
+  STR_TO_RX7(xp).toDouble(&ok);
+  if(ok)
+  {
+    m_xp = STR_TO_RX7(xp);
+    return true;
+  }
+  return false;
+}
+
+double PlrBackDamperImpl::Cn() const
+{
+  return m_Cn.toDouble();
+}
+
+bool PlrBackDamperImpl::setCn(const double Cn)
+{
+  m_Cn = QString::number(Cn);
+  return true;
+}
+
+bool PlrBackDamperImpl::setCn(const std::string &Cn)
+{
+  bool ok;
+  STR_TO_RX7(Cn).toDouble(&ok);
+  if(ok)
+  {
+    m_Cn = STR_TO_RX7(Cn);
+    return true;
+  }
+  return false;
+}
+
+double PlrBackDamperImpl::xn() const
+{
+  return m_xn.toDouble();
+}
+
+bool PlrBackDamperImpl::setXn(const double xn)
+{
+  m_xn = QString::number(xn);
+  return true;
+}
+
+bool PlrBackDamperImpl::setXn(const std::string &xn)
+{
+  bool ok;
+  STR_TO_RX7(xn).toDouble(&ok);
+  if(ok)
+  {
+    m_xn = STR_TO_RX7(xn);
+    return true;
+  }
+  return false;
+}
+
+void QfrQuadraticImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_a = RX7("0.0");
+  m_b = RX7("0.0");
+}
+
+QfrQuadraticImpl::QfrQuadraticImpl()
+{
+  setDefaults();
+}
+
+QfrQuadraticImpl::QfrQuadraticImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+QfrQuadraticImpl::QfrQuadraticImpl(int nr,int icon,std::string name,std::string desc,double a,double b)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setA(a);
+  setB(b);
+}
+
+QfrQuadraticImpl::QfrQuadraticImpl(int nr,int icon,std::string name,std::string desc,std::string a,std::string b)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setA(a);
+  setB(b);
+}
+
+void QfrQuadraticImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setA(input.readNumber<std::string>(FILELINE));
+  setB(input.readNumber<std::string>(FILELINE));
+}
+
+std::string QfrQuadraticImpl::write(std::string dataType)
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_bdq " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(Cp) + ' ' + openstudio::toString(xp) + ' ' + openstudio::toString(Cn) + ' ' + openstudio::toString(xn) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + ' ' + dataType + ' ' + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_a) + ' ' + ANY_TO_STR(m_b) + '\n';
   return string;
 }
 
-void PlrBdqPrivate::readDetails(Reader &input)
+void QfrQuadraticImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  Cp = input.readNumber<RX>(FILELINE);
-  xp = input.readNumber<RX>(FILELINE);
-  Cn = input.readNumber<RX>(FILELINE);
-  xn = input.readNumber<RX>(FILELINE);
+  setA(input.readNumber<std::string>(FILELINE));
+  setB(input.readNumber<std::string>(FILELINE));
 }
 
-PlrBdfPrivate::PlrBdfPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
-{}
-
-void PlrBdfPrivate::read(Reader &input)
+int QfrQuadraticImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  Cp = input.readNumber<RX>(FILELINE);
-  xp = input.readNumber<RX>(FILELINE);
-  Cn = input.readNumber<RX>(FILELINE);
-  xn = input.readNumber<RX>(FILELINE);
+  return m_nr;
 }
 
-std::string PlrBdfPrivate::write()
+void QfrQuadraticImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int QfrQuadraticImpl::icon() const
+{
+  return m_icon;
+}
+
+void QfrQuadraticImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string QfrQuadraticImpl::name() const
+{
+  return m_name;
+}
+
+void QfrQuadraticImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string QfrQuadraticImpl::desc() const
+{
+  return m_desc;
+}
+
+void QfrQuadraticImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double QfrQuadraticImpl::a() const
+{
+  return m_a.toDouble();
+}
+
+bool QfrQuadraticImpl::setA(const double a)
+{
+  m_a = QString::number(a);
+  return true;
+}
+
+bool QfrQuadraticImpl::setA(const std::string &a)
+{
+  bool ok;
+  STR_TO_RX7(a).toDouble(&ok);
+  if(ok)
+  {
+    m_a = STR_TO_RX7(a);
+    return true;
+  }
+  return false;
+}
+
+double QfrQuadraticImpl::b() const
+{
+  return m_b.toDouble();
+}
+
+bool QfrQuadraticImpl::setB(const double b)
+{
+  m_b = QString::number(b);
+  return true;
+}
+
+bool QfrQuadraticImpl::setB(const std::string &b)
+{
+  bool ok;
+  STR_TO_RX7(b).toDouble(&ok);
+  if(ok)
+  {
+    m_b = STR_TO_RX7(b);
+    return true;
+  }
+  return false;
+}
+
+void QfrCrackImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_a = RX7("0.0");
+  m_b = RX7("0.0");
+  m_length = RX7("0.0");
+  m_width = RX7("0.0");
+  m_depth = RX7("0.0");
+  m_nB = 0;
+  m_u_L = 0;
+  m_u_W = 0;
+  m_u_D = 0;
+}
+
+QfrCrackImpl::QfrCrackImpl()
+{
+  setDefaults();
+}
+
+QfrCrackImpl::QfrCrackImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+QfrCrackImpl::QfrCrackImpl(int nr,int icon,std::string name,std::string desc,double a,double b,double length,
+                           double width,double depth,int nB,int u_L,int u_W,int u_D)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setA(a);
+  setB(b);
+  setLength(length);
+  setWidth(width);
+  setDepth(depth);
+  setNB(nB);
+  setU_L(u_L);
+  setU_W(u_W);
+  setU_D(u_D);
+}
+
+QfrCrackImpl::QfrCrackImpl(int nr,int icon,std::string name,std::string desc,std::string a,std::string b,std::string length,
+                           std::string width,std::string depth,int nB,int u_L,int u_W,int u_D)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setA(a);
+  setB(b);
+  setLength(length);
+  setWidth(width);
+  setDepth(depth);
+  setNB(nB);
+  setU_L(u_L);
+  setU_W(u_W);
+  setU_D(u_D);
+}
+
+void QfrCrackImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setA(input.readNumber<std::string>(FILELINE));
+  setB(input.readNumber<std::string>(FILELINE));
+  setLength(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setDepth(input.readNumber<std::string>(FILELINE));
+  setNB(input.read<int>(FILELINE));
+  setU_L(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
+}
+
+std::string QfrCrackImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " plr_bdf " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(Cp) + ' ' + openstudio::toString(xp) + ' ' + openstudio::toString(Cn) + ' ' + openstudio::toString(xn) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " qfr_crack " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_a) + ' ' + ANY_TO_STR(m_b) + ' ' + ANY_TO_STR(m_length) + ' ' + ANY_TO_STR(m_width)
+    + ' ' + ANY_TO_STR(m_depth) + ' ' + ANY_TO_STR(m_nB) + ' ' + ANY_TO_STR(m_u_L) + ' '
+    + ANY_TO_STR(m_u_W) + ' ' + ANY_TO_STR(m_u_D) + '\n';
   return string;
 }
 
-void PlrBdfPrivate::readDetails(Reader &input)
+void QfrCrackImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  Cp = input.readNumber<RX>(FILELINE);
-  xp = input.readNumber<RX>(FILELINE);
-  Cn = input.readNumber<RX>(FILELINE);
-  xn = input.readNumber<RX>(FILELINE);
+  setA(input.readNumber<std::string>(FILELINE));
+  setB(input.readNumber<std::string>(FILELINE));
+  setLength(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setDepth(input.readNumber<std::string>(FILELINE));
+  setNB(input.read<int>(FILELINE));
+  setU_L(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
+  setU_D(input.read<int>(FILELINE));
 }
 
-QfrQabPrivate::QfrQabPrivate(int nr,int icon,std::string name,std::string desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
-{}
-
-void QfrQabPrivate::read(Reader &input)
+int QfrCrackImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
+  return m_nr;
 }
 
-std::string QfrQabPrivate::write()
+void QfrCrackImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int QfrCrackImpl::icon() const
+{
+  return m_icon;
+}
+
+void QfrCrackImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string QfrCrackImpl::name() const
+{
+  return m_name;
+}
+
+void QfrCrackImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string QfrCrackImpl::desc() const
+{
+  return m_desc;
+}
+
+void QfrCrackImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double QfrCrackImpl::a() const
+{
+  return m_a.toDouble();
+}
+
+bool QfrCrackImpl::setA(const double a)
+{
+  m_a = QString::number(a);
+  return true;
+}
+
+bool QfrCrackImpl::setA(const std::string &a)
+{
+  bool ok;
+  STR_TO_RX7(a).toDouble(&ok);
+  if(ok)
+  {
+    m_a = STR_TO_RX7(a);
+    return true;
+  }
+  return false;
+}
+
+double QfrCrackImpl::b() const
+{
+  return m_b.toDouble();
+}
+
+bool QfrCrackImpl::setB(const double b)
+{
+  m_b = QString::number(b);
+  return true;
+}
+
+bool QfrCrackImpl::setB(const std::string &b)
+{
+  bool ok;
+  STR_TO_RX7(b).toDouble(&ok);
+  if(ok)
+  {
+    m_b = STR_TO_RX7(b);
+    return true;
+  }
+  return false;
+}
+
+double QfrCrackImpl::length() const
+{
+  return m_length.toDouble();
+}
+
+bool QfrCrackImpl::setLength(const double length)
+{
+  m_length = QString::number(length);
+  return true;
+}
+
+bool QfrCrackImpl::setLength(const std::string &length)
+{
+  bool ok;
+  STR_TO_RX7(length).toDouble(&ok);
+  if(ok)
+  {
+    m_length = STR_TO_RX7(length);
+    return true;
+  }
+  return false;
+}
+
+double QfrCrackImpl::width() const
+{
+  return m_width.toDouble();
+}
+
+bool QfrCrackImpl::setWidth(const double width)
+{
+  m_width = QString::number(width);
+  return true;
+}
+
+bool QfrCrackImpl::setWidth(const std::string &width)
+{
+  bool ok;
+  STR_TO_RX7(width).toDouble(&ok);
+  if(ok)
+  {
+    m_width = STR_TO_RX7(width);
+    return true;
+  }
+  return false;
+}
+
+double QfrCrackImpl::depth() const
+{
+  return m_depth.toDouble();
+}
+
+bool QfrCrackImpl::setDepth(const double depth)
+{
+  m_depth = QString::number(depth);
+  return true;
+}
+
+bool QfrCrackImpl::setDepth(const std::string &depth)
+{
+  bool ok;
+  STR_TO_RX7(depth).toDouble(&ok);
+  if(ok)
+  {
+    m_depth = STR_TO_RX7(depth);
+    return true;
+  }
+  return false;
+}
+
+int QfrCrackImpl::nB() const
+{
+  return m_nB;
+}
+
+void QfrCrackImpl::setNB(const int nB)
+{
+  m_nB = nB;
+}
+
+int QfrCrackImpl::u_L() const
+{
+  return m_u_L;
+}
+
+void QfrCrackImpl::setU_L(const int u_L)
+{
+  m_u_L = u_L;
+}
+
+int QfrCrackImpl::u_W() const
+{
+  return m_u_W;
+}
+
+void QfrCrackImpl::setU_W(const int u_W)
+{
+  m_u_W = u_W;
+}
+
+int QfrCrackImpl::u_D() const
+{
+  return m_u_D;
+}
+
+void QfrCrackImpl::setU_D(const int u_D)
+{
+  m_u_D = u_D;
+}
+
+void QfrTest2Impl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_a = RX7("0.0");
+  m_b = RX7("0.0");
+  m_dP1 = RX7("0.0");
+  m_F1 = RX7("0.0");
+  m_dP2 = RX7("0.0");
+  m_F2 = RX7("0.0");
+  m_u_P1 = 0;
+  m_u_F1 = 0;
+  m_u_P2 = 0;
+  m_u_F2 = 0;
+}
+
+QfrTest2Impl::QfrTest2Impl()
+{
+  setDefaults();
+}
+
+QfrTest2Impl::QfrTest2Impl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+QfrTest2Impl::QfrTest2Impl(int nr,int icon,std::string name,std::string desc,double a,double b,double dP1,double F1,
+                           double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setA(a);
+  setB(b);
+  setDP1(dP1);
+  setF1(F1);
+  setDP2(dP2);
+  setF2(F2);
+  setU_P1(u_P1);
+  setU_F1(u_F1);
+  setU_P2(u_P2);
+  setU_F2(u_F2);
+}
+
+QfrTest2Impl::QfrTest2Impl(int nr,int icon,std::string name,std::string desc,std::string a,std::string b,std::string dP1,std::string F1,
+                           std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setA(a);
+  setB(b);
+  setDP1(dP1);
+  setF1(F1);
+  setDP2(dP2);
+  setF2(F2);
+  setU_P1(u_P1);
+  setU_F1(u_F1);
+  setU_P2(u_P2);
+  setU_F2(u_F2);
+}
+
+void QfrTest2Impl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setA(input.readNumber<std::string>(FILELINE));
+  setB(input.readNumber<std::string>(FILELINE));
+  setDP1(input.readNumber<std::string>(FILELINE));
+  setF1(input.readNumber<std::string>(FILELINE));
+  setDP2(input.readNumber<std::string>(FILELINE));
+  setF2(input.readNumber<std::string>(FILELINE));
+  setU_P1(input.read<int>(FILELINE));
+  setU_F1(input.read<int>(FILELINE));
+  setU_P2(input.read<int>(FILELINE));
+  setU_F2(input.read<int>(FILELINE));
+}
+
+std::string QfrTest2Impl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_qab " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " qfr_test2 " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_a) + ' ' + ANY_TO_STR(m_b) + ' ' + ANY_TO_STR(m_dP1) + ' ' + ANY_TO_STR(m_F1)
+    + ' ' + ANY_TO_STR(m_dP2) + ' ' + ANY_TO_STR(m_F2) + ' ' + ANY_TO_STR(m_u_P1) + ' '
+    + ANY_TO_STR(m_u_F1) + ' ' + ANY_TO_STR(m_u_P2) + ' ' + ANY_TO_STR(m_u_F2) + '\n';
   return string;
 }
 
-void QfrQabPrivate::readDetails(Reader &input)
+void QfrTest2Impl::readDetails(Reader &input)
 {
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
+  setA(input.readNumber<std::string>(FILELINE));
+  setB(input.readNumber<std::string>(FILELINE));
+  setDP1(input.readNumber<std::string>(FILELINE));
+  setF1(input.readNumber<std::string>(FILELINE));
+  setDP2(input.readNumber<std::string>(FILELINE));
+  setF2(input.readNumber<std::string>(FILELINE));
+  setU_P1(input.read<int>(FILELINE));
+  setU_F1(input.read<int>(FILELINE));
+  setU_P2(input.read<int>(FILELINE));
+  setU_F2(input.read<int>(FILELINE));
 }
 
-QfrFabPrivate::QfrFabPrivate(int nr,int icon,std::string name,std::string desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
-{}
-
-void QfrFabPrivate::read(Reader &input)
+int QfrTest2Impl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
+  return m_nr;
 }
 
-std::string QfrFabPrivate::write()
+void QfrTest2Impl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int QfrTest2Impl::icon() const
+{
+  return m_icon;
+}
+
+void QfrTest2Impl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string QfrTest2Impl::name() const
+{
+  return m_name;
+}
+
+void QfrTest2Impl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string QfrTest2Impl::desc() const
+{
+  return m_desc;
+}
+
+void QfrTest2Impl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double QfrTest2Impl::a() const
+{
+  return m_a.toDouble();
+}
+
+bool QfrTest2Impl::setA(const double a)
+{
+  m_a = QString::number(a);
+  return true;
+}
+
+bool QfrTest2Impl::setA(const std::string &a)
+{
+  bool ok;
+  STR_TO_RX7(a).toDouble(&ok);
+  if(ok)
+  {
+    m_a = STR_TO_RX7(a);
+    return true;
+  }
+  return false;
+}
+
+double QfrTest2Impl::b() const
+{
+  return m_b.toDouble();
+}
+
+bool QfrTest2Impl::setB(const double b)
+{
+  m_b = QString::number(b);
+  return true;
+}
+
+bool QfrTest2Impl::setB(const std::string &b)
+{
+  bool ok;
+  STR_TO_RX7(b).toDouble(&ok);
+  if(ok)
+  {
+    m_b = STR_TO_RX7(b);
+    return true;
+  }
+  return false;
+}
+
+double QfrTest2Impl::dP1() const
+{
+  return m_dP1.toDouble();
+}
+
+bool QfrTest2Impl::setDP1(const double dP1)
+{
+  m_dP1 = QString::number(dP1);
+  return true;
+}
+
+bool QfrTest2Impl::setDP1(const std::string &dP1)
+{
+  bool ok;
+  STR_TO_RX7(dP1).toDouble(&ok);
+  if(ok)
+  {
+    m_dP1 = STR_TO_RX7(dP1);
+    return true;
+  }
+  return false;
+}
+
+double QfrTest2Impl::F1() const
+{
+  return m_F1.toDouble();
+}
+
+bool QfrTest2Impl::setF1(const double F1)
+{
+  m_F1 = QString::number(F1);
+  return true;
+}
+
+bool QfrTest2Impl::setF1(const std::string &F1)
+{
+  bool ok;
+  STR_TO_RX7(F1).toDouble(&ok);
+  if(ok)
+  {
+    m_F1 = STR_TO_RX7(F1);
+    return true;
+  }
+  return false;
+}
+
+double QfrTest2Impl::dP2() const
+{
+  return m_dP2.toDouble();
+}
+
+bool QfrTest2Impl::setDP2(const double dP2)
+{
+  m_dP2 = QString::number(dP2);
+  return true;
+}
+
+bool QfrTest2Impl::setDP2(const std::string &dP2)
+{
+  bool ok;
+  STR_TO_RX7(dP2).toDouble(&ok);
+  if(ok)
+  {
+    m_dP2 = STR_TO_RX7(dP2);
+    return true;
+  }
+  return false;
+}
+
+double QfrTest2Impl::F2() const
+{
+  return m_F2.toDouble();
+}
+
+bool QfrTest2Impl::setF2(const double F2)
+{
+  m_F2 = QString::number(F2);
+  return true;
+}
+
+bool QfrTest2Impl::setF2(const std::string &F2)
+{
+  bool ok;
+  STR_TO_RX7(F2).toDouble(&ok);
+  if(ok)
+  {
+    m_F2 = STR_TO_RX7(F2);
+    return true;
+  }
+  return false;
+}
+
+int QfrTest2Impl::u_P1() const
+{
+  return m_u_P1;
+}
+
+void QfrTest2Impl::setU_P1(const int u_P1)
+{
+  m_u_P1 = u_P1;
+}
+
+int QfrTest2Impl::u_F1() const
+{
+  return m_u_F1;
+}
+
+void QfrTest2Impl::setU_F1(const int u_F1)
+{
+  m_u_F1 = u_F1;
+}
+
+int QfrTest2Impl::u_P2() const
+{
+  return m_u_P2;
+}
+
+void QfrTest2Impl::setU_P2(const int u_P2)
+{
+  m_u_P2 = u_P2;
+}
+
+int QfrTest2Impl::u_F2() const
+{
+  return m_u_F2;
+}
+
+void QfrTest2Impl::setU_F2(const int u_F2)
+{
+  m_u_F2 = u_F2;
+}
+
+void AfeDorImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_dTmin = RX7("0.0");
+  m_ht = RX7("0.0");
+  m_wd = RX7("0.0");
+  m_cd = RX7("0.0");
+  m_u_T = 0;
+  m_u_H = 0;
+  m_u_W = 0;
+}
+
+AfeDorImpl::AfeDorImpl()
+{
+  setDefaults();
+}
+
+AfeDorImpl::AfeDorImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+AfeDorImpl::AfeDorImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                       double dTmin,double ht,double wd,double cd,int u_T,int u_H,int u_W)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDTmin(dTmin);
+  setHeight(ht);
+  setWidth(wd);
+  setCd(cd);
+  setU_T(u_T);
+  setU_H(u_H);
+  setU_W(u_W);
+}
+
+AfeDorImpl::AfeDorImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                       std::string dTmin,std::string ht,std::string wd,std::string cd,int u_T,int u_H,int u_W)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDTmin(dTmin);
+  setHeight(ht);
+  setWidth(wd);
+  setCd(cd);
+  setU_T(u_T);
+  setU_H(u_H);
+  setU_W(u_W);
+}
+
+void AfeDorImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDTmin(input.readNumber<std::string>(FILELINE));
+  setHeight(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setCd(input.readNumber<std::string>(FILELINE));
+  setU_T(input.read<int>(FILELINE));
+  setU_H(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
+}
+
+std::string AfeDorImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_fab " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " dor_door " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' '
+    + ANY_TO_STR(m_dTmin) + ' ' + ANY_TO_STR(m_ht) + ' ' + ANY_TO_STR(m_wd) + ' '
+    + ANY_TO_STR(m_cd) + ' ' + ANY_TO_STR(m_u_T) + ' ' + ANY_TO_STR(m_u_H) + ' '
+    + ANY_TO_STR(m_u_W) + '\n';
   return string;
 }
 
-void QfrFabPrivate::readDetails(Reader &input)
+void AfeDorImpl::readDetails(Reader &input)
 {
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDTmin(input.readNumber<std::string>(FILELINE));
+  setHeight(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setCd(input.readNumber<std::string>(FILELINE));
+  setU_T(input.read<int>(FILELINE));
+  setU_H(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
 }
 
-QfrCrackPrivate::QfrCrackPrivate(int nr,int icon,std::string name,std::string desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),length(length),width(width),depth(depth),nB(nB),u_L(u_L),u_W(u_W),u_D(u_D)
-{}
-
-void QfrCrackPrivate::read(Reader &input)
+int AfeDorImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
-  length = input.readNumber<RX>(FILELINE);
-  width = input.readNumber<RX>(FILELINE);
-  depth = input.readNumber<RX>(FILELINE);
-  nB = input.read<int>(FILELINE);
-  u_L = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string QfrCrackPrivate::write()
+void AfeDorImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int AfeDorImpl::icon() const
+{
+  return m_icon;
+}
+
+void AfeDorImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string AfeDorImpl::name() const
+{
+  return m_name;
+}
+
+void AfeDorImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string AfeDorImpl::desc() const
+{
+  return m_desc;
+}
+
+void AfeDorImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double AfeDorImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool AfeDorImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool AfeDorImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double AfeDorImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool AfeDorImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool AfeDorImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double AfeDorImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool AfeDorImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool AfeDorImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double AfeDorImpl::dTmin() const
+{
+  return m_dTmin.toDouble();
+}
+
+bool AfeDorImpl::setDTmin(const double dTmin)
+{
+  m_dTmin = QString::number(dTmin);
+  return true;
+}
+
+bool AfeDorImpl::setDTmin(const std::string &dTmin)
+{
+  bool ok;
+  STR_TO_RX7(dTmin).toDouble(&ok);
+  if(ok)
+  {
+    m_dTmin = STR_TO_RX7(dTmin);
+    return true;
+  }
+  return false;
+}
+
+double AfeDorImpl::height() const
+{
+  return m_ht.toDouble();
+}
+
+bool AfeDorImpl::setHeight(const double ht)
+{
+  m_ht = QString::number(ht);
+  return true;
+}
+
+bool AfeDorImpl::setHeight(const std::string &ht)
+{
+  bool ok;
+  STR_TO_RX7(ht).toDouble(&ok);
+  if(ok)
+  {
+    m_ht = STR_TO_RX7(ht);
+    return true;
+  }
+  return false;
+}
+
+double AfeDorImpl::width() const
+{
+  return m_wd.toDouble();
+}
+
+bool AfeDorImpl::setWidth(const double wd)
+{
+  m_wd = QString::number(wd);
+  return true;
+}
+
+bool AfeDorImpl::setWidth(const std::string &wd)
+{
+  bool ok;
+  STR_TO_RX7(wd).toDouble(&ok);
+  if(ok)
+  {
+    m_wd = STR_TO_RX7(wd);
+    return true;
+  }
+  return false;
+}
+
+double AfeDorImpl::cd() const
+{
+  return m_cd.toDouble();
+}
+
+bool AfeDorImpl::setCd(const double cd)
+{
+  m_cd = QString::number(cd);
+  return true;
+}
+
+bool AfeDorImpl::setCd(const std::string &cd)
+{
+  bool ok;
+  STR_TO_RX7(cd).toDouble(&ok);
+  if(ok)
+  {
+    m_cd = STR_TO_RX7(cd);
+    return true;
+  }
+  return false;
+}
+
+int AfeDorImpl::u_T() const
+{
+  return m_u_T;
+}
+
+void AfeDorImpl::setU_T(const int u_T)
+{
+  m_u_T = u_T;
+}
+
+int AfeDorImpl::u_H() const
+{
+  return m_u_H;
+}
+
+void AfeDorImpl::setU_H(const int u_H)
+{
+  m_u_H = u_H;
+}
+
+int AfeDorImpl::u_W() const
+{
+  return m_u_W;
+}
+
+void AfeDorImpl::setU_W(const int u_W)
+{
+  m_u_W = u_W;
+}
+
+void DrPl2Impl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_dH = RX7("0.0");
+  m_ht = RX7("0.0");
+  m_wd = RX7("0.0");
+  m_cd = RX7("0.0");
+  m_u_H = 0;
+  m_u_W = 0;
+}
+
+DrPl2Impl::DrPl2Impl()
+{
+  setDefaults();
+}
+
+DrPl2Impl::DrPl2Impl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+DrPl2Impl::DrPl2Impl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dH,
+                     double ht,double wd,double cd,int u_H,int u_W)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDH(dH);
+  setHeight(ht);
+  setWidth(wd);
+  setCd(cd);
+  setU_H(u_H);
+  setU_W(u_W);
+}
+
+DrPl2Impl::DrPl2Impl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dH,
+                     std::string ht,std::string wd,std::string cd,int u_H,int u_W)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setDH(dH);
+  setHeight(ht);
+  setWidth(wd);
+  setCd(cd);
+  setU_H(u_H);
+  setU_W(u_W);
+}
+
+void DrPl2Impl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDH(input.readNumber<std::string>(FILELINE));
+  setHeight(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setCd(input.readNumber<std::string>(FILELINE));
+  setU_H(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
+}
+
+std::string DrPl2Impl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_crack " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + ' ' + openstudio::toString(length) + ' ' + openstudio::toString(width) + ' ' + openstudio::toString(depth) + ' ' + openstudio::toString(nB) + ' ' + openstudio::toString(u_L) + ' ' + openstudio::toString(u_W) + ' ' + openstudio::toString(u_D) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " dor_pl2 " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' '
+    + ANY_TO_STR(m_dH) + ' ' + ANY_TO_STR(m_ht) + ' ' + ANY_TO_STR(m_wd) + ' ' + ANY_TO_STR(m_cd)
+    + ' ' + ANY_TO_STR(m_u_H) + ' ' + ANY_TO_STR(m_u_W) + '\n';
   return string;
 }
 
-void QfrCrackPrivate::readDetails(Reader &input)
+void DrPl2Impl::readDetails(Reader &input)
 {
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
-  length = input.readNumber<RX>(FILELINE);
-  width = input.readNumber<RX>(FILELINE);
-  depth = input.readNumber<RX>(FILELINE);
-  nB = input.read<int>(FILELINE);
-  u_L = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
-  u_D = input.read<int>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setDH(input.readNumber<std::string>(FILELINE));
+  setHeight(input.readNumber<std::string>(FILELINE));
+  setWidth(input.readNumber<std::string>(FILELINE));
+  setCd(input.readNumber<std::string>(FILELINE));
+  setU_H(input.read<int>(FILELINE));
+  setU_W(input.read<int>(FILELINE));
 }
 
-QfrTest2Private::QfrTest2Private(int nr,int icon,std::string name,std::string desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
-{}
-
-void QfrTest2Private::read(Reader &input)
+int DrPl2Impl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  // dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
-  dP1 = input.readNumber<RX>(FILELINE);
-  F1 = input.readNumber<RX>(FILELINE);
-  dP2 = input.readNumber<RX>(FILELINE);
-  F2 = input.readNumber<RX>(FILELINE);
-  u_P1 = input.read<int>(FILELINE);
-  u_F1 = input.read<int>(FILELINE);
-  u_P2 = input.read<int>(FILELINE);
-  u_F2 = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string QfrTest2Private::write()
+void DrPl2Impl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int DrPl2Impl::icon() const
+{
+  return m_icon;
+}
+
+void DrPl2Impl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string DrPl2Impl::name() const
+{
+  return m_name;
+}
+
+void DrPl2Impl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string DrPl2Impl::desc() const
+{
+  return m_desc;
+}
+
+void DrPl2Impl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double DrPl2Impl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool DrPl2Impl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool DrPl2Impl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double DrPl2Impl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool DrPl2Impl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool DrPl2Impl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double DrPl2Impl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool DrPl2Impl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool DrPl2Impl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double DrPl2Impl::dH() const
+{
+  return m_dH.toDouble();
+}
+
+bool DrPl2Impl::setDH(const double dH)
+{
+  m_dH = QString::number(dH);
+  return true;
+}
+
+bool DrPl2Impl::setDH(const std::string &dH)
+{
+  bool ok;
+  STR_TO_RX7(dH).toDouble(&ok);
+  if(ok)
+  {
+    m_dH = STR_TO_RX7(dH);
+    return true;
+  }
+  return false;
+}
+
+double DrPl2Impl::height() const
+{
+  return m_ht.toDouble();
+}
+
+bool DrPl2Impl::setHeight(const double ht)
+{
+  m_ht = QString::number(ht);
+  return true;
+}
+
+bool DrPl2Impl::setHeight(const std::string &ht)
+{
+  bool ok;
+  STR_TO_RX7(ht).toDouble(&ok);
+  if(ok)
+  {
+    m_ht = STR_TO_RX7(ht);
+    return true;
+  }
+  return false;
+}
+
+double DrPl2Impl::width() const
+{
+  return m_wd.toDouble();
+}
+
+bool DrPl2Impl::setWidth(const double wd)
+{
+  m_wd = QString::number(wd);
+  return true;
+}
+
+bool DrPl2Impl::setWidth(const std::string &wd)
+{
+  bool ok;
+  STR_TO_RX7(wd).toDouble(&ok);
+  if(ok)
+  {
+    m_wd = STR_TO_RX7(wd);
+    return true;
+  }
+  return false;
+}
+
+double DrPl2Impl::cd() const
+{
+  return m_cd.toDouble();
+}
+
+bool DrPl2Impl::setCd(const double cd)
+{
+  m_cd = QString::number(cd);
+  return true;
+}
+
+bool DrPl2Impl::setCd(const std::string &cd)
+{
+  bool ok;
+  STR_TO_RX7(cd).toDouble(&ok);
+  if(ok)
+  {
+    m_cd = STR_TO_RX7(cd);
+    return true;
+  }
+  return false;
+}
+
+int DrPl2Impl::u_H() const
+{
+  return m_u_H;
+}
+
+void DrPl2Impl::setU_H(const int u_H)
+{
+  m_u_H = u_H;
+}
+
+int DrPl2Impl::u_W() const
+{
+  return m_u_W;
+}
+
+void DrPl2Impl::setU_W(const int u_W)
+{
+  m_u_W = u_W;
+}
+
+void AfeFlowImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_Flow = RX7("0.0");
+  m_u_F = 0;
+}
+
+AfeFlowImpl::AfeFlowImpl()
+{
+  setDefaults();
+}
+
+AfeFlowImpl::AfeFlowImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+AfeFlowImpl::AfeFlowImpl(int nr,int icon,std::string name,std::string desc,double Flow,int u_F)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setFlow(Flow);
+  setU_F(u_F);
+}
+
+AfeFlowImpl::AfeFlowImpl(int nr,int icon,std::string name,std::string desc,std::string Flow,int u_F)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setFlow(Flow);
+  setU_F(u_F);
+}
+
+void AfeFlowImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setFlow(input.readNumber<std::string>(FILELINE));
+  setU_F(input.read<int>(FILELINE));
+}
+
+std::string AfeFlowImpl::write(std::string dataType)
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " qfr_test2 " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(a) + ' ' + openstudio::toString(b) + ' ' + openstudio::toString(dP1) + ' ' + openstudio::toString(F1) + ' ' + openstudio::toString(dP2) + ' ' + openstudio::toString(F2) + ' ' + openstudio::toString(u_P1) + ' ' + openstudio::toString(u_F1) + ' ' + openstudio::toString(u_P2) + ' ' + openstudio::toString(u_F2) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + ' ' + dataType + ' ' + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_Flow) + ' ' + ANY_TO_STR(m_u_F) + '\n';
   return string;
 }
 
-void QfrTest2Private::readDetails(Reader &input)
+void AfeFlowImpl::readDetails(Reader &input)
 {
-  a = input.readNumber<RX>(FILELINE);
-  b = input.readNumber<RX>(FILELINE);
-  dP1 = input.readNumber<RX>(FILELINE);
-  F1 = input.readNumber<RX>(FILELINE);
-  dP2 = input.readNumber<RX>(FILELINE);
-  F2 = input.readNumber<RX>(FILELINE);
-  u_P1 = input.read<int>(FILELINE);
-  u_F1 = input.read<int>(FILELINE);
-  u_P2 = input.read<int>(FILELINE);
-  u_F2 = input.read<int>(FILELINE);
+  setFlow(input.readNumber<std::string>(FILELINE));
+  setU_F(input.read<int>(FILELINE));
 }
 
-AfeDorPrivate::AfeDorPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dTmin(dTmin),ht(ht),wd(wd),cd(cd),u_T(u_T),u_H(u_H),u_W(u_W)
-{}
-
-void AfeDorPrivate::read(Reader &input)
+int AfeFlowImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dTmin = input.readNumber<RX>(FILELINE);
-  ht = input.readNumber<RX>(FILELINE);
-  wd = input.readNumber<RX>(FILELINE);
-  cd = input.readNumber<RX>(FILELINE);
-  u_T = input.read<int>(FILELINE);
-  u_H = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
+  return m_nr;
 }
 
-std::string AfeDorPrivate::write()
+void AfeFlowImpl::setNr(const int nr)
 {
-  std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " dor_door " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dTmin) + ' ' + openstudio::toString(ht) + ' ' + openstudio::toString(wd) + ' ' + openstudio::toString(cd) + ' ' + openstudio::toString(u_T) + ' ' + openstudio::toString(u_H) + ' ' + openstudio::toString(u_W) + '\n';
-  return string;
+  m_nr = nr;
 }
 
-void AfeDorPrivate::readDetails(Reader &input)
+int AfeFlowImpl::icon() const
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dTmin = input.readNumber<RX>(FILELINE);
-  ht = input.readNumber<RX>(FILELINE);
-  wd = input.readNumber<RX>(FILELINE);
-  cd = input.readNumber<RX>(FILELINE);
-  u_T = input.read<int>(FILELINE);
-  u_H = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
+  return m_icon;
 }
 
-DrPl2Private::DrPl2Private(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dH(dH),ht(ht),wd(wd),cd(cd),u_H(u_H),u_W(u_W)
-{}
-
-void DrPl2Private::read(Reader &input)
+void AfeFlowImpl::setIcon(const int icon)
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dH = input.readNumber<RX>(FILELINE);
-  ht = input.readNumber<RX>(FILELINE);
-  wd = input.readNumber<RX>(FILELINE);
-  cd = input.readNumber<RX>(FILELINE);
-  u_H = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
+  m_icon = icon;
 }
 
-std::string DrPl2Private::write()
+std::string AfeFlowImpl::name() const
 {
-  std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " dor_pl2 " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(dH) + ' ' + openstudio::toString(ht) + ' ' + openstudio::toString(wd) + ' ' + openstudio::toString(cd) + ' ' + openstudio::toString(u_H) + ' ' + openstudio::toString(u_W) + '\n';
-  return string;
+  return m_name;
 }
 
-void DrPl2Private::readDetails(Reader &input)
+void AfeFlowImpl::setName(const std::string &name)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  dH = input.readNumber<RX>(FILELINE);
-  ht = input.readNumber<RX>(FILELINE);
-  wd = input.readNumber<RX>(FILELINE);
-  cd = input.readNumber<RX>(FILELINE);
-  u_H = input.read<int>(FILELINE);
-  u_W = input.read<int>(FILELINE);
+  m_name = name;
 }
 
-AfeCmfPrivate::AfeCmfPrivate(int nr,int icon,std::string name,std::string desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
-{}
-
-void AfeCmfPrivate::read(Reader &input)
+std::string AfeFlowImpl::desc() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  Flow = input.readNumber<RX>(FILELINE);
-  u_F = input.read<int>(FILELINE);
+  return m_desc;
 }
 
-std::string AfeCmfPrivate::write()
+void AfeFlowImpl::setDesc(const std::string &desc)
 {
-  std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " fan_cmf " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(Flow) + ' ' + openstudio::toString(u_F) + '\n';
-  return string;
+  m_desc = desc;
 }
 
-void AfeCmfPrivate::readDetails(Reader &input)
+double AfeFlowImpl::Flow() const
 {
-  Flow = input.readNumber<RX>(FILELINE);
-  u_F = input.read<int>(FILELINE);
+  return m_Flow.toDouble();
 }
 
-AfeCvfPrivate::AfeCvfPrivate(int nr,int icon,std::string name,std::string desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
-{}
-
-void AfeCvfPrivate::read(Reader &input)
+bool AfeFlowImpl::setFlow(const double Flow)
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  Flow = input.readNumber<RX>(FILELINE);
-  u_F = input.read<int>(FILELINE);
+  m_Flow = QString::number(Flow);
+  return true;
 }
 
-std::string AfeCvfPrivate::write()
+bool AfeFlowImpl::setFlow(const std::string &Flow)
 {
-  std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " fan_cvf " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(Flow) + ' ' + openstudio::toString(u_F) + '\n';
-  return string;
+  bool ok;
+  STR_TO_RX7(Flow).toDouble(&ok);
+  if(ok)
+  {
+    m_Flow = STR_TO_RX7(Flow);
+    return true;
+  }
+  return false;
 }
 
-void AfeCvfPrivate::readDetails(Reader &input)
+int AfeFlowImpl::u_F() const
 {
-  Flow = input.readNumber<RX>(FILELINE);
-  u_F = input.read<int>(FILELINE);
+  return m_u_F;
 }
 
-AfeFanPrivate::AfeFanPrivate(int nr,int icon,std::string name,std::string desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),rdens(rdens),fdf(fdf),sop(sop),off(off),fpc(fpc),Sarea(Sarea),u_Sa(u_Sa),data(data)
-{}
-
-void AfeFanPrivate::read(Reader &input)
+void AfeFlowImpl::setU_F(const int u_F)
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  rdens = input.readNumber<RX>(FILELINE);
-  fdf = input.readNumber<RX>(FILELINE);
-  sop = input.readNumber<RX>(FILELINE);
-  off = input.readNumber<RX>(FILELINE);
+  m_u_F = u_F;
+}
+
+void AfeFanImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_lam = RX7("0.0");
+  m_turb = RX7("0.0");
+  m_expt = RX7("0.0");
+  m_rdens = RX7("0.0");
+  m_fdf = RX7("0.0");
+  m_sop = RX7("0.0");
+  m_off = RX7("0.0");
+  m_Sarea = RX7("0.0");
+  m_u_Sa = 0;
+}
+
+AfeFanImpl::AfeFanImpl()
+{
+  setDefaults();
+}
+
+AfeFanImpl::AfeFanImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+AfeFanImpl::AfeFanImpl(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,
+                       double rdens,double fdf,double sop,double off,std::vector<double> fpc,double Sarea,
+                       int u_Sa,std::vector<FanDataPoint> data)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setRdens(rdens);
+  setFdf(fdf);
+  setSop(sop);
+  setOff(off);
+  setFpc(fpc);
+  setSarea(Sarea);
+  setU_Sa(u_Sa);
+  setData(data);
+}
+
+AfeFanImpl::AfeFanImpl(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,
+                       std::string rdens,std::string fdf,std::string sop,std::string off,std::vector<std::string> fpc,std::string Sarea,
+                       int u_Sa,std::vector<FanDataPoint> data)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setLam(lam);
+  setTurb(turb);
+  setExpt(expt);
+  setRdens(rdens);
+  setFdf(fdf);
+  setSop(sop);
+  setOff(off);
+  setFpc(fpc);
+  setSarea(Sarea);
+  setU_Sa(u_Sa);
+  setData(data);
+}
+
+void AfeFanImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setRdens(input.readNumber<std::string>(FILELINE));
+  setFdf(input.readNumber<std::string>(FILELINE));
+  setSop(input.readNumber<std::string>(FILELINE));
+  setOff(input.readNumber<std::string>(FILELINE));
+  std::vector<std::string> fpc;
   for(int i=0;i<4;i++)
-    fpc.push_back(input.read<RX>(FILELINE));
+  {
+    fpc.push_back(input.read<std::string>(FILELINE));
+  }
+  setFpc(fpc);
   int npts = input.read<int>(FILELINE);
-  Sarea = input.readNumber<RX>(FILELINE);
-  u_Sa = input.read<int>(FILELINE);
+  setSarea(input.readNumber<std::string>(FILELINE));
+  setU_Sa(input.read<int>(FILELINE));
+  std::vector<FanDataPoint> data;
   for(int i=0;i<npts;i++)
   {
     FanDataPoint object;
     object.read(input);
     data.push_back(object);
   }
-
+  setData(data);
 }
 
-std::string AfeFanPrivate::write()
+std::string AfeFanImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " fan_fan " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(lam) + ' ' + openstudio::toString(turb) + ' ' + openstudio::toString(expt) + ' ' + openstudio::toString(rdens) + ' ' + openstudio::toString(fdf) + ' ' + openstudio::toString(sop) + ' ' + openstudio::toString(off) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " fan_fan " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_lam) + ' ' + ANY_TO_STR(m_turb) + ' ' + ANY_TO_STR(m_expt) + ' ' + ANY_TO_STR(m_rdens)
+    + ' ' + ANY_TO_STR(m_fdf) + ' ' + ANY_TO_STR(m_sop) + ' ' + ANY_TO_STR(m_off) + '\n';
   for(int i=0;i<4;i++)
-    string += openstudio::toString(fpc[i]) + ' ';
+    string += ANY_TO_STR(m_fpc[i]) + ' ';
   string += '\n';
-  string += openstudio::toString(data.size()) + ' ' + openstudio::toString(Sarea) + ' ' + openstudio::toString(u_Sa) + '\n';
-  for(unsigned int i=0;i<data.size();i++)
+  string += ANY_TO_STR(m_data.size()) + ' ' + ANY_TO_STR(m_Sarea) + ' ' + ANY_TO_STR(m_u_Sa) + '\n';
+  for(unsigned int i=0;i<m_data.size();i++)
   {
-    string += data[i].write();
+    string += m_data[i].write();
   }
   return string;
 }
 
-void AfeFanPrivate::readDetails(Reader &input)
+void AfeFanImpl::readDetails(Reader &input)
 {
-  lam = input.readNumber<RX>(FILELINE);
-  turb = input.readNumber<RX>(FILELINE);
-  expt = input.readNumber<RX>(FILELINE);
-  rdens = input.readNumber<RX>(FILELINE);
-  fdf = input.readNumber<RX>(FILELINE);
-  sop = input.readNumber<RX>(FILELINE);
-  off = input.readNumber<RX>(FILELINE);
+  setLam(input.readNumber<std::string>(FILELINE));
+  setTurb(input.readNumber<std::string>(FILELINE));
+  setExpt(input.readNumber<std::string>(FILELINE));
+  setRdens(input.readNumber<std::string>(FILELINE));
+  setFdf(input.readNumber<std::string>(FILELINE));
+  setSop(input.readNumber<std::string>(FILELINE));
+  setOff(input.readNumber<std::string>(FILELINE));
+  std::vector<std::string> fpc;
   for(int i=0;i<4;i++)
-    fpc.push_back(input.read<RX>(FILELINE));
+  {
+    fpc.push_back(input.read<std::string>(FILELINE));
+  }
+  setFpc(fpc);
   int npts = input.read<int>(FILELINE);
-  Sarea = input.readNumber<RX>(FILELINE);
-  u_Sa = input.read<int>(FILELINE);
+  setSarea(input.readNumber<std::string>(FILELINE));
+  setU_Sa(input.read<int>(FILELINE));
+  std::vector<FanDataPoint> data;
   for(int i=0;i<npts;i++)
   {
     FanDataPoint object;
     object.read(input);
     data.push_back(object);
   }
-
+  setData(data);
 }
 
-AfeCsfPrivate::AfeCsfPrivate(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data):nr(nr),icon(icon),name(name),desc(desc),u_x(u_x),u_y(u_y),data(data)
-{}
-
-void AfeCsfPrivate::read(Reader &input)
+int AfeFanImpl::nr() const
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
+  return m_nr;
+}
+
+void AfeFanImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int AfeFanImpl::icon() const
+{
+  return m_icon;
+}
+
+void AfeFanImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string AfeFanImpl::name() const
+{
+  return m_name;
+}
+
+void AfeFanImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string AfeFanImpl::desc() const
+{
+  return m_desc;
+}
+
+void AfeFanImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+double AfeFanImpl::lam() const
+{
+  return m_lam.toDouble();
+}
+
+bool AfeFanImpl::setLam(const double lam)
+{
+  m_lam = QString::number(lam);
+  return true;
+}
+
+bool AfeFanImpl::setLam(const std::string &lam)
+{
+  bool ok;
+  STR_TO_RX7(lam).toDouble(&ok);
+  if(ok)
+  {
+    m_lam = STR_TO_RX7(lam);
+    return true;
+  }
+  return false;
+}
+
+double AfeFanImpl::turb() const
+{
+  return m_turb.toDouble();
+}
+
+bool AfeFanImpl::setTurb(const double turb)
+{
+  m_turb = QString::number(turb);
+  return true;
+}
+
+bool AfeFanImpl::setTurb(const std::string &turb)
+{
+  bool ok;
+  STR_TO_RX7(turb).toDouble(&ok);
+  if(ok)
+  {
+    m_turb = STR_TO_RX7(turb);
+    return true;
+  }
+  return false;
+}
+
+double AfeFanImpl::expt() const
+{
+  return m_expt.toDouble();
+}
+
+bool AfeFanImpl::setExpt(const double expt)
+{
+  m_expt = QString::number(expt);
+  return true;
+}
+
+bool AfeFanImpl::setExpt(const std::string &expt)
+{
+  bool ok;
+  STR_TO_RX7(expt).toDouble(&ok);
+  if(ok)
+  {
+    m_expt = STR_TO_RX7(expt);
+    return true;
+  }
+  return false;
+}
+
+double AfeFanImpl::rdens() const
+{
+  return m_rdens.toDouble();
+}
+
+bool AfeFanImpl::setRdens(const double rdens)
+{
+  m_rdens = QString::number(rdens);
+  return true;
+}
+
+bool AfeFanImpl::setRdens(const std::string &rdens)
+{
+  bool ok;
+  STR_TO_RX7(rdens).toDouble(&ok);
+  if(ok)
+  {
+    m_rdens = STR_TO_RX7(rdens);
+    return true;
+  }
+  return false;
+}
+
+double AfeFanImpl::fdf() const
+{
+  return m_fdf.toDouble();
+}
+
+bool AfeFanImpl::setFdf(const double fdf)
+{
+  m_fdf = QString::number(fdf);
+  return true;
+}
+
+bool AfeFanImpl::setFdf(const std::string &fdf)
+{
+  bool ok;
+  STR_TO_RX7(fdf).toDouble(&ok);
+  if(ok)
+  {
+    m_fdf = STR_TO_RX7(fdf);
+    return true;
+  }
+  return false;
+}
+
+double AfeFanImpl::sop() const
+{
+  return m_sop.toDouble();
+}
+
+bool AfeFanImpl::setSop(const double sop)
+{
+  m_sop = QString::number(sop);
+  return true;
+}
+
+bool AfeFanImpl::setSop(const std::string &sop)
+{
+  bool ok;
+  STR_TO_RX7(sop).toDouble(&ok);
+  if(ok)
+  {
+    m_sop = STR_TO_RX7(sop);
+    return true;
+  }
+  return false;
+}
+
+double AfeFanImpl::off() const
+{
+  return m_off.toDouble();
+}
+
+bool AfeFanImpl::setOff(const double off)
+{
+  m_off = QString::number(off);
+  return true;
+}
+
+bool AfeFanImpl::setOff(const std::string &off)
+{
+  bool ok;
+  STR_TO_RX7(off).toDouble(&ok);
+  if(ok)
+  {
+    m_off = STR_TO_RX7(off);
+    return true;
+  }
+  return false;
+}
+
+std::vector<double> AfeFanImpl::fpc() const
+{
+  std::vector<double> out;
+  for(int i=0;i<4;i++)
+  {
+    out.push_back(m_fpc[i].toDouble());
+  }
+  return out;
+}
+
+bool AfeFanImpl::setFpc(const std::vector<double> &fpc)
+{
+  for(int i=0;i<4;i++)
+  {
+    m_fpc.push_back(QString::number(fpc[i]));
+  }
+  return true;
+}
+
+bool AfeFanImpl::setFpc(const std::vector<std::string> &fpc)
+{
+  std::vector<RX7> in;
+  for(int i=0;i<4;i++)
+  {
+    bool ok;
+    STR_TO_RX7(fpc[i]).toDouble(&ok);
+    if(!ok)
+    {
+      return false;
+    }
+    in.push_back(STR_TO_RX7(fpc[i]));
+  }
+  m_fpc = in;
+  return true;
+}
+
+double AfeFanImpl::Sarea() const
+{
+  return m_Sarea.toDouble();
+}
+
+bool AfeFanImpl::setSarea(const double Sarea)
+{
+  m_Sarea = QString::number(Sarea);
+  return true;
+}
+
+bool AfeFanImpl::setSarea(const std::string &Sarea)
+{
+  bool ok;
+  STR_TO_RX7(Sarea).toDouble(&ok);
+  if(ok)
+  {
+    m_Sarea = STR_TO_RX7(Sarea);
+    return true;
+  }
+  return false;
+}
+
+int AfeFanImpl::u_Sa() const
+{
+  return m_u_Sa;
+}
+
+void AfeFanImpl::setU_Sa(const int u_Sa)
+{
+  m_u_Sa = u_Sa;
+}
+
+std::vector<FanDataPoint> AfeFanImpl::data() const
+{
+  return m_data;
+}
+
+void AfeFanImpl::setData(const std::vector<FanDataPoint> &data)
+{
+  m_data = data;
+}
+
+void AfeCsfImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_u_x = 0;
+  m_u_y = 0;
+}
+
+AfeCsfImpl::AfeCsfImpl()
+{
+  setDefaults();
+}
+
+AfeCsfImpl::AfeCsfImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+AfeCsfImpl::AfeCsfImpl(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,
+                       std::vector<DataPoint> data)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setU_x(u_x);
+  setU_y(u_y);
+  setData(data);
+}
+
+void AfeCsfImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
   int npts = input.read<int>(FILELINE);
-  u_x = input.read<int>(FILELINE);
-  u_y = input.read<int>(FILELINE);
+  setU_x(input.read<int>(FILELINE));
+  setU_y(input.read<int>(FILELINE));
   for(int i=0;i<npts;i++)
   {
     DataPoint object;
     object.read(input);
-    data.push_back(object);
+    m_data.push_back(object);
+  }
+}
+
+void AfeCsfImpl::readDetails(Reader &input)
+{
+  int npts = input.read<int>(FILELINE);
+  setU_x(input.read<int>(FILELINE));
+  setU_y(input.read<int>(FILELINE));
+  for(int i=0;i<npts;i++)
+  {
+    DataPoint object;
+    object.read(input);
+    m_data.push_back(object);
   }
 
 }
 
-std::string AfeCsfPrivate::write(std::string datatype)
+std::string AfeCsfImpl::write(std::string datatype)
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + ' ' + datatype + ' ' + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(data.size()) + ' ' + openstudio::toString(u_x) + ' ' + openstudio::toString(u_y) + '\n';
-  for(unsigned int i=0;i<data.size();i++)
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + ' ' + datatype + ' ' + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_data.size()) + ' ' + ANY_TO_STR(m_u_x) + ' ' + ANY_TO_STR(m_u_y) + '\n';
+  for(unsigned int i=0;i<m_data.size();i++)
   {
-    string += data[i].write();
+    string += m_data[i].write();
   }
   return string;
 }
 
-void AfeCsfPrivate::readDetails(Reader &input)
+int AfeCsfImpl::nr() const
 {
-  int npts = input.read<int>(FILELINE);
-  u_x = input.read<int>(FILELINE);
-  u_y = input.read<int>(FILELINE);
-  for(int i=0;i<npts;i++)
-  {
-    DataPoint object;
-    object.read(input);
-    data.push_back(object);
-  }
-
+  return m_nr;
 }
 
-AfeSupPrivate::AfeSupPrivate(int nr,int icon,std::string name,std::string desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements):nr(nr),icon(icon),name(name),desc(desc),sched(sched),u_H(u_H),subelements(subelements)
-{}
-
-void AfeSupPrivate::read(Reader &input)
+void AfeCsfImpl::setNr(const int nr)
 {
-  nr = input.read<int>(FILELINE);
-  icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  name = input.readString(FILELINE);
-  desc = input.readLine(FILELINE);
+  m_nr = nr;
+}
+
+int AfeCsfImpl::icon() const
+{
+  return m_icon;
+}
+
+void AfeCsfImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string AfeCsfImpl::name() const
+{
+  return m_name;
+}
+
+void AfeCsfImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string AfeCsfImpl::desc() const
+{
+  return m_desc;
+}
+
+void AfeCsfImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+int AfeCsfImpl::u_x() const
+{
+  return m_u_x;
+}
+
+void AfeCsfImpl::setU_x(const int u_x)
+{
+  m_u_x = u_x;
+}
+
+int AfeCsfImpl::u_y() const
+{
+  return m_u_y;
+}
+
+void AfeCsfImpl::setU_y(const int u_y)
+{
+  m_u_y = u_y;
+}
+
+std::vector<DataPoint> AfeCsfImpl::data() const
+{
+  return m_data;
+}
+
+void AfeCsfImpl::setData(const std::vector<DataPoint> &data)
+{
+  m_data = data;
+}
+
+void AfeSupImpl::setDefaults()
+{
+  m_nr = 0;
+  m_icon = 0;
+  m_sched = 0;
+  m_u_H = 0;
+}
+
+AfeSupImpl::AfeSupImpl()
+{
+  setDefaults();
+}
+
+AfeSupImpl::AfeSupImpl(int nr,int icon,std::string name,std::string desc)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+}
+
+AfeSupImpl::AfeSupImpl(int nr,int icon,std::string name,std::string desc,int sched,int u_H,
+                       std::vector<AirflowSubelementData> subelements)
+{
+  setDefaults();
+  setNr(nr);
+  setIcon(icon);
+  setName(name);
+  setDesc(desc);
+  setSched(sched);
+  setU_H(u_H);
+  setSubelements(subelements);
+}
+
+void AfeSupImpl::read(Reader &input)
+{
+  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>(FILELINE));
+  std::string dataType = input.readString(FILELINE); // Should really check this
+  setName(input.readString(FILELINE));
+  setDesc(input.readLine(FILELINE));
   int nse = input.read<int>(FILELINE);
-  sched = input.read<int>(FILELINE);
-  u_H = input.read<int>(FILELINE);
+  setSched(input.read<int>(FILELINE));
+  setU_H(input.read<int>(FILELINE));
+  std::vector<AirflowSubelementData> subelements;
   for(int i=0;i<nse;i++)
   {
     AirflowSubelementData object;
     object.read(input);
     subelements.push_back(object);
   }
-
+  setSubelements(subelements);
 }
 
-std::string AfeSupPrivate::write()
+std::string AfeSupImpl::write()
 {
   std::string string;
-  string += openstudio::toString(nr) + ' ' + openstudio::toString(icon) + " sup_afe " + name + '\n';
-  string += desc + '\n';
-  string += openstudio::toString(subelements.size()) + ' ' + openstudio::toString(sched) + ' ' + openstudio::toString(u_H) + '\n';
-  for(unsigned int i=0;i<subelements.size();i++)
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " sup_afe " + m_name + '\n';
+  string += m_desc + '\n';
+  string += ANY_TO_STR(m_subelements.size()) + ' ' + ANY_TO_STR(m_sched) + ' ' + ANY_TO_STR(m_u_H) + '\n';
+  for(unsigned int i=0;i<m_subelements.size();i++)
   {
-    string += subelements[i].write();
+    string += m_subelements[i].write();
   }
   return string;
 }
 
-void AfeSupPrivate::readDetails(Reader &input)
+void AfeSupImpl::readDetails(Reader &input)
 {
   int nse = input.read<int>(FILELINE);
-  sched = input.read<int>(FILELINE);
-  u_H = input.read<int>(FILELINE);
+  setSched(input.read<int>(FILELINE));
+  setU_H(input.read<int>(FILELINE));
+  std::vector<AirflowSubelementData> subelements;
   for(int i=0;i<nse;i++)
   {
     AirflowSubelementData object;
     object.read(input);
     subelements.push_back(object);
   }
+  setSubelements(subelements);
+}
 
+int AfeSupImpl::nr() const
+{
+  return m_nr;
+}
+
+void AfeSupImpl::setNr(const int nr)
+{
+  m_nr = nr;
+}
+
+int AfeSupImpl::icon() const
+{
+  return m_icon;
+}
+
+void AfeSupImpl::setIcon(const int icon)
+{
+  m_icon = icon;
+}
+
+std::string AfeSupImpl::name() const
+{
+  return m_name;
+}
+
+void AfeSupImpl::setName(const std::string &name)
+{
+  m_name = name;
+}
+
+std::string AfeSupImpl::desc() const
+{
+  return m_desc;
+}
+
+void AfeSupImpl::setDesc(const std::string &desc)
+{
+  m_desc = desc;
+}
+
+int AfeSupImpl::sched() const
+{
+  return m_sched;
+}
+
+void AfeSupImpl::setSched(const int sched)
+{
+  m_sched = sched;
+}
+
+int AfeSupImpl::u_H() const
+{
+  return m_u_H;
+}
+
+void AfeSupImpl::setU_H(const int u_H)
+{
+  m_u_H = u_H;
+}
+
+std::vector<AirflowSubelementData> AfeSupImpl::subelements() const
+{
+  return m_subelements;
+}
+
+void AfeSupImpl::setSubelements(const std::vector<AirflowSubelementData> &subelements)
+{
+  m_subelements = subelements;
 }
 
 } // contam
