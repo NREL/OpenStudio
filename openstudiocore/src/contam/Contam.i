@@ -46,7 +46,8 @@
 #endif
 
 %include <contam/PrjSubobjects.hpp>
-%include <contam/PrjPublic.hpp>
+%include <contam/PrjObjects.hpp>
+%include <contam/PrjAirflowElements.hpp>
 %include <contam/PrjModel.hpp>
 //%include <contam/ReverseTranslator.hpp>
 %include <contam/ForwardTranslator.hpp>

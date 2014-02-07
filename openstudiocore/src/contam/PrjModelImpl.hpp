@@ -21,7 +21,8 @@
 
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
-#include "PrjPublic.hpp"
+#include "PrjObjects.hpp"
+#include "PrjAirflowElements.hpp"
 
 #include <QSharedData>
 

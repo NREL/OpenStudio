@@ -20,7 +20,7 @@
 #include "PrjReader.hpp"
 #include "SimFile.hpp"
 
-#include "PrjModelPrivate.hpp"
+#include "PrjModelImpl.hpp"
 
 #include <QFile>
 
