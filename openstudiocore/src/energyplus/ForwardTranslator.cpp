@@ -947,6 +947,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanVariableVolume(fan);
       break;
     }
+    
+  case openstudio::IddObjectType::OS_Fan_ZoneExhaust :
+    {
+      model::FanZoneExhaust fan = modelObject.cast<FanZoneExhaust>();
+      retVal = translateFanZoneExhaust(fan);
+      break;
+    }
+    
   case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
     {
       model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
@@ -1827,6 +1835,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
   result.push_back(IddObjectType::OS_Fan_ConstantVolume);
   result.push_back(IddObjectType::OS_Fan_OnOff);
+  result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
   result.push_back(IddObjectType::OS_Node);
   result.push_back(IddObjectType::OS_PlantLoop);
   result.push_back(IddObjectType::OS_Splitter);

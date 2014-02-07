@@ -108,6 +108,7 @@ class ExteriorLights;
 class FanConstantVolume;
 class FanOnOff;
 class FanVariableVolume;
+class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
 class Gas;
 class GasEquipment;
@@ -437,6 +438,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFanOnOff( model::FanOnOff & modelObject );
 
   boost::optional<IdfObject> translateFanVariableVolume( model::FanVariableVolume & modelObject );
+  
+  boost::optional<IdfObject> translateFanZoneExhaust( model::FanZoneExhaust & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeCoolerDirectResearchSpecial( model::EvaporativeCoolerDirectResearchSpecial & modelObject );
 
