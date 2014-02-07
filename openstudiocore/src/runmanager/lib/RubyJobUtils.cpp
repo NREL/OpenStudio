@@ -24,6 +24,7 @@
 
 #include <ruleset/OSArgument.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -111,6 +112,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
 
   initializeFromParams(t_workItem.params,t_originalBasePath,t_newBasePath);
   if (userScriptJob()) {
+    clearIncludeDir();
     setIncludeDir(getOpenStudioRubyIncludePath());
   }
 }
@@ -358,11 +360,22 @@ void RubyJobBuilder::addScriptArgument(const std::string &name)
   m_params.push_back(name);
 }
 
+void RubyJobBuilder::clearIncludeDir() {
+  std::vector<std::string>::iterator it = m_toolparams.begin();
+  while (it != m_toolparams.end()) {
+    if (*it == std::string("-I")) {
+      it = m_toolparams.erase(it); // erase -I
+      OS_ASSERT(it != m_toolparams.end());
+      it = m_toolparams.erase(it); // and path it was pointing to
+    }
+    else {
+      ++it;
+    }
+  }
+}
+
 void RubyJobBuilder::setIncludeDir(const openstudio::path &value)
 {
-  // ETH@20140108 - Should this also clear any existing -I toolparams, 
-  // or should there be a separate method for clearning all such toolparams?
-  // I am asking because of line 107.
   if (!value.empty()){
     m_toolparams.push_back("-I");
     m_toolparams.push_back(toString(value));
