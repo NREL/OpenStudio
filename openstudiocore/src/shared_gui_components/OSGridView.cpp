@@ -63,8 +63,15 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
     button = new QPushButton(categories.at(i));
+    button->setCheckable(true);
     buttonLayout->addWidget(button,0,Qt::AlignLeft);
     buttonGroup->addButton(button,buttonGroup->buttons().size());
+  }
+  std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
+  if(buttons.size() > 0){
+    QPushButton * button = qobject_cast<QPushButton *>(buttons.at(0));
+    OS_ASSERT(button);
+    button->setChecked(true);
   }
   buttonLayout->addStretch();
 
@@ -110,6 +117,8 @@ void OSGridView::setGridController(OSGridController * gridController)
   }
 
   m_gridController = gridController;
+
+  m_gridController->setParent(this);
 
   bool isConnected = false;
 

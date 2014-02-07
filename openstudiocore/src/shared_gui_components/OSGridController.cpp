@@ -22,6 +22,7 @@
 #include <shared_gui_components/OSCheckBox.hpp>
 #include <shared_gui_components/OSComboBox.hpp>
 #include <shared_gui_components/OSDoubleEdit.hpp>
+#include <shared_gui_components/OSGridView.hpp>
 #include <shared_gui_components/OSIntegerEdit.hpp>
 #include <shared_gui_components/OSLineEdit.hpp>
 #include <shared_gui_components/OSQuantityEdit.hpp>
@@ -62,6 +63,7 @@ OSGridController::OSGridController(const QString & headerText,
   m_horizontalHeader(std::vector<QWidget *>()),
   m_hasHorizontalHeader(true),
   m_currentCategory(QString()),
+  m_currentCategoryIndex(0),
   m_currentFields(std::vector<QString> ()),
   m_model(model),
   m_modelObjects(modelObjects),
@@ -119,11 +121,14 @@ std::vector<std::pair<QString,std::vector<QString>>> OSGridController::categorie
 
 void OSGridController::categorySelected(int index)
 {
+  m_currentCategoryIndex = index;
+
   m_currentCategory = m_categoriesAndFields.at(index).first;
 
   m_currentFields = m_categoriesAndFields.at(index).second;
  
   addColumns(m_currentFields);
+
 }
 
 void OSGridController::setHorizontalHeader()
@@ -133,36 +138,32 @@ void OSGridController::setHorizontalHeader()
   if(m_horizontalHeaderBtnGrp == 0){
     m_horizontalHeaderBtnGrp = new QButtonGroup();
     m_horizontalHeaderBtnGrp->setExclusive(false);
+
+    bool isConnected = false;
+    isConnected = connect(m_horizontalHeaderBtnGrp, SIGNAL(buttonClicked(int)),
+      this, SLOT(horizontalHeaderChecked(int)));
+    OS_ASSERT(isConnected);
+
   } else {
     QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();
     for(int i = 0; i < buttons.size(); i++){
       m_horizontalHeaderBtnGrp->removeButton(buttons.at(i));
+      OS_ASSERT(buttons.at(i));
+      delete buttons.at(i);
     }
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_horizontalHeaderBtnGrp, SIGNAL(buttonClicked(int)),
-    this, SLOT(horizontalHeaderChecked(int)));
-  OS_ASSERT(isConnected);
+  QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();
+  OS_ASSERT(buttons.size() == 0);
 
-  QWidget * widget = 0;
-  QLabel * label = 0;
-  QCheckBox * checkBox = 0;
-  QHBoxLayout * layout = 0;
+  HeaderWidget * headerWidget = 0;
   Q_FOREACH(QString field, m_currentFields){
-    label = new QLabel(field);
-    label->setWordWrap(true);
-    checkBox = new QCheckBox();
-    m_horizontalHeaderBtnGrp->addButton(checkBox,m_horizontalHeaderBtnGrp->buttons().size());
-    layout = new QHBoxLayout();
-    layout->setSpacing(20);
-    layout->setContentsMargins(20,20,20,20);
-    layout->addWidget(label,1,Qt::AlignVCenter | Qt::AlignHCenter); 
-    layout->addWidget(checkBox,0,Qt::AlignTop | Qt::AlignRight);
-    widget = new QWidget();
-    widget->setLayout(layout);
-    m_horizontalHeader.push_back(widget);
+    headerWidget = new HeaderWidget(field);
+    m_horizontalHeaderBtnGrp->addButton(headerWidget->m_checkBox,m_horizontalHeaderBtnGrp->buttons().size());
+    m_horizontalHeader.push_back(headerWidget);
   }
+
+  checkSelectedFields();
 }
 
 QWidget * OSGridController::widgetAt(int row, int column)
@@ -181,7 +182,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
   if(m_hasHorizontalHeader && row == 0){
     if(column == 0){
       setHorizontalHeader();
-      //OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size()); TODO uncomment this later
+      // Each concept should have its own column
+      //OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size()); TODO uncomment this later, once all types are supported
     }
     widget = m_horizontalHeader.at(column);
   } else {
@@ -343,6 +345,40 @@ QWidget * OSGridController::widgetAt(int row, int column)
   return wrapper;
 }
 
+void OSGridController::checkSelectedFields()
+{
+  if(!this->m_hasHorizontalHeader) return;
+
+  std::vector<QString>::iterator it;
+  this->m_currentFields;
+  for(unsigned j = 0; j < m_customCategories.size(); j++){
+    it = std::find(m_currentFields.begin(), m_currentFields.end() ,m_customCategories.at(j));
+    if( it != m_currentFields.end() ){
+      int index = std::distance(m_currentFields.begin(), it);
+      HeaderWidget * headerWidget = qobject_cast<HeaderWidget *>(m_horizontalHeader.at(index));
+      OS_ASSERT(headerWidget);
+      headerWidget->m_checkBox->blockSignals(true);
+      headerWidget->m_checkBox->setChecked(true);
+      headerWidget->m_checkBox->blockSignals(false);
+    }
+  }
+
+}
+
+void OSGridController::setCustomCategoryAndFields()
+{
+  std::vector<QString> categories = this->categories();
+  std::vector<QString>::iterator it;
+  it = std::find(categories.begin(), categories.end() , QString("Custom"));
+  if( it != categories.end() ){
+    int index = std::distance(categories.begin(), it);
+    m_categoriesAndFields.erase(m_categoriesAndFields.begin() + index);
+  }
+
+  std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),m_customCategories);
+  m_categoriesAndFields.push_back(categoryAndFields);
+}
+
 int OSGridController::rowCount() const
 {
   return m_modelObjects.size();
@@ -360,11 +396,9 @@ std::vector<QWidget *> OSGridController::row(int i)
 
 void OSGridController::horizontalHeaderChecked(int index)
 {
-}
-
-void OSGridController::verticalHeaderChecked(int index)
-{
-  if(m_verticalHeaderBtnGrp->button(index)->isChecked()){
+  QCheckBox * checkBox = qobject_cast<QCheckBox *>(m_horizontalHeaderBtnGrp->button(index));
+  OS_ASSERT(checkBox);
+  if(checkBox->isChecked()){
     m_customCategories.push_back(m_currentFields.at(index));
   } else {
     std::vector<QString>::iterator it;
@@ -373,6 +407,26 @@ void OSGridController::verticalHeaderChecked(int index)
       m_customCategories.erase(it);
     }
   }
+  setCustomCategoryAndFields();
+}
+
+void OSGridController::verticalHeaderChecked(int index)
+{
+}
+
+HeaderWidget::HeaderWidget(const QString & fieldName, QWidget * parent)
+  : QWidget(parent),
+  m_label(new QLabel(fieldName)),
+  m_checkBox(new QCheckBox())
+{
+    QHBoxLayout * layout = new QHBoxLayout();
+    setLayout(layout);
+
+    m_label->setWordWrap(true);
+    layout->addWidget(m_label); 
+
+    layout->addWidget(m_checkBox);
+
 }
 
 } // openstudio

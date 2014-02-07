@@ -316,10 +316,6 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back(CASEDEFROSTTYPE);
-    fields.push_back(CASEHEIGHT);
-    fields.push_back(CASELENGTH);
-    fields.push_back(LATENTCASECREDITCURVETYPE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -575,8 +571,6 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back(DEFROSTCONTROLTYPE);
-    fields.push_back(INSULATEDFLOORUVALUE);
     std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }

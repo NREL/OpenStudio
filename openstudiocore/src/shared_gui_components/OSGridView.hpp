@@ -43,7 +43,7 @@ public:
 
   virtual ~OSGridView() {}; 
      
-
+  QGridLayout * m_gridLayout;
 
 signals:
 
@@ -88,8 +88,6 @@ private:
   void selectColumn(int column);
 
   OSCollapsibleView * m_CollapsibleView;
-
-  QGridLayout * m_gridLayout;
 
   OSGridController * m_gridController;
 

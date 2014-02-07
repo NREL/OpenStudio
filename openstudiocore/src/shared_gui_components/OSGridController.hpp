@@ -29,10 +29,12 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include <QWidget>
 
 class QButtonGroup;
+class QCheckBox;
 class QColor;
-class QWidget;
+class QLabel;
 
 namespace openstudio {
 
@@ -43,7 +45,6 @@ class OSGridController : public QObject
   Q_OBJECT
 
 public:
-
   // This form requires clients to subclass OSGridController and
   // reimplement rowCount(), and itemAt()
   OSGridController();
@@ -149,8 +150,15 @@ protected:
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal
-  virtual void addColumns(const std::vector<QString> & fields) = 0; 
-  
+  virtual void addColumns(const std::vector<QString> & fields) = 0;
+
+  // Call this function after the table is constructed
+  // to appropriately check user-selected category fields
+  // from QSettings and load them into a "Custom" button
+  void checkSelectedFields();
+
+  void checkSelectedFields(int category);
+
   std::vector<std::pair<QString,std::vector<QString>>> m_categoriesAndFields;
 
   std::vector<QSharedPointer<BaseConcept> > m_baseConcepts;
@@ -161,6 +169,8 @@ protected:
 
   QString m_currentCategory;
 
+  int m_currentCategoryIndex;
+
   std::vector<QString> m_currentFields;
 
   std::vector<QString> m_customCategories;
@@ -169,9 +179,11 @@ protected:
 
 private:
 
-  virtual void loadQSettings();
+  void loadQSettings();
 
-  virtual void saveQSettings() const;
+  void saveQSettings() const;
+
+  void setCustomCategoryAndFields();
 
   model::Model m_model;
 
@@ -209,6 +221,22 @@ private slots:
   void horizontalHeaderChecked(int index);
 
   void verticalHeaderChecked(int index);
+
+};
+
+class HeaderWidget : public QWidget
+{
+  Q_OBJECT
+
+public:
+
+  HeaderWidget(const QString & fieldName, QWidget * parent = 0);
+
+  virtual ~HeaderWidget() {}
+  
+  QLabel * m_label;
+
+  QCheckBox * m_checkBox;
 
 };
 
