@@ -1173,7 +1173,7 @@ namespace sdd {
 
     }else if (tagName == "Dr"){
 
-      subSurface.setSubSurfaceType("Dr");
+      subSurface.setSubSurfaceType("Door");
 
       QDomElement constructionReferenceElement = element.firstChildElement("DrConsRef");
       if(!constructionReferenceElement.isNull()){

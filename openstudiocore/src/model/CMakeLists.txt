@@ -335,6 +335,9 @@ SET( ${target_name}_src
   FanVariableVolume.hpp
   FanVariableVolume_Impl.hpp
   FanVariableVolume.cpp
+  FanZoneExhaust.hpp
+  FanZoneExhaust_Impl.hpp
+  FanZoneExhaust.cpp  
   FenestrationMaterial.hpp
   FenestrationMaterial_Impl.hpp
   FenestrationMaterial.cpp
@@ -1164,6 +1167,7 @@ SET( ${target_name}_test_src
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
+  test/FanZoneExhaust_GTest.cpp  
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
   test/GasEquipment_GTest.cpp
