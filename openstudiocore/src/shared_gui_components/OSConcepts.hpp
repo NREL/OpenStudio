@@ -201,6 +201,96 @@ class DoubleEditConceptImpl : public DoubleEditConcept
 ///////////////////////////////////////////////////////////////////////////////////
 
 
+class OptionalDoubleEditConcept : public BaseConcept
+{
+  public:
+
+  virtual boost::optional<double> get(const model::ModelObject & obj) = 0;
+  virtual bool set(const model::ModelObject & obj, double) = 0;
+}; 
+
+template<typename DataSourceType>
+class OptionalDoubleEditConceptImpl : public OptionalDoubleEditConcept
+{
+  public:
+
+  OptionalDoubleEditConceptImpl(QString t_headingLabel, 
+    boost::function<boost::optional<double> (DataSourceType *)>  t_getter, 
+    boost::function<bool (DataSourceType *, double)> t_setter)
+
+    : m_getter(t_getter),
+      m_setter(t_setter)
+
+  {
+  }
+
+  virtual boost::optional<double> get(const model::ModelObject & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(&obj);
+  }
+
+  virtual bool set(const model::ModelObject & t_obj, double value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(&obj,value);
+  }
+
+  private:
+
+  boost::function<boost::optional<double> (DataSourceType *)>  m_getter;
+  boost::function<bool (DataSourceType *, double)> m_setter;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
+class DoubleEditVoidReturnConcept : public BaseConcept
+{
+  public:
+
+  virtual double get(const model::ModelObject & obj) = 0;
+  virtual void set(const model::ModelObject & obj, double) = 0;
+}; 
+
+template<typename DataSourceType>
+class DoubleEditVoidReturnConceptImpl : public DoubleEditVoidReturnConcept
+{
+  public:
+
+  DoubleEditVoidReturnConceptImpl(QString t_headingLabel, 
+    boost::function<double (DataSourceType *)>  t_getter, 
+    boost::function<void (DataSourceType *, double)> t_setter)
+
+    : m_getter(t_getter),
+      m_setter(t_setter)
+
+  {
+  }
+
+  virtual double get(const model::ModelObject & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(&obj);
+  }
+
+  virtual void set(const model::ModelObject & t_obj, double value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(&obj,value);
+  }
+
+  private:
+
+  boost::function<double (DataSourceType *)>  m_getter;
+  boost::function<void (DataSourceType *, double)> m_setter;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
 class IntegerEditConcept : public BaseConcept
 {
   public:

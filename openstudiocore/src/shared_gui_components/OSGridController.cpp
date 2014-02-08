@@ -156,11 +156,11 @@ void OSGridController::setHorizontalHeader()
   QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();
   OS_ASSERT(buttons.size() == 0);
 
-  HeaderWidget * headerWidget = 0;
+  HorizontalHeaderWidget * horizontalHeaderWidget = 0;
   Q_FOREACH(QString field, m_currentFields){
-    headerWidget = new HeaderWidget(field);
-    m_horizontalHeaderBtnGrp->addButton(headerWidget->m_checkBox,m_horizontalHeaderBtnGrp->buttons().size());
-    m_horizontalHeader.push_back(headerWidget);
+    horizontalHeaderWidget = new HorizontalHeaderWidget(field);
+    m_horizontalHeaderBtnGrp->addButton(horizontalHeaderWidget->m_checkBox,m_horizontalHeaderBtnGrp->buttons().size());
+    m_horizontalHeader.push_back(horizontalHeaderWidget);
   }
 
   checkSelectedFields();
@@ -232,6 +232,38 @@ QWidget * OSGridController::widgetAt(int row, int column)
                   boost::none);
 
         widget = doubleEdit;
+
+    } else if(QSharedPointer<OptionalDoubleEditConcept> optionalDoubleEditConcept = baseConcept.dynamicCast<OptionalDoubleEditConcept>()) {
+
+        OSDoubleEdit2 * optionalDoubleEdit = new OSDoubleEdit2();
+
+        optionalDoubleEdit->bind(mo,
+                  boost::bind(&OptionalDoubleEditConcept::get,optionalDoubleEditConcept.data(),mo),
+                  boost::optional<DoubleSetter>(boost::bind(&OptionalDoubleEditConcept::set,optionalDoubleEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = optionalDoubleEdit;
+
+    } else if(QSharedPointer<DoubleEditVoidReturnConcept> doubleEditVoidReturnConcept = baseConcept.dynamicCast<DoubleEditVoidReturnConcept>()) {
+
+        OSDoubleEdit2 * doubleEditVoidReturn = new OSDoubleEdit2();
+
+        //doubleEditVoidReturn->bindRequired(mo,
+        //          boost::bind(&DoubleEditVoidReturnConcept::get,doubleEditVoidReturnConcept.data(),mo),
+        //          boost::optional<DoubleSetterVoidReturn>(boost::bind(&DoubleEditVoidReturnConcept::set,doubleEditVoidReturnConcept.data(),mo,_1)),
+        //          boost::none,
+        //          boost::none,
+        //          boost::none,
+        //          boost::none,
+        //          boost::none,
+        //          boost::none); TODO won't compile
+
+        widget = doubleEditVoidReturn;
 
     } else if(QSharedPointer<IntegerEditConcept> integerEditConcept = baseConcept.dynamicCast<IntegerEditConcept>()) {
 
@@ -355,11 +387,11 @@ void OSGridController::checkSelectedFields()
     it = std::find(m_currentFields.begin(), m_currentFields.end() ,m_customCategories.at(j));
     if( it != m_currentFields.end() ){
       int index = std::distance(m_currentFields.begin(), it);
-      HeaderWidget * headerWidget = qobject_cast<HeaderWidget *>(m_horizontalHeader.at(index));
-      OS_ASSERT(headerWidget);
-      headerWidget->m_checkBox->blockSignals(true);
-      headerWidget->m_checkBox->setChecked(true);
-      headerWidget->m_checkBox->blockSignals(false);
+      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
+      OS_ASSERT(horizontalHeaderWidget);
+      horizontalHeaderWidget->m_checkBox->blockSignals(true);
+      horizontalHeaderWidget->m_checkBox->setChecked(true);
+      horizontalHeaderWidget->m_checkBox->blockSignals(false);
     }
   }
 
@@ -414,18 +446,32 @@ void OSGridController::verticalHeaderChecked(int index)
 {
 }
 
-HeaderWidget::HeaderWidget(const QString & fieldName, QWidget * parent)
+HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
   m_label(new QLabel(fieldName)),
   m_checkBox(new QCheckBox())
 {
-    QHBoxLayout * layout = new QHBoxLayout();
-    setLayout(layout);
+  QHBoxLayout * layout = new QHBoxLayout();
+  setLayout(layout);
 
-    m_label->setWordWrap(true);
-    layout->addWidget(m_label); 
+  m_label->setWordWrap(true);
+  layout->addWidget(m_label); 
 
-    layout->addWidget(m_checkBox);
+  layout->addWidget(m_checkBox);
+
+}
+
+BulkSelectionWidget::BulkSelectionWidget(QWidget * parent)
+  : QWidget(parent),
+  m_comboBox(new OSComboBox()),
+  m_checkBox(new QCheckBox())
+{
+  QHBoxLayout * layout = new QHBoxLayout();
+  setLayout(layout);
+
+  layout->addWidget(m_checkBox);
+
+  layout->addWidget(m_comboBox); 
 
 }
 

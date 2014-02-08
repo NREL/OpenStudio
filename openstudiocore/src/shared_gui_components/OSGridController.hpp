@@ -38,6 +38,8 @@ class QLabel;
 
 namespace openstudio {
 
+class OSComboBox;
+
 class OSVectorController;
 
 class OSGridController : public QObject
@@ -82,6 +84,22 @@ public:
                          bool (DataSourceType::* setter)(double))
   {
     m_baseConcepts.push_back(QSharedPointer<DoubleEditConcept>(new DoubleEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+  }
+
+  template<typename DataSourceType>
+  void addOptionalDoubleEditColumn(QString headingLabel, 
+                         boost::optional<double> (DataSourceType::* getter)(void) const, 
+                         bool (DataSourceType::* setter)(double))
+  {
+    m_baseConcepts.push_back(QSharedPointer<OptionalDoubleEditConcept>(new OptionalDoubleEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+  }
+
+  template<typename DataSourceType>
+  void addDoubleEditVoidReturnColumn(QString headingLabel, 
+                         double (DataSourceType::* getter)(void) const, 
+                         void (DataSourceType::* setter)(double))
+  {
+    m_baseConcepts.push_back(QSharedPointer<DoubleEditVoidReturnConcept>(new DoubleEditVoidReturnConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
   template<typename DataSourceType>
@@ -224,17 +242,33 @@ private slots:
 
 };
 
-class HeaderWidget : public QWidget
+class HorizontalHeaderWidget : public QWidget
 {
   Q_OBJECT
 
 public:
 
-  HeaderWidget(const QString & fieldName, QWidget * parent = 0);
+  HorizontalHeaderWidget(const QString & fieldName, QWidget * parent = 0);
 
-  virtual ~HeaderWidget() {}
+  virtual ~HorizontalHeaderWidget() {}
   
   QLabel * m_label;
+
+  QCheckBox * m_checkBox;
+
+};
+
+class BulkSelectionWidget : public QWidget
+{
+  Q_OBJECT
+
+public:
+
+  BulkSelectionWidget(QWidget * parent = 0);
+
+  virtual ~BulkSelectionWidget() {}
+  
+  OSComboBox * m_comboBox;
 
   QCheckBox * m_checkBox;
 

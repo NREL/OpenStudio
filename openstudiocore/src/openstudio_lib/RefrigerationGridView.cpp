@@ -391,17 +391,17 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
                           &model::RefrigerationCase::underCaseHVACReturnAirFraction,
                           &model::RefrigerationCase::setUnderCaseHVACReturnAirFraction);
     }else if(field == STANDARDCASELIGHTINGPOWERPERUNITLENGTH){
-      //addDoubleEditColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
-      //                    &model::RefrigerationCase::standardCaseLightingPowerperUnitLength,
-      //                    &model::RefrigerationCase::setStandardCaseLightingPowerperUnitLength); // TODO does not return bool
+      addDoubleEditVoidReturnColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
+                          &model::RefrigerationCase::standardCaseLightingPowerperUnitLength,
+                          &model::RefrigerationCase::setStandardCaseLightingPowerperUnitLength);
     }else if(field == HUMIDITYATZEROANTISWEATHEATERENERGY){
-      //addDoubleEditColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
-      //                    &model::RefrigerationCase::humidityatZeroAntiSweatHeaterEnergy,
-      //                    &model::RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy); // TODO does not return bool
+      addDoubleEditVoidReturnColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
+                          &model::RefrigerationCase::humidityatZeroAntiSweatHeaterEnergy,
+                          &model::RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy);
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      //addDoubleEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
-      //                    &model::RefrigerationCase::averageRefrigerantChargeInventory,
-      //                    &model::RefrigerationCase::setAverageRefrigerantChargeInventory); // TODO does not return bool
+      addDoubleEditVoidReturnColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+                          &model::RefrigerationCase::averageRefrigerantChargeInventory,
+                          &model::RefrigerationCase::setAverageRefrigerantChargeInventory);
     }else if(field == LATENTCASECREDITCURVETYPE){
       addComboBoxColumn(QString(LATENTCASECREDITCURVETYPE),
                         &model::RefrigerationCase::latentCaseCreditCurveTypeValues,
@@ -423,31 +423,30 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
                         &model::RefrigerationCase::defrostEnergyCorrectionCurveType,
                         &model::RefrigerationCase::setDefrostEnergyCorrectionCurveType);
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
-      //boost::optional<double> installedCaseLightingPowerperUnitLength() const;
+      //addOptionalDoubleEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
+      //                            &model::RefrigerationCase::installedCaseLightingPowerperUnitLength,
+      //                            &model::RefrigerationCase::setInstalledCaseLightingPowerperUnitLength); TODO returns void
     }else if(field == DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE){
-      // TODO required
-      //boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature() const;
+      addOptionalDoubleEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
+                                  &model::RefrigerationCase::designEvaporatorTemperatureorBrineInletTemperature,
+                                  &model::RefrigerationCase::setDesignEvaporatorTemperatureorBrineInletTemperature);
     }else if(field == CASELIGHTINGSCHEDULE){
-      // TODO required
-      //boost::optional<Schedule> caseLightingSchedule() const;
+      //boost::optional<Schedule> caseLightingSchedule() const; TODO
     }else if(field == CASEDEFROSTSCHEDULE){
-      //boost::optional<Schedule> caseDefrostSchedule() const;
+      //boost::optional<Schedule> caseDefrostSchedule() const; TODO
     }else if(field == CASEDEFROSTDRIPDOWNSCHEDULE){
-      //boost::optional<Schedule> caseDefrostDripDownSchedule() const;
+      //boost::optional<Schedule> caseDefrostDripDownSchedule() const; TODO
     }else if(field == REFRIGERATEDCASERESTOCKINGSCHEDULE){
-      // TODO required
-      //boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const;
+      //boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const; TODO
     }else if(field == CASECREDITFRACTIONSCHEDULE){
-      //boost::optional<Schedule> caseCreditFractionSchedule() const;
+      //boost::optional<Schedule> caseCreditFractionSchedule() const; TODO
     }else if(field == AVAILABILITYSCHEDULE){
-      // TODO required
-      //boost::optional<Schedule> availabilitySchedule() const;
+      //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == THERMALZONE){
-      //addDropZoneColumn(QString(THERMALZONE), // TODO Evan
+      //addDropZoneColumn(QString(THERMALZONE), // TODO won't compile
       //                  &model::RefrigerationCase::thermalZone,
       //                  model::RefrigerationCase::setThermalZone);
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
-      // TODO required
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
     }else{
       // unhandled
@@ -617,46 +616,43 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
                           &model::RefrigerationWalkIn::insulatedFloorUValue,
                           &model::RefrigerationWalkIn::setInsulatedFloorUValue); 
     }else if(field == RATEDCOILCOOLINGCAPACITY){
-      //addDoubleEditColumn(QString(RATEDCOILCOOLINGCAPACITY),
-      //                    &model::RefrigerationWalkIn::ratedCoilCoolingCapacity,
-      //                    &model::RefrigerationWalkIn::setRatedCoilCoolingCapacity); // TODO does not return bool
+      addDoubleEditVoidReturnColumn(QString(RATEDCOILCOOLINGCAPACITY),
+                          &model::RefrigerationWalkIn::ratedCoilCoolingCapacity,
+                          &model::RefrigerationWalkIn::setRatedCoilCoolingCapacity);
     }else if(field == RATEDTOTALHEATINGPOWER){
-      //addDoubleEditColumn(QString(RATEDTOTALHEATINGPOWER),
-      //                    &model::RefrigerationWalkIn::ratedTotalHeatingPower,
-      //                    &model::RefrigerationWalkIn::setRatedTotalHeatingPower); // TODO does not return bool
+      addDoubleEditVoidReturnColumn(QString(RATEDTOTALHEATINGPOWER),
+                          &model::RefrigerationWalkIn::ratedTotalHeatingPower,
+                          &model::RefrigerationWalkIn::setRatedTotalHeatingPower);
     }else if(field == RATEDTOTALLIGHTINGPOWER){
-      // TODO required
-      //addDoubleEditColumn(QString(RATEDTOTALLIGHTINGPOWER),
-      //                    &model::RefrigerationWalkIn::ratedTotalLightingPower,
-      //                    &model::RefrigerationWalkIn::setRatedTotalLightingPower); // TODO does not return bool
+      addDoubleEditVoidReturnColumn(QString(RATEDTOTALLIGHTINGPOWER),
+                          &model::RefrigerationWalkIn::ratedTotalLightingPower,
+                          &model::RefrigerationWalkIn::setRatedTotalLightingPower);
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      //addDoubleEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
-      //                    &model::RefrigerationWalkIn::averageRefrigerantChargeInventory,
-      //                    &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory); // TODO does not return bool
+      addDoubleEditVoidReturnColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+                          &model::RefrigerationWalkIn::averageRefrigerantChargeInventory,
+                          &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory);
     }else if(field == DEFROSTSCHEDULE){
-      //Schedule defrostSchedule() const;
+      //Schedule defrostSchedule() const; TODO
     }else if(field == DEFROSTPOWER){
-      // TODO required
-      //boost::optional<double> defrostPower() const;
+      addOptionalDoubleEditColumn(QString(DEFROSTPOWER),
+                                  &model::RefrigerationWalkIn::defrostPower,
+                                  &model::RefrigerationWalkIn::setDefrostPower);
     }else if(field == TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE){
-      // TODO required
-      //boost::optional<double> temperatureTerminationDefrostFractiontoIce() const;
+      addOptionalDoubleEditColumn(QString(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE),
+                                  &model::RefrigerationWalkIn::temperatureTerminationDefrostFractiontoIce,
+                                  &model::RefrigerationWalkIn::setTemperatureTerminationDefrostFractiontoIce);
     }else if(field == AVAILABILITYSCHEDULE){
-      // TODO required
-      //boost::optional<Schedule> availabilitySchedule() const;
+      //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == HEATINGPOWERSCHEDULE){
-      // TODO required
-      //boost::optional<Schedule> heatingPowerSchedule() const;
+      //boost::optional<Schedule> heatingPowerSchedule() const; TODO
     }else if(field == LIGHTINGSCHEDULE){
-      // TODO required
-      //boost::optional<Schedule> lightingSchedule() const;
+      //boost::optional<Schedule> lightingSchedule() const; TODO
     }else if(field == DEFROSTDRIPDOWNSCHEDULE){
-      //boost::optional<Schedule> defrostDripDownSchedule() const;
+      //boost::optional<Schedule> defrostDripDownSchedule() const; TODO
     }else if(field == RESTOCKINGSCHEDULE){
-      // TODO required
-      //boost::optional<Schedule> restockingSchedule() const;
+      //boost::optional<Schedule> restockingSchedule() const; TODO
     }else if(field == ZONEBOUNDARIES){
-      //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const;
+      //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const; TODO
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time

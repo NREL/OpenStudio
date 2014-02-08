@@ -49,6 +49,7 @@ typedef boost::function<std::vector<std::string> ()> ChoicesGetter;
 
 typedef boost::function<void (bool)> BoolSetter;
 typedef boost::function<bool (double)> DoubleSetter;
+typedef boost::function<void (double)> DoubleSetterVoidReturn;
 typedef boost::function<bool (int)> IntSetter;
 typedef boost::function<bool (std::string)> StringSetter;
 typedef boost::function<bool (unsigned)> UnsignedSetter;
