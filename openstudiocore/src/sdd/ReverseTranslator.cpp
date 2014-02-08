@@ -796,6 +796,19 @@ namespace sdd {
 
       QDomElement simVarsHVACPriElement = projectElement.firstChildElement("SimVarsHVACPri");
 
+      if( (simVarsHVACPriElement.text().toInt() == 1) ||
+          autosize() )
+      {
+        model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Boiler Heating Rate",*result);
+        var.setReportingFrequency(interval);
+      }
+
       if( simVarsHVACPriElement.text().toInt() == 1 )
       {
         model::OutputVariable var("Pump Electric Power",*result);
@@ -813,9 +826,6 @@ namespace sdd {
         var = model::OutputVariable("Debug Plant Loop Bypass Fraction",*result);
         var.setReportingFrequency(interval);
 
-        var = model::OutputVariable("Chiller Evaporator Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
         var = model::OutputVariable("Chiller Condenser Heat Transfer Rate",*result);
         var.setReportingFrequency(interval);
 
@@ -826,9 +836,6 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Cooling Tower Fan Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Boiler Heating Rate",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Boiler Gas Rate",*result);
@@ -844,9 +851,6 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Chiller Evaporator Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Boiler Heating Rate",*result);
