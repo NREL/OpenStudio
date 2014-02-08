@@ -213,6 +213,19 @@ namespace sdd {
         LOG(Error, "Could not find site information in SDD");
       }
 
+      // Shading Model
+      QDomElement solDistributionElement = projectElement.firstChildElement("SolDistribution");
+      if(istringEqual("FullExterior",solDistributionElement.text().toStdString()))
+      {
+        model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+        simulationControl.setSolarDistribution("FullExterior");
+      }
+      else if(istringEqual("MinimalShadowing",solDistributionElement.text().toStdString()))
+      {
+        model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+        simulationControl.setSolarDistribution("MinimalShadowing");
+      }
+
       // HVACAutoSizing
       QDomElement hvacAutoSizingElement = projectElement.firstChildElement("HVACAutoSizing");
       if( hvacAutoSizingElement.text().toInt() == 0 )
