@@ -55,6 +55,8 @@
 #include <utilities/idd/Output_VariableDictionary_FieldEnums.hxx>
 #include <utilities/idd/Output_SQLite_FieldEnums.hxx>
 #include <utilities/idd/ProgramControl_FieldEnums.hxx>
+#include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/plot/ProgressBar.hpp>
@@ -234,7 +236,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
     if (!lifeCycleCostParameters){
       // only warn if costs are present
-      if (!model.getModelObjects<LifeCycleCost>().empty()){
+      if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
         LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
       }
       
@@ -945,6 +947,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanVariableVolume(fan);
       break;
     }
+    
+  case openstudio::IddObjectType::OS_Fan_ZoneExhaust :
+    {
+      model::FanZoneExhaust fan = modelObject.cast<FanZoneExhaust>();
+      retVal = translateFanZoneExhaust(fan);
+      break;
+    }
+    
   case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
     {
       model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
@@ -1825,6 +1835,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
   result.push_back(IddObjectType::OS_Fan_ConstantVolume);
   result.push_back(IddObjectType::OS_Fan_OnOff);
+  result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
   result.push_back(IddObjectType::OS_Node);
   result.push_back(IddObjectType::OS_PlantLoop);
   result.push_back(IddObjectType::OS_Splitter);
@@ -2315,6 +2326,27 @@ void ForwardTranslator::createStandardOutputRequests()
   IdfObject sqliteOutput(IddObjectType::Output_SQLite);
   sqliteOutput.setString(Output_SQLiteFields::OptionType,"SimpleAndTabular");
   m_idfObjects.push_back(sqliteOutput);
+
+  // ensure at least one life cycle cost exists to prevent crash in E+ 8
+  unsigned numCosts = 0;
+  BOOST_FOREACH(const IdfObject& object, m_idfObjects){
+    if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost){
+      numCosts += 1;
+    }else if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_RecurringCosts){
+      numCosts += 1;
+    }
+  }
+  if (numCosts == 0){
+    // add default cost
+    IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
+    m_idfObjects.push_back(idfObject);
+
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
+    idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+  }
+
 }
 
 IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType,

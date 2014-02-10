@@ -62,6 +62,7 @@
     <file>images/evap_fluid_cooler.png</file>
     <file>images/fan_constant.png</file>
     <file>images/fan_on_off.png</file>   
+    <file>images/fan_zoneexhaust.png</file>   
     <file>images/fast_forward.png</file>
     <file>images/fast_reverse.png</file>
     <file>images/fire.png</file>
@@ -257,8 +258,9 @@
     <file>images/mini_icons/evap_fluid_cooler.png</file>
     <file>images/mini_icons/facility.png</file>
     <file>images/mini_icons/fan_constant.png</file>
-    <file>images/mini_icons/fan_on_off_mini.png</file>   
-    <file>images/mini_icons/fan_variable.png</file> 
+    <file>images/mini_icons/fan_on_off_mini.png</file>
+    <file>images/mini_icons/fan_variable.png</file>
+    <file>images/mini_icons/fan_zoneexhaust.png</file>
     <file>images/mini_icons/folder.png</file>
     <file>images/mini_icons/four_pipe_fan_coil.png</file>    
     <file>images/mini_icons/furnace.png</file>
