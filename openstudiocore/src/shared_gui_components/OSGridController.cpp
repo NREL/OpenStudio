@@ -253,15 +253,15 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         OSDoubleEdit2 * doubleEditVoidReturn = new OSDoubleEdit2();
 
-        //doubleEditVoidReturn->bindRequired(mo,
-        //          boost::bind(&DoubleEditVoidReturnConcept::get,doubleEditVoidReturnConcept.data(),mo),
-        //          boost::optional<DoubleSetterVoidReturn>(boost::bind(&DoubleEditVoidReturnConcept::set,doubleEditVoidReturnConcept.data(),mo,_1)),
-        //          boost::none,
-        //          boost::none,
-        //          boost::none,
-        //          boost::none,
-        //          boost::none,
-        //          boost::none); TODO won't compile
+        doubleEditVoidReturn->bindRequiredVoidReturn(mo,
+                  boost::bind(&DoubleEditVoidReturnConcept::get,doubleEditVoidReturnConcept.data(),mo),
+                  boost::optional<DoubleSetterVoidReturn>(boost::bind(&DoubleEditVoidReturnConcept::set,doubleEditVoidReturnConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
 
         widget = doubleEditVoidReturn;
 
