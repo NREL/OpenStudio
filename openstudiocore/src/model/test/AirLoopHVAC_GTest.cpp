@@ -198,6 +198,17 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForPlenums)
   model::ThermalZone zone2(model);
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone2,supplyPlenum,returnPlenum));
   EXPECT_EQ(16u,airLoopHVAC.demandComponents().size());
+
+  EXPECT_EQ(2u,airLoopHVAC.zoneSplitter().outletModelObjects().size());
+  EXPECT_EQ(3u,supplyPlenum.outletModelObjects().size());
+
+  supplyPlenum.remove();
+  EXPECT_EQ(14u,airLoopHVAC.demandComponents().size());
+  EXPECT_EQ(4u,airLoopHVAC.zoneSplitter().outletModelObjects().size());
+
+  returnPlenum.remove();
+  EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
+  EXPECT_EQ(4u,airLoopHVAC.zoneMixer().inletModelObjects().size());
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)

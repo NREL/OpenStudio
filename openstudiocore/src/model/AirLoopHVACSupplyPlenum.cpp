@@ -278,7 +278,7 @@ namespace detail {
 
       for( std::vector<ModelObject>::reverse_iterator it = t_outletModelObjects.rbegin();
            it != t_outletModelObjects.rend();
-           it++ )
+           ++it )
       {
         unsigned branchIndex = branchIndexForOutletModelObject(*it); 
         unsigned t_outletPort = outletPort(branchIndex);
@@ -286,6 +286,13 @@ namespace detail {
 
         t_model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),*it,connectedObjectInletPort);
       }
+
+      boost::optional<ModelObject> mo = inletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<Node> node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+      zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(node.get()));
+      node->remove();
     }
 
     return Splitter_Impl::remove();
