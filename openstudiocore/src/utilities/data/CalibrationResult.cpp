@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -136,8 +136,8 @@ namespace openstudio {
   Date CalibrationBillingPeriod::startDate() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("startDate");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::String);
     return Date(attribute->valueAsString());
   }
 
@@ -150,16 +150,16 @@ namespace openstudio {
   unsigned CalibrationBillingPeriod::numberOfDays() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("numberOfDays");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::Unsigned);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::Unsigned);
     return attribute->valueAsUnsigned();
   }
 
   std::string CalibrationBillingPeriod::consumptionUnit() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("consumptionUnit");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::String);
     return attribute->valueAsString();
   }
   
@@ -167,7 +167,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("peakDemandUnit");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::String);
       return attribute->valueAsString();
     }
     return boost::none;
@@ -177,7 +177,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("consumption");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -187,7 +187,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("peakDemand");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -197,7 +197,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("totalCost");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -207,7 +207,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("modelConsumption");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -217,7 +217,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("modelPeakDemand");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -227,7 +227,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("modelTotalCost");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -368,24 +368,24 @@ namespace openstudio {
   std::string CalibrationUtilityBill::name() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("name");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::String);
     return attribute->valueAsString();
   }
 
   FuelType CalibrationUtilityBill::fuelType() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("fuelType");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::String);
     return FuelType(attribute->valueAsString());
   }
 
   InstallLocationType CalibrationUtilityBill::meterInstallLocation() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("meterInstallLocation");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::String);
     return InstallLocationType(attribute->valueAsString());
   }
 
@@ -393,7 +393,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("meterSpecificInstallLocation");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::String);
       return attribute->valueAsString();
     }
     return boost::none;
@@ -403,7 +403,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("meterEndUseCategory");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::String);
       return EndUseCategoryType(attribute->valueAsString());
     }
     return boost::none;
@@ -413,7 +413,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("meterSpecificEndUse");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::String);
       return attribute->valueAsString();
     }
     return boost::none;
@@ -422,16 +422,16 @@ namespace openstudio {
   std::string CalibrationUtilityBill::consumptionUnit() const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("consumptionUnit");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::String);
     return attribute->valueAsString();
   }
 
   double CalibrationUtilityBill::consumptionUnitConversionFactor () const
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("consumptionUnitConversionFactor");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
     return attribute->valueAsDouble();
   }
   
@@ -439,7 +439,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("peakDemandUnit");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::String);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::String);
       return attribute->valueAsString();
     }
     return boost::none;
@@ -449,7 +449,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("peakDemandUnitConversionFactor");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -459,7 +459,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("timestepsInPeakDemandWindow");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Unsigned);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Unsigned);
       return attribute->valueAsUnsigned();
     }
     return boost::none;
@@ -469,7 +469,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("minutesInPeakDemandWindow");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -479,7 +479,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("numberBillingPeriodsInCalculations");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Unsigned);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Unsigned);
       return attribute->valueAsUnsigned();
     }
     return boost::none;
@@ -489,7 +489,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("cvrmse");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -499,7 +499,7 @@ namespace openstudio {
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("nmbe");
     if (attribute){
-      BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
+      OS_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
     }
     return boost::none;
@@ -511,8 +511,8 @@ namespace openstudio {
     std::vector<CalibrationBillingPeriod> result;
 
     boost::optional<Attribute> attribute = m_attribute.findChildByName("billingPeriods");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
     BOOST_FOREACH(const Attribute& value, attribute->valueAsAttributeVector()){
       boost::optional<CalibrationBillingPeriod> tmp = CalibrationBillingPeriod::fromAttribute(value);
       if (tmp){
@@ -533,8 +533,8 @@ namespace openstudio {
     }
 
     boost::optional<Attribute> attribute = m_attribute.findChildByName("billingPeriods");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
     std::vector<Attribute> values = attribute->valueAsAttributeVector();
     values.push_back(billingPeriod.attribute());
     attribute->setValue(values);
@@ -602,8 +602,8 @@ namespace openstudio {
     std::vector<CalibrationUtilityBill> result;
 
     boost::optional<Attribute> attribute = m_attribute.findChildByName("utilityBills");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
     BOOST_FOREACH(const Attribute& value, attribute->valueAsAttributeVector()){
       boost::optional<CalibrationUtilityBill> tmp = CalibrationUtilityBill::fromAttribute(value);
       if (tmp){
@@ -617,8 +617,8 @@ namespace openstudio {
   bool CalibrationResult::addUtilityBill(const CalibrationUtilityBill& utilityBill)
   {
     boost::optional<Attribute> attribute = m_attribute.findChildByName("utilityBills");
-    BOOST_ASSERT(attribute);
-    BOOST_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
+    OS_ASSERT(attribute);
+    OS_ASSERT(attribute->valueType() == AttributeValueType::AttributeVector);
     std::vector<Attribute> values = attribute->valueAsAttributeVector();
     values.push_back(utilityBill.attribute());
     attribute->setValue(values);

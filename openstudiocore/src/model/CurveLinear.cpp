@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -130,26 +130,22 @@ namespace detail {
   }
 
   void CurveLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_LinearFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_LinearFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setCoefficient2x(double coefficient2x) {
-    bool result = false;
-    result = setDouble(OS_Curve_LinearFields::Coefficient2x, coefficient2x);
+    bool result = setDouble(OS_Curve_LinearFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_LinearFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_LinearFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveLinear_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_LinearFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_LinearFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
@@ -184,8 +180,7 @@ namespace detail {
   }
 
   bool CurveLinear_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_LinearFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_LinearFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -195,8 +190,7 @@ namespace detail {
   }
 
   bool CurveLinear_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_LinearFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_LinearFields::OutputUnitType, outputUnitType);
     return result;
   }
 

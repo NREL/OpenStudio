@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ class ExportXMLDialog : public OSDialog
   public:
 
     /// Constructor of the dialog to create a new BCL Measure
-    ExportXMLDialog(const std::vector<std::string> alternatives, QWidget* parent = 0);
+    ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent = 0);
 
     virtual ~ExportXMLDialog();
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ namespace detail {
                                                                                  bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == EvaporativeFluidCoolerSingleSpeed::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == EvaporativeFluidCoolerSingleSpeed::iddObjectType());
   }
 
   EvaporativeFluidCoolerSingleSpeed_Impl::EvaporativeFluidCoolerSingleSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -59,7 +59,7 @@ namespace detail {
                                                                                  bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == EvaporativeFluidCoolerSingleSpeed::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == EvaporativeFluidCoolerSingleSpeed::iddObjectType());
   }
 
   EvaporativeFluidCoolerSingleSpeed_Impl::EvaporativeFluidCoolerSingleSpeed_Impl(const EvaporativeFluidCoolerSingleSpeed_Impl& other,
@@ -179,7 +179,7 @@ namespace detail {
 
   double EvaporativeFluidCoolerSingleSpeed_Impl::designSprayWaterFlowRate() const {
     boost::optional<double> value = getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -235,7 +235,7 @@ namespace detail {
 
   std::string EvaporativeFluidCoolerSingleSpeed_Impl::capacityControl() const {
     boost::optional<std::string> value = getString(OS_EvaporativeFluidCooler_SingleSpeedFields::CapacityControl,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -245,7 +245,7 @@ namespace detail {
 
   double EvaporativeFluidCoolerSingleSpeed_Impl::sizingFactor() const {
     boost::optional<double> value = getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::SizingFactor,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -255,7 +255,7 @@ namespace detail {
 
   std::string EvaporativeFluidCoolerSingleSpeed_Impl::evaporationLossMode() const {
     boost::optional<std::string> value = getString(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossMode,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -269,7 +269,7 @@ namespace detail {
 
   double EvaporativeFluidCoolerSingleSpeed_Impl::driftLossPercent() const {
     boost::optional<double> value = getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -279,7 +279,7 @@ namespace detail {
 
   std::string EvaporativeFluidCoolerSingleSpeed_Impl::blowdownCalculationMode() const {
     boost::optional<std::string> value = getString(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -289,7 +289,7 @@ namespace detail {
 
   double EvaporativeFluidCoolerSingleSpeed_Impl::blowdownConcentrationRatio() const {
     boost::optional<double> value = getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -311,7 +311,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosizeDesignAirFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setFanPoweratDesignAirFlowRate(boost::optional<double> fanPoweratDesignAirFlowRate) {
@@ -324,7 +324,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosizeFanPoweratDesignAirFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignSprayWaterFlowRate(double designSprayWaterFlowRate) {
@@ -346,7 +346,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetPerformanceInputMethod() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setStandardDesignCapacity(boost::optional<double> standardDesignCapacity) {
@@ -363,7 +363,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetStandardDesignCapacity() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setUfactorTimesAreaValueatDesignAirFlowRate(boost::optional<double> ufactorTimesAreaValueatDesignAirFlowRate) {
@@ -380,12 +380,12 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetUfactorTimesAreaValueatDesignAirFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosizeUfactorTimesAreaValueatDesignAirFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate) {
@@ -402,12 +402,12 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignWaterFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosizeDesignWaterFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setUserSpecifiedDesignCapacity(boost::optional<double> userSpecifiedDesignCapacity) {
@@ -424,7 +424,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetUserSpecifiedDesignCapacity() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignEnteringWaterTemperature(boost::optional<double> designEnteringWaterTemperature) {
@@ -441,7 +441,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignEnteringWaterTemperature() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignEnteringAirTemperature(boost::optional<double> designEnteringAirTemperature) {
@@ -458,7 +458,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignEnteringAirTemperature() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignEnteringAirWetbulbTemperature(boost::optional<double> designEnteringAirWetbulbTemperature) {
@@ -475,7 +475,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignEnteringAirWetbulbTemperature() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setCapacityControl(std::string capacityControl) {
@@ -485,7 +485,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetCapacityControl() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::CapacityControl, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setSizingFactor(double sizingFactor) {
@@ -495,7 +495,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetSizingFactor() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::SizingFactor, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossMode(std::string evaporationLossMode) {
@@ -505,7 +505,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetEvaporationLossMode() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossMode, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
@@ -517,22 +517,22 @@ namespace detail {
       resetEvaporationLossFactor();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetEvaporationLossFactor() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, driftLossPercent);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDriftLossPercent() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
@@ -542,7 +542,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetBlowdownCalculationMode() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownConcentrationRatio(double blowdownConcentrationRatio) {
@@ -552,7 +552,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetBlowdownConcentrationRatio() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownMakeupWaterUsageSchedule(Schedule& schedule) {
@@ -565,7 +565,7 @@ namespace detail {
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetBlowdownMakeupWaterUsageSchedule() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::performanceInputMethodValues() const {
@@ -615,7 +615,7 @@ namespace detail {
 EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model& model)
   : StraightComponent(EvaporativeFluidCoolerSingleSpeed::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>());
+  OS_ASSERT(getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>());
  
   autosizeDesignAirFlowRate();
   autosizeFanPoweratDesignAirFlowRate();

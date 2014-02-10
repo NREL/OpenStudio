@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -363,8 +363,6 @@ void Component::createCompleteLayout()
 
   QTableWidget * tableWidget = NULL;
 
-  QTableWidgetItem * item = NULL;
-
   ///! Attributes
   ///! Class BCL only stores double (optional units),
   ///! int (optional units), and string, with their names.
@@ -390,7 +388,7 @@ void Component::createCompleteLayout()
   Q_FOREACH(const Attribute & attribute, m_attributes){
     tableWidget->insertRow(tableWidget->rowCount());
 
-    item = new QTableWidgetItem(attribute.name().c_str());
+    QTableWidgetItem * item = new QTableWidgetItem(attribute.name().c_str());
     tableWidget->setItem(tableWidget->rowCount() - 1, 0, item);
     
     boost::optional<std::string> optionalUnits = attribute.units();

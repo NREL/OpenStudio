@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -208,7 +208,7 @@ void PatMainWindow::closeEvent(QCloseEvent *event)
       }
     }
 
-  } else if (status == CLOUD_RUNNING) {
+  } else if (status == CLOUD_STOPPED) {
 
     // DLM: check if running locally?
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -80,7 +80,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> RefrigerationWalkIn_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -118,7 +117,7 @@ namespace detail {
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
          it != zoneBoundaries.end();
-         it++ )
+         ++it )
     {
       std::vector<IdfObject> removedZoneBoundaries = it->remove();
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
@@ -139,7 +138,7 @@ namespace detail {
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
          it != zoneBoundaries.end();
-         it++ )
+         ++it )
     {
       RefrigerationWalkInZoneBoundary zoneBoundaryClone = it->clone(model).cast<RefrigerationWalkInZoneBoundary>();
       modelObjectClone.addZoneBoundary(zoneBoundaryClone);
@@ -159,11 +158,11 @@ namespace detail {
     return temp;
   }
 
-  void RefrigerationWalkIn_Impl::removeZoneBoundary(unsigned groupIndex)
+  void RefrigerationWalkIn_Impl::removeZoneBoundary(unsigned index)
   {
     unsigned numberofDataPairs = numExtensibleGroups();
-    if(groupIndex < numberofDataPairs) {
-      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+    if(index < numberofDataPairs) {
+      getObject<ModelObject>().eraseExtensibleGroup(index);
     }
   }
 
@@ -180,7 +179,7 @@ namespace detail {
 
     for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
          it != groups.end();
-         it++ )
+         ++it )
     {
         if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary)->optionalCast<RefrigerationWalkInZoneBoundary>()) {
           result.push_back( refrigerationWalkInZoneBoundary.get() );
@@ -530,9 +529,8 @@ RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDef
 {
   OS_ASSERT(getImpl<detail::RefrigerationWalkIn_Impl>());
 
-  bool ok = true;
   setRatedCoilCoolingCapacity(4690.0);
-  ok = setOperatingTemperature(-2.22);
+  bool ok = setOperatingTemperature(-2.22);
   OS_ASSERT(ok);
   ok = setRatedCoolingSourceTemperature(-6.67);
   OS_ASSERT(ok);
@@ -577,8 +575,8 @@ bool RefrigerationWalkIn::addZoneBoundary(const RefrigerationWalkInZoneBoundary&
   return getImpl<detail::RefrigerationWalkIn_Impl>()->addZoneBoundary(refrigerationWalkInZoneBoundary);
 }
 
-void RefrigerationWalkIn::removeZoneBoundary(unsigned groupIndex){
-  return getImpl<detail::RefrigerationWalkIn_Impl>()->removeZoneBoundary(groupIndex);
+void RefrigerationWalkIn::removeZoneBoundary(unsigned index){
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->removeZoneBoundary(index);
 }
 
 void RefrigerationWalkIn::removeAllZoneBoundaries(){

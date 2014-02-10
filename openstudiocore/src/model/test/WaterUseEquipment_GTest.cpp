@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
+#include <model/Space.hpp>
 #include <model/WaterUseEquipment.hpp>
 #include <model/WaterUseEquipment_Impl.hpp>
 #include <model/WaterUseEquipmentDefinition.hpp>
@@ -40,10 +41,41 @@ TEST_F(ModelFixture,WaterUseEquipment_WaterUseEquipment)
 
     model::WaterUseEquipmentDefinition definition(m);
 
-    model::WaterUseEquipment WaterUseEquipment(definition);
+    model::WaterUseEquipment waterUseEquipment(definition);
 
     exit(0); 
   } ,
   ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture,WaterUseEquipment_Space)
+{
+  model::Model m; 
+
+  model::Space space(m);
+
+  model::WaterUseEquipmentDefinition definition(m);
+
+  model::WaterUseEquipment waterUseEquipment(definition);
+
+  EXPECT_EQ(0, space.children().size());
+
+  EXPECT_TRUE(waterUseEquipment.setSpace(space));
+
+  ASSERT_EQ(1u, space.children().size());
+
+  EXPECT_EQ(waterUseEquipment.handle(), space.children()[0].handle());
+
+  ASSERT_TRUE(waterUseEquipment.parent());
+
+  EXPECT_EQ(space.handle(), waterUseEquipment.parent()->handle());
+
+  space.remove();
+
+  EXPECT_TRUE(space.handle().isNull());
+
+  EXPECT_TRUE(waterUseEquipment.handle().isNull());
+
+  EXPECT_FALSE(definition.handle().isNull());
+
+}

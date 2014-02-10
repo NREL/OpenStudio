@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -203,14 +203,13 @@ void OSCollapsibleItemList::addCollapsibleItem(OSCollapsibleItem * collapsibleIt
 void OSCollapsibleItemList::onCollapsableItemSelected(OSCollapsibleItem* selectedItem)
 {
   QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
   OSCollapsibleItem* collapsibleItem = NULL;
   OSItem* newSelectedItem = NULL;
 
   for (int i = 0; i < m_vLayout->count(); ++i){
 
     layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
+    QWidget * widget = layoutItem->widget();
 
     collapsibleItem = qobject_cast<OSCollapsibleItem*>(widget);
     if (collapsibleItem){
@@ -237,13 +236,12 @@ void OSCollapsibleItemList::onCollapsableItemSelected(OSCollapsibleItem* selecte
 void OSCollapsibleItemList::onItemSelected(OSItem* item)
 {
   QLayoutItem * layoutItem = NULL;
-  QWidget * widget = NULL;
   OSCollapsibleItem* collapsibleItem = NULL;
 
   for (int i = 0; i < m_vLayout->count(); ++i){
 
     layoutItem = m_vLayout->itemAt(i);
-    widget = layoutItem->widget();
+    QWidget * widget = layoutItem->widget();
 
     collapsibleItem = qobject_cast<OSCollapsibleItem*>(widget);
     if (collapsibleItem){

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -51,13 +51,12 @@ void FloodPlotColorMap::init()
   switch (m_colorMap)
   {
     case Gray:
-      double gray;
       minColor = QColor(0,0,0);
       maxColor = QColor(255,255,255);
       setColorInterval(minColor, maxColor); // end points
             for (i = 0; i < colormapLength; i++)
             {
-                gray = 1.0 * i / (colormapLength - 1);
+                double gray = 1.0 * i / (colormapLength - 1);
                 r = (int)(255 * gray);
                 g = (int)(255 * gray);
                 b = (int)(255 * gray);

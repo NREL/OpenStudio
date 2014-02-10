@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -59,16 +59,16 @@ namespace exportxml {
   private:
 
     boost::optional<QDomElement> exportMeasure(QDomDocument& doc,
-                                              const WorkflowStepJob& wfJob);
+                                               const WorkflowStepJob& wfJob);
 
 
     boost::optional<QDomElement> exportAlternative(QDomDocument& doc, 
-                                                          Attribute& alternativeAttr,
-                                                          analysis::DataPoint dataPt,
-                                                          std::vector<WorkflowStepJob>& jobs,
-                                                          std::string edaBaselineName,
-                                                          std::string proposedBaselineName,
-                                                          std::string certificationBaselineName);
+                                                   Attribute& alternativeAttr,
+                                                   analysis::DataPoint dataPt,
+                                                   std::vector<WorkflowStepJob>& jobs,
+                                                   std::string edaBaselineName,
+                                                   std::string proposedBaselineName,
+                                                   std::string certificationBaselineName);
 
     boost::optional<QDomElement> exportCashFlow(QDomDocument& doc, 
                                                 const Attribute& cashFlowAttr);

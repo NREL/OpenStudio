@@ -33,9 +33,10 @@
 
 namespace openstudio {
 
+class Attribute;
+class Quantity;
 class Workspace;
 class WorkspaceObject;
-class Quantity;
 
 namespace model {
   class ModelObject;
@@ -120,6 +121,51 @@ class RULESET_API OSRunner {
   /** Sets the result final condition to message. */
   virtual void registerFinalCondition(const std::string& message);
 
+  /** Saves attribute as an output result of the measure currently being run. */
+  virtual void registerAttribute(const Attribute& attribute);
+
+  /** \overload Shortcut method for registering boolean attribute. */
+  virtual void registerValue(const std::string& name, bool value);
+  /** \overload Shortcut method for registering boolean attribute. */
+  virtual void registerValue(const std::string& name,
+                             const std::string& displayName,
+                             bool value);
+
+  /** \overload Shortcut method for registering double attribute. */
+  virtual void registerValue(const std::string& name, double value);
+  /** \overload Shortcut method for registering double attribute. */
+  virtual void registerValue(const std::string& name, double value, const std::string& units);
+  /** \overload Shortcut method for registering double attribute. */
+  virtual void registerValue(const std::string& name,
+                             const std::string& displayName,
+                             double value);
+  /** \overload Shortcut method for registering double attribute. */
+  virtual void registerValue(const std::string& name,
+                             const std::string& displayName,
+                             double value,
+                             const std::string& units);
+
+  /** \overload Shortcut method for registering int attribute */
+  virtual void registerValue(const std::string& name, int value);
+  /** \overload Shortcut method for registering int attribute */
+  virtual void registerValue(const std::string& name, int value, const std::string& units);
+  /** \overload Shortcut method for registering int attribute */
+  virtual void registerValue(const std::string& name,
+                             const std::string& displayName,
+                             int value);
+  /** \overload Shortcut method for registering int attribute */
+  virtual void registerValue(const std::string& name,
+                             const std::string& displayName,
+                             int value,
+                             const std::string& units);
+
+  /** \overload Shortcut method for registering string attribute */
+  virtual void registerValue(const std::string& name, const std::string& value);
+  /** \overload Shortcut method for registering string attribute */
+  virtual void registerValue(const std::string& name,
+                             const std::string& displayName,
+                             const std::string& value);
+
   /** Creates a progress bar with the text label. Base class implementation does nothing. */
   virtual void createProgressBar(const std::string& text) const;
 
@@ -134,12 +180,13 @@ class RULESET_API OSRunner {
   /** @name Common Error Checking Functions */
   //@{
 
-  /** Returns true and logs no messages if all script_arguments are in user_arguments, and if
-   *  all required script_arguments have been set or have defaults in user_arguments. Otherwise,
-   *  returns false and \link registerError registers an error\endlink if there are any type 
-   *  mismatches, or if any required or defaulted arguments are missing (entirely, or their 
-   *  values are not set). All other discrepencies are \link registerWarning logged as 
-   *  warnings\endlink. */
+  /** Returns true, logs no messages, and \link registerAttribute registers a value\endlink
+   *  for each argument with a value or default value if all script_arguments are in
+   *  user_arguments, and if all required script_arguments have been set or have defaults
+   *  in user_arguments. Otherwise, returns false and \link registerError registers an
+   *  error\endlink if there are any type mismatches, or if any required or defaulted
+   *  arguments are missing (entirely, or their values are not set). All other discrepencies
+   *  are \link registerWarning logged as warnings\endlink. */
   bool validateUserArguments(const std::vector<OSArgument>& script_arguments,
                              const std::map<std::string, OSArgument>& user_arguments);
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ namespace openstudio {
 namespace model {
 
 // forward declaration
-class ConstructionBaseStandardsInformation;
+class StandardsInformationConstruction;
 class RenderingColor;
 
 namespace detail {
@@ -67,7 +67,7 @@ namespace detail {
     //@{
 
     /** Returns this construction's standards information, constructing a new object if necessary. */
-    ConstructionBaseStandardsInformation standardsInformation() const;
+    StandardsInformationConstruction standardsInformation() const;
 
     virtual double getNetArea() const;
 

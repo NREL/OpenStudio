@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -140,7 +140,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneMixer( Air
   int i = 2;
   for( std::vector<ModelObject>::iterator it = inletModelObjects.begin();
        it < inletModelObjects.end();
-       it++ )
+       ++it )
   {
     optS = it->name();
     if(optS)

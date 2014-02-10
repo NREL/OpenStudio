@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -525,9 +525,6 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
     OS_ASSERT(test);
   }else if (modelObject.optionalCast<HVACComponent>()){
     test = setString(OS_LifeCycleCostFields::ItemType, "HVACComponent");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "ZoneHVACComponent");
     OS_ASSERT(test);
   }else{
     this->remove();

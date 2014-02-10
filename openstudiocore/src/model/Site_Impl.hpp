@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -52,8 +52,8 @@ namespace detail {
     Q_PROPERTY(bool isElevationDefaulted READ isElevationDefaulted);
     Q_PROPERTY(std::string terrain READ terrain WRITE setTerrain RESET resetTerrain);
     Q_PROPERTY(bool isTerrainDefaulted READ isTerrainDefaulted);
-    Q_PROPERTY(std::string activeClimateZoneValue READ activeClimateZoneValue WRITE setActiveClimateZoneValue);  
-    Q_PROPERTY(std::string activeClimateZoneInstitution READ activeClimateZoneInstitution WRITE setActiveClimateZoneInstitution);  
+    //Q_PROPERTY(std::string activeClimateZoneValue READ activeClimateZoneValue WRITE setActiveClimateZoneValue);  
+    //Q_PROPERTY(std::string activeClimateZoneInstitution READ activeClimateZoneInstitution WRITE setActiveClimateZoneInstitution);  
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -157,16 +157,16 @@ namespace detail {
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
     /** The value of the active climate zone in the ClimateZones object. May be empty. */
-    std::string activeClimateZoneValue() const;
+    //std::string activeClimateZoneValue() const;
 
     /** Set the value of the active climate zone. */
-    bool setActiveClimateZoneValue(const std::string& value); 
+    //bool setActiveClimateZoneValue(const std::string& value); 
 
     /** The institution name of the active climate zone in the ClimateZones object. May be empty. */
-    std::string activeClimateZoneInstitution() const;
+    //std::string activeClimateZoneInstitution() const;
 
     /** Set the active climate zone institution to institution. */
-    bool setActiveClimateZoneInstitution(const std::string& institution);
+    //bool setActiveClimateZoneInstitution(const std::string& institution);
 
    protected:
    private:

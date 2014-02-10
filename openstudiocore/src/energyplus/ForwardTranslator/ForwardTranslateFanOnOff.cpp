@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_OnOff,modelObject);
   
   // Model Name
-  std::string baseName = modelObject.name().get();
+  //std::string baseName = modelObject.name().get();
 
   //  A3 ,Field Availability Schedule Name
   boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();

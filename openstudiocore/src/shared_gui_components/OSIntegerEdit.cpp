@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@ namespace openstudio {
 OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }
@@ -317,6 +318,7 @@ void OSIntegerEdit2::setPrecision(const std::string& str) {
 OSIntegerEdit::OSIntegerEdit( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }

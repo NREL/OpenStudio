@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -125,6 +125,11 @@ class CreateSketchUpGroupsFromDiagram < OpenStudio::Ruleset::ModelUserScript
       faces = []
       sel_sort.each { |entity| faces << entity if entity.class == Sketchup::Face }
 
+      # create or confirm layers
+      layers = suModel.layers
+      new_layer_diagram = layers.add("SketchUp - Space Diagrams")
+      new_layer_spaces = layers.add("OpenStudio BackgroundModel Space")
+
       # add loop to create multiple floors. Will need to create new stories and adjust z values
       for floor in (1..num_floors)
 
@@ -139,6 +144,9 @@ class CreateSketchUpGroupsFromDiagram < OpenStudio::Ruleset::ModelUserScript
 
           # make group
           group = Sketchup.active_model.entities.add_group
+
+          #put on space layer
+          group.layer = new_layer_spaces
 
           # create face in group
           entities = group.entities
@@ -167,16 +175,12 @@ class CreateSketchUpGroupsFromDiagram < OpenStudio::Ruleset::ModelUserScript
 
       end # end of floor loop
 
-      # create or confirm layer called "OpenStudio - Space Diagrams" exists
-      layers = suModel.layers
-      new_layer = layers.add("SketchUp - Space Diagrams")
-
       # turn off layer visibility
-      new_layer.visible  = false
+      new_layer_diagram.visible  = false
 
       # make group out of selection and put onto OS Loose Geometry Layer
       thermal_diagram = Sketchup.active_model.entities.add_group(saved_selection)
-      thermal_diagram.layer = new_layer
+      thermal_diagram.layer = new_layer_diagram
 
     end #end of if valid_diagram
 

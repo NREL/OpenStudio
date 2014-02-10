@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -59,8 +59,7 @@ RenderingColorWidget::RenderingColorWidget(QWidget * parent )
   hLayout->addWidget(m_renderColorButton);
   hLayout->addStretch();
 
-  bool isConnected = false;
-  isConnected = connect(m_renderColorButton, SIGNAL(clicked()), this, SLOT(renderColorButtonClicked()));
+  bool isConnected = connect(m_renderColorButton, SIGNAL(clicked()), this, SLOT(renderColorButtonClicked()));
   OS_ASSERT(isConnected);
 }
 
@@ -70,8 +69,7 @@ void RenderingColorWidget::attach(const openstudio::model::RenderingColor& rende
 
   m_renderingColor = renderingColor;
 
-  bool isConnected = false;
-  isConnected = connect(m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get(),
+  bool isConnected = connect(m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onChange()),
                         this, 
                         SLOT(refresh()));

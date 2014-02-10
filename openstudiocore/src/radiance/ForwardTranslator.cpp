@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -927,8 +927,7 @@ namespace radiance {
         double azi = surface->azimuth();
 
         // std::string aperture_heading = boost::lexical_cast<std::string>(azi);
-        std::string aperture_heading = boost::lexical_cast<std::string>(azi);
-          aperture_heading = formatString(azi, 4);
+        std::string aperture_heading = formatString(azi, 4);
 
         if (std::find(aperture_headings.begin(),aperture_headings.end(),aperture_heading) == aperture_headings.end())
         {

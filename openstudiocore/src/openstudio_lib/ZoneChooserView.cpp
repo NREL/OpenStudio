@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -130,7 +130,7 @@ void ZoneChooserView::layoutView()
 
   for( std::vector<model::ThermalZone>::iterator it = zones.begin();
         it < zones.end();
-        it++ )
+        ++it )
   {
     ZoneChooserItem * zoneChooserItem = new ZoneChooserItem(*it,this);
     m_zoneChooserItems.push_back(zoneChooserItem);
@@ -143,7 +143,7 @@ void ZoneChooserView::layoutView()
   thermalZones = m_splitter->thermalZones();
   for( std::vector<model::ThermalZone>::iterator it = thermalZones.begin();
         it < thermalZones.end();
-        it++ )
+        ++it )
   {
     zoneChooserItemForZone(it->name().get())->setChecked(true);
   }
@@ -172,7 +172,7 @@ ZoneChooserItem * ZoneChooserView::zoneChooserItemForZone(std::string zoneName)
 {
   for( std::vector<ZoneChooserItem *>::iterator it = m_zoneChooserItems.begin();
        it < m_zoneChooserItems.end();
-       it++ )
+       ++it )
   {
     if( (*it)->zoneName() == zoneName )
     {

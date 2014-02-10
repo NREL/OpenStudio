@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 class QLabel;
 class QPushButton;
 class QColor;
+class QComboBox;
 
 namespace openstudio {
 
@@ -220,11 +221,25 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
     virtual void onUpdate();
 
+  protected slots:
+
+    void editStandardsBuildingType(const QString & text);
+    void standardsBuildingTypeChanged(const QString & text);
+
+    void editStandardsSpaceType(const QString & text);
+    void standardsSpaceTypeChanged(const QString & text);
+
   private:
 
     void attach(openstudio::model::SpaceType& spaceType);
 
     void detach();
+
+    void populateStandardsBuildingTypes();
+
+    void populateStandardsSpaceTypes();
+
+    boost::optional<openstudio::model::SpaceType> m_spaceType;
 
     OSLineEdit* m_nameEdit;
     SpaceTypeDefaultConstructionSetVectorController* m_defaultConstructionSetVectorController;
@@ -232,6 +247,8 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
     SpaceTypeDefaultScheduleSetVectorController* m_defaultScheduleSetVectorController;
     OSDropZone* m_defaultScheduleSetDropZone;
     RenderingColorWidget* m_renderingColorWidget;
+    QComboBox* m_standardsBuildingTypeComboBox;
+    QComboBox* m_standardsSpaceTypeComboBox;
     SpaceTypeDesignSpecificationOutdoorAirVectorController* m_designSpecificationOutdoorAirVectorController;
     OSDropZone* m_designSpecificationOutdoorAirDropZone;
     SpaceTypeSpaceInfiltrationDesignFlowRateVectorController* m_spaceInfiltrationDesignFlowRateVectorController;

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -340,8 +340,24 @@ namespace detail {
 
   LocalProcess::FileSet LocalProcess::dirFiles(const QString &dir) const
   {
+    QFileInfoList fil;
+
+    
+    QDir subdirs(dir, "mergedjob-*", QDir::Name, QDir::Dirs);
+    QFileInfoList mergedjobdirs = subdirs.entryInfoList();
+
+    for (QFileInfoList::const_iterator itr = mergedjobdirs.begin();
+         itr != mergedjobdirs.end();
+         ++itr)
+    {
+
+      QDir mergeddir(itr->absoluteFilePath(), "", QDir::Name, QDir::Files);
+      fil.append(mergeddir.entryInfoList());
+    }
+  
+
     QDir d(dir, "", QDir::Name, QDir::Files);
-    QFileInfoList fil = d.entryInfoList();
+    fil.append(d.entryInfoList());
 
     QFileInfoList filtered;
 
@@ -377,7 +393,7 @@ namespace detail {
     try{
       std::transform(filtered.begin(), filtered.end(), std::inserter(out, out.end()), 
           static_cast<filetransform>(&RunManager_Util::dirFile));
-    } catch(openstudio::Exception e) {
+    } catch(openstudio::Exception& e) {
       LOG_AND_THROW("Exception caught " << e.what());
     }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -87,6 +87,7 @@ FacilityTreeWidget::FacilityTreeWidget(const model::Model& model, QWidget* paren
   vLayout->addLayout(hLayout);
 
   bool isConnected = false;
+
   isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString&)),
                         this, SLOT(onSortByChanged(const QString&)));
   OS_ASSERT(isConnected);

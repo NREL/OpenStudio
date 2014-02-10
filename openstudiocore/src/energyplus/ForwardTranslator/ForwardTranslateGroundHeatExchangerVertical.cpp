@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -158,7 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
   {
     for( std::vector< std::pair<double,double> >::iterator it = gFunctions.begin();
        it != gFunctions.end();
-       it++ )
+       ++it )
     {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 

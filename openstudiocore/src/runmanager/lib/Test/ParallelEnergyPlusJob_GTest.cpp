@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -137,6 +137,8 @@ TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
 
     ASSERT_TRUE(sqlfile.netSiteEnergy());
     parallelSiteEnergy = *sqlfile.netSiteEnergy();
+    ASSERT_TRUE(sqlfile.hoursSimulated());
+    EXPECT_EQ(8760, *sqlfile.hoursSimulated());
   }  
 
   qint64 paralleltime = et.restart();

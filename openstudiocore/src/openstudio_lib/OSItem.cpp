@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -246,9 +246,8 @@ void OSItem::createLayout()
     this->setRemoveable(false);
   }
 
-  bool isConnected = false;
-  isConnected = connect(m_removeButton,SIGNAL(clicked()),
-                        this,SLOT(onRemoveClicked()));
+  bool isConnected = connect(m_removeButton,SIGNAL(clicked()),
+                             this,SLOT(onRemoveClicked()));
   OS_ASSERT(isConnected);
 }
 

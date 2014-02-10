@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -151,44 +151,37 @@ namespace detail {
   }
 
   void CurveQuartic_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuarticFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_QuarticFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient2x(double coefficient2x) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuarticFields::Coefficient2x, coefficient2x);
+    bool result = setDouble(OS_Curve_QuarticFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuarticFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    bool result = setDouble(OS_Curve_QuarticFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuarticFields::Coefficient4x_POW_3, coefficient4xPOW3);
+    bool result = setDouble(OS_Curve_QuarticFields::Coefficient4x_POW_3, coefficient4xPOW3);
     OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient5xPOW4(double coefficient5xPOW4) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuarticFields::Coefficient5x_POW_4, coefficient5xPOW4);
+    bool result = setDouble(OS_Curve_QuarticFields::Coefficient5x_POW_4, coefficient5xPOW4);
     OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuarticFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_QuarticFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuarticFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_QuarticFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
@@ -223,8 +216,7 @@ namespace detail {
   }
 
   bool CurveQuartic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_QuarticFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_QuarticFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -234,8 +226,7 @@ namespace detail {
   }
 
   bool CurveQuartic_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_QuarticFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_QuarticFields::OutputUnitType, outputUnitType);
     return result;
   }
 

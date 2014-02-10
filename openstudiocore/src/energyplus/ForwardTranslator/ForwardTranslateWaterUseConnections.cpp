@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -102,7 +102,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections(
 
   for( std::vector<WaterUseEquipment>::iterator it = equipment.begin();
        it != equipment.end();
-       it++ )
+       ++it )
   {
     boost::optional<IdfObject> _equipment = translateAndMapModelObject(*it); 
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -85,10 +85,10 @@ class UTILITIES_API IdfFile {
   IddFileType iddFileType() const;
 
   /** Returns the version IdfObject in this file, if it exists and is unique. Typically, the
-   *  BOOST_ASSERT below will pass (but is not a trivial test).
+   *  OS_ASSERT below will pass (but is not a trivial test).
    *  \code
    *  IdfObject vo = versionObject().get();
-   *  BOOST_ASSERT(VersionString(vo.getString(vo.numFields() - 1,true).get()) == version());
+   *  OS_ASSERT(VersionString(vo.getString(vo.numFields() - 1,true).get()) == version());
    *  \endcode */
   boost::optional<IdfObject> versionObject() const;
 

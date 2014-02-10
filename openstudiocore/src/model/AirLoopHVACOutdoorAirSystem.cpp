@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -207,7 +207,7 @@ namespace detail {
     modelObjects = this->components();
     for(it = modelObjects.begin();
         it != modelObjects.end();
-        it++)
+        ++it)
     {
       if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
       {
@@ -375,7 +375,7 @@ namespace detail {
     
     for( it = airLoops.begin();
          it != airLoops.end();
-         it++ )
+         ++it )
     {
       OptionalAirLoopHVAC airLoop = it->optionalCast<AirLoopHVAC>();
       if( airLoop )
@@ -410,7 +410,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -428,7 +428,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -446,7 +446,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {

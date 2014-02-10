@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -23,9 +23,12 @@
 #include <openstudio_lib/ModelObjectInspectorView.hpp>
 #include <openstudio_lib/ModelObjectVectorController.hpp>
 
+#include <model/Building.hpp>
+
 class QLabel;
 class QPushButton;
 class QColor;
+class QComboBox;
 
 namespace openstudio {
 
@@ -34,9 +37,6 @@ class OSLineEdit;
 class OSComboBox;
 class OSQuantityEdit;
 
-namespace model {
-  class Building;
-}
 
 class BuildingSpaceTypeVectorController : public ModelObjectVectorController
 {
@@ -120,16 +120,23 @@ class BuildingInspectorView : public ModelObjectInspectorView
 
     virtual void onUpdate();
 
+  protected slots:
+
+    void editStandardsBuildingType(const QString & text);
+    void standardsBuildingTypeChanged(const QString & text);
+
   private:
 
     void attach(openstudio::model::Building& building);
 
     void detach();
 
-    void refresh();
+    void populateStandardsBuildingTypes();
+
+    boost::optional<openstudio::model::Building> m_building;
 
     OSLineEdit* m_nameEdit;
-    OSComboBox* m_buildingTypeComboBox;
+    QComboBox* m_standardsBuildingTypeComboBox;
     BuildingSpaceTypeVectorController* m_spaceTypeVectorController;
     OSDropZone* m_spaceTypeDropZone;
     BuildingDefaultConstructionSetVectorController* m_defaultConstructionSetVectorController;

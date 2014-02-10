@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -686,7 +686,6 @@ namespace detail {
       RunManagerDB::RunManagerDatabase m_db;
       RunManagerDB::ConfigOptions m_config;
       bool m_loading;
-      bool m_newConfig;
       openstudio::path m_dbPath;
       boost::shared_ptr<openstudio::runmanager::ConfigOptions> m_configOptions;
 
@@ -797,8 +796,8 @@ namespace detail {
               RunManagerDB::JobToolInfo::JobUuid == uuidstr).all();
             std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db,
               RunManagerDB::JobParam::JobUuid == uuidstr).all();
-            std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db,
-              RunManagerDB::OutputFileInfo::JobUuid == uuidstr).all();
+            //std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db,
+            //  RunManagerDB::OutputFileInfo::JobUuid == uuidstr).all();
             std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db,
               RunManagerDB::JobFileInfo::JobUuid == uuidstr).all();
 
@@ -1286,7 +1285,7 @@ namespace detail {
       template<typename JobFileType, typename RequiredFileType>
       void persistJobFiles(const openstudio::runmanager::Job &t_job)
       {
-        persistJobFiles<JobFileType, RequiredFileType>(t_job.uuid(), t_job.rawInputFiles());
+        persistJobFiles<JobFileType, RequiredFileType>(t_job.uuid(), t_job.inputFiles());
       }
 
       template<typename JobFileType, typename RequiredFileType>

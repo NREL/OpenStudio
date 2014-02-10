@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -80,7 +80,7 @@ boost::optional<ModelObject> Splitter_Impl::lastOutletModelObject()
 
 unsigned Splitter_Impl::newOutletPortAfterBranch(unsigned branchIndex)
 {
-  std::vector<ModelObject> modelObjects = outletModelObjects();
+  //std::vector<ModelObject> modelObjects = outletModelObjects();
   int stop = nextBranchIndex() - 1;
   for(int i = branchIndex; i < stop; i++ )
   {
@@ -127,7 +127,7 @@ void Splitter_Impl::removePortForBranch(unsigned branchIndex)
 {
   int _nextBranchIndex = nextBranchIndex();
   model().disconnect(getObject<ModelObject>(),outletPort(branchIndex));
-  std::vector<ModelObject> modelObjects = outletModelObjects();
+  //std::vector<ModelObject> modelObjects = outletModelObjects();
   for(int i = branchIndex + 1; i < _nextBranchIndex; i++ )
   {
     ModelObject mo = outletModelObject(i).get();

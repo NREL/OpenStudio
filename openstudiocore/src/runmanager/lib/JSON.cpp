@@ -270,6 +270,17 @@ namespace detail {
     return openstudio::saveJSON(QVariant(result),t_p,t_overwrite);
   }
 
+  bool JSON::saveJSON(const std::vector<JobParam> &t_jobParams,
+                      const openstudio::path &t_p,
+                      bool t_overwrite)
+  {
+    QVariantMap result;
+    result["metadata"] = jsonMetadata();
+    result["job_params"] = toVariant(t_jobParams);
+    return openstudio::saveJSON(QVariant(result),t_p,t_overwrite);
+  }
+
+
   std::string JSON::toJSON(const std::vector<WorkItem> &t_workItems) {
     QVariantMap result = jsonMetadata().toMap();
     result["work_items"] = toVariant(t_workItems);
@@ -292,6 +303,15 @@ namespace detail {
     QVariant workItemsData = variant.toMap()["work_items"];
     return toVectorOfWorkItem(workItemsData,version);
   }
+
+  std::vector<JobParam> JSON::toVectorOfJobParam(const openstudio::path &t_pathToJson) {
+    QVariant variant = loadJSON(t_pathToJson);
+    VersionString version = extractOpenStudioVersion(variant);
+
+    QVariant jobParamsData = variant.toMap()["job_params"];
+    return toVectorOfJobParam(jobParamsData,version);
+  }
+
 
   std::vector<WorkItem> JSON::toVectorOfWorkItem(const std::string &t_json) {
     QVariant variant = loadJSON(t_json);

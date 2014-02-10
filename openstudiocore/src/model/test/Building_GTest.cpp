@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -24,7 +24,6 @@
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
 
-#include <model/BuildingStandardsInformation.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/BuildingStory.hpp>
@@ -61,7 +60,6 @@ TEST_F(ModelFixture, Building)
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
-  EXPECT_EQ("Commercial", building.buildingType());
   EXPECT_EQ(0, building.northAxis());
   EXPECT_FALSE(building.getDouble(2));
   EXPECT_TRUE(building.isNorthAxisDefaulted());
@@ -243,26 +241,10 @@ TEST_F(ModelFixture, Building_SpaceType)
 TEST_F(ModelFixture,Building_StandardsInformation) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
-
-  EXPECT_EQ(1u,model.numObjects());
-  BuildingStandardsInformation standardsInformation = building.standardsInformation();
-  EXPECT_EQ(2u,model.numObjects());
-  EXPECT_FALSE(building.numberOfStories());
-  standardsInformation.remove();
-  EXPECT_EQ(1u,model.numObjects());
-
-  building.setNumberOfStories(3);
-  EXPECT_EQ(2u,model.numObjects());
-  ASSERT_TRUE(building.numberOfStories());
-  EXPECT_EQ(3,building.numberOfStories().get());
-
-  ASSERT_TRUE(building.getAttribute("numberOfStories"));
-  Attribute numberOfStories = building.getAttribute("numberOfStories").get();
-  ASSERT_TRUE(numberOfStories.valueType() == AttributeValueType::Integer);
-  EXPECT_EQ(3,numberOfStories.valueAsInteger());
-  EXPECT_TRUE(building.setAttribute("numberOfStories", 1));
-  ASSERT_TRUE(building.numberOfStories());
-  EXPECT_EQ(1,building.numberOfStories().get());
+  EXPECT_FALSE(building.standardsNumberOfStories());
+  building.setStandardsNumberOfStories(3);
+  ASSERT_TRUE(building.standardsNumberOfStories());
+  EXPECT_EQ(3,building.standardsNumberOfStories().get());
 }
 
 

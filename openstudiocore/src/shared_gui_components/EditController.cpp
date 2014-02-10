@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -90,7 +90,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   for( std::vector<ruleset::OSArgument>::iterator it = arguments.begin();
        it != arguments.end();
-       it++ )
+       ++it )
   {
     QSharedPointer<InputController> inputController = QSharedPointer<InputController>(new InputController(this,*it,t_app));
 
@@ -184,7 +184,7 @@ InputController::InputController(EditController * editController,const ruleset::
     int i = 0;
     for( std::vector<std::string>::const_iterator it = choices.begin();
          it != choices.end();
-         it++ )
+         ++it )
     {
       choiceInputView->comboBox->addItem(QString::fromStdString(*it),QString::fromStdString(values[i]));
 
@@ -249,7 +249,7 @@ InputController::InputController(EditController * editController,const ruleset::
     }
     else {
       boolInputView->checkBox->setChecked(false);
-      setValue(false);
+      m_argument.setValue(false);
     }
 
     bool bingo = connect(boolInputView->checkBox,SIGNAL(clicked(bool)),this,SLOT(setValue(bool)));

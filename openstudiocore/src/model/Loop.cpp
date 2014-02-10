@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -88,7 +88,7 @@ namespace detail {
     //modelObjects = this->supplyComponents();
     //for(it = modelObjects.begin();
     //    it != modelObjects.end();
-    //    it++)
+    //    ++it)
     //{
     //  if( it->optionalCast<Node>() ) continue;
     //  it->remove();
@@ -96,7 +96,7 @@ namespace detail {
     //modelObjects = this->demandComponents();
     //for(it = modelObjects.begin();
     //    it != modelObjects.end();
-    //    it++)
+    //    ++it)
     //{
     //  it->remove();
     //}
@@ -111,7 +111,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -129,7 +129,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -147,7 +147,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -348,7 +348,7 @@ namespace detail {
 
         for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
              it != outletModelObjects.end();
-             it++ )
+             ++it )
         {
           thisBranchModelObjects.clear();
           OptionalModelObject branchObject = OptionalModelObject(*it);
@@ -478,7 +478,7 @@ namespace detail {
 
       for(it = modelObjects.begin();
           it != modelObjects.end();
-          it++)
+          ++it)
       {
         if(it->iddObject().type() == type)
         {
@@ -659,7 +659,7 @@ namespace detail {
 
         for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
              it != outletModelObjects.end();
-             it++ )
+             ++it )
         {
           thisBranchModelObjects.clear();
           OptionalModelObject branchObject = OptionalModelObject(*it);
@@ -786,7 +786,7 @@ namespace detail {
 
       for(it = modelObjects.begin();
           it != modelObjects.end();
-          it++)
+          ++it)
       {
         if(it->iddObject().type() == type)
         {

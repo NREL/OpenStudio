@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -620,6 +620,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::People :
     {
       modelObject = translatePeople(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Refrigeration_Case :
+    {
+      // modelObject = translateRefrigerationCase(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Refrigeration_Compressor :
+    {
+      // modelObject = translateRefrigerationCompressor(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::RunPeriod :

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,8 @@
 #include <model/BuildingStory.hpp>
 #include <model/BuildingStory_Impl.hpp>
 #include <model/Space.hpp>
+
+#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 
@@ -61,7 +63,7 @@ void ScriptsController::onAddItem()
 {
   const OSItem* item = subTabView()->itemSelector()->selectedItem();
   ScriptFolderListView *lv = qobject_cast<ScriptFolderListView *>(subTabView()->itemSelector());
-  BOOST_ASSERT(lv);
+  OS_ASSERT(lv);
 
   if (item)
   {

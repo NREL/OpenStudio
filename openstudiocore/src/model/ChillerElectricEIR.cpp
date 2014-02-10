@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -140,23 +140,23 @@ namespace detail {
     return result;
   }
 
-CurveBiquadratic ChillerElectricEIR_Impl::coolingCapacityFunctionOfTemperature() const
-{
-  WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName).get();
-  return wo.optionalCast<CurveBiquadratic>().get();
-}
+  CurveBiquadratic ChillerElectricEIR_Impl::coolingCapacityFunctionOfTemperature() const
+  {
+    WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName).get();
+    return wo.optionalCast<CurveBiquadratic>().get();
+  }
 
-CurveBiquadratic  ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfTemperature() const
-{
-  WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName).get();
-  return wo.optionalCast<CurveBiquadratic>().get();
-}
+  CurveBiquadratic  ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfTemperature() const
+  {
+    WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName).get();
+    return wo.optionalCast<CurveBiquadratic>().get();
+  }
 
-CurveQuadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const
-{
-  WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName).get();
-  return wo.optionalCast<CurveQuadratic>().get();
-}
+  CurveQuadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const
+  {
+    WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName).get();
+    return wo.optionalCast<CurveQuadratic>().get();
+  }
 
   double ChillerElectricEIR_Impl::minimumPartLoadRatio() const {
     boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::MinimumPartLoadRatio,true);
@@ -340,8 +340,7 @@ CurveQuadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctio
   }
 
   void ChillerElectricEIR_Impl::setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature) {
-    bool result = false;
-    result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceLeavingChilledWaterTemperature, referenceLeavingChilledWaterTemperature);
+    bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceLeavingChilledWaterTemperature, referenceLeavingChilledWaterTemperature);
     OS_ASSERT(result);
   }
 
@@ -351,8 +350,7 @@ CurveQuadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctio
   }
 
   void ChillerElectricEIR_Impl::setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature) {
-    bool result = false;
-    result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceEnteringCondenserFluidTemperature, referenceEnteringCondenserFluidTemperature);
+    bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceEnteringCondenserFluidTemperature, referenceEnteringCondenserFluidTemperature);
     OS_ASSERT(result);
   }
 
@@ -380,8 +378,7 @@ CurveQuadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctio
   }
 
   bool ChillerElectricEIR_Impl::setReferenceChilledWaterFlowRate(double referenceChilledWaterFlowRate) {
-    bool result = false;
-    result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceChilledWaterFlowRate, referenceChilledWaterFlowRate);
+    bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceChilledWaterFlowRate, referenceChilledWaterFlowRate);
     return result;
   }
 
@@ -404,73 +401,72 @@ CurveQuadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctio
   }
 
   bool ChillerElectricEIR_Impl::setReferenceCondenserFluidFlowRate(double referenceCondenserFluidFlowRate) {
-    bool result = false;
-    result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceCondenserFluidFlowRate, referenceCondenserFluidFlowRate);
+    bool result = setDouble(OS_Chiller_Electric_EIRFields::ReferenceCondenserFluidFlowRate, referenceCondenserFluidFlowRate);
     return result;
   }
 
-bool ChillerElectricEIR_Impl::setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic& curve)
-{
-  if(model() != curve.model())
+  bool ChillerElectricEIR_Impl::setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic& curve)
   {
-    return false;
+    if(model() != curve.model())
+    {
+      return false;
+    }
+    return this->setPointer(OS_Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName, curve.handle());
   }
-  return this->setPointer(OS_Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName, curve.handle());
-}
 
-bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic& curve)
-{
-  if(model() != curve.model())
+  bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic& curve)
   {
-    return false;
+    if(model() != curve.model())
+    {
+      return false;
+    }
+    return this->setPointer(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName, curve.handle());
   }
-  return this->setPointer(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName, curve.handle());
-}
 
-bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic& curve)
-{
-  if(model() != curve.model())
+  bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic& curve)
   {
-    return false;
+    if(model() != curve.model())
+    {
+      return false;
+    }
+    return this->setPointer(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName, curve.handle());
   }
-  return this->setPointer(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName, curve.handle());
-}
 
-bool ChillerElectricEIR_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio)
-{
- return setDouble(OS_Chiller_Electric_EIRFields::MinimumPartLoadRatio, minimumPartLoadRatio);
-}
+  bool ChillerElectricEIR_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio)
+  {
+   return setDouble(OS_Chiller_Electric_EIRFields::MinimumPartLoadRatio, minimumPartLoadRatio);
+  }
 
-void ChillerElectricEIR_Impl::resetMinimumPartLoadRatio()
-{
-  bool result = setString(OS_Chiller_Electric_EIRFields::MinimumPartLoadRatio, "");
-  OS_ASSERT(result);
-}
+  void ChillerElectricEIR_Impl::resetMinimumPartLoadRatio()
+  {
+    bool result = setString(OS_Chiller_Electric_EIRFields::MinimumPartLoadRatio, "");
+    OS_ASSERT(result);
+  }
 
-bool ChillerElectricEIR_Impl::setMaximumPartLoadRatio(double maximumPartLoadRatio)
-{
-  return setDouble(OS_Chiller_Electric_EIRFields::MaximumPartLoadRatio, maximumPartLoadRatio);
-}
+  bool ChillerElectricEIR_Impl::setMaximumPartLoadRatio(double maximumPartLoadRatio)
+  {
+    return setDouble(OS_Chiller_Electric_EIRFields::MaximumPartLoadRatio, maximumPartLoadRatio);
+  }
 
   void ChillerElectricEIR_Impl::resetMaximumPartLoadRatio() {
     bool result = setString(OS_Chiller_Electric_EIRFields::MaximumPartLoadRatio, "");
     OS_ASSERT(result);
   }
 
-bool ChillerElectricEIR_Impl::setOptimumPartLoadRatio(double optimumPartLoadRatio)
-{
-  return setDouble(OS_Chiller_Electric_EIRFields::OptimumPartLoadRatio, optimumPartLoadRatio);
-}
+  bool ChillerElectricEIR_Impl::setOptimumPartLoadRatio(double optimumPartLoadRatio)
+  {
+    return setDouble(OS_Chiller_Electric_EIRFields::OptimumPartLoadRatio, optimumPartLoadRatio);
+  }
 
-void ChillerElectricEIR_Impl::resetOptimumPartLoadRatio() {
-  bool result = setString(OS_Chiller_Electric_EIRFields::OptimumPartLoadRatio, "");
-  OS_ASSERT(result);
-}
+  void ChillerElectricEIR_Impl::resetOptimumPartLoadRatio() {
+    bool result = setString(OS_Chiller_Electric_EIRFields::OptimumPartLoadRatio, "");
+    OS_ASSERT(result);
+  }
 
-bool ChillerElectricEIR_Impl::setMinimumUnloadingRatio(double minimumUnloadingRatio)
-{
- return setDouble(OS_Chiller_Electric_EIRFields::MinimumUnloadingRatio, minimumUnloadingRatio);
-}
+  bool ChillerElectricEIR_Impl::setMinimumUnloadingRatio(double minimumUnloadingRatio)
+  {
+   return setDouble(OS_Chiller_Electric_EIRFields::MinimumUnloadingRatio, minimumUnloadingRatio);
+  }
 
   void ChillerElectricEIR_Impl::resetMinimumUnloadingRatio() {
     bool result = setString(OS_Chiller_Electric_EIRFields::MinimumUnloadingRatio, "");
@@ -478,22 +474,19 @@ bool ChillerElectricEIR_Impl::setMinimumUnloadingRatio(double minimumUnloadingRa
   }
 
   void ChillerElectricEIR_Impl::setChilledWaterInletNodeName(std::string chilledWaterInletNodeName) {
-    bool result = false;
-    result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName, chilledWaterInletNodeName);
+    bool result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName, chilledWaterInletNodeName);
     OS_ASSERT(result);
   }
 
   void ChillerElectricEIR_Impl::setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName) {
-    bool result = false;
-    result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterOutletNodeName, chilledWaterOutletNodeName);
+    bool result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterOutletNodeName, chilledWaterOutletNodeName);
     OS_ASSERT(result);
   }
 
   void ChillerElectricEIR_Impl::setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName) {
-    bool result = false;
     if (condenserInletNodeName) {
-    result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName.get());
-    OS_ASSERT(result);
+      bool result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName.get());
+      OS_ASSERT(result);
     }
   }
 
@@ -503,17 +496,15 @@ bool ChillerElectricEIR_Impl::setMinimumUnloadingRatio(double minimumUnloadingRa
   }
 
   void ChillerElectricEIR_Impl::setCondenserInletNodeName(std::string condenserInletNodeName) {
-    bool result = false;
-    result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName);
+    bool result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName);
     OS_ASSERT(result);
   }
 
 
   void ChillerElectricEIR_Impl::setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName) {
-    bool result = false;
     if (condenserOutletNodeName) {
-    result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName.get());
-    OS_ASSERT(result);
+      bool result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName.get());
+      OS_ASSERT(result);
     }
   }
 
@@ -523,46 +514,44 @@ bool ChillerElectricEIR_Impl::setMinimumUnloadingRatio(double minimumUnloadingRa
   }
 
   void ChillerElectricEIR_Impl::setCondenserOutletNodeName(std::string condenserOutletNodeName) {
-    bool result = false;
-    result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName);
+    bool result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName);
     OS_ASSERT(result);
   }
 
 
 
-bool ChillerElectricEIR_Impl::setCondenserType(std::string condenserType)
-{
-  return setString(OS_Chiller_Electric_EIRFields::CondenserType, condenserType);
-}
+  bool ChillerElectricEIR_Impl::setCondenserType(std::string condenserType)
+  {
+    return setString(OS_Chiller_Electric_EIRFields::CondenserType, condenserType);
+  }
 
   void ChillerElectricEIR_Impl::resetCondenserType() {
     bool result = setString(OS_Chiller_Electric_EIRFields::CondenserType, "");
     OS_ASSERT(result);
   }
 
-bool ChillerElectricEIR_Impl::setCondenserFanPowerRatio(double condenserFanPowerRatio)
-{
-  return setDouble(OS_Chiller_Electric_EIRFields::CondenserFanPowerRatio, condenserFanPowerRatio);
-}
+  bool ChillerElectricEIR_Impl::setCondenserFanPowerRatio(double condenserFanPowerRatio)
+  {
+    return setDouble(OS_Chiller_Electric_EIRFields::CondenserFanPowerRatio, condenserFanPowerRatio);
+  }
 
   void ChillerElectricEIR_Impl::resetCondenserFanPowerRatio() {
     bool result = setString(OS_Chiller_Electric_EIRFields::CondenserFanPowerRatio, "");
     OS_ASSERT(result);
   }
 
-bool ChillerElectricEIR_Impl::setCompressorMotorEfficiency(double compressorMotorEfficiency)
-{
-  return setDouble(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, compressorMotorEfficiency);
-}
+  bool ChillerElectricEIR_Impl::setCompressorMotorEfficiency(double compressorMotorEfficiency)
+  {
+    return setDouble(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, compressorMotorEfficiency);
+  }
 
-void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
-  bool result = setString(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, "");
-  OS_ASSERT(result);
-}
+  void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
+    bool result = setString(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, "");
+    OS_ASSERT(result);
+  }
 
   void ChillerElectricEIR_Impl::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
-    bool result = false;
-    result = setDouble(OS_Chiller_Electric_EIRFields::LeavingChilledWaterLowerTemperatureLimit, leavingChilledWaterLowerTemperatureLimit);
+    bool result = setDouble(OS_Chiller_Electric_EIRFields::LeavingChilledWaterLowerTemperatureLimit, leavingChilledWaterLowerTemperatureLimit);
     OS_ASSERT(result);
   }
 
@@ -601,10 +590,9 @@ void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
   }
 
   void ChillerElectricEIR_Impl::setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName) {
-    bool result = false;
     if (heatRecoveryInletNodeName) {
-    result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName.get());
-    OS_ASSERT(result);
+      bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName.get());
+      OS_ASSERT(result);
     }
   }
 
@@ -614,16 +602,14 @@ void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
   }
 
   void ChillerElectricEIR_Impl::setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName) {
-    bool result = false;
-    result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName);
+    bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName);
     OS_ASSERT(result);
   }
 
   void ChillerElectricEIR_Impl::setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName) {
-    bool result = false;
     if (heatRecoveryOutletNodeName) {
-    result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName.get());
-    OS_ASSERT(result);
+      bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName.get());
+      OS_ASSERT(result);
     }
   }
 
@@ -633,8 +619,7 @@ void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
   }
 
   void ChillerElectricEIR_Impl::setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName) {
-    bool result = false;
-    result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName);
+    bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName);
     OS_ASSERT(result);
   }
 

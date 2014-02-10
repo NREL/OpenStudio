@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@
 #include <model/Surface_Impl.hpp>
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
-#include <model/ConstructionBaseStandardsInformation.hpp>
-#include <model/ConstructionBaseStandardsInformation_Impl.hpp>
+#include <model/StandardsInformationConstruction.hpp>
+#include <model/StandardsInformationConstruction_Impl.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
 
@@ -114,9 +114,9 @@ TEST_F(ModelFixture, ModelObject_Clone_DifferentModel) {
   EXPECT_TRUE(anotherNewSurface.construction().get().cast<LayeredConstruction>().layers() == newSurface.construction().get().cast<LayeredConstruction>().layers());
 
   // Change the data in the resource's child
-  ConstructionBaseStandardsInformationVector stdsInfos = newModel.getModelObjects<ConstructionBaseStandardsInformation>();
+  StandardsInformationConstructionVector stdsInfos = newModel.getModelObjects<StandardsInformationConstruction>();
   EXPECT_EQ(1u,stdsInfos.size());
-  stdsInfos[0].setIntendedSurfaceType(ConstructionBaseStandardsInformation::intendedSurfaceTypeValues()[0]);
+  stdsInfos[0].setIntendedSurfaceType(StandardsInformationConstruction::intendedSurfaceTypeValues()[0]);
 
   // Clone into that model again -- everything added, except resource of resource
   anotherNewSurface = surface.clone(newModel).cast<Surface>();

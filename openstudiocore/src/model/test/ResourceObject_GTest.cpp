@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@
 
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
-#include <model/ConstructionBaseStandardsInformation.hpp>
-#include <model/ConstructionBaseStandardsInformation_Impl.hpp>
+#include <model/StandardsInformationConstruction.hpp>
+#include <model/StandardsInformationConstruction_Impl.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
 
@@ -90,8 +90,8 @@ TEST_F(ModelFixture,ResourceObject_Clone) {
   StandardOpaqueMaterial material(original);
   bool ok = construction.setLayers(MaterialVector(1u,material));
   EXPECT_TRUE(ok);
-  EXPECT_EQ(3u,original.numObjects());
-  EXPECT_EQ(1u,construction.numLayers());
+  EXPECT_EQ(3u,original.numObjects()) << original;
+  EXPECT_EQ(1u,construction.numLayers()) << construction;
 
   // clone into original
   Construction newConstruction = construction.clone(original).cast<Construction>();
@@ -99,29 +99,30 @@ TEST_F(ModelFixture,ResourceObject_Clone) {
   EXPECT_FALSE(newConstruction == construction);
   EXPECT_TRUE(newConstruction.model() == construction.model());
   // child cloned
-  EXPECT_EQ(2u,original.getModelObjects<ConstructionBaseStandardsInformation>().size());
+  EXPECT_EQ(2u,original.getModelObjects<StandardsInformationConstruction>().size()) << original;
   EXPECT_FALSE(newConstruction.standardsInformation() == construction.standardsInformation());
+  EXPECT_EQ(2u,original.getModelObjects<StandardsInformationConstruction>().size()) << original;
   // resource not cloned
   EXPECT_EQ(1u,newConstruction.numLayers());
   EXPECT_TRUE(newConstruction.layers() == construction.layers());
-  EXPECT_EQ(5u,original.numObjects());
+  EXPECT_EQ(5u,original.numObjects()) << original;
 
   // clone into new model
   Model newModel;
   newConstruction = construction.clone(newModel).cast<Construction>();
   EXPECT_FALSE(newConstruction.model() == construction.model());
-  EXPECT_EQ(3u,newModel.numObjects());
+  EXPECT_EQ(3u,newModel.numObjects()) << newModel;
   EXPECT_EQ("Material 1",newConstruction.layers()[0].name().get());
   // clone again -- object and child added again, resource reused
   Construction anotherNewConstruction = construction.clone(newModel).cast<Construction>();
   EXPECT_FALSE(anotherNewConstruction == newConstruction);
-  EXPECT_EQ(5u,newModel.numObjects());
+  EXPECT_EQ(5u,newModel.numObjects()) << newModel;
   EXPECT_EQ("Material 1",anotherNewConstruction.layers()[0].name().get());
   // change resource data
   newConstruction.layers()[0].setName("Material with Changed Data");
   // clone again -- all added again
   anotherNewConstruction = construction.clone(newModel).cast<Construction>();
-  EXPECT_EQ(8u,newModel.numObjects());
+  EXPECT_EQ(8u,newModel.numObjects()) << newModel;
   EXPECT_EQ("Material with Changed Data",newConstruction.layers()[0].name().get());
   EXPECT_EQ("Material 1",anotherNewConstruction.layers()[0].name().get());
 }

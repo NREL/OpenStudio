@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -73,6 +73,9 @@ class MODEL_API RunPeriodControlSpecialDays : public ModelObject {
   bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
   bool setDuration(unsigned duration);
   bool setSpecialDayType(const std::string& specialDayType);
+
+  // ensure that this object does not contain the date 2/29
+  void ensureNoLeapDays();
 
   //@}
 

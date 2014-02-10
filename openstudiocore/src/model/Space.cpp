@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -418,8 +418,7 @@ namespace detail {
   }
 
   void Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    bool result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -429,8 +428,7 @@ namespace detail {
   }
 
   void Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -440,8 +438,7 @@ namespace detail {
   }
 
   void Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -451,8 +448,7 @@ namespace detail {
   }
 
   void Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -1910,6 +1906,136 @@ namespace detail {
     return true;
   }
 
+  double Space_Impl::infiltrationDesignFlowRate() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getDesignFlowRate(floorArea,
+                                       exteriorSurfaceArea,
+                                       exteriorWallArea,
+                                       airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getDesignFlowRate(floorArea,
+                                         exteriorSurfaceArea,
+                                         exteriorWallArea,
+                                         airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignFlowPerSpaceFloorArea() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getFlowPerSpaceFloorArea(floorArea,
+                                              exteriorSurfaceArea,
+                                              exteriorWallArea,
+                                              airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getFlowPerSpaceFloorArea(floorArea,
+                                                exteriorSurfaceArea,
+                                                exteriorWallArea,
+                                                airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getFlowPerExteriorSurfaceArea(floorArea,
+                                                   exteriorSurfaceArea,
+                                                   exteriorWallArea,
+                                                   airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getFlowPerExteriorSurfaceArea(floorArea,
+                                                     exteriorSurfaceArea,
+                                                     exteriorWallArea,
+                                                     airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignFlowPerExteriorWallArea() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getFlowPerExteriorWallArea(floorArea,
+                                                exteriorSurfaceArea,
+                                                exteriorWallArea,
+                                                airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getFlowPerExteriorWallArea(floorArea,
+                                                  exteriorSurfaceArea,
+                                                  exteriorWallArea,
+                                                  airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignAirChangesPerHour() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getAirChangesPerHour(floorArea,
+                                          exteriorSurfaceArea,
+                                          exteriorWallArea,
+                                          airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getAirChangesPerHour(floorArea,
+                                            exteriorSurfaceArea,
+                                            exteriorWallArea,
+                                            airVolume);
+      }
+    }
+
+    return result;
+  }
+
   void Space_Impl::hardApplySpaceType(bool hardSizeLoads)
   {
     Model model = this->model();
@@ -3144,6 +3270,26 @@ bool Space::setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson,
                                    const GasEquipment& templateGasEquipment)
 {
   return getImpl<detail::Space_Impl>()->setGasEquipmentPowerPerPerson(gasEquipmentPowerPerPerson,templateGasEquipment);
+}
+
+double Space::infiltrationDesignFlowRate() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowRate();
+}
+
+double Space::infiltrationDesignFlowPerSpaceFloorArea() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
+}
+
+double Space::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowPerExteriorSurfaceArea();
+}
+
+double Space::infiltrationDesignFlowPerExteriorWallArea() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowPerExteriorWallArea();
+}
+
+double Space::infiltrationDesignAirChangesPerHour() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignAirChangesPerHour();
 }
 
 void Space::hardApplySpaceType(bool hardSizeLoads){

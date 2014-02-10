@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -144,38 +144,32 @@ namespace detail {
   }
 
   void CurveCubic_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_CubicFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_CubicFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setCoefficient2x(double coefficient2x) {
-    bool result = false;
-    result = setDouble(OS_Curve_CubicFields::Coefficient2x, coefficient2x);
+    bool result = setDouble(OS_Curve_CubicFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
-    bool result = false;
-    result = setDouble(OS_Curve_CubicFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    bool result = setDouble(OS_Curve_CubicFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
-    bool result = false;
-    result = setDouble(OS_Curve_CubicFields::Coefficient4x_POW_3, coefficient4xPOW3);
+    bool result = setDouble(OS_Curve_CubicFields::Coefficient4x_POW_3, coefficient4xPOW3);
     OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_CubicFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_CubicFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveCubic_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_CubicFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_CubicFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
@@ -210,8 +204,7 @@ namespace detail {
   }
 
   bool CurveCubic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_CubicFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_CubicFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -221,8 +214,7 @@ namespace detail {
   }
 
   bool CurveCubic_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_CubicFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_CubicFields::OutputUnitType, outputUnitType);
     return result;
   }
 

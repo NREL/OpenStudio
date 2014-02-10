@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -68,7 +68,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRej
 	EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature )
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature)
 {    
 	Model m; 
 	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
@@ -83,7 +83,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature
 	EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedSubcoolingTemperatureDifference )
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedSubcoolingTemperatureDifference)
 {    
 	Model m; 
 	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
@@ -132,6 +132,21 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_Connections)
 	EXPECT_EQ( outletNode.handle(), refrigerationCondenserWaterCooled.outletModelObject()->handle() );
 }
 
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_PlantLoopAddDemandBranchForComponent)
+{
+	Model m; 
+	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
+
+	PlantLoop plantLoop = PlantLoop(m);
+	EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
+
+	EXPECT_TRUE(plantLoop.addDemandBranchForComponent(refrigerationCondenserWaterCooled));
+
+	EXPECT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
+
+	ASSERT_TRUE( refrigerationCondenserWaterCooled.inletModelObject() );
+	ASSERT_TRUE( refrigerationCondenserWaterCooled.outletModelObject() );
+}
 
 
 TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterCooledLoopFlowType)
@@ -214,7 +229,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMaximumWaterOutletTem
 }
 
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemperature )
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemperature)
 {    
 	Model m; 
 	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);

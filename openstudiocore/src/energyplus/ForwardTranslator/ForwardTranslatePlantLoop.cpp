@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
 
     for( std::vector<ModelObject>::iterator it = modelObjects.begin();
          it < modelObjects.end();
-         it++ )
+         ++it )
     {
       boost::optional<Node> inletNode;
       boost::optional<Node> outletNode;
@@ -342,9 +342,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   // Operation Scheme
 
-  std::vector<ModelObject> supplyComponents;
-  supplyComponents = plantLoop.supplyComponents();
-
   IdfObject _operationScheme(IddObjectType::PlantEquipmentOperationSchemes);
   m_idfObjects.push_back(_operationScheme);
   _operationScheme.setName(plantLoop.name().get() + " Operation Scheme List");
@@ -352,14 +349,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   
   idfObject.setString(PlantLoopFields::PlantEquipmentOperationSchemeName,_operationScheme.name().get());
 
-  supplyComponents = plantLoop.supplyComponents();
+  std::vector<ModelObject> supplyComponents = plantLoop.supplyComponents();
   std::vector<ModelObject> heatingComponents;
   std::vector<ModelObject> coolingComponents;
   std::vector<ModelObject> condenserComponents;
 
   for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
        it < supplyComponents.end();
-       it++ )
+       ++it )
   {
     switch(it->iddObject().type().value())
     {
@@ -557,7 +554,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   for( std::vector<ModelObject>::iterator it = supplyInletModelObjects.begin();
         it < supplyInletModelObjects.end();
-        it++ )
+        ++it )
   {
     //nodes don't go onto branches, but still need to be translated and mapped
     //because doing so translates their setpoint managers
@@ -607,7 +604,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   unsigned i = 0;
   for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin();
        it1 < splitterOutletObjects.end();
-       it1++ )
+       ++it1 )
   {
     i++;
 
@@ -637,7 +634,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     for( std::vector<ModelObject>::iterator it = allComponents.begin();
           it < allComponents.end();
-          it++ )
+          ++it )
     {
       //nodes don't go onto branches, but still need to be translated and mapped
       //because doing so translates their setpoint managers
@@ -678,7 +675,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
     }
 
-    it2++;
+    ++it2;
   }
 
   // Populate supply outlet branch
@@ -704,7 +701,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   for( std::vector<ModelObject>::iterator it = supplyOutletModelObjects.begin();
          it < supplyOutletModelObjects.end();
-         it++ )
+         ++it )
   {
     //nodes don't go onto branches, but still need to be translated and mapped
     //because doing so translates their setpoint managers
@@ -812,7 +809,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   for( std::vector<ModelObject>::iterator it = demandInletModelObjects.begin();
          it < demandInletModelObjects.end();
-         it++ )
+         ++it )
   {
     //nodes don't go onto branches, but still need to be translated and mapped
     //because doing so translates their setpoint managers
@@ -862,7 +859,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   i = 0;
   for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin();
        it1 < splitterOutletObjects.end();
-       it1++ )
+       ++it1 )
   {
     i++;
 
@@ -892,7 +889,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
     for( std::vector<ModelObject>::iterator allCompIt = allComponents.begin();
          allCompIt < allComponents.end();
-         allCompIt++ )
+         ++allCompIt )
     {
       //nodes don't go onto branches, but still need to be translated and mapped
       //because doing so translates their setpoint managers
@@ -933,7 +930,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
     }
 
-    it2++;
+    ++it2;
   }
 
   // Install a bypass branch with a pipe
@@ -995,7 +992,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   for( std::vector<ModelObject>::iterator it = demandOutletModelObjects.begin();
          it < demandOutletModelObjects.end();
-         it++ )
+         ++it )
   {
     //nodes don't go onto branches, but still need to be translated and mapped
     //because doing so translates their setpoint managers
@@ -1042,7 +1039,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     for( std::vector<ModelObject>::iterator it = heatingComponents.begin();
          it < heatingComponents.end();
-         it++ )
+         ++it )
     {
       boost::optional<IdfObject> _idfObject = translateAndMapModelObject(*it);
 
@@ -1059,7 +1056,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     for( std::vector<ModelObject>::iterator it = coolingComponents.begin();
          it < coolingComponents.end();
-         it++ )
+         ++it )
     {
       boost::optional<IdfObject> _idfObject = translateAndMapModelObject(*it);
 

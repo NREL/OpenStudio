@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -76,7 +76,7 @@ RefrigerationSystemGridView::~RefrigerationSystemGridView()
   QList<QGraphicsItem *> itemList = childItems();
   for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
        it < itemList.end(); 
-       it++ )
+       ++it )
   {
     delete *it;
   }
@@ -126,7 +126,7 @@ void RefrigerationSystemGridView::refreshAllItemViews()
   QList<QGraphicsItem *> itemList = childItems();
   for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
        it < itemList.end(); 
-       it++ )
+       ++it )
   {
     delete *it;
   }
@@ -677,11 +677,10 @@ int RefrigerationSystemView::rightXPos() const
 RefrigerationCasesView::RefrigerationCasesView()
   : QGraphicsObject(),
     m_numberOfDisplayCases(0),
-    m_numberOfWalkinCases(0)
+    m_numberOfWalkinCases(0),
+    m_displayCasesPixmap(QPixmap(":/images/display_case.png").scaled(displayCasesRect().height(),displayCasesRect().height())),
+    m_walkinPixmap(QPixmap(":/images/walkin_case.png").scaled(displayCasesRect().height(),displayCasesRect().height()))
 {
-  m_displayCasesPixmap = QPixmap(":/images/display_case.png").scaled(displayCasesRect().height(),displayCasesRect().height());
-  m_walkinPixmap = QPixmap(":/images/walkin_case.png").scaled(displayCasesRect().height(),displayCasesRect().height());
-
   refrigerationCasesDropZoneView = new RefrigerationCasesDropZoneView();
 
   refrigerationCasesDropZoneView->setParentItem(this);
@@ -723,7 +722,7 @@ void RefrigerationCasesView::setExpanded(bool exapanded)
 
   for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
        it != m_caseDetailViews.end();
-       it++ )
+       ++it )
   {
     if( m_expanded )
     {
@@ -887,7 +886,7 @@ void RefrigerationCasesView::adjustLayout()
 
   for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
        it != m_caseDetailViews.end();
-       it++ )
+       ++it )
   {
     (*it)->setPos(casePos(i));
 
@@ -913,10 +912,9 @@ QPointF RefrigerationCasesView::casePos(int index) const
 }
 
 RefrigerationCaseDetailView::RefrigerationCaseDetailView()
+  : m_displayCasesPixmap(QPixmap(":/images/display_case.png").scaled(iconRect().width(),iconRect().height())),
+    m_walkinPixmap(QPixmap(":/images/walkin_case.png").scaled(iconRect().width(),iconRect().height()))
 {
-  m_displayCasesPixmap = QPixmap(":/images/display_case.png").scaled(iconRect().width(),iconRect().height());
-  m_walkinPixmap = QPixmap(":/images/walkin_case.png").scaled(iconRect().width(),iconRect().height());
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1014,9 +1012,8 @@ void RefrigerationCaseDetailView::paint( QPainter *painter,
 }
 
 RefrigerationCondenserView::RefrigerationCondenserView()
+  : m_pixmap(QPixmap(":/images/condensor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight))
 {
-  m_pixmap = QPixmap(":/images/condensor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1121,9 +1118,8 @@ QSizeF RefrigerationCondenserView::size()
 }
 
 RefrigerationCompressorDetailView::RefrigerationCompressorDetailView()
+  : m_pixmap(QPixmap(":/images/compressor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight))
 {
-  m_pixmap = QPixmap(":/images/compressor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1271,7 +1267,7 @@ void RefrigerationCompressorView::adjustLayout()
 
   for( std::vector<QGraphicsObject *>::iterator it = m_compressorDetailViews.begin();
        it != m_compressorDetailViews.end();
-       it++ )
+       ++it )
   {
     (*it)->setPos(x,y);
 
@@ -1335,10 +1331,9 @@ void RefrigerationCasesDropZoneView::paint( QPainter *painter,
 }
 
 RefrigerationSubCoolerView::RefrigerationSubCoolerView()
+  : m_pixmap(QPixmap(":/images/mechanical-sub-cooler.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
+                                                                  RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin))
 {
-  m_pixmap = QPixmap(":/images/mechanical-sub-cooler.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
-                                                                  RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin);
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1487,10 +1482,9 @@ void RefrigerationSHXView::paint( QPainter *painter,
 }
 
 RefrigerationSHXView::RefrigerationSHXView()
+  : m_pixmap(QPixmap(":/images/slhx.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
+                                                 RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin))
 {
-  m_pixmap = QPixmap(":/images/slhx.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
-                                                 RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin);
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1680,9 +1674,9 @@ void RefrigerationSystemDetailView::paint( QPainter *painter,
 }
 
 CaseViewExpandButton::CaseViewExpandButton()
+  : m_closeImage(QPixmap(":/images/contextual_arrow_up.png")),
+    m_openImage(QPixmap(":/images/contextual_arrow.png"))
 {
-  m_closeImage = QPixmap(":/images/contextual_arrow_up.png");
-  m_openImage = QPixmap(":/images/contextual_arrow.png");
 }
 
 QSize CaseViewExpandButton::size()

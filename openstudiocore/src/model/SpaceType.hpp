@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -78,6 +78,24 @@ class MODEL_API SpaceType : public ResourceObject {
   /// Returns the rendering color.
   boost::optional<RenderingColor> renderingColor() const;
 
+  /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  boost::optional<std::string> standardsBuildingType() const;
+
+  /// If standardsBuildingType is empty, returns a list of suggestions.  If standardsBuildingType is not empty,
+  /// returns standardsBuildingType.
+  std::vector<std::string> suggestedStandardsBuildingTypes() const;
+
+  /// Returns the standards space type. This is a freeform field used to identify the space type for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  boost::optional<std::string> standardsSpaceType() const;
+
+  /// If standardsSpaceType is empty, returns a list of suggestions based on standardsBuildingType.  If standardsSpaceType is not empty,
+  /// returns standardsSpaceType.
+  std::vector<std::string> suggestedStandardsSpaceTypes() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -99,6 +117,18 @@ class MODEL_API SpaceType : public ResourceObject {
 
   /// Resets the rendering color.
   void resetRenderingColor();
+
+  /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  bool setStandardsBuildingType(const std::string& standardsBuildingType);
+  void resetStandardsBuildingType();
+
+  /// Sets the standards space type. This is a freeform field used to identify the space type for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  bool setStandardsSpaceType(const std::string& standardsSpaceType);
+  void resetStandardsSpaceType();
 
   //@}
   /** @name Other */

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -168,8 +168,8 @@ namespace detail {
       errors.addError(ErrorType::Warning, itr->logMessage());
     }
 
-    for (std::vector<openstudio::LogMessage>::const_iterator itr = logwarnings.begin();
-        itr != logwarnings.end();
+    for (std::vector<openstudio::LogMessage>::const_iterator itr = logerrors.begin();
+        itr != logerrors.end();
         ++itr)
     {
       errors.addError(ErrorType::Error, itr->logMessage());

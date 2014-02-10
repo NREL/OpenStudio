@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -40,12 +40,9 @@ void TableWidget::populateTable(const openstudio::WorkspaceObject& obj)
   setCurrentCell(0,0);
   setRowCount(1);
 
-  QTableWidgetItem * newItem = NULL; 
-  bool defaultText;
-
   openstudio::IddObject iddObj = obj.iddObject();
   for(unsigned i=0; i<obj.numFields(); ++i){
-    defaultText = false;
+    bool defaultText = false;
     OptionalString val = obj.getString(i);
     if(!val){
       defaultText = true;
@@ -56,7 +53,7 @@ void TableWidget::populateTable(const openstudio::WorkspaceObject& obj)
       }
     }
     // setItem causes QTableWIdget to take ownership of newItem
-    newItem = new QTableWidgetItem((*val).c_str());
+    QTableWidgetItem * newItem = new QTableWidgetItem((*val).c_str());
     if(defaultText){
       newItem->setTextColor(Qt::gray);
     }

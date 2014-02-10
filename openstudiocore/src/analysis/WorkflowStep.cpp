@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -26,8 +26,10 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 
-#include <utilities/core/Assert.hpp>
 #include <runmanager/lib/JSON.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
+
+#include <utilities/core/Assert.hpp>
 
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -244,15 +246,21 @@ namespace detail {
     }
     else {
       // WorkItem -- Try to update files.
-      BOOST_FOREACH(runmanager::FileInfo& info,m_workItem->files.files()) {
-        // update fullPath
-        openstudio::path temp = relocatePath(info.fullPath,originalBase,newBase);
-        if (!temp.empty()) {
-          info.fullPath = temp;
-        }
+      if (workItemType() == runmanager::JobType::UserScript) {
+        runmanager::RubyJobBuilder rjb(*m_workItem,originalBase,newBase);
+        m_workItem = rjb.toWorkItem();
+      }
+      else {
+        BOOST_FOREACH(runmanager::FileInfo& info,m_workItem->files.files()) {
+          // update fullPath
+          openstudio::path temp = relocatePath(info.fullPath,originalBase,newBase);
+          if (!temp.empty()) {
+            info.fullPath = temp;
+          }
 
-        // update requiredFiles
-        // ETH@20130815 -- Skip for now. I think these are usually not absolute paths ...
+          // update requiredFiles
+          // ETH@20130815 -- Skip for now. I think these are usually not absolute paths ...
+        }
       }
     }
   }

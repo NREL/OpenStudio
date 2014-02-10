@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -33,6 +33,10 @@
 #include <model/LightsDefinition_Impl.hpp>
 
 #include <utilities/idd/IddEnums.hxx>
+
+#include <utilities/core/Finder.hpp>
+
+#include <utilities/units/QuantityConverter.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -172,6 +176,7 @@ class TestModelUserScript2 : public ModelUserScript {
   {
     ModelUserScript::run(model,runner,user_arguments); // initializes runner
 
+    // calls runner.registerAttribute for 'lights_definition' and 'multiplier'
     if (!runner.validateUserArguments(arguments(model),user_arguments)) {
       return false;
     }
@@ -194,6 +199,8 @@ class TestModelUserScript2 : public ModelUserScript {
       runner.registerError(ss.str());
       return false;
     }
+    // save name of lights definition
+    runner.registerValue("lights_definition_name",lightsDef->name().get());
 
     if (!(lightsDef->designLevelCalculationMethod() == "Watts/Area")) {
       std::stringstream ss;
@@ -219,13 +226,30 @@ class TestModelUserScript2 : public ModelUserScript {
 
     lightsDef->setWattsperSpaceFloorArea(newValue);
 
+    // register effects of this measure
+
+    // human-readable
     std::stringstream ss;
     ss << "The lighting power density of " << lightsDef->briefDescription();
-    ss << " was " << originalValue << ".";
+    ss << ", which is used by " << lightsDef->quantity() << " instances covering ";
+    ss << lightsDef->floorArea() << " m^2 of floor area, was " << originalValue << ".";
     runner.registerInitialCondition(ss.str()); ss.str("");
     ss << "The lighting power density of " << lightsDef->briefDescription();
     ss << " has been changed to " << newValue << ".";
     runner.registerFinalCondition(ss.str()); ss.str("");
+
+    // machine-readable
+    runner.registerValue("lpd_in","Input Lighting Power Density",originalValue,"W/m^2");
+    runner.registerValue("lpd_out","Output Lighting Power Density",newValue,"W/m^2");
+    runner.registerValue("lights_definition_num_instances",lightsDef->quantity());
+    runner.registerValue("lights_definition_floor_area",
+                         "Floor Area using this Lights Definition (SI)",
+                         lightsDef->floorArea(),
+                         "m^2");
+    runner.registerValue("lights_definition_floor_area_ip",
+                         "Floor Area using this Lights Definition (IP)",
+                         convert(lightsDef->floorArea(),"m^2","ft^2").get(),
+                         "ft^2");
 
     return true;
   }
@@ -253,6 +277,7 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(0u,result.info().size());
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
+  EXPECT_TRUE(result.attributes().empty());
   result.save(fileDir / toPath("TestModelUserScript2_1.ossr"),true);
 
   // call with required argument, but no lights definitions in model
@@ -273,7 +298,10 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(0u,result.info().size());
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
+  EXPECT_EQ(2u,result.attributes().size()); // registers argument values
   result.save(fileDir / toPath("TestModelUserScript2_2.ossr"),true);
+  // save attributes json for inspection
+  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_2.json"),true);
 
   // call properly using default multiplier, but lights definition not Watts/Area
   lightsDef = LightsDefinition(model);
@@ -292,7 +320,10 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(1u,result.info().size()); // Measure not applicable as called
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
+  EXPECT_EQ(3u,result.attributes().size()); // Registers lights definition name, then fails
   result.save(fileDir / toPath("TestModelUserScript2_3.ossr"),true);
+  // save attributes json for inspection
+  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_3.json"),true);
 
   // call properly using default multiplier
   lightsDef.setWattsperSpaceFloorArea(10.0);
@@ -305,8 +336,11 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(0u,result.info().size());
   EXPECT_TRUE(result.initialCondition()); // describes original state
   EXPECT_TRUE(result.finalCondition());   // describes changes
+  EXPECT_EQ(8u,result.attributes().size());
   result.save(fileDir / toPath("TestModelUserScript2_4.ossr"),true);
   EXPECT_DOUBLE_EQ(8.0,lightsDef.wattsperSpaceFloorArea().get());
+  // save attributes json for inspection
+  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_4.json"),true);
 
   // call properly using different multiplier
   arg = definitions[1];
@@ -321,8 +355,11 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(0u,result.info().size());
   EXPECT_TRUE(result.initialCondition()); // describes original state
   EXPECT_TRUE(result.finalCondition());   // describes changes
+  EXPECT_EQ(8u,result.attributes().size());
   result.save(fileDir / toPath("TestModelUserScript2_5.ossr"),true);
   EXPECT_DOUBLE_EQ(4.0,lightsDef.wattsperSpaceFloorArea().get());
+  // save attributes json for inspection
+  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_5.json"),true);
 
   // check that can load ossrs
   OptionalOSResult temp = OSResult::load(fileDir / toPath("TestModelUserScript2_1.ossr"));
@@ -374,4 +411,159 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
   EXPECT_EQ(0u,result.info().size());
   EXPECT_TRUE(result.initialCondition()); // describes original state
   EXPECT_TRUE(result.finalCondition());   // describes changes
+
+  // check that can load attribute jsons
+  std::vector<Attribute> loadedAttributes;
+  NameFinder<Attribute> lightsDefinitionFinder("lights_definition",true);
+  NameFinder<Attribute> multiplierFinder("multiplier",true);
+  NameFinder<Attribute> lightsDefinitionNameFinder("lights_definition_name",true);
+  NameFinder<Attribute> lpdInFinder("lpd_in",true);
+  NameFinder<Attribute> lpdOutFinder("lpd_out",true);
+  NameFinder<Attribute> lightsDefinitionNumInstancesFinder("lights_definition_num_instances",true);
+  NameFinder<Attribute> lightsDefinitionFloorAreaFinder("lights_definition_floor_area",true);
+  NameFinder<Attribute> lightsDefinitionFloorAreaIPFinder("lights_definition_floor_area_ip",true);
+  AttributeVector::const_iterator it;
+
+  // lights definition not in model - load attributes
+  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_2.json"));
+  EXPECT_EQ(2u,loadedAttributes.size());
+  // lights_definition
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+  // multiplier
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(0.8,it->valueAsDouble());
+  EXPECT_FALSE(it->units());
+
+  // run with bad lights definition type - load attributes
+  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_3.json"));
+  EXPECT_EQ(3u,loadedAttributes.size());
+  // lights_definition
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+  // multiplier
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(0.8,it->valueAsDouble());
+  EXPECT_FALSE(it->units());
+  // lights_definition_name
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNameFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+
+  // good run, default multiplier
+  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_4.json"));
+  EXPECT_EQ(8u,loadedAttributes.size());
+  // lights_definition
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+  // multiplier
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(0.8,it->valueAsDouble());
+  EXPECT_FALSE(it->units());
+  // lights_definition_name
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNameFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+  // lpd_in
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdInFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(10.0,it->valueAsDouble());
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("W/m^2",it->units().get());
+  // -- unit conversion example --
+  OptionalDouble ipValue = convert(it->valueAsDouble(),it->units().get(),"W/ft^2");
+  ASSERT_TRUE(ipValue);
+  EXPECT_DOUBLE_EQ(0.9290304,*ipValue);
+  // lpd_out
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdOutFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(8.0,it->valueAsDouble());
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("W/m^2",it->units().get());
+  // lights_definition_num_instances
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Integer);
+  // lights_definition_floor_area
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("m^2",it->units().get());
+  // lights_definition_floor_area_ip
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaIPFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("ft^2",it->units().get());
+
+  // good run, different multiplier
+  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_5.json"));
+  EXPECT_EQ(8u,loadedAttributes.size());
+  // lights_definition
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+  // multiplier
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(0.5,it->valueAsDouble());
+  EXPECT_FALSE(it->units());
+  // lights_definition_name
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNameFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
+  EXPECT_FALSE(it->valueAsString().empty());
+  // lpd_in
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdInFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(8.0,it->valueAsDouble()); // uses previous example _out as _in
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("W/m^2",it->units().get());
+  // -- unit conversion example --
+  ipValue = convert(it->valueAsDouble(),it->units().get(),"W/ft^2");
+  ASSERT_TRUE(ipValue);
+  EXPECT_DOUBLE_EQ(0.74322432,*ipValue);
+  // lpd_out
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdOutFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  EXPECT_DOUBLE_EQ(4.0,it->valueAsDouble());
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("W/m^2",it->units().get());
+  // lights_definition_num_instances
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Integer);
+  // lights_definition_floor_area
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("m^2",it->units().get());
+  // lights_definition_floor_area_ip
+  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaIPFinder);
+  ASSERT_FALSE(it == loadedAttributes.end());
+  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
+  ASSERT_TRUE(it->units());
+  EXPECT_EQ("ft^2",it->units().get());
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -40,11 +40,10 @@ ModelSubTabController::ModelSubTabController(ModelSubTabView* subTabView, const 
   : SubTabController(subTabView),
     m_model(model)
 {
-  bool isConnected = false;
-  isConnected = connect(subTabView,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
-                        this,
-                        SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
+  bool isConnected = connect(subTabView,
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
+                             this,
+                             SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
   OS_ASSERT(isConnected);
 }
 

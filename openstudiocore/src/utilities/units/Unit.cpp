@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -327,6 +327,13 @@ namespace detail {
     m_prettyString = str;
   }
 
+  std::string Unit_Impl::print(bool withScale) const {
+    if (prettyString(false) != "") {
+      return prettyString(withScale);
+    }
+    return standardString(withScale);
+  }
+
   UnitSystem Unit_Impl::system() const {
     return m_system;
   }
@@ -589,6 +596,10 @@ void Unit::setPrettyString(const std::string& str) {
   getImpl<detail::Unit_Impl>()->setPrettyString(str);
 }
 
+std::string Unit::print(bool withScale) const {
+  return getImpl<detail::Unit_Impl>()->print(withScale);
+}
+
 UnitSystem Unit::system() const {
   return getImpl<detail::Unit_Impl>()->system();
 }
@@ -619,12 +630,7 @@ Unit::Unit(boost::shared_ptr<detail::Unit_Impl> impl)
 /// @endcond
 
 std::ostream& operator<<(std::ostream& os, const Unit& u) {
-  if (u.prettyString(false) != "") {
-    os << u.prettyString();
-  }
-  else {
-    os << u.standardString();
-  }
+  os << u.print();
   return os;
 }
 

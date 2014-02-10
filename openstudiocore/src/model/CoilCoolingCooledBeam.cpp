@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ namespace detail {
                                                          bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilCoolingCooledBeam::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilCoolingCooledBeam::iddObjectType());
   }
 
   CoilCoolingCooledBeam_Impl::CoilCoolingCooledBeam_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -54,7 +54,7 @@ namespace detail {
                                                          bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilCoolingCooledBeam::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilCoolingCooledBeam::iddObjectType());
   }
 
   CoilCoolingCooledBeam_Impl::CoilCoolingCooledBeam_Impl(const CoilCoolingCooledBeam_Impl& other,
@@ -101,7 +101,7 @@ namespace detail {
 
     for( std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam>::iterator it = airTerminalSingleDuctConstantVolumeCooledBeam.begin();
     it < airTerminalSingleDuctConstantVolumeCooledBeam.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it-> coilCoolingCooledBeam() )
       {
@@ -117,7 +117,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::coilSurfaceAreaperCoilLength() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::CoilSurfaceAreaperCoilLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -129,7 +129,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::modelParametera() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::ModelParametera,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -141,7 +141,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::modelParametern1() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::ModelParametern1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -153,7 +153,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::modelParametern2() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::ModelParametern2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -165,7 +165,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::modelParametern3() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::ModelParametern3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -177,7 +177,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::modelParametera0() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::ModelParametera0,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -189,7 +189,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::modelParameterK1() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::ModelParameterK1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -201,7 +201,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::modelParametern() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::ModelParametern,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -213,7 +213,7 @@ namespace detail {
   double CoilCoolingCooledBeam_Impl::leavingPipeInsideDiameter() const 
   {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_CooledBeamFields::LeavingPipeInsideDiameter,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -231,7 +231,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetCoilSurfaceAreaperCoilLength() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::CoilSurfaceAreaperCoilLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setModelParametera(double modelParametera) 
@@ -243,7 +243,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetModelParametera() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::ModelParametera, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setModelParametern1(double modelParametern1) 
@@ -254,7 +254,7 @@ namespace detail {
 
   void CoilCoolingCooledBeam_Impl::resetModelParametern1() {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::ModelParametern1, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setModelParametern2(double modelParametern2) 
@@ -266,7 +266,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetModelParametern2() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::ModelParametern2, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setModelParametern3(double modelParametern3) 
@@ -278,7 +278,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetModelParametern3() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::ModelParametern3, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setModelParametera0(double modelParametera0) 
@@ -290,7 +290,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetModelParametera0() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::ModelParametera0, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setModelParameterK1(double modelParameterK1) 
@@ -302,7 +302,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetModelParameterK1() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::ModelParameterK1, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setModelParametern(double modelParametern) 
@@ -314,7 +314,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetModelParametern() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::ModelParametern, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilCoolingCooledBeam_Impl::setLeavingPipeInsideDiameter(double leavingPipeInsideDiameter) 
@@ -326,7 +326,7 @@ namespace detail {
   void CoilCoolingCooledBeam_Impl::resetLeavingPipeInsideDiameter() 
   {
     bool result = setString(OS_Coil_Cooling_CooledBeamFields::LeavingPipeInsideDiameter, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
     
 } // detail
@@ -334,7 +334,7 @@ namespace detail {
 CoilCoolingCooledBeam::CoilCoolingCooledBeam(const Model& model)
   : StraightComponent(CoilCoolingCooledBeam::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilCoolingCooledBeam_Impl>());
+  OS_ASSERT(getImpl<detail::CoilCoolingCooledBeam_Impl>());
 }
 
 

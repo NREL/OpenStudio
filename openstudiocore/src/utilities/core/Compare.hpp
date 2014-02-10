@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -39,6 +39,23 @@ class WorkspaceObject;
 /** Test equality between two strings without regard to case. */
 inline UTILITIES_API bool istringEqual(const std::string& x, const std::string& y){
   return boost::iequals(x, y);
+};
+
+/** Small functor object for case insensitive std::string equality. */
+struct UTILITIES_API IstringEqual{
+  bool operator()(const std::string& x, const std::string& y) const{
+    return boost::iequals(x, y);;
+  };
+};
+
+/** Small functor object for case insensitive std::string equality. */
+struct UTILITIES_API IstringFind{
+  IstringFind();
+  IstringFind(const std::string& target);
+  void addTarget(const std::string& target);
+  bool operator()(const std::string& other) const;
+private:
+  std::vector<std::string> m_targets;
 };
 
 /** Compare two strings without regard to case. */

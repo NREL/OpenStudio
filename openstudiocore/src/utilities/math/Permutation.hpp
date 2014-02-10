@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ namespace openstudio {
 template<class T> 
 std::vector<unsigned> permutation(const T& original,const T& newOrder) {
 
-  BOOST_ASSERT(original.size() == newOrder.size());
+  OS_ASSERT(original.size() == newOrder.size());
 
   std::vector<unsigned> result(original.size());
   std::vector<bool> usedAsJ(newOrder.size(),false);
@@ -57,7 +57,7 @@ std::vector<unsigned> permutation(const T& original,const T& newOrder) {
  *  from .size(). */
 template<class T>
 T permute(const T& original,const std::vector<unsigned>& order) {
-  BOOST_ASSERT(original.size() == order.size());
+  OS_ASSERT(original.size() == order.size());
   T result(original.size());
   for (unsigned i = 0; i < original.size(); ++i) {
     result[order[i]] = original[i];
