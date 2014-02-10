@@ -443,9 +443,9 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
     }else if(field == AVAILABILITYSCHEDULE){
       //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == THERMALZONE){
-      //addDropZoneColumn(QString(THERMALZONE), // TODO won't compile
-      //                  &model::RefrigerationCase::thermalZone,
-      //                  model::RefrigerationCase::setThermalZone);
+      //addDropZoneColumn<model::RefrigerationCase>(QString(THERMALZONE), // TODO won't compile
+      //  &model::RefrigerationCase::thermalZone,
+      //  &model::RefrigerationCase::setThermalZone);
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
     }else{
