@@ -409,9 +409,9 @@ void GridLayoutItem::removePair(QObject * object)
 
     if( it2 != m_itemViewGridPosPairs.end() )
     {
-      m_itemViewGridPosPairs.erase(it2);
-
       pos = it2->second;
+
+      m_itemViewGridPosPairs.erase(it2);
 
       std::map<std::pair<int,int>,QObject *>::iterator it3 = m_gridPosItemViewPairs.find(pos);
 
