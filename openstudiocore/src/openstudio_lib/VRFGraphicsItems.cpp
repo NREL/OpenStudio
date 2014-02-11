@@ -341,8 +341,17 @@ void VRFThermalZoneDropZoneView::paint( QPainter *painter,
     font.setPointSize(25);
     painter->setFont(font);
     painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
-	QRectF t_rec = boundingRect();
-	painter->drawText(QRectF(5,5,t_rec.width() - 10,t_rec.height() - 10),Qt::AlignLeft | Qt::AlignVCenter,m_text);
+    QRectF t_rec = boundingRect();
+    QFontMetrics m(font);
+    QRectF t_textRec = m.boundingRect(m_text);
+    if( t_textRec.width() > (t_rec.width() - 10) )
+    {
+      painter->drawText(QRectF(5,5,t_rec.width() - 10,t_rec.height() - 10),Qt::AlignLeft | Qt::AlignVCenter,m_text);
+    }
+    else
+    {
+      painter->drawText(QRectF(5,5,t_rec.width() - 10,t_rec.height() - 10),Qt::AlignCenter,m_text);
+    }
   }
   else
   {
