@@ -22,6 +22,7 @@
 
 #include <QGraphicsObject>
 #include "OSItem.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
@@ -87,73 +88,6 @@ class CaseViewExpandButton : public AbstractButtonItem
   QPixmap m_openImage;
 
   QPixmap m_closeImage;
-};
-
-// A grid layout of refrigeration systems
-class RefrigerationSystemGridView : public QGraphicsObject
-{
-  Q_OBJECT;
-
-  public:
-
-  RefrigerationSystemGridView();
-
-  virtual ~RefrigerationSystemGridView();
-
-  void setDelegate(QSharedPointer<OSGraphicsItemDelegate> delegate);
-
-  void setListController(QSharedPointer<OSListController> listController);
-
-  QSharedPointer<OSListController> listController() const;
-
-  QRectF boundingRect() const;
-
-  public slots:
-
-  void refreshAllItemViews();
-
-  protected:
-
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
-              QWidget *widget = 0 ) {}
-
-  private slots:
-
-  void insertItemView(int i);
-
-  void removeItemView(int i);
-
-  void removePair(QObject * object);
-
-  void refreshItemView(int i);
-
-  private:
-
-  int spacing() const;
-
-  int rows() const;
-
-  int columns() const;
-
-  std::pair<int,int> gridPos(int i); 
-
-  QGraphicsObject * createNewItemView(int i);
-
-  void setItemViewGridPos(QGraphicsObject * item,std::pair<int,int> gridPos);
-
-  QGraphicsObject * viewFromGridPos(std::pair<int,int> gridPos);
-
-  QSharedPointer<OSGraphicsItemDelegate> m_delegate;
-
-  QSharedPointer<OSListController> m_listController;
-
-  // Use this to keep the OSListItem classes around for the life of the widget
-  std::map<QObject *,QSharedPointer<OSListItem> > m_widgetItemPairs;
-
-  std::map<std::pair<int,int>,QObject *> m_gridPosItemViewPairs;
-
-  std::map<QObject *,std::pair<int,int> > m_itemViewGridPosPairs;
 };
 
 // A cell of the refrigeration system grid
@@ -236,39 +170,19 @@ class RefrigerationSystemDetailView : public QGraphicsObject
   // QString m_name;
 };
 
-class RefrigerationSystemDropZoneView : public QGraphicsObject
+class RefrigerationSystemDropZoneView : public OSDropZoneItem 
 {
   Q_OBJECT;
 
   public:
 
-  RefrigerationSystemDropZoneView();
-
-  virtual ~RefrigerationSystemDropZoneView() {}
-
   QRectF boundingRect() const;
-
-  signals:
-
-  void mouseClicked();
-
-  void componentDropped(const OSItemId & itemid);
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget );
-
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-
-  void dropEvent(QGraphicsSceneDragDropEvent *event);
-
-  private:
-
-  bool m_mouseDown;
 };
 
 class RefrigerationSystemView : public QGraphicsObject

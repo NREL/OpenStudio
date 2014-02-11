@@ -84,6 +84,10 @@ namespace detail {
     bool setHeatingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
     bool setHeatingCapacityModifierFunctionofFlowFractionCurve(const Curve& curve);
+    
+    ModelObject clone(Model model) const;
+
+    std::vector<ModelObject> children() const;
 
    protected:
 
