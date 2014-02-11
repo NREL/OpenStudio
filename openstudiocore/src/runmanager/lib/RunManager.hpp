@@ -93,6 +93,20 @@ namespace detail {
       RunManager(const openstudio::path &DB, bool t_new = false, bool t_paused = false, bool t_initializeui=true, bool t_useStatusGUI = true);
       ~RunManager();
 
+      /// Executes a workflow which is defined by a JSON string from Nick
+      ///
+      /// To monitor the progress of the workflow use the RunManagerWatcher object
+      ///
+      /// \note The function uses the currently configured ConfigOptions object in the RunManager
+      ///       to determine the Tools objects to use.
+      ///
+      /// \sa openstudio::runmanager::RunManagerWatcher
+      ///
+      /// \param[in] t_json the JSON string to execute. See various input files from Nick for definition.
+      /// \param[in] t_basePath the path of the directory containing the input files necessary
+      /// \param[in] t_runPath directory to execute the simulations in
+      runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath);
+
       /// Return tue if the given job is out of date
       /// \todo This should probably be removed in favor of openstudio::runmanager::Job::isOutOfDate
       bool outOfDate(const openstudio::runmanager::Job &job) const;

@@ -82,7 +82,7 @@ namespace runmanager {
         } else {
           ++itr;
         }
-      }  
+      }
     }
 
     boost::shared_ptr<detail::RunManager_Impl> get_impl(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_tempdb, bool t_useStatusGUI)
@@ -468,6 +468,10 @@ namespace runmanager {
     m_impl->deleteWorkflowByName(t_name);
   }
 
+  runmanager::Job RunManager::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath)
+  {
+    return m_impl->runWorkflow(t_json, t_basePath, t_runPath);
+  }
 
   void RunManager::simplifyModelForPerformance(openstudio::model::Model &t_model)
   {

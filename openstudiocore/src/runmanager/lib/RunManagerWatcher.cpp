@@ -6,6 +6,8 @@
 #include "FileInfo.hpp"
 #include "Job.hpp"
 #include "AdvancedStatus.hpp"
+#include "RubyJobUtils.hpp"
+#include "MergedJobResults.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -16,8 +18,8 @@ namespace runmanager {
     bool connected = m_runManager.connect(SIGNAL(pausedChanged(bool)), this, SLOT(pausedChanged(bool)));
     OS_ASSERT(connected);
 
-    connected = m_runManager.connect(SIGNAL(jobTreeAdded(const openstudio::runmanager::Job &t_job)), 
-        this, SLOT(jobTreeAdded(const openstudio::runmanager::Job &t_job)));
+    connected = m_runManager.connect(SIGNAL(jobTreeAdded(const openstudio::UUID &)), 
+        this, SLOT(jobTreeAdded(const openstudio::UUID &)));
     OS_ASSERT(connected);
 
     connected = m_runManager.connect(SIGNAL(statsChanged()), this, SLOT(statsChanged()));
@@ -43,26 +45,27 @@ namespace runmanager {
 
   void RunManagerWatcher::hookUpSignals(const openstudio::runmanager::Job &t_job)
   {
-    bool connected = t_job.connect(SIGNAL(started(const openstudio::UUID &)), this, SLOT(started(openstudio::UUID &)));
+    bool connected = t_job.connect(SIGNAL(started(const openstudio::UUID &)), this, SLOT(started(const openstudio::UUID &)));
     OS_ASSERT(connected);
 
     connected = t_job.connect(SIGNAL(finished(const openstudio::UUID &, const openstudio::runmanager::JobErrors&)), 
-        this, SLOT(finished(const started(openstudio::UUID &, const openstudio::runmanager::JobErrors&))));
+        this, SLOT(finished(const openstudio::UUID &, const openstudio::runmanager::JobErrors&)));
     OS_ASSERT(connected);
 
-    connected = t_job.connect(SIGNAL(finishedExt(const openstudio::UUID &, const openstudio::runmanager::JobErrors&, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)), 
-        this, SLOT(finishedExt(const started(openstudio::UUID &, const openstudio::runmanager::JobErrors&, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &))));
+    connected = t_job.connect(
+            SIGNAL(finishedExt(const openstudio::UUID &, const openstudio::runmanager::JobErrors&, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)), 
+        this, SLOT(finishedExt(const openstudio::UUID &, const openstudio::runmanager::JobErrors&, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)));
     OS_ASSERT(connected);
 
-    connected = t_job.connect(SIGNAL(outputFileChanged(const openstudio::UUID &id, const openstudio::runmanager::FileInfo& file)), 
-        this, SLOT(outputFileChanged(const openstudio::UUID &id, const openstudio::runmanager::FileInfo& file)));
+    connected = t_job.connect(SIGNAL(outputFileChanged(const openstudio::UUID &, const openstudio::runmanager::FileInfo&)), 
+        this, SLOT(outputFileChanged(const openstudio::UUID &, const openstudio::runmanager::FileInfo&)));
     OS_ASSERT(connected);
 
-    connected = t_job.connect(SIGNAL(stateChanged(const openstudio::UUID &)), this, SLOT(stateChanged(openstudio::UUID &)));
+    connected = t_job.connect(SIGNAL(stateChanged(const openstudio::UUID &)), this, SLOT(stateChanged(const openstudio::UUID &)));
     OS_ASSERT(connected);
 
     connected = t_job.connect(SIGNAL(outputDataAdded(const openstudio::UUID &, const std::string &)), 
-        this, SLOT(outputDataAdded(openstudio::UUID &, const std::string &)));
+        this, SLOT(outputDataAdded(const openstudio::UUID &, const std::string &)));
     OS_ASSERT(connected);
 
 
@@ -103,6 +106,64 @@ namespace runmanager {
     runManagerJobTreeAdded(t_job);
   }
 
+
+  void RunManagerWatcher::jobFinishedExtInternal(const openstudio::UUID &t_id, const openstudio::runmanager::JobErrors& t_errors, 
+      const openstudio::DateTime &t_lastRun, const std::vector<openstudio::runmanager::FileInfo> &t_outputfiles)
+  {
+    jobFinishedExt(t_id, t_errors, t_lastRun, t_outputfiles);
+
+    try {
+      Job job = m_runManager.getJob(t_id);
+
+      if (job.hasMergedJobs())
+      {
+        std::vector<MergedJobResults> mergedJobs = job.mergedJobResults();
+        openstudio::runmanager::JobType jobtype = job.jobType();
+        openstudio::DateTime lastRun = t_lastRun;
+        openstudio::UUID mergedIntoJobId = t_id;
+        JobParams inputParams = job.params();
+
+        std::vector<JobParams> params;
+
+        if (jobtype == JobType::Ruby)
+        {
+          RubyJobBuilder rjb(inputParams);
+          std::vector<RubyJobBuilder> mergedRubyJobs = rjb.mergedJobs();
+          OS_ASSERT(mergedRubyJobs.size() + 1 == mergedJobs.size());
+          params.push_back(inputParams);
+
+          for (std::vector<RubyJobBuilder>::const_iterator itr = mergedRubyJobs.begin();
+               itr != mergedRubyJobs.end();
+               ++itr)
+          {
+            params.push_back(itr->toParams());
+          }
+
+        }
+
+        OS_ASSERT(params.empty() || params.size() == mergedJobs.size());
+
+        for (size_t pos = 0; pos < mergedJobs.size(); ++pos)
+        {
+          openstudio::UUID jobId = mergedJobs[pos].uuid;
+          JobErrors errors = mergedJobs[pos].errors;
+          Files outputFiles = mergedJobs[pos].outputFiles;
+
+          bool isMergedJob = true;
+
+          jobFinishedDetails(jobId, jobtype, lastRun, errors, outputFiles, params.empty()?inputParams:params.at(pos),
+              isMergedJob, mergedIntoJobId);
+        }
+      } else {
+        // no merged jobs
+        jobFinishedDetails(t_id, job.jobType(), t_lastRun, t_errors, Files(job.outputFiles()), JobParams(job.params()),
+            false, openstudio::UUID());
+      }
+    } catch (const std::runtime_error &e) {
+      LOG(Error, "Error extracting job finished details " << e.what());
+    }
+  }
+
   void RunManagerWatcher::started(const openstudio::UUID &id)
   {
     jobStarted(id);
@@ -116,7 +177,7 @@ namespace runmanager {
   void RunManagerWatcher::finishedExt(const openstudio::UUID &id, const openstudio::runmanager::JobErrors& errors, 
       const openstudio::DateTime &lastRun, const std::vector<openstudio::runmanager::FileInfo> &outputfiles)
   {
-    jobFinishedExt(id, errors, lastRun, outputfiles);
+    jobFinishedExtInternal(id, errors, lastRun, outputfiles);
   }
 
   void RunManagerWatcher::outputFileChanged(const openstudio::UUID &id, const openstudio::runmanager::FileInfo& file)
@@ -169,10 +230,11 @@ namespace runmanager {
     runManagerStatsChanged();
   }
 
-  void RunManagerWatcher::jobTreeAdded(const openstudio::runmanager::Job &t_job)
+  void RunManagerWatcher::jobTreeAdded(const openstudio::UUID &id)
   {
-    runManagerJobTreeAddedInternal(t_job);
+    runManagerJobTreeAddedInternal(m_runManager.getJob(id));
   }
+
 
 }
 }

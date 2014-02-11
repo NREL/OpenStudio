@@ -96,6 +96,8 @@ namespace detail {
                                                                            bool force,
                                                                            const openstudio::path &path);
 
+      runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath);
+
       /// Queue a vector of jobs and all children up for processing
       /// \param t_jobs jobs to queue up for processing
       /// \param force true if the job runnable state should be forced to true after queuing
@@ -233,7 +235,7 @@ namespace detail {
       void statsChanged();
 
       /// Job tree added
-      void jobTreeAdded(const openstudio::runmanager::Job &t_job);
+      void jobTreeAdded(const openstudio::UUID &t_job);
 
     protected:
       virtual void run();
