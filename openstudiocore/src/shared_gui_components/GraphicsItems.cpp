@@ -60,8 +60,6 @@ void AbstractButtonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 
     this->update();
 
-    QApplication::processEvents();
-
     if( shape().contains(event->pos()) )
     {
       event->accept();
@@ -110,8 +108,6 @@ void ButtonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
     m_mouseDown = false;
 
     this->update();
-
-    QApplication::processEvents();
 
     if( shape().contains(event->pos()) )
     {
@@ -350,8 +346,6 @@ void GridLayoutItem::insertItemView(int index)
     {
       _scene->setSceneRect(boundingRect());
     }
-
-    QApplication::processEvents();
   }
 }
 
@@ -367,8 +361,6 @@ void GridLayoutItem::removeItemView(int index)
       removePair(itemViewToRemove);
 
       itemViewToRemove->deleteLater();
-
-      QApplication::processEvents();
 
       // Move Everything after index back one grid position
       for( int i = index + 1; i < m_listController->count() + 1; i++ )

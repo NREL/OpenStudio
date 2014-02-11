@@ -315,7 +315,7 @@ void VRFTerminalView::paint( QPainter *painter,
 VRFThermalZoneDropZoneView::VRFThermalZoneDropZoneView()
   : m_hasZone(false)
 {
-  setSize(300,50);
+  setSize(300,75);
   setText("Drop Thermal Zone");
 }
 
@@ -338,10 +338,11 @@ void VRFThermalZoneDropZoneView::paint( QPainter *painter,
     painter->drawRect(boundingRect());
 
     QFont font = painter->font();
-    font.setPointSize(30);
+    font.setPointSize(25);
     painter->setFont(font);
     painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
-    painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,m_text);
+	QRectF t_rec = boundingRect();
+	painter->drawText(QRectF(5,5,t_rec.width() - 10,t_rec.height() - 10),Qt::AlignLeft | Qt::AlignVCenter,m_text);
   }
   else
   {
