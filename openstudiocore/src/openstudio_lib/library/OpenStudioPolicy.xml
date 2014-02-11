@@ -184,6 +184,10 @@
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Fan_ZoneExhaust">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Node">
     <rule IddField="Inlet Port" Access="HIDDEN"/>
     <rule IddField="Outlet Port" Access="HIDDEN"/>

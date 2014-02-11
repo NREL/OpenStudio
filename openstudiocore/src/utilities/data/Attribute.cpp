@@ -1764,7 +1764,8 @@ namespace detail {
     Q_FOREACH(const QString& key,map.keys()) {
       // determine attribute name
       std::string attributeName;
-      if (boost::regex_match(toString(key),matches,displayNameRegex)) {
+      std::string keyString = toString(key);
+      if (boost::regex_match(keyString,matches,displayNameRegex)) {
         // ends in '_display_name'.
         // pull attribute name off and make sure is in map.
         attributeName = std::string(matches[1].first,matches[1].second);
@@ -1773,17 +1774,17 @@ namespace detail {
           attributeName = toString(key);
         }
       }
-      else if (boost::regex_match(toString(key),matches,unitsRegex)) {
+      else if (boost::regex_match(keyString,matches,unitsRegex)) {
         // ends in '_units'.
         // pull attribute name off and make sure is in map.
         attributeName = std::string(matches[1].first,matches[1].second);
         if (!map.contains(toQString(attributeName))) {
           // if it is not, attribute name actually ends in '_units'.
-          attributeName = toString(key);
+          attributeName = keyString;
         }
       }
       else {
-        attributeName = toString(key);
+        attributeName = keyString;
       }
 
       // see if already processed

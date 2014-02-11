@@ -49,6 +49,7 @@
 #include <runmanager/lib/WorkItem.hpp>
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/MergedJobResults.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
 
 #include <ruleset/OSArgument.hpp>
 
@@ -1387,7 +1388,13 @@ namespace detail {
       }
 
       if (step.isWorkItem()) {
-        result.push_back(step.workItem());
+        runmanager::WorkItem workItem = step.workItem();
+        if (workItem.type == runmanager::JobType::UserScript) {
+          runmanager::RubyJobBuilder rjb(workItem);
+          rjb.setIncludeDir(rubyIncludeDirectory);
+          workItem = rjb.toWorkItem();
+        }
+        result.push_back(workItem);
       }
       else {
         InputVariable variable = step.inputVariable();

@@ -210,7 +210,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(BoilerHotWater);
     REGISTER_CONSTRUCTOR(BoilerSteam);
     REGISTER_CONSTRUCTOR(Building);
-    REGISTER_CONSTRUCTOR(BuildingStandardsInformation);
     REGISTER_CONSTRUCTOR(BuildingStory);
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
@@ -240,7 +239,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ConnectorMixer);
     REGISTER_CONSTRUCTOR(ConnectorSplitter);
     REGISTER_CONSTRUCTOR(Construction);
-    REGISTER_CONSTRUCTOR(ConstructionBaseStandardsInformation);
     REGISTER_CONSTRUCTOR(ConstructionWithInternalSource);
     REGISTER_CONSTRUCTOR(ControllerMechanicalVentilation);
     REGISTER_CONSTRUCTOR(ControllerOutdoorAir);
@@ -288,6 +286,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanVariableVolume);
+    REGISTER_CONSTRUCTOR(FanZoneExhaust);    
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
@@ -394,6 +393,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SpaceType);
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
+    REGISTER_CONSTRUCTOR(StandardsInformationConstruction);
     REGISTER_CONSTRUCTOR(SteamEquipment);
     REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
     REGISTER_CONSTRUCTOR(SubSurface);
@@ -496,7 +496,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(BoilerHotWater);
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
     REGISTER_COPYCONSTRUCTORS(Building);
-    REGISTER_COPYCONSTRUCTORS(BuildingStandardsInformation);
     REGISTER_COPYCONSTRUCTORS(BuildingStory);
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
@@ -526,7 +525,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ConnectorMixer);
     REGISTER_COPYCONSTRUCTORS(ConnectorSplitter);
     REGISTER_COPYCONSTRUCTORS(Construction);
-    REGISTER_COPYCONSTRUCTORS(ConstructionBaseStandardsInformation);
     REGISTER_COPYCONSTRUCTORS(ConstructionWithInternalSource);
     REGISTER_COPYCONSTRUCTORS(ControllerMechanicalVentilation);
     REGISTER_COPYCONSTRUCTORS(ControllerOutdoorAir);
@@ -574,6 +572,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
+    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);    
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
@@ -680,6 +679,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SpaceType);
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);
+    REGISTER_COPYCONSTRUCTORS(StandardsInformationConstruction);
     REGISTER_COPYCONSTRUCTORS(SteamEquipment);
     REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(SubSurface);

@@ -30,7 +30,7 @@
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/LayeredConstruction.hpp>
 #include <model/LayeredConstruction_Impl.hpp>
-#include <model/ConstructionBaseStandardsInformation.hpp>
+#include <model/StandardsInformationConstruction.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
@@ -237,11 +237,15 @@ namespace detail {
     bool result = PlanarSurface_Impl::setVertices(vertices);
 
     if (isEmpty(OS_SurfaceFields::SurfaceType)){
-      this->assignDefaultSurfaceType(false);
-      this->assignDefaultBoundaryCondition(false);
-      this->assignDefaultSunExposure(false);
-      this->assignDefaultWindExposure(false);
-      this->emitChangeSignals(); // emit signals here
+      if (result){
+        this->assignDefaultSurfaceType(false);
+        this->assignDefaultBoundaryCondition(false);
+        this->assignDefaultSunExposure(false);
+        this->assignDefaultWindExposure(false);
+        this->emitChangeSignals(); // emit signals here
+      }else{
+        LOG(Error, "Cannot compute default Surface properties.");
+      }
     }
 
     return result;
@@ -1072,25 +1076,6 @@ namespace detail {
     }
   }
 
-  std::string Surface_Impl::constructionType() const {
-    std::string result;
-    OptionalConstructionBase oConstruction = construction();
-    if (oConstruction) {
-      result = oConstruction->standardsInformation().constructionType();
-    }
-    return result;
-  }
-
-  bool Surface_Impl::setConstructionType(const std::string& type) {
-    OptionalConstructionBase oConstruction = construction();
-    if (oConstruction) {
-      ConstructionBaseStandardsInformation info = oConstruction->standardsInformation();
-      info.setConstructionType(type);
-      return true;
-    }
-    return false;
-  }
-
   std::vector<ModelObject> Surface_Impl::subSurfacesAsModelObjects() const {
     ModelObjectVector result = castVector<ModelObject>(subSurfaces());
     return result;
@@ -1544,14 +1529,6 @@ void Surface::assignDefaultSunExposure() {
 
 void Surface::assignDefaultWindExposure() {
   getImpl<detail::Surface_Impl>()->assignDefaultWindExposure();
-}
-
-std::string Surface::constructionType() const {
-  return getImpl<detail::Surface_Impl>()->constructionType();
-}
-
-bool Surface::setConstructionType(const std::string& type) {
-  return getImpl<detail::Surface_Impl>()->setConstructionType(type);  
 }
 
 double Surface::filmResistance() const {

@@ -43,7 +43,6 @@
 #include <model/BoilerHotWater.hpp>
 #include <model/BoilerSteam.hpp>
 #include <model/Building.hpp>
-#include <model/BuildingStandardsInformation.hpp>
 #include <model/BuildingStory.hpp>
 #include <model/CFactorUndergroundWallConstruction.hpp>
 #include <model/ClimateZones.hpp>
@@ -73,7 +72,6 @@
 #include <model/ConnectorMixer.hpp>
 #include <model/ConnectorSplitter.hpp>
 #include <model/Construction.hpp>
-#include <model/ConstructionBaseStandardsInformation.hpp>
 #include <model/ConstructionWithInternalSource.hpp>
 #include <model/ControllerMechanicalVentilation.hpp>
 #include <model/ControllerOutdoorAir.hpp>
@@ -123,6 +121,7 @@
 #include <model/FanConstantVolume.hpp>
 #include <model/FanOnOff.hpp>
 #include <model/FanVariableVolume.hpp>
+#include <model/FanZoneExhaust.hpp>
 #include <model/FFactorGroundFloorConstruction.hpp>
 #include <model/Gas.hpp>
 #include <model/GasEquipment.hpp>
@@ -230,6 +229,7 @@
 #include <model/SpaceType.hpp>
 #include <model/StandardGlazing.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
+#include <model/StandardsInformationConstruction.hpp>
 #include <model/SteamEquipment.hpp>
 #include <model/SteamEquipmentDefinition.hpp>
 #include <model/SubSurface.hpp>
@@ -298,7 +298,6 @@
 #include <model/BoilerHotWater_Impl.hpp>
 #include <model/BoilerSteam_Impl.hpp>
 #include <model/Building_Impl.hpp>
-#include <model/BuildingStandardsInformation_Impl.hpp>
 #include <model/BuildingStory_Impl.hpp>
 #include <model/CFactorUndergroundWallConstruction_Impl.hpp>
 #include <model/ChillerElectricEIR_Impl.hpp>
@@ -328,7 +327,6 @@
 #include <model/ConnectorMixer_Impl.hpp>
 #include <model/ConnectorSplitter_Impl.hpp>
 #include <model/Construction_Impl.hpp>
-#include <model/ConstructionBaseStandardsInformation_Impl.hpp>
 #include <model/ConstructionWithInternalSource_Impl.hpp>
 #include <model/ControllerMechanicalVentilation_Impl.hpp>
 #include <model/ControllerOutdoorAir_Impl.hpp>
@@ -376,6 +374,7 @@
 #include <model/FanConstantVolume_Impl.hpp>
 #include <model/FanOnOff_Impl.hpp>
 #include <model/FanVariableVolume_Impl.hpp>
+#include <model/FanZoneExhaust_Impl.hpp>
 #include <model/FFactorGroundFloorConstruction_Impl.hpp>
 #include <model/Gas_Impl.hpp>
 #include <model/GasEquipment_Impl.hpp>
@@ -484,6 +483,7 @@
 #include <model/SpaceType_Impl.hpp>
 #include <model/StandardGlazing_Impl.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
+#include <model/StandardsInformationConstruction_Impl.hpp>
 #include <model/SteamEquipment_Impl.hpp>
 #include <model/SteamEquipmentDefinition_Impl.hpp>
 #include <model/SubSurface_Impl.hpp>

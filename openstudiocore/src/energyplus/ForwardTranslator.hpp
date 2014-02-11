@@ -110,6 +110,7 @@ class ExteriorLights;
 class FanConstantVolume;
 class FanOnOff;
 class FanVariableVolume;
+class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
 class Gas;
 class GasEquipment;
@@ -264,6 +265,12 @@ class ENERGYPLUS_API ForwardTranslator {
     * Some assumptions in OpenStudio results processing may fail.
    */
   void setIPTabularOutput(bool isIP);
+
+  /** If excludeLCCObjects, skip translation of life cycle cost objects.
+    * Use this interface with extreme caution and understanding of the impacts.
+    * Some assumptions in OpenStudio will fail if you exclude life cycle costs
+    */
+  void setExcludeLCCObjects(bool excludeLCCObjects);
 
  private:
 
@@ -443,6 +450,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFanOnOff( model::FanOnOff & modelObject );
 
   boost::optional<IdfObject> translateFanVariableVolume( model::FanVariableVolume & modelObject );
+  
+  boost::optional<IdfObject> translateFanZoneExhaust( model::FanZoneExhaust & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeCoolerDirectResearchSpecial( model::EvaporativeCoolerDirectResearchSpecial & modelObject );
 
@@ -759,6 +768,8 @@ class ENERGYPLUS_API ForwardTranslator {
   bool m_keepRunControlSpecialDays;
 
   bool m_ipTabularOutput;
+
+  bool m_excludeLCCObjects;
 };
 
 namespace detail
