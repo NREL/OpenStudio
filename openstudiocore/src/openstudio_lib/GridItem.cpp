@@ -45,6 +45,10 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/AirToAirComponent.hpp>
 #include <model/AirToAirComponent_Impl.hpp>
 #include <model/PlantLoop.hpp>
@@ -468,6 +472,26 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
       }
       m_gridItems.push_back(gridItem);
     }
+    else if(model::OptionalAirLoopHVACSupplyPlenum comp = it->optionalCast<model::AirLoopHVACSupplyPlenum>())
+    {
+      GridItem * gridItem = new OneThreeStraightItem(this); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+    }
+    else if(model::OptionalAirLoopHVACReturnPlenum comp = it->optionalCast<model::AirLoopHVACReturnPlenum>())
+    {
+      GridItem * gridItem = new OneThreeStraightItem(this); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+    }
     else if(model::OptionalWaterUseConnections comp = it->optionalCast<model::WaterUseConnections>())
     {
       WaterUseConnectionsItem * gridItem = new WaterUseConnectionsItem(this); 
@@ -829,42 +853,65 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
 
   bool isSupplySide = loop.supplyComponent(splitter.handle());
 
+  std::vector<model::ModelObject> branchComponents;
+
   if( ! (splitterOutletObjects.front() == mixer) )
   {
-    std::vector<model::ModelObject>::iterator it2 = mixerInletObjects.begin();
-    for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin(); 
-         it1 < splitterOutletObjects.end();
+    for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin();
+         it1 != splitterOutletObjects.end();
          ++it1 )
     {
-      model::HVACComponent node1 = it1->optionalCast<model::HVACComponent>().get();
-      model::HVACComponent node2 = it2->optionalCast<model::HVACComponent>().get();
-
-      std::vector<model::ModelObject> branchComponents;
-
-      if( isSupplySide )
+      bool isSupplyPlenum = false;
+      if( boost::optional<model::Node> node = it1->optionalCast<model::Node>() )
       {
-        branchComponents = loop.supplyComponents(node1,node2);
-      }
-      else
-      {
-        branchComponents = loop.demandComponents(node1,node2);
-      }
-
-      if( isSupplySide )
-      {
-        m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
-        ++it2;
-      }
-      else
-      {
-        std::vector<model::ModelObject> rBranchComponents;
-        for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
-             rit < branchComponents.rend(); ++rit )
+        boost::optional<model::ModelObject> outletMo = node->outletModelObject();
+        OS_ASSERT(outletMo);
+        if(boost::optional<model::Splitter> plenumSplitter = outletMo->optionalCast<model::Splitter>())
         {
-          rBranchComponents.push_back( *rit );
+          isSupplyPlenum = true;
+          std::vector<model::ModelObject> plenumOutletObjects = plenumSplitter->outletModelObjects();
+          for( std::vector<model::ModelObject>::iterator it2 = plenumOutletObjects.begin();
+               it2 != plenumOutletObjects.end();
+               ++it2 )
+          {
+            boost::optional<model::HVACComponent> comp1 = it2->optionalCast<model::HVACComponent>();
+            OS_ASSERT(comp1);
+            branchComponents = loop.components(comp1.get(),mixer);
+            branchComponents.erase(branchComponents.end() - 1);
+            branchComponents.insert(branchComponents.begin(),plenumSplitter.get());
+            branchComponents.insert(branchComponents.begin(),*it1);
+
+            std::vector<model::ModelObject> rBranchComponents;
+            for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+                 rit < branchComponents.rend(); ++rit )
+            {
+              rBranchComponents.push_back( *rit );
+            }
+            m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
+          }
         }
-        m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
-        ++it2;
+      }
+      if( ! isSupplyPlenum )
+      {
+        boost::optional<model::HVACComponent> comp1 = it1->optionalCast<model::HVACComponent>();
+        OS_ASSERT(comp1);
+        branchComponents = loop.components(comp1.get(),mixer);
+        branchComponents.erase(branchComponents.end() - 1);
+
+        if( isSupplySide )
+        {
+          m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
+        }
+        else
+        {
+          std::vector<model::ModelObject> rBranchComponents;
+          for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+               rit < branchComponents.rend(); ++rit )
+          {
+            rBranchComponents.push_back( *rit );
+          }
+          m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
+        }
       }
     }
   }
@@ -1051,7 +1098,7 @@ void SystemCenterItem::paint( QPainter *painter,
   painter->drawPixmap((m_hLength - 1) * 100 + 37.5,yOrigin + 25,25,25,QPixmap(":/images/arrow.png"));
 
   painter->rotate(180);
-  painter->drawPixmap(-62.5,-(yOrigin + 75),25,25,QPixmap(":/images/arrow.png"));
+  painter->drawPixmap(-62,-(yOrigin + 75),25,25,QPixmap(":/images/arrow.png"));
 
   painter->rotate(-180);
 
