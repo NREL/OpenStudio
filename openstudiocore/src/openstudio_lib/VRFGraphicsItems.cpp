@@ -315,7 +315,7 @@ void VRFTerminalView::paint( QPainter *painter,
 VRFThermalZoneDropZoneView::VRFThermalZoneDropZoneView()
   : m_hasZone(false)
 {
-  setSize(300,75);
+  setSize(300,50);
   setText("Drop Thermal Zone");
 }
 
