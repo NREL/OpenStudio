@@ -134,12 +134,12 @@ public:
     m_baseConcepts.push_back(QSharedPointer<UnsignedEditConcept>(new UnsignedEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
+  template<typename ValueType, typename DataSourceType>
   void addDropZoneColumn(QString headingLabel, 
-                         boost::optional<model::ModelObject> (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(const model::ModelObject &))
+                         boost::optional<ValueType> (DataSourceType::* getter)(void) const, 
+                         bool (DataSourceType::* setter)(const ValueType &))
   {
-    m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
 
   std::vector<QString> categories();
