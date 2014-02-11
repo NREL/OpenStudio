@@ -23,8 +23,8 @@
 #include <shared_gui_components/OSCollapsibleView.hpp>
 #include <shared_gui_components/OSGridController.hpp>
 
-#include <model/Model_impl.hpp>
-#include <model/ModelObject_impl.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/ModelObject_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/IddObject.hpp>

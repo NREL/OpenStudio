@@ -144,7 +144,7 @@ public:
 
   std::vector<QString> categories();
 
-  std::vector<std::pair<QString,std::vector<QString>>> categoriesAndFields(); 
+  std::vector<std::pair<QString,std::vector<QString> > > categoriesAndFields(); 
 
   void categorySelected(int index);
 
@@ -177,7 +177,7 @@ protected:
 
   void checkSelectedFields(int category);
 
-  std::vector<std::pair<QString,std::vector<QString>>> m_categoriesAndFields;
+  std::vector<std::pair<QString,std::vector<QString> > > m_categoriesAndFields;
 
   std::vector<QSharedPointer<BaseConcept> > m_baseConcepts;
 

@@ -21,9 +21,9 @@
 #define OPENSTUDIO_FIELDMETHODTYPEDEFS_HPP
 
 #include <model/Model.hpp>
-#include <model/Model_impl.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/ModelObject.hpp>
-#include <model/ModelObject_impl.hpp>
+#include <model/ModelObject_Impl.hpp>
 
 #include <boost/function.hpp>
 #include <boost/optional.hpp>

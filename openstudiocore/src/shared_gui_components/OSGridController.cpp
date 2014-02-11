@@ -32,8 +32,8 @@
 #include <openstudio_lib/OSVectorController.hpp>
 #include <openstudio_lib/SchedulesView.hpp>
 
-#include <model/Model_impl.hpp>
-#include <model/ModelObject_impl.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/ModelObject_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -58,7 +58,7 @@ OSGridController::OSGridController(const QString & headerText,
   model::Model model,
   std::vector<model::ModelObject> modelObjects)
   : QObject(),
-  m_categoriesAndFields(std::vector<std::pair<QString,std::vector<QString>>>()),
+  m_categoriesAndFields(std::vector<std::pair<QString,std::vector<QString> > >()),
   m_baseConcepts(std::vector<QSharedPointer<BaseConcept> >()),
   m_horizontalHeader(std::vector<QWidget *>()),
   m_hasHorizontalHeader(true),
@@ -114,7 +114,7 @@ std::vector<QString> OSGridController::categories()
   return categories;
 }
 
-std::vector<std::pair<QString,std::vector<QString>>> OSGridController::categoriesAndFields()
+std::vector<std::pair<QString,std::vector<QString> > > OSGridController::categoriesAndFields()
 {
   return m_categoriesAndFields;
 }
@@ -407,7 +407,7 @@ void OSGridController::setCustomCategoryAndFields()
     m_categoriesAndFields.erase(m_categoriesAndFields.begin() + index);
   }
 
-  std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),m_customCategories);
+  std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),m_customCategories);
   m_categoriesAndFields.push_back(categoryAndFields);
 }
 

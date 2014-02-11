@@ -86,10 +86,10 @@ class CheckBoxConceptImpl : public CheckBoxConcept
     return m_getter(&obj);
   }
 
-  virtual void set(const model::ModelObject & t_obj, bool)
+  virtual void set(const model::ModelObject & t_obj, bool value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
-    return m_setter(&obj,value);
+    return m_setter(&obj, value);
   }
 
   private:
@@ -320,7 +320,7 @@ class IntegerEditConceptImpl : public IntegerEditConcept
     return m_getter(&obj);
   }
 
-  virtual bool set(const model::ModelObject & t_obj, int)
+  virtual bool set(const model::ModelObject & t_obj, int value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);

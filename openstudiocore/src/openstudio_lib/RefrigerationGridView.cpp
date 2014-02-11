@@ -24,9 +24,9 @@
 #include <openstudio_lib/ModelObjectItem.hpp>
 
 #include <model/ModelObject.hpp>
-#include <model/ModelObject_impl.hpp>
+#include <model/ModelObject_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_impl.hpp>
+#include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/Schedule.hpp>
@@ -232,14 +232,14 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     //fields.push_back("Rack Saturated Suction Temperature (F)");
     //fields.push_back("Fixture Name");
     fields.push_back(THERMALZONE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("General"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
     fields.push_back(CASELENGTH);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Dimensions"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Dimensions"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -249,7 +249,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     fields.push_back(CASEOPERATINGTEMPERATURE);
     fields.push_back(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE);
     fields.push_back(RATEDRUNTIMEFRACTION);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Operation"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Operation"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -258,7 +258,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     fields.push_back(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH);
     fields.push_back(CASECREDITFRACTIONSCHEDULE);
     fields.push_back(RATEDLATENTHEATRATIO);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Cooling Capacity"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling Capacity"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -266,7 +266,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(STANDARDCASEFANPOWERPERUNITLENGTH);
     fields.push_back(OPERATINGCASEFANPOWERPERUNITLENGTH);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Fan"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Fan"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -276,7 +276,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     fields.push_back(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH);
     fields.push_back(FRACTIONOFLIGHTINGENERGYTOCASE);
     fields.push_back(CASELIGHTINGSCHEDULE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Lighting"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Lighting"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -287,7 +287,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     fields.push_back(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH);
     fields.push_back(HUMIDITYATZEROANTISWEATHEATERENERGY);
     fields.push_back(FRACTIONOFANTISWEATHEATERENERGYTOCASE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Case Anti-Sweat Heaters"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Case Anti-Sweat Heaters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -303,20 +303,20 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     //fields.push_back("Defrost 5 Start Time");
     //fields.push_back("Defrost 6 Start Time");
     fields.push_back(DEFROSTENERGYCORRECTIONCURVE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Defrost"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
     fields.push_back(REFRIGERATEDCASERESTOCKINGSCHEDULE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Restocking"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Restocking"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -476,7 +476,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     //fields.push_back("Walk-in Type");
     //fields.push_back("Manufacturer & Model No.");
     //fields.push_back("Zone Adjacent");
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("General"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -485,7 +485,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     //fields.push_back("Length (ft)");
     //fields.push_back("Width (ft)");
     //fields.push_back("Height (ft)");
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Dimensions"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Dimensions"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
   
@@ -493,7 +493,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(INSULATEDFLOORUVALUE);
     //fields.push_back("Wall/Roof R-Value");
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Construction"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Construction"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
   
@@ -504,7 +504,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     //fields.push_back("Stocking Door R-Value (hr-ft2-F/Btu)");
     //fields.push_back("Stocking Door Opening Schedule");
     //fields.push_back("Stocking Door Opening Protection");
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Stocking Doors"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Stocking Doors"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -514,7 +514,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     fields.push_back(OPERATINGTEMPERATURE);
     fields.push_back(RATEDCOOLINGSOURCETEMPERATURE);
     fields.push_back(RATEDCOILCOOLINGCAPACITY);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Operation"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Operation"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -522,7 +522,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(RATEDCOOLINGCOILFANPOWER);
     fields.push_back(RATEDCIRCULATIONFANPOWER);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Fans"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Fans"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -530,7 +530,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(RATEDTOTALLIGHTINGPOWER);
     fields.push_back(LIGHTINGSCHEDULE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Lighting"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Lighting"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -538,7 +538,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(RATEDTOTALHEATINGPOWER);
     fields.push_back(HEATINGPOWERSCHEDULE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Heating"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -557,20 +557,20 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     //fields.push_back("Defrost 5 Start Time");
     //fields.push_back("Defrost 6 Start Time");
     fields.push_back(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Defrost"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
   
   {
     std::vector<QString> fields;
     fields.push_back(RESTOCKINGSCHEDULE);
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Restocking"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Restocking"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    std::pair<QString,std::vector<QString>> categoryAndFields = std::make_pair(QString("Custom"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
