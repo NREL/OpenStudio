@@ -468,10 +468,18 @@ namespace runmanager {
     m_impl->deleteWorkflowByName(t_name);
   }
 
-  runmanager::Job RunManager::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath)
+  runmanager::Job RunManager::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
+      const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options)
   {
-    return m_impl->runWorkflow(t_json, t_basePath, t_runPath);
+    return m_impl->runWorkflow(t_json, t_basePath, t_runPath, t_tools, t_options);
   }
+
+  runmanager::Job RunManager::runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+      const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options)
+  {
+    return m_impl->runWorkflow(t_jsonPath, t_basePath, t_runPath, t_tools, t_options);
+  }
+
 
   void RunManager::simplifyModelForPerformance(openstudio::model::Model &t_model)
   {

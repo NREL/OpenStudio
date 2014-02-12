@@ -69,6 +69,10 @@ namespace runmanager {
           bool t_isMergedJob,
           const openstudio::UUID &t_mergedIntoJobId) {}
 
+      /// Called once for each job tree that has completed
+      virtual void treeFinished(const openstudio::runmanager::Job &t_job)
+      { }
+
       Job getJob(const openstudio::UUID &t_uuid);
 
     private:

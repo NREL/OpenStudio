@@ -115,6 +115,19 @@ namespace runmanager {
     try {
       Job job = m_runManager.getJob(t_id);
 
+      boost::optional<openstudio::runmanager::Job> parent = job;
+      while (parent->parent())
+      {
+        parent = parent->parent();
+      }
+
+      TreeStatusEnum status = parent->treeStatus();
+      if (status == TreeStatusEnum::Finished || status == TreeStatusEnum::Failed || status == TreeStatusEnum::Canceled)
+      {
+        LOG(Debug, "Calling treeFinished");
+        treeFinished(*parent);
+      }
+
       if (job.hasMergedJobs())
       {
         std::vector<MergedJobResults> mergedJobs = job.mergedJobResults();

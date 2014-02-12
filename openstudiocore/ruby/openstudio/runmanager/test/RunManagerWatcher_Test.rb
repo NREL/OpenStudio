@@ -39,7 +39,15 @@ class RunManagerWatcherImpl < OpenStudio::Runmanager::RunManagerWatcher
     else
       @m_finishedCounts[t_jobType.value] += 1
     end
+  end
 
+  def treeFinished(t_job)
+    puts "Tree Finished"
+    if not @m_finishedCounts[999]
+      @m_finishedCounts[999] = 1
+    else
+      @m_finishedCounts[999] += 1
+    end
   end
 end
 
@@ -47,7 +55,7 @@ class RunManagerWatcher_Test < Test::Unit::TestCase
 
 
   def test_RunManagerWatcher
-  
+
     # configure logging
     logFile = OpenStudio::FileLogSink.new(OpenStudio::Path.new("./ParallelEnergyPlus1.log"))
     logFile.setLogLevel(OpenStudio::Debug)
@@ -119,7 +127,7 @@ class RunManagerWatcher_Test < Test::Unit::TestCase
 
     # run the job tree
     run_manager.enqueue(jobtree, true)
-    
+
     # show status dialog
     #run_manager.showStatusDialog()
 
@@ -135,6 +143,8 @@ class RunManagerWatcher_Test < Test::Unit::TestCase
     assert(counts[OpenStudio::Runmanager::JobType.new("ModelToIdf").value] == 1)
     assert(counts[OpenStudio::Runmanager::JobType.new("EnergyPlus").value] == 1)
 
+    # check to make sure exactly ONE *tree* finished
+    assert(counts[999] == 1);
 
   end
 end
