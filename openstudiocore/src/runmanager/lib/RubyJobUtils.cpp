@@ -798,7 +798,13 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
 {
   std::vector<ruleset::OSArgument> retval;
 
-  std::vector<JobParam> args = t_params.get("user_script_params").children;
+  std::vector<JobParam> args;
+  try {
+    args = t_params.get("user_script_params").children;
+  }
+  catch (...) {
+    return retval;
+  }
 
   LOG(Debug, "Params found: " << args.size());
   for (std::vector<JobParam>::const_iterator itr = args.begin();
