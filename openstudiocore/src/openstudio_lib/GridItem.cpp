@@ -17,10 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/GridItem.hpp>
-#include <openstudio_lib/ServiceWaterGridItems.hpp>
-#include <openstudio_lib/IconLibrary.hpp>
-#include <openstudio_lib/LoopScene.hpp>
+#include "GridItem.hpp"
+#include "ServiceWaterGridItems.hpp"
+#include "IconLibrary.hpp"
+#include "LoopScene.hpp"
+#include "SchedulesView.hpp"
 
 #include <utilities/core/Assert.hpp>
 
@@ -433,7 +434,8 @@ QRectF LinkItem::boundingRect() const
 }
 
 HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                                            QGraphicsItem * parent )
+                                            QGraphicsItem * parent,
+                                            int index )
   : GridItem( parent ),
     m_isDropZone(false),
     m_text("Drag From Library"),
@@ -474,8 +476,7 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
     }
     else if(model::OptionalAirLoopHVACSupplyPlenum comp = it->optionalCast<model::AirLoopHVACSupplyPlenum>())
     {
-      GridItem * gridItem = new OneThreeStraightItem(this); 
-      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      GridItem * gridItem = new SupplyPlenumItem(comp.get(),this); 
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
@@ -484,8 +485,7 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
     }
     else if(model::OptionalAirLoopHVACReturnPlenum comp = it->optionalCast<model::AirLoopHVACReturnPlenum>())
     {
-      GridItem * gridItem = new OneThreeStraightItem(this); 
-      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      GridItem * gridItem = new ReturnPlenumItem(comp.get(),this); 
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
@@ -1016,6 +1016,19 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
   model::Node supplyInletNode = m_loop.supplyInletNode();
   model::Node supplyOutletNode = m_loop.supplyOutletNode();
 
+  std::vector<model::ModelObject> supplyPlenums = loop.demandComponents(model::AirLoopHVACSupplyPlenum::iddObjectType());
+  std::vector<model::ModelObject> returnPlenums = loop.demandComponents(model::AirLoopHVACReturnPlenum::iddObjectType());
+  std::vector<model::ModelObject> plenums = supplyPlenums;
+  plenums.insert(plenums.end(),returnPlenums.begin(),returnPlenums.end());
+  int i = 0;
+  for(std::vector<model::ModelObject>::iterator it = plenums.begin();
+      it != plenums.end();
+      ++it)
+  {
+    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    ++i;
+  }
+
   m_supplySideItem = new SupplySideItem( this,
                                          supplyInletNode,
                                          supplyOutletNode);
@@ -1060,6 +1073,19 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
   setVGridLength( m_supplySideItem->getVGridLength() + m_demandSideItem->getVGridLength() + m_systemCenterItem->getVGridLength() );
 
   setHGridLength( m_supplySideItem->getHGridLength() );
+}
+
+int SystemItem::plenumIndex(const Handle & plenumHandle)
+{
+  std::map<Handle,int>::iterator it = m_plenumIndexMap.find(plenumHandle);
+  if( it != m_plenumIndexMap.end() )
+  {
+    return it->second;
+  }
+  else
+  {
+    return -1;
+  }
 }
 
 void SystemItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -1118,8 +1144,94 @@ void SystemCenterItem::paint( QPainter *painter,
   painter->drawText(QRect(110,52,200,25),Qt::AlignTop,"Demand Equipment");
 }
 
+SupplyPlenumItem::SupplyPlenumItem(const model::ModelObject & mo, QGraphicsItem * parent)
+  : GridItem(parent)
+{
+  setModelObject(mo);
+
+  // HorizontalBranchItem -> BranchGroupItem -> DemandSideItem -> SystemItem
+  int index = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumIndex(mo.handle());
+  if( index < 0 )
+  {
+    m_color = SchedulesView::colors[0];
+  }
+  else if( index > 12 )
+  {
+    m_color = SchedulesView::colors[12];
+  }
+  else
+  {
+    m_color = SchedulesView::colors[index];
+  }
+}
+
+void SupplyPlenumItem::paint(QPainter *painter, 
+                             const QStyleOptionGraphicsItem *option, 
+                             QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->setBrush(QBrush(m_color,Qt::SolidPattern));
+
+  painter->drawLine(0,50,25,50);
+  painter->drawLine(75,50,100,50);
+
+  QPointF points[4] = {
+    QPointF(25,25),
+    QPointF(75,40),
+    QPointF(75,60),
+    QPointF(25,75),
+  };
+  painter->drawPolygon(points,4);
+}
+
+ReturnPlenumItem::ReturnPlenumItem(const model::ModelObject & mo, QGraphicsItem * parent)
+  : GridItem(parent)
+{
+  setModelObject(mo);
+
+  // HorizontalBranchItem -> BranchGroupItem -> DemandSideItem -> SystemItem
+  int index = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumIndex(mo.handle());
+  if( index < 0 )
+  {
+    m_color = SchedulesView::colors[0];
+  }
+  else if( index > 12 )
+  {
+    m_color = SchedulesView::colors[12];
+  }
+  else
+  {
+    m_color = SchedulesView::colors[index];
+  }
+}
+
+void ReturnPlenumItem::paint(QPainter *painter, 
+                             const QStyleOptionGraphicsItem *option, 
+                             QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->setBrush(QBrush(m_color,Qt::SolidPattern));
+
+  painter->drawLine(0,50,25,50);
+  painter->drawLine(75,50,100,50);
+
+  QPointF points[4] = {
+    QPointF(25,40),
+    QPointF(75,25),
+    QPointF(75,75),
+    QPointF(25,60),
+  };
+  painter->drawPolygon(points,4);
+}
+
 OneThreeStraightItem::OneThreeStraightItem( QGraphicsItem * parent )
-  : GridItem( parent )
+  : GridItem(parent)
 {
 }
 

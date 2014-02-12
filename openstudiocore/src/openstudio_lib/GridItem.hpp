@@ -274,6 +274,36 @@ class OneThreeStraightItem : public GridItem
   void mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
 };
 
+class SupplyPlenumItem : public GridItem
+{
+  public:
+
+  SupplyPlenumItem(const model::ModelObject & modelObject, QGraphicsItem * parent = 0);
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = 0);
+
+  private:
+
+  QColor m_color;
+};
+
+class ReturnPlenumItem : public GridItem
+{
+  public:
+
+  ReturnPlenumItem(const model::ModelObject & modelObject, QGraphicsItem * parent = 0);
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = 0);
+
+  private:
+
+  QColor m_color;
+};
+
 class LinkItem : public QGraphicsObject
 {
   Q_OBJECT;
@@ -610,7 +640,8 @@ class HorizontalBranchItem : public GridItem
   public:
 
   HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                        QGraphicsItem * parent = 0 );
+                        QGraphicsItem * parent = 0,
+                        int index = -1 );
 
   void setPadding( unsigned );
 
@@ -881,6 +912,8 @@ class SystemItem : public GridItem
              const QStyleOptionGraphicsItem *option, 
              QWidget *widget = 0);
 
+  int plenumIndex(const Handle & plenumHandle);
+
   private:
 
   model::Loop m_loop;
@@ -892,6 +925,8 @@ class SystemItem : public GridItem
   DemandSideItem * m_demandSideItem;
   
   SystemCenterItem * m_systemCenterItem;
+
+  std::map<Handle,int> m_plenumIndexMap;
 };
 
 class OneTwoFourStraightItem : public GridItem
