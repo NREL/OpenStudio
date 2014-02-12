@@ -354,6 +354,13 @@ namespace detail {
         addParameter("ruby", lastEnergyPlusSqlFilePathArgument);
       } catch (const std::exception &) {
       }
+
+      try {
+        FileInfo epw = allInputFiles().getLastByExtension("epw");
+        std::string lastEpwFilePathArgument = "--lastEpwFilePathArgument=" + toString(epw.fullPath);
+        addParameter("ruby", lastEpwFilePathArgument);
+      } catch (const std::exception &) {
+      }
     }
 
   }
