@@ -961,32 +961,26 @@ namespace detail {
         if (workItem.type == runmanager::JobType::UserScript) {
           // compare BCLMeasure uuids
           try {
-            runmanager::JobParam param = workItem.params.get("ruby_bclmeasureparameters");
-            for (std::vector<runmanager::JobParam>::const_iterator it = param.children.begin(), 
-              itEnd = param.children.end(); it != itEnd; ++it) 
-            {
-              if (it->value == "bcl_measure_uuid") {
-                if (openstudio::toUUID(it->children.at(0).value) == measureUUID) {
-                  // update this WorkItem if arguments may have changed
-                  bool updateWorkItem = false;
-                  if (newArguments.empty()) {
-                    if (!keepOldArgumentsIfNewEmpty) {
-                      // clear WorkItem arguments if it has any
-                      if (!runmanager::RubyJobBuilder::toOSArguments(workItem.params).empty()) {
-                        updateWorkItem = true;
-                      }
-                    }
-                  }
-                  else {
-                    // go ahead and do the swap no matter what
+            runmanager::RubyJobBuilder rjb(workItem);
+            if (rjb.bclMeasureUUID() && (rjb.bclMeasureUUID().get() == measureUUID)) {
+              // update this WorkItem if arguments may have changed
+              bool updateWorkItem = false;
+              if (newArguments.empty()) {
+                if (!keepOldArgumentsIfNewEmpty) {
+                  // clear WorkItem arguments if it has any
+                  if (!runmanager::RubyJobBuilder::toOSArguments(workItem.params).empty()) {
                     updateWorkItem = true;
                   }
-                  if (updateWorkItem) {
-                    runmanager::RubyJobBuilder rjb(newVersion,newArguments);
-                    runmanager::WorkItem newWorkItem = rjb.toWorkItem();
-                    step.set(newWorkItem);
-                  }
                 }
+              }
+              else {
+                // go ahead and do the swap no matter what
+                updateWorkItem = true;
+              }
+              if (updateWorkItem) {
+                rjb = runmanager::RubyJobBuilder(newVersion,newArguments);
+                runmanager::WorkItem newWorkItem = rjb.toWorkItem();
+                step.set(newWorkItem);
               }
             }
           }

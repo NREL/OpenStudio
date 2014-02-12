@@ -570,6 +570,10 @@ boost::optional<openstudio::UUID> RubyJobBuilder::originalUUID() const
   return m_originalUUID;
 }
 
+boost::optional<openstudio::UUID> RubyJobBuilder::bclMeasureUUID() const {
+  return m_bclMeasureUUID;
+}
+
 std::vector<boost::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const
 {
   return m_copyRequiredFiles;
