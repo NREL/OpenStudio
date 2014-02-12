@@ -423,9 +423,9 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
                         &model::RefrigerationCase::defrostEnergyCorrectionCurveType,
                         &model::RefrigerationCase::setDefrostEnergyCorrectionCurveType);
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
-      //addOptionalDoubleEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
-      //                            &model::RefrigerationCase::installedCaseLightingPowerperUnitLength,
-      //                            &model::RefrigerationCase::setInstalledCaseLightingPowerperUnitLength); TODO returns void
+      addOptionalDoubleEditVoidReturnColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
+                                  &model::RefrigerationCase::installedCaseLightingPowerperUnitLength,
+                                  &model::RefrigerationCase::setInstalledCaseLightingPowerperUnitLength);
     }else if(field == DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE){
       addOptionalDoubleEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
                                   &model::RefrigerationCase::designEvaporatorTemperatureorBrineInletTemperature,
@@ -443,19 +443,11 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
     }else if(field == AVAILABILITYSCHEDULE){
       //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == THERMALZONE){
-      addDropZoneColumn(QString(THERMALZONE), // TODO won't compile
+      addDropZoneColumn(QString(THERMALZONE),
         &model::RefrigerationCase::thermalZone,
         &model::RefrigerationCase::setThermalZone);
-
-      // No need to specify the template types
-      
-      /*
-      addDropZoneColumn<model::ThermalZone, model::RefrigerationCase>(QString(THERMALZONE), // TODO won't compile
-        &model::RefrigerationCase::thermalZone,
-        &model::RefrigerationCase::setThermalZone);
-        */
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
-      //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
+      //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; // TODO
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time

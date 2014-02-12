@@ -265,6 +265,22 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         widget = doubleEditVoidReturn;
 
+    } else if(QSharedPointer<OptionalDoubleEditVoidReturnConcept> optionalDoubleEditVoidReturnConcept = baseConcept.dynamicCast<OptionalDoubleEditVoidReturnConcept>()) {
+
+        OSDoubleEdit2 * optionalDoubleEditVoidReturn = new OSDoubleEdit2();
+
+        optionalDoubleEditVoidReturn->bindVoidReturn(mo,
+                  boost::bind(&OptionalDoubleEditVoidReturnConcept::get,optionalDoubleEditVoidReturnConcept.data(),mo),
+                  boost::optional<DoubleSetterVoidReturn>(boost::bind(&OptionalDoubleEditVoidReturnConcept::set,optionalDoubleEditVoidReturnConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = optionalDoubleEditVoidReturn;
+
     } else if(QSharedPointer<IntegerEditConcept> integerEditConcept = baseConcept.dynamicCast<IntegerEditConcept>()) {
 
         OSIntegerEdit2 * integerEdit = new OSIntegerEdit2();

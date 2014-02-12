@@ -103,6 +103,14 @@ public:
   }
 
   template<typename DataSourceType>
+  void addOptionalDoubleEditVoidReturnColumn(QString headingLabel, 
+                         boost::optional<double> (DataSourceType::* getter)(void) const, 
+                         void (DataSourceType::* setter)(double))
+  {
+    m_baseConcepts.push_back(QSharedPointer<OptionalDoubleEditVoidReturnConcept>(new OptionalDoubleEditVoidReturnConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+  }
+
+  template<typename DataSourceType>
   void addIntegerEditColumn(QString headingLabel, 
                          int (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(int))

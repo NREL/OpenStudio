@@ -108,6 +108,29 @@ void OSDoubleEdit2::bindRequiredVoidReturn(model::ModelObject& modelObject,
   completeBind();
 }
 
+void OSDoubleEdit2::bindVoidReturn(model::ModelObject& modelObject,
+                         OptionalDoubleGetter get,
+                         boost::optional<DoubleSetterVoidReturn> set,
+                         boost::optional<NoFailAction> reset,
+                         boost::optional<NoFailAction> autosize,
+                         boost::optional<NoFailAction> autocalculate,
+                         boost::optional<BasicQuery> isDefaulted,
+                         boost::optional<BasicQuery> isAutosized,
+                         boost::optional<BasicQuery> isAutocalculated)
+{
+  m_modelObject = modelObject;
+  m_getOptional = get;
+  m_setVoidReturn = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  completeBind();
+}
+
 void OSDoubleEdit2::bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
                          DoubleGetter get,
                          boost::optional<DoubleSetter> set,

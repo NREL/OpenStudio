@@ -291,6 +291,51 @@ class DoubleEditVoidReturnConceptImpl : public DoubleEditVoidReturnConcept
 ///////////////////////////////////////////////////////////////////////////////////
 
 
+class OptionalDoubleEditVoidReturnConcept : public BaseConcept
+{
+  public:
+
+  virtual boost::optional<double> get(const model::ModelObject & obj) = 0;
+  virtual void set(const model::ModelObject & obj, double) = 0;
+}; 
+
+template<typename DataSourceType>
+class OptionalDoubleEditVoidReturnConceptImpl : public OptionalDoubleEditVoidReturnConcept
+{
+  public:
+
+  OptionalDoubleEditVoidReturnConceptImpl(QString t_headingLabel, 
+    boost::function<boost::optional<double> (DataSourceType *)>  t_getter, 
+    boost::function<void (DataSourceType *, double)> t_setter)
+
+    : m_getter(t_getter),
+      m_setter(t_setter)
+
+  {
+  }
+
+  virtual boost::optional<double> get(const model::ModelObject & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(&obj);
+  }
+
+  virtual void set(const model::ModelObject & t_obj, double value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(&obj,value);
+  }
+
+  private:
+
+  boost::function<boost::optional<double> (DataSourceType *)>  m_getter;
+  boost::function<void (DataSourceType *, double)> m_setter;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
 class IntegerEditConcept : public BaseConcept
 {
   public:
