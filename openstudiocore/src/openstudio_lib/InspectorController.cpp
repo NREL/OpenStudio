@@ -158,6 +158,11 @@ void InspectorController::moveBranchForZoneSupply(model::ThermalZone & zone, con
   {
     airLoopHVAC->moveBranchForZone(zone,supplyPlenum.get());
   }
+  else
+  {
+    model::AirLoopHVACZoneSplitter zoneSplitter = airLoopHVAC->zoneSplitter();
+    airLoopHVAC->moveBranchForZone(zone,zoneSplitter);
+  }
 }
 
 void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, const Handle & newPlenumHandle)
@@ -169,6 +174,11 @@ void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, con
   if(boost::optional<model::AirLoopHVACReturnPlenum> returnPlenum = model.getModelObject<model::AirLoopHVACReturnPlenum>(newPlenumHandle))
   {
     airLoopHVAC->moveBranchForZone(zone,returnPlenum.get());
+  }
+  else
+  {
+    model::AirLoopHVACZoneMixer zoneMixer = airLoopHVAC->zoneMixer();
+    airLoopHVAC->moveBranchForZone(zone,zoneMixer);
   }
 }
 
