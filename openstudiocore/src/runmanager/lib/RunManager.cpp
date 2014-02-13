@@ -469,13 +469,13 @@ namespace runmanager {
   }
 
   runmanager::Job RunManager::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
-      const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options)
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
   {
     return m_impl->runWorkflow(t_json, t_basePath, t_runPath, t_tools, t_options);
   }
 
   runmanager::Job RunManager::runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
-      const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options)
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
   {
     return m_impl->runWorkflow(t_jsonPath, t_basePath, t_runPath, t_tools, t_options);
   }

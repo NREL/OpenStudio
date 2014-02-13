@@ -97,14 +97,14 @@ namespace detail {
                                                                            bool force,
                                                                            const openstudio::path &path);
 
-      runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
-          const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options);
+      openstudio::runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
-      runmanager::Job runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
-          const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options);
+      openstudio::runmanager::Job runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
-      runmanager::Job runWorkflow(const QVariant &t_variant, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
-          const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options);
+      openstudio::runmanager::Job runWorkflow(const QVariant &t_variant, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
       /// Queue a vector of jobs and all children up for processing
       /// \param t_jobs jobs to queue up for processing

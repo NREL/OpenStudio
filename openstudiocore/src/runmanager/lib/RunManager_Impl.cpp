@@ -1801,8 +1801,8 @@ namespace detail {
     return true; // is there really a failure case here?
   }
 
-  runmanager::Job RunManager_Impl::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
-      const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options)
+  openstudio::runmanager::Job RunManager_Impl::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
   {
     QJson::Parser parser;
     bool ok = false;
@@ -1813,8 +1813,8 @@ namespace detail {
     return runWorkflow(variant, t_basePath, t_runPath, t_tools, t_options);
   }
 
-  runmanager::Job RunManager_Impl::runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
-      const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options)
+  openstudio::runmanager::Job RunManager_Impl::runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
   {
     QFile file(toQString(t_jsonPath));
     if (file.open(QFile::ReadOnly)) {
@@ -1831,8 +1831,8 @@ namespace detail {
     LOG_FREE_AND_THROW("openstudio.Json","Could not open file " << toString(t_jsonPath) << " for reading.");
   }
 
-  runmanager::Job RunManager_Impl::runWorkflow(const QVariant &t_variant, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
-      const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options)
+  openstudio::runmanager::Job RunManager_Impl::runWorkflow(const QVariant &t_variant, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
   {
     if (t_variant.isNull())
     {

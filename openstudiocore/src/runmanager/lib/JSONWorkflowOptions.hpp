@@ -4,7 +4,7 @@
 namespace openstudio {
 namespace runmanager {
 
-struct RUNMANAGER_API JSONWorkflowOptions
+struct JSONWorkflowOptions
 {
   JSONWorkflowOptions()
     : throwOnNoWorkflowVariable(false),

@@ -1,25 +1,20 @@
 #ifndef OPENSTUDIO_RUNMANAGER_WATCHER_HPP
 #define OPENSTUDIO_RUNMANAGER_WATCHER_HPP
 
+#include "RunManagerAPI.hpp"
+
 #include <vector>
 #include <string>
 #include <QObject>
 #include <utilities/core/UUID.hpp>
 #include "RunManager.hpp"
+#include "Job.hpp"
 
 namespace openstudio {
   class DateTime;
 
 namespace runmanager {
-  class JobErrors;
-  class FileInfo;
-  class AdvancedStatus;
-  class Job;
-  class Files;
-  class JobParams;
-  class JobType;
-
-  class RunManagerWatcher : public QObject
+  class RUNMANAGER_API RunManagerWatcher : public QObject
   {
     Q_OBJECT;
     REGISTER_LOGGER("openstudio.runmanager.RunManagerWatcher");

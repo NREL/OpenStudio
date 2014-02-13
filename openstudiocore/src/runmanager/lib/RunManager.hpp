@@ -45,7 +45,7 @@ namespace detail {
   class Workflow;
   class RunManagerStatus;
   class RunManager;
-  class JSONWorkflowOptions;
+  struct JSONWorkflowOptions;
 
 
   /// Handle to a RunManagerStatus dialog
@@ -105,8 +105,8 @@ namespace detail {
       /// \param[in] t_runPath directory to execute the simulations in
       /// \param[in] t_tools tools to use for executing job
       /// \param[in] t_options set of options for job creation
-      runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
-          const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options);
+      openstudio::runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
       /// Executes a workflow which is defined by a JSON string from Nick
       ///
@@ -115,8 +115,8 @@ namespace detail {
       /// \param[in] t_runPath directory to execute the simulations in
       /// \param[in] t_tools tools to use for executing job
       /// \param[in] t_options set of options for job creation
-      runmanager::Job runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
-          const openstudio::runmanager::Tools &t_tools, const JSONWorkflowOptions &t_options);
+      openstudio::runmanager::Job runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
       /// Return tue if the given job is out of date
       /// \todo This should probably be removed in favor of openstudio::runmanager::Job::isOutOfDate
