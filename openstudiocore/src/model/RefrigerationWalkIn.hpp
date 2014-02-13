@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject.hpp>
+#include <model/RefrigerationSystem.hpp>
 
 namespace openstudio {
 
@@ -117,6 +118,8 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   bool isInsulatedFloorUValueDefaulted() const;
 
+  boost::optional<RefrigerationSystem> system() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -186,6 +189,8 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   bool setInsulatedFloorUValue(double insulatedFloorUValue);
 
   void resetInsulatedFloorUValue();
+
+  void setSystem(RefrigerationSystem & system);
 
   //@}
   /** @name Other */

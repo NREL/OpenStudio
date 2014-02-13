@@ -186,6 +186,8 @@ namespace detail {
 
     bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
+    boost::optional<RefrigerationSystem> system() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -323,6 +325,8 @@ namespace detail {
     void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
+
+    void setSystem(RefrigerationSystem & system);
 
     //@}
     /** @name Other */

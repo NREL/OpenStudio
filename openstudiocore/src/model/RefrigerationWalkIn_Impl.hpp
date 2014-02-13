@@ -129,6 +129,8 @@ namespace detail {
 
     bool isInsulatedFloorUValueDefaulted() const;
 
+    boost::optional<RefrigerationSystem> system() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -198,6 +200,8 @@ namespace detail {
     bool setInsulatedFloorUValue(double insulatedFloorUValue);
 
     void resetInsulatedFloorUValue();
+
+    void setSystem(RefrigerationSystem & system);
 
     //@}
     /** @name Other */

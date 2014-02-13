@@ -20,6 +20,7 @@
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
 
+#include <model/RefrigerationSystem_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -416,6 +417,22 @@ namespace detail {
     return isEmpty(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationCase_Impl::system() const {
+    boost::optional<RefrigerationSystem> system;
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getModelObjects<RefrigerationSystem>();
+    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems){
+      RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
+      BOOST_FOREACH(RefrigerationCase refrigerationCase, refrigerationCases){
+        if (refrigerationCase == this->getObject<RefrigerationCase>()){
+          // bingo!
+          system = refrigerationSystem;
+          break;
+        }
+      }
+    }
+    return system;
+  }
+
   bool RefrigerationCase_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Refrigeration_CaseFields::AvailabilityScheduleName,
                               "RefrigerationCase",
@@ -794,6 +811,10 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName);
   }
 
+  void RefrigerationCase_Impl::setSystem(RefrigerationSystem & system) {
+    system.addCase(this->getObject<RefrigerationCase>());
+  }
+
 } // detail
 
 RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule)
@@ -1091,6 +1112,10 @@ bool RefrigerationCase::isAverageRefrigerantChargeInventoryDefaulted() const {
   return getImpl<detail::RefrigerationCase_Impl>()->isAverageRefrigerantChargeInventoryDefaulted();
 }
 
+boost::optional<RefrigerationSystem> RefrigerationCase::system() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->system();
+}
+
 bool RefrigerationCase::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::RefrigerationCase_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -1357,6 +1382,10 @@ void RefrigerationCase::setAverageRefrigerantChargeInventory(double averageRefri
 
 void RefrigerationCase::resetAverageRefrigerantChargeInventory() {
   getImpl<detail::RefrigerationCase_Impl>()->resetAverageRefrigerantChargeInventory();
+}
+
+void RefrigerationCase::setSystem(RefrigerationSystem & system) {
+  getImpl<detail::RefrigerationCase_Impl>()->setSystem(system);
 }
 
 /// @cond

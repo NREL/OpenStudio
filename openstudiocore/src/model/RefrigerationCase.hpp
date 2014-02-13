@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/ParentObject.hpp>
+#include <model/RefrigerationSystem.hpp>
 
 namespace openstudio {
 
@@ -176,6 +177,8 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
+  boost::optional<RefrigerationSystem> system() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -313,6 +316,8 @@ class MODEL_API RefrigerationCase : public ParentObject {
   void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
   void resetAverageRefrigerantChargeInventory();
+
+  void setSystem(RefrigerationSystem & system);
 
   //@}
   /** @name Other */

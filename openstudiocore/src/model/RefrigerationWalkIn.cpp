@@ -22,6 +22,7 @@
 #include <model/RefrigerationWalkInZoneBoundary.hpp>
 #include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
 
+#include <model/RefrigerationSystem_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
@@ -321,6 +322,22 @@ namespace detail {
     return isEmpty(OS_Refrigeration_WalkInFields::InsulatedFloorUValue);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
+    boost::optional<RefrigerationSystem> system;
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getModelObjects<RefrigerationSystem>();
+    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems){
+      RefrigerationWalkInVector refrigerationWalkInsCases = refrigerationSystem.walkins();
+      BOOST_FOREACH(RefrigerationWalkIn refrigerationWalkIn, refrigerationWalkInsCases){
+        if (refrigerationWalkIn == this->getObject<RefrigerationWalkIn>()){
+          // bingo!
+          system = refrigerationSystem;
+          break;
+        }
+      }
+    }
+    return system;
+  }
+
   bool RefrigerationWalkIn_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Refrigeration_WalkInFields::AvailabilityScheduleName,
                               "RefrigerationWalkIn",
@@ -522,6 +539,10 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_WalkInFields::DefrostScheduleName);
   }
 
+  void RefrigerationWalkIn_Impl::setSystem(RefrigerationSystem & system) {
+    system.addWalkin(this->getObject<RefrigerationWalkIn>());
+  }
+
 } // detail
 
 RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule)
@@ -691,6 +712,10 @@ bool RefrigerationWalkIn::isInsulatedFloorUValueDefaulted() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->isInsulatedFloorUValueDefaulted();
 }
 
+boost::optional<RefrigerationSystem> RefrigerationWalkIn::system() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->system();
+}
+
 bool RefrigerationWalkIn::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -821,6 +846,10 @@ bool RefrigerationWalkIn::setInsulatedFloorUValue(double insulatedFloorUValue) {
 
 void RefrigerationWalkIn::resetInsulatedFloorUValue() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetInsulatedFloorUValue();
+}
+
+void RefrigerationWalkIn::setSystem(RefrigerationSystem & system) {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->setSystem(system);
 }
 
 /// @cond
