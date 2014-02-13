@@ -434,8 +434,7 @@ QRectF LinkItem::boundingRect() const
 }
 
 HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                                            QGraphicsItem * parent,
-                                            int index )
+                                            QGraphicsItem * parent)
   : GridItem( parent ),
     m_isDropZone(false),
     m_text("Drag From Library"),

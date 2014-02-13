@@ -26,6 +26,10 @@
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -63,20 +67,32 @@ InspectorController::InspectorController()
   connect( m_inspectorView,SIGNAL(addZoneClicked(model::ThermalZone &)),
            this,SLOT(addBranchForZone(model::ThermalZone &)));
 
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+  bool bingo = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  OS_ASSERT(bingo);
 
-  connect( m_inspectorView,SIGNAL(removeZoneClicked(model::ThermalZone &)),
-           this,SLOT(removeBranchForZone(model::ThermalZone &)));
+  bingo = connect( m_inspectorView,SIGNAL(removeZoneClicked(model::ThermalZone &)),
+                   this,SLOT(removeBranchForZone(model::ThermalZone &)));
+  OS_ASSERT(bingo);
 
-  connect( m_inspectorView,SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
+  bingo = connect( m_inspectorView,SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
            this,SLOT(addToLoop(model::Loop &, boost::optional<model::HVACComponent> &)));
+  OS_ASSERT(bingo);
 
-  connect( m_inspectorView,SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
+  bingo = connect( m_inspectorView,SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
            this,SLOT(removeFromLoop(model::Loop &, boost::optional<model::HVACComponent> &)));
+  OS_ASSERT(bingo);
 
-  connect(m_inspectorView,SIGNAL(destroyed(QObject *)),this,SLOT(onViewDestroyed(QObject *)));
+  bingo = connect(m_inspectorView,SIGNAL(destroyed(QObject *)),this,SLOT(onViewDestroyed(QObject *)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_inspectorView,SIGNAL(moveBranchForZoneSupplySelected(model::ThermalZone &, const Handle &)),
+                  this,SLOT(moveBranchForZoneSupply(model::ThermalZone &, const Handle &)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_inspectorView,SIGNAL(moveBranchForZoneReturnSelected(model::ThermalZone &, const Handle &)),
+                  this,SLOT(moveBranchForZoneReturn(model::ThermalZone &, const Handle &)));
+  OS_ASSERT(bingo);
 }
 
 InspectorController::~InspectorController()
@@ -129,6 +145,30 @@ void InspectorController::removeBranchForZone(model::ThermalZone & zone)
   if( airLoop )
   {
     airLoop->removeBranchForZone(zone);
+  }
+}
+
+void InspectorController::moveBranchForZoneSupply(model::ThermalZone & zone, const Handle & newPlenumHandle)
+{
+  boost::optional<model::AirLoopHVAC> airLoopHVAC = zone.airLoopHVAC();
+  OS_ASSERT(airLoopHVAC);
+  model::Model model = airLoopHVAC->model();
+
+  if(boost::optional<model::AirLoopHVACSupplyPlenum> supplyPlenum = model.getModelObject<model::AirLoopHVACSupplyPlenum>(newPlenumHandle))
+  {
+    airLoopHVAC->moveBranchForZone(zone,supplyPlenum.get());
+  }
+}
+
+void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, const Handle & newPlenumHandle)
+{
+  boost::optional<model::AirLoopHVAC> airLoopHVAC = zone.airLoopHVAC();
+  OS_ASSERT(airLoopHVAC);
+  model::Model model = airLoopHVAC->model();
+
+  if(boost::optional<model::AirLoopHVACReturnPlenum> returnPlenum = model.getModelObject<model::AirLoopHVACReturnPlenum>(newPlenumHandle))
+  {
+    airLoopHVAC->moveBranchForZone(zone,returnPlenum.get());
   }
 }
 

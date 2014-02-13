@@ -30,29 +30,23 @@
 #include <model/HVACComponent_Impl.hpp>
 
 class InspectorGadget;
-
 class QStackedWidget;
-
 class QVBoxLayout;
-
 class QTimer;
+class QComboBox;
 
 namespace openstudio {
 
 namespace model {
 
 class ThermalZone;
-
 class Loop;
 
 }
 
 class ZoneChooserView;
-
 class BaseInspectorView;
-
 class LibraryTabWidget;
-
 class LoopChooserView;
 
 class InspectorView : public QWidget
@@ -76,6 +70,9 @@ class InspectorView : public QWidget
   void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
 
   void toggleUnitsClicked(bool displayIP);
+
+  void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
+  void moveBranchForZoneReturnSelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
 
   public slots:
 
@@ -163,6 +160,48 @@ class SplitterMixerInspectorView : public BaseInspectorView
   private:
 
   ZoneChooserView * m_zoneChooserView;
+};
+
+class PlenumChooserView : public QWidget
+{
+  public:
+  
+  PlenumChooserView(QWidget * parent = 0);
+
+  virtual ~PlenumChooserView() {}
+
+  QComboBox * supplyPlenumChooser;
+  QComboBox * returnPlenumChooser;
+};
+
+class ThermalZoneInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  ThermalZoneInspectorView(QWidget * parent = 0);
+
+  virtual ~ThermalZoneInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+
+  signals:
+
+  void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
+  void moveBranchForZoneReturnSelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
+
+  private slots:
+
+  void onSupplyPlenumChooserChanged(int newIndex);
+  void onReturnPlenumChooserChanged(int newIndex);
+
+  private:
+
+  InspectorGadget * m_inspectorGadget;
+  PlenumChooserView * m_plenumChooser;
+  bool m_displayIP;
+  boost::optional<model::ModelObject> m_modelObject;
 };
 
 class WaterToAirInspectorView : public BaseInspectorView

@@ -640,8 +640,7 @@ class HorizontalBranchItem : public GridItem
   public:
 
   HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                        QGraphicsItem * parent = 0,
-                        int index = -1 );
+                        QGraphicsItem * parent = 0 );
 
   void setPadding( unsigned );
 

@@ -74,11 +74,16 @@
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QTimer>
+#include <QLabel>
 
 namespace openstudio {
 
@@ -126,6 +131,30 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       connect( m_currentView, SIGNAL(addZoneClicked(model::ThermalZone &)), this,  SIGNAL(addZoneClicked(model::ThermalZone &)) );
 
       connect( m_currentView, SIGNAL(removeZoneClicked(model::ThermalZone &)), this,  SIGNAL(removeZoneClicked(model::ThermalZone &)) );
+    }
+    else if( model::OptionalThermalZone zone = modelObject->optionalCast<model::ThermalZone>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new ThermalZoneInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      OS_ASSERT(isConnected);
+
+      isConnected = connect(m_currentView,SIGNAL(moveBranchForZoneSupplySelected(model::ThermalZone &,const Handle &)),
+                      this,SIGNAL(moveBranchForZoneSupplySelected(model::ThermalZone &,const Handle &)));
+      OS_ASSERT(isConnected);
+
+      isConnected = connect(m_currentView,SIGNAL(moveBranchForZoneReturnSelected(model::ThermalZone &,const Handle &)),
+                      this,SIGNAL(moveBranchForZoneReturnSelected(model::ThermalZone &,const Handle &)));
+      OS_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(zone.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
     }
     else if( model::OptionalAirLoopHVACZoneMixer mixer = modelObject->optionalCast<model::AirLoopHVACZoneMixer>()  )
     {
@@ -544,6 +573,167 @@ void GenericInspectorView::layoutModelObject( model::ModelObject & modelObject, 
     m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
   }
   m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+}
+
+PlenumChooserView::PlenumChooserView(QWidget * parent)
+{
+  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  mainVLayout->setAlignment(Qt::AlignTop);
+  setLayout(mainVLayout);
+  mainVLayout->setContentsMargins(10,10,10,10);
+  mainVLayout->setSpacing(0);
+
+  //std::vector<model::ThermalZone> zones = 
+
+  QLabel * supplyPlenumLabel = new QLabel("Zone Supply");
+  mainVLayout->addWidget(supplyPlenumLabel);
+  supplyPlenumChooser = new QComboBox();
+  mainVLayout->addWidget(supplyPlenumChooser);
+
+  mainVLayout->addSpacing(10);
+
+  QLabel * returnPlenumLabel = new QLabel("Zone Return");
+  mainVLayout->addWidget(returnPlenumLabel);
+  returnPlenumChooser = new QComboBox();
+  mainVLayout->addWidget(returnPlenumChooser);
+}
+
+ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  bool bingo = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                       m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(bingo);
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_plenumChooser = new PlenumChooserView();
+  m_libraryTabWidget->addTab( m_plenumChooser,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  bingo = connect(m_plenumChooser->supplyPlenumChooser,SIGNAL(currentIndexChanged(int)),this,SLOT(onSupplyPlenumChooserChanged(int)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_plenumChooser->returnPlenumChooser,SIGNAL(currentIndexChanged(int)),this,SLOT(onReturnPlenumChooserChanged(int)));
+  OS_ASSERT(bingo);
+}
+
+void ThermalZoneInspectorView::onSupplyPlenumChooserChanged(int newIndex)
+{
+  OS_ASSERT(m_modelObject);
+  boost::optional<model::ThermalZone> thermalZone;
+  thermalZone = m_modelObject->optionalCast<model::ThermalZone>();
+  OS_ASSERT(thermalZone);
+
+  QString newPlenumString = m_plenumChooser->supplyPlenumChooser->itemData(newIndex).toString();
+  Handle newPlenumHandle(newPlenumString);
+
+  emit moveBranchForZoneSupplySelected(thermalZone.get(),newPlenumHandle);
+}
+
+void ThermalZoneInspectorView::onReturnPlenumChooserChanged(int newIndex)
+{
+  OS_ASSERT(m_modelObject);
+  boost::optional<model::ThermalZone> thermalZone;
+  thermalZone = m_modelObject->optionalCast<model::ThermalZone>();
+  OS_ASSERT(thermalZone);
+
+  QString newPlenumString = m_plenumChooser->returnPlenumChooser->itemData(newIndex).toString();
+  Handle newPlenumHandle(newPlenumString);
+
+  emit moveBranchForZoneReturnSelected(thermalZone.get(),newPlenumHandle);
+}
+
+void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  bool force=false;
+  bool recursive=true;
+  bool hideChildren=false;
+  m_displayIP = displayIP;
+  m_modelObject = modelObject;
+
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, readOnly, hideChildren);
+
+  boost::optional<model::ThermalZone> t_zone = modelObject.optionalCast<model::ThermalZone>();
+  OS_ASSERT(t_zone);
+  boost::optional<model::AirLoopHVAC> t_airLoopHVAC = t_zone->airLoopHVAC();
+  OS_ASSERT(t_airLoopHVAC);
+
+  // Populate chooser with supply plenums in system
+  QComboBox * supplyChooser = m_plenumChooser->supplyPlenumChooser;
+  supplyChooser->blockSignals(true);
+
+  std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(t_airLoopHVAC->demandComponents());
+  for( std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
+       it != supplyPlenums.end();
+       ++it )
+  {
+    boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
+    if( t_plenumZone )
+    {
+      supplyChooser->addItem(QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+    }
+    else 
+    {
+      supplyChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+    }
+  }
+  supplyChooser->addItem("Ducted Supply - No Plenum","");
+
+  // Set the current supply plenum
+  std::vector<model::ModelObject> thisZoneSupplyPlenums = t_airLoopHVAC->demandComponents(t_airLoopHVAC->zoneSplitter(),t_zone.get(),model::AirLoopHVACSupplyPlenum::iddObjectType());
+  if( thisZoneSupplyPlenums.empty() )
+  {
+    supplyChooser->setCurrentIndex(supplyChooser->findData(""));
+  }
+  else
+  {
+    supplyChooser->setCurrentIndex(supplyChooser->findData(thisZoneSupplyPlenums.front().handle().toString()));
+  }
+  supplyChooser->blockSignals(false);
+
+  // Populate chooser with return plenums in system
+  QComboBox * returnChooser = m_plenumChooser->returnPlenumChooser;
+  returnChooser->blockSignals(true);
+
+  std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(t_airLoopHVAC->demandComponents());
+  for( std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
+       it != returnPlenums.end();
+       ++it )
+  {
+    boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
+    if( t_plenumZone )
+    {
+      returnChooser->addItem(QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+    }
+    else 
+    {
+      returnChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+    }
+  }
+  returnChooser->addItem("Ducted Return - No Plenum","");
+
+  // Set the current return plenum
+  std::vector<model::ModelObject> thisZoneReturnPlenums = t_airLoopHVAC->demandComponents(t_zone.get(),t_airLoopHVAC->zoneMixer(),model::AirLoopHVACReturnPlenum::iddObjectType());
+  if( thisZoneReturnPlenums.empty() )
+  {
+    returnChooser->setCurrentIndex(returnChooser->findData(""));
+  }
+  else
+  {
+    returnChooser->setCurrentIndex(returnChooser->findData(thisZoneReturnPlenums.front().handle().toString()));
+  }
+  returnChooser->blockSignals(false);
 }
 
 WaterToAirInspectorView::WaterToAirInspectorView( QWidget * parent )
