@@ -192,6 +192,8 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   void setSystem(RefrigerationSystem & system);
 
+  void resetSystem();
+
   //@}
   /** @name Other */
   //@{

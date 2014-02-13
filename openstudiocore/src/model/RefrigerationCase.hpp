@@ -319,6 +319,8 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void setSystem(RefrigerationSystem & system);
 
+  void resetSystem();
+
   //@}
   /** @name Other */
   //@{

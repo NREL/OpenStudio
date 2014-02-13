@@ -539,6 +539,13 @@ namespace detail {
     system.addWalkin(this->getObject<RefrigerationWalkIn>());
   }
 
+  void RefrigerationWalkIn_Impl::resetSystem() {
+    boost::optional<RefrigerationSystem> refrigerationSystem = system();
+    if(refrigerationSystem){
+      refrigerationSystem.get().removeWalkin(this->getObject<RefrigerationWalkIn>());
+    }
+  }
+
 } // detail
 
 RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule)
@@ -846,6 +853,10 @@ void RefrigerationWalkIn::resetInsulatedFloorUValue() {
 
 void RefrigerationWalkIn::setSystem(RefrigerationSystem & system) {
   getImpl<detail::RefrigerationWalkIn_Impl>()->setSystem(system);
+}
+
+void RefrigerationWalkIn::resetSystem() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetSystem();
 }
 
 /// @cond

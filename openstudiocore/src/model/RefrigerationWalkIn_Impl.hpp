@@ -203,6 +203,8 @@ namespace detail {
 
     void setSystem(RefrigerationSystem & system);
 
+    void resetSystem();
+
     //@}
     /** @name Other */
     //@{

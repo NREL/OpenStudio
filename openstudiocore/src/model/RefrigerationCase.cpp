@@ -811,6 +811,13 @@ namespace detail {
     system.addCase(this->getObject<RefrigerationCase>());
   }
 
+  void RefrigerationCase_Impl::resetSystem() {
+    boost::optional<RefrigerationSystem> refrigerationSystem = system();
+    if(refrigerationSystem){
+      refrigerationSystem.get().removeCase(this->getObject<RefrigerationCase>());
+    }
+  }
+
 } // detail
 
 RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule)
@@ -1382,6 +1389,10 @@ void RefrigerationCase::resetAverageRefrigerantChargeInventory() {
 
 void RefrigerationCase::setSystem(RefrigerationSystem & system) {
   getImpl<detail::RefrigerationCase_Impl>()->setSystem(system);
+}
+
+void RefrigerationCase::resetSystem() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetSystem();
 }
 
 /// @cond
