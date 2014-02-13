@@ -20,6 +20,8 @@
 #include <radiance/WindowGroup.hpp>
 #include <radiance/ForwardTranslator.hpp>
 
+#include <utilities/geometry/Geometry.hpp>
+
 namespace openstudio{
 namespace radiance{
 
@@ -137,6 +139,41 @@ namespace radiance{
   boost::optional<model::ShadingControl> WindowGroup::shadingControl() const
   {
     return m_shadingControl;
+  }
+
+  void WindowGroup::addWindowPolygon(const openstudio::Point3dVector& windowPolygon)
+  {
+    m_windowPolygons.push_back(windowPolygon);
+  }
+
+  std::string WindowGroup::windowGroupPoints() const
+  {
+    boost::optional<double> largestArea;
+    boost::optional<Point3d> centroid;
+    boost::optional<Vector3d> outwardNormal;
+
+    BOOST_FOREACH(const openstudio::Point3dVector& windowPolygon, m_windowPolygons){
+      boost::optional<double> area = getArea(windowPolygon);
+      if (area){
+        if (!largestArea || (*area > *largestArea)){
+          boost::optional<Point3d> tmpCentroid = getCentroid(windowPolygon);
+          boost::optional<Vector3d> tmpOutwardNormal = getOutwardNormal(windowPolygon);
+          if (tmpCentroid && tmpOutwardNormal){
+            largestArea = area;
+            centroid = tmpCentroid;
+            outwardNormal = tmpOutwardNormal;
+          }
+        }
+      }
+    }
+
+    std::string result;
+    if (centroid && outwardNormal){
+      result = formatString(centroid->x()) + " " + formatString(centroid->y()) + " " + formatString(centroid->z()) + " " +
+               formatString(outwardNormal->x()) + " " + formatString(outwardNormal->y()) + " " + formatString(outwardNormal->z()) + "\n";
+    }
+
+    return result;
   }
 
   std::string WindowGroup::makeName() const

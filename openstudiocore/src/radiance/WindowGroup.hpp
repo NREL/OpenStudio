@@ -26,6 +26,8 @@
 #include <model/ConstructionBase.hpp>
 #include <model/ShadingControl.hpp>
 
+#include <utilities/geometry/Point3d.hpp>
+
 namespace openstudio{
 namespace radiance{
 
@@ -50,6 +52,10 @@ namespace radiance{
 
       boost::optional<model::ShadingControl> shadingControl() const;
 
+      void addWindowPolygon(const openstudio::Point3dVector& windowPolygon);
+
+      std::string windowGroupPoints() const;
+
     private:
 
       std::string makeName() const;
@@ -59,6 +65,7 @@ namespace radiance{
       model::Space m_space;
       model::ConstructionBase m_construction;
       boost::optional<model::ShadingControl> m_shadingControl;
+      std::vector<openstudio::Point3dVector> m_windowPolygons;
   };
 
   // vector of WindowGroup

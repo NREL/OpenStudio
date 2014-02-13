@@ -734,14 +734,17 @@ namespace radiance {
   }
 
   WindowGroup ForwardTranslator::getWindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
-    const boost::optional<model::ShadingControl>& shadingControl)
+    const boost::optional<model::ShadingControl>& shadingControl, const openstudio::Point3dVector& polygon)
   {
     WindowGroup result(azimuth, space, construction, shadingControl);
-    std::vector<WindowGroup>::const_iterator it = std::find(m_windowGroups.begin(), m_windowGroups.end(), result);
+
+    std::vector<WindowGroup>::iterator it = std::find(m_windowGroups.begin(), m_windowGroups.end(), result);
     if (it != m_windowGroups.end()){
+      it->addWindowPolygon(polygon);
       return *it;
     }
 
+    result.addWindowPolygon(polygon);
     m_windowGroups.push_back(result);
     return result;
   }
@@ -890,7 +893,6 @@ namespace radiance {
 
       space_names.push_back(space_name);
       LOG(Debug, "Processing space: " << space_name);
-      openstudio::Transformation space_transformation = space->transformation();
 
       // split model into zone-based Radiance .rad files
       m_radSpaces[space_name] = "#Space = " + space_name + "\n";
@@ -965,13 +967,16 @@ namespace radiance {
             continue;
           }
 
+          // get the polygon
+          polygon = openstudio::radiance::ForwardTranslator::getPolygon(*subSurface);
+
           boost::optional<model::ShadingControl> shadingControl = subSurface->shadingControl();
 
           // find window groupd
           // double azi = surface->azimuth() * (180 / PI());
           double azi = surface->azimuth();
           
-          WindowGroup windowGroup = getWindowGroup(azi, *space, *construction, shadingControl);
+          WindowGroup windowGroup = getWindowGroup(azi, *space, *construction, shadingControl, polygon);
           std::string windowGroup_name = windowGroup.name();
 
           std::string subSurface_name = cleanName(subSurface->name().get());
@@ -1023,8 +1028,7 @@ namespace radiance {
             // polygon header
             m_radWindowGroups[windowGroup_name] += "#--SubSurface = " + subSurface_name + "\n";
             m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis, 4) + " (tn = " + formatString(tn, 4) + ")\n";
-            // get/write the polygon
-            openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(*subSurface);
+            // write the polygon
             m_radWindowGroups[windowGroup_name] += "glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + " polygon " + subSurface_name + "\n";
             m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
@@ -1034,9 +1038,6 @@ namespace radiance {
             {
               m_radWindowGroups[windowGroup_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
             }
-
-            // TODO: for each window group store representative points for control
-            // append these to the end of the points file
 
           } else if (subSurfaceUpCase == "DOOR") {
 
@@ -1051,9 +1052,7 @@ namespace radiance {
             m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
             // write material
             m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
-            // get / write polygon
-
-            openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(*subSurface);
+            // write polygon
             m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance) + " polygon " + subSurface_name + "\n";
             m_radSpaces[space_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
@@ -1093,18 +1092,17 @@ namespace radiance {
             // polygon header
             m_radSpaces[space_name] += "#--SubSurface = " + subSurface_name + "\n";
             m_radSpaces[space_name] += "#---Tvis = " + formatString(tVis) + " (tn = " + formatString(tn) + ")\n";
-
-            // get/write the polygon
-            openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(*subSurface);
-
+            // write the polygon
             m_radSpaces[space_name] += "glaz_skylight_" + space_name + "_" + formatString(tn) + " polygon " + space_name + "_" + subSurface_name + "\n";
             m_radSpaces[space_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
+
             for (Point3dVector::const_iterator vertex = polygon.begin();
                 vertex != polygon.end();
                 ++vertex)
             {
               m_radSpaces[space_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
             }
+
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDOME") {
             LOG(Warn, "subsurface is a tdd dome, not translated (not yet implemented).");
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDIFFUSER") {
@@ -1249,8 +1247,9 @@ namespace radiance {
         // openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
         BOOST_FOREACH(const Vector3d& viewVector, viewVectors){        
-        m_radGlareSensors[space_name] += formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + formatString(sensor_point.z()) + " " + formatString(viewVector.x()) + " " + formatString(viewVector.y()) + " " + formatString(viewVector.z()) + "\n";
+          m_radGlareSensors[space_name] += formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + formatString(sensor_point.z()) + " " + formatString(viewVector.x()) + " " + formatString(viewVector.y()) + " " + formatString(viewVector.z()) + "\n";
         }
+
         // write glare sensor
         openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".glr");
         std::ofstream file(openstudio::toString(filename).c_str());
@@ -1285,19 +1284,19 @@ namespace radiance {
         m_radMaps[space_name] = "";
         m_radMapHandles[space_name] = map->handle();
 
-        std::vector<Point3d> referencePoints = openstudio::radiance::ForwardTranslator::getReferencePoints(*map);
+        // write map file
+        openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".map");
+        std::ofstream file(openstudio::toString(filename).c_str());
+        t_outfiles.push_back(filename);
 
+        std::vector<Point3d> referencePoints = openstudio::radiance::ForwardTranslator::getReferencePoints(*map);
         for (std::vector<Point3d>::const_iterator point = referencePoints.begin();
             point != referencePoints.end();
             ++point)
         {
           m_radMaps[space_name] += "" + formatString(point->x()) + " " + formatString(point->y()) + " " + formatString(point->z()) + " 0 0 1\n";
-          // write map file
-          openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".map");
-          std::ofstream file(openstudio::toString(filename).c_str());
-          t_outfiles.push_back(filename);
-          file << m_radMaps[space_name];
         }
+        file << m_radMaps[space_name];
 
         LOG(Debug, "wrote " << space_name << ".map");
       }
@@ -1324,6 +1323,12 @@ namespace radiance {
           std::ofstream glazefile(openstudio::toString(glazefilename).c_str());
           t_outfiles.push_back(glazefilename);
           glazefile << m_radWindowGroups[windowGroup_name];
+
+          // write window group control points
+          openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(windowGroup_name + ".pts");
+          std::ofstream file(openstudio::toString(filename).c_str());
+          t_outfiles.push_back(filename);
+          file << windowGroup->windowGroupPoints();
         }
       }
 
