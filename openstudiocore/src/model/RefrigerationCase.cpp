@@ -418,19 +418,18 @@ namespace detail {
   }
 
   boost::optional<RefrigerationSystem> RefrigerationCase_Impl::system() const {
-    boost::optional<RefrigerationSystem> system;
-    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getModelObjects<RefrigerationSystem>();
-    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems){
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+    RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
+    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
       RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
-      BOOST_FOREACH(RefrigerationCase refrigerationCase, refrigerationCases){
-        if (refrigerationCase == this->getObject<RefrigerationCase>()){
-          // bingo!
-          system = refrigerationSystem;
-          break;
-        }
+      if ( refrigerationCases.empty() ) {
+        continue;
+      }
+      if ( std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end() ) {
+        return refrigerationSystem;
       }
     }
-    return system;
+    return boost::none;
   }
 
   bool RefrigerationCase_Impl::setAvailabilitySchedule(Schedule& schedule) {
