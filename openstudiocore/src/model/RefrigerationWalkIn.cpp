@@ -323,19 +323,15 @@ namespace detail {
   }
 
   boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
-    boost::optional<RefrigerationSystem> system;
-    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getModelObjects<RefrigerationSystem>();
-    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems){
-      RefrigerationWalkInVector refrigerationWalkInsCases = refrigerationSystem.walkins();
-      BOOST_FOREACH(RefrigerationWalkIn refrigerationWalkIn, refrigerationWalkInsCases){
-        if (refrigerationWalkIn == this->getObject<RefrigerationWalkIn>()){
-          // bingo!
-          system = refrigerationSystem;
-          break;
-        }
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+    RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
+      RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
+      if ( !refrigerationWalkIns.empty() && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
+        return refrigerationSystem;
       }
     }
-    return system;
+    return boost::none;
   }
 
   bool RefrigerationWalkIn_Impl::setAvailabilitySchedule(Schedule& schedule) {
