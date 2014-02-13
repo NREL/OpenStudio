@@ -47,16 +47,16 @@ class DaylightSim_Test < Test::Unit::TestCase
     assert(system(command))
   
     #modelPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel.osm")
-    sqlPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel/model/radiance/gen_eplus/ModelToRadPreProcess/ModelToIdf-0/ExpandObjects-0/EnergyPlus-0/eplusout.sql") 
+    sqlPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel/model/radiance/gen_eplus/3-EnergyPlus-0/eplusout.sql") 
     #generate daylight coefficients
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim.rb' '#{modelPath}' '#{sqlPath}' --dc"))
+    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc"))
     #do annual sim
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim.rb' '#{modelPath}' '#{sqlPath}' --dcts --month 1 --day 21"))
+    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dcts --month 1 --day 21"))
   end
   
   def test_DaylightSim_help
     #print help message
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim.rb' --help"))
+    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim-Simple.rb' --help"))
   end
   
   def teardown

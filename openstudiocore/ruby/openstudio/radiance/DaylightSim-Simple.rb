@@ -171,7 +171,6 @@ end
 
 options = ParseOptions.parse(ARGV)
 
-
 # Read simsettings from model export 2013.01.10 RPG 
 # TODO: read settings directly from model
 options.tregVars = ""
@@ -198,7 +197,16 @@ File.open("#{outPath}/options/vmx.opt", "r") do |file|
   options.vmx = tempIO
 end
 
-
+if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+  perlpath = ""
+  if OpenStudio::applicationIsRunningFromBuildDirectory()
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+  else
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+  end
+  puts "Adding path for local perl: " + perlpath.to_s
+  ENV["PATH"] = ENV["PATH"] + ";" + perlpath.to_s
+end
 
 if !which('perl')
   puts "Perl could not be found in path, exiting"
@@ -404,7 +412,6 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   # "three phase" method
   if t_options.z == true
 
-
     # TODO actually generate the necessary DMX files
     # rpg777 this is copy and pasted from the old code
 
@@ -441,8 +448,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
           # compute daylight matri(ces)
           system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
 
-          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
-          | rcontrib #{klemsDensity} #{tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
+          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{t_options.klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
+          | rcontrib #{t_options.klemsDensity} #{t_options.tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
                          #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
           #end
       end
@@ -450,10 +457,10 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     # compute view matri(ces)
     puts "computing view matri(ces) for merged_space.map..."
     if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM) #Windows commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -I+ -fo #{klemsDensity} #{tregVars} \
+      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -I+ -fo #{t_options.klemsDensity} #{t_options.tregVars} \
        -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx -m skyglow model_dc.oct")
     else #UNIX commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{klemsDensity} #{tregVars} \
+      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{t_options.klemsDensity} #{t_options.tregVars} \
       -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx #{binPairs} #{t_outPath}/octrees/model_dc.oct")
     end
 

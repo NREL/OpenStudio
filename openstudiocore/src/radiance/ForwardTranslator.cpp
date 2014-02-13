@@ -60,6 +60,7 @@
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 #include <cstring>
 #include <cmath>
@@ -86,6 +87,8 @@ using openstudio::model::OptionalSpace;
 using openstudio::model::OptionalShadingSurfaceGroup;
 using openstudio::model::OptionalInteriorPartitionSurfaceGroup;
 using openstudio::model::OptionalSurface;
+
+typedef boost::filesystem::basic_ofstream<char> OFSTREAM;
 
 namespace openstudio {
 namespace radiance {
@@ -274,82 +277,101 @@ namespace radiance {
       //
       std::vector<openstudio::model::ShadingControl> shadingControls = model.getModelObjects<openstudio::model::ShadingControl>();
       openstudio::path daylightsimoptpath = radDir / openstudio::toPath("options/daylightsim.opt");
-      outfiles.push_back(daylightsimoptpath);
-      std::ofstream daylightsimopt(openstudio::toString(daylightsimoptpath).c_str());
-      if (shadingControls.empty())
-      {
-        // not 3-phase
-        daylightsimopt << "--x";
-      } else {
-        // yes 3-phase
-        daylightsimopt << "--z";
+      OFSTREAM daylightsimopt(daylightsimoptpath);
+      if (daylightsimopt.is_open()){
+        outfiles.push_back(daylightsimoptpath);
+        if (shadingControls.empty())
+        {
+          // not 3-phase
+          daylightsimopt << "--x";
+        } else {
+          // yes 3-phase
+          daylightsimopt << "--z";
 
-        // copy required bsdf files into place
-        openstudio::path bsdfoutpath = radDir/ openstudio::toPath("bsdf");
+          // copy required bsdf files into place
+          openstudio::path bsdfoutpath = radDir/ openstudio::toPath("bsdf");
 
-        // TODO: find all the bsdfs associated with the model and copy them all over now
+          // TODO: find all the bsdfs associated with the model and copy them all over now
 
-        boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/clear_100.xml"), bsdfoutpath / openstudio::toPath("clear_100.xml"), boost::filesystem::copy_option::overwrite_if_exists);
-        boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/shade_020.xml"), bsdfoutpath / openstudio::toPath("shade_020.xml"), boost::filesystem::copy_option::overwrite_if_exists);
+          boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/clear_100.xml"), bsdfoutpath / openstudio::toPath("clear_100.xml"), boost::filesystem::copy_option::overwrite_if_exists);
+          boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/shade_020.xml"), bsdfoutpath / openstudio::toPath("shade_020.xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
-        /// \todo rpg777 do we need reference these files in the materials.rad file?
-        //
-        /// \todo rgp777 also, we only want to group windows if they share the same shadinggroup
+          /// \todo rpg777 do we need reference these files in the materials.rad file?
+          //
+          /// \todo rgp777 also, we only want to group windows if they share the same shadinggroup
+        }
+      }else{
+        LOG(Error, "Cannot open file '" << toString(daylightsimoptpath) << "' for writing");
       }
 
       // write Radiance options to file(s)
       // view matrix options
       openstudio::path vmxoptpath = radDir / openstudio::toPath("options/vmx.opt");
-      outfiles.push_back(vmxoptpath);
-      std::ofstream vmxopt(openstudio::toString(vmxoptpath).c_str());
-      vmxopt << "-ab " << (int)radianceParameters.ambientBouncesVMX() << " " 
-                << "-ad " << (int)radianceParameters.ambientDivisionsVMX() << " "
-                << "-as " << (int)radianceParameters.ambientSupersamples() << " "
-                // << "-c " << (int)radianceParameters.accumulatedRaysperRecord() << " "
-                << "-dj " << radianceParameters.directJitter() << " "
-                << "-dp " << radianceParameters.directPretest() << " "              
-                << "-dt " << radianceParameters.directThreshold() << " "
-                << "-dc " << radianceParameters.directCertainty() << " "
-                << "-lw " << radianceParameters.limitWeightVMX() << " ";
+      OFSTREAM vmxopt(vmxoptpath);
+      if (vmxopt.is_open()){
+        outfiles.push_back(vmxoptpath);
+        vmxopt << "-ab " << (int)radianceParameters.ambientBouncesVMX() << " " 
+                  << "-ad " << (int)radianceParameters.ambientDivisionsVMX() << " "
+                  << "-as " << (int)radianceParameters.ambientSupersamples() << " "
+                  // << "-c " << (int)radianceParameters.accumulatedRaysperRecord() << " "
+                  << "-dj " << radianceParameters.directJitter() << " "
+                  << "-dp " << radianceParameters.directPretest() << " "              
+                  << "-dt " << radianceParameters.directThreshold() << " "
+                  << "-dc " << radianceParameters.directCertainty() << " "
+                  << "-lw " << radianceParameters.limitWeightVMX() << " ";
+      }else{
+        LOG(Error, "Cannot open file '" << toString(vmxoptpath) << "' for writing");
+      }
 
       // daylight matrix options
       openstudio::path dmxoptpath = radDir / openstudio::toPath("options/dmx.opt");
-      outfiles.push_back(dmxoptpath);
-      std::ofstream dmxopt(openstudio::toString(dmxoptpath).c_str());
-      dmxopt << "-ab " << (int)radianceParameters.ambientBouncesDMX() << " " 
-                << "-ad " << (int)radianceParameters.ambientDivisionsDMX() << " "
-                << "-as " << (int)radianceParameters.ambientSupersamples() << " "
-                // << "-c " << (int)radianceParameters.accumulatedRaysperRecord() << " "
-                << "-dj " << radianceParameters.directJitter() << " "
-                << "-dp " << radianceParameters.directPretest() << " "              
-                << "-dt " << radianceParameters.directThreshold() << " "
-                << "-dc " << radianceParameters.directCertainty() << " "
-                << "-lw " << radianceParameters.limitWeightDMX() << " ";
+      OFSTREAM dmxopt(dmxoptpath);
+      if (dmxopt.is_open()){
+        outfiles.push_back(dmxoptpath);
+        dmxopt << "-ab " << (int)radianceParameters.ambientBouncesDMX() << " " 
+                  << "-ad " << (int)radianceParameters.ambientDivisionsDMX() << " "
+                  << "-as " << (int)radianceParameters.ambientSupersamples() << " "
+                  // << "-c " << (int)radianceParameters.accumulatedRaysperRecord() << " "
+                  << "-dj " << radianceParameters.directJitter() << " "
+                  << "-dp " << radianceParameters.directPretest() << " "              
+                  << "-dt " << radianceParameters.directThreshold() << " "
+                  << "-dc " << radianceParameters.directCertainty() << " "
+                  << "-lw " << radianceParameters.limitWeightDMX() << " ";
+      }else{
+        LOG(Error, "Cannot open file '" << toString(dmxoptpath) << "' for writing");
+      }
 
       // Tregenza/Klems resolution options
       openstudio::path tregoptpath = radDir / openstudio::toPath("options/treg.opt");
-      outfiles.push_back(tregoptpath);
-      std::ofstream tregopt(openstudio::toString(tregoptpath).c_str());
-      tregopt << "-c " << (int)radianceParameters.klemsSamplingDensity() << " ";
+      OFSTREAM tregopt(tregoptpath);
+      if (tregopt.is_open()){
+        outfiles.push_back(tregoptpath);
+        tregopt << "-c " << (int)radianceParameters.klemsSamplingDensity() << " ";
 
-      if (radianceParameters.skyDiscretizationResolution() == "146"){
-        tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
-      } else if (radianceParameters.skyDiscretizationResolution() == "578"){
-        tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
-      } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-        tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";
+        if (radianceParameters.skyDiscretizationResolution() == "146"){
+          tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
+        } else if (radianceParameters.skyDiscretizationResolution() == "578"){
+          tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
+        } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+          tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";
+        }
+        // TODO: make these values into a pulldown choice, add support for out of bounds
+      }else{
+        LOG(Error, "Cannot open file '" << toString(tregoptpath) << "' for writing");
       }
-      // TODO: make these values into a pulldown choice, add support for out of bounds
 
+      // Hi Qual options (illumimance maps)
+      openstudio::path mapsoptpath = radDir / openstudio::toPath("options/maps.opt");
+      OFSTREAM mapsopt(mapsoptpath);
+      if (mapsopt.is_open()){
+        outfiles.push_back(mapsoptpath);
+        mapsopt << "-ab 10 -ad 8000 -as 50 -dt 0 -dc 1 -ds 0.05 -lw 0.00001";
+      }else{
+        LOG(Error, "Cannot open file '" << toString(mapsoptpath) << "' for writing");
+      }
 
-    // Hi Qual options (illumimance maps)
-    openstudio::path mapsoptpath = radDir / openstudio::toPath("options/maps.opt");
-    outfiles.push_back(mapsoptpath);
-    std::ofstream mapsopt(openstudio::toString(mapsoptpath).c_str());
-    mapsopt << "-ab 10 -ad 8000 -as 50 -dt 0 -dc 1 -ds 0.05 -lw 0.00001";
-
-    // the end
-    LOG(Debug, "Done. Radiance model located at: " << openstudio::toString(radDir) << ".");
+      // the end
+      LOG(Debug, "Done. Radiance model located at: " << openstudio::toString(radDir) << ".");
 
     }catch(const std::exception& e){
       outfiles.clear();
@@ -799,16 +821,19 @@ namespace radiance {
       }
 
       openstudio::path filename = t_radDir / openstudio::toPath("/scene/shading_site.rad");
-      t_outfiles.push_back(filename);
-      m_radSceneFiles.push_back(filename);
+      OFSTREAM f(filename);
+      if (f.is_open()){
+        t_outfiles.push_back(filename);
+        m_radSceneFiles.push_back(filename);
 
-      std::ofstream f(openstudio::toString(filename).c_str(), std::ios_base::out | std::ios_base::trunc);
-
-      for (std::set<std::string>::const_iterator line = siteShadingSurfaces.begin();
-          line != siteShadingSurfaces.end();
-          ++line)
-      {
-        f << *line;
+        for (std::set<std::string>::const_iterator line = siteShadingSurfaces.begin();
+            line != siteShadingSurfaces.end();
+            ++line)
+        {
+          f << *line;
+        }
+      }else{
+        LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
       }
 
     }
@@ -866,16 +891,18 @@ namespace radiance {
       }
 
       openstudio::path filename = t_radDir / openstudio::toPath("scene/shading_building.rad");
-      t_outfiles.push_back(filename);
-      m_radSceneFiles.push_back(filename);
-
-      std::ofstream f(openstudio::toString(filename).c_str(), std::ios_base::out | std::ios_base::trunc);
-
-      for (std::set<std::string>::const_iterator line = buildingShadingSurfaces.begin();
-          line != buildingShadingSurfaces.end();
-          ++line)
-      {
-        f << *line;
+      OFSTREAM f(filename);
+      if (f.is_open()){
+        t_outfiles.push_back(filename);
+        m_radSceneFiles.push_back(filename);
+        for (std::set<std::string>::const_iterator line = buildingShadingSurfaces.begin();
+            line != buildingShadingSurfaces.end();
+            ++line)
+        {
+          f << *line;
+        }
+      }else{
+        LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
       }
     }
   }
@@ -1227,9 +1254,13 @@ namespace radiance {
        
         // write daylighting controls
         openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".sns");
-        std::ofstream file(openstudio::toString(filename).c_str());
-        t_outfiles.push_back(filename);
-        file << m_radSensors[space_name];
+        OFSTREAM file(filename);
+        if (file.is_open()){
+          t_outfiles.push_back(filename);
+          file << m_radSensors[space_name];
+        }else{
+          LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+        }
 
         LOG(Debug, "INFO: wrote " << space_name << ".sns");
       }
@@ -1252,9 +1283,13 @@ namespace radiance {
 
         // write glare sensor
         openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".glr");
-        std::ofstream file(openstudio::toString(filename).c_str());
-        t_outfiles.push_back(filename);
-        file << m_radGlareSensors[space_name];
+        OFSTREAM file(filename);
+        if (file.is_open()){
+          t_outfiles.push_back(filename);
+          file << m_radGlareSensors[space_name];
+        }else{
+          LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+        }
 
         LOG(Debug, "INFO: wrote " << space_name << ".glr");
       }
@@ -1268,7 +1303,7 @@ namespace radiance {
       //
       //  // write views
       //  openstudio::path filename = t_radDir/openstudio::toPath("views")/openstudio::toPath(space_name + ".vw");
-      //  std::ofstream file(openstudio::toString(filename).c_str());
+      //  OFSTREAM file(filename);
       //  t_outfiles.push_back(filename);
       //  file << m_radViews[space_name];
       //
@@ -1286,29 +1321,37 @@ namespace radiance {
 
         // write map file
         openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(space_name + ".map");
-        std::ofstream file(openstudio::toString(filename).c_str());
-        t_outfiles.push_back(filename);
+        OFSTREAM file(filename);
+        if (file.is_open()){
+          t_outfiles.push_back(filename);
 
-        std::vector<Point3d> referencePoints = openstudio::radiance::ForwardTranslator::getReferencePoints(*map);
-        for (std::vector<Point3d>::const_iterator point = referencePoints.begin();
-            point != referencePoints.end();
-            ++point)
-        {
-          m_radMaps[space_name] += "" + formatString(point->x()) + " " + formatString(point->y()) + " " + formatString(point->z()) + " 0 0 1\n";
+          std::vector<Point3d> referencePoints = openstudio::radiance::ForwardTranslator::getReferencePoints(*map);
+          for (std::vector<Point3d>::const_iterator point = referencePoints.begin();
+              point != referencePoints.end();
+              ++point)
+          {
+            m_radMaps[space_name] += "" + formatString(point->x()) + " " + formatString(point->y()) + " " + formatString(point->z()) + " 0 0 1\n";
+          }
+          file << m_radMaps[space_name];
+        }else{
+          LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
-        file << m_radMaps[space_name];
 
         LOG(Debug, "wrote " << space_name << ".map");
       }
 
       // write geometry
       openstudio::path filename = t_radDir / openstudio::toPath("scene") / openstudio::toPath(space_name + "_geom.rad");
-      t_outfiles.push_back(filename);
-      m_radSceneFiles.push_back(filename);
+      OFSTREAM file(filename);
+      if (file.is_open()){
+        t_outfiles.push_back(filename);
+        m_radSceneFiles.push_back(filename);
+        file << m_radSpaces[space_name];
+      }else{
+        LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+      }
 
-      std::ofstream file(toString(filename).c_str());
-      file << m_radSpaces[space_name];
-
+      // write window groups
       for (std::vector<WindowGroup>::const_iterator windowGroup = m_windowGroups.begin();
           windowGroup != m_windowGroups.end();
           ++windowGroup)
@@ -1319,74 +1362,91 @@ namespace radiance {
         if (m_radWindowGroups.find(windowGroup_name) != m_radWindowGroups.end())
         {
           openstudio::path glazefilename = t_radDir / openstudio::toPath("scene/glazing") / openstudio::toPath(windowGroup_name + ".rad");
-          m_radSceneFiles.push_back(glazefilename);
-          std::ofstream glazefile(openstudio::toString(glazefilename).c_str());
-          t_outfiles.push_back(glazefilename);
-          glazefile << m_radWindowGroups[windowGroup_name];
+          OFSTREAM glazefile(glazefilename);
+          if (glazefile.is_open()){
+            t_outfiles.push_back(glazefilename);
+            m_radSceneFiles.push_back(glazefilename);
+            glazefile << m_radWindowGroups[windowGroup_name];
+          }else{
+            LOG(Error, "Cannot open file '" << toString(glazefilename) << "' for writing");
+          }
 
           // write window group control points
           openstudio::path filename = t_radDir/openstudio::toPath("numeric")/openstudio::toPath(windowGroup_name + ".pts");
-          std::ofstream file(openstudio::toString(filename).c_str());
-          t_outfiles.push_back(filename);
-          file << windowGroup->windowGroupPoints();
+          OFSTREAM file(filename);
+          if (file.is_open()){
+            t_outfiles.push_back(filename);
+            file << windowGroup->windowGroupPoints();
+          }else{
+            LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+          }
         }
       }
 
       // write radiance materials file
       openstudio::path materialsfilename = t_radDir / openstudio::toPath("materials/materials.rad");
-      t_outfiles.push_back(materialsfilename);
-      std::ofstream materialsfile(openstudio::toString(materialsfilename).c_str());
-
-      for (std::set<std::string>::const_iterator line = m_radMaterials.begin();
-          line != m_radMaterials.end();
-          ++line)
-      {
-        materialsfile << *line;
-      };
+      OFSTREAM materialsfile(materialsfilename);
+      if (materialsfile.is_open()){
+        t_outfiles.push_back(materialsfilename);
+        for (std::set<std::string>::const_iterator line = m_radMaterials.begin();
+            line != m_radMaterials.end();
+            ++line)
+        {
+          materialsfile << *line;
+        };
+      }else{
+        LOG(Error, "Cannot open file '" << toString(materialsfilename) << "' for writing");
+      }
 
       // write radiance DC vmx materials (lights) file
       openstudio::path materials_vmxfilename = t_radDir / openstudio::toPath("materials/materials_vmx.rad");
-      t_outfiles.push_back(materials_vmxfilename);
-      std::ofstream materials_vmxfile(openstudio::toString(materials_vmxfilename).c_str());
-
-      for (std::set<std::string>::const_iterator line = m_radMaterialsDC.begin();
-          line != m_radMaterialsDC.end();
-          ++line)
-      {
-        materials_vmxfile << *line;
-      };
-
-      // write radiance vmx materials list
-
-      // DLM: format of this file is, approximately VMX, bsdf1, bsdf2, DMX
-
-      openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
-      t_outfiles.push_back(materials_dcfilename);
-      std::ofstream materials_dcfile(openstudio::toString(materials_dcfilename).c_str());
-
-      for (std::set<std::string>::const_iterator line = m_radDCmats.begin();
-          line != m_radDCmats.end();
-          ++line)
-      {
-        materials_dcfile << *line;
-      };
-
-
-      // write complete scene
-      openstudio::path modelfilename= t_radDir / openstudio::toPath("model.rad");
-      t_outfiles.push_back(modelfilename);
-      std::ofstream modelfile(openstudio::toString(modelfilename).c_str());
-
-      // materials not included in model.rad (suport for 3-phase method)
-      // modelfile << "!xform materials/materials.rad\n";
-
-      for (std::vector<openstudio::path>::const_iterator filename = m_radSceneFiles.begin();
-          filename != m_radSceneFiles.end();
-          ++filename)
-      {
-        modelfile << "!xform ./" << openstudio::toString(openstudio::relativePath(*filename, t_radDir)) << std::endl;
+      OFSTREAM materials_vmxfile(materials_vmxfilename);
+      if (materials_vmxfile.is_open()){
+        t_outfiles.push_back(materials_vmxfilename);
+        for (std::set<std::string>::const_iterator line = m_radMaterialsDC.begin();
+            line != m_radMaterialsDC.end();
+            ++line)
+        {
+          materials_vmxfile << *line;
+        };
+      }else{
+        LOG(Error, "Cannot open file '" << toString(materials_vmxfilename) << "' for writing");
       }
 
+      // write radiance vmx materials list
+      // DLM: format of this file is, approximately VMX, bsdf1, bsdf2, DMX
+      openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
+      OFSTREAM materials_dcfile(materials_dcfilename);
+      if (materials_dcfile.is_open()){
+        t_outfiles.push_back(materials_dcfilename);
+        for (std::set<std::string>::const_iterator line = m_radDCmats.begin();
+            line != m_radDCmats.end();
+            ++line)
+        {
+          materials_dcfile << *line;
+        };
+      }else{
+        LOG(Error, "Cannot open file '" << toString(materials_dcfilename) << "' for writing");
+      }
+
+      // write complete scene
+      openstudio::path modelfilename = t_radDir / openstudio::toPath("model.rad");
+      OFSTREAM modelfile(modelfilename);
+      if (modelfile.is_open()){
+        t_outfiles.push_back(modelfilename);
+
+        // materials not included in model.rad (suport for 3-phase method)
+        // modelfile << "!xform materials/materials.rad\n";
+
+        for (std::vector<openstudio::path>::const_iterator filename = m_radSceneFiles.begin();
+            filename != m_radSceneFiles.end();
+            ++filename)
+        {
+          modelfile << "!xform ./" << openstudio::toString(openstudio::relativePath(*filename, t_radDir)) << std::endl;
+        }
+      }else{
+        LOG(Error, "Cannot open file '" << toString(modelfilename) << "' for writing");
+      }
     }
   }
 

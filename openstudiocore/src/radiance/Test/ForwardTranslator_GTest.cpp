@@ -46,8 +46,6 @@
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 
 #include <boost/foreach.hpp>
-#include <QTemporaryFile>
-#include <QDir>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -167,17 +165,16 @@ TEST(Radiance, ForwardTranslator_ExampleModel)
 {
   Model model = exampleModel();
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());//QDir::tempPath());//tempFile.fileName());
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_TRUE(boost::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty());
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
-
-  long removed = boost::filesystem::remove_all(outpath);
-  EXPECT_GT(removed, 0);
 }
 
 
@@ -193,18 +190,17 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
       subSurface.setShadingControl(shadingControl);
     }
   }
-  
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModelWithShadingControl");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_TRUE(boost::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty());
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
-
-  long removed = boost::filesystem::remove_all(outpath);
-  EXPECT_GT(removed, 0);
 }
 
 
@@ -216,17 +212,16 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
     illuminanceMap.remove();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoIllumMaps");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_FALSE(boost::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
-
-  long removed = boost::filesystem::remove_all(outpath);
-  EXPECT_GT(removed, 0);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
@@ -237,17 +232,16 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
     daylightingControl.remove();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoDaylightingControls");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_FALSE(boost::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
-
-  long removed = boost::filesystem::remove_all(outpath);
-  EXPECT_GT(removed, 0);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
@@ -258,17 +252,16 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
     glareSensor.remove();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoGlareSensors");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_TRUE(boost::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty());
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
-
-  long removed = boost::filesystem::remove_all(outpath);
-  EXPECT_GT(removed, 0);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
@@ -281,15 +274,14 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
     thermalZone.resetIlluminanceMap();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoThermalZoneLinks");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_FALSE(boost::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
-
-  long removed = boost::filesystem::remove_all(outpath);
-  EXPECT_GT(removed, 0);
 }
