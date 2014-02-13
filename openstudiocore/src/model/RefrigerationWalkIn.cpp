@@ -327,10 +327,7 @@ namespace detail {
     RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
     BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
       RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
-      if ( refrigerationWalkIns.empty() ) {
-        continue;
-      }
-      if ( std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
+      if ( !refrigerationWalkIns.empty() && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
         return refrigerationSystem;
       }
     }

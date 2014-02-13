@@ -422,10 +422,7 @@ namespace detail {
     RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
     BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
       RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
-      if ( refrigerationCases.empty() ) {
-        continue;
-      }
-      if ( std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end() ) {
+      if ( !refrigerationCases.empty() && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end() ) {
         return refrigerationSystem;
       }
     }
