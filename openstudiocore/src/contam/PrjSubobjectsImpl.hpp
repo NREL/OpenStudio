@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2013-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -16,8 +16,8 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef PRJSUBOBJECTSPRIVATE_H
-#define PRJSUBOBJECTSPRIVATE_H
+#ifndef PRJSUBOBJECTSIMPL_H
+#define PRJSUBOBJECTSIMPL_H
 
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
