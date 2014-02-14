@@ -21,6 +21,7 @@
 #define OPENSTUDIO_INSPECTORVIEW_HPP
 
 #include <QWidget>
+#include <QDialog>
 #include <model/ModelObject.hpp>
 #include <model/WaterToAirComponent.hpp>
 #include <model/WaterToAirComponent_Impl.hpp>
@@ -34,6 +35,7 @@ class QStackedWidget;
 class QVBoxLayout;
 class QTimer;
 class QComboBox;
+class QPushButton;
 
 namespace openstudio {
 
@@ -73,6 +75,8 @@ class InspectorView : public QWidget
 
   void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
   void moveBranchForZoneReturnSelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
+  void moveBranchForZoneToNewSupplyPlenumSelected(model::ThermalZone & zone, const Handle & newPlenumZoneHandle);
+  void moveBranchForZoneToNewReturnPlenumSelected(model::ThermalZone & zone, const Handle & newPlenumZoneHandle);
 
   public slots:
 
@@ -162,8 +166,28 @@ class SplitterMixerInspectorView : public BaseInspectorView
   ZoneChooserView * m_zoneChooserView;
 };
 
+class NewPlenumDialog : public QDialog
+{
+  Q_OBJECT;
+
+  public:
+
+  NewPlenumDialog(QWidget * parent = 0);
+
+  virtual ~NewPlenumDialog() {}
+
+  QComboBox * zoneChooser;
+
+  private slots:
+
+  void onCancelClicked(); 
+  void onApplyClicked(); 
+};
+
 class PlenumChooserView : public QWidget
 {
+  Q_OBJECT;
+
   public:
   
   PlenumChooserView(QWidget * parent = 0);
@@ -172,6 +196,8 @@ class PlenumChooserView : public QWidget
 
   QComboBox * supplyPlenumChooser;
   QComboBox * returnPlenumChooser;
+  QPushButton * newSupplyPlenumButton;
+  QPushButton * newReturnPlenumButton;
 };
 
 class ThermalZoneInspectorView : public BaseInspectorView
@@ -195,6 +221,9 @@ class ThermalZoneInspectorView : public BaseInspectorView
 
   void onSupplyPlenumChooserChanged(int newIndex);
   void onReturnPlenumChooserChanged(int newIndex);
+
+  void onNewSupplyPlenumClicked();
+  void onNewReturnPlenumClicked();
 
   private:
 

@@ -90,6 +90,10 @@
 #include <QLabel>
 #include <QPainter>
 #include <QPixmap>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QButtonGroup>
+#include <QDialogButtonBox>
 
 namespace openstudio {
 
@@ -581,18 +585,72 @@ void GenericInspectorView::layoutModelObject( model::ModelObject & modelObject, 
   m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
 }
 
+NewPlenumDialog::NewPlenumDialog(QWidget * parent)
+  : QDialog(parent)
+{
+  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  mainVLayout->setAlignment(Qt::AlignTop);
+  mainVLayout->setContentsMargins(10,10,10,10);
+  mainVLayout->setSpacing(10);
+  setLayout(mainVLayout);
+
+  zoneChooser = new QComboBox();
+  mainVLayout->addWidget(zoneChooser);
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  model::Model model = doc->model();
+
+  std::vector<model::ThermalZone> allZones = model.getModelObjects<model::ThermalZone>();
+
+  for(std::vector<model::ThermalZone>::iterator it = allZones.begin();
+      it != allZones.end();
+      ++it)
+  {
+    if( (! it->isPlenum()) && it->equipment().empty() )
+    {
+      zoneChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+    }
+  }
+
+  mainVLayout->addSpacing(10);
+
+  bool bingo;
+  QDialogButtonBox * buttonBox = new QDialogButtonBox();
+  QPushButton * cancelButton = buttonBox->addButton(QDialogButtonBox::Cancel);
+  bingo = connect(cancelButton,SIGNAL(clicked()),this,SLOT(onCancelClicked()));
+  OS_ASSERT(bingo);
+  QPushButton * applyButton = buttonBox->addButton(QDialogButtonBox::Apply);
+  bingo = connect(applyButton,SIGNAL(clicked()),this,SLOT(onApplyClicked()));
+  OS_ASSERT(bingo);
+  mainVLayout->addWidget(buttonBox);
+}
+
+void NewPlenumDialog::onCancelClicked()
+{
+  reject();
+}
+
+void NewPlenumDialog::onApplyClicked()
+{
+  accept();
+}
+
 PlenumChooserView::PlenumChooserView(QWidget * parent)
 {
   QVBoxLayout * mainVLayout = new QVBoxLayout();
   mainVLayout->setAlignment(Qt::AlignTop);
   setLayout(mainVLayout);
   mainVLayout->setContentsMargins(10,10,10,10);
-  mainVLayout->setSpacing(0);
+  mainVLayout->setSpacing(10);
 
   QLabel * supplyPlenumLabel = new QLabel("Zone Supply");
   mainVLayout->addWidget(supplyPlenumLabel);
   supplyPlenumChooser = new QComboBox();
   mainVLayout->addWidget(supplyPlenumChooser);
+
+  newSupplyPlenumButton = new QPushButton();
+  newSupplyPlenumButton->setText("Create new supply plenum from zone");
+  mainVLayout->addWidget(newSupplyPlenumButton);
 
   mainVLayout->addSpacing(10);
 
@@ -600,6 +658,10 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   mainVLayout->addWidget(returnPlenumLabel);
   returnPlenumChooser = new QComboBox();
   mainVLayout->addWidget(returnPlenumChooser);
+
+  newReturnPlenumButton = new QPushButton();
+  newReturnPlenumButton->setText("Create new return plenum from zone");
+  mainVLayout->addWidget(newReturnPlenumButton);
 }
 
 ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)
@@ -621,6 +683,12 @@ ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)
   OS_ASSERT(bingo);
 
   bingo = connect(m_plenumChooser->returnPlenumChooser,SIGNAL(currentIndexChanged(int)),this,SLOT(onReturnPlenumChooserChanged(int)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_plenumChooser->newSupplyPlenumButton,SIGNAL(clicked()),this,SLOT(onNewSupplyPlenumClicked()));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_plenumChooser->newReturnPlenumButton,SIGNAL(clicked()),this,SLOT(onNewReturnPlenumClicked()));
   OS_ASSERT(bingo);
 }
 
@@ -648,6 +716,48 @@ void ThermalZoneInspectorView::onReturnPlenumChooserChanged(int newIndex)
   Handle newPlenumHandle(newPlenumString);
 
   emit moveBranchForZoneReturnSelected(thermalZone.get(),newPlenumHandle);
+}
+
+void ThermalZoneInspectorView::onNewSupplyPlenumClicked()
+{
+  NewPlenumDialog dialog;
+  int result = dialog.exec();
+
+  if( result == QDialog::Accepted )
+  {
+    QComboBox * cb = dialog.zoneChooser;
+    Handle newZoneHandle(cb->itemData(cb->currentIndex()).toString());
+    if( ! newZoneHandle.isNull() )
+    {
+      OS_ASSERT(m_modelObject);
+      boost::optional<model::ThermalZone> thermalZone;
+      thermalZone = m_modelObject->optionalCast<model::ThermalZone>();
+      OS_ASSERT(thermalZone);
+
+      emit moveBranchForZoneSupplySelected(thermalZone.get(),newZoneHandle);
+    }
+  }
+}
+
+void ThermalZoneInspectorView::onNewReturnPlenumClicked()
+{
+  NewPlenumDialog dialog;
+  int result = dialog.exec();
+
+  if( result == QDialog::Accepted )
+  {
+    QComboBox * cb = dialog.zoneChooser;
+    Handle newZoneHandle(cb->itemData(cb->currentIndex()).toString());
+    if( ! newZoneHandle.isNull() )
+    {
+      OS_ASSERT(m_modelObject);
+      boost::optional<model::ThermalZone> thermalZone;
+      thermalZone = m_modelObject->optionalCast<model::ThermalZone>();
+      OS_ASSERT(thermalZone);
+
+      emit moveBranchForZoneReturnSelected(thermalZone.get(),newZoneHandle);
+    }
+  }
 }
 
 void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
@@ -749,7 +859,7 @@ void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObje
     }
     else 
     {
-      returnChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+      returnChooser->addItem(returnPixmap,QString::fromStdString(it->name().get()),it->handle().toString());
     }
   }
   returnChooser->addItem("Ducted Return - No Plenum","");

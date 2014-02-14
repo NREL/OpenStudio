@@ -158,6 +158,14 @@ void InspectorController::moveBranchForZoneSupply(model::ThermalZone & zone, con
   {
     airLoopHVAC->moveBranchForZone(zone,supplyPlenum.get());
   }
+  else if(boost::optional<model::ThermalZone> thermalZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
+  {
+    model::AirLoopHVACSupplyPlenum supplyPlenum(model);
+    supplyPlenum.setThermalZone(thermalZone.get());
+
+    airLoopHVAC->addBranchForHVACComponent(supplyPlenum);
+    airLoopHVAC->moveBranchForZone(zone,supplyPlenum);
+  }
   else
   {
     model::AirLoopHVACZoneSplitter zoneSplitter = airLoopHVAC->zoneSplitter();
@@ -174,6 +182,14 @@ void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, con
   if(boost::optional<model::AirLoopHVACReturnPlenum> returnPlenum = model.getModelObject<model::AirLoopHVACReturnPlenum>(newPlenumHandle))
   {
     airLoopHVAC->moveBranchForZone(zone,returnPlenum.get());
+  }
+  else if(boost::optional<model::ThermalZone> thermalZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
+  {
+    model::AirLoopHVACReturnPlenum returnPlenum(model);
+    returnPlenum.setThermalZone(thermalZone.get());
+
+    airLoopHVAC->addBranchForHVACComponent(returnPlenum);
+    airLoopHVAC->moveBranchForZone(zone,returnPlenum);
   }
   else
   {
