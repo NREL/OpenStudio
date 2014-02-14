@@ -17,10 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/InspectorView.hpp>
-#include <openstudio_lib/ZoneChooserView.hpp>
-#include <openstudio_lib/LoopChooserView.hpp>
-#include <openstudio_lib/LibraryTabWidget.hpp>
+#include "OSDocument.hpp"
+#include "OSAppBase.hpp"
+#include "GridItem.hpp"
+#include "MainRightColumnController.hpp"
+#include "InspectorView.hpp"
+#include "ZoneChooserView.hpp"
+#include "LoopChooserView.hpp"
+#include "LibraryTabWidget.hpp"
 #include <model_editor/InspectorGadget.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
@@ -84,6 +88,8 @@
 #include <QApplication>
 #include <QTimer>
 #include <QLabel>
+#include <QPainter>
+#include <QPixmap>
 
 namespace openstudio {
 
@@ -583,8 +589,6 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   mainVLayout->setContentsMargins(10,10,10,10);
   mainVLayout->setSpacing(0);
 
-  //std::vector<model::ThermalZone> zones = 
-
   QLabel * supplyPlenumLabel = new QLabel("Zone Supply");
   mainVLayout->addWidget(supplyPlenumLabel);
   supplyPlenumChooser = new QComboBox();
@@ -669,23 +673,42 @@ void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObje
   boost::optional<model::AirLoopHVAC> t_airLoopHVAC = t_zone->airLoopHVAC();
   OS_ASSERT(t_airLoopHVAC);
 
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  SystemItem * systemItem = mrc->systemItem(t_airLoopHVAC->handle());
+
+  QPointF points[4] = {
+    QPointF(25,25),
+    QPointF(75,40),
+    QPointF(75,60),
+    QPointF(25,75),
+  };
+
   // Populate chooser with supply plenums in system
   QComboBox * supplyChooser = m_plenumChooser->supplyPlenumChooser;
   supplyChooser->blockSignals(true);
-
+  
   std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(t_airLoopHVAC->demandComponents());
   for( std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
        it != supplyPlenums.end();
        ++it )
   {
+    QPixmap supplyPixmap(100,100);
+    QPainter painter(&supplyPixmap);
+    painter.setBackground(Qt::white);
+    painter.eraseRect(0,0,100,100);
+    painter.setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+    painter.setBrush(QBrush(systemItem->plenumColor(it->handle()),Qt::SolidPattern));
+    painter.drawPolygon(points,4);
+
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )
     {
-      supplyChooser->addItem(QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+      supplyChooser->addItem(supplyPixmap,QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
     }
     else 
     {
-      supplyChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+      supplyChooser->addItem(supplyPixmap,QString::fromStdString(it->name().get()),it->handle().toString());
     }
   }
   supplyChooser->addItem("Ducted Supply - No Plenum","");
@@ -711,10 +734,18 @@ void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObje
        it != returnPlenums.end();
        ++it )
   {
+    QPixmap returnPixmap(100,100);
+    QPainter painter(&returnPixmap);
+    painter.setBackground(Qt::white);
+    painter.eraseRect(0,0,100,100);
+    painter.setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+    painter.setBrush(QBrush(systemItem->plenumColor(it->handle()),Qt::SolidPattern));
+    painter.drawPolygon(points,4);
+
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )
     {
-      returnChooser->addItem(QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+      returnChooser->addItem(returnPixmap,QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
     }
     else 
     {

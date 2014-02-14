@@ -33,12 +33,10 @@ class QStackedWidget;
 namespace openstudio {
 
 class HorizontalTabWidget;
-
 class InspectorController;
-
 class LocalLibraryController;
-
 class EditController;
+class SystemItem;
 
 class MainRightColumnController : public OSQObjectController
 {
@@ -58,6 +56,12 @@ class MainRightColumnController : public OSQObjectController
     LIBRARY,
     EDIT
   };
+
+  // Methods to store and retrieve SystemItem objects.
+  // These are used to get plenum colors and potentially other tasks.
+  void registerSystemItem(const Handle & systemHandle, SystemItem * systemItem);
+  void unregisterSystemItem(const Handle & systemHandle);
+  SystemItem * systemItem(const Handle & systemHandle) const;
 
   signals:
   
@@ -123,6 +127,8 @@ class MainRightColumnController : public OSQObjectController
   QStackedWidget * m_libraryView;
 
   QStackedWidget * m_editView;
+
+  std::map<Handle,SystemItem *> m_systemItemMap;
 
   model::Model m_model;
 

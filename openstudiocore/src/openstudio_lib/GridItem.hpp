@@ -907,11 +907,13 @@ class SystemItem : public GridItem
 
   SystemItem( model::Loop loop, LoopScene * loopScene );
 
+  virtual ~SystemItem();
+
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
              QWidget *widget = 0);
 
-  int plenumIndex(const Handle & plenumHandle);
+  QColor plenumColor(const Handle & plenumHandle);
 
   private:
 
@@ -926,6 +928,8 @@ class SystemItem : public GridItem
   SystemCenterItem * m_systemCenterItem;
 
   std::map<Handle,int> m_plenumIndexMap;
+
+  int plenumIndex(const Handle & plenumHandle);
 };
 
 class OneTwoFourStraightItem : public GridItem

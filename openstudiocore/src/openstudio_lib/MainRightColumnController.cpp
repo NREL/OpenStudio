@@ -92,6 +92,31 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   OS_ASSERT(isConnected);
 }
 
+void MainRightColumnController::registerSystemItem(const Handle & systemHandle, SystemItem * systemItem)
+{
+  m_systemItemMap[systemHandle] = systemItem;
+}
+
+void MainRightColumnController::unregisterSystemItem(const Handle & systemHandle)
+{
+  std::map<Handle,SystemItem *>::iterator it = m_systemItemMap.find(systemHandle);
+  if( it != m_systemItemMap.end() )
+  {
+    m_systemItemMap.erase(it);
+  }
+}
+
+SystemItem * MainRightColumnController::systemItem(const Handle & systemHandle) const
+{
+  std::map<Handle,SystemItem *>::const_iterator it = m_systemItemMap.find(systemHandle);
+  if( it != m_systemItemMap.end() )
+  {
+    return it->second;
+  }
+
+  return NULL;
+}
+
 void MainRightColumnController::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
 {
   if( modelObject )

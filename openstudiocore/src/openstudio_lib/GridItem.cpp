@@ -22,6 +22,9 @@
 #include "IconLibrary.hpp"
 #include "LoopScene.hpp"
 #include "SchedulesView.hpp"
+#include "OSDocument.hpp"
+#include "OSAppBase.hpp"
+#include "MainRightColumnController.hpp"
 
 #include <utilities/core/Assert.hpp>
 
@@ -1010,6 +1013,10 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
     m_loop(loop),
     m_loopScene(loopScene)
 {
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  mrc->registerSystemItem(m_loop.handle(),this);
+
   m_loopScene->addItem(this);
 
   model::Node supplyInletNode = m_loop.supplyInletNode();
@@ -1074,6 +1081,13 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
   setHGridLength( m_supplySideItem->getHGridLength() );
 }
 
+SystemItem::~SystemItem()
+{
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  mrc->unregisterSystemItem(m_loop.handle());
+}
+
 int SystemItem::plenumIndex(const Handle & plenumHandle)
 {
   std::map<Handle,int>::iterator it = m_plenumIndexMap.find(plenumHandle);
@@ -1085,6 +1099,26 @@ int SystemItem::plenumIndex(const Handle & plenumHandle)
   {
     return -1;
   }
+}
+
+QColor SystemItem::plenumColor(const Handle & plenumHandle)
+{
+  QColor color;
+  int index = plenumIndex(plenumHandle);
+  if( index < 0 )
+  {
+    color = SchedulesView::colors[0];
+  }
+  else if( index > 12 )
+  {
+    color = SchedulesView::colors[12];
+  }
+  else
+  {
+    color = SchedulesView::colors[index];
+  }
+
+  return color;
 }
 
 void SystemItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -1149,19 +1183,7 @@ SupplyPlenumItem::SupplyPlenumItem(const model::ModelObject & mo, QGraphicsItem 
   setModelObject(mo);
 
   // HorizontalBranchItem -> BranchGroupItem -> DemandSideItem -> SystemItem
-  int index = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumIndex(mo.handle());
-  if( index < 0 )
-  {
-    m_color = SchedulesView::colors[0];
-  }
-  else if( index > 12 )
-  {
-    m_color = SchedulesView::colors[12];
-  }
-  else
-  {
-    m_color = SchedulesView::colors[index];
-  }
+  m_color = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumColor(mo.handle());
 }
 
 void SupplyPlenumItem::paint(QPainter *painter, 
@@ -1192,19 +1214,7 @@ ReturnPlenumItem::ReturnPlenumItem(const model::ModelObject & mo, QGraphicsItem 
   setModelObject(mo);
 
   // HorizontalBranchItem -> BranchGroupItem -> DemandSideItem -> SystemItem
-  int index = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumIndex(mo.handle());
-  if( index < 0 )
-  {
-    m_color = SchedulesView::colors[0];
-  }
-  else if( index > 12 )
-  {
-    m_color = SchedulesView::colors[12];
-  }
-  else
-  {
-    m_color = SchedulesView::colors[index];
-  }
+  m_color = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumColor(mo.handle());
 }
 
 void ReturnPlenumItem::paint(QPainter *painter, 
