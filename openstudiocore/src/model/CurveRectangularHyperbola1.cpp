@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -138,32 +138,27 @@ namespace detail {
   }
 
   void CurveRectangularHyperbola1_Impl::setCoefficient1C1(double coefficient1C1) {
-    bool result = false;
-    result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient1C1, coefficient1C1);
+    bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient1C1, coefficient1C1);
     OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola1_Impl::setCoefficient2C2(double coefficient2C2) {
-    bool result = false;
-    result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient2C2, coefficient2C2);
+    bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient2C2, coefficient2C2);
     OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola1_Impl::setCoefficient3C3(double coefficient3C3) {
-    bool result = false;
-    result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient3C3, coefficient3C3);
+    bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::Coefficient3C3, coefficient3C3);
     OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola1_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_RectangularHyperbola1Fields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola1_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_RectangularHyperbola1Fields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_RectangularHyperbola1Fields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
@@ -198,8 +193,7 @@ namespace detail {
   }
 
   bool CurveRectangularHyperbola1_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
-    bool result = false;
-    result = setString(OS_Curve_RectangularHyperbola1Fields::InputUnitTypeforx, inputUnitTypeforx);
+    bool result = setString(OS_Curve_RectangularHyperbola1Fields::InputUnitTypeforx, inputUnitTypeforx);
     return result;
   }
 
@@ -209,8 +203,7 @@ namespace detail {
   }
 
   bool CurveRectangularHyperbola1_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_RectangularHyperbola1Fields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_RectangularHyperbola1Fields::OutputUnitType, outputUnitType);
     return result;
   }
 

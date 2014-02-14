@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -68,41 +68,5 @@ class Site_Test < Test::Unit::TestCase
     assert(site.empty?)
 
   end
-  
-  def test_site_attributes
-  
-    model = OpenStudio::Model::Model.new
-    
-    site = model.getSite
-    
-    # ClimateZones-related Attributes
-    
-    assert(site.climateZones.empty?)
-    
-    climateZone = site.getAttribute("activeClimateZoneValue")
-    assert((not climateZone.empty?))
-    assert_equal("",climateZone.get.valueAsString)
-    assert(site.climateZones.empty?)
-    
-    climateZoneInstitution = site.getAttribute("activeClimateZoneInstitution")
-    assert((not climateZoneInstitution.empty?))
-    assert_equal("",climateZoneInstitution.get.valueAsString)
-    assert(site.climateZones.empty?)
-    
-    assert(site.setAttribute("activeClimateZoneInstitution", "CEC"))
-    assert_equal(false, site.climateZones.empty?)
-    climateZoneInstitution = site.getAttribute("activeClimateZoneInstitution")
-    assert((not climateZoneInstitution.empty?))
-    assert_equal("CEC",climateZoneInstitution.get.valueAsString)
-    
-    assert(site.setAttribute("activeClimateZoneValue", "13"))
-    assert_equal(false,site.climateZones.empty?)
-    climateZoneInstitution = site.getAttribute("activeClimateZoneInstitution")
-    assert((not climateZoneInstitution.empty?))
-    assert_equal("CEC",climateZoneInstitution.get.valueAsString)
-    climateZone = site.getAttribute("activeClimateZoneValue")
-    assert((not climateZone.empty?))
-    assert_equal("13",climateZone.get.valueAsString)
-  
-  end
+ 
 end

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -306,12 +306,12 @@ void ClassViewWidget::on_nameChanged(QString)
     loadModel(); // TODO costly and clunky
     update();
     return;
-    QModelIndexList rowList;
+    /*QModelIndexList rowList;
     if(mTableView->getSelectedRows(rowList)){
       ///! we are only coded to handle a single row
       OS_ASSERT(rowList.size() == 1);
       //rowList.at(0).
-    }
+    }*/
   }
   else{
     mModelDirty = true;

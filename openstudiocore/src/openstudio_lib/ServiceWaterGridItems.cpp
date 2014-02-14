@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -133,8 +133,6 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
   i = i + straightItem->getHGridLength();
 
   // Drop Zone
-
-  std::vector<model::ModelObject> modelObjects;
 
   WaterUseEquipmentDropZoneItem * dropBranchItem = new WaterUseEquipmentDropZoneItem(this);
 
@@ -391,8 +389,6 @@ ServiceWaterItem::ServiceWaterItem(ServiceWaterScene * serviceWaterScene)
   i = i + straightItem->getHGridLength();
 
   // Drop Zone
-
-  std::vector<model::ModelObject> modelObjects;
 
   WaterUseConnectionsDropZoneItem * dropBranchItem = new WaterUseConnectionsDropZoneItem(this);
 

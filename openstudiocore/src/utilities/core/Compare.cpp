@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,29 @@
 #include <boost/lexical_cast.hpp>
 
 namespace openstudio {
+
+IstringFind::IstringFind()
+{
+}
+
+IstringFind::IstringFind(const std::string& target)
+{
+  addTarget(target);
+}
+void IstringFind::addTarget(const std::string& target)
+{
+  m_targets.push_back(target);
+}
+
+bool IstringFind::operator()(const std::string& other) const
+{
+  BOOST_FOREACH(const std::string& target, m_targets){
+    if (istringEqual(target, other)){
+      return true;
+    }
+  }
+  return false;
+}
 
 bool IstringPairCompare::operator()(const std::pair<std::string, std::string>& x,
                                     const std::pair<std::string, std::string>& y) const

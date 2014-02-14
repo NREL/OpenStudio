@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -495,16 +495,9 @@ void FileReferenceRecord::updatePathData(ProjectDatabase database,
                                          const openstudio::path& originalBase,
                                          const openstudio::path& newBase)
 {
-  bool didStartTransaction = database.startTransaction();
-
   FileReferenceRecordVector records = getFileReferenceRecords(database);
   BOOST_FOREACH(FileReferenceRecord& record,records) {
     record.getImpl<detail::FileReferenceRecord_Impl>()->updatePathData(originalBase,newBase);
-  }
-
-  if (didStartTransaction) {
-    bool test = database.commitTransaction();
-    OS_ASSERT(test);
   }
 }
 

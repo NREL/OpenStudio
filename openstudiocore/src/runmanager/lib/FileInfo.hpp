@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -108,6 +108,10 @@ struct RUNMANAGER_API FileInfo {
   ///
   /// \throws std::runtime_error if the required file could not be found
   std::pair<QUrl, openstudio::path> getRequiredFile(const openstudio::path &filename);
+
+
+  /// Prepends a path onto the requiredFiles 
+  void prependRequiredFilePath(const openstudio::path &t_path);
 
   bool hasRequiredFile(const openstudio::path &filename);
 

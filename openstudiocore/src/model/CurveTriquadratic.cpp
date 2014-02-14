@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -863,8 +863,7 @@ namespace detail {
   }
 
   bool CurveTriquadratic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -874,8 +873,7 @@ namespace detail {
   }
 
   bool CurveTriquadratic_Impl::setInputUnitTypeforY(std::string inputUnitTypeforY) {
-    bool result = false;
-    result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforY, inputUnitTypeforY);
+    bool result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforY, inputUnitTypeforY);
     return result;
   }
 
@@ -885,8 +883,7 @@ namespace detail {
   }
 
   bool CurveTriquadratic_Impl::setInputUnitTypeforZ(std::string inputUnitTypeforZ) {
-    bool result = false;
-    result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforZ, inputUnitTypeforZ);
+    bool result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforZ, inputUnitTypeforZ);
     return result;
   }
 
@@ -896,8 +893,7 @@ namespace detail {
   }
 
   bool CurveTriquadratic_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_TriquadraticFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_TriquadraticFields::OutputUnitType, outputUnitType);
     return result;
   }
 

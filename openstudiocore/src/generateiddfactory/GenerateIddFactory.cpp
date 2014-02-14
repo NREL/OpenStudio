@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -42,8 +42,6 @@ IddFileFactoryDataVector constructIddFileObjects(const std::vector<std::string>&
 void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
                         const std::vector<IddFileFactoryData>& iddFiles) 
 {
-  std::stringstream ss;
-
   // start IddEnums.hxx
   outFiles.iddEnumsHxx.tempFile
     << "#ifndef UTILITIES_IDD_IDDENUMS_HXX" << std::endl

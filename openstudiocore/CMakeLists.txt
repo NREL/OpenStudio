@@ -23,7 +23,7 @@ CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenSt
 IF( APPLE )
   SET(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   SET(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_VERSION_BUILD}")
-  SET(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2013 National Renewable Energy Laboratory")
+  SET(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2014 National Renewable Energy Laboratory")
 ENDIF()
 
 ###############################################################################
@@ -53,7 +53,7 @@ OPTION( BUILD_V8_BINDINGS "Build Node V8 bindings" OFF )
 OPTION( BUILD_PYTHON_BINDINGS "Build Python bindings" OFF )
 
 # Build ctest testing
-# Requires: EnergyPLus
+# Requires: EnergyPlus
 OPTION( BUILD_TESTING "Build testing targets" OFF )
 
 # Build package
@@ -580,7 +580,7 @@ ADD_DEFINITIONS( -DSQLITE_THREADSAFE=1 ) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
-FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns REQUIRED)
+FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns QtWebKit REQUIRED)
 
 # Newer versions of cmake have a sqlite plugin finder built into the Qt package finder.  
 # This is for older versions.  Sometime before cmake version 2.8.7.
@@ -630,47 +630,13 @@ LIST( APPEND QT_LIBS ${QT_QTCORE_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTGUI_LIBRARY})
 LIST( APPEND QT_LIBS ${QT_QTGUI_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTSQL_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTSQL_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIBRARY})
 LIST( APPEND QT_LIBS ${QT_QTNETWORK_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTXML_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXML_LIB_DEPENDENCIES})
 LIST( APPEND QT_LIBS ${QT_QTXMLPATTERNS_LIBRARY})
-LIST( APPEND QT_LIBS ${QT_QTXMLPATTERNS_LIB_DEPENDENCIES})
+LIST( APPEND QT_LIBS ${QT_QTWEBKIT_LIBRARY})
 
 #QT_QSQLITE_PLUGIN_RELEASE
-
-
-# VTK #######################
-find_package(VTK REQUIRED)
-
-include(${VTK_USE_FILE})
-##############################
-
-# vtkCharts ##################
-find_library( VTK_SIMPLE_CHARTS_RELEASE_LIB 
-  NAME vtkSimpleCharts 
-  PATHS ${VTK_CHARTS_LIB_DIR}
-        ${VTK_CHARTS_LIB_DIR}/Release
-  NO_DEFAULT_PATH )
-
-find_library( VTK_SIMPLE_CHARTS_DEBUG_LIB 
-  NAME vtkSimpleCharts 
-  PATHS ${VTK_CHARTS_LIB_DIR}
-        ${VTK_CHARTS_LIB_DIR}/Debug
-  NO_DEFAULT_PATH )
-
-add_definitions(-DvtkCharts_USE_QT)
-
-include_directories(SYSTEM ${VTK_CHARTS_INCLUDE_DIR})
-
-link_directories( ${VTK_CHARTS_LIB_DIR} )
-##############################
-
-
-
-
-
 
 
 ###############################################################################
@@ -726,32 +692,32 @@ IF (WIN32)
   SET(AWS_RUBY_DESTINATION ".")
   SET(AWS_RUBY_EXTENSION ".zip")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip)
-  SET(AWS_RUBY_CHECKSUM f30b3eb7d5ed73e99b2b6875a43ab8ea)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip)
+  SET(AWS_RUBY_CHECKSUM 1f6e4348099b26e92909db62dcd3b173)
 ELSEIF(APPLE)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
   SET(AWS_RUBY_DESTINATION ".")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM 8bb6739c0babb08b4e2259f9797b31a7)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Darwin.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM 75963f2c6996af47a3ad69ac84d3d120)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
   SET(AWS_RUBY_DESTINATION "lib/openstudio")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM f5a8f11f1b2c854a550a15349df79a60)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-x86_64.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM 74d3a8ab4e1e3fb44c308f2aaa8e5732)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
   SET(AWS_RUBY_DESTINATION "lib/openstudio")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-i686.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM be333fe95ef13d4c5f3f449dd9b7c534)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-i686.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM e51ce64b3e03ed3a66f1f7e0a22b5b7e)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ENDIF()
 
-FILE(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 ) # EXPECTED_MD5 ${AWS_RUBY_CHECKSUM})
+FILE(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 )
 execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
 EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 INSTALL( DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}" DESTINATION "${AWS_RUBY_DESTINATION}" )
@@ -890,7 +856,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_1_0_20131018.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_2_0_20131220.pdf" DESTINATION . )
 
 ###############################################################################
 
@@ -912,7 +878,9 @@ IF (NOT UNIX)
     
   install( DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION . )
   
-  install( DIRECTORY "${CMAKE_BINARY_DIR}/../../../Ruby-prefix/src/Ruby/" DESTINATION "ruby-install/ruby" )
+  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" PATH )
+  get_filename_component(RubyPath "${RubyEXEPath}" PATH )
+  install( DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby" )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   INCLUDE(InstallRequiredSystemLibraries)
@@ -923,6 +891,9 @@ IF (NOT UNIX)
     # Install the system libraries to the ruby dir
     INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION "Ruby/openstudio")
+      
+    INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+      DESTINATION "ruby-install/ruby/bin")
   ENDIF(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 ENDIF()
 

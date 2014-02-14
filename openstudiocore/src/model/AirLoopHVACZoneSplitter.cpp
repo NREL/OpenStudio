@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -127,7 +127,7 @@ namespace detail{
   {
     std::vector<ThermalZone> zones;
     std::vector<ModelObject> modelObjects;
-    std::vector<ModelObject> _outletModelObjects = outletModelObjects();
+    //std::vector<ModelObject> _outletModelObjects = outletModelObjects();
 
     OptionalAirLoopHVAC _airLoopHVAC = airLoopHVAC();
     OptionalNode demandOutletNode;
@@ -148,7 +148,7 @@ namespace detail{
 
     for( std::vector<ModelObject>::iterator it = modelObjects.begin();
     it < modelObjects.end();
-    it++ )
+    ++it )
     {
       OptionalThermalZone zone;
       zone = it->optionalCast<ThermalZone>();

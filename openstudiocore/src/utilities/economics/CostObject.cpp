@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -82,8 +82,6 @@ void CostObject::addCostInstance( std::string name, double matCost, double insta
 
 void CostObject::calculateCashFlows( int analysisPeriod )
 {
-  double PVIF = 0.0;
-
   m_cashFlows.clear(); //clear out result
   m_cashFlows_Inflation.clear();
   m_cashFlows_Gas_Inflation.clear();
@@ -102,7 +100,7 @@ void CostObject::calculateCashFlows( int analysisPeriod )
 
   for (int iYear = 0; iYear <= analysisPeriod; iYear++) //year 0 is initial capital
   {
-    PVIF = double( 1 ) / ( pow( 1 + m_discountRate, iYear ) );
+    double PVIF = double( 1 ) / ( pow( 1 + m_discountRate, iYear ) );
     for (unsigned j = 0; j < m_RefCostObjsData.size(); j++)
     {
       if ( iYear == 0 ) 

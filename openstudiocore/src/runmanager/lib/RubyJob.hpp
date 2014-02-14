@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include "ToolBasedJob.hpp"
+#include "MergedJobResults.hpp"
 #include <energyplus/ErrorFile.hpp>
 
 #include <QProcess>
@@ -77,13 +78,20 @@ namespace detail {
 
       virtual void basePathChanged();
 
+      virtual void mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+
+      virtual bool hasMergedJobsImpl() const;
+      virtual std::vector<MergedJobResults> mergedJobResultsImpl() const;
+
     private:
       REGISTER_LOGGER("openstudio.runmanager.RubyJob");
 
       void getFiles(const RubyJobBuilder &t_rjb);
+      static std::vector<JobParams> getMergedJobs(const JobParams &t_params);
 
-      std::vector<std::pair<Files, std::string> > m_inputfiles;
+      std::vector<std::pair<int, std::pair<Files, std::string> > > m_inputfiles;
       std::string m_description;
+      std::vector<JobParams> m_mergedJobs;
    }; 
 
 }

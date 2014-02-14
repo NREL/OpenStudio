@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -77,18 +77,27 @@ namespace detail {
  *  WorkflowStepJobs\endlink are constructed by Problem, through the interpretation of 
  *  DataPoint::topLevelJob in the context of the Problem::workflow. */
 struct ANALYSIS_API WorkflowStepJob {
-  boost::optional<runmanager::Job> job; // initialized unless step evaluates to a null job
-                                        // or to the preliminary part of a compound measure
-                                        // (multiple variables per WorkItem/Job)
+  boost::optional<runmanager::Job> job; // initialized unless step evaluates to a null job or
+                                        // the preliminary part of a compound measure
+  boost::optional<unsigned> mergedJobIndex;
   WorkflowStep step;
   boost::optional<Measure> measure;
   boost::optional<QVariant> value; // for variables with explicitly set values (all continuous
                                    // variables and discrete variables where an integer value
                                    // is set, rather than mapped to a measure)
 
+  /** Returns errors from job if not job->hasMergedJobs(). Returns errors from MergeJobResults
+   *  otherwise. */
+  boost::optional<runmanager::JobErrors> errors() const;
+
+  /** Returns ouptputFiles from job if not job->hasMergedJobs(). Returns outputFiles from 
+   *  MergeJobResults otherwise. */
+  boost::optional<runmanager::Files> outputFiles() const;
+
   /** Constructor for bare runmanager::WorkItem. */
   WorkflowStepJob(const runmanager::Job& t_job,
-                  const WorkflowStep& t_step);
+                  const WorkflowStep& t_step,
+                  boost::optional<unsigned> t_mergedJobIndex=boost::none);
 
   /** Constructor for bare, null runmanager::WorkItem. */
   WorkflowStepJob(const WorkflowStep& t_step);
@@ -96,7 +105,8 @@ struct ANALYSIS_API WorkflowStepJob {
   /** Constructor for non-null measure. */
   WorkflowStepJob(const runmanager::Job& t_job,
                   const WorkflowStep& t_step,
-                  const Measure& t_measure);
+                  const Measure& t_measure,
+                  boost::optional<unsigned> t_mergedJobIndex=boost::none);
 
   /** Constructor for null measure. */
   WorkflowStepJob(const WorkflowStep& t_step,
@@ -105,7 +115,8 @@ struct ANALYSIS_API WorkflowStepJob {
   /** Constructor for explicitly set variable. */
   WorkflowStepJob(const runmanager::Job& t_job,
                   const WorkflowStep &t_step,
-                  const QVariant& t_value);
+                  const QVariant& t_value,
+                  boost::optional<unsigned> t_mergedJobIndex=boost::none);
 
   /** Constructor for explicitly set variable in preliminary part of compound measure. */
   WorkflowStepJob(const WorkflowStep &t_step,

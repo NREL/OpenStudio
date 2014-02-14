@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -46,6 +46,7 @@
 #include <model/PeopleDefinition.hpp>
 #include <model/Schedule.hpp>
 #include <model/LifeCycleCost.hpp>
+#include <model/SpaceInfiltrationDesignFlowRate.hpp>
 
 #include <utilities/core/UUID.hpp>
 
@@ -1224,4 +1225,58 @@ TEST_F(ModelFixture, Space_Cost)
 
   EXPECT_DOUBLE_EQ(200, cost1->totalCost());
   EXPECT_DOUBLE_EQ(200, cost2->totalCost());
+}
+
+TEST_F(ModelFixture, Space_InfiltrationDesignFlowRate) {
+  // create from floor print
+  Model model;
+  Point3dVector floorPrint;
+  floorPrint.push_back(Point3d(0, 10, 0));
+  floorPrint.push_back(Point3d(10, 10, 0));
+  floorPrint.push_back(Point3d(10, 0, 0));
+  floorPrint.push_back(Point3d(0, 0, 0));
+  boost::optional<Space> ospace = Space::fromFloorPrint(floorPrint, 3.6, model);
+  ASSERT_TRUE(ospace);
+  Space space = *ospace;
+
+  // check dimensions
+  EXPECT_DOUBLE_EQ(100.0,space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0,space.volume());
+  EXPECT_DOUBLE_EQ(144.0,space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0,space.exteriorArea()); // ground does not count
+  EXPECT_DOUBLE_EQ(0.0,space.infiltrationDesignFlowRate());
+
+  // add an infiltration object
+  SpaceInfiltrationDesignFlowRate spaceInfiltration(model);
+  spaceInfiltration.setSpace(space);
+  spaceInfiltration.setAirChangesperHour(1.0);
+
+  // check infiltration getters
+  EXPECT_DOUBLE_EQ(0.1,space.infiltrationDesignFlowRate());
+  EXPECT_DOUBLE_EQ(0.001,space.infiltrationDesignFlowPerSpaceFloorArea());
+  EXPECT_DOUBLE_EQ(4.0983606557377049E-4,space.infiltrationDesignFlowPerExteriorSurfaceArea());
+  EXPECT_DOUBLE_EQ(6.9444444444444447E-4,space.infiltrationDesignFlowPerExteriorWallArea());
+  EXPECT_DOUBLE_EQ(1.0,space.infiltrationDesignAirChangesPerHour());
+
+  // create a space type with infiltration
+  SpaceType spaceType(model);
+  SpaceInfiltrationDesignFlowRate spaceTypeInfiltration(model);
+  spaceTypeInfiltration.setSpaceType(spaceType);
+  spaceTypeInfiltration.setFlowperExteriorWallArea(5.0E-4);
+  space.setSpaceType(spaceType);
+
+  // check infiltration getters again
+  EXPECT_DOUBLE_EQ(0.172,space.infiltrationDesignFlowRate());
+  EXPECT_DOUBLE_EQ(0.00172,space.infiltrationDesignFlowPerSpaceFloorArea());
+  EXPECT_DOUBLE_EQ(7.0491803278688531E-4,space.infiltrationDesignFlowPerExteriorSurfaceArea());
+  EXPECT_DOUBLE_EQ(11.944444444444446E-4,space.infiltrationDesignFlowPerExteriorWallArea());
+  EXPECT_DOUBLE_EQ(1.72,space.infiltrationDesignAirChangesPerHour());
+
+  // go ahead and check building now
+  Building building = model.getUniqueModelObject<Building>();
+  EXPECT_DOUBLE_EQ(0.172,building.infiltrationDesignFlowRate());
+  EXPECT_DOUBLE_EQ(0.00172,building.infiltrationDesignFlowPerSpaceFloorArea());
+  EXPECT_DOUBLE_EQ(7.0491803278688531E-4,building.infiltrationDesignFlowPerExteriorSurfaceArea());
+  EXPECT_DOUBLE_EQ(11.944444444444446E-4,building.infiltrationDesignFlowPerExteriorWallArea());
+  EXPECT_DOUBLE_EQ(1.72,building.infiltrationDesignAirChangesPerHour());
 }

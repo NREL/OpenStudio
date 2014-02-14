@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -403,7 +403,7 @@ namespace detail {
     return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoil,component.handle());
   }
 
-  ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model & model) const
+  ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model model) const
   {
     ModelObject terminalClone = ZoneHVACComponent_Impl::clone(model);
 
@@ -418,6 +418,10 @@ namespace detail {
     terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoilClone);
 
     terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoilClone);
+
+    // TODO Move this into base clase
+    terminalClone.setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNode,"");
+    terminalClone.setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNode,"");
 
     return terminalClone;
   }

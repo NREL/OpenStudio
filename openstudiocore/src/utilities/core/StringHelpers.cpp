@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,10 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
+#include <utilities/core/Assert.hpp>
+#include <utilities/core/Optional.hpp>
 #include <utilities/core/StringHelpers.hpp>
+#include <utilities/math/FloatCompare.hpp>
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
+
+#include <cmath> 
+#include <iomanip>
 
 namespace openstudio {
 
@@ -40,6 +46,12 @@ std::string toUpperCamelCase(const std::string& s) {
 std::string toLowerCamelCase(const std::string& s) {
   std::string result = toCamelCase(s);
   result = boost::regex_replace(result,boost::regex("^([A-Z])"),"\\l$1");
+  return result;
+}
+
+std::string toUnderscoreCase(const std::string& s) {
+  std::string result = toLowerCamelCase(s);
+  result = boost::regex_replace(result,boost::regex("(.)([A-Z])"),"$1_\\l$2");
   return result;
 }
 
@@ -65,6 +77,123 @@ std::string iddObjectNameToIdfObjectName(const std::string& s) {
   result = boost::regex_replace(result,boost::regex(":")," ");
   result = boost::regex_replace(result,boost::regex("([a-z])([A-Z])"),"$1 $2");
   boost::trim(result);
+  return result;
+}
+
+std::string toNeatString(double value, 
+                         unsigned numFractionalDigits, 
+                         bool applyCommas)
+{
+  std::stringstream ss;
+  ss << std::fixed << std::setprecision(numFractionalDigits) << value;
+  std::string result = ss.str();
+  if (applyCommas) {
+    boost::smatch m;
+    bool ok = boost::regex_match(result,
+                                 m,
+                                 boost::regex("(-?[0-9]{1,3})([0-9]{3})*(\\.[0-9]+|$)"),
+                                 boost::match_extra);
+    OS_ASSERT(ok);
+    ss.str("");
+    ss << std::string(m[1].first,m[1].second);
+    for (std::string::const_iterator start = m[1].second; start != m[3].first; ) {
+      std::string::const_iterator end = start;
+      ++(++(++end));
+      ss << "," << std::string(start,end);
+      start = end;
+    }
+    ss << std::string(m[3].first,m[3].second);
+    result = ss.str();
+  }
+  return result;
+}
+
+std::string toNeatStringBySigFigs(double value,unsigned numSigFigs,bool applyCommas) {
+  return toNeatString(toNumSigFigs(value,numSigFigs),numFractionalDigits(value,numSigFigs),applyCommas);
+}
+
+unsigned numFractionalDigits(const std::string& str) {
+  unsigned result(0);
+  boost::smatch m;
+  if (boost::regex_search(str,m,boost::regex("\\.([0-9]+)"))) {
+    result = std::string(m[1].first,m[1].second).size();
+  }
+  return result;
+}
+
+unsigned numFractionalDigits(double value,unsigned numSigFigs) {
+  if (numSigFigs == 0u) {
+    LOG_FREE_AND_THROW("openstudio.core.StringHelpers","Number of significant figures must be > 0.");
+  }
+
+  if (equal<double>(value,0.0)) {
+    return numSigFigs - 1u;
+  }
+
+  value = fabs(value);
+  int orderOfMagnitude = int(floor(log10(value))); // 1683 => 3
+                                                   // 0.001683892 => -3
+  int figsBeforeDecimal = std::min(std::max(orderOfMagnitude + 1,0),int(numSigFigs));
+  OS_ASSERT(figsBeforeDecimal >= 0);
+  OS_ASSERT(figsBeforeDecimal <= int(numSigFigs));
+  int numZerosAfterDecimal = std::max(-1 - orderOfMagnitude,0);
+  OS_ASSERT(numZerosAfterDecimal >= 0);
+  return numSigFigs - figsBeforeDecimal + numZerosAfterDecimal;
+}
+
+std::pair<unsigned,unsigned> numFractionalDigits(const std::vector<double>& values,
+                                                 unsigned numSigFigs) 
+{
+  if (numSigFigs == 0u) {
+    LOG_FREE_AND_THROW("openstudio.core.StringHelpers","Number of significant figures must be > 0.");
+  }
+
+  std::pair<unsigned,unsigned> result(0u,0u);
+  for (unsigned i = 0, n = values.size(); i < n; ++i) {
+    double value = values[i];
+    unsigned numDigits = numFractionalDigits(value,numSigFigs);
+    if (i == 0) {
+      result = std::pair<unsigned,unsigned>(numDigits,numDigits);
+    }
+    else {
+      if (numDigits < result.first) {
+        result.first = numDigits;
+      }
+      else if (numDigits > result.second) {
+        result.second = numDigits;
+      }
+    }
+  }
+
+  return result;
+}
+
+double toNumSigFigs(double value, unsigned numSigFigs) {
+  if (numSigFigs == 0u) {
+    LOG_FREE_AND_THROW("openstudio.core.StringHelpers","Number of significant figures must be > 0.");
+  }
+
+  if (equal<double>(value,0.0)) {
+    return value;
+  }
+
+  double absValue = fabs(value);
+  bool negative = (value != absValue);
+  
+  double orderOfMagnitude = floor(log10(absValue)); // 1683 => 3
+                                                    // 0.001683892 => -3
+  //                             X.XXXXX             add more sig-figs
+  double positioningPowerOfTen = -orderOfMagnitude + double(int(numSigFigs) - 1);
+  // 1683, 2 sig-figs => 1683 * 10**-2 => 16.83
+  // 0.001683892, 2 sig-figs => 0.001683892 * 10**4 => 16.83892
+
+  double temp = absValue * pow(10.0,positioningPowerOfTen);
+  temp = floor(temp + 0.5); // round doesn't exist in VS2008 at least
+  double result = temp * pow(10.0,-positioningPowerOfTen);
+
+  if (negative) {
+    return -result;
+  }
   return result;
 }
 

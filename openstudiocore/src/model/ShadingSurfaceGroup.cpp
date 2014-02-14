@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -256,8 +256,7 @@ namespace detail {
   }
 
   void ShadingSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    bool result = setDouble(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -267,8 +266,7 @@ namespace detail {
   }
 
   void ShadingSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_ShadingSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
+    bool result = setDouble(OS_ShadingSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -278,8 +276,7 @@ namespace detail {
   }
 
   void ShadingSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_ShadingSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
+    bool result = setDouble(OS_ShadingSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -289,8 +286,7 @@ namespace detail {
   }
 
   void ShadingSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_ShadingSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
+    bool result = setDouble(OS_ShadingSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
   }
 

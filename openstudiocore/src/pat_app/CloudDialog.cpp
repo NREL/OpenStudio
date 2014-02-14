@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -419,10 +419,6 @@ CloudProviderWidget::~CloudProviderWidget()
 
 void CloudProviderWidget::createWidgets()
 {
-  QHBoxLayout * hLayout = 0;
-  QLabel * label = 0;
-  bool isConnected = false;
-
   // LOGIN PAGE
   m_loginWidget = new QWidget();
 
@@ -448,12 +444,12 @@ void CloudProviderWidget::createWidgets()
   m_rightSettingsLayout = new QVBoxLayout(this);
   m_rightSettingsWidget->setLayout(m_rightSettingsLayout);  
 
-  //label = new QLabel;
+  //QLabel * label = new QLabel;
   //label->setObjectName("H2");
   //label->setText("Cloud Session Default Setting");
   //m_rightSettingsLayout->addWidget(label);
 
-  //hLayout = new QHBoxLayout;
+  //QHBoxLayout * hLayout = new QHBoxLayout;
   //hLayout->setContentsMargins(QMargins(0,0,0,0));
   //hLayout->setSpacing(5);
   //m_rightSettingsLayout->addLayout(hLayout);
@@ -461,7 +457,7 @@ void CloudProviderWidget::createWidgets()
   //m_waitCheckBox = new QCheckBox();
   //hLayout->addWidget(m_waitCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
 
-  //isConnected = connect(m_waitCheckBox, SIGNAL(clicked(bool)),
+  //bool isConnected = connect(m_waitCheckBox, SIGNAL(clicked(bool)),
   //  this, SLOT(waitClicked(bool)));
   //OS_ASSERT(isConnected);
 
@@ -489,7 +485,7 @@ void CloudProviderWidget::createWidgets()
 
   //hLayout->addStretch();
 
-  label = new QLabel;
+  QLabel* label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
   label->setWordWrap(true);
   label->setObjectName("H1");
@@ -730,9 +726,6 @@ void VagrantProviderWidget::saveData()
   VagrantSettings vagrantSettings;
 
   vagrantSettings.signUserAgreement(m_cloudDialog->m_iAcceptCheckBox->isChecked()); 
-
-  bool isChecked = true;
-  isChecked = m_runOnStartUpCheckBox->isChecked();
 
   vagrantSettings.setUsername(m_serverUsernameLineEdit->text().toStdString());
   vagrantSettings.setPassword(m_serverPasswordLineEdit->text().toStdString());

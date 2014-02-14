@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <QWidget>
 
 class QDir;
+class QComboBox;
 
 namespace openstudio {
 
@@ -46,12 +47,16 @@ public:
 private slots:
   void onWeatherFileBtnClicked();
   void onDesignDayBtnClicked();
+  void onASHRAEClimateZoneChanged(const QString& climateZone);
+  void onCECClimateZoneChanged(const QString& climateZone);
 
 private:
   void update();
 
   model::Model m_model;
   QString m_modelTempDir;
+  QComboBox * m_ashraeClimateZone;
+  QComboBox * m_cecClimateZone;
   QLabel * m_weatherFileLbl;
   QLabel * m_designDaysLbl;
   QLabel * m_nameLbl;

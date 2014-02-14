@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -186,7 +186,7 @@ StartupView::StartupView(QWidget *parent) :
   // Create Reports
 
   QString reportDescription;
-  reportDescription.append("Compare results from Design Alternatives.  Currently only one report is available.  ");
+  reportDescription.append("Compare results from Design Alternatives.  Currently standard and calibration reports are available.  ");
   reportDescription.append("More reports are being developed.");
   QLabel * reportImageLabel = new QLabel();
   reportImageLabel->setFixedSize(54,65);

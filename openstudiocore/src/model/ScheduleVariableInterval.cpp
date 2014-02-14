@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -125,26 +125,47 @@ namespace detail {
   }
 
   bool ScheduleVariableInterval_Impl::setStartMonth(int startMonth, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_VariableIntervalFields::StartMonth, startMonth, driverMethod);
+    bool result = setInt(OS_Schedule_VariableIntervalFields::StartMonth, startMonth, driverMethod);
     return result;
   }
 
   bool ScheduleVariableInterval_Impl::setStartDay(int startDay, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Schedule_VariableIntervalFields::StartDay, startDay, driverMethod);
+    bool result = setInt(OS_Schedule_VariableIntervalFields::StartDay, startDay, driverMethod);
     return result;
   }
 
   void ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
+    bool result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
     OS_ASSERT(result);
   }
 
   void ScheduleVariableInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
     bool result = setString(OS_Schedule_VariableIntervalFields::OutOfRangeValue, "", driverMethod);
     OS_ASSERT(result);
+  }
+
+  void ScheduleVariableInterval_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_Schedule_VariableIntervalFields::StartMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_Schedule_VariableIntervalFields::StartDay);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_Schedule_VariableIntervalFields::StartDay, 28);
+      }
+    }
+
+    BOOST_FOREACH(IdfExtensibleGroup group, this->extensibleGroups()){
+      month = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Month);
+      if (month && (month.get() == 2)){
+        day = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Day);
+        if (day && (day.get() == 29)){
+          this->setInt(OS_Schedule_VariableIntervalExtensibleFields::Day, 28);
+        }
+      }
+    }
   }
 
   openstudio::TimeSeries ScheduleVariableInterval_Impl::timeSeries() const

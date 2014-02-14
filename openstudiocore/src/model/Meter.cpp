@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -254,12 +254,11 @@ namespace detail {
 
   bool Meter_Impl::setSpecificEndUse(const std::string& endUse)
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(endUse, endUseType(), fuelType(), installLocationType(), specificInstallLocation());
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }
@@ -274,12 +273,11 @@ namespace detail {
 
   bool Meter_Impl::setEndUseType(EndUseType type)
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(specificEndUse(), type, fuelType(), installLocationType(), specificInstallLocation());
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }
@@ -289,12 +287,11 @@ namespace detail {
 
   bool Meter_Impl::resetEndUseType()
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(specificEndUse(), boost::none, fuelType(), installLocationType(), specificInstallLocation());
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }
@@ -304,12 +301,11 @@ namespace detail {
 
   bool Meter_Impl::setFuelType(FuelType type)
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(specificEndUse(), endUseType(), type, installLocationType(), specificInstallLocation());
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }
@@ -319,12 +315,11 @@ namespace detail {
 
   bool Meter_Impl::resetFuelType()
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(specificEndUse(), endUseType(), boost::none, installLocationType(), specificInstallLocation());
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }
@@ -334,12 +329,11 @@ namespace detail {
 
   bool Meter_Impl::setInstallLocationType(InstallLocationType type)
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(specificEndUse(), endUseType(), fuelType(), type, specificInstallLocation());
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }
@@ -349,12 +343,11 @@ namespace detail {
 
   bool Meter_Impl::resetInstallLocationType()
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(specificEndUse(), endUseType(), fuelType(), boost::none, specificInstallLocation());
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }
@@ -364,12 +357,11 @@ namespace detail {
 
   bool Meter_Impl::setSpecificInstallLocation(const std::string& locationName)
   {
-    bool result = false;
     ModelObject object = getObject<ModelObject>();
 
     std::string name = Meter::getName(specificEndUse(), endUseType(), fuelType(), installLocationType(), locationName);
 
-    result = object.setString(OS_MeterFields::Name, name);
+    bool result = object.setString(OS_MeterFields::Name, name);
     if (!result){
       LOG(Error, "Could not set name to '" << name << "'");
     }

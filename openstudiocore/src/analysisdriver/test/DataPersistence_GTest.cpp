@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -80,12 +80,14 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     ASSERT_TRUE(jobResult.job);
     EXPECT_TRUE(jobResult.measure);
     Job job = jobResult.job.get();
+    ASSERT_TRUE(jobResult.mergedJobIndex);
+    EXPECT_EQ(0u,jobResult.mergedJobIndex.get());
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
     JobErrors treeErrors = job.treeErrors(); // get all tree errors now, test later
-    JobErrors errors = job.errors();
+    JobErrors errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::NA),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -98,11 +100,13 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
+    ASSERT_TRUE(jobResult.mergedJobIndex);
+    EXPECT_EQ(1u,jobResult.mergedJobIndex.get());
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Success),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -113,11 +117,13 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     ASSERT_TRUE(jobResult.job);
     EXPECT_TRUE(jobResult.measure);
     job = jobResult.job.get();
+    ASSERT_TRUE(jobResult.mergedJobIndex);
+    EXPECT_EQ(2u,jobResult.mergedJobIndex.get());
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_FALSE(errors.errors().empty());
@@ -130,11 +136,14 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
+    ASSERT_TRUE(jobResult.mergedJobIndex);
+    EXPECT_EQ(3u,jobResult.mergedJobIndex.get());
     EXPECT_FALSE(job.running());
-    EXPECT_TRUE(job.outOfDate()); // never run
+    EXPECT_FALSE(job.outOfDate()); // now all four scripts are in same job
     EXPECT_FALSE(job.canceled());
-    EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    EXPECT_TRUE(job.lastRun());    // now all four scripts are in same job
+    errors = jobResult.errors().get();
+    // this script not actually run, so result in default state
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -147,10 +156,11 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     ASSERT_TRUE(jobResult.step.isWorkItem());
     EXPECT_EQ(JobType(JobType::ModelToIdf),jobResult.step.workItemType());
     job = jobResult.job.get();
+    EXPECT_FALSE(jobResult.mergedJobIndex);
     EXPECT_TRUE(job.outOfDate()); // never run
     EXPECT_FALSE(job.canceled());
     EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -190,7 +200,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
     JobErrors treeErrors = job.treeErrors(); // get all tree errors now, test later
-    JobErrors errors = job.errors();
+    JobErrors errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::NA),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -207,7 +217,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Success),errors.result);
     EXPECT_TRUE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -222,7 +232,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(job.outOfDate());
     EXPECT_FALSE(job.canceled());
     EXPECT_TRUE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_FALSE(errors.errors().empty());
@@ -236,10 +246,10 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_EQ(JobType(JobType::UserScript),jobResult.step.workItemType());
     job = jobResult.job.get();
     EXPECT_FALSE(job.running());
-    EXPECT_TRUE(job.outOfDate()); // never run
+    EXPECT_FALSE(job.outOfDate()); // now all four scripts are in same job
     EXPECT_FALSE(job.canceled());
-    EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    EXPECT_TRUE(job.lastRun());    // now all four scripts are in same job
+    errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());
@@ -255,7 +265,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_TRUE(job.outOfDate()); // never run
     EXPECT_FALSE(job.canceled());
     EXPECT_FALSE(job.lastRun());
-    errors = job.errors();
+    errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
     EXPECT_TRUE(errors.errors().empty());

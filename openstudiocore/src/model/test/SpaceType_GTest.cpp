@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -118,3 +118,75 @@ TEST_F(ModelFixture, SpaceType_FloorArea) {
   EXPECT_DOUBLE_EQ(200, spaceType1.floorArea());
   EXPECT_DOUBLE_EQ(100, spaceType2.floorArea());
 }
+
+
+TEST_F(ModelFixture, SpaceType_StandardsTypes) {
+  Model model;
+  SpaceType spaceType(model);
+
+  EXPECT_FALSE(spaceType.standardsBuildingType());
+  std::vector<std::string> suggestedStandardsBuildingTypes = spaceType.suggestedStandardsBuildingTypes();
+  unsigned numBuildingTypes = suggestedStandardsBuildingTypes.size();
+  ASSERT_GT(numBuildingTypes, 0u);
+  EXPECT_FALSE(spaceType.standardsSpaceType());
+  EXPECT_TRUE(spaceType.suggestedStandardsSpaceTypes().empty());
+
+  std::vector<std::string>::const_iterator it = std::find(suggestedStandardsBuildingTypes.begin(), suggestedStandardsBuildingTypes.end(), "SecondarySchool");
+  EXPECT_NE(suggestedStandardsBuildingTypes.end(), it);
+
+  EXPECT_TRUE(spaceType.setStandardsBuildingType("SecondarySchool"));
+  ASSERT_TRUE(spaceType.standardsBuildingType());
+  EXPECT_EQ("SecondarySchool", spaceType.standardsBuildingType().get());
+  ASSERT_EQ(numBuildingTypes, spaceType.suggestedStandardsBuildingTypes().size());
+  EXPECT_EQ("SecondarySchool", spaceType.suggestedStandardsBuildingTypes()[0]);
+  EXPECT_FALSE(spaceType.standardsSpaceType());
+
+  std::vector<std::string> secondarySchoolStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
+  unsigned numSpaceTypes = secondarySchoolStandardsSpaceTypes.size();
+
+  ASSERT_NE(0, numSpaceTypes);
+  EXPECT_TRUE(spaceType.setStandardsSpaceType(secondarySchoolStandardsSpaceTypes[0]));
+  ASSERT_TRUE(spaceType.standardsSpaceType());
+  EXPECT_EQ(secondarySchoolStandardsSpaceTypes[0], spaceType.standardsSpaceType().get());
+  ASSERT_EQ(numSpaceTypes, spaceType.suggestedStandardsSpaceTypes().size());
+
+  EXPECT_TRUE(spaceType.setStandardsSpaceType("Anything Goes"));
+  ASSERT_TRUE(spaceType.standardsSpaceType());
+  EXPECT_EQ("Anything Goes", spaceType.standardsSpaceType().get());
+  ASSERT_EQ(numSpaceTypes + 1, spaceType.suggestedStandardsSpaceTypes().size());
+  EXPECT_EQ("Anything Goes", spaceType.suggestedStandardsSpaceTypes()[0]);
+
+  EXPECT_TRUE(spaceType.setStandardsSpaceType(""));
+  EXPECT_FALSE(spaceType.standardsSpaceType());
+  ASSERT_EQ(numSpaceTypes, spaceType.suggestedStandardsSpaceTypes().size());
+
+  EXPECT_TRUE(spaceType.setStandardsBuildingType("Outpatient"));
+  ASSERT_TRUE(spaceType.standardsBuildingType());
+  EXPECT_EQ("Outpatient", spaceType.standardsBuildingType().get());
+  ASSERT_EQ(numBuildingTypes, spaceType.suggestedStandardsBuildingTypes().size());
+  EXPECT_EQ("Outpatient", spaceType.suggestedStandardsBuildingTypes()[0]);
+  EXPECT_FALSE(spaceType.standardsSpaceType());
+  EXPECT_FALSE(spaceType.suggestedStandardsSpaceTypes().empty());
+
+  std::vector<std::string> outpatientStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
+
+  bool allSame = true;
+  if (secondarySchoolStandardsSpaceTypes.size() != outpatientStandardsSpaceTypes.size()){
+    allSame = false;
+  }else{
+    for (unsigned i = 0; i < secondarySchoolStandardsSpaceTypes.size(); ++i){
+      if (secondarySchoolStandardsSpaceTypes[i] != outpatientStandardsSpaceTypes[i]){
+        allSame = false;
+      }
+    }
+  }
+  EXPECT_FALSE(allSame);
+
+  EXPECT_TRUE(spaceType.setStandardsBuildingType("Anything Goes"));
+  ASSERT_TRUE(spaceType.standardsBuildingType());
+  EXPECT_EQ("Anything Goes", spaceType.standardsBuildingType().get());
+  ASSERT_EQ(numBuildingTypes + 1, spaceType.suggestedStandardsBuildingTypes().size());
+  EXPECT_EQ("Anything Goes", spaceType.suggestedStandardsBuildingTypes()[0]);
+  EXPECT_FALSE(spaceType.standardsSpaceType());
+  EXPECT_TRUE(spaceType.suggestedStandardsSpaceTypes().empty());
+} 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -61,6 +61,11 @@ namespace detail {
 
   IddObjectType WeatherFileConditionType_Impl::iddObjectType() const {
     return WeatherFileConditionType::iddObjectType();
+  }
+
+  void WeatherFileConditionType_Impl::ensureNoLeapDays()
+  {
+    // nothing to do
   }
 
 } // detail

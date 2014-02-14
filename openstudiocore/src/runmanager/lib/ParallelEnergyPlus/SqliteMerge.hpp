@@ -24,8 +24,6 @@ class SqliteMerge {
     openstudio::path m_working;
     std::string m_final;
 
-    int m_primaryKeyBase;
-
     // sql helper functions
     static sqlite3 * openDatabase(const openstudio::path &);
     static void closeDatabase(sqlite3 *);

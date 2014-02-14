@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -148,8 +148,7 @@ namespace detail {
   }
 
   bool HotWaterEquipment_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_HotWaterEquipmentFields::Multiplier, multiplier);
+    bool result = setDouble(OS_HotWaterEquipmentFields::Multiplier, multiplier);
     return result;
   }
 
@@ -159,8 +158,7 @@ namespace detail {
   }
 
   void HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 

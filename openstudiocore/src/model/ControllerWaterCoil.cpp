@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -201,8 +201,7 @@ void ControllerWaterCoil_Impl::autosizeMaximumActuatedFlow() {
 }
 
 void ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
-  bool result = false;
-  result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
+  bool result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
   OS_ASSERT(result);
 }
 

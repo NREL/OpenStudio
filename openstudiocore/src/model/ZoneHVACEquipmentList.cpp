@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -103,7 +103,7 @@ void ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipmen
 
   for( std::vector<ModelObject>::iterator it = equipmentVector.begin();
        it != equipmentVector.end();
-       it++ )
+       ++it )
   {
     WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
 
@@ -130,7 +130,7 @@ void ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipmen
 
   for( std::vector<ModelObject>::iterator it = equipmentVector.begin();
        it != equipmentVector.end();
-       it++ )
+       ++it )
   {
     WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
 
@@ -148,7 +148,7 @@ WorkspaceExtensibleGroup ZoneHVACEquipmentList_Impl::getGroupForModelObject(cons
 
   for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
        it != groups.end();
-       it++ )
+       ++it )
   {
     boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
@@ -175,7 +175,7 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipment()
 
   for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
        it != groups.end();
-       it++ )
+       ++it )
   {
     boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
@@ -196,7 +196,7 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInHeatingOrder()
 
   for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
        it != groups.end();
-       it++ )
+       ++it )
   {
     unsigned heatingPriority = it->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence).get();
 
@@ -229,7 +229,7 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInCoolingOrder()
 
   for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
        it != groups.end();
-       it++ )
+       ++it )
   {
     unsigned coolingPriority = it->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence).get();
 
@@ -272,7 +272,7 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
        it != groups.end();
-       it++ )
+       ++it )
   {
     boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
@@ -293,7 +293,7 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   for( std::vector<ModelObject>::iterator it = coolingVector.begin();
        it != coolingVector.end();
-       it++ )
+       ++it )
   {
     WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
 
@@ -306,7 +306,7 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   for( std::vector<ModelObject>::iterator it = heatingVector.begin();
        it != heatingVector.end();
-       it++ )
+       ++it )
   {
     WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
 
@@ -325,7 +325,7 @@ unsigned ZoneHVACEquipmentList_Impl::heatingPriority(const ModelObject & equipme
 
   for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
        it != groups.end();
-       it++ )
+       ++it )
   {
     boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
@@ -352,7 +352,7 @@ unsigned ZoneHVACEquipmentList_Impl::coolingPriority(const ModelObject & equipme
 
   for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
        it != groups.end();
-       it++ )
+       ++it )
   {
     boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 

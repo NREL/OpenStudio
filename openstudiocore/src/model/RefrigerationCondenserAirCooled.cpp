@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #include <model/RefrigerationCondenserAirCooled.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/CurveLinear.hpp>
 #include <model/CurveLinear_Impl.hpp>
 #include <model/ThermalZone.hpp>

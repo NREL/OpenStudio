@@ -87,7 +87,7 @@ void CLASS_NAME##_Impl::set##ACCESSOR_BASE_NAME(boost::optional<double> value) {
   } else { \
     result = setString(IDD_FIELD_NAME##Fields::IDD_FIELD_NAME, ""); \
   } \
-  BOOST_ASSERT(result); \
+  OS_ASSERT(result); \
 } \
 \
 boost::optional<double> CLASS_NAME##_Impl::ATTRIBUTE_NAME() const { \
@@ -99,7 +99,7 @@ boost::optional<double> CLASS_NAME##_Impl::ATTRIBUTE_NAME() const { \
 BOOST_PP_IF(HAS_DEFAULT, \
 void CLASS_NAME##_Impl::reset##ATTRIBUTE_NAME() { \
   bool result = setString(IDD_OBJECT_NAME##Fields::IDD_FIELD_NAME, ""); \
-  BOOST_ASSERT(result); \
+  OS_ASSERT(result); \
 } \
 ,) \
 BOOST_PP_IF(IS_AUTOSIZEABLE, \
@@ -113,14 +113,14 @@ bool CLASS_NAME##_Impl::is##ACCESSOR_BASE_NAME##Autosized() const { \
 } \
 void CLASS_NAME##_Impl::autosize##ACCESSOR_BASE_NAME() { \
   bool result = setString(IDD_OBJECT_NAME##Fields::IDD_FIELD_NAME, "autosize"); \
-  BOOST_ASSERT(result); \
+  OS_ASSERT(result); \
 } \
 ,) \
 ,\
 Quantity CLASS_NAME##_Impl::get##ACCESSOR_BASE_NAME(bool returnIP) const { \
   OptionalDouble value = ATTRIBUTE_NAME(); \
   OSOptionalQuantity result = getQuantityFromDouble(IDD_OBJECT_NAME##Fields::IDD_FIELD_NAME, value, returnIP); \
-  BOOST_ASSERT(result.isSet()); \
+  OS_ASSERT(result.isSet()); \
   return result.get(); \
 } \
 \
@@ -143,7 +143,7 @@ Quantity CLASS_NAME##_Impl::ATTRIBUTE_NAME##_IP() const { \
 BOOST_PP_IF(DEFAULT_IMPLEMENTATIOIN, \
 double CLASS_NAME##_Impl::ATTRIBUTE_NAME() const { \
   OptionalDouble value = getDouble(IDD_OBJECT_NAME##Fields::IDD_FIELD_NAME, true); \
-  BOOST_ASSERT(value); \
+  OS_ASSERT(value); \
   return value.get(); \
 } \
 \
@@ -157,7 +157,7 @@ bool CLASS_NAME##_Impl::set##ACCESSOR_BASE_NAME(double value) { \
 BOOST_PP_IF(HAS_DEFAULT, \
 void CLASS_NAME##_Impl::reset##ACCESSOR_BASE_NAME() { \
   bool result = setString(IDD_OBJECT_NAME##Fields::IDD_FIELD_NAME, ""); \
-  BOOST_ASSERT(result); \
+  OS_ASSERT(result); \
 } \
 bool CLASS_NAME##_Impl::is##ACCESSOR_BASE_NAME##Defaulted() const { \
   return isEmpty(IDD_OBJECT_NAME##Fields::IDD_FIELD_NAME); \

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -71,10 +71,8 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
                                        new UtilityBillsInspectorView(model,parent),
                                        parent)
 {
-  bool isConnected = false;
-
-  isConnected = connect(modelObjectInspectorView(),SIGNAL(enableAddNewObjectButton( bool )),
-    this,SIGNAL(enableAddNewObjectButton( bool )) );
+  bool isConnected = connect(modelObjectInspectorView(),SIGNAL(enableAddNewObjectButton( bool )),
+                             this,SIGNAL(enableAddNewObjectButton( bool )) );
   OS_ASSERT(isConnected);
 }
 
@@ -560,14 +558,14 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
   m_energyUseLabel = new QLabel();
   m_energyUseLabel->setFixedWidth(WIDTH);
   m_energyUseLabel->setObjectName("H2"); 
-  m_energyUseLabel->setText(getEnergyUseLabelText());
+  updateEnergyUseLabelText();
   hLayout->addWidget(m_energyUseLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
   if(m_utilityBill.get().fuelType() == FuelType::Electricity){
     m_peakLabel = new QLabel();
     m_peakLabel->setFixedWidth(WIDTH);
     m_peakLabel->setObjectName("H2"); 
-    m_peakLabel->setText(getPeakLabelText());
+    updatePeakLabelText();
     hLayout->addWidget(m_peakLabel, 0, Qt::AlignLeft | Qt::AlignTop);
   } else {
     m_peakLabel = 0;
@@ -583,10 +581,6 @@ void UtilityBillsInspectorView::createBillingPeriodHeaderWidget()
   label->setObjectName("H2"); 
   label->setText("");
   hLayout->addWidget(label, 0, Qt::AlignLeft | Qt::AlignTop);
-
-  updateEnergyUseLabelText();
-
-  updatePeakLabelText();
 }
 
 void UtilityBillsInspectorView::addBillingPeriodWidget(model::BillingPeriod & billingPeriod)
@@ -629,6 +623,9 @@ void UtilityBillsInspectorView::deleteBillingPeriodWidgets()
 
   delete m_billingPeriodHeaderWidget;
   m_billingPeriodHeaderWidget = 0;
+  // Set m_billingPeriodHeaderWidget's labels to null, which were deleted above
+  m_energyUseLabel = 0;
+  m_peakLabel = 0;
 }
 
 void UtilityBillsInspectorView::deleteAllWidgetsAndLayoutItems(QLayout * layout, bool deleteWidgets)
@@ -958,11 +955,19 @@ void BillingPeriodWidget::modelObjectChanged()
 
 void BillingPeriodWidget::startDateChanged(const QDate & newdate)
 { 
+  int m = newdate.month();
+  int d = newdate.day();
+  int y = newdate.year();
+  OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setStartDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 
 void BillingPeriodWidget::endDateChanged(const QDate & newdate)
 {
+  int m = newdate.month();
+  int d = newdate.day();
+  int y = newdate.year();
+  OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setEndDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 

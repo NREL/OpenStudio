@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -214,6 +214,27 @@ namespace detail {
     setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);
   }
 
+  void RunPeriod_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_RunPeriodFields::BeginMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_RunPeriodFields::BeginDayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_RunPeriodFields::BeginDayofMonth, 28);
+      }
+    }
+
+    month = getInt(OS_RunPeriodFields::EndMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_RunPeriodFields::EndDayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_RunPeriodFields::EndDayofMonth, 28);
+      }
+    }
+  }
 
   // return the parent object in the hierarchy
   boost::optional<ParentObject> RunPeriod_Impl::parent() const
@@ -387,6 +408,11 @@ void RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
 void RunPeriod::setNumTimePeriodRepeats(int numRepeats)
 {
   getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
+}
+
+void RunPeriod::ensureNoLeapDays()
+{
+  getImpl<detail::RunPeriod_Impl>()->ensureNoLeapDays();
 }
 
 bool RunPeriod::isAnnual() const {

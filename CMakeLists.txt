@@ -4,7 +4,7 @@ PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 2)
-SET(CMAKE_VERSION_PATCH 0)
+SET(CMAKE_VERSION_PATCH 4)
 
 SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 FIND_PACKAGE(Git)
@@ -183,7 +183,7 @@ ENDIF()
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
 
-FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns )
+FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns QtWebKit)
 MARK_AS_ADVANCED(QT_QTMOTIF_INCLUDE_DIR)
 MARK_AS_ADVANCED(QT_QTMOTIF_LIBRARY_DEBUG)
 MARK_AS_ADVANCED(QT_QTMOTIF_LIBRARY_RELEASE)
@@ -290,14 +290,16 @@ IF (UNIX)
 ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
-  OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 ruby 2.0" OFF)
-  
-  IF(WIN32 AND MSVC AND CMAKE_CL_64)
-    MESSAGE(ERROR "Cannot use 32bit mingw build of ruby 2.0 with 64bit build of openstudio") 
-  ENDIF() 
-  
   MARK_AS_ADVANCED(BUILD_RUBY)
-  MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
+  
+  IF(WIN32 AND MSVC)
+    IF(CMAKE_CL_64)
+      MESSAGE(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0") 
+    ELSE()
+      OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 Ruby 2.0" OFF)
+      MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
+    ENDIF()
+  ENDIF() 
 ENDIF()
 
 IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
@@ -358,15 +360,17 @@ IF(BUILD_RUBY)
     SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
   ELSE()
     IF(CMAKE_CL_64)
+       find_program(NMAKE_EXE nmake)
+       
       # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
-	  # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
+      # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
       ExternalProject_Add(Ruby
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p0.zip
-        URL_MD5 db5af5d6034646ad194cbdf6e50f49ee
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p353.zip
+        URL_MD5 0f8aeb1f1b1cd606ab9790badabd0fb4
         PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/mkexports.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/mkexports.rb
         CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/configure.bat --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --target=x64-mswin64 --disable-install-doc --disable-win95"
-        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && nmake
-        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && nmake install
+        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE}
+        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE} install
         )
       SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe )
       SET(RUBY_DLL x64-msvcr100-ruby200.dll)
@@ -376,8 +380,9 @@ IF(BUILD_RUBY)
       IF (BUILD_RUBY_MINGW32_2_0)
         # And windows requires mingw to build ruby, so we just unpackage it locally
         ExternalProject_Add(Ruby
-          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip
-          PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby 
+          URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip
+          URL_MD5 1f6e4348099b26e92909db62dcd3b173
+          PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/msvcrt-ruby200.lib  ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/config.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/i386-mingw32/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/missing.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/mingw32-ruby2.0/ruby.h ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include/ruby-2.0.0/ruby
           CONFIGURE_COMMAND ""
           BUILD_COMMAND ""
           INSTALL_COMMAND ""
@@ -587,13 +592,14 @@ IF(BUILD_QT)
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
       )
   ELSE()
-
+    find_program(NMAKE_EXE nmake)
+    
     ExternalProject_Add( Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && configure -debug-and-release -opensource -confirm-license -shared -plugin-sql-sqlite -no-qt3support -nomake examples -nomake docs -nomake demos -mp -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install -L ${OPENSSL_ROOT_DIR}/lib -I ${OPENSSL_ROOT_DIR}/include -openssl
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && nmake 
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && nmake install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE}
+      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE} install
       )
   ENDIF()
 
@@ -602,7 +608,6 @@ ENDIF()
 
 
 IF(BUILD_QT)
-  list(APPEND VTK_DEPENDS Qt)
   list(APPEND QJSON_DEPENDS Qt)
 ENDIF()
 
@@ -627,77 +632,13 @@ ExternalProject_Add(QJSON
 )
 
 
-IF(UNIX)
-  SET(VTK_PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/dependencies/VTK/VTK.patch)
-ELSE()
-  SET(VTK_PATCH_COMMAND "")
-ENDIF()
-  
-ExternalProject_Add( VTK
-  DEPENDS ${VTK_DEPENDS}
-  URL ${CMAKE_SOURCE_DIR}/dependencies/VTK.tar.gz
-  URL_MD5 740c01c83c853e16b8826c616d076ebf
-  CMAKE_CACHE_ARGS
-  -DBUILD_EXAMPLES:BOOL=OFF
-  -DBUILD_TESTING:BOOL=OFF
-  -DVTK_USE_QT:BOOL=ON
-  -DVTK_USE_QTCHARTS:BOOL=ON
-  -DVTK_REQUIRED_OBJCXX_FLAGS:STRING=
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-   INSTALL_COMMAND ""
-  PATCH_COMMAND ${VTK_PATCH_COMMAND} 
-  )
-
-set(VTK_DIR ${CMAKE_BINARY_DIR}/VTK-prefix/src/VTK-build)
-
-IF(UNIX)
-  SET(VTK_CHARTS_PATCH_COMMAND patch -p0 < ${CMAKE_SOURCE_DIR}/dependencies/vtkCharts/vtkCharts.CMakeLists.txt.patch)
-ELSE()
-  SET(VTK_CHARTS_PATCH_COMMAND "")
-ENDIF()
-
-ExternalProject_Add( vtkCharts
-  DEPENDS VTK
-  URL ${CMAKE_SOURCE_DIR}/dependencies/vtkCharts.tar.gz
-  URL_MD5 73e64aa67b33f718d464173048e4081c 
-  CMAKE_CACHE_ARGS
-  -DVTK_DIR:PATH=${VTK_DIR}
-  -DvtkCharts_USE_QT:BOOL=ON
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-  -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
-  INSTALL_COMMAND ""
-  PATCH_COMMAND ${VTK_CHARTS_PATCH_COMMAND}
-  )
-
-
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build)
 
 set(BoostLog_DIR "${CMAKE_BINARY_DIR}/BoostLog-prefix/src/BoostLog-build")
 set(QJSON_DIR "${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-build")
 
-set(VTK_CHARTS_LIB_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/vtkCharts-build)
-set(VTK_CHARTS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/)
-
 # Set up the dependencies for OpenStudioCore
-SET(OpenStudioCore_DEPENDS vtkCharts)
-LIST(APPEND OpenStudioCore_DEPENDS BoostLog)
+SET(OpenStudioCore_DEPENDS BoostLog)
 LIST(APPEND OpenStudioCore_DEPENDS GoogleTest)
 LIST(APPEND OpenStudioCore_DEPENDS QJSON)
 
@@ -730,10 +671,6 @@ ExternalProject_Add( OpenStudioCore
   DEPENDS ${OpenStudioCore_DEPENDS}
   SOURCE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore
   CMAKE_CACHE_ARGS
-    -DvtkCharts_USE_QT:BOOL=ON
-    -DVTK_DIR:PATH=${VTK_DIR}
-    -DVTK_CHARTS_LIB_DIR:PATH=${VTK_CHARTS_LIB_DIR}
-    -DVTK_CHARTS_INCLUDE_DIR:PATH=${VTK_CHARTS_INCLUDE_DIR}
     -DGTEST_LIB_DIR:PATH=${GTEST_LIB_DIR}
     -DGTEST_INCLUDE_DIR:PATH=${GTEST_INCLUDE_DIR}
     -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}

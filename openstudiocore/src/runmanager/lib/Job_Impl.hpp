@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -41,6 +41,8 @@ Q_DECLARE_METATYPE(QProcess::ProcessError);
 
 namespace openstudio {
 namespace runmanager {
+  class MergedJobResults;
+
 namespace detail {
 
   /// Public interface is defined in openstudio::runmanager::Job, see it for more details
@@ -319,6 +321,9 @@ namespace detail {
       /// Sets the advancedstatus of the current job. Only allowed on externally managed jobs
       void setStatus(const AdvancedStatus &t_status);
 
+      bool hasMergedJobs() const;
+      std::vector<MergedJobResults> mergedJobResults() const;
+
 
     protected:
       /// Called when the base path has changed
@@ -368,6 +373,12 @@ namespace detail {
       /// \returns a default description for this job
       std::string buildDescription(const std::string &extension) const;
 
+      /// Sets a new set of JobParams for this Job
+      void setParams(const openstudio::runmanager::JobParams &t_newParams);
+
+      /// Sets a new set of Files for this Job
+      void setFiles(const openstudio::runmanager::Files &t_newFiles);
+
       virtual void standardCleanImpl() = 0;
 
       struct FileTrack
@@ -395,6 +406,9 @@ namespace detail {
       static void resetFiles(std::map<openstudio::path, FileTrack> &t_files);
       static void resetFiles(std::map<openstudio::path, FileTrack> &t_files, const boost::optional<FileInfo> &t_file);
       static void resetFiles(std::map<openstudio::path, FileTrack> &t_files, const boost::optional<FileInfo> &t_file, const boost::optional<FileInfo> &t_file2);
+
+      virtual bool hasMergedJobsImpl() const;
+      virtual std::vector<MergedJobResults> mergedJobResultsImpl() const;
 
 
       /// Updates the list of tracked files for timestamps and checksums

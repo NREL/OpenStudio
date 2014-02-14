@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -55,6 +55,8 @@
 #include <utilities/idd/Output_VariableDictionary_FieldEnums.hxx>
 #include <utilities/idd/Output_SQLite_FieldEnums.hxx>
 #include <utilities/idd/ProgramControl_FieldEnums.hxx>
+#include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/plot/ProgressBar.hpp>
@@ -82,6 +84,8 @@ ForwardTranslator::ForwardTranslator()
 
   // temp code 
   m_keepRunControlSpecialDays = false;
+  m_ipTabularOutput = false;
+  m_excludeLCCObjects = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -139,6 +143,15 @@ void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialD
   m_keepRunControlSpecialDays = keepRunControlSpecialDays;
 }
 
+void ForwardTranslator::setIPTabularOutput(bool isIP)
+{
+  m_ipTabularOutput = isIP;
+}
+
+void ForwardTranslator::setExcludeLCCObjects(bool excludeLCCObjects)
+{
+  m_excludeLCCObjects = excludeLCCObjects;
+}
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
 {
@@ -225,6 +238,21 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   if (fullModelTranslation){
 
+    // translate life cycle cost parameters
+    if( ! m_excludeLCCObjects ){
+      boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
+      if (!lifeCycleCostParameters){
+        // only warn if costs are present
+        if (!model.getModelObjects<LifeCycleCost>().empty()){
+          LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
+        }
+        
+        // always add this object so E+ results section exists
+        lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
+      }
+      translateAndMapModelObject(*lifeCycleCostParameters);
+    }
+
     // ensure that building exists
     boost::optional<model::Building> building = model.building();
     if (!building){
@@ -267,19 +295,6 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
     m_idfObjects.push_back(globalGeometryRules);
-
-    // translate life cycle cost parameters
-    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
-    if (!lifeCycleCostParameters){
-      // only warn if costs are present
-      if (!model.getModelObjects<LifeCycleCost>().empty()){
-        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
-      }
-      
-      // always add this object so E+ results section exists
-      lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
-    }
-    translateAndMapModelObject(*lifeCycleCostParameters);
   
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
@@ -567,6 +582,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingWaterToAirHeatPumpEquationFit(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Heating_Desuperheater :
+    {
+      model::CoilHeatingDesuperheater coil = modelObject.cast<CoilHeatingDesuperheater>();
+      retVal = translateCoilHeatingDesuperheater(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Heating_DX_SingleSpeed :
     {
       model::CoilHeatingDXSingleSpeed coil = modelObject.cast<CoilHeatingDXSingleSpeed>();
@@ -611,6 +632,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::CoilHeatingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
       retVal = translateCoilHeatingWaterToAirHeatPumpEquationFit(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater :
+    {
+      model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
+      retVal = translateCoilWaterHeatingDesuperheater(coil);
       break;
     }
   case openstudio::IddObjectType::OS_ComponentData :
@@ -928,6 +955,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanVariableVolume(fan);
       break;
     }
+    
+  case openstudio::IddObjectType::OS_Fan_ZoneExhaust :
+    {
+      model::FanZoneExhaust fan = modelObject.cast<FanZoneExhaust>();
+      retVal = translateFanZoneExhaust(fan);
+      break;
+    }
+    
   case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
     {
       model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
@@ -1138,6 +1173,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePortList(portList);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_AirChiller :
+    {
+      model::RefrigerationAirChiller refrigerationAirChiller = modelObject.cast<RefrigerationAirChiller>();
+      retVal = translateRefrigerationAirChiller(refrigerationAirChiller);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Case :
     {
       model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();
@@ -1174,6 +1215,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationCondenserWaterCooled(refrigerationCondenserWaterCooled);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_GasCooler_AirCooled:
+    {
+      model::RefrigerationGasCoolerAirCooled refrigerationGasCoolerAirCooled = modelObject.cast<RefrigerationGasCoolerAirCooled>();
+      retVal = translateRefrigerationGasCoolerAirCooled(refrigerationGasCoolerAirCooled);
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction:
     {
       model::RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = modelObject.cast<RefrigerationSubcoolerLiquidSuction>();
@@ -1198,6 +1245,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationSystem(refrigerationSystem);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_TranscriticalSystem :
+    {
+      model::RefrigerationTranscriticalSystem refrigerationTranscriticalSystem = modelObject.cast<RefrigerationTranscriticalSystem>();
+      retVal = translateRefrigerationTranscriticalSystem(refrigerationTranscriticalSystem);
+      break;
+    }    
   case openstudio::IddObjectType::OS_Refrigeration_WalkIn :
     {
       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
@@ -1713,7 +1766,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 
   result.push_back(IddObjectType::OS_Facility);
   result.push_back(IddObjectType::OS_Building);
-  result.push_back(IddObjectType::OS_StandardsInformation_Building);
   result.push_back(IddObjectType::OS_BuildingStory);
   result.push_back(IddObjectType::OS_LightingSimulationZone);
 
@@ -1759,9 +1811,11 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_Water);
   result.push_back(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
+  result.push_back(IddObjectType::OS_Coil_Heating_Desuperheater);
   result.push_back(IddObjectType::OS_Coil_Heating_Gas);
   result.push_back(IddObjectType::OS_Coil_Heating_Water);
   result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
+  result.push_back(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
   result.push_back(IddObjectType::OS_Connection);
   result.push_back(IddObjectType::OS_Connector_Mixer);
   result.push_back(IddObjectType::OS_Connector_Splitter);
@@ -1789,10 +1843,10 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
   result.push_back(IddObjectType::OS_Fan_ConstantVolume);
   result.push_back(IddObjectType::OS_Fan_OnOff);
+  result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
   result.push_back(IddObjectType::OS_Node);
   result.push_back(IddObjectType::OS_PlantLoop);
   result.push_back(IddObjectType::OS_Splitter);
-  result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
@@ -1800,6 +1854,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
+  result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
@@ -2050,8 +2105,14 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
         LOG(Warn, "Both surfaces '" << surface.name() << "', and '" << adjacentSurface->name() 
                << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
 
-        surface.setConstruction(c1);
-        adjacentSurface->setConstruction(c2);
+        // DLM: use surface name to choose which surface gets the original copy, not a good way but at least repeatable
+        if (surface.name() < adjacentSurface->name()){
+          surface.setConstruction(c1);
+          adjacentSurface->setConstruction(c2);
+        }else{
+          surface.setConstruction(c2);
+          adjacentSurface->setConstruction(c1);
+        }
       }
 
       processedSurfaces.insert(surface.handle());
@@ -2191,8 +2252,14 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
         LOG(Warn, "Both sub surfaces '" << subSurface.name() << "', and '" << adjacentSubSurface->name() 
                << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
 
-        subSurface.setConstruction(c1);
-        adjacentSubSurface->setConstruction(c2);
+        // DLM: use subSurface name to choose which surface gets the original copy, not a good way but at least repeatable
+        if (subSurface.name() < adjacentSubSurface->name()){
+          subSurface.setConstruction(c1);
+          adjacentSubSurface->setConstruction(c2);
+        }else{
+          subSurface.setConstruction(c2);
+          adjacentSubSurface->setConstruction(c1);
+        }
       }
 
       processedSubSurfaces.insert(subSurface.handle());
@@ -2261,6 +2328,10 @@ void ForwardTranslator::createStandardOutputRequests()
   IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
   m_idfObjects.push_back(tableStyle);
   tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator,"HTML");
+  if( m_ipTabularOutput )
+  {
+    tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion,"InchPound");
+  }
 
   IdfObject outputTableSummaryReport(IddObjectType::Output_Table_SummaryReports);
   IdfExtensibleGroup eg = outputTableSummaryReport.pushExtensibleGroup();
@@ -2275,6 +2346,27 @@ void ForwardTranslator::createStandardOutputRequests()
   IdfObject sqliteOutput(IddObjectType::Output_SQLite);
   sqliteOutput.setString(Output_SQLiteFields::OptionType,"SimpleAndTabular");
   m_idfObjects.push_back(sqliteOutput);
+
+  // ensure at least one life cycle cost exists to prevent crash in E+ 8
+  unsigned numCosts = 0;
+  BOOST_FOREACH(const IdfObject& object, m_idfObjects){
+    if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost){
+      numCosts += 1;
+    }else if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_RecurringCosts){
+      numCosts += 1;
+    }
+  }
+  if (numCosts == 0){
+    // add default cost
+    IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
+    m_idfObjects.push_back(idfObject);
+
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
+    idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+  }
+
 }
 
 IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType,
@@ -2331,7 +2423,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
@@ -2370,7 +2462,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
@@ -2395,7 +2487,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
     for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
        it != fluidObjects.end();
-       it++ )
+       ++it )
     {
       if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
         idfObject = *it;

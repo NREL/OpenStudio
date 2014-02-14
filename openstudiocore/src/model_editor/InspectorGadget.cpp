@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -820,22 +820,24 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
 
     std::sort(names.begin(), names.end(), IstringCompare());
 
-    if (!prop.required){
+    combo->addItem("");
+    /*if (!prop.required){
       combo->addItem("");
     }else{
       combo->addItem("");
-    }
+    }*/
     BOOST_FOREACH(const std::string& name, names){
       combo->addItem(name.c_str());   
     }
   }
   else
   {
-    if (!prop.required){
+    combo->addItem("");
+    /*if (!prop.required){
       combo->addItem("");
     }else{
       combo->addItem("");
-    }
+    }*/
     BOOST_FOREACH(IddKey key, field.keys()){
       combo->addItem(key.name().c_str());
     }

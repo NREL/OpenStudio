@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneSplitter( 
   int i = 2;
   for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
        it < outletModelObjects.end();
-       it++ )
+       ++it )
   {
     if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
         it->optionalCast<AirTerminalSingleDuctUncontrolled>() )

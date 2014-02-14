@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -533,10 +533,9 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
   std::string comment;    // keep running comment
   bool firstBlock = true; // to capture first comment block as the header
 
-  int streamsize = 0;
   if (progressBar){
     is.seekg(0, std::ios_base::end);
-    streamsize = static_cast<int>(is.tellg());
+    int streamsize = static_cast<int>(is.tellg());
     progressBar->setMinimum(0);
     progressBar->setMaximum(streamsize);
     is.seekg(0, std::ios_base::beg);

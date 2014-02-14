@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -208,8 +208,7 @@ namespace detail {
   }
 
   bool InteriorPartitionSurface_Impl::setSurfaceArea(double surfaceArea) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceFields::SurfaceArea, surfaceArea);
+    bool result = setDouble(OS_InteriorPartitionSurfaceFields::SurfaceArea, surfaceArea);
     return result;
   }
 
@@ -229,8 +228,7 @@ namespace detail {
   }
 
   bool InteriorPartitionSurface_Impl::setNumberofVertices(double numberofVertices) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceFields::NumberofVertices, numberofVertices);
+    bool result = setDouble(OS_InteriorPartitionSurfaceFields::NumberofVertices, numberofVertices);
     return result;
   }
 

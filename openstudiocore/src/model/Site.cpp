@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -223,8 +223,7 @@ namespace detail {
   }
 
   bool Site_Impl::setLatitude(double latitude) {
-    bool result = false;
-    result = setDouble(OS_SiteFields::Latitude, latitude);
+    bool result = setDouble(OS_SiteFields::Latitude, latitude);
     return result;
   }
 
@@ -234,8 +233,7 @@ namespace detail {
   }
 
   bool Site_Impl::setLongitude(double longitude) {
-    bool result = false;
-    result = setDouble(OS_SiteFields::Longitude, longitude);
+    bool result = setDouble(OS_SiteFields::Longitude, longitude);
     return result;
   }
 
@@ -245,8 +243,7 @@ namespace detail {
   }
 
   bool Site_Impl::setTimeZone(double timeZone) {
-    bool result = false;
-    result = setDouble(OS_SiteFields::TimeZone, timeZone);
+    bool result = setDouble(OS_SiteFields::TimeZone, timeZone);
     return result;
   }
 
@@ -256,8 +253,7 @@ namespace detail {
   }
 
   bool Site_Impl::setElevation(double elevation) {
-    bool result = false;
-    result = setDouble(OS_SiteFields::Elevation, elevation);
+    bool result = setDouble(OS_SiteFields::Elevation, elevation);
     return result;
   }
 
@@ -267,8 +263,7 @@ namespace detail {
   }
 
   bool Site_Impl::setTerrain(std::string terrain) {
-    bool result = false;
-    result = setString(OS_SiteFields::Terrain, terrain);
+    bool result = setString(OS_SiteFields::Terrain, terrain);
     return result;
   }
 
@@ -315,7 +310,7 @@ namespace detail {
     }
     return result;
   }
-
+/*
   std::string Site_Impl::activeClimateZoneValue() const {
     std::string result;
     OptionalClimateZones oClimateZones = climateZones();
@@ -348,7 +343,7 @@ namespace detail {
     ClimateZones climateZones = this->model().getUniqueModelObject<ClimateZones>();
     return !climateZones.setActiveClimateZone(institution).empty();
   }
-
+*/
 } // detail
 
 IddObjectType Site::iddObjectType() {
@@ -473,7 +468,7 @@ ShadingSurfaceGroupVector Site::shadingSurfaceGroups() const
 {
   return getImpl<detail::Site_Impl>()->shadingSurfaceGroups();
 }
-
+/*
 std::string Site::activeClimateZoneValue() const {
   return getImpl<detail::Site_Impl>()->activeClimateZoneValue();
 }
@@ -489,7 +484,7 @@ bool Site::setActiveClimateZoneValue(const std::string& value) {
 bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
   return getImpl<detail::Site_Impl>()->setActiveClimateZoneInstitution(institution);
 }
-
+*/
 /// @cond
 Site::Site(boost::shared_ptr<detail::Site_Impl> impl)
   : ParentObject(impl)

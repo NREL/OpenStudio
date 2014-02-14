@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -58,8 +58,6 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   unsigned row = 0;
   unsigned col = 0;
 
-  bool isConnected = false;
-
   // Name
 
   QLabel * label = new QLabel("Name: ");
@@ -76,7 +74,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   mainGridLayout->addWidget(label,row++,col);
 
   m_opticalDataTemperature = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_opticalDataTemperature, SLOT(onUnitSystemChange(bool)));
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_opticalDataTemperature, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_opticalDataTemperature,row++,0,1,3);
 

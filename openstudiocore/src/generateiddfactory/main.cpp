@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -32,8 +32,6 @@
 int main(int argc, char *argv[])
 {
   try {
-    std::stringstream ss;
-
     // set up program options
     std::string outdir;
     boost::program_options::options_description opts("Options",100);
@@ -73,7 +71,7 @@ int main(int argc, char *argv[])
     std::stringstream fileHeader;
     fileHeader 
       << "/**********************************************************************" << std::endl
-      << "*  Copyright (c) 2008-2013, Alliance for Sustainable Energy." << std::endl
+      << "*  Copyright (c) 2008-2014, Alliance for Sustainable Energy." << std::endl
       << "*  All rights reserved." << std::endl
       << "*" << std::endl
       << "*  This library is free software; you can redistribute it and/or" << std::endl

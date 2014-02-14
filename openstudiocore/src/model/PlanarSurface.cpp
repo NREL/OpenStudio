@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -592,8 +592,8 @@ PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& ver
   OS_ASSERT(getImpl<detail::PlanarSurface_Impl>());
   bool ok = this->setVertices(vertices);
   if (!ok){
-    LOG_AND_THROW("Cannot create a surface with vertices " << vertices);
     this->remove();
+    LOG_AND_THROW("Cannot create a surface with vertices " << vertices);
   }
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -219,6 +219,29 @@ namespace detail {
 
   boost::optional<Curve> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalCoolingCapacityModifierCurveFunctionofFlowFraction() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFraction);
+  }
+    
+  ModelObject CoilCoolingDXVariableRefrigerantFlow_Impl::clone(Model model) const
+  {
+    CoilCoolingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
+
+    Curve curveClone = coolingCapacityRatioModifierFunctionofTemperatureCurve().clone(model).cast<Curve>();
+    objectClone.setCoolingCapacityRatioModifierFunctionofTemperatureCurve(curveClone);
+
+    curveClone = coolingCapacityModifierCurveFunctionofFlowFraction().clone(model).cast<Curve>();
+    objectClone.setCoolingCapacityModifierCurveFunctionofFlowFraction(curveClone);
+
+    return objectClone;
+  }
+
+  std::vector<ModelObject> CoilCoolingDXVariableRefrigerantFlow_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(coolingCapacityRatioModifierFunctionofTemperatureCurve());
+    result.push_back(coolingCapacityModifierCurveFunctionofFlowFraction());
+
+    return result;
   }
 
 } // detail

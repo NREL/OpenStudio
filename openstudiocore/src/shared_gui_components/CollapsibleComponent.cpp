@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
   m_mainLayout->addWidget(m_collapsibleComponentHeader);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
-                        this, SIGNAL(headerClicked(bool)));
+                             this, SIGNAL(headerClicked(bool)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@
 
 #include <utilities/idf/ImfFile.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/document/DocumentRegex.hpp>
 #include <utilities/core/StringHelpers.hpp>
 
@@ -49,7 +50,6 @@
 
 #include <boost/foreach.hpp>
 
-#include <sstream>
 #include <iomanip>
 
 namespace openstudio {
@@ -331,6 +331,7 @@ namespace openstudio {
                                         SIGNAL(imfFileSections(std::vector<std::string>)),
                                         argChoiceEdit,
                                         SLOT(setChoices(std::vector<std::string>)));
+                    OS_ASSERT(connected);
                     connected = connect(argChoiceEdit,
                                         SIGNAL(newArgumentValue(const ruleset::OSArgument&)),
                                         m_scriptItem,
@@ -380,7 +381,7 @@ namespace openstudio {
           }
           m_argumentEditsLayout->addWidget(m_argumentEdits.back().first);
           m_argumentEditsLayout->addWidget(m_argumentEdits.back().second);
-          BOOST_ASSERT(connected);
+          OS_ASSERT(connected);
         }
         if (m_argumentEdits.empty()) {
           m_argumentsLabel->setVisible(false);
@@ -411,13 +412,13 @@ ScriptsView::ScriptsView(const openstudio::path &t_scriptsPath,
       this, SIGNAL(toolsUpdated()));
 
 //  connect(this, 
-  BOOST_ASSERT(scriptFolderListView);
+  OS_ASSERT(scriptFolderListView);
 }
 
 OSArgumentBooleanEdit::OSArgumentBooleanEdit(ruleset::OSArgument& arg, QWidget * parent)
   : OSSwitch(parent), m_arg(arg)
 {
-  BOOST_ASSERT(arg.type() == ruleset::OSArgumentType::Boolean);
+  OS_ASSERT(arg.type() == ruleset::OSArgumentType::Boolean);
 //  setObjectName("StandardGrayButton");
 //  this->setCheckable(true);
 //  this->setAcceptDrops(false);
@@ -434,7 +435,7 @@ OSArgumentBooleanEdit::OSArgumentBooleanEdit(ruleset::OSArgument& arg, QWidget *
   this->setChecked(value);
 
   bool isConnected = connect(this,SIGNAL(clicked(bool)),this,SLOT(onToggled(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void OSArgumentBooleanEdit::onToggled(bool checked) {
@@ -446,12 +447,12 @@ OSArgumentDoubleEdit::OSArgumentDoubleEdit(ruleset::OSArgument& arg,
                                                            QWidget * parent)
   : QLineEdit(parent), m_arg(arg), m_isScientific(false)
 {
-  BOOST_ASSERT(arg.type() == ruleset::OSArgumentType::Double);
+  OS_ASSERT(arg.type() == ruleset::OSArgumentType::Double);
   this->setAcceptDrops(false);
   refreshText();
 
   bool isConnected = connect(this,SIGNAL(editingFinished()),this,SLOT(onEditingFinished()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void OSArgumentDoubleEdit::onEditingFinished()
@@ -533,12 +534,12 @@ OSArgumentIntegerEdit::OSArgumentIntegerEdit(ruleset::OSArgument& arg,
                                                              QWidget * parent)
   : QLineEdit(parent), m_arg(arg), m_isScientific(false)
 {
-  BOOST_ASSERT(arg.type() == ruleset::OSArgumentType::Integer);
+  OS_ASSERT(arg.type() == ruleset::OSArgumentType::Integer);
   this->setAcceptDrops(false);
   refreshText();
 
   bool isConnected = connect(this,SIGNAL(editingFinished()),this,SLOT(onEditingFinished()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void OSArgumentIntegerEdit::onEditingFinished() {
@@ -614,12 +615,12 @@ OSArgumentStringEdit::OSArgumentStringEdit(ruleset::OSArgument& arg,
                                                            QWidget * parent)
   : QLineEdit(parent), m_arg(arg)
 {
-  BOOST_ASSERT(arg.type() == ruleset::OSArgumentType::String);
+  OS_ASSERT(arg.type() == ruleset::OSArgumentType::String);
   this->setAcceptDrops(false);
   refreshText();
 
   bool isConnected = connect(this,SIGNAL(editingFinished()),this,SLOT(onEditingFinished()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void OSArgumentStringEdit::onEditingFinished() {
@@ -648,7 +649,7 @@ OSArgumentChoiceEdit::OSArgumentChoiceEdit(ruleset::OSArgument& arg,
                                                            QWidget * parent)
   : QComboBox(parent), m_arg(arg)
 {
-  BOOST_ASSERT((arg.type() == ruleset::OSArgumentType::Choice) || (arg.type() == ruleset::OSArgumentType::String));
+  OS_ASSERT((arg.type() == ruleset::OSArgumentType::Choice) || (arg.type() == ruleset::OSArgumentType::String));
   this->setAcceptDrops(false);
   refreshChoices();
 
@@ -662,7 +663,7 @@ void OSArgumentChoiceEdit::connectOnCurrentIndexChanged() {
                              SIGNAL(currentIndexChanged(const QString&)),
                              this,
                              SLOT(onCurrentIndexChanged(const QString&)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void OSArgumentChoiceEdit::setChoices(const std::vector<std::string>& choices) {
@@ -722,7 +723,7 @@ OSArgumentPathEdit::OSArgumentPathEdit(ruleset::OSArgument& arg,
 
   QPushButton * btn = new QPushButton("Browse",this);
   bool isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onFileBtnClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   btn->setFixedWidth(100);
 
   QVBoxLayout * vLayout = new QVBoxLayout();

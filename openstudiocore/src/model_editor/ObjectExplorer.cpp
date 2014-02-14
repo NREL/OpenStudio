@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -160,9 +160,8 @@ void ObjectExplorer::updateIddFile()
 
 void ObjectExplorer::groupTextEdited(const QString& text)
 {
-  QListWidgetItem * item = NULL;
   for(int i=0; i<mGroupList->count(); i++){
-    item = mGroupList->item(i);
+    QListWidgetItem * item = mGroupList->item(i);
     item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
   }
 }

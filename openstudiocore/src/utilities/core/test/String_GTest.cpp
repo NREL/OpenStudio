@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include <gtest/gtest.h>
 
+#include <utilities/core/Containers.hpp>
 #include <utilities/core/String.hpp>
 #include <utilities/core/StringHelpers.hpp>
 #include <utilities/core/Path.hpp>
@@ -31,13 +32,7 @@
 #include <iostream>
 
 using std::string;
-using openstudio::path;
-using openstudio::toString;
-using openstudio::toQString;
-using openstudio::toPath;
-using openstudio::toCamelCase;
-using openstudio::toUpperCamelCase;
-using openstudio::toLowerCamelCase;
+using namespace openstudio;
 using boost::serialization::make_nvp;
 using std::ios;
 using boost::regex;
@@ -235,3 +230,100 @@ TEST(String, LowerCamelCase) {
   EXPECT_EQ("helloWorld",toLowerCamelCase("hello  World"));
   EXPECT_EQ("helloWorld",toLowerCamelCase("Hello World"));
 }
+
+TEST(String, UnderscoreCase) {
+  EXPECT_EQ("hello_world",toUnderscoreCase("hello world"));
+  EXPECT_EQ("hello_world",toUnderscoreCase("hello_world"));
+  EXPECT_EQ("hello_world",toUnderscoreCase("hello  World"));
+  EXPECT_EQ("hello_world",toUnderscoreCase("Hello World"));
+}
+
+TEST(String,NeatStrings) {
+  double value = 1.0;
+  // as is, should print as "1" and show me no digits past the decimal point
+  std::string str = toString(value);
+  EXPECT_EQ("1",str);
+  EXPECT_EQ(0u,numFractionalDigits(str));
+  // can add digits if I want
+  EXPECT_EQ("1.0",toNeatString(value,1));
+  EXPECT_EQ("1.000",toNeatString(value,3));
+
+  value = 16891690157329.2819;
+  // too many significant figures -- cut down to 5 and see how it looks
+  str = toString(toNumSigFigs(value,5));
+  EXPECT_EQ("16892000000000",str);
+  str = toNeatStringBySigFigs(value,6);
+  EXPECT_EQ("16,891,700,000,000",str);
+  EXPECT_EQ(0u,numFractionalDigits(str));
+  str = toNeatString(toNumSigFigs(value,5));
+  EXPECT_EQ("16,892,000,000,000",str);
+  EXPECT_EQ(0u,numFractionalDigits(str));
+
+  value = -0.0001892962;
+  str = toString(toNumSigFigs(value,2));
+  EXPECT_EQ("-0.00019",str);
+  str = toNeatStringBySigFigs(value,2);
+  EXPECT_EQ("-0.00019",str);
+  EXPECT_EQ(5u,numFractionalDigits(str));
+  str = toNeatString(value,5);
+  EXPECT_EQ("-0.00019",str);
+  EXPECT_EQ(5u,numFractionalDigits(str));
+  
+  value = -1326.32;
+  str = toNeatString(toNumSigFigs(value,3),1);
+  EXPECT_EQ("-1,330.0",str);
+  EXPECT_EQ(1u,numFractionalDigits(str));
+}
+
+TEST(String,NumFractionalDigits) {
+  DoubleVector values;
+  values.push_back(128196.198);
+  values.push_back(19671.281);
+  values.push_back(218528.28);
+  values.push_back(192.186);
+
+  std::pair<unsigned,unsigned> result = numFractionalDigits(values,3u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(0u,result.second);
+
+  result = numFractionalDigits(values,4u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(1u,result.second);
+
+  result = numFractionalDigits(values,7u);
+  EXPECT_EQ(1u,result.first); EXPECT_EQ(4u,result.second);
+
+  values.clear();
+  values.push_back(0.189678);
+  values.push_back(0.001869168);
+  values.push_back(0.7198);
+
+  result = numFractionalDigits(values,2u);
+  EXPECT_EQ(2u,result.first); EXPECT_EQ(4u,result.second);
+
+  result = numFractionalDigits(values,8u);
+  EXPECT_EQ(8u,result.first); EXPECT_EQ(10u,result.second);
+
+  values.clear();
+  values.push_back(0.07592);
+  values.push_back(198.82);
+  values.push_back(210.28);
+  values.push_back(0.628);
+
+  result = numFractionalDigits(values,2u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(3u,result.second);
+
+  result = numFractionalDigits(values,3u);
+  EXPECT_EQ(0u,result.first); EXPECT_EQ(4u,result.second);
+
+  result = numFractionalDigits(values,5u);
+  EXPECT_EQ(2u,result.first); EXPECT_EQ(6u,result.second);  
+
+  values.clear();
+  values.push_back(0.0);
+
+  result = numFractionalDigits(values,2u);
+  EXPECT_EQ(1u,result.first); EXPECT_EQ(1u,result.second);
+
+  result = numFractionalDigits(values,5u);
+  EXPECT_EQ(4u,result.first); EXPECT_EQ(4u,result.second);
+}
+

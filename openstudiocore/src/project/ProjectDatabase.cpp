@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -124,23 +124,30 @@ namespace detail {
     OS_ASSERT(database.open());
     m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
-    QSqlQuery query(*m_qSqlDatabase);
-    //query.prepare("PRAGMA synchronous = OFF");
-    query.prepare("PRAGMA synchronous = NORMAL");
-    //query.prepare("PRAGMA synchronous = FULL");
-    query.exec();
+    { 
+      // do it in a new scope to make sure the query is finalized before we start anything else
+      QSqlQuery query(*m_qSqlDatabase);
+      //query.prepare("PRAGMA synchronous = OFF");
+      query.prepare("PRAGMA synchronous = NORMAL");
+      //query.prepare("PRAGMA synchronous = FULL");
+      query.exec();
 
-    query.prepare("PRAGMA locking_mode=NORMAL");
-    //query.prepare("PRAGMA locking_mode=EXCLUSIVE");
-    query.exec();
+      query.prepare("PRAGMA locking_mode=NORMAL");
+      //query.prepare("PRAGMA locking_mode=EXCLUSIVE");
+      query.exec();
 
-    //query.prepare("PRAGMA journal_mode=DELETE");
-    //query.prepare("PRAGMA journal_mode=TRUNCATE");
-    query.prepare("PRAGMA journal_mode=PERSIST");
-    //query.prepare("PRAGMA journal_mode=MEMORY");
-    //query.prepare("PRAGMA journal_mode=WAL");
-    //query.prepare("PRAGMA journal_mode=OFF");
-    query.exec();
+      //query.prepare("PRAGMA journal_mode=DELETE");
+      //query.prepare("PRAGMA journal_mode=TRUNCATE");
+      //query.prepare("PRAGMA journal_mode=PERSIST");
+      query.prepare("PRAGMA journal_mode=MEMORY");
+      //query.prepare("PRAGMA journal_mode=WAL");
+      //query.prepare("PRAGMA journal_mode=OFF");
+      query.exec();
+
+      query.prepare("PRAGMA temp_store=MEMORY");
+      query.exec();
+    }
+
 
     if (needsInitialize){
       this->initialize();
@@ -314,6 +321,12 @@ namespace detail {
     bool test = false;
     if (m_qSqlDatabase->driver()->hasFeature(QSqlDriver::Transactions)){
       test = m_qSqlDatabase->transaction();
+      if (!test)
+      {
+        LOG(Info, "DB Message: " << openstudio::toString(m_qSqlDatabase->lastError().text()));
+      }
+    } else {
+      LOG(Error, "DB Engine doesn't support transactions");
     }
     return test;
   }
@@ -321,9 +334,17 @@ namespace detail {
   bool ProjectDatabase_Impl::commitTransaction() const
   {
     bool test = false;
+
     if (m_qSqlDatabase->driver()->hasFeature(QSqlDriver::Transactions)){
       test = m_qSqlDatabase->commit();
+      if (!test)
+      {
+        LOG(Error, "Db Error: " << openstudio::toString(m_qSqlDatabase->lastError().text()));
+      }
+    } else {
+      LOG(Error, "DB Engine doesn't support transactions");
     }
+
     return test;
   }
 
@@ -432,7 +453,8 @@ namespace detail {
 
     // remove undo struct for this record
     HandleFinder finder(record.handle());
-    std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
+    std::vector<RemoveUndo>::iterator ruit = std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
+    m_removeUndos.erase(ruit,m_removeUndos.end());
 
     // delete removed object
     it = m_handleRemovedRecordMap.find(record.handle());

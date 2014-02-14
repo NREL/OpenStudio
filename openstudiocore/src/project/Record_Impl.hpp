@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -190,7 +190,7 @@ namespace project {
           std::vector<QVariant>::const_iterator nullItEnd = queryData.nulls.end();
           for (; colIndexIt != colIndexItEnd; ++colIndexIt, ++nullIt)
           {
-            BOOST_ASSERT(nullIt != nullItEnd);
+            OS_ASSERT(nullIt != nullItEnd);
             query.bindValue(*colIndexIt,*nullIt);
           }
           // bind id to the id in the WHERE clause

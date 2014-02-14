@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -463,11 +463,13 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-  ModelObject clone(Model & model) const;
+  ModelObject clone(Model model) const;
 
   std::vector<openstudio::IdfObject> remove();
 
   bool addToNode(Node & node);
+
+  std::vector<ModelObject> children() const;
 
  private:
 

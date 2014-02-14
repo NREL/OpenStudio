@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
 class CurveCubic;
@@ -73,10 +72,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> thermalZone() const;
 
     double ratedAmbientTemperature() const;
@@ -111,7 +108,6 @@ namespace detail {
 
     bool isLatentCaseCreditCurveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveCubic.
     CurveCubic latentCaseCreditCurve() const;
 
     double standardCaseFanPowerperUnitLength() const;
@@ -128,7 +124,6 @@ namespace detail {
 
     boost::optional<double> installedCaseLightingPowerperUnitLength() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> caseLightingSchedule() const;
 
     double fractionofLightingEnergytoCase() const;
@@ -167,27 +162,22 @@ namespace detail {
 
     bool isCaseDefrostTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> caseDefrostSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> caseDefrostDripDownSchedule() const;
 
     std::string defrostEnergyCorrectionCurveType() const;
 
     bool isDefrostEnergyCorrectionCurveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CurveCubic.
     boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
 
     double underCaseHVACReturnAirFraction() const;
 
     bool isUnderCaseHVACReturnAirFractionDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> caseCreditFractionSchedule() const;
 
     boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature() const;
@@ -200,12 +190,10 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setThermalZone(const ThermalZone& thermalZone);
 
     void resetThermalZone();
@@ -242,7 +230,6 @@ namespace detail {
 
     void resetLatentCaseCreditCurveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
     bool setLatentCaseCreditCurve(const CurveCubic& curveCubic);
 
     bool setStandardCaseFanPowerperUnitLength(double standardCaseFanPowerperUnitLength);
@@ -261,7 +248,6 @@ namespace detail {
 
     void resetInstalledCaseLightingPowerperUnitLength();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setCaseLightingSchedule(Schedule& schedule);
 
     void resetCaseLightingSchedule();
@@ -302,12 +288,10 @@ namespace detail {
 
     void resetCaseDefrostType();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setCaseDefrostSchedule(Schedule& schedule);
 
     void resetCaseDefrostSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setCaseDefrostDripDownSchedule(Schedule& schedule);
 
     void resetCaseDefrostDripDownSchedule();
@@ -316,7 +300,6 @@ namespace detail {
 
     void resetDefrostEnergyCorrectionCurveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
     bool setDefrostEnergyCorrectionCurve(const boost::optional<CurveCubic>& curveCubic);
 
     void resetDefrostEnergyCorrectionCurve();
@@ -325,12 +308,10 @@ namespace detail {
 
     void resetUnderCaseHVACReturnAirFraction();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setRefrigeratedCaseRestockingSchedule(Schedule& schedule);
 
     void resetRefrigeratedCaseRestockingSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setCaseCreditFractionSchedule(Schedule& schedule);
 
     void resetCaseCreditFractionSchedule();
@@ -352,7 +333,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RefrigerationCase");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals

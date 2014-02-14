@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-class TestCreateErrorMsgs < OpenStudio::Ruleset::ModelUserScript
+class TestFlagAsNotApplicable < OpenStudio::Ruleset::ModelUserScript
 
   #override name to return the name of your script
   def name
@@ -60,4 +60,4 @@ class TestCreateErrorMsgs < OpenStudio::Ruleset::ModelUserScript
   
 end
 
-TestCreateErrorMsgs.new.registerWithApplication
+TestFlagAsNotApplicable.new.registerWithApplication

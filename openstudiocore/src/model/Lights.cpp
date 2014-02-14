@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -158,8 +158,7 @@ namespace detail {
   }
 
   bool Lights_Impl::setFractionReplaceable(double fractionReplaceable) {
-    bool result = false;
-    result = setDouble(OS_LightsFields::FractionReplaceable, fractionReplaceable);
+    bool result = setDouble(OS_LightsFields::FractionReplaceable, fractionReplaceable);
     return result;
   }
 
@@ -169,8 +168,7 @@ namespace detail {
   }
 
   bool Lights_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_LightsFields::Multiplier, multiplier);
+    bool result = setDouble(OS_LightsFields::Multiplier, multiplier);
     return result;
   }
 
@@ -180,8 +178,7 @@ namespace detail {
   }
 
   void Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_LightsFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_LightsFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,8 +23,6 @@
 
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
@@ -81,12 +79,10 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_set_get)
   evapcond.setApproachTemperatureCoefficient4(9.0);
   evapcond.setMinimumCapacityFactor(0.9);
   evapcond.setMaximumCapacityFactor(9.0);
-//  evapcond.setAirInletNode("AirInNode");
   evapcond.setRatedAirFlowRate(999.0);
   evapcond.setBasinHeaterCapacity(999.0);
   evapcond.setBasinHeaterSetpointTemperature(999.0);
   evapcond.setRatedWaterPumpPower(999.0);
-  //  evapcond.setEvaporativeCondenserAvailabilitySchedule("AvailSched");
   evapcond.setEndUseSubcategory("EndUseCat");
   evapcond.setCondenserRefrigerantOperatingChargeInventory(999.0);
   evapcond.setCondensateReceiverRefrigerantInventory(999.0);
@@ -103,12 +99,10 @@ TEST_F(ModelFixture,RefrigerationCondenserEvaporativeCooled_set_get)
   EXPECT_DOUBLE_EQ(evapcond.approachTemperatureCoefficient4(),9.0);
   EXPECT_DOUBLE_EQ(evapcond.minimumCapacityFactor(),0.9);
   EXPECT_DOUBLE_EQ(evapcond.maximumCapacityFactor(),9.0);
-//  EXPECT_EQ(evapcond.airInletNode(),"AirInNode");
   EXPECT_DOUBLE_EQ(evapcond.ratedAirFlowRate().get(),999.0);
   EXPECT_DOUBLE_EQ(evapcond.basinHeaterCapacity(),999.0);
   EXPECT_DOUBLE_EQ(evapcond.basinHeaterSetpointTemperature(),999.0);
   EXPECT_DOUBLE_EQ(evapcond.ratedWaterPumpPower().get(),999.0);
-//  EXPECT_EQ(evapcond.evaporativeCondenserAvailabilitySchedule(),"AvailSched");
   EXPECT_EQ(evapcond.endUseSubcategory(),"EndUseCat");
   EXPECT_DOUBLE_EQ(evapcond.condenserRefrigerantOperatingChargeInventory(),999.0);
   EXPECT_DOUBLE_EQ(evapcond.condensateReceiverRefrigerantInventory(),999.0);
@@ -515,7 +509,6 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithDe
 TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCustomData)
 {
   Model model;
-  ThermalZone thermalZone(model);
   Schedule evaporativeCondenserSchedule = model.alwaysOnDiscreteSchedule();
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
@@ -530,7 +523,6 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCu
   testObject.setApproachTemperatureCoefficient4(9.0);
   testObject.setMinimumCapacityFactor(0.9);
   testObject.setMaximumCapacityFactor(9.0);
-  testObject.setAirInletNode(thermalZone);
   testObject.autocalculateRatedAirFlowRate();
   testObject.setBasinHeaterCapacity(999.0);
   testObject.setBasinHeaterSetpointTemperature(999.0);
@@ -563,7 +555,6 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_CloneOneModelWithCu
   EXPECT_DOUBLE_EQ(testObjectClone.condensateReceiverRefrigerantInventory(),999.0);
   EXPECT_DOUBLE_EQ(testObjectClone.condensatePipingRefrigerantInventory(),999.0);
 
-  EXPECT_FALSE(testObjectClone.airInletNode());
   EXPECT_EQ(testObject.evaporativeCondenserAvailabilitySchedule().get().handle(), testObjectClone.evaporativeCondenserAvailabilitySchedule().get().handle());
   EXPECT_EQ(evaporativeCondenserSchedule.handle(), testObjectClone.evaporativeCondenserAvailabilitySchedule().get().handle());
 }

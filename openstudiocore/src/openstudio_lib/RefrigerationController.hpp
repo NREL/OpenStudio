@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ class QWidget;
 
 namespace openstudio {
 
-class RefrigerationSystemGridView;
+class GridLayoutItem;
 class RefrigerationSystemView;
 class RefrigerationSystemListController;
 class RefrigerationScene;
@@ -92,7 +92,7 @@ class RefrigerationController : public QObject
 
   QPointer<RefrigerationView> m_refrigerationView;
 
-  QPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
+  QPointer<GridLayoutItem> m_refrigerationSystemGridView;
 
   QPointer<RefrigerationSystemView> m_detailView;
 

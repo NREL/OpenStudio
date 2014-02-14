@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -43,10 +43,6 @@ class ClimateZones_Test < Test::Unit::TestCase
     newZone = climateZones.appendClimateZone(OpenStudio::Model::ClimateZones.cecInstitutionName,
                                                     "12")
     assert_equal(false,newZone.empty)
-    
-    activeZone = climateZones.activeClimateZone
-    assert_equal(true,defaultZone == activeZone)
-    assert_equal(false,newZone == activeZone)
     assert_equal(2,climateZones.numClimateZones)
     
   end

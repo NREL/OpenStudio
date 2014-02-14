@@ -326,6 +326,10 @@ SET( ${target_name}_SRC
   VariablesTabView.hpp
   VerticalTabWidget.cpp
   VerticalTabWidget.hpp
+  VRFController.cpp
+  VRFController.hpp
+  VRFGraphicsItems.cpp
+  VRFGraphicsItems.hpp
   WaterUseEquipmentInspectorView.cpp
   WaterUseEquipmentInspectorView.hpp
   WindowMaterialBlindInspectorView.cpp
@@ -598,6 +602,8 @@ SET( ${target_name}_moc
   VariablesTabController.hpp
   VariablesTabView.hpp
   VerticalTabWidget.hpp
+  VRFController.hpp
+  VRFGraphicsItems.hpp
   WaterUseEquipmentInspectorView.hpp
   WindowMaterialBlindInspectorView.hpp
   WindowMaterialGasInspectorView.hpp
@@ -677,9 +683,6 @@ ADD_LIBRARY( ${target_name}
 )
 
 SET( depends
-  vtkSimpleCharts
-  vtkCharts
-  QVTK
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor

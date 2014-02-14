@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -114,10 +114,6 @@ class VariableGroupItemView : public OSCollapsibleView
   LightGradientHeader * variableGroupHeader;
 
   VariableGroupContentView * variableGroupContentView;
-
-  private:
-
-  bool m_fixedMeasuresOnly;
 };
 
 class VariableGroupContentView : public QWidget
@@ -236,7 +232,7 @@ class MeasureItemView : public QWidget
 {
   Q_OBJECT
 
-  public:
+ public:
 
   MeasureItemView(bool t_fixed);
 
@@ -244,9 +240,11 @@ class MeasureItemView : public QWidget
 
   MeasureItemButton * measureItemButton;
 
+  QPushButton * duplicateButton;
+
   QPushButton * removeButton;
 
-  protected:
+ protected:
 
   void paintEvent(QPaintEvent *);
 };

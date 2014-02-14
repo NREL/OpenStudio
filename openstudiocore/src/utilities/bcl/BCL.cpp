@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -435,8 +435,8 @@ namespace openstudio{
           .nodeValue().toStdString();
         std::string value = attributeElement.firstChildElement("value").firstChild()
           .nodeValue().toStdString();
-        std::string datatype = attributeElement.firstChildElement("datatype").firstChild()
-          .nodeValue().toStdString();
+        //std::string datatype = attributeElement.firstChildElement("datatype").firstChild()
+        //  .nodeValue().toStdString();
 
         // Units are optional
         std::string units = attributeElement.firstChildElement("units").firstChild()

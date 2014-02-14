@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -80,7 +79,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> RefrigerationCase_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -803,7 +801,6 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSc
 {
   OS_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
 
-  bool ok = true;
   CurveCubic latentCaseCreditCurve = CurveCubic(model);
   latentCaseCreditCurve.setName("Refrigeration Case Latent Credit Curve");
   latentCaseCreditCurve.setCoefficient1Constant(0.026526281);
@@ -822,7 +819,7 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSc
   setCaseOperatingTemperature(2.78);
   setLatentCaseCreditCurveType("CaseTemperatureMethod");
 
-  ok = setLatentCaseCreditCurve(latentCaseCreditCurve);
+  bool ok = setLatentCaseCreditCurve(latentCaseCreditCurve);
   OS_ASSERT(ok);
 
   setStandardCaseFanPowerperUnitLength(41.01);

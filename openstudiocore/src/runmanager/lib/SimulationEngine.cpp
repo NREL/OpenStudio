@@ -11,7 +11,6 @@ namespace openstudio {
 
     SimulationEngine::SimulationEngine(const openstudio::path &t_cacheFolder, size_t t_numVariables)
       : m_numVariables(t_numVariables), m_folder(validateFolder(t_cacheFolder)), 
-        m_errorEstimations(t_numVariables),
         m_runManager(m_folder / openstudio::toPath("run.db"), false, true)
     {
       LOG(Info, "Starting SimulationEngine: " << openstudio::toString(t_cacheFolder));
@@ -22,9 +21,6 @@ namespace openstudio {
 
       std::vector<openstudio::runmanager::Job> jobs = m_runManager.getJobs();
 
-      m_errorEstimations.setConfidence(estimationJobString(), .75);
-      m_errorEstimations.setConfidence(fullJobString(), .90);
-      m_errorEstimations.setConfidence(radianceJobString(), 1.0);
 
       LOG(Info, "Scanning jobs from RunManager: " << jobs.size());
       for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
@@ -46,8 +42,9 @@ namespace openstudio {
 
           // register that we are keeping track of this simulation
           std::vector<double> variables = getVariables(*itr);
-          LOG(Info, "Registering loaded simulation " << toString(variables));
-          m_simulations.insert(variables);
+          std::vector<int> discreteVariables = getDiscreteVariables(*itr);
+          LOG(Info, "Registering loaded simulation " << toString(variables) << " " << toString(discreteVariables));
+          m_simulations.insert(std::make_pair(variables, discreteVariables));
         }
       }
    
@@ -74,27 +71,38 @@ namespace openstudio {
 
     std::vector<double> SimulationEngine::getVariables(const openstudio::runmanager::Job &t_job) 
     {
-      return fromString(t_job.jobParams().get("simulationEngineVariables").children.at(0).value); 
+      return fromString<double>(t_job.jobParams().get("simulationEngineVariables").children.at(0).value); 
+    }
+
+    std::vector<int> SimulationEngine::getDiscreteVariables(const openstudio::runmanager::Job &t_job) 
+    {
+      return fromString<int>(t_job.jobParams().get("simulationEngineDiscreteVariables").children.at(0).value); 
     }
 
     FuelUses SimulationEngine::fuelUses(const openstudio::model::Model &t_model, const std::vector<double> &t_variables,
+        const std::vector<int> &t_discreteVariables,
+        const std::string &t_simulationId,
         const openstudio::path &t_weatherFile)
     {
       validateNumVariables(t_variables);
 
-      if (m_simulations.count(t_variables) == 0)
+      std::pair<std::vector<double>, std::vector<int> > key(t_variables, t_discreteVariables);
+
+      if (m_simulations.count(key) == 0)
       {
-        LOG(Info, "Simulation did not exist, adding " << toString(t_variables));
-        enqueueSimulations(t_model, t_variables, t_weatherFile);
-        m_simulations.insert(t_variables);
+        LOG(Info, "Simulation did not exist, adding " << toString(t_variables) << " " << toString(t_discreteVariables));
+        enqueueSimulations(t_model, t_variables, t_discreteVariables, t_simulationId, t_weatherFile);
+        m_simulations.insert(key);
       } else {
-        LOG(Info, "Simulation already existed " << toString(t_variables));
+        LOG(Info, "Simulation already existed " << toString(t_variables) << " " << toString(t_discreteVariables));
       }
 
-      return fuelUses(t_variables);
+      return fuelUses(t_variables, t_discreteVariables);
     }
 
     void SimulationEngine::enqueueSimulations(const openstudio::model::Model &t_model, const std::vector<double> &t_variables,
+        const std::vector<int> &t_discreteVariables,
+        const std::string &t_simulationId,
         const openstudio::path &t_weatherFile)
     {
       validateNumVariables(t_variables);
@@ -102,22 +110,28 @@ namespace openstudio {
       QCryptographicHash hash(QCryptographicHash::Sha1);
 
       hash.addData(reinterpret_cast<const char *>(&t_variables.front()), (t_variables.size() * sizeof(double)) / sizeof(char));
+      hash.addData(reinterpret_cast<const char *>(&t_discreteVariables.front()), (t_discreteVariables.size() * sizeof(int)) / sizeof(char));
 
       // We are using a hash because this list of variables could get very long indeed
       const std::string hashstring(hash.result().toHex().data());
 
       openstudio::path basePath = m_folder / openstudio::toPath(hashstring);
 
+      if (!t_simulationId.empty())
+      {
+        m_simulationIds[t_simulationId] = std::make_pair(t_variables, t_discreteVariables);
+      }
+
       // estimation
-      openstudio::runmanager::Job estimation = createEstimationJob(basePath, t_model, t_variables, t_weatherFile);
+      openstudio::runmanager::Job estimation = createEstimationJob(basePath, t_model, t_variables, t_discreteVariables, t_simulationId, t_weatherFile);
       connectSignals(estimation);
 
       // Full run
-      openstudio::runmanager::Job fullrun = createFullJob(basePath, t_model, t_variables, t_weatherFile);
+      openstudio::runmanager::Job fullrun = createFullJob(basePath, t_model, t_variables, t_discreteVariables, t_simulationId, t_weatherFile);
       connectSignals(fullrun);
 
       // Radiance run
-      openstudio::runmanager::Job radianceRun = createRadianceJob(basePath, t_model, t_variables, t_weatherFile);
+      openstudio::runmanager::Job radianceRun = createRadianceJob(basePath, t_model, t_variables, t_discreteVariables, t_simulationId, t_weatherFile);
       connectSignals(radianceRun);
 
       m_runManager.enqueue(estimation, true);
@@ -154,42 +168,62 @@ namespace openstudio {
     void SimulationEngine::loadResults(const openstudio::runmanager::Job &t_job)
     {
       std::string runtype = t_job.jobParams().get("simulationEngineRunType").children.at(0).value; 
+
       std::vector<double> variables = getVariables(t_job);
+      std::vector<int> discreteVariables = getDiscreteVariables(t_job);
+
+      try {
+        JobParams params = t_job.jobParams();
+        if (params.has("simulationEngineSimulationId"))
+        {
+          std::string simulationId = params.get("simulationEngineSimulationId").children.at(0).value;
+          m_simulationIds[simulationId] = std::make_pair(variables, discreteVariables);
+        }
+      } catch (...) { /* no simulation id */ }
 
       openstudio::path sqlfilePath = getSqlFilePath(t_job);
       SqlFile sql(sqlfilePath); 
 
-      m_errorEstimations.add(sql, runtype, variables); 
 
-      double confidence = m_errorEstimations.getConfidence(runtype);
+      getErrorEstimation(discreteVariables).add(sql, runtype, variables); 
 
-      if (m_details[variables].confidence < confidence)
+      double confidence = getErrorEstimation(discreteVariables).getConfidence(runtype);
+
+
+      if (m_details[std::make_pair(variables, discreteVariables)].confidence < confidence)
       {
-        m_details[variables] = SimulationDetails(confidence, sqlfilePath);
+        m_details[std::make_pair(variables, discreteVariables)] = SimulationDetails(confidence, sqlfilePath);
       }
+
     }
 
     openstudio::runmanager::Job SimulationEngine::createEstimationJob(const openstudio::path &t_path, const openstudio::model::Model &t_model,
-        const std::vector<double> &t_variables, const openstudio::path &t_weatherFile)
+        const std::vector<double> &t_variables, const std::vector<int> &t_discreteVariables, 
+        const std::string &t_simulationId,
+        const openstudio::path &t_weatherFile)
     {
       return createJob(t_path / openstudio::toPath(estimationJobString()), t_model,
-          t_variables, estimationJobString(), true, m_runManager.getConfigOptions().getMaxLocalJobs(),
+          t_variables, t_discreteVariables, t_simulationId, estimationJobString(), true, m_runManager.getConfigOptions().getMaxLocalJobs(),
           false, t_weatherFile);
     }
 
     openstudio::runmanager::Job SimulationEngine::createFullJob(const openstudio::path &t_path, const openstudio::model::Model &t_model,
-        const std::vector<double> &t_variables, const openstudio::path &t_weatherFile)
+        const std::vector<double> &t_variables, const std::vector<int> &t_discreteVariables, 
+        const std::string &t_simulationId,
+        const openstudio::path &t_weatherFile)
     {
       return createJob(t_path / openstudio::toPath(fullJobString()), t_model,
-          t_variables, fullJobString(), false, m_runManager.getConfigOptions().getMaxLocalJobs(),
+          t_variables, t_discreteVariables, t_simulationId, fullJobString(), false, m_runManager.getConfigOptions().getMaxLocalJobs(),
           false, t_weatherFile);
     }
 
     openstudio::runmanager::Job SimulationEngine::createRadianceJob(const openstudio::path &t_path, const openstudio::model::Model &t_model,
-        const std::vector<double> &t_variables, const openstudio::path &t_weatherFile)
+        const std::vector<double> &t_variables, const std::vector<int> &t_discreteVariables,
+        const std::string &t_simulationId,
+        const openstudio::path &t_weatherFile)
     {
       return createJob(t_path / openstudio::toPath(radianceJobString()), t_model,
-          t_variables, radianceJobString(), false, m_runManager.getConfigOptions().getMaxLocalJobs(),
+          t_variables, t_discreteVariables, t_simulationId, radianceJobString(), false, m_runManager.getConfigOptions().getMaxLocalJobs(),
           true, t_weatherFile);
     }
 
@@ -218,10 +252,11 @@ namespace openstudio {
       return t_job.treeOutputFiles().getLastByFilename("eplusout.sql").fullPath;
     }
 
-    std::string SimulationEngine::toString(const std::vector<double> &t_variables)
+    template<typename T>
+    std::string SimulationEngine::toString(const std::vector<T> &t_variables)
     {
       std::stringstream ss;
-      for(std::vector<double>::const_iterator itr = t_variables.begin();
+      for(typename std::vector<T>::const_iterator itr = t_variables.begin();
           itr != t_variables.end();
           ++itr)
       {
@@ -230,14 +265,15 @@ namespace openstudio {
       return ss.str();
     }
 
-    std::vector<double> SimulationEngine::fromString(const std::string &t_variableString)
+    template<typename T>
+    std::vector<T> SimulationEngine::fromString(const std::string &t_variableString)
     {
       std::stringstream ss(t_variableString);
 
-      std::vector<double> results;
+      std::vector<T> results;
       while(ss.good())
       {
-        double val;
+        T val;
         ss >> val;
         char comma;
         ss >> comma;
@@ -253,7 +289,8 @@ namespace openstudio {
     }
 
     openstudio::runmanager::Job SimulationEngine::createJob(const openstudio::path &t_path, openstudio::model::Model t_model,
-        const std::vector<double> &t_variables, const std::string &t_runType,
+        const std::vector<double> &t_variables, const std::vector<int> &t_discreteVariables, const std::string &t_simulationId,
+        const std::string &t_runType,
         bool t_estimation, int t_numParallel, bool t_radiance, const openstudio::path &t_weatherFile)
     {
       openstudio::runmanager::ConfigOptions co = m_runManager.getConfigOptions();
@@ -274,8 +311,14 @@ namespace openstudio {
       workflow.addJob(openstudio::runmanager::JobType::EnergyPlus);
 
       JobParams params;
+      if (!t_simulationId.empty())
+      {
+        params.append("simulationEngineSimulationId", t_simulationId);
+      }
       params.append("simulationEngineRunType", t_runType);
       params.append("simulationEngineVariables", toString(t_variables));
+      params.append("simulationEngineDiscreteVariables", toString(t_discreteVariables));
+
       workflow.add(params);
 
       workflow.add(co.getTools());
@@ -300,19 +343,71 @@ namespace openstudio {
 
       return workflow.create(t_path, osmpath, t_weatherFile);
     }
-
-    FuelUses SimulationEngine::fuelUses(const std::vector<double> &t_variables) const
+    
+    FuelUses SimulationEngine::fuelUses(const std::vector<double> &t_variables, const std::vector<int> &t_discreteVariables) 
     {
       validateNumVariables(t_variables);
 
-      return m_errorEstimations.approximate(t_variables);
+      return getErrorEstimation(t_discreteVariables).approximate(t_variables);
     }
 
-    SimulationDetails SimulationEngine::details(const std::vector<double> &t_variables) const
+    FuelUses SimulationEngine::fuelUses(const std::vector<double> &t_variables, const std::vector<int> &t_discreteVariables) const
     {
       validateNumVariables(t_variables);
 
-      std::map<std::vector<double>, SimulationDetails>::const_iterator itr = m_details.find(t_variables);
+      return getErrorEstimation(t_discreteVariables).approximate(t_variables);
+    }
+
+    std::pair<std::vector<double>, std::vector<int> > SimulationEngine::lookupSimulationId(const std::string &t_simulationId) const
+    {
+      std::map<std::string, std::pair<std::vector<double>, std::vector<int> > >::const_iterator itr =
+        m_simulationIds.find(t_simulationId);
+
+      if (itr != m_simulationIds.end())
+      {
+        return itr->second;
+      } else {
+        throw std::runtime_error("Unknown simulationId: '" + t_simulationId + "'");
+      }
+    }
+
+    FuelUses SimulationEngine::fuelUses(const std::string &t_simulationId) const
+    {
+      std::pair<std::vector<double>, std::vector<int> > p = lookupSimulationId(t_simulationId);
+      return fuelUses(p.first, p.second);
+    }
+
+    ErrorEstimation &SimulationEngine::getErrorEstimation(const std::vector<int> &t_discreteVariables)
+    {
+      std::map<std::vector<int>, ErrorEstimation>::iterator itr = m_errorEstimations.find(t_discreteVariables);
+      if (itr != m_errorEstimations.end())
+      {
+        return itr->second;
+      } else {
+        ErrorEstimation ee(m_numVariables);
+        ee.setConfidence(estimationJobString(), .75);
+        ee.setConfidence(fullJobString(), .90);
+        ee.setConfidence(radianceJobString(), 1.0);
+        return m_errorEstimations.insert(std::map<std::vector<int>, ErrorEstimation>::value_type(t_discreteVariables, ee)).first->second;
+      }
+    }
+
+    const ErrorEstimation &SimulationEngine::getErrorEstimation(const std::vector<int> &t_discreteVariables) const
+    {
+      std::map<std::vector<int>, ErrorEstimation>::const_iterator itr = m_errorEstimations.find(t_discreteVariables);
+      if (itr != m_errorEstimations.end())
+      {
+        return itr->second;
+      } else {
+        throw std::range_error("Unknown set of discrete variables");
+      }
+    }
+
+    SimulationDetails SimulationEngine::details(const std::vector<double> &t_variables, const std::vector<int> &t_discreteVariables) const
+    {
+      validateNumVariables(t_variables);
+
+      std::map<std::pair<std::vector<double>, std::vector<int> >, SimulationDetails>::const_iterator itr = m_details.find(std::make_pair(t_variables, t_discreteVariables));
 
       if (itr != m_details.end())
       {
@@ -320,6 +415,12 @@ namespace openstudio {
       }
 
       return SimulationDetails();
+    }
+
+    SimulationDetails SimulationEngine::details(const std::string &t_simulationId) const
+    {
+      std::pair<std::vector<double>, std::vector<int> > p = lookupSimulationId(t_simulationId);
+      return details(p.first, p.second);
     }
 
 

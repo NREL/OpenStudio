@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ namespace detail {
     // looop through each one, seeing if the coil is contained by the zonehvacbaseboard
     for( std::vector<ZoneHVACBaseboardConvectiveWater>::iterator it = zoneHVACBaseboardConvectiveWaters.begin();
     it < zoneHVACBaseboardConvectiveWaters.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->heatingCoil() )
       {

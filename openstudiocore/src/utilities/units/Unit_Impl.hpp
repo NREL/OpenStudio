@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -123,6 +123,9 @@ namespace detail {
      *  to keep up with prettyStrings, but makes no promises. Precondition: isCompoundUnit(str).
      *  Otherwise throws. */
     void setPrettyString(const std::string& str);
+
+    /** Returns prettyString(withScale) if it exists; otherwise returns standardString(withScale). */
+    std::string print(bool withScale=true) const;
 
     //@}
     /** @name Unit System */

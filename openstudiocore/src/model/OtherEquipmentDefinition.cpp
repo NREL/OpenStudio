@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -185,8 +185,7 @@ namespace detail {
   }
 
   bool OtherEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
-    bool result = false;
-    result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLatent, fractionLatent);
+    bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLatent, fractionLatent);
     return result;
   }
 
@@ -196,8 +195,7 @@ namespace detail {
   //}
 
   bool OtherEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
-    bool result = false;
-    result = setDouble(OS_OtherEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
+    bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
     return result;
   }
 
@@ -207,8 +205,7 @@ namespace detail {
   //}
 
   bool OtherEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
-    bool result = false;
-    result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLost, fractionLost);
+    bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLost, fractionLost);
     return result;
   }
 

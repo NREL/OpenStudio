@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -128,7 +128,7 @@ void OSComboBox2::onModelObjectChanged() {
   int i = 0;
   for( std::vector<std::string>::iterator it = m_values.begin();
        it < m_values.end();
-       it++ )
+       ++it )
   {
     if( istringEqual(*it,value) )
     {
@@ -262,7 +262,7 @@ void OSComboBox2::completeBind() {
 
   for( std::vector<std::string>::iterator it = m_values.begin();
        it < m_values.end();
-       it++ )
+       ++it )
   {
     addItem(QString::fromStdString(*it));
   }
@@ -309,7 +309,7 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChanged()) );
+                              this,SLOT(onModelObjectChanged()) );
   OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
@@ -334,7 +334,7 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   for( std::vector<std::string>::iterator it = m_values.begin();
        it < m_values.end();
-       it++ )
+       ++it )
   {
     addItem(QString::fromStdString(*it));
   }
@@ -361,7 +361,7 @@ void OSComboBox::onModelObjectChanged()
   int i = 0;
   for( std::vector<std::string>::iterator it = m_values.begin();
        it < m_values.end();
-       it++ )
+       ++it )
   {
     if( istringEqual(*it,value) )
     {
@@ -506,7 +506,7 @@ void OSObjectListCBDS::initialize()
 
   for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
        it < modelObjects.end();
-       it++ )
+       ++it )
   {
     if( std::find(m_types.begin(),m_types.end(),it->iddObjectType()) != m_types.end() )
     {

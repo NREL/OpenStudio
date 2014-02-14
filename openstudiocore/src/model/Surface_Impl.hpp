@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,6 @@ namespace detail {
   /** Surface_Impl is a PlanarSurface_Impl that is the implementation class for Surface.*/
   class MODEL_API Surface_Impl : public PlanarSurface_Impl {
     Q_OBJECT;
-    Q_PROPERTY(std::string constructionType READ constructionType WRITE setConstructionType);
     Q_PROPERTY(std::string surfaceType READ surfaceType WRITE setSurfaceType);
     Q_PROPERTY(std::vector<std::string> surfaceTypeValues READ surfaceTypeValues);
     Q_PROPERTY(std::string outsideBoundaryCondition READ outsideBoundaryCondition WRITE setOutsideBoundaryCondition);
@@ -260,14 +259,6 @@ namespace detail {
     /** Assign default wind exposure. */
     void assignDefaultWindExposure();
     void assignDefaultWindExposure(bool driverMethod);
-
-    /** Returns the ConstructionBase.standardsInformation().constructionType(). Method provided 
-     *  so constructionType can be Attribute on the Surface. */
-    std::string constructionType() const;
-
-    /** Set the ConstructionBase.standardsInformation().constructionType(). Method provided so 
-     *  constructionType can be Attribute on the Surface. */
-    bool setConstructionType(const std::string& type);
 
     /** Get the default film thermal resistance (m^2*K/W) for this surface. Assumes still indoor
      *  air, and 15 mph wind outside. */

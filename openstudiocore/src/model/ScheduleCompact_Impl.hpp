@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,6 +65,7 @@ namespace detail {
 
     virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
+
     //@}
     /** @name Setters */
     //@{
@@ -76,6 +77,9 @@ namespace detail {
     void setToConstantValue(double value);
 
     bool setToConstantValue(const Quantity& value);
+
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays();
 
     //@}
     /** @name Queries */

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -21,8 +21,8 @@
 #include <model/ConstructionBase_Impl.hpp>
 
 #include <model/Model.hpp>
-#include <model/ConstructionBaseStandardsInformation.hpp>
-#include <model/ConstructionBaseStandardsInformation_Impl.hpp>
+#include <model/StandardsInformationConstruction.hpp>
+#include <model/StandardsInformationConstruction_Impl.hpp>
 #include <model/PlanarSurface.hpp>
 #include <model/PlanarSurface_Impl.hpp>
 #include <model/Surface.hpp>
@@ -64,8 +64,8 @@ namespace detail {
     : ResourceObject_Impl(other, model, keepHandle)
   {}
 
-  ConstructionBaseStandardsInformation ConstructionBase_Impl::standardsInformation() const {
-    ConstructionBaseStandardsInformationVector candidates = getObject<ConstructionBase>().getModelObjectSources<ConstructionBaseStandardsInformation>();
+  StandardsInformationConstruction ConstructionBase_Impl::standardsInformation() const {
+    StandardsInformationConstructionVector candidates = getObject<ConstructionBase>().getModelObjectSources<StandardsInformationConstruction>();
     if (candidates.size() > 1) {
       for (unsigned i = 1, n = candidates.size(); i < n; ++i) {
         candidates[i].remove();
@@ -74,7 +74,7 @@ namespace detail {
           << briefDescription() << ".");
     }
     if (candidates.size() == 1) { return candidates[0]; }
-    return ConstructionBaseStandardsInformation(getObject<ConstructionBase>());
+    return StandardsInformationConstruction(getObject<ConstructionBase>());
   }
 
   double ConstructionBase_Impl::getNetArea() const
@@ -148,14 +148,14 @@ namespace detail {
 
   std::vector<ModelObject> ConstructionBase_Impl::children() const {
 
-    vector<ModelObject> results(castVector<ModelObject>(getObject<ConstructionBase>().getModelObjectSources<ConstructionBaseStandardsInformation>()));
+    vector<ModelObject> results(castVector<ModelObject>(getObject<ConstructionBase>().getModelObjectSources<StandardsInformationConstruction>()));
 
     return results;
   }
 
   std::vector<IddObjectType> ConstructionBase_Impl::allowableChildTypes() const {
     IddObjectTypeVector result;
-    result.push_back(ConstructionBaseStandardsInformation::iddObjectType());
+    result.push_back(StandardsInformationConstruction::iddObjectType());
     return result;
   }
 
@@ -212,7 +212,7 @@ namespace detail {
 
 } // detail
 
-ConstructionBaseStandardsInformation ConstructionBase::standardsInformation() const {
+StandardsInformationConstruction ConstructionBase::standardsInformation() const {
   return getImpl<detail::ConstructionBase_Impl>()->standardsInformation();
 }
 

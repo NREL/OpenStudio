@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -230,11 +230,22 @@ namespace detail {
       std::string outsideBoundaryCondition = planarSurface.cast<Surface>().outsideBoundaryCondition();
       if (istringEqual("Outdoors", outsideBoundaryCondition)){
         defaultSurfaceConstructions = this->defaultExteriorSurfaceConstructions();
-      }else if (istringEqual("Ground", outsideBoundaryCondition)){
-        // DLM: do we want to apply this for all ground surfaces?
+      }else if (istringEqual("Ground", outsideBoundaryCondition) || 
+                istringEqual("GroundSlabPreprocessorAverage", outsideBoundaryCondition) ||
+                istringEqual("GroundSlabPreprocessorCore", outsideBoundaryCondition) ||
+                istringEqual("GroundSlabPreprocessorPerimeter", outsideBoundaryCondition) ||
+                istringEqual("GroundBasementPreprocessorAverageWall", outsideBoundaryCondition) ||
+                istringEqual("GroundBasementPreprocessorAverageFloor", outsideBoundaryCondition) ||
+                istringEqual("GroundBasementPreprocessorUpperWall", outsideBoundaryCondition) ||
+                istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition)){
         defaultSurfaceConstructions = this->defaultGroundContactSurfaceConstructions();
       }else if (istringEqual("Surface", outsideBoundaryCondition)){
         defaultSurfaceConstructions = this->defaultInteriorSurfaceConstructions();
+      }else{
+       //Adiabatic
+       //GroundFCfactorMethod
+       //OtherSideCoefficients
+       //OtherSideConditionsModel
       }
       
       if (defaultSurfaceConstructions){
@@ -258,6 +269,19 @@ namespace detail {
           defaultSubSurfaceConstructions = this->defaultExteriorSubSurfaceConstructions();
         }else if (istringEqual("Surface", outsideBoundaryCondition)){
           defaultSubSurfaceConstructions = this->defaultInteriorSubSurfaceConstructions();
+        }else{
+          //Adiabatic
+          //Ground
+          //GroundFCfactorMethod
+          //OtherSideCoefficients
+          //OtherSideConditionsModel
+          //GroundSlabPreprocessorAverage
+          //GroundSlabPreprocessorCore
+          //GroundSlabPreprocessorPerimeter
+          //GroundBasementPreprocessorAverageWall
+          //GroundBasementPreprocessorAverageFloor
+          //GroundBasementPreprocessorUpperWall
+          //GroundBasementPreprocessorLowerWall
         }
       }
 
