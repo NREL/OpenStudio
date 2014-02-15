@@ -134,27 +134,28 @@ namespace detail {
     }
 
     // Is the node part of an air loop
-    boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC();
+    boost::optional<AirLoopHVAC> nodeAirLoop = node.airLoopHVAC();
 
-    if( ! airLoop )
+    if( ! nodeAirLoop )
     {
       result = false;
     }
 
-    // Is this plenum already connected to an air loop
-    if( boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC() )
+    // Is this plenum already connected to a different air loop
+    boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC();
+    if( currentAirLoopHVAC && (currentAirLoopHVAC.get() != nodeAirLoop) )
     {
       result = false;
     }
 
     boost::optional<ModelObject> outletObj = node.outletModelObject();
     boost::optional<ModelObject> inletObj = node.inletModelObject();
-    boost::optional<Mixer> mixer;
+    boost::optional<AirLoopHVACZoneMixer> mixer;
 
     // Is the immediate downstream object to the node a mixer
     if( result )
     {
-      mixer = airLoop->demandMixer();
+      mixer = nodeAirLoop->zoneMixer();
 
       if( ! (outletObj && mixer && (outletObj.get() == mixer.get()) ) ) 
       {
@@ -183,14 +184,22 @@ namespace detail {
       outletModelObject = outletObj;
       outletObjectPort = node.connectedObjectPort(node.outletPort()).get();
 
-      Node plenumOutletNode(_model);
-      plenumOutletNode.createName();
-
       AirLoopHVACReturnPlenum thisObject = getObject<AirLoopHVACReturnPlenum>();
 
-      _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
-      _model.connect(thisObject,thisObject.outletPort(),plenumOutletNode,plenumOutletNode.inletPort());
-      _model.connect(plenumOutletNode,plenumOutletNode.outletPort(),outletModelObject.get(),outletObjectPort);
+      if( currentAirLoopHVAC )
+      {
+        mixer->removePortForBranch(mixer->branchIndexForInletModelObject(inletModelObject.get()));
+        _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
+      }
+      else
+      {
+        Node plenumOutletNode(_model);
+        plenumOutletNode.createName();
+
+        _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
+        _model.connect(thisObject,thisObject.outletPort(),plenumOutletNode,plenumOutletNode.inletPort());
+        _model.connect(plenumOutletNode,plenumOutletNode.outletPort(),outletModelObject.get(),outletObjectPort);
+      }
     }
 
     return result;

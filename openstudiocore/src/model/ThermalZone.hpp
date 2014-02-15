@@ -360,6 +360,12 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool isPlenum() const;
 
+  bool canBePlenum() const;
+
+  bool setSupplyPlenum(const ThermalZone & plenumZone);
+
+  void removeSupplyPlenum();
+
   //@}
  protected:
   /// @cond

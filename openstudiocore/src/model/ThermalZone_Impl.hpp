@@ -413,6 +413,9 @@ namespace detail {
     boost::optional<AirLoopHVACReturnPlenum> airLoopHVACReturnPlenum() const;
 
     bool isPlenum() const;
+    bool canBePlenum() const;
+    bool setSupplyPlenum(const ThermalZone & plenumZone);
+    void removeSupplyPlenum();
 
    protected:
 
