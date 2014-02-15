@@ -110,6 +110,14 @@ InspectorView::InspectorView(QWidget* parent)
   setLayout(m_vLayout);
 }
 
+void InspectorView::update()
+{
+  if( m_currentView )
+  {
+    m_currentView->update();
+  }
+}
+
 void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & modelObject, bool readOnly, bool displayIP)
 {
   bool isConnected = false;
@@ -606,7 +614,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
       it != allZones.end();
       ++it)
   {
-    if( (! it->isPlenum()) && it->equipment().empty() )
+    if( (! it->isPlenum()) && it->equipment().empty() && (! it->airLoopHVAC()) )
     {
       zoneChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
     }
@@ -760,25 +768,10 @@ void ThermalZoneInspectorView::onNewReturnPlenumClicked()
   }
 }
 
-void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+void ThermalZoneInspectorView::update()
 {
-  bool force=false;
-  bool recursive=true;
-  bool hideChildren=false;
-  m_displayIP = displayIP;
-  m_modelObject = modelObject;
-
-  if( displayIP )
-  {
-    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
-  }
-  else
-  {
-    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
-  }
-  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, readOnly, hideChildren);
-
-  boost::optional<model::ThermalZone> t_zone = modelObject.optionalCast<model::ThermalZone>();
+  OS_ASSERT(m_modelObject);
+  boost::optional<model::ThermalZone> t_zone = m_modelObject->optionalCast<model::ThermalZone>();
   OS_ASSERT(t_zone);
   boost::optional<model::AirLoopHVAC> t_airLoopHVAC = t_zone->airLoopHVAC();
   OS_ASSERT(t_airLoopHVAC);
@@ -797,6 +790,7 @@ void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObje
   // Populate chooser with supply plenums in system
   QComboBox * supplyChooser = m_plenumChooser->supplyPlenumChooser;
   supplyChooser->blockSignals(true);
+  supplyChooser->clear();
   
   std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(t_airLoopHVAC->demandComponents());
   for( std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
@@ -838,6 +832,7 @@ void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObje
   // Populate chooser with return plenums in system
   QComboBox * returnChooser = m_plenumChooser->returnPlenumChooser;
   returnChooser->blockSignals(true);
+  returnChooser->clear();
 
   std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(t_airLoopHVAC->demandComponents());
   for( std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
@@ -875,6 +870,27 @@ void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObje
     returnChooser->setCurrentIndex(returnChooser->findData(thisZoneReturnPlenums.front().handle().toString()));
   }
   returnChooser->blockSignals(false);
+}
+
+void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  bool force=false;
+  bool recursive=true;
+  bool hideChildren=false;
+  m_displayIP = displayIP;
+  m_modelObject = modelObject;
+
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, readOnly, hideChildren);
+
+  update();
 }
 
 WaterToAirInspectorView::WaterToAirInspectorView( QWidget * parent )

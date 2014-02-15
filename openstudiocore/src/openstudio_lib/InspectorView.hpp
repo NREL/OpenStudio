@@ -58,19 +58,16 @@ class InspectorView : public QWidget
   public:
 
   InspectorView(QWidget* parent = 0);
-
   virtual ~InspectorView() {}
+
+  void update();
 
   signals:
 
   void addZoneClicked(model::ThermalZone &);
-
   void removeZoneClicked(model::ThermalZone &);
-
   void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
-
   void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
-
   void toggleUnitsClicked(bool displayIP);
 
   void moveBranchForZoneSupplySelected(model::ThermalZone & zone, const Handle & newPlenumHandle);
@@ -89,9 +86,7 @@ class InspectorView : public QWidget
   private:
 
   QVBoxLayout * m_vLayout;
-
   BaseInspectorView * m_currentView;
-
   QStackedWidget * m_stackedWidget;
 };
 
@@ -108,6 +103,8 @@ class BaseInspectorView : public QWidget
   void addMainView( QWidget * widget );
 
   virtual void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP) = 0;
+
+  virtual void update() {}
 
   signals:
 
@@ -227,6 +224,7 @@ class ThermalZoneInspectorView : public BaseInspectorView
 
   private:
 
+  void update();
   InspectorGadget * m_inspectorGadget;
   PlenumChooserView * m_plenumChooser;
   bool m_displayIP;

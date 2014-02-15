@@ -171,6 +171,12 @@ void InspectorController::moveBranchForZoneSupply(model::ThermalZone & zone, con
     model::AirLoopHVACZoneSplitter zoneSplitter = airLoopHVAC->zoneSplitter();
     airLoopHVAC->moveBranchForZone(zone,zoneSplitter);
   }
+
+  // This updates the plenum chooser combo box
+  // Need to process events first because HVAC scene needs to redraw to supply colors to combo box
+  QApplication::instance()->processEvents();
+  OS_ASSERT(m_inspectorView);
+  m_inspectorView->update();
 }
 
 void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, const Handle & newPlenumHandle)
@@ -196,6 +202,12 @@ void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, con
     model::AirLoopHVACZoneMixer zoneMixer = airLoopHVAC->zoneMixer();
     airLoopHVAC->moveBranchForZone(zone,zoneMixer);
   }
+
+  // This updates the plenum chooser combo box
+  // Need to process events first because HVAC scene needs to redraw to supply colors to combo box
+  QApplication::instance()->processEvents();
+  OS_ASSERT(m_inspectorView);
+  m_inspectorView->update();
 }
 
 void InspectorController::onViewDestroyed(QObject * object)
