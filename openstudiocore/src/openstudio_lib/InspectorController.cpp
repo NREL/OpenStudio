@@ -150,26 +150,22 @@ void InspectorController::removeBranchForZone(model::ThermalZone & zone)
 
 void InspectorController::moveBranchForZoneSupply(model::ThermalZone & zone, const Handle & newPlenumHandle)
 {
-  boost::optional<model::AirLoopHVAC> airLoopHVAC = zone.airLoopHVAC();
-  OS_ASSERT(airLoopHVAC);
-  model::Model model = airLoopHVAC->model();
+  model::Model model = zone.model();
 
   if(boost::optional<model::AirLoopHVACSupplyPlenum> supplyPlenum = model.getModelObject<model::AirLoopHVACSupplyPlenum>(newPlenumHandle))
   {
-    airLoopHVAC->moveBranchForZone(zone,supplyPlenum.get());
+    if( boost::optional<model::ThermalZone> plenumZone = supplyPlenum->thermalZone() )
+    {
+      zone.setSupplyPlenum(plenumZone.get());
+    }
   }
-  else if(boost::optional<model::ThermalZone> thermalZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
+  else if(boost::optional<model::ThermalZone> plenumZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
   {
-    model::AirLoopHVACSupplyPlenum supplyPlenum(model);
-    supplyPlenum.setThermalZone(thermalZone.get());
-
-    airLoopHVAC->addBranchForHVACComponent(supplyPlenum);
-    airLoopHVAC->moveBranchForZone(zone,supplyPlenum);
+    zone.setSupplyPlenum(plenumZone.get());
   }
   else
   {
-    model::AirLoopHVACZoneSplitter zoneSplitter = airLoopHVAC->zoneSplitter();
-    airLoopHVAC->moveBranchForZone(zone,zoneSplitter);
+    zone.removeSupplyPlenum();
   }
 
   // This updates the plenum chooser combo box
@@ -181,26 +177,22 @@ void InspectorController::moveBranchForZoneSupply(model::ThermalZone & zone, con
 
 void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, const Handle & newPlenumHandle)
 {
-  boost::optional<model::AirLoopHVAC> airLoopHVAC = zone.airLoopHVAC();
-  OS_ASSERT(airLoopHVAC);
-  model::Model model = airLoopHVAC->model();
+  model::Model model = zone.model();
 
   if(boost::optional<model::AirLoopHVACReturnPlenum> returnPlenum = model.getModelObject<model::AirLoopHVACReturnPlenum>(newPlenumHandle))
   {
-    airLoopHVAC->moveBranchForZone(zone,returnPlenum.get());
+    if( boost::optional<model::ThermalZone> plenumZone = returnPlenum->thermalZone() )
+    {
+      zone.setReturnPlenum(plenumZone.get());
+    }
   }
-  else if(boost::optional<model::ThermalZone> thermalZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
+  else if(boost::optional<model::ThermalZone> plenumZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
   {
-    model::AirLoopHVACReturnPlenum returnPlenum(model);
-    returnPlenum.setThermalZone(thermalZone.get());
-
-    airLoopHVAC->addBranchForHVACComponent(returnPlenum);
-    airLoopHVAC->moveBranchForZone(zone,returnPlenum);
+    zone.setReturnPlenum(plenumZone.get());
   }
   else
   {
-    model::AirLoopHVACZoneMixer zoneMixer = airLoopHVAC->zoneMixer();
-    airLoopHVAC->moveBranchForZone(zone,zoneMixer);
+    zone.removeReturnPlenum();
   }
 
   // This updates the plenum chooser combo box
