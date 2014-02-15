@@ -366,6 +366,10 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   void removeSupplyPlenum();
 
+  bool setReturnPlenum(const ThermalZone & plenumZone);
+
+  void removeReturnPlenum();
+
   //@}
  protected:
   /// @cond

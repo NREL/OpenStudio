@@ -416,6 +416,8 @@ namespace detail {
     bool canBePlenum() const;
     bool setSupplyPlenum(const ThermalZone & plenumZone);
     void removeSupplyPlenum();
+    bool setReturnPlenum(const ThermalZone & plenumZone);
+    void removeReturnPlenum();
 
    protected:
 
