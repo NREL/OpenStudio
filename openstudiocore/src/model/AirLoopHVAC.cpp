@@ -486,49 +486,31 @@ namespace detail {
       return false;
     }
 
+    thermalZone.removeSupplyPlenum();
+    thermalZone.removeReturnPlenum();
+
     std::vector<ModelObject> modelObjects;
-    boost::optional<Splitter> splitter;
-    boost::optional<Mixer> mixer;
+    AirLoopHVACZoneSplitter zoneSplitter = t_airLoopHVAC->zoneSplitter();
+    AirLoopHVACZoneMixer zoneMixer = t_airLoopHVAC->zoneMixer();
     boost::optional<ModelObject> splitterOutletObject;
     boost::optional<ModelObject> mixerInletObject;
+    std::vector<ModelObject>::iterator findit;
 
-    modelObjects = t_airLoopHVAC->demandComponents(thermalZone,t_airLoopHVAC->zoneMixer());
-    for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-         it != modelObjects.end();
-         ++it )
-    {
-      if( (mixer = it->optionalCast<Mixer>()) )
-      {
-        std::vector<ModelObject>::iterator lastIt = it - 1;
-        OS_ASSERT(lastIt != modelObjects.begin());
-        mixerInletObject = *lastIt;
-        break;
-      }
-    }
+    modelObjects = t_airLoopHVAC->demandComponents(thermalZone,zoneMixer);
+    findit = std::find(modelObjects.begin(),modelObjects.end(),zoneMixer);
+    mixerInletObject = *(findit - 1);
 
-    modelObjects = t_airLoopHVAC->demandComponents(t_airLoopHVAC->zoneSplitter(),thermalZone);
-    for( std::vector<ModelObject>::reverse_iterator it = modelObjects.rbegin();
-         it != modelObjects.rend();
-         ++it )
-    {
-      if( (splitter = it->optionalCast<Splitter>()) )
-      {
-        std::vector<ModelObject>::reverse_iterator lastIt = it - 1;
-        OS_ASSERT(lastIt != modelObjects.rbegin());
-        splitterOutletObject = *lastIt;
-        break;
-      }
-    }
+    modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,thermalZone);
+    findit = std::find(modelObjects.begin(),modelObjects.end(),zoneSplitter);
+    splitterOutletObject = *(findit + 1);
 
-    OS_ASSERT(splitter);
-    OS_ASSERT(mixer);
     OS_ASSERT(splitterOutletObject);
     OS_ASSERT(mixerInletObject);
 
     modelObjects = t_airLoopHVAC->demandComponents(splitterOutletObject->cast<HVACComponent>(),mixerInletObject->cast<HVACComponent>());
     
-    splitter->removePortForBranch(splitter->branchIndexForOutletModelObject(splitterOutletObject.get()));
-    mixer->removePortForBranch(mixer->branchIndexForInletModelObject(mixerInletObject.get()));
+    zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(splitterOutletObject.get()));
+    zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(mixerInletObject.get()));
 
     for( std::vector<ModelObject>::iterator it = modelObjects.begin();
          it < modelObjects.end();
@@ -555,13 +537,13 @@ namespace detail {
       }
     }
 
-    if( (! splitter->lastOutletModelObject()) || (! mixer->lastInletModelObject()) )
+    if( (! zoneSplitter.lastOutletModelObject()) || (! zoneMixer.lastInletModelObject()) )
     {
       Node newNode(_model);
 
-      _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
+      _model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),newNode,newNode.inletPort());
 
-      _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
+      _model.connect(newNode,newNode.outletPort(),zoneMixer,zoneMixer.nextInletPort());
     }
 
     return true;
