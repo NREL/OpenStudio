@@ -190,9 +190,9 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   void resetInsulatedFloorUValue();
 
-  void setSystem(RefrigerationSystem & system);
+  void addToSystem(RefrigerationSystem & system);
 
-  void resetSystem();
+  void removeFromSystem();
 
   //@}
   /** @name Other */

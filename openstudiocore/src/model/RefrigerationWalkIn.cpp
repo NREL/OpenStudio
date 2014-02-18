@@ -535,11 +535,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_WalkInFields::DefrostScheduleName);
   }
 
-  void RefrigerationWalkIn_Impl::setSystem(RefrigerationSystem & system) {
+  void RefrigerationWalkIn_Impl::addToSystem(RefrigerationSystem & system) {
     system.addWalkin(this->getObject<RefrigerationWalkIn>());
   }
 
-  void RefrigerationWalkIn_Impl::resetSystem() {
+  void RefrigerationWalkIn_Impl::removeFromSystem() {
     boost::optional<RefrigerationSystem> refrigerationSystem = system();
     if(refrigerationSystem){
       refrigerationSystem.get().removeWalkin(this->getObject<RefrigerationWalkIn>());
@@ -851,12 +851,12 @@ void RefrigerationWalkIn::resetInsulatedFloorUValue() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetInsulatedFloorUValue();
 }
 
-void RefrigerationWalkIn::setSystem(RefrigerationSystem & system) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->setSystem(system);
+void RefrigerationWalkIn::addToSystem(RefrigerationSystem & system) {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->addToSystem(system);
 }
 
-void RefrigerationWalkIn::resetSystem() {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->resetSystem();
+void RefrigerationWalkIn::removeFromSystem() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->removeFromSystem();
 }
 
 /// @cond

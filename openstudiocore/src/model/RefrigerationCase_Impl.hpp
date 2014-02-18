@@ -326,9 +326,9 @@ namespace detail {
 
     void resetAverageRefrigerantChargeInventory();
 
-    void setSystem(RefrigerationSystem & system);
+    void addToSystem(RefrigerationSystem & system);
 
-    void resetSystem();
+    void removeFromSystem();
 
     //@}
     /** @name Other */
