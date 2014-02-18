@@ -20,6 +20,8 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
+#include <OpenStudio.hxx>
+
 #include <QCoreApplication>
 #include <sstream>
 #include <boost/algorithm/string/case_conv.hpp>
@@ -77,7 +79,7 @@ namespace openstudio {
 #if defined(Q_OS_MAC)
       candidate = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources");
 #else
-      candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio");
+      candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "");
 #endif
       // revert to build directory location for regression tests and other external projects 
       // that link to a developer build of OpenStudio
@@ -364,7 +366,7 @@ openstudio::path getOpenStudioRubyScriptsPath() {
     return getApplicationSourceDirectory() / openstudio::toPath("ruby");
   } else {
 #ifdef Q_OS_LINUX
-    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby");
+    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/Ruby");
 #elif defined(Q_OS_MAC)
     return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby");
 #else

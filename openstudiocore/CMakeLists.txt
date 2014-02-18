@@ -166,6 +166,7 @@ INCLUDE(ProjectMacros.cmake)
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # Use CTest
+SET( ALL_TESTING_TARGETS "" ) # global list
 IF( BUILD_TESTING )
   ENABLE_TESTING()
   INCLUDE(CTest) 
@@ -703,14 +704,14 @@ ELSEIF(APPLE)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
-  SET(AWS_RUBY_DESTINATION "lib/openstudio")
+  SET(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO-VERSION}")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-x86_64.tar.bz2)
   SET(AWS_RUBY_CHECKSUM 74d3a8ab4e1e3fb44c308f2aaa8e5732)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
-  SET(AWS_RUBY_DESTINATION "lib/openstudio")
+  SET(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO-VERSION}")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-i686.tar.bz2)
   SET(AWS_RUBY_CHECKSUM e51ce64b3e03ed3a66f1f7e0a22b5b7e)
@@ -807,40 +808,61 @@ ELSE( WIN32 )
   SET(QTWINMIGRATE_EXPORT "")
 ENDIF( WIN32 )
 
+SET(all_lib_targets
+  openstudio_runmanager 
+  openstudio_project
+  openstudio_osversion
+  openstudio_model
+  openstudio_modeleditor
+  openstudio_utilities
+  openstudio_energyplus
+  openstudio_analysisdriver
+  openstudio_ruleset
+  openstudio_analysis
+  openstudio_radiance
+  openstudio_gbxml
+  openstudio_isomodel
+  openstudio_lib
+  openstudio_sdd
+  openstudio_contam
+  ${LIBSSH_EXPORT}
+  ${QTWINMIGRATE_EXPORT}
+  zkexpat
+  zkqwt
+  miniziplib
+  sqlite
+  litesql
+  litesql-util
+  ${ALL_RUBY_BINDING_TARGETS}
+)
 
-export(TARGETS openstudio_runmanager 
-               openstudio_project
-               openstudio_osversion
-               openstudio_model
-               openstudio_modeleditor
-               openstudio_utilities
-               openstudio_energyplus
-               openstudio_analysisdriver
-               openstudio_ruleset
-               openstudio_analysis
-               openstudio_radiance
-               openstudio_gbxml
-               openstudio_isomodel
-               openstudio_lib
-               openstudio_sdd
-               openstudio_contam
-               ${LIBSSH_EXPORT}
-               ${QTWINMIGRATE_EXPORT}
-               zkexpat
-               zkqwt
-               miniziplib
-               sqlite
-               litesql
-               litesql-util
-               ${ALL_RUBY_BINDING_TARGETS}
-       FILE "${TARGETS_FILE}")
+export(TARGETS
+  ${all_lib_targets}
+  FILE "${TARGETS_FILE}")
+
+SET(all_exe_targets
+  epw2wea
+  GenerateIddFactory
+  ModelEditor
+  gbXMLToIdf
+  OpenStudio
+  RunManager
+  ruby_cpp
+  litesql-gen
+  ResultsViewer
+  Pat
+  )
+
+FOREACH( targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
+  SET_TARGET_PROPERTIES(${targ} PROPERTIES VERSION ${OPENSTUDIO_VERSION})
+ENDFOREACH()
 
 configure_file("${CMAKE_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${CMAKE_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
 
 
 IF( UNIX AND NOT APPLE ) 
-  SET(examplesdir share/openstudio/examples)
+  SET(examplesdir share/openstudio-${OPENSTUDIO-VERSION}/examples)
 ELSE()
   set(examplesdir Examples)
 ENDIF()
@@ -875,9 +897,9 @@ IF (NOT UNIX)
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     RESULT_VARIABLE rv)
-    
+
   install( DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION . )
-  
+
   get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" PATH )
   get_filename_component(RubyPath "${RubyEXEPath}" PATH )
   install( DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby" )
@@ -891,7 +913,7 @@ IF (NOT UNIX)
     # Install the system libraries to the ruby dir
     INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION "Ruby/openstudio")
-      
+
     INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION "ruby-install/ruby/bin")
   ENDIF(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
@@ -911,8 +933,8 @@ IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
     INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
     INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
   ELSE()
-    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO-VERSION}" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO-VERSION}" USE_SOURCE_PERMISSIONS)
   ENDIF()
 
 ENDIF()

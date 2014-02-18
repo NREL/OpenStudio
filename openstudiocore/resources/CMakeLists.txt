@@ -285,10 +285,10 @@ if (APPLE)
          )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
-           DESTINATION share/openstudio
+           DESTINATION share/openstudio-${OPENSTUDIO-VERSION}
          )
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
-           DESTINATION share/openstudio
+           DESTINATION share/openstudio-${OPENSTUDIO-VERSION}
          )
 endif()
 
