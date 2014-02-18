@@ -135,9 +135,13 @@ public:
   }
 
   template<typename DataSourceType>
-  void addQuantityEditColumn(QString headingLabel, 
-                         double (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(double))
+  void addQuantityEditColumn(QString headingLabel,
+                             QString modelUnits,
+                             QString siUnits, 
+                             QString ipUnits,
+                             bool isIP,
+                             double (DataSourceType::* getter)(void) const, 
+                             bool (DataSourceType::* setter)(double))
   {
     m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept>(new QuantityEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }

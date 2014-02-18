@@ -31,17 +31,9 @@ class BaseConcept
   public:
 
   virtual ~BaseConcept() {}
-}; 
 
-template<typename DataSourceType>
-class BaseConceptImpl : public BaseConcept
-{
-  public:
-
-  BaseConceptImpl(QString t_headingLabel)
-
+  BaseConcept(QString t_headingLabel)
     : m_headingLabel(t_headingLabel)
-
   {
   }
 
@@ -51,7 +43,7 @@ class BaseConceptImpl : public BaseConcept
 
   QString m_headingLabel;
 
-};
+}; 
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +52,11 @@ class BaseConceptImpl : public BaseConcept
 class CheckBoxConcept : public BaseConcept
 {
   public:
+
+   CheckBoxConcept(QString t_headingLabel)
+     : BaseConcept(t_headingLabel)
+  {
+  }
 
   virtual bool get(const model::ModelObject & obj) = 0;
   virtual void set(const model::ModelObject & obj, bool) = 0;
@@ -73,10 +70,9 @@ class CheckBoxConceptImpl : public CheckBoxConcept
   CheckBoxConceptImpl(QString t_headingLabel, 
     boost::function<bool (DataSourceType *)>  t_getter, 
     boost::function<void (DataSourceType *, bool)> t_setter)
-
-    : m_getter(t_getter),
+    : CheckBoxConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -106,6 +102,11 @@ class ComboBoxConcept : public BaseConcept
 {
   public:
 
+   ComboBoxConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual std::vector<std::string> choices() = 0;
   virtual std::string get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, std::string) = 0;
@@ -120,11 +121,10 @@ class ComboBoxConceptImpl : public ComboBoxConcept
     boost::function<std::vector<std::string> (void)> t_choices, 
     boost::function<std::string (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, std::string)> t_setter)
-
-    : m_choices(t_choices),
+    : ComboBoxConcept(t_headingLabel),
+      m_choices(t_choices),
       m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -160,6 +160,11 @@ class DoubleEditConcept : public BaseConcept
 {
   public:
 
+  DoubleEditConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual double get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, double) = 0;
 }; 
@@ -172,10 +177,9 @@ class DoubleEditConceptImpl : public DoubleEditConcept
   DoubleEditConceptImpl(QString t_headingLabel, 
     boost::function<double (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, double)> t_setter)
-
-    : m_getter(t_getter),
+    : DoubleEditConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -205,6 +209,11 @@ class OptionalDoubleEditConcept : public BaseConcept
 {
   public:
 
+   OptionalDoubleEditConcept(QString t_headingLabel)
+     : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual boost::optional<double> get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, double) = 0;
 }; 
@@ -217,10 +226,9 @@ class OptionalDoubleEditConceptImpl : public OptionalDoubleEditConcept
   OptionalDoubleEditConceptImpl(QString t_headingLabel, 
     boost::function<boost::optional<double> (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, double)> t_setter)
-
-    : m_getter(t_getter),
+    : OptionalDoubleEditConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -250,6 +258,11 @@ class DoubleEditVoidReturnConcept : public BaseConcept
 {
   public:
 
+   DoubleEditVoidReturnConcept(QString t_headingLabel)
+     : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual double get(const model::ModelObject & obj) = 0;
   virtual void set(const model::ModelObject & obj, double) = 0;
 }; 
@@ -259,13 +272,12 @@ class DoubleEditVoidReturnConceptImpl : public DoubleEditVoidReturnConcept
 {
   public:
 
-  DoubleEditVoidReturnConceptImpl(QString t_headingLabel, 
-    boost::function<double (DataSourceType *)>  t_getter, 
+  DoubleEditVoidReturnConceptImpl(QString t_headingLabel,
+    boost::function<double (DataSourceType *)>  t_getter,
     boost::function<void (DataSourceType *, double)> t_setter)
-
-    : m_getter(t_getter),
+    : DoubleEditVoidReturnConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -295,6 +307,11 @@ class OptionalDoubleEditVoidReturnConcept : public BaseConcept
 {
   public:
 
+  OptionalDoubleEditVoidReturnConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual boost::optional<double> get(const model::ModelObject & obj) = 0;
   virtual void set(const model::ModelObject & obj, double) = 0;
 }; 
@@ -307,10 +324,9 @@ class OptionalDoubleEditVoidReturnConceptImpl : public OptionalDoubleEditVoidRet
   OptionalDoubleEditVoidReturnConceptImpl(QString t_headingLabel, 
     boost::function<boost::optional<double> (DataSourceType *)>  t_getter, 
     boost::function<void (DataSourceType *, double)> t_setter)
-
-    : m_getter(t_getter),
+    : OptionalDoubleEditVoidReturnConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -340,9 +356,14 @@ class IntegerEditConcept : public BaseConcept
 {
   public:
 
+  IntegerEditConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual int get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, int) = 0;
-}; 
+};
 
 template<typename DataSourceType>
 class IntegerEditConceptImpl : public IntegerEditConcept
@@ -352,10 +373,9 @@ class IntegerEditConceptImpl : public IntegerEditConcept
   IntegerEditConceptImpl(QString t_headingLabel,
     boost::function<int (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, int)> t_setter)
-
-    : m_getter(t_getter),
+    : IntegerEditConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -385,6 +405,11 @@ class LineEditConcept : public BaseConcept
 {
   public:
 
+  LineEditConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual std::string get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, std::string) = 0;
 }; 
@@ -397,10 +422,9 @@ class LineEditConceptImpl : public LineEditConcept
   LineEditConceptImpl(QString t_headingLabel, 
     boost::function<std::string (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, std::string)> t_setter)
-
-    : m_getter(t_getter),
+    : LineEditConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -430,6 +454,11 @@ class NameLineEditConcept : public BaseConcept
 {
   public:
 
+  NameLineEditConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual boost::optional<std::string> get(const model::ModelObject & obj, bool) = 0;
   virtual boost::optional<std::string> set(const model::ModelObject & obj, const std::string &) = 0;
 }; 
@@ -439,13 +468,12 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 {
   public:
 
-  NameLineEditConceptImpl(QString t_headingLabel, 
+  NameLineEditConceptImpl(QString t_headingLabel,
     boost::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter, 
     boost::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter)
-
-    : m_getter(t_getter),
+    : NameLineEditConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -475,8 +503,29 @@ class QuantityEditConcept : public BaseConcept
 {
   public:
 
+  QuantityEditConcept(QString t_headingLabel, QString t_modelUnits, QString t_siUnits, QString t_ipUnits, bool t_isIP)
+    : BaseConcept(t_headingLabel),
+      m_modelUnits(t_modelUnits),
+      m_siUnits(t_siUnits),
+      m_ipUnits(t_ipUnits),
+      m_isIP(t_isIP)
+  {
+  }
+
   virtual double get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, double) = 0;
+
+  QString modelUnits() const { return m_modelUnits; }
+  QString siUnits() const { return m_siUnits; }
+  QString ipUnits() const { return m_ipUnits; }
+  bool isIP() const { return m_isIP; }
+
+  private:
+
+  QString m_modelUnits;
+  QString m_siUnits;
+  QString m_ipUnits;
+  bool m_isIP;
 }; 
 
 template<typename DataSourceType>
@@ -484,13 +533,12 @@ class QuantityEditConceptImpl : public QuantityEditConcept
 {
   public:
 
-  QuantityEditConceptImpl(QString t_headingLabel, 
-    boost::function<double (DataSourceType *)>  t_getter, 
+  QuantityEditConceptImpl(QString t_headingLabel,
+    boost::function<double (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, double)> t_setter)
-
-    : m_getter(t_getter),
+    : QuantityEditConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -510,6 +558,7 @@ class QuantityEditConceptImpl : public QuantityEditConcept
 
   boost::function<double (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, double)> m_setter;
+
 };
 
 
@@ -519,6 +568,11 @@ class QuantityEditConceptImpl : public QuantityEditConcept
 class UnsignedEditConcept : public BaseConcept
 {
   public:
+
+  UnsignedEditConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
 
   virtual unsigned get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, unsigned) = 0;
@@ -532,10 +586,9 @@ class UnsignedEditConceptImpl : public UnsignedEditConcept
   UnsignedEditConceptImpl(QString t_headingLabel, 
     boost::function<unsigned (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, unsigned)> t_setter)
-
-    : m_getter(t_getter),
+    : UnsignedEditConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 
@@ -565,6 +618,11 @@ class DropZoneConcept : public BaseConcept
 {
   public:
 
+  DropZoneConcept(QString t_headingLabel)
+    : BaseConcept(t_headingLabel)
+  {
+  }
+
   virtual boost::optional<model::ModelObject> get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, const model::ModelObject &) = 0;
 }; 
@@ -577,10 +635,9 @@ class DropZoneConceptImpl : public DropZoneConcept
   DropZoneConceptImpl(QString t_headingLabel, 
     boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter, 
     boost::function<bool (DataSourceType *, const ValueType &)> t_setter)
-
-    : m_getter(t_getter),
+    : DropZoneConcept(t_headingLabel),
+      m_getter(t_getter),
       m_setter(t_setter)
-
   {
   }
 

@@ -327,7 +327,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     } else if(QSharedPointer<QuantityEditConcept> quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept>()) {
 
-        OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", true);
+        OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2(quantityEditConcept->modelUnits().toStdString().c_str(),
+                                                             quantityEditConcept->siUnits().toStdString().c_str(),
+                                                             quantityEditConcept->ipUnits().toStdString().c_str(),
+                                                             quantityEditConcept->isIP());
 
         quantityEdit->bindRequired(true,
                   mo,
