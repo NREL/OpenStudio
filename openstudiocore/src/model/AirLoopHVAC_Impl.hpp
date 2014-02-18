@@ -162,8 +162,6 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::string nightCycleControlType() const;
 
-  bool addBranchForPlenums(AirLoopHVACSupplyPlenum & supplyPlenum, AirLoopHVACReturnPlenum & returnPlenum);
-
   static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
                                    AirLoopHVAC & airLoopHVAC,
                                    Splitter & splitter,

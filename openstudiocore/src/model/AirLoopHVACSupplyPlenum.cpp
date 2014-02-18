@@ -182,6 +182,16 @@ namespace detail {
       }
     }
 
+    // Is there a zone on this branch
+    if( result )
+    {
+      Mixer mixer = nodeAirLoop->zoneMixer();
+      if( nodeAirLoop->demandComponents(node,mixer,ThermalZone::iddObjectType()).empty() )
+      {
+        result = false;
+      }
+    }
+
     unsigned oldOutletObjectPort;
     unsigned oldInletObjectPort;
     boost::optional<ModelObject> oldInletModelObject;

@@ -153,64 +153,6 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
 
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForHVACComponent)
-{
-  model::Model model = openstudio::model::Model();
-  model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-
-  model::AirLoopHVACSupplyPlenum supplyPlenum(model);
-  bool result = airLoopHVAC.addBranchForHVACComponent(supplyPlenum);
-  EXPECT_TRUE(result);
-
-  model::AirLoopHVACReturnPlenum returnPlenum(model);
-  result = airLoopHVAC.addBranchForHVACComponent(returnPlenum);
-  EXPECT_TRUE(result);
-
-  EXPECT_EQ(10u,airLoopHVAC.demandComponents().size());
-
-  returnPlenum.remove();
-  EXPECT_EQ(8u,airLoopHVAC.demandComponents().size());
-
-  supplyPlenum.remove();
-  EXPECT_EQ(6u,airLoopHVAC.demandComponents().size());
-}
-
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForPlenums)
-{
-  model::Model model = openstudio::model::Model();
-
-  model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-
-  model::AirLoopHVACSupplyPlenum supplyPlenum(model);
-  bool result = airLoopHVAC.addBranchForHVACComponent(supplyPlenum);
-  EXPECT_TRUE(result);
-  EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
-
-  model::AirLoopHVACReturnPlenum returnPlenum(model);
-  result = airLoopHVAC.addBranchForHVACComponent(returnPlenum);
-  EXPECT_TRUE(result);
-  EXPECT_EQ(10u,airLoopHVAC.demandComponents().size());
-
-  model::ThermalZone zone1(model);
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone1,supplyPlenum,returnPlenum));
-  EXPECT_EQ(13u,airLoopHVAC.demandComponents().size());
-
-  model::ThermalZone zone2(model);
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone2,supplyPlenum,returnPlenum));
-  EXPECT_EQ(16u,airLoopHVAC.demandComponents().size());
-
-  EXPECT_EQ(2u,airLoopHVAC.zoneSplitter().outletModelObjects().size());
-  EXPECT_EQ(3u,supplyPlenum.outletModelObjects().size());
-
-  supplyPlenum.remove();
-  EXPECT_EQ(14u,airLoopHVAC.demandComponents().size());
-  EXPECT_EQ(4u,airLoopHVAC.zoneSplitter().outletModelObjects().size());
-
-  returnPlenum.remove();
-  EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
-  EXPECT_EQ(4u,airLoopHVAC.zoneMixer().inletModelObjects().size());
-}
-
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 {
   openstudio::model::Model model = openstudio::model::Model();

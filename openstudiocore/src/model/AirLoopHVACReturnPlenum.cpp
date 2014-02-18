@@ -172,6 +172,16 @@ namespace detail {
       }
     }
 
+    // Is there a zone on this branch
+    if( result )
+    {
+      Splitter splitter = nodeAirLoop->zoneSplitter();
+      if( nodeAirLoop->demandComponents(splitter,node,ThermalZone::iddObjectType()).empty() )
+      {
+        result = false;
+      }
+    }
+
     if( result )
     {
       unsigned inletObjectPort;

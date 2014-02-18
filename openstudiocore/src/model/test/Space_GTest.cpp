@@ -1317,11 +1317,11 @@ TEST_F(ModelFixture,Space_Plenum)
 
   model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
 
-  model::AirLoopHVACSupplyPlenum supplyPlenum(model);
-  EXPECT_TRUE(supplyPlenum.setThermalZone(supplyZone));
-  model::AirLoopHVACReturnPlenum returnPlenum(model);
-  EXPECT_TRUE(returnPlenum.setThermalZone(returnZone));
-  bool result = airLoopHVAC.addBranchForPlenums(supplyPlenum,returnPlenum);
+  bool result = airLoopHVAC.addBranchForZone(zone);
+  EXPECT_TRUE(result);
+  result = zone.setSupplyPlenum(supplyZone);
+  EXPECT_TRUE(result);
+  result = zone.setReturnPlenum(returnZone);
   EXPECT_TRUE(result);
 
   ASSERT_TRUE(supplySpace.spaceType());
