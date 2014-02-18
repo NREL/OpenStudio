@@ -42,6 +42,7 @@ typedef boost::function<model::ModelObject ()> ModelObjectGetter;
 typedef boost::function<boost::optional<double> ()> OptionalDoubleGetter;
 typedef boost::function<boost::optional<int> ()> OptionalIntGetter;
 typedef boost::function<boost::optional<std::string> ()> OptionalStringGetter;
+typedef boost::function<boost::optional<std::string> (bool)> OptionalStringGetterBoolArg;
 typedef boost::function<boost::optional<unsigned> ()> OptionalUnsignedGetter;
 typedef boost::function<boost::optional<model::ModelObject> ()> OptionalModelObjectGetter;
 
@@ -52,6 +53,7 @@ typedef boost::function<bool (double)> DoubleSetter;
 typedef boost::function<void (double)> DoubleSetterVoidReturn;
 typedef boost::function<bool (int)> IntSetter;
 typedef boost::function<bool (std::string)> StringSetter;
+typedef boost::function<boost::optional<std::string> (const std::string &)> StringSetterOptionalStringReturn;
 typedef boost::function<bool (unsigned)> UnsignedSetter;
 typedef boost::function<bool (const model::ModelObject &)> ModelObjectSetter;
 

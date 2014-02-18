@@ -426,6 +426,51 @@ class LineEditConceptImpl : public LineEditConcept
 ///////////////////////////////////////////////////////////////////////////////////
   
 
+class NameLineEditConcept : public BaseConcept
+{
+  public:
+
+  virtual boost::optional<std::string> get(const model::ModelObject & obj, bool) = 0;
+  virtual boost::optional<std::string> set(const model::ModelObject & obj, const std::string &) = 0;
+}; 
+
+template<typename DataSourceType>
+class NameLineEditConceptImpl : public NameLineEditConcept
+{
+  public:
+
+  NameLineEditConceptImpl(QString t_headingLabel, 
+    boost::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter, 
+    boost::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter)
+
+    : m_getter(t_getter),
+      m_setter(t_setter)
+
+  {
+  }
+
+  virtual boost::optional<std::string> get(const model::ModelObject & t_obj, bool value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(&obj,value);
+  }
+
+  virtual boost::optional<std::string> set(const model::ModelObject & t_obj, const std::string & value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(&obj,value);
+  }
+
+  private:
+
+  boost::function<boost::optional<std::string> (DataSourceType *, bool)>  m_getter;
+  boost::function<boost::optional<std::string> (DataSourceType *, const std::string &)> m_setter;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
 class QuantityEditConcept : public BaseConcept
 {
   public:

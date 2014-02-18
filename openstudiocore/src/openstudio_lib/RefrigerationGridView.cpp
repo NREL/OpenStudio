@@ -27,6 +27,8 @@
 #include <model/ModelObject_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
+#include <model/RefrigerationSystem.hpp>
+#include <model/RefrigerationSystem_Impl.hpp>
 #include <model/RefrigerationWalkIn.hpp>
 #include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/Schedule.hpp>
@@ -157,6 +159,8 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
 
   scrollLayout->addStretch(1);
+
+  std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // TODO for horizontal system list
 
 }
 
@@ -448,6 +452,10 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
         &model::RefrigerationCase::setThermalZone);
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; // TODO
+    }else if(field == NAME){
+      //addNameLineEditColumn(QString(NAME),
+      //                      &model::RefrigerationCase::name,
+      //                      &model::RefrigerationCase::setName); // TODO
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time
@@ -653,6 +661,10 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
       //boost::optional<Schedule> restockingSchedule() const; TODO
     }else if(field == ZONEBOUNDARIES){
       //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const; TODO
+    }else if(field == NAME){
+      //addNameLineEditColumn(QString(NAME),
+      //                      &model::RefrigerationWalkIn::name,
+      //                      &model::RefrigerationWalkIn::setName); // TODO
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time

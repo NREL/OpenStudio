@@ -127,6 +127,14 @@ public:
   }
 
   template<typename DataSourceType>
+  void addNameLineEditColumn(QString headingLabel, 
+                         boost::optional<std::string> (DataSourceType::* getter)(bool) const, 
+                         boost::optional<std::string> (DataSourceType::* setter)(const std::string &))
+  {
+    m_baseConcepts.push_back(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+  }
+
+  template<typename DataSourceType>
   void addQuantityEditColumn(QString headingLabel, 
                          double (DataSourceType::* getter)(void) const, 
                          bool (DataSourceType::* setter)(double))

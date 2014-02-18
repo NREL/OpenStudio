@@ -126,6 +126,10 @@ void OSGridController::categorySelected(int index)
   m_currentCategory = m_categoriesAndFields.at(index).first;
 
   m_currentFields = m_categoriesAndFields.at(index).second;
+
+  // always show name column TODO
+
+  //m_currentFields.insert(m_currentFields.begin(),"Name");
  
   addColumns(m_currentFields);
 
@@ -308,6 +312,18 @@ QWidget * OSGridController::widgetAt(int row, int column)
                   boost::none);
 
         widget = lineEdit;
+
+    } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = baseConcept.dynamicCast<NameLineEditConcept>()) {
+
+        OSLineEdit2 * nameLineEdit = new OSLineEdit2();
+
+        nameLineEdit->bindOptionalStringReturn(mo,
+                  boost::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),mo,_1),
+                  boost::optional<StringSetterOptionalStringReturn>(boost::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none);
+
+        widget = nameLineEdit;
 
     } else if(QSharedPointer<QuantityEditConcept> quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept>()) {
 
