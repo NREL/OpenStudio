@@ -394,7 +394,8 @@ namespace openstudio{
         close();
         init(m_path);
       }catch(const std::exception&e){
-        LOG(Error, "Exception while opening database: " << e.what());
+        LOG(Error, "Exception while opening database at '" << toString(m_path) 
+            << "': " << e.what());
         result = false;
       }
       return result;
