@@ -132,10 +132,13 @@ void ZoneChooserView::layoutView()
         it < zones.end();
         ++it )
   {
-    ZoneChooserItem * zoneChooserItem = new ZoneChooserItem(*it,this);
-    m_zoneChooserItems.push_back(zoneChooserItem);
-    m_vLayout->addWidget(zoneChooserItem);
-    zoneChooserItem->setChecked(false);
+    if( ! it->isPlenum() )
+    {
+      ZoneChooserItem * zoneChooserItem = new ZoneChooserItem(*it,this);
+      m_zoneChooserItems.push_back(zoneChooserItem);
+      m_vLayout->addWidget(zoneChooserItem);
+      zoneChooserItem->setChecked(false);
+    }
   }
   m_vLayout->addStretch();
 
