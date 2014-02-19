@@ -836,6 +836,34 @@ void ReverseVerticalBranchItem::layout()
   setVGridLength( j );
 }
 
+bool sortBranches(std::vector<ModelObject> i, std::vector<ModelObject> j)
+{
+  std::vector<ThermalZone> iZones = subsetCastVector<ThermalZone>(i);
+  std::vector<ThermalZone> jZones = subsetCastVector<ThermalZone>(j);
+
+  boost::optional<ThermalZone> iZone;
+  boost::optional<ThermalZone> jZone;
+
+  if( ! iZones.empty() )
+  {
+    iZone = iZones.front();
+  }
+
+  if( ! jZones.empty() )
+  {
+    jZone = jZones.front();
+  }
+
+  bool result = true;
+
+  if( iZone && jZone )
+  {
+    result = (iZone->name().get() < jZone->name().get());
+  }
+
+  return result;
+}
+
 HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter,
                                                       model::Mixer & mixer,
                                                       QGraphicsItem * parent ) 
@@ -845,17 +873,14 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     m_dropZoneBranchItem(NULL)
 {
   boost::optional<model::Loop> optionalLoop = splitter.loop();
-
   OS_ASSERT( optionalLoop );
-
   model::Loop loop = optionalLoop.get(); 
 
   std::vector<model::ModelObject> splitterOutletObjects = splitter.outletModelObjects();
-  std::vector<model::ModelObject> mixerInletObjects = mixer.inletModelObjects();
-
   bool isSupplySide = loop.supplyComponent(splitter.handle());
 
   std::vector<model::ModelObject> branchComponents;
+  std::vector< std::vector<model::ModelObject> > allBranchComponents;
 
   if( ! (splitterOutletObjects.front() == mixer) )
   {
@@ -889,7 +914,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
             {
               rBranchComponents.push_back( *rit );
             }
-            m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
+            allBranchComponents.push_back(rBranchComponents);
           }
         }
       }
@@ -902,7 +927,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
 
         if( isSupplySide )
         {
-          m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
+          allBranchComponents.push_back(branchComponents);
         }
         else
         {
@@ -912,10 +937,18 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
           {
             rBranchComponents.push_back( *rit );
           }
-          m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
+          allBranchComponents.push_back(rBranchComponents);
         }
       }
     }
+  }
+
+  std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
+  for(std::vector< std::vector<ModelObject> >::iterator it = allBranchComponents.begin();
+      it != allBranchComponents.end();
+      ++it)
+  {
+    m_branchItems.push_back(new HorizontalBranchItem(*it,this));
   }
 
   layout();
