@@ -34,6 +34,8 @@
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/WorkItem.hpp>
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
@@ -1144,7 +1146,21 @@ void DataPointJobItemView::update()
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
-    dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
+    bool nameSet = false;
+    if (m_workflowStepJob.step.workItemType() == runmanager::JobType::UserScript) {
+      runmanager::RubyJobBuilder rjb(m_workflowStepJob.step.workItem());
+      if (OptionalUUID measureUUID = rjb.bclMeasureUUID()) {
+        boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+        OS_ASSERT(project);
+        if (OptionalBCLMeasure measure = project->getMeasureByUUID(*measureUUID)) {
+          dataPointJobHeaderView->setName(measure->name());
+          nameSet = true;
+        }
+      }
+    }
+    if (!nameSet) {
+      dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
+    }
   }
 
   OS_ASSERT(m_workflowStepJob.job);

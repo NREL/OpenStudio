@@ -1,7 +1,7 @@
 <measure>
   <name>Calibration Reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>c803b488-6806-4499-86dc-261e86df04bc</version_id>
+  <version_id>38334c1b-f0a2-4b85-944c-524ef85c1549</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -41,19 +41,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>F6B9DCC2</checksum>
+      <checksum>2D9CE497</checksum>
     </file>
     <file>
       <filename>ExampleModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>686F83F1</checksum>
-    </file>
-    <file>
-      <filename>report.html</filename>
-      <filetype>html</filetype>
-      <usage_type>test</usage_type>
-      <checksum>B6AB73DC</checksum>
+      <checksum>396AF667</checksum>
     </file>
   </files>
 </measure>
