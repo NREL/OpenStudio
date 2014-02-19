@@ -89,7 +89,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("0.11.6")] = &VersionTranslator::update_0_11_5_to_0_11_6;
   m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
-  m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3; //&VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
+  m_updateMethods[VersionString("1.2.4")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -142,6 +143,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.2.0"));
   m_startVersions.push_back(VersionString("1.2.1"));
   m_startVersions.push_back(VersionString("1.2.2"));
+  m_startVersions.push_back(VersionString("1.2.3"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2163,6 +2165,7 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
 
   boost::optional<int> numberOfStories;
   boost::optional<int> numberOfAboveGroundStories;
+  boost::optional<std::string> buildingTypeValue;
   boost::optional<IdfObject> buildingObject;
 
   BOOST_FOREACH(const IdfObject& object,idf_1_2_2.objects()) {
@@ -2189,6 +2192,15 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
 
     } else if( object.iddObject().name() == "OS:StandardsInformation:Building" ) {
 
+      //Number of Stories
+      numberOfStories = object.getInt(1);
+
+      // Number of Above Ground Stories
+      numberOfAboveGroundStories = object.getInt(2);
+
+      // Building Type Value
+      buildingTypeValue = object.getString(6);
+
       m_deprecated.push_back(object);
 
     } else {
@@ -2203,55 +2215,75 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
 
     // Handle
     boost::optional<std::string> s = buildingObject->getString(0);
-    OS_ASSERT(s);
-    bool test = newBuildingObject.setString(0, *s);
-    OS_ASSERT(test);
+    if (s){
+      bool test = newBuildingObject.setString(0, *s);
+      OS_ASSERT(test);
+    }
 
     // Name
     s = buildingObject->getString(1);
-    OS_ASSERT(s);
-    test = newBuildingObject.setString(1, *s);
-    OS_ASSERT(test);
+    if (s){
+      bool test = newBuildingObject.setString(1, *s);
+      OS_ASSERT(test);
+    }
     
     // Building Sector Type
     s = buildingObject->getString(2);
-    OS_ASSERT(s);
-    test = newBuildingObject.setString(2, *s);
-    OS_ASSERT(test);
+    if (s){
+      bool test = newBuildingObject.setString(2, *s);
+      OS_ASSERT(test);
+    }
 
     // North Axis
     s = buildingObject->getString(3);
-    OS_ASSERT(s);
-    test = newBuildingObject.setString(3, *s);
-    OS_ASSERT(test);
+    if (s){
+      bool test = newBuildingObject.setString(3, *s);
+      OS_ASSERT(test);
+    }
 
     // Nominal Floor to Floor Height
     s = buildingObject->getString(4);
-    OS_ASSERT(s);
-    test = newBuildingObject.setString(4, *s);
-    OS_ASSERT(test);
+    if (s){
+      bool test = newBuildingObject.setString(4, *s);
+      OS_ASSERT(test);
+    }
 
     // Space Type Name
     s = buildingObject->getString(5);
-    OS_ASSERT(s);
-    test = newBuildingObject.setString(5, *s);
-    OS_ASSERT(test);
+    if (s){
+      bool test = newBuildingObject.setString(5, *s);
+      OS_ASSERT(test);
+    }
+
+    // Default Construction Set Name
+    s = buildingObject->getString(6);
+    if (s){
+      bool test = newBuildingObject.setString(6, *s);
+      OS_ASSERT(test);
+    }
 
     // Default Schedule Set Name
-    s = buildingObject->getString(6);
-    OS_ASSERT(s);
-    test = newBuildingObject.setString(6, *s);
-    OS_ASSERT(test);
+    s = buildingObject->getString(7);
+    if (s){
+      bool test = newBuildingObject.setString(7, *s);
+      OS_ASSERT(test);
+    }
 
     // Standards Number of Stories
     if (numberOfStories){
-      test = newBuildingObject.setInt(7, *numberOfStories);
+      bool test = newBuildingObject.setInt(8, *numberOfStories);
       OS_ASSERT(test);
     }
 
     /// Standards Number of Above Ground Stories
     if (numberOfAboveGroundStories){
-      test = newBuildingObject.setInt(8, *numberOfAboveGroundStories);
+      bool test = newBuildingObject.setInt(9, *numberOfAboveGroundStories);
+      OS_ASSERT(test);
+    }
+
+    // Standards Building Type
+    if (buildingTypeValue){
+      bool test = newBuildingObject.setString(10, *buildingTypeValue);
       OS_ASSERT(test);
     }
 

@@ -24,6 +24,7 @@
 
 #include <ruleset/OSArgument.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -111,6 +112,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
 
   initializeFromParams(t_workItem.params,t_originalBasePath,t_newBasePath);
   if (userScriptJob()) {
+    clearIncludeDir();
     setIncludeDir(getOpenStudioRubyIncludePath());
   }
 }
@@ -358,11 +360,22 @@ void RubyJobBuilder::addScriptArgument(const std::string &name)
   m_params.push_back(name);
 }
 
+void RubyJobBuilder::clearIncludeDir() {
+  std::vector<std::string>::iterator it = m_toolparams.begin();
+  while (it != m_toolparams.end()) {
+    if (*it == std::string("-I")) {
+      it = m_toolparams.erase(it); // erase -I
+      OS_ASSERT(it != m_toolparams.end());
+      it = m_toolparams.erase(it); // and path it was pointing to
+    }
+    else {
+      ++it;
+    }
+  }
+}
+
 void RubyJobBuilder::setIncludeDir(const openstudio::path &value)
 {
-  // ETH@20140108 - Should this also clear any existing -I toolparams, 
-  // or should there be a separate method for clearning all such toolparams?
-  // I am asking because of line 107.
   if (!value.empty()){
     m_toolparams.push_back("-I");
     m_toolparams.push_back(toString(value));
@@ -555,6 +568,10 @@ std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > 
 boost::optional<openstudio::UUID> RubyJobBuilder::originalUUID() const
 {
   return m_originalUUID;
+}
+
+boost::optional<openstudio::UUID> RubyJobBuilder::bclMeasureUUID() const {
+  return m_bclMeasureUUID;
 }
 
 std::vector<boost::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const
@@ -781,7 +798,13 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
 {
   std::vector<ruleset::OSArgument> retval;
 
-  std::vector<JobParam> args = t_params.get("user_script_params").children;
+  std::vector<JobParam> args;
+  try {
+    args = t_params.get("user_script_params").children;
+  }
+  catch (...) {
+    return retval;
+  }
 
   LOG(Debug, "Params found: " << args.size());
   for (std::vector<JobParam>::const_iterator itr = args.begin();

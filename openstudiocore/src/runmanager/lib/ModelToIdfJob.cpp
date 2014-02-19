@@ -169,6 +169,11 @@ namespace detail {
           ft.setIPTabularOutput(true);
         }
 
+        if (allParams().has("ExcludeLCCObjects"))
+        {
+          ft.setExcludeLCCObjects(true);
+        }
+
         openstudio::Workspace workspace = ft.translateModel(*m);
 
         if (workspace.numObjects() > 0){

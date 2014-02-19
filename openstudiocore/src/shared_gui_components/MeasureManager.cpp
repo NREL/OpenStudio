@@ -446,6 +446,11 @@ std::vector<BCLMeasure> MeasureManager::bclMeasures()
     result.push_back(it->second);
   }
 
+  // include installed measures in this list (eventually they should be taken out of the 
+  // installer and come in a pre-loaded local BCL)
+  std::vector<BCLMeasure> patMeasures = BCLMeasure::patApplicationMeasures();
+  result.insert(result.end(),patMeasures.begin(),patMeasures.end());
+
   return result;
 }
 

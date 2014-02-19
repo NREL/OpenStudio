@@ -34,6 +34,7 @@
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/WorkItem.hpp>
 
 #include <utilities/cloud/AWSProvider.hpp>
@@ -1201,13 +1202,29 @@ void DataPointJobItemView::update()
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
-    openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
-    // give it a special name instead of just "Ruby" when we find the radiance job
-    if (wi.jobkeyname == "pat-radiance-job")
-    {
-      dataPointJobHeaderView->setName("Radiance Daylighting");
-    } else {
-      dataPointJobHeaderView->setName(wi.type.valueName());
+
+    bool nameSet = false;
+    if (m_workflowStepJob.step.workItemType() == runmanager::JobType::UserScript) {
+      openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
+      
+      if (wi.jobkeyname == "pat-radiance-job"){
+        // give it a special name instead of just "Ruby" when we find the radiance job
+        dataPointJobHeaderView->setName("Radiance Daylighting");
+      }else{
+        runmanager::RubyJobBuilder rjb(wi);
+        if (OptionalUUID measureUUID = rjb.bclMeasureUUID()) {
+          boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+          OS_ASSERT(project);
+          if (OptionalBCLMeasure measure = project->getMeasureByUUID(*measureUUID)) {
+            dataPointJobHeaderView->setName(measure->name());
+            nameSet = true;
+          }
+        }
+      }
+    }
+    
+    if (!nameSet) {
+      dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
     }
   }
 

@@ -28,6 +28,7 @@
 
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/sql/SqlFile.hpp>
+#include <utilities/filetypes/EpwFile.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -77,6 +78,12 @@ class RULESET_API OSRunner {
 
   /** Returns a copy of the last EnergyPlus SqlFile generated in the workflow if available. */
   boost::optional<openstudio::SqlFile> lastEnergyPlusSqlFile() const;
+
+  /** Returns a copy of the last EpwFile generated in the workflow if available. */
+  boost::optional<openstudio::EpwFile> lastEpwFile() const;
+
+  /** Returns a path to the last EpwFile generated in the workflow if available. */
+  boost::optional<openstudio::path> lastEpwFilePath() const;
 
   /** Tests if the given ModelObject is in the application's current selection. Base class
    *  implementation always returns true. */
@@ -279,6 +286,10 @@ class RULESET_API OSRunner {
   void setLastEnergyPlusSqlFilePath(const openstudio::path& lastEnergyPlusSqlFilePath);
   void resetLastEnergyPlusSqlFilePath();
 
+  // clears m_lastEpwFilePath
+  void setLastEpwFilePath(const openstudio::path& lastEpwFilePath);
+  void resetLastEpwFilePath();
+
  private:
   REGISTER_LOGGER("openstudio.ruleset.OSRunner");
 
@@ -291,6 +302,9 @@ class RULESET_API OSRunner {
   boost::optional<openstudio::path> m_lastEnergyPlusWorkspacePath;
   mutable boost::optional<openstudio::SqlFile> m_lastEnergyPlusSqlFile;
   boost::optional<openstudio::path> m_lastEnergyPlusSqlFilePath;
+  mutable boost::optional<openstudio::EpwFile> m_lastEpwFile;
+  boost::optional<openstudio::path> m_lastEpwFilePath;
+
 };
 
 } // ruleset

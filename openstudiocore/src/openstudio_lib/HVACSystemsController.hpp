@@ -63,6 +63,7 @@ class OAResetSPMView;
 class AirLoopHVACUnitaryHeatPumpAirToAirControlView;
 class NoControlsView;
 class RefrigerationController;
+class VRFController;
 
 class HVACSystemsController : public QObject
 {
@@ -132,6 +133,8 @@ class HVACSystemsController : public QObject
   boost::shared_ptr<HVACControlsController> m_hvacControlsController;
 
   boost::shared_ptr<RefrigerationController> m_refrigerationController;
+
+  boost::shared_ptr<VRFController> m_vrfController;
 
   QString m_currentHandle;
 

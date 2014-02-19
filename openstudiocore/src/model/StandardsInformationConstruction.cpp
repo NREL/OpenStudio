@@ -78,15 +78,73 @@ namespace detail {
     boost::optional<std::string> standardsConstructionType = this->standardsConstructionType();
 
     // todo: pull from standards JSON file, for now just hard code here
-    if (intendedSurfaceType){
+	// note: didn't add DemsingCeiling choices here. Thinking Intended Surafce Types should instead be DemisingCeiling
+	if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "ExteriorFloor")){
+        result.push_back("Mass");
+        result.push_back("SteelFramed");
+		result.push_back("WoodFramed");
+	  }
+    }
+	if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "ExteriorWall")){
-        result.push_back("Wood Framed");
-        result.push_back("Metal Framed");
-        result.push_back("Structurally Insulated Panels");
-      }
+        result.push_back("Mass");
+        result.push_back("Metal");
+        result.push_back("SteelFramed");
+		result.push_back("WoodFramed");
+	  }
+    }
+	if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "ExteriorRoof")){
+        result.push_back("IEAD");
+        result.push_back("Metal");
+	  }
+    }
+    if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "InteriorFloor")){
+        result.push_back("Mass");
+        result.push_back("SteelFramed");
+		result.push_back("WoodFramed");
+	  }
+    }
+    if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "InterorWall")){
+        result.push_back("Mass");
+        result.push_back("Metal");
+        result.push_back("SteelFramed");
+		result.push_back("WoodFramed");
+	  }
+    }
+	if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "InteriorCeling")){
+        result.push_back("Mass");
+        result.push_back("SteelFramed");
+		result.push_back("WoodFramed");
+	  }
+    }
+	if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "DemisingFloor")){
+        result.push_back("Mass");
+        result.push_back("SteelFramed");
+		result.push_back("WoodFramed");
+	  }
+    }
+    if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "DemisingWall")){
+        result.push_back("Mass");
+        result.push_back("Metal");
+        result.push_back("SteelFramed");
+		result.push_back("WoodFramed");
+	  }
+    }
+    if (intendedSurfaceType){
+      if (istringEqual(*intendedSurfaceType, "GroundContactFloor")){
+        result.push_back("Heated");
+        result.push_back("Unheated");
+	  }
     }
 
-    // include values from model
+	// include values from model
 
     BOOST_FOREACH(const StandardsInformationConstruction& other, this->model().getConcreteModelObjects<StandardsInformationConstruction>()){
       if (other.handle() == this->handle()){

@@ -167,6 +167,9 @@ namespace runmanager {
       /// Adds an argument with no "--" prefix to the ruby script that is executed
       void addScriptArgument(const std::string &name);
 
+      /// Clears any -I parameters currently set to be sent to the ruby script interpreter
+      void clearIncludeDir();
+
       /// Sets the -I include dir that is passed to the ruby script interpreter during execution
       void setIncludeDir(const openstudio::path &value);
 
@@ -214,6 +217,8 @@ namespace runmanager {
       const std::vector<RubyJobBuilder> &mergedJobs() const;
 
       boost::optional<openstudio::UUID> originalUUID() const;
+
+      boost::optional<openstudio::UUID> bclMeasureUUID() const;
 
       static JobParams toJobParams(const std::vector<ruleset::OSArgument> &t_args,
           const openstudio::path &t_basePath=openstudio::path());

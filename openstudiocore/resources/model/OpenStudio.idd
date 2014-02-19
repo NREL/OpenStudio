@@ -1,4 +1,4 @@
-!IDD_Version 1.2.3
+!IDD_Version 1.2.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -3225,6 +3225,9 @@ OS:StandardsInformation:Construction,
        \object-list ConstructionNames
   A3, \field Intended Surface Type
        \type choice
+       \key AtticFloor
+       \key AtticWall
+       \key AtticRoof
        \key DemisingFloor
        \key DemisingWall
        \key DemisingRoof
@@ -12902,6 +12905,64 @@ OS:Fan:OnOff,
        \type alpha
        \retaincase
        \default General
+       
+OS:Fan:ZoneExhaust,
+       \memo Models a fan that exhausts air from a zone.
+  \min-fields 10
+  A1, \field Handle
+       \type handle
+       \required-field  
+  A2, \field Name
+       \type alpha  
+       \required-field
+       \reference FansZoneExhaust
+       \reference ConnectionObject       
+  A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N1, \field Fan Efficiency
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \required-field
+  N2, \field Pressure Rise
+       \units Pa
+       \ip-units inH2O
+       \required-field
+  N3, \field Maximum Flow Rate
+       \units m3/s
+       \minimum 0.0
+  A4, \field Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames       
+  A5, \field Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A6, \field End-Use Subcategory
+       \type alpha
+       \retaincase
+       \required-field
+  A7, \field Flow Fraction Schedule Name
+       \note If field is used, then when fan runs the exhausted air flow rate is controlled to be the scheduled fraction times the Maximum Flow Rate
+       \type object-list
+       \object-list ScheduleNames
+  A8, \field System Availability Manager Coupling Mode
+       \note Control if fan is to be interlocked with HVAC system Availability Managers or not.
+       \type choice
+       \key Coupled
+       \key Decoupled
+       \required-field
+  A9, \field Minimum Zone Temperature Limit Schedule Name
+       \note If field is used, the exhaust fan will not run if the zone temperature is lower than this limit
+       \type object-list
+       \object-list ScheduleNames
+  A10; \field Balanced Exhaust Fraction Schedule Name
+       \note Used to control fan's impact on flow at the return air node. Enter the portion of the exhaust that is balanced by simple airflows.
+       \note
+       \type object-list
+       \object-list ScheduleNames       
 
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \min-fields 24
