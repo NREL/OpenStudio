@@ -146,6 +146,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::string nightCycleControlType() const;
 
+  boost::optional<Node> mixedAirNode();
+
   private:
 
   boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );

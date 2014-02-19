@@ -85,7 +85,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
     }
     surface->setSurfaceType(*s);
   }
-  std::string surfaceType = surface->surfaceType();
+  //std::string surfaceType = surface->surfaceType();
 
   s = workspaceObject.getString(BuildingSurface_DetailedFields::SunExposure);
   if (s) {

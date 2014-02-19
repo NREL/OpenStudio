@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class CurveLinear;
 class ThermalZone;
 
@@ -70,7 +69,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: CurveLinear.
     boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;
 
     double ratedSubcoolingTemperatureDifference() const;
@@ -89,7 +87,6 @@ namespace detail {
 
     bool isMinimumFanAirFlowRatioDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> airInletZone() const;
 
     std::string endUseSubcategory() const;
@@ -112,7 +109,6 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: CurveLinear.
     bool setRatedEffectiveTotalHeatRejectionRateCurve(const boost::optional<CurveLinear>& curveLinear);
 
     void resetRatedEffectiveTotalHeatRejectionRateCurve();
@@ -133,7 +129,6 @@ namespace detail {
 
     void resetMinimumFanAirFlowRatio();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setAirInletZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetAirInletZone();

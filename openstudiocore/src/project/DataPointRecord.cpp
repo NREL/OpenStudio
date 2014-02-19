@@ -1005,16 +1005,9 @@ void DataPointRecord::updatePathData(ProjectDatabase database,
                                      const openstudio::path& originalBase,
                                      const openstudio::path& newBase)
 {
-  bool didStartTransaction = database.startTransaction();
-
   DataPointRecordVector records = getDataPointRecords(database);
   BOOST_FOREACH(DataPointRecord& record,records) {
     record.getImpl<detail::DataPointRecord_Impl>()->updatePathData(originalBase,newBase);
-  }
-
-  if (didStartTransaction) {
-    bool test = database.commitTransaction();
-    OS_ASSERT(test);
   }
 }
 

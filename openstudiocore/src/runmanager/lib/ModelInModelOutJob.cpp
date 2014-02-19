@@ -209,8 +209,6 @@ namespace detail {
 
   void ModelInModelOutJob::mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job) 
   {
-
-
     QWriteLocker l(&m_mutex);
     boost::shared_ptr<ModelInModelOutJob> mimojob = boost::dynamic_pointer_cast<ModelInModelOutJob>(t_job);
 
@@ -243,8 +241,6 @@ namespace detail {
 
     // make sure we merge the already merged jobs too
     m_mergedJobs.insert(m_mergedJobs.begin(), existing_merged_jobs.begin(), existing_merged_jobs.end());
-   
-
   }
 
 } // detail

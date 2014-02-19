@@ -218,10 +218,8 @@ PeopleInspectorView::PeopleInspectorView(bool isIP, const openstudio::model::Mod
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
 
-  bool isConnected = false;
-
   m_multiplierEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_multiplierEdit, SLOT(onUnitSystemChange(bool)));
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_multiplierEdit, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   vLayout->addWidget(m_multiplierEdit);
 

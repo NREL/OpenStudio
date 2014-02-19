@@ -114,20 +114,24 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     peakDemandUnitConversionFactor = 1.0
     consumptionUnitConversionFactor = 1.0
 
+    missingData = false
     # must have a runPeriod
     runPeriod = model.runPeriod
     if runPeriod.empty?
-      runner.registerError("Model has no run period.")
+      missingData = true
+      runner.registerWarning("Model has no run period and cannot generate all data.")
     end
     
-    # must have a calendarYear
+    # must have a calendarYear to generate model data
     yearDescription = model.yearDescription
     if yearDescription.empty?
-      runner.registerError("Model has no year description.")
+      missingData = true
+      runner.registerWarning("Model has no year description and cannot generate all data.")
     end
     calendarYear = yearDescription.get.calendarYear
     if calendarYear.empty?
-      runner.registerError("Model has no calendar year.")
+      missingData = true
+      runner.registerWarning("Model has no calendar year and cannot generate all data.")
     end
     
     model.getUtilityBills.each do |utilityBill|
@@ -207,7 +211,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           end
           modelPeakDemand << ","
 
-          if not billingPeriod.peakDemand.empty? and not billingPeriod.modelPeakDemand.empty?
+          if not billingPeriod.peakDemand.empty? and not billingPeriod.modelPeakDemand.empty? and not billingPeriod.consumption.get == 0
             percent = 100 * ((billingPeriod.modelPeakDemand.get / 1000) - billingPeriod.peakDemand.get) / billingPeriod.peakDemand.get
             percent = sprintf "%.2f", percent
             demandNMBE << percent.to_s
@@ -216,7 +220,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           end
           demandNMBE << ","
           
-          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty?
+          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty? and not billingPeriod.consumption.get == 0
             percent = 100 * ((billingPeriod.modelConsumption.get / consumptionUnitConversionFactor) - billingPeriod.consumption.get) / billingPeriod.consumption.get
             percent = sprintf "%.2f", percent
             elecNMBE << percent.to_s
@@ -246,7 +250,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           end
           gasModelConsumption << ","
 
-          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty? # and not billingPeriod.consumption.get = 0
+          if not billingPeriod.consumption.empty? and not billingPeriod.modelConsumption.empty? and not billingPeriod.consumption.get == 0
             percent = 100 * ((billingPeriod.modelConsumption.get / consumptionUnitConversionFactor) - billingPeriod.consumption.get) / billingPeriod.consumption.get
             percent = sprintf "%.2f", percent
             gasNMBE << percent.to_s
@@ -331,7 +335,11 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     sqlFile.close()
 
     #reporting final condition
-    runner.registerFinalCondition("Goodbye.")
+    if missingData == true
+        runner.registerFinalCondition("Calibration Report was not generated successfully.")
+    else
+        runner.registerFinalCondition("Calibration Report generated successfully.")
+    end
 
     return true
 

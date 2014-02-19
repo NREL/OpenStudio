@@ -172,14 +172,6 @@ class MODEL_API Surface : public PlanarSurface {
   /** Assign default wind exposure. */
   void assignDefaultWindExposure();
 
-  /** Returns the ConstructionBase.standardsInformation().constructionType(). Method provided
-   *  so constructionType can be Attribute on the Surface. */
-  std::string constructionType() const;
-
-  /** Set the ConstructionBase.standardsInformation().constructionType(). Method provided so
-   *  constructionType can be Attribute on the Surface. */
-  bool setConstructionType(const std::string& type);
-
   /** Returns the default film thermal resistance (m^2*K/W) for this surface. Assumes still indoor
    *  air, and 15 mph wind outside. */
   double filmResistance() const;

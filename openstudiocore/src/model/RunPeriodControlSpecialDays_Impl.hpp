@@ -60,6 +60,9 @@ namespace detail {
     bool setDuration(unsigned duration);
     bool setSpecialDayType(const std::string& specialDayType);
 
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
+
     // virtual methods
     virtual boost::optional<ParentObject> parent() const;
 

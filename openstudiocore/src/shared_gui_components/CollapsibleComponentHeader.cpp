@@ -76,7 +76,7 @@ void CollapsibleComponentHeader::createLayout(const std::string& text, int numRe
   bool isConnected = false;
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
-                        this, SIGNAL(getComponentsByPage(int)));
+                             this, SIGNAL(getComponentsByPage(int)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),

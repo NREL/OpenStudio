@@ -28,10 +28,10 @@
 #include <runmanager/lib/RunManager.hpp>
 
 #include <QWidget>
+#include <QWebView>
 
 class QComboBox;
 class QPushButton;
-class QWebView;
 
 namespace openstudio {
 
@@ -43,7 +43,7 @@ namespace openstudio {
 
     public:
       ResultsView(QWidget *t_parent = 0);
-      virtual ~ResultsView() {}
+      virtual ~ResultsView();
       void searchForExistingResults(const openstudio::path &t_runDir);
 
     public slots:
@@ -100,6 +100,17 @@ namespace openstudio {
     private:
       ResultsView * m_resultsView;
       REGISTER_LOGGER("openstudio::ResultsTabView");
+  };
+
+  class ResultsWebView : public QWebView
+  {
+    Q_OBJECT;
+
+    public:
+
+      ResultsWebView(QWidget * parent = 0);
+      
+      QSize sizeHint() const;
   };
 
 } // openstudio

@@ -94,8 +94,7 @@ namespace detail {
   }
 
   bool OutsideSurfaceConvectionAlgorithm_Impl::setAlgorithm(std::string algorithm) {
-    bool result = false;
-    result = setString(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm, algorithm);
+    bool result = setString(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm, algorithm);
     return result;
   }
 

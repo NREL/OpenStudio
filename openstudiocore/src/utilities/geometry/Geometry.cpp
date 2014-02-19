@@ -283,7 +283,7 @@ namespace openstudio{
     double c = E1.dot(E1);
     double d = E0.dot(BminusP);
     double e = E1.dot(BminusP);
-    double f = BminusP.dot(BminusP);
+    // double f = BminusP.dot(BminusP); // unused
 
     double det = a*c-b*b; 
     double s = b*e-c*d; 

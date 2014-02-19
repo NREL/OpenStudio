@@ -92,6 +92,9 @@ namespace detail {
 
     bool setValue(const Quantity& value);
 
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays();
+
     //@}
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleConstant");

@@ -142,7 +142,8 @@ void MainWindow::dragEnterEvent(QDragEnterEvent * event)
 {
   if(event->mimeData()->hasUrls())
   {
-    QUrl url = event->mimeData()->urls().first();
+    event->ignore();
+    /*QUrl url = event->mimeData()->urls().first();
     if (url.scheme().compare("file", Qt::CaseInsensitive) == 0 && url.toString().toLower().endsWith(".osm")) 
     {
       //event->accept();
@@ -151,7 +152,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent * event)
     else
     {
       event->ignore();
-    }
+    }*/
   }
 }
 

@@ -20,6 +20,8 @@
 #include "HVACSystemsController.hpp"
 #include "RefrigerationController.hpp"
 #include "RefrigerationGraphicsItems.hpp"
+#include "VRFController.hpp"
+#include "VRFGraphicsItems.hpp"
 #include "LoopLibraryDialog.hpp"
 #include "HVACSystemsView.hpp"
 #include "LoopScene.hpp"
@@ -104,6 +106,7 @@ namespace openstudio {
 
 const QString SHW = "SHW";
 const QString REFRIGERATION = "REFRIGERATION";
+const QString VRF = "VRF";
 
 HVACSystemsController::HVACSystemsController(const model::Model & model)
   : QObject(),
@@ -205,13 +208,14 @@ void HVACSystemsController::update()
 
     for( std::vector<model::Loop>::iterator it = loops.begin();
          it != loops.end();
-         it++ )
+         ++it )
     {
       systemComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
     }
 
     systemComboBox->addItem("Service Hot Water",SHW);
     systemComboBox->addItem("Refrigeration",REFRIGERATION);
+    systemComboBox->addItem("VRF",VRF);
 
     // Set system combo box current index
     QString handle = currentHandle();
@@ -228,6 +232,14 @@ void HVACSystemsController::update()
     else if( handle == REFRIGERATION ) 
     {
       int index = systemComboBox->findData(REFRIGERATION);
+
+      OS_ASSERT(index >= 0);
+      
+      systemComboBox->setCurrentIndex(index);
+    }
+    else if( handle == VRF ) 
+    {
+      int index = systemComboBox->findData(VRF);
 
       OS_ASSERT(index >= 0);
       
@@ -254,6 +266,7 @@ void HVACSystemsController::update()
     m_hvacLayoutController.reset();
     m_hvacControlsController.reset();
     m_refrigerationController.reset();
+    m_vrfController.reset();
 
     if( handle == REFRIGERATION )
     {
@@ -265,6 +278,24 @@ void HVACSystemsController::update()
         m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
 
         m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationController->refrigerationView());
+      }
+      else
+      {
+          m_hvacControlsController = boost::shared_ptr<HVACControlsController>(new HVACControlsController(this));
+
+          m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->noControlsView());
+      }
+    }
+    else if( handle == VRF )
+    {
+      m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
+      m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
+
+      if( m_hvacSystemsView->hvacToolbarView->topologyViewButton->isChecked() )
+      {
+        m_vrfController = boost::shared_ptr<VRFController>(new VRFController());
+
+        m_hvacSystemsView->mainViewSwitcher->setView(m_vrfController->vrfView());
       }
       else
       {
@@ -1002,7 +1033,7 @@ void HVACControlsController::update()
 
         for( std::vector<model::ThermalZone>::const_iterator it = thermalZones.begin();
              it != thermalZones.end();
-             it++ )
+             ++it )
         {
           m_singleZoneReheatSPMView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
         }
@@ -1083,7 +1114,7 @@ void HVACControlsController::update()
 
         for( std::vector<model::ThermalZone>::const_iterator it = thermalZones.begin();
              it != thermalZones.end();
-             it++ )
+             ++it )
         {
           m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
         }

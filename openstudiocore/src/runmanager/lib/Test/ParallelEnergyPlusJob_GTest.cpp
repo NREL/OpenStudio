@@ -137,6 +137,8 @@ TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
 
     ASSERT_TRUE(sqlfile.netSiteEnergy());
     parallelSiteEnergy = *sqlfile.netSiteEnergy();
+    ASSERT_TRUE(sqlfile.hoursSimulated());
+    EXPECT_EQ(8760, *sqlfile.hoursSimulated());
   }  
 
   qint64 paralleltime = et.restart();

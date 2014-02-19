@@ -22,6 +22,8 @@
 #include <model/Site.hpp>
 #include <model/Site_Impl.hpp>
 
+#include <utilities/idd/OS_SizingPeriod_WeatherFileDays_FieldEnums.hxx>
+
 #include <utilities/core/Assert.hpp>
 
 namespace openstudio {
@@ -61,6 +63,28 @@ namespace detail {
 
   IddObjectType WeatherFileDays_Impl::iddObjectType() const {
     return WeatherFileDays::iddObjectType();
+  }
+
+  void WeatherFileDays_Impl::ensureNoLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_SizingPeriod_WeatherFileDaysFields::BeginMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_SizingPeriod_WeatherFileDaysFields::BeginDayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_SizingPeriod_WeatherFileDaysFields::BeginDayofMonth, 28);
+      }
+    }
+
+    month = getInt(OS_SizingPeriod_WeatherFileDaysFields::EndMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_SizingPeriod_WeatherFileDaysFields::EndDayofMonth);
+      if (day && (day.get() == 29)){
+        this->setInt(OS_SizingPeriod_WeatherFileDaysFields::EndDayofMonth, 28);
+      }
+    }
   }
 
 } // detail

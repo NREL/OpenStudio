@@ -425,7 +425,7 @@ namespace openstudio {
 
         LOG(Trace, "confidence " << approximations.size() << " approximations generated for " << openstudio::FuelType(*itr).valueName());
 
-        if (approximations.size() > 0)
+        if (!approximations.empty())
         {
           std::map<std::pair<double, double>, FuelUse>::const_reverse_iterator itr = approximations.rbegin();
 

@@ -175,7 +175,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   unsigned i = 3;
   for( oaIt = oaModelObjects.begin();
        oaIt != oaModelObjects.end();
-       oaIt++ )
+       ++oaIt )
   {
     if( ! oaIt->optionalCast<Node>() )
     {
@@ -198,7 +198,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   for( oaIt = oaModelObjects.begin();
        oaIt != oaModelObjects.end();
-       oaIt++ )
+       ++oaIt )
   {
     translateAndMapModelObject(*oaIt);
   }

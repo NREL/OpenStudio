@@ -143,6 +143,11 @@ namespace detail {
     return false;
   }
 
+  void ScheduleConstant_Impl::ensureNoLeapDays()
+  {
+    // nothing to do
+  }
+
 } // detail
 
 // create a new ScheduleConstant object in the model's workspace

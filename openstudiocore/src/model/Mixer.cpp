@@ -81,7 +81,7 @@ boost::optional<ModelObject> Mixer_Impl::lastInletModelObject()
 
 unsigned Mixer_Impl::newInletPortAfterBranch(unsigned branchIndex)
 {
-  std::vector<ModelObject> modelObjects = inletModelObjects();
+  //std::vector<ModelObject> modelObjects = inletModelObjects();
   unsigned stop = nextBranchIndex();
   for(unsigned i = branchIndex; i < stop; i++ )
   {

@@ -87,6 +87,7 @@ FacilityTreeWidget::FacilityTreeWidget(const model::Model& model, QWidget* paren
   vLayout->addLayout(hLayout);
 
   bool isConnected = false;
+
   isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString&)),
                         this, SLOT(onSortByChanged(const QString&)));
   OS_ASSERT(isConnected);

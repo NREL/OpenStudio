@@ -315,17 +315,14 @@ QVariant TemplateListModel::data( const QModelIndex & index, int role ) const
       case NEWFROMTEMPLATE_EMPTY:
       {
         return QPixmap(":/images/osm-icon-open.png").scaled(85,85,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-        break;
       }
       case NEWFROMTEMPLATE_WIZARD:
       {
         return QPixmap(":/images/wizard.png").scaled(85,85,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-        break;
       }
       default:
       {
         return QVariant();
-        break;
       }
     }
   }
@@ -340,17 +337,14 @@ QVariant TemplateListModel::data( const QModelIndex & index, int role ) const
       case NEWFROMTEMPLATE_EMPTY:
       {
         return QString("Empty Building Model");
-        break;
       }
       case NEWFROMTEMPLATE_WIZARD:
       {
         return QString("Building Model From Wizard");
-        break;
       }
       default:
       {
         return QVariant();
-        break;
       }
     }
   }
@@ -361,18 +355,15 @@ QVariant TemplateListModel::data( const QModelIndex & index, int role ) const
       case NEWFROMTEMPLATE_EMPTY:
       {
         return QString("Create a new empty building model.  Start here if you want to add your own Zones and HVAC Systems.");
-        break;
       }
       case NEWFROMTEMPLATE_WIZARD:
       {
         return QString("Create a new building model using a wizard.  \
 This option will create a complete building model through a series of basic inputs.");
-        break;
       }
       default:
       {
         return QVariant();
-        break;
       }
     }
   }

@@ -156,6 +156,48 @@ namespace detail {
     void resetVelocitySquaredTermCoefficient();
 
     //@}
+    /** @name Other */
+    //@{
+
+    /** Returns the design flow rate (m^3/s) based on the floorArea (m^2),
+     *  exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and airVolume (m^3). */
+    double getDesignFlowRate(double floorArea,
+                             double exteriorSurfaceArea,
+                             double exteriorWallArea,
+                             double airVolume) const;
+
+    /** Returns the design flow per space floor area (m^3/m^2*s) based on the
+     *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
+     *  airVolume (m^3). */
+    double getFlowPerSpaceFloorArea(double floorArea,
+                                    double exteriorSurfaceArea,
+                                    double exteriorWallArea,
+                                    double airVolume) const;
+
+    /** Returns the design flow per exterior surface area (m^3/m^2*s) based on the
+     *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
+     *  airVolume (m^3). */
+    double getFlowPerExteriorSurfaceArea(double floorArea,
+                                         double exteriorSurfaceArea,
+                                         double exteriorWallArea,
+                                         double airVolume) const;
+
+    /** Returns the design flow per exterior wall area (m^3/m^2*s) based on the
+     *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
+     *  airVolume (m^3). */
+    double getFlowPerExteriorWallArea(double floorArea,
+                                      double exteriorSurfaceArea,
+                                      double exteriorWallArea,
+                                      double airVolume) const;
+
+    /** Returns the design air changes per hour (1/h) based on the floorArea (m^2),
+     *  exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and airVolume (m^3). */
+    double getAirChangesPerHour(double floorArea,
+                                double exteriorSurfaceArea,
+                                double exteriorWallArea,
+                                double airVolume) const;
+
+    //@}
    protected:
 
     // index of the space name
