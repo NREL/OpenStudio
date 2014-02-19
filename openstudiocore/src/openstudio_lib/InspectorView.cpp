@@ -648,28 +648,38 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   QVBoxLayout * mainVLayout = new QVBoxLayout();
   mainVLayout->setAlignment(Qt::AlignTop);
   setLayout(mainVLayout);
-  mainVLayout->setContentsMargins(10,10,10,10);
-  mainVLayout->setSpacing(10);
+  mainVLayout->setContentsMargins(0,0,0,0);
+  mainVLayout->setSpacing(0);
 
-  QLabel * supplyPlenumLabel = new QLabel("Zone Supply");
-  mainVLayout->addWidget(supplyPlenumLabel);
+  QFrame * supplyFrame = new QFrame();
+  supplyFrame->setObjectName("IGRow");
+  QVBoxLayout * supplyVLayout = new QVBoxLayout();
+  supplyFrame->setLayout(supplyVLayout);
+  mainVLayout->addWidget(supplyFrame);
+
+  QLabel * supplyPlenumLabel = new QLabel("Supply Plenum");
+  supplyVLayout->addWidget(supplyPlenumLabel);
   supplyPlenumChooser = new QComboBox();
-  mainVLayout->addWidget(supplyPlenumChooser);
+  supplyVLayout->addWidget(supplyPlenumChooser);
 
   newSupplyPlenumButton = new QPushButton();
   newSupplyPlenumButton->setText("Create new supply plenum from zone");
-  mainVLayout->addWidget(newSupplyPlenumButton);
+  supplyVLayout->addWidget(newSupplyPlenumButton);
 
-  mainVLayout->addSpacing(10);
+  QFrame * returnFrame = new QFrame();
+  returnFrame->setObjectName("IGRow");
+  QVBoxLayout * returnVLayout = new QVBoxLayout();
+  returnFrame->setLayout(returnVLayout);
+  mainVLayout->addWidget(returnFrame);
 
-  QLabel * returnPlenumLabel = new QLabel("Zone Return");
-  mainVLayout->addWidget(returnPlenumLabel);
+  QLabel * returnPlenumLabel = new QLabel("Return Plenum");
+  returnVLayout->addWidget(returnPlenumLabel);
   returnPlenumChooser = new QComboBox();
-  mainVLayout->addWidget(returnPlenumChooser);
+  returnVLayout->addWidget(returnPlenumChooser);
 
   newReturnPlenumButton = new QPushButton();
   newReturnPlenumButton->setText("Create new return plenum from zone");
-  mainVLayout->addWidget(newReturnPlenumButton);
+  returnVLayout->addWidget(newReturnPlenumButton);
 }
 
 ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)
