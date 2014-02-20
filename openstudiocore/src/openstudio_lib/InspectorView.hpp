@@ -36,6 +36,7 @@ class QVBoxLayout;
 class QTimer;
 class QComboBox;
 class QPushButton;
+class QToolButton;
 
 namespace openstudio {
 
@@ -193,8 +194,8 @@ class PlenumChooserView : public QWidget
 
   QComboBox * supplyPlenumChooser;
   QComboBox * returnPlenumChooser;
-  QPushButton * newSupplyPlenumButton;
-  QPushButton * newReturnPlenumButton;
+  QToolButton * newSupplyPlenumButton;
+  QToolButton * newReturnPlenumButton;
 };
 
 class ThermalZoneInspectorView : public BaseInspectorView

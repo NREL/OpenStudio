@@ -1219,6 +1219,22 @@ SupplyPlenumItem::SupplyPlenumItem(const model::ModelObject & mo, QGraphicsItem 
   m_color = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumColor(mo.handle());
 }
 
+void SupplyPlenumItem::setModelObject( model::OptionalModelObject modelObject )
+{
+  if( modelObject )
+  {
+    boost::optional<model::AirLoopHVACSupplyPlenum> plenum = modelObject->optionalCast<model::AirLoopHVACSupplyPlenum>();
+    OS_ASSERT(plenum);
+
+    GridItem::setModelObject(modelObject);
+
+    if( boost::optional<model::ThermalZone> tz = plenum->thermalZone() )
+    {
+      setToolTip(QString::fromStdString(tz->name().get()));
+    }
+  }
+}
+
 void SupplyPlenumItem::paint(QPainter *painter, 
                              const QStyleOptionGraphicsItem *option, 
                              QWidget *widget)
@@ -1248,6 +1264,22 @@ ReturnPlenumItem::ReturnPlenumItem(const model::ModelObject & mo, QGraphicsItem 
 
   // HorizontalBranchItem -> BranchGroupItem -> DemandSideItem -> SystemItem
   m_color = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumColor(mo.handle());
+}
+
+void ReturnPlenumItem::setModelObject( model::OptionalModelObject modelObject )
+{
+  if( modelObject )
+  {
+    boost::optional<model::AirLoopHVACReturnPlenum> plenum = modelObject->optionalCast<model::AirLoopHVACReturnPlenum>();
+    OS_ASSERT(plenum);
+
+    GridItem::setModelObject(modelObject);
+
+    if( boost::optional<model::ThermalZone> tz = plenum->thermalZone() )
+    {
+      setToolTip(QString::fromStdString(tz->name().get()));
+    }
+  }
 }
 
 void ReturnPlenumItem::paint(QPainter *painter, 

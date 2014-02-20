@@ -91,6 +91,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
+#include <QToolButton>
 #include <QCheckBox>
 #include <QButtonGroup>
 #include <QDialogButtonBox>
@@ -602,8 +603,17 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   mainVLayout->setSpacing(10);
   setLayout(mainVLayout);
 
+  setFixedWidth(400);
+
+  QLabel * message = new QLabel();
+  message->setWordWrap(true);
+  message->setText("Choose an available zone to use as a plenum.  Only zones that are not conditioned by an air system or zone equipment are displayed."); 
+  mainVLayout->addWidget(message);
+
   zoneChooser = new QComboBox();
   mainVLayout->addWidget(zoneChooser);
+
+  mainVLayout->addSpacing(20);
 
   boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model model = doc->model();
@@ -657,13 +667,17 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   supplyFrame->setLayout(supplyVLayout);
   mainVLayout->addWidget(supplyFrame);
 
-  QLabel * supplyPlenumLabel = new QLabel("Supply Plenum");
+  QLabel * supplyPlenumLabel = new QLabel("Select Supply Plenum");
   supplyVLayout->addWidget(supplyPlenumLabel);
   supplyPlenumChooser = new QComboBox();
   supplyVLayout->addWidget(supplyPlenumChooser);
 
-  newSupplyPlenumButton = new QPushButton();
-  newSupplyPlenumButton->setText("Create new supply plenum from zone");
+  newSupplyPlenumButton = new QToolButton();
+  newSupplyPlenumButton->setText("New Supply Plenum");
+  newSupplyPlenumButton->setIcon(QPixmap(":images/add.png"));
+  newSupplyPlenumButton->setIconSize(QSize(35,35));
+  newSupplyPlenumButton->setStyleSheet("QToolButton { font-size: 12px; }");
+  newSupplyPlenumButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   supplyVLayout->addWidget(newSupplyPlenumButton);
 
   QFrame * returnFrame = new QFrame();
@@ -672,13 +686,17 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   returnFrame->setLayout(returnVLayout);
   mainVLayout->addWidget(returnFrame);
 
-  QLabel * returnPlenumLabel = new QLabel("Return Plenum");
+  QLabel * returnPlenumLabel = new QLabel("Select Return Plenum");
   returnVLayout->addWidget(returnPlenumLabel);
   returnPlenumChooser = new QComboBox();
   returnVLayout->addWidget(returnPlenumChooser);
 
-  newReturnPlenumButton = new QPushButton();
-  newReturnPlenumButton->setText("Create new return plenum from zone");
+  newReturnPlenumButton = new QToolButton();
+  newReturnPlenumButton->setText("New Return Plenum");
+  newReturnPlenumButton->setIcon(QPixmap(":images/add.png"));
+  newReturnPlenumButton->setIconSize(QSize(35,35));
+  newReturnPlenumButton->setStyleSheet("QToolButton { font-size: 12px; }");
+  newReturnPlenumButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   returnVLayout->addWidget(newReturnPlenumButton);
 }
 
@@ -694,8 +712,8 @@ ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)
 
   m_plenumChooser = new PlenumChooserView();
   m_libraryTabWidget->addTab( m_plenumChooser,
-                              ":images/properties_icon_on.png",
-                              ":images/properties_icon_off.png" );
+                              ":images/plenum_on.png",
+                              ":images/plenum_off.png" );
 
   bingo = connect(m_plenumChooser->supplyPlenumChooser,SIGNAL(currentIndexChanged(int)),this,SLOT(onSupplyPlenumChooserChanged(int)));
   OS_ASSERT(bingo);
@@ -790,7 +808,7 @@ void ThermalZoneInspectorView::update()
   boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   SystemItem * systemItem = mrc->systemItem(t_airLoopHVAC->handle());
 
-  QPointF points[4] = {
+  QPointF supplyPoints[4] = {
     QPointF(25,25),
     QPointF(75,40),
     QPointF(75,60),
@@ -813,7 +831,7 @@ void ThermalZoneInspectorView::update()
     painter.eraseRect(0,0,100,100);
     painter.setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
     painter.setBrush(QBrush(systemItem->plenumColor(it->handle()),Qt::SolidPattern));
-    painter.drawPolygon(points,4);
+    painter.drawPolygon(supplyPoints,4);
 
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )
@@ -844,6 +862,13 @@ void ThermalZoneInspectorView::update()
   returnChooser->blockSignals(true);
   returnChooser->clear();
 
+  QPointF returnPoints[4] = {
+    QPointF(25,40),
+    QPointF(75,25),
+    QPointF(75,75),
+    QPointF(25,60),
+  };
+
   std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(t_airLoopHVAC->demandComponents());
   for( std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
        it != returnPlenums.end();
@@ -855,7 +880,7 @@ void ThermalZoneInspectorView::update()
     painter.eraseRect(0,0,100,100);
     painter.setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
     painter.setBrush(QBrush(systemItem->plenumColor(it->handle()),Qt::SolidPattern));
-    painter.drawPolygon(points,4);
+    painter.drawPolygon(returnPoints,4);
 
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )

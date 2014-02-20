@@ -284,6 +284,8 @@ class SupplyPlenumItem : public GridItem
              const QStyleOptionGraphicsItem *option, 
              QWidget *widget = 0);
 
+  void setModelObject( model::OptionalModelObject modelObject );
+
   private:
 
   QColor m_color;
@@ -298,6 +300,8 @@ class ReturnPlenumItem : public GridItem
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
              QWidget *widget = 0);
+
+  void setModelObject( model::OptionalModelObject modelObject );
 
   private:
 
