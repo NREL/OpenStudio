@@ -603,6 +603,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   mainVLayout->setSpacing(10);
   setLayout(mainVLayout);
 
+  setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
   setFixedWidth(400);
 
   QLabel * message = new QLabel();
@@ -619,6 +620,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   model::Model model = doc->model();
 
   std::vector<model::ThermalZone> allZones = model.getModelObjects<model::ThermalZone>();
+  std::sort(allZones.begin(),allZones.end(),WorkspaceObjectNameLess()); 
 
   for(std::vector<model::ThermalZone>::iterator it = allZones.begin();
       it != allZones.end();
@@ -796,6 +798,36 @@ void ThermalZoneInspectorView::onNewReturnPlenumClicked()
   }
 }
 
+bool supplyPlenumSort(const model::AirLoopHVACSupplyPlenum & i, const model::AirLoopHVACSupplyPlenum & j)
+{
+  boost::optional<model::ThermalZone> iZone = i.thermalZone();
+  boost::optional<model::ThermalZone> jZone = j.thermalZone();
+
+  if( iZone && jZone )
+  {
+    return iZone->name().get() < jZone->name().get();
+  }
+  else
+  {
+    return i.name().get() < j.name().get();
+  }
+}
+
+bool returnPlenumSort(const model::AirLoopHVACReturnPlenum & i, const model::AirLoopHVACReturnPlenum & j)
+{
+  boost::optional<model::ThermalZone> iZone = i.thermalZone();
+  boost::optional<model::ThermalZone> jZone = j.thermalZone();
+
+  if( iZone && jZone )
+  {
+    return iZone->name().get() < jZone->name().get();
+  }
+  else
+  {
+    return i.name().get() < j.name().get();
+  }
+}
+
 void ThermalZoneInspectorView::update()
 {
   OS_ASSERT(m_modelObject);
@@ -821,6 +853,7 @@ void ThermalZoneInspectorView::update()
   supplyChooser->clear();
   
   std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(t_airLoopHVAC->demandComponents());
+  std::sort(supplyPlenums.begin(),supplyPlenums.end(),supplyPlenumSort);
   for( std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
        it != supplyPlenums.end();
        ++it )
@@ -870,6 +903,7 @@ void ThermalZoneInspectorView::update()
   };
 
   std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(t_airLoopHVAC->demandComponents());
+  std::sort(returnPlenums.begin(),returnPlenums.end(),returnPlenumSort);
   for( std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
        it != returnPlenums.end();
        ++it )
