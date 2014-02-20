@@ -34,6 +34,16 @@
 #include <model/PumpVariableSpeed.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/BoilerHotWater.hpp>
+#include <model/BoilerHotWater_Impl.hpp>
+#include <model/ChillerElectricEIR.hpp>
+#include <model/ChillerElectricEIR_Impl.hpp>
+#include <model/WaterHeaterMixed.hpp>
+#include <model/WaterHeaterMixed_Impl.hpp>
+#include <model/CoolingTowerVariableSpeed.hpp>
+#include <model/CoolingTowerVariableSpeed_Impl.hpp>
+#include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerSingleSpeed_Impl.hpp>
 #include <model/WaterToAirComponent.hpp>
 #include <model/WaterToAirComponent_Impl.hpp>
 #include <model/WaterToWaterComponent.hpp>
@@ -405,6 +415,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
        it < supplyComponents.end();
        ++it )
   {
+    bool autosize = false;
+    double flowRate = 0.0;
+
     switch(it->iddObject().type().value())
     {
       case openstudio::IddObjectType::OS_Boiler_HotWater :
@@ -412,7 +425,16 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         sizeAsHotWaterSystem = true;
         if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,*it) ) 
         {
-          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,0.0,true,HEATING));
+          BoilerHotWater boiler = it->cast<BoilerHotWater>();
+          if( boiler.isDesignWaterFlowRateAutosized() )
+          {
+            autosize = true;
+          }
+          else if(boost::optional<double> optionalFlowRate = boiler.designWaterFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,flowRate,autosize,HEATING));
         }
         else
         {
@@ -425,7 +447,16 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         sizeAsHotWaterSystem = true;
         if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,*it) ) 
         {
-          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,0.0,true,HEATING));
+          WaterHeaterMixed waterHeater = it->cast<WaterHeaterMixed>();
+          if( waterHeater.isUseSideDesignFlowRateAutosized() )
+          {
+            autosize = true;
+          }
+          else if(boost::optional<double> optionalFlowRate = waterHeater.useSideDesignFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,flowRate,autosize,HEATING));
         }
         else
         {
@@ -451,7 +482,16 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         sizeAsChilledWaterSystem = true;
         if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,*it) ) 
         {
-          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,0.0,true,COOLING));
+          ChillerElectricEIR chiller = it->cast<ChillerElectricEIR>();
+          if( chiller.isReferenceChilledWaterFlowRateAutosized() )
+          {
+            autosize = true;
+          }
+          else if(boost::optional<double> optionalFlowRate = chiller.referenceChilledWaterFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -477,6 +517,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         sizeAsCondenserSystem = true;
         if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,*it) ) 
         {
+          CoolingTowerSingleSpeed tower = it->cast<CoolingTowerSingleSpeed>();
+          if( tower.isDesignWaterFlowRateAutosized() )
+          {
+            autosize = true;
+          }
+          else if(boost::optional<double> optionalFlowRate = tower.designWaterFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
           setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,0.0,true,COOLING));
         }
         else
@@ -490,6 +539,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         sizeAsCondenserSystem = true;
         if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,*it) ) 
         {
+          CoolingTowerVariableSpeed tower = it->cast<CoolingTowerVariableSpeed>();
+          if( tower.isDesignWaterFlowRateAutosized() )
+          {
+            autosize = true;
+          }
+          else if(boost::optional<double> optionalFlowRate = tower.designWaterFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
           setpointComponents.push_back(SetpointComponentInfo(*it,*outletNode,0.0,true,COOLING));
         }
         else
@@ -518,6 +576,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     _setpointOperation.setName(plantLoop.name().get() + " Setpoint Operation Scheme");
     m_idfObjects.push_back(_setpointOperation);
     _setpointOperation.clearExtensibleGroups();
+    _optionalSetpointOperation = _setpointOperation;
 
     IdfExtensibleGroup eg = _operationScheme.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_setpointOperation.iddObject().name());
@@ -1194,16 +1253,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
          ++it )
     {
       boost::optional<IdfObject> _idfObject = translateAndMapModelObject(it->modelObject);
-      boost::optional<IdfObject> _node = translateAndMapModelObject(it->outletNode);
 
       OS_ASSERT(_idfObject);
-      OS_ASSERT(_node);
 
       IdfExtensibleGroup eg = _optionalSetpointOperation->pushExtensibleGroup();
       eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType,_idfObject->iddObject().name());
       eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName,_idfObject->name().get());
-      eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName,_node->name().get());
-      eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::SetpointNodeName,_node->name().get());
+      eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName,it->outletNode.name().get());
+      eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::SetpointNodeName,it->outletNode.name().get());
       if( it->isFlowRateAutosized )
       {
         eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::ComponentFlowRate,"Autosize");
