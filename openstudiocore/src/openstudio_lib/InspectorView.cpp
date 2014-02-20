@@ -95,6 +95,7 @@
 #include <QCheckBox>
 #include <QButtonGroup>
 #include <QDialogButtonBox>
+#include <QBitmap>
 
 namespace openstudio {
 
@@ -672,6 +673,7 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   QLabel * supplyPlenumLabel = new QLabel("Select Supply Plenum");
   supplyVLayout->addWidget(supplyPlenumLabel);
   supplyPlenumChooser = new QComboBox();
+  supplyPlenumChooser->setIconSize(QSize(25,25));
   supplyVLayout->addWidget(supplyPlenumChooser);
 
   newSupplyPlenumButton = new QToolButton();
@@ -691,6 +693,7 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   QLabel * returnPlenumLabel = new QLabel("Select Return Plenum");
   returnVLayout->addWidget(returnPlenumLabel);
   returnPlenumChooser = new QComboBox();
+  returnPlenumChooser->setIconSize(QSize(25,25));
   returnVLayout->addWidget(returnPlenumChooser);
 
   newReturnPlenumButton = new QToolButton();
@@ -858,10 +861,14 @@ void ThermalZoneInspectorView::update()
        it != supplyPlenums.end();
        ++it )
   {
+    QBitmap bitmap(100,100);
+    bitmap.clear();
+    QPainter painter2(&bitmap);
+    painter2.drawPolygon(supplyPoints,4);
+
     QPixmap supplyPixmap(100,100);
+    supplyPixmap.setMask(bitmap);
     QPainter painter(&supplyPixmap);
-    painter.setBackground(Qt::white);
-    painter.eraseRect(0,0,100,100);
     painter.setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
     painter.setBrush(QBrush(systemItem->plenumColor(it->handle()),Qt::SolidPattern));
     painter.drawPolygon(supplyPoints,4);
@@ -908,10 +915,14 @@ void ThermalZoneInspectorView::update()
        it != returnPlenums.end();
        ++it )
   {
+    QBitmap bitmap(100,100);
+    bitmap.clear();
+    QPainter painter2(&bitmap);
+    painter2.drawPolygon(returnPoints,4);
+
     QPixmap returnPixmap(100,100);
+    returnPixmap.setMask(bitmap);
     QPainter painter(&returnPixmap);
-    painter.setBackground(Qt::white);
-    painter.eraseRect(0,0,100,100);
     painter.setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
     painter.setBrush(QBrush(systemItem->plenumColor(it->handle()),Qt::SolidPattern));
     painter.drawPolygon(returnPoints,4);
