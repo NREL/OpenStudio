@@ -21,80 +21,12 @@
 #include <model/Model.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingGas_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/FenestrationMaterial_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
@@ -115,29 +47,31 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( AirLo
   std::string s;
 
   IdfObject supplyPathIdf(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
-
   m_idfObjects.push_back(supplyPathIdf);
 
-  supplyPathIdf.createName();
+  supplyPathIdf.setName(airLoopHVAC.name().get() + " Supply Path");
 
-  s = airLoopHVAC.demandInletNodes().front().name().get();
-  supplyPathIdf.setString(openstudio::AirLoopHVAC_SupplyPathFields::SupplyAirPathInletNodeName,s);
+  model::Node node = airLoopHVAC.demandInletNode();
+  supplyPathIdf.setString(openstudio::AirLoopHVAC_SupplyPathFields::SupplyAirPathInletNodeName,node.name().get());
 
-  ModelObjectVector modelObjects;
-  modelObjects = airLoopHVAC.demandComponents( airLoopHVAC.demandInletNodes().front(),
-                                               airLoopHVAC.demandOutletNode(),
-                                               openstudio::IddObjectType::OS_AirLoopHVAC_ZoneSplitter );
-  if( modelObjects.size() == 1 )
+  model::AirLoopHVACZoneSplitter zoneSplitter = airLoopHVAC.zoneSplitter();
+
+  boost::optional<IdfObject> _zoneSplitter = translateAndMapModelObject(zoneSplitter);
+  OS_ASSERT(_zoneSplitter);
+  IdfExtensibleGroup eg = supplyPathIdf.pushExtensibleGroup();
+  eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType,_zoneSplitter->iddObject().name());
+  eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_zoneSplitter->name().get());
+
+  std::vector<ModelObject> supplyPlenums = airLoopHVAC.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType());
+  for( std::vector<ModelObject>::iterator it = supplyPlenums.begin();
+       it != supplyPlenums.end();
+       it++ )
   {
-    ModelObject modelObject = modelObjects.front();
-    OptionalAirLoopHVACZoneSplitter zoneSplitter = modelObject.optionalCast<AirLoopHVACZoneSplitter>();
-    translateAndMapModelObject(*zoneSplitter);
-
-    s = stripOS2(zoneSplitter->iddObject().name());
-    supplyPathIdf.setString(2,s);
-
-    s = zoneSplitter->name().get();
-    supplyPathIdf.setString(3,s);
+    eg = supplyPathIdf.pushExtensibleGroup();
+    boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(*it);
+    OS_ASSERT(_supplyPlenum);
+    eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType,_supplyPlenum->iddObject().name());
+    eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_supplyPlenum->name().get());
   }
 
   return boost::optional<IdfObject>(supplyPathIdf);

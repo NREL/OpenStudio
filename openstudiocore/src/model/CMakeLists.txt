@@ -47,6 +47,12 @@ SET( ${target_name}_src
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
+  AirLoopHVACReturnPlenum.hpp
+  AirLoopHVACReturnPlenum_Impl.hpp
+  AirLoopHVACReturnPlenum.cpp
+  AirLoopHVACSupplyPlenum.hpp
+  AirLoopHVACSupplyPlenum_Impl.hpp
+  AirLoopHVACSupplyPlenum.cpp
   AirLoopHVACZoneMixer.hpp
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneMixer.cpp
@@ -1205,6 +1211,7 @@ SET( ${target_name}_test_src
   test/PipeAdiabatic_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
+  test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
   test/RadianceParameters_GTest.cpp

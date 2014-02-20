@@ -208,7 +208,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   /// Resets the rendering color.
   void resetRenderingColor();
 
-  std::vector<ModelObject> equipment();
+  std::vector<ModelObject> equipment() const;
 
   /// returns all spaces in this thermal zone
   std::vector<Space> spaces() const;
@@ -354,6 +354,39 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Return all equipment.  Order is determined by coooling priority */
   std::vector<ModelObject> equipmentInCoolingOrder();
+
+  /** Return true if the ThermalZone is attached to 
+  *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
+  */
+  bool isPlenum() const;
+
+  /** Retrun true if the ThermalZone is unconditioned and available to be used as a plenum
+  *   This means the zone is not attached to an AirLoopHVAC structure as a conditioned zone
+  *   and there is no zone equipment.
+  */
+  bool canBePlenum() const;
+
+  /** Establish plenumZone as the supply plenum for this ThermalZone.
+  *   This ThermalZone must already be attached to AirLoopHVAC.
+  *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
+  *   The method canBePlenum called on plenumZone must return true.
+  */
+  bool setSupplyPlenum(const ThermalZone & plenumZone);
+
+  /** Remove any supply plenum serving this zone
+  */
+  void removeSupplyPlenum();
+
+  /** Establish plenumZone as the return plenum for this ThermalZone.
+  *   This ThermalZone must already be attached to AirLoopHVAC.
+  *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
+  *   The method canBePlenum called on plenumZone must return true.
+  */
+  bool setReturnPlenum(const ThermalZone & plenumZone);
+
+  /** Remove any return plenum serving this zone
+  */
+  void removeReturnPlenum();
 
   //@}
  protected:

@@ -192,6 +192,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
+    REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
+    REGISTER_CONSTRUCTOR(AirLoopHVACSupplyPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
@@ -476,6 +478,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
@@ -902,6 +906,32 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  SpaceType Model_Impl::plenumSpaceType() const
+  {
+    std::string plenumSpaceTypeName("Plenum Space Type");
+
+    std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
+
+    for( std::vector<SpaceType>::iterator it = spaceTypes.begin();
+         it != spaceTypes.end();
+         ++it )
+    {
+      if( boost::optional<std::string> name = it->name() )
+      {
+        if( istringEqual(name.get(),plenumSpaceTypeName) )
+        {
+          return *it;
+        }
+      }
+    }
+
+    SpaceType spaceType(model());
+
+    spaceType.setName(plenumSpaceTypeName);
+
+    return spaceType;
+  }
+
   /// get the sql file
   boost::optional<openstudio::SqlFile> Model_Impl::sqlFile() const
   {
@@ -1252,6 +1282,11 @@ boost::optional<WeatherFile> Model::weatherFile() const
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+SpaceType Model::plenumSpaceType() const
+{
+  return getImpl<detail::Model_Impl>()->plenumSpaceType();
 }
 
 openstudio::OptionalSqlFile Model::sqlFile() const
