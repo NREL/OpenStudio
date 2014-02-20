@@ -14,7 +14,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #####################################################################
 
-$OpenStudio_Dir = "#{File.expand_path(File.dirname(__FILE__))}/"
+# follow symlinks so that we find the original path to the so's 
+$OpenStudio_Dir = "#{File.expand_path(File.dirname(Pathname.new(__FILE__).realpath()))}/"
 if not $:.include?($OpenStudio_Dir)
   $: << $OpenStudio_Dir
 end

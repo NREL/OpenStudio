@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
- 
+
 PROJECT(OpenStudioCore)
 
 ###############################################################################
@@ -10,7 +10,7 @@ SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
 SET(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
-# EnergyPlus Idd version 
+# EnergyPlus Idd version
 SET(ENERGYPLUS_VERSION "8.0" CACHE INTERNAL "EnergyPlus Version")
 
 # Dakota version
@@ -79,7 +79,7 @@ IF (BUILD_RUBY_GEM)
     MESSAGE(SEND_ERROR "Gem tool not found, cannot build gem")
     IF(UNIX AND NOT APPLE)
       MESSAGE(SEND_ERROR "Please install rubygems using your package management system")
-    ENDIF()    
+    ENDIF()
   ENDIF()
 
   # Build Ruby gem and package up all the libs
@@ -90,12 +90,12 @@ IF (BUILD_V8_BINDINGS)
   OPTION( BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON )
 ENDIF()
 
-# Configure vagrant 
+# Configure vagrant
 SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
 
 # Require that DAKOTA_FOUND
 #
-# Some code (certain analysisdriver tests) are conditionally compiled depending on 
+# Some code (certain analysisdriver tests) are conditionally compiled depending on
 # the value of this variable.
 #
 # Dakota is an optional third party algorithm library that we use through its command line
@@ -125,7 +125,7 @@ ENDIF()
 SET( project_directories
   generateiddfactory
   utilities
-  model  
+  model
   energyplus
   radiance
   gbxml
@@ -150,7 +150,7 @@ SET( project_directories
 ###############################################################################
 
 ###############################################################################
-# CMake control  
+# CMake control
 
 # High level project configuration
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Products" )
@@ -162,14 +162,14 @@ SET ( LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBR
 # Include project specific macros
 INCLUDE(ProjectMacros.cmake)
 
-# Search for modules in the root dir first to override cmake ones 
+# Search for modules in the root dir first to override cmake ones
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # Use CTest
 SET( ALL_TESTING_TARGETS "" ) # global list
 IF( BUILD_TESTING )
   ENABLE_TESTING()
-  INCLUDE(CTest) 
+  INCLUDE(CTest)
 ENDIF( BUILD_TESTING )
 ###############################################################################
 
@@ -196,7 +196,7 @@ IF(MINGW)
   #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
   # treat warnings as errors
   #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-  
+
   # wchar not supported for MinGW
   ADD_DEFINITIONS(-DBOOST_LOG_USE_CHAR)
   ADD_DEFINITIONS(-DBOOST_LOG_NO_COMPILER_TLS)
@@ -215,17 +215,17 @@ IF(MSVC)
   # ignore decorated name length exceeded
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4503")
   # ignore needs to have dll-interface to be used by clients of class
-  # we will not rely on exporting templates instead all libraries must 
+  # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
   # treat warnings as errors
-  
+
   IF(NOT CMAKE_CL_64)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
   ELSE()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
   ENDIF()
-  
+
   # ignore warnings about the stl being insecure
   ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
 
@@ -243,7 +243,7 @@ ENDIF()
 
 
 ###############################################################################
-# Dependencies 
+# Dependencies
 
 # EnergyPlus
 #IF( BUILD_TESTING OR BUILD_PACKAGE)
@@ -265,13 +265,12 @@ SET(RUBY_MODULE_DIR "Ruby")
 SET(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
 
 IF(WIN32 AND MSVC AND CMAKE_CL_64)
-  MESSAGE(WARNING "64bit Support on Windows is EXPERIMENTAL. The Sketchup plugin will not work. Expect problems with ruby support in general. There are lots of warnings, so we are disabling warnings as errors.") 
+  MESSAGE(WARNING "64bit Support on Windows is EXPERIMENTAL. The Sketchup plugin will not work. Expect problems with ruby support in general. There are lots of warnings, so we are disabling warnings as errors.")
 
   IF (NOT "${RUBY_VERSION_MAJOR}" EQUAL "2")
     MESSAGE(SEND_ERROR "64bit Windows support requires Ruby >= 2.0.0")
   ENDIF()
 ENDIF()
-
 
 #We want to use the site_ruby folder if this is intended for /usr/local install
 #If it is intended for /usr install, we want to use the main ruby module folder
@@ -281,6 +280,13 @@ IF( ${CMAKE_INSTALL_PREFIX} STREQUAL "/usr" AND RUBY_ARCH_DIR MATCHES "^/usr/lib
 ELSEIF( ${CMAKE_INSTALL_PREFIX} STREQUAL "/usr/local" AND RUBY_SITEARCH_DIR MATCHES "^/usr/local/lib.*/.*" )
   STRING(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_ARCH_DIR ${RUBY_SITEARCH_DIR} )
   STRING(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_DIR ${RUBY_SITELIB_DIR} )
+ENDIF()
+
+IF(UNIX AND NOT APPLE)
+  SET(RUBY_MODULE_SITE_DIR "${RUBY_MODULE_DIR}")
+
+  SET(RUBY_MODULE_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
+  SET(RUBY_MODULE_ARCH_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
 ENDIF()
 
 MESSAGE(STATUS "Ruby module code installing to: ${RUBY_MODULE_DIR}")
@@ -308,20 +314,20 @@ IF( BUILD_WITH_OPENSSL )
     INSTALL(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
     INSTALL(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
   ENDIF()
-  
+
   #enable libssh
   ADD_DEFINITIONS(-DLIBSSH_STATIC)
-  
+
   # add sub directory
   ADD_SUBDIRECTORY( src/libssh )
   INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
-      
+
 ENDIF()
 
 
 
 FIND_PACKAGE( SWIG 1.3.40 REQUIRED )
-MARK_AS_ADVANCED(  
+MARK_AS_ADVANCED(
   SWIG_DIR
   SWIG_EXECUTABLE
   SWIG_VERSION
@@ -338,12 +344,12 @@ IF( BUILD_DOCUMENTATION )
     FIND_PROGRAM( RDOC NAMES rdoc )
     FIND_PROGRAM( RI NAMES ri )
   ENDIF(WIN32)
-  
+
   MARK_AS_ADVANCED(
     RDOC
     RI
-  ) 
-  
+  )
+
   SET( ALL_RDOC_TARGETS ${ALL_RUBY_BINDING_TARGETS} )
 ENDIF( BUILD_DOCUMENTATION )
 
@@ -363,7 +369,7 @@ IF( BUILD_PYTHON_BINDINGS )
   SET( ALL_PYTHON_BINDING_TARGETS "" ) # global list
 ENDIF()
 
-IF (REQUIRE_DAKOTA) 
+IF (REQUIRE_DAKOTA)
   FIND_PACKAGE(Dakota "${DAKOTA_VERSION}" REQUIRED)
   MARK_AS_ADVANCED(DAKOTA_EXE)
 ELSE (REQUIRE_DAKOTA)
@@ -387,60 +393,60 @@ SET(DAKOTA_FOUND ${DAKOTA_FOUND} CACHE INTERNAL "Boolean indicating whether Dako
 IF( BUILD_DOCUMENTATION )
   # need doxygen
   Find_Package( Doxygen REQUIRED )
-  
+
   OPTION( DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION "Show all inherited members of a class as if those members were ordinary class members" OFF )
-  
+
   MARK_AS_ADVANCED(
     DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION
   )
-  
+
   IF( DOXYGEN_INLINE_INHERITED_MEMBERS_OPTION )
     SET( DOXYGEN_INLINE_INHERITED_MEMBERS "YES")
   ELSE()
     SET( DOXYGEN_INLINE_INHERITED_MEMBERS "NO")
   ENDIF()
-  
+
   # if have dot you have more options
   IF(DOXYGEN_DOT_FOUND)
-  
+
     OPTION( DOXYGEN_COLLABORATION_GRAPH_OPTION "Generate implementation dependency diagrams (inheritance, containment, and class reference)" OFF )
     OPTION( DOXYGEN_CLASS_GRAPH_OPTION "Graph direct and indirect inheritance relations" ON )
     OPTION( DOXYGEN_UML_LOOK_OPTION "Generate graphs in UML format" OFF )
     OPTION( DOXYGEN_GRAPHICAL_HIERARCHY_OPTION "Graphical hierarchy of all classes instead of a textual one" OFF )
-    
-    MARK_AS_ADVANCED( 
+
+    MARK_AS_ADVANCED(
       DOXYGEN_COLLABORATION_GRAPH_OPTION
       DOXYGEN_CLASS_GRAPH_OPTION
       DOXYGEN_UML_LOOK_OPTION
       DOXYGEN_GRAPHICAL_HIERARCHY_OPTION
     )
-    
+
     IF( DOXYGEN_COLLABORATION_GRAPH_OPTION )
       SET( DOXYGEN_COLLABORATION_GRAPH "YES")
     ELSE()
       SET( DOXYGEN_COLLABORATION_GRAPH "NO")
     ENDIF()
-      
+
     IF( DOXYGEN_CLASS_GRAPH_OPTION )
       SET( DOXYGEN_CLASS_GRAPH "YES")
     ELSE()
       SET( DOXYGEN_CLASS_GRAPH "NO")
-    ENDIF() 
-   
+    ENDIF()
+
     IF( DOXYGEN_UML_LOOK_OPTION )
       SET( DOXYGEN_UML_LOOK "YES")
     ELSE()
       SET( DOXYGEN_UML_LOOK "NO")
     ENDIF()
-    
+
     IF( DOXYGEN_GRAPHICAL_HIERARCHY_OPTION )
       SET ( DOXYGEN_GRAPHICAL_HIERARCHY "YES" )
     ELSE()
       SET ( DOXYGEN_GRAPHICAL_HIERARCHY "NO" )
     ENDIF()
-    
+
   ENDIF()
-  
+
   CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/doc/index.html.in ${CMAKE_BINARY_DIR}/doc/index.html)
 
   SET( doxygen_directories ${project_directories} )
@@ -454,7 +460,7 @@ IF( BUILD_DOCUMENTATION )
 
   # Default TAGFILES
   SET( DOXY_TAGFILES "" )
-  
+
   FOREACH( D ${doxygen_directories} )
     STRING( REPLACE "/" "_" DOC_NAME ${D} )
     IF( ${D} MATCHES "utilities/idd" )
@@ -476,7 +482,7 @@ IF( BUILD_DOCUMENTATION )
       SET( DOXY_ADDITIONAL_DIR "" )
       SET( DOXY_ADDITIONAL_FILES "" )
       SET( DOXY_EXCLUDE_DIR "" )
-#      SET( DOXY_TAGFILES "utilities_idd.tag utilities.tag" )      
+#      SET( DOXY_TAGFILES "utilities_idd.tag utilities.tag" )
     ELSEIF( ${D} MATCHES "standardsinterface" )
       SET( DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"" )
@@ -490,27 +496,27 @@ IF( BUILD_DOCUMENTATION )
       SET( DOXY_EXCLUDE_DIR "" )
     ENDIF()
     CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile_${DOC_NAME} )
-    
+
     ADD_CUSTOM_TARGET( openstudio_${DOC_NAME}_doc
       COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}
       COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}
       COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile_${DOC_NAME}
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}  
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
-  
+
     set( ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
       openstudio_${DOC_NAME}_doc
       )
     #LIST( APPEND ALL_CPP_DOC_TARGETS "openstudio_${DOC_NAME}_doc" )
-  
+
   ENDFOREACH()
 
-  
+
 ENDIF()
 ###############################################################################
 
 ###############################################################################
-# Required dependencies 
+# Required dependencies
 
 # Threading library
 FIND_PACKAGE(Threads)
@@ -530,13 +536,13 @@ link_directories( ${GTEST_LIB_DIR} )
 
 # Boost
 IF(APPLE)
-  set(Boost_USE_STATIC_LIBS ON)  
+  set(Boost_USE_STATIC_LIBS ON)
 ENDIF()
 IF (WIN32)
-  set(Boost_USE_STATIC_LIBS ON)  
+  set(Boost_USE_STATIC_LIBS ON)
 
   #uncomment all of this if we want to force dynamic libs on windows
-#  set(Boost_USE_STATIC_LIBS OFF)  
+#  set(Boost_USE_STATIC_LIBS OFF)
 #  ADD_DEFINITIONS( -DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
 #  LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS} )
 #  IF (MSVC)
@@ -568,7 +574,7 @@ find_package(BoostLog REQUIRED)
 INCLUDE_DIRECTORIES( SYSTEM ${BoostLog_INCLUDE_DIRS} )
 LINK_DIRECTORIES( ${BoostLog_LIBRARY_DIRS} )
 
-# QJSON 
+# QJSON
 
 find_package(QJSON REQUIRED)
 INCLUDE_DIRECTORIES( SYSTEM ${QJSON_INCLUDE_DIR} )
@@ -583,7 +589,7 @@ ADD_DEFINITIONS( -DSQLITE_THREADSAFE=1 ) # 1 is default, serial access
 # Qt
 FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns QtWebKit REQUIRED)
 
-# Newer versions of cmake have a sqlite plugin finder built into the Qt package finder.  
+# Newer versions of cmake have a sqlite plugin finder built into the Qt package finder.
 # This is for older versions.  Sometime before cmake version 2.8.7.
 IF( NOT QT_QSQLITE_PLUGIN_RELEASE )
   SET(CMAKE_FIND_LIBRARY_SUFFIXES_DEFAULT ${CMAKE_FIND_LIBRARY_SUFFIXES})
@@ -605,7 +611,7 @@ MARK_AS_ADVANCED( QT_QMAKE_EXECUTABLE QT_QTMOTIF_INCLUDE_DIR QT_QTMOTIF_LIBRARY_
 
 # This sets the windows build that will need the special winmain@16 call. Qt provides
 #  this for us in the qtmain.lib file. Using this cmake code will ensure we have it
-#  linked into our build. Not needed on Unix/OS X/Linux which is why we have the 
+#  linked into our build. Not needed on Unix/OS X/Linux which is why we have the
 #  IF(WIN32) conditional.
 IF (WIN32)
     SET (QT_USE_QTMAIN TRUE)
@@ -704,14 +710,14 @@ ELSEIF(APPLE)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
-  SET(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO-VERSION}")
+  SET(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-x86_64.tar.bz2)
   SET(AWS_RUBY_CHECKSUM 74d3a8ab4e1e3fb44c308f2aaa8e5732)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
-  SET(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO-VERSION}")
+  SET(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-i686.tar.bz2)
   SET(AWS_RUBY_CHECKSUM e51ce64b3e03ed3a66f1f7e0a22b5b7e)
@@ -735,6 +741,32 @@ ADD_DEPENDENCIES( ResultsViewer ResultsViewer_resources )
 # ruby, after loading projects
 ADD_SUBDIRECTORY( src/ruby_cpp )
 ADD_SUBDIRECTORY( ruby )
+
+IF (UNIX AND NOT APPLE)
+
+  SET( ruby_link_path "" )
+  SET( ruby_target_path "" )
+
+  install(CODE "
+    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E make_directory \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}\")
+    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"../../../${RUBY_MODULE_DIR}/openstudio.rb\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio.rb\")
+    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"../../../${RUBY_MODULE_DIR}/openstudio\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio\")
+    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"../../../${RUBY_MODULE_DIR}/cloud\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/cloud\")
+    ")
+
+    SET( legacy_link   ${CMAKE_INSTALL_PREFIX}/libIex.so)
+    SET( legacy_target ${CMAKE_INSTALL_PREFIX}/)
+    ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_INSTALL_PREFIX}/poopyhead/touch.txt
+      COMMAND mkdir -p ${CMAKE_INSTALL_PREFIX}/poopyhead
+      COMMAND touch ${CMAKE_INSTALL_PREFIX}/poopyhead/touch.txt
+      #      COMMAND ln -s ${legacy_target} ${legacy_link}
+      DEPENDS install
+      COMMENT "Generating legacy symbolic link")
+
+    ADD_CUSTOM_TARGET( install_legacy DEPENDS ${CMAKE_INSTALL_PREFIX}/poopyhead/touch.txt )
+
+
+ENDIF ()
 
 # build epw2wea for supporting gendaymtx
 ADD_SUBDIRECTORY( src/epw2wea )
@@ -809,7 +841,7 @@ ELSE( WIN32 )
 ENDIF( WIN32 )
 
 SET(all_lib_targets
-  openstudio_runmanager 
+  openstudio_runmanager
   openstudio_project
   openstudio_osversion
   openstudio_model
@@ -861,12 +893,12 @@ configure_file("${CMAKE_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${CMAKE_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
 
 
-IF( UNIX AND NOT APPLE ) 
-  SET(examplesdir share/openstudio-${OPENSTUDIO-VERSION}/examples)
+IF( UNIX AND NOT APPLE )
+  SET(examplesdir share/openstudio-${OPENSTUDIO_VERSION}/examples)
 ELSE()
   set(examplesdir Examples)
 ENDIF()
-  
+
 # Used by some Ruby tests, remove eventually
 INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf"
         DESTINATION "${examplesdir}/resultsviewer/SmallOffice/" )
@@ -886,9 +918,9 @@ install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes
 IF (UNIX AND NOT APPLE)
   # if we build on Linux and we built our own Qt, let's grab said Qt and install it
   IF(QT_QMAKE_EXECUTABLE MATCHES ".*Qt-install.*")
-    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib" 
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/lib"
             DESTINATION .)
-    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share" 
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/../../../Qt-prefix/src/Qt-install/share"
             DESTINATION .)
   ENDIF()
 ENDIF()
@@ -933,8 +965,8 @@ IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
     INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
     INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
   ELSE()
-    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO-VERSION}" USE_SOURCE_PERMISSIONS)
-    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO-VERSION}" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+    INSTALL(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   ENDIF()
 
 ENDIF()

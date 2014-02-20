@@ -51,6 +51,7 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <OpenStudio.hxx>
 
 #include <QDir>
 #include <QMessageBox>

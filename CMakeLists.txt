@@ -17,7 +17,7 @@ IF(GIT_FOUND)
                   ERROR_QUIET
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
   IF(${RESULT} EQUAL 0)
-    SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
+    SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
   ENDIF()
 ENDIF()
 
@@ -29,7 +29,7 @@ OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )
 
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
 
-# Search for modules in the openstudiocore dir first to override cmake ones 
+# Search for modules in the openstudiocore dir first to override cmake ones
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE_SOURCE_DIR})
 
 # Build C++ documentation using Doxygen
@@ -112,7 +112,7 @@ MARK_AS_ADVANCED(
   ENERGYPLUS_WEATHER_DIR
 )
 
-# Package Radiance and EnergyPlus for convenience 
+# Package Radiance and EnergyPlus for convenience
 OPTION( PACKAGE_RADIANCE_AND_ENERGYPLUS "Package Radiance and EnergyPlus" OFF )
 MARK_AS_ADVANCED(FORCE PACKAGE_RADIANCE_AND_ENERGYPLUS)
 
@@ -164,7 +164,7 @@ ENDIF()
 
 # Require that DAKOTA_FOUND
 #
-# Some code (certain analysisdriver tests) are conditionally compiled depending on 
+# Some code (certain analysisdriver tests) are conditionally compiled depending on
 # whether Dakota is found on the system. If this variable is set to true, CMake will give a configure
 # error in the case that Dakota is not found.
 #
@@ -176,7 +176,7 @@ MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 IF(MSVC)
   # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
   OPTION( MSVC_IS_EXPRESS "using the Express editions of Visual Studio, must install both C++ and C# versions" FALSE )
-  
+
   MARK_AS_ADVANCED(CMAKE_CONFIGURATION_TYPES)
 ENDIF()
 
@@ -235,13 +235,13 @@ endif()
 
 # Boost
 IF(APPLE)
-  set(Boost_USE_STATIC_LIBS ON)  
+  set(Boost_USE_STATIC_LIBS ON)
 ENDIF()
 IF (WIN32)
-  set(Boost_USE_STATIC_LIBS ON)  
+  set(Boost_USE_STATIC_LIBS ON)
 
   #uncomment all of this if we want to force dynamic libs on windows
-#  set(Boost_USE_STATIC_LIBS OFF)  
+#  set(Boost_USE_STATIC_LIBS OFF)
 #  ADD_DEFINITIONS( -DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
 #  LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS} )
 #  IF (MSVC)
@@ -261,7 +261,7 @@ ENDIF()
 
 
 FIND_PACKAGE( SWIG 1.3.40 )
-MARK_AS_ADVANCED(  
+MARK_AS_ADVANCED(
   SWIG_DIR
   SWIG_EXECUTABLE
   SWIG_VERSION
@@ -278,7 +278,7 @@ FIND_PACKAGE( Ruby )
 
 
 IF(WIN32 AND MSVC AND CMAKE_CL_64)
-  MESSAGE(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The Sketchup plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.") 
+  MESSAGE(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The Sketchup plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.")
 ENDIF()
 
 IF (UNIX)
@@ -291,15 +291,15 @@ ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
   MARK_AS_ADVANCED(BUILD_RUBY)
-  
+
   IF(WIN32 AND MSVC)
     IF(CMAKE_CL_64)
-      MESSAGE(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0") 
+      MESSAGE(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0")
     ELSE()
       OPTION(BUILD_RUBY_MINGW32_2_0 "Use mingw32 Ruby 2.0" OFF)
       MARK_AS_ADVANCED(BUILD_RUBY_MINGW32_2_0)
     ENDIF()
-  ENDIF() 
+  ENDIF()
 ENDIF()
 
 IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
@@ -340,7 +340,7 @@ ENDIF()
 IF(BUILD_RUBY)
   IF (APPLE)
     # OSX can work with a static ruby library
-    ExternalProject_Add(Ruby 
+    ExternalProject_Add(Ruby
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.7-p370.tar.gz
       URL_MD5 98b00bbd1cdde3116155edb6e555b781
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --without-tcl --without-tk  CFLAGS=\"-arch i386 -arch x86_64 -fPIC\" LDFLAGS=\"-arch i386 -arch x86_64\""
@@ -350,7 +350,7 @@ IF(BUILD_RUBY)
     SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
   ELSEIF (UNIX)
     # but linux cannot, it has a double free when unloading a ruby module
-    ExternalProject_Add(Ruby 
+    ExternalProject_Add(Ruby
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-1.8.7-p370.tar.gz
       URL_MD5 98b00bbd1cdde3116155edb6e555b781
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
@@ -361,7 +361,7 @@ IF(BUILD_RUBY)
   ELSE()
     IF(CMAKE_CL_64)
        find_program(NMAKE_EXE nmake)
-       
+
       # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
       # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
       ExternalProject_Add(Ruby
@@ -403,13 +403,13 @@ IF(BUILD_RUBY)
         SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe )
         SET(RUBY_DLL msvcrt-ruby18.dll)
         SET(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby18.lib") 
+        SET(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/msvcrt-ruby18.lib")
       ENDIF()
     ENDIF()
-    
-    
+
+
   ENDIF()
-ENDIF() 
+ENDIF()
 
 
 IF(BUILD_SWIG)
@@ -462,7 +462,7 @@ IF(BUILD_SWIG)
       )
     SET(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG/swig.exe )
   ENDIF()
-ENDIF() 
+ENDIF()
 
 IF(BUILD_BOOST)
   IF(APPLE)
@@ -488,7 +488,7 @@ IF(BUILD_BOOST)
       )
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
   ELSE()
-    # The call to cmd and VS_UNICODE_OUTPUT is to fix an oddity where boost configuration complains about missing ICU when it shouldn't 
+    # The call to cmd and VS_UNICODE_OUTPUT is to fix an oddity where boost configuration complains about missing ICU when it shouldn't
     # be trying to find it
 
     IF(CMAKE_CL_64)
@@ -580,7 +580,7 @@ IF(BUILD_QT)
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-phonon -no-phonon-backend -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       PATCH_COMMAND ${APPLE_PATCH_COMMAND}
-      BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile      
+      BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && make -j1 install"
       )
   ELSEIF(UNIX)
@@ -593,7 +593,7 @@ IF(BUILD_QT)
       )
   ELSE()
     find_program(NMAKE_EXE nmake)
-    
+
     ExternalProject_Add( Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
@@ -730,51 +730,51 @@ if (BUILD_QT AND MSVC)
   ExternalProject_Add_Step(OpenStudioCore InstallQtReleaseDLLs
      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release
      DEPENDERS configure
-   )     
-   
+   )
+
   # Install Qt DLL's to Debug directory. This is brute force-ish, it copies all files in the bin folder
   ExternalProject_Add_Step(OpenStudioCore InstallQtDebugDLLs
      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug
      DEPENDERS configure
-   )     
+   )
 endif()
 
 if (BUILD_RUBY AND MSVC)
   ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseFolder
      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release
      DEPENDERS configure
-   )     
+   )
   ExternalProject_Add_Step(OpenStudioCore MakeRubyDebugFolder
    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug
      DEPENDERS configure
-   )     
+   )
   ExternalProject_Add_Step(OpenStudioCore MakeRubyRelWithDebInfoFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo
      DEPENDERS configure
-   )     
+   )
   ExternalProject_Add_Step(OpenStudioCore MakeRubyMinSizeRelFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/MinSizeRel
      DEPENDERS configure
-   )     
+   )
 
-   
+
   ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release/${RUBY_DLL}"
      DEPENDERS configure
-   )     
+   )
   ExternalProject_Add_Step(OpenStudioCore MakeRubyDebugDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug/${RUBY_DLL}"
      DEPENDERS configure
-   )     
+   )
   ExternalProject_Add_Step(OpenStudioCore MakeRubyRelWithDebInfoDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo/${RUBY_DLL}"
      DEPENDERS configure
-   )     
+   )
   ExternalProject_Add_Step(OpenStudioCore MakeRubyMinSizeRelDLL
     COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/MinSizeRel/${RUBY_DLL}"
      DEPENDERS configure
-   )     
-      
+   )
+
 endif()
 
 
