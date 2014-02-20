@@ -422,6 +422,21 @@ namespace detail {
     return result;
   }
 
+  bool SubSurface_Impl::allowShadingControl() const
+  {
+    bool result = false;
+
+    std::string subSurfaceType = this->subSurfaceType();
+    if (istringEqual("FixedWindow", subSurfaceType) ||
+        istringEqual("OperableWindow", subSurfaceType) ||
+        istringEqual("GlassDor", subSurfaceType))
+    {
+      result = true;
+    }
+
+    return result;
+  }
+
   boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
   {
     return getObject<SubSurface>().getModelObjectTarget<ShadingControl>(OS_SubSurfaceFields::ShadingControlName);
@@ -458,10 +473,15 @@ namespace detail {
     bool result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
     if (result){
 
-      if (!(istringEqual("FixedWindow", subSurfaceType) ||
-            istringEqual("OperableWindow", subSurfaceType) ||
-            istringEqual("GlassDor", subSurfaceType))){
+      if (!allowShadingControl()){
         this->resetShadingControl();
+      }
+
+      if (!allowDaylightingDeviceShelf()){
+        boost::optional<DaylightingDeviceShelf> shelf = this->daylightingDeviceShelf();
+        if (shelf){
+          shelf->remove();
+        }
       }
 
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
@@ -501,10 +521,7 @@ namespace detail {
   bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
   {
     bool result = false;
-    std::string subSurfaceType = this->subSurfaceType();
-    if (istringEqual("FixedWindow", subSurfaceType) ||
-        istringEqual("OperableWindow", subSurfaceType) ||
-        istringEqual("GlassDor", subSurfaceType)){
+    if (allowShadingControl()){
       result = setPointer(OS_SubSurfaceFields::ShadingControlName, shadingControl.handle());
     }
     return result;
@@ -835,6 +852,21 @@ namespace detail {
     return shadingSurface;
   }
 
+  bool SubSurface_Impl::allowDaylightingDeviceShelf() const
+  {
+    bool result = false;
+
+    std::string subSurfaceType = this->subSurfaceType();
+    if (istringEqual(subSurfaceType, "FixedWindow") ||
+        istringEqual(subSurfaceType, "OperableWindow") ||
+        istringEqual(subSurfaceType, "GlassDoor"))
+    {
+      result = true;
+    }
+
+    return result;
+  }
+
   boost::optional<DaylightingDeviceShelf> SubSurface_Impl::daylightingDeviceShelf() const
   {
     boost::optional<DaylightingDeviceShelf> result;
@@ -855,10 +887,7 @@ namespace detail {
       return result;
     }
 
-    std::string subSurfaceType = this->subSurfaceType();
-    if (istringEqual(subSurfaceType, "FixedWindow") ||
-        istringEqual(subSurfaceType, "OperableWindow") ||
-        istringEqual(subSurfaceType, "GlassDoor"))
+    if (allowDaylightingDeviceShelf())
     {
       try{
         result = DaylightingDeviceShelf(getObject<SubSurface>());
@@ -1064,6 +1093,11 @@ boost::optional<ShadingSurface> SubSurface::addOverhang(double depth, double off
 boost::optional<ShadingSurface> SubSurface::addOverhangByProjectionFactor(double projectionFactor, double offsetFraction)
 {
   return getImpl<detail::SubSurface_Impl>()->addOverhangByProjectionFactor(projectionFactor, offsetFraction);
+}
+
+bool SubSurface::allowDaylightingDeviceShelf() const
+{
+  return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceShelf();
 }
 
 boost::optional<DaylightingDeviceShelf> SubSurface::daylightingDeviceShelf() const

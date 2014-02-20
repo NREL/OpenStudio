@@ -159,11 +159,7 @@ DaylightingDeviceShelf::DaylightingDeviceShelf(const SubSurface& subSurface)
   OS_ASSERT(getImpl<detail::DaylightingDeviceShelf_Impl>());
 
   bool subSurfaceOk = false;
-  std::string subSurfaceType = subSurface.subSurfaceType();
-  if (istringEqual(subSurfaceType, "FixedWindow") ||
-      istringEqual(subSurfaceType, "OperableWindow") ||
-      istringEqual(subSurfaceType, "GlassDoor"))
-  {
+  if (subSurface.allowDaylightingDeviceShelf()){
     if (!subSurface.daylightingDeviceShelf()){
       subSurfaceOk = true;
     }

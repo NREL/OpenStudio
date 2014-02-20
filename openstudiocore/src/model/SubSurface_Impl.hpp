@@ -143,6 +143,8 @@ namespace detail {
 
     bool isViewFactortoGroundAutocalculated() const;
 
+    bool allowShadingControl() const;
+
     boost::optional<ShadingControl> shadingControl() const;
 
     double multiplier() const;
@@ -218,6 +220,9 @@ namespace detail {
     /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. 
      *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
     boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
+  
+    /** Returns true if this sub surface allows the addition of a daylighting light shelf. */
+    bool allowDaylightingDeviceShelf() const;
 
     /** Get the daylighting light shelf associated with this sub surface if there is one. */
     boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
