@@ -30,6 +30,7 @@ class Surface;
 class SubSurface;
 class ShadingSurface;
 class ShadingControl;
+class DaylightingDeviceShelf;
 
 namespace detail {
 
@@ -217,6 +218,13 @@ namespace detail {
     /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. 
      *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
     boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
+
+    /** Get the daylighting light shelf associated with this sub surface if there is one. */
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
+
+    /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window, 
+     * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
+    boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
    protected:
 

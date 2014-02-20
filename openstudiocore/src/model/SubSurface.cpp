@@ -36,6 +36,8 @@
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
+#include <model/DaylightingDeviceShelf.hpp>
+#include <model/DaylightingDeviceShelf_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
@@ -96,6 +98,10 @@ namespace detail {
   std::vector<ModelObject> SubSurface_Impl::children() const
   {
     std::vector<ModelObject> result;
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf = this->daylightingDeviceShelf();
+    if (daylightingDeviceShelf){
+      result.push_back(*daylightingDeviceShelf);
+    }
     return result;
   }
 
@@ -829,6 +835,40 @@ namespace detail {
     return shadingSurface;
   }
 
+  boost::optional<DaylightingDeviceShelf> SubSurface_Impl::daylightingDeviceShelf() const
+  {
+    boost::optional<DaylightingDeviceShelf> result;
+
+    std::vector<DaylightingDeviceShelf> shelves = getObject<ModelObject>().getModelObjectSources<DaylightingDeviceShelf>(DaylightingDeviceShelf::iddObjectType());
+    if (shelves.size() == 1){
+      result = shelves[0];
+    }else if (shelves.size() > 1){
+      result = shelves[0];
+    }
+    return result;
+  }
+
+  boost::optional<DaylightingDeviceShelf> SubSurface_Impl::addDaylightingDeviceShelf() const
+  {
+    boost::optional<DaylightingDeviceShelf> result = this->daylightingDeviceShelf();
+    if (result){
+      return result;
+    }
+
+    std::string subSurfaceType = this->subSurfaceType();
+    if (istringEqual(subSurfaceType, "FixedWindow") ||
+        istringEqual(subSurfaceType, "OperableWindow") ||
+        istringEqual(subSurfaceType, "GlassDoor"))
+    {
+      try{
+        result = DaylightingDeviceShelf(getObject<SubSurface>());
+      }catch(const std::exception&){
+      }
+    }
+
+    return result;
+  }
+
   boost::optional<ModelObject> SubSurface_Impl::surfaceAsModelObject() const {
     OptionalModelObject result;
     OptionalSurface intermediate = surface();
@@ -1024,6 +1064,16 @@ boost::optional<ShadingSurface> SubSurface::addOverhang(double depth, double off
 boost::optional<ShadingSurface> SubSurface::addOverhangByProjectionFactor(double projectionFactor, double offsetFraction)
 {
   return getImpl<detail::SubSurface_Impl>()->addOverhangByProjectionFactor(projectionFactor, offsetFraction);
+}
+
+boost::optional<DaylightingDeviceShelf> SubSurface::daylightingDeviceShelf() const
+{
+  return getImpl<detail::SubSurface_Impl>()->daylightingDeviceShelf();
+}
+
+boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() const
+{
+  return getImpl<detail::SubSurface_Impl>()->addDaylightingDeviceShelf();
 }
 
 /// @cond
