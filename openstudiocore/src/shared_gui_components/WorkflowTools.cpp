@@ -43,11 +43,11 @@ void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
   bool radiance_not_installed = co.getTools().getAllByName("rtrace").tools().size() == 0;
   
   if(radiance_not_installed){
-    t_errors.push_back("Radiance is required, but not installed.");
+    t_errors.push_back("Radiance is required but not found, install Radiance and scan for tools.");
   }
 
   if(ruby_not_installed){
-    t_errors.push_back("Ruby is required, but not installed.");
+    t_errors.push_back("Ruby is required but not found, install Ruby 1.8.7 and scan for tools.");
   }
   
   // TODO remove when fixed

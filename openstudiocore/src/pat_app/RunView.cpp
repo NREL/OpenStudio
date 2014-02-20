@@ -1210,6 +1210,7 @@ void DataPointJobItemView::update()
       if (wi.jobkeyname == "pat-radiance-job"){
         // give it a special name instead of just "Ruby" when we find the radiance job
         dataPointJobHeaderView->setName("Radiance Daylighting");
+        nameSet = true;
       }else{
         runmanager::RubyJobBuilder rjb(wi);
         if (OptionalUUID measureUUID = rjb.bclMeasureUUID()) {
