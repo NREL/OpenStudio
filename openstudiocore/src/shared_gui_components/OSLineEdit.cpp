@@ -124,9 +124,15 @@ void OSLineEdit2::onModelObjectChange() {
     if (m_get) {
       value = (*m_get)();
     }
-    else {
-      OS_ASSERT(m_getOptional);
+    else if (m_getOptional){
       value = (*m_getOptional)();
+    }
+    else if (m_getOptionalBoolArg) {
+      value = (*m_getOptionalBoolArg)(true); // TODO may want to pass a variable
+    }
+    else{
+      // unhandled
+      OS_ASSERT(false);
     }
     std::string text;
     if (value) {

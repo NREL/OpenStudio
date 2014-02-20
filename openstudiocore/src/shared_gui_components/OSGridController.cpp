@@ -127,9 +127,9 @@ void OSGridController::categorySelected(int index)
 
   m_currentFields = m_categoriesAndFields.at(index).second;
 
-  // always show name column TODO
+  // always show name column
 
-  //m_currentFields.insert(m_currentFields.begin(),"Name");
+  m_currentFields.insert(m_currentFields.begin(),"Name");
  
   addColumns(m_currentFields);
 

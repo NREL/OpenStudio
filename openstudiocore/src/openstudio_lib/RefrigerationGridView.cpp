@@ -453,9 +453,9 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; // TODO
     }else if(field == NAME){
-      //addNameLineEditColumn(QString(NAME),
-      //                      &model::RefrigerationCase::name,
-      //                      &model::RefrigerationCase::setName); // TODO
+      addNameLineEditColumn(QString(NAME),
+                            &model::RefrigerationCase::name,
+                            &model::RefrigerationCase::setName);
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time
@@ -662,9 +662,9 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
     }else if(field == ZONEBOUNDARIES){
       //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const; TODO
     }else if(field == NAME){
-      //addNameLineEditColumn(QString(NAME),
-      //                      &model::RefrigerationWalkIn::name,
-      //                      &model::RefrigerationWalkIn::setName); // TODO
+      addNameLineEditColumn(QString(NAME),
+                            &model::RefrigerationWalkIn::name,
+                            &model::RefrigerationWalkIn::setName);
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time
