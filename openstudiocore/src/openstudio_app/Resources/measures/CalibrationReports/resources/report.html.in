@@ -126,6 +126,8 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
         })
 
         for (var c in charts) {
+        
+        if(consumption[charts[c]]){
             cvrmseString = "<h6>CV(RMSE) = </h6>"
             num = consumption[charts[c]].cvrsme;
             if (Math.abs(num) > maxCVRMSE) {
@@ -140,8 +142,13 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
             }
             nmbeString = nmbeString + num;
 
-            string = "<h4 style=\"margin-bottom:-10px;\">" + charts[c] + " (" + consumption[charts[c]].units + ")</h4><br>" + cvrmseString + "<br>" + nmbeString;
+            string = "<h4 style=\"margin-bottom:-10px;\">" + charts[c] + " (" + consumption[charts[c]].units + ")</h4>";
+            if(charts[c] != "Electricity Demand"){
+                string = string + "<br>" + cvrmseString + "<br>" + nmbeString;
+            }
             $('#consumptionString-' + c).html(string);
+        }
+
         }
 
     }
@@ -220,6 +227,8 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
 
     for (var c in charts) {
 
+    if(consumption[charts[c]]){
+    
         if (c == 0) {
             margin.right = 125;
         }
@@ -238,7 +247,10 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
         }
         nmbeString = nmbeString + num;
 
-        string = "<h4 style=\"margin-bottom:-10px;\">" + charts[c] + " (" + consumption[charts[c]].units + ")</h4><br>" + cvrmseString + "<br>" + nmbeString;
+        string = "<h4 style=\"margin-bottom:-10px;\">" + charts[c] + " (" + consumption[charts[c]].units + ")</h4>";
+        if(charts[c] != "Electricity Demand"){
+            string = string + "<br>" + cvrmseString + "<br>" + nmbeString;
+        }
         $('#consumptionString-' + c).html(string);
 
         var svg = d3.select("#chart-" + c).append("svg")
@@ -360,6 +372,8 @@ d3.tip=function(){function t(t){v=m(t),w=v.createSVGPoint(),document.body.append
         svg.selectAll(".g").attr("stroke", "black");
 
         outputTable(charts[c], consumption[charts[c]].units, consumption[charts[c]].data, "table-" + c);
+    }
+    
     }
 </script>
 </body>
