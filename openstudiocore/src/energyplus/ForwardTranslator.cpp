@@ -2117,8 +2117,14 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
         LOG(Warn, "Both surfaces '" << surface.name() << "', and '" << adjacentSurface->name() 
                << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
 
-        surface.setConstruction(c1);
-        adjacentSurface->setConstruction(c2);
+        // DLM: use surface name to choose which surface gets the original copy, not a good way but at least repeatable
+        if (surface.name() < adjacentSurface->name()){
+          surface.setConstruction(c1);
+          adjacentSurface->setConstruction(c2);
+        }else{
+          surface.setConstruction(c2);
+          adjacentSurface->setConstruction(c1);
+        }
       }
 
       processedSurfaces.insert(surface.handle());
@@ -2258,8 +2264,14 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
         LOG(Warn, "Both sub surfaces '" << subSurface.name() << "', and '" << adjacentSubSurface->name() 
                << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
 
-        subSurface.setConstruction(c1);
-        adjacentSubSurface->setConstruction(c2);
+        // DLM: use subSurface name to choose which surface gets the original copy, not a good way but at least repeatable
+        if (subSurface.name() < adjacentSubSurface->name()){
+          subSurface.setConstruction(c1);
+          adjacentSubSurface->setConstruction(c2);
+        }else{
+          subSurface.setConstruction(c2);
+          adjacentSubSurface->setConstruction(c1);
+        }
       }
 
       processedSubSurfaces.insert(subSurface.handle());

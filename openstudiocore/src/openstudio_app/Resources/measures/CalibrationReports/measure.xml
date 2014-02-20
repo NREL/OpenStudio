@@ -1,7 +1,7 @@
 <measure>
   <name>Calibration Reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>c803b488-6806-4499-86dc-261e86df04bc</version_id>
+  <version_id>d009120e-338a-4feb-9262-5b2cbc0643f2</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -25,35 +25,19 @@
       <filename>CalibrationReports_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>DB3AF2D5</checksum>
+      <checksum>394F49A6</checksum>
     </file>
     <file>
       <filename>report.html.in</filename>
       <filetype>in</filetype>
       <usage_type>resource</usage_type>
-      <checksum>C40272C0</checksum>
-    </file>
-    <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>1.1.2</identifier>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>F6B9DCC2</checksum>
+      <checksum>FDB6F2C4</checksum>
     </file>
     <file>
       <filename>ExampleModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>686F83F1</checksum>
-    </file>
-    <file>
-      <filename>report.html</filename>
-      <filetype>html</filetype>
-      <usage_type>test</usage_type>
-      <checksum>B6AB73DC</checksum>
+      <checksum>396AF667</checksum>
     </file>
   </files>
 </measure>

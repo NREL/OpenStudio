@@ -218,6 +218,8 @@ namespace runmanager {
 
       boost::optional<openstudio::UUID> originalUUID() const;
 
+      boost::optional<openstudio::UUID> bclMeasureUUID() const;
+
       static JobParams toJobParams(const std::vector<ruleset::OSArgument> &t_args,
           const openstudio::path &t_basePath=openstudio::path());
 
