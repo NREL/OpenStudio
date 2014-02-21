@@ -4506,9 +4506,9 @@ OS:ShadingSurfaceGroup,
        \type real
        \units m
        \default 0
-  A5; \field Shaded Sub Surface Name
+  A5; \field Shaded Object Name
        \type object-list
-       \object-list SubSurfNames
+       \object-list SurfAndSubSurfNames
        
 OS:Space,
        \min-fields 1

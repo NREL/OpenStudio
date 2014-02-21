@@ -26,6 +26,8 @@
 #include <model/Space_Impl.hpp>
 #include <model/SubSurface.hpp>
 #include <model/SubSurface_Impl.hpp>
+#include <model/ShadingSurfaceGroup.hpp>
+#include <model/ShadingSurfaceGroup_Impl.hpp>
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/LayeredConstruction.hpp>
@@ -1330,6 +1332,11 @@ namespace detail {
     return window;
   }
 
+  std::vector<ShadingSurfaceGroup> Surface_Impl::shadingSurfaceGroups() const
+  {
+    return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(ShadingSurfaceGroup::iddObjectType());
+  }
+
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
@@ -1548,6 +1555,11 @@ boost::optional<SubSurface> Surface::setWindowToWallRatio(double wwr)
 boost::optional<SubSurface> Surface::setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor)
 {
   return getImpl<detail::Surface_Impl>()->setWindowToWallRatio(wwr, desiredHeightOffset, heightOffsetFromFloor);
+}
+
+std::vector<ShadingSurfaceGroup> Surface::shadingSurfaceGroups() const
+{
+  return getImpl<detail::Surface_Impl>()->shadingSurfaceGroups();
 }
 
 /// @cond

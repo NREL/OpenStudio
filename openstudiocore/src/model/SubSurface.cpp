@@ -746,8 +746,6 @@ namespace detail {
 
     Model model = this->model();
     boost::optional<Space> space = this->space();
-    std::string shadingSurfaceGroupName = this->name().get() + " Shading Surfaces";
-    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
     boost::optional<ShadingSurface> shadingSurface;
     if (space){
       
@@ -773,23 +771,14 @@ namespace detail {
       overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
 
-      BOOST_FOREACH(ShadingSurfaceGroup group, this->shadingSurfaceGroups()){
-        if (group.name() == shadingSurfaceGroupName){
-          shadingSurfaceGroup = group;
-          break;
-        }
-        shadingSurfaceGroup = group;
-      }
-
-      if (!shadingSurfaceGroup){
-        shadingSurfaceGroup = ShadingSurfaceGroup(model);
-        shadingSurfaceGroup->setSpace(*space);
-      }
+      ShadingSurfaceGroup shadingSurfaceGroup(model);
+      shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");
+      shadingSurfaceGroup.setSpace(*space);
 
       shadingSurface = ShadingSurface(transformation*overhangVertices, model);
-      shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+      shadingSurface->setShadingSurfaceGroup(shadingSurfaceGroup);
 
-      shadingSurfaceGroup->setShadedSubSurface(getObject<SubSurface>());
+      shadingSurfaceGroup.setShadedSubSurface(getObject<SubSurface>());
     }
 
     return shadingSurface;
@@ -806,8 +795,6 @@ namespace detail {
 
     Model model = this->model();
     boost::optional<Space> space = this->space();
-    std::string shadingSurfaceGroupName = this->name().get() + " Shading Surfaces";
-    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
     boost::optional<ShadingSurface> shadingSurface;
     if (space){
       
@@ -836,23 +823,14 @@ namespace detail {
       overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
 
-      BOOST_FOREACH(ShadingSurfaceGroup group, this->shadingSurfaceGroups()){
-        if (group.name() == shadingSurfaceGroupName){
-          shadingSurfaceGroup = group;
-          break;
-        }
-        shadingSurfaceGroup = group;
-      }
-
-      if (!shadingSurfaceGroup){
-        shadingSurfaceGroup = ShadingSurfaceGroup(model);
-        shadingSurfaceGroup->setSpace(*space);
-      }
+      ShadingSurfaceGroup shadingSurfaceGroup(model);
+      shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");
+      shadingSurfaceGroup.setSpace(*space);
 
       shadingSurface = ShadingSurface(transformation*overhangVertices, model);
-      shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+      shadingSurface->setShadingSurfaceGroup(shadingSurfaceGroup);
 
-      shadingSurfaceGroup->setShadedSubSurface(getObject<SubSurface>());
+      shadingSurfaceGroup.setShadedSubSurface(getObject<SubSurface>());
     }
 
     return shadingSurface;
@@ -860,7 +838,7 @@ namespace detail {
 
   std::vector<ShadingSurfaceGroup> SubSurface_Impl::shadingSurfaceGroups() const
   {
-    return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(ShadingSurface::iddObjectType());
+    return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(ShadingSurfaceGroup::iddObjectType());
   }
 
   bool SubSurface_Impl::allowDaylightingDeviceShelf() const

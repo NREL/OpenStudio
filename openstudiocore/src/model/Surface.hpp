@@ -28,6 +28,7 @@ namespace model {
 
 class Space;
 class SubSurface;
+class ShadingSurfaceGroup;
 
 namespace detail {
 
@@ -192,6 +193,9 @@ class MODEL_API Surface : public PlanarSurface {
   If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
   offset from the ceiling. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
+
+  /** Returns any shading surface groups associated with this surface. */
+  std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
  protected:
   /// @cond
