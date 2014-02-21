@@ -19,7 +19,7 @@
 
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
-#include <model/airLoopHVACZoneSplitter.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirLoopHVACSupplyPlenum.hpp>
 #include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
