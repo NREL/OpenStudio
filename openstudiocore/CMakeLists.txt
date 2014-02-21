@@ -744,14 +744,13 @@ ADD_SUBDIRECTORY( ruby )
 
 IF (UNIX AND NOT APPLE)
 
-  SET( ruby_link_path "" )
-  SET( ruby_target_path "" )
+  FILE(RELATIVE_PATH relative "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}" "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_DIR}")
 
   install(CODE "
     EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E make_directory \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}\")
-    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"../../../${RUBY_MODULE_DIR}/openstudio.rb\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio.rb\")
-    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"../../../${RUBY_MODULE_DIR}/openstudio\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio\")
-    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"../../../${RUBY_MODULE_DIR}/cloud\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/cloud\")
+    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio.rb\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio.rb\")
+    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio\")
+    EXECUTE_PROCESS (COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/cloud\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/cloud\")
     ")
 
     SET( legacy_link   ${CMAKE_INSTALL_PREFIX}/libIex.so)
@@ -764,7 +763,6 @@ IF (UNIX AND NOT APPLE)
       COMMENT "Generating legacy symbolic link")
 
     ADD_CUSTOM_TARGET( install_legacy DEPENDS ${CMAKE_INSTALL_PREFIX}/poopyhead/touch.txt )
-
 
 ENDIF ()
 
