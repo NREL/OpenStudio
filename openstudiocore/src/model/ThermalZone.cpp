@@ -21,6 +21,8 @@
 #include <model/ThermalZone_Impl.hpp>
 #include <model/AirLoopHVACSupplyPlenum.hpp>
 #include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
+#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirLoopHVACReturnPlenum.hpp>
 #include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/ZoneHVACEquipmentList.hpp>
@@ -1673,6 +1675,29 @@ namespace detail {
 
           _model.connect( newNode, newNode.outletPort(),
                           outletObj.get(), oldMixerPort );
+
+          // Add the terminal to equipment list
+          if( (! inletObj->optionalCast<Splitter>()) && (! inletObj->optionalCast<Node>()) )
+          {
+            addEquipment(inletObj.get());            
+
+            if( boost::optional<AirTerminalSingleDuctParallelPIUReheat> terminal = inletObj->optionalCast<AirTerminalSingleDuctParallelPIUReheat>() )
+            {
+              Node secondaryInletNode(_model);
+
+              PortList t_exhaustPortList = exhaustPortList();
+
+              _model.connect( t_exhaustPortList,
+                              t_exhaustPortList.nextPort(),
+                              secondaryInletNode,
+                              secondaryInletNode.inletPort() );
+
+              _model.connect( secondaryInletNode,
+                              secondaryInletNode.outletPort(),
+                              terminal.get(),
+                              terminal->secondaryAirInletPort() );
+            }
+          }
 
           setUseIdealAirLoads(false);
 
