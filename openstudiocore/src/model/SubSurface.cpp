@@ -773,11 +773,12 @@ namespace detail {
       overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
 
-      BOOST_FOREACH(ShadingSurfaceGroup group, space->shadingSurfaceGroups()){
+      BOOST_FOREACH(ShadingSurfaceGroup group, this->shadingSurfaceGroups()){
         if (group.name() == shadingSurfaceGroupName){
           shadingSurfaceGroup = group;
           break;
         }
+        shadingSurfaceGroup = group;
       }
 
       if (!shadingSurfaceGroup){
@@ -787,6 +788,8 @@ namespace detail {
 
       shadingSurface = ShadingSurface(transformation*overhangVertices, model);
       shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+
+      shadingSurfaceGroup->setShadedSubSurface(getObject<SubSurface>());
     }
 
     return shadingSurface;
@@ -833,11 +836,12 @@ namespace detail {
       overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
 
-      BOOST_FOREACH(ShadingSurfaceGroup group, space->shadingSurfaceGroups()){
+      BOOST_FOREACH(ShadingSurfaceGroup group, this->shadingSurfaceGroups()){
         if (group.name() == shadingSurfaceGroupName){
           shadingSurfaceGroup = group;
           break;
         }
+        shadingSurfaceGroup = group;
       }
 
       if (!shadingSurfaceGroup){
@@ -847,9 +851,16 @@ namespace detail {
 
       shadingSurface = ShadingSurface(transformation*overhangVertices, model);
       shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+
+      shadingSurfaceGroup->setShadedSubSurface(getObject<SubSurface>());
     }
 
     return shadingSurface;
+  }
+
+  std::vector<ShadingSurfaceGroup> SubSurface_Impl::shadingSurfaceGroups() const
+  {
+    return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(ShadingSurface::iddObjectType());
   }
 
   bool SubSurface_Impl::allowDaylightingDeviceShelf() const
@@ -977,6 +988,11 @@ bool SubSurface::isViewFactortoGroundAutocalculated() const {
   return getImpl<detail::SubSurface_Impl>()->isViewFactortoGroundAutocalculated();
 }
 
+bool SubSurface::allowShadingControl() const
+{
+  return getImpl<detail::SubSurface_Impl>()->allowShadingControl();
+}
+
 boost::optional<ShadingControl> SubSurface::shadingControl() const
 {
   return getImpl<detail::SubSurface_Impl>()->shadingControl();
@@ -1093,6 +1109,11 @@ boost::optional<ShadingSurface> SubSurface::addOverhang(double depth, double off
 boost::optional<ShadingSurface> SubSurface::addOverhangByProjectionFactor(double projectionFactor, double offsetFraction)
 {
   return getImpl<detail::SubSurface_Impl>()->addOverhangByProjectionFactor(projectionFactor, offsetFraction);
+}
+
+std::vector<ShadingSurfaceGroup> SubSurface::shadingSurfaceGroups() const
+{
+  return getImpl<detail::SubSurface_Impl>()->shadingSurfaceGroups();
 }
 
 bool SubSurface::allowDaylightingDeviceShelf() const

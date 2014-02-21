@@ -4502,11 +4502,14 @@ OS:ShadingSurfaceGroup,
        \type real
        \units m
        \default 0
-  N4; \field Z Origin
+  N4, \field Z Origin
        \type real
        \units m
        \default 0
-
+  A5; \field Shaded Sub Surface Name
+       \type object-list
+       \object-list SubSurfNames
+       
 OS:Space,
        \min-fields 1
   A1, \field Handle

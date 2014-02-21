@@ -32,6 +32,7 @@ namespace model {
 class Space;
 class ShadingSurface;
 class ShadingSurfaceGroup;
+class SubSurface;
 
 namespace detail {
 
@@ -146,6 +147,15 @@ namespace detail {
 
     /// Returns child shading surfaces.
     std::vector<ShadingSurface> shadingSurfaces() const;
+
+    /** Returns the sub surface shaded by this group if specified. */
+    boost::optional<SubSurface> shadedSubSurface() const;
+
+    /** Sets the sub surface shaded by this group, sub surface must be in the same parent space. */
+    bool setShadedSubSurface(const SubSurface& subSurface);
+
+    /** Resets the sub surface shaded by this group. */
+    void resetShadedSubSurface();
 
    protected:
 

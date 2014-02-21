@@ -29,6 +29,7 @@ namespace model {
 class Surface;
 class ShadingSurface;
 class ShadingControl;
+class ShadingSurfaceGroup;
 class DaylightingDeviceShelf;
 
 namespace detail {
@@ -147,6 +148,9 @@ class MODEL_API SubSurface : public PlanarSurface {
   /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. 
    *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
   boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
+
+  /** Returns any shading surface groups associated with this sub surface. */
+  std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
   /** Returns true if this sub surface allows the addition of a daylighting light shelf. */
   bool allowDaylightingDeviceShelf() const;
