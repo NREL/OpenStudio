@@ -79,6 +79,7 @@
 #include <utilities/idd/PlantEquipmentOperation_HeatingLoad_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperation_CoolingLoad_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperation_ComponentSetpoint_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_Uncontrolled_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
@@ -404,6 +405,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> supplyComponents = plantLoop.supplyComponents();
   std::vector<ModelObject> heatingComponents;
   std::vector<ModelObject> coolingComponents;
+  std::vector<ModelObject> uncontrolledComponents;
   std::vector<SetpointComponentInfo> setpointComponents;
 
   // These will be used later, but only if resonable sizing values have not already been provided.
@@ -556,6 +558,12 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         break;
       }
+      case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
+      {
+        sizeAsCondenserSystem = true;
+        uncontrolledComponents.push_back(*it);
+        break;
+      }
       default:
       {
         break;
@@ -565,6 +573,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   boost::optional<IdfObject> _optionalHeatingPlantEquipmentList;
   boost::optional<IdfObject> _optionalCoolingPlantEquipmentList;
+  boost::optional<IdfObject> _optionalUncontrolledPlantEquipmentList;
   boost::optional<IdfObject> _optionalSetpointOperation;
 
   if( ! setpointComponents.empty() )
@@ -636,6 +645,30 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_coolingOperation.iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_coolingOperation.name().get());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,scheduleCompact2.name().get());
+  }
+
+  if( ! uncontrolledComponents.empty() )
+  {
+    Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
+    IdfObject _alwaysOn = translateAndMapModelObject(alwaysOn).get();
+    
+    IdfObject _uncontrolledOperation(IddObjectType::PlantEquipmentOperation_Uncontrolled);
+    _uncontrolledOperation.setName(plantLoop.name().get() + " Uncontrolled Operation Scheme");
+    m_idfObjects.push_back(_uncontrolledOperation);
+    _uncontrolledOperation.clearExtensibleGroups();
+
+    IdfObject _plantEquipmentList(IddObjectType::PlantEquipmentList);
+    _plantEquipmentList.setName(plantLoop.name().get() + " Uncontrolled Equipment List");
+    _plantEquipmentList.clearExtensibleGroups();
+    m_idfObjects.push_back(_plantEquipmentList);
+    _optionalUncontrolledPlantEquipmentList = _plantEquipmentList;
+
+    _uncontrolledOperation.setString(PlantEquipmentOperation_UncontrolledFields::EquipmentListName,_plantEquipmentList.name().get());
+
+    IdfExtensibleGroup eg = _operationScheme.pushExtensibleGroup();
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_uncontrolledOperation.iddObject().name());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_uncontrolledOperation.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn.name().get());
   }
 
   SizingPlant sizingPlant = plantLoop.sizingPlant();
@@ -1240,6 +1273,23 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       if( _idfObject )
       {
         IdfExtensibleGroup eg = _optionalCoolingPlantEquipmentList->pushExtensibleGroup();
+        eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,_idfObject->iddObject().name());
+        eg.setString(PlantEquipmentListExtensibleFields::EquipmentName,_idfObject->name().get());
+      }
+    }
+  }
+
+  if( _optionalUncontrolledPlantEquipmentList )
+  {
+    for( std::vector<ModelObject>::iterator it = uncontrolledComponents.begin();
+         it < uncontrolledComponents.end();
+         ++it )
+    {
+      boost::optional<IdfObject> _idfObject = translateAndMapModelObject(*it);
+
+      if( _idfObject )
+      {
+        IdfExtensibleGroup eg = _optionalUncontrolledPlantEquipmentList->pushExtensibleGroup();
         eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,_idfObject->iddObject().name());
         eg.setString(PlantEquipmentListExtensibleFields::EquipmentName,_idfObject->name().get());
       }
