@@ -78,53 +78,39 @@ public:
     m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
   }
 
-  template<typename DataSourceType>
-  void addDoubleEditColumn(QString headingLabel, 
-                         double (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(double))
+
+  template<typename ValueType, typename DataSourceType>
+  void addValueEditColumn(QString headingLabel, 
+                         ValueType (DataSourceType::* getter)(void) const, 
+                         bool (DataSourceType::* setter)(ValueType))
   {
-    m_baseConcepts.push_back(QSharedPointer<DoubleEditConcept>(new DoubleEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<ValueEditConcept<ValueType> >(new ValueEditConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
-  void addOptionalDoubleEditColumn(QString headingLabel, 
-                         boost::optional<double> (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(double))
+  template<typename ValueType, typename DataSourceType>
+  void addValueEditColumn(QString headingLabel, 
+                         boost::optional<ValueType> (DataSourceType::* getter)(void) const, 
+                         bool (DataSourceType::* setter)(ValueType))
   {
-    m_baseConcepts.push_back(QSharedPointer<OptionalDoubleEditConcept>(new OptionalDoubleEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<OptionalValueEditConcept<ValueType> >(new OptionalValueEditConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
-  void addDoubleEditVoidReturnColumn(QString headingLabel, 
-                         double (DataSourceType::* getter)(void) const, 
+  template<typename ValueType, typename DataSourceType>
+  void addValueEditColumn(QString headingLabel, 
+                         ValueType (DataSourceType::* getter)(void) const, 
+                         void (DataSourceType::* setter)(ValueType))
+  {
+    m_baseConcepts.push_back(QSharedPointer<ValueEditVoidReturnConcept<ValueType> >(new ValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
+  }
+
+  template<typename ValueType, typename DataSourceType>
+  void addValueEditColumn(QString headingLabel, 
+                         boost::optional<ValueType> (DataSourceType::* getter)(void) const, 
                          void (DataSourceType::* setter)(double))
   {
-    m_baseConcepts.push_back(QSharedPointer<DoubleEditVoidReturnConcept>(new DoubleEditVoidReturnConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<OptionalValueEditVoidReturnConcept<ValueType> >(new OptionalValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
-  void addOptionalDoubleEditVoidReturnColumn(QString headingLabel, 
-                         boost::optional<double> (DataSourceType::* getter)(void) const, 
-                         void (DataSourceType::* setter)(double))
-  {
-    m_baseConcepts.push_back(QSharedPointer<OptionalDoubleEditVoidReturnConcept>(new OptionalDoubleEditVoidReturnConceptImpl<DataSourceType>(headingLabel,getter,setter)));
-  }
-
-  template<typename DataSourceType>
-  void addIntegerEditColumn(QString headingLabel, 
-                         int (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(int))
-  {
-    m_baseConcepts.push_back(QSharedPointer<IntegerEditConcept>(new IntegerEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
-  }
-
-  template<typename DataSourceType>
-  void addLineEditColumn(QString headingLabel, 
-                         std::string (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(std::string))
-  {
-    m_baseConcepts.push_back(QSharedPointer<LineEditConcept>(new LineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
-  }
 
   template<typename DataSourceType>
   void addNameLineEditColumn(QString headingLabel, 
@@ -146,13 +132,6 @@ public:
     m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept>(new QuantityEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
-  void addUnsignedEditColumn(QString headingLabel, 
-                         unsigned (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(unsigned))
-  {
-    m_baseConcepts.push_back(QSharedPointer<UnsignedEditConcept>(new UnsignedEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
-  }
 
   template<typename ValueType, typename DataSourceType>
   void addDropZoneColumn(QString headingLabel, 

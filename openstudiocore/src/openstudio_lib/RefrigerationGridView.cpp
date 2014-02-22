@@ -331,79 +331,79 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
 
   Q_FOREACH(QString field, fields){
     if(field == RATEDAMBIENTTEMPERATURE){
-      addDoubleEditColumn(QString(RATEDAMBIENTTEMPERATURE),
+      addValueEditColumn(QString(RATEDAMBIENTTEMPERATURE),
                           &model::RefrigerationCase::ratedAmbientTemperature,
                           &model::RefrigerationCase::setRatedAmbientTemperature);
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
-      addDoubleEditColumn(QString(RATEDAMBIENTRELATIVEHUMIDITY),
+      addValueEditColumn(QString(RATEDAMBIENTRELATIVEHUMIDITY),
                           &model::RefrigerationCase::ratedAmbientRelativeHumidity,
                           &model::RefrigerationCase::setRatedAmbientRelativeHumidity);
     }else if(field == RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH){
-      addDoubleEditColumn(QString(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH),
+      addValueEditColumn(QString(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH),
                           &model::RefrigerationCase::ratedTotalCoolingCapacityperUnitLength,
                           &model::RefrigerationCase::setRatedTotalCoolingCapacityperUnitLength);
     }else if(field == RATEDLATENTHEATRATIO){
-      addDoubleEditColumn(QString(RATEDLATENTHEATRATIO),
+      addValueEditColumn(QString(RATEDLATENTHEATRATIO),
                           &model::RefrigerationCase::ratedLatentHeatRatio,
                           &model::RefrigerationCase::setRatedLatentHeatRatio);
     }else if(field == RATEDRUNTIMEFRACTION){
-      addDoubleEditColumn(QString(RATEDRUNTIMEFRACTION),
+      addValueEditColumn(QString(RATEDRUNTIMEFRACTION),
                           &model::RefrigerationCase::ratedRuntimeFraction,
                           &model::RefrigerationCase::setRatedRuntimeFraction);
     }else if(field == CASELENGTH){
-      addDoubleEditColumn(QString(CASELENGTH),
+      addValueEditColumn(QString(CASELENGTH),
                           &model::RefrigerationCase::caseLength,
                           &model::RefrigerationCase::setCaseLength);
     }else if(field == CASEOPERATINGTEMPERATURE){
-      addDoubleEditColumn(QString(CASEOPERATINGTEMPERATURE),
+      addValueEditColumn(QString(CASEOPERATINGTEMPERATURE),
                           &model::RefrigerationCase::caseOperatingTemperature,
                           &model::RefrigerationCase::setCaseOperatingTemperature);
     }else if(field == STANDARDCASEFANPOWERPERUNITLENGTH){
-      addDoubleEditColumn(QString(STANDARDCASEFANPOWERPERUNITLENGTH),
+      addValueEditColumn(QString(STANDARDCASEFANPOWERPERUNITLENGTH),
                           &model::RefrigerationCase::standardCaseFanPowerperUnitLength,
                           &model::RefrigerationCase::setStandardCaseFanPowerperUnitLength);
     }else if(field == OPERATINGCASEFANPOWERPERUNITLENGTH){
-      addDoubleEditColumn(QString(OPERATINGCASEFANPOWERPERUNITLENGTH),
+      addValueEditColumn(QString(OPERATINGCASEFANPOWERPERUNITLENGTH),
                           &model::RefrigerationCase::operatingCaseFanPowerperUnitLength,
                           &model::RefrigerationCase::setOperatingCaseFanPowerperUnitLength);
     }else if(field == FRACTIONOFLIGHTINGENERGYTOCASE){
-      addDoubleEditColumn(QString(FRACTIONOFLIGHTINGENERGYTOCASE),
+      addValueEditColumn(QString(FRACTIONOFLIGHTINGENERGYTOCASE),
                           &model::RefrigerationCase::fractionofLightingEnergytoCase,
                           &model::RefrigerationCase::setFractionofLightingEnergytoCase);
     }else if(field == CASEANTISWEATHEATERPOWERPERUNITLENGTH){
-      addDoubleEditColumn(QString(CASEANTISWEATHEATERPOWERPERUNITLENGTH),
+      addValueEditColumn(QString(CASEANTISWEATHEATERPOWERPERUNITLENGTH),
                           &model::RefrigerationCase::caseAntiSweatHeaterPowerperUnitLength,
                           &model::RefrigerationCase::setCaseAntiSweatHeaterPowerperUnitLength);
     }else if(field == MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH){
-      addDoubleEditColumn(QString(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH),
+      addValueEditColumn(QString(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH),
                           &model::RefrigerationCase::minimumAntiSweatHeaterPowerperUnitLength,
                           &model::RefrigerationCase::setMinimumAntiSweatHeaterPowerperUnitLength);
     }else if(field == CASEHEIGHT){
-      addDoubleEditColumn(QString(CASEHEIGHT),
+      addValueEditColumn(QString(CASEHEIGHT),
                           &model::RefrigerationCase::caseHeight,
                           &model::RefrigerationCase::setCaseHeight);
     }else if(field == FRACTIONOFANTISWEATHEATERENERGYTOCASE){
-      addDoubleEditColumn(QString(FRACTIONOFANTISWEATHEATERENERGYTOCASE),
+      addValueEditColumn(QString(FRACTIONOFANTISWEATHEATERENERGYTOCASE),
                           &model::RefrigerationCase::fractionofAntiSweatHeaterEnergytoCase,
                           &model::RefrigerationCase::setFractionofAntiSweatHeaterEnergytoCase);
     }else if(field == CASEDEFROSTPOWERPERUNITLENGTH){
-      addDoubleEditColumn(QString(CASEDEFROSTPOWERPERUNITLENGTH),
+      addValueEditColumn(QString(CASEDEFROSTPOWERPERUNITLENGTH),
                           &model::RefrigerationCase::caseDefrostPowerperUnitLength,
                           &model::RefrigerationCase::setCaseDefrostPowerperUnitLength);
     }else if(field == UNDERCASEHVACRETURNAIRFRACTION){
-      addDoubleEditColumn(QString(UNDERCASEHVACRETURNAIRFRACTION),
+      addValueEditColumn(QString(UNDERCASEHVACRETURNAIRFRACTION),
                           &model::RefrigerationCase::underCaseHVACReturnAirFraction,
                           &model::RefrigerationCase::setUnderCaseHVACReturnAirFraction);
     }else if(field == STANDARDCASELIGHTINGPOWERPERUNITLENGTH){
-      addDoubleEditVoidReturnColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
+      addValueEditColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
                           &model::RefrigerationCase::standardCaseLightingPowerperUnitLength,
                           &model::RefrigerationCase::setStandardCaseLightingPowerperUnitLength);
     }else if(field == HUMIDITYATZEROANTISWEATHEATERENERGY){
-      addDoubleEditVoidReturnColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
+      addValueEditColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
                           &model::RefrigerationCase::humidityatZeroAntiSweatHeaterEnergy,
                           &model::RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy);
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      addDoubleEditVoidReturnColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+      addValueEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
                           &model::RefrigerationCase::averageRefrigerantChargeInventory,
                           &model::RefrigerationCase::setAverageRefrigerantChargeInventory);
     }else if(field == LATENTCASECREDITCURVETYPE){
@@ -427,11 +427,11 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
                         &model::RefrigerationCase::defrostEnergyCorrectionCurveType,
                         &model::RefrigerationCase::setDefrostEnergyCorrectionCurveType);
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
-      addOptionalDoubleEditVoidReturnColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
+      addValueEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
                                   &model::RefrigerationCase::installedCaseLightingPowerperUnitLength,
                                   &model::RefrigerationCase::setInstalledCaseLightingPowerperUnitLength);
     }else if(field == DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE){
-      addOptionalDoubleEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
+      addValueEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
                                   &model::RefrigerationCase::designEvaporatorTemperatureorBrineInletTemperature,
                                   &model::RefrigerationCase::setDesignEvaporatorTemperatureorBrineInletTemperature);
     }else if(field == CASELIGHTINGSCHEDULE){
@@ -600,53 +600,53 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
                       &model::RefrigerationWalkIn::defrostControlType,
                       &model::RefrigerationWalkIn::setDefrostControlType);
     }else if(field == OPERATINGTEMPERATURE){
-      addDoubleEditColumn(QString(OPERATINGTEMPERATURE),
+      addValueEditColumn(QString(OPERATINGTEMPERATURE),
                           &model::RefrigerationWalkIn::operatingTemperature,
                           &model::RefrigerationWalkIn::setOperatingTemperature);
     }else if(field == RATEDCOOLINGSOURCETEMPERATURE){
-      addDoubleEditColumn(QString(RATEDCOOLINGSOURCETEMPERATURE),
+      addValueEditColumn(QString(RATEDCOOLINGSOURCETEMPERATURE),
                           &model::RefrigerationWalkIn::ratedCoolingSourceTemperature,
                           &model::RefrigerationWalkIn::setRatedCoolingSourceTemperature);
     }else if(field == RATEDCOOLINGCOILFANPOWER){
-      addDoubleEditColumn(QString(RATEDCOOLINGCOILFANPOWER),
+      addValueEditColumn(QString(RATEDCOOLINGCOILFANPOWER),
                           &model::RefrigerationWalkIn::ratedCoolingCoilFanPower,
                           &model::RefrigerationWalkIn::setRatedCoolingCoilFanPower);
     }else if(field == RATEDCIRCULATIONFANPOWER){
-      addDoubleEditColumn(QString(RATEDCIRCULATIONFANPOWER),
+      addValueEditColumn(QString(RATEDCIRCULATIONFANPOWER),
                           &model::RefrigerationWalkIn::ratedCirculationFanPower,
                           &model::RefrigerationWalkIn::setRatedCirculationFanPower);
     }else if(field == INSULATEDFLOORSURFACEAREA){
-      addDoubleEditColumn(QString(INSULATEDFLOORSURFACEAREA),
+      addValueEditColumn(QString(INSULATEDFLOORSURFACEAREA),
                           &model::RefrigerationWalkIn::insulatedFloorSurfaceArea,
                           &model::RefrigerationWalkIn::setInsulatedFloorSurfaceArea);
     }else if(field == INSULATEDFLOORUVALUE){
-      addDoubleEditColumn(QString(INSULATEDFLOORUVALUE),
+      addValueEditColumn(QString(INSULATEDFLOORUVALUE),
                           &model::RefrigerationWalkIn::insulatedFloorUValue,
                           &model::RefrigerationWalkIn::setInsulatedFloorUValue); 
     }else if(field == RATEDCOILCOOLINGCAPACITY){
-      addDoubleEditVoidReturnColumn(QString(RATEDCOILCOOLINGCAPACITY),
+      addValueEditColumn(QString(RATEDCOILCOOLINGCAPACITY),
                           &model::RefrigerationWalkIn::ratedCoilCoolingCapacity,
                           &model::RefrigerationWalkIn::setRatedCoilCoolingCapacity);
     }else if(field == RATEDTOTALHEATINGPOWER){
-      addDoubleEditVoidReturnColumn(QString(RATEDTOTALHEATINGPOWER),
+      addValueEditColumn(QString(RATEDTOTALHEATINGPOWER),
                           &model::RefrigerationWalkIn::ratedTotalHeatingPower,
                           &model::RefrigerationWalkIn::setRatedTotalHeatingPower);
     }else if(field == RATEDTOTALLIGHTINGPOWER){
-      addDoubleEditVoidReturnColumn(QString(RATEDTOTALLIGHTINGPOWER),
+      addValueEditColumn(QString(RATEDTOTALLIGHTINGPOWER),
                           &model::RefrigerationWalkIn::ratedTotalLightingPower,
                           &model::RefrigerationWalkIn::setRatedTotalLightingPower);
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      addDoubleEditVoidReturnColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+      addValueEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
                           &model::RefrigerationWalkIn::averageRefrigerantChargeInventory,
                           &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory);
     }else if(field == DEFROSTSCHEDULE){
       //Schedule defrostSchedule() const; TODO
     }else if(field == DEFROSTPOWER){
-      addOptionalDoubleEditColumn(QString(DEFROSTPOWER),
+      addValueEditColumn(QString(DEFROSTPOWER),
                                   &model::RefrigerationWalkIn::defrostPower,
                                   &model::RefrigerationWalkIn::setDefrostPower);
     }else if(field == TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE){
-      addOptionalDoubleEditColumn(QString(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE),
+      addValueEditColumn(QString(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE),
                                   &model::RefrigerationWalkIn::temperatureTerminationDefrostFractiontoIce,
                                   &model::RefrigerationWalkIn::setTemperatureTerminationDefrostFractiontoIce);
     }else if(field == AVAILABILITYSCHEDULE){
