@@ -212,28 +212,27 @@ namespace detail {
   {
     ModelObjectVector modelObjects;
     ModelObjectVector::iterator it;
-    modelObjects = this->components();
 
+    sizingSystem().remove();
+
+    availabilityManagerAssignmentList().remove();
+
+    modelObjects = supplyComponents();
     for(it = modelObjects.begin();
         it != modelObjects.end();
         ++it)
     {
       if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
       {
-        comp->disconnectAirSide();
-      }
-      else if( boost::optional<ThermalZone> tz = it->optionalCast<ThermalZone>() )
-      {
-      }
-      else if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
-      {
-        comp->disconnect();
+        comp->removeFromAirLoopHVAC();
+        if( ! comp->plantLoop() )
+        {
+          comp->remove();
+        }
       }
     }
 
-    sizingSystem().remove();
-
-    availabilityManagerAssignmentList().remove();
+    modelObjects = components();
 
     std::vector<openstudio::IdfObject> idfObjects =  ModelObject_Impl::remove();
 
@@ -243,11 +242,12 @@ namespace detail {
     {
       if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
       {
-        if( ! it->optionalCast<ThermalZone>() )
+        if( ! it->handle().isNull() )
         {
-          if( ! it->handle().isNull() )
+          comp->disconnect();
+          if( ! comp->optionalCast<ThermalZone>() )
           {
-            it->cast<HVACComponent>().remove();
+            comp->remove();
           }
         }
       }
