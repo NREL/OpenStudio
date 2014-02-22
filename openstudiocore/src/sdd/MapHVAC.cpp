@@ -5738,6 +5738,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvD
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing Y Maximum Limit");
   }
 
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
+  }
+
   return curve;
 }
 
@@ -5816,6 +5832,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvC
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
   }
 
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
+  }
+
   return curve;
 }
 
@@ -5886,6 +5918,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
     curve.setMaximumValueofx(100.0);
 
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
+
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
   }
 
   return curve;
