@@ -1174,12 +1174,52 @@ namespace detail {
   boost::optional<SubSurface> Surface_Impl::setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor)
   {
     boost::optional<SubSurface> result;
+    std::vector<SubSurface> tmp;
+
+    double viewGlassToWallRatio = 0;
+    double daylightingGlassToWallRatio = 0;
+    double desiredViewGlassSillHeight = 0;
+    double desiredDaylightingGlassHeaderHeight = 0;
+    double exteriorShadingProjectionFactor = 0;
+    double interiorShelfProjectionFactor = 0; 
+    boost::optional<ConstructionBase> viewGlassConstruction;
+    boost::optional<ConstructionBase> daylightingGlassConstruction;
+
+    if (heightOffsetFromFloor){
+      viewGlassToWallRatio = wwr;
+      desiredViewGlassSillHeight = desiredHeightOffset;
+    }else{
+      daylightingGlassToWallRatio = wwr;
+      desiredDaylightingGlassHeaderHeight = desiredHeightOffset;
+    }
+
+    tmp = applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+                                             desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+                                             exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                             viewGlassConstruction, daylightingGlassConstruction);
+
+    if (!tmp.empty()){
+      OS_ASSERT(tmp.size() == 1);
+      result = tmp[0];
+    }
+
+    return result;
+  }
+
+  std::vector<SubSurface> Surface_Impl::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+                                                                           double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                                           double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
+                                                                           boost::optional<ConstructionBase> viewGlassConstruction, 
+                                                                           boost::optional<ConstructionBase> daylightingGlassConstruction)
+  {
+    std::vector<SubSurface> result;
 
     if (!istringEqual(this->surfaceType(), "Wall")){
       return result;
     }
-    
-    if (wwr <= 0.0 || wwr >= 1.0){
+
+    double totalWWR = viewGlassToWallRatio + daylightingGlassToWallRatio;
+    if (totalWWR <= 0.0 || totalWWR >= 1.0){
       return result;
     }
 
@@ -1203,51 +1243,90 @@ namespace detail {
       ymax = std::max(ymax, faceVertex.y());
     }
 
-    // w*h = (W-2*x)(H-y-offset) = W*H-W*y-W*offset-2*x*H+2*x*y+2*x*offset = wwr*W*H
-    double x, y, h, w, offset;
-    double W = xmax - xmin; // W = x + w + x
-    double H = ymax - ymin; // H = y + h + offset
-    double minx = 0.0254; // 1" 
-    double miny = 0.0254; // 1" 
-    double minh = 0.3048; // 1'
-    double minw = 0.3048; // 1'
+/*
+    viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+                                                                           double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                                           double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
+    */
+      
+    double oneInch = 0.0254;
+    double oneFoot = 0.3048;
 
-    // first try x = minx and offset = desiredHeightOffset, solve for y
-    // H*w-offset*w-wwr*W*H = y*w
-    x = minx;
-    w = W-2*x;
-    offset = desiredHeightOffset;
-    y = (H*w-offset*w-wwr*W*H)/(w);
-    h = H - offset - y;
-    
-    if (y < miny){
-      // window is too big, need to shrink offset
-      // w*H-w*y-wwr*W*H = w*offset
-      x = minx;
-      w = W-2*x;
-      y = miny;
-      offset = (w*H-w*y-wwr*W*H)/w;
-      h = H - offset - y;
+    // wall parameters
+    double wallWidth = xmax - xmin; 
+    double wallHeight = ymax - ymin;
+    double wallArea = wallWidth*wallHeight;
 
-      if (offset < miny){
-        // window is too big
-        return result;
+    // DLM: check against actual surface area to ensure this is a rectangle?
+
+    // initial view glass parameters 
+    double viewMinX = 0;
+    double viewMinY = 0;
+    double viewWidth = 0;
+    double viewHeight = 0;  
+
+    // initial daylighting glass parameters
+    double daylightingWidth = 0;
+    double daylightingHeight = 0;
+    double daylightingMinX = 0;
+    double daylightingMinY = 0;
+
+    // initial free parameters
+    double viewWidthInset = oneFoot;
+    double viewSillHeight = desiredViewGlassSillHeight;
+    double daylightinWidthInset = oneFoot;
+    double daylightingHeaderHeight = desiredDaylightingGlassHeaderHeight;
+
+    bool converged = false;
+    for (unsigned i = 0; i < 100; ++i){
+
+      // view glass parameters 
+      viewMinX = viewWidthInset;
+      viewMinY = viewSillHeight;
+      viewWidth = wallWidth - 2*viewWidthInset;
+      viewHeight = viewGlassToWallRatio*wallArea/viewWidth;  
+
+      // initial daylighting glass parameters
+      daylightingWidth = wallWidth - 2*daylightinWidthInset;
+      daylightingHeight = daylightingGlassToWallRatio*wallArea/daylightingWidth;
+      daylightingMinX = viewWidthInset;
+      daylightingMinY = wallHeight - daylightingHeaderHeight - daylightingHeight;
+
+      if (viewMinY + viewHeight + oneInch > daylightingMinY){
+        // windows overlap
+
+        // first try shrinking width insets
+        if ((viewWidthInset > oneInch) || (daylightinWidthInset > oneInch)){
+          viewWidthInset = std::max(viewWidthInset - oneInch, oneInch);
+          daylightinWidthInset = std::max(daylightinWidthInset - oneInch, oneInch);
+        }else{
+          // try shrinking vertical offsets 
+          viewSillHeight = std::max(viewSillHeight - oneInch, oneInch);
+          daylightingHeaderHeight = std::max(daylightingHeaderHeight - oneInch, oneInch);
+        }
+
+      } else if ( ((viewGlassToWallRatio > 0) && (viewHeight < oneFoot)) ||
+                  ((daylightingGlassToWallRatio > 0) && (daylightingHeight < oneFoot)) {
+        // windows are too skinny
+
+        if ((viewGlassToWallRatio > 0) && (viewHeight < oneFoot)){
+          viewWidthInset = 0.5*(wallWidth - (viewGlassToWallRatio*wallArea/oneFoot));
+        }
+
+        if ((daylightingGlassToWallRatio > 0) && (daylightingHeight < oneFoot)){
+          daylightinWidthInset = 0.5*(wallWidth - (daylightingGlassToWallRatio*wallArea/oneFoot));
+        }
+
+      }else{
+
+        converged = true;
+        break;
+
       }
 
-    }else if (h < minh){
-      // window is too skinny, need to increase x
-      // w*h = wwr*W*H
-      offset = desiredHeightOffset;
-      h = minh;
-      y = H-offset-h;
-      w = wwr*W*H/h;
-      x = (W-w)/2.0;
-
-      if (w < minw){
-        // window is too small
-        return result;
-      }
     }
+
+
 
     Point3dVector windowVertices;
     if (heightOffsetFromFloor){
@@ -1555,6 +1634,18 @@ boost::optional<SubSurface> Surface::setWindowToWallRatio(double wwr)
 boost::optional<SubSurface> Surface::setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor)
 {
   return getImpl<detail::Surface_Impl>()->setWindowToWallRatio(wwr, desiredHeightOffset, heightOffsetFromFloor);
+}
+
+std::vector<SubSurface> Surface::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+                                                                    double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                                    double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
+                                                                    boost::optional<ConstructionBase> viewGlassConstruction, 
+                                                                    boost::optional<ConstructionBase> daylightingGlassConstruction)
+{
+  return getImpl<detail::Surface_Impl>()->applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+                                                                             desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+                                                                             exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
+                                                                             viewGlassConstruction, daylightingGlassConstruction);
 }
 
 std::vector<ShadingSurfaceGroup> Surface::shadingSurfaceGroups() const

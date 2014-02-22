@@ -29,6 +29,7 @@ namespace model {
 class Space;
 class SubSurface;
 class ShadingSurfaceGroup;
+class ConstructionBase;
 
 namespace detail {
 
@@ -193,6 +194,26 @@ class MODEL_API Surface : public PlanarSurface {
   If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
   offset from the ceiling. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
+
+  /** Applies both view and daylighting glass to the surface with optional exterior shading and interior light shelf.
+   *  viewGlassToWallRatio - the ratio of view glass to wall area, if 0 no view glass will be created
+   *  daylightingGlassToWallRatio - the ratio of daylighting glass to wall area, if 0 no daylighting glass will be created
+   *  desiredViewGlassSillHeight - the distance from the floor to the bottom of the view glass 
+   *  desiredDaylightingGlassHeaderHeight - the distance from the ceiling to the top of the daylighting glass
+   *  desiredSpacingViewToDaylightingGlass - the distance between top of view glass and bottom of daylighting glass
+   *  exteriorShadingProjectionFactor - projection factor of exterior shading applied to the view window
+   *  interiorShelfProjectionFactor - projection factor of interior light shelf applied to the daylighting window
+   *  viewGlassConstruction - optional construction to use for the view glass
+   *  daylightingGlassConstruction - optional construction to use for the daylighting glass
+   *
+   *  If successful returns a vector of sub surfaces created, view window will be the first in the vector if viewGlassToWallRatio > 0
+  */
+  std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+                                                             double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                             double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
+                                                             boost::optional<ConstructionBase> viewGlassConstruction, 
+                                                             boost::optional<ConstructionBase> daylightingGlassConstruction);
+
 
   /** Returns any shading surface groups associated with this surface. */
   std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;

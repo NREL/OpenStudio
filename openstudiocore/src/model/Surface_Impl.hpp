@@ -31,6 +31,7 @@ class SubSurface;
 class Surface;
 class ShadingSurfaceGroup;
 class SurfaceIntersection;
+class ConstructionBase;
 
 namespace detail {
 
@@ -281,6 +282,12 @@ namespace detail {
     If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
     offset from the ceiling. */
     boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
+
+    std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+                                                               double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                               double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
+                                                               boost::optional<ConstructionBase> viewGlassConstruction, 
+                                                               boost::optional<ConstructionBase> daylightingGlassConstruction);
 
     /** Returns any shading surface groups associated with this surface. */
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
