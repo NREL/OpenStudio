@@ -5034,6 +5034,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
   waterHeaterMixed.setSetpointTemperatureSchedule(setpointTempSchedule);
 
+  // HIR_fPLRCrvRef
+
+  QDomElement hirfPLRCrvRefElement = element.firstChildElement("HIR_fPLRCrvRef");
+  boost::optional<model::CurveCubic> hirfPLRCrv = model.getModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().toStdString());
+  if( hirfPLRCrv )
+  {
+    waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
+  }
+
   return waterHeaterMixed;
 }
 
