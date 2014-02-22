@@ -1802,17 +1802,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
         fan.setName(nameElement.text().toStdString());
 
         // OverallEff
+        boost::optional<double> overallEff;
         value = overallEffElement.text().toDouble(&ok);
         if( ok )
         {
-          fan.setFanEfficiency(value);
+          overallEff = value;
         }
 
         // MtrEff
+        boost::optional<double> mtrEff;
         value = mtrEffElement.text().toDouble(&ok);
         if( ok )
         {
-          fan.setMotorEfficiency(value);
+          mtrEff = value;
+        }
+
+        if( overallEff && mtrEff )
+        {
+          fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+          fan.setMotorEfficiency(mtrEff.get());
         }
 
         // FlowCap
@@ -1864,17 +1872,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
       fan.setName(nameElement.text().toStdString());
 
       // OverallEff
+      boost::optional<double> overallEff;
       value = overallEffElement.text().toDouble(&ok);
       if( ok )
       {
-        fan.setFanEfficiency(value);
+        overallEff = value;
       }
 
       // MtrEff
+      boost::optional<double> mtrEff;
       value = mtrEffElement.text().toDouble(&ok);
       if( ok )
       {
-        fan.setMotorEfficiency(value);
+        mtrEff = value;
+      }
+
+      if( overallEff && mtrEff )
+      {
+        fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+        fan.setMotorEfficiency(mtrEff.get());
       }
 
       // FlowCap
@@ -1913,16 +1929,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
     fan.setName(nameElement.text().toStdString());
 
+    // OverallEff
+    boost::optional<double> overallEff;
     value = overallEffElement.text().toDouble(&ok);
     if( ok )
     {
-      fan.setFanEfficiency(value);
+      overallEff = value;
     }
 
+    // MtrEff
+    boost::optional<double> mtrEff;
     value = mtrEffElement.text().toDouble(&ok);
     if( ok )
     {
-      fan.setMotorEfficiency(value);
+      mtrEff = value;
+    }
+
+    if( overallEff && mtrEff )
+    {
+      fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+      fan.setMotorEfficiency(mtrEff.get());
     }
 
     // FlowCap
