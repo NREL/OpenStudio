@@ -333,9 +333,15 @@ namespace detail {
 
   void ShadingSurfaceGroup_Impl::resetSpace() {
     if (space()) {
-      bool ok = setShadingSurfaceType("Building");
-      OS_ASSERT(ok);
       resetShadedObject();
+
+      // do not call setShadingSurfaceType("Building"), infinite recursion issue
+      bool ok = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, "Building", false);
+      OS_ASSERT(ok);
+      ok = setString(OS_ShadingSurfaceGroupFields::SpaceName, "", false);
+      OS_ASSERT(ok);
+
+      this->emitChangeSignals();
     }else{
       OS_ASSERT(!shadedSubSurface());
       OS_ASSERT(!shadedSurface());

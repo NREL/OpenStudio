@@ -1341,9 +1341,33 @@ namespace detail {
       if (viewMinY + viewHeight + minViewToDaylightDistance > daylightingMinY){
         // windows overlap or exceed maximum size
 
-        // try shrinking vertical offsets 
-        viewSillHeight = std::max(viewSillHeight - oneInch, minGlassToEdgeDistance);
-        daylightingHeaderHeight = std::max(daylightingHeaderHeight - oneInch, minGlassToEdgeDistance);
+        if (doViewAndDaylightGlass){
+
+          // try shrinking vertical offsets 
+          viewSillHeight = std::max(viewSillHeight - oneInch, minGlassToEdgeDistance);
+          daylightingHeaderHeight = std::max(daylightingHeaderHeight - oneInch, minGlassToEdgeDistance);
+
+        }else if (doViewGlass){
+
+          // solve directly
+          viewSillHeight = wallHeight - minGlassToEdgeDistance - viewHeight;
+          
+          if (viewSillHeight < minGlassToEdgeDistance){
+            // cannot make window this large
+            return result;
+          }
+
+        }else if (doDaylightGlass){
+
+          // solve directly
+          daylightingHeaderHeight = wallHeight - minGlassToEdgeDistance - daylightingHeight;
+
+          if (daylightingHeaderHeight < minGlassToEdgeDistance){
+            // cannot make window this large
+            return result;
+          }
+
+        }
 
       }else{
 
