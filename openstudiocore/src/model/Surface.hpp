@@ -186,7 +186,7 @@ class MODEL_API Surface : public PlanarSurface {
   /** Sets the window to wall ratio for this surface.  Returns false if the
   surface is not a wall, if the surface is not rectangular in face coordinates, if 
   requested ratio is too large (window area ~= surface area) or too small (min dimension
-  of window < 1 foot), or if the window clips any remaining sub surfaces. Otherwise, removes
+  of window < 1 foot), or if surface has any doors. Otherwise, removes
   all existing windows and adds new window to meet requested ratio.*/
   boost::optional<SubSurface> setWindowToWallRatio(double wwr);
   
