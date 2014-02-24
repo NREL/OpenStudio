@@ -193,7 +193,7 @@ measures.each { |measure|
     row << table_element(arg.displayName)
     row << table_element(arg.name)
     row << table_element("static")
-    row << table_element(arg.type.valueDescription)
+    row << table_element(arg.type.valueName)
     row << table_element("")
     if arg.hasValue
       row << table_element(arg.valueAsString)
@@ -222,7 +222,7 @@ measures.each { |measure|
       row << (output.displayName.empty? ? table_element(output.name) : table_element(output.displayName.get))
       row << table_element(output.name)
       row << table_element("")
-      row << table_element(output.valueType.valueDescription)
+      row << table_element(output.valueType.valueName)
       row << (output.units.empty? ? table_element("") : table_element(output.units.get))
       row << table_element(output.toString)
       table.appendRow(row)
