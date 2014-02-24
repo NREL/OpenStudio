@@ -100,6 +100,9 @@ namespace detail {
 
   std::vector<IdfObject> ZoneHVACWaterToAirHeatPump_Impl::remove()
   {
+    // This plant disconnect needs to be done because virtual ModelObject::remove
+    // is not called by ParentObjects bulk children remove.  Normally WaterToAirComponent::remove
+    // handles this.
     if( boost::optional<CoilHeatingWaterToAirHeatPumpEquationFit> waterHeatingCoil =
           heatingCoil().optionalCast<CoilHeatingWaterToAirHeatPumpEquationFit>() )
     {
@@ -114,6 +117,14 @@ namespace detail {
       if( boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop() )
       {
         plantLoop->removeDemandBranchWithComponent( waterCoolingCoil.get() );
+      }
+    }
+    if( boost::optional<CoilHeatingWater> t_supplementalHeatingCoil =
+          supplementalHeatingCoil().optionalCast<CoilHeatingWater>() )
+    {
+      if( boost::optional<PlantLoop> plantLoop = t_supplementalHeatingCoil->plantLoop() )
+      {
+        plantLoop->removeDemandBranchWithComponent( t_supplementalHeatingCoil.get() );
       }
     }
     return ZoneHVACComponent_Impl::remove();
