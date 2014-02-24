@@ -67,7 +67,18 @@ namespace sdd {
         materials.push_back(*material);
       }
 
+      bool test = construction.setLayers(materials);
+      OS_ASSERT(test); // what type of error handling do we want?
+
+      bool wasFastNaming = model.fastNaming();
+      model.setFastNaming(false);
+
+      construction.ensureUniqueLayers();
+ 
+      model.setFastNaming(wasFastNaming);
+
       unsigned n = materials.size();
+
       if (n > 0){
 
         // DLM: are these fields only on layered constructions? 
@@ -150,11 +161,7 @@ namespace sdd {
             intMaterial.setVisibleAbsorptance(intVisAbsElement.text().toDouble());
           }
         }
-
       }
-
-      bool test = construction.setLayers(materials);
-      OS_ASSERT(test); // what type of error handling do we want?
 
       result = construction;
 
