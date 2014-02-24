@@ -22,6 +22,8 @@
 #include <shared_gui_components/OSGridView.hpp>
 
 #include <openstudio_lib/ModelObjectItem.hpp>
+#include <openstudio_lib/OSAppBase.hpp>
+#include <openstudio_lib/OSDocument.hpp>
 
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
@@ -63,7 +65,7 @@
 #define CASEOPERATINGTEMPERATURE "Case Operating Temperature"
 #define DEFROSTENERGYCORRECTIONCURVE "Defrost Energy Correction Curve"
 #define DEFROSTENERGYCORRECTIONCURVETYPE "Defrost Energy Correction Curve Type"
-#define DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE "Design Evaporator Temperatureor Brine Inlet Temperature"
+#define DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE "Design Evaporator Temperature or Brine Inlet Temperature"
 #define FRACTIONOFANTISWEATHEATERENERGYTOCASE "Fraction of Anti Sweat Heater Energy to Case"
 #define FRACTIONOFLIGHTINGENERGYTOCASE "Fraction of Lighting Energy to Case"
 #define HUMIDITYATZEROANTISWEATHEATERENERGY "Humidity at Zero Anti Sweat Heater Energy"
@@ -164,65 +166,12 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
 
 }
 
-// CaseThermalZoneVectorController
-
-void CaseThermalZoneVectorController::onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle)
-{
-  if (index == Refrigeration_CaseFields::ZoneName){
-    emit itemIds(makeVector());
-  }
-}
-
-std::vector<OSItemId> CaseThermalZoneVectorController::makeVector()
-{
-  std::vector<OSItemId> result;
-  if (m_modelObject){
-    model::RefrigerationCase refrigerationCase = m_modelObject->cast<model::RefrigerationCase>();
-    boost::optional<model::ThermalZone> thermalZone = refrigerationCase.thermalZone();
-    if (thermalZone){
-      result.push_back(modelObjectToItemId(*thermalZone, false));
-    }
-  }
-  return result;
-}
-
-void CaseThermalZoneVectorController::onRemoveItem(OSItem* item)
-{
-  if (m_modelObject){
-    model::RefrigerationCase refrigerationCase = m_modelObject->cast<model::RefrigerationCase>();
-    refrigerationCase.resetThermalZone();
-  }
-}
-
-void CaseThermalZoneVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
-{
-  onDrop(replacementItemId);
-}
-
-void CaseThermalZoneVectorController::onDrop(const OSItemId& itemId)
-{
-  if (m_modelObject){
-    model::RefrigerationCase refrigerationCase = m_modelObject->cast<model::RefrigerationCase>();
-    boost::optional<model::ModelObject> modelObject = this->getModelObject(itemId);
-    if (modelObject){
-      if (modelObject->optionalCast<model::ThermalZone>()){
-        if (this->fromComponentLibrary(itemId)){
-          modelObject = modelObject->clone(m_modelObject->model());
-        }
-        model::ThermalZone thermalZone = modelObject->cast<model::ThermalZone>();
-        refrigerationCase.setThermalZone(thermalZone);
-      }
-    }
-  }
-}
-
 RefrigerationCaseGridController::RefrigerationCaseGridController(const QString & headerText,
   IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
   OSGridController(headerText, iddObjectType, model, modelObjects)
 {
-  m_vectorController = new CaseThermalZoneVectorController();
   setCategoriesAndFields();
 }
 
@@ -447,9 +396,9 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
     }else if(field == AVAILABILITYSCHEDULE){
       //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == THERMALZONE){
-      addDropZoneColumn(QString(THERMALZONE),
-        &model::RefrigerationCase::thermalZone,
-        &model::RefrigerationCase::setThermalZone);
+      //addDropZoneColumn(QString(THERMALZONE),
+      //  &model::RefrigerationCase::thermalZone,
+      //  &model::RefrigerationCase::setThermalZone); // TODO
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; // TODO
     }else if(field == NAME){
@@ -459,6 +408,16 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time
+    }
+  }
+}
+
+void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
+{
+  boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
+  if (modelObject){
+    if (modelObject->optionalCast<model::RefrigerationCase>()){
+      // TODO how to add this to model
     }
   }
 }
@@ -668,6 +627,16 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time
+    }
+  }
+}
+
+void RefrigerationWalkInGridController::onItemDropped(const OSItemId& itemId)
+{
+  boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
+  if (modelObject){
+    if (modelObject->optionalCast<model::RefrigerationWalkIn>()){
+      // TODO how to add this to model
     }
   }
 }

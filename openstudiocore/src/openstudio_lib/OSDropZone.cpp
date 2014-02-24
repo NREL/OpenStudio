@@ -45,6 +45,7 @@ namespace openstudio {
 
 OSDropZone2::OSDropZone2(OSVectorController* vectorController,
                        bool growsHorizontally,
+                       //const std::string & text,
                        QWidget * parent )
   : QWidget(parent),
     m_vectorController(vectorController),
@@ -54,7 +55,9 @@ OSDropZone2::OSDropZone2(OSVectorController* vectorController,
     m_itemsRemoveable(true),
     m_allowAdd(false),
     m_growsHorizontally(growsHorizontally),
-    m_useLargeIcon(false)
+    m_useLargeIcon(false),
+    //m_text(text)
+    m_text("Drag From Library")
 {
   QWidget * mainBox = new QWidget();
   mainBox->setObjectName("mainBox");
@@ -152,6 +155,8 @@ void OSDropZone2::completeBind() {
 
   bool isConnected = false;
 
+  OS_ASSERT(false); // TODO this bind function not yet complete
+
   //isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
   //  this,SLOT(onModelObjectChange()) );
   //OS_ASSERT(isConnected);
@@ -159,17 +164,6 @@ void OSDropZone2::completeBind() {
   //isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
   //  this,SLOT(onModelObjectRemove(Handle)) );
   //OS_ASSERT(isConnected);
-
-  //isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-  //  this,SLOT(???()) );
-  //OS_ASSERT(isConnected);
-
-  //isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-  //  this,SLOT(???(Handle)) );
-  //OS_ASSERT(isConnected);
-
-
-
 
   isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addButtonClicked()));
   OS_ASSERT(isConnected);
@@ -382,7 +376,7 @@ void OSDropZone2::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   if (numItems < m_maxItems){
-    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally);
+    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
     bool isConnected = false;
@@ -436,6 +430,7 @@ void OSDropZone2::setUseLargeIcon(bool useLargeIcon)
 
 OSDropZone::OSDropZone(OSVectorController* vectorController,
                        bool growsHorizontally,
+                       //const std::string & text,
                        QWidget * parent )
   : QWidget(parent),
     m_vectorController(vectorController),
@@ -445,7 +440,9 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
     m_itemsRemoveable(true),
     m_allowAdd(false),
     m_growsHorizontally(growsHorizontally),
-    m_useLargeIcon(false)
+    m_useLargeIcon(false),
+    //m_text(text)
+    m_text("Drag From Library")
 {
   QWidget * mainBox = new QWidget();
   mainBox->setObjectName("mainBox");
@@ -705,7 +702,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   if (numItems < m_maxItems){
-    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally);
+    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
     bool isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
@@ -757,6 +754,7 @@ void OSDropZone::setUseLargeIcon(bool useLargeIcon)
 }
 
 OSItemDropZone::OSItemDropZone(bool growsHorizontally,
+                               const std::string & text,
                                QWidget * parent)
   : QWidget(parent),
   m_growsHorizontally(growsHorizontally)
@@ -778,7 +776,7 @@ OSItemDropZone::OSItemDropZone(bool growsHorizontally,
 
   QLabel * label = new QLabel();
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  label->setText("Drag From Library");
+  label->setText(text.c_str());
   label->setWordWrap(true);
 
   label->setStyleSheet("QLabel { font: bold; color: #808080}");

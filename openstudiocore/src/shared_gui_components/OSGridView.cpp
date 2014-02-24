@@ -23,6 +23,9 @@
 #include <shared_gui_components/OSCollapsibleView.hpp>
 #include <shared_gui_components/OSGridController.hpp>
 
+#include <openstudio_lib/OSDropZone.hpp>
+#include <openstudio_lib/OSItem.hpp>
+
 #include <model/Model_Impl.hpp>
 #include <model/ModelObject_Impl.hpp>
 
@@ -58,6 +61,17 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   buttonLayout->setSpacing(10);
   buttonLayout->setContentsMargins(0,0,0,0);
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+  GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
+  //OSDropZone * dropZone = new OSDropZone(vectorController, true, "Drag and Drop from Library");
+  OSDropZone * dropZone = new OSDropZone(vectorController);
+  dropZone->setMaxItems(1);
+
+  isConnected = connect(dropZone,SIGNAL(itemDropped(const OSItemId&)),
+    m_gridController,SLOT(onItemDropped(const OSItemId&)));
+  OS_ASSERT(isConnected);
+
+  buttonLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
   QPushButton * button = 0;

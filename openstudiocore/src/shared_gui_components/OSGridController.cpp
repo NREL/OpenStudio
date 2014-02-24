@@ -29,7 +29,6 @@
 #include <shared_gui_components/OSUnsignedEdit.hpp>
 
 #include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
 #include <openstudio_lib/SchedulesView.hpp>
 
 #include <model/Model_Impl.hpp>
@@ -62,6 +61,7 @@ OSGridController::OSGridController(const QString & headerText,
   m_baseConcepts(std::vector<QSharedPointer<BaseConcept> >()),
   m_horizontalHeader(std::vector<QWidget *>()),
   m_hasHorizontalHeader(true),
+  m_hasVerticalHeader(true),
   m_currentCategory(QString()),
   m_currentCategoryIndex(0),
   m_currentFields(std::vector<QString> ()),
@@ -71,7 +71,6 @@ OSGridController::OSGridController(const QString & headerText,
   m_horizontalHeaderBtnGrp(0),
   m_verticalHeaderBtnGrp(0),
   m_customCategories(std::vector<QString>()),
-  m_vectorController(0),
   m_headerText(headerText)
 {
   m_verticalHeaderBtnGrp = new QButtonGroup();
@@ -127,7 +126,7 @@ void OSGridController::categorySelected(int index)
 
   m_currentFields = m_categoriesAndFields.at(index).second;
 
-  // always show name column
+  // always show name column TODO
 
   m_currentFields.insert(m_currentFields.begin(),"Name");
  
@@ -170,6 +169,11 @@ void OSGridController::setHorizontalHeader()
   checkSelectedFields();
 }
 
+void OSGridController::setVerticalHeader()
+{
+
+}
+
 QWidget * OSGridController::widgetAt(int row, int column)
 {
   OS_ASSERT(row >= 0);
@@ -180,7 +184,13 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   QWidget * widget = 0;
 
-  // Note: If there is a header row,  modelObject[0] starts on gridLayout[1]
+  // Note: If there is a vertical header row,  m_baseConcepts[0] starts on gridLayout[1]
+  //int baseConceptColumn = m_hasVerticalHeader ? column - 1 : column; TODO
+
+  if(m_hasHorizontalHeader && row == 0){
+  }
+
+  // Note: If there is a horizpntal header row,  m_modelObjects[0] starts on gridLayout[1]
   int modelObjectRow = m_hasHorizontalHeader ? row - 1 : row;
 
   if(m_hasHorizontalHeader && row == 0){
@@ -361,16 +371,18 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         widget = unsignedEdit;
     } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = baseConcept.dynamicCast<DropZoneConcept>()) {
+        // Note: OSDropZone2 bind not fully implemented
+        OS_ASSERT(false);
+        //GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
+        //OSDropZone2 * dropZone = new OSDropZone2(vectorController);
 
-        OSDropZone2 * dropZone = new OSDropZone2(this->m_vectorController);
+        //dropZone->bind(mo,
+        //          boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
+        //          boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
+        //          boost::none,
+        //          boost::none);
 
-        dropZone->bind(mo,
-                  boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
-                  boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
-                  boost::none,
-                  boost::none);
-
-        widget = dropZone;
+        //widget = dropZone;
     } else {
       // Unknown type
       OS_ASSERT(false);

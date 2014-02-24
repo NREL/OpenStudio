@@ -21,8 +21,7 @@
 #define OPENSTUDIO_REFRIGERATIONGRIDVIEW_H
 
 #include <shared_gui_components/OSGridController.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include <openstudio_lib/OSItem.hpp>
 
 #include <model/Model.hpp>
 
@@ -42,29 +41,10 @@ public:
 
 };
 
-class CaseThermalZoneVectorController : public ModelObjectVectorController
-{
-  Q_OBJECT
-
-public:
-
-  virtual ~CaseThermalZoneVectorController() {}
-
-protected:
-
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
-
-  virtual std::vector<OSItemId> makeVector();
-
-  virtual void onRemoveItem(OSItem* item);
-
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
-
-  virtual void onDrop(const OSItemId& itemId);
-};
-
 class RefrigerationCaseGridController : public OSGridController
 {
+
+  Q_OBJECT
 
 public:
 
@@ -81,15 +61,17 @@ protected:
 
   virtual void addColumns(const std::vector<QString> & fields);
 
-private:
 
-  CaseThermalZoneVectorController * m_thermalZoneVectorController;
-  OSDropZone * m_thermalZoneDropZone;
+public slots:
+
+  virtual void onItemDropped(const OSItemId& itemId);
 
 };
 
 class RefrigerationWalkInGridController : public OSGridController
 {
+
+  Q_OBJECT
 
 public:
 
@@ -105,6 +87,10 @@ protected:
   virtual void setCategoriesAndFields();
 
   virtual void addColumns(const std::vector<QString> & fields);
+
+public slots:
+
+  virtual void onItemDropped(const OSItemId& itemId);
 
 };
 

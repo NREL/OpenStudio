@@ -22,6 +22,9 @@
 
 #include <shared_gui_components/OSConcepts.hpp> 
 
+#include <openstudio_lib/OSItem.hpp>
+#include <openstudio_lib/OSVectorController.hpp>
+
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
 
@@ -39,8 +42,6 @@ class QLabel;
 namespace openstudio {
 
 class OSComboBox;
-
-class OSVectorController;
 
 class OSGridController : public QObject
 {
@@ -160,6 +161,8 @@ protected:
   virtual void setCategoriesAndFields() = 0; 
   
   virtual void setHorizontalHeader();
+
+  virtual void setVerticalHeader();
   
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
@@ -184,6 +187,8 @@ protected:
 
   bool m_hasHorizontalHeader;
 
+  bool m_hasVerticalHeader;
+
   QString m_currentCategory;
 
   int m_currentCategoryIndex;
@@ -191,8 +196,6 @@ protected:
   std::vector<QString> m_currentFields;
 
   std::vector<QString> m_customCategories;
-
-  OSVectorController * m_vectorController;
 
 private:
 
@@ -233,6 +236,10 @@ signals:
   // Nuclear reset of everything
   void modelReset();
 
+public slots:
+
+  virtual void onItemDropped(const OSItemId& itemId) = 0;
+
 private slots:
 
   void horizontalHeaderChecked(int index);
@@ -271,6 +278,13 @@ public:
 
   QCheckBox * m_checkBox;
 
+};
+
+class GridViewDropZoneVectorController : public OSVectorController
+{
+  protected:
+
+  virtual std::vector<OSItemId> makeVector() { return std::vector<OSItemId>(); }
 };
 
 } // openstudio
