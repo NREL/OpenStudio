@@ -149,6 +149,10 @@ class MODEL_API LayeredConstruction : public ConstructionBase {
    *  of the construction. */
   void resetInsulation();
 
+  /** Ensures that all materials in this construction are used by this construction only.  Allows standards
+  *   to then appply standards specified material properties to each layer (e.g. SRI). */
+  void ensureUniqueLayers(); 
+
   //@}
  protected:
   /// @cond
