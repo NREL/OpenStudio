@@ -195,12 +195,22 @@ measures.each { |measure|
     row << table_element("static")
     row << table_element(arg.type.valueName)
     row << table_element("")
-    if arg.hasValue
-      row << table_element(arg.valueAsString)
-    elsif arg.hasDefaultValue
-      row << table_element(arg.defaultValueAsString)
+    if arg.type == "Choice".to_OSArgumentType
+      if arg.hasValue
+        row << table_element(arg.valueDisplayName)
+      elsif arg.hasDefaultValue
+        row << table_element(arg.defaultValueDisplayName)
+      else
+        row << table_element("")
+      end
     else
-      row << table_element("")
+      if arg.hasValue
+        row << table_element(arg.valueAsString)
+      elsif arg.hasDefaultValue
+        row << table_element(arg.defaultValueAsString)
+      else
+        row << table_element("")
+      end
     end
     if arg.type == "Choice".to_OSArgumentType
       choices_str = String.new
