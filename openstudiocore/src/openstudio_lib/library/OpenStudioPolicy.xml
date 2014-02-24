@@ -546,6 +546,9 @@
     <rule IddField="Defrost Energy Correction Curve Name" Access="HIDDEN"/>
     <rule IddField="Defrost Energy Correction Curve Type" Access="LOCKED"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_WalkIn">
+    <rule IddField="Walkin Zone Boundary" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_WaterHeater_Mixed">
     <rule IddField="Use Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Use Side Outlet Node Name" Access="HIDDEN"/>
