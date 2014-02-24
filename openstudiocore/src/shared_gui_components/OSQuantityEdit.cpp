@@ -83,9 +83,11 @@ void OSQuantityEdit2::bindRequired(bool isIP,
 {
   m_get = get;
   m_optionalGet.reset();
-  
-  bindCommon(isIP, modelObject, set, reset, autosize,
-             autocalculate, isDefaulted, isAutosized, isAutocalculated);
+  m_set = set;
+  m_setVoidReturn.reset();
+
+  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
+             isDefaulted, isAutosized, isAutocalculated);
 }
 
 void OSQuantityEdit2::bind(bool isIP,
@@ -101,14 +103,55 @@ void OSQuantityEdit2::bind(bool isIP,
 {
   m_get.reset();
   m_optionalGet = optionalGet;
-  
-  bindCommon(isIP, modelObject, set, reset, autosize,
-             autocalculate, isDefaulted, isAutosized, isAutocalculated);
+  m_set = set;
+  m_setVoidReturn.reset();
+
+  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
+             isDefaulted, isAutosized, isAutocalculated);
+}
+
+void OSQuantityEdit2::bindRequiredVoidReturn(bool isIP,
+                           model::ModelObject& modelObject,
+                           DoubleGetter get,
+                           boost::optional<DoubleSetterVoidReturn> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
+{
+  m_get = get;
+  m_optionalGet.reset();
+  m_set.reset();
+  m_setVoidReturn = set;
+
+  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
+             isDefaulted, isAutosized, isAutocalculated);
+}
+
+void OSQuantityEdit2::bindVoidReturn(bool isIP,
+                           model::ModelObject& modelObject,
+                           OptionalDoubleGetter optionalGet,
+                           boost::optional<DoubleSetterVoidReturn> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
+{
+  m_get.reset();
+  m_optionalGet = optionalGet;
+  m_set.reset();
+  m_setVoidReturn = set;
+
+  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
+             isDefaulted, isAutosized, isAutocalculated);
 }
 
 void OSQuantityEdit2::bindCommon(bool isIP,
           model::ModelObject& modelObject,
-          boost::optional<DoubleSetter> set,
           boost::optional<NoFailAction> reset,
           boost::optional<NoFailAction> autosize,
           boost::optional<NoFailAction> autocalculate,
@@ -126,7 +169,6 @@ void OSQuantityEdit2::bindCommon(bool isIP,
   
   m_isIP = isIP;
   m_modelObject = modelObject;
-  m_set = set;
   m_reset = reset;
   m_autosize = autosize;
   m_autocalculate = autocalculate;
@@ -159,6 +201,7 @@ void OSQuantityEdit2::unbind() {
     m_get.reset();
     m_optionalGet.reset();
     m_set.reset();
+    m_setVoidReturn.reset();
     m_reset.reset();
     m_autosize.reset();
     m_autocalculate.reset();

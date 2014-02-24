@@ -71,6 +71,7 @@ OSGridController::OSGridController(const QString & headerText,
   m_horizontalHeaderBtnGrp(0),
   m_verticalHeaderBtnGrp(0),
   m_customCategories(std::vector<QString>()),
+  m_isIP(false),
   m_headerText(headerText)
 {
   m_verticalHeaderBtnGrp = new QButtonGroup();
@@ -335,7 +336,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         widget = nameLineEdit;
 
-    } else if(QSharedPointer<QuantityEditConcept> quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept>()) {
+    } else if(QSharedPointer<QuantityEditConcept<double> > quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept<double> >()) {
 
         OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2(quantityEditConcept->modelUnits().toStdString().c_str(),
                                                              quantityEditConcept->siUnits().toStdString().c_str(),
@@ -344,8 +345,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         quantityEdit->bindRequired(true,
                   mo,
-                  boost::bind(&QuantityEditConcept::get,quantityEditConcept.data(),mo),
-                  boost::optional<DoubleSetter>(boost::bind(&QuantityEditConcept::set,quantityEditConcept.data(),mo,_1)),
+                  boost::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),mo),
+                  boost::optional<DoubleSetter>(boost::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),mo,_1)),
                   boost::none,
                   boost::none,
                   boost::none,

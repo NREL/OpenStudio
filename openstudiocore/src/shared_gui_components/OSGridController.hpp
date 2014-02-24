@@ -79,7 +79,6 @@ public:
     m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
   }
 
-
   template<typename ValueType, typename DataSourceType>
   void addValueEditColumn(QString headingLabel, 
                          ValueType (DataSourceType::* getter)(void) const, 
@@ -112,7 +111,6 @@ public:
     m_baseConcepts.push_back(QSharedPointer<OptionalValueEditVoidReturnConcept<ValueType> >(new OptionalValueEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
 
-
   template<typename DataSourceType>
   void addNameLineEditColumn(QString headingLabel, 
                          boost::optional<std::string> (DataSourceType::* getter)(bool) const, 
@@ -121,18 +119,53 @@ public:
     m_baseConcepts.push_back(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
+  template<typename ValueType, typename DataSourceType>
   void addQuantityEditColumn(QString headingLabel,
                              QString modelUnits,
                              QString siUnits, 
                              QString ipUnits,
                              bool isIP,
-                             double (DataSourceType::* getter)(void) const, 
-                             bool (DataSourceType::* setter)(double))
+                             ValueType (DataSourceType::* getter)(void) const, 
+                             bool (DataSourceType::* setter)(ValueType))
   {
-    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept>(new QuantityEditConceptImpl<DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
   }
 
+  template<typename ValueType, typename DataSourceType>
+  void addQuantityEditColumn(QString headingLabel,
+                             QString modelUnits,
+                             QString siUnits, 
+                             QString ipUnits,
+                             bool isIP,
+                             boost::optional<ValueType> (DataSourceType::* getter)(void) const, 
+                             bool (DataSourceType::* setter)(ValueType))
+  {
+    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
+  }
+
+  template<typename ValueType, typename DataSourceType>
+  void addQuantityEditColumn(QString headingLabel,
+                             QString modelUnits,
+                             QString siUnits, 
+                             QString ipUnits,
+                             bool isIP,
+                             ValueType (DataSourceType::* getter)(void) const, 
+                             void (DataSourceType::* setter)(ValueType))
+  {
+    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
+  }
+
+  template<typename ValueType, typename DataSourceType>
+  void addQuantityEditColumn(QString headingLabel,
+                             QString modelUnits,
+                             QString siUnits, 
+                             QString ipUnits,
+                             bool isIP,
+                             boost::optional<ValueType> (DataSourceType::* getter)(void) const, 
+                             void (DataSourceType::* setter)(ValueType))
+  {
+    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
+  }
 
   template<typename ValueType, typename DataSourceType>
   void addDropZoneColumn(QString headingLabel, 
@@ -196,6 +229,8 @@ protected:
   std::vector<QString> m_currentFields;
 
   std::vector<QString> m_customCategories;
+
+  bool m_isIP;
 
 private:
 

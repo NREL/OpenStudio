@@ -65,6 +65,28 @@ class OSQuantityEdit2: public QWidget {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
+  void bindRequiredVoidReturn(bool isIP,
+            model::ModelObject& modelObject,
+            DoubleGetter get,
+            boost::optional<DoubleSetterVoidReturn> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bindVoidReturn(bool isIP,
+            model::ModelObject& modelObject,
+            OptionalDoubleGetter optionalGet,
+            boost::optional<DoubleSetterVoidReturn> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
   void unbind();
 
  private slots:
@@ -90,6 +112,7 @@ class OSQuantityEdit2: public QWidget {
   boost::optional<DoubleGetter> m_get;
   boost::optional<OptionalDoubleGetter> m_optionalGet;
   boost::optional<DoubleSetter> m_set;
+  boost::optional<DoubleSetterVoidReturn> m_setVoidReturn;
   boost::optional<NoFailAction> m_reset;
   boost::optional<NoFailAction> m_autosize;
   boost::optional<NoFailAction> m_autocalculate;
@@ -106,7 +129,6 @@ class OSQuantityEdit2: public QWidget {
 
   void bindCommon(bool isIP,
             model::ModelObject& modelObject,
-            boost::optional<DoubleSetter> set,
             boost::optional<NoFailAction> reset,
             boost::optional<NoFailAction> autosize,
             boost::optional<NoFailAction> autocalculate,
