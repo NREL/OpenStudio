@@ -52,7 +52,8 @@ OSGridController::OSGridController()
 {
 }
 
-OSGridController::OSGridController(const QString & headerText,
+OSGridController::OSGridController(bool isIP,
+  const QString & headerText,
   IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects)
@@ -71,7 +72,7 @@ OSGridController::OSGridController(const QString & headerText,
   m_horizontalHeaderBtnGrp(0),
   m_verticalHeaderBtnGrp(0),
   m_customCategories(std::vector<QString>()),
-  m_isIP(false),
+  m_isIP(isIP),
   m_headerText(headerText)
 {
   m_verticalHeaderBtnGrp = new QButtonGroup();
@@ -553,6 +554,11 @@ void OSGridController::horizontalHeaderChecked(int index)
 
 void OSGridController::verticalHeaderChecked(int index)
 {
+}
+
+void OSGridController::toggleUnits(bool displayIP)
+{
+  m_isIP = displayIP;
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

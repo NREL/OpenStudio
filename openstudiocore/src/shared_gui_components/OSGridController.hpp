@@ -55,7 +55,8 @@ public:
   // This form utilizes the default implementations of 
   // rowCount() and itemAt(), showing one row for each object 
   // in the model that is iddObjectType
-  OSGridController(const QString & headerText,
+  OSGridController(bool isIP,
+    const QString & headerText,
     IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
@@ -274,6 +275,8 @@ signals:
 public slots:
 
   virtual void onItemDropped(const OSItemId& itemId) = 0;
+
+  void toggleUnits(bool displayIP);
 
 private slots:
 

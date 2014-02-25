@@ -23,9 +23,9 @@
 
 namespace openstudio {
 
-RefrigerationGridController::RefrigerationGridController(const model::Model & model)
+RefrigerationGridController::RefrigerationGridController(bool isIP, const model::Model & model)
   : QObject(),
-  m_refrigerationGridView(new RefrigerationGridView(model))
+  m_refrigerationGridView(new RefrigerationGridView(isIP, model))
 {
 }
 

@@ -35,9 +35,17 @@ class RefrigerationGridView : public QWidget
 
 public:
 
-  RefrigerationGridView(const model::Model & model, QWidget * parent = 0);
+  RefrigerationGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
 
   virtual ~RefrigerationGridView() {}
+
+private:
+
+  bool m_isIP;
+
+signals:
+
+  void toggleUnitsClicked(bool displayIP);
 
 };
 
@@ -48,7 +56,8 @@ class RefrigerationCaseGridController : public OSGridController
 
 public:
 
-  RefrigerationCaseGridController(const QString & headerText,
+  RefrigerationCaseGridController(bool isIP,
+    const QString & headerText,
     IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
@@ -75,7 +84,8 @@ class RefrigerationWalkInGridController : public OSGridController
 
 public:
 
-  RefrigerationWalkInGridController(const QString & headerText,
+  RefrigerationWalkInGridController(bool isIP,
+    const QString & headerText,
     IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);

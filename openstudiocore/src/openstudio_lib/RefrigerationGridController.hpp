@@ -36,7 +36,7 @@ class RefrigerationGridController : public QObject
 
   public:
 
-  RefrigerationGridController(const model::Model & model);
+  RefrigerationGridController(bool isIP, const model::Model & model);
 
   virtual ~RefrigerationGridController();
 

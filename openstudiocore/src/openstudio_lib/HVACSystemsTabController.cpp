@@ -24,10 +24,14 @@
 
 namespace openstudio {
 
-HVACSystemsTabController::HVACSystemsTabController(const model::Model& model)
+HVACSystemsTabController::HVACSystemsTabController(bool isIP, const model::Model& model)
   : MainTabController(new HVACSystemsTabView())
 {
-  m_hvacSystemsController = boost::shared_ptr<HVACSystemsController>(new HVACSystemsController(model));
+  m_hvacSystemsController = boost::shared_ptr<HVACSystemsController>(new HVACSystemsController(isIP, model));
+
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                             m_hvacSystemsController.get(), SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 
   this->mainContentWidget()->addTabWidget(m_hvacSystemsController->hvacSystemsView());
 }

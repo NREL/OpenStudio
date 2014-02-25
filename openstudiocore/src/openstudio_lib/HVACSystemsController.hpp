@@ -74,7 +74,7 @@ class HVACSystemsController : public QObject
 
   enum SceneType {TOPOLOGY, CONTROLS};
 
-  HVACSystemsController(const model::Model & model);
+  HVACSystemsController(bool isIP, const model::Model & model);
 
   virtual ~HVACSystemsController();
 
@@ -144,6 +144,13 @@ class HVACSystemsController : public QObject
   bool m_dirty;
 
   model::Model m_model;
+
+  bool m_isIP;
+
+  signals:
+  
+  void toggleUnitsClicked(bool displayIP);
+
 };
 
 class HVACControlsController : public QObject

@@ -111,8 +111,9 @@
 
 namespace openstudio {
 
-RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget * parent)
-  : QWidget(parent)
+RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & model, QWidget * parent)
+  : QWidget(parent),
+  m_isIP(isIP)
 {
   QVBoxLayout * layout = 0;
   
@@ -147,7 +148,7 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
   caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
 
-  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController("Display Cases", model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
+  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
@@ -156,21 +157,32 @@ RefrigerationGridView::RefrigerationGridView(const model::Model & model, QWidget
   walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
   walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
 
-  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController("Walk Ins", model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
+  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
   scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
 
   scrollLayout->addStretch(1);
 
+  bool isConnected = false;
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        refrigerationCaseGridController, SLOT(toggleUnits(bool)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        refrigerationWalkInGridController, SLOT(toggleUnits(bool)));
+  OS_ASSERT(isConnected);
+
   std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // TODO for horizontal system list
 
 }
 
-RefrigerationCaseGridController::RefrigerationCaseGridController(const QString & headerText,
+RefrigerationCaseGridController::RefrigerationCaseGridController(bool isIP,
+  const QString & headerText,
   IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(headerText, iddObjectType, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -478,11 +490,12 @@ void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
   }
 }
 
-RefrigerationWalkInGridController::RefrigerationWalkInGridController(const QString & headerText,
+RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
+  const QString & headerText,
   IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(headerText, iddObjectType, model, modelObjects)
+  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -656,9 +669,9 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
                             &model::RefrigerationWalkIn::setInsulatedFloorSurfaceArea);
     }else if(field == INSULATEDFLOORUVALUE){
       addQuantityEditColumn(QString(INSULATEDFLOORUVALUE),
-                            QString("W/m2-K"),
-                            QString("W/m2-K"),
-                            QString("W/m2-K"),
+                            QString("W/m^2-K"),
+                            QString("W/m^2-K"),
+                            QString("W/m^2-K"),
                             //QString("Btu/hr*ft^2*F"), // TODO this crashes in OSQuantityEdit assert for conversion
                             m_isIP,
                             &model::RefrigerationWalkIn::insulatedFloorUValue,

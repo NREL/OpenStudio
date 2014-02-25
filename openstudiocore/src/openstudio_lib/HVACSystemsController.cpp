@@ -107,9 +107,10 @@ namespace openstudio {
 const QString SHW = "SHW";
 const QString REFRIGERATION = "REFRIGERATION";
 
-HVACSystemsController::HVACSystemsController(const model::Model & model)
+HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & model)
   : QObject(),
-    m_model(model)
+    m_model(model),
+    m_isIP(isIP)
 {
   m_hvacSystemsView = new HVACSystemsView();
 
@@ -289,7 +290,11 @@ void HVACSystemsController::update()
         m_hvacSystemsView->hvacToolbarView->addButton->hide();
         m_hvacSystemsView->hvacToolbarView->deleteButton->hide();
 
-        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_model));
+        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_isIP, m_model));
+
+        bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                                   m_refrigerationGridController.get()->refrigerationGridView(), SIGNAL(toggleUnitsClicked(bool)));
+        OS_ASSERT(isConnected);
 
         // TODO m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
       }
@@ -315,7 +320,11 @@ void HVACSystemsController::update()
       else if( m_hvacSystemsView->hvacToolbarView->gridViewButton->isChecked() )
       {
         // TODO
-        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_model));
+        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_isIP, m_model));
+
+        bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                                   m_refrigerationGridController.get()->refrigerationGridView(), SIGNAL(toggleUnitsClicked(bool)));
+        OS_ASSERT(isConnected);
 
         m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
       }
