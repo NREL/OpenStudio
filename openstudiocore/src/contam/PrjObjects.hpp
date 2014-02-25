@@ -796,13 +796,13 @@ public:
   int uac2() const;
   /** Sets the display units for afacnvg. */
   void setUac2(const int uac2);
-  /** Returns the . */
-  double Pres() const;
-  /** Sets the . */
-  bool setPres(const double Pres);
-  /** Sets the . */
-  bool setPres(const std::string &Pres);
   /** Returns the pressure test pressure. */
+  double Pres() const;
+  /** Sets the pressure test pressure. */
+  bool setPres(const double Pres);
+  /** Sets the pressure test pressure. */
+  bool setPres(const std::string &Pres);
+  /** Returns the display units of pressure test pressure. */
   int uPres() const;
   /** Sets the pressure test pressure. */
   void setUPres(const int uPres);
@@ -1130,9 +1130,9 @@ public:
   int achsave() const;
   /** Sets the building air exchange rate transient data save flag: 0 = don't save, 1 = save. */
   void setAchsave(const int achsave);
-  /** Returns  the save flag: 0 = don't save, 1 = save. */
+  /** Returns the air exchange save flag: 0 = don't save, 1 = save. */
   int abwsave() const;
-  /** Sets the  save flag: 0 = don't save, 1 = save. */
+  /** Sets the air exchange save flag: 0 = don't save, 1 = save. */
   void setAbwsave(const int abwsave);
   /** Returns the contaminant box-whisker data save flag: 0 = don't save, 1 = save. */
   int cbwsave() const;
