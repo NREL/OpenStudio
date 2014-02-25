@@ -140,7 +140,7 @@ public:
                              boost::optional<ValueType> (DataSourceType::* getter)(void) const, 
                              bool (DataSourceType::* setter)(ValueType))
   {
-    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
+    m_baseConcepts.push_back(QSharedPointer<OptionalQuantityEditConcept<ValueType> >(new OptionalQuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
   }
 
   template<typename ValueType, typename DataSourceType>
@@ -152,7 +152,7 @@ public:
                              ValueType (DataSourceType::* getter)(void) const, 
                              void (DataSourceType::* setter)(ValueType))
   {
-    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
+    m_baseConcepts.push_back(QSharedPointer<QuantityEditVoidReturnConcept<ValueType> >(new QuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
   }
 
   template<typename ValueType, typename DataSourceType>
@@ -164,7 +164,7 @@ public:
                              boost::optional<ValueType> (DataSourceType::* getter)(void) const, 
                              void (DataSourceType::* setter)(ValueType))
   {
-    m_baseConcepts.push_back(QSharedPointer<QuantityEditConcept<ValueType> >(new QuantityEditConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
+    m_baseConcepts.push_back(QSharedPointer<OptionalQuantityEditVoidReturnConcept<ValueType> >(new OptionalQuantityEditVoidReturnConceptImpl<ValueType, DataSourceType>(headingLabel, modelUnits, siUnits, ipUnits, isIP, getter, setter)));
   }
 
   template<typename ValueType, typename DataSourceType>

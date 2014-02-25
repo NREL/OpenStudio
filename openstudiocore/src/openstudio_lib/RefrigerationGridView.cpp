@@ -281,156 +281,128 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
   Q_FOREACH(QString field, fields){
     if(field == RATEDAMBIENTTEMPERATURE){
       addQuantityEditColumn(QString(RATEDAMBIENTTEMPERATURE),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("C"),
+                            QString("C"),
+                            QString("F"),
                             m_isIP,
                             &model::RefrigerationCase::ratedAmbientTemperature,
                             &model::RefrigerationCase::setRatedAmbientTemperature);
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
-      addQuantityEditColumn(QString(RATEDAMBIENTRELATIVEHUMIDITY),
-                            QString(""),
-                            QString(""),
-                            QString(""),
-                            m_isIP,
-                            &model::RefrigerationCase::ratedAmbientRelativeHumidity,
-                            &model::RefrigerationCase::setRatedAmbientRelativeHumidity);
+      addValueEditColumn(QString(RATEDAMBIENTRELATIVEHUMIDITY),
+                         &model::RefrigerationCase::ratedAmbientRelativeHumidity,
+                         &model::RefrigerationCase::setRatedAmbientRelativeHumidity);
     }else if(field == RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH){
       addQuantityEditColumn(QString(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("Btu/hr*ft"),
                             m_isIP,
                             &model::RefrigerationCase::ratedTotalCoolingCapacityperUnitLength,
                             &model::RefrigerationCase::setRatedTotalCoolingCapacityperUnitLength);
     }else if(field == RATEDLATENTHEATRATIO){
-      addQuantityEditColumn(QString(RATEDLATENTHEATRATIO),
-                            QString(""),
-                            QString(""),
-                            QString(""),
-                            m_isIP,
-                            &model::RefrigerationCase::ratedLatentHeatRatio,
-                            &model::RefrigerationCase::setRatedLatentHeatRatio);
+      addValueEditColumn(QString(RATEDLATENTHEATRATIO),
+                         &model::RefrigerationCase::ratedLatentHeatRatio,
+                         &model::RefrigerationCase::setRatedLatentHeatRatio);
     }else if(field == RATEDRUNTIMEFRACTION){
-      addQuantityEditColumn(QString(RATEDRUNTIMEFRACTION),
-                            QString(""),
-                            QString(""),
-                            QString(""),
-                            m_isIP,
-                            &model::RefrigerationCase::ratedRuntimeFraction,
-                            &model::RefrigerationCase::setRatedRuntimeFraction);
+      addValueEditColumn(QString(RATEDRUNTIMEFRACTION),
+                         &model::RefrigerationCase::ratedRuntimeFraction,
+                         &model::RefrigerationCase::setRatedRuntimeFraction);
     }else if(field == CASELENGTH){
       addQuantityEditColumn(QString(CASELENGTH),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("m"),
+                            QString("m"),
+                            QString("ft"),
                             m_isIP,
                             &model::RefrigerationCase::caseLength,
                             &model::RefrigerationCase::setCaseLength);
     }else if(field == CASEOPERATINGTEMPERATURE){
       addQuantityEditColumn(QString(CASEOPERATINGTEMPERATURE),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("C"),
+                            QString("C"),
+                            QString("F"),
                             m_isIP,
                             &model::RefrigerationCase::caseOperatingTemperature,
                             &model::RefrigerationCase::setCaseOperatingTemperature);
     }else if(field == STANDARDCASEFANPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(STANDARDCASEFANPOWERPERUNITLENGTH),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("W/ft"),
                             m_isIP,
                             &model::RefrigerationCase::standardCaseFanPowerperUnitLength,
                             &model::RefrigerationCase::setStandardCaseFanPowerperUnitLength);
     }else if(field == OPERATINGCASEFANPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(OPERATINGCASEFANPOWERPERUNITLENGTH),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("W/ft"),
                             m_isIP,
                             &model::RefrigerationCase::operatingCaseFanPowerperUnitLength,
                             &model::RefrigerationCase::setOperatingCaseFanPowerperUnitLength);
     }else if(field == FRACTIONOFLIGHTINGENERGYTOCASE){
-      addQuantityEditColumn(QString(FRACTIONOFLIGHTINGENERGYTOCASE),
-                            QString(""),
-                            QString(""),
-                            QString(""),
-                            m_isIP,
-                            &model::RefrigerationCase::fractionofLightingEnergytoCase,
-                            &model::RefrigerationCase::setFractionofLightingEnergytoCase);
+      addValueEditColumn(QString(FRACTIONOFLIGHTINGENERGYTOCASE),
+                         &model::RefrigerationCase::fractionofLightingEnergytoCase,
+                         &model::RefrigerationCase::setFractionofLightingEnergytoCase);
     }else if(field == CASEANTISWEATHEATERPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(CASEANTISWEATHEATERPOWERPERUNITLENGTH),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("W/ft"),
                             m_isIP,
                             &model::RefrigerationCase::caseAntiSweatHeaterPowerperUnitLength,
                             &model::RefrigerationCase::setCaseAntiSweatHeaterPowerperUnitLength);
     }else if(field == MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("W/ft"),
                             m_isIP,
                             &model::RefrigerationCase::minimumAntiSweatHeaterPowerperUnitLength,
                             &model::RefrigerationCase::setMinimumAntiSweatHeaterPowerperUnitLength);
     }else if(field == CASEHEIGHT){
       addQuantityEditColumn(QString(CASEHEIGHT),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("m"),
+                            QString("m"),
+                            QString("ft"),
                             m_isIP,
                             &model::RefrigerationCase::caseHeight,
                             &model::RefrigerationCase::setCaseHeight);
     }else if(field == FRACTIONOFANTISWEATHEATERENERGYTOCASE){
-      addQuantityEditColumn(QString(FRACTIONOFANTISWEATHEATERENERGYTOCASE),
-                            QString(""),
-                            QString(""),
-                            QString(""),
-                            m_isIP,
-                            &model::RefrigerationCase::fractionofAntiSweatHeaterEnergytoCase,
-                            &model::RefrigerationCase::setFractionofAntiSweatHeaterEnergytoCase);
+      addValueEditColumn(QString(FRACTIONOFANTISWEATHEATERENERGYTOCASE),
+                         &model::RefrigerationCase::fractionofAntiSweatHeaterEnergytoCase,
+                         &model::RefrigerationCase::setFractionofAntiSweatHeaterEnergytoCase);
     }else if(field == CASEDEFROSTPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(CASEDEFROSTPOWERPERUNITLENGTH),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("W/ft"),
                             m_isIP,
                             &model::RefrigerationCase::caseDefrostPowerperUnitLength,
                             &model::RefrigerationCase::setCaseDefrostPowerperUnitLength);
     }else if(field == UNDERCASEHVACRETURNAIRFRACTION){
-      addQuantityEditColumn(QString(UNDERCASEHVACRETURNAIRFRACTION),
-                            QString(""),
-                            QString(""),
-                            QString(""),
-                            m_isIP,
-                            &model::RefrigerationCase::underCaseHVACReturnAirFraction,
-                            &model::RefrigerationCase::setUnderCaseHVACReturnAirFraction);
+      addValueEditColumn(QString(UNDERCASEHVACRETURNAIRFRACTION),
+                         &model::RefrigerationCase::underCaseHVACReturnAirFraction,
+                         &model::RefrigerationCase::setUnderCaseHVACReturnAirFraction);
     }else if(field == STANDARDCASELIGHTINGPOWERPERUNITLENGTH){
-      //addQuantityEditColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationCase::standardCaseLightingPowerperUnitLength,
-      //                      &model::RefrigerationCase::setStandardCaseLightingPowerperUnitLength);
+      addQuantityEditColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("W/ft"),
+                            m_isIP,
+                            &model::RefrigerationCase::standardCaseLightingPowerperUnitLength,
+                            &model::RefrigerationCase::setStandardCaseLightingPowerperUnitLength);
     }else if(field == HUMIDITYATZEROANTISWEATHEATERENERGY){
-      //addQuantityEditColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationCase::humidityatZeroAntiSweatHeaterEnergy,
-      //                      &model::RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy);
+      addValueEditColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
+                         &model::RefrigerationCase::humidityatZeroAntiSweatHeaterEnergy,
+                         &model::RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy);
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      //addQuantityEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationCase::averageRefrigerantChargeInventory,
-      //                      &model::RefrigerationCase::setAverageRefrigerantChargeInventory);
+      addQuantityEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+                            QString("kg/m"),
+                            QString("kg/m"),
+                            QString("lb/ft"),
+                            m_isIP,
+                            &model::RefrigerationCase::averageRefrigerantChargeInventory,
+                            &model::RefrigerationCase::setAverageRefrigerantChargeInventory);
     }else if(field == LATENTCASECREDITCURVETYPE){
       addComboBoxColumn(QString(LATENTCASECREDITCURVETYPE),
                         &model::RefrigerationCase::latentCaseCreditCurveTypeValues,
@@ -452,21 +424,21 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
                         &model::RefrigerationCase::defrostEnergyCorrectionCurveType,
                         &model::RefrigerationCase::setDefrostEnergyCorrectionCurveType);
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
-      //addQuantityEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationCase::installedCaseLightingPowerperUnitLength,
-      //                      &model::RefrigerationCase::setInstalledCaseLightingPowerperUnitLength);
+      addQuantityEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
+                            QString("W/m"),
+                            QString("W/m"),
+                            QString("W/ft"),
+                            m_isIP,
+                            &model::RefrigerationCase::installedCaseLightingPowerperUnitLength,
+                            &model::RefrigerationCase::setInstalledCaseLightingPowerperUnitLength);
     }else if(field == DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE){
-      //addQuantityEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationCase::designEvaporatorTemperatureorBrineInletTemperature,
-      //                      &model::RefrigerationCase::setDesignEvaporatorTemperatureorBrineInletTemperature);
+      addQuantityEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
+                            QString("C"),
+                            QString("C"),
+                            QString("F"),
+                            m_isIP,
+                            &model::RefrigerationCase::designEvaporatorTemperatureorBrineInletTemperature,
+                            &model::RefrigerationCase::setDesignEvaporatorTemperatureorBrineInletTemperature);
     }else if(field == CASELIGHTINGSCHEDULE){
       //boost::optional<Schedule> caseLightingSchedule() const; TODO
     }else if(field == CASEDEFROSTSCHEDULE){
@@ -476,7 +448,7 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
     }else if(field == REFRIGERATEDCASERESTOCKINGSCHEDULE){
       //boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const; TODO
     }else if(field == CASECREDITFRACTIONSCHEDULE){
-      //boost::optional<Schedule> caseCreditFractionSchedule() const; TODO
+      //boost::optional<Schedule> caseCreditFractionSchedule() const; TODO // TODO OSDouble?
     }else if(field == AVAILABILITYSCHEDULE){
       //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == THERMALZONE){
@@ -644,102 +616,99 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
                         &model::RefrigerationWalkIn::setDefrostControlType);
     }else if(field == OPERATINGTEMPERATURE){
       addQuantityEditColumn(QString(OPERATINGTEMPERATURE),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("C"),
+                            QString("C"),
+                            QString("F"),
                             m_isIP,
                             &model::RefrigerationWalkIn::operatingTemperature,
                             &model::RefrigerationWalkIn::setOperatingTemperature);
     }else if(field == RATEDCOOLINGSOURCETEMPERATURE){
       addQuantityEditColumn(QString(RATEDCOOLINGSOURCETEMPERATURE),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("C"),
+                            QString("C"),
+                            QString("F"),
                             m_isIP,
                             &model::RefrigerationWalkIn::ratedCoolingSourceTemperature,
                             &model::RefrigerationWalkIn::setRatedCoolingSourceTemperature);
     }else if(field == RATEDCOOLINGCOILFANPOWER){
       addQuantityEditColumn(QString(RATEDCOOLINGCOILFANPOWER),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W"),
+                            QString("W"),
+                            QString("W"),
                             m_isIP,
                             &model::RefrigerationWalkIn::ratedCoolingCoilFanPower,
                             &model::RefrigerationWalkIn::setRatedCoolingCoilFanPower);
     }else if(field == RATEDCIRCULATIONFANPOWER){
       addQuantityEditColumn(QString(RATEDCIRCULATIONFANPOWER),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W"),
+                            QString("W"),
+                            QString("W"),
                             m_isIP,
                             &model::RefrigerationWalkIn::ratedCirculationFanPower,
                             &model::RefrigerationWalkIn::setRatedCirculationFanPower);
     }else if(field == INSULATEDFLOORSURFACEAREA){
       addQuantityEditColumn(QString(INSULATEDFLOORSURFACEAREA),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("m2"),
+                            QString("m2"),
+                            QString("ft^2"),
                             m_isIP,
                             &model::RefrigerationWalkIn::insulatedFloorSurfaceArea,
                             &model::RefrigerationWalkIn::setInsulatedFloorSurfaceArea);
     }else if(field == INSULATEDFLOORUVALUE){
       addQuantityEditColumn(QString(INSULATEDFLOORUVALUE),
-                            QString(""),
-                            QString(""),
-                            QString(""),
+                            QString("W/m2-K"),
+                            QString("W/m2-K"),
+                            QString("W/m2-K"),
+                            //QString("Btu/hr*ft^2*F"), // TODO this crashes in OSQuantityEdit assert for conversion
                             m_isIP,
                             &model::RefrigerationWalkIn::insulatedFloorUValue,
                             &model::RefrigerationWalkIn::setInsulatedFloorUValue); 
     }else if(field == RATEDCOILCOOLINGCAPACITY){
-      //addQuantityEditColumn(QString(RATEDCOILCOOLINGCAPACITY),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationWalkIn::ratedCoilCoolingCapacity,
-      //                      &model::RefrigerationWalkIn::setRatedCoilCoolingCapacity);
+      addQuantityEditColumn(QString(RATEDCOILCOOLINGCAPACITY),
+                            QString("W"),
+                            QString("W"),
+                            QString("Btu/hr"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::ratedCoilCoolingCapacity,
+                            &model::RefrigerationWalkIn::setRatedCoilCoolingCapacity);
     }else if(field == RATEDTOTALHEATINGPOWER){
-      //addQuantityEditColumn(QString(RATEDTOTALHEATINGPOWER),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationWalkIn::ratedTotalHeatingPower,
-      //                      &model::RefrigerationWalkIn::setRatedTotalHeatingPower);
+      addQuantityEditColumn(QString(RATEDTOTALHEATINGPOWER),
+                            QString("W"),
+                            QString("W"),
+                            QString("W"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::ratedTotalHeatingPower,
+                            &model::RefrigerationWalkIn::setRatedTotalHeatingPower);
     }else if(field == RATEDTOTALLIGHTINGPOWER){
-      //addQuantityEditColumn(QString(RATEDTOTALLIGHTINGPOWER),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationWalkIn::ratedTotalLightingPower,
-      //                      &model::RefrigerationWalkIn::setRatedTotalLightingPower);
+      addQuantityEditColumn(QString(RATEDTOTALLIGHTINGPOWER),
+                            QString("W"),
+                            QString("W"),
+                            QString("W"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::ratedTotalLightingPower,
+                            &model::RefrigerationWalkIn::setRatedTotalLightingPower);
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      //addQuantityEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationWalkIn::averageRefrigerantChargeInventory,
-      //                      &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory);
+      addQuantityEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+                            QString("kg"),
+                            QString("kg"),
+                            QString("lb"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::averageRefrigerantChargeInventory,
+                            &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory);
     }else if(field == DEFROSTSCHEDULE){
       //Schedule defrostSchedule() const; TODO
     }else if(field == DEFROSTPOWER){
-      //addQuantityEditColumn(QString(DEFROSTPOWER),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationWalkIn::defrostPower,
-      //                      &model::RefrigerationWalkIn::setDefrostPower);
+      addQuantityEditColumn(QString(DEFROSTPOWER),
+                            QString("W"),
+                            QString("W"),
+                            QString("W"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::defrostPower,
+                            &model::RefrigerationWalkIn::setDefrostPower);
     }else if(field == TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE){
-      //addQuantityEditColumn(QString(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE),
-      //                      QString(""),
-      //                      QString(""),
-      //                      QString(""),
-      //                      m_isIP,
-      //                      &model::RefrigerationWalkIn::temperatureTerminationDefrostFractiontoIce,
-      //                      &model::RefrigerationWalkIn::setTemperatureTerminationDefrostFractiontoIce);
+      addValueEditColumn(QString(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE),
+                         &model::RefrigerationWalkIn::temperatureTerminationDefrostFractiontoIce,
+                         &model::RefrigerationWalkIn::setTemperatureTerminationDefrostFractiontoIce);
     }else if(field == AVAILABILITYSCHEDULE){
       //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == HEATINGPOWERSCHEDULE){
