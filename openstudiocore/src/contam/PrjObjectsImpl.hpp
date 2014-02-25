@@ -215,10 +215,10 @@ private:
   int m_pc;  // control node index (IX); converted to pointer
   int m_pk;  // kinetic reaction index (IX); converted to pointer
   int m_pl;  // building level index (IX); converted to pointer
-  RX7 m_relHt;  // zone height [m] (R4)
-  RX7 m_Vol;  // zone volume [m^3] (R4)
-  RX7 m_T0;  // initial zone temperature [K] (R4)
-  RX7 m_P0;  // initial zone pressure [Pa] (R4)
+  PRJFLOAT m_relHt;  // zone height [m] (R4)
+  PRJFLOAT m_Vol;  // zone volume [m^3] (R4)
+  PRJFLOAT m_T0;  // initial zone temperature [K] (R4)
+  PRJFLOAT m_P0;  // initial zone pressure [Pa] (R4)
   std::string m_name;  // zone name (CS) {W}
   int m_color;  // zone fill color (I2) {W} {Contam 2.4}
   int m_u_Ht;  // units of height (I2) {W}
@@ -228,18 +228,18 @@ private:
   int m_cdaxis;  // conv/diff axis (0=no cd, 1-4 => cd axis direction) (I2)
   int m_cfd;  // cfd zone (0=no, 1=yes) (I2)
   std::string m_cfdname;  // cfd zone id (CS)
-  RX7 m_X1;  // X coordinate of one end of cdaxis (RX)
-  RX7 m_Y1;  // Y coordinate of one end of cdaxis (RX)
-  RX7 m_H1;  // Relative Height of one end of cdaxis (RX)
-  RX7 m_X2;  // X coordinate of other end of cdaxis (RX)
-  RX7 m_Y2;  // Y coordinate of other end of cdaxis (RX)
-  RX7 m_H2;  // Relative Height of other end of cdaxis (RX)
-  RX7 m_celldx;  // length of c/d cell [m] (R4)
-  RX7 m_axialD;  // axial diffusion coeff [m^2/s] (R4)
+  PRJFLOAT m_X1;  // X coordinate of one end of cdaxis (RX)
+  PRJFLOAT m_Y1;  // Y coordinate of one end of cdaxis (RX)
+  PRJFLOAT m_H1;  // Relative Height of one end of cdaxis (RX)
+  PRJFLOAT m_X2;  // X coordinate of other end of cdaxis (RX)
+  PRJFLOAT m_Y2;  // Y coordinate of other end of cdaxis (RX)
+  PRJFLOAT m_H2;  // Relative Height of other end of cdaxis (RX)
+  PRJFLOAT m_celldx;  // length of c/d cell [m] (R4)
+  PRJFLOAT m_axialD;  // axial diffusion coeff [m^2/s] (R4)
   int m_u_aD;  // units of axial diffusion (I2)
   int m_u_L;  // units of c/d axis limits (I2)
 
-  QVector<RX7> m_ic;
+  QVector<PRJFLOAT> m_ic;
 
 };
 
@@ -357,13 +357,13 @@ private:
   int m_nr;  // species number (IX), in order from 1 to _nspcs
   int m_sflag;  // 1 = simulated, 0 = unsimulated species (I2) {W}
   int m_ntflag;  // 1 = non-trace, 0 = trace species (I2) {W}
-  RX7 m_molwt;  // molar mass [kg/kmol] - gas (R4)
-  RX7 m_mdiam;  // mean diameter - particle [m] (R4)
-  RX7 m_edens;  // effective density - particle [kg/m^3] (R4)
-  RX7 m_decay;  // decay constant [1/s] (R4) {W}
-  RX7 m_Dm;  // molecular diffusion coefficient [m2/s] (R4)
-  RX7 m_ccdef;  // default concentration [kg/kg air] (R4)
-  RX7 m_Cp;  // (unused) specific heat at constant pressure [J/kgK] (R4)
+  PRJFLOAT m_molwt;  // molar mass [kg/kmol] - gas (R4)
+  PRJFLOAT m_mdiam;  // mean diameter - particle [m] (R4)
+  PRJFLOAT m_edens;  // effective density - particle [kg/m^3] (R4)
+  PRJFLOAT m_decay;  // decay constant [1/s] (R4) {W}
+  PRJFLOAT m_Dm;  // molecular diffusion coefficient [m2/s] (R4)
+  PRJFLOAT m_ccdef;  // default concentration [kg/kg air] (R4)
+  PRJFLOAT m_Cp;  // (unused) specific heat at constant pressure [J/kgK] (R4)
   int m_ucc;  // units to display concentration (I2) {W}
   int m_umd;  // units to display mean diameter (I2) {W}
   int m_ued;  // units to display effective density (I2) {W}
@@ -616,16 +616,16 @@ private:
   int m_ps;  // schedule index (IX); converted to pointer
   int m_pc;  // control node index (IX); converted to pointer
   int m_pld;  // level index (IX); converted to pointer
-  RX7 m_X;  // X-coordinate of envelope path [m] (R4) {Contam 2.1}
-  RX7 m_Y;  // Y-coordinate of envelope path [m] (R4) {Contam 2.1}
-  RX7 m_relHt;  // height relative to current level [m] (R4)
-  RX7 m_mult;  // element multiplier (R4)
-  RX7 m_wPset;  // constant wind pressure [Pa] (pw==NULL) (R4)
-  RX7 m_wPmod;  // wind speed(?) modifier (pw!=NULL) (R4)
-  RX7 m_wazm;  // wall azimuth angle (pw!=NULL) (R4)
-  RX7 m_Fahs;  // AHS path flow rate [kg/s] (pw==NULL) (R4)
-  RX7 m_Xmax;  // flow or pressure limit - maximum (R4) {W}
-  RX7 m_Xmin;  // flow or pressure limit - minimum (R4) {W}
+  PRJFLOAT m_X;  // X-coordinate of envelope path [m] (R4) {Contam 2.1}
+  PRJFLOAT m_Y;  // Y-coordinate of envelope path [m] (R4) {Contam 2.1}
+  PRJFLOAT m_relHt;  // height relative to current level [m] (R4)
+  PRJFLOAT m_mult;  // element multiplier (R4)
+  PRJFLOAT m_wPset;  // constant wind pressure [Pa] (pw==NULL) (R4)
+  PRJFLOAT m_wPmod;  // wind speed(?) modifier (pw!=NULL) (R4)
+  PRJFLOAT m_wazm;  // wall azimuth angle (pw!=NULL) (R4)
+  PRJFLOAT m_Fahs;  // AHS path flow rate [kg/s] (pw==NULL) (R4)
+  PRJFLOAT m_Xmax;  // flow or pressure limit - maximum (R4) {W}
+  PRJFLOAT m_Xmin;  // flow or pressure limit - minimum (R4) {W}
   unsigned int m_icon;  // icon used to represent flow path (U1) {W}
   unsigned int m_dir;  // positive flow direction on sketchpad (U1) {W}
   int m_u_Ht;  // units of height (I2) {W}
@@ -1149,59 +1149,59 @@ private:
   int m_sim_af;  // airflow simulation: 0 = steady, 1 = dynamic (I2)
   int m_afcalc;  // N-R method for non-linear eqns: 0 = SUR, 1 = STR (I2)
   int m_afmaxi;  // maximum number of N-R iterations (I2)
-  RX7 m_afrcnvg;  // relative airflow convergence factor (R4)
-  RX7 m_afacnvg;  // absolute airflow convergence factor [1/s] (R4)
-  RX7 m_afrelax;  // flow under-relaxation coefficient (for SUR) (R4)
+  PRJFLOAT m_afrcnvg;  // relative airflow convergence factor (R4)
+  PRJFLOAT m_afacnvg;  // absolute airflow convergence factor [1/s] (R4)
+  PRJFLOAT m_afrelax;  // flow under-relaxation coefficient (for SUR) (R4)
   int m_uac2;  // units for afacnvg (I2)
-  RX7 m_Pres;  // pressure test pressure (R4) {Contam 2.4}
+  PRJFLOAT m_Pres;  // pressure test pressure (R4) {Contam 2.4}
   int m_uPres;  // units of Pres (I2) {Contam 2.4}
   int m_afslae;  // method for linear equations: 0 = SKY, 1 = PCG (I2)
   int m_afrseq;  // if true, resequence the linear equations (I2)
   int m_aflmaxi;  // maximum number of iterations (PCG) (I2)
-  RX7 m_aflcnvg;  // relative convergence factor for (PCG) (R4)
+  PRJFLOAT m_aflcnvg;  // relative convergence factor for (PCG) (R4)
   int m_aflinit;  // if true, do linear airflow initialization (I2)
   int m_Tadj;  // if true, use temperature adjustment (I2)
   int m_sim_mf;  // mass fraction (contaminant) simulation: 0 = none, 1 = steady, 2 = transient, 3 = cyclic (I2)
   int m_ccmaxi;  // simulation: maximum number of cyclic iterations (I2)
-  RX7 m_ccrcnvg;  // relative convergence factor (R4)
-  RX7 m_ccacnvg;  // absolute convergence factor [kg/kg] (R4)
-  RX7 m_ccrelax;  // (unused) over-relaxation coefficient (R4)
+  PRJFLOAT m_ccrcnvg;  // relative convergence factor (R4)
+  PRJFLOAT m_ccacnvg;  // absolute convergence factor [kg/kg] (R4)
+  PRJFLOAT m_ccrelax;  // (unused) over-relaxation coefficient (R4)
   int m_uccc;  // units for ccacnvg (I2)
   int m_mfnmthd;  // simulation: 0 = SKY, 1 = BCG, 2 = SOR, 3 = LU (I2)
   int m_mfnrseq;  // if true, resequence the linear equations (I2)
   int m_mfnmaxi;  // maximum iterations (I2)
-  RX7 m_mfnrcnvg;  // desired relative convergence (R4)
-  RX7 m_mfnacnvg;  // desired absolute convergence (R4)
-  RX7 m_mfnrelax;  // relaxation coefficient (R4)
-  RX7 m_mfngamma;  // trapezoidal integration factor (R4)
+  PRJFLOAT m_mfnrcnvg;  // desired relative convergence (R4)
+  PRJFLOAT m_mfnacnvg;  // desired absolute convergence (R4)
+  PRJFLOAT m_mfnrelax;  // relaxation coefficient (R4)
+  PRJFLOAT m_mfngamma;  // trapezoidal integration factor (R4)
   int m_uccn;  // units for mfnacnvg (I2)
   int m_mftmthd;  // 0 = SKY, 1 = BCG, 2 = SOR, 3 = LU (I2)
   int m_mftrseq;  // if true, resequence the linear equations (I2)
   int m_mftmaxi;  // maximum iterations (I2)
-  RX7 m_mftrcnvg;  // desired relative convergence (R4)
-  RX7 m_mftacnvg;  // desired absolute convergence (R4)
-  RX7 m_mftrelax;  // relaxation coefficient (R4)
-  RX7 m_mftgamma;  // trapezoidal integration factor (R4)
+  PRJFLOAT m_mftrcnvg;  // desired relative convergence (R4)
+  PRJFLOAT m_mftacnvg;  // desired absolute convergence (R4)
+  PRJFLOAT m_mftrelax;  // relaxation coefficient (R4)
+  PRJFLOAT m_mftgamma;  // trapezoidal integration factor (R4)
   int m_ucct;  // units for mftacnvg (I2)
   int m_mfvmthd;  // 0 = SKY, 2 = SOR, 3 = LU (1 n/a) (I2)
   int m_mfvrseq;  // if true, resequence the linear equations (I2)
   int m_mfvmaxi;  // maximum iterations (I2)
-  RX7 m_mfvrcnvg;  // desired relative convergence (R4)
-  RX7 m_mfvacnvg;  // desired absolute convergence (R4)
-  RX7 m_mfvrelax;  // relaxation coefficient (R4)
+  PRJFLOAT m_mfvrcnvg;  // desired relative convergence (R4)
+  PRJFLOAT m_mfvacnvg;  // desired absolute convergence (R4)
+  PRJFLOAT m_mfvrelax;  // relaxation coefficient (R4)
   int m_uccv;  // units for mfvacnvg (I2)
   int m_mf_solver;  // mass fraction integration method: {3.1} 0=trapezoid, 1=STS, 2=CVODE (I2)
   int m_sim_1dz;  // if true, use 1D zones (I2)
   int m_sim_1dd;  // if true, use 1D ducts (I2)
-  RX7 m_celldx;  // default length of duct cells for C-D model [m] (R4)
+  PRJFLOAT m_celldx;  // default length of duct cells for C-D model [m] (R4)
   int m_sim_vjt;  // if true, compute variable junction temperatures (I2)
   int m_udx;  // units of celldx (I2)
   int m_cvode_mth;  // 0 = am, 1 = bdf (I2)
-  RX7 m_cvode_rcnvg;  // relative convergence factor(R4)
-  RX7 m_cvode_acnvg;  // absolute convergence factor(R4)
-  RX7 m_cvode_dtmax;  // maximum time step (R4)
+  PRJFLOAT m_cvode_rcnvg;  // relative convergence factor(R4)
+  PRJFLOAT m_cvode_acnvg;  // absolute convergence factor(R4)
+  PRJFLOAT m_cvode_dtmax;  // maximum time step (R4)
   int m_tsdens;  // (0/1) vary density during time step (I2)
-  RX7 m_tsrelax;  // (inactive) under-relaxation factor for calculating dM/dt (R4)
+  PRJFLOAT m_tsrelax;  // (inactive) under-relaxation factor for calculating dM/dt (R4)
   int m_tsmaxi;  // maximum number of iterations for density changes (I2)
   int m_cnvgSS;  // (0/1) converge density in steady state init (I1) {2.4b}
   int m_densZP;  // (0/1) density = f(zone pressure) (I1) {2.4b, 3.1}
@@ -1239,12 +1239,12 @@ private:
   int m_srfsave;  // (0/1) save text surface result file (I1)
   int m_logsave;  // (0/1) save text controls log file (I1)
   std::vector<int> m_save;  // (unused by CONTAM; subject to change without notice) (I1)
-  std::vector<RX7> m_rvals;  // real values (R4)
+  std::vector<PRJFLOAT> m_rvals;  // real values (R4)
   int m_BldgFlowZ;  // output building airflow test (zones) (IX)
   int m_BldgFlowD;  // output building airflow test (ducts) (IX)
   int m_BldgFlowC;  // output building airflow test (classified flows) (IX)
   int m_cfd_ctype;  // (0=no cfd, 1=post, 2=quasi, 3=dynamic) cfd coupling method (I2)
-  RX7 m_cfd_convcpl;  // convergence factor for dynamic coupling (R4)
+  PRJFLOAT m_cfd_convcpl;  // convergence factor for dynamic coupling (R4)
   int m_cfd_var;  // (0/1) use .var file (I2)
   int m_cfd_zref;  // currently not used (I2)
   int m_cfd_imax;  // max number of dynamic coupling iterations (I2)
@@ -1255,7 +1255,8 @@ class LevelImpl : public QSharedData
 {
 public:
   LevelImpl();
-  LevelImpl(int nr, RX refht, RX delht, int u_rfht, int u_dlht, std::string name, std::vector<Icon> icons);
+  LevelImpl(int nr, double refht, double delht, int u_rfht, int u_dlht, std::string name, std::vector<Icon> icons);
+  LevelImpl(int nr, std::string refht, std::string delht, int u_rfht, int u_dlht, std::string name, std::vector<Icon> icons);
   void read(Reader &reader);
   std::string write();
 
@@ -1296,8 +1297,8 @@ private:
   void setDefaults();
 
   int m_nr;  // level number (IX), in order from 1 to nlev
-  RX7 m_refht;  // reference elevation of level [m] (R4)
-  RX7 m_delht;  // delta elevation to next level [m] (R4) {W}
+  PRJFLOAT m_refht;  // reference elevation of level [m] (R4)
+  PRJFLOAT m_delht;  // delta elevation to next level [m] (R4) {W}
   //int m_nicon;  // number of icons on this level (IX)
   int m_u_rfht;  // units of reference elevation (I2) {W}
   int m_u_dlht;  // units of delta elevation (I2) {W}

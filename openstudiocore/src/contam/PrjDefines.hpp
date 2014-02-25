@@ -19,42 +19,10 @@
 #ifndef PRJDEFINES_H
 #define PRJDEFINES_H
 
-#define STD_STRING
-#define RX_IS_STRING
-
-#ifdef RX_IS_STRING
-#define RX std::string
-#define RX_C(v) v
-#define RX_INIT(v) std::string(#v)
-#endif
-
-#define RX7 QString
-#define STR_TO_RX7 QString::fromStdString
+#define PRJFLOAT QString
+#define STR_TO_FLOAT(a) QString::fromStdString(a)
+#define FLOAT_CHECK(a,b) QString::fromStdString(a).toDouble(b)
 #define ANY_TO_STR openstudio::toString
-
-#define NOFILELINE
-
-#ifdef NOFILELINE
-#define DECFILELINE
-#define DECFILELINEC
-#define DECCFILELINE
-#define ARGFILELINE
-#define ARGFILELINEC
-#define ARGCFILELINE
-#define FILELINE
-#define CFILELINE
-#define FILELINEC
-#else
-#define DECFILELINE const char *file, int line
-#define DECFILELINEC const char *file, int line,
-#define DECCFILELINE ,const char *file, int line
-#define ARGFILELINE file,line
-#define ARGFILELINEC file,line,
-#define ARGCFILELINE ,file,line
-#define FILELINE __FILE__,__LINE__
-#define CFILELINE ,__FILE__,__LINE__
-#define FILELINEC __FILE__,__LINE__,
-#endif
 
 // CONTAM icon definitions
 #define FLOW_E      1  /* flow arrow - pointing east */
@@ -171,43 +139,6 @@
 #define EXP_N     252  /* FC 374 exponent n */
 #define EXP_2     253  /* FD 375 exponent 2 */
 #define SUB_2     254  /* FE 376 subscript 2 */
-
-// The defines below were mainly for the ReverseTranslator object - so
-// can be eliminated if that object doesn't ever come back.
-// Directional icon defines: E=1, N=2, W=4, S=8
-#define BIT_E       1
-#define BIT_N       2
-#define BIT_W       4
-#define BIT_S       8
-#define BIT_NE      3
-#define BIT_EW      5
-#define BIT_NW      6
-#define BIT_NEW     7
-#define BIT_ES      9
-#define BIT_NS     10
-#define BIT_NES    11
-#define BIT_SW     12
-#define BIT_ESW    13
-#define BIT_NSW    14
-#define BIT_NESW   15
-
-namespace BitMath { // Take that, C++!
-const unsigned int E = BIT_E;
-const unsigned int N = BIT_N;
-const unsigned int W = BIT_W;
-const unsigned int S = BIT_S;
-const unsigned int NE = BIT_NE;
-const unsigned int EW = BIT_EW;
-const unsigned int NW = BIT_NW;
-const unsigned int NEW = BIT_NEW;
-const unsigned int ES = BIT_ES;
-const unsigned int NS = BIT_NS;
-const unsigned int NES = BIT_NES;
-const unsigned int SW = BIT_SW;
-const unsigned int ESW = BIT_ESW;
-const unsigned int NSW = BIT_NSW;
-const unsigned int NESW = BIT_NESW;
-}
 
 enum PathFlags {
     WIND=0x0001, // Path is subject to wind pressure

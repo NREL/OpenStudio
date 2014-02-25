@@ -402,14 +402,14 @@ private:
   int m_skwidth;  // total SketchPad width [cells] (I2) {W}
   int m_def_units;  // default units: 0 = SI, 1 = US (I2) {W}
   int m_def_flows;  // default flows: 0 = mass, 1 = volume (I2) {W}
-  RX7 m_def_T;  // default temperature for zones [K] (R4) {W}
+  PRJFLOAT m_def_T;  // default temperature for zones [K] (R4) {W}
   int m_udefT;  // units for temperature (I2) {W}
-  RX7 m_rel_N;  // angle to true north [degrees] (R4) {W}
-  RX7 m_wind_H;  // elevation for reference wind speed [m] (R4) {W}
+  PRJFLOAT m_rel_N;  // angle to true north [degrees] (R4) {W}
+  PRJFLOAT m_wind_H;  // elevation for reference wind speed [m] (R4) {W}
   int m_uwH;  // units for _wind_H (I2) {W}
-  RX7 m_wind_Ao;  // local terrain constant (R4) {W}
-  RX7 m_wind_a;  // velocity profile exponent (R4) {W}
-  RX7 m_scale;  // cell scaling factor (R4)
+  PRJFLOAT m_wind_Ao;  // local terrain constant (R4) {W}
+  PRJFLOAT m_wind_a;  // velocity profile exponent (R4) {W}
+  PRJFLOAT m_scale;  // cell scaling factor (R4)
   int m_uScale;  // units of scaling factor: 0 = m, 1 = ft (I2)
   int m_orgRow;  // row of origin (I2)
   int m_orgCol;  // column of origin (I2)
@@ -424,24 +424,24 @@ private:
   std::string m_WPCfile;  // full name of WPC file (CS)
   std::string m_EWCfile;  // full name of EWC data source file (CS) {W}
   std::string m_WPCdesc;  // WPC description (CS) {W}
-  RX7 m_X0;  // X-value of ContamW origin in EWC coordinates [m] (R4) {W}
-  RX7 m_Y0;  // Y-value of ContamW origin in EWC coordinates [m] (R4) {W}
-  RX7 m_Z0;  // Z-value of ContamW origin in EWC coordinates [m] (R4) {W}
-  RX7 m_angle;  // Rotation of ContamW relative to EWC coordinates (R4) {W}
+  PRJFLOAT m_X0;  // X-value of ContamW origin in EWC coordinates [m] (R4) {W}
+  PRJFLOAT m_Y0;  // Y-value of ContamW origin in EWC coordinates [m] (R4) {W}
+  PRJFLOAT m_Z0;  // Z-value of ContamW origin in EWC coordinates [m] (R4) {W}
+  PRJFLOAT m_angle;  // Rotation of ContamW relative to EWC coordinates (R4) {W}
   int m_u_XYZ;  // units of coordinates (I2) {W}
-  RX7 m_epsPath;  // tolerance for matching path locations [-] (R4) {W}
-  RX7 m_epsSpcs;  // tolerance for matching species [-] (R4) {W}
+  PRJFLOAT m_epsPath;  // tolerance for matching path locations [-] (R4) {W}
+  PRJFLOAT m_epsSpcs;  // tolerance for matching species [-] (R4) {W}
   std::string m_tShift;  // time shift of EWC data {W} [s] (hh:mm:ss) {W}
   std::string m_dStart;  // date WPC data starts (mm/dd) {W}
   std::string m_dEnd;  // date WPC data ends (mm/dd) {W}
   int m_useWPCwp;  // if true, use WPC file wind pressures (I2)
   int m_useWPCmf;  // if true, use WPC file mass fractions (I2)
   int m_wpctrig;  // 0/1 = trigger airflow calculation by WPC data (I2)
-  RX7 m_latd;  // latitude (degrees: north +, south -) (R4)
-  RX7 m_lgtd;  // longitude (degrees: east +, west -) (R4)
-  RX7 m_Tznr;  // time zone (Greenwich = 0, Eastern = -5, etc.) (R4)
-  RX7 m_altd;  // elevation above sea level [m] (R4)
-  RX7 m_Tgrnd;  // ground temperature [K] (R4)
+  PRJFLOAT m_latd;  // latitude (degrees: north +, south -) (R4)
+  PRJFLOAT m_lgtd;  // longitude (degrees: east +, west -) (R4)
+  PRJFLOAT m_Tznr;  // time zone (Greenwich = 0, Eastern = -5, etc.) (R4)
+  PRJFLOAT m_altd;  // elevation above sea level [m] (R4)
+  PRJFLOAT m_Tgrnd;  // ground temperature [K] (R4)
   int m_utg;  // units for ground temperatures (I2)
   int m_u_a;  // units for elevation (I2)
 

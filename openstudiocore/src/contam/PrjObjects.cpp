@@ -2603,7 +2603,12 @@ Level::Level()
   d = new LevelImpl;
 }
 
-Level::Level(int nr,RX refht,RX delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
+Level::Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
+{
+  d = new LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons);
+}
+
+Level::Level(int nr,std::string refht,std::string delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
 {
   d = new LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons);
 }
@@ -3054,15 +3059,15 @@ ControlNode::Type ControlNode::convertTag(std::string string)
 ControlNode* ControlNode::readElement(Reader &input)
 {
   ControlNode *out=NULL;
-  int nr = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  int seqnr = input.read<int>(FILELINE);
-  unsigned int flags = input.read<unsigned int>(FILELINE);
-  int inreq = input.read<int>(FILELINE);
-  int n1 = input.read<int>(FILELINE);
-  int n2 = input.read<int>(FILELINE);
-  std::string name = input.readString(FILELINE);
-  std::string desc = input.readLine(FILELINE);
+  int nr = input.read<int>();
+  std::string dataType = input.readString();
+  int seqnr = input.read<int>();
+  unsigned int flags = input.read<unsigned int>();
+  int inreq = input.read<int>();
+  int n1 = input.read<int>();
+  int n2 = input.read<int>();
+  std::string name = input.readString();
+  std::string desc = input.readLine();
   int kind = convertTag(dataType);
   switch(kind)
   {
@@ -3117,17 +3122,11 @@ ControlNode* ControlNode::readElement(Reader &input)
   case ControlNode::CT_SUP:
     {
       std::string mesg = "Control node type '" + dataType + "' is not supported.";
-#ifndef NOFILELINE
-      mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
-#endif
       LOG_FREE_AND_THROW("openstudio.contam.Reader",mesg);
     }
   case ControlNode::UNKNOWN:
   default:
     std::string mesg = "Unknown control node type '" + dataType + "' at line " + openstudio::toString(input.lineNumber());
-#ifndef NOFILELINE
-    mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
-#endif
     LOG_FREE_AND_THROW("openstudio.contam.Reader",mesg);
   }
   return out;

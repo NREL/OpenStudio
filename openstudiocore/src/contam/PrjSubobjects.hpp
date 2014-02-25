@@ -194,8 +194,6 @@ public:
 
   /** Returns true if the icon is a wall icon. */
   bool isWall();
-  /** Returns a bit flag representation of wall icons. */
-  uint bits();
 
   //@}
 
@@ -264,11 +262,11 @@ public:
 private:
   void setDefaults();
 
-  RX7 m_mF;  // measured flow rates [kg/s] (R4) {W}
+  PRJFLOAT m_mF;  // measured flow rates [kg/s] (R4) {W}
   int m_u_mF;  // units of measured flows (I2) {W}
-  RX7 m_dP;  // measured pressure rises [Pa] (R4) {W}
+  PRJFLOAT m_dP;  // measured pressure rises [Pa] (R4) {W}
   int m_u_dP;  // units of pressure rises (I2) {W}
-  RX7 m_rP;  // revised pressure rises [Pa] (R4) {W}
+  PRJFLOAT m_rP;  // revised pressure rises [Pa] (R4) {W}
   int m_u_rP;  // units of revised pressures (I2) {W}
 };
 
@@ -316,8 +314,8 @@ public:
 private:
   void setDefaults();
 
-  RX7 m_x;  // value of independent variable (R4)
-  RX7 m_y;  // value of dependent variable (R4)
+  PRJFLOAT m_x;  // value of independent variable (R4)
+  PRJFLOAT m_y;  // value of dependent variable (R4)
 };
 
 /** The AirflowSubelementData object stores specific details for an
@@ -367,7 +365,7 @@ private:
   void setDefaults();
 
   int m_nr;  // sub-element number (IX)
-  RX7 m_relHt;  // relative height of sub-element (R4)
+  PRJFLOAT m_relHt;  // relative height of sub-element (R4)
   int m_filt;  // 1= filtered, 0= not (I2)
 };
 
@@ -416,8 +414,8 @@ public:
 private:
   void setDefaults();
 
-  RX7 m_azm;  // wind azimuth value {R4} [degrees]
-  RX7 m_coef;  // normalized wind pressure coefficients {R4} [-]
+  PRJFLOAT m_azm;  // wind azimuth value {R4} [degrees]
+  PRJFLOAT m_coef;  // normalized wind pressure coefficients {R4} [-]
 };
 
 /** SchedulePoint stores the time (in hh:mm:ss format) and control value for
@@ -463,7 +461,7 @@ private:
   void setDefaults();
 
   std::string m_time;  // time-of-day [s] (hh:mm:ss)
-  RX7 m_ctrl;  // corresponding control value (R4) [-]
+  PRJFLOAT m_ctrl;  // corresponding control value (R4) [-]
 };
 
 } // contam

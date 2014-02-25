@@ -116,13 +116,13 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_area;  // actual area [m^2] (R4) {X}
-  RX7 m_dia;  // hydraulic diameter [m] (R4) {X}
-  RX7 m_coef;  // flow coefficient (R4) {X}
-  RX7 m_Re;  // laminar/turbulet transition Reynolds number [-](R4) {X}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_area;  // actual area [m^2] (R4) {X}
+  PRJFLOAT m_dia;  // hydraulic diameter [m] (R4) {X}
+  PRJFLOAT m_coef;  // flow coefficient (R4) {X}
+  PRJFLOAT m_Re;  // laminar/turbulet transition Reynolds number [-](R4) {X}
   int m_u_A;  // units of area (I2) {X}
   int m_u_D;  // units of diameter (I2) {X}
 };
@@ -228,14 +228,14 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_coef;  // flow coefficient (R4) {W}
-  RX7 m_pres;  // reference pressure drop [Pa] (R4) {W}
-  RX7 m_area1;  // leakage area per item [m^2] (R4) {W}
-  RX7 m_area2;  // leakage area per unit length [m^2/m] (R4) {W}
-  RX7 m_area3;  // leakage area per unit area [m^2/m^2] (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_coef;  // flow coefficient (R4) {W}
+  PRJFLOAT m_pres;  // reference pressure drop [Pa] (R4) {W}
+  PRJFLOAT m_area1;  // leakage area per item [m^2] (R4) {W}
+  PRJFLOAT m_area2;  // leakage area per unit length [m^2/m] (R4) {W}
+  PRJFLOAT m_area3;  // leakage area per unit area [m^2/m^2] (R4) {W}
   int m_u_A1;  // units of area1 [m^2] (I2) {W}
   int m_u_A2;  // units of area2 [m^2/m] (I2) {W}
   int m_u_A3;  // units of area3 [m^2/m^2] (I2) {W}
@@ -315,11 +315,11 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent - 0.5 (R4)
-  RX7 m_area;  // actual area [m^2] (R4) {W}
-  RX7 m_coef;  // flow coefficient (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent - 0.5 (R4)
+  PRJFLOAT m_area;  // actual area [m^2] (R4) {W}
+  PRJFLOAT m_coef;  // flow coefficient (R4) {W}
   int m_u_A;  // units of area (I2) {W}
 };
 
@@ -376,9 +376,9 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
 };
 
 class PlrTest1Impl : public QSharedData
@@ -456,11 +456,11 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_dP;  // pressure drop [Pa] (R4) {W}
-  RX7 m_Flow;  // flow rate [kg/s] (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_dP;  // pressure drop [Pa] (R4) {W}
+  PRJFLOAT m_Flow;  // flow rate [kg/s] (R4) {W}
   int m_u_P;  // units of pressure drop (I2) {W}
   int m_u_F;  // units of flow (I2) {W}
 };
@@ -562,13 +562,13 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_dP1;  // point 1 pressure drop [Pa] (R4) {W}
-  RX7 m_F1;  // point 1 flow rate [kg/s] (R4) {W}
-  RX7 m_dP2;  // point 2 pressure drop [Pa] (R4) {W}
-  RX7 m_F2;  // point 2 flow rate [kg/s] (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_dP1;  // point 1 pressure drop [Pa] (R4) {W}
+  PRJFLOAT m_F1;  // point 1 flow rate [kg/s] (R4) {W}
+  PRJFLOAT m_dP2;  // point 2 pressure drop [Pa] (R4) {W}
+  PRJFLOAT m_F2;  // point 2 flow rate [kg/s] (R4) {W}
   int m_u_P1;  // units of pressure drop (I2) {W}
   int m_u_F1;  // units of flow (I2) {W}
   int m_u_P2;  // units of pressure drop (I2) {W}
@@ -650,11 +650,11 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_length;  // crack length [m] (R4) {W}
-  RX7 m_width;  // crack width [m] (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_length;  // crack length [m] (R4) {W}
+  PRJFLOAT m_width;  // crack width [m] (R4) {W}
   int m_u_L;  // units of length (I2) {W}
   int m_u_W;  // units of width (I2) {W}
 };
@@ -744,12 +744,12 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_Ht;  // distance between levels [m] (R4) {W}
-  RX7 m_Area;  // cross-sectional area [m^2] (R4) {W}
-  RX7 m_peo;  // density of people [pers/m^2] (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_Ht;  // distance between levels [m] (R4) {W}
+  PRJFLOAT m_Area;  // cross-sectional area [m^2] (R4) {W}
+  PRJFLOAT m_peo;  // density of people [pers/m^2] (R4) {W}
   int m_tread;  // 1 = open tread 0 = closed (IX) {W}
   int m_u_A;  // units of area (I2) {W}
   int m_u_D;  // units of distance (I2) {W}
@@ -853,13 +853,13 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_Ht;  // distance between levels [m] (R4) {W}
-  RX7 m_area;  // cross-sectional area [m^2] (R4) {W}
-  RX7 m_perim;  // perimeter [m] (R4) {W}
-  RX7 m_rough;  // roughness [m] (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_Ht;  // distance between levels [m] (R4) {W}
+  PRJFLOAT m_area;  // cross-sectional area [m^2] (R4) {W}
+  PRJFLOAT m_perim;  // perimeter [m] (R4) {W}
+  PRJFLOAT m_rough;  // roughness [m] (R4) {W}
   int m_u_A;  // units of area (I2) {W}
   int m_u_D;  // units of distance (I2) {W}
   int m_u_P;  // units of perimeter (I2) {W}
@@ -931,11 +931,11 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient {R4}
-  RX7 m_Cp;  // turbulent flow coefficient ( dP > 0 ) {R4}
-  RX7 m_xp;  // pressure exponent ( dP > 0 ) {R4}
-  RX7 m_Cn;  // turbulent flow coefficient ( dP < 0 ) {R4}
-  RX7 m_xn;  // pressure exponent ( dP < 0 ) {R4}
+  PRJFLOAT m_lam;  // laminar flow coefficient {R4}
+  PRJFLOAT m_Cp;  // turbulent flow coefficient ( dP > 0 ) {R4}
+  PRJFLOAT m_xp;  // pressure exponent ( dP > 0 ) {R4}
+  PRJFLOAT m_Cn;  // turbulent flow coefficient ( dP < 0 ) {R4}
+  PRJFLOAT m_xn;  // pressure exponent ( dP < 0 ) {R4}
 };
 
 class QfrQuadraticImpl : public QSharedData
@@ -984,8 +984,8 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_a;  // dP = a*Q + b*Q*Q {R4}
-  RX7 m_b;  // {R4}
+  PRJFLOAT m_a;  // dP = a*Q + b*Q*Q {R4}
+  PRJFLOAT m_b;  // {R4}
 };
 
 class QfrCrackImpl : public QSharedData
@@ -1077,11 +1077,11 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_a;  // dP = a*F + b*F*F {R4}
-  RX7 m_b;  // {R4}
-  RX7 m_length;  // crack length [m] {R4}
-  RX7 m_width;  // crack width [m] {R4}
-  RX7 m_depth;  // crack depth [m] {R4}
+  PRJFLOAT m_a;  // dP = a*F + b*F*F {R4}
+  PRJFLOAT m_b;  // {R4}
+  PRJFLOAT m_length;  // crack length [m] {R4}
+  PRJFLOAT m_width;  // crack width [m] {R4}
+  PRJFLOAT m_depth;  // crack depth [m] {R4}
   int m_nB;  // number of bends (IX)
   int m_u_L;  // units of length (IX)
   int m_u_W;  // units of width (IX)
@@ -1177,12 +1177,12 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_a;  // dP = a*F + b*F*F {R4}
-  RX7 m_b;  // {R4}
-  RX7 m_dP1;  // point 1 pressure drop [Pa] (R4) {W}
-  RX7 m_F1;  // point 1 flow rate [kg/s] (R4) {W}
-  RX7 m_dP2;  // point 2 pressure drop [Pa] (R4) {W}
-  RX7 m_F2;  // point 2 flow rate [kg/s] (R4) {W}
+  PRJFLOAT m_a;  // dP = a*F + b*F*F {R4}
+  PRJFLOAT m_b;  // {R4}
+  PRJFLOAT m_dP1;  // point 1 pressure drop [Pa] (R4) {W}
+  PRJFLOAT m_F1;  // point 1 flow rate [kg/s] (R4) {W}
+  PRJFLOAT m_dP2;  // point 2 pressure drop [Pa] (R4) {W}
+  PRJFLOAT m_F2;  // point 2 flow rate [kg/s] (R4) {W}
   int m_u_P1;  // units of pressure drop (I2) {W}
   int m_u_F1;  // units of flow (I2) {W}
   int m_u_P2;  // units of pressure drop (I2) {W}
@@ -1283,13 +1283,13 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_dTmin;  // minimum temperature difference for two-way flow [C] (R4)
-  RX7 m_ht;  // height of doorway [m] (R4)
-  RX7 m_wd;  // width of doorway [m] (R4)
-  RX7 m_cd;  // discharge coefficient (R4)
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_dTmin;  // minimum temperature difference for two-way flow [C] (R4)
+  PRJFLOAT m_ht;  // height of doorway [m] (R4)
+  PRJFLOAT m_wd;  // width of doorway [m] (R4)
+  PRJFLOAT m_cd;  // discharge coefficient (R4)
   int m_u_T;  // units of temperature (I2) {W}
   int m_u_H;  // units of height (I2) {W}
   int m_u_W;  // units of width (I2) {W}
@@ -1385,13 +1385,13 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_dH;  // distance above | below midpoint [m] {R4}
-  RX7 m_ht;  // height of doorway [m] (R4) {W in v. 2.0}
-  RX7 m_wd;  // width of doorway [m] (R4) {W}
-  RX7 m_cd;  // discharge coefficient [-] (R4) {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_dH;  // distance above | below midpoint [m] {R4}
+  PRJFLOAT m_ht;  // height of doorway [m] (R4) {W in v. 2.0}
+  PRJFLOAT m_wd;  // width of doorway [m] (R4) {W}
+  PRJFLOAT m_cd;  // discharge coefficient [-] (R4) {W}
   int m_u_H;  // units of height (I2) {W}
   int m_u_W;  // units of width (I2) {W}
 };
@@ -1441,7 +1441,7 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_Flow;  // design flow rate [kg/s] (R4)
+  PRJFLOAT m_Flow;  // design flow rate [kg/s] (R4)
   int m_u_F;  // units of flow (I2) {W}
 };
 
@@ -1548,15 +1548,15 @@ private:
   int m_icon;  // icon used to represent flow path (I2) {W}
   std::string m_name;  // element name (CS) {W}
   std::string m_desc;  // element description (CS) {W} may be blank
-  RX7 m_lam;  // laminar flow coefficient (R4)
-  RX7 m_turb;  // turbulent flow coefficient (R4)
-  RX7 m_expt;  // pressure exponent (R4)
-  RX7 m_rdens;  // reference fluid density [kg/m^3] {R4}
-  RX7 m_fdf;  // free delivery flow (prise = 0) [kg/s] {R4}
-  RX7 m_sop;  // shut-off pressure (flow = 0) [Pa] {R4}
-  RX7 m_off;  // fan is off if (RPM/rated RPM) < off {R4}
-  std::vector<RX7> m_fpc;  // fan performance polynomial coefficients {R4}
-  RX7 m_Sarea;  // shut-off orifice area [m^2] {R4} {W}
+  PRJFLOAT m_lam;  // laminar flow coefficient (R4)
+  PRJFLOAT m_turb;  // turbulent flow coefficient (R4)
+  PRJFLOAT m_expt;  // pressure exponent (R4)
+  PRJFLOAT m_rdens;  // reference fluid density [kg/m^3] {R4}
+  PRJFLOAT m_fdf;  // free delivery flow (prise = 0) [kg/s] {R4}
+  PRJFLOAT m_sop;  // shut-off pressure (flow = 0) [Pa] {R4}
+  PRJFLOAT m_off;  // fan is off if (RPM/rated RPM) < off {R4}
+  std::vector<PRJFLOAT> m_fpc;  // fan performance polynomial coefficients {R4}
+  PRJFLOAT m_Sarea;  // shut-off orifice area [m^2] {R4} {W}
   int m_u_Sa;  // units of shut-off area (I2) {W}
   std::vector<FanDataPoint> m_data;  // measured fan data points (FanDataPoint)
 };

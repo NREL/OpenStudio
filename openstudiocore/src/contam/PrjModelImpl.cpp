@@ -32,34 +32,34 @@ void PrjModelImpl::setDefaults()
   m_skwidth = 0;
   m_def_units = 0;
   m_def_flows = 0;
-  m_def_T = RX7("0.0");
+  m_def_T = PRJFLOAT("0.0");
   m_udefT = 0;
-  m_rel_N = RX7("0.0");
-  m_wind_H = RX7("0.0");
+  m_rel_N = PRJFLOAT("0.0");
+  m_wind_H = PRJFLOAT("0.0");
   m_uwH = 0;
-  m_wind_Ao = RX7("0.0");
-  m_wind_a = RX7("0.0");
-  m_scale = RX7("0.0");
+  m_wind_Ao = PRJFLOAT("0.0");
+  m_wind_a = PRJFLOAT("0.0");
+  m_scale = PRJFLOAT("0.0");
   m_uScale = 0;
   m_orgRow = 0;
   m_orgCol = 0;
   m_invYaxis = 0;
   m_showGeom = 0;
-  m_X0 = RX7("0.0");
-  m_Y0 = RX7("0.0");
-  m_Z0 = RX7("0.0");
-  m_angle = RX7("0.0");
+  m_X0 = PRJFLOAT("0.0");
+  m_Y0 = PRJFLOAT("0.0");
+  m_Z0 = PRJFLOAT("0.0");
+  m_angle = PRJFLOAT("0.0");
   m_u_XYZ = 0;
-  m_epsPath = RX7("0.0");
-  m_epsSpcs = RX7("0.0");
+  m_epsPath = PRJFLOAT("0.0");
+  m_epsSpcs = PRJFLOAT("0.0");
   m_useWPCwp = 0;
   m_useWPCmf = 0;
   m_wpctrig = 0;
-  m_latd = RX7("0.0");
-  m_lgtd = RX7("0.0");
-  m_Tznr = RX7("0.0");
-  m_altd = RX7("0.0");
-  m_Tgrnd = RX7("0.0");
+  m_latd = PRJFLOAT("0.0");
+  m_lgtd = PRJFLOAT("0.0");
+  m_Tznr = PRJFLOAT("0.0");
+  m_altd = PRJFLOAT("0.0");
+  m_Tgrnd = PRJFLOAT("0.0");
   m_utg = 0;
   m_u_a = 0;
 }
@@ -96,11 +96,7 @@ bool PrjModelImpl::read(openstudio::path path)
 bool PrjModelImpl::read(std::string filename)
 {
   setDefaults();
-#ifdef STD_STRING
   QFile fp(QString().fromStdString(filename));
-#else
-  QFile fp(filename);
-#endif
 
   m_valid = false;
   if (fp.open(QFile::ReadOnly))
@@ -117,124 +113,124 @@ bool PrjModelImpl::read(Reader &input)
 {
   m_valid = false;
   // Section 1: Project, Weather, Simulation, and Output Controls
-  m_programName = input.readString(FILELINE);
-  m_programVersion = input.readString(FILELINE);
-  m_echo = input.read<int>(FILELINE);
-  m_desc = input.readLine(FILELINE);
-  setSkheight(input.read<int>(FILELINE));
-  setSkwidth(input.read<int>(FILELINE));
-  setDef_units(input.read<int>(FILELINE));
-  setDef_flows(input.read<int>(FILELINE));
-  setDef_T(input.readNumber<RX>(FILELINE));
-  setUdefT(input.read<int>(FILELINE));
-  setRel_N(input.readNumber<RX>(FILELINE));
-  setWind_H(input.readNumber<RX>(FILELINE));
-  setUwH(input.read<int>(FILELINE));
-  setWind_Ao(input.readNumber<RX>(FILELINE));
-  setWind_a(input.readNumber<RX>(FILELINE));
-  setScale(input.readNumber<RX>(FILELINE));
-  setUScale(input.read<int>(FILELINE));
-  setOrgRow(input.read<int>(FILELINE));
-  setOrgCol(input.read<int>(FILELINE));
-  setInvYaxis(input.read<int>(FILELINE));
-  setShowGeom(input.read<int>(FILELINE));
+  m_programName = input.readString();
+  m_programVersion = input.readString();
+  m_echo = input.read<int>();
+  m_desc = input.readLine();
+  setSkheight(input.read<int>());
+  setSkwidth(input.read<int>());
+  setDef_units(input.read<int>());
+  setDef_flows(input.read<int>());
+  setDef_T(input.readNumber<std::string>());
+  setUdefT(input.read<int>());
+  setRel_N(input.readNumber<std::string>());
+  setWind_H(input.readNumber<std::string>());
+  setUwH(input.read<int>());
+  setWind_Ao(input.readNumber<std::string>());
+  setWind_a(input.readNumber<std::string>());
+  setScale(input.readNumber<std::string>());
+  setUScale(input.read<int>());
+  setOrgRow(input.read<int>());
+  setOrgCol(input.read<int>());
+  setInvYaxis(input.read<int>());
+  setShowGeom(input.read<int>());
   m_ssWeather.read(input);
   m_wptWeather.read(input);
-  m_WTHpath = input.readLine(FILELINE);
-  m_CTMpath = input.readLine(FILELINE);
-  m_CVFpath = input.readLine(FILELINE);
-  m_DVFpath = input.readLine(FILELINE);
-  m_WPCfile = input.readLine(FILELINE);
-  m_EWCfile = input.readLine(FILELINE);
-  m_WPCdesc = input.readLine(FILELINE);
-  setX0(input.readNumber<RX>(FILELINE));
-  setY0(input.readNumber<RX>(FILELINE));
-  setZ0(input.readNumber<RX>(FILELINE));
-  setAngle(input.readNumber<RX>(FILELINE));
-  setU_XYZ(input.read<int>(FILELINE));
-  setEpsPath(input.readNumber<RX>(FILELINE));
-  setEpsSpcs(input.readNumber<RX>(FILELINE));
-  setTShift(input.readString(FILELINE));
-  setDStart(input.readString(FILELINE));
-  setDEnd(input.readString(FILELINE));
-  setUseWPCwp(input.read<int>(FILELINE));
-  setUseWPCmf(input.read<int>(FILELINE));
-  setWpctrig(input.read<int>(FILELINE));
-  setLatd(input.readNumber<RX>(FILELINE));
-  setLgtd(input.readNumber<RX>(FILELINE));
-  setTznr(input.readNumber<RX>(FILELINE));
-  setAltd(input.readNumber<RX>(FILELINE));
-  setTgrnd(input.readNumber<RX>(FILELINE));
-  setUtg(input.read<int>(FILELINE));
-  setU_a(input.read<int>(FILELINE));
+  m_WTHpath = input.readLine();
+  m_CTMpath = input.readLine();
+  m_CVFpath = input.readLine();
+  m_DVFpath = input.readLine();
+  m_WPCfile = input.readLine();
+  m_EWCfile = input.readLine();
+  m_WPCdesc = input.readLine();
+  setX0(input.readNumber<std::string>());
+  setY0(input.readNumber<std::string>());
+  setZ0(input.readNumber<std::string>());
+  setAngle(input.readNumber<std::string>());
+  setU_XYZ(input.read<int>());
+  setEpsPath(input.readNumber<std::string>());
+  setEpsSpcs(input.readNumber<std::string>());
+  setTShift(input.readString());
+  setDStart(input.readString());
+  setDEnd(input.readString());
+  setUseWPCwp(input.read<int>());
+  setUseWPCmf(input.read<int>());
+  setWpctrig(input.read<int>());
+  setLatd(input.readNumber<std::string>());
+  setLgtd(input.readNumber<std::string>());
+  setTznr(input.readNumber<std::string>());
+  setAltd(input.readNumber<std::string>());
+  setTgrnd(input.readNumber<std::string>());
+  setUtg(input.read<int>());
+  setU_a(input.read<int>());
   m_rc.read(input); // Read the run control section
-  input.read999(FILELINE);
+  input.read999();
   // Section 2: Species and Contaminants
-  m_contaminants = input.readIntVector(FILELINEC false);
-  m_species = input.readSectionVector<Species>(FILELINEC "species");
+  m_contaminants = input.readIntVector(false);
+  m_species = input.readSectionVector<Species>("species");
   // Section 3: Level and Icon Data
-  m_levels = input.readSectionVector<Level>(FILELINEC "level");
+  m_levels = input.readSectionVector<Level>("level");
   // Section 4: Day Schedules
-  m_daySchedules = input.readSectionVector<DaySchedule>(FILELINEC "day schedule");
+  m_daySchedules = input.readSectionVector<DaySchedule>("day schedule");
   // Section 5: Week Schedules
-  m_weekSchedules = input.readSectionVector<WeekSchedule>(FILELINEC "week schedule");
+  m_weekSchedules = input.readSectionVector<WeekSchedule>("week schedule");
   // Section 6: Wind Pressure Profiles
-  m_windPressureProfiles = input.readSectionVector<WindPressureProfile>(FILELINEC "wind pressure profiles");
+  m_windPressureProfiles = input.readSectionVector<WindPressureProfile>("wind pressure profiles");
   // Section 7: Kinetic Reactions
-  std::string kinr = input.readSection(FILELINE); // Skip it
+  std::string kinr = input.readSection(); // Skip it
   m_unsupported["KineticReaction"] = kinr;
   // Section 8a: Filter Elements
-  std::string flte = input.readSection(FILELINE); // Skip it
+  std::string flte = input.readSection(); // Skip it
   m_unsupported["FilterElement"] = flte;
   // Section 8b: Filters
-  std::string filt = input.readSection(FILELINE); // Skip it
+  std::string filt = input.readSection(); // Skip it
   m_unsupported["Filter"] = filt;
   // Section 9: Source/Sink Elements
-  std::string cse = input.readSection(FILELINE); // Skip it
+  std::string cse = input.readSection(); // Skip it
   m_unsupported["SourceSink"] = cse;
   // Section 10: Airflow Elements
-  m_airflowElements = input.readElementVector<AirflowElement>(FILELINEC "airflow element");
+  m_airflowElements = input.readElementVector<AirflowElement>("airflow element");
   // Section 11: Duct Elements
-  std::string dfe = input.readSection(FILELINE); // Skip it
+  std::string dfe = input.readSection(); // Skip it
   m_unsupported["DuctElement"] = dfe;
   // Section 12a: Control Super Elements
-  std::string selmt = input.readSection(FILELINE); // Skip it
+  std::string selmt = input.readSection(); // Skip it
   m_unsupported["ControlSuperElements"] = selmt;
   // Section 12b: Control Nodes
-  //std::string ctrl = input.readSection(FILELINE); // Skip it
+  //std::string ctrl = input.readSection(); // Skip it
   //m_unsupported["ControlNode"] = ctrl;
-  m_controlNodes = input.readElementVector<ControlNode>(FILELINEC "control node");
+  m_controlNodes = input.readElementVector<ControlNode>("control node");
   // Section 13: Simple Air Handling System (AHS)
-  m_ahs = input.readSectionVector<Ahs>(FILELINEC "ahs");
+  m_ahs = input.readSectionVector<Ahs>("ahs");
   // Section 14: Zones
-  m_zones = input.readSectionVector<Zone>(FILELINEC "zone");
+  m_zones = input.readSectionVector<Zone>("zone");
   // Section 15: Initial Zone Concentrations
   readZoneIc(input);
   // Section 16: Airflow Paths
-  m_paths = input.readSectionVector<Path>(FILELINEC "path");
+  m_paths = input.readSectionVector<Path>("path");
   // Section 17: Duct Junctions
-  std::string jct = input.readSection(FILELINE); // Skip it
+  std::string jct = input.readSection(); // Skip it
   m_unsupported["DuctJunction"] = jct;
   // Section 18: Initial Junction Concentrations
-  std::string jctic = input.readSection(FILELINE); // Skip it
+  std::string jctic = input.readSection(); // Skip it
   m_unsupported["JunctionIC"] = jctic;
   // Section 19: Duct Segments
-  std::string dct = input.readSection(FILELINE); // Skip it
+  std::string dct = input.readSection(); // Skip it
   m_unsupported["DuctSegment"] = dct;
   // Section 20: Source/Sinks
-  //m_sourceSinks = input.readSectionVector<SourceSink>(FILELINEC QString("source/sink"));
-  std::string css = input.readSection(FILELINE); // Skip it
+  //m_sourceSinks = input.readSectionVector<SourceSink>(QString("source/sink"));
+  std::string css = input.readSection(); // Skip it
   m_unsupported["SourceSink"] = css;
   // Section 21: Occupancy Schedules
-  std::string osch = input.readSection(FILELINE); // Skip it
+  std::string osch = input.readSection(); // Skip it
   m_unsupported["OccupancySchedule"] = osch;
   // Section 22: Exposures
-  std::string pexp = input.readSection(FILELINE); // Skip it
+  std::string pexp = input.readSection(); // Skip it
   m_unsupported["Exposure"] = pexp;
   // Section 23: Annotations
-  std::string note = input.readSection(FILELINE); // Skip it
+  std::string note = input.readSection(); // Skip it
   m_unsupported["Annotation"] = note;
-  input.readEnd(FILELINE);
+  input.readEnd();
   m_valid = true;
   return true;
 }
@@ -423,10 +419,10 @@ bool PrjModelImpl::setDef_T(const double def_T)
 bool PrjModelImpl::setDef_T(const std::string &def_T)
 {
   bool ok;
-  STR_TO_RX7(def_T).toDouble(&ok);
+  FLOAT_CHECK(def_T,&ok);
   if(ok)
   {
-    m_def_T = STR_TO_RX7(def_T);
+    m_def_T = STR_TO_FLOAT(def_T);
     return true;
   }
   return false;
@@ -456,10 +452,10 @@ bool PrjModelImpl::setRel_N(const double rel_N)
 bool PrjModelImpl::setRel_N(const std::string &rel_N)
 {
   bool ok;
-  STR_TO_RX7(rel_N).toDouble(&ok);
+  FLOAT_CHECK(rel_N,&ok);
   if(ok)
   {
-    m_rel_N = STR_TO_RX7(rel_N);
+    m_rel_N = STR_TO_FLOAT(rel_N);
     return true;
   }
   return false;
@@ -479,10 +475,10 @@ bool PrjModelImpl::setWind_H(const double wind_H)
 bool PrjModelImpl::setWind_H(const std::string &wind_H)
 {
   bool ok;
-  STR_TO_RX7(wind_H).toDouble(&ok);
+  FLOAT_CHECK(wind_H,&ok);
   if(ok)
   {
-    m_wind_H = STR_TO_RX7(wind_H);
+    m_wind_H = STR_TO_FLOAT(wind_H);
     return true;
   }
   return false;
@@ -512,10 +508,10 @@ bool PrjModelImpl::setWind_Ao(const double wind_Ao)
 bool PrjModelImpl::setWind_Ao(const std::string &wind_Ao)
 {
   bool ok;
-  STR_TO_RX7(wind_Ao).toDouble(&ok);
+  FLOAT_CHECK(wind_Ao,&ok);
   if(ok)
   {
-    m_wind_Ao = STR_TO_RX7(wind_Ao);
+    m_wind_Ao = STR_TO_FLOAT(wind_Ao);
     return true;
   }
   return false;
@@ -535,10 +531,10 @@ bool PrjModelImpl::setWind_a(const double wind_a)
 bool PrjModelImpl::setWind_a(const std::string &wind_a)
 {
   bool ok;
-  STR_TO_RX7(wind_a).toDouble(&ok);
+  FLOAT_CHECK(wind_a,&ok);
   if(ok)
   {
-    m_wind_a = STR_TO_RX7(wind_a);
+    m_wind_a = STR_TO_FLOAT(wind_a);
     return true;
   }
   return false;
@@ -558,10 +554,10 @@ bool PrjModelImpl::setScale(const double scale)
 bool PrjModelImpl::setScale(const std::string &scale)
 {
   bool ok;
-  STR_TO_RX7(scale).toDouble(&ok);
+  FLOAT_CHECK(scale,&ok);
   if(ok)
   {
-    m_scale = STR_TO_RX7(scale);
+    m_scale = STR_TO_FLOAT(scale);
     return true;
   }
   return false;
@@ -721,10 +717,10 @@ bool PrjModelImpl::setX0(const double X0)
 bool PrjModelImpl::setX0(const std::string &X0)
 {
   bool ok;
-  STR_TO_RX7(X0).toDouble(&ok);
+  FLOAT_CHECK(X0,&ok);
   if(ok)
   {
-    m_X0 = STR_TO_RX7(X0);
+    m_X0 = STR_TO_FLOAT(X0);
     return true;
   }
   return false;
@@ -744,10 +740,10 @@ bool PrjModelImpl::setY0(const double Y0)
 bool PrjModelImpl::setY0(const std::string &Y0)
 {
   bool ok;
-  STR_TO_RX7(Y0).toDouble(&ok);
+  FLOAT_CHECK(Y0,&ok);
   if(ok)
   {
-    m_Y0 = STR_TO_RX7(Y0);
+    m_Y0 = STR_TO_FLOAT(Y0);
     return true;
   }
   return false;
@@ -767,10 +763,10 @@ bool PrjModelImpl::setZ0(const double Z0)
 bool PrjModelImpl::setZ0(const std::string &Z0)
 {
   bool ok;
-  STR_TO_RX7(Z0).toDouble(&ok);
+  FLOAT_CHECK(Z0,&ok);
   if(ok)
   {
-    m_Z0 = STR_TO_RX7(Z0);
+    m_Z0 = STR_TO_FLOAT(Z0);
     return true;
   }
   return false;
@@ -790,10 +786,10 @@ bool PrjModelImpl::setAngle(const double angle)
 bool PrjModelImpl::setAngle(const std::string &angle)
 {
   bool ok;
-  STR_TO_RX7(angle).toDouble(&ok);
+  FLOAT_CHECK(angle,&ok);
   if(ok)
   {
-    m_angle = STR_TO_RX7(angle);
+    m_angle = STR_TO_FLOAT(angle);
     return true;
   }
   return false;
@@ -823,10 +819,10 @@ bool PrjModelImpl::setEpsPath(const double epsPath)
 bool PrjModelImpl::setEpsPath(const std::string &epsPath)
 {
   bool ok;
-  STR_TO_RX7(epsPath).toDouble(&ok);
+  FLOAT_CHECK(epsPath,&ok);
   if(ok)
   {
-    m_epsPath = STR_TO_RX7(epsPath);
+    m_epsPath = STR_TO_FLOAT(epsPath);
     return true;
   }
   return false;
@@ -846,10 +842,10 @@ bool PrjModelImpl::setEpsSpcs(const double epsSpcs)
 bool PrjModelImpl::setEpsSpcs(const std::string &epsSpcs)
 {
   bool ok;
-  STR_TO_RX7(epsSpcs).toDouble(&ok);
+  FLOAT_CHECK(epsSpcs,&ok);
   if(ok)
   {
-    m_epsSpcs = STR_TO_RX7(epsSpcs);
+    m_epsSpcs = STR_TO_FLOAT(epsSpcs);
     return true;
   }
   return false;
@@ -929,10 +925,10 @@ bool PrjModelImpl::setLatd(const double latd)
 bool PrjModelImpl::setLatd(const std::string &latd)
 {
   bool ok;
-  STR_TO_RX7(latd).toDouble(&ok);
+  FLOAT_CHECK(latd,&ok);
   if(ok)
   {
-    m_latd = STR_TO_RX7(latd);
+    m_latd = STR_TO_FLOAT(latd);
     return true;
   }
   return false;
@@ -952,10 +948,10 @@ bool PrjModelImpl::setLgtd(const double lgtd)
 bool PrjModelImpl::setLgtd(const std::string &lgtd)
 {
   bool ok;
-  STR_TO_RX7(lgtd).toDouble(&ok);
+  FLOAT_CHECK(lgtd,&ok);
   if(ok)
   {
-    m_lgtd = STR_TO_RX7(lgtd);
+    m_lgtd = STR_TO_FLOAT(lgtd);
     return true;
   }
   return false;
@@ -975,10 +971,10 @@ bool PrjModelImpl::setTznr(const double Tznr)
 bool PrjModelImpl::setTznr(const std::string &Tznr)
 {
   bool ok;
-  STR_TO_RX7(Tznr).toDouble(&ok);
+  FLOAT_CHECK(Tznr,&ok);
   if(ok)
   {
-    m_Tznr = STR_TO_RX7(Tznr);
+    m_Tznr = STR_TO_FLOAT(Tznr);
     return true;
   }
   return false;
@@ -998,10 +994,10 @@ bool PrjModelImpl::setAltd(const double altd)
 bool PrjModelImpl::setAltd(const std::string &altd)
 {
   bool ok;
-  STR_TO_RX7(altd).toDouble(&ok);
+  FLOAT_CHECK(altd,&ok);
   if(ok)
   {
-    m_altd = STR_TO_RX7(altd);
+    m_altd = STR_TO_FLOAT(altd);
     return true;
   }
   return false;
@@ -1021,10 +1017,10 @@ bool PrjModelImpl::setTgrnd(const double Tgrnd)
 bool PrjModelImpl::setTgrnd(const std::string &Tgrnd)
 {
   bool ok;
-  STR_TO_RX7(Tgrnd).toDouble(&ok);
+  FLOAT_CHECK(Tgrnd,&ok);
   if(ok)
   {
-    m_Tgrnd = STR_TO_RX7(Tgrnd);
+    m_Tgrnd = STR_TO_FLOAT(Tgrnd);
     return true;
   }
   return false;
@@ -1077,8 +1073,8 @@ void PrjModelImpl::setSpecies(const std::vector<Species> &species)
 
 void PrjModelImpl::addSpecies(Species &species)
 {
-    species.setNr(m_species.size()+1);
-    m_species.push_back(species);
+  species.setNr(m_species.size()+1);
+  m_species.push_back(species);
 }
 
 std::vector<Level> PrjModelImpl::levels() const
@@ -1093,8 +1089,8 @@ void PrjModelImpl::setLevels(const std::vector<Level> &levels)
 
 void PrjModelImpl::addLevel(Level &level)
 {
-    level.setNr(m_levels.size()+1);
-    m_levels.push_back(level);
+  level.setNr(m_levels.size()+1);
+  m_levels.push_back(level);
 }
 
 std::vector<DaySchedule> PrjModelImpl::daySchedules() const
@@ -1190,8 +1186,8 @@ void PrjModelImpl::setAhs(const std::vector<Ahs> &ahs)
 
 void PrjModelImpl::addAhs(Ahs &ahs)
 {
-    ahs.setNr(m_ahs.size()+1);
-    m_ahs.push_back(ahs);
+  ahs.setNr(m_ahs.size()+1);
+  m_ahs.push_back(ahs);
 }
 
 std::vector<Zone> PrjModelImpl::zones() const
@@ -1206,8 +1202,8 @@ void PrjModelImpl::setZones(const std::vector<Zone> &zones)
 
 void PrjModelImpl::addZone(Zone &zone)
 {
-    zone.setNr(m_zones.size()+1);
-    m_zones.push_back(zone);
+  zone.setNr(m_zones.size()+1);
+  m_zones.push_back(zone);
 }
 
 bool PrjModelImpl::valid() const
@@ -1227,8 +1223,8 @@ void PrjModelImpl::setPaths(const std::vector<Path> &paths)
 
 void PrjModelImpl::addPath(Path &path)
 {
-    path.setNr(m_paths.size()+1);
-    m_paths.push_back(path);
+  path.setNr(m_paths.size()+1);
+  m_paths.push_back(path);
 }
 
 void PrjModelImpl::rebuildContaminants()
@@ -1246,39 +1242,33 @@ void PrjModelImpl::rebuildContaminants()
 
 void PrjModelImpl::readZoneIc(Reader &input)
 {
-  unsigned int nn = input.readUInt(FILELINE);
+  unsigned int nn = input.readUInt();
   if(nn != 0)
   {
     unsigned int nctm = m_contaminants.size();
     if(nn != nctm*m_zones.size())
     {
       QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
-#ifndef NOFILELINE
-      mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
-#endif
       LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
     }
     for(unsigned int i=0;i<m_zones.size();i++)
     {
-      unsigned int nr = input.readUInt(FILELINE);
+      unsigned int nr = input.readUInt();
       if(nr != i+1)
       {
         QString mesg = QString("Mismatch between zone IC number and zone number at line %1 ")
           .arg(input.lineNumber());
-#ifndef NOFILELINE
-        mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
-#endif
         LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
       }
-      std::vector<RX> ic;
+      std::vector<std::string> ic;
       for(unsigned int j=0;j<nctm;j++)
       {
-        ic.push_back(input.readNumber<RX>(FILELINE));
+        ic.push_back(input.readNumber<std::string>());
       }
       m_zones[i].setIc(ic);
     }
   }
-  input.read999("Failed to find zone IC section termination" CFILELINE);
+  input.read999("Failed to find zone IC section termination");
 }
 
 std::string PrjModelImpl::writeZoneIc(int start)

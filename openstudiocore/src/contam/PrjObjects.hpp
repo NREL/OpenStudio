@@ -1243,7 +1243,9 @@ public:
   /** Create a new object with default values. */
   Level();
   /** Create a new object. */
-  Level(int nr,RX refht,RX delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons);
+  Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons);
+  /** Create a new object. */
+  Level(int nr,std::string refht,std::string delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons);
   /** Create a new object from another object. */
   Level(const Level &other);
   /** Destroy the object. */

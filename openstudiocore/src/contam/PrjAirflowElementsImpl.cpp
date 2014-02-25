@@ -25,13 +25,13 @@ void PlrOrfImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_area = RX7("0.0");
-  m_dia = RX7("0.0");
-  m_coef = RX7("0.0");
-  m_Re = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_area = PRJFLOAT("0.0");
+  m_dia = PRJFLOAT("0.0");
+  m_coef = PRJFLOAT("0.0");
+  m_Re = PRJFLOAT("0.0");
   m_u_A = 0;
   m_u_D = 0;
 }
@@ -90,20 +90,20 @@ PlrOrfImpl::PlrOrfImpl(int nr,int icon,std::string name,std::string desc,std::st
 
 void PlrOrfImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setDia(input.readNumber<std::string>(FILELINE));
-  setCoef(input.readNumber<std::string>(FILELINE));
-  setRe(input.readNumber<std::string>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setDia(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
+  setRe(input.readNumber<std::string>());
+  setU_A(input.read<int>());
+  setU_D(input.read<int>());
 }
 
 std::string PlrOrfImpl::write()
@@ -119,15 +119,15 @@ std::string PlrOrfImpl::write()
 
 void PlrOrfImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setDia(input.readNumber<std::string>(FILELINE));
-  setCoef(input.readNumber<std::string>(FILELINE));
-  setRe(input.readNumber<std::string>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setDia(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
+  setRe(input.readNumber<std::string>());
+  setU_A(input.read<int>());
+  setU_D(input.read<int>());
 }
 
 int PlrOrfImpl::nr() const
@@ -184,10 +184,10 @@ bool PlrOrfImpl::setLam(const double lam)
 bool PlrOrfImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -207,10 +207,10 @@ bool PlrOrfImpl::setTurb(const double turb)
 bool PlrOrfImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -230,10 +230,10 @@ bool PlrOrfImpl::setExpt(const double expt)
 bool PlrOrfImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -253,10 +253,10 @@ bool PlrOrfImpl::setArea(const double area)
 bool PlrOrfImpl::setArea(const std::string &area)
 {
   bool ok;
-  STR_TO_RX7(area).toDouble(&ok);
+  FLOAT_CHECK(area,&ok);
   if(ok)
   {
-    m_area = STR_TO_RX7(area);
+    m_area = STR_TO_FLOAT(area);
     return true;
   }
   return false;
@@ -276,10 +276,10 @@ bool PlrOrfImpl::setDia(const double dia)
 bool PlrOrfImpl::setDia(const std::string &dia)
 {
   bool ok;
-  STR_TO_RX7(dia).toDouble(&ok);
+  FLOAT_CHECK(dia,&ok);
   if(ok)
   {
-    m_dia = STR_TO_RX7(dia);
+    m_dia = STR_TO_FLOAT(dia);
     return true;
   }
   return false;
@@ -299,10 +299,10 @@ bool PlrOrfImpl::setCoef(const double coef)
 bool PlrOrfImpl::setCoef(const std::string &coef)
 {
   bool ok;
-  STR_TO_RX7(coef).toDouble(&ok);
+  FLOAT_CHECK(coef,&ok);
   if(ok)
   {
-    m_coef = STR_TO_RX7(coef);
+    m_coef = STR_TO_FLOAT(coef);
     return true;
   }
   return false;
@@ -322,10 +322,10 @@ bool PlrOrfImpl::setRe(const double Re)
 bool PlrOrfImpl::setRe(const std::string &Re)
 {
   bool ok;
-  STR_TO_RX7(Re).toDouble(&ok);
+  FLOAT_CHECK(Re,&ok);
   if(ok)
   {
-    m_Re = STR_TO_RX7(Re);
+    m_Re = STR_TO_FLOAT(Re);
     return true;
   }
   return false;
@@ -355,14 +355,14 @@ void PlrLeakImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_coef = RX7("0.0");
-  m_pres = RX7("0.0");
-  m_area1 = RX7("0.0");
-  m_area2 = RX7("0.0");
-  m_area3 = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_coef = PRJFLOAT("0.0");
+  m_pres = PRJFLOAT("0.0");
+  m_area1 = PRJFLOAT("0.0");
+  m_area2 = PRJFLOAT("0.0");
+  m_area3 = PRJFLOAT("0.0");
   m_u_A1 = 0;
   m_u_A2 = 0;
   m_u_A3 = 0;
@@ -431,23 +431,23 @@ PlrLeakImpl::PlrLeakImpl(int nr,int icon,std::string name,std::string desc,std::
 
 void PlrLeakImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setCoef(input.readNumber<std::string>(FILELINE));
-  setPres(input.readNumber<std::string>(FILELINE));
-  setArea1(input.readNumber<std::string>(FILELINE));
-  setArea2(input.readNumber<std::string>(FILELINE));
-  setArea3(input.readNumber<std::string>(FILELINE));
-  setU_A1(input.read<int>(FILELINE));
-  setU_A2(input.read<int>(FILELINE));
-  setU_A3(input.read<int>(FILELINE));
-  setU_dP(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
+  setPres(input.readNumber<std::string>());
+  setArea1(input.readNumber<std::string>());
+  setArea2(input.readNumber<std::string>());
+  setArea3(input.readNumber<std::string>());
+  setU_A1(input.read<int>());
+  setU_A2(input.read<int>());
+  setU_A3(input.read<int>());
+  setU_dP(input.read<int>());
 }
 
 std::string PlrLeakImpl::write(std::string datatype)
@@ -464,18 +464,18 @@ std::string PlrLeakImpl::write(std::string datatype)
 
 void PlrLeakImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setCoef(input.readNumber<std::string>(FILELINE));
-  setPres(input.readNumber<std::string>(FILELINE));
-  setArea1(input.readNumber<std::string>(FILELINE));
-  setArea2(input.readNumber<std::string>(FILELINE));
-  setArea3(input.readNumber<std::string>(FILELINE));
-  setU_A1(input.read<int>(FILELINE));
-  setU_A2(input.read<int>(FILELINE));
-  setU_A3(input.read<int>(FILELINE));
-  setU_dP(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
+  setPres(input.readNumber<std::string>());
+  setArea1(input.readNumber<std::string>());
+  setArea2(input.readNumber<std::string>());
+  setArea3(input.readNumber<std::string>());
+  setU_A1(input.read<int>());
+  setU_A2(input.read<int>());
+  setU_A3(input.read<int>());
+  setU_dP(input.read<int>());
 }
 
 int PlrLeakImpl::nr() const
@@ -532,10 +532,10 @@ bool PlrLeakImpl::setLam(const double lam)
 bool PlrLeakImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -555,10 +555,10 @@ bool PlrLeakImpl::setTurb(const double turb)
 bool PlrLeakImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -578,10 +578,10 @@ bool PlrLeakImpl::setExpt(const double expt)
 bool PlrLeakImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -601,10 +601,10 @@ bool PlrLeakImpl::setCoef(const double coef)
 bool PlrLeakImpl::setCoef(const std::string &coef)
 {
   bool ok;
-  STR_TO_RX7(coef).toDouble(&ok);
+  FLOAT_CHECK(coef,&ok);
   if(ok)
   {
-    m_coef = STR_TO_RX7(coef);
+    m_coef = STR_TO_FLOAT(coef);
     return true;
   }
   return false;
@@ -624,10 +624,10 @@ bool PlrLeakImpl::setPres(const double pres)
 bool PlrLeakImpl::setPres(const std::string &pres)
 {
   bool ok;
-  STR_TO_RX7(pres).toDouble(&ok);
+  FLOAT_CHECK(pres,&ok);
   if(ok)
   {
-    m_pres = STR_TO_RX7(pres);
+    m_pres = STR_TO_FLOAT(pres);
     return true;
   }
   return false;
@@ -647,10 +647,10 @@ bool PlrLeakImpl::setArea1(const double area1)
 bool PlrLeakImpl::setArea1(const std::string &area1)
 {
   bool ok;
-  STR_TO_RX7(area1).toDouble(&ok);
+  FLOAT_CHECK(area1,&ok);
   if(ok)
   {
-    m_area1 = STR_TO_RX7(area1);
+    m_area1 = STR_TO_FLOAT(area1);
     return true;
   }
   return false;
@@ -670,10 +670,10 @@ bool PlrLeakImpl::setArea2(const double area2)
 bool PlrLeakImpl::setArea2(const std::string &area2)
 {
   bool ok;
-  STR_TO_RX7(area2).toDouble(&ok);
+  FLOAT_CHECK(area2,&ok);
   if(ok)
   {
-    m_area2 = STR_TO_RX7(area2);
+    m_area2 = STR_TO_FLOAT(area2);
     return true;
   }
   return false;
@@ -693,10 +693,10 @@ bool PlrLeakImpl::setArea3(const double area3)
 bool PlrLeakImpl::setArea3(const std::string &area3)
 {
   bool ok;
-  STR_TO_RX7(area3).toDouble(&ok);
+  FLOAT_CHECK(area3,&ok);
   if(ok)
   {
-    m_area3 = STR_TO_RX7(area3);
+    m_area3 = STR_TO_FLOAT(area3);
     return true;
   }
   return false;
@@ -746,11 +746,11 @@ void PlrConnImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_coef = RX7("0.0");
-  m_area = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_coef = PRJFLOAT("0.0");
+  m_area = PRJFLOAT("0.0");
   m_u_A = 0;
 }
 
@@ -802,17 +802,17 @@ PlrConnImpl::PlrConnImpl(int nr,int icon,std::string name,std::string desc,std::
 
 void PlrConnImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setCoef(input.readNumber<std::string>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
+  setU_A(input.read<int>());
 }
 
 std::string PlrConnImpl::write()
@@ -827,12 +827,12 @@ std::string PlrConnImpl::write()
 
 void PlrConnImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setCoef(input.readNumber<std::string>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
+  setU_A(input.read<int>());
 }
 
 int PlrConnImpl::nr() const
@@ -889,10 +889,10 @@ bool PlrConnImpl::setLam(const double lam)
 bool PlrConnImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -912,10 +912,10 @@ bool PlrConnImpl::setTurb(const double turb)
 bool PlrConnImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -935,10 +935,10 @@ bool PlrConnImpl::setExpt(const double expt)
 bool PlrConnImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -958,10 +958,10 @@ bool PlrConnImpl::setArea(const double area)
 bool PlrConnImpl::setArea(const std::string &area)
 {
   bool ok;
-  STR_TO_RX7(area).toDouble(&ok);
+  FLOAT_CHECK(area,&ok);
   if(ok)
   {
-    m_area = STR_TO_RX7(area);
+    m_area = STR_TO_FLOAT(area);
     return true;
   }
   return false;
@@ -981,10 +981,10 @@ bool PlrConnImpl::setCoef(const double coef)
 bool PlrConnImpl::setCoef(const std::string &coef)
 {
   bool ok;
-  STR_TO_RX7(coef).toDouble(&ok);
+  FLOAT_CHECK(coef,&ok);
   if(ok)
   {
-    m_coef = STR_TO_RX7(coef);
+    m_coef = STR_TO_FLOAT(coef);
     return true;
   }
   return false;
@@ -1004,9 +1004,9 @@ void PlrGeneralImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
 }
 
 PlrGeneralImpl::PlrGeneralImpl()
@@ -1049,14 +1049,14 @@ PlrGeneralImpl::PlrGeneralImpl(int nr,int icon,std::string name,std::string desc
 
 void PlrGeneralImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
 }
 
 std::string PlrGeneralImpl::write(std::string dataType)
@@ -1070,9 +1070,9 @@ std::string PlrGeneralImpl::write(std::string dataType)
 
 void PlrGeneralImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
 }
 
 int PlrGeneralImpl::nr() const
@@ -1129,10 +1129,10 @@ bool PlrGeneralImpl::setLam(const double lam)
 bool PlrGeneralImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -1152,10 +1152,10 @@ bool PlrGeneralImpl::setTurb(const double turb)
 bool PlrGeneralImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -1175,10 +1175,10 @@ bool PlrGeneralImpl::setExpt(const double expt)
 bool PlrGeneralImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -1188,11 +1188,11 @@ void PlrTest1Impl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_dP = RX7("0.0");
-  m_Flow = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_dP = PRJFLOAT("0.0");
+  m_Flow = PRJFLOAT("0.0");
   m_u_P = 0;
   m_u_F = 0;
 }
@@ -1247,18 +1247,18 @@ PlrTest1Impl::PlrTest1Impl(int nr,int icon,std::string name,std::string desc,std
 
 void PlrTest1Impl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDP(input.readNumber<std::string>(FILELINE));
-  setFlow(input.readNumber<std::string>(FILELINE));
-  setU_P(input.read<int>(FILELINE));
-  setU_F(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDP(input.readNumber<std::string>());
+  setFlow(input.readNumber<std::string>());
+  setU_P(input.read<int>());
+  setU_F(input.read<int>());
 }
 
 std::string PlrTest1Impl::write()
@@ -1274,13 +1274,13 @@ std::string PlrTest1Impl::write()
 
 void PlrTest1Impl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDP(input.readNumber<std::string>(FILELINE));
-  setFlow(input.readNumber<std::string>(FILELINE));
-  setU_P(input.read<int>(FILELINE));
-  setU_F(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDP(input.readNumber<std::string>());
+  setFlow(input.readNumber<std::string>());
+  setU_P(input.read<int>());
+  setU_F(input.read<int>());
 }
 
 int PlrTest1Impl::nr() const
@@ -1337,10 +1337,10 @@ bool PlrTest1Impl::setLam(const double lam)
 bool PlrTest1Impl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -1360,10 +1360,10 @@ bool PlrTest1Impl::setTurb(const double turb)
 bool PlrTest1Impl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -1383,10 +1383,10 @@ bool PlrTest1Impl::setExpt(const double expt)
 bool PlrTest1Impl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -1406,10 +1406,10 @@ bool PlrTest1Impl::setDP(const double dP)
 bool PlrTest1Impl::setDP(const std::string &dP)
 {
   bool ok;
-  STR_TO_RX7(dP).toDouble(&ok);
+  FLOAT_CHECK(dP,&ok);
   if(ok)
   {
-    m_dP = STR_TO_RX7(dP);
+    m_dP = STR_TO_FLOAT(dP);
     return true;
   }
   return false;
@@ -1429,10 +1429,10 @@ bool PlrTest1Impl::setFlow(const double Flow)
 bool PlrTest1Impl::setFlow(const std::string &Flow)
 {
   bool ok;
-  STR_TO_RX7(Flow).toDouble(&ok);
+  FLOAT_CHECK(Flow,&ok);
   if(ok)
   {
-    m_Flow = STR_TO_RX7(Flow);
+    m_Flow = STR_TO_FLOAT(Flow);
     return true;
   }
   return false;
@@ -1462,13 +1462,13 @@ void PlrTest2Impl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_dP1 = RX7("0.0");
-  m_F1 = RX7("0.0");
-  m_dP2 = RX7("0.0");
-  m_F2 = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_dP1 = PRJFLOAT("0.0");
+  m_F1 = PRJFLOAT("0.0");
+  m_dP2 = PRJFLOAT("0.0");
+  m_F2 = PRJFLOAT("0.0");
   m_u_P1 = 0;
   m_u_F1 = 0;
   m_u_P2 = 0;
@@ -1533,22 +1533,22 @@ PlrTest2Impl::PlrTest2Impl(int nr,int icon,std::string name,std::string desc,std
 
 void PlrTest2Impl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDP1(input.readNumber<std::string>(FILELINE));
-  setF1(input.readNumber<std::string>(FILELINE));
-  setDP2(input.readNumber<std::string>(FILELINE));
-  setF2(input.readNumber<std::string>(FILELINE));
-  setU_P1(input.read<int>(FILELINE));
-  setU_F1(input.read<int>(FILELINE));
-  setU_P2(input.read<int>(FILELINE));
-  setU_F2(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDP1(input.readNumber<std::string>());
+  setF1(input.readNumber<std::string>());
+  setDP2(input.readNumber<std::string>());
+  setF2(input.readNumber<std::string>());
+  setU_P1(input.read<int>());
+  setU_F1(input.read<int>());
+  setU_P2(input.read<int>());
+  setU_F2(input.read<int>());
 }
 
 std::string PlrTest2Impl::write()
@@ -1565,17 +1565,17 @@ std::string PlrTest2Impl::write()
 
 void PlrTest2Impl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDP1(input.readNumber<std::string>(FILELINE));
-  setF1(input.readNumber<std::string>(FILELINE));
-  setDP2(input.readNumber<std::string>(FILELINE));
-  setF2(input.readNumber<std::string>(FILELINE));
-  setU_P1(input.read<int>(FILELINE));
-  setU_F1(input.read<int>(FILELINE));
-  setU_P2(input.read<int>(FILELINE));
-  setU_F2(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDP1(input.readNumber<std::string>());
+  setF1(input.readNumber<std::string>());
+  setDP2(input.readNumber<std::string>());
+  setF2(input.readNumber<std::string>());
+  setU_P1(input.read<int>());
+  setU_F1(input.read<int>());
+  setU_P2(input.read<int>());
+  setU_F2(input.read<int>());
 }
 
 int PlrTest2Impl::nr() const
@@ -1632,10 +1632,10 @@ bool PlrTest2Impl::setLam(const double lam)
 bool PlrTest2Impl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -1655,10 +1655,10 @@ bool PlrTest2Impl::setTurb(const double turb)
 bool PlrTest2Impl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -1678,10 +1678,10 @@ bool PlrTest2Impl::setExpt(const double expt)
 bool PlrTest2Impl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -1701,10 +1701,10 @@ bool PlrTest2Impl::setDP1(const double dP1)
 bool PlrTest2Impl::setDP1(const std::string &dP1)
 {
   bool ok;
-  STR_TO_RX7(dP1).toDouble(&ok);
+  FLOAT_CHECK(dP1,&ok);
   if(ok)
   {
-    m_dP1 = STR_TO_RX7(dP1);
+    m_dP1 = STR_TO_FLOAT(dP1);
     return true;
   }
   return false;
@@ -1724,10 +1724,10 @@ bool PlrTest2Impl::setF1(const double F1)
 bool PlrTest2Impl::setF1(const std::string &F1)
 {
   bool ok;
-  STR_TO_RX7(F1).toDouble(&ok);
+  FLOAT_CHECK(F1,&ok);
   if(ok)
   {
-    m_F1 = STR_TO_RX7(F1);
+    m_F1 = STR_TO_FLOAT(F1);
     return true;
   }
   return false;
@@ -1747,10 +1747,10 @@ bool PlrTest2Impl::setDP2(const double dP2)
 bool PlrTest2Impl::setDP2(const std::string &dP2)
 {
   bool ok;
-  STR_TO_RX7(dP2).toDouble(&ok);
+  FLOAT_CHECK(dP2,&ok);
   if(ok)
   {
-    m_dP2 = STR_TO_RX7(dP2);
+    m_dP2 = STR_TO_FLOAT(dP2);
     return true;
   }
   return false;
@@ -1770,10 +1770,10 @@ bool PlrTest2Impl::setF2(const double F2)
 bool PlrTest2Impl::setF2(const std::string &F2)
 {
   bool ok;
-  STR_TO_RX7(F2).toDouble(&ok);
+  FLOAT_CHECK(F2,&ok);
   if(ok)
   {
-    m_F2 = STR_TO_RX7(F2);
+    m_F2 = STR_TO_FLOAT(F2);
     return true;
   }
   return false;
@@ -1823,11 +1823,11 @@ void PlrCrackImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_length = RX7("0.0");
-  m_width = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_length = PRJFLOAT("0.0");
+  m_width = PRJFLOAT("0.0");
   m_u_L = 0;
   m_u_W = 0;
 }
@@ -1882,18 +1882,18 @@ PlrCrackImpl::PlrCrackImpl(int nr,int icon,std::string name,std::string desc,std
 
 void PlrCrackImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setLength(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setU_L(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setLength(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setU_L(input.read<int>());
+  setU_W(input.read<int>());
 }
 
 std::string PlrCrackImpl::write()
@@ -1909,13 +1909,13 @@ std::string PlrCrackImpl::write()
 
 void PlrCrackImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setLength(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setU_L(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setLength(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setU_L(input.read<int>());
+  setU_W(input.read<int>());
 }
 
 int PlrCrackImpl::nr() const
@@ -1972,10 +1972,10 @@ bool PlrCrackImpl::setLam(const double lam)
 bool PlrCrackImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -1995,10 +1995,10 @@ bool PlrCrackImpl::setTurb(const double turb)
 bool PlrCrackImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -2018,10 +2018,10 @@ bool PlrCrackImpl::setExpt(const double expt)
 bool PlrCrackImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -2041,10 +2041,10 @@ bool PlrCrackImpl::setLength(const double length)
 bool PlrCrackImpl::setLength(const std::string &length)
 {
   bool ok;
-  STR_TO_RX7(length).toDouble(&ok);
+  FLOAT_CHECK(length,&ok);
   if(ok)
   {
-    m_length = STR_TO_RX7(length);
+    m_length = STR_TO_FLOAT(length);
     return true;
   }
   return false;
@@ -2064,10 +2064,10 @@ bool PlrCrackImpl::setWidth(const double width)
 bool PlrCrackImpl::setWidth(const std::string &width)
 {
   bool ok;
-  STR_TO_RX7(width).toDouble(&ok);
+  FLOAT_CHECK(width,&ok);
   if(ok)
   {
-    m_width = STR_TO_RX7(width);
+    m_width = STR_TO_FLOAT(width);
     return true;
   }
   return false;
@@ -2097,12 +2097,12 @@ void PlrStairImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_Ht = RX7("0.0");
-  m_Area = RX7("0.0");
-  m_peo = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_Ht = PRJFLOAT("0.0");
+  m_Area = PRJFLOAT("0.0");
+  m_peo = PRJFLOAT("0.0");
   m_tread = 0;
   m_u_A = 0;
   m_u_D = 0;
@@ -2165,20 +2165,20 @@ PlrStairImpl::PlrStairImpl(int nr,int icon,std::string name,std::string desc,std
 
 void PlrStairImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setHt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setPeople(input.readNumber<std::string>(FILELINE));
-  setTread(input.read<int>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setHt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setPeople(input.readNumber<std::string>());
+  setTread(input.read<int>());
+  setU_A(input.read<int>());
+  setU_D(input.read<int>());
 }
 
 std::string PlrStairImpl::write()
@@ -2194,15 +2194,15 @@ std::string PlrStairImpl::write()
 
 void PlrStairImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setHt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setPeople(input.readNumber<std::string>(FILELINE));
-  setTread(input.read<int>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setHt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setPeople(input.readNumber<std::string>());
+  setTread(input.read<int>());
+  setU_A(input.read<int>());
+  setU_D(input.read<int>());
 }
 
 int PlrStairImpl::nr() const
@@ -2259,10 +2259,10 @@ bool PlrStairImpl::setLam(const double lam)
 bool PlrStairImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -2282,10 +2282,10 @@ bool PlrStairImpl::setTurb(const double turb)
 bool PlrStairImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -2305,10 +2305,10 @@ bool PlrStairImpl::setExpt(const double expt)
 bool PlrStairImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -2328,10 +2328,10 @@ bool PlrStairImpl::setHt(const double Ht)
 bool PlrStairImpl::setHt(const std::string &Ht)
 {
   bool ok;
-  STR_TO_RX7(Ht).toDouble(&ok);
+  FLOAT_CHECK(Ht,&ok);
   if(ok)
   {
-    m_Ht = STR_TO_RX7(Ht);
+    m_Ht = STR_TO_FLOAT(Ht);
     return true;
   }
   return false;
@@ -2351,10 +2351,10 @@ bool PlrStairImpl::setArea(const double Area)
 bool PlrStairImpl::setArea(const std::string &Area)
 {
   bool ok;
-  STR_TO_RX7(Area).toDouble(&ok);
+  FLOAT_CHECK(Area,&ok);
   if(ok)
   {
-    m_Area = STR_TO_RX7(Area);
+    m_Area = STR_TO_FLOAT(Area);
     return true;
   }
   return false;
@@ -2374,10 +2374,10 @@ bool PlrStairImpl::setPeople(const double peo)
 bool PlrStairImpl::setPeople(const std::string &peo)
 {
   bool ok;
-  STR_TO_RX7(peo).toDouble(&ok);
+  FLOAT_CHECK(peo,&ok);
   if(ok)
   {
-    m_peo = STR_TO_RX7(peo);
+    m_peo = STR_TO_FLOAT(peo);
     return true;
   }
   return false;
@@ -2417,13 +2417,13 @@ void PlrShaftImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_Ht = RX7("0.0");
-  m_area = RX7("0.0");
-  m_perim = RX7("0.0");
-  m_rough = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_Ht = PRJFLOAT("0.0");
+  m_area = PRJFLOAT("0.0");
+  m_perim = PRJFLOAT("0.0");
+  m_rough = PRJFLOAT("0.0");
   m_u_A = 0;
   m_u_D = 0;
   m_u_P = 0;
@@ -2488,22 +2488,22 @@ PlrShaftImpl::PlrShaftImpl(int nr,int icon,std::string name,std::string desc,std
 
 void PlrShaftImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setHt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setPerim(input.readNumber<std::string>(FILELINE));
-  setRough(input.readNumber<std::string>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
-  setU_P(input.read<int>(FILELINE));
-  setU_R(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setHt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setPerim(input.readNumber<std::string>());
+  setRough(input.readNumber<std::string>());
+  setU_A(input.read<int>());
+  setU_D(input.read<int>());
+  setU_P(input.read<int>());
+  setU_R(input.read<int>());
 }
 
 std::string PlrShaftImpl::write()
@@ -2520,17 +2520,17 @@ std::string PlrShaftImpl::write()
 
 void PlrShaftImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setHt(input.readNumber<std::string>(FILELINE));
-  setArea(input.readNumber<std::string>(FILELINE));
-  setPerim(input.readNumber<std::string>(FILELINE));
-  setRough(input.readNumber<std::string>(FILELINE));
-  setU_A(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
-  setU_P(input.read<int>(FILELINE));
-  setU_R(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setHt(input.readNumber<std::string>());
+  setArea(input.readNumber<std::string>());
+  setPerim(input.readNumber<std::string>());
+  setRough(input.readNumber<std::string>());
+  setU_A(input.read<int>());
+  setU_D(input.read<int>());
+  setU_P(input.read<int>());
+  setU_R(input.read<int>());
 }
 
 int PlrShaftImpl::nr() const
@@ -2587,10 +2587,10 @@ bool PlrShaftImpl::setLam(const double lam)
 bool PlrShaftImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -2610,10 +2610,10 @@ bool PlrShaftImpl::setTurb(const double turb)
 bool PlrShaftImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -2633,10 +2633,10 @@ bool PlrShaftImpl::setExpt(const double expt)
 bool PlrShaftImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -2656,10 +2656,10 @@ bool PlrShaftImpl::setHt(const double Ht)
 bool PlrShaftImpl::setHt(const std::string &Ht)
 {
   bool ok;
-  STR_TO_RX7(Ht).toDouble(&ok);
+  FLOAT_CHECK(Ht,&ok);
   if(ok)
   {
-    m_Ht = STR_TO_RX7(Ht);
+    m_Ht = STR_TO_FLOAT(Ht);
     return true;
   }
   return false;
@@ -2679,10 +2679,10 @@ bool PlrShaftImpl::setArea(const double area)
 bool PlrShaftImpl::setArea(const std::string &area)
 {
   bool ok;
-  STR_TO_RX7(area).toDouble(&ok);
+  FLOAT_CHECK(area,&ok);
   if(ok)
   {
-    m_area = STR_TO_RX7(area);
+    m_area = STR_TO_FLOAT(area);
     return true;
   }
   return false;
@@ -2702,10 +2702,10 @@ bool PlrShaftImpl::setPerim(const double perim)
 bool PlrShaftImpl::setPerim(const std::string &perim)
 {
   bool ok;
-  STR_TO_RX7(perim).toDouble(&ok);
+  FLOAT_CHECK(perim,&ok);
   if(ok)
   {
-    m_perim = STR_TO_RX7(perim);
+    m_perim = STR_TO_FLOAT(perim);
     return true;
   }
   return false;
@@ -2725,10 +2725,10 @@ bool PlrShaftImpl::setRough(const double rough)
 bool PlrShaftImpl::setRough(const std::string &rough)
 {
   bool ok;
-  STR_TO_RX7(rough).toDouble(&ok);
+  FLOAT_CHECK(rough,&ok);
   if(ok)
   {
-    m_rough = STR_TO_RX7(rough);
+    m_rough = STR_TO_FLOAT(rough);
     return true;
   }
   return false;
@@ -2778,11 +2778,11 @@ void PlrBackDamperImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_Cp = RX7("0.0");
-  m_xp = RX7("0.0");
-  m_Cn = RX7("0.0");
-  m_xn = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_Cp = PRJFLOAT("0.0");
+  m_xp = PRJFLOAT("0.0");
+  m_Cn = PRJFLOAT("0.0");
+  m_xn = PRJFLOAT("0.0");
 }
 
 PlrBackDamperImpl::PlrBackDamperImpl()
@@ -2831,16 +2831,16 @@ PlrBackDamperImpl::PlrBackDamperImpl(int nr,int icon,std::string name,std::strin
 
 void PlrBackDamperImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setCp(input.readNumber<std::string>(FILELINE));
-  setXp(input.readNumber<std::string>(FILELINE));
-  setCn(input.readNumber<std::string>(FILELINE));
-  setXn(input.readNumber<std::string>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setCp(input.readNumber<std::string>());
+  setXp(input.readNumber<std::string>());
+  setCn(input.readNumber<std::string>());
+  setXn(input.readNumber<std::string>());
 }
 
 std::string PlrBackDamperImpl::write(std::string dataType)
@@ -2855,11 +2855,11 @@ std::string PlrBackDamperImpl::write(std::string dataType)
 
 void PlrBackDamperImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setCp(input.readNumber<std::string>(FILELINE));
-  setXp(input.readNumber<std::string>(FILELINE));
-  setCn(input.readNumber<std::string>(FILELINE));
-  setXn(input.readNumber<std::string>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setCp(input.readNumber<std::string>());
+  setXp(input.readNumber<std::string>());
+  setCn(input.readNumber<std::string>());
+  setXn(input.readNumber<std::string>());
 }
 
 int PlrBackDamperImpl::nr() const
@@ -2916,10 +2916,10 @@ bool PlrBackDamperImpl::setLam(const double lam)
 bool PlrBackDamperImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -2939,10 +2939,10 @@ bool PlrBackDamperImpl::setCp(const double Cp)
 bool PlrBackDamperImpl::setCp(const std::string &Cp)
 {
   bool ok;
-  STR_TO_RX7(Cp).toDouble(&ok);
+  FLOAT_CHECK(Cp,&ok);
   if(ok)
   {
-    m_Cp = STR_TO_RX7(Cp);
+    m_Cp = STR_TO_FLOAT(Cp);
     return true;
   }
   return false;
@@ -2962,10 +2962,10 @@ bool PlrBackDamperImpl::setXp(const double xp)
 bool PlrBackDamperImpl::setXp(const std::string &xp)
 {
   bool ok;
-  STR_TO_RX7(xp).toDouble(&ok);
+  FLOAT_CHECK(xp,&ok);
   if(ok)
   {
-    m_xp = STR_TO_RX7(xp);
+    m_xp = STR_TO_FLOAT(xp);
     return true;
   }
   return false;
@@ -2985,10 +2985,10 @@ bool PlrBackDamperImpl::setCn(const double Cn)
 bool PlrBackDamperImpl::setCn(const std::string &Cn)
 {
   bool ok;
-  STR_TO_RX7(Cn).toDouble(&ok);
+  FLOAT_CHECK(Cn,&ok);
   if(ok)
   {
-    m_Cn = STR_TO_RX7(Cn);
+    m_Cn = STR_TO_FLOAT(Cn);
     return true;
   }
   return false;
@@ -3008,10 +3008,10 @@ bool PlrBackDamperImpl::setXn(const double xn)
 bool PlrBackDamperImpl::setXn(const std::string &xn)
 {
   bool ok;
-  STR_TO_RX7(xn).toDouble(&ok);
+  FLOAT_CHECK(xn,&ok);
   if(ok)
   {
-    m_xn = STR_TO_RX7(xn);
+    m_xn = STR_TO_FLOAT(xn);
     return true;
   }
   return false;
@@ -3021,8 +3021,8 @@ void QfrQuadraticImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_a = RX7("0.0");
-  m_b = RX7("0.0");
+  m_a = PRJFLOAT("0.0");
+  m_b = PRJFLOAT("0.0");
 }
 
 QfrQuadraticImpl::QfrQuadraticImpl()
@@ -3063,13 +3063,13 @@ QfrQuadraticImpl::QfrQuadraticImpl(int nr,int icon,std::string name,std::string 
 
 void QfrQuadraticImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setA(input.readNumber<std::string>(FILELINE));
-  setB(input.readNumber<std::string>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setA(input.readNumber<std::string>());
+  setB(input.readNumber<std::string>());
 }
 
 std::string QfrQuadraticImpl::write(std::string dataType)
@@ -3083,8 +3083,8 @@ std::string QfrQuadraticImpl::write(std::string dataType)
 
 void QfrQuadraticImpl::readDetails(Reader &input)
 {
-  setA(input.readNumber<std::string>(FILELINE));
-  setB(input.readNumber<std::string>(FILELINE));
+  setA(input.readNumber<std::string>());
+  setB(input.readNumber<std::string>());
 }
 
 int QfrQuadraticImpl::nr() const
@@ -3141,10 +3141,10 @@ bool QfrQuadraticImpl::setA(const double a)
 bool QfrQuadraticImpl::setA(const std::string &a)
 {
   bool ok;
-  STR_TO_RX7(a).toDouble(&ok);
+  FLOAT_CHECK(a,&ok);
   if(ok)
   {
-    m_a = STR_TO_RX7(a);
+    m_a = STR_TO_FLOAT(a);
     return true;
   }
   return false;
@@ -3164,10 +3164,10 @@ bool QfrQuadraticImpl::setB(const double b)
 bool QfrQuadraticImpl::setB(const std::string &b)
 {
   bool ok;
-  STR_TO_RX7(b).toDouble(&ok);
+  FLOAT_CHECK(b,&ok);
   if(ok)
   {
-    m_b = STR_TO_RX7(b);
+    m_b = STR_TO_FLOAT(b);
     return true;
   }
   return false;
@@ -3177,11 +3177,11 @@ void QfrCrackImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_a = RX7("0.0");
-  m_b = RX7("0.0");
-  m_length = RX7("0.0");
-  m_width = RX7("0.0");
-  m_depth = RX7("0.0");
+  m_a = PRJFLOAT("0.0");
+  m_b = PRJFLOAT("0.0");
+  m_length = PRJFLOAT("0.0");
+  m_width = PRJFLOAT("0.0");
+  m_depth = PRJFLOAT("0.0");
   m_nB = 0;
   m_u_L = 0;
   m_u_W = 0;
@@ -3242,20 +3242,20 @@ QfrCrackImpl::QfrCrackImpl(int nr,int icon,std::string name,std::string desc,std
 
 void QfrCrackImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setA(input.readNumber<std::string>(FILELINE));
-  setB(input.readNumber<std::string>(FILELINE));
-  setLength(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setDepth(input.readNumber<std::string>(FILELINE));
-  setNB(input.read<int>(FILELINE));
-  setU_L(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setA(input.readNumber<std::string>());
+  setB(input.readNumber<std::string>());
+  setLength(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setDepth(input.readNumber<std::string>());
+  setNB(input.read<int>());
+  setU_L(input.read<int>());
+  setU_W(input.read<int>());
+  setU_D(input.read<int>());
 }
 
 std::string QfrCrackImpl::write()
@@ -3271,15 +3271,15 @@ std::string QfrCrackImpl::write()
 
 void QfrCrackImpl::readDetails(Reader &input)
 {
-  setA(input.readNumber<std::string>(FILELINE));
-  setB(input.readNumber<std::string>(FILELINE));
-  setLength(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setDepth(input.readNumber<std::string>(FILELINE));
-  setNB(input.read<int>(FILELINE));
-  setU_L(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
-  setU_D(input.read<int>(FILELINE));
+  setA(input.readNumber<std::string>());
+  setB(input.readNumber<std::string>());
+  setLength(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setDepth(input.readNumber<std::string>());
+  setNB(input.read<int>());
+  setU_L(input.read<int>());
+  setU_W(input.read<int>());
+  setU_D(input.read<int>());
 }
 
 int QfrCrackImpl::nr() const
@@ -3336,10 +3336,10 @@ bool QfrCrackImpl::setA(const double a)
 bool QfrCrackImpl::setA(const std::string &a)
 {
   bool ok;
-  STR_TO_RX7(a).toDouble(&ok);
+  FLOAT_CHECK(a,&ok);
   if(ok)
   {
-    m_a = STR_TO_RX7(a);
+    m_a = STR_TO_FLOAT(a);
     return true;
   }
   return false;
@@ -3359,10 +3359,10 @@ bool QfrCrackImpl::setB(const double b)
 bool QfrCrackImpl::setB(const std::string &b)
 {
   bool ok;
-  STR_TO_RX7(b).toDouble(&ok);
+  FLOAT_CHECK(b,&ok);
   if(ok)
   {
-    m_b = STR_TO_RX7(b);
+    m_b = STR_TO_FLOAT(b);
     return true;
   }
   return false;
@@ -3382,10 +3382,10 @@ bool QfrCrackImpl::setLength(const double length)
 bool QfrCrackImpl::setLength(const std::string &length)
 {
   bool ok;
-  STR_TO_RX7(length).toDouble(&ok);
+  FLOAT_CHECK(length,&ok);
   if(ok)
   {
-    m_length = STR_TO_RX7(length);
+    m_length = STR_TO_FLOAT(length);
     return true;
   }
   return false;
@@ -3405,10 +3405,10 @@ bool QfrCrackImpl::setWidth(const double width)
 bool QfrCrackImpl::setWidth(const std::string &width)
 {
   bool ok;
-  STR_TO_RX7(width).toDouble(&ok);
+  FLOAT_CHECK(width,&ok);
   if(ok)
   {
-    m_width = STR_TO_RX7(width);
+    m_width = STR_TO_FLOAT(width);
     return true;
   }
   return false;
@@ -3428,10 +3428,10 @@ bool QfrCrackImpl::setDepth(const double depth)
 bool QfrCrackImpl::setDepth(const std::string &depth)
 {
   bool ok;
-  STR_TO_RX7(depth).toDouble(&ok);
+  FLOAT_CHECK(depth,&ok);
   if(ok)
   {
-    m_depth = STR_TO_RX7(depth);
+    m_depth = STR_TO_FLOAT(depth);
     return true;
   }
   return false;
@@ -3481,12 +3481,12 @@ void QfrTest2Impl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_a = RX7("0.0");
-  m_b = RX7("0.0");
-  m_dP1 = RX7("0.0");
-  m_F1 = RX7("0.0");
-  m_dP2 = RX7("0.0");
-  m_F2 = RX7("0.0");
+  m_a = PRJFLOAT("0.0");
+  m_b = PRJFLOAT("0.0");
+  m_dP1 = PRJFLOAT("0.0");
+  m_F1 = PRJFLOAT("0.0");
+  m_dP2 = PRJFLOAT("0.0");
+  m_F2 = PRJFLOAT("0.0");
   m_u_P1 = 0;
   m_u_F1 = 0;
   m_u_P2 = 0;
@@ -3549,21 +3549,21 @@ QfrTest2Impl::QfrTest2Impl(int nr,int icon,std::string name,std::string desc,std
 
 void QfrTest2Impl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setA(input.readNumber<std::string>(FILELINE));
-  setB(input.readNumber<std::string>(FILELINE));
-  setDP1(input.readNumber<std::string>(FILELINE));
-  setF1(input.readNumber<std::string>(FILELINE));
-  setDP2(input.readNumber<std::string>(FILELINE));
-  setF2(input.readNumber<std::string>(FILELINE));
-  setU_P1(input.read<int>(FILELINE));
-  setU_F1(input.read<int>(FILELINE));
-  setU_P2(input.read<int>(FILELINE));
-  setU_F2(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setA(input.readNumber<std::string>());
+  setB(input.readNumber<std::string>());
+  setDP1(input.readNumber<std::string>());
+  setF1(input.readNumber<std::string>());
+  setDP2(input.readNumber<std::string>());
+  setF2(input.readNumber<std::string>());
+  setU_P1(input.read<int>());
+  setU_F1(input.read<int>());
+  setU_P2(input.read<int>());
+  setU_F2(input.read<int>());
 }
 
 std::string QfrTest2Impl::write()
@@ -3579,16 +3579,16 @@ std::string QfrTest2Impl::write()
 
 void QfrTest2Impl::readDetails(Reader &input)
 {
-  setA(input.readNumber<std::string>(FILELINE));
-  setB(input.readNumber<std::string>(FILELINE));
-  setDP1(input.readNumber<std::string>(FILELINE));
-  setF1(input.readNumber<std::string>(FILELINE));
-  setDP2(input.readNumber<std::string>(FILELINE));
-  setF2(input.readNumber<std::string>(FILELINE));
-  setU_P1(input.read<int>(FILELINE));
-  setU_F1(input.read<int>(FILELINE));
-  setU_P2(input.read<int>(FILELINE));
-  setU_F2(input.read<int>(FILELINE));
+  setA(input.readNumber<std::string>());
+  setB(input.readNumber<std::string>());
+  setDP1(input.readNumber<std::string>());
+  setF1(input.readNumber<std::string>());
+  setDP2(input.readNumber<std::string>());
+  setF2(input.readNumber<std::string>());
+  setU_P1(input.read<int>());
+  setU_F1(input.read<int>());
+  setU_P2(input.read<int>());
+  setU_F2(input.read<int>());
 }
 
 int QfrTest2Impl::nr() const
@@ -3645,10 +3645,10 @@ bool QfrTest2Impl::setA(const double a)
 bool QfrTest2Impl::setA(const std::string &a)
 {
   bool ok;
-  STR_TO_RX7(a).toDouble(&ok);
+  FLOAT_CHECK(a,&ok);
   if(ok)
   {
-    m_a = STR_TO_RX7(a);
+    m_a = STR_TO_FLOAT(a);
     return true;
   }
   return false;
@@ -3668,10 +3668,10 @@ bool QfrTest2Impl::setB(const double b)
 bool QfrTest2Impl::setB(const std::string &b)
 {
   bool ok;
-  STR_TO_RX7(b).toDouble(&ok);
+  FLOAT_CHECK(b,&ok);
   if(ok)
   {
-    m_b = STR_TO_RX7(b);
+    m_b = STR_TO_FLOAT(b);
     return true;
   }
   return false;
@@ -3691,10 +3691,10 @@ bool QfrTest2Impl::setDP1(const double dP1)
 bool QfrTest2Impl::setDP1(const std::string &dP1)
 {
   bool ok;
-  STR_TO_RX7(dP1).toDouble(&ok);
+  FLOAT_CHECK(dP1,&ok);
   if(ok)
   {
-    m_dP1 = STR_TO_RX7(dP1);
+    m_dP1 = STR_TO_FLOAT(dP1);
     return true;
   }
   return false;
@@ -3714,10 +3714,10 @@ bool QfrTest2Impl::setF1(const double F1)
 bool QfrTest2Impl::setF1(const std::string &F1)
 {
   bool ok;
-  STR_TO_RX7(F1).toDouble(&ok);
+  FLOAT_CHECK(F1,&ok);
   if(ok)
   {
-    m_F1 = STR_TO_RX7(F1);
+    m_F1 = STR_TO_FLOAT(F1);
     return true;
   }
   return false;
@@ -3737,10 +3737,10 @@ bool QfrTest2Impl::setDP2(const double dP2)
 bool QfrTest2Impl::setDP2(const std::string &dP2)
 {
   bool ok;
-  STR_TO_RX7(dP2).toDouble(&ok);
+  FLOAT_CHECK(dP2,&ok);
   if(ok)
   {
-    m_dP2 = STR_TO_RX7(dP2);
+    m_dP2 = STR_TO_FLOAT(dP2);
     return true;
   }
   return false;
@@ -3760,10 +3760,10 @@ bool QfrTest2Impl::setF2(const double F2)
 bool QfrTest2Impl::setF2(const std::string &F2)
 {
   bool ok;
-  STR_TO_RX7(F2).toDouble(&ok);
+  FLOAT_CHECK(F2,&ok);
   if(ok)
   {
-    m_F2 = STR_TO_RX7(F2);
+    m_F2 = STR_TO_FLOAT(F2);
     return true;
   }
   return false;
@@ -3813,13 +3813,13 @@ void AfeDorImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_dTmin = RX7("0.0");
-  m_ht = RX7("0.0");
-  m_wd = RX7("0.0");
-  m_cd = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_dTmin = PRJFLOAT("0.0");
+  m_ht = PRJFLOAT("0.0");
+  m_wd = PRJFLOAT("0.0");
+  m_cd = PRJFLOAT("0.0");
   m_u_T = 0;
   m_u_H = 0;
   m_u_W = 0;
@@ -3881,21 +3881,21 @@ AfeDorImpl::AfeDorImpl(int nr,int icon,std::string name,std::string desc,std::st
 
 void AfeDorImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDTmin(input.readNumber<std::string>(FILELINE));
-  setHeight(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setCd(input.readNumber<std::string>(FILELINE));
-  setU_T(input.read<int>(FILELINE));
-  setU_H(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDTmin(input.readNumber<std::string>());
+  setHeight(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setCd(input.readNumber<std::string>());
+  setU_T(input.read<int>());
+  setU_H(input.read<int>());
+  setU_W(input.read<int>());
 }
 
 std::string AfeDorImpl::write()
@@ -3912,16 +3912,16 @@ std::string AfeDorImpl::write()
 
 void AfeDorImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDTmin(input.readNumber<std::string>(FILELINE));
-  setHeight(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setCd(input.readNumber<std::string>(FILELINE));
-  setU_T(input.read<int>(FILELINE));
-  setU_H(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDTmin(input.readNumber<std::string>());
+  setHeight(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setCd(input.readNumber<std::string>());
+  setU_T(input.read<int>());
+  setU_H(input.read<int>());
+  setU_W(input.read<int>());
 }
 
 int AfeDorImpl::nr() const
@@ -3978,10 +3978,10 @@ bool AfeDorImpl::setLam(const double lam)
 bool AfeDorImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -4001,10 +4001,10 @@ bool AfeDorImpl::setTurb(const double turb)
 bool AfeDorImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -4024,10 +4024,10 @@ bool AfeDorImpl::setExpt(const double expt)
 bool AfeDorImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -4047,10 +4047,10 @@ bool AfeDorImpl::setDTmin(const double dTmin)
 bool AfeDorImpl::setDTmin(const std::string &dTmin)
 {
   bool ok;
-  STR_TO_RX7(dTmin).toDouble(&ok);
+  FLOAT_CHECK(dTmin,&ok);
   if(ok)
   {
-    m_dTmin = STR_TO_RX7(dTmin);
+    m_dTmin = STR_TO_FLOAT(dTmin);
     return true;
   }
   return false;
@@ -4070,10 +4070,10 @@ bool AfeDorImpl::setHeight(const double ht)
 bool AfeDorImpl::setHeight(const std::string &ht)
 {
   bool ok;
-  STR_TO_RX7(ht).toDouble(&ok);
+  FLOAT_CHECK(ht,&ok);
   if(ok)
   {
-    m_ht = STR_TO_RX7(ht);
+    m_ht = STR_TO_FLOAT(ht);
     return true;
   }
   return false;
@@ -4093,10 +4093,10 @@ bool AfeDorImpl::setWidth(const double wd)
 bool AfeDorImpl::setWidth(const std::string &wd)
 {
   bool ok;
-  STR_TO_RX7(wd).toDouble(&ok);
+  FLOAT_CHECK(wd,&ok);
   if(ok)
   {
-    m_wd = STR_TO_RX7(wd);
+    m_wd = STR_TO_FLOAT(wd);
     return true;
   }
   return false;
@@ -4116,10 +4116,10 @@ bool AfeDorImpl::setCd(const double cd)
 bool AfeDorImpl::setCd(const std::string &cd)
 {
   bool ok;
-  STR_TO_RX7(cd).toDouble(&ok);
+  FLOAT_CHECK(cd,&ok);
   if(ok)
   {
-    m_cd = STR_TO_RX7(cd);
+    m_cd = STR_TO_FLOAT(cd);
     return true;
   }
   return false;
@@ -4159,13 +4159,13 @@ void DrPl2Impl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_dH = RX7("0.0");
-  m_ht = RX7("0.0");
-  m_wd = RX7("0.0");
-  m_cd = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_dH = PRJFLOAT("0.0");
+  m_ht = PRJFLOAT("0.0");
+  m_wd = PRJFLOAT("0.0");
+  m_cd = PRJFLOAT("0.0");
   m_u_H = 0;
   m_u_W = 0;
 }
@@ -4224,20 +4224,20 @@ DrPl2Impl::DrPl2Impl(int nr,int icon,std::string name,std::string desc,std::stri
 
 void DrPl2Impl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDH(input.readNumber<std::string>(FILELINE));
-  setHeight(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setCd(input.readNumber<std::string>(FILELINE));
-  setU_H(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDH(input.readNumber<std::string>());
+  setHeight(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setCd(input.readNumber<std::string>());
+  setU_H(input.read<int>());
+  setU_W(input.read<int>());
 }
 
 std::string DrPl2Impl::write()
@@ -4253,15 +4253,15 @@ std::string DrPl2Impl::write()
 
 void DrPl2Impl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setDH(input.readNumber<std::string>(FILELINE));
-  setHeight(input.readNumber<std::string>(FILELINE));
-  setWidth(input.readNumber<std::string>(FILELINE));
-  setCd(input.readNumber<std::string>(FILELINE));
-  setU_H(input.read<int>(FILELINE));
-  setU_W(input.read<int>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setDH(input.readNumber<std::string>());
+  setHeight(input.readNumber<std::string>());
+  setWidth(input.readNumber<std::string>());
+  setCd(input.readNumber<std::string>());
+  setU_H(input.read<int>());
+  setU_W(input.read<int>());
 }
 
 int DrPl2Impl::nr() const
@@ -4318,10 +4318,10 @@ bool DrPl2Impl::setLam(const double lam)
 bool DrPl2Impl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -4341,10 +4341,10 @@ bool DrPl2Impl::setTurb(const double turb)
 bool DrPl2Impl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -4364,10 +4364,10 @@ bool DrPl2Impl::setExpt(const double expt)
 bool DrPl2Impl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -4387,10 +4387,10 @@ bool DrPl2Impl::setDH(const double dH)
 bool DrPl2Impl::setDH(const std::string &dH)
 {
   bool ok;
-  STR_TO_RX7(dH).toDouble(&ok);
+  FLOAT_CHECK(dH,&ok);
   if(ok)
   {
-    m_dH = STR_TO_RX7(dH);
+    m_dH = STR_TO_FLOAT(dH);
     return true;
   }
   return false;
@@ -4410,10 +4410,10 @@ bool DrPl2Impl::setHeight(const double ht)
 bool DrPl2Impl::setHeight(const std::string &ht)
 {
   bool ok;
-  STR_TO_RX7(ht).toDouble(&ok);
+  FLOAT_CHECK(ht,&ok);
   if(ok)
   {
-    m_ht = STR_TO_RX7(ht);
+    m_ht = STR_TO_FLOAT(ht);
     return true;
   }
   return false;
@@ -4433,10 +4433,10 @@ bool DrPl2Impl::setWidth(const double wd)
 bool DrPl2Impl::setWidth(const std::string &wd)
 {
   bool ok;
-  STR_TO_RX7(wd).toDouble(&ok);
+  FLOAT_CHECK(wd,&ok);
   if(ok)
   {
-    m_wd = STR_TO_RX7(wd);
+    m_wd = STR_TO_FLOAT(wd);
     return true;
   }
   return false;
@@ -4456,10 +4456,10 @@ bool DrPl2Impl::setCd(const double cd)
 bool DrPl2Impl::setCd(const std::string &cd)
 {
   bool ok;
-  STR_TO_RX7(cd).toDouble(&ok);
+  FLOAT_CHECK(cd,&ok);
   if(ok)
   {
-    m_cd = STR_TO_RX7(cd);
+    m_cd = STR_TO_FLOAT(cd);
     return true;
   }
   return false;
@@ -4489,7 +4489,7 @@ void AfeFlowImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_Flow = RX7("0.0");
+  m_Flow = PRJFLOAT("0.0");
   m_u_F = 0;
 }
 
@@ -4531,13 +4531,13 @@ AfeFlowImpl::AfeFlowImpl(int nr,int icon,std::string name,std::string desc,std::
 
 void AfeFlowImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setFlow(input.readNumber<std::string>(FILELINE));
-  setU_F(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setFlow(input.readNumber<std::string>());
+  setU_F(input.read<int>());
 }
 
 std::string AfeFlowImpl::write(std::string dataType)
@@ -4551,8 +4551,8 @@ std::string AfeFlowImpl::write(std::string dataType)
 
 void AfeFlowImpl::readDetails(Reader &input)
 {
-  setFlow(input.readNumber<std::string>(FILELINE));
-  setU_F(input.read<int>(FILELINE));
+  setFlow(input.readNumber<std::string>());
+  setU_F(input.read<int>());
 }
 
 int AfeFlowImpl::nr() const
@@ -4609,10 +4609,10 @@ bool AfeFlowImpl::setFlow(const double Flow)
 bool AfeFlowImpl::setFlow(const std::string &Flow)
 {
   bool ok;
-  STR_TO_RX7(Flow).toDouble(&ok);
+  FLOAT_CHECK(Flow,&ok);
   if(ok)
   {
-    m_Flow = STR_TO_RX7(Flow);
+    m_Flow = STR_TO_FLOAT(Flow);
     return true;
   }
   return false;
@@ -4632,14 +4632,14 @@ void AfeFanImpl::setDefaults()
 {
   m_nr = 0;
   m_icon = 0;
-  m_lam = RX7("0.0");
-  m_turb = RX7("0.0");
-  m_expt = RX7("0.0");
-  m_rdens = RX7("0.0");
-  m_fdf = RX7("0.0");
-  m_sop = RX7("0.0");
-  m_off = RX7("0.0");
-  m_Sarea = RX7("0.0");
+  m_lam = PRJFLOAT("0.0");
+  m_turb = PRJFLOAT("0.0");
+  m_expt = PRJFLOAT("0.0");
+  m_rdens = PRJFLOAT("0.0");
+  m_fdf = PRJFLOAT("0.0");
+  m_sop = PRJFLOAT("0.0");
+  m_off = PRJFLOAT("0.0");
+  m_Sarea = PRJFLOAT("0.0");
   m_u_Sa = 0;
 }
 
@@ -4703,27 +4703,27 @@ AfeFanImpl::AfeFanImpl(int nr,int icon,std::string name,std::string desc,std::st
 
 void AfeFanImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setRdens(input.readNumber<std::string>(FILELINE));
-  setFdf(input.readNumber<std::string>(FILELINE));
-  setSop(input.readNumber<std::string>(FILELINE));
-  setOff(input.readNumber<std::string>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setRdens(input.readNumber<std::string>());
+  setFdf(input.readNumber<std::string>());
+  setSop(input.readNumber<std::string>());
+  setOff(input.readNumber<std::string>());
   std::vector<std::string> fpc;
   for(int i=0;i<4;i++)
   {
-    fpc.push_back(input.read<std::string>(FILELINE));
+    fpc.push_back(input.read<std::string>());
   }
   setFpc(fpc);
-  int npts = input.read<int>(FILELINE);
-  setSarea(input.readNumber<std::string>(FILELINE));
-  setU_Sa(input.read<int>(FILELINE));
+  int npts = input.read<int>();
+  setSarea(input.readNumber<std::string>());
+  setU_Sa(input.read<int>());
   std::vector<FanDataPoint> data;
   for(int i=0;i<npts;i++)
   {
@@ -4754,22 +4754,22 @@ std::string AfeFanImpl::write()
 
 void AfeFanImpl::readDetails(Reader &input)
 {
-  setLam(input.readNumber<std::string>(FILELINE));
-  setTurb(input.readNumber<std::string>(FILELINE));
-  setExpt(input.readNumber<std::string>(FILELINE));
-  setRdens(input.readNumber<std::string>(FILELINE));
-  setFdf(input.readNumber<std::string>(FILELINE));
-  setSop(input.readNumber<std::string>(FILELINE));
-  setOff(input.readNumber<std::string>(FILELINE));
+  setLam(input.readNumber<std::string>());
+  setTurb(input.readNumber<std::string>());
+  setExpt(input.readNumber<std::string>());
+  setRdens(input.readNumber<std::string>());
+  setFdf(input.readNumber<std::string>());
+  setSop(input.readNumber<std::string>());
+  setOff(input.readNumber<std::string>());
   std::vector<std::string> fpc;
   for(int i=0;i<4;i++)
   {
-    fpc.push_back(input.read<std::string>(FILELINE));
+    fpc.push_back(input.read<std::string>());
   }
   setFpc(fpc);
-  int npts = input.read<int>(FILELINE);
-  setSarea(input.readNumber<std::string>(FILELINE));
-  setU_Sa(input.read<int>(FILELINE));
+  int npts = input.read<int>();
+  setSarea(input.readNumber<std::string>());
+  setU_Sa(input.read<int>());
   std::vector<FanDataPoint> data;
   for(int i=0;i<npts;i++)
   {
@@ -4834,10 +4834,10 @@ bool AfeFanImpl::setLam(const double lam)
 bool AfeFanImpl::setLam(const std::string &lam)
 {
   bool ok;
-  STR_TO_RX7(lam).toDouble(&ok);
+  FLOAT_CHECK(lam,&ok);
   if(ok)
   {
-    m_lam = STR_TO_RX7(lam);
+    m_lam = STR_TO_FLOAT(lam);
     return true;
   }
   return false;
@@ -4857,10 +4857,10 @@ bool AfeFanImpl::setTurb(const double turb)
 bool AfeFanImpl::setTurb(const std::string &turb)
 {
   bool ok;
-  STR_TO_RX7(turb).toDouble(&ok);
+  FLOAT_CHECK(turb,&ok);
   if(ok)
   {
-    m_turb = STR_TO_RX7(turb);
+    m_turb = STR_TO_FLOAT(turb);
     return true;
   }
   return false;
@@ -4880,10 +4880,10 @@ bool AfeFanImpl::setExpt(const double expt)
 bool AfeFanImpl::setExpt(const std::string &expt)
 {
   bool ok;
-  STR_TO_RX7(expt).toDouble(&ok);
+  FLOAT_CHECK(expt,&ok);
   if(ok)
   {
-    m_expt = STR_TO_RX7(expt);
+    m_expt = STR_TO_FLOAT(expt);
     return true;
   }
   return false;
@@ -4903,10 +4903,10 @@ bool AfeFanImpl::setRdens(const double rdens)
 bool AfeFanImpl::setRdens(const std::string &rdens)
 {
   bool ok;
-  STR_TO_RX7(rdens).toDouble(&ok);
+  FLOAT_CHECK(rdens,&ok);
   if(ok)
   {
-    m_rdens = STR_TO_RX7(rdens);
+    m_rdens = STR_TO_FLOAT(rdens);
     return true;
   }
   return false;
@@ -4926,10 +4926,10 @@ bool AfeFanImpl::setFdf(const double fdf)
 bool AfeFanImpl::setFdf(const std::string &fdf)
 {
   bool ok;
-  STR_TO_RX7(fdf).toDouble(&ok);
+  FLOAT_CHECK(fdf,&ok);
   if(ok)
   {
-    m_fdf = STR_TO_RX7(fdf);
+    m_fdf = STR_TO_FLOAT(fdf);
     return true;
   }
   return false;
@@ -4949,10 +4949,10 @@ bool AfeFanImpl::setSop(const double sop)
 bool AfeFanImpl::setSop(const std::string &sop)
 {
   bool ok;
-  STR_TO_RX7(sop).toDouble(&ok);
+  FLOAT_CHECK(sop,&ok);
   if(ok)
   {
-    m_sop = STR_TO_RX7(sop);
+    m_sop = STR_TO_FLOAT(sop);
     return true;
   }
   return false;
@@ -4972,10 +4972,10 @@ bool AfeFanImpl::setOff(const double off)
 bool AfeFanImpl::setOff(const std::string &off)
 {
   bool ok;
-  STR_TO_RX7(off).toDouble(&ok);
+  FLOAT_CHECK(off,&ok);
   if(ok)
   {
-    m_off = STR_TO_RX7(off);
+    m_off = STR_TO_FLOAT(off);
     return true;
   }
   return false;
@@ -5002,16 +5002,16 @@ bool AfeFanImpl::setFpc(const std::vector<double> &fpc)
 
 bool AfeFanImpl::setFpc(const std::vector<std::string> &fpc)
 {
-  std::vector<RX7> in;
+  std::vector<PRJFLOAT> in;
   for(int i=0;i<4;i++)
   {
     bool ok;
-    STR_TO_RX7(fpc[i]).toDouble(&ok);
+    FLOAT_CHECK(fpc[i],&ok);
     if(!ok)
     {
       return false;
     }
-    in.push_back(STR_TO_RX7(fpc[i]));
+    in.push_back(STR_TO_FLOAT(fpc[i]));
   }
   m_fpc = in;
   return true;
@@ -5031,10 +5031,10 @@ bool AfeFanImpl::setSarea(const double Sarea)
 bool AfeFanImpl::setSarea(const std::string &Sarea)
 {
   bool ok;
-  STR_TO_RX7(Sarea).toDouble(&ok);
+  FLOAT_CHECK(Sarea,&ok);
   if(ok)
   {
-    m_Sarea = STR_TO_RX7(Sarea);
+    m_Sarea = STR_TO_FLOAT(Sarea);
     return true;
   }
   return false;
@@ -5097,14 +5097,14 @@ AfeCsfImpl::AfeCsfImpl(int nr,int icon,std::string name,std::string desc,int u_x
 
 void AfeCsfImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  int npts = input.read<int>(FILELINE);
-  setU_x(input.read<int>(FILELINE));
-  setU_y(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  int npts = input.read<int>();
+  setU_x(input.read<int>());
+  setU_y(input.read<int>());
   for(int i=0;i<npts;i++)
   {
     DataPoint object;
@@ -5115,9 +5115,9 @@ void AfeCsfImpl::read(Reader &input)
 
 void AfeCsfImpl::readDetails(Reader &input)
 {
-  int npts = input.read<int>(FILELINE);
-  setU_x(input.read<int>(FILELINE));
-  setU_y(input.read<int>(FILELINE));
+  int npts = input.read<int>();
+  setU_x(input.read<int>());
+  setU_y(input.read<int>());
   for(int i=0;i<npts;i++)
   {
     DataPoint object;
@@ -5247,14 +5247,14 @@ AfeSupImpl::AfeSupImpl(int nr,int icon,std::string name,std::string desc,int sch
 
 void AfeSupImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setIcon(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  int nse = input.read<int>(FILELINE);
-  setSched(input.read<int>(FILELINE));
-  setU_H(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setIcon(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setName(input.readString());
+  setDesc(input.readLine());
+  int nse = input.read<int>();
+  setSched(input.read<int>());
+  setU_H(input.read<int>());
   std::vector<AirflowSubelementData> subelements;
   for(int i=0;i<nse;i++)
   {
@@ -5280,9 +5280,9 @@ std::string AfeSupImpl::write()
 
 void AfeSupImpl::readDetails(Reader &input)
 {
-  int nse = input.read<int>(FILELINE);
-  setSched(input.read<int>(FILELINE));
-  setU_H(input.read<int>(FILELINE));
+  int nse = input.read<int>();
+  setSched(input.read<int>());
+  setU_H(input.read<int>());
   std::vector<AirflowSubelementData> subelements;
   for(int i=0;i<nse;i++)
   {

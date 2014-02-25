@@ -94,11 +94,11 @@ public:
 private:
   void setDefaults();
 
-  RX7 m_Tambt;  // ambient temperature [K] (R4)
-  RX7 m_barpres;  // barometric pressure [Pa] NOT corrected to sea level (R4)
-  RX7 m_windspd;  // wind speed [m/s] (R4)
-  RX7 m_winddir;  // wind direction: 0 = N, 90 = E, 180 = S, ...; (R4)
-  RX7 m_relhum;  // relative humidity: 0.0 to 1.0 (R4)
+  PRJFLOAT m_Tambt;  // ambient temperature [K] (R4)
+  PRJFLOAT m_barpres;  // barometric pressure [Pa] NOT corrected to sea level (R4)
+  PRJFLOAT m_windspd;  // wind speed [m/s] (R4)
+  PRJFLOAT m_winddir;  // wind direction: 0 = N, 90 = E, 180 = S, ...; (R4)
+  PRJFLOAT m_relhum;  // relative humidity: 0.0 to 1.0 (R4)
   int m_daytyp;  // type of day (1-12) (I2)
   int m_uTa;  // units for Tambt (I2) {W}
   int m_ubP;  // units for barpres (I2) {W}
@@ -154,8 +154,6 @@ public:
 
   /** Returns true if the icon is a wall icon. */
   bool isWall();
-  /** Returns a bit flag representation of wall icons. */
-  uint bits();
 
   //@}
 

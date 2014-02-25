@@ -29,10 +29,10 @@ void ZoneImpl::setDefaults()
   m_pc = 0;
   m_pk = 0;
   m_pl = 0;
-  m_relHt = RX7("0.0");
-  m_Vol = RX7("0.0");
-  m_T0 = RX7("0.0");
-  m_P0 = RX7("0.0");
+  m_relHt = PRJFLOAT("0.0");
+  m_Vol = PRJFLOAT("0.0");
+  m_T0 = PRJFLOAT("0.0");
+  m_P0 = PRJFLOAT("0.0");
   m_color = 0;
   m_u_Ht = 0;
   m_u_V = 0;
@@ -40,14 +40,14 @@ void ZoneImpl::setDefaults()
   m_u_P = 0;
   m_cdaxis = 0;
   m_cfd = 0;
-  m_X1 = RX7("0.0");
-  m_Y1 = RX7("0.0");
-  m_H1 = RX7("0.0");
-  m_X2 = RX7("0.0");
-  m_Y2 = RX7("0.0");
-  m_H2 = RX7("0.0");
-  m_celldx = RX7("0.0");
-  m_axialD = RX7("0.0");
+  m_X1 = PRJFLOAT("0.0");
+  m_Y1 = PRJFLOAT("0.0");
+  m_H1 = PRJFLOAT("0.0");
+  m_X2 = PRJFLOAT("0.0");
+  m_Y2 = PRJFLOAT("0.0");
+  m_H2 = PRJFLOAT("0.0");
+  m_celldx = PRJFLOAT("0.0");
+  m_axialD = PRJFLOAT("0.0");
   m_u_aD = 0;
   m_u_L = 0;
 }
@@ -133,41 +133,41 @@ ZoneImpl::ZoneImpl(int nr,unsigned int flags,int ps,int pc,int pk,int pl,double 
 
 void ZoneImpl::read(Reader &input)
 {
-  setNr(input.readInt(FILELINE));
-  setFlags(input.readInt(FILELINE));
-  setPs(input.readInt(FILELINE));
-  setPc(input.readInt(FILELINE));
-  setPk(input.readInt(FILELINE));
-  setPl(input.readInt(FILELINE));
-  setRelHt(input.readNumber<std::string>(FILELINE));
-  setVol(input.readNumber<std::string>(FILELINE));
-  setT0(input.readNumber<std::string>(FILELINE));
-  setP0(input.readNumber<std::string>(FILELINE));
-  setName(input.readString(FILELINE));
-  setColor(input.readInt(FILELINE));
-  setU_Ht(input.readInt(FILELINE));
-  setU_V(input.readInt(FILELINE));
-  setU_T(input.readInt(FILELINE));
-  setU_P(input.readInt(FILELINE));
-  setCdaxis(input.readInt(FILELINE));
-  setCfd(input.readInt(FILELINE));
+  setNr(input.readInt());
+  setFlags(input.readInt());
+  setPs(input.readInt());
+  setPc(input.readInt());
+  setPk(input.readInt());
+  setPl(input.readInt());
+  setRelHt(input.readNumber<std::string>());
+  setVol(input.readNumber<std::string>());
+  setT0(input.readNumber<std::string>());
+  setP0(input.readNumber<std::string>());
+  setName(input.readString());
+  setColor(input.readInt());
+  setU_Ht(input.readInt());
+  setU_V(input.readInt());
+  setU_T(input.readInt());
+  setU_P(input.readInt());
+  setCdaxis(input.readInt());
+  setCfd(input.readInt());
   if(cfd())
   {
-    setCfdname(input.readString(FILELINE));
+    setCfdname(input.readString());
   }
   else if(cdaxis())
   {
-    input.readString(FILELINE);  // Read "1D:"
-    setX1(input.readNumber<RX>(FILELINE));
-    setY1(input.readNumber<RX>(FILELINE));
-    setH1(input.readNumber<RX>(FILELINE));
-    setX2(input.readNumber<RX>(FILELINE));
-    setY2(input.readNumber<RX>(FILELINE));
-    setH2(input.readNumber<RX>(FILELINE));
-    setCelldx(input.readNumber<RX>(FILELINE));
-    setAxialD(input.readNumber<RX>(FILELINE));
-    setU_aD(input.readInt(FILELINE));
-    setU_L(input.readInt(FILELINE));
+    input.readString();  // Read "1D:"
+    setX1(input.readNumber<std::string>());
+    setY1(input.readNumber<std::string>());
+    setH1(input.readNumber<std::string>());
+    setX2(input.readNumber<std::string>());
+    setY2(input.readNumber<std::string>());
+    setH2(input.readNumber<std::string>());
+    setCelldx(input.readNumber<std::string>());
+    setAxialD(input.readNumber<std::string>());
+    setU_aD(input.readInt());
+    setU_L(input.readInt());
   }
 }
 
@@ -263,10 +263,10 @@ bool ZoneImpl::setRelHt(const double relHt)
 bool ZoneImpl::setRelHt(const std::string &relHt)
 {
   bool ok;
-  STR_TO_RX7(relHt).toDouble(&ok);
+  FLOAT_CHECK(relHt,&ok);
   if(ok)
   {
-    m_relHt = STR_TO_RX7(relHt);
+    m_relHt = STR_TO_FLOAT(relHt);
     return true;
   }
   return false;
@@ -286,10 +286,10 @@ bool ZoneImpl::setVol(const double Vol)
 bool ZoneImpl::setVol(const std::string &Vol)
 {
   bool ok;
-  STR_TO_RX7(Vol).toDouble(&ok);
+  FLOAT_CHECK(Vol,&ok);
   if(ok)
   {
-    m_Vol = STR_TO_RX7(Vol);
+    m_Vol = STR_TO_FLOAT(Vol);
     return true;
   }
   return false;
@@ -309,10 +309,10 @@ bool ZoneImpl::setT0(const double T0)
 bool ZoneImpl::setT0(const std::string &T0)
 {
   bool ok;
-  STR_TO_RX7(T0).toDouble(&ok);
+  FLOAT_CHECK(T0,&ok);
   if(ok)
   {
-    m_T0 = STR_TO_RX7(T0);
+    m_T0 = STR_TO_FLOAT(T0);
     return true;
   }
   return false;
@@ -332,10 +332,10 @@ bool ZoneImpl::setP0(const double P0)
 bool ZoneImpl::setP0(const std::string P0)
 {
   bool ok;
-  STR_TO_RX7(P0).toDouble(&ok);
+  FLOAT_CHECK(P0,&ok);
   if(ok)
   {
-    m_P0 = STR_TO_RX7(P0);
+    m_P0 = STR_TO_FLOAT(P0);
     return true;
   }
   return false;
@@ -445,10 +445,10 @@ bool ZoneImpl::setX1(const double X1)
 bool ZoneImpl::setX1(const std::string &X1)
 {
   bool ok;
-  STR_TO_RX7(X1).toDouble(&ok);
+  FLOAT_CHECK(X1,&ok);
   if(ok)
   {
-    m_X1 = STR_TO_RX7(X1);
+    m_X1 = STR_TO_FLOAT(X1);
     return true;
   }
   return false;
@@ -468,10 +468,10 @@ bool ZoneImpl::setY1(const double Y1)
 bool ZoneImpl::setY1(const std::string &Y1)
 {
   bool ok;
-  STR_TO_RX7(Y1).toDouble(&ok);
+  FLOAT_CHECK(Y1,&ok);
   if(ok)
   {
-    m_Y1 = STR_TO_RX7(Y1);
+    m_Y1 = STR_TO_FLOAT(Y1);
     return true;
   }
   return false;
@@ -491,10 +491,10 @@ bool ZoneImpl::setH1(const double H1)
 bool ZoneImpl::setH1(const std::string &H1)
 {
   bool ok;
-  STR_TO_RX7(H1).toDouble(&ok);
+  FLOAT_CHECK(H1,&ok);
   if(ok)
   {
-    m_H1 = STR_TO_RX7(H1);
+    m_H1 = STR_TO_FLOAT(H1);
     return true;
   }
   return false;
@@ -514,10 +514,10 @@ bool ZoneImpl::setX2(const double X2)
 bool ZoneImpl::setX2(const std::string &X2)
 {
   bool ok;
-  STR_TO_RX7(X2).toDouble(&ok);
+  FLOAT_CHECK(X2,&ok);
   if(ok)
   {
-    m_X2 = STR_TO_RX7(X2);
+    m_X2 = STR_TO_FLOAT(X2);
     return true;
   }
   return false;
@@ -537,10 +537,10 @@ bool ZoneImpl::setY2(const double Y2)
 bool ZoneImpl::setY2(const std::string &Y2)
 {
   bool ok;
-  STR_TO_RX7(Y2).toDouble(&ok);
+  FLOAT_CHECK(Y2,&ok);
   if(ok)
   {
-    m_Y2 = STR_TO_RX7(Y2);
+    m_Y2 = STR_TO_FLOAT(Y2);
     return true;
   }
   return false;
@@ -560,10 +560,10 @@ bool ZoneImpl::setH2(const double H2)
 bool ZoneImpl::setH2(const std::string &H2)
 {
   bool ok;
-  STR_TO_RX7(H2).toDouble(&ok);
+  FLOAT_CHECK(H2,&ok);
   if(ok)
   {
-    m_H2 = STR_TO_RX7(H2);
+    m_H2 = STR_TO_FLOAT(H2);
     return true;
   }
   return false;
@@ -583,10 +583,10 @@ bool ZoneImpl::setCelldx(const double celldx)
 bool ZoneImpl::setCelldx(const std::string &celldx)
 {
   bool ok;
-  STR_TO_RX7(celldx).toDouble(&ok);
+  FLOAT_CHECK(celldx,&ok);
   if(ok)
   {
-    m_celldx = STR_TO_RX7(celldx);
+    m_celldx = STR_TO_FLOAT(celldx);
     return true;
   }
   return false;
@@ -606,10 +606,10 @@ bool ZoneImpl::setAxialD(const double axialD)
 bool ZoneImpl::setAxialD(const std::string &axialD)
 {
   bool ok;
-  STR_TO_RX7(axialD).toDouble(&ok);
+  FLOAT_CHECK(axialD,&ok);
   if(ok)
   {
-    m_axialD = STR_TO_RX7(axialD);
+    m_axialD = STR_TO_FLOAT(axialD);
     return true;
   }
   return false;
@@ -698,10 +698,10 @@ bool ZoneImpl::setIc(const int i, const double value)
 bool ZoneImpl::setIc(const int i, const std::string &value)
 {
   bool ok;
-  STR_TO_RX7(value).toDouble(&ok);
+  FLOAT_CHECK(value,&ok);
   if(ok)
   {
-    m_ic[i] = STR_TO_RX7(value);
+    m_ic[i] = STR_TO_FLOAT(value);
     return true;
   }
   return false;
@@ -724,12 +724,12 @@ bool ZoneImpl::setIc(std::vector<std::string> &ic)
   for(unsigned i=0;i<ic.size();i++)
   {
     bool ok;
-    STR_TO_RX7(ic[i]).toDouble(&ok);
+    FLOAT_CHECK(ic[i],&ok);
     if(!ok)
     {
       return false;
     }
-    in << STR_TO_RX7(ic[i]);
+    in << STR_TO_FLOAT(ic[i]);
   }
   m_ic = in;
   return true;
@@ -740,13 +740,13 @@ void SpeciesImpl::setDefaults()
   m_nr = 0;
   m_sflag = 0;
   m_ntflag = 0;
-  m_molwt = RX7("0.0");
-  m_mdiam = RX7("0.0");
-  m_edens = RX7("0.0");
-  m_decay = RX7("0.0");
-  m_Dm = RX7("0.0");
-  m_ccdef = RX7("0.0");
-  m_Cp = RX7("0.0");
+  m_molwt = PRJFLOAT("0.0");
+  m_mdiam = PRJFLOAT("0.0");
+  m_edens = PRJFLOAT("0.0");
+  m_decay = PRJFLOAT("0.0");
+  m_Dm = PRJFLOAT("0.0");
+  m_ccdef = PRJFLOAT("0.0");
+  m_Cp = PRJFLOAT("0.0");
   m_ucc = 0;
   m_umd = 0;
   m_ued = 0;
@@ -809,23 +809,23 @@ SpeciesImpl::SpeciesImpl(int nr,int sflag,int ntflag,double molwt,double mdiam,d
 
 void SpeciesImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setSflag(input.read<int>(FILELINE));
-  setNtflag(input.read<int>(FILELINE));
-  setMolwt(input.read<std::string>(FILELINE));
-  setMdiam(input.read<std::string>(FILELINE));
-  setEdens(input.read<std::string>(FILELINE));
-  setDecay(input.read<std::string>(FILELINE));
-  setDm(input.read<std::string>(FILELINE));
-  setCcdef(input.read<std::string>(FILELINE));
-  setCp(input.read<std::string>(FILELINE));
-  setUcc(input.read<int>(FILELINE));
-  setUmd(input.read<int>(FILELINE));
-  setUed(input.read<int>(FILELINE));
-  setUdm(input.read<int>(FILELINE));
-  setUcp(input.read<int>(FILELINE));
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
+  setNr(input.read<int>());
+  setSflag(input.read<int>());
+  setNtflag(input.read<int>());
+  setMolwt(input.read<std::string>());
+  setMdiam(input.read<std::string>());
+  setEdens(input.read<std::string>());
+  setDecay(input.read<std::string>());
+  setDm(input.read<std::string>());
+  setCcdef(input.read<std::string>());
+  setCp(input.read<std::string>());
+  setUcc(input.read<int>());
+  setUmd(input.read<int>());
+  setUed(input.read<int>());
+  setUdm(input.read<int>());
+  setUcp(input.read<int>());
+  setName(input.readString());
+  setDesc(input.readLine());
 }
 
 std::string SpeciesImpl::write()
@@ -880,10 +880,10 @@ bool SpeciesImpl::setMolwt(const double molwt)
 bool SpeciesImpl::setMolwt(const std::string &molwt)
 {
   bool ok;
-  STR_TO_RX7(molwt).toDouble(&ok);
+  FLOAT_CHECK(molwt,&ok);
   if(ok)
   {
-    m_molwt = STR_TO_RX7(molwt);
+    m_molwt = STR_TO_FLOAT(molwt);
     return true;
   }
   return false;
@@ -903,10 +903,10 @@ bool SpeciesImpl::setMdiam(const double mdiam)
 bool SpeciesImpl::setMdiam(const std::string &mdiam)
 {
   bool ok;
-  STR_TO_RX7(mdiam).toDouble(&ok);
+  FLOAT_CHECK(mdiam,&ok);
   if(ok)
   {
-    m_mdiam = STR_TO_RX7(mdiam);
+    m_mdiam = STR_TO_FLOAT(mdiam);
     return true;
   }
   return false;
@@ -926,10 +926,10 @@ bool SpeciesImpl::setEdens(const double edens)
 bool SpeciesImpl::setEdens(const std::string &edens)
 {
   bool ok;
-  STR_TO_RX7(edens).toDouble(&ok);
+  FLOAT_CHECK(edens,&ok);
   if(ok)
   {
-    m_edens = STR_TO_RX7(edens);
+    m_edens = STR_TO_FLOAT(edens);
     return true;
   }
   return false;
@@ -949,10 +949,10 @@ bool SpeciesImpl::setDecay(const double decay)
 bool SpeciesImpl::setDecay(const std::string &decay)
 {
   bool ok;
-  STR_TO_RX7(decay).toDouble(&ok);
+  FLOAT_CHECK(decay,&ok);
   if(ok)
   {
-    m_decay = STR_TO_RX7(decay);
+    m_decay = STR_TO_FLOAT(decay);
     return true;
   }
   return false;
@@ -972,10 +972,10 @@ bool SpeciesImpl::setDm(const double Dm)
 bool SpeciesImpl::setDm(const std::string &Dm)
 {
   bool ok;
-  STR_TO_RX7(Dm).toDouble(&ok);
+  FLOAT_CHECK(Dm,&ok);
   if(ok)
   {
-    m_Dm = STR_TO_RX7(Dm);
+    m_Dm = STR_TO_FLOAT(Dm);
     return true;
   }
   return false;
@@ -995,10 +995,10 @@ bool SpeciesImpl::setCcdef(const double ccdef)
 bool SpeciesImpl::setCcdef(const std::string &ccdef)
 {
   bool ok;
-  STR_TO_RX7(ccdef).toDouble(&ok);
+  FLOAT_CHECK(ccdef,&ok);
   if(ok)
   {
-    m_ccdef = STR_TO_RX7(ccdef);
+    m_ccdef = STR_TO_FLOAT(ccdef);
     return true;
   }
   return false;
@@ -1018,10 +1018,10 @@ bool SpeciesImpl::setCp(const double Cp)
 bool SpeciesImpl::setCp(const std::string &Cp)
 {
   bool ok;
-  STR_TO_RX7(Cp).toDouble(&ok);
+  FLOAT_CHECK(Cp,&ok);
   if(ok)
   {
-    m_Cp = STR_TO_RX7(Cp);
+    m_Cp = STR_TO_FLOAT(Cp);
     return true;
   }
   return false;
@@ -1128,14 +1128,14 @@ AhsImpl::AhsImpl(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,
 
 void AhsImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setZone_r(input.read<int>(FILELINE));
-  setZone_s(input.read<int>(FILELINE));
-  setPath_r(input.read<int>(FILELINE));
-  setPath_s(input.read<int>(FILELINE));
-  setPath_x(input.read<int>(FILELINE));
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
+  setNr(input.read<int>());
+  setZone_r(input.read<int>());
+  setZone_s(input.read<int>());
+  setPath_r(input.read<int>());
+  setPath_s(input.read<int>());
+  setPath_x(input.read<int>());
+  setName(input.readString());
+  setDesc(input.readLine());
 }
 
 std::string AhsImpl::write()
@@ -1239,16 +1239,16 @@ void PathImpl::setDefaults()
   m_ps = 0;
   m_pc = 0;
   m_pld = 0;
-  m_X = RX7("0.0");
-  m_Y = RX7("0.0");
-  m_relHt = RX7("0.0");
-  m_mult = RX7("0.0");
-  m_wPset = RX7("0.0");
-  m_wPmod = RX7("0.0");
-  m_wazm = RX7("0.0");
-  m_Fahs = RX7("0.0");
-  m_Xmax = RX7("0.0");
-  m_Xmin = RX7("0.0");
+  m_X = PRJFLOAT("0.0");
+  m_Y = PRJFLOAT("0.0");
+  m_relHt = PRJFLOAT("0.0");
+  m_mult = PRJFLOAT("0.0");
+  m_wPset = PRJFLOAT("0.0");
+  m_wPmod = PRJFLOAT("0.0");
+  m_wazm = PRJFLOAT("0.0");
+  m_Fahs = PRJFLOAT("0.0");
+  m_Xmax = PRJFLOAT("0.0");
+  m_Xmin = PRJFLOAT("0.0");
   m_icon = 0;
   m_dir = 0;
   m_u_Ht = 0;
@@ -1348,40 +1348,40 @@ PathImpl::PathImpl(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,
 
 void PathImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setFlags(input.read<int>(FILELINE));
-  setPzn(input.read<int>(FILELINE));
-  setPzm(input.read<int>(FILELINE));
-  setPe(input.read<int>(FILELINE));
-  setPf(input.read<int>(FILELINE));
-  setPw(input.read<int>(FILELINE));
-  setPa(input.read<int>(FILELINE));
-  setPs(input.read<int>(FILELINE));
-  setPc(input.read<int>(FILELINE));
-  setPld(input.read<int>(FILELINE));
-  setX(input.readNumber<std::string>(FILELINE));
-  setY(input.readNumber<std::string>(FILELINE));
-  setRelHt(input.readNumber<std::string>(FILELINE));
-  setMult(input.readNumber<std::string>(FILELINE));
-  setWPset(input.readNumber<std::string>(FILELINE));
-  setWPmod(input.readNumber<std::string>(FILELINE));
-  setWazm(input.readNumber<std::string>(FILELINE));
-  setFahs(input.readNumber<std::string>(FILELINE));
-  setXmax(input.readNumber<std::string>(FILELINE));
-  setXmin(input.readNumber<std::string>(FILELINE));
-  setIcon(input.read<unsigned int>(FILELINE));
-  setDir(input.read<unsigned int>(FILELINE));
-  setU_Ht(input.read<int>(FILELINE));
-  setU_XY(input.read<int>(FILELINE));
-  setU_dP(input.read<int>(FILELINE));
-  setU_F(input.read<int>(FILELINE));
-  setCfd(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setFlags(input.read<int>());
+  setPzn(input.read<int>());
+  setPzm(input.read<int>());
+  setPe(input.read<int>());
+  setPf(input.read<int>());
+  setPw(input.read<int>());
+  setPa(input.read<int>());
+  setPs(input.read<int>());
+  setPc(input.read<int>());
+  setPld(input.read<int>());
+  setX(input.readNumber<std::string>());
+  setY(input.readNumber<std::string>());
+  setRelHt(input.readNumber<std::string>());
+  setMult(input.readNumber<std::string>());
+  setWPset(input.readNumber<std::string>());
+  setWPmod(input.readNumber<std::string>());
+  setWazm(input.readNumber<std::string>());
+  setFahs(input.readNumber<std::string>());
+  setXmax(input.readNumber<std::string>());
+  setXmin(input.readNumber<std::string>());
+  setIcon(input.read<unsigned int>());
+  setDir(input.read<unsigned int>());
+  setU_Ht(input.read<int>());
+  setU_XY(input.read<int>());
+  setU_dP(input.read<int>());
+  setU_F(input.read<int>());
+  setCfd(input.read<int>());
   if(m_cfd)
   {
-    setCfd_name(input.readString(FILELINE));
-    setCfd_ptype(input.read<int>(FILELINE));
-    setCfd_btype(input.read<int>(FILELINE));
-    setCfd_capp(input.read<int>(FILELINE));
+    setCfd_name(input.readString());
+    setCfd_ptype(input.read<int>());
+    setCfd_btype(input.read<int>());
+    setCfd_capp(input.read<int>());
   }
 }
 
@@ -1527,10 +1527,10 @@ bool PathImpl::setX(const double X)
 bool PathImpl::setX(const std::string &X)
 {
   bool ok;
-  STR_TO_RX7(X).toDouble(&ok);
+  FLOAT_CHECK(X,&ok);
   if(ok)
   {
-    m_X = STR_TO_RX7(X);
+    m_X = STR_TO_FLOAT(X);
     return true;
   }
   return false;
@@ -1550,10 +1550,10 @@ bool PathImpl::setY(const double Y)
 bool PathImpl::setY(const std::string &Y)
 {
   bool ok;
-  STR_TO_RX7(Y).toDouble(&ok);
+  FLOAT_CHECK(Y,&ok);
   if(ok)
   {
-    m_Y = STR_TO_RX7(Y);
+    m_Y = STR_TO_FLOAT(Y);
     return true;
   }
   return false;
@@ -1573,10 +1573,10 @@ bool PathImpl::setRelHt(const double relHt)
 bool PathImpl::setRelHt(const std::string &relHt)
 {
   bool ok;
-  STR_TO_RX7(relHt).toDouble(&ok);
+  FLOAT_CHECK(relHt,&ok);
   if(ok)
   {
-    m_relHt = STR_TO_RX7(relHt);
+    m_relHt = STR_TO_FLOAT(relHt);
     return true;
   }
   return false;
@@ -1596,10 +1596,10 @@ bool PathImpl::setMult(const double mult)
 bool PathImpl::setMult(const std::string &mult)
 {
   bool ok;
-  STR_TO_RX7(mult).toDouble(&ok);
+  FLOAT_CHECK(mult,&ok);
   if(ok)
   {
-    m_mult = STR_TO_RX7(mult);
+    m_mult = STR_TO_FLOAT(mult);
     return true;
   }
   return false;
@@ -1619,10 +1619,10 @@ bool PathImpl::setWPset(const double wPset)
 bool PathImpl::setWPset(const std::string &wPset)
 {
   bool ok;
-  STR_TO_RX7(wPset).toDouble(&ok);
+  FLOAT_CHECK(wPset,&ok);
   if(ok)
   {
-    m_wPset = STR_TO_RX7(wPset);
+    m_wPset = STR_TO_FLOAT(wPset);
     return true;
   }
   return false;
@@ -1639,13 +1639,13 @@ bool PathImpl::setWPmod(const double wPmod)
   return true;
 }
 
-bool PathImpl::setWPmod(const RX &wPmod)
+bool PathImpl::setWPmod(const std::string &wPmod)
 {
   bool ok;
-  STR_TO_RX7(wPmod).toDouble(&ok);
+  FLOAT_CHECK(wPmod,&ok);
   if(ok)
   {
-    m_wPmod = STR_TO_RX7(wPmod);
+    m_wPmod = STR_TO_FLOAT(wPmod);
     return true;
   }
   return false;
@@ -1665,10 +1665,10 @@ bool PathImpl::setWazm(const double wazm)
 bool PathImpl::setWazm(const std::string &wazm)
 {
   bool ok;
-  STR_TO_RX7(wazm).toDouble(&ok);
+  FLOAT_CHECK(wazm,&ok);
   if(ok)
   {
-    m_wazm = STR_TO_RX7(wazm);
+    m_wazm = STR_TO_FLOAT(wazm);
     return true;
   }
   return false;
@@ -1688,10 +1688,10 @@ bool PathImpl::setFahs(const double Fahs)
 bool PathImpl::setFahs(const std::string &Fahs)
 {
   bool ok;
-  STR_TO_RX7(Fahs).toDouble(&ok);
+  FLOAT_CHECK(Fahs,&ok);
   if(ok)
   {
-    m_Fahs = STR_TO_RX7(Fahs);
+    m_Fahs = STR_TO_FLOAT(Fahs);
     return true;
   }
   return false;
@@ -1711,10 +1711,10 @@ bool PathImpl::setXmax(const double Xmax)
 bool PathImpl::setXmax(const std::string &Xmax)
 {
   bool ok;
-  STR_TO_RX7(Xmax).toDouble(&ok);
+  FLOAT_CHECK(Xmax,&ok);
   if(ok)
   {
-    m_Xmax = STR_TO_RX7(Xmax);
+    m_Xmax = STR_TO_FLOAT(Xmax);
     return true;
   }
   return false;
@@ -1734,10 +1734,10 @@ bool PathImpl::setXmin(const double Xmin)
 bool PathImpl::setXmin(const std::string &Xmin)
 {
   bool ok;
-  STR_TO_RX7(Xmin).toDouble(&ok);
+  FLOAT_CHECK(Xmin,&ok);
   if(ok)
   {
-    m_Xmin = STR_TO_RX7(Xmin);
+    m_Xmin = STR_TO_FLOAT(Xmin);
     return true;
   }
   return false;
@@ -1924,59 +1924,59 @@ void RunControlImpl::setDefaults()
   m_sim_af = 0;
   m_afcalc = 0;
   m_afmaxi = 0;
-  m_afrcnvg = RX7("0.0");
-  m_afacnvg = RX7("0.0");
-  m_afrelax = RX7("0.0");
+  m_afrcnvg = PRJFLOAT("0.0");
+  m_afacnvg = PRJFLOAT("0.0");
+  m_afrelax = PRJFLOAT("0.0");
   m_uac2 = 0;
-  m_Pres = RX7("0.0");
+  m_Pres = PRJFLOAT("0.0");
   m_uPres = 0;
   m_afslae = 0;
   m_afrseq = 0;
   m_aflmaxi = 0;
-  m_aflcnvg = RX7("0.0");
+  m_aflcnvg = PRJFLOAT("0.0");
   m_aflinit = 0;
   m_Tadj = 0;
   m_sim_mf = 0;
   m_ccmaxi = 0;
-  m_ccrcnvg = RX7("0.0");
-  m_ccacnvg = RX7("0.0");
-  m_ccrelax = RX7("0.0");
+  m_ccrcnvg = PRJFLOAT("0.0");
+  m_ccacnvg = PRJFLOAT("0.0");
+  m_ccrelax = PRJFLOAT("0.0");
   m_uccc = 0;
   m_mfnmthd = 0;
   m_mfnrseq = 0;
   m_mfnmaxi = 0;
-  m_mfnrcnvg = RX7("0.0");
-  m_mfnacnvg = RX7("0.0");
-  m_mfnrelax = RX7("0.0");
-  m_mfngamma = RX7("0.0");
+  m_mfnrcnvg = PRJFLOAT("0.0");
+  m_mfnacnvg = PRJFLOAT("0.0");
+  m_mfnrelax = PRJFLOAT("0.0");
+  m_mfngamma = PRJFLOAT("0.0");
   m_uccn = 0;
   m_mftmthd = 0;
   m_mftrseq = 0;
   m_mftmaxi = 0;
-  m_mftrcnvg = RX7("0.0");
-  m_mftacnvg = RX7("0.0");
-  m_mftrelax = RX7("0.0");
-  m_mftgamma = RX7("0.0");
+  m_mftrcnvg = PRJFLOAT("0.0");
+  m_mftacnvg = PRJFLOAT("0.0");
+  m_mftrelax = PRJFLOAT("0.0");
+  m_mftgamma = PRJFLOAT("0.0");
   m_ucct = 0;
   m_mfvmthd = 0;
   m_mfvrseq = 0;
   m_mfvmaxi = 0;
-  m_mfvrcnvg = RX7("0.0");
-  m_mfvacnvg = RX7("0.0");
-  m_mfvrelax = RX7("0.0");
+  m_mfvrcnvg = PRJFLOAT("0.0");
+  m_mfvacnvg = PRJFLOAT("0.0");
+  m_mfvrelax = PRJFLOAT("0.0");
   m_uccv = 0;
   m_mf_solver = 0;
   m_sim_1dz = 0;
   m_sim_1dd = 0;
-  m_celldx = RX7("0.0");
+  m_celldx = PRJFLOAT("0.0");
   m_sim_vjt = 0;
   m_udx = 0;
   m_cvode_mth = 0;
-  m_cvode_rcnvg = RX7("0.0");
-  m_cvode_acnvg = RX7("0.0");
-  m_cvode_dtmax = RX7("0.0");
+  m_cvode_rcnvg = PRJFLOAT("0.0");
+  m_cvode_acnvg = PRJFLOAT("0.0");
+  m_cvode_dtmax = PRJFLOAT("0.0");
   m_tsdens = 0;
-  m_tsrelax = RX7("0.0");
+  m_tsrelax = PRJFLOAT("0.0");
   m_tsmaxi = 0;
   m_cnvgSS = 0;
   m_densZP = 0;
@@ -2006,7 +2006,7 @@ void RunControlImpl::setDefaults()
   m_BldgFlowD = 0;
   m_BldgFlowC = 0;
   m_cfd_ctype = 0;
-  m_cfd_convcpl = RX7("0.0");
+  m_cfd_convcpl = PRJFLOAT("0.0");
   m_cfd_var = 0;
   m_cfd_zref = 0;
   m_cfd_imax = 0;
@@ -2275,120 +2275,120 @@ RunControlImpl::RunControlImpl(int sim_af,int afcalc,int afmaxi,std::string afrc
 
 void RunControlImpl::read(Reader &input)
 {
-  setSim_af(input.read<int>(FILELINE));
-  setAfcalc(input.read<int>(FILELINE));
-  setAfmaxi(input.read<int>(FILELINE));
-  setAfrcnvg(input.readNumber<std::string>(FILELINE));
-  setAfacnvg(input.readNumber<std::string>(FILELINE));
-  setAfrelax(input.readNumber<std::string>(FILELINE));
-  setUac2(input.read<int>(FILELINE));
-  setPres(input.readNumber<std::string>(FILELINE));
-  setUPres(input.read<int>(FILELINE));
-  setAfslae(input.read<int>(FILELINE));
-  setAfrseq(input.read<int>(FILELINE));
-  setAflmaxi(input.read<int>(FILELINE));
-  setAflcnvg(input.readNumber<std::string>(FILELINE));
-  setAflinit(input.read<int>(FILELINE));
-  setTadj(input.read<int>(FILELINE));
-  setSim_mf(input.read<int>(FILELINE));
-  setCcmaxi(input.read<int>(FILELINE));
-  setCcrcnvg(input.readNumber<std::string>(FILELINE));
-  setCcacnvg(input.readNumber<std::string>(FILELINE));
-  setCcrelax(input.readNumber<std::string>(FILELINE));
-  setUccc(input.read<int>(FILELINE));
-  setMfnmthd(input.read<int>(FILELINE));
-  setMfnrseq(input.read<int>(FILELINE));
-  setMfnmaxi(input.read<int>(FILELINE));
-  setMfnrcnvg(input.readNumber<std::string>(FILELINE));
-  setMfnacnvg(input.readNumber<std::string>(FILELINE));
-  setMfnrelax(input.readNumber<std::string>(FILELINE));
-  setMfngamma(input.readNumber<std::string>(FILELINE));
-  setUccn(input.read<int>(FILELINE));
-  setMftmthd(input.read<int>(FILELINE));
-  setMftrseq(input.read<int>(FILELINE));
-  setMftmaxi(input.read<int>(FILELINE));
-  setMftrcnvg(input.readNumber<std::string>(FILELINE));
-  setMftacnvg(input.readNumber<std::string>(FILELINE));
-  setMftrelax(input.readNumber<std::string>(FILELINE));
-  setMftgamma(input.readNumber<std::string>(FILELINE));
-  setUcct(input.read<int>(FILELINE));
-  setMfvmthd(input.read<int>(FILELINE));
-  setMfvrseq(input.read<int>(FILELINE));
-  setMfvmaxi(input.read<int>(FILELINE));
-  setMfvrcnvg(input.readNumber<std::string>(FILELINE));
-  setMfvacnvg(input.readNumber<std::string>(FILELINE));
-  setMfvrelax(input.readNumber<std::string>(FILELINE));
-  setUccv(input.read<int>(FILELINE));
-  setMf_solver(input.read<int>(FILELINE));
-  setSim_1dz(input.read<int>(FILELINE));
-  setSim_1dd(input.read<int>(FILELINE));
-  setCelldx(input.readNumber<std::string>(FILELINE));
-  setSim_vjt(input.read<int>(FILELINE));
-  setUdx(input.read<int>(FILELINE));
-  setCvode_mth(input.read<int>(FILELINE));
-  setCvode_rcnvg(input.readNumber<std::string>(FILELINE));
-  setCvode_acnvg(input.readNumber<std::string>(FILELINE));
-  setCvode_dtmax(input.readNumber<std::string>(FILELINE));
-  setTsdens(input.read<int>(FILELINE));
-  setTsrelax(input.readNumber<std::string>(FILELINE));
-  setTsmaxi(input.read<int>(FILELINE));
-  setCnvgSS(input.read<int>(FILELINE));
-  setDensZP(input.read<int>(FILELINE));
-  setStackD(input.read<int>(FILELINE));
-  setDodMdt(input.read<int>(FILELINE));
-  setDate_st(input.readString(FILELINE));
-  setTime_st(input.readString(FILELINE));
-  setDate_0(input.readString(FILELINE));
-  setTime_0(input.readString(FILELINE));
-  setDate_1(input.readString(FILELINE));
-  setTime_1(input.readString(FILELINE));
-  setTime_step(input.readString(FILELINE));
-  setTime_list(input.readString(FILELINE));
-  setTime_scrn(input.readString(FILELINE));
-  setRestart(input.read<int>(FILELINE));
-  setRstdate(input.readString(FILELINE));
-  setRsttime(input.readString(FILELINE));
-  setList(input.read<int>(FILELINE));
-  setDoDlg(input.read<int>(FILELINE));
-  setPfsave(input.read<int>(FILELINE));
-  setZfsave(input.read<int>(FILELINE));
-  setZcsave(input.read<int>(FILELINE));
-  setAchvol(input.read<int>(FILELINE));
-  setAchsave(input.read<int>(FILELINE));
-  setAbwsave(input.read<int>(FILELINE));
-  setCbwsave(input.read<int>(FILELINE));
-  setExpsave(input.read<int>(FILELINE));
-  setEbwsave(input.read<int>(FILELINE));
-  setZaasave(input.read<int>(FILELINE));
-  setZbwsave(input.read<int>(FILELINE));
-  setRzfsave(input.read<int>(FILELINE));
-  setRzmsave(input.read<int>(FILELINE));
-  setRz1save(input.read<int>(FILELINE));
-  setCsmsave(input.read<int>(FILELINE));
-  setSrfsave(input.read<int>(FILELINE));
-  setLogsave(input.read<int>(FILELINE));
+  setSim_af(input.read<int>());
+  setAfcalc(input.read<int>());
+  setAfmaxi(input.read<int>());
+  setAfrcnvg(input.readNumber<std::string>());
+  setAfacnvg(input.readNumber<std::string>());
+  setAfrelax(input.readNumber<std::string>());
+  setUac2(input.read<int>());
+  setPres(input.readNumber<std::string>());
+  setUPres(input.read<int>());
+  setAfslae(input.read<int>());
+  setAfrseq(input.read<int>());
+  setAflmaxi(input.read<int>());
+  setAflcnvg(input.readNumber<std::string>());
+  setAflinit(input.read<int>());
+  setTadj(input.read<int>());
+  setSim_mf(input.read<int>());
+  setCcmaxi(input.read<int>());
+  setCcrcnvg(input.readNumber<std::string>());
+  setCcacnvg(input.readNumber<std::string>());
+  setCcrelax(input.readNumber<std::string>());
+  setUccc(input.read<int>());
+  setMfnmthd(input.read<int>());
+  setMfnrseq(input.read<int>());
+  setMfnmaxi(input.read<int>());
+  setMfnrcnvg(input.readNumber<std::string>());
+  setMfnacnvg(input.readNumber<std::string>());
+  setMfnrelax(input.readNumber<std::string>());
+  setMfngamma(input.readNumber<std::string>());
+  setUccn(input.read<int>());
+  setMftmthd(input.read<int>());
+  setMftrseq(input.read<int>());
+  setMftmaxi(input.read<int>());
+  setMftrcnvg(input.readNumber<std::string>());
+  setMftacnvg(input.readNumber<std::string>());
+  setMftrelax(input.readNumber<std::string>());
+  setMftgamma(input.readNumber<std::string>());
+  setUcct(input.read<int>());
+  setMfvmthd(input.read<int>());
+  setMfvrseq(input.read<int>());
+  setMfvmaxi(input.read<int>());
+  setMfvrcnvg(input.readNumber<std::string>());
+  setMfvacnvg(input.readNumber<std::string>());
+  setMfvrelax(input.readNumber<std::string>());
+  setUccv(input.read<int>());
+  setMf_solver(input.read<int>());
+  setSim_1dz(input.read<int>());
+  setSim_1dd(input.read<int>());
+  setCelldx(input.readNumber<std::string>());
+  setSim_vjt(input.read<int>());
+  setUdx(input.read<int>());
+  setCvode_mth(input.read<int>());
+  setCvode_rcnvg(input.readNumber<std::string>());
+  setCvode_acnvg(input.readNumber<std::string>());
+  setCvode_dtmax(input.readNumber<std::string>());
+  setTsdens(input.read<int>());
+  setTsrelax(input.readNumber<std::string>());
+  setTsmaxi(input.read<int>());
+  setCnvgSS(input.read<int>());
+  setDensZP(input.read<int>());
+  setStackD(input.read<int>());
+  setDodMdt(input.read<int>());
+  setDate_st(input.readString());
+  setTime_st(input.readString());
+  setDate_0(input.readString());
+  setTime_0(input.readString());
+  setDate_1(input.readString());
+  setTime_1(input.readString());
+  setTime_step(input.readString());
+  setTime_list(input.readString());
+  setTime_scrn(input.readString());
+  setRestart(input.read<int>());
+  setRstdate(input.readString());
+  setRsttime(input.readString());
+  setList(input.read<int>());
+  setDoDlg(input.read<int>());
+  setPfsave(input.read<int>());
+  setZfsave(input.read<int>());
+  setZcsave(input.read<int>());
+  setAchvol(input.read<int>());
+  setAchsave(input.read<int>());
+  setAbwsave(input.read<int>());
+  setCbwsave(input.read<int>());
+  setExpsave(input.read<int>());
+  setEbwsave(input.read<int>());
+  setZaasave(input.read<int>());
+  setZbwsave(input.read<int>());
+  setRzfsave(input.read<int>());
+  setRzmsave(input.read<int>());
+  setRz1save(input.read<int>());
+  setCsmsave(input.read<int>());
+  setSrfsave(input.read<int>());
+  setLogsave(input.read<int>());
   std::vector<int> save;
   for(int i=0;i<16;i++)
   {
-    save.push_back(input.read<int>(FILELINE));
+    save.push_back(input.read<int>());
   }
   setSave(save);
-  int nrvals = input.read<int>(FILELINE);
+  int nrvals = input.read<int>();
   std::vector<std::string> rvals;
   for(int i=0;i<nrvals;i++)
   {
-    rvals.push_back(input.read<std::string>(FILELINE));
+    rvals.push_back(input.read<std::string>());
   }
   setRvals(rvals);
-  setBldgFlowZ(input.read<int>(FILELINE));
-  setBldgFlowD(input.read<int>(FILELINE));
-  setBldgFlowC(input.read<int>(FILELINE));
-  setCfd_ctype(input.read<int>(FILELINE));
-  setCfd_convcpl(input.readNumber<std::string>(FILELINE));
-  setCfd_var(input.read<int>(FILELINE));
-  setCfd_zref(input.read<int>(FILELINE));
-  setCfd_imax(input.read<int>(FILELINE));
-  setCfd_dtcmo(input.read<int>(FILELINE));
+  setBldgFlowZ(input.read<int>());
+  setBldgFlowD(input.read<int>());
+  setBldgFlowC(input.read<int>());
+  setCfd_ctype(input.read<int>());
+  setCfd_convcpl(input.readNumber<std::string>());
+  setCfd_var(input.read<int>());
+  setCfd_zref(input.read<int>());
+  setCfd_imax(input.read<int>());
+  setCfd_dtcmo(input.read<int>());
 }
 
 std::string RunControlImpl::write()
@@ -2484,10 +2484,10 @@ bool RunControlImpl::setAfrcnvg(const double afrcnvg)
 bool RunControlImpl::setAfrcnvg(const std::string &afrcnvg)
 {
   bool ok;
-  STR_TO_RX7(afrcnvg).toDouble(&ok);
+  FLOAT_CHECK(afrcnvg,&ok);
   if(ok)
   {
-    m_afrcnvg = STR_TO_RX7(afrcnvg);
+    m_afrcnvg = STR_TO_FLOAT(afrcnvg);
     return true;
   }
   return false;
@@ -2507,10 +2507,10 @@ bool RunControlImpl::setAfacnvg(const double afacnvg)
 bool RunControlImpl::setAfacnvg(const std::string &afacnvg)
 {
   bool ok;
-  STR_TO_RX7(afacnvg).toDouble(&ok);
+  FLOAT_CHECK(afacnvg,&ok);
   if(ok)
   {
-    m_afacnvg = STR_TO_RX7(afacnvg);
+    m_afacnvg = STR_TO_FLOAT(afacnvg);
     return true;
   }
   return false;
@@ -2530,10 +2530,10 @@ bool RunControlImpl::setAfrelax(const double afrelax)
 bool RunControlImpl::setAfrelax(const std::string &afrelax)
 {
   bool ok;
-  STR_TO_RX7(afrelax).toDouble(&ok);
+  FLOAT_CHECK(afrelax,&ok);
   if(ok)
   {
-    m_afrelax = STR_TO_RX7(afrelax);
+    m_afrelax = STR_TO_FLOAT(afrelax);
     return true;
   }
   return false;
@@ -2563,10 +2563,10 @@ bool RunControlImpl::setPres(const double Pres)
 bool RunControlImpl::setPres(const std::string &Pres)
 {
   bool ok;
-  STR_TO_RX7(Pres).toDouble(&ok);
+  FLOAT_CHECK(Pres,&ok);
   if(ok)
   {
-    m_Pres = STR_TO_RX7(Pres);
+    m_Pres = STR_TO_FLOAT(Pres);
     return true;
   }
   return false;
@@ -2626,10 +2626,10 @@ bool RunControlImpl::setAflcnvg(const double aflcnvg)
 bool RunControlImpl::setAflcnvg(const std::string &aflcnvg)
 {
   bool ok;
-  STR_TO_RX7(aflcnvg).toDouble(&ok);
+  FLOAT_CHECK(aflcnvg,&ok);
   if(ok)
   {
-    m_aflcnvg = STR_TO_RX7(aflcnvg);
+    m_aflcnvg = STR_TO_FLOAT(aflcnvg);
     return true;
   }
   return false;
@@ -2689,10 +2689,10 @@ bool RunControlImpl::setCcrcnvg(const double ccrcnvg)
 bool RunControlImpl::setCcrcnvg(const std::string &ccrcnvg)
 {
   bool ok;
-  STR_TO_RX7(ccrcnvg).toDouble(&ok);
+  FLOAT_CHECK(ccrcnvg,&ok);
   if(ok)
   {
-    m_ccrcnvg = STR_TO_RX7(ccrcnvg);
+    m_ccrcnvg = STR_TO_FLOAT(ccrcnvg);
     return true;
   }
   return false;
@@ -2712,10 +2712,10 @@ bool RunControlImpl::setCcacnvg(const double ccacnvg)
 bool RunControlImpl::setCcacnvg(const std::string &ccacnvg)
 {
   bool ok;
-  STR_TO_RX7(ccacnvg).toDouble(&ok);
+  FLOAT_CHECK(ccacnvg,&ok);
   if(ok)
   {
-    m_ccacnvg = STR_TO_RX7(ccacnvg);
+    m_ccacnvg = STR_TO_FLOAT(ccacnvg);
     return true;
   }
   return false;
@@ -2735,10 +2735,10 @@ bool RunControlImpl::setCcrelax(const double ccrelax)
 bool RunControlImpl::setCcrelax(const std::string &ccrelax)
 {
   bool ok;
-  STR_TO_RX7(ccrelax).toDouble(&ok);
+  FLOAT_CHECK(ccrelax,&ok);
   if(ok)
   {
-    m_ccrelax = STR_TO_RX7(ccrelax);
+    m_ccrelax = STR_TO_FLOAT(ccrelax);
     return true;
   }
   return false;
@@ -2798,10 +2798,10 @@ bool RunControlImpl::setMfnrcnvg(const double mfnrcnvg)
 bool RunControlImpl::setMfnrcnvg(const std::string &mfnrcnvg)
 {
   bool ok;
-  STR_TO_RX7(mfnrcnvg).toDouble(&ok);
+  FLOAT_CHECK(mfnrcnvg,&ok);
   if(ok)
   {
-    m_mfnrcnvg = STR_TO_RX7(mfnrcnvg);
+    m_mfnrcnvg = STR_TO_FLOAT(mfnrcnvg);
     return true;
   }
   return false;
@@ -2821,10 +2821,10 @@ bool RunControlImpl::setMfnacnvg(const double mfnacnvg)
 bool RunControlImpl::setMfnacnvg(const std::string &mfnacnvg)
 {
   bool ok;
-  STR_TO_RX7(mfnacnvg).toDouble(&ok);
+  FLOAT_CHECK(mfnacnvg,&ok);
   if(ok)
   {
-    m_mfnacnvg = STR_TO_RX7(mfnacnvg);
+    m_mfnacnvg = STR_TO_FLOAT(mfnacnvg);
     return true;
   }
   return false;
@@ -2844,10 +2844,10 @@ bool RunControlImpl::setMfnrelax(const double mfnrelax)
 bool RunControlImpl::setMfnrelax(const std::string &mfnrelax)
 {
   bool ok;
-  STR_TO_RX7(mfnrelax).toDouble(&ok);
+  FLOAT_CHECK(mfnrelax,&ok);
   if(ok)
   {
-    m_mfnrelax = STR_TO_RX7(mfnrelax);
+    m_mfnrelax = STR_TO_FLOAT(mfnrelax);
     return true;
   }
   return false;
@@ -2867,10 +2867,10 @@ bool RunControlImpl::setMfngamma(const double mfngamma)
 bool RunControlImpl::setMfngamma(const std::string &mfngamma)
 {
   bool ok;
-  STR_TO_RX7(mfngamma).toDouble(&ok);
+  FLOAT_CHECK(mfngamma,&ok);
   if(ok)
   {
-    m_mfngamma = STR_TO_RX7(mfngamma);
+    m_mfngamma = STR_TO_FLOAT(mfngamma);
     return true;
   }
   return false;
@@ -2930,10 +2930,10 @@ bool RunControlImpl::setMftrcnvg(const double mftrcnvg)
 bool RunControlImpl::setMftrcnvg(const std::string &mftrcnvg)
 {
   bool ok;
-  STR_TO_RX7(mftrcnvg).toDouble(&ok);
+  FLOAT_CHECK(mftrcnvg,&ok);
   if(ok)
   {
-    m_mftrcnvg = STR_TO_RX7(mftrcnvg);
+    m_mftrcnvg = STR_TO_FLOAT(mftrcnvg);
     return true;
   }
   return false;
@@ -2953,10 +2953,10 @@ bool RunControlImpl::setMftacnvg(const double mftacnvg)
 bool RunControlImpl::setMftacnvg(const std::string &mftacnvg)
 {
   bool ok;
-  STR_TO_RX7(mftacnvg).toDouble(&ok);
+  FLOAT_CHECK(mftacnvg,&ok);
   if(ok)
   {
-    m_mftacnvg = STR_TO_RX7(mftacnvg);
+    m_mftacnvg = STR_TO_FLOAT(mftacnvg);
     return true;
   }
   return false;
@@ -2976,10 +2976,10 @@ bool RunControlImpl::setMftrelax(const double mftrelax)
 bool RunControlImpl::setMftrelax(const std::string &mftrelax)
 {
   bool ok;
-  STR_TO_RX7(mftrelax).toDouble(&ok);
+  FLOAT_CHECK(mftrelax,&ok);
   if(ok)
   {
-    m_mftrelax = STR_TO_RX7(mftrelax);
+    m_mftrelax = STR_TO_FLOAT(mftrelax);
     return true;
   }
   return false;
@@ -2999,10 +2999,10 @@ bool RunControlImpl::setMftgamma(const double mftgamma)
 bool RunControlImpl::setMftgamma(const std::string &mftgamma)
 {
   bool ok;
-  STR_TO_RX7(mftgamma).toDouble(&ok);
+  FLOAT_CHECK(mftgamma,&ok);
   if(ok)
   {
-    m_mftgamma = STR_TO_RX7(mftgamma);
+    m_mftgamma = STR_TO_FLOAT(mftgamma);
     return true;
   }
   return false;
@@ -3062,10 +3062,10 @@ bool RunControlImpl::setMfvrcnvg(const double mfvrcnvg)
 bool RunControlImpl::setMfvrcnvg(const std::string &mfvrcnvg)
 {
   bool ok;
-  STR_TO_RX7(mfvrcnvg).toDouble(&ok);
+  FLOAT_CHECK(mfvrcnvg,&ok);
   if(ok)
   {
-    m_mfvrcnvg = STR_TO_RX7(mfvrcnvg);
+    m_mfvrcnvg = STR_TO_FLOAT(mfvrcnvg);
     return true;
   }
   return false;
@@ -3085,10 +3085,10 @@ bool RunControlImpl::setMfvacnvg(const double mfvacnvg)
 bool RunControlImpl::setMfvacnvg(const std::string &mfvacnvg)
 {
   bool ok;
-  STR_TO_RX7(mfvacnvg).toDouble(&ok);
+  FLOAT_CHECK(mfvacnvg,&ok);
   if(ok)
   {
-    m_mfvacnvg = STR_TO_RX7(mfvacnvg);
+    m_mfvacnvg = STR_TO_FLOAT(mfvacnvg);
     return true;
   }
   return false;
@@ -3108,10 +3108,10 @@ bool RunControlImpl::setMfvrelax(const double mfvrelax)
 bool RunControlImpl::setMfvrelax(const std::string &mfvrelax)
 {
   bool ok;
-  STR_TO_RX7(mfvrelax).toDouble(&ok);
+  FLOAT_CHECK(mfvrelax,&ok);
   if(ok)
   {
-    m_mfvrelax = STR_TO_RX7(mfvrelax);
+    m_mfvrelax = STR_TO_FLOAT(mfvrelax);
     return true;
   }
   return false;
@@ -3171,10 +3171,10 @@ bool RunControlImpl::setCelldx(const double celldx)
 bool RunControlImpl::setCelldx(const std::string &celldx)
 {
   bool ok;
-  STR_TO_RX7(celldx).toDouble(&ok);
+  FLOAT_CHECK(celldx,&ok);
   if(ok)
   {
-    m_celldx = STR_TO_RX7(celldx);
+    m_celldx = STR_TO_FLOAT(celldx);
     return true;
   }
   return false;
@@ -3224,10 +3224,10 @@ bool RunControlImpl::setCvode_rcnvg(const double cvode_rcnvg)
 bool RunControlImpl::setCvode_rcnvg(const std::string &cvode_rcnvg)
 {
   bool ok;
-  STR_TO_RX7(cvode_rcnvg).toDouble(&ok);
+  FLOAT_CHECK(cvode_rcnvg,&ok);
   if(ok)
   {
-    m_cvode_rcnvg = STR_TO_RX7(cvode_rcnvg);
+    m_cvode_rcnvg = STR_TO_FLOAT(cvode_rcnvg);
     return true;
   }
   return false;
@@ -3247,10 +3247,10 @@ bool RunControlImpl::setCvode_acnvg(const double cvode_acnvg)
 bool RunControlImpl::setCvode_acnvg(const std::string &cvode_acnvg)
 {
   bool ok;
-  STR_TO_RX7(cvode_acnvg).toDouble(&ok);
+  FLOAT_CHECK(cvode_acnvg,&ok);
   if(ok)
   {
-    m_cvode_acnvg = STR_TO_RX7(cvode_acnvg);
+    m_cvode_acnvg = STR_TO_FLOAT(cvode_acnvg);
     return true;
   }
   return false;
@@ -3270,10 +3270,10 @@ bool RunControlImpl::setCvode_dtmax(const double cvode_dtmax)
 bool RunControlImpl::setCvode_dtmax(const std::string &cvode_dtmax)
 {
   bool ok;
-  STR_TO_RX7(cvode_dtmax).toDouble(&ok);
+  FLOAT_CHECK(cvode_dtmax,&ok);
   if(ok)
   {
-    m_cvode_dtmax = STR_TO_RX7(cvode_dtmax);
+    m_cvode_dtmax = STR_TO_FLOAT(cvode_dtmax);
     return true;
   }
   return false;
@@ -3303,10 +3303,10 @@ bool RunControlImpl::setTsrelax(const double tsrelax)
 bool RunControlImpl::setTsrelax(const std::string &tsrelax)
 {
   bool ok;
-  STR_TO_RX7(tsrelax).toDouble(&ok);
+  FLOAT_CHECK(tsrelax,&ok);
   if(ok)
   {
-    m_tsrelax = STR_TO_RX7(tsrelax);
+    m_tsrelax = STR_TO_FLOAT(tsrelax);
     return true;
   }
   return false;
@@ -3703,16 +3703,16 @@ bool RunControlImpl::setRvals(const std::vector<double> &rvals)
 
 bool RunControlImpl::setRvals(const std::vector<std::string> &rvals)
 {
-  std::vector<RX7> in;
+  std::vector<PRJFLOAT> in;
   for(unsigned i=0;i<rvals.size();i++)
   {
     bool ok;
-    STR_TO_RX7(rvals[i]).toDouble(&ok);
+    FLOAT_CHECK(rvals[i],&ok);
     if(!ok)
     {
       return false;
     }
-    in.push_back(STR_TO_RX7(rvals[i]));
+    in.push_back(STR_TO_FLOAT(rvals[i]));
   }
   m_rvals = in;
   return true;
@@ -3772,10 +3772,10 @@ bool RunControlImpl::setCfd_convcpl(const double cfd_convcpl)
 bool RunControlImpl::setCfd_convcpl(const std::string &cfd_convcpl)
 {
   bool ok;
-  STR_TO_RX7(cfd_convcpl).toDouble(&ok);
+  FLOAT_CHECK(cfd_convcpl,&ok);
   if(ok)
   {
-    m_cfd_convcpl = STR_TO_RX7(cfd_convcpl);
+    m_cfd_convcpl = STR_TO_FLOAT(cfd_convcpl);
     return true;
   }
   return false;
@@ -3824,8 +3824,8 @@ void RunControlImpl::setCfd_dtcmo(const int cfd_dtcmo)
 void LevelImpl::setDefaults()
 {
   m_nr = 0;
-  m_refht = RX7("0.0");
-  m_delht = RX7("0.0");
+  m_refht = PRJFLOAT("0.0");
+  m_delht = PRJFLOAT("0.0");
   m_u_rfht = 0;
   m_u_dlht = 0;
 }
@@ -3835,7 +3835,19 @@ LevelImpl::LevelImpl()
   setDefaults();
 }
 
-LevelImpl::LevelImpl(int nr,RX refht,RX delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
+LevelImpl::LevelImpl(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
+{
+  setDefaults();
+  setNr(nr);
+  setRefht(refht);
+  setDelht(delht);
+  setU_rfht(u_rfht);
+  setU_dlht(u_dlht);
+  setName(name);
+  setIcons(icons);
+}
+
+LevelImpl::LevelImpl(int nr,std::string refht,std::string delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
 {
   setDefaults();
   setNr(nr);
@@ -3849,13 +3861,13 @@ LevelImpl::LevelImpl(int nr,RX refht,RX delht,int u_rfht,int u_dlht,std::string 
 
 void LevelImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setRefht(input.readNumber<std::string>(FILELINE));
-  setDelht(input.readNumber<std::string>(FILELINE));
-  int nicon = input.read<int>(FILELINE);
-  setU_rfht(input.read<int>(FILELINE));
-  setU_dlht(input.read<int>(FILELINE));
-  setName(input.readString(FILELINE));
+  setNr(input.read<int>());
+  setRefht(input.readNumber<std::string>());
+  setDelht(input.readNumber<std::string>());
+  int nicon = input.read<int>();
+  setU_rfht(input.read<int>());
+  setU_dlht(input.read<int>());
+  setName(input.readString());
   std::vector<Icon> icons;
   for(int i=0;i<nicon;i++)
   {
@@ -3902,10 +3914,10 @@ bool LevelImpl::setRefht(const double refht)
 bool LevelImpl::setRefht(const std::string &refht)
 {
   bool ok;
-  STR_TO_RX7(refht).toDouble(&ok);
+  FLOAT_CHECK(refht,&ok);
   if(ok)
   {
-    m_refht = STR_TO_RX7(refht);
+    m_refht = STR_TO_FLOAT(refht);
     return true;
   }
   return false;
@@ -3925,10 +3937,10 @@ bool LevelImpl::setDelht(const double delht)
 bool LevelImpl::setDelht(const std::string &delht)
 {
   bool ok;
-  STR_TO_RX7(delht).toDouble(&ok);
+  FLOAT_CHECK(delht,&ok);
   if(ok)
   {
-    m_delht = STR_TO_RX7(delht);
+    m_delht = STR_TO_FLOAT(delht);
     return true;
   }
   return false;
@@ -4002,13 +4014,13 @@ DayScheduleImpl::DayScheduleImpl(int nr,int shape,int utyp,int ucnv,std::string 
 
 void DayScheduleImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  int npts = input.read<int>(FILELINE);
-  setShape(input.read<int>(FILELINE));
-  setUtyp(input.read<int>(FILELINE));
-  setUcnv(input.read<int>(FILELINE));
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
+  setNr(input.read<int>());
+  int npts = input.read<int>();
+  setShape(input.read<int>());
+  setUtyp(input.read<int>());
+  setUcnv(input.read<int>());
+  setName(input.readString());
+  setDesc(input.readLine());
   std::vector<SchedulePoint> points;
   for(int i=0;i<npts;i++)
   {
@@ -4127,15 +4139,15 @@ WeekScheduleImpl::WeekScheduleImpl(int nr,int utyp,int ucnv,std::string name,std
 
 void WeekScheduleImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setUtyp(input.read<int>(FILELINE));
-  setUcnv(input.read<int>(FILELINE));
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
+  setNr(input.read<int>());
+  setUtyp(input.read<int>());
+  setUcnv(input.read<int>());
+  setName(input.readString());
+  setDesc(input.readLine());
   std::vector<int> j;
   for(int i=0;i<12;i++)
   {
-    j.push_back(input.read<int>(FILELINE));
+    j.push_back(input.read<int>());
   }
   setJ(j);
 }
@@ -4237,11 +4249,11 @@ WindPressureProfileImpl::WindPressureProfileImpl(int nr,int type,std::string nam
 
 void WindPressureProfileImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  int npts = input.read<int>(FILELINE);
-  setType(input.read<int>(FILELINE));
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
+  setNr(input.read<int>());
+  int npts = input.read<int>();
+  setType(input.read<int>());
+  setName(input.readString());
+  setDesc(input.readLine());
   std::vector<PressureCoefficientPoint> coeffs;
   for(int i=0;i<npts;i++)
   {
@@ -4359,16 +4371,16 @@ CdvDatImpl::CdvDatImpl(int nr,int seqnr,unsigned int flags,int inreq,int n1,int 
 
 void CdvDatImpl::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  std::string dataType = input.readString(FILELINE); // Should really check this
-  setSeqnr(input.read<int>(FILELINE));
-  setFlags(input.read<unsigned int>(FILELINE));
-  setInreq(input.read<int>(FILELINE));
-  setN1(input.read<int>(FILELINE));
-  setN2(input.read<int>(FILELINE));
-  setName(input.readString(FILELINE));
-  setDesc(input.readLine(FILELINE));
-  setValuename(input.readLine(FILELINE));
+  setNr(input.read<int>());
+  std::string dataType = input.readString(); // Should really check this
+  setSeqnr(input.read<int>());
+  setFlags(input.read<unsigned int>());
+  setInreq(input.read<int>());
+  setN1(input.read<int>());
+  setN2(input.read<int>());
+  setName(input.readString());
+  setDesc(input.readLine());
+  setValuename(input.readLine());
 }
 
 std::string CdvDatImpl::write(std::string datatype)
@@ -4384,7 +4396,7 @@ std::string CdvDatImpl::write(std::string datatype)
 
 void CdvDatImpl::readDetails(Reader &input)
 {
-  setValuename(input.readLine(FILELINE));
+  setValuename(input.readLine());
 }
 
 int CdvDatImpl::nr() const

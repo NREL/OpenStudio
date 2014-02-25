@@ -48,11 +48,11 @@ AirflowElement::Type AirflowElement::convertTag(std::string string)
 AirflowElement* AirflowElement::readElement(Reader &input)
 {
   AirflowElement *out=NULL;
-  int nr = input.read<int>(FILELINE);
-  int icon = input.read<int>(FILELINE);
-  std::string dataType = input.readString(FILELINE);
-  std::string name = input.readString(FILELINE);
-  std::string desc = input.readLine(FILELINE);
+  int nr = input.read<int>();
+  int icon = input.read<int>();
+  std::string dataType = input.readString();
+  std::string name = input.readString();
+  std::string desc = input.readLine();
   int kind = convertTag(dataType);
   switch(kind)
   {
@@ -255,9 +255,6 @@ AirflowElement* AirflowElement::readElement(Reader &input)
   case AirflowElement::UNKNOWN:
   default:
     std::string mesg = "Unknown airflow element type '" + dataType + "' at line " + openstudio::toString(input.lineNumber());
-#ifndef NOFILELINE
-    mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__).toStdString();
-#endif
     LOG_FREE_AND_THROW("openstudio.contam.Reader",mesg);
   }
   return out;

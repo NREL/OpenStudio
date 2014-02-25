@@ -23,11 +23,11 @@ namespace contam {
 
 void WeatherDataImpl::setDefaults()
 {
-  m_Tambt=RX7("0.0");
-  m_barpres=RX7("0.0");
-  m_windspd=RX7("0.0");
-  m_winddir=RX7("0.0");
-  m_relhum=RX7("0.0");
+  m_Tambt=PRJFLOAT("0.0");
+  m_barpres=PRJFLOAT("0.0");
+  m_windspd=PRJFLOAT("0.0");
+  m_winddir=PRJFLOAT("0.0");
+  m_relhum=PRJFLOAT("0.0");
   m_daytyp=0;
   m_uTa=0;
   m_ubP=0;
@@ -74,16 +74,16 @@ WeatherDataImpl::WeatherDataImpl(double Tambt,double barpres,double windspd,doub
 
 void WeatherDataImpl::read(Reader &input)
 {
-  setTambt(input.readNumber<std::string>(FILELINE));
-  setBarpres(input.readNumber<std::string>(FILELINE));
-  setWindspd(input.readNumber<std::string>(FILELINE));
-  setWinddir(input.readNumber<std::string>(FILELINE));
-  setRelhum(input.readNumber<std::string>(FILELINE));
-  setDaytyp(input.read<int>(FILELINE));
-  setUTa(input.read<int>(FILELINE));
-  setUbP(input.read<int>(FILELINE));
-  setUws(input.read<int>(FILELINE));
-  setUwd(input.read<int>(FILELINE));
+  setTambt(input.readNumber<std::string>());
+  setBarpres(input.readNumber<std::string>());
+  setWindspd(input.readNumber<std::string>());
+  setWinddir(input.readNumber<std::string>());
+  setRelhum(input.readNumber<std::string>());
+  setDaytyp(input.read<int>());
+  setUTa(input.read<int>());
+  setUbP(input.read<int>());
+  setUws(input.read<int>());
+  setUwd(input.read<int>());
 }
 
 std::string WeatherDataImpl::write()
@@ -107,10 +107,10 @@ bool WeatherDataImpl::setTambt(const double Tambt)
 bool WeatherDataImpl::setTambt(const std::string &Tambt)
 {
   bool ok;
-  STR_TO_RX7(Tambt).toDouble(&ok);
+  FLOAT_CHECK(Tambt,&ok);
   if(ok)
   {
-    m_Tambt = STR_TO_RX7(Tambt);
+    m_Tambt = STR_TO_FLOAT(Tambt);
     return true;
   }
   return false;
@@ -130,10 +130,10 @@ bool WeatherDataImpl::setBarpres(const double barpres)
 bool WeatherDataImpl::setBarpres(const std::string &barpres)
 {
   bool ok;
-  STR_TO_RX7(barpres).toDouble(&ok);
+  FLOAT_CHECK(barpres,&ok);
   if(ok)
   {
-    m_barpres = STR_TO_RX7(barpres);
+    m_barpres = STR_TO_FLOAT(barpres);
     return true;
   }
   return false;
@@ -153,10 +153,10 @@ bool WeatherDataImpl::setWindspd(const double windspd)
 bool WeatherDataImpl::setWindspd(const std::string &windspd)
 {
   bool ok;
-  STR_TO_RX7(windspd).toDouble(&ok);
+  FLOAT_CHECK(windspd,&ok);
   if(ok)
   {
-    m_windspd = STR_TO_RX7(windspd);
+    m_windspd = STR_TO_FLOAT(windspd);
     return true;
   }
   return false;
@@ -176,10 +176,10 @@ bool WeatherDataImpl::setWinddir(const double winddir)
 bool WeatherDataImpl::setWinddir(const std::string &winddir)
 {
   bool ok;
-  STR_TO_RX7(winddir).toDouble(&ok);
+  FLOAT_CHECK(winddir,&ok);
   if(ok)
   {
-    m_winddir = STR_TO_RX7(winddir);
+    m_winddir = STR_TO_FLOAT(winddir);
     return true;
   }
   return false;
@@ -199,10 +199,10 @@ bool WeatherDataImpl::setRelhum(const double relhum)
 bool WeatherDataImpl::setRelhum(const std::string &relhum)
 {
   bool ok;
-  STR_TO_RX7(relhum).toDouble(&ok);
+  FLOAT_CHECK(relhum,&ok);
   if(ok)
   {
-    m_relhum = STR_TO_RX7(relhum);
+    m_relhum = STR_TO_FLOAT(relhum);
     return true;
   }
   return false;
@@ -282,10 +282,10 @@ IconImpl::IconImpl(int icon,int col,int row,int nr)
 
 void IconImpl::read(Reader &input)
 {
-  setIcon(input.read<int>(FILELINE));
-  setCol(input.read<int>(FILELINE));
-  setRow(input.read<int>(FILELINE));
-  setNr(input.read<int>(FILELINE));
+  setIcon(input.read<int>());
+  setCol(input.read<int>());
+  setRow(input.read<int>());
+  setNr(input.read<int>());
 }
 
 std::string IconImpl::write()
@@ -338,37 +338,6 @@ void IconImpl::setNr(const int nr)
 bool IconImpl::isWall()
 {
   return (m_icon >= WL_EW) && (m_icon <= WL_NESW);
-}
-
-uint IconImpl::bits()
-{
-  if(isWall())
-    switch(m_icon)
-  {
-    case WL_EW:
-      return BIT_EW;
-    case WL_NS:
-      return BIT_NS;
-    case WL_ES:
-      return BIT_ES;
-    case WL_SW:
-      return BIT_SW;
-    case WL_NW:
-      return BIT_NW;
-    case WL_NE:
-      return BIT_NE;
-    case WL_NES:
-      return BIT_NES;
-    case WL_ESW:
-      return BIT_ESW;
-    case WL_NSW:
-      return BIT_NSW;
-    case WL_NEW:
-      return BIT_NEW;
-    case WL_NESW:
-      return BIT_NESW;
-  }
-  return 0;
 }
 
 } // contam

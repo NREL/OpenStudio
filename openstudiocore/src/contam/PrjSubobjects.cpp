@@ -283,18 +283,13 @@ bool Icon::isWall()
   return d->isWall();
 }
 
-uint Icon::bits()
-{
-  return d->bits();
-}
-
 void FanDataPoint::setDefaults()
 {
-  m_mF = RX7("0.0");
+  m_mF = PRJFLOAT("0.0");
   m_u_mF = 0;
-  m_dP = RX7("0.0");
+  m_dP = PRJFLOAT("0.0");
   m_u_dP = 0;
-  m_rP = RX7("0.0");
+  m_rP = PRJFLOAT("0.0");
   m_u_rP = 0;
 }
 
@@ -327,12 +322,12 @@ FanDataPoint::FanDataPoint(std::string mF,int u_mF,std::string dP,int u_dP,std::
 
 void FanDataPoint::read(Reader &input)
 {
-  setMF(input.readNumber<std::string>(FILELINE));
-  setU_mF(input.read<int>(FILELINE));
-  setDP(input.readNumber<std::string>(FILELINE));
-  setU_dP(input.read<int>(FILELINE));
-  setRP(input.readNumber<std::string>(FILELINE));
-  setU_rP(input.read<int>(FILELINE));
+  setMF(input.readNumber<std::string>());
+  setU_mF(input.read<int>());
+  setDP(input.readNumber<std::string>());
+  setU_dP(input.read<int>());
+  setRP(input.readNumber<std::string>());
+  setU_rP(input.read<int>());
 }
 
 std::string FanDataPoint::write()
@@ -356,10 +351,10 @@ bool FanDataPoint::setMF(const double mF)
 bool FanDataPoint::setMF(const std::string &mF)
 {
   bool ok;
-  STR_TO_RX7(mF).toDouble(&ok);
+  FLOAT_CHECK(mF,&ok);
   if(ok)
   {
-    m_mF = STR_TO_RX7(mF);
+    m_mF = STR_TO_FLOAT(mF);
     return true;
   }
   return false;
@@ -389,10 +384,10 @@ bool FanDataPoint::setDP(const double dP)
 bool FanDataPoint::setDP(const std::string &dP)
 {
   bool ok;
-  STR_TO_RX7(dP).toDouble(&ok);
+  FLOAT_CHECK(dP,&ok);
   if(ok)
   {
-    m_dP = STR_TO_RX7(dP);
+    m_dP = STR_TO_FLOAT(dP);
     return true;
   }
   return false;
@@ -422,10 +417,10 @@ bool FanDataPoint::setRP(const double rP)
 bool FanDataPoint::setRP(const std::string &rP)
 {
   bool ok;
-  STR_TO_RX7(rP).toDouble(&ok);
+  FLOAT_CHECK(rP,&ok);
   if(ok)
   {
-    m_rP = STR_TO_RX7(rP);
+    m_rP = STR_TO_FLOAT(rP);
     return true;
   }
   return false;
@@ -443,8 +438,8 @@ void FanDataPoint::setU_rP(const int u_rP)
 
 void DataPoint::setDefaults()
 {
-  m_x = RX7("0.0");
-  m_y = RX7("0.0");
+  m_x = PRJFLOAT("0.0");
+  m_y = PRJFLOAT("0.0");
 }
 
 DataPoint::DataPoint()
@@ -468,8 +463,8 @@ DataPoint::DataPoint(std::string x,std::string y)
 
 void DataPoint::read(Reader &input)
 {
-  setX(input.readNumber<std::string>(FILELINE));
-  setY(input.readNumber<std::string>(FILELINE));
+  setX(input.readNumber<std::string>());
+  setY(input.readNumber<std::string>());
 }
 
 std::string DataPoint::write()
@@ -493,10 +488,10 @@ bool DataPoint::setX(const double x)
 bool DataPoint::setX(const std::string &x)
 {
   bool ok;
-  STR_TO_RX7(x).toDouble(&ok);
+  FLOAT_CHECK(x,&ok);
   if(ok)
   {
-    m_x = STR_TO_RX7(x);
+    m_x = STR_TO_FLOAT(x);
     return true;
   }
   return false;
@@ -516,10 +511,10 @@ bool DataPoint::setY(const double y)
 bool DataPoint::setY(const std::string &y)
 {
   bool ok;
-  STR_TO_RX7(y).toDouble(&ok);
+  FLOAT_CHECK(y,&ok);
   if(ok)
   {
-    m_y = STR_TO_RX7(y);
+    m_y = STR_TO_FLOAT(y);
     return true;
   }
   return false;
@@ -528,7 +523,7 @@ bool DataPoint::setY(const std::string &y)
 void AirflowSubelementData::setDefaults()
 {
   m_nr = 0;
-  m_relHt = RX7("0.0");
+  m_relHt = PRJFLOAT("0.0");
   m_filt = 0;
 }
 
@@ -555,9 +550,9 @@ AirflowSubelementData::AirflowSubelementData(int nr,std::string relHt,int filt)
 
 void AirflowSubelementData::read(Reader &input)
 {
-  setNr(input.read<int>(FILELINE));
-  setRelHt(input.readNumber<std::string>(FILELINE));
-  setFilt(input.read<int>(FILELINE));
+  setNr(input.read<int>());
+  setRelHt(input.readNumber<std::string>());
+  setFilt(input.read<int>());
 }
 
 std::string AirflowSubelementData::write()
@@ -591,10 +586,10 @@ bool AirflowSubelementData::setRelHt(const double relHt)
 bool AirflowSubelementData::setRelHt(const std::string &relHt)
 {
   bool ok;
-  STR_TO_RX7(relHt).toDouble(&ok);
+  FLOAT_CHECK(relHt,&ok);
   if(ok)
   {
-    m_relHt = STR_TO_RX7(relHt);
+    m_relHt = STR_TO_FLOAT(relHt);
     return true;
   }
   return false;
@@ -612,8 +607,8 @@ void AirflowSubelementData::setFilt(const int filt)
 
 void PressureCoefficientPoint::setDefaults()
 {
-  m_azm = RX7("0.0");
-  m_coef = RX7("0.0");
+  m_azm = PRJFLOAT("0.0");
+  m_coef = PRJFLOAT("0.0");
 }
 
 PressureCoefficientPoint::PressureCoefficientPoint()
@@ -637,8 +632,8 @@ PressureCoefficientPoint::PressureCoefficientPoint(std::string azm,std::string c
 
 void PressureCoefficientPoint::read(Reader &input)
 {
-  setAzm(input.readNumber<std::string>(FILELINE));
-  setCoef(input.readNumber<std::string>(FILELINE));
+  setAzm(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
 }
 
 std::string PressureCoefficientPoint::write()
@@ -662,10 +657,10 @@ bool PressureCoefficientPoint::setAzm(const double azm)
 bool PressureCoefficientPoint::setAzm(const std::string &azm)
 {
   bool ok;
-  STR_TO_RX7(azm).toDouble(&ok);
+  FLOAT_CHECK(azm,&ok);
   if(ok)
   {
-    m_azm = STR_TO_RX7(azm);
+    m_azm = STR_TO_FLOAT(azm);
     return true;
   }
   return false;
@@ -685,10 +680,10 @@ bool PressureCoefficientPoint::setCoef(const double coef)
 bool PressureCoefficientPoint::setCoef(const std::string &coef)
 {
   bool ok;
-  STR_TO_RX7(coef).toDouble(&ok);
+  FLOAT_CHECK(coef,&ok);
   if(ok)
   {
-    m_coef = STR_TO_RX7(coef);
+    m_coef = STR_TO_FLOAT(coef);
     return true;
   }
   return false;
@@ -697,7 +692,7 @@ bool PressureCoefficientPoint::setCoef(const std::string &coef)
 void SchedulePoint::setDefaults()
 {
   m_time = std::string("00:00:00");
-  m_ctrl = RX7("0.0");
+  m_ctrl = PRJFLOAT("0.0");
 }
 
 SchedulePoint::SchedulePoint()
@@ -721,8 +716,8 @@ SchedulePoint::SchedulePoint(std::string time,std::string ctrl)
 
 void SchedulePoint::read(Reader &input)
 {
-  setTime(input.readString(FILELINE));
-  setCtrl(input.readNumber<std::string>(FILELINE));
+  setTime(input.readString());
+  setCtrl(input.readNumber<std::string>());
 }
 
 std::string SchedulePoint::write()
@@ -756,10 +751,10 @@ bool SchedulePoint::setCtrl(const double ctrl)
 bool SchedulePoint::setCtrl(const std::string &ctrl)
 {
   bool ok;
-  STR_TO_RX7(ctrl).toDouble(&ok);
+  FLOAT_CHECK(ctrl,&ok);
   if(ok)
   {
-    m_ctrl = STR_TO_RX7(ctrl);
+    m_ctrl = STR_TO_FLOAT(ctrl);
     return true;
   }
   return false;
