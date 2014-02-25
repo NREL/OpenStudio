@@ -186,6 +186,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   QWidget * widget = 0;
 
+  bool isConnected = false;
+
   // Note: If there is a vertical header row,  m_baseConcepts[0] starts on gridLayout[1]
   //int baseConceptColumn = m_hasVerticalHeader ? column - 1 : column; TODO
 
@@ -344,7 +346,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                                              quantityEditConcept->ipUnits().toStdString().c_str(),
                                                              quantityEditConcept->isIP());
 
-        quantityEdit->bindRequired(true,
+        quantityEdit->bindRequired(m_isIP,
                   mo,
                   boost::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),mo),
                   boost::optional<DoubleSetter>(boost::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),mo,_1)),
@@ -355,6 +357,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
                   boost::none,
                   boost::none);
 
+        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+          quantityEdit, SLOT(onUnitSystemChange(bool)));
+        OS_ASSERT(isConnected);
+
         widget = quantityEdit;
 
     } else if(QSharedPointer<OptionalQuantityEditConcept<double> > optionalQuantityEditConcept = baseConcept.dynamicCast<OptionalQuantityEditConcept<double> >()) {
@@ -364,7 +370,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                                              optionalQuantityEditConcept->ipUnits().toStdString().c_str(),
                                                              optionalQuantityEditConcept->isIP());
 
-        optionalQuantityEdit->bind(true,
+        optionalQuantityEdit->bind(m_isIP,
                   mo,
                   boost::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),mo),
                   boost::optional<DoubleSetter>(boost::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),mo,_1)),
@@ -375,6 +381,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
                   boost::none,
                   boost::none);
 
+        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+          optionalQuantityEdit, SLOT(onUnitSystemChange(bool)));
+        OS_ASSERT(isConnected);
+
         widget = optionalQuantityEdit;
 
     } else if(QSharedPointer<QuantityEditVoidReturnConcept<double> > quantityEditVoidReturnConcept = baseConcept.dynamicCast<QuantityEditVoidReturnConcept<double> >()) {
@@ -384,7 +394,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                                              quantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
                                                              quantityEditVoidReturnConcept->isIP());
 
-        quantityEditVoidReturn->bindRequiredVoidReturn(true,
+        quantityEditVoidReturn->bindRequiredVoidReturn(m_isIP,
                   mo,
                   boost::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),mo),
                   boost::optional<DoubleSetterVoidReturn>(boost::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),mo,_1)),
@@ -394,6 +404,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
                   boost::none,
                   boost::none,
                   boost::none);
+        
+        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+          quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
+        OS_ASSERT(isConnected);
 
         widget = quantityEditVoidReturn;
 
@@ -404,7 +418,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                                              optionalQuantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
                                                              optionalQuantityEditVoidReturnConcept->isIP());
 
-        optionalQuantityEditVoidReturn->bindVoidReturn(true,
+        optionalQuantityEditVoidReturn->bindVoidReturn(m_isIP,
                   mo,
                   boost::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),mo),
                   boost::optional<DoubleSetterVoidReturn>(boost::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),mo,_1)),
@@ -414,6 +428,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
                   boost::none,
                   boost::none,
                   boost::none);
+
+        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+          optionalQuantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
+        OS_ASSERT(isConnected);
 
         widget = optionalQuantityEditVoidReturn;
 
@@ -554,11 +572,6 @@ void OSGridController::horizontalHeaderChecked(int index)
 
 void OSGridController::verticalHeaderChecked(int index)
 {
-}
-
-void OSGridController::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

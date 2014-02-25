@@ -166,11 +166,11 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   bool isConnected = false;
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationCaseGridController, SLOT(toggleUnits(bool)));
+                        refrigerationCaseGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationWalkInGridController, SLOT(toggleUnits(bool)));
+                        refrigerationWalkInGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
   std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // TODO for horizontal system list
@@ -508,7 +508,6 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     //fields.push_back("Rack Name");
     //fields.push_back("Rack Saturated Suction Temperature (F)");
-    fields.push_back(NAME);
     //fields.push_back("Walk-in Type");
     //fields.push_back("Manufacturer & Model No.");
     //fields.push_back("Zone Adjacent");

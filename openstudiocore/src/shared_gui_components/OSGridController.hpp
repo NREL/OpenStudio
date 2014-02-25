@@ -272,11 +272,11 @@ signals:
   // Nuclear reset of everything
   void modelReset();
 
+  void toggleUnitsClicked(bool displayIP);
+
 public slots:
 
   virtual void onItemDropped(const OSItemId& itemId) = 0;
-
-  void toggleUnits(bool displayIP);
 
 private slots:
 
