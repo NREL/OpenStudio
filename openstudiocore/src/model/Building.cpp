@@ -214,12 +214,13 @@ namespace detail {
     std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
-    // make unique
-    it = std::unique(result.begin(), result.end(), IstringEqual()); 
-    result.resize( std::distance(result.begin(),it) ); 
-
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
 
     // add current to front
     if (standardsBuildingType){
