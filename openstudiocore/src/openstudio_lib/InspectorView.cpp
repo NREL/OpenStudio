@@ -755,8 +755,8 @@ RefrigerationWalkinInspectorView::RefrigerationWalkinInspectorView(QWidget * par
 
   m_zoneBoundaryWidget = new QWidget();
   m_libraryTabWidget->addTab( m_zoneBoundaryWidget,
-                              ":images/properties_icon_on.png",
-                              ":images/properties_icon_off.png" );
+                              ":images/walkin_right_tab_on.png",
+                              ":images/walkin_right_tab_off.png" );
 }
 
 void RefrigerationWalkinInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
