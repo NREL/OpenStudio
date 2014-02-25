@@ -901,10 +901,10 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
     if(sqlFile)
     {
       std::vector<std::string> available = sqlFile->availableTimeSeries();
-      BOOST_FOREACH(std::string var, available)
-      {
-        std::cout << '\t' << var << std::endl;
-      }
+      //BOOST_FOREACH(std::string var, available)
+      //{
+      //  std::cout << '\t' << var << std::endl;
+      //}
       std::string envPeriod; 
       BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
       {
@@ -975,7 +975,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
               "System Node MassFlowRate", keyValue);
             if (timeSeries)
             {
-              std::cout << "Found time series for supply to zone " << thermalZone.name().get() << std::endl;
+              //std::cout << "Found time series for supply to zone " << thermalZone.name().get() << std::endl;
               nr = m_pathMap.value(thermalZone.name().get()+" supply",0);
               // There really should not be a case of missing number here, but it is better to be safe
               if(!nr)
@@ -1034,7 +1034,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
                 "System Node MassFlowRate", keyValue);
               if (timeSeries)
               {
-                std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
+                //std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
                 nr = m_pathMap.value(thermalZone.name().get()+" return",0);
                 // There really should not be a case of missing number here, but it is better to be safe
                 if(!nr)
