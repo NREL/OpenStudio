@@ -601,6 +601,8 @@ class QuantityEditVoidReturnConcept : public BaseConcept
       m_siUnits(t_siUnits),
       m_ipUnits(t_ipUnits),
       m_isIP(t_isIP)
+  {
+  }
 
   virtual ~QuantityEditVoidReturnConcept() {}
 
