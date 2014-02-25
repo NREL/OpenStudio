@@ -356,6 +356,66 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         widget = quantityEdit;
 
+    } else if(QSharedPointer<OptionalQuantityEditConcept<double> > optionalQuantityEditConcept = baseConcept.dynamicCast<OptionalQuantityEditConcept<double> >()) {
+
+        OSQuantityEdit2 * optionalQuantityEdit = new OSQuantityEdit2(optionalQuantityEditConcept->modelUnits().toStdString().c_str(),
+                                                             optionalQuantityEditConcept->siUnits().toStdString().c_str(),
+                                                             optionalQuantityEditConcept->ipUnits().toStdString().c_str(),
+                                                             optionalQuantityEditConcept->isIP());
+
+        optionalQuantityEdit->bind(true,
+                  mo,
+                  boost::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),mo),
+                  boost::optional<DoubleSetter>(boost::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = optionalQuantityEdit;
+
+    } else if(QSharedPointer<QuantityEditVoidReturnConcept<double> > quantityEditVoidReturnConcept = baseConcept.dynamicCast<QuantityEditVoidReturnConcept<double> >()) {
+
+        OSQuantityEdit2 * quantityEditVoidReturn = new OSQuantityEdit2(quantityEditVoidReturnConcept->modelUnits().toStdString().c_str(),
+                                                             quantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
+                                                             quantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
+                                                             quantityEditVoidReturnConcept->isIP());
+
+        quantityEditVoidReturn->bindRequiredVoidReturn(true,
+                  mo,
+                  boost::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),mo),
+                  boost::optional<DoubleSetterVoidReturn>(boost::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = quantityEditVoidReturn;
+
+    } else if(QSharedPointer<OptionalQuantityEditVoidReturnConcept<double> > optionalQuantityEditVoidReturnConcept = baseConcept.dynamicCast<OptionalQuantityEditVoidReturnConcept<double> >()) {
+
+        OSQuantityEdit2 * optionalQuantityEditVoidReturn = new OSQuantityEdit2(optionalQuantityEditVoidReturnConcept->modelUnits().toStdString().c_str(),
+                                                             optionalQuantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
+                                                             optionalQuantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
+                                                             optionalQuantityEditVoidReturnConcept->isIP());
+
+        optionalQuantityEditVoidReturn->bindVoidReturn(true,
+                  mo,
+                  boost::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),mo),
+                  boost::optional<DoubleSetterVoidReturn>(boost::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),mo,_1)),
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none,
+                  boost::none);
+
+        widget = optionalQuantityEditVoidReturn;
+
     } else if(QSharedPointer<ValueEditConcept<unsigned> > unsignedEditConcept = baseConcept.dynamicCast<ValueEditConcept<unsigned> >()) {
 
         OSUnsignedEdit2 * unsignedEdit = new OSUnsignedEdit2();
@@ -371,6 +431,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                   boost::none);
 
         widget = unsignedEdit;
+
     } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = baseConcept.dynamicCast<DropZoneConcept>()) {
         // Note: OSDropZone2 bind not fully implemented
         OS_ASSERT(false);
