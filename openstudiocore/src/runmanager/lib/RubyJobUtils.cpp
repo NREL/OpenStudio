@@ -81,8 +81,12 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
   try {
     FileInfo fi = t_workItem.files.getLastByKey("rb");
     m_script = fi.fullPath;
+    /// \todo this is a bit of a hack, but it works for now
     if (toString(m_script.filename()) == "UserScriptAdapter.rb") {
       openstudio::path adapterPath = toPath("openstudio/runmanager/rubyscripts/UserScriptAdapter.rb");
+      setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
+    } else if (toString(m_script.filename()) == "DaylightCalculations.rb") {
+      openstudio::path adapterPath = toPath("openstudio/runmanager/rubyscripts/DaylightCalculations.rb");
       setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
     }
     else {
