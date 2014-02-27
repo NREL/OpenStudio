@@ -1680,6 +1680,10 @@ namespace detail {
         OS_ASSERT(object);
         surface = object->optionalCast<Surface>();
         OS_ASSERT(surface);
+        // remove cloned sub surfaces
+        BOOST_FOREACH(ModelObject child, surface->children()){
+          child.remove();
+        }
         result.push_back(*surface);
       }
       OS_ASSERT(surface);
