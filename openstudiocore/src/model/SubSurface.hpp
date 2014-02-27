@@ -187,7 +187,7 @@ class MODEL_API SubSurface : public PlanarSurface {
 /// Applys a skylight pattern to exterior roofs in selected spaces. 
 /// Pattern should be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
 /// Returns new sub surfaces created.
-MODEL_API std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces);
+MODEL_API std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces, const boost::optional<ConstructionBase>& construction);
 
 /** \relates SubSurface*/
 typedef boost::optional<SubSurface> OptionalSubSurface;

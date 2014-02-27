@@ -764,6 +764,9 @@ namespace detail {
         ymin = std::min(ymin, faceVertex.y());
         ymax = std::max(ymax, faceVertex.y());
       }
+      if ((xmin > xmax) || (ymin > ymax)){
+        return boost::none;
+      }
 
       Point3dVector overhangVertices;
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, 0));
@@ -812,6 +815,9 @@ namespace detail {
         xmax = std::max(xmax, faceVertex.x());
         ymin = std::min(ymin, faceVertex.y());
         ymax = std::max(ymax, faceVertex.y());
+      }
+      if ((xmin > xmax) || (ymin > ymax)){
+        return boost::none;
       }
 
       double offset = offsetFraction*(ymax-ymin);
@@ -1115,9 +1121,41 @@ SubSurface::SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl)
 {}
 /// @endcond
 
-std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces)
+std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces, const boost::optional<ConstructionBase>& construction)
 {
-  return std::vector<SubSurface>();
+  double inset = 0.0254;
+
+  std::vector<SubSurface> result;
+
+  BOOST_FOREACH(const Space& space, spaces){
+    Transformation transformation = space.buildingTransformation();
+    Transformation inverseTransformation = transformation.inverse();
+
+    std::vector<std::vector<Point3d> > spacePattern;
+    spacePattern.reserve(pattern.size());
+    BOOST_FOREACH(const std::vector<Point3d>& face, pattern){
+      spacePattern.push_back(inverseTransformation*face);
+    }
+
+    BOOST_FOREACH(Surface surface, space.surfaces()){
+      if (istringEqual("RoofCeiling", surface.surfaceType()) &&
+          istringEqual("Outdoors", surface.outsideBoundaryCondition())){
+
+        Plane surfacePlane = surface.plane();
+
+        std::vector<std::vector<Point3d> > surfacePattern;
+        spacePattern.reserve(pattern.size());
+        BOOST_FOREACH(const std::vector<Point3d>& spaceFace, spacePattern){
+          surfacePattern.push_back(surfacePlane.project(spaceFace));
+        }
+
+        std::vector<SubSurface> newSkylights = surface.createSubSurfaces(surfacePattern, inset, construction);
+        result.insert(result.end(), newSkylights.begin(), newSkylights.end());
+      }
+    }
+  }
+
+  return result;
 }
 
 

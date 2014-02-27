@@ -1267,7 +1267,10 @@ namespace detail {
       ymin = std::min(ymin, faceVertex.y());
       ymax = std::max(ymax, faceVertex.y());
     }
-    
+    if ((xmin > xmax) || (ymin > ymax)){
+      return result;
+    }
+
     double oneInch = 0.0254;
     double oneFoot = 0.3048;
 
@@ -1594,6 +1597,9 @@ namespace detail {
       ymin = std::min(ymin, faceVertex.y());
       ymax = std::max(ymax, faceVertex.y());
     }
+    if (ymin > ymax){
+      return result;
+    }
 
     // create a mask for each sub surface
     std::vector<Point3dVector> masks;
@@ -1602,7 +1608,7 @@ namespace detail {
       
       Point3dVector subSurfaceFaceVertices = inverseTransformation * subSurface.vertices();
       if (subSurfaceFaceVertices.size() < 3){
-        return result;
+        continue;
       }
 
       // boost polygon wants vertices in clockwise order, subSurfaceFaceVertices must be reversed
@@ -1619,6 +1625,9 @@ namespace detail {
         xmax = std::max(xmax, faceVertex.x());
         //ymin = std::min(ymin, faceVertex.y());
         //ymax = std::max(ymax, faceVertex.y());
+      }
+      if (xmin > xmax){
+        return continue;
       }
 
       Point3dVector mask;

@@ -689,7 +689,70 @@ namespace detail {
 
   std::vector<std::vector<Point3d> > Building_Impl::generateSkylightPattern(double skylightToFloorRatio, double desiredWidth, double desiredHeight) const
   {
-    return std::vector<std::vector<Point3d> >();
+    std::vector<std::vector<Point3d> > result;
+
+    if (skylightToFloorRatio <= 0.0){
+      return result;
+    }else if (skylightToFloorRatio >= 1.0){
+      return result;
+    }
+
+    if (desiredWidth <= 0){
+      return result;
+    }
+
+    if (desiredHeight <= 0){
+      return result;
+    }
+
+    // find extents of building 
+    double xmin = std::numeric_limits<double>::max();
+    double xmax = std::numeric_limits<double>::min();
+    double ymin = std::numeric_limits<double>::max();
+    double ymax = std::numeric_limits<double>::min();
+    BOOST_FOREACH(const Space& space, this->spaces()){
+      Transformation transformation = space.buildingTransformation();
+      BOOST_FOREACH(const Surface& surface, space.surfaces()){
+        if (istringEqual("RoofCeiling", surface.surfaceType()) &&
+            istringEqual("Outdoors", surface.outsideBoundaryCondition())){
+          std::vector<Point3d> vertices = transformation*surface.vertices();
+          BOOST_FOREACH(const Point3d& vertex, vertices){
+            xmin = std::min(xmin, vertex.x());
+            xmax = std::max(xmax, vertex.x());
+            ymin = std::min(ymin, vertex.y());
+            ymax = std::max(ymax, vertex.y());
+          }
+        }
+      }
+    }
+    if ((xmin > xmax) || (ymin > ymax)){
+      return result;
+    }
+
+    double floorPrintWidth = (xmax-xmin);
+    double floorPrintHeight = (ymax-ymin);
+    double floorPrintArea = floorPrintWidth * floorPrintHeight;
+    double desiredArea = desiredWidth * desiredHeight;
+    double numSkylights = skylightToFloorRatio*floorPrintArea/desiredArea;
+    double numSkylightsX = skylightToFloorRatio*floorPrintWidth/desiredWidth;
+    double numSkylightsY = skylightToFloorRatio*floorPrintHeight/desiredHeight;
+
+    double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/numSkylightsX;
+    double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/numSkylightsY;
+
+    for (double x = xSpace/2.0; x < floorPrintWidth; x+=desiredWidth){
+      for (double y = ySpace/2.0; y < floorPrintHeight; y+=desiredHeight){
+        std::vector<Point3d> skylight;
+        skylight.push_back(Point3d(x,y,0));
+        skylight.push_back(Point3d(x+desiredWidth,y,0));
+        skylight.push_back(Point3d(x+desiredWidth,y+desiredHeight,0));
+        skylight.push_back(Point3d(x,y+desiredHeight,0));
+
+        result.push_back(skylight);
+      }
+    }
+
+    return result;
   }
 
   openstudio::Quantity Building_Impl::northAxis_SI() const
