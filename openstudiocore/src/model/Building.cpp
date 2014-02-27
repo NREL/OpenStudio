@@ -734,19 +734,23 @@ namespace detail {
     double floorPrintArea = floorPrintWidth * floorPrintHeight;
     double desiredArea = desiredWidth * desiredHeight;
     double numSkylights = skylightToFloorRatio*floorPrintArea/desiredArea;
-    double numSkylightsX = skylightToFloorRatio*floorPrintWidth/desiredWidth;
-    double numSkylightsY = skylightToFloorRatio*floorPrintHeight/desiredHeight;
+    double numSkylightsX = std::sqrt(skylightToFloorRatio)*floorPrintWidth/desiredWidth;
+    double numSkylightsY = std::sqrt(skylightToFloorRatio)*floorPrintHeight/desiredHeight;
 
     double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/numSkylightsX;
     double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/numSkylightsY;
 
-    for (double x = xSpace/2.0; x < floorPrintWidth - xSpace/2.0 - desiredWidth; x+=desiredWidth){
-      for (double y = ySpace/2.0; y < floorPrintHeight - ySpace/2.0 - desiredHeight; y+=desiredHeight){
+    for (double x = xSpace/2.0; x < floorPrintWidth - xSpace/2.0; x += desiredWidth + xSpace){
+      for (double y = ySpace/2.0; y < floorPrintHeight - ySpace/2.0; y += desiredHeight + ySpace){
+
+        double x2 = std::min(x+desiredWidth, floorPrintWidth - xSpace/2.0);
+        double y2 = std::min(y+desiredHeight, floorPrintHeight - ySpace/2.0);
+
         std::vector<Point3d> skylight;
         skylight.push_back(Point3d(x,y,0));
-        skylight.push_back(Point3d(x+desiredWidth,y,0));
-        skylight.push_back(Point3d(x+desiredWidth,y+desiredHeight,0));
-        skylight.push_back(Point3d(x,y+desiredHeight,0));
+        skylight.push_back(Point3d(x2,y,0));
+        skylight.push_back(Point3d(x2,y2,0));
+        skylight.push_back(Point3d(x,y2,0));
 
         result.push_back(skylight);
       }
