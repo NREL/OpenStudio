@@ -408,7 +408,7 @@ namespace detail {
   }
 
   bool Space_Impl::partofTotalFloorArea() const {
-    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,false);
+    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,false,true);
     if (!value){
       if (this->isPlenum()){
         return false;
