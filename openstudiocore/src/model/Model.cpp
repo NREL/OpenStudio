@@ -1075,11 +1075,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       targetObject = connection->targetObject();
       targetPort = connection->targetObjectPort();
 
-      if( sourceObject && sourcePort )
-      {
-        sourceObject->setString(sourcePort.get(),"");
-      }
-
+      // This resets the cache
       if( targetObject )
       {
         if( boost::optional<HVACComponent> hvacComponent = targetObject->optionalCast<HVACComponent>() )
@@ -1101,9 +1097,17 @@ if (_className::iddObjectType() == typeToCreate) { \
 
       if( targetObject && targetPort )
       {
-        targetObject->setString(targetPort.get(),"");
+        if( boost::optional<PortList> portList = targetObject->optionalCast<PortList>() )
+        {
+          portList->getImpl<model::detail::PortList_Impl>()->removePort(targetPort.get());
+        }
+        else
+        {
+          targetObject->setString(targetPort.get(),"");
+        }
       }
 
+      // This resets the cache
       if( sourceObject )
       {
         if( boost::optional<HVACComponent> hvacComponent = sourceObject->optionalCast<HVACComponent>() )
@@ -1125,7 +1129,14 @@ if (_className::iddObjectType() == typeToCreate) { \
 
       if( sourceObject && sourcePort )
       {
-        sourceObject->setString(sourcePort.get(),"");
+        if( boost::optional<PortList> portList = sourceObject->optionalCast<PortList>() )
+        {
+          portList->getImpl<model::detail::PortList_Impl>()->removePort(sourcePort.get());
+        }
+        else
+        {
+          sourceObject->setString(sourcePort.get(),"");
+        }
       }
 
       connection->remove();
