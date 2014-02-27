@@ -838,30 +838,45 @@ void ReverseVerticalBranchItem::layout()
 
 bool sortBranches(std::vector<ModelObject> i, std::vector<ModelObject> j)
 {
+  OS_ASSERT(! i.empty());
+  OS_ASSERT(! j.empty());
+
   std::vector<ThermalZone> iZones = subsetCastVector<ThermalZone>(i);
   std::vector<ThermalZone> jZones = subsetCastVector<ThermalZone>(j);
 
-  boost::optional<ThermalZone> iZone;
-  boost::optional<ThermalZone> jZone;
+  boost::optional<ModelObject> iModelObject;
+  boost::optional<ModelObject> jModelObject;
 
   if( ! iZones.empty() )
   {
-    iZone = iZones.front();
+    iModelObject = iZones.front();
+  }
+  else if( i.size() > 1u )
+  {
+    iModelObject = i[1];
+  }
+  else
+  {
+    iModelObject = i[0];
   }
 
   if( ! jZones.empty() )
   {
-    jZone = jZones.front();
+    jModelObject = jZones.front();
   }
-
-  bool result = true;
-
-  if( iZone && jZone )
+  else if( j.size() > 1u )
   {
-    result = (iZone->name().get() < jZone->name().get());
+    jModelObject = j[1];
+  }
+  else
+  {
+    jModelObject = j[0];
   }
 
-  return result;
+  OS_ASSERT(iModelObject);
+  OS_ASSERT(jModelObject);
+
+  return iModelObject->name().get() < jModelObject->name().get();
 }
 
 HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter,

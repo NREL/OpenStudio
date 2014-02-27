@@ -54,6 +54,8 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
   virtual ~PortList_Impl() {}
 
   unsigned port(unsigned portIndex);
+
+  unsigned portIndex(unsigned port);
   
   unsigned nextPort();
 
@@ -65,11 +67,11 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
 
   unsigned newPortAfterIndex(unsigned portIndex);
   
-  unsigned portIndexForModelObject( ModelObject modelObject );
+  unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = NULL );
 
   unsigned nextPortIndex();
 
-  void removePortForIndex(unsigned portIndex);
+  void removePort(unsigned port);
 
   virtual const std::vector<std::string>& outputVariableNames() const;
 

@@ -36,6 +36,7 @@
 ######################################################################
 
 require 'openstudio'
+require 'csv'
 
 if ARGV[0].nil?
   puts "This script requires a path to a project directory as input."
@@ -46,6 +47,7 @@ project_dir = ARGV[0].to_s
 
 puts "Importing measure information from " + project_dir + "."
 
+OpenStudio::Application::instance.processEvents
 project = OpenStudio::AnalysisDriver::SimpleProject::open(project_dir)
 raise "Unable to open " + project_dir + "." if project.empty?
 
@@ -174,33 +176,62 @@ data_points.each { |data_point|
   }  
 }
 
-# Create csv file
-def table_element(data)
-  return OpenStudio::TableElement.new(data)
-end
-table = OpenStudio::Table.new
-row = OpenStudio::TableRow.new
+# create csv files
+csv_path = OpenStudio::Path.new(project_dir) / 
+           OpenStudio::Path.new("spreadsheet_model_measures_export.csv")
+model_measures_csv = CSV.open(csv_path.to_s,"wb")
+csv_path = OpenStudio::Path.new(project_dir) / 
+           OpenStudio::Path.new("spreadsheet_energyplus_measures_export.csv")
+energyplus_measures_csv = CSV.open(csv_path.to_s,"wb")
+csv_path = OpenStudio::Path.new(project_dir) / 
+           OpenStudio::Path.new("spreadsheet_reporting_measures_export.csv")
+reporting_measures_csv = CSV.open(csv_path.to_s,"wb")
+
 measures.each { |measure|
-  row << OpenStudio::TableElement.new("FALSE",OpenStudio::TableLoadOptions.new(false,false,false))
-  row << table_element(measure["bcl_measure"].name)
-  row << table_element(OpenStudio::toString(measure["bcl_measure"].directory.stem))
-  row << table_element("RubyMeasure")
-  table.appendRow(row)
-  row.clear
+  csv_file = nil
+  if measure["bcl_measure"].measureType == "ModelMeasure".to_MeasureType
+    csv_file = model_measures_csv
+  elsif measure["bcl_measure"].measureType == "EnergyPlusMeasure".to_MeasureType
+    csv_file = energyplus_measures_csv
+  elsif measure["bcl_measure"].measureType == "ReportingMeasure".to_MeasureType
+    csv_file = reporting_measures_csv
+  else
+    puts "Skipping #{measure["bcl_measure"].name}, because it is of unexpected type '#{measure["bcl_measure"].measureType.valueDescription}'." 
+  end
+  
+  row = []
+  row << "FALSE"
+  row << measure["bcl_measure"].name
+  row << OpenStudio::toString(measure["bcl_measure"].directory.stem)
+  row << "RubyMeasure"
+  csv_file << row
+  row = []
   measure["arguments"].each { |arg|
-    row << table_element("")
-    row << table_element("argument")
-    row << table_element(arg.displayName)
-    row << table_element(arg.name)
-    row << table_element("static")
-    row << table_element(arg.type.valueDescription)
-    row << table_element("")
-    if arg.hasValue
-      row << table_element(arg.valueAsString)
-    elsif arg.hasDefaultValue
-      row << table_element(arg.defaultValueAsString)
+    row << ""
+    row << "argument"
+    row << arg.displayName
+    row << arg.name
+    row << "static"
+    if arg.type == "Choice".to_OSArgumentType
+      row << "String"
+      row << ""    
+      if arg.hasValue
+        row << arg.valueDisplayName
+      elsif arg.hasDefaultValue
+        row << arg.defaultValueDisplayName
+      else
+        row << ""
+      end
     else
-      row << table_element("")
+      row << arg.type.valueName
+      row << ""    
+      if arg.hasValue
+        row << arg.valueAsString
+      elsif arg.hasDefaultValue
+        row << arg.defaultValueAsString
+      else
+        row << ""
+      end
     end
     if arg.type == "Choice".to_OSArgumentType
       choices_str = String.new
@@ -210,25 +241,40 @@ measures.each { |measure|
         sep = ","
       }
       choices_str << "|"
-      row << table_element(choices_str)
+      row << choices_str
     end
-    table.appendRow(row)
-    row.clear
+    csv_file << row
+    row = []
   }
+}
+model_measures_csv.close
+energyplus_measures_csv.close
+reporting_measures_csv.close
+
+csv_path = OpenStudio::Path.new(project_dir) / 
+           OpenStudio::Path.new("spreadsheet_outputs_export.csv")
+csv_file = CSV.open(csv_path.to_s,"wb")
+def add_rows_for_attribute(csv_file,measure,att,prefix)
+  if att.valueType == "AttributeVector".to_AttributeValueType
+    sub_prefix = prefix + "." + att.name
+    att.valueAsAttributeVector.each { |sub_att|
+      add_rows_for_attribute(csv_file,measure,sub_att,sub_prefix)
+    }
+  else
+    row = []
+    row << measure["bcl_measure"].name
+    row << (att.displayName.empty? ? att.name : att.displayName.get)
+    row << (prefix + att.name)
+    row << (att.units.empty? ? "" : att.units.get)
+    row << "FALSE"
+    csv_file << row  
+  end
+end
+measures.each { |measure|
   if measure.has_key?("outputs")
     measure["outputs"].each { |output|
-      row << table_element("")
-      row << table_element("output")
-      row << (output.displayName.empty? ? table_element(output.name) : table_element(output.displayName.get))
-      row << table_element(output.name)
-      row << table_element("")
-      row << table_element(output.valueType.valueDescription)
-      row << (output.units.empty? ? table_element("") : table_element(output.units.get))
-      row << table_element(output.toString)
-      table.appendRow(row)
-      row.clear
+      add_rows_for_attribute(csv_file,measure,output,"")
     }
   end
 }
-csv_path = OpenStudio::Path.new(project_dir) / OpenStudio::Path.new("spreadsheet_export.csv")
-table.save(csv_path,true)
+csv_file.close
