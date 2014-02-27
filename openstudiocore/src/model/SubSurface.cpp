@@ -1115,6 +1115,11 @@ SubSurface::SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl)
 {}
 /// @endcond
 
+std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces)
+{
+  return std::vector<SubSurface>();
+}
+
 
 } // model
 } // openstudio
