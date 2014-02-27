@@ -1213,8 +1213,8 @@ namespace detail {
   std::vector<SubSurface> Surface_Impl::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
                                                                            double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
                                                                            double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                                           boost::optional<ConstructionBase> viewGlassConstruction, 
-                                                                           boost::optional<ConstructionBase> daylightingGlassConstruction)
+                                                                           const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                                           const boost::optional<ConstructionBase>& daylightingGlassConstruction)
   {
     std::vector<SubSurface> result;
 
@@ -1553,7 +1553,7 @@ namespace detail {
     std::vector<Surface> result;
 
     double expand = 0.0254;
-    double tol = 0.001; // should be less than expand
+    double tol = 0.01; // should be less than expand
 
     // has to be a wall
     if (!istringEqual(this->surfaceType(), "Wall")){
@@ -1708,6 +1708,73 @@ namespace detail {
       LOG(Warn, "Expected to reparent " << handleToFaceVertexMap.size() << " sub surfaces in splitSurfaceForSubSurfaces, but only reparented " << numReparented);
     }
   
+
+    return result;
+  }
+
+  std::vector<SubSurface> Surface_Impl::createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction)
+  {
+    std::vector<SubSurface> result;
+    
+    double tol = 0.0254;
+    
+    if (!this->subSurfaces().empty()){
+      return result;
+    }
+
+    if (this->adjacentSurface()){
+      return result;
+    }
+
+    boost::optional<Point3d> centroid = this->centroid();
+    if (!centroid){
+      return result;
+    }
+
+    Point3dVector vertices = this->vertices();
+    Point3dVector insetVertices = moveVerticesTowardsPoint(vertices, *centroid, inset);
+
+    Transformation transformation = Transformation::alignFace(vertices);
+    Transformation inverseTransformation = transformation.inverse();
+    Point3dVector insetFaceVertices = inverseTransformation * insetVertices;
+
+    // boost polygon wants vertices in clockwise order, insetFaceVertices must be reversed
+    std::reverse(insetFaceVertices.begin(), insetFaceVertices.end());
+
+    Model model = this->model();
+    Surface surface = getObject<Surface>();
+    BOOST_FOREACH(const std::vector<Point3d>& face, faces){
+      Point3dVector faceVertices = inverseTransformation*face;
+
+      // boost polygon wants vertices in clockwise order, faceVertices must be reversed
+      std::reverse(faceVertices.begin(), faceVertices.end());
+
+      boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, insetFaceVertices, tol);
+      if (intersection){
+        Point3dVector intersectionVertices = intersection->polygon1();
+
+        std::vector<std::vector<Point3d> > allNewFaceVertices;
+        if (intersectionVertices.size() <= 4){
+          allNewFaceVertices.push_back(intersectionVertices);
+        }else{
+          std::vector<std::vector<Point3d> > holes;
+          allNewFaceVertices = computeTriangulation(intersectionVertices, holes, tol);
+        } 
+
+        BOOST_FOREACH(Point3dVector newFaceVertices, allNewFaceVertices){
+
+          std::reverse(newFaceVertices.begin(), newFaceVertices.end());
+
+          Point3dVector newVertices = transformation * newFaceVertices;
+          SubSurface subSurface(newVertices, model);
+          subSurface.setSurface(surface);
+          if (construction){
+            subSurface.setConstruction(*construction);
+          }
+          result.push_back(subSurface);
+        }
+      }
+    }
 
     return result;
   }
@@ -1936,13 +2003,18 @@ boost::optional<SubSurface> Surface::setWindowToWallRatio(double wwr, double des
 std::vector<SubSurface> Surface::applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
                                                                     double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
                                                                     double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                                    boost::optional<ConstructionBase> viewGlassConstruction, 
-                                                                    boost::optional<ConstructionBase> daylightingGlassConstruction)
+                                                                    const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                                    const boost::optional<ConstructionBase>& daylightingGlassConstruction)
 {
   return getImpl<detail::Surface_Impl>()->applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
                                                                              desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
                                                                              exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
                                                                              viewGlassConstruction, daylightingGlassConstruction);
+}
+
+std::vector<SubSurface> Surface::createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction)
+{
+  return getImpl<detail::Surface_Impl>()->createSubSurfaces(faces, inset, construction);
 }
 
 std::vector<ShadingSurfaceGroup> Surface::shadingSurfaceGroups() const

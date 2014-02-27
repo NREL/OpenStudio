@@ -216,17 +216,24 @@ class MODEL_API Surface : public PlanarSurface {
   std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
                                                              double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
                                                              double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                             boost::optional<ConstructionBase> viewGlassConstruction, 
-                                                             boost::optional<ConstructionBase> daylightingGlassConstruction);
+                                                             const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                             const boost::optional<ConstructionBase>& daylightingGlassConstruction);
 
 
   /** Returns any shading surface groups associated with this surface. */
   std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
-  /** Splits this surface vertically surrounding any sub surfaces, this surface must be a wall. 
+  /** Splits this surface vertically surrounding any sub surfaces.
+   *  This surface must be a wall and must not have an adjacent surface. 
    *  Returns any new surfaces created in this routine.
    *  Typically this is called on a surface that has doors but no windows before applying banded windows. */
   std::vector<Surface> splitSurfaceForSubSurfaces();
+
+  /** Moves all of the surfaces vertices towards the centroid by inset then intersects each face with the inset polygon.
+   *  Faces are in space coordinates, it is expected that not all faces will intersect the surface.
+   *  Returns all new sub surfaces created, sub surface types are defaulted.  Optional construction is applied.
+   *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
+  std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
  protected:
   /// @cond

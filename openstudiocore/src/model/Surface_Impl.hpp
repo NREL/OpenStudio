@@ -234,12 +234,14 @@ namespace detail {
     std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
                                                                double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
                                                                double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                               boost::optional<ConstructionBase> viewGlassConstruction, 
-                                                               boost::optional<ConstructionBase> daylightingGlassConstruction);
+                                                               const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                               const boost::optional<ConstructionBase>& daylightingGlassConstruction);
 
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
     std::vector<Surface> splitSurfaceForSubSurfaces();
+
+    std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
    protected:
    private:

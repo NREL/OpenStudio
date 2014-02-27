@@ -84,6 +84,10 @@ namespace openstudio{
   /// requires that vertices and holes are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
   UTILITIES_API std::vector<std::vector<Point3d> > computeTriangulation(const Point3dVector& vertices, const std::vector<std::vector<Point3d> >& holes, double tol = 0.001);
 
+  /// move all vertices towards point by distance, pass negative distance to move away from point
+  /// no guarantee that resulting polygon will be valid
+  UTILITIES_API std::vector<Point3d> moveVerticesTowardsPoint(const Point3dVector& vertices, const Point3d& point, double distance);
+
 } // openstudio
 
 #endif //UTILITIES_GEOMETRY_GEOMETRY_HPP
