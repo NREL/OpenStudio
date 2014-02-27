@@ -1693,7 +1693,7 @@ namespace detail {
       typedef std::pair<Handle, Point3dVector> MapType;
       BOOST_FOREACH(const MapType& p, handleToFaceVertexMap){
         // if surface includes a single point it will include them all
-        if (pointInPolygon(p.second[0], newFace)){
+        if (pointInPolygon(p.second[0], newFace, tol)){
           boost::optional<SubSurface> subSurface = model.getModelObject<SubSurface>(p.first);
           if (subSurface){
             numReparented += 1;
