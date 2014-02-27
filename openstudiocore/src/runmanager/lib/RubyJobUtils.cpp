@@ -84,10 +84,12 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
     /// \todo this is a bit of a hack, but it works for now
     if (toString(m_script.filename()) == "UserScriptAdapter.rb") {
       openstudio::path adapterPath = toPath("openstudio/runmanager/rubyscripts/UserScriptAdapter.rb");
+      LOG(Debug, "Updating path of UserScriptAdapter.rb to " << openstudio::toString(adapterPath));
       setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
     } else if (toString(m_script.filename()) == "DaylightCalculations.rb") {
-      openstudio::path adapterPath = toPath("openstudio/runmanager/rubyscripts/DaylightCalculations.rb");
-      setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
+      openstudio::path daylightPath = toPath("openstudio/runmanager/rubyscripts/DaylightCalculations.rb");
+      LOG(Debug, "Updating path of DaylightCalculations.rb to " << openstudio::toString(daylightPath));
+      setScriptFile(getOpenStudioRubyScriptsPath() / daylightPath);
     }
     else {
       openstudio::path temp = relocatePath(m_script,t_originalBasePath,t_newBasePath);

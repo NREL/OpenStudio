@@ -56,7 +56,8 @@ namespace detail {
   {
 #ifndef Q_WS_WIN
     // Check for process status if the exit was not handled correctly. 
-    Q_PID qpid = pid();
+/*
+ * Q_PID qpid = pid();
 
     if (qpid != 0)
     {
@@ -73,6 +74,8 @@ namespace detail {
         }
       }
     }
+    */
+
 #endif
   }
 
