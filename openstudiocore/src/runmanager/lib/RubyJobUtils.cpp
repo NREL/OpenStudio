@@ -87,7 +87,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
       LOG(Debug, "Updating path of UserScriptAdapter.rb to " << openstudio::toString(adapterPath));
       setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
     } else if (toString(m_script.filename()) == "DaylightCalculations.rb") {
-      openstudio::path daylightPath = toPath("openstudio/runmanager/rubyscripts/DaylightCalculations.rb");
+      openstudio::path daylightPath = toPath("openstudio/radiance/DaylightCalculations.rb");
       LOG(Debug, "Updating path of DaylightCalculations.rb to " << openstudio::toString(daylightPath));
       setScriptFile(getOpenStudioRubyScriptsPath() / daylightPath);
     }
