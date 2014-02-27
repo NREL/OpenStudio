@@ -143,11 +143,15 @@ class MODEL_API SubSurface : public PlanarSurface {
   std::string outsideBoundaryCondition() const;
 
   /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. */
+  // DLM: todo add argument for horizontal offset 
   boost::optional<ShadingSurface> addOverhang(double depth, double offset);
 
   /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. 
    *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
+  // DLM: todo add argument for horizontal offset 
   boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
+
+  // DLM: todo add methods to create fins
 
   /** Returns any shading surface groups associated with this sub surface. */
   std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
@@ -161,6 +165,8 @@ class MODEL_API SubSurface : public PlanarSurface {
   /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window, 
    * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
   boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
+
+  // DLM: todo add methods to create light shelves by projection factor
 
  protected:
   /// @cond

@@ -183,26 +183,31 @@ class MODEL_API Surface : public PlanarSurface {
   0 if this surface is not a wall. */
   double windowToWallRatio() const;
 
-  /** Sets the window to wall ratio for this surface.  Returns false if the
-  surface is not a wall, if the surface is not rectangular in face coordinates, if 
-  requested ratio is too large (window area ~= surface area) or too small (min dimension
-  of window < 1 foot), or if surface has any doors. Otherwise, removes
-  all existing windows and adds new window to meet requested ratio.*/
+  /** Sets the window to wall ratio for this surface using a single banded window.  
+   *  Uses applyViewAndDaylightingGlassRatios for implementation. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr);
   
   /** Same as setWindowToWallRatio but with extra parameters desiredHeightOffset and heightOffsetFromFloor.
-  If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
-  offset from the ceiling. */
+   *  If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
+   *  offset from the ceiling. Uses applyViewAndDaylightingGlassRatios for implementation. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
 
-  /** Applies both view and daylighting glass to the surface with optional exterior shading and interior light shelf.
+  /** Applies banded view and daylighting windows to the surface with optional exterior shading and interior light shelf.
+   * 
+   *  Assumes that this surface spans the entire height of the space, this method should not be used if the wall is broken
+   *  into multiple vertical pieces.
+   * 
+   *  Returns false if the surface is not a wall, if the surface is not rectangular in face coordinates, 
+   *  if requested ratio is too large (window area ~= surface area), or if surface has any doors.  
+   *  
+   *  Otherwise, removes all existing windows and adds new windows to meet requested ratio.
+   *
    *  viewGlassToWallRatio - the ratio of view glass to wall area, if 0 no view glass will be created
    *  daylightingGlassToWallRatio - the ratio of daylighting glass to wall area, if 0 no daylighting glass will be created
-   *  desiredViewGlassSillHeight - the distance from the floor to the bottom of the view glass 
-   *  desiredDaylightingGlassHeaderHeight - the distance from the ceiling to the top of the daylighting glass
-   *  desiredSpacingViewToDaylightingGlass - the distance between top of view glass and bottom of daylighting glass
-   *  exteriorShadingProjectionFactor - projection factor of exterior shading applied to the view window
-   *  interiorShelfProjectionFactor - projection factor of interior light shelf applied to the daylighting window
+   *  desiredViewGlassSillHeight - the desired distance from the floor to the bottom of the view glass, this may be reduced if the requested window area is too high
+   *  desiredDaylightingGlassHeaderHeight - the distance from the ceiling to the top of the daylighting glass, this may be reduced if the requested window area is too high
+   *  exteriorShadingProjectionFactor - projection factor of exterior shading applied to the view window, if 0 no exterior shading will be created
+   *  interiorShelfProjectionFactor - projection factor of interior light shelf applied to the daylighting window, if 0 no interior light shelf will be created
    *  viewGlassConstruction - optional construction to use for the view glass
    *  daylightingGlassConstruction - optional construction to use for the daylighting glass
    *
@@ -217,6 +222,11 @@ class MODEL_API Surface : public PlanarSurface {
 
   /** Returns any shading surface groups associated with this surface. */
   std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
+
+  /** Splits this surface vertically surrounding any sub surfaces, this surface must be a wall. 
+   *  Returns any new surfaces created in this routine.
+   *  Typically this is called on a surface that has doors but no windows before applying banded windows. */
+  std::vector<Surface> splitSurfaceForSubsurfaces();
 
  protected:
   /// @cond

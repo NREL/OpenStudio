@@ -355,19 +355,19 @@ namespace openstudio{
   }
 
   // convert vertices to a boost polygon, all vertices must lie on z = 0 plane
-  boost::optional<BoostRing> boostPolygonFromVertices(const std::vector<Point3d>& vertices, std::vector<Point3d>& allPoints, double tol)
+  boost::optional<BoostPolygon> boostPolygonFromVertices(const std::vector<Point3d>& vertices, std::vector<Point3d>& allPoints, double tol)
   {
     if (vertices.size () < 3){
       return boost::none;
     }
 
-    BoostRing polygon;
+    BoostPolygon polygon;
     BOOST_FOREACH(const Point3d& vertex, vertices){
 
       // should all have zero z coordinate now
       double z = vertex.z();
       if (abs(z) > tol){
-        LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane for intersection methods");
+        LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane");
         return boost::none;
       }
 
@@ -380,7 +380,80 @@ namespace openstudio{
 
     //boost::geometry::correct(polygon);
 
+    boost::optional<double> testArea = boost::geometry::area(polygon);
+    if (!testArea || (*testArea < 0)){
+      // DLM: we could offer to reverse these vertices here but that might not be the best idea
+      return boost::none;
+    }
+
     return polygon;
+  }
+
+  boost::optional<BoostPolygon> nonIntersectingBoostPolygonFromVertices(const std::vector<Point3d>& polygon, std::vector<Point3d>& allPoints, double tol)
+  {
+    boost::optional<BoostPolygon> result = boostPolygonFromVertices(polygon, allPoints, tol);
+    if (!result){
+      return boost::none;
+    }
+    // check if polygon overlaps itself
+    try{
+      boost::geometry::detail::overlay::has_self_intersections(*result);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      //LOG_FREE(Error, "utilities.geometry.nonIntersectingBoostPolygonFromVertices", "Self intersecting polygon");
+      return boost::none;
+    }
+    return result;
+  }
+
+  // convert vertices to a boost ring, all vertices must lie on z = 0 plane
+  boost::optional<BoostRing> boostRingFromVertices(const std::vector<Point3d>& vertices, std::vector<Point3d>& allPoints, double tol)
+  {
+    if (vertices.size () < 3){
+      return boost::none;
+    }
+
+    BoostRing ring;
+    BOOST_FOREACH(const Point3d& vertex, vertices){
+
+      // should all have zero z coordinate now
+      double z = vertex.z();
+      if (abs(z) > tol){
+        LOG_FREE(Error, "utilities.geometry.boostRingFromVertices", "All points must be on z = 0 plane");
+        return boost::none;
+      }
+
+      // use helper method which combines close points
+      boost::geometry::append(ring, boostPointFromPoint3d(vertex, allPoints, tol));
+    }
+
+    // close polygon, use helper method which combines close points
+    boost::geometry::append(ring, boostPointFromPoint3d(vertices[0], allPoints, tol));
+
+    //boost::geometry::correct(ring);
+
+    boost::optional<double> testArea = boost::geometry::area(ring);
+    if (!testArea || (*testArea < 0)){
+      // DLM: we could offer to reverse these vertices here but that might not be the best idea
+      return boost::none;
+    }
+
+    return ring;
+  }
+
+  boost::optional<BoostRing> nonIntersectingBoostRingFromVertices(const std::vector<Point3d>& polygon, std::vector<Point3d>& allPoints, double tol)
+  {
+    boost::optional<BoostRing> result = boostRingFromVertices(polygon, allPoints, tol);
+    if (!result){
+      return boost::none;
+    }
+    // check if polygon overlaps itself
+    try{
+      boost::geometry::detail::overlay::has_self_intersections(*result);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      //LOG_FREE(Error, "utilities.geometry.nonIntersectingBoostRingFromVertices", "Self intersecting polygon");
+      return boost::none;
+    }
+    return result;
   }
 
   // convert a boost polygon to vertices
@@ -468,6 +541,71 @@ namespace openstudio{
     return m_newPolygons2;
   }
 
+  boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
+  {
+    std::vector<Point3d> resultPolygon;
+
+    // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
+    
+    boost::optional<BoostRing> boostPolygon1 = nonIntersectingBoostRingFromVertices(polygon1, allPoints, tol);
+    if (!boostPolygon1){
+      return boost::none;
+    }
+
+    boost::optional<BoostRing> boostPolygon2 = nonIntersectingBoostRingFromVertices(polygon2, allPoints, tol);
+    if (!boostPolygon2){
+      return boost::none;
+    }
+
+    // union the points in face coordinates, 
+    std::vector<BoostPolygon> unionResult;
+    try{
+      boost::geometry::union_(*boostPolygon1, *boostPolygon2, unionResult);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      LOG_FREE(Error, "utilities.geometry.join", "overlay_invalid_input_exception");
+      return boost::none;
+    }
+
+    unionResult = removeSpikes(unionResult);
+
+    // should not be any holes, check for that below
+
+    // check that union is ok
+    if (unionResult.empty()){
+      return boost::none;
+    }else if (unionResult.size() > 1){
+      return boost::none;
+    }
+
+    std::vector<Point3d> unionVertices = verticesFromBoostPolygon(unionResult[0], allPoints, tol);
+    boost::optional<double> testArea = boost::geometry::area(unionResult[0]);
+    if (!testArea || unionVertices.empty()){
+      LOG_FREE(Info, "utilities.geometry.join", "Cannot compute area of union");
+      return boost::none;
+    }else if (*testArea < tol*tol){
+      LOG_FREE(Info, "utilities.geometry.join", "Union has very small area of " << *testArea << " m^2");
+      return boost::none;
+    }
+    try{
+      boost::geometry::detail::overlay::has_self_intersections(unionResult[0]);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      LOG_FREE(Error, "utilities.geometry.join", "Union is self intersecting");
+      return boost::none;
+    }
+
+    // check for holes
+    if (!unionResult[0].inners().empty()){
+      LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
+      return boost::none;
+    };
+
+    unionVertices = reorderULC(unionVertices);
+    unionVertices = removeColinear(unionVertices);
+
+    return unionVertices;
+  }
+
   boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
   {
     std::vector<Point3d> resultPolygon1;
@@ -478,27 +616,13 @@ namespace openstudio{
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
     
-    boost::optional<BoostRing> boostPolygon1 = boostPolygonFromVertices(polygon1, allPoints, tol);
+    boost::optional<BoostRing> boostPolygon1 = nonIntersectingBoostRingFromVertices(polygon1, allPoints, tol);
     if (!boostPolygon1){
       return boost::none;
     }
-    // check if polygon overlaps itself
-    try{
-      boost::geometry::detail::overlay::has_self_intersections(*boostPolygon1);
-    }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG_FREE(Error, "utilities.geometry.intersect", "Cannot intersect self intersecting polygon");
-      return boost::none;
-    }
 
-    boost::optional<BoostRing> boostPolygon2 = boostPolygonFromVertices(polygon2, allPoints, tol);
+    boost::optional<BoostRing> boostPolygon2 = nonIntersectingBoostRingFromVertices(polygon2, allPoints, tol);
     if (!boostPolygon2){
-      return boost::none;
-    }
-    // check if polygon overlaps itself
-    try{
-      boost::geometry::detail::overlay::has_self_intersections(*boostPolygon2);
-    }catch(const boost::geometry::overlay_invalid_input_exception&){
-      LOG_FREE(Error, "utilities.geometry.intersect", "Cannot intersect self intersecting polygon");
       return boost::none;
     }
 
@@ -533,7 +657,7 @@ namespace openstudio{
       LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of largest intersection");
       return boost::none;
     }else if (*testArea < tol*tol){
-      LOG_FREE(Info, "utilities.geometry.intersect", "Largest intersection has very small area of " << *testArea << "m^2");
+      LOG_FREE(Info, "utilities.geometry.intersect", "Largest intersection has very small area of " << *testArea << " m^2");
       return boost::none;
     }
     try{
@@ -561,7 +685,7 @@ namespace openstudio{
         LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of intersection, result will not include this polygon, " << newPolygon);
         continue;
       }else if (*testArea < tol*tol){
-        LOG_FREE(Info, "utilities.geometry.intersect", "Intersection has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Intersection has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon);
         continue;
       }
       try{
@@ -595,7 +719,7 @@ namespace openstudio{
         LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon1);
         continue;
       }else if (*testArea < tol*tol){
-        LOG_FREE(Info, "utilities.geometry.intersect", "Face difference has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon1);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon1);
         continue;
       }
       try{
@@ -624,7 +748,7 @@ namespace openstudio{
         LOG_FREE(Info, "utilities.geometry.intersect", "Cannot compute area of face difference, result will not include this polygon, " << newPolygon2);
         continue;
       }else if (*testArea < tol*tol){
-        LOG_FREE(Info, "utilities.geometry.intersect", "Face difference has very small area of " << *testArea << "m^2, result will not include this polygon, " << newPolygon2);
+        LOG_FREE(Info, "utilities.geometry.intersect", "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon2);
         continue;
       }
       try{

@@ -1534,6 +1534,47 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(ShadingSurfaceGroup::iddObjectType());
   }
 
+  std::vector<Surface> Surface_Impl::splitSurfaceForSubsurfaces()
+  {
+    std::vector<Surface> result;
+
+    // has to be a wall
+    if (!istringEqual(this->surfaceType(), "Wall")){
+      return result;
+    }
+
+    std::vector<SubSurface> subSurfaces = this->subSurfaces();
+    if (subSurfaces.empty()){
+      // nothing to do
+      return result;
+    }
+
+    Point3dVector vertices = this->vertices();
+    Transformation transformation = Transformation::alignFace(vertices);
+    Point3dVector faceVertices = transformation.inverse() * vertices;
+
+    if (faceVertices.empty()){
+      return result;
+    }
+
+    // new coordinate system has z' in direction of outward normal, y' is up
+    double xmin = std::numeric_limits<double>::max();
+    double xmax = std::numeric_limits<double>::min();
+    double ymin = std::numeric_limits<double>::max();
+    double ymax = std::numeric_limits<double>::min();
+    BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
+      xmin = std::min(xmin, faceVertex.x());
+      xmax = std::max(xmax, faceVertex.x());
+      ymin = std::min(ymin, faceVertex.y());
+      ymax = std::max(ymax, faceVertex.y());
+    }
+
+    // create a mask for each sub surface
+
+    return result;
+  }
+
+
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
@@ -1769,6 +1810,11 @@ std::vector<SubSurface> Surface::applyViewAndDaylightingGlassRatios(double viewG
 std::vector<ShadingSurfaceGroup> Surface::shadingSurfaceGroups() const
 {
   return getImpl<detail::Surface_Impl>()->shadingSurfaceGroups();
+}
+
+std::vector<Surface> Surface::splitSurfaceForSubsurfaces()
+{
+  return getImpl<detail::Surface_Impl>()->splitSurfaceForSubsurfaces();
 }
 
 /// @cond
