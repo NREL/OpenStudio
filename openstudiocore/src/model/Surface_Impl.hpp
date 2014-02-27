@@ -239,7 +239,7 @@ namespace detail {
 
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
-    std::vector<Surface> splitSurfaceForSubsurfaces();
+    std::vector<Surface> splitSurfaceForSubSurfaces();
 
    protected:
    private:

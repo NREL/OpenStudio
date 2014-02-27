@@ -1548,7 +1548,7 @@ namespace detail {
     }
   };
 
-  std::vector<Surface> Surface_Impl::splitSurfaceForSubsurfaces()
+  std::vector<Surface> Surface_Impl::splitSurfaceForSubSurfaces()
   {
     std::vector<Surface> result;
 
@@ -1705,7 +1705,7 @@ namespace detail {
     }
 
     if (numReparented != handleToFaceVertexMap.size()){
-      LOG(Warn, "Expected to reparent " << handleToFaceVertexMap.size() << " sub surfaces in splitSurfaceForSubsurfaces, but only reparented " << numReparented);
+      LOG(Warn, "Expected to reparent " << handleToFaceVertexMap.size() << " sub surfaces in splitSurfaceForSubSurfaces, but only reparented " << numReparented);
     }
   
 
@@ -1950,9 +1950,9 @@ std::vector<ShadingSurfaceGroup> Surface::shadingSurfaceGroups() const
   return getImpl<detail::Surface_Impl>()->shadingSurfaceGroups();
 }
 
-std::vector<Surface> Surface::splitSurfaceForSubsurfaces()
+std::vector<Surface> Surface::splitSurfaceForSubSurfaces()
 {
-  return getImpl<detail::Surface_Impl>()->splitSurfaceForSubsurfaces();
+  return getImpl<detail::Surface_Impl>()->splitSurfaceForSubSurfaces();
 }
 
 /// @cond

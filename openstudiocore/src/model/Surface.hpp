@@ -226,7 +226,7 @@ class MODEL_API Surface : public PlanarSurface {
   /** Splits this surface vertically surrounding any sub surfaces, this surface must be a wall. 
    *  Returns any new surfaces created in this routine.
    *  Typically this is called on a surface that has doors but no windows before applying banded windows. */
-  std::vector<Surface> splitSurfaceForSubsurfaces();
+  std::vector<Surface> splitSurfaceForSubSurfaces();
 
  protected:
   /// @cond
