@@ -246,7 +246,7 @@ TEST_F(DataFixture, Matrix_FindConnectedComponents)
     result = findConnectedComponents(A);
     ASSERT_EQ(1u, result.size());
     ASSERT_EQ(1u, result[0].size());
-    EXPECT_EQ(1u, result[0][0]);
+    EXPECT_EQ(0u, result[0][0]);
   }
 
   // 2x2 identity
@@ -275,7 +275,7 @@ TEST_F(DataFixture, Matrix_FindConnectedComponents)
     ASSERT_EQ(1u, result[1].size());
     EXPECT_EQ(1u, result[1][0]);
     ASSERT_EQ(1u, result[2].size());
-    EXPECT_EQ(1u, result[2][0]);
+    EXPECT_EQ(2u, result[2][0]);
   }
 
   // 3x3 1-2 symetric, 3

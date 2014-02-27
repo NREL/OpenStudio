@@ -403,7 +403,7 @@ namespace openstudio{
       added.insert(i);
 
       for (unsigned j = i+1; j < N; ++j){
-        if (A(i,j) > 0){
+        if ((A(i,j) > 0) || (A(j,i) > 0)){
           group.push_back(j);
           added.insert(j);
         }
