@@ -1627,7 +1627,7 @@ namespace detail {
         //ymax = std::max(ymax, faceVertex.y());
       }
       if (xmin > xmax){
-        return continue;
+        continue;
       }
 
       Point3dVector mask;

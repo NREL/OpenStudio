@@ -740,8 +740,8 @@ namespace detail {
     double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/numSkylightsX;
     double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/numSkylightsY;
 
-    for (double x = xSpace/2.0; x < floorPrintWidth; x+=desiredWidth){
-      for (double y = ySpace/2.0; y < floorPrintHeight; y+=desiredHeight){
+    for (double x = xSpace/2.0; x < floorPrintWidth - xSpace/2.0 - desiredWidth; x+=desiredWidth){
+      for (double y = ySpace/2.0; y < floorPrintHeight - ySpace/2.0 - desiredHeight; y+=desiredHeight){
         std::vector<Point3d> skylight;
         skylight.push_back(Point3d(x,y,0));
         skylight.push_back(Point3d(x+desiredWidth,y,0));
