@@ -56,10 +56,10 @@ namespace detail {
   {
 #ifndef Q_WS_WIN
     // Check for process status if the exit was not handled correctly. 
-/*
- * Q_PID qpid = pid();
 
-    if (qpid != 0)
+    Q_PID qpid = pid();
+
+    if (qpid != 0 && atEnd() && state() != QProcess::Starting)
     {
       pid_t result = waitpid(qpid, 0, WNOHANG);
       if (result != 0 && m_exitedCount != -1)
@@ -74,7 +74,6 @@ namespace detail {
         }
       }
     }
-    */
 
 #endif
   }
