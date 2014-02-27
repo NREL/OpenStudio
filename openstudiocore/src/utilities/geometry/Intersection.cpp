@@ -19,7 +19,7 @@
 
 #include <utilities/geometry/Geometry.hpp>
 #include <utilities/geometry/Intersection.hpp>
-
+#include <utilities/data/Matrix.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Logger.hpp>
 
@@ -32,6 +32,8 @@
 #include <boost/geometry/geometries/ring.hpp>
 #include <boost/geometry/multi/geometries/multi_polygon.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
+#include <boost/geometry/strategies/cartesian/point_in_poly_franklin.hpp> 
+#include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp> 
 
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
@@ -540,6 +542,39 @@ namespace openstudio{
   {
     return m_newPolygons2;
   }
+  
+  bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol)
+  {
+    // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
+    
+    boost::optional<BoostRing> boostPolygon = nonIntersectingBoostRingFromVertices(polygon, allPoints, tol);
+    if (!boostPolygon){
+      return false;
+    }
+
+    if (abs(point.z()) > tol){
+      return false;
+    }
+
+    boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
+    BoostPoint boostPoint(p.get<0>(), p.get<1>());
+
+    //boost::geometry::strategy::within::winding<BoostPoint> strategy;
+    //boost::geometry::strategy::within::franklin<BoostPoint> strategy;
+    //boost::geometry::strategy::within::crossings_multiply<BoostPoint> strategy;
+    //bool result = boost::geometry::within(boostPoint, *boostPolygon, strategy);
+
+    //bool result = boost::geometry::intersects(boostPoint, *boostPolygon);
+
+    //bool result = boost::geometry::overlaps(boostPoint, *boostPolygon);
+
+    double distance = boost::geometry::distance(boostPoint, *boostPolygon);
+    bool result = (distance <= 0.0001);
+
+    return result; 
+      
+  }
 
   boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
   {
@@ -604,6 +639,50 @@ namespace openstudio{
     unionVertices = removeColinear(unionVertices);
 
     return unionVertices;
+  }
+
+  std::vector<std::vector<Point3d> > joinAll(const std::vector<std::vector<Point3d> >& polygons, double tol)
+  {
+    std::vector<std::vector<Point3d> > result;
+
+    unsigned N = polygons.size();
+    if (N <= 1){
+      return polygons;
+    }
+
+    // compute adjacency matrix
+    Matrix A(N,N,0.0);
+    for (unsigned i = 0; i < polygons.size(); ++i){
+      A(i,i) = 1.0;
+      for (unsigned j = i+1; j < polygons.size(); ++j){
+        if (join(polygons[i], polygons[j], tol)){
+          A(i,j) = 1.0;
+          A(j,i) = 1.0;
+        }
+      }
+    }
+
+    
+
+    std::vector<std::vector<unsigned> > connectedComponents = findConnectedComponents(A);
+    BOOST_FOREACH(const std::vector<unsigned>& component, connectedComponents){
+      std::vector<Point3d> points;
+      BOOST_FOREACH(unsigned i, component){
+        if (points.empty()){
+          points = polygons[i];
+        }else{
+          boost::optional<std::vector<Point3d> > joined = join(points, polygons[i], tol);
+          if (!joined){
+            LOG_FREE(Error, "utilities.geometry.joinAll", "Expected polygons to join together");
+          }else{
+            points = *joined;
+          }
+        }
+      }
+      result.push_back(points);
+    }
+
+    return result;
   }
 
   boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)

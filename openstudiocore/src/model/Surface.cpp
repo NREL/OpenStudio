@@ -1534,12 +1534,34 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(ShadingSurfaceGroup::iddObjectType());
   }
 
+  struct PolygonAreaGreater{
+    bool operator()(const Point3dVector& left, const Point3dVector& right){
+      boost::optional<double> leftA = getArea(left);
+      if (!leftA){
+        leftA = 0;
+      }
+      boost::optional<double> rightA = getArea(right);
+      if (!rightA){
+        rightA = 0;
+      }
+      return (*leftA > *rightA);
+    }
+  };
+
   std::vector<Surface> Surface_Impl::splitSurfaceForSubsurfaces()
   {
     std::vector<Surface> result;
 
+    double expand = 0.0254;
+    double tol = 0.001; // should be less than expand
+
     // has to be a wall
     if (!istringEqual(this->surfaceType(), "Wall")){
+      return result;
+    }
+
+    // can't have adjacent surface
+    if (this->adjacentSurface()){
       return result;
     }
 
@@ -1551,25 +1573,141 @@ namespace detail {
 
     Point3dVector vertices = this->vertices();
     Transformation transformation = Transformation::alignFace(vertices);
-    Point3dVector faceVertices = transformation.inverse() * vertices;
+    Transformation inverseTransformation = transformation.inverse();
+    Point3dVector faceVertices = inverseTransformation * vertices;
 
-    if (faceVertices.empty()){
+    if (faceVertices.size() < 3){
       return result;
     }
 
+    // boost polygon wants vertices in clockwise order, faceVertices must be reversed
+    std::reverse(faceVertices.begin(), faceVertices.end());
+
     // new coordinate system has z' in direction of outward normal, y' is up
-    double xmin = std::numeric_limits<double>::max();
-    double xmax = std::numeric_limits<double>::min();
+    //double xmin = std::numeric_limits<double>::max();
+    //double xmax = std::numeric_limits<double>::min();
     double ymin = std::numeric_limits<double>::max();
     double ymax = std::numeric_limits<double>::min();
     BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
-      xmin = std::min(xmin, faceVertex.x());
-      xmax = std::max(xmax, faceVertex.x());
+      //xmin = std::min(xmin, faceVertex.x());
+      //xmax = std::max(xmax, faceVertex.x());
       ymin = std::min(ymin, faceVertex.y());
       ymax = std::max(ymax, faceVertex.y());
     }
 
     // create a mask for each sub surface
+    std::vector<Point3dVector> masks;
+    std::map<Handle, Point3dVector> handleToFaceVertexMap;
+    BOOST_FOREACH(const SubSurface& subSurface, subSurfaces){
+      
+      Point3dVector subSurfaceFaceVertices = inverseTransformation * subSurface.vertices();
+      if (subSurfaceFaceVertices.size() < 3){
+        return result;
+      }
+
+      // boost polygon wants vertices in clockwise order, subSurfaceFaceVertices must be reversed
+      std::reverse(subSurfaceFaceVertices.begin(), subSurfaceFaceVertices.end());
+
+      handleToFaceVertexMap[subSurface.handle()] = subSurfaceFaceVertices;
+
+      double xmin = std::numeric_limits<double>::max();
+      double xmax = std::numeric_limits<double>::min();
+      //double ymin = std::numeric_limits<double>::max();
+      //double ymax = std::numeric_limits<double>::min();
+      BOOST_FOREACH(const Point3d& faceVertex, subSurfaceFaceVertices){
+        xmin = std::min(xmin, faceVertex.x());
+        xmax = std::max(xmax, faceVertex.x());
+        //ymin = std::min(ymin, faceVertex.y());
+        //ymax = std::max(ymax, faceVertex.y());
+      }
+
+      Point3dVector mask;
+      mask.push_back(Point3d(xmax+expand, ymax+expand, 0));
+      mask.push_back(Point3d(xmax+expand, ymin-expand, 0));
+      mask.push_back(Point3d(xmin-expand, ymin-expand, 0));
+      mask.push_back(Point3d(xmin-expand, ymax+expand, 0));
+      masks.push_back(mask);
+    }
+
+    // join masks
+    std::vector<Point3dVector> joinedMasks = joinAll(masks, tol);
+
+    // intersect masks with surface
+    std::vector<Point3dVector> newFaces;
+    newFaces.push_back(faceVertices);
+    BOOST_FOREACH(const Point3dVector& mask, joinedMasks){
+
+      std::vector<Point3dVector> tmpFaces;
+      unsigned numIntersects = 0;
+      BOOST_FOREACH(const Point3dVector& face, newFaces){
+        // each mask should intersect one and only one newFace
+        boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, mask, tol);
+        if (intersection){
+          numIntersects += 1;
+          tmpFaces.push_back(intersection->polygon1());
+          BOOST_FOREACH(const Point3dVector& tmpFace, intersection->newPolygons1()){
+            tmpFaces.push_back(tmpFace);
+          }
+        }else{
+          tmpFaces.push_back(face);
+        }
+      }
+
+      if (numIntersects != 1){
+        LOG(Warn, "Expected each mask to intersect one and only one face");
+      }
+
+      newFaces = tmpFaces;
+    }
+
+    OS_ASSERT(!newFaces.empty());
+
+    // sort new faces in descending order by area
+    std::sort(newFaces.begin(), newFaces.end(), PolygonAreaGreater());
+
+    // loop over all new faces
+    bool changedThis = false;
+    unsigned numReparented = 0;
+    Model model = this->model();
+    BOOST_FOREACH(const Point3dVector& newFace, newFaces){
+      
+      boost::optional<Surface> surface;
+      if (!changedThis){
+        changedThis = true;
+        surface = getObject<Surface>();
+      }else{
+        boost::optional<ModelObject> object = this->clone(model);
+        OS_ASSERT(object);
+        surface = object->optionalCast<Surface>();
+        OS_ASSERT(surface);
+        result.push_back(*surface);
+      }
+      OS_ASSERT(surface);
+
+      Point3dVector vertices = newFace;
+      std::reverse(vertices.begin(), vertices.end());
+      vertices = transformation * vertices;
+      surface->setVertices(vertices);
+
+      // loop over all sub surfaces and reparent 
+      typedef std::pair<Handle, Point3dVector> MapType;
+      BOOST_FOREACH(const MapType& p, handleToFaceVertexMap){
+        // if surface includes a single point it will include them all
+        if (pointInPolygon(p.second[0], newFace)){
+          boost::optional<SubSurface> subSurface = model.getModelObject<SubSurface>(p.first);
+          if (subSurface){
+            numReparented += 1;
+            subSurface->setSurface(*surface);
+          }
+          continue;
+        }
+      }
+    }
+
+    if (numReparented != handleToFaceVertexMap.size()){
+      LOG(Warn, "Expected to reparent " << handleToFaceVertexMap.size() << " sub surfaces in splitSurfaceForSubsurfaces, but only reparented " << numReparented);
+    }
+  
 
     return result;
   }

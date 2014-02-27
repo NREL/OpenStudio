@@ -145,6 +145,38 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
 
 }
 
+
+TEST_F(GeometryFixture, PointInPolygon)
+{
+  double tol = 0.01;
+
+  Point3dVector points = makeRectangleDown(0, 0, 1, 1);
+
+  // center
+  EXPECT_TRUE(pointInPolygon(Point3d(0.5,0.5,0), points, tol));
+
+  // corners
+  EXPECT_TRUE(pointInPolygon(Point3d(0,0,0), points, tol));
+  EXPECT_TRUE(pointInPolygon(Point3d(1,0,0), points, tol));
+  EXPECT_TRUE(pointInPolygon(Point3d(1,1,0), points, tol));
+  EXPECT_TRUE(pointInPolygon(Point3d(0,1,0), points, tol));
+
+  // edges
+  EXPECT_TRUE(pointInPolygon(Point3d(0.5,0,0), points, tol));
+  EXPECT_TRUE(pointInPolygon(Point3d(1,0.5,0), points, tol));
+  EXPECT_TRUE(pointInPolygon(Point3d(0.5,1,0), points, tol));
+  EXPECT_TRUE(pointInPolygon(Point3d(0,0.5,0), points, tol));
+
+  // outside
+  EXPECT_FALSE(pointInPolygon(Point3d(2,0,0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(1,2,0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(-1,0,0), points, tol));
+  EXPECT_FALSE(pointInPolygon(Point3d(-1,-1,0), points, tol));
+
+  // not on z = 0
+  EXPECT_FALSE(pointInPolygon(Point3d(0.5,0.5,0.5), points, tol));
+}
+
 TEST_F(GeometryFixture, Intersect_False)
 {
   double tol = 0.01;
@@ -515,4 +547,82 @@ TEST_F(GeometryFixture, Join_Overlap)
   test = join(points2, points1, tol);
   ASSERT_TRUE(test);
   EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 3, 1), *test)) << *test;
+}
+
+TEST_F(GeometryFixture, Join_Overlap2)
+{
+  double tol = 0.01;
+
+  boost::optional<std::vector<Point3d> > test;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is down
+  points1 = makeRectangleDown(0, 0, 4, 1);
+  points2 = makeRectangleDown(1, -1, 4, 1);
+
+  test = join(points1, points2, tol);
+  ASSERT_TRUE(test);
+
+  test = join(points2, points1, tol);
+  ASSERT_TRUE(test);
+}
+
+
+
+TEST_F(GeometryFixture, JoinAll)
+{
+  double tol = 0.01;
+
+  std::vector<Point3dVector> test;
+  std::vector<Point3dVector> polygons;
+
+  // empty
+  test = joinAll(polygons, tol);
+  EXPECT_EQ(0, test.size());
+
+  // two overlapping
+  polygons.clear();
+  polygons.push_back(makeRectangleDown(0, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(1, 0, 1, 1));
+  test = joinAll(polygons, tol);
+  ASSERT_EQ(1u, test.size());
+  EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 2, 1), test[0])) << test[0];
+
+  // three overlapping
+  polygons.clear();
+  polygons.push_back(makeRectangleDown(0, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(1, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(2, 0, 1, 1));
+  test = joinAll(polygons, tol);
+  ASSERT_EQ(1u, test.size());
+  EXPECT_TRUE(circularEqual(makeRectangleDown(0, 0, 3, 1), test[0])) << test[0];
+
+  // three not overlapping
+  polygons.clear();
+  polygons.push_back(makeRectangleDown(0, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(2, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(3, 0, 1, 1));
+  test = joinAll(polygons, tol);
+  ASSERT_EQ(3u, test.size());
+
+  // two overlapping, one not
+  polygons.clear();
+  polygons.push_back(makeRectangleDown(0, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(1, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(3, 0, 1, 1));
+  test = joinAll(polygons, tol);
+  ASSERT_EQ(2u, test.size());
+
+  bool found1 = false;
+  bool found2 = false;
+  for (unsigned i = 0; i < 2; ++i){
+    if (circularEqual(makeRectangleDown(0, 0, 2, 1), test[i])){
+      found1 = true;
+    }else if (circularEqual(makeRectangleDown(3, 0, 1, 1), test[i])){
+      found2 = true;
+    }
+  }
+  EXPECT_TRUE(found1);
+  EXPECT_TRUE(found2);
 }
