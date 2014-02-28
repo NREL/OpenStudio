@@ -75,6 +75,10 @@ class RunTabController : public QObject
 
     void onRadianceEnabledChanged(bool t_radianceEnabled);
 
+    void seedChanged();
+
+    bool checkSeedForRadianceWarningsAndErrors(boost::optional<model::Model> &t_seedModel, runmanager::RunManager &t_runManager);
+
   private:
 
     bool m_refreshScheduled;

@@ -1209,6 +1209,10 @@ void PatApp::analysisSeedChanged()
     // Changing the seed can make script arguments invalid
     m_measureManager.updateMeasures(*m_project, m_project->measures(), false);
 
+    if (m_runTabController)
+    {
+      m_runTabController->seedChanged();
+    }
     // DLM: Elaine changing the seed doesn't also make data points invalid right?
 
     // ETH@20130319 - Deleting explicit call to clearAllResults. analysisChanged() slot will take
@@ -1644,6 +1648,7 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
   if( m_runTabController )
   {
     m_runTabController->runView->runStatusView->setStatus(cloudStatus, analysisStatus);
+    m_runTabController->seedChanged();
   }
 }
 

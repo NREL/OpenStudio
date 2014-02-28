@@ -184,20 +184,9 @@ void RunTabController::onRadianceEnabledChanged(bool t_radianceEnabled)
       boost::optional<model::Model> seedModel = project->seedModel();
       runmanager::RunManager runManager = project->runManager();
 
-      std::vector<std::string> warnings;
-      std::vector<std::string> errors;
 
-      openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, runManager, seedModel);
-
-
-      if (!warnings.empty() || !errors.empty())
+      if (!checkSeedForRadianceWarningsAndErrors(seedModel, runManager))
       {
-        showRadianceWarningsAndErrors(warnings, errors);
-      }
-
-      if (!errors.empty())
-      {
-        runView->runStatusView->setRadianceEnabled(false);
         return; // cannot use radiance
       }
     }
@@ -241,6 +230,45 @@ void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::stri
   }
 
   QMessageBox::critical(runView, "Radiance Warnings and Errors", errorsAndWarnings);
+}
+
+
+bool RunTabController::checkSeedForRadianceWarningsAndErrors(boost::optional<model::Model> &t_seedModel, runmanager::RunManager &t_runManager)
+{
+  if (!t_seedModel)
+  {
+    return true;
+  }
+
+  std::vector<std::string> warnings;
+  std::vector<std::string> errors;
+  openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, t_runManager, t_seedModel);
+
+  if (!warnings.empty() || !errors.empty())
+  {
+    showRadianceWarningsAndErrors(warnings, errors);
+  }
+
+  if (!errors.empty())
+  {
+    runView->runStatusView->setRadianceEnabled(false);
+    return false;
+  }
+
+  return true;
+}
+
+void RunTabController::seedChanged()
+{
+  if (m_radianceEnabled)
+  {
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    OS_ASSERT(project);
+    boost::optional<model::Model> seedModel = project->seedModel();
+    runmanager::RunManager runManager = project->runManager();
+
+    checkSeedForRadianceWarningsAndErrors(seedModel, runManager);
+  }
 }
 
 void RunTabController::onPlayButtonClicked()

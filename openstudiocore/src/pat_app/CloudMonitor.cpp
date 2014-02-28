@@ -854,12 +854,12 @@ void StopCloudWorker::startWorking()
 ReconnectCloudWorker::ReconnectCloudWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor),
-    m_status(CLOUD_STOPPED),
     m_internetAvailable(false),
     m_authenticated(false),
     m_cloudRunning(false),
     m_cloudServiceRunning(false),
-    m_projectIsOnCloud(false)
+    m_projectIsOnCloud(false),
+    m_status(CLOUD_STOPPED)
 {
 }
 
@@ -986,11 +986,11 @@ bool RecoverCloudWorker::authenticated() const
 CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor),
-    m_count(0),
     m_internetAvailable(false),
     m_authenticated(false),
     m_cloudRunning(false),
-    m_cloudServiceRunning(false)
+    m_cloudServiceRunning(false),
+    m_count(0)
 {
 }
 

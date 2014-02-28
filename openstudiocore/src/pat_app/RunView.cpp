@@ -1215,7 +1215,7 @@ void DataPointJobItemView::update()
           dataPointJobHeaderView->setName(measure->name());
           nameSet = true;
         }
-      }  
+      }
     } else if (m_workflowStepJob.step.workItemType() == runmanager::JobType::Ruby) {
       openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
 
@@ -1223,7 +1223,7 @@ void DataPointJobItemView::update()
         // give it a special name instead of just "Ruby" when we find the radiance job
         dataPointJobHeaderView->setName("Radiance Daylighting");
         nameSet = true;
-      }    
+      }
     }
 
     if (!nameSet) {
