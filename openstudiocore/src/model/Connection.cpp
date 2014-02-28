@@ -138,6 +138,7 @@ namespace detail {
 Connection::Connection(const Model& model)
   : ModelObject(Connection::iddObjectType(),model)
 {
+  setName(handle().toString().toStdString());
   OS_ASSERT(getImpl<detail::Connection_Impl>());
 }
 
