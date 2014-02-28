@@ -70,7 +70,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
 }
 
-void OSQuantityEdit2::bindRequired(bool isIP,
+void OSQuantityEdit2::bind(bool isIP,
                            model::ModelObject& modelObject,
                            DoubleGetter get,
                            boost::optional<DoubleSetter> set,
@@ -86,8 +86,8 @@ void OSQuantityEdit2::bindRequired(bool isIP,
   m_set = set;
   m_setVoidReturn.reset();
 
-  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
-             isDefaulted, isAutosized, isAutocalculated);
+  completeBind(isIP, modelObject, reset, autosize, autocalculate,
+               isDefaulted, isAutosized, isAutocalculated);
 }
 
 void OSQuantityEdit2::bind(bool isIP,
@@ -106,14 +106,14 @@ void OSQuantityEdit2::bind(bool isIP,
   m_set = set;
   m_setVoidReturn.reset();
 
-  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
-             isDefaulted, isAutosized, isAutocalculated);
+  completeBind(isIP, modelObject, reset, autosize, autocalculate,
+               isDefaulted, isAutosized, isAutocalculated);
 }
 
-void OSQuantityEdit2::bindRequiredVoidReturn(bool isIP,
+void OSQuantityEdit2::bind(bool isIP,
                            model::ModelObject& modelObject,
                            DoubleGetter get,
-                           boost::optional<DoubleSetterVoidReturn> set,
+                           DoubleSetterVoidReturn set,
                            boost::optional<NoFailAction> reset,
                            boost::optional<NoFailAction> autosize,
                            boost::optional<NoFailAction> autocalculate,
@@ -126,14 +126,14 @@ void OSQuantityEdit2::bindRequiredVoidReturn(bool isIP,
   m_set.reset();
   m_setVoidReturn = set;
 
-  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
-             isDefaulted, isAutosized, isAutocalculated);
+  completeBind(isIP, modelObject, reset, autosize, autocalculate,
+               isDefaulted, isAutosized, isAutocalculated);
 }
 
-void OSQuantityEdit2::bindVoidReturn(bool isIP,
+void OSQuantityEdit2::bind(bool isIP,
                            model::ModelObject& modelObject,
                            OptionalDoubleGetter optionalGet,
-                           boost::optional<DoubleSetterVoidReturn> set,
+                           DoubleSetterVoidReturn set,
                            boost::optional<NoFailAction> reset,
                            boost::optional<NoFailAction> autosize,
                            boost::optional<NoFailAction> autocalculate,
@@ -146,18 +146,18 @@ void OSQuantityEdit2::bindVoidReturn(bool isIP,
   m_set.reset();
   m_setVoidReturn = set;
 
-  bindCommon(isIP, modelObject, reset, autosize, autocalculate,
-             isDefaulted, isAutosized, isAutocalculated);
+  completeBind(isIP, modelObject, reset, autosize, autocalculate,
+               isDefaulted, isAutosized, isAutocalculated);
 }
 
-void OSQuantityEdit2::bindCommon(bool isIP,
-          model::ModelObject& modelObject,
-          boost::optional<NoFailAction> reset,
-          boost::optional<NoFailAction> autosize,
-          boost::optional<NoFailAction> autocalculate,
-          boost::optional<BasicQuery> isDefaulted,
-          boost::optional<BasicQuery> isAutosized,
-          boost::optional<BasicQuery> isAutocalculated)
+void OSQuantityEdit2::completeBind(bool isIP,
+                                   model::ModelObject& modelObject,
+                                   boost::optional<NoFailAction> reset,
+                                   boost::optional<NoFailAction> autosize,
+                                   boost::optional<NoFailAction> autocalculate,
+                                   boost::optional<BasicQuery> isDefaulted,
+                                   boost::optional<BasicQuery> isAutosized,
+                                   boost::optional<BasicQuery> isAutocalculated)
 {
   // only let one of autosize/autocalculate
   if ((isAutosized && isAutocalculated) || 

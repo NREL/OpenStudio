@@ -43,7 +43,7 @@ class OSQuantityEdit2: public QWidget {
 
   virtual ~OSQuantityEdit2() {}
 
-  void bindRequired(bool isIP,
+  void bind(bool isIP,
             model::ModelObject& modelObject,
             DoubleGetter get,
             boost::optional<DoubleSetter> set=boost::none,
@@ -65,10 +65,10 @@ class OSQuantityEdit2: public QWidget {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
-  void bindRequiredVoidReturn(bool isIP,
+  void bind(bool isIP,
             model::ModelObject& modelObject,
             DoubleGetter get,
-            boost::optional<DoubleSetterVoidReturn> set=boost::none,
+            DoubleSetterVoidReturn set,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<NoFailAction> autosize=boost::none,
             boost::optional<NoFailAction> autocalculate=boost::none,
@@ -76,10 +76,10 @@ class OSQuantityEdit2: public QWidget {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
-  void bindVoidReturn(bool isIP,
+  void bind(bool isIP,
             model::ModelObject& modelObject,
             OptionalDoubleGetter optionalGet,
-            boost::optional<DoubleSetterVoidReturn> set=boost::none,
+            DoubleSetterVoidReturn set,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<NoFailAction> autosize=boost::none,
             boost::optional<NoFailAction> autocalculate=boost::none,
@@ -127,14 +127,14 @@ class OSQuantityEdit2: public QWidget {
 
   void setPrecision(const std::string& str);
 
-  void bindCommon(bool isIP,
-            model::ModelObject& modelObject,
-            boost::optional<NoFailAction> reset,
-            boost::optional<NoFailAction> autosize,
-            boost::optional<NoFailAction> autocalculate,
-            boost::optional<BasicQuery> isDefaulted,
-            boost::optional<BasicQuery> isAutosized,
-            boost::optional<BasicQuery> isAutocalculated);
+  void completeBind(bool isIP,
+                    model::ModelObject& modelObject,
+                    boost::optional<NoFailAction> reset,
+                    boost::optional<NoFailAction> autosize,
+                    boost::optional<NoFailAction> autocalculate,
+                    boost::optional<BasicQuery> isDefaulted,
+                    boost::optional<BasicQuery> isAutosized,
+                    boost::optional<BasicQuery> isAutocalculated);
 
   REGISTER_LOGGER("openstudio.OSQuantityEdit");
 };

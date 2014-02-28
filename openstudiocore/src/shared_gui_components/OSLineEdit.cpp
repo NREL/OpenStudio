@@ -33,7 +33,7 @@ OSLineEdit2::OSLineEdit2( QWidget * parent )
   setEnabled(false);
 }
 
-void OSLineEdit2::bindRequired(model::ModelObject& modelObject, 
+void OSLineEdit2::bind(model::ModelObject& modelObject,
                        StringGetter get,
                        boost::optional<StringSetter> set,
                        boost::optional<NoFailAction> reset,
@@ -63,7 +63,7 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSLineEdit2::bindOptionalStringReturn(model::ModelObject& modelObject, 
+void OSLineEdit2::bind(model::ModelObject& modelObject,
                        OptionalStringGetterBoolArg get,
                        boost::optional<StringSetterOptionalStringReturn> set,
                        boost::optional<NoFailAction> reset,

@@ -39,7 +39,7 @@ OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   setEnabled(false);
 }
 
-void OSDoubleEdit2::bindRequired(model::ModelObject& modelObject,
+void OSDoubleEdit2::bind(model::ModelObject& modelObject,
                          DoubleGetter get,
                          boost::optional<DoubleSetter> set,
                          boost::optional<NoFailAction> reset,
@@ -85,9 +85,9 @@ void OSDoubleEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSDoubleEdit2::bindRequiredVoidReturn(model::ModelObject& modelObject,
+void OSDoubleEdit2::bind(model::ModelObject& modelObject,
                          DoubleGetter get,
-                         boost::optional<DoubleSetterVoidReturn> set,
+                         DoubleSetterVoidReturn set,
                          boost::optional<NoFailAction> reset,
                          boost::optional<NoFailAction> autosize,
                          boost::optional<NoFailAction> autocalculate,
@@ -108,9 +108,9 @@ void OSDoubleEdit2::bindRequiredVoidReturn(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSDoubleEdit2::bindVoidReturn(model::ModelObject& modelObject,
+void OSDoubleEdit2::bind(model::ModelObject& modelObject,
                          OptionalDoubleGetter get,
-                         boost::optional<DoubleSetterVoidReturn> set,
+                         DoubleSetterVoidReturn set,
                          boost::optional<NoFailAction> reset,
                          boost::optional<NoFailAction> autosize,
                          boost::optional<NoFailAction> autocalculate,
@@ -131,7 +131,7 @@ void OSDoubleEdit2::bindVoidReturn(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSDoubleEdit2::bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
+void OSDoubleEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
                          DoubleGetter get,
                          boost::optional<DoubleSetter> set,
                          boost::optional<NoFailAction> reset,

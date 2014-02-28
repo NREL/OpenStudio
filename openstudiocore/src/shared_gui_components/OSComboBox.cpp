@@ -29,6 +29,146 @@
 
 namespace openstudio {
 
+OSObjectListCBDS::OSObjectListCBDS(const IddObjectType & type, const model::Model & model)
+  :  OSComboBoxDataSource(),
+     m_model(model)
+{
+  m_types.push_back(type);
+
+  initialize();
+}
+
+OSObjectListCBDS::OSObjectListCBDS(const std::vector<IddObjectType> & types, const model::Model & model)
+  : OSComboBoxDataSource(),
+    m_allowEmptySelection(true),
+    m_types(types),
+    m_model(model)
+{
+  initialize();
+}
+
+void OSObjectListCBDS::initialize()
+{
+  std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<model::ModelObject>();
+
+  for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
+       it < modelObjects.end();
+       ++it )
+  {
+    if( std::find(m_types.begin(),m_types.end(),it->iddObjectType()) != m_types.end() )
+    {
+      m_workspaceObjects << *it;
+
+      connect( it->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
+               SIGNAL(onChange()),
+               this,
+               SLOT(onObjectChanged()) );
+    }
+  }
+
+  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+           SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+           this,
+           SLOT(onObjectAdded(const WorkspaceObject&)) );
+
+  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+           SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+           this,
+           SLOT(onObjectWillBeRemoved(const WorkspaceObject&)) );
+}
+
+int OSObjectListCBDS::numberOfItems()
+{
+  if( m_allowEmptySelection )
+  {
+    return m_workspaceObjects.count() + 1;
+  }
+  else
+  {
+    return m_workspaceObjects.count();
+  }
+}
+
+QString OSObjectListCBDS::valueAt(int i)
+{
+  if( m_allowEmptySelection )
+  {
+    if( i > 0 )
+    {
+      return QString::fromStdString(m_workspaceObjects[i - 1].name().get());
+    }
+    else
+    {
+      return QString("");
+    }
+  }
+  else
+  {
+    return QString::fromStdString(m_workspaceObjects[i].name().get());
+  }
+}
+
+void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject)
+{
+  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
+  {
+    m_workspaceObjects << workspaceObject;
+
+    connect( workspaceObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
+             SIGNAL(onChange()),
+             this,
+             SLOT(onObjectChanged()) );
+
+    if( m_allowEmptySelection )
+    {
+      emit itemAdded(m_workspaceObjects.size());
+    }
+    else
+    {
+      emit itemAdded(m_workspaceObjects.size() - 1);
+    }
+  }
+}
+
+void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceObject)
+{
+  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
+  {
+    int i = m_workspaceObjects.indexOf(workspaceObject);
+
+    m_workspaceObjects.removeAt(i);
+
+    if( m_allowEmptySelection )
+    {
+      emit itemRemoved(i + 1);
+    }
+    else
+    {
+      emit itemRemoved(i);
+    }
+  }
+}
+
+void OSObjectListCBDS::onObjectChanged()
+{
+  WorkspaceObject workspaceObject = qobject_cast<detail::WorkspaceObject_Impl *>(sender())->getObject<WorkspaceObject>();
+
+  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
+  {
+
+    int i = m_workspaceObjects.indexOf(workspaceObject);
+
+    if( m_allowEmptySelection )
+    {
+      emit itemChanged(i + 1);
+    }
+    else
+    {
+      emit itemChanged(i);
+    }
+  }
+}
+
 OSComboBox2::OSComboBox2( QWidget * parent )
   : QComboBox(parent)
 {
@@ -48,7 +188,7 @@ bool OSComboBox2::event( QEvent * e )
   }
 }
 
-void OSComboBox2::bindRequired(model::ModelObject& modelObject,
+void OSComboBox2::bind(model::ModelObject& modelObject,
                        ChoicesGetter choices, 
                        StringGetter get,
                        boost::optional<StringSetter> set,
@@ -480,146 +620,6 @@ void OSComboBox::setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSourc
   setCurrentIndex(-1);
 
   setEnabled(true);
-}
-
-OSObjectListCBDS::OSObjectListCBDS(const IddObjectType & type, const model::Model & model)
-  :  OSComboBoxDataSource(),
-     m_model(model)
-{
-  m_types.push_back(type);
-
-  initialize();
-}
-
-OSObjectListCBDS::OSObjectListCBDS(const std::vector<IddObjectType> & types, const model::Model & model)
-  : OSComboBoxDataSource(),
-    m_allowEmptySelection(true),
-    m_types(types),
-    m_model(model)
-{
-  initialize();
-}
-
-void OSObjectListCBDS::initialize()
-{
-  std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<model::ModelObject>();
-
-  for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
-       it < modelObjects.end();
-       ++it )
-  {
-    if( std::find(m_types.begin(),m_types.end(),it->iddObjectType()) != m_types.end() )
-    {
-      m_workspaceObjects << *it;
-
-      connect( it->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
-               SIGNAL(onChange()),
-               this,
-               SLOT(onObjectChanged()) );
-    }
-  }
-
-  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onObjectAdded(const WorkspaceObject&)) );
-
-  connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
-           this,
-           SLOT(onObjectWillBeRemoved(const WorkspaceObject&)) );
-}
-
-int OSObjectListCBDS::numberOfItems()
-{
-  if( m_allowEmptySelection )
-  {
-    return m_workspaceObjects.count() + 1;
-  }
-  else
-  {
-    return m_workspaceObjects.count();
-  }
-}
-
-QString OSObjectListCBDS::valueAt(int i)
-{
-  if( m_allowEmptySelection )
-  {
-    if( i > 0 )
-    {
-      return QString::fromStdString(m_workspaceObjects[i - 1].name().get());
-    }
-    else
-    {
-      return QString("");
-    }
-  }
-  else
-  {
-    return QString::fromStdString(m_workspaceObjects[i].name().get());
-  }
-}
-
-void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject)
-{
-  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
-  {
-    m_workspaceObjects << workspaceObject;
-
-    connect( workspaceObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
-             SIGNAL(onChange()),
-             this,
-             SLOT(onObjectChanged()) );
-
-    if( m_allowEmptySelection )
-    {
-      emit itemAdded(m_workspaceObjects.size());
-    }
-    else
-    {
-      emit itemAdded(m_workspaceObjects.size() - 1);
-    }
-  }
-}
-
-void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceObject)
-{
-  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
-  {
-    int i = m_workspaceObjects.indexOf(workspaceObject);
-
-    m_workspaceObjects.removeAt(i);
-
-    if( m_allowEmptySelection )
-    {
-      emit itemRemoved(i + 1);
-    }
-    else
-    {
-      emit itemRemoved(i);
-    }
-  }
-}
-
-void OSObjectListCBDS::onObjectChanged()
-{
-  WorkspaceObject workspaceObject = qobject_cast<detail::WorkspaceObject_Impl *>(sender())->getObject<WorkspaceObject>();
-
-  if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
-  {
-
-    int i = m_workspaceObjects.indexOf(workspaceObject);
-
-    if( m_allowEmptySelection )
-    {
-      emit itemChanged(i + 1);
-    }
-    else
-    {
-      emit itemChanged(i);
-    }
-  }
 }
 
 } // openstudio

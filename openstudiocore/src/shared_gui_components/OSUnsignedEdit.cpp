@@ -39,7 +39,7 @@ OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   setEnabled(false);
 }
 
-void OSUnsignedEdit2::bindRequired(model::ModelObject& modelObject,
+void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
                           UnsignedGetter get,
                           boost::optional<UnsignedSetter> set,
                           boost::optional<NoFailAction> reset,
@@ -85,15 +85,15 @@ void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
-void OSUnsignedEdit2::bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
-                         UnsignedGetter get,
-                         boost::optional<UnsignedSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<NoFailAction> autosize,
-                         boost::optional<NoFailAction> autocalculate,
-                         boost::optional<BasicQuery> isDefaulted,
-                         boost::optional<BasicQuery> isAutosized,
-                         boost::optional<BasicQuery> isAutocalculated)
+void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+                           UnsignedGetter get,
+                           boost::optional<UnsignedSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
 {
   m_modelExtensibleGroup = modelExtensibleGroup;
   m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
@@ -110,14 +110,14 @@ void OSUnsignedEdit2::bindRequired(model::ModelExtensibleGroup& modelExtensibleG
 }
 
 void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
-                         OptionalUnsignedGetter get,
-                         boost::optional<UnsignedSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<NoFailAction> autosize,
-                         boost::optional<NoFailAction> autocalculate,
-                         boost::optional<BasicQuery> isDefaulted,
-                         boost::optional<BasicQuery> isAutosized,
-                         boost::optional<BasicQuery> isAutocalculated)
+                           OptionalUnsignedGetter get,
+                           boost::optional<UnsignedSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
 {
   m_modelExtensibleGroup = modelExtensibleGroup;
   m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();

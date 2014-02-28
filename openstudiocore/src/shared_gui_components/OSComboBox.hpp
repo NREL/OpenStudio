@@ -103,12 +103,12 @@ class OSComboBox2 : public QComboBox {
   virtual ~OSComboBox2() {}
 
   // Bind for required or defaulted fields.
-  void bindRequired(model::ModelObject& modelObject,
-                    ChoicesGetter choices,
-                    StringGetter get,
-                    boost::optional<StringSetter> set=boost::none,
-                    boost::optional<NoFailAction> reset=boost::none,
-                    boost::optional<BasicQuery> isDefaulted=boost::none);
+  void bind(model::ModelObject& modelObject,
+            ChoicesGetter choices,
+            StringGetter get,
+            boost::optional<StringSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
 
   // Bind for optional fields without defaults.
   void bind(model::ModelObject& modelObject,
@@ -118,8 +118,10 @@ class OSComboBox2 : public QComboBox {
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
 
+  // This should also unbind dataSources.
   void unbind();
 
+  // This should also be "bind".
   void setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource);
 
  protected:
@@ -128,17 +130,17 @@ class OSComboBox2 : public QComboBox {
 
  private slots:
 
-  void onDataSourceChange(int);
-
-  void onDataSourceAdd(int);
-  
-  void onDataSourceRemove(int);
-
   void onModelObjectChanged();
 
   void onModelObjectRemoved(Handle handle);
 
   void onCurrentIndexChanged(const QString & text);
+
+  void onDataSourceChange(int);
+
+  void onDataSourceAdd(int);
+
+  void onDataSourceRemove(int);
 
  private:
 

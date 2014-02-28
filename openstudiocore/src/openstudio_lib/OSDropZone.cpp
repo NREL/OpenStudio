@@ -119,7 +119,7 @@ OSDropZone2::OSDropZone2(OSVectorController* vectorController,
   hideAddButton();
 }
 
-void OSDropZone2::bindRequired(model::ModelObject & modelObject,
+void OSDropZone2::bind(model::ModelObject & modelObject,
                          ModelObjectGetter get,
                          boost::optional<ModelObjectSetter> set,
                          boost::optional<NoFailAction> reset,

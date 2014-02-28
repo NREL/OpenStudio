@@ -771,17 +771,17 @@ void UtilityBillsInspectorView::updateRunPeriodDates()
 
 
 BillingPeriodWidget::BillingPeriodWidget(model::BillingPeriod billingPeriod,
-  FuelType fuelType,
-  BillFormat billFormat,
-  QWidget * parent)
+                                         FuelType fuelType,
+                                         BillFormat billFormat,
+                                         QWidget * parent)
   : QWidget(parent),
-  m_billingPeriod(billingPeriod),
-  m_startDateEdit(0),
-  m_endDateEdit(0),
-  m_billingPeriodIntEdit(0),
-  m_energyUseDoubleEdit(0),
-  m_peakDoubleEdit(0),
-  m_costDoubleEdit(0)
+    m_startDateEdit(0),
+    m_endDateEdit(0),
+    m_billingPeriodIntEdit(0),
+    m_energyUseDoubleEdit(0),
+    m_peakDoubleEdit(0),
+    m_costDoubleEdit(0),
+    m_billingPeriod(billingPeriod)
 {
   OS_ASSERT(m_billingPeriod.is_initialized());
 
@@ -791,7 +791,7 @@ BillingPeriodWidget::BillingPeriodWidget(model::BillingPeriod billingPeriod,
 }
 
 void BillingPeriodWidget::createWidgets(FuelType fuelType,
-  BillFormat billFormat)
+                                        BillFormat billFormat)
 {
   QHBoxLayout * hLayout = 0;
   hLayout = new QHBoxLayout(this);
@@ -955,18 +955,12 @@ void BillingPeriodWidget::modelObjectChanged()
 
 void BillingPeriodWidget::startDateChanged(const QDate & newdate)
 { 
-  int m = newdate.month();
-  int d = newdate.day();
-  int y = newdate.year();
   OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setStartDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 
 void BillingPeriodWidget::endDateChanged(const QDate & newdate)
 {
-  int m = newdate.month();
-  int d = newdate.day();
-  int y = newdate.year();
   OS_ASSERT(newdate.isValid());
   m_billingPeriod.get().setEndDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }

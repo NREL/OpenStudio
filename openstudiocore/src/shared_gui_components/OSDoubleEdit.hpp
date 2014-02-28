@@ -41,7 +41,7 @@ class OSDoubleEdit2: public QLineEdit {
 
   virtual ~OSDoubleEdit2() {}
 
-  void bindRequired(model::ModelObject& modelObject,
+  void bind(model::ModelObject& modelObject,
             DoubleGetter get,
             boost::optional<DoubleSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
@@ -61,9 +61,9 @@ class OSDoubleEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
-  void bindRequiredVoidReturn(model::ModelObject& modelObject,
+  void bind(model::ModelObject& modelObject,
             DoubleGetter get,
-            boost::optional<DoubleSetterVoidReturn> set=boost::none,
+            DoubleSetterVoidReturn set,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<NoFailAction> autosize=boost::none,
             boost::optional<NoFailAction> autocalculate=boost::none,
@@ -71,9 +71,9 @@ class OSDoubleEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
-  void bindVoidReturn(model::ModelObject& modelObject,
+  void bind(model::ModelObject& modelObject,
             OptionalDoubleGetter get,
-            boost::optional<DoubleSetterVoidReturn> set=boost::none,
+            DoubleSetterVoidReturn set,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<NoFailAction> autosize=boost::none,
             boost::optional<NoFailAction> autocalculate=boost::none,
@@ -81,7 +81,7 @@ class OSDoubleEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
-  void bindRequired(model::ModelExtensibleGroup& modelExtensibleGroup,
+  void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
             DoubleGetter get,
             boost::optional<DoubleSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
