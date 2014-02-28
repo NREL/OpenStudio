@@ -409,6 +409,8 @@ void RefrigerationController::refreshNow()
         m_detailView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
       }
 
+      // insert secondary systems
+
       // insert compressors
 
       std::vector<model::RefrigerationCompressor> compressors = m_currentSystem->compressors();

@@ -665,7 +665,7 @@ class RefrigerationSHXView : public RefrigerationSystemDropZoneView
   QPixmap m_pixmap;
 };
 
-class RefrigerationSecondaryView : public QGraphicsObject
+class SecondaryDropZoneView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 
@@ -677,7 +677,58 @@ class RefrigerationSecondaryView : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+};
+
+class SecondaryDetailView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  SecondaryDetailView();
+
+  virtual ~SecondaryDetailView() {}
+
+  QRectF boundingRect() const;
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+};
+
+class RefrigerationSecondaryView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSecondaryView();
+
+  virtual ~RefrigerationSecondaryView() {}
+
+  QRectF boundingRect() const;
+
+  SecondaryDropZoneView * secondaryDropZoneView;
+
+  void insertSecondaryDetailView(int index, QGraphicsObject * object);
+
+  void removeAllSecondaryDetailViews();
+
+  void adjustLayout();
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  private:
+
+  std::vector<QGraphicsObject *> m_secondaryDetailViews;
+  int m_height;
 };
 
 } // openstudio
