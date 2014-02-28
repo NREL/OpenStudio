@@ -26,6 +26,10 @@
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -63,20 +67,32 @@ InspectorController::InspectorController()
   connect( m_inspectorView,SIGNAL(addZoneClicked(model::ThermalZone &)),
            this,SLOT(addBranchForZone(model::ThermalZone &)));
 
-  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+  bool bingo = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorView, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
+  OS_ASSERT(bingo);
 
-  connect( m_inspectorView,SIGNAL(removeZoneClicked(model::ThermalZone &)),
-           this,SLOT(removeBranchForZone(model::ThermalZone &)));
+  bingo = connect( m_inspectorView,SIGNAL(removeZoneClicked(model::ThermalZone &)),
+                   this,SLOT(removeBranchForZone(model::ThermalZone &)));
+  OS_ASSERT(bingo);
 
-  connect( m_inspectorView,SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
+  bingo = connect( m_inspectorView,SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
            this,SLOT(addToLoop(model::Loop &, boost::optional<model::HVACComponent> &)));
+  OS_ASSERT(bingo);
 
-  connect( m_inspectorView,SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
+  bingo = connect( m_inspectorView,SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
            this,SLOT(removeFromLoop(model::Loop &, boost::optional<model::HVACComponent> &)));
+  OS_ASSERT(bingo);
 
-  connect(m_inspectorView,SIGNAL(destroyed(QObject *)),this,SLOT(onViewDestroyed(QObject *)));
+  bingo = connect(m_inspectorView,SIGNAL(destroyed(QObject *)),this,SLOT(onViewDestroyed(QObject *)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_inspectorView,SIGNAL(moveBranchForZoneSupplySelected(model::ThermalZone &, const Handle &)),
+                  this,SLOT(moveBranchForZoneSupply(model::ThermalZone &, const Handle &)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_inspectorView,SIGNAL(moveBranchForZoneReturnSelected(model::ThermalZone &, const Handle &)),
+                  this,SLOT(moveBranchForZoneReturn(model::ThermalZone &, const Handle &)));
+  OS_ASSERT(bingo);
 }
 
 InspectorController::~InspectorController()
@@ -130,6 +146,60 @@ void InspectorController::removeBranchForZone(model::ThermalZone & zone)
   {
     airLoop->removeBranchForZone(zone);
   }
+}
+
+void InspectorController::moveBranchForZoneSupply(model::ThermalZone & zone, const Handle & newPlenumHandle)
+{
+  model::Model model = zone.model();
+
+  if(boost::optional<model::AirLoopHVACSupplyPlenum> supplyPlenum = model.getModelObject<model::AirLoopHVACSupplyPlenum>(newPlenumHandle))
+  {
+    if( boost::optional<model::ThermalZone> plenumZone = supplyPlenum->thermalZone() )
+    {
+      zone.setSupplyPlenum(plenumZone.get());
+    }
+  }
+  else if(boost::optional<model::ThermalZone> plenumZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
+  {
+    zone.setSupplyPlenum(plenumZone.get());
+  }
+  else
+  {
+    zone.removeSupplyPlenum();
+  }
+
+  // This updates the plenum chooser combo box
+  // Need to process events first because HVAC scene needs to redraw to supply colors to combo box
+  QApplication::instance()->processEvents();
+  OS_ASSERT(m_inspectorView);
+  m_inspectorView->update();
+}
+
+void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, const Handle & newPlenumHandle)
+{
+  model::Model model = zone.model();
+
+  if(boost::optional<model::AirLoopHVACReturnPlenum> returnPlenum = model.getModelObject<model::AirLoopHVACReturnPlenum>(newPlenumHandle))
+  {
+    if( boost::optional<model::ThermalZone> plenumZone = returnPlenum->thermalZone() )
+    {
+      zone.setReturnPlenum(plenumZone.get());
+    }
+  }
+  else if(boost::optional<model::ThermalZone> plenumZone = model.getModelObject<model::ThermalZone>(newPlenumHandle))
+  {
+    zone.setReturnPlenum(plenumZone.get());
+  }
+  else
+  {
+    zone.removeReturnPlenum();
+  }
+
+  // This updates the plenum chooser combo box
+  // Need to process events first because HVAC scene needs to redraw to supply colors to combo box
+  QApplication::instance()->processEvents();
+  OS_ASSERT(m_inspectorView);
+  m_inspectorView->update();
 }
 
 void InspectorController::onViewDestroyed(QObject * object)

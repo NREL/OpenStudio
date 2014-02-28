@@ -55,6 +55,12 @@ class MODEL_API PortList : public ModelObject {
    *  indexed starting from 0. 
    */
   unsigned port(unsigned portIndex);
+
+  /** Given a port, return the port index.
+   *  Consider that a "port" is simply an unsigned, so 
+   *  port and port index share the same type, but they do not share the same value.
+   */
+  unsigned portIndex(unsigned port);
   
   /** Returns the next available port.  This will be the first port 
    *  with no connected objects */
@@ -75,22 +81,13 @@ class MODEL_API PortList : public ModelObject {
    *  If no objects are connected to the PortList then an empty vector will be returned.
    */
   std::vector<ModelObject> modelObjects();
-
-  /** Returns a new port after the portIndex */
-  unsigned newPortAfterIndex(unsigned portIndex);
   
   /** Returns the port index for the ModelObject specified by modelObject.
    */
-  unsigned portIndexForModelObject( ModelObject modelObject );
+  unsigned portIndexForModelObject( ModelObject & modelObject );
 
   /** Returns the index of the next available port */
   unsigned nextPortIndex();
-
-  /** Disconnects anything connected to the  port
-   *  at the specified index.  All ports after the specified 
-   *  index are shifted to the next lower index.
-   */
-  void removePortForIndex(unsigned portIndex);
 
   ThermalZone thermalZone() const;
 

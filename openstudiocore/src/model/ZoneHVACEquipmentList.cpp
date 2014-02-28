@@ -167,7 +167,7 @@ WorkspaceExtensibleGroup ZoneHVACEquipmentList_Impl::getGroupForModelObject(cons
   return result.get();
 }
 
-std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipment()
+std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipment() const
 {
   std::vector<ModelObject> result;
 
@@ -400,7 +400,7 @@ void ZoneHVACEquipmentList::setHeatingPriority(const ModelObject & equipment, un
   getImpl<detail::ZoneHVACEquipmentList_Impl>()->setHeatingPriority(equipment,priority);
 }
 
-std::vector<ModelObject> ZoneHVACEquipmentList::equipment()
+std::vector<ModelObject> ZoneHVACEquipmentList::equipment() const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->equipment();
 }

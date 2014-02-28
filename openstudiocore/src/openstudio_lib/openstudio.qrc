@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
+    <file>images/add.png</file>
     <file>images/add-small.png</file>
     <file>images/add_disabled.png</file>
     <file>images/add_off.png</file>
@@ -131,6 +132,8 @@
     <file>images/parallel_fan_terminal.png</file>
     <file>images/pipe.png</file>
     <file>images/plant_loop_icon.png</file>
+    <file>images/plenum_on.png</file>
+    <file>images/plenum_off.png</file>
     <file>images/properties_icon_off.png</file>
     <file>images/properties_icon_on.png</file>
     <file>images/pump_constant.png</file>

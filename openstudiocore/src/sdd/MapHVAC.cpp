@@ -1802,17 +1802,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
         fan.setName(nameElement.text().toStdString());
 
         // OverallEff
+        boost::optional<double> overallEff;
         value = overallEffElement.text().toDouble(&ok);
         if( ok )
         {
-          fan.setFanEfficiency(value);
+          overallEff = value;
         }
 
         // MtrEff
+        boost::optional<double> mtrEff;
         value = mtrEffElement.text().toDouble(&ok);
         if( ok )
         {
-          fan.setMotorEfficiency(value);
+          mtrEff = value;
+        }
+
+        if( overallEff && mtrEff )
+        {
+          fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+          fan.setMotorEfficiency(mtrEff.get());
         }
 
         // FlowCap
@@ -1864,17 +1872,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
       fan.setName(nameElement.text().toStdString());
 
       // OverallEff
+      boost::optional<double> overallEff;
       value = overallEffElement.text().toDouble(&ok);
       if( ok )
       {
-        fan.setFanEfficiency(value);
+        overallEff = value;
       }
 
       // MtrEff
+      boost::optional<double> mtrEff;
       value = mtrEffElement.text().toDouble(&ok);
       if( ok )
       {
-        fan.setMotorEfficiency(value);
+        mtrEff = value;
+      }
+
+      if( overallEff && mtrEff )
+      {
+        fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+        fan.setMotorEfficiency(mtrEff.get());
       }
 
       // FlowCap
@@ -1913,16 +1929,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
     fan.setName(nameElement.text().toStdString());
 
+    // OverallEff
+    boost::optional<double> overallEff;
     value = overallEffElement.text().toDouble(&ok);
     if( ok )
     {
-      fan.setFanEfficiency(value);
+      overallEff = value;
     }
 
+    // MtrEff
+    boost::optional<double> mtrEff;
     value = mtrEffElement.text().toDouble(&ok);
     if( ok )
     {
-      fan.setMotorEfficiency(value);
+      mtrEff = value;
+    }
+
+    if( overallEff && mtrEff )
+    {
+      fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+      fan.setMotorEfficiency(mtrEff.get());
     }
 
     // FlowCap
@@ -5008,6 +5034,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
   waterHeaterMixed.setSetpointTemperatureSchedule(setpointTempSchedule);
 
+  // HIR_fPLRCrvRef
+
+  QDomElement hirfPLRCrvRefElement = element.firstChildElement("HIR_fPLRCrvRef");
+  boost::optional<model::CurveCubic> hirfPLRCrv = model.getModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().toStdString());
+  if( hirfPLRCrv )
+  {
+    waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
+  }
+
   return waterHeaterMixed;
 }
 
@@ -5712,6 +5747,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvD
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing Y Maximum Limit");
   }
 
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
+  }
+
   return curve;
 }
 
@@ -5790,6 +5841,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvC
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
   }
 
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
+  }
+
   return curve;
 }
 
@@ -5860,6 +5927,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
     curve.setMaximumValueofx(100.0);
 
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
+
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
   }
 
   return curve;

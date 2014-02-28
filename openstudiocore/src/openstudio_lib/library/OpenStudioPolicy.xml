@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <!-- edited with XMLSpy v2008 (http://www.altova.com) by Daniel Macumber (NREL) -->
 <ROOT>
+  <POLICY IddObjectType="OS_AirLoopHVAC_SupplyPlenum">
+    <rule IddField="Thermal Zone" Access="LOCKED"/>
+    <rule IddField="Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Outlet Node" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirLoopHVAC_ReturnPlenum">
+    <rule IddField="ThermalZone" Access="LOCKED"/>
+    <rule IddField="Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_FollowOutdoorAirTemperature">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
@@ -108,8 +119,8 @@
     <rule IddField="Ceiling Height" Access="HIDDEN"/>
     <rule IddField="Volume" Access="HIDDEN"/>
     <rule IddField="Zone Conditioning Equipment List Name" Access="HIDDEN"/>
-    <rule IddField="Zone Air Inlet Node or NodeList Name" Access="HIDDEN"/>
-    <rule IddField="Zone Air Exhaust Node or NodeList Name" Access="HIDDEN"/>
+    <rule IddField="Zone Air Inlet Port List" Access="HIDDEN"/>
+    <rule IddField="Zone Air Exhaust Port List" Access="HIDDEN"/>
     <rule IddField="Zone Air Node Name" Access="HIDDEN"/>
     <rule IddField="Zone Return Air Node Name" Access="HIDDEN"/>
     <rule IddField="Primary Daylighting Control Name" Access="HIDDEN"/>
@@ -491,6 +502,9 @@
   </POLICY>  
   <POLICY IddObjectType="OS_Sizing_Plant">
     <rule IddField="Plant or Condenser Loop Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_Sizing_Zone">
+    <rule IddField="Zone or ZoneList Name" Access="HIDDEN"/>
   </POLICY>  
   <POLICY IddObjectType="OS_ZoneHVAC_UnitHeater">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
