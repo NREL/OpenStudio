@@ -2591,6 +2591,17 @@ OS:Refrigeration:Condenser:AirCooled,
   ,                                       !- Condensate Receiver Refrigerant Inventory {kg}
   ;                                       !- Condensate Piping Refrigerant Inventory {kg}
 
+OS:Refrigeration:Condenser:Cascade,
+  {e739be92-9f20-4e31-a98c-49e9727dd37b}, !- Handle
+  Cascading Condenser,      !- Name
+  -4,                                     !- Rated Condensing Temperature {C}
+  3,                                      !- Rated Approach Temperature Difference {deltaC}
+  20000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  Fixed,                                  !- Condensing Temperature Control Type
+  ,
+  ,
+  ;
+
 OS:Curve:Linear,
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Handle
   Refrigeration Condenser Air Cooled HR Curve, !- Name

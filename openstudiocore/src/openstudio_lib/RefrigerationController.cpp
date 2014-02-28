@@ -29,6 +29,8 @@
 #include "../model/RefrigerationSystem_Impl.hpp"
 #include "../model/RefrigerationCondenserAirCooled.hpp"
 #include "../model/RefrigerationCondenserAirCooled_Impl.hpp"
+#include "../model/RefrigerationCondenserCascade.hpp"
+#include "../model/RefrigerationCondenserCascade_Impl.hpp"
 #include "../model/RefrigerationCompressor.hpp"
 #include "../model/RefrigerationCompressor_Impl.hpp"
 #include "../model/RefrigerationCase.hpp"
@@ -197,6 +199,21 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
 
       model::RefrigerationCondenserAirCooled condenserClone = 
         condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserAirCooled>();
+
+      m_currentSystem->setRefrigerationCondenser(condenserClone);
+
+      refresh();
+    }
+    else if( boost::optional<model::RefrigerationCondenserCascade> condenser 
+          = mo->optionalCast<model::RefrigerationCondenserCascade>() )
+    {
+      if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
+      {
+        currentCondenser->remove();
+      }
+
+      model::RefrigerationCondenserCascade condenserClone = 
+        condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserCascade>();
 
       m_currentSystem->setRefrigerationCondenser(condenserClone);
 
