@@ -1204,26 +1204,28 @@ void DataPointJobItemView::update()
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
 
     bool nameSet = false;
-    if (m_workflowStepJob.step.workItemType() == runmanager::JobType::UserScript) {
+    if (m_workflowStepJob.step.workItemType() == runmanager::JobType::UserScript)
+    {
       openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
-      
+      runmanager::RubyJobBuilder rjb(wi);
+      if (OptionalUUID measureUUID = rjb.bclMeasureUUID()) {
+        boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+        OS_ASSERT(project);
+        if (OptionalBCLMeasure measure = project->getMeasureByUUID(*measureUUID)) {
+          dataPointJobHeaderView->setName(measure->name());
+          nameSet = true;
+        }
+      }  
+    } else if (m_workflowStepJob.step.workItemType() == runmanager::JobType::Ruby) {
+      openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
+
       if (wi.jobkeyname == "pat-radiance-job"){
         // give it a special name instead of just "Ruby" when we find the radiance job
         dataPointJobHeaderView->setName("Radiance Daylighting");
         nameSet = true;
-      }else{
-        runmanager::RubyJobBuilder rjb(wi);
-        if (OptionalUUID measureUUID = rjb.bclMeasureUUID()) {
-          boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-          OS_ASSERT(project);
-          if (OptionalBCLMeasure measure = project->getMeasureByUUID(*measureUUID)) {
-            dataPointJobHeaderView->setName(measure->name());
-            nameSet = true;
-          }
-        }
-      }
+      }    
     }
-    
+
     if (!nameSet) {
       dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
     }
