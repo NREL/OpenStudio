@@ -84,6 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   }
   DateTime firstReportDateTime = timeseries.firstReportDateTime();
   Vector daysFromFirst = timeseries.daysFromFirstReport();
+  std::vector<long> secondsFromFirst = timeseries.secondsFromFirstReport();
   Vector values = timeseries.values();
 
   // We aren't using this - should we?
@@ -103,20 +104,19 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
   Date lastDate = firstReportDateTime.date();
   Time dayDelta = Time(1.0);
   // The day number of the date that data was last written relative to the first date
-  double lastDay = 0.0; 
+  //double lastDay = 0.0; 
+  int lastDay = 0;
   // Adjust the floating point day delta to be relative to the beginning of the first day and
   // shift the start of the loop if needed
   double timeShift = firstReportDateTime.time().totalDays();
+  int secondShift = firstReportDateTime.time().totalSeconds();
   unsigned int start = 0;
-  if(timeShift == 0.0)
-  {
+  if(secondShift == 0.0) {
     start = 1;
-  }
-  else
-  {
-    for(unsigned int i=0;i<daysFromFirst.size();i++)
-    {
+  } else {
+    for(unsigned int i=0;i<daysFromFirst.size();i++) {
       daysFromFirst[i] += timeShift;
+      secondsFromFirst[i] += secondShift;
     }
   }
 
@@ -133,37 +133,30 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     // problem unless the API has enforced that the times in the 
     // time series are all distinct when rounded to the minute. Is that
     // happening?
-    double today = floor(daysFromFirst[i]);
-    double hms = daysFromFirst[i]-today;
-    // Here, we need to make sure that we aren't nearly the end of a day
-    if(fabs(1.0-hms) < eps)
-    {
-      today += 1;
-      hms = 0.0;
-    }
-    if(hms < eps)
-    {
+    //double today = floor(daysFromFirst[i]);
+    //double hms = daysFromFirst[i]-today;
+    int secondsFromStartOfDay = secondsFromFirst[i] % 86400;
+    int today = (secondsFromFirst[i]-secondsFromStartOfDay)/86400;
+    // Check to see if we are at the end of a day.
+    if(secondsFromStartOfDay) {
       // This value is an end of day value, so end the day and set up the next
       fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
       lastDate += dayDelta;
       fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
-    }
-    else
-    {
-      if(today != lastDay)
-      {
+    } else {
+      // This still could be on a different day
+      if(today != lastDay) {
         // We're on a new day, need a 24:00:00 value and set up the next day
         fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
         lastDate += dayDelta;
         fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
       }
-      if(values[i] == values[i+1])
-      {
+      if(values[i] == values[i+1]){
         // Bail on values that match the next value
         continue;
       }
       // Write out the current entry
-      Time time(hms);
+      Time time(0,0,0,secondsFromStartOfDay);
       int hours = time.hours();
       int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
       // This is a little dangerous, but all of the problematic 24:00 
@@ -177,6 +170,53 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     }
     lastDay = today;
   }
+
+
+
+
+
+    // Here, we need to make sure that we aren't nearly the end of a day
+    //if(fabs(1.0-hms) < eps)
+    //{
+    //  today += 1;
+    //  hms = 0.0;
+   // }
+    //if(hms < eps)
+    //{
+      // This value is an end of day value, so end the day and set up the next
+    //  fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
+    //  lastDate += dayDelta;
+    //  fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
+   // }
+    //else
+    //{
+    //  if(today != lastDay)
+    //  {
+        // We're on a new day, need a 24:00:00 value and set up the next day
+    //    fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
+    //    lastDate += dayDelta;
+    //    fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
+    //  }
+    //  if(values[i] == values[i+1])
+    //  {
+        // Bail on values that match the next value
+    //    continue;
+    //  }
+      // Write out the current entry
+    //  Time time(hms);
+    //  int hours = time.hours();
+    //  int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
+      // This is a little dangerous, but all of the problematic 24:00 
+      // times that might need to cause a day++ should be caught above.
+    //  if(minutes==60)
+    //  {
+    //    hours += 1;
+   //     minutes = 0;
+   //   }
+   //   fieldIndex = addUntil(idfObject,fieldIndex,hours,minutes,values[i]);
+   // }
+    //lastDay = today;
+  //}
   // Handle the last point a little differently to make sure that the schedule ends exactly on the end of a day
   unsigned int i = values.size()-1;
   // We'll skip a sanity check here, but it might be a good idea to add one at some point
