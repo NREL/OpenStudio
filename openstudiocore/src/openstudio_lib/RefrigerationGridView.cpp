@@ -42,6 +42,7 @@
 #include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
 
 #include <QBoxLayout>
+#include <QCheckBox>
 #include <QLabel>
 #include <QScrollArea>
 #include <QSettings>
@@ -148,7 +149,8 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
   caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
 
-  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
+  std::vector<model::RefrigerationCase> refrigerationCases = model.getModelObjects<model::RefrigerationCase>();
+  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
@@ -157,7 +159,8 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
   walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
 
-  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
+  std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
+  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
   scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
 
@@ -179,10 +182,9 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
 RefrigerationCaseGridController::RefrigerationCaseGridController(bool isIP,
   const QString & headerText,
-  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
+  OSGridController(isIP, headerText, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -286,8 +288,11 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
   }
 
 }
-void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fields)
+void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
 {
+  // always show name column
+  fields.insert(fields.begin(), NAME);
+
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
@@ -478,6 +483,20 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
 //      OS_ASSERT(false); TODO add this back at a later time
     }
   }
+
+}
+
+void RefrigerationCaseGridController::checkSelectedFields()
+{
+  if(!this->m_hasHorizontalHeader) return;
+
+  // Don't show the name column check box
+  // From above in addColumns, we know that NAME is the first entry
+  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
+  OS_ASSERT(horizontalHeaderWidget);
+  horizontalHeaderWidget->m_checkBox->hide();
+
+  OSGridController::checkSelectedFields();
 }
 
 void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
@@ -492,10 +511,9 @@ void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
 
 RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
   const QString & headerText,
-  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
+  OSGridController(isIP, headerText, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -611,8 +629,11 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
 }
 
-void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & fields)
+void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields)
 {
+  // always show name column
+  fields.insert(fields.begin(), NAME);
+
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
@@ -742,6 +763,21 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
 //      OS_ASSERT(false); TODO add this back at a later time
     }
   }
+
+
+}
+
+void RefrigerationWalkInGridController::checkSelectedFields()
+{
+  if(!this->m_hasHorizontalHeader) return;
+
+  // Don't show the name column check box
+  // From above in addColumns, we know that NAME is the first entry
+  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
+  OS_ASSERT(horizontalHeaderWidget);
+  horizontalHeaderWidget->m_checkBox->hide();
+
+  OSGridController::checkSelectedFields();
 }
 
 void RefrigerationWalkInGridController::onItemDropped(const OSItemId& itemId)

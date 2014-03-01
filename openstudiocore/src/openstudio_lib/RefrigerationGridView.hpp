@@ -58,7 +58,6 @@ public:
 
   RefrigerationCaseGridController(bool isIP,
     const QString & headerText,
-    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -68,8 +67,9 @@ protected:
 
   virtual void setCategoriesAndFields();
 
-  virtual void addColumns(const std::vector<QString> & fields);
+  virtual void addColumns(std::vector<QString> & fields);
 
+  virtual void checkSelectedFields();
 
 public slots:
 
@@ -86,7 +86,6 @@ public:
 
   RefrigerationWalkInGridController(bool isIP,
     const QString & headerText,
-    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -96,7 +95,9 @@ protected:
 
   virtual void setCategoriesAndFields();
 
-  virtual void addColumns(const std::vector<QString> & fields);
+  virtual void addColumns(std::vector<QString> & fields);
+
+  virtual void checkSelectedFields();
 
 public slots:
 

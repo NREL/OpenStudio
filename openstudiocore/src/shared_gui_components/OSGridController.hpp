@@ -57,7 +57,6 @@ public:
   // in the model that is iddObjectType
   OSGridController(bool isIP,
     const QString & headerText,
-    IddObjectType iddObjectType,
     model::Model model,
     std::vector<model::ModelObject> modelObjects);
 
@@ -195,8 +194,6 @@ protected:
   virtual void setCategoriesAndFields() = 0; 
   
   virtual void setHorizontalHeader();
-
-  virtual void setVerticalHeader();
   
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
@@ -204,12 +201,12 @@ protected:
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal
-  virtual void addColumns(const std::vector<QString> & fields) = 0;
+  virtual void addColumns(std::vector<QString> & fields) = 0;
 
   // Call this function after the table is constructed
   // to appropriately check user-selected category fields
   // from QSettings and load them into a "Custom" button
-  void checkSelectedFields();
+  virtual void checkSelectedFields();
 
   void checkSelectedFields(int category);
 
@@ -220,8 +217,6 @@ protected:
   std::vector<QWidget *> m_horizontalHeader;
 
   bool m_hasHorizontalHeader;
-
-  bool m_hasVerticalHeader;
 
   QString m_currentCategory;
 
@@ -245,11 +240,7 @@ private:
 
   std::vector<model::ModelObject> m_modelObjects;
 
-  IddObjectType m_iddObjectType; // TODO this is not currently needed
-
   QButtonGroup * m_horizontalHeaderBtnGrp;
-
-  QButtonGroup * m_verticalHeaderBtnGrp;
 
   static const std::vector<QColor> m_colors;
 
@@ -281,8 +272,6 @@ public slots:
 private slots:
 
   void horizontalHeaderChecked(int index);
-
-  void verticalHeaderChecked(int index);
 
 };
 

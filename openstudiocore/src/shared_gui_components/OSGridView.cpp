@@ -215,15 +215,6 @@ void OSGridView::addWidget(int row, int column)
   m_gridLayout->addWidget(widget,row,column);
 }
 
-void OSGridView::setVerticalHeader(bool visible, QString title)
-{
-  OS_ASSERT(m_gridLayout);
-
-  QLabel * label = new QLabel(title);
-  label->setVisible(visible);
-  m_gridLayout->addWidget(label,0,0);
-}
-
 void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
 {
   OS_ASSERT(m_gridLayout);

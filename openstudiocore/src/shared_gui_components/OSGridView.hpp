@@ -64,8 +64,6 @@ private slots:
   void addWidget(int row, int column);
 
   void removeWidget(int row, int column);
-    
-  void setVerticalHeader(bool visible, QString title);
 
   void setHorizontalHeader(std::vector<QWidget *> widgets);
 

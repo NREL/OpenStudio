@@ -54,7 +54,6 @@ OSGridController::OSGridController()
 
 OSGridController::OSGridController(bool isIP,
                                    const QString & headerText,
-                                   IddObjectType iddObjectType,
                                    model::Model model,
                                    std::vector<model::ModelObject> modelObjects)
   : QObject(),
@@ -62,7 +61,6 @@ OSGridController::OSGridController(bool isIP,
     m_baseConcepts(std::vector<QSharedPointer<BaseConcept> >()),
     m_horizontalHeader(std::vector<QWidget *>()),
     m_hasHorizontalHeader(true),
-    m_hasVerticalHeader(true),
     m_currentCategory(QString()),
     m_currentCategoryIndex(0),
     m_currentFields(std::vector<QString> ()),
@@ -70,14 +68,9 @@ OSGridController::OSGridController(bool isIP,
     m_isIP(isIP),
     m_model(model),
     m_modelObjects(modelObjects),
-    m_iddObjectType(iddObjectType),
     m_horizontalHeaderBtnGrp(0),
-    m_verticalHeaderBtnGrp(0),
     m_headerText(headerText)
 {
-  m_verticalHeaderBtnGrp = new QButtonGroup();
-  m_verticalHeaderBtnGrp->setExclusive(false);
-
   loadQSettings();
 }
 
@@ -127,10 +120,6 @@ void OSGridController::categorySelected(int index)
   m_currentCategory = m_categoriesAndFields.at(index).first;
 
   m_currentFields = m_categoriesAndFields.at(index).second;
-
-  // always show name column TODO
-
-  m_currentFields.insert(m_currentFields.begin(),"Name");
  
   addColumns(m_currentFields);
 
@@ -171,11 +160,6 @@ void OSGridController::setHorizontalHeader()
   checkSelectedFields();
 }
 
-void OSGridController::setVerticalHeader()
-{
-
-}
-
 QWidget * OSGridController::widgetAt(int row, int column)
 {
   OS_ASSERT(row >= 0);
@@ -188,13 +172,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   bool isConnected = false;
 
-  // Note: If there is a vertical header row,  m_baseConcepts[0] starts on gridLayout[1]
-  //int baseConceptColumn = m_hasVerticalHeader ? column - 1 : column; TODO
-
-  if(m_hasHorizontalHeader && row == 0){
-  }
-
-  // Note: If there is a horizpntal header row,  m_modelObjects[0] starts on gridLayout[1]
+  // Note: If there is a horizontal header row,  m_modelObjects[0] starts on gridLayout[1]
   int modelObjectRow = m_hasHorizontalHeader ? row - 1 : row;
 
   if(m_hasHorizontalHeader && row == 0){
@@ -503,10 +481,6 @@ void OSGridController::horizontalHeaderChecked(int index)
     }
   }
   setCustomCategoryAndFields();
-}
-
-void OSGridController::verticalHeaderChecked(int index)
-{
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
