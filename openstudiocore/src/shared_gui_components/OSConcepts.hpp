@@ -102,34 +102,40 @@ class CheckBoxConceptImpl : public CheckBoxConcept
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-
+template<typename ChoiceType>
 class ComboBoxConcept : public BaseConcept
 {
   public:
 
-   ComboBoxConcept(QString t_headingLabel)
+  typedef ChoiceType choice_type;
+
+  ComboBoxConcept(QString t_headingLabel)
     : BaseConcept(t_headingLabel)
   {
   }
 
-   virtual ~ComboBoxConcept() {}
+  virtual ~ComboBoxConcept() {}
 
 
-  virtual std::vector<std::string> choices() = 0;
-  virtual std::string get(const model::ModelObject & obj) = 0;
-  virtual bool set(const model::ModelObject & obj, std::string) = 0;
+  virtual std::string toString(ChoiceType) = 0;
+  virtual std::vector<ChoiceType> choices() = 0;
+  virtual ChoiceType get(const model::ModelObject & obj) = 0;
+  virtual bool set(const model::ModelObject & obj, ChoiceType) = 0;
 }; 
 
-template<typename DataSourceType>
-class ComboBoxConceptImpl : public ComboBoxConcept
+template<typename ChoiceType,typename DataSourceType>
+class ComboBoxConceptImpl : public ComboBoxConcept<ChoiceType>
 {
   public:
 
-  ComboBoxConceptImpl(QString t_headingLabel, 
-    boost::function<std::vector<std::string> (void)> t_choices, 
+  ComboBoxConceptImpl(
+    QString t_headingLabel,
+    boost::function<std::string (ChoiceType)> t_toString,
+    boost::function<std::vector<ChoiceType> (void)> t_choices,
     boost::function<std::string (DataSourceType *)>  t_getter, 
-    boost::function<bool (DataSourceType *, std::string)> t_setter)
-    : ComboBoxConcept(t_headingLabel),
+    boost::function<bool (DataSourceType *, ChoiceType)> t_setter)
+    : ComboBoxConcept<ChoiceType>(t_headingLabel),
+      m_toString(t_toString),
       m_choices(t_choices),
       m_getter(t_getter),
       m_setter(t_setter)
@@ -138,18 +144,18 @@ class ComboBoxConceptImpl : public ComboBoxConcept
 
   virtual ~ComboBoxConceptImpl() {}
 
-  virtual std::vector<std::string> choices()
+  virtual std::vector<ChoiceType> choices()
   {
     return m_choices();
   }
 
-  virtual std::string get(const model::ModelObject & t_obj)
+  virtual ChoiceType get(const model::ModelObject & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual bool set(const model::ModelObject & t_obj, std::string value)
+  virtual bool set(const model::ModelObject & t_obj, ChoiceType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -157,9 +163,10 @@ class ComboBoxConceptImpl : public ComboBoxConcept
 
   private:
 
-  boost::function<std::vector<std::string> (void)> m_choices;
+  boost::function<std::string (ChoiceType)> m_toString;
+  boost::function<std::vector<ChoiceType> (void)> m_choices;
   boost::function<std::string (DataSourceType *)>  m_getter;
-  boost::function<bool (DataSourceType *, std::string)> m_setter;
+  boost::function<bool (DataSourceType *, ChoiceType)> m_setter;
 };
 
 

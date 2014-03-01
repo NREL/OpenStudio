@@ -46,8 +46,6 @@ typedef boost::function<boost::optional<std::string> (bool)> OptionalStringGette
 typedef boost::function<boost::optional<unsigned> ()> OptionalUnsignedGetter;
 typedef boost::function<boost::optional<model::ModelObject> ()> OptionalModelObjectGetter;
 
-typedef boost::function<std::vector<std::string> ()> ChoicesGetter;
-
 typedef boost::function<void (bool)> BoolSetter;
 typedef boost::function<bool (double)> DoubleSetter;
 typedef boost::function<void (double)> DoubleSetterVoidReturn;

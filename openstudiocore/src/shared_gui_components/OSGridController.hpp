@@ -71,13 +71,14 @@ public:
     m_baseConcepts.push_back(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
+  template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel, 
-                         std::vector<std::string> (* choices)(void), 
-                         std::string (DataSourceType::* getter)(void) const, 
-                         bool (DataSourceType::* setter)(std::string))
+                         std::string (* toString)(ChoiceType),
+                         std::vector<ChoiceType> (* choices)(void),
+                         ChoiceType (DataSourceType::* getter)(void) const,
+                         bool (DataSourceType::* setter)(ChoiceType))
   {
-    m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept <ChoiceType> >(new ComboBoxConceptImpl<ChoiceType,DataSourceType>(headingLabel,toString,choices,getter,setter)));
   }
 
   template<typename ValueType, typename DataSourceType>

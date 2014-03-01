@@ -94,6 +94,172 @@ class OSObjectListCBDS : public OSComboBoxDataSource
   QList<WorkspaceObject> m_workspaceObjects;
 };
 
+class ChoiceConcept {
+ public:
+  virtual ~ChoiceConcept() {}
+
+  virtual std::vector<std::string> choices() = 0;
+  virtual std::string get() = 0;
+  virtual bool set(std::string value) = 0;
+  virtual void clear() {}
+  virtual bool isDefaulted() { return false; }
+};
+
+// ValueType get()
+// bool set(ValueType)
+// void clear()
+// bool isDefaulted()
+
+// ValueType get()
+// bool set(ValueType)
+
+template<typename ChoiceType>
+class RequiredChoiceConceptImpl : public ChoiceConcept {
+ public:
+  RequiredChoiceConceptImpl(
+      boost::function<std::string (ChoiceType)> toString,
+      boost::function<std::vector<ChoiceType> ()> choices,
+      boost::function<ChoiceType ()> getter,
+      boost::function<bool (ChoiceType)> setter,
+      boost::optional<NoFailAction> reset=boost::none,
+      boost::optional<BasicQuery> isDefaulted=boost::none)
+    : m_toString(toString),
+      m_choices(choices),
+      m_getter(getter),
+      m_setter(setter),
+      m_reset(reset),
+      m_isDefaulted(isDefaulted)
+  {}
+
+  virtual ~RequiredChoiceConceptImpl() {}
+
+  virtual std::vector<std::string> choices() {
+    m_choicesMap.clear();
+    std::vector<std::string> result;
+    std::vector<ChoiceType> typedChoices = m_choices();
+    for (typename std::vector<ChoiceType>::const_iterator typedChoice = typedChoices.begin();
+         typedChoice != typedChoices.end(); ++typedChoice)
+    {
+      std::string choice = m_toString(*typedChoice);
+      result.push_back(choice);
+      m_choicesMap.insert(typename std::map<std::string,ChoiceType>::value_type(choice,*typedChoice));
+    }
+    return result;
+  }
+
+  virtual std::string get() {
+    ChoiceType typedValue = m_getter();
+    std::string result = m_toString(typedValue);
+    OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+    return result;
+  }
+
+  virtual bool set(std::string value) {
+    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(value);
+    OS_ASSERT(valuePair != m_choicesMap.end());
+    return m_setter(valuePair->second);
+  }
+
+  virtual void clear() {
+    if (m_reset) {
+      (*m_reset)();
+    }
+  }
+
+  virtual bool isDefaulted() {
+    if (m_isDefaulted) {
+      return (*m_isDefaulted)();
+    }
+    return false;
+  }
+
+ private:
+  boost::function<std::string (ChoiceType)> m_toString;
+  boost::function<std::vector<ChoiceType> ()> m_choices;
+  boost::function<ChoiceType ()> m_getter;
+  boost::function<bool (ChoiceType)> m_setter;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<BasicQuery> m_isDefaulted;
+
+  std::map<std::string,ChoiceType> m_choicesMap;
+};
+
+// boost::optional<ValueType> get()
+// bool set(ValueType)
+// void clear()
+
+template<typename ChoiceType>
+class OptionalChoiceConceptImpl : public ChoiceConcept {
+ public:
+  OptionalChoiceConceptImpl(
+      boost::function<std::string (ChoiceType)> toString,
+      boost::function<std::vector<ChoiceType> ()> choices,
+      boost::function<boost::optional<ChoiceType> ()> getter,
+      boost::function<bool (ChoiceType)> setter,
+      boost::optional<NoFailAction> reset=boost::none)
+    : m_toString(toString),
+      m_choices(choices),
+      m_getter(getter),
+      m_setter(setter),
+      m_reset(reset)
+  {}
+
+  virtual ~OptionalChoiceConceptImpl() {}
+
+  virtual std::vector<std::string> choices() {
+    m_choicesMap.clear();
+    std::vector<std::string> result;
+    // optional, so blank string is always a choice
+    result.push_back(std::string());
+    std::vector<ChoiceType> typedChoices = m_choices();
+    for (typename std::vector<ChoiceType>::const_iterator typedChoice = typedChoices.begin();
+         typedChoice != typedChoices.end(); ++typedChoice)
+    {
+      std::string choice = m_toString(*typedChoice);
+      result.push_back(choice);
+      m_choicesMap.insert(typename std::map<std::string,ChoiceType>::value_type(choice,*typedChoice));
+    }
+    return result;
+  }
+
+  virtual std::string get() {
+    std::string result;
+    boost::optional<ChoiceType> typedValue = m_getter();
+    if (typedValue) {
+      std::string result = m_toString(*typedValue);
+      OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+    }
+    return result;
+  }
+
+  virtual bool set(std::string value) {
+    if (value.empty()) {
+      clear();
+      return true;
+    }
+
+    typename std::map<std::string,ChoiceType>::const_iterator valuePair = m_choicesMap.find(value);
+    OS_ASSERT(valuePair != m_choicesMap.end());
+    return m_setter(valuePair->second);
+  }
+
+  virtual void clear() {
+    if (m_reset) {
+      (*m_reset)();
+    }
+  }
+
+ private:
+  boost::function<std::string (ChoiceType)> m_toString;
+  boost::function<std::vector<ChoiceType> ()> m_choices;
+  boost::function<boost::optional<ChoiceType> ()> m_getter;
+  boost::function<bool (ChoiceType)> m_setter;
+  boost::optional<NoFailAction> m_reset;
+
+  std::map<std::string,ChoiceType> m_choicesMap;
+};
+
+
 class OSComboBox2 : public QComboBox {
   Q_OBJECT
  public:
@@ -102,27 +268,50 @@ class OSComboBox2 : public QComboBox {
 
   virtual ~OSComboBox2() {}
 
-  // Bind for required or defaulted fields.
+  template<typename ChoiceType>
   void bind(model::ModelObject& modelObject,
-            ChoicesGetter choices,
-            StringGetter get,
-            boost::optional<StringSetter> set=boost::none,
+            boost::function<std::string (ChoiceType)> toString,
+            boost::function<std::vector<ChoiceType> ()> choices,
+            boost::function<ChoiceType ()> getter,
+            boost::function<bool (ChoiceType)> setter,
             boost::optional<NoFailAction> reset=boost::none,
-            boost::optional<BasicQuery> isDefaulted=boost::none);
+            boost::optional<BasicQuery> isDefaulted=boost::none)
+  {
+    m_modelObject = modelObject;
+    m_choiceConcept = boost::shared_ptr<ChoiceConcept>(
+          new RequiredChoiceConceptImpl<ChoiceType>(toString,
+                                                    choices,
+                                                    getter,
+                                                    setter,
+                                                    reset,
+                                                    isDefaulted));
+    clear();
+    completeBind();
+  }
 
-  // Bind for optional fields without defaults.
+  template<typename ChoiceType>
   void bind(model::ModelObject& modelObject,
-            ChoicesGetter choices,
-            OptionalStringGetter get,
-            boost::optional<StringSetter> set=boost::none,
-            boost::optional<NoFailAction> reset=boost::none,
-            boost::optional<BasicQuery> isDefaulted=boost::none);
+            boost::function<std::string (ChoiceType)> toString,
+            boost::function<std::vector<ChoiceType> ()> choices,
+            boost::function<boost::optional<ChoiceType> ()> getter,
+            boost::function<bool (ChoiceType)> setter,
+            boost::optional<NoFailAction> reset=boost::none)
+  {
+    m_modelObject = modelObject;
+    m_choiceConcept = boost::shared_ptr<ChoiceConcept>(
+          new OptionalChoiceConceptImpl<ChoiceType>(toString,
+                                                    choices,
+                                                    getter,
+                                                    setter,
+                                                    reset));
+    clear();
+    completeBind();
+  }
 
-  // This should also unbind dataSources.
+  // Bind to an OSComboBoxDataSource
+  void bind(boost::shared_ptr<OSComboBoxDataSource> dataSource);
+
   void unbind();
-
-  // This should also be "bind".
-  void setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource);
 
  protected:
 
@@ -143,17 +332,10 @@ class OSComboBox2 : public QComboBox {
   void onDataSourceRemove(int);
 
  private:
-
   boost::shared_ptr<OSComboBoxDataSource> m_dataSource;
 
   boost::optional<model::ModelObject> m_modelObject;
-  boost::optional<ChoicesGetter> m_choices; 
-  boost::optional<StringGetter> m_get;
-  boost::optional<OptionalStringGetter> m_getOptional;
-  boost::optional<StringSetter> m_set;
-  boost::optional<NoFailAction> m_reset;
-  boost::optional<BasicQuery> m_isDefaulted;
-
+  boost::shared_ptr<ChoiceConcept> m_choiceConcept;
   std::vector<std::string> m_values;
 
   void completeBind();

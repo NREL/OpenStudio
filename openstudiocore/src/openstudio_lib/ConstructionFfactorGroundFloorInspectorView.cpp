@@ -242,12 +242,13 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
     m_standardsInformation->setIntendedSurfaceType("GroundContactFloor");
   }
 
-  m_intendedSurfaceType->bind(
+  m_intendedSurfaceType->bind<std::string>(
       *m_standardsInformation,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
-      OptionalStringGetter(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      boost::optional<StringSetter>(boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+      boost::function<boost::optional<std::string> ()>(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
+      boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1),
+      NoFailAction(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
   bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
   OS_ASSERT(test);

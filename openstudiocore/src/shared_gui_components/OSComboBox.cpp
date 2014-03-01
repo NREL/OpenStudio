@@ -188,40 +188,10 @@ bool OSComboBox2::event( QEvent * e )
   }
 }
 
-void OSComboBox2::bind(model::ModelObject& modelObject,
-                       ChoicesGetter choices, 
-                       StringGetter get,
-                       boost::optional<StringSetter> set,
-                       boost::optional<NoFailAction> reset,
-                       boost::optional<BasicQuery> isDefaulted)
+void OSComboBox2::bind(boost::shared_ptr<OSComboBoxDataSource> dataSource)
 {
-  m_modelObject = modelObject;
-  m_choices = choices;
-  m_get = get;
-  m_set = set;
-  m_reset = reset;
-  m_isDefaulted = isDefaulted;
+  m_dataSource = dataSource;
 
-  m_dataSource.reset();
-  clear();
-  completeBind();
-}
-
-void OSComboBox2::bind(model::ModelObject& modelObject,
-                       ChoicesGetter choices, 
-                       OptionalStringGetter get,
-                       boost::optional<StringSetter> set,
-                       boost::optional<NoFailAction> reset,
-                       boost::optional<BasicQuery> isDefaulted)
-{
-  m_modelObject = modelObject;
-  m_choices = choices;
-  m_getOptional = get;
-  m_set = set;
-  m_reset = reset;
-  m_isDefaulted = isDefaulted;
-
-  m_dataSource.reset();
   clear();
   completeBind();
 }
@@ -229,15 +199,16 @@ void OSComboBox2::bind(model::ModelObject& modelObject,
 void OSComboBox2::unbind() {
   if (m_modelObject){
     disconnect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get() );
+
+    m_modelObject.reset();
+    m_choiceConcept.reset();
   }
-  m_modelObject.reset();
-  m_choices.reset();
-  m_get.reset();
-  m_getOptional.reset();
-  m_set.reset();
-  m_reset.reset();
-  m_isDefaulted.reset();
-  m_dataSource.reset();
+
+  if (m_dataSource) {
+    disconnect(m_dataSource.get());
+
+    m_dataSource.reset();
+  }
 
   this->blockSignals(true);
 
@@ -251,35 +222,16 @@ void OSComboBox2::unbind() {
 void OSComboBox2::onModelObjectChanged() {
   OS_ASSERT(m_modelObject);
 
-  OptionalString oValue;
-  if (m_get) {
-    oValue = (*m_get)();
-  }
-  else {
-    OS_ASSERT(m_getOptional);
-    oValue = (*m_getOptional)();
-  }
+  std::string value = m_choiceConcept->get();
 
-  std::string value;
-  if (oValue) {
-    value = *oValue;
-  }
+  std::vector<std::string>::const_iterator it = std::find(m_values.begin(),
+                                                          m_values.end(),
+                                                          value);
 
-  int i = 0;
-  for( std::vector<std::string>::iterator it = m_values.begin();
-       it < m_values.end();
-       ++it )
-  {
-    if( istringEqual(*it,value) )
-    {
-      this->blockSignals(true);
-      setCurrentIndex(i);
-      this->blockSignals(false);
-      break;
-    }
-
-    i++;
-  }
+  int i = int(it - m_values.begin());
+  this->blockSignals(true);
+  setCurrentIndex(i);
+  this->blockSignals(false);
 }
 
 void OSComboBox2::onModelObjectRemoved(Handle handle)
@@ -290,60 +242,16 @@ void OSComboBox2::onModelObjectRemoved(Handle handle)
 void OSComboBox2::onCurrentIndexChanged(const QString & text)
 {
   OS_ASSERT(m_modelObject);
-  OS_ASSERT(m_set); // should only be enabled if there is a setter
 
   std::string value = text.toStdString();
-  (*m_set)(value);
+  m_choiceConcept->set(value);
 
   // test if property changed
-  OptionalString oValue;
-  if (m_get) {
-    oValue = (*m_get)();
-  }
-  else {
-    OS_ASSERT(m_getOptional);
-    oValue = (*m_getOptional)();
-  }
-  std::string actualValue;
-  if (oValue) {
-    actualValue = *oValue;
-  }
-
+  std::string actualValue = m_choiceConcept->get();
   if (!istringEqual(actualValue, value)) {
     // failed, reset combo box
     onModelObjectChanged();
   }
-}
-
-void OSComboBox2::setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource)
-{
-  unbind();
-
-  if( m_dataSource )
-  {
-    disconnect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
-    disconnect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
-    disconnect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
-  }
-
-  m_dataSource = dataSource;
-
-  connect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
-  connect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
-  connect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
-
-  this->clear();
-
-  for( int i = 0;
-       i < m_dataSource->numberOfItems();
-       i++ )
-  {
-    this->addItem(m_dataSource->valueAt(i));
-  }
-
-  setCurrentIndex(-1);
-
-  setEnabled(true);
 }
 
 void OSComboBox2::onDataSourceChange(int i)
@@ -374,45 +282,65 @@ void OSComboBox2::onDataSourceRemove(int i)
 }
 
 void OSComboBox2::completeBind() {
-  OS_ASSERT(m_modelObject);
-  OS_ASSERT(m_choices);
+  bool isConnected(false);
+  if (m_modelObject) {
+    // connections
+    isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+                           this,SLOT(onModelObjectChanged()) );
+    OS_ASSERT(isConnected);
 
-  // Connections
+    isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
+                           this,SLOT(onModelObjectRemoved(Handle)) );
+    OS_ASSERT(isConnected);
 
-  bool isConnected = false;
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-                         this,SLOT(onModelObjectChanged()) );
-  OS_ASSERT(isConnected);
+    isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
+    OS_ASSERT(isConnected);
 
-  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-                         this,SLOT(onModelObjectRemoved(Handle)) );
-  OS_ASSERT(isConnected);
+    // populate choices
+    // ETH@20140228 - With extension of this class to choices of ModelObjects, and beyond,
+    // do we need to figure out some way to signal when the choices have changed? Or maybe
+    // controllers will be able to sense that and trigger an unbind(), (re-)bind?
+    m_values = m_choiceConcept->choices();
+    this->blockSignals(true);
 
-  isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
-  OS_ASSERT(isConnected);
+    for( std::vector<std::string>::iterator it = m_values.begin();
+         it < m_values.end();
+         ++it )
+    {
+      addItem(QString::fromStdString(*it));
+    }
 
-  // Populate choices
-  m_values = (*m_choices)();
-  if (m_getOptional) {
-    // can be blank
-    m_values.insert(m_values.begin(),std::string());
+    // initialize
+    onModelObjectChanged();
   }
+  else if (m_dataSource) {
 
-  this->blockSignals(true);
+    // connections
+    isConnected = connect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
+    OS_ASSERT(isConnected);
+    isConnected = connect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
+    OS_ASSERT(isConnected);
+    isConnected = connect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
+    OS_ASSERT(isConnected);
 
-  for( std::vector<std::string>::iterator it = m_values.begin();
-       it < m_values.end();
-       ++it )
-  {
-    addItem(QString::fromStdString(*it));
+    this->blockSignals(true);
+
+    // populate choices
+    for( int i = 0;
+         i < m_dataSource->numberOfItems();
+         i++ )
+    {
+      this->addItem(m_dataSource->valueAt(i));
+    }
+
+    // initialize
+    setCurrentIndex(-1);
   }
-
-  // Initialize
-
-  onModelObjectChanged();
+  else {
+    OS_ASSERT(false);
+  }
 
   this->blockSignals(false);
-
   setEnabled(true);
 }
 
