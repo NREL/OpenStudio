@@ -524,7 +524,7 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
   ASSERT_FALSE(boost::filesystem::exists(openstudio::toPath(wi.files.files().at(0).requiredFiles.at(0).first.toLocalFile())));
 
   Workflow wf2;
-  RubyJobBuilder(wi, openstudio::path("we/dont/know/original/base/path"), openstudio::path("new/path/doesnt/matter")).addToWorkflow(wf2);
+  RubyJobBuilder(wi, openstudio::toPath("we/dont/know/original/base/path"), openstudio::toPath("new/path/doesnt/matter")).addToWorkflow(wf2);
   WorkItem wi2 = wf2.toWorkItems().at(0);
 
 
