@@ -79,6 +79,10 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
   : m_userScriptJob(false)
 {
   try {
+
+    openstudio::path requiredOriginalBasePath = t_originalBasePath;
+    openstudio::path requiredNewBasePath = t_newBasePath;
+
     FileInfo fi = t_workItem.files.getLastByKey("rb");
     m_script = fi.fullPath;
     /// \todo this is a bit of a hack, but it works for now
@@ -87,11 +91,12 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
       LOG(Debug, "Updating path of UserScriptAdapter.rb to " << openstudio::toString(adapterPath));
       setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
     } else if (toString(m_script.filename()) == "DaylightCalculations.rb") {
-      openstudio::path daylightPath = toPath("openstudio/radiance/DaylightCalculations.rb");
+      requiredOriginalBasePath = m_script.parent_path();
+      requiredNewBasePath = getOpenStudioRubyScriptsPath() / toPath("openstudio/radiance");
+      openstudio::path daylightPath = requiredNewBasePath / toPath("DaylightCalculations.rb");
       LOG(Debug, "Updating path of DaylightCalculations.rb to " << openstudio::toString(daylightPath));
-      setScriptFile(getOpenStudioRubyScriptsPath() / daylightPath);
-    }
-    else {
+      setScriptFile(daylightPath);
+    } else {
       openstudio::path temp = relocatePath(m_script,t_originalBasePath,t_newBasePath);
       if (!temp.empty()) {
         m_script = temp;
@@ -105,12 +110,14 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
         ++itr)
     {
       openstudio::path source = toPath(itr->first.toLocalFile());
-      openstudio::path temp = relocatePath(source,t_originalBasePath,t_newBasePath);
+      openstudio::path temp = relocatePath(source,requiredOriginalBasePath,requiredNewBasePath);
       if (!temp.empty()) {
         source = temp;
       }
       m_requiredFiles.push_back(std::make_pair(source, itr->second));
     }
+
+
 
   } catch (const std::exception &) {
     // carry on
@@ -327,7 +334,8 @@ std::vector< std::pair<openstudio::path, openstudio::path> > RubyJobBuilder::req
 
 bool RubyJobBuilder::addRequiredFile(const openstudio::path& currentPath,
                                      const openstudio::path& copyPath,
-                                     const openstudio::path& relativeTo)
+                                     const openstudio::path& relativeTo,
+                                     bool verifyExistence)
 {
   openstudio::path p = currentPath;
 
@@ -336,12 +344,22 @@ bool RubyJobBuilder::addRequiredFile(const openstudio::path& currentPath,
   }
 
   LOG(Trace, "addRequiredFile: " << openstudio::toString(currentPath) << " to " << openstudio::toString(copyPath) << " relative to: " << openstudio::toString(relativeTo));
+  if (!verifyExistence) 
+  {
+    LOG(Trace, "addRequiredFile: not checking file existence " << openstudio::toString(p));
+    m_requiredFiles.push_back(openstudio::PathPair(currentPath,copyPath));
+    return true;
+  }
+
   if (boost::filesystem::exists(p)) {
     LOG(Trace, "addRequiredFile: file exists " << openstudio::toString(p));
     m_requiredFiles.push_back(openstudio::PathPair(currentPath,copyPath));
     return true;
+  } else {
+    LOG(Trace, "addRequiredFile: file does not exist " << openstudio::toString(p));
+    return false;
   }
-  return false;
+
 }
 
 void RubyJobBuilder::copyRequiredFiles(const std::string &t_infileextension,
@@ -925,7 +943,7 @@ void RubyJobBuilder::setAsUserScriptRubyJob(const openstudio::path& t_userScript
   openstudio::path adapterPath = toPath("openstudio/runmanager/rubyscripts/UserScriptAdapter.rb");
   setScriptFile(getOpenStudioRubyScriptsPath() / adapterPath);
 
-  addRequiredFile(userScriptPath,toPath("user_script.rb"), t_relativeTo);
+  addRequiredFile(userScriptPath,toPath("user_script.rb"), t_relativeTo, true);
 
   // add arguments in -n, -v, name, value pairs
   BOOST_FOREACH(const ruleset::OSArgument& argument,t_args) {
