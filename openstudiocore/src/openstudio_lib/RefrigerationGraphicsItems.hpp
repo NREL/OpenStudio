@@ -692,11 +692,17 @@ class SecondaryDetailView : public QGraphicsObject
 
   QRectF boundingRect() const;
 
+  void setName(const QString & name);
+
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget );
+
+  private:
+
+  QString m_name;
 };
 
 class RefrigerationSecondaryView : public QGraphicsObject

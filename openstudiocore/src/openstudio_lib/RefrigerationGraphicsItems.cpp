@@ -1275,7 +1275,7 @@ void RefrigerationSHXView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 
 QRectF SecondaryDropZoneView::boundingRect() const
 {
-  return QRectF(0,0,RefrigerationSystemView::componentHeight * 2.0,RefrigerationSystemView::componentHeight);
+  return QRectF(0,0,RefrigerationSystemView::componentHeight * 3.0,RefrigerationSystemView::componentHeight);
 }
 
 void SecondaryDropZoneView::paint( QPainter *painter, 
@@ -1296,9 +1296,15 @@ SecondaryDetailView::SecondaryDetailView()
 {
 }
 
+void SecondaryDetailView::setName(const QString & name)
+{
+  m_name = name;
+  update();
+}
+
 QRectF SecondaryDetailView::boundingRect() const
 {
-  return QRectF(0,0,RefrigerationSystemView::componentHeight * 2.0,RefrigerationSystemView::componentHeight);
+  return QRectF(0,0,RefrigerationSystemView::componentHeight * 3.0,RefrigerationSystemView::componentHeight / 2.0);
 }
 
 void SecondaryDetailView::paint( QPainter *painter, 
@@ -1307,9 +1313,10 @@ void SecondaryDetailView::paint( QPainter *painter,
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setBrush(Qt::NoBrush);
-  painter->setPen(QPen(Qt::black,2,Qt::DashLine, Qt::RoundCap));
+  painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawRoundedRect(boundingRect(),5,5);
+  painter->drawRect(boundingRect());
+  painter->drawText(boundingRect(),Qt::AlignCenter,m_name);
 }
 
 RefrigerationSecondaryView::RefrigerationSecondaryView()
@@ -1335,7 +1342,6 @@ void RefrigerationSecondaryView::removeAllSecondaryDetailViews()
        it != m_secondaryDetailViews.end(); )
   {
     delete * it;
-
     it = m_secondaryDetailViews.erase(it);
   }
 
@@ -1350,7 +1356,7 @@ void RefrigerationSecondaryView::adjustLayout()
   int y = 0;
 
   secondaryDropZoneView->setPos(0,0);
-  y = y + secondaryDropZoneView->boundingRect().height();
+  y = y + secondaryDropZoneView->boundingRect().height() + RefrigerationSystemView::margin / 2.0;
 
   for( std::vector<QGraphicsObject *>::iterator it = m_secondaryDetailViews.begin();
        it != m_secondaryDetailViews.end();
@@ -1375,7 +1381,7 @@ void RefrigerationSecondaryView::paint( QPainter *painter,
 
 QRectF RefrigerationSecondaryView::boundingRect() const
 {
-  return QRectF(0,0,RefrigerationSystemView::componentHeight * 2.0,m_height);
+  return QRectF(0,0,RefrigerationSystemView::componentHeight * 3.0,m_height);
 }
 
 QRectF RefrigerationSystemDropZoneView::boundingRect() const

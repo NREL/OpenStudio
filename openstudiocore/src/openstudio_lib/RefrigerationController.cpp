@@ -82,6 +82,29 @@ RefrigerationController::~RefrigerationController()
   delete m_refrigerationView;
 }
 
+boost::optional<model::RefrigerationSystem> RefrigerationController::cascadeSystem(const model::RefrigerationCondenserCascade & condenser)
+{
+  boost::optional<model::RefrigerationSystem> result;
+
+  model::Model t_model = condenser.model();
+  std::vector<model::RefrigerationSystem> systems = t_model.getConcreteModelObjects<model::RefrigerationSystem>();
+  for(std::vector<model::RefrigerationSystem>::iterator it = systems.begin();
+      it != systems.end();
+      ++it)
+  {
+    if( boost::optional<model::ModelObject> mo = it->refrigerationCondenser() )
+    {
+      if( mo->handle() == condenser.handle() )
+      {
+        result = *it;
+        break;
+      }
+    }
+  }
+
+  return result;
+}
+
 void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem)
 {
   model::OptionalModelObject mo;
@@ -153,6 +176,10 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 
   bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
                   this,SLOT(inspectOSItem(const OSItemId &)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(m_detailView->refrigerationSecondaryView->secondaryDropZoneView,SIGNAL(componentDropped(const OSItemId &)),
+                  this,SLOT(onSecondaryViewDrop(const OSItemId &)));
   OS_ASSERT(bingo);
 
   m_refrigerationView->graphicsView->setAlignment(Qt::AlignCenter);
@@ -243,6 +270,47 @@ void RefrigerationController::onCompressorViewDrop(const OSItemId & itemid)
       m_currentSystem->addCompressor(compressorClone);
 
       refresh();
+    }
+  }
+}
+
+void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
+{
+  OS_ASSERT(m_currentSystem);
+  model::Model t_model = m_currentSystem->model();
+
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  if( doc->fromComponentLibrary(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+    OS_ASSERT(mo); 
+
+    if( boost::optional<model::RefrigerationSystem> system 
+          = mo->optionalCast<model::RefrigerationSystem>() )
+    {
+      if( boost::optional<model::ModelObject> condenserModelObject = system->refrigerationCondenser() )
+      {
+        if( boost::optional<model::RefrigerationCondenserCascade> cascadeCondenser = condenserModelObject->optionalCast<model::RefrigerationCondenserCascade>() )
+        {
+          if( ! cascadeSystem(cascadeCondenser.get()) )
+          {
+            // TODO: clone and add some stuff
+            refresh();
+          }
+        }
+      }
+      else
+      {
+        model::RefrigerationSystem systemClone = 
+          system->clone(t_model).cast<model::RefrigerationSystem>();
+
+        model::RefrigerationCondenserCascade newCascadeCondenser(t_model);
+        systemClone.setRefrigerationCondenser(newCascadeCondenser);
+        bool bingo = m_currentSystem->addCascadeCondenserLoad(newCascadeCondenser);
+        OS_ASSERT(bingo);
+
+        refresh();
+      }
     }
   }
 }
@@ -384,6 +452,8 @@ void RefrigerationController::refreshNow()
 
     m_detailView->refrigerationCompressorView->removeAllCompressorDetailViews();
 
+    m_detailView->refrigerationSecondaryView->removeAllSecondaryDetailViews();
+
     if( m_currentSystem )
     {
       m_detailView->setId(OSItemId(m_currentSystem->handle(),QString(),false));
@@ -410,6 +480,23 @@ void RefrigerationController::refreshNow()
       }
 
       // insert secondary systems
+
+      std::vector<model::RefrigerationCondenserCascade> cascadeCondensers = m_currentSystem->cascadeCondenserLoads();
+      for( std::vector<model::RefrigerationCondenserCascade>::iterator it = cascadeCondensers.begin();
+           it != cascadeCondensers.end();
+           ++it )
+      {
+        SecondaryDetailView * detailView = new SecondaryDetailView();
+        if( boost::optional<model::RefrigerationSystem> t_cascadeSystem = cascadeSystem(*it) )
+        {
+          detailView->setName(QString::fromStdString(t_cascadeSystem->name().get()));
+        }
+        else
+        {
+          detailView->setName(QString::fromStdString(it->name().get()));
+        }
+        m_detailView->refrigerationSecondaryView->insertSecondaryDetailView(0,detailView);
+      }
 
       // insert compressors
 

@@ -54,6 +54,8 @@ class RefrigerationController : public QObject
 
   QSharedPointer<RefrigerationSystemListController> refrigerationSystemListController() const;
 
+  static boost::optional<model::RefrigerationSystem> cascadeSystem(const model::RefrigerationCondenserCascade & condenser);
+
   public slots:
 
   void zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem);
@@ -75,6 +77,8 @@ class RefrigerationController : public QObject
   void onSHXViewDrop(const OSItemId & itemid);
 
   void onCasesViewDrop(const OSItemId & itemid);
+
+  void onSecondaryViewDrop(const OSItemId & itemid);
 
   void removeCondenser(const OSItemId & itemid);
 
