@@ -20,6 +20,7 @@
 
 namespace openstudio {
 namespace contam {
+namespace detail {
 
 void ZoneImpl::setDefaults()
 {
@@ -4489,5 +4490,6 @@ void CdvDatImpl::setValuename(const std::string &valuename)
   m_valuename = valuename;
 }
 
+} // detail
 } // contam
 } // openstudio

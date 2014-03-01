@@ -35,7 +35,9 @@ namespace openstudio {
 namespace contam {
 
 class SimFile;
-class PrjModelImpl;
+namespace detail {
+  class PrjModelImpl;
+}
 
 /** PrjModel is primarily a container for CONTAM airflow model data.
 *
@@ -420,7 +422,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PrjModelImpl> d;
+  QExplicitlySharedDataPointer<detail::PrjModelImpl> d;
 };
 
 } // contam

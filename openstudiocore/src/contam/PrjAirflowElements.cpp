@@ -262,24 +262,24 @@ AirflowElement* AirflowElement::readElement(Reader &input)
 
 PlrOrf::PlrOrf()
 {
-  d = new PlrOrfImpl();
+  d = new detail::PlrOrfImpl();
 }
 
 PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrOrfImpl(nr,icon,name,desc);
+  d = new detail::PlrOrfImpl(nr,icon,name,desc);
 }
 
 PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double area,
                double dia,double coef,double Re,int u_A,int u_D)
 {
-  d = new PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D);
+  d = new detail::PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D);
 }
 
 PlrOrf::PlrOrf(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string area,
                std::string dia,std::string coef,std::string Re,int u_A,int u_D)
 {
-  d = new PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D);
+  d = new detail::PlrOrfImpl(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D);
 }
 
 PlrOrf::PlrOrf(const PlrOrf &other) : d(other.d)
@@ -486,24 +486,24 @@ void PlrOrf::setU_D(const int u_D)
 
 PlrLeak::PlrLeak()
 {
-  d = new PlrLeakImpl();
+  d = new detail::PlrLeakImpl();
 }
 
 PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrLeakImpl(nr,icon,name,desc);
+  d = new detail::PlrLeakImpl(nr,icon,name,desc);
 }
 
 PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double coef,
                  double pres,double area1,double area2,double area3,int u_A1,int u_A2,int u_A3,int u_dP)
 {
-  d = new PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP);
+  d = new detail::PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP);
 }
 
 PlrLeak::PlrLeak(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string coef,
                  std::string pres,std::string area1,std::string area2,std::string area3,int u_A1,int u_A2,int u_A3,int u_dP)
 {
-  d = new PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP);
+  d = new detail::PlrLeakImpl(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP);
 }
 
 PlrLeak::PlrLeak(const PlrLeak &other) : d(other.d)
@@ -802,24 +802,24 @@ PlrLeak3::~PlrLeak3()
 
 PlrConn::PlrConn()
 {
-  d = new PlrConnImpl();
+  d = new detail::PlrConnImpl();
 }
 
 PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrConnImpl(nr,icon,name,desc);
+  d = new detail::PlrConnImpl(nr,icon,name,desc);
 }
 
 PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double area,
                  double coef,int u_A)
 {
-  d = new PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A);
+  d = new detail::PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A);
 }
 
 PlrConn::PlrConn(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string area,
                  std::string coef,int u_A)
 {
-  d = new PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A);
+  d = new detail::PlrConnImpl(nr,icon,name,desc,lam,turb,expt,area,coef,u_A);
 }
 
 PlrConn::PlrConn(const PlrConn &other) : d(other.d)
@@ -986,22 +986,22 @@ void PlrConn::setU_A(const int u_A)
 
 PlrGeneral::PlrGeneral()
 {
-  d = new PlrGeneralImpl();
+  d = new detail::PlrGeneralImpl();
 }
 
 PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrGeneralImpl(nr,icon,name,desc);
+  d = new detail::PlrGeneralImpl(nr,icon,name,desc);
 }
 
 PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt)
 {
-  d = new PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt);
+  d = new detail::PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt);
 }
 
 PlrGeneral::PlrGeneral(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt)
 {
-  d = new PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt);
+  d = new detail::PlrGeneralImpl(nr,icon,name,desc,lam,turb,expt);
 }
 
 PlrGeneral::PlrGeneral(const PlrGeneral &other) : d(other.d)
@@ -1162,24 +1162,24 @@ PlrFcn::~PlrFcn()
 
 PlrTest1::PlrTest1()
 {
-  d = new PlrTest1Impl();
+  d = new detail::PlrTest1Impl();
 }
 
 PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrTest1Impl(nr,icon,name,desc);
+  d = new detail::PlrTest1Impl(nr,icon,name,desc);
 }
 
 PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dP,
                    double Flow,int u_P,int u_F)
 {
-  d = new PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F);
+  d = new detail::PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F);
 }
 
 PlrTest1::PlrTest1(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dP,
                    std::string Flow,int u_P,int u_F)
 {
-  d = new PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F);
+  d = new detail::PlrTest1Impl(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F);
 }
 
 PlrTest1::PlrTest1(const PlrTest1 &other) : d(other.d)
@@ -1356,24 +1356,24 @@ void PlrTest1::setU_F(const int u_F)
 
 PlrTest2::PlrTest2()
 {
-  d = new PlrTest2Impl();
+  d = new detail::PlrTest2Impl();
 }
 
 PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrTest2Impl(nr,icon,name,desc);
+  d = new detail::PlrTest2Impl(nr,icon,name,desc);
 }
 
 PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dP1,
                    double F1,double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
-  d = new PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
+  d = new detail::PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
 PlrTest2::PlrTest2(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dP1,
                    std::string F1,std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
-  d = new PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
+  d = new detail::PlrTest2Impl(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
 PlrTest2::PlrTest2(const PlrTest2 &other) : d(other.d)
@@ -1600,24 +1600,24 @@ void PlrTest2::setU_F2(const int u_F2)
 
 PlrCrack::PlrCrack()
 {
-  d = new PlrCrackImpl();
+  d = new detail::PlrCrackImpl();
 }
 
 PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrCrackImpl(nr,icon,name,desc);
+  d = new detail::PlrCrackImpl(nr,icon,name,desc);
 }
 
 PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double length,
                    double width,int u_L,int u_W)
 {
-  d = new PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W);
+  d = new detail::PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W);
 }
 
 PlrCrack::PlrCrack(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string length,
                    std::string width,int u_L,int u_W)
 {
-  d = new PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W);
+  d = new detail::PlrCrackImpl(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W);
 }
 
 PlrCrack::PlrCrack(const PlrCrack &other) : d(other.d)
@@ -1794,24 +1794,24 @@ void PlrCrack::setU_W(const int u_W)
 
 PlrStair::PlrStair()
 {
-  d = new PlrStairImpl();
+  d = new detail::PlrStairImpl();
 }
 
 PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrStairImpl(nr,icon,name,desc);
+  d = new detail::PlrStairImpl(nr,icon,name,desc);
 }
 
 PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc,double lam,double turb,
                    double expt,double Ht,double Area,double peo,int tread,int u_A,int u_D)
 {
-  d = new PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D);
+  d = new detail::PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D);
 }
 
 PlrStair::PlrStair(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,
                    std::string expt,std::string Ht,std::string Area,std::string peo,int tread,int u_A,int u_D)
 {
-  d = new PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D);
+  d = new detail::PlrStairImpl(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D);
 }
 
 PlrStair::PlrStair(const PlrStair &other) : d(other.d)
@@ -2013,24 +2013,24 @@ void PlrStair::setU_D(const int u_D)
 
 PlrShaft::PlrShaft()
 {
-  d = new PlrShaftImpl();
+  d = new detail::PlrShaftImpl();
 }
 
 PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrShaftImpl(nr,icon,name,desc);
+  d = new detail::PlrShaftImpl(nr,icon,name,desc);
 }
 
 PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double Ht,
                    double area,double perim,double rough,int u_A,int u_D,int u_P,int u_R)
 {
-  d = new PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R);
+  d = new detail::PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R);
 }
 
 PlrShaft::PlrShaft(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string Ht,
                    std::string area,std::string perim,std::string rough,int u_A,int u_D,int u_P,int u_R)
 {
-  d = new PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R);
+  d = new detail::PlrShaftImpl(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R);
 }
 
 PlrShaft::PlrShaft(const PlrShaft &other) : d(other.d)
@@ -2257,22 +2257,22 @@ void PlrShaft::setU_R(const int u_R)
 
 PlrBackDamper::PlrBackDamper()
 {
-  d = new PlrBackDamperImpl();
+  d = new detail::PlrBackDamperImpl();
 }
 
 PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc)
 {
-  d = new PlrBackDamperImpl(nr,icon,name,desc);
+  d = new detail::PlrBackDamperImpl(nr,icon,name,desc);
 }
 
 PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc,double lam,double Cp,double xp,double Cn,double xn)
 {
-  d = new PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
+  d = new detail::PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
 }
 
 PlrBackDamper::PlrBackDamper(int nr,int icon,std::string name,std::string desc,std::string lam,std::string Cp,std::string xp,std::string Cn,std::string xn)
 {
-  d = new PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
+  d = new detail::PlrBackDamperImpl(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
 }
 
 PlrBackDamper::PlrBackDamper(const PlrBackDamper &other) : d(other.d)
@@ -2465,22 +2465,22 @@ PlrBdf::~PlrBdf()
 
 QfrGeneral::QfrGeneral()
 {
-  d = new QfrQuadraticImpl();
+  d = new detail::QfrQuadraticImpl();
 }
 
 QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc)
 {
-  d = new QfrQuadraticImpl(nr,icon,name,desc);
+  d = new detail::QfrQuadraticImpl(nr,icon,name,desc);
 }
 
 QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc,double a,double b)
 {
-  d = new QfrQuadraticImpl(nr,icon,name,desc,a,b);
+  d = new detail::QfrQuadraticImpl(nr,icon,name,desc,a,b);
 }
 
 QfrGeneral::QfrGeneral(int nr,int icon,std::string name,std::string desc,std::string a,std::string b)
 {
-  d = new QfrQuadraticImpl(nr,icon,name,desc,a,b);
+  d = new detail::QfrQuadraticImpl(nr,icon,name,desc,a,b);
 }
 
 QfrGeneral::QfrGeneral(const QfrGeneral &other) : d(other.d)
@@ -2626,24 +2626,24 @@ QfrFab::~QfrFab()
 
 QfrCrack::QfrCrack()
 {
-  d = new QfrCrackImpl();
+  d = new detail::QfrCrackImpl();
 }
 
 QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc)
 {
-  d = new QfrCrackImpl(nr,icon,name,desc);
+  d = new detail::QfrCrackImpl(nr,icon,name,desc);
 }
 
 QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc,double a,double b,double length,double width,
                    double depth,int nB,int u_L,int u_W,int u_D)
 {
-  d = new QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D);
+  d = new detail::QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D);
 }
 
 QfrCrack::QfrCrack(int nr,int icon,std::string name,std::string desc,std::string a,std::string b,std::string length,std::string width,
                    std::string depth,int nB,int u_L,int u_W,int u_D)
 {
-  d = new QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D);
+  d = new detail::QfrCrackImpl(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D);
 }
 
 QfrCrack::QfrCrack(const QfrCrack &other) : d(other.d)
@@ -2840,24 +2840,24 @@ void QfrCrack::setU_D(const int u_D)
 
 QfrTest2::QfrTest2()
 {
-  d = new QfrTest2Impl();
+  d = new detail::QfrTest2Impl();
 }
 
 QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc)
 {
-  d = new QfrTest2Impl(nr,icon,name,desc);
+  d = new detail::QfrTest2Impl(nr,icon,name,desc);
 }
 
 QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc,double a,double b,double dP1,double F1,
                    double dP2,double F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
-  d = new QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
+  d = new detail::QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
 QfrTest2::QfrTest2(int nr,int icon,std::string name,std::string desc,std::string a,std::string b,std::string dP1,std::string F1,
                    std::string dP2,std::string F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
-  d = new QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
+  d = new detail::QfrTest2Impl(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
 QfrTest2::QfrTest2(const QfrTest2 &other) : d(other.d)
@@ -3069,24 +3069,24 @@ void QfrTest2::setU_F2(const int u_F2)
 
 AfeDor::AfeDor()
 {
-  d = new AfeDorImpl();
+  d = new detail::AfeDorImpl();
 }
 
 AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc)
 {
-  d = new AfeDorImpl(nr,icon,name,desc);
+  d = new detail::AfeDorImpl(nr,icon,name,desc);
 }
 
 AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dTmin,
                double ht,double wd,double cd,int u_T,int u_H,int u_W)
 {
-  d = new AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W);
+  d = new detail::AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W);
 }
 
 AfeDor::AfeDor(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dTmin,
                std::string ht,std::string wd,std::string cd,int u_T,int u_H,int u_W)
 {
-  d = new AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W);
+  d = new detail::AfeDorImpl(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W);
 }
 
 AfeDor::AfeDor(const AfeDor &other) : d(other.d)
@@ -3303,24 +3303,24 @@ void AfeDor::setU_W(const int u_W)
 
 DrPl2::DrPl2()
 {
-  d = new DrPl2Impl();
+  d = new detail::DrPl2Impl();
 }
 
 DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc)
 {
-  d = new DrPl2Impl(nr,icon,name,desc);
+  d = new detail::DrPl2Impl(nr,icon,name,desc);
 }
 
 DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double dH,double ht,
              double wd,double cd,int u_H,int u_W)
 {
-  d = new DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W);
+  d = new detail::DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W);
 }
 
 DrPl2::DrPl2(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string dH,std::string ht,
              std::string wd,std::string cd,int u_H,int u_W)
 {
-  d = new DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W);
+  d = new detail::DrPl2Impl(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W);
 }
 
 DrPl2::DrPl2(const DrPl2 &other) : d(other.d)
@@ -3527,22 +3527,22 @@ void DrPl2::setU_W(const int u_W)
 
 AfeFlow::AfeFlow()
 {
-  d = new AfeFlowImpl();
+  d = new detail::AfeFlowImpl();
 }
 
 AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc)
 {
-  d = new AfeFlowImpl(nr,icon,name,desc);
+  d = new detail::AfeFlowImpl(nr,icon,name,desc);
 }
 
 AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc,double Flow,int u_F)
 {
-  d = new AfeFlowImpl(nr,icon,name,desc,Flow,u_F);
+  d = new detail::AfeFlowImpl(nr,icon,name,desc,Flow,u_F);
 }
 
 AfeFlow::AfeFlow(int nr,int icon,std::string name,std::string desc,std::string Flow,int u_F)
 {
-  d = new AfeFlowImpl(nr,icon,name,desc,Flow,u_F);
+  d = new detail::AfeFlowImpl(nr,icon,name,desc,Flow,u_F);
 }
 
 AfeFlow::AfeFlow(const AfeFlow &other) : d(other.d)
@@ -3683,26 +3683,26 @@ AfeCvf::~AfeCvf()
 
 AfeFan::AfeFan()
 {
-  d = new AfeFanImpl();
+  d = new detail::AfeFanImpl();
 }
 
 AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc)
 {
-  d = new AfeFanImpl(nr,icon,name,desc);
+  d = new detail::AfeFanImpl(nr,icon,name,desc);
 }
 
 AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc,double lam,double turb,double expt,double rdens,
                double fdf,double sop,double off,std::vector<double> fpc,double Sarea,int u_Sa,
                std::vector<FanDataPoint> data)
 {
-  d = new AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data);
+  d = new detail::AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data);
 }
 
 AfeFan::AfeFan(int nr,int icon,std::string name,std::string desc,std::string lam,std::string turb,std::string expt,std::string rdens,
                std::string fdf,std::string sop,std::string off,std::vector<std::string> fpc,std::string Sarea,int u_Sa,
                std::vector<FanDataPoint> data)
 {
-  d = new AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data);
+  d = new detail::AfeFanImpl(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data);
 }
 
 AfeFan::AfeFan(const AfeFan &other) : d(other.d)
@@ -3939,17 +3939,17 @@ void AfeFan::setData(const std::vector<FanDataPoint> &data)
 
 AfeCsf::AfeCsf()
 {
-  d = new AfeCsfImpl();
+  d = new detail::AfeCsfImpl();
 }
 
 AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc)
 {
-  d = new AfeCsfImpl(nr,icon,name,desc);
+  d = new detail::AfeCsfImpl(nr,icon,name,desc);
 }
 
 AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data)
 {
-  d = new AfeCsfImpl(nr,icon,name,desc,u_x,u_y,data);
+  d = new detail::AfeCsfImpl(nr,icon,name,desc,u_x,u_y,data);
 }
 
 AfeCsf::AfeCsf(const AfeCsf &other) : d(other.d)
@@ -4113,18 +4113,18 @@ AfePsq::~AfePsq()
 
 AfeSup::AfeSup()
 {
-  d = new AfeSupImpl();
+  d = new detail::AfeSupImpl();
 }
 
 AfeSup::AfeSup(int nr,int icon,std::string name,std::string desc)
 {
-  d = new AfeSupImpl(nr,icon,name,desc);
+  d = new detail::AfeSupImpl(nr,icon,name,desc);
 }
 
 AfeSup::AfeSup(int nr,int icon,std::string name,std::string desc,int sched,int u_H,
                std::vector<AirflowSubelementData> subelements)
 {
-  d = new AfeSupImpl(nr,icon,name,desc,sched,u_H,subelements);
+  d = new detail::AfeSupImpl(nr,icon,name,desc,sched,u_H,subelements);
 }
 
 AfeSup::AfeSup(const AfeSup &other) : d(other.d)

@@ -26,6 +26,7 @@
 
 namespace openstudio {
 namespace contam {
+namespace detail {
 
 class ZoneImpl : public QSharedData
 {
@@ -1504,6 +1505,7 @@ private:
   std::string m_valuename;  // name of the value read from the Discrete or Continuous Values file (CS)
 };
 
+} // detail
 } // contam
 } // openstudio
 

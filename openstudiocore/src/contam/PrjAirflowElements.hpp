@@ -30,25 +30,27 @@ namespace openstudio {
 namespace contam {
 
 class Reader;
-class PlrOrfImpl;
-class PlrLeakImpl;
-class PlrConnImpl;
-class PlrGeneralImpl;
-class PlrTest1Impl;
-class PlrTest2Impl;
-class PlrCrackImpl;
-class PlrStairImpl;
-class PlrShaftImpl;
-class PlrBackDamperImpl;
-class QfrQuadraticImpl;
-class QfrCrackImpl;
-class QfrTest2Impl;
-class AfeDorImpl;
-class DrPl2Impl;
-class AfeFlowImpl;
-class AfeFanImpl;
-class AfeCsfImpl;
-class AfeSupImpl;
+namespace detail {
+  class PlrOrfImpl;
+  class PlrLeakImpl;
+  class PlrConnImpl;
+  class PlrGeneralImpl;
+  class PlrTest1Impl;
+  class PlrTest2Impl;
+  class PlrCrackImpl;
+  class PlrStairImpl;
+  class PlrShaftImpl;
+  class PlrBackDamperImpl;
+  class QfrQuadraticImpl;
+  class QfrCrackImpl;
+  class QfrTest2Impl;
+  class AfeDorImpl;
+  class DrPl2Impl;
+  class AfeFlowImpl;
+  class AfeFanImpl;
+  class AfeCsfImpl;
+  class AfeSupImpl;
+}
 
 /** The AirflowElement object is the base class of all airflow elements. */
 class CONTAM_API AirflowElement
@@ -208,7 +210,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrOrfImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrOrfImpl> d;
 };
 
 /** The PlrLeak object is the base class of the leakage area airflow elements. */
@@ -343,7 +345,7 @@ public:
   void setU_dP(const int u_dP);
   //@}
 private:
-  QExplicitlySharedDataPointer<PlrLeakImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrLeakImpl> d;
 };
 
 /** The PlrLeak1 object is an airflow element representing a leakage area on a per-item basis. */
@@ -542,7 +544,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrConnImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrConnImpl> d;
 };
 
 /** The PlrGeneral object is the base class for general power law elements. */
@@ -630,7 +632,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrGeneralImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrGeneralImpl> d;
 };
 
 /** The PlrQcn object is an airflow element representing volume flow rate power law leakage. */
@@ -798,7 +800,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrTest1Impl> d;
+  QExplicitlySharedDataPointer<detail::PlrTest1Impl> d;
 };
 
 /** The PlrTest2 object is an airflow element representing 2-point test data power law leakage. */
@@ -928,7 +930,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrTest2Impl> d;
+  QExplicitlySharedDataPointer<detail::PlrTest2Impl> d;
 };
 
 /** The PlrCrack object is an airflow element representing power law leakage through a crack. */
@@ -1038,7 +1040,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrCrackImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrCrackImpl> d;
 };
 
 /** The PlrStair object is an airflow element representing level-to-level power law leakage in stairwells. */
@@ -1158,7 +1160,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrStairImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrStairImpl> d;
 };
 
 /** The PlrShaft object is an airflow element representing level-to-level power law leakage in shafts. */
@@ -1289,7 +1291,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PlrShaftImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrShaftImpl> d;
 };
 
 /** The PlrBackDamper object is the base class of backdraft damper airflow elements. */
@@ -1387,7 +1389,7 @@ public:
   bool setXn(const std::string &xn);
   //@}
 private:
-  QExplicitlySharedDataPointer<PlrBackDamperImpl> d;
+  QExplicitlySharedDataPointer<detail::PlrBackDamperImpl> d;
 };
 
 /** The PlrBdq object is a backdraft damper airflow element in volumetric flow form. */
@@ -1523,7 +1525,7 @@ public:
   bool setB(const std::string &b);
   //@}
 private:
-  QExplicitlySharedDataPointer<QfrQuadraticImpl> d;
+  QExplicitlySharedDataPointer<detail::QfrQuadraticImpl> d;
 };
 
 /** The QfrQab object is an airflow element representing volume flow rate quadratic leakage. */
@@ -1697,7 +1699,7 @@ public:
   void setU_D(const int u_D);
   //@}
 private:
-  QExplicitlySharedDataPointer<QfrCrackImpl> d;
+  QExplicitlySharedDataPointer<detail::QfrCrackImpl> d;
 };
 
 /** The QfrTest2 object is an airflow element representing 2-point test data quadratic leakage. */
@@ -1819,7 +1821,7 @@ public:
   void setU_F2(const int u_F);
   //@}
 private:
-  QExplicitlySharedDataPointer<QfrTest2Impl> d;
+  QExplicitlySharedDataPointer<detail::QfrTest2Impl> d;
 };
 
 /** The AfeDor object is an airflow element representing 2-way flow through a single opening. */
@@ -1943,7 +1945,7 @@ public:
   void setU_W(const int u_W);
   //@}
 private:
-  QExplicitlySharedDataPointer<AfeDorImpl> d;
+  QExplicitlySharedDataPointer<detail::AfeDorImpl> d;
 };
 
 /** The DrPl2 object is an airflow element representing 2-way flow through an opening using two power law models. */
@@ -2063,7 +2065,7 @@ public:
   void setU_W(const int u_W);
   //@}
 private:
-  QExplicitlySharedDataPointer<DrPl2Impl> d;
+  QExplicitlySharedDataPointer<detail::DrPl2Impl> d;
 };
 
 /** The AfeFlow object is the base class of constant flow rate airflow elements. */
@@ -2141,7 +2143,7 @@ public:
   void setU_F(const int u_F);
   //@}
 private:
-  QExplicitlySharedDataPointer<AfeFlowImpl> d;
+  QExplicitlySharedDataPointer<detail::AfeFlowImpl> d;
 };
 
 /** The AfeCmf object is an airflow element representing constant mass flow rate. */
@@ -2331,7 +2333,7 @@ public:
   void setData(const std::vector<FanDataPoint> &data);
   //@}
 private:
-  QExplicitlySharedDataPointer<AfeFanImpl> d;
+  QExplicitlySharedDataPointer<detail::AfeFanImpl> d;
 };
 
 /** The AfeCvf object is the base class of airflow element representing cubic spline leakage. */
@@ -2407,7 +2409,7 @@ public:
   void setData(const std::vector<DataPoint> &data);
   //@}
 private:
-  QExplicitlySharedDataPointer<AfeCsfImpl> d;
+  QExplicitlySharedDataPointer<detail::AfeCsfImpl> d;
 };
 
 /** The AfeFsp object is an airflow element representing cubic spline leakage with mass flow rate as a function of pressure drop. */
@@ -2598,7 +2600,7 @@ public:
   void setSubelements(const std::vector<AirflowSubelementData> &subelements);
   //@}
 private:
-  QExplicitlySharedDataPointer<AfeSupImpl> d;
+  QExplicitlySharedDataPointer<detail::AfeSupImpl> d;
 };
 
 } // contam

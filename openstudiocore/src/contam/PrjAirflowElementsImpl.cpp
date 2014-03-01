@@ -20,6 +20,7 @@
 
 namespace openstudio {
 namespace contam {
+namespace detail {
 
 void PlrOrfImpl::setDefaults()
 {
@@ -5363,5 +5364,6 @@ void AfeSupImpl::setSubelements(const std::vector<AirflowSubelementData> &subele
   m_subelements = subelements;
 }
 
+} // detail
 } // contam
 } // openstudio

@@ -28,16 +28,17 @@ namespace openstudio {
 namespace contam {
 
 class Reader;
-class ZoneImpl;
-class SpeciesImpl;
-class AhsImpl;
-class PathImpl;
-class RunControlImpl;
-class LevelImpl;
-class DayScheduleImpl;
-class WeekScheduleImpl;
-class WindPressureProfileImpl;
-
+namespace detail {
+  class ZoneImpl;
+  class SpeciesImpl;
+  class AhsImpl;
+  class PathImpl;
+  class RunControlImpl;
+  class LevelImpl;
+  class DayScheduleImpl;
+  class WeekScheduleImpl;
+  class WindPressureProfileImpl;
+}
 
 /** The Zone object stores the data that describes an airflow zone. */
 class CONTAM_API Zone
@@ -252,7 +253,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<ZoneImpl> d;
+  QExplicitlySharedDataPointer<detail::ZoneImpl> d;
 };
 
 /** The Species object contains descriptive information about contaminants in
@@ -384,7 +385,7 @@ public:
   void setDesc(const std::string &desc);
   //@}
 private:
-  QExplicitlySharedDataPointer<SpeciesImpl> d;
+  QExplicitlySharedDataPointer<detail::SpeciesImpl> d;
 };
 
 /** Ahs is a class that represents CONTAM's simple air handling system. These
@@ -463,7 +464,7 @@ public:
   void setDesc(const std::string &desc);
   //@}
 private:
-  QExplicitlySharedDataPointer<AhsImpl> d;
+  QExplicitlySharedDataPointer<detail::AhsImpl> d;
 };
 
 /** The Path object stores one flow linkage in the airflow network. */
@@ -686,7 +687,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<PathImpl> d;
+  QExplicitlySharedDataPointer<detail::PathImpl> d;
 };
 
 /** The RunControl object stores most of the information related to how CONTAM solves the airflow network
@@ -1229,7 +1230,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<RunControlImpl> d;
+  QExplicitlySharedDataPointer<detail::RunControlImpl> d;
 };
 
 /** Level objects contain information about the levels that make up a CONTAM
@@ -1309,7 +1310,7 @@ public:
   void setIcons(const std::vector<Icon> &icons);
   //@}
 private:
-  QExplicitlySharedDataPointer<LevelImpl> d;
+  QExplicitlySharedDataPointer<detail::LevelImpl> d;
 };
 
 /** The DaySchedule object contains schedule data for a single day. */
@@ -1383,7 +1384,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<DayScheduleImpl> d;
+  QExplicitlySharedDataPointer<detail::DayScheduleImpl> d;
 };
 
 /** The WeekSchedule object represents a complete week with 12 possible day
@@ -1455,7 +1456,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<WeekScheduleImpl> d;
+  QExplicitlySharedDataPointer<detail::WeekScheduleImpl> d;
 };
 
 /** WindPressureProfile objects store pressure coefficient as a function of
@@ -1522,7 +1523,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<WindPressureProfileImpl> d;
+  QExplicitlySharedDataPointer<detail::WindPressureProfileImpl> d;
 };
 
 /** The ControlNode object is the base class of all control node elements. */
@@ -1665,7 +1666,7 @@ public:
   void setValuename(const std::string &valuename);
   //@}
 private:
-  QExplicitlySharedDataPointer<CdvDatImpl> d;
+  QExplicitlySharedDataPointer<detail::CdvDatImpl> d;
 };
 
 /** The CvfDat object represents a continuous value datas file control node. */

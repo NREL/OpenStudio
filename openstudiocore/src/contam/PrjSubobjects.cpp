@@ -24,19 +24,19 @@ namespace contam {
 
 WeatherData::WeatherData()
 {
-  d = new WeatherDataImpl;
+  d = new detail::WeatherDataImpl;
 }
 
 WeatherData::WeatherData(std::string Tambt,std::string barpres,std::string windspd,std::string winddir,std::string relhum,int daytyp,
                          int uTa,int ubP,int uws,int uwd)
 {
-  d = new WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
+  d = new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
 }
 
 WeatherData::WeatherData(double Tambt,double barpres,double windspd,double winddir,double relhum,int daytyp,
                          int uTa,int ubP,int uws,int uwd)
 {
-  d = new WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
+  d = new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
 }
 
 WeatherData::WeatherData(const WeatherData &other) : d(other.d)
@@ -198,12 +198,12 @@ void WeatherData::setUwd(const int uwd)
 
 Icon::Icon()
 {
-  d = new IconImpl();
+  d = new detail::IconImpl();
 }
 
 Icon::Icon(int icon,int col,int row,int nr)
 {
-  d = new IconImpl(icon,col,row,nr);
+  d = new detail::IconImpl(icon,col,row,nr);
 }
 
 Icon::Icon(const Icon &other) : d(other.d)

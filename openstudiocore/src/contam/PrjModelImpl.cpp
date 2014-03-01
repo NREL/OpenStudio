@@ -23,6 +23,7 @@
 
 namespace openstudio {
 namespace contam {
+namespace detail {
 
 void PrjModelImpl::setDefaults()
 {
@@ -1472,5 +1473,6 @@ std::vector<TimeSeries> PrjModelImpl::pathInfiltration(std::vector<int> pathNrs,
   return results;
 }
 
+} // detail
 } // contam
 } // openstudio

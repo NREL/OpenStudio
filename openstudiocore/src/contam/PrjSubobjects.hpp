@@ -26,8 +26,10 @@ namespace openstudio {
 namespace contam {
 
 class Reader;
-class WeatherDataImpl;
-class IconImpl;
+namespace detail {
+  class WeatherDataImpl;
+  class IconImpl;
+}
 
 /** WeatherData objects contain the simplified weather data associated with a CONTAM model. */
 class CONTAM_API WeatherData
@@ -126,7 +128,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<WeatherDataImpl> d;
+  QExplicitlySharedDataPointer<detail::WeatherDataImpl> d;
 };
 
 /** The Icon object contains basic information about sketchpad icons. This object
@@ -198,7 +200,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<IconImpl> d;
+  QExplicitlySharedDataPointer<detail::IconImpl> d;
 };
 
 /** FanDataPoint is an object for defining fan characteristics. It contains a single

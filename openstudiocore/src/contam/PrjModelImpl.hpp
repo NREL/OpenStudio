@@ -36,6 +36,8 @@ namespace contam {
 
 class SimFile;
 
+namespace detail {
+
 class PrjModelImpl : public QSharedData
 {
 public:
@@ -519,6 +521,7 @@ template <class T> std::string PrjModelImpl::writeArray(std::vector<T> vector, s
   return string +'\n';
 }
 
+} // detail
 } // contam
 } // openstudio
 

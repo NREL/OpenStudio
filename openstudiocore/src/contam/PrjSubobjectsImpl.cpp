@@ -20,6 +20,7 @@
 
 namespace openstudio {
 namespace contam {
+namespace detail {
 
 void WeatherDataImpl::setDefaults()
 {
@@ -340,5 +341,6 @@ bool IconImpl::isWall()
   return (m_icon >= WL_EW) && (m_icon <= WL_NESW);
 }
 
+} // detail
 } // contam
 } // openstudio

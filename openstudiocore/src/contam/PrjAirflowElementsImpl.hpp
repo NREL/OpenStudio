@@ -26,6 +26,7 @@
 
 namespace openstudio {
 namespace contam {
+namespace detail {
 
 class PlrOrfImpl : public QSharedData
 {
@@ -1666,7 +1667,7 @@ private:
   std::vector<AirflowSubelementData> m_subelements;  // Subelement data (AirflowSubelementData)
 };
 
-
+} // detail
 } // contam
 } // openstudio
 
