@@ -788,6 +788,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("regular case");
     expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
@@ -808,6 +809,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, false);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("daylighting window");
     expect_point_eq(Point3d(x, 0, H-offset), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, y), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, y), window->vertices()[2]);
@@ -828,6 +830,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("window goes all the way up to min limit at ceiling");
     expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
@@ -848,6 +851,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("window extends below desired sill height");
     expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
@@ -855,6 +859,8 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
 
+/*
+  DLM: this is no longer supported
   {
     // window is too small, shrinks in x
     Model model;
@@ -874,7 +880,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     expect_point_eq(Point3d(W-x, 0, H-y), window->vertices()[3]);
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
-
+*/
   {
     // existing window is no problem
     Model model;
@@ -901,7 +907,8 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     EXPECT_EQ(1u, wall.subSurfaces().size());
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
-
+/*
+  DLM: this is no longer supported
   {
     // existing door is no problem if it does not intersect new window
     Model model;
@@ -927,6 +934,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     EXPECT_EQ(2u, wall.subSurfaces().size());
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
+  */
 }
 
 TEST_F(ModelFixture, Surface_EastWall_WWR)

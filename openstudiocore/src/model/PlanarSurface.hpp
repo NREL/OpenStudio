@@ -204,6 +204,9 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Get a triangulation of this surface, subsurfaces will be replaced by holes in the triangulation
   virtual std::vector<std::vector<Point3d> > triangulation() const;
 
+  /// Return the centroid of this planar surface's vertices
+  Point3d centroid() const;
+
  protected:
 
   /** @name Constructors and Destructors */

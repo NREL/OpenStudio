@@ -123,6 +123,9 @@ class MODEL_API GlareSensor : public SpaceItem {
   /** Sets a Transformation representing position and orientation in meters relative to the Space. */
   bool setTransformation(const openstudio::Transformation& transformation);
 
+  /// Keeps current position and orients the view towards the target, target is in space coordinates.
+  bool aimAt(const Point3d& target);
+
  protected:
   /// @cond
   typedef detail::GlareSensor_Impl ImplType;

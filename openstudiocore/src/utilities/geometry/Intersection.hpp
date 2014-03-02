@@ -56,6 +56,15 @@ namespace openstudio{
     std::vector< std::vector<Point3d> > m_newPolygons2;
   };
 
+  /// returns true if point is inside polygon, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  UTILITIES_API bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol);
+  
+  /// compute the union of two overlapping polygons, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  UTILITIES_API boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
+  
+  /// compute the union of many polygons, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  UTILITIES_API std::vector<std::vector<Point3d> > joinAll(const std::vector<std::vector<Point3d> >& polygons, double tol);
+
   /// intersect two polygons, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
   UTILITIES_API boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
 

@@ -139,6 +139,8 @@ namespace detail {
 
     bool setTransformation(const openstudio::Transformation& transformation);
 
+    bool aimAt(const Point3d& target);
+
    protected: 
 
     // index of the space name
