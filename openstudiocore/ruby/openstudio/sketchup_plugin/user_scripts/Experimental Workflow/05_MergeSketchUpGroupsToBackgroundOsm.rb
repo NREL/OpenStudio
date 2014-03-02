@@ -38,10 +38,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     merge_selected_only.setDisplayName("Merge Selected Spaces Only? ")
     merge_selected_only.setDefaultValue(false)
     result << merge_selected_only
-        
-    # todo - expose layers as arguments mapped to type of SO objects?
-    # todo - have way to pull in background model from other script.
-    # todo - support save as to another or a new osm.
 
     return result
   end
@@ -60,7 +56,11 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     merge_selected_only = runner.getBoolArgumentValue("merge_selected_only",user_arguments)
 
     # Open OSM file
-    @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).get
+    if not OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).empty
+      @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).get
+    else
+      @background_osm_model = OpenStudio::Model::Model.new # make new model if path given wasn't an existing model
+    end
 
     # get surface groups from osm
     @spaces = @background_osm_model.getSpaces
@@ -81,6 +81,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     end
 
     #use north direction in SketchUp to set building rotation
+    info = skp_model.shadow_info
+    building = @background_osm_model.getBuilding
+    building.setNorthAxis(info["NorthAngle"]*-1.0)
 
     #get spaces shading groups and interior partition groups
 
@@ -108,6 +111,8 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           space.setXOrigin(xOrigin.to_f)
           space.setYOrigin(yOrigin.to_f)
           space.setZOrigin(zOrigin.to_f)
+          space.setDirectionofRelativeNorth(rotation)
+
           @result = space
           @current_spaces << space
 
@@ -125,6 +130,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         space.setXOrigin(xOrigin.to_f)
         space.setYOrigin(yOrigin.to_f)
         space.setZOrigin(zOrigin.to_f)
+        space.setDirectionofRelativeNorth(rotation)
         @result = space
       end
 
@@ -480,7 +486,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     @current_shading_surface_groups = []
     @current_interior_partition_groups = []
 
-    #todo - address scaling and other group transformation
+    #todo - address scaling and not z axis rotation
 
     #making array of groups and components
     groups = []
@@ -506,7 +512,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           shadingSurfaceType = "Site"
         end
 
-        shading_surface_group = make_shading_surface_group(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation",shadingSurfaceType,"") #no parent for site and building shading
+        shading_surface_group = make_shading_surface_group(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,t.rotz*-1,shadingSurfaceType,"") #no parent for site and building shading
         #add to array of shading groups
         #make surfaces
         shading_surfaces = make_shading_surfaces(shading_surface_group,group)
@@ -517,7 +523,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       elsif group.layer.name == "OpenStudio BackgroundModel Space"
 
         #make or update space
-        space = make_space(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,"rotation")
+        space = make_space(group.name,t.origin.x.to_m,t.origin.y.to_m,t.origin.z.to_m,t.rotz*-1)
         #add to array of shading groups
         #make surfaces
         make_space_surfaces(space,group)
@@ -540,7 +546,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           if nested_group.layer.name == "OpenStudio BackgroundModel ShadingGroup"
 
             #make or update group
-            space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",space)
+            space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,nested_t.rotz*-1,space)
             #add to array of shading groups
             #make surfaces
             shading_surfaces = make_shading_surfaces(space_shading_group,nested_group)
@@ -548,7 +554,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           elsif nested_group.layer.name == "OpenStudio BackgroundModel InteriorPartitionSurfaceGroup"
 
             #make or update group
-            interior_partition_group = make_interior_partition_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,"rotation",space)
+            interior_partition_group = make_interior_partition_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,nested_t.rotz*-1,space)
             #add to array of shading groups
             #make surfaces
             interior_partition_surfaces = make_interior_partition_surfaces(interior_partition_group,nested_group)
