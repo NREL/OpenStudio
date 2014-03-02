@@ -1,17 +1,17 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -117,7 +117,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   m_isIP(isIP)
 {
   QVBoxLayout * layout = 0;
-  
+
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
@@ -126,7 +126,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   QVBoxLayout * scrollLayout = new QVBoxLayout();
   scrollLayout->setSpacing(0);
   scrollLayout->setContentsMargins(0,0,0,0);
-  
+
   QWidget * scrollWidget = new QWidget();
   scrollWidget->setObjectName("ScrollWidget");
   scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
@@ -483,7 +483,34 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
 //      OS_ASSERT(false); TODO add this back at a later time
     }
   }
+}
 
+QString RefrigerationCaseGridController::getColor(const model:: ModelObject & modelObject)
+{
+  QColor defaultColor(Qt::lightGray);
+  QString color(defaultColor.name());
+
+  std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+
+  boost::optional<model::RefrigerationCase> refrigerationCase = modelObject.optionalCast<model::RefrigerationCase>();
+  OS_ASSERT(refrigerationCase);
+
+  boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationCase->system();
+  if(!refrigerationSystem){
+    return color;
+  }
+
+  std::vector<model::RefrigerationSystem>::iterator it;
+  it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
+  if(it != refrigerationSystems.end()){
+    int index = std::distance(refrigerationSystems.begin(), it);
+    if(index >= static_cast<int>(m_colors.size())){
+      index = m_colors.size() - 1; // similar to scheduleView's approach
+    }
+    color = this->m_colors.at(index).name();
+  }
+
+  return color;
 }
 
 void RefrigerationCaseGridController::checkSelectedFields()
@@ -541,7 +568,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Dimensions"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
-  
+
   {
     std::vector<QString> fields;
     fields.push_back(INSULATEDFLOORUVALUE);
@@ -549,7 +576,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Construction"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
-  
+
   {
     std::vector<QString> fields;
     //fields.push_back("Stocking Door Area (ft2)");
@@ -613,7 +640,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
-  
+
   {
     std::vector<QString> fields;
     fields.push_back(RESTOCKINGSCHEDULE);
@@ -695,7 +722,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             //QString("Btu/hr*ft^2*F"), // TODO this crashes in OSQuantityEdit assert for conversion
                             m_isIP,
                             &model::RefrigerationWalkIn::insulatedFloorUValue,
-                            &model::RefrigerationWalkIn::setInsulatedFloorUValue); 
+                            &model::RefrigerationWalkIn::setInsulatedFloorUValue);
     }else if(field == RATEDCOILCOOLINGCAPACITY){
       addQuantityEditColumn(QString(RATEDCOILCOOLINGCAPACITY),
                             QString("W"),
@@ -763,8 +790,34 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
 //      OS_ASSERT(false); TODO add this back at a later time
     }
   }
+}
 
+QString RefrigerationWalkInGridController::getColor(const model:: ModelObject & modelObject)
+{
+  QColor defaultColor(Qt::lightGray);
+  QString color(defaultColor.name());
 
+  std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+
+  boost::optional<model::RefrigerationWalkIn> refrigerationWalkIn = modelObject.optionalCast<model::RefrigerationWalkIn>();
+  OS_ASSERT(refrigerationWalkIn);
+
+  boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationWalkIn->system();
+  if(!refrigerationSystem){
+    return color;
+  }
+
+  std::vector<model::RefrigerationSystem>::iterator it;
+  it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
+  if(it != refrigerationSystems.end()){
+    int index = std::distance(refrigerationSystems.begin(), it);
+    if(index >= static_cast<int>(m_colors.size())){
+      index = m_colors.size() - 1; // similar to scheduleView's approach
+    }
+    color = this->m_colors.at(index).name();
+  }
+
+  return color;
 }
 
 void RefrigerationWalkInGridController::checkSelectedFields()
