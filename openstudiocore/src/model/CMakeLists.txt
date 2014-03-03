@@ -956,7 +956,6 @@ SET( ${target_name}_moc
   CurveSigmoid_Impl.hpp
   CurveTriquadratic_Impl.hpp
   DaylightingControl_Impl.hpp
-  DaylightingDeviceShelf_Impl.hpp
   DefaultConstructionSet_Impl.hpp
   DefaultScheduleSet_Impl.hpp
   DefaultSubSurfaceConstructions_Impl.hpp

@@ -91,6 +91,13 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     # set render mode to color by layers (interior partition and shading can match OpenStudio, spaces should be something unique)?
 
     # use building rotation to set north direction in SketchUp
+    building = background_osm_model.getBuilding
+    rotation = building.northAxis # not sure of units
+    info = skp_model.shadow_info
+    info["NorthAngle"] = rotation*-1.0
+    if rotation != 0.0
+      info["DisplayNorth"] = rotation*-1.0
+    end
 
     # create def to make group
     def make_group(parent,name,layer,xOrigin,yOrigin,zOrigin,rotation)
@@ -102,7 +109,9 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
       point = Geom::Point3d.new "#{xOrigin}m".to_l,"#{yOrigin}m".to_l,"#{zOrigin}m".to_l
       t = Geom::Transformation.new point
       group.move! t
-      #todo - still need to rotate as well
+      # rotate
+      tr = Geom::Transformation.rotation ["#{xOrigin}m".to_l,"#{yOrigin}m".to_l,"#{zOrigin}m".to_l], [0, 0, 1], rotation.degrees
+      group.transform! tr
 
       return group
 
@@ -204,7 +213,7 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
 
     end #end of shading_surface_groups.each do
 
-    #todo - see why spaces are not passing manifold solid test. Seems like old SketchUp issue where if I explosed and re-make it then shows as solid. Maybe even just re-open it.
+    #todo - see why spaces are not passing manifold solid test. Seems like old SketchUp issue where if I exploded and re-make it then shows as solid. Maybe even just re-open it.
 
     #zoom extents
     view = Sketchup.active_model.active_view

@@ -73,6 +73,9 @@ namespace openstudio{
     /// project a point to this plane
     Point3d project(const Point3d& point) const;
 
+    /// project a vector of points to this plane
+    std::vector<Point3d> project(const std::vector<Point3d>& points) const;
+
     /// returns true if the point is on this plane
     bool pointOnPlane(const Point3d& point, double tol = 0.001) const;
 

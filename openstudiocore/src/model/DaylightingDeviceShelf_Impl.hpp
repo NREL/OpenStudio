@@ -27,15 +27,15 @@ namespace openstudio {
 namespace model {
 
 class SubSurface;
+class InteriorPartitionSurface;
+class ShadingSurface;
 class DaylightingDeviceShelf;
 
 namespace detail {
 
   /** DaylightingDeviceShelf_Impl is a ModelObject_Impl that is the implementation class for DaylightingDeviceShelf.*/
   class MODEL_API DaylightingDeviceShelf_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(boost::optional<double> viewFactortoOutsideShelf READ viewFactortoOutsideShelf WRITE setViewFactortoOutsideShelf RESET resetViewFactortoOutsideShelf);
-   public:
+  public:
     /** @name Constructors and Destructors */
     //@{
 
@@ -60,11 +60,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Handle Non-Extensible IddField Window Name.
+    boost::optional<InteriorPartitionSurface> insideShelf() const;
 
-    // TODO: Handle Non-Extensible IddField Inside Shelf Name.
-
-    // TODO: Handle Non-Extensible IddField Outside Shelf Name.
+    boost::optional<ShadingSurface> outsideShelf() const;
 
     boost::optional<double> viewFactortoOutsideShelf() const;
 
@@ -72,13 +70,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Handle Non-Extensible IddField Window Name.
+    bool setInsideShelf(const InteriorPartitionSurface& insideShelf);
 
-    // TODO: Handle Non-Extensible IddField Inside Shelf Name.
-
-    // TODO: Handle Non-Extensible IddField Outside Shelf Name.
-
-    bool setViewFactortoOutsideShelf(boost::optional<double> viewFactortoOutsideShelf);
+    bool setOutsideShelf(const ShadingSurface& outsideShelf);
 
     bool setViewFactortoOutsideShelf(double viewFactortoOutsideShelf);
 
@@ -89,11 +83,9 @@ namespace detail {
     /// Get the related sub surface.
     SubSurface subSurface() const;
 
-    /// Set the related sub surface.
-    bool setSubSurface(const SubSurface& subSurface);
-
    protected:
    private:
+
     REGISTER_LOGGER("openstudio.model.DaylightingDeviceShelf");
   };
 

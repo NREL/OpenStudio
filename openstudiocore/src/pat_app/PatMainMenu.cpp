@@ -111,7 +111,14 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
 
   m_preferencesMenu->addAction(m_changeMeasuresDir);
   
-  // Window menu
+  m_configureProxy = new QAction(tr("&Configure Internet Proxy"),this);
+
+  isConnected = connect(m_configureProxy, SIGNAL(triggered()),this,SIGNAL(configureProxyClicked()));
+  OS_ASSERT(isConnected);
+
+  m_preferencesMenu->addAction(m_configureProxy);
+
+   // Window menu
   m_windowMenu = new QMenu(tr("&Online BCL"),this);
   addMenu(m_windowMenu);
 

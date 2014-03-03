@@ -536,6 +536,12 @@ namespace model {
       return m_cachedTriangulation;
     }
 
+    Point3d PlanarSurface_Impl::centroid() const
+    {
+      boost::optional<Point3d> result = getCentroid(this->vertices());
+      OS_ASSERT(result);
+      return *result;
+    }
 
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
@@ -744,6 +750,11 @@ Plane PlanarSurface::plane() const
 std::vector<std::vector<Point3d> > PlanarSurface::triangulation() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->triangulation();
+}
+
+Point3d PlanarSurface::centroid() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->centroid();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,
