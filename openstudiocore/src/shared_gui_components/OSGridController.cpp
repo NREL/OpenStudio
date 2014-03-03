@@ -225,9 +225,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
         OSComboBox2 * comboBox = new OSComboBox2();
 
         comboBox->bind(mo,
-                       boost::bind(&ComboBoxConcept::choices,comboBoxConcept.data()),
-                       StringGetter(boost::bind(&ComboBoxConcept::get,comboBoxConcept.data(),mo)),
-                       boost::optional<StringSetter>(boost::bind(&ComboBoxConcept::set,comboBoxConcept.data(),mo,_1)));
+                       comboBoxConcept->choiceConcept(mo));
 
         widget = comboBox;
 

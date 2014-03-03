@@ -139,23 +139,13 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   scrollArea->setBackgroundRole(QPalette::NoRole);
   layout->addWidget(scrollArea);
 
-  model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-  std::vector<model::ModelObject> caseModelObjects;
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
+  std::vector<model::ModelObject> caseModelObjects = castVector<model::ModelObject>(model.getModelObjects<model::RefrigerationCase>());
 
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
-  std::vector<model::ModelObject> walkInModelObjects;
-  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
-  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
-  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
+  std::vector<model::ModelObject> walkInModelObjects = castVector<model::ModelObject>(model.getModelObjects<model::RefrigerationWalkIn>());
 
   RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
@@ -416,29 +406,33 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
                             &model::RefrigerationCase::averageRefrigerantChargeInventory,
                             &model::RefrigerationCase::setAverageRefrigerantChargeInventory);
     }else if(field == LATENTCASECREDITCURVETYPE){
-      addComboBoxColumn(QString(LATENTCASECREDITCURVETYPE),
-                        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-                        &model::RefrigerationCase::latentCaseCreditCurveTypeValues,
-                        &model::RefrigerationCase::latentCaseCreditCurveType,
-                        &model::RefrigerationCase::setLatentCaseCreditCurveType);
+      addComboBoxColumn<model::RefrigerationCase,std::string>(
+            QString(LATENTCASECREDITCURVETYPE),
+            static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+            &model::RefrigerationCase::latentCaseCreditCurveTypeValues,
+            &model::RefrigerationCase::latentCaseCreditCurveType,
+            &model::RefrigerationCase::setLatentCaseCreditCurveType);
     }else if(field == ANTISWEATHEATERCONTROLTYPE){
-      addComboBoxColumn(QString(ANTISWEATHEATERCONTROLTYPE),
-                        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-                        &model::RefrigerationCase::antiSweatHeaterControlTypeValues,
-                        &model::RefrigerationCase::antiSweatHeaterControlType,
-                        &model::RefrigerationCase::setAntiSweatHeaterControlType);
+      addComboBoxColumn<model::RefrigerationCase,std::string>(
+            QString(ANTISWEATHEATERCONTROLTYPE),
+            static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+            &model::RefrigerationCase::antiSweatHeaterControlTypeValues,
+            &model::RefrigerationCase::antiSweatHeaterControlType,
+            &model::RefrigerationCase::setAntiSweatHeaterControlType);
     }else if(field == CASEDEFROSTTYPE){
-      addComboBoxColumn(QString(CASEDEFROSTTYPE),
-                        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-                        &model::RefrigerationCase::caseDefrostTypeValues,
-                        &model::RefrigerationCase::caseDefrostType,
-                        &model::RefrigerationCase::setCaseDefrostType);
+      addComboBoxColumn<model::RefrigerationCase,std::string>(
+            QString(CASEDEFROSTTYPE),
+            static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+            &model::RefrigerationCase::caseDefrostTypeValues,
+            &model::RefrigerationCase::caseDefrostType,
+            &model::RefrigerationCase::setCaseDefrostType);
     }else if(field == DEFROSTENERGYCORRECTIONCURVETYPE){
-      addComboBoxColumn(QString(DEFROSTENERGYCORRECTIONCURVETYPE),
-                        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-                        &model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues,
-                        &model::RefrigerationCase::defrostEnergyCorrectionCurveType,
-                        &model::RefrigerationCase::setDefrostEnergyCorrectionCurveType);
+      addComboBoxColumn<model::RefrigerationCase,std::string>(
+            QString(DEFROSTENERGYCORRECTIONCURVETYPE),
+            static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+            &model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues,
+            &model::RefrigerationCase::defrostEnergyCorrectionCurveType,
+            &model::RefrigerationCase::setDefrostEnergyCorrectionCurveType);
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
       addQuantityEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
                             QString("W/m"),
@@ -621,15 +615,19 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
 
   Q_FOREACH(QString field, fields){
     if(field == DEFROSTTYPE){
-      addComboBoxColumn(QString(DEFROSTTYPE),
-                        &model::RefrigerationWalkIn::defrostTypeValues,
-                        &model::RefrigerationWalkIn::defrostType,
-                        &model::RefrigerationWalkIn::setDefrostType);
+      addComboBoxColumn<model::RefrigerationWalkIn,std::string>(
+            QString(DEFROSTTYPE),
+            static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+            &model::RefrigerationWalkIn::defrostTypeValues,
+            &model::RefrigerationWalkIn::defrostType,
+            &model::RefrigerationWalkIn::setDefrostType);
     }else if(field == DEFROSTCONTROLTYPE){
-      addComboBoxColumn(QString(DEFROSTCONTROLTYPE),
-                        &model::RefrigerationWalkIn::defrostControlTypeValues,
-                        &model::RefrigerationWalkIn::defrostControlType,
-                        &model::RefrigerationWalkIn::setDefrostControlType);
+      addComboBoxColumn<model::RefrigerationWalkIn,std::string>(
+            QString(DEFROSTCONTROLTYPE),
+            static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+            &model::RefrigerationWalkIn::defrostControlTypeValues,
+            &model::RefrigerationWalkIn::defrostControlType,
+            &model::RefrigerationWalkIn::setDefrostControlType);
     }else if(field == OPERATINGTEMPERATURE){
       addQuantityEditColumn(QString(OPERATINGTEMPERATURE),
                             QString("C"),

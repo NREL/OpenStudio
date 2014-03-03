@@ -41,8 +41,8 @@ namespace openstudio {
 
 OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, QWidget * parent)
   : QWidget(parent),
-  m_CollapsibleView(0),
   m_gridLayout(0),
+  m_CollapsibleView(0),
   m_gridController(gridController)
 {
   m_gridLayout = new QGridLayout();
