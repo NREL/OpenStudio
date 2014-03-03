@@ -27,6 +27,7 @@
 #include <model/ThermalZone.hpp>
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
+#include <model/DaylightingDeviceShelf.hpp>
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -43,6 +44,11 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateInteriorPartitionSurface( model::InteriorPartitionSurface & modelObject )
 {
   if (!modelObject.converttoInternalMass()){
+    return boost::none;
+  }
+
+  // will get translated with light shelf
+  if (modelObject.daylightingDeviceShelf()){
     return boost::none;
   }
 

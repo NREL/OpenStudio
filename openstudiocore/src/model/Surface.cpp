@@ -1456,10 +1456,10 @@ namespace detail {
 
     Point3dVector interiorShelfVertices;
     if (doInteriorShelf) {
-      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0));
-      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, interiorShelfProjectionFactor*daylightingHeight)); 
-      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY + daylightingHeight, interiorShelfProjectionFactor*daylightingHeight));
-      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY + daylightingHeight, 0));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight)); 
+      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));
     }
 
     // everything ok, remove all windows
