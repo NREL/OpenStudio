@@ -30,6 +30,8 @@
 
 #include <utilities/idd/IddObject.hpp>
 
+#include <boost/function.hpp>
+
 #include <QObject>
 #include <QSharedPointer>
 #include <QWidget>
@@ -70,13 +72,19 @@ public:
     m_baseConcepts.push_back(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType>
+  template<typename DataSourceType, typename ChoiceType>
   void addComboBoxColumn(QString headingLabel,
-                         std::vector<std::string> (* choices)(void),
-                         std::string (DataSourceType::* getter)(void) const,
-                         bool (DataSourceType::* setter)(std::string))
+                         boost::function<std::string (ChoiceType)> toString,
+                         boost::function<std::vector<ChoiceType> ()> choices,
+                         boost::function<ChoiceType (DataSourceType*)> getter,
+                         boost::function<bool (DataSourceType*, ChoiceType)> setter)
   {
-    m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(new ComboBoxConceptImpl<DataSourceType>(headingLabel,choices,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(
+        new ComboBoxRequiredChoiceImpl<DataSourceType,ChoiceType>(headingLabel,
+                                                                  toString,
+                                                                  choices,
+                                                                  getter,
+                                                                  setter)));
   }
 
   template<typename ValueType, typename DataSourceType>

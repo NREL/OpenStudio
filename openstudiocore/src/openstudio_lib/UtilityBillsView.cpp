@@ -398,20 +398,22 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
     OptionalStringGetter(boost::bind(&model::UtilityBill::name,m_utilityBill.get_ptr(),true)),
     boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),_1)));
 
-  m_consumptionUnits->bind(
+  m_consumptionUnits->bind<std::string>(
       *m_utilityBill,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       boost::bind(&model::UtilityBill::consumptionUnitValues,m_utilityBill.get_ptr()),
       OptionalStringGetter(boost::bind(&model::UtilityBill::consumptionUnit,m_utilityBill.get_ptr())),
-      boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setConsumptionUnit,m_utilityBill.get_ptr(),_1)));
+      boost::bind(&model::UtilityBill::setConsumptionUnit,m_utilityBill.get_ptr(),_1));
 
   if (m_utilityBill->fuelType() == FuelType::Electricity){
     m_peakDemandUnitsLabel->setVisible(true);
     m_peakDemandUnits->setVisible(true);
-    m_peakDemandUnits->bind(
+    m_peakDemandUnits->bind<std::string>(
         *m_utilityBill,
+        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
         boost::bind(&model::UtilityBill::peakDemandUnitValues,m_utilityBill.get_ptr()),
         OptionalStringGetter(boost::bind(&model::UtilityBill::peakDemandUnit,m_utilityBill.get_ptr())),
-        boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setPeakDemandUnit,m_utilityBill.get_ptr(),_1)));
+        boost::bind(&model::UtilityBill::setPeakDemandUnit,m_utilityBill.get_ptr(),_1));
 
     m_windowTimestepsLabel->setVisible(true);
     m_windowTimesteps->setVisible(true);
