@@ -408,14 +408,14 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
   tempIO = IO.popen(t_cmd)
 
 
-  temp = tempIO.readlines.to_s
+  temp = tempIO.readlines
   tempIO.close
 
   linenum = 0
 
   puts "#{Time.now.getutc}: Parsing result"
   values = []
-  temp.split(/\n/).each do |val|
+  temp.each do |val|
     line = OpenStudio::Radiance::parseGenDayMtxLine(val)
     if line.size != 8760
       abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
@@ -425,6 +425,8 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
     linenum = linenum + 1
     values << line;
   end
+
+  puts "Generated #{linenum} lines"
 
   if values.empty?
     puts "ERROR: simulation command generated no results: #{t_cmd}"
