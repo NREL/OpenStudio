@@ -81,12 +81,6 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
     buttonLayout->addWidget(button,0,Qt::AlignLeft);
     buttonGroup->addButton(button,buttonGroup->buttons().size());
   }
-  std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
-  if(buttons.size() > 0){
-    QPushButton * button = qobject_cast<QPushButton *>(buttons.at(0));
-    OS_ASSERT(button);
-    button->setChecked(true);
-  }
   buttonLayout->addStretch();
 
   QVBoxLayout * layout = 0;
@@ -120,7 +114,13 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   setContentsMargins(5,5,5,5);
 
-  refreshAll();
+  std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
+  if(buttons.size() > 0){
+    QPushButton * button = qobject_cast<QPushButton *>(buttons.at(0));
+    OS_ASSERT(button);
+    button->setChecked(true);
+    selectCategory(0);
+  }
 }
 
 void OSGridView::setGridController(OSGridController * gridController)
