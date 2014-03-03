@@ -28,6 +28,8 @@
 #include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
+#include <model/DaylightingDeviceShelf.hpp>
+#include <model/DaylightingDeviceShelf_Impl.hpp>
 
 #include <utilities/idd/OS_InteriorPartitionSurface_FieldEnums.hxx>
 
@@ -208,8 +210,7 @@ namespace detail {
   }
 
   bool InteriorPartitionSurface_Impl::setSurfaceArea(double surfaceArea) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceFields::SurfaceArea, surfaceArea);
+    bool result = setDouble(OS_InteriorPartitionSurfaceFields::SurfaceArea, surfaceArea);
     return result;
   }
 
@@ -229,8 +230,7 @@ namespace detail {
   }
 
   bool InteriorPartitionSurface_Impl::setNumberofVertices(double numberofVertices) {
-    bool result = false;
-    result = setDouble(OS_InteriorPartitionSurfaceFields::NumberofVertices, numberofVertices);
+    bool result = setDouble(OS_InteriorPartitionSurfaceFields::NumberofVertices, numberofVertices);
     return result;
   }
 
@@ -264,6 +264,18 @@ namespace detail {
     bool ok = setString(OS_InteriorPartitionSurfaceFields::InteriorPartitionSurfaceGroupName,
                         "");
     OS_ASSERT(ok);
+  }
+
+  boost::optional<DaylightingDeviceShelf> InteriorPartitionSurface_Impl::daylightingDeviceShelf() const
+  {
+    std::vector<DaylightingDeviceShelf> sources = getObject<ModelObject>().getModelObjectSources<DaylightingDeviceShelf>();
+    if (sources.empty()){
+      return boost::none;
+    }
+    if (sources.size() > 1){
+      LOG(Error, "InteriorPartitionSurface is referenced by more than one DaylightingDeviceShelf, returning first");
+    }
+    return sources[0];
   }
 
   boost::optional<ModelObject> InteriorPartitionSurface_Impl::interiorPartitionSurfaceGroupAsModelObject() const {
@@ -376,6 +388,11 @@ bool InteriorPartitionSurface::setInteriorPartitionSurfaceGroup(const InteriorPa
 
 void InteriorPartitionSurface::resetInteriorPartitionSurfaceGroup() {
   getImpl<detail::InteriorPartitionSurface_Impl>()->resetInteriorPartitionSurfaceGroup();
+}
+
+boost::optional<DaylightingDeviceShelf> InteriorPartitionSurface::daylightingDeviceShelf() const
+{
+  return getImpl<detail::InteriorPartitionSurface_Impl>()->daylightingDeviceShelf();
 }
 
 /// @cond

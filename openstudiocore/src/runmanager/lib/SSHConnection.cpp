@@ -909,7 +909,9 @@ namespace detail {
 
   SSHConnection::SSHConnection(const SSHCredentials &t_creds, bool /*t_allow_ui*/ )
     : m_credentials(t_creds), m_command_timedout(false),
-      m_get_timedout(false), m_put_timedout(false)
+      m_oob_command_timedout(false), m_get_timedout(false),
+      m_put_timedout(false)
+      
   {
   }
 

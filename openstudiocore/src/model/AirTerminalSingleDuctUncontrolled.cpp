@@ -138,11 +138,11 @@ namespace detail{
         thermalZone = portList->thermalZone(); 
       }
 
-      if( thermalZone || outlet->optionalCast<AirLoopHVACZoneMixer>() )
+      if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
       {
         if( boost::optional<ModelObject> inlet = node.inletModelObject() )
         {
-          if( boost::optional<AirLoopHVACZoneSplitter> splitter = inlet->optionalCast<AirLoopHVACZoneSplitter>() )
+          if( boost::optional<Splitter> splitter = inlet->optionalCast<Splitter>() )
           {
             boost::optional<ModelObject> sourceModelObject = node.inletModelObject();
             boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
@@ -192,7 +192,7 @@ namespace detail{
     std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 

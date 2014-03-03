@@ -25,11 +25,11 @@
 
 namespace openstudio {
 
+class Point3d;
 class Transformation;
 
 namespace model {
 
-class BuildingStandardsInformation;
 class Facility;
 class Meter;
 class ShadingSurfaceGroup;
@@ -65,14 +65,8 @@ class MODEL_API Building : public ParentObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validBuildingTypeValues();
-
   /** @name Getters */
   //@{
-
-  std::string buildingType() const;
-
-  bool isBuildingTypeDefaulted() const;
 
   double northAxis() const;
 
@@ -82,13 +76,22 @@ class MODEL_API Building : public ParentObject {
 
   bool isNominalFloortoFloorHeightDefaulted() const;
 
+  boost::optional<int> standardsNumberOfStories() const;
+
+  boost::optional<int> standardsNumberOfAboveGroundStories() const;
+
+  /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  boost::optional<std::string> standardsBuildingType() const;
+
+  /// If standardsBuildingType is empty, returns a list of suggestions.  If standardsBuildingType is not empty,
+  /// returns standardsBuildingType.
+  std::vector<std::string> suggestedStandardsBuildingTypes() const;
+
   //@}
   /** @name Setters */
   //@{
-
-  bool setBuildingType(const std::string& buildingType);
-
-  void resetBuildingType();
 
   void setNorthAxis(double northAxis);
 
@@ -97,6 +100,18 @@ class MODEL_API Building : public ParentObject {
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
 
   void resetNominalFloortoFloorHeight();
+
+  bool setStandardsNumberOfStories(int value);
+  void resetStandardsNumberOfStories();
+
+  bool setStandardsNumberOfAboveGroundStories(int value);
+  void resetStandardsNumberOfAboveGroundStories();
+
+  /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  bool setStandardsBuildingType(const std::string& standardsBuildingType);
+  void resetStandardsBuildingType();
 
   //@}
   /** @name Other */
@@ -135,6 +150,8 @@ class MODEL_API Building : public ParentObject {
   /// Returns the parent Facility object if it exists.
   boost::optional<Facility> facility() const;
 
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
   /// Returns all of the \link Space Spaces\endlink in the Building.
   std::vector<Space> spaces() const;
 
@@ -150,10 +167,8 @@ class MODEL_API Building : public ParentObject {
   /// Returns all \link Surface Surfaces\endlink which are roofs.
   std::vector<Surface> roofs() const;
 
-  /// Returns the BuildingStandardsInformation object associated with the Building.
-  /// Constructs a new object if necessary.
-  BuildingStandardsInformation standardsInformation() const;
-
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
   /// Returns the total floor area in square meters.  
   /// Includes only spaces marked as included in floor area.
   /// Includes space multipliers in calculation.
@@ -165,6 +180,26 @@ class MODEL_API Building : public ParentObject {
   /// Attribute name: conditionedFloorArea
   boost::optional<double> conditionedFloorArea() const;
 
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
+  /** Returns the total exterior surface area (m^2). Includes space multipliers in
+   *  calculation. */
+  double exteriorSurfaceArea() const;
+
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
+  /** Returns the total exterior wall area (m^2). Includes space multipliers in the
+   *  calculation. */
+  double exteriorWallArea() const;
+
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area".
+  /** Returns the total air volume (m^3) in the building. Includes space multipliers
+   *  in the calculation. */
+  double airVolume() const;
+
+  // ETH@20140115 - Should take a bool as to whether to include spaces marked as
+  // "not in floor area". (Etc. for the rest of the getters like this.)
   /** Returns the number of people in the building. */
   double numberOfPeople() const;
 
@@ -201,28 +236,32 @@ class MODEL_API Building : public ParentObject {
   /** Returns the gas equipment power per person (W/person) of this building. */
   double gasEquipmentPowerPerPerson() const;
 
-  /// Returns the number of stories in this Building if set in the child BuildingStandardsInformation
-  /// object.  This value is not inferred from Building geometry. 
-  /// Attribute name: numberOfStories
-  boost::optional<int> numberOfStories() const;
+  /** Returns the infiltration design flow rate (m^3/s) of this building. Ignores
+   *  SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowRate() const;
 
-  /// Returns the number of above ground stories in this Building if set in the child BuildingStandardsInformation
-  /// object.  This value is not inferred from Building geometry. 
-  /// Attribute name: numberOfAboveGroundStories
-  boost::optional<int> numberOfAboveGroundStories() const;
+  /** Returns the infiltration design flow per space floor area (m^3/m^2*s) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowPerSpaceFloorArea() const;
 
-  /// Sets the number of stories of this Building in the child BuildingStandardsInformation
-  /// object.
-  /// Attribute name: numberOfStories
-  bool setNumberOfStories(boost::optional<int> value);
+  /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowPerExteriorSurfaceArea() const;
 
-  /// Sets the number of above ground stories in this Building in the child BuildingStandardsInformation
-  /// object.  
-  /// Attribute name: numberOfAboveGroundStories
-  bool setNumberOfAboveGroundStories(boost::optional<int> value);
+  /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignFlowPerExteriorWallArea() const;
+
+  /** Returns the infiltration design air changes per hour (1/h) of this building.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+  double infiltrationDesignAirChangesPerHour() const;
 
   /// Returns the Transformation from the Building coordinate system to world coordinates.
   Transformation transformation() const;
+
+  /// Returns a suggested pattern for skylights targeting a skylight to floor ratio with desired sizes.
+  /// Pattern will be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
+  std::vector<std::vector<Point3d> > generateSkylightPattern(double skylightToFloorRatio, double desiredWidth, double desiredHeight) const;
 
   //@}
  protected:

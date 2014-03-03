@@ -184,8 +184,7 @@ namespace detail {
   }
 
   bool OtherEquipment_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_OtherEquipmentFields::Multiplier, multiplier);
+    bool result = setDouble(OS_OtherEquipmentFields::Multiplier, multiplier);
     return result;
   }
 

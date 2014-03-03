@@ -446,6 +446,31 @@ namespace detail {
         double gasEquipmentPowerPerPerson, 
         const boost::optional<GasEquipment>& templateGasEquipment);
 
+    /** Returns the infiltration design flow rate (m^3/s) in the space. Ignores
+     *  SpaceInfiltrationEffectiveLeakageArea objects. */
+    /// Does not include space multiplier in calculation.
+    double infiltrationDesignFlowRate() const;
+
+    /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    /// Does not include space multiplier in calculation.
+    double infiltrationDesignFlowPerSpaceFloorArea() const;
+
+    /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    /// Does not include space multiplier in calculation.
+    double infiltrationDesignFlowPerExteriorSurfaceArea() const;
+
+    /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    /// Does not include space multiplier in calculation.
+    double infiltrationDesignFlowPerExteriorWallArea() const;
+
+    /** Returns the infiltration design air changes per hour (1/h) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+    /// Does not include space multiplier in calculation.
+    double infiltrationDesignAirChangesPerHour() const;
+
     /** The following functionality is used by the EnergyPlus translator, the primary aim
      *  is to preserve information while putting the space into a state where it can easily
      *  be translated to EnergyPlus:
@@ -490,6 +515,8 @@ namespace detail {
         Will return empty vector if all floors in space are not on the same x,y plane.
     */
     std::vector<Point3d> floorPrint() const;
+
+    bool isPlenum() const;
 
    private:
     REGISTER_LOGGER("openstudio.model.Space");

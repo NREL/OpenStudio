@@ -23,6 +23,10 @@
 #include <openstudio_lib/ModelObjectInspectorView.hpp>
 #include <openstudio_lib/ModelObjectVectorController.hpp>
 
+#include <model/StandardsInformationConstruction.hpp>
+
+class QComboBox;
+
 namespace openstudio {
 
 namespace model {
@@ -34,6 +38,8 @@ namespace model {
 class OSLineEdit;
 
 class OSQuantityEdit;
+
+class OSComboBox2;
 
 class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorView
 {
@@ -53,6 +59,14 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
 
     virtual void onUpdate();
 
+  protected slots:
+
+    void standardsConstructionTypeChanged(const QString& text);
+
+    void editStandardsConstructionType(const QString& text);
+
+    void populateStandardsConstructionType();
+
   private:
 
     void createLayout();
@@ -65,11 +79,17 @@ class ConstructionFfactorGroundFloorInspectorView : public ModelObjectInspectorV
 
     OSLineEdit * m_nameEdit;
 
+    OSComboBox2 * m_intendedSurfaceType;
+
+    QComboBox * m_standardsConstructionType;
+
     OSQuantityEdit * m_ffactorEdit;
 
     OSQuantityEdit * m_areaEdit;
 
     OSQuantityEdit * m_perimeterExposedEdit;
+
+    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
 
     bool m_isIP;
 

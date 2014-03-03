@@ -69,7 +69,7 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
   void setHeatingPriority(const ModelObject & euqipment, unsigned priority);
 
   /** Return all equipment.  Order is undetermined. */
-  std::vector<ModelObject> equipment();
+  std::vector<ModelObject> equipment() const;
 
   /** Return all equipment.  Order is determined by heating priority */
   std::vector<ModelObject> equipmentInHeatingOrder();

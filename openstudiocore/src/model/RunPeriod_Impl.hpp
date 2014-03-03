@@ -67,6 +67,9 @@ namespace detail {
     void setUseWeatherFileSnowInd(bool snowInd);
     void setNumTimePeriodRepeats(int numRepeats);
 
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
+
     // return the parent object in the hierarchy
     virtual boost::optional<ParentObject> parent() const;
 

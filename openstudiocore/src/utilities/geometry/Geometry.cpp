@@ -283,7 +283,7 @@ namespace openstudio{
     double c = E1.dot(E1);
     double d = E0.dot(BminusP);
     double e = E1.dot(BminusP);
-    double f = BminusP.dot(BminusP);
+    // double f = BminusP.dot(BminusP); // unused
 
     double det = a*c-b*b; 
     double s = b*e-c*d; 
@@ -493,6 +493,17 @@ namespace openstudio{
     }
     //std::cout << "End" << std::endl;
 
+    return result;
+  }
+
+  std::vector<Point3d> moveVerticesTowardsPoint(const Point3dVector& vertices, const Point3d& point, double distance)
+  {
+    Point3dVector result;
+    BOOST_FOREACH(const Point3d& vertex, vertices){
+      Vector3d vector = point-vertex;
+      vector.setLength(distance);
+      result.push_back(vertex+vector);
+    }
     return result;
   }
 

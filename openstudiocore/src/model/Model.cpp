@@ -192,6 +192,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
+    REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
+    REGISTER_CONSTRUCTOR(AirLoopHVACSupplyPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
@@ -208,7 +210,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(BoilerHotWater);
     REGISTER_CONSTRUCTOR(BoilerSteam);
     REGISTER_CONSTRUCTOR(Building);
-    REGISTER_CONSTRUCTOR(BuildingStandardsInformation);
     REGISTER_CONSTRUCTOR(BuildingStory);
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
@@ -221,6 +222,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingWater);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpEquationFit);
+    REGISTER_CONSTRUCTOR(CoilHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
@@ -230,13 +232,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilHeatingWater);
     REGISTER_CONSTRUCTOR(CoilHeatingWaterToAirHeatPumpEquationFit);
     REGISTER_CONSTRUCTOR(CoilHeatingWaterBaseboard);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
     REGISTER_CONSTRUCTOR(Connection);
     REGISTER_CONSTRUCTOR(ConnectorMixer);
     REGISTER_CONSTRUCTOR(ConnectorSplitter);
     REGISTER_CONSTRUCTOR(Construction);
-    REGISTER_CONSTRUCTOR(ConstructionBaseStandardsInformation);
     REGISTER_CONSTRUCTOR(ConstructionWithInternalSource);
     REGISTER_CONSTRUCTOR(ControllerMechanicalVentilation);
     REGISTER_CONSTRUCTOR(ControllerOutdoorAir);
@@ -284,6 +286,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanVariableVolume);
+    REGISTER_CONSTRUCTOR(FanZoneExhaust);    
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
@@ -331,16 +334,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(PumpVariableSpeed);
     REGISTER_CONSTRUCTOR(RadianceParameters);
     REGISTER_CONSTRUCTOR(RefractionExtinctionGlazing);
+    REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
     REGISTER_CONSTRUCTOR(RefrigerationCase);
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationGasCoolerAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
     REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
     REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
     REGISTER_CONSTRUCTOR(RefrigerationSystem);
+    REGISTER_CONSTRUCTOR(RefrigerationTranscriticalSystem);
     REGISTER_CONSTRUCTOR(RefrigerationWalkIn);
     REGISTER_CONSTRUCTOR(RefrigerationWalkInZoneBoundary);
     REGISTER_CONSTRUCTOR(RenderingColor);
@@ -387,6 +393,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SpaceType);
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
+    REGISTER_CONSTRUCTOR(StandardsInformationConstruction);
     REGISTER_CONSTRUCTOR(SteamEquipment);
     REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
     REGISTER_CONSTRUCTOR(SubSurface);
@@ -471,6 +478,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
@@ -487,7 +496,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(BoilerHotWater);
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
     REGISTER_COPYCONSTRUCTORS(Building);
-    REGISTER_COPYCONSTRUCTORS(BuildingStandardsInformation);
     REGISTER_COPYCONSTRUCTORS(BuildingStory);
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
@@ -500,6 +508,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWater);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpEquationFit);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
@@ -509,13 +518,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWater);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterToAirHeatPumpEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterBaseboard);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
     REGISTER_COPYCONSTRUCTORS(Connection);
     REGISTER_COPYCONSTRUCTORS(ConnectorMixer);
     REGISTER_COPYCONSTRUCTORS(ConnectorSplitter);
     REGISTER_COPYCONSTRUCTORS(Construction);
-    REGISTER_COPYCONSTRUCTORS(ConstructionBaseStandardsInformation);
     REGISTER_COPYCONSTRUCTORS(ConstructionWithInternalSource);
     REGISTER_COPYCONSTRUCTORS(ControllerMechanicalVentilation);
     REGISTER_COPYCONSTRUCTORS(ControllerOutdoorAir);
@@ -563,6 +572,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
+    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);    
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
@@ -610,16 +620,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(PumpVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(RadianceParameters);
     REGISTER_COPYCONSTRUCTORS(RefractionExtinctionGlazing);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCase);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserWaterCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationGasCoolerAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSystem);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationTranscriticalSystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkIn);
     REGISTER_COPYCONSTRUCTORS(RefrigerationWalkInZoneBoundary);
     REGISTER_COPYCONSTRUCTORS(RenderingColor);
@@ -666,6 +679,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SpaceType);
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);
+    REGISTER_COPYCONSTRUCTORS(StandardsInformationConstruction);
     REGISTER_COPYCONSTRUCTORS(SteamEquipment);
     REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(SubSurface);
@@ -848,7 +862,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     for( std::vector<ScheduleConstant>::iterator it = schedules.begin();
          it != schedules.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<std::string> name = it->name() )
       {
@@ -890,6 +904,32 @@ if (_className::iddObjectType() == typeToCreate) { \
     schedule.setValue(1.0);
 
     return schedule;
+  }
+
+  SpaceType Model_Impl::plenumSpaceType() const
+  {
+    std::string plenumSpaceTypeName("Plenum Space Type");
+
+    std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
+
+    for( std::vector<SpaceType>::iterator it = spaceTypes.begin();
+         it != spaceTypes.end();
+         ++it )
+    {
+      if( boost::optional<std::string> name = it->name() )
+      {
+        if( istringEqual(name.get(),plenumSpaceTypeName) )
+        {
+          return *it;
+        }
+      }
+    }
+
+    SpaceType spaceType(model());
+
+    spaceType.setName(plenumSpaceTypeName);
+
+    return spaceType;
   }
 
   /// get the sql file
@@ -1035,11 +1075,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       targetObject = connection->targetObject();
       targetPort = connection->targetObjectPort();
 
-      if( sourceObject && sourcePort )
-      {
-        sourceObject->setString(sourcePort.get(),"");
-      }
-
+      // This resets the cache
       if( targetObject )
       {
         if( boost::optional<HVACComponent> hvacComponent = targetObject->optionalCast<HVACComponent>() )
@@ -1061,9 +1097,17 @@ if (_className::iddObjectType() == typeToCreate) { \
 
       if( targetObject && targetPort )
       {
-        targetObject->setString(targetPort.get(),"");
+        if( boost::optional<PortList> portList = targetObject->optionalCast<PortList>() )
+        {
+          portList->getImpl<model::detail::PortList_Impl>()->removePort(targetPort.get());
+        }
+        else
+        {
+          targetObject->setString(targetPort.get(),"");
+        }
       }
 
+      // This resets the cache
       if( sourceObject )
       {
         if( boost::optional<HVACComponent> hvacComponent = sourceObject->optionalCast<HVACComponent>() )
@@ -1085,7 +1129,14 @@ if (_className::iddObjectType() == typeToCreate) { \
 
       if( sourceObject && sourcePort )
       {
-        sourceObject->setString(sourcePort.get(),"");
+        if( boost::optional<PortList> portList = sourceObject->optionalCast<PortList>() )
+        {
+          portList->getImpl<model::detail::PortList_Impl>()->removePort(sourcePort.get());
+        }
+        else
+        {
+          sourceObject->setString(sourcePort.get(),"");
+        }
       }
 
       connection->remove();
@@ -1242,6 +1293,11 @@ boost::optional<WeatherFile> Model::weatherFile() const
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+SpaceType Model::plenumSpaceType() const
+{
+  return getImpl<detail::Model_Impl>()->plenumSpaceType();
 }
 
 openstudio::OptionalSqlFile Model::sqlFile() const

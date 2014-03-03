@@ -203,6 +203,8 @@ namespace detail {
 
     bool isSecondaryDaylightingControl() const;
 
+    bool aimAt(const Point3d& point);
+
    protected: 
 
     // index of the space name

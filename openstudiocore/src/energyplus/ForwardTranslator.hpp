@@ -38,6 +38,8 @@ class AirConditionerVariableRefrigerantFlow;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
+class AirLoopHVACReturnPlenum;
+class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeReheat;
@@ -59,12 +61,14 @@ class CoilCoolingDXTwoSpeed;
 class CoilCoolingDXVariableRefrigerantFlow;
 class CoilCoolingWater;
 class CoilCoolingWaterToAirHeatPumpEquationFit;
+class CoilHeatingDesuperheater;
 class CoilHeatingDXSingleSpeed;
 class CoilHeatingDXVariableRefrigerantFlow;
 class CoilHeatingElectric;
 class CoilHeatingGas;
 class CoilHeatingWater;
 class CoilHeatingWaterToAirHeatPumpEquationFit;
+class CoilWaterHeatingDesuperheater;
 class Construction;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
@@ -106,6 +110,7 @@ class ExteriorLights;
 class FanConstantVolume;
 class FanOnOff;
 class FanVariableVolume;
+class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
 class Gas;
 class GasEquipment;
@@ -138,16 +143,19 @@ class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
 class RefractionExtinctionGlazing;
+class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationCompressor;
 class RefrigerationCondenserAirCooled;
 class RefrigerationCondenserCascade;
 class RefrigerationCondenserEvaporativeCooled;
 class RefrigerationCondenserWaterCooled;
+class RefrigerationGasCoolerAirCooled;
 class RefrigerationSubcoolerLiquidSuction;
 class RefrigerationSubcoolerMechanical;
 class RefrigerationSecondarySystem;
 class RefrigerationSystem;
+class RefrigerationTranscriticalSystem;
 class RefrigerationWalkIn;
 class RoofVegetation;
 class RunPeriod;
@@ -252,6 +260,18 @@ class ENERGYPLUS_API ForwardTranslator {
    */ 
   void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
 
+  /** If isIP, translate to a Workspace that requests Inch Pound tabular (HTML) reports from EnergyPlus
+    * Use this interface with extreme caution and understanding of the impacts of reporting IP units.  
+    * Some assumptions in OpenStudio results processing may fail.
+   */
+  void setIPTabularOutput(bool isIP);
+
+  /** If excludeLCCObjects, skip translation of life cycle cost objects.
+    * Use this interface with extreme caution and understanding of the impacts.
+    * Some assumptions in OpenStudio will fail if you exclude life cycle costs
+    */
+  void setExcludeLCCObjects(bool excludeLCCObjects);
+
  private:
 
   REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -284,6 +304,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem( model::AirLoopHVACOutdoorAirSystem & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatPumpAirToAir( model::AirLoopHVACUnitaryHeatPumpAirToAir & modelObject );
+
+  boost::optional<IdfObject> translateAirLoopHVACReturnPlenum( model::AirLoopHVACReturnPlenum & airLoopHVACReturnPlenum );
+
+  boost::optional<IdfObject> translateAirLoopHVACSupplyPlenum( model::AirLoopHVACSupplyPlenum & airLoopHVACSupplyPlenum );
 
   boost::optional<IdfObject> translateAirLoopHVACZoneMixer( model::AirLoopHVACZoneMixer & modelObject  );
 
@@ -329,6 +353,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilCoolingWaterToAirHeatPumpEquationFit( model::CoilCoolingWaterToAirHeatPumpEquationFit & modelObject );
 
+  boost::optional<IdfObject> translateCoilHeatingDesuperheater( model::CoilHeatingDesuperheater & modelObject );
+
   boost::optional<IdfObject> translateCoilHeatingDXSingleSpeed( model::CoilHeatingDXSingleSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingDXSingleSpeedWithoutUnitary( model::CoilHeatingDXSingleSpeed & modelObject );
@@ -342,6 +368,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilHeatingWater( model::CoilHeatingWater & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingWaterToAirHeatPumpEquationFit( model::CoilHeatingWaterToAirHeatPumpEquationFit & modelObject );
+
+  boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater( model::CoilWaterHeatingDesuperheater & modelObject );
 
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
   
@@ -422,6 +450,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFanOnOff( model::FanOnOff & modelObject );
 
   boost::optional<IdfObject> translateFanVariableVolume( model::FanVariableVolume & modelObject );
+  
+  boost::optional<IdfObject> translateFanZoneExhaust( model::FanZoneExhaust & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeCoolerDirectResearchSpecial( model::EvaporativeCoolerDirectResearchSpecial & modelObject );
 
@@ -489,6 +519,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateRefractionExtinctionGlazing( model::RefractionExtinctionGlazing & modelObject );
 
+  boost::optional<IdfObject> translateRefrigerationAirChiller( model::RefrigerationAirChiller & modelObject );
+
   boost::optional<IdfObject> translateRefrigerationCase( model::RefrigerationCase & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationCompressor( model::RefrigerationCompressor & modelObject );
@@ -501,6 +533,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateRefrigerationCondenserWaterCooled( model::RefrigerationCondenserWaterCooled & modelObject );
 
+  boost::optional<IdfObject> translateRefrigerationGasCoolerAirCooled( model::RefrigerationGasCoolerAirCooled & modelObject );
+
   boost::optional<IdfObject> translateRefrigerationSubcoolerLiquidSuction( model::RefrigerationSubcoolerLiquidSuction & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationSubcoolerMechanical( model::RefrigerationSubcoolerMechanical & modelObject );
@@ -508,6 +542,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateRefrigerationSecondarySystem( model::RefrigerationSecondarySystem & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationSystem( model::RefrigerationSystem & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationTranscriticalSystem( model::RefrigerationTranscriticalSystem & modelObject );
 
   boost::optional<IdfObject> translateRefrigerationWalkIn( model::RefrigerationWalkIn & modelObject );
 
@@ -730,6 +766,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   // temp code
   bool m_keepRunControlSpecialDays;
+
+  bool m_ipTabularOutput;
+
+  bool m_excludeLCCObjects;
 };
 
 namespace detail

@@ -49,6 +49,7 @@ namespace openstudio {
         unsigned int seed;
         urandom = fopen ("/dev/urandom", "r");
         fread(&seed, sizeof (seed), 1, urandom);
+        fclose(urandom);
         qsrand(seed);
       }
     };

@@ -192,27 +192,23 @@ namespace detail {
   }
 
   void DaylightingControl_Impl::setPositionXCoordinate(double positionXCoordinate) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::PositionXCoordinate, positionXCoordinate);
+    bool result = setDouble(OS_Daylighting_ControlFields::PositionXCoordinate, positionXCoordinate);
     OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::setPositionYCoordinate(double positionYCoordinate) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::PositionYCoordinate, positionYCoordinate);
+    bool result = setDouble(OS_Daylighting_ControlFields::PositionYCoordinate, positionYCoordinate);
     OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::setPositionZCoordinate(double positionZCoordinate) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::PositionZCoordinate, positionZCoordinate);
+    bool result = setDouble(OS_Daylighting_ControlFields::PositionZCoordinate, positionZCoordinate);
     OS_ASSERT(result);
   }
 
 
   void DaylightingControl_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
+    bool result = setDouble(OS_Daylighting_ControlFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
     OS_ASSERT(result);
   }
 
@@ -222,8 +218,7 @@ namespace detail {
   }
 
   void DaylightingControl_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
+    bool result = setDouble(OS_Daylighting_ControlFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
     OS_ASSERT(result);
   }
 
@@ -233,8 +228,7 @@ namespace detail {
   }
 
   void DaylightingControl_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
+    bool result = setDouble(OS_Daylighting_ControlFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
     OS_ASSERT(result);
   }
 
@@ -244,8 +238,7 @@ namespace detail {
   }
 
   bool DaylightingControl_Impl::setIlluminanceSetpoint(double illuminanceSetpoint) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::IlluminanceSetpoint, illuminanceSetpoint);
+    bool result = setDouble(OS_Daylighting_ControlFields::IlluminanceSetpoint, illuminanceSetpoint);
     return result;
   }
 
@@ -255,8 +248,7 @@ namespace detail {
   }
 
   bool DaylightingControl_Impl::setLightingControlType(std::string lightingControlType) {
-    bool result = false;
-    result = setString(OS_Daylighting_ControlFields::LightingControlType, lightingControlType);
+    bool result = setString(OS_Daylighting_ControlFields::LightingControlType, lightingControlType);
     return result;
   }
 
@@ -266,8 +258,7 @@ namespace detail {
   }
 
   bool DaylightingControl_Impl::setMinimumInputPowerFractionforContinuousDimmingControl(double minimumInputPowerFractionforContinuousDimmingControl) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::MinimumInputPowerFractionforContinuousDimmingControl, minimumInputPowerFractionforContinuousDimmingControl);
+    bool result = setDouble(OS_Daylighting_ControlFields::MinimumInputPowerFractionforContinuousDimmingControl, minimumInputPowerFractionforContinuousDimmingControl);
     return result;
   }
 
@@ -277,8 +268,7 @@ namespace detail {
   }
 
   bool DaylightingControl_Impl::setMinimumLightOutputFractionforContinuousDimmingControl(double minimumLightOutputFractionforContinuousDimmingControl) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::MinimumLightOutputFractionforContinuousDimmingControl, minimumLightOutputFractionforContinuousDimmingControl);
+    bool result = setDouble(OS_Daylighting_ControlFields::MinimumLightOutputFractionforContinuousDimmingControl, minimumLightOutputFractionforContinuousDimmingControl);
     return result;
   }
 
@@ -288,8 +278,7 @@ namespace detail {
   }
 
   void DaylightingControl_Impl::setNumberofSteppedControlSteps(int numberofSteppedControlSteps) {
-    bool result = false;
-    result = setInt(OS_Daylighting_ControlFields::NumberofSteppedControlSteps, numberofSteppedControlSteps);
+    bool result = setInt(OS_Daylighting_ControlFields::NumberofSteppedControlSteps, numberofSteppedControlSteps);
     OS_ASSERT(result);
   }
 
@@ -299,8 +288,7 @@ namespace detail {
   }
 
   bool DaylightingControl_Impl::setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(double probabilityLightingwillbeResetWhenNeededinManualSteppedControl) {
-    bool result = false;
-    result = setDouble(OS_Daylighting_ControlFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl, probabilityLightingwillbeResetWhenNeededinManualSteppedControl);
+    bool result = setDouble(OS_Daylighting_ControlFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl, probabilityLightingwillbeResetWhenNeededinManualSteppedControl);
     return result;
   }
 
@@ -310,8 +298,7 @@ namespace detail {
   }
 
   bool DaylightingControl_Impl::setNumberofDaylightingViews(int numberofDaylightingViews) {
-    bool result = false;
-    result = setInt(OS_Daylighting_ControlFields::NumberofDaylightingViews, numberofDaylightingViews);
+    bool result = setInt(OS_Daylighting_ControlFields::NumberofDaylightingViews, numberofDaylightingViews);
     return result;
   }
 
@@ -406,7 +393,35 @@ namespace detail {
         result = (this->handle() == control->handle());
       }
     }
-    return result;  }
+    return result;  
+  }
+
+  bool DaylightingControl_Impl::aimAt(const Point3d& target)
+  {
+    Point3d position = this->position();
+    Vector3d vector = target - position;
+
+    if (!vector.normalize()){
+      return false;
+    }
+
+    Vector3d yAxis(0,1,0);
+    Vector3d rotationAxis = yAxis.cross(vector);
+
+    if (!rotationAxis.normalize()){
+      return false;
+    }
+
+    double angle = getAngle(yAxis, vector);
+    Transformation transformation = Transformation::rotation(rotationAxis, angle);
+    EulerAngles eulerAngles = transformation.eulerAngles();
+
+    this->setPsiRotationAroundXAxis(eulerAngles.psi());
+    this->setThetaRotationAroundYAxis(eulerAngles.theta());
+    this->setPhiRotationAroundZAxis(eulerAngles.phi());
+
+    return true;
+  }
 
   int DaylightingControl_Impl::spaceIndex() const
   {
@@ -654,6 +669,11 @@ bool DaylightingControl::isPrimaryDaylightingControl() const
 bool DaylightingControl::isSecondaryDaylightingControl() const
 {
   return getImpl<detail::DaylightingControl_Impl>()->isSecondaryDaylightingControl();
+}
+
+bool DaylightingControl::aimAt(const Point3d& target)
+{
+  return getImpl<detail::DaylightingControl_Impl>()->aimAt(target);
 }
 
 /// @cond

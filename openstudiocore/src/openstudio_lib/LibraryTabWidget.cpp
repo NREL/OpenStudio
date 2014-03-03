@@ -50,7 +50,7 @@ LibraryTabWidget::LibraryTabWidget(QWidget * parent)
 
   m_pageStack = new QStackedWidget();
 
-  m_pageStack->setStyleSheet("QStackedWidget {}");
+  m_pageStack->setStyleSheet("QStackedWidget { border: none;}");
 
   m_pageStack->setContentsMargins(0,0,0,0);
 
@@ -87,7 +87,7 @@ void LibraryTabWidget::select()
 
   for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
        it < m_tabButtons.end();
-       it++ )
+       ++it )
   {
     if( *it == button )
     {

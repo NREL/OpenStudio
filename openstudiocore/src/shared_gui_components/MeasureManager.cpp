@@ -328,7 +328,7 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
       // DLM: there is a bug in QMessageBox where setMinimumWidth is not used
       // http://www.qtcentre.org/threads/22298-QMessageBox-Controlling-the-width?p=113348#post113348
       QSpacerItem* horizontalSpacer = new QSpacerItem(330, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-      QGridLayout* layout = (QGridLayout*)messageBox->layout();
+      QGridLayout* layout = static_cast<QGridLayout*>(messageBox->layout());
       layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
       
       messageBox->exec();  
@@ -352,6 +352,7 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
       itr != measures.end();
       ++itr)
   {
+    // DLM: this should not happen for BCL measures but ok to check anyway
     bool isNewVersion = itr->checkForUpdates();
     if (isNewVersion) {
       itr->save();
@@ -411,6 +412,7 @@ void MeasureManager::updateMyMeasures(analysisdriver::SimpleProject &t_project)
       itr != measures.end();
       ++itr)
   {
+    // DLM: this happens if user updates measure but does not update checksums, ok to save it for them
     bool isNewVersion = itr->checkForUpdates();
     if (isNewVersion) {
       itr->save();
@@ -439,10 +441,15 @@ std::vector<BCLMeasure> MeasureManager::bclMeasures()
 
   for(std::map<UUID,BCLMeasure>::const_iterator it = m_bclMeasures.begin();
       it != m_bclMeasures.end();
-      it++ )
+      ++it )
   {
     result.push_back(it->second);
   }
+
+  // include installed measures in this list (eventually they should be taken out of the 
+  // installer and come in a pre-loaded local BCL)
+  std::vector<BCLMeasure> patMeasures = BCLMeasure::patApplicationMeasures();
+  result.insert(result.end(),patMeasures.begin(),patMeasures.end());
 
   return result;
 }
@@ -468,7 +475,7 @@ void MeasureManager::updateMeasuresLists()
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
   for( std::vector<BCLMeasure>::const_iterator it = localBCLMeasures.begin();
        it != localBCLMeasures.end();
-       it++ )
+       ++it )
   {
     m_bclMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
   }
@@ -476,7 +483,7 @@ void MeasureManager::updateMeasuresLists()
   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
   for( std::vector<BCLMeasure>::const_iterator it = userMeasures.begin();
        it != userMeasures.end();
-       it++ )
+       ++it )
   {
     m_myMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
   }
@@ -493,7 +500,7 @@ std::vector<BCLMeasure> MeasureManager::myMeasures()
 
   for(std::map<UUID,BCLMeasure>::const_iterator it = m_myMeasures.begin();
       it != m_myMeasures.end();
-      it++ )
+      ++it )
   {
     result.push_back(it->second);
   }

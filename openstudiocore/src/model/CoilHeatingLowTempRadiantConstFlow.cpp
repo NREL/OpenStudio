@@ -45,7 +45,7 @@ namespace detail {
                                                                                    bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilHeatingLowTempRadiantConstFlow::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingLowTempRadiantConstFlow::iddObjectType());
   }
 
   CoilHeatingLowTempRadiantConstFlow_Impl::CoilHeatingLowTempRadiantConstFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -53,7 +53,7 @@ namespace detail {
                                                                                    bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilHeatingLowTempRadiantConstFlow::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilHeatingLowTempRadiantConstFlow::iddObjectType());
   }
 
   CoilHeatingLowTempRadiantConstFlow_Impl::CoilHeatingLowTempRadiantConstFlow_Impl(const CoilHeatingLowTempRadiantConstFlow_Impl& other,
@@ -117,7 +117,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACLowTempRadiantConstFlow>::iterator it = zoneHVACLowTempRadiantConstFlows.begin();
     it < zoneHVACLowTempRadiantConstFlows.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->heatingCoil() )
       {
@@ -156,7 +156,7 @@ namespace detail {
 
   void CoilHeatingLowTempRadiantConstFlow_Impl::resetHeatingHighWaterTemperatureSchedule() {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_ConstantFlowFields::HeatingHighWaterTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingLowTempRadiantConstFlow_Impl::setHeatingLowWaterTemperatureSchedule(Schedule& schedule) {
@@ -169,7 +169,7 @@ namespace detail {
 
   void CoilHeatingLowTempRadiantConstFlow_Impl::resetHeatingLowWaterTemperatureSchedule() {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_ConstantFlowFields::HeatingLowWaterTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingLowTempRadiantConstFlow_Impl::setHeatingHighControlTemperatureSchedule(Schedule& schedule) {
@@ -182,7 +182,7 @@ namespace detail {
 
   void CoilHeatingLowTempRadiantConstFlow_Impl::resetHeatingHighControlTemperatureSchedule() {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_ConstantFlowFields::HeatingHighControlTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingLowTempRadiantConstFlow_Impl::setHeatingLowControlTemperatureSchedule(Schedule& schedule) {
@@ -195,7 +195,7 @@ namespace detail {
 
   void CoilHeatingLowTempRadiantConstFlow_Impl::resetHeatingLowControlTemperatureSchedule() {
     bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_ConstantFlowFields::HeatingLowControlTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ModelObject> CoilHeatingLowTempRadiantConstFlow_Impl::heatingHighWaterTemperatureScheduleAsModelObject() const {
@@ -311,18 +311,18 @@ CoilHeatingLowTempRadiantConstFlow::CoilHeatingLowTempRadiantConstFlow(const Mod
                                      Schedule& heatingLowControlTemperatureSchedule)
   : StraightComponent(CoilHeatingLowTempRadiantConstFlow::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilHeatingLowTempRadiantConstFlow_Impl>());
+  OS_ASSERT(getImpl<detail::CoilHeatingLowTempRadiantConstFlow_Impl>());
   bool ok = setHeatingHighWaterTemperatureSchedule(heatingHighWaterTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setHeatingLowWaterTemperatureSchedule(heatingLowWaterTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setHeatingHighControlTemperatureSchedule(heatingHighControlTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setHeatingLowControlTemperatureSchedule(heatingLowControlTemperatureSchedule);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
 }
 

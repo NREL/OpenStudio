@@ -408,7 +408,13 @@ namespace detail {
   }
 
   bool Space_Impl::partofTotalFloorArea() const {
-    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,true);
+    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,false,true);
+    if (!value){
+      if (this->isPlenum()){
+        return false;
+      }
+      value = getString(OS_SpaceFields::PartofTotalFloorArea,true);
+    }
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
@@ -418,8 +424,7 @@ namespace detail {
   }
 
   void Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    bool result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -429,8 +434,7 @@ namespace detail {
   }
 
   void Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -440,8 +444,7 @@ namespace detail {
   }
 
   void Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -451,8 +454,7 @@ namespace detail {
   }
 
   void Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -480,9 +482,13 @@ namespace detail {
   {
     boost::optional<SpaceType> result = getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_SpaceFields::SpaceTypeName);
     if (!result){
-      boost::optional<Building> building = this->model().building();
-      if (building){
-        result = building->spaceType();
+      if (this->isPlenum()){
+        result = this->model().plenumSpaceType();
+      }else{
+        boost::optional<Building> building = this->model().building();
+        if (building){
+          result = building->spaceType();
+        }
       }
     }
     return result;
@@ -1910,6 +1916,136 @@ namespace detail {
     return true;
   }
 
+  double Space_Impl::infiltrationDesignFlowRate() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getDesignFlowRate(floorArea,
+                                       exteriorSurfaceArea,
+                                       exteriorWallArea,
+                                       airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getDesignFlowRate(floorArea,
+                                         exteriorSurfaceArea,
+                                         exteriorWallArea,
+                                         airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignFlowPerSpaceFloorArea() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getFlowPerSpaceFloorArea(floorArea,
+                                              exteriorSurfaceArea,
+                                              exteriorWallArea,
+                                              airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getFlowPerSpaceFloorArea(floorArea,
+                                                exteriorSurfaceArea,
+                                                exteriorWallArea,
+                                                airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getFlowPerExteriorSurfaceArea(floorArea,
+                                                   exteriorSurfaceArea,
+                                                   exteriorWallArea,
+                                                   airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getFlowPerExteriorSurfaceArea(floorArea,
+                                                     exteriorSurfaceArea,
+                                                     exteriorWallArea,
+                                                     airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignFlowPerExteriorWallArea() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getFlowPerExteriorWallArea(floorArea,
+                                                exteriorSurfaceArea,
+                                                exteriorWallArea,
+                                                airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getFlowPerExteriorWallArea(floorArea,
+                                                  exteriorSurfaceArea,
+                                                  exteriorWallArea,
+                                                  airVolume);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::infiltrationDesignAirChangesPerHour() const {
+    double result(0.0);
+    double floorArea = this->floorArea();
+    double exteriorSurfaceArea = this->exteriorArea();
+    double exteriorWallArea = this->exteriorWallArea();
+    double airVolume = volume();
+
+    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+      result += idfr.getAirChangesPerHour(floorArea,
+                                          exteriorSurfaceArea,
+                                          exteriorWallArea,
+                                          airVolume);
+    }
+
+    if (OptionalSpaceType st = spaceType()) {
+      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+        result += idfr.getAirChangesPerHour(floorArea,
+                                            exteriorSurfaceArea,
+                                            exteriorWallArea,
+                                            airVolume);
+      }
+    }
+
+    return result;
+  }
+
   void Space_Impl::hardApplySpaceType(bool hardSizeLoads)
   {
     Model model = this->model();
@@ -2674,6 +2810,15 @@ namespace detail {
     return result;
   }
 
+  bool Space_Impl::isPlenum() const
+  {
+    bool result = false;
+    boost::optional<ThermalZone> thermalZone = this->thermalZone();
+    if (thermalZone){
+      result = thermalZone->isPlenum();
+    }
+    return result;
+  }
   
   // helper function to get a boost polygon point from a Point3d
   boost::tuple<double, double> Space_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const
@@ -3146,6 +3291,26 @@ bool Space::setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson,
   return getImpl<detail::Space_Impl>()->setGasEquipmentPowerPerPerson(gasEquipmentPowerPerPerson,templateGasEquipment);
 }
 
+double Space::infiltrationDesignFlowRate() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowRate();
+}
+
+double Space::infiltrationDesignFlowPerSpaceFloorArea() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
+}
+
+double Space::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowPerExteriorSurfaceArea();
+}
+
+double Space::infiltrationDesignFlowPerExteriorWallArea() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignFlowPerExteriorWallArea();
+}
+
+double Space::infiltrationDesignAirChangesPerHour() const {
+  return getImpl<detail::Space_Impl>()->infiltrationDesignAirChangesPerHour();
+}
+
 void Space::hardApplySpaceType(bool hardSizeLoads){
   getImpl<detail::Space_Impl>()->hardApplySpaceType(hardSizeLoads);
 }
@@ -3182,6 +3347,11 @@ std::vector <Surface> Space::findSurfaces(boost::optional<double> minDegreesFrom
 std::vector<Point3d> Space::floorPrint() const
 {
   return getImpl<detail::Space_Impl>()->floorPrint();
+}
+
+bool Space::isPlenum() const
+{
+  return getImpl<detail::Space_Impl>()->isPlenum();
 }
 
 /// @cond

@@ -39,6 +39,9 @@
 #include <QScrollArea>
 #include <QStyleOption>
 #include <QTimer>
+#include <QGraphicsSceneDragDropEvent>
+#include <QGraphicsSceneMouseEvent>
+#include <QApplication>
 
 using namespace openstudio::model;
 
@@ -318,8 +321,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
     OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
-    bool isConnected = false;
-    isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
+    bool isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
     OS_ASSERT(isConnected);
 
     if( m_maxItems == 1 )
@@ -454,6 +456,92 @@ void OSItemDropZone::dropEvent(QDropEvent *event)
   event->accept();
   if(event->proposedAction() == Qt::CopyAction){
     emit dropped(event);
+  }
+}
+
+OSDropZoneItem::OSDropZoneItem()
+  : QGraphicsObject(), 
+    m_mouseDown(false)
+{
+  setAcceptHoverEvents(true);
+  setAcceptDrops(true);
+
+  setSize(100,50);
+}
+
+void OSDropZoneItem::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+  event->accept();
+
+  if(event->proposedAction() == Qt::CopyAction)
+  {
+    OSItemId id = OSItemId(event->mimeData());
+
+    emit componentDropped(id);
+  }
+}
+
+QRectF OSDropZoneItem::boundingRect() const
+{
+  return QRectF(0,0,m_width,m_height);
+}
+
+void OSDropZoneItem::setSize(double width, double height)
+{
+  prepareGeometryChange();
+  m_width = width;
+  m_height = height;
+  m_text = QString("Drop Item");
+}
+
+void OSDropZoneItem::setText(const QString & text)
+{
+  m_text = text;
+  update();
+}
+
+void OSDropZoneItem::paint( QPainter *painter, 
+                                                 const QStyleOptionGraphicsItem *option, 
+                                                 QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
+
+  painter->drawRect(boundingRect());
+
+  QFont font = painter->font();
+  font.setPointSize(25);
+  painter->setFont(font);
+  painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,m_text);
+}
+
+void OSDropZoneItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  m_mouseDown = true;
+
+  this->update();
+
+  event->accept();
+}
+
+void OSDropZoneItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+  if( m_mouseDown )
+  {
+    m_mouseDown = false;
+
+    this->update();
+
+    QApplication::processEvents();
+
+    if( shape().contains(event->pos()) )
+    {
+      event->accept();
+
+      emit mouseClicked();
+    }
   }
 }
 

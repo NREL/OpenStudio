@@ -128,26 +128,22 @@ namespace detail {
   }
 
   void GlareSensor_Impl::setPositionXCoordinate(double positionXCoordinate) {
-    bool result = false;
-    result = setDouble(OS_Glare_SensorFields::PositionXCoordinate, positionXCoordinate);
+    bool result = setDouble(OS_Glare_SensorFields::PositionXCoordinate, positionXCoordinate);
     OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setPositionYCoordinate(double positionYCoordinate) {
-    bool result = false;
-    result = setDouble(OS_Glare_SensorFields::PositionYCoordinate, positionYCoordinate);
+    bool result = setDouble(OS_Glare_SensorFields::PositionYCoordinate, positionYCoordinate);
     OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setPositionZCoordinate(double positionZCoordinate) {
-    bool result = false;
-    result = setDouble(OS_Glare_SensorFields::PositionZCoordinate, positionZCoordinate);
+    bool result = setDouble(OS_Glare_SensorFields::PositionZCoordinate, positionZCoordinate);
     OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
-    bool result = false;
-    result = setDouble(OS_Glare_SensorFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
+    bool result = setDouble(OS_Glare_SensorFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
     OS_ASSERT(result);
   }
 
@@ -157,8 +153,7 @@ namespace detail {
   }
 
   void GlareSensor_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
-    bool result = false;
-    result = setDouble(OS_Glare_SensorFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
+    bool result = setDouble(OS_Glare_SensorFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
     OS_ASSERT(result);
   }
 
@@ -168,8 +163,7 @@ namespace detail {
   }
 
   void GlareSensor_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
-    bool result = false;
-    result = setDouble(OS_Glare_SensorFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
+    bool result = setDouble(OS_Glare_SensorFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
     OS_ASSERT(result);
   }
 
@@ -179,8 +173,7 @@ namespace detail {
   }
 
   bool GlareSensor_Impl::setNumberofGlareViewVectors(int numberofGlareViewVectors) {
-    bool result = false;
-    result = setInt(OS_Glare_SensorFields::NumberofGlareViewVectors, numberofGlareViewVectors);
+    bool result = setInt(OS_Glare_SensorFields::NumberofGlareViewVectors, numberofGlareViewVectors);
     return result;
   }
 
@@ -248,6 +241,33 @@ namespace detail {
     setPhiRotationAroundZAxis(radToDeg(eulerAngles.phi()));
     
     return true;  
+  }
+
+  bool GlareSensor_Impl::aimAt(const Point3d& target)
+  {
+    Point3d position = this->position();
+    Vector3d vector = target - position;
+
+    if (!vector.normalize()){
+      return false;
+    }
+
+    Vector3d yAxis(0,1,0);
+    Vector3d rotationAxis = yAxis.cross(vector);
+
+    if (!rotationAxis.normalize()){
+      return false;
+    }
+
+    double angle = getAngle(yAxis, vector);
+    Transformation transformation = Transformation::rotation(rotationAxis, angle);
+    EulerAngles eulerAngles = transformation.eulerAngles();
+
+    this->setPsiRotationAroundXAxis(eulerAngles.psi());
+    this->setThetaRotationAroundYAxis(eulerAngles.theta());
+    this->setPhiRotationAroundZAxis(eulerAngles.phi());
+
+    return true;
   }
 
   //bool GlareSensor_Impl::isPrimaryGlareSensor() const
@@ -408,6 +428,11 @@ openstudio::Transformation GlareSensor::transformation() const {
 bool GlareSensor::setTransformation(const openstudio::Transformation& transformation)
 {
   return getImpl<detail::GlareSensor_Impl>()->setTransformation(transformation);
+}
+
+bool GlareSensor::aimAt(const Point3d& target)
+{
+  return getImpl<detail::GlareSensor_Impl>()->aimAt(target);
 }
 
 /// @cond

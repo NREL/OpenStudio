@@ -692,34 +692,35 @@ IF (WIN32)
   SET(AWS_RUBY_DESTINATION ".")
   SET(AWS_RUBY_EXTENSION ".zip")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip)
-  SET(AWS_RUBY_CHECKSUM f30b3eb7d5ed73e99b2b6875a43ab8ea)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-win32.zip)
+  SET(AWS_RUBY_CHECKSUM 1f6e4348099b26e92909db62dcd3b173)
 ELSEIF(APPLE)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
   SET(AWS_RUBY_DESTINATION ".")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM 8bb6739c0babb08b4e2259f9797b31a7)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Darwin.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM 75963f2c6996af47a3ad69ac84d3d120)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
   SET(AWS_RUBY_DESTINATION "lib/openstudio")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM f5a8f11f1b2c854a550a15349df79a60)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-x86_64.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM 74d3a8ab4e1e3fb44c308f2aaa8e5732)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ELSEIF(UNIX)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
   SET(AWS_RUBY_DESTINATION "lib/openstudio")
 
-  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-i686.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM be333fe95ef13d4c5f3f449dd9b7c534)
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-i686.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM e51ce64b3e03ed3a66f1f7e0a22b5b7e)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 ENDIF()
 
-FILE(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 ) # EXPECTED_MD5 ${AWS_RUBY_CHECKSUM})
+FILE(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 )
 execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
 EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_HOME_DIRECTORY}/ruby/aws-sdk-patches/connection_pool.rb" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/lib/ruby/gems/2.0.0/gems/aws-sdk-1.31.3/lib/aws/core/http")
 INSTALL( DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}" DESTINATION "${AWS_RUBY_DESTINATION}" )
 
 # end ruby aws-sdk info
@@ -878,7 +879,9 @@ IF (NOT UNIX)
     
   install( DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION . )
   
-  install( DIRECTORY "${CMAKE_BINARY_DIR}/../../../Ruby-prefix/src/Ruby/" DESTINATION "ruby-install/ruby" )
+  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" PATH )
+  get_filename_component(RubyPath "${RubyEXEPath}" PATH )
+  install( DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby" )
 
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   INCLUDE(InstallRequiredSystemLibraries)
@@ -889,6 +892,9 @@ IF (NOT UNIX)
     # Install the system libraries to the ruby dir
     INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION "Ruby/openstudio")
+      
+    INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+      DESTINATION "ruby-install/ruby/bin")
   ENDIF(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 ENDIF()
 

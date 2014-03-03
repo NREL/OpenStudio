@@ -106,7 +106,10 @@ class MeasureManager : public QObject
 
     /// Updates the UI for all measures.
     /// For all measures in the "bclMeasures" list which have changed relative to the version
-    /// in the project, update the project to the new version
+    /// in the project, update the project to the new version.
+    ///
+    /// Also checks installed measures and updates the project's version of them if 
+    /// appropriate. 
     /// 
     /// Does not ask for user approval
     void updateBCLMeasures(analysisdriver::SimpleProject &t_project);

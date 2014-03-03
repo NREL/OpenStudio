@@ -380,7 +380,6 @@ namespace detail {
       if (increment != 0){
         OS_ASSERT(i + increment >= 0);
         unsigned newIndex = i + increment;
-        OS_ASSERT(newIndex >= 0);
         OS_ASSERT(newIndex < N);
         scheduleRules[i].setRuleIndex(newIndex);
       }
@@ -469,6 +468,13 @@ namespace detail {
   {
     std::vector<ScheduleRule> scheduleRules = this->scheduleRules();
     return setScheduleRuleIndex(scheduleRule, scheduleRules.size() - 1);
+  }
+
+  void ScheduleRuleset_Impl::ensureNoLeapDays()
+  {
+    BOOST_FOREACH(ScheduleRule scheduleRule, this->scheduleRules()){
+      scheduleRule.ensureNoLeapDays();
+    }
   }
 
   boost::optional<ScheduleDay> ScheduleRuleset_Impl::optionalDefaultDaySchedule() const {

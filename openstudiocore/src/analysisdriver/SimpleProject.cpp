@@ -752,7 +752,7 @@ namespace detail {
   }
 
   bool SimpleProject_Impl::updateMeasure(const BCLMeasure& measure,
-                                    const std::vector<ruleset::OSArgument>& arguments)
+                                         const std::vector<ruleset::OSArgument>& arguments)
   {
     UUID measureUUID = measure.uuid();
     OptionalBCLMeasure existing = getMeasureByUUID(measureUUID);

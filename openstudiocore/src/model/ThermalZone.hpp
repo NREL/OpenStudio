@@ -208,13 +208,27 @@ class MODEL_API ThermalZone : public HVACComponent {
   /// Resets the rendering color.
   void resetRenderingColor();
 
-  std::vector<ModelObject> equipment();
+  std::vector<ModelObject> equipment() const;
 
   /// returns all spaces in this thermal zone
   std::vector<Space> spaces() const;
 
-  /** Accumulates the floorArea of spaces. Does not include space multiplier. */
+  /** Accumulates the floorArea (m^2) of spaces. Does not include space multiplier. */
   double floorArea() const;
+
+  /** Accumulates the exterior surface area (m^2) of spaces. Does not include space
+   *  multiplier. */
+  double exteriorSurfaceArea() const;
+
+  /** Accumulates the exterior wall area (m^2) of spaces. Does not include space
+   *  multiplier. */
+  double exteriorWallArea() const;
+
+  // TODO: How should this interact with the volume field. If there is an interaction,
+  // how should Building calculate its airVolume and accumulate infiltration design
+  // flow rate?
+  /** Accumulates the air volume (m^3) of spaces. Does not include space multiplier. */
+  double airVolume() const;
 
   /** Returns the number of people in the thermal zone. Does not include space multiplier. Does include people multiplier. */
   double numberOfPeople() const;
@@ -251,6 +265,26 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Returns the gas equipment power per person (W/person) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
   double gasEquipmentPowerPerPerson() const;
+
+  /** Returns the infiltration design flow rate (m^3/s) in this thermal zone. Ignores
+   *  SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+  double infiltrationDesignFlowRate() const;
+
+  /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in this thermal zone.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+  double infiltrationDesignFlowPerSpaceFloorArea() const;
+
+  /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in this thermal zone.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+  double infiltrationDesignFlowPerExteriorSurfaceArea() const;
+
+  /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in this thermal zone.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+  double infiltrationDesignFlowPerExteriorWallArea() const;
+
+  /** Returns the infiltration design air changes per hour (1/h) in this thermal zone.
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+  double infiltrationDesignAirChangesPerHour() const;
 
   /** Determines if this zone is conditioned, based on the SqlFile output. Returns 'Yes' if zone is conditioned. */
   boost::optional<std::string> isConditioned() const;
@@ -320,6 +354,39 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Return all equipment.  Order is determined by coooling priority */
   std::vector<ModelObject> equipmentInCoolingOrder();
+
+  /** Return true if the ThermalZone is attached to 
+  *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
+  */
+  bool isPlenum() const;
+
+  /** Retrun true if the ThermalZone is unconditioned and available to be used as a plenum
+  *   This means the zone is not attached to an AirLoopHVAC structure as a conditioned zone
+  *   and there is no zone equipment.
+  */
+  bool canBePlenum() const;
+
+  /** Establish plenumZone as the supply plenum for this ThermalZone.
+  *   This ThermalZone must already be attached to AirLoopHVAC.
+  *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
+  *   The method canBePlenum called on plenumZone must return true.
+  */
+  bool setSupplyPlenum(const ThermalZone & plenumZone);
+
+  /** Remove any supply plenum serving this zone
+  */
+  void removeSupplyPlenum();
+
+  /** Establish plenumZone as the return plenum for this ThermalZone.
+  *   This ThermalZone must already be attached to AirLoopHVAC.
+  *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
+  *   The method canBePlenum called on plenumZone must return true.
+  */
+  bool setReturnPlenum(const ThermalZone & plenumZone);
+
+  /** Remove any return plenum serving this zone
+  */
+  void removeReturnPlenum();
 
   //@}
  protected:

@@ -68,8 +68,7 @@ namespace detail {
   }
 
   bool ExteriorLightsDefinition_Impl::setDesignLevel(double designLevel) {
-    bool result = false;
-    result = setDouble(OS_Exterior_Lights_DefinitionFields::DesignLevel, designLevel);
+    bool result = setDouble(OS_Exterior_Lights_DefinitionFields::DesignLevel, designLevel);
     return result;
   }
 
@@ -80,8 +79,7 @@ ExteriorLightsDefinition::ExteriorLightsDefinition(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ExteriorLightsDefinition_Impl>());
 
-  bool ok = true;
-  ok = setDesignLevel(0.0);
+  bool ok = setDesignLevel(0.0);
   OS_ASSERT(ok);
 }
 

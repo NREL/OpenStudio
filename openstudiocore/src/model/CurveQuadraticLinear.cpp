@@ -182,62 +182,52 @@ namespace detail {
   }
 
   void CurveQuadraticLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setCoefficient2x(double coefficient2x) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient2x, coefficient2x);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient2x, coefficient2x);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient3x_POW_2, coefficient3xPOW2);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient3x_POW_2, coefficient3xPOW2);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setCoefficient4y(double coefficient4y) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient4y, coefficient4y);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient4y, coefficient4y);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setCoefficient5xTIMESY(double coefficient5xTIMESY) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient5x_TIMES_y, coefficient5xTIMESY);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient5x_TIMES_y, coefficient5xTIMESY);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient6x_POW_2_TIMES_y, coefficient6xPOW2TIMESY);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::Coefficient6x_POW_2_TIMES_y, coefficient6xPOW2TIMESY);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setMinimumValueofy(double minimumValueofy) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::MinimumValueofy, minimumValueofy);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::MinimumValueofy, minimumValueofy);
     OS_ASSERT(result);
   }
 
   void CurveQuadraticLinear_Impl::setMaximumValueofy(double maximumValueofy) {
-    bool result = false;
-    result = setDouble(OS_Curve_QuadraticLinearFields::MaximumValueofy, maximumValueofy);
+    bool result = setDouble(OS_Curve_QuadraticLinearFields::MaximumValueofy, maximumValueofy);
     OS_ASSERT(result);
   }
 
@@ -272,8 +262,7 @@ namespace detail {
   }
 
   bool CurveQuadraticLinear_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
-    bool result = false;
-    result = setString(OS_Curve_QuadraticLinearFields::InputUnitTypeforX, inputUnitTypeforX);
+    bool result = setString(OS_Curve_QuadraticLinearFields::InputUnitTypeforX, inputUnitTypeforX);
     return result;
   }
 
@@ -283,8 +272,7 @@ namespace detail {
   }
 
   bool CurveQuadraticLinear_Impl::setInputUnitTypeforY(std::string inputUnitTypeforY) {
-    bool result = false;
-    result = setString(OS_Curve_QuadraticLinearFields::InputUnitTypeforY, inputUnitTypeforY);
+    bool result = setString(OS_Curve_QuadraticLinearFields::InputUnitTypeforY, inputUnitTypeforY);
     return result;
   }
 
@@ -294,8 +282,7 @@ namespace detail {
   }
 
   bool CurveQuadraticLinear_Impl::setOutputUnitType(std::string outputUnitType) {
-    bool result = false;
-    result = setString(OS_Curve_QuadraticLinearFields::OutputUnitType, outputUnitType);
+    bool result = setString(OS_Curve_QuadraticLinearFields::OutputUnitType, outputUnitType);
     return result;
   }
 

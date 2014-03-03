@@ -26,15 +26,24 @@ class PATMeasures_Test < Test::Unit::TestCase
 
   def test_PATMeasures
     patApplicationMeasuresDir = OpenStudio::BCLMeasure::patApplicationMeasuresDir
+    
+    # copy measures to build directory and test there
+    test_dir = (OpenStudio::Path.new($OpenStudio_ResourcePath) / 
+                OpenStudio::Path.new("ruleset/PATMeasures")).to_s
+    if File.exists?(test_dir)
+      FileUtils.rm_rf(test_dir)
+    end
+    FileUtils.cp_r(patApplicationMeasuresDir.to_s,test_dir)
 
-    puts "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{patApplicationMeasuresDir}'"
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{patApplicationMeasuresDir}'"))
+    puts "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{test_dir}'"
+    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{test_dir}'"))
 
   end
   
   def test_NewMeasures
     
-    test_dir = "./NewMeasuresDir/"
+    test_dir = (OpenStudio::Path.new($OpenStudio_ResourcePath) / 
+                OpenStudio::Path.new("ruleset/NewMeasuresDir/")).to_s
     if File.exists?(test_dir)
       FileUtils.rm_rf(test_dir)
     end
