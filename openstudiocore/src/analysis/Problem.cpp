@@ -886,23 +886,21 @@ namespace detail {
                                    const std::vector<ruleset::OSArgument>& newArguments,
                                    bool keepOldArgumentsIfNewEmpty)
   {
-    // TODO: Also update Ruby WorkItems.
     bool result = true;
     UUID measureUUID = newVersion.uuid();
-    InputVariableVector variables = this->variables();
+    WorkflowStepVector steps = workflow();
     OptionalRubyMeasure compoundRubyMeasure;
     std::vector<RubyContinuousVariable> compoundVariables;
-    BOOST_FOREACH(const InputVariable& variable, variables) {
+    BOOST_FOREACH(WorkflowStep& step, steps) {
+      // see if should clear compound variable
       if (compoundRubyMeasure) {
         // see if should clear
-        bool clearCompound = false;
-        if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
-          if (!(rcv->measure() == compoundRubyMeasure.get())) {
-            clearCompound = true;
+        bool clearCompound = true;
+        if (step.isInputVariable() && step.inputVariable().optionalCast<RubyContinuousVariable>()) {
+          RubyContinuousVariable rcv = step.inputVariable().cast<RubyContinuousVariable>();
+          if (rcv.measure() == compoundRubyMeasure.get()) {
+            clearCompound = false;
           }
-        }
-        else {
-          clearCompound = true;
         }
         if (clearCompound) {
           result = result && updateMeasureForCompoundRubyMeasure(
@@ -916,44 +914,90 @@ namespace detail {
         }
       }
 
-      if (compoundRubyMeasure) {
-        compoundVariables.push_back(variable.cast<RubyContinuousVariable>());
-      }
-      else if (OptionalMeasureGroup mg = variable.optionalCast<MeasureGroup>()) {
-        MeasureVector dps = mg->measures(false);
-        BOOST_FOREACH(Measure& dp,dps) {
-          if (OptionalRubyMeasure rm = dp.optionalCast<RubyMeasure>()) {
-            if (rm->usesBCLMeasure() && (rm->measureUUID() == measureUUID)) {
-              bool ok(true);
-              if (newArguments.empty() && keepOldArgumentsIfNewEmpty) {
-                OSArgumentVector currentArguments = rm->arguments();
-                ok = rm->setMeasure(newVersion);
-                if (ok) {
-                  rm->setArguments(currentArguments);
+      if (step.isInputVariable()) {
+        InputVariable variable = step.inputVariable();
+
+        if (compoundRubyMeasure) {
+          compoundVariables.push_back(variable.cast<RubyContinuousVariable>());
+        }
+        else if (OptionalMeasureGroup mg = variable.optionalCast<MeasureGroup>()) {
+          MeasureVector dps = mg->measures(false);
+          BOOST_FOREACH(Measure& dp,dps) {
+            if (OptionalRubyMeasure rm = dp.optionalCast<RubyMeasure>()) {
+              if (rm->usesBCLMeasure() && (rm->measureUUID() == measureUUID)) {
+                bool ok(true);
+                if (newArguments.empty() && keepOldArgumentsIfNewEmpty) {
+                  OSArgumentVector currentArguments = rm->arguments();
+                  ok = rm->setMeasure(newVersion);
+                  if (ok) {
+                    rm->setArguments(currentArguments);
+                  }
                 }
-              }
-              else {
-                ok = rm->updateMeasure(newVersion,newArguments);
-              }
-              if (!ok) {
-                // bad match between file types
-                ok = mg->erase(*rm);
+                else {
+                  ok = rm->updateMeasure(newVersion,newArguments);
+                }
                 if (!ok) {
-                  result = false;
+                  // bad match between file types
+                  ok = mg->erase(*rm);
+                  if (!ok) {
+                    result = false;
+                  }
                 }
               }
             }
           }
         }
-      }
-      else if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
-        if (rcv->measure().usesBCLMeasure() &&
-            (rcv->measure().measureUUID() == measureUUID))
-        {
-          compoundRubyMeasure = rcv->measure();
-          compoundVariables.push_back(*rcv);
+        else if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
+          if (rcv->measure().usesBCLMeasure() &&
+              (rcv->measure().measureUUID() == measureUUID))
+          {
+            compoundRubyMeasure = rcv->measure();
+            compoundVariables.push_back(*rcv);
+          }
         }
       }
+      else {
+        runmanager::WorkItem workItem = step.workItem();
+        if (workItem.type == runmanager::JobType::UserScript) {
+          // compare BCLMeasure uuids
+          try {
+            runmanager::RubyJobBuilder rjb(workItem);
+            if (rjb.bclMeasureUUID() && (rjb.bclMeasureUUID().get() == measureUUID)) {
+              // update this WorkItem if arguments may have changed
+              bool updateWorkItem = false;
+              if (newArguments.empty()) {
+                if (!keepOldArgumentsIfNewEmpty) {
+                  // clear WorkItem arguments if it has any
+                  if (!runmanager::RubyJobBuilder::toOSArguments(workItem.params).empty()) {
+                    updateWorkItem = true;
+                  }
+                }
+              }
+              else {
+                // go ahead and do the swap no matter what
+                updateWorkItem = true;
+              }
+              if (updateWorkItem) {
+                rjb = runmanager::RubyJobBuilder(newVersion,newArguments);
+                runmanager::WorkItem newWorkItem = rjb.toWorkItem();
+                step.set(newWorkItem);
+              }
+            }
+          }
+          catch (...) {}
+        }
+      }
+    }
+
+    if (compoundRubyMeasure) {
+      result = result && updateMeasureForCompoundRubyMeasure(
+            newVersion,
+            newArguments,
+            keepOldArgumentsIfNewEmpty,
+            *compoundRubyMeasure,
+            compoundVariables);
+      compoundRubyMeasure.reset();
+      compoundVariables.clear();
     }
 
     return result;

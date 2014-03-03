@@ -529,8 +529,6 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-  //ModelObject clone(Model & model) const;
-
  protected:
 
   /// @cond

@@ -18,8 +18,13 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/CoilHeatingWater.hpp>
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
@@ -53,7 +58,7 @@
 
 using namespace openstudio;
 
-TEST(AirLoopHVAC,AirLoopHVAC_AirLoopHVAC)
+TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -129,7 +134,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_AirLoopHVAC)
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(AirLoopHVAC,AirLoopHVAC_addBranchForZone)
+TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -148,7 +153,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_addBranchForZone)
 
 }
 
-TEST(AirLoopHVAC,AirLoopHVAC_demandComponents)
+TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -175,7 +180,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_demandComponents)
                                                        thermalZone.iddObjectType() ).front() );
 }
 
-TEST(AirLoopHVAC,AirLoopHVAC_demandComponents2)
+TEST_F(ModelFixture,AirLoopHVAC_demandComponents2)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -194,7 +199,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_demandComponents2)
   EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 }
 
-TEST(AirLoopHVAC,AirLoopHVAC_removeBranchForZone)
+TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -225,7 +230,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_removeBranchForZone)
   EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 }
 
-TEST(AirLoopHVAC,ThermalZone_remove)
+TEST_F(ModelFixture,ThermalZone_remove)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -246,7 +251,7 @@ TEST(AirLoopHVAC,ThermalZone_remove)
   airLoopHVAC.removeBranchForZone(thermalZone);
 }
 
-TEST(AirLoopHVAC,AirLoopHVAC_remove)
+TEST_F(ModelFixture,AirLoopHVAC_remove)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -265,7 +270,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_remove)
   ASSERT_NO_THROW(airLoopHVAC.remove());
 }
 
-TEST(AirLoopHVAC,AirLoopHVACOutdoorAirSystem_addToNode)
+TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_addToNode)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -293,7 +298,7 @@ TEST(AirLoopHVAC,AirLoopHVACOutdoorAirSystem_addToNode)
   ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<openstudio::model::Node>().inletModelObject().get());
 }
 
-TEST(AirLoopHVAC,AirLoopHVAC_supplyComponents)
+TEST_F(ModelFixture,AirLoopHVAC_supplyComponents)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -327,7 +332,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_supplyComponents)
   ASSERT_EQ(unsigned(2),returnComponents.size());
 }
 
-TEST(AirLoopHVAC,FanConstantVolume_remove)
+TEST_F(ModelFixture,FanConstantVolume_remove)
 {
   openstudio::model::Model model = openstudio::model::Model();
   openstudio::model::OptionalModelObject modelObject;
@@ -362,7 +367,7 @@ TEST(AirLoopHVAC,FanConstantVolume_remove)
   ASSERT_EQ(oaSystem,supplyOutletNode.inletModelObject().get());
 }
 
-TEST(AirLoopHVAC,AirLoopHVAC_remove2)
+TEST_F(ModelFixture,AirLoopHVAC_remove2)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -412,7 +417,7 @@ TEST(AirLoopHVAC,AirLoopHVAC_remove2)
 }
 
 
-TEST(AirLoopHVAC, AirLoopHVAC_remove3)
+TEST_F(ModelFixture, AirLoopHVAC_remove3)
 {
   model::Model m; 
 
@@ -430,7 +435,7 @@ TEST(AirLoopHVAC, AirLoopHVAC_remove3)
   EXPECT_EQ(0u, m.getModelObjects<model::SizingSystem>().size());
 }
 
-TEST(AirLoopHVAC, AirLoopHVAC_Cost)
+TEST_F(ModelFixture, AirLoopHVAC_Cost)
 {
   openstudio::model::Model model; 
 
@@ -475,7 +480,7 @@ TEST(AirLoopHVAC, AirLoopHVAC_Cost)
 
 }
 
-TEST(AirLoopHVAC, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
+TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 {
   openstudio::model::Model model; 
 

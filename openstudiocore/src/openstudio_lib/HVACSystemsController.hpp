@@ -65,6 +65,7 @@ class NoControlsView;
 class RefrigerationController;
 class RefrigerationGridController;
 class RefrigerationGridView;
+class VRFController;
 
 class HVACSystemsController : public QObject
 {
@@ -138,6 +139,8 @@ class HVACSystemsController : public QObject
   boost::shared_ptr<RefrigerationController> m_refrigerationController;
 
   boost::shared_ptr<RefrigerationGridController> m_refrigerationGridController;
+
+  boost::shared_ptr<VRFController> m_vrfController;
 
   QString m_currentHandle;
 

@@ -54,7 +54,7 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   void setHeatingPriority(const ModelObject & euqipment, unsigned priority);
 
-  std::vector<ModelObject> equipment();
+  std::vector<ModelObject> equipment() const;
 
   std::vector<ModelObject> equipmentInHeatingOrder();
 

@@ -36,6 +36,8 @@
 #include <model/DefaultConstructionSet_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/DaylightingDeviceShelf.hpp>
+#include <model/DaylightingDeviceShelf_Impl.hpp>
 
 #include <utilities/idd/OS_ShadingSurface_FieldEnums.hxx>
 
@@ -287,6 +289,18 @@ namespace detail {
     OS_ASSERT(test);
   }
 
+  boost::optional<DaylightingDeviceShelf> ShadingSurface_Impl::daylightingDeviceShelf() const
+  {
+    std::vector<DaylightingDeviceShelf> sources = getObject<ModelObject>().getModelObjectSources<DaylightingDeviceShelf>();
+    if (sources.empty()){
+      return boost::none;
+    }
+    if (sources.size() > 1){
+      LOG(Error, "ShadingSurface is referenced by more than one DaylightingDeviceShelf, returning first");
+    }
+    return sources[0];
+  }
+
   boost::optional<ModelObject> ShadingSurface_Impl::shadingSurfaceGroupAsModelObject() const {
     OptionalModelObject result;
     OptionalShadingSurfaceGroup intermediate = shadingSurfaceGroup();
@@ -406,6 +420,11 @@ bool ShadingSurface::setTransmittanceSchedule(Schedule& transmittanceSchedule)
 void ShadingSurface::resetTransmittanceSchedule()
 {
   getImpl<detail::ShadingSurface_Impl>()->resetTransmittanceSchedule();
+}
+
+boost::optional<DaylightingDeviceShelf> ShadingSurface::daylightingDeviceShelf() const
+{
+  return getImpl<detail::ShadingSurface_Impl>()->daylightingDeviceShelf();
 }
 
 /// @cond

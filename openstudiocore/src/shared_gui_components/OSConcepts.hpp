@@ -1,17 +1,17 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -46,7 +46,7 @@ class BaseConcept
 
   QString m_headingLabel;
 
-}; 
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -65,15 +65,15 @@ class CheckBoxConcept : public BaseConcept
 
   virtual bool get(const model::ModelObject & obj) = 0;
   virtual void set(const model::ModelObject & obj, bool) = 0;
-}; 
+};
 
 template<typename DataSourceType>
 class CheckBoxConceptImpl : public CheckBoxConcept
 {
   public:
 
-  CheckBoxConceptImpl(QString t_headingLabel, 
-    boost::function<bool (DataSourceType *)>  t_getter, 
+  CheckBoxConceptImpl(QString t_headingLabel,
+    boost::function<bool (DataSourceType *)>  t_getter,
     boost::function<void (DataSourceType *, bool)> t_setter)
     : CheckBoxConcept(t_headingLabel),
       m_getter(t_getter),
@@ -338,15 +338,15 @@ class ValueEditConcept : public BaseConcept
 
   virtual ValueType get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, ValueType) = 0;
-}; 
+};
 
 template<typename ValueType, typename DataSourceType>
 class ValueEditConceptImpl : public ValueEditConcept<ValueType>
 {
   public:
 
-  ValueEditConceptImpl(QString t_headingLabel, 
-    boost::function<ValueType (DataSourceType *)>  t_getter, 
+  ValueEditConceptImpl(QString t_headingLabel,
+    boost::function<ValueType (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, ValueType)> t_setter)
     : ValueEditConcept<ValueType>(t_headingLabel),
       m_getter(t_getter),
@@ -391,15 +391,15 @@ class OptionalValueEditConcept : public BaseConcept
 
   virtual boost::optional<ValueType> get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, ValueType) = 0;
-}; 
+};
 
 template<typename ValueType, typename DataSourceType>
 class OptionalValueEditConceptImpl : public OptionalValueEditConcept<ValueType>
 {
   public:
 
-  OptionalValueEditConceptImpl(QString t_headingLabel, 
-    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter, 
+  OptionalValueEditConceptImpl(QString t_headingLabel,
+    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, ValueType)> t_setter)
     : OptionalValueEditConcept<ValueType>(t_headingLabel),
       m_getter(t_getter),
@@ -445,7 +445,7 @@ class ValueEditVoidReturnConcept : public BaseConcept
 
   virtual ValueType get(const model::ModelObject & obj) = 0;
   virtual void set(const model::ModelObject & obj, ValueType) = 0;
-}; 
+};
 
 template<typename ValueType, typename DataSourceType>
 class ValueEditVoidReturnConceptImpl : public ValueEditVoidReturnConcept<ValueType>
@@ -499,15 +499,15 @@ class OptionalValueEditVoidReturnConcept : public BaseConcept
 
   virtual boost::optional<ValueType> get(const model::ModelObject & obj) = 0;
   virtual void set(const model::ModelObject & obj, ValueType) = 0;
-}; 
+};
 
 template<typename ValueType, typename DataSourceType>
 class OptionalValueEditVoidReturnConceptImpl : public OptionalValueEditVoidReturnConcept<ValueType>
 {
   public:
 
-  OptionalValueEditVoidReturnConceptImpl(QString t_headingLabel, 
-    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter, 
+  OptionalValueEditVoidReturnConceptImpl(QString t_headingLabel,
+    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     boost::function<void (DataSourceType *, ValueType)> t_setter)
     : OptionalValueEditVoidReturnConcept<ValueType>(t_headingLabel),
       m_getter(t_getter),
@@ -552,7 +552,7 @@ class NameLineEditConcept : public BaseConcept
 
   virtual boost::optional<std::string> get(const model::ModelObject & obj, bool) = 0;
   virtual boost::optional<std::string> set(const model::ModelObject & obj, const std::string &) = 0;
-}; 
+};
 
 template<typename DataSourceType>
 class NameLineEditConceptImpl : public NameLineEditConcept
@@ -560,7 +560,7 @@ class NameLineEditConceptImpl : public NameLineEditConcept
   public:
 
   NameLineEditConceptImpl(QString t_headingLabel,
-    boost::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter, 
+    boost::function<boost::optional<std::string> (DataSourceType *, bool)>  t_getter,
     boost::function<boost::optional<std::string> (DataSourceType *, const std::string &)> t_setter)
     : NameLineEditConcept(t_headingLabel),
       m_getter(t_getter),
@@ -634,7 +634,7 @@ class QuantityEditConceptImpl : public QuantityEditConcept<ValueType>
     QString t_siUnits,
     QString t_ipUnits,
     bool t_isIP,
-    boost::function<ValueType (DataSourceType *)>  t_getter, 
+    boost::function<ValueType (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, ValueType)> t_setter)
     : QuantityEditConcept<ValueType>(t_headingLabel,
       t_modelUnits,
@@ -712,7 +712,7 @@ class OptionalQuantityEditConceptImpl : public OptionalQuantityEditConcept<Value
     QString t_siUnits,
     QString t_ipUnits,
     bool t_isIP,
-    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter, 
+    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, ValueType)> t_setter)
     : OptionalQuantityEditConcept<ValueType>(t_headingLabel,
       t_modelUnits,
@@ -863,12 +863,12 @@ class OptionalQuantityEditVoidReturnConceptImpl : public OptionalQuantityEditVoi
 {
   public:
 
-  OptionalQuantityEditVoidReturnConceptImpl(QString t_headingLabel, 
+  OptionalQuantityEditVoidReturnConceptImpl(QString t_headingLabel,
     QString t_modelUnits,
     QString t_siUnits,
     QString t_ipUnits,
     bool t_isIP,
-    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter, 
+    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     boost::function<void (DataSourceType *, ValueType)> t_setter)
     : OptionalQuantityEditVoidReturnConcept<ValueType>(t_headingLabel,
       t_modelUnits,
@@ -917,15 +917,15 @@ class DropZoneConcept : public BaseConcept
 
   virtual boost::optional<model::ModelObject> get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, const model::ModelObject &) = 0;
-}; 
+};
 
 template<typename ValueType, typename DataSourceType>
 class DropZoneConceptImpl : public DropZoneConcept
 {
   public:
 
-  DropZoneConceptImpl(QString t_headingLabel, 
-    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter, 
+  DropZoneConceptImpl(QString t_headingLabel,
+    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, const ValueType &)> t_setter)
     : DropZoneConcept(t_headingLabel),
       m_getter(t_getter),

@@ -29,6 +29,7 @@
 
 #include <QWidget>
 #include <QMouseEvent>
+#include <QGraphicsItem>
 
 class QDropEvent;
 class QDragEnterEvent;
@@ -267,6 +268,50 @@ public:
 
 };
 
+// This is a version of OSDropZone that works with QGraphicsScene
+// as opposed to QWidget.  Much of the custom drawing in the HVAC 
+// interface is done with QGraphicsScene.
+class OSDropZoneItem : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  OSDropZoneItem();
+
+  virtual ~OSDropZoneItem() {}
+
+  QRectF boundingRect() const;
+
+  void setSize(double width, double height);
+
+  void setText(const QString & text);
+
+  signals:
+
+  void mouseClicked();
+
+  void componentDropped(const OSItemId & itemid);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+  void dropEvent(QGraphicsSceneDragDropEvent *event);
+
+  QString m_text;
+
+  private:
+
+  bool m_mouseDown;
+
+  double m_width;
+  double m_height;
+};
 
 } // openstudio
 

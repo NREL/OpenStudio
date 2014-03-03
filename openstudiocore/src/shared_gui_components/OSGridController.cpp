@@ -1,17 +1,17 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -54,7 +54,6 @@ OSGridController::OSGridController()
 
 OSGridController::OSGridController(bool isIP,
                                    const QString & headerText,
-                                   IddObjectType iddObjectType,
                                    model::Model model,
                                    std::vector<model::ModelObject> modelObjects)
   : QObject(),
@@ -62,22 +61,16 @@ OSGridController::OSGridController(bool isIP,
     m_baseConcepts(std::vector<QSharedPointer<BaseConcept> >()),
     m_horizontalHeader(std::vector<QWidget *>()),
     m_hasHorizontalHeader(true),
-    m_hasVerticalHeader(true),
     m_currentCategory(QString()),
     m_currentCategoryIndex(0),
     m_currentFields(std::vector<QString> ()),
     m_customCategories(std::vector<QString>()),
-    m_isIP(isIP),
     m_model(model),
+    m_isIP(isIP),
     m_modelObjects(modelObjects),
-    m_iddObjectType(iddObjectType),
     m_horizontalHeaderBtnGrp(0),
-    m_verticalHeaderBtnGrp(0),
     m_headerText(headerText)
 {
-  m_verticalHeaderBtnGrp = new QButtonGroup();
-  m_verticalHeaderBtnGrp->setExclusive(false);
-
   loadQSettings();
 }
 
@@ -128,10 +121,6 @@ void OSGridController::categorySelected(int index)
 
   m_currentFields = m_categoriesAndFields.at(index).second;
 
-  // always show name column TODO
-
-  m_currentFields.insert(m_currentFields.begin(),"Name");
- 
   addColumns(m_currentFields);
 
 }
@@ -171,30 +160,21 @@ void OSGridController::setHorizontalHeader()
   checkSelectedFields();
 }
 
-void OSGridController::setVerticalHeader()
-{
-
-}
-
 QWidget * OSGridController::widgetAt(int row, int column)
 {
   OS_ASSERT(row >= 0);
   OS_ASSERT(column >= 0);
 
   OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(row));
-  OS_ASSERT(m_baseConcepts.size() > static_cast<unsigned>(column));    
+  OS_ASSERT(m_baseConcepts.size() > static_cast<unsigned>(column));
 
   QWidget * widget = 0;
 
   bool isConnected = false;
 
-  // Note: If there is a vertical header row,  m_baseConcepts[0] starts on gridLayout[1]
-  //int baseConceptColumn = m_hasVerticalHeader ? column - 1 : column; TODO
+  QString cellColor("#FFFFFF"); // white
 
-  if(m_hasHorizontalHeader && row == 0){
-  }
-
-  // Note: If there is a horizpntal header row,  m_modelObjects[0] starts on gridLayout[1]
+  // Note: If there is a horizontal header row,  m_modelObjects[0] starts on gridLayout[1]
   int modelObjectRow = m_hasHorizontalHeader ? row - 1 : row;
 
   if(m_hasHorizontalHeader && row == 0){
@@ -207,6 +187,11 @@ QWidget * OSGridController::widgetAt(int row, int column)
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
+
+    // Only color the first 2 columns
+    if(column < 2){
+      cellColor = getColor(mo);
+    }
 
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
@@ -349,7 +334,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
                                      mo,
                                      DoubleGetter(boost::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),mo)),
                                      DoubleSetterVoidReturn(boost::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),mo,_1)));
-        
+
         isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
           quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
         OS_ASSERT(isConnected);
@@ -408,18 +393,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
   wrapper->setFixedSize(QSize(200,70));
   wrapper->setObjectName("TableCell");
 
-  QString color;
-  if(modelObjectRow >= static_cast<int>(m_colors.size())) row = m_colors.size() - 1; // similar to scheduleView's approach
-  if(column < 2 && row > 0){
-    color = this->m_colors.at(modelObjectRow).name();
-  } else {
-    color = "#FFFFFF"; // white
-  }
-
   QString style;
   style.append("QWidget#TableCell {");
   style.append("  background-color: ");
-  style.append(color);
+  style.append(cellColor);
   style.append(";");
   style.append("  border-bottom: 1px solid black;");
   style.append("  border-right: 1px solid black;");
@@ -476,7 +453,7 @@ int OSGridController::rowCount() const
 {
   return m_modelObjects.size();
 }
-   
+
 int OSGridController::columnCount() const
 {
   return m_baseConcepts.size();
@@ -503,10 +480,6 @@ void OSGridController::horizontalHeaderChecked(int index)
   setCustomCategoryAndFields();
 }
 
-void OSGridController::verticalHeaderChecked(int index)
-{
-}
-
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
   m_label(new QLabel(fieldName)),
@@ -516,7 +489,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   setLayout(layout);
 
   m_label->setWordWrap(true);
-  layout->addWidget(m_label); 
+  layout->addWidget(m_label);
 
   layout->addWidget(m_checkBox);
 
@@ -532,7 +505,7 @@ BulkSelectionWidget::BulkSelectionWidget(QWidget * parent)
 
   layout->addWidget(m_checkBox);
 
-  layout->addWidget(m_comboBox); 
+  layout->addWidget(m_comboBox);
 
 }
 

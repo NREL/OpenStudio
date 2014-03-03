@@ -148,15 +148,20 @@ namespace detail{
     return boost::none;
   }
 
+  bool CoilHeatingWater_Impl::removeFromPlantLoop()
+  {
+    if( boost::optional<ControllerWaterCoil> controller = this->controllerWaterCoil() )
+    {
+      controller->remove();
+    }
+
+    return WaterToAirComponent_Impl::removeFromPlantLoop();
+  }
+
   std::vector<openstudio::IdfObject> CoilHeatingWater_Impl::remove()
   {
     if( isRemovable() )
     {
-      if( boost::optional<ControllerWaterCoil> controller = this->controllerWaterCoil() )
-      {
-        controller->remove();
-      }
-
       return WaterToAirComponent_Impl::remove();
     }
 

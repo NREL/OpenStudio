@@ -1,17 +1,17 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -42,6 +42,7 @@
 #include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
 
 #include <QBoxLayout>
+#include <QCheckBox>
 #include <QLabel>
 #include <QScrollArea>
 #include <QSettings>
@@ -116,7 +117,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   m_isIP(isIP)
 {
   QVBoxLayout * layout = 0;
-  
+
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
@@ -125,7 +126,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   QVBoxLayout * scrollLayout = new QVBoxLayout();
   scrollLayout->setSpacing(0);
   scrollLayout->setContentsMargins(0,0,0,0);
-  
+
   QWidget * scrollWidget = new QWidget();
   scrollWidget->setObjectName("ScrollWidget");
   scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
@@ -141,13 +142,15 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
   std::vector<model::ModelObject> caseModelObjects = castVector<model::ModelObject>(model.getModelObjects<model::RefrigerationCase>());
 
-  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model::RefrigerationCase::iddObjectType(), model, caseModelObjects);
+  std::vector<model::RefrigerationCase> refrigerationCases = model.getModelObjects<model::RefrigerationCase>();
+  RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
   std::vector<model::ModelObject> walkInModelObjects = castVector<model::ModelObject>(model.getModelObjects<model::RefrigerationWalkIn>());
 
-  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model::RefrigerationWalkIn::iddObjectType(), model, walkInModelObjects);
+  std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
+  RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
   scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
 
@@ -169,10 +172,9 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
 RefrigerationCaseGridController::RefrigerationCaseGridController(bool isIP,
   const QString & headerText,
-  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
+  OSGridController(isIP, headerText, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -276,8 +278,11 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
   }
 
 }
-void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fields)
+void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
 {
+  // always show name column
+  fields.insert(fields.begin(), NAME);
+
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
@@ -478,6 +483,47 @@ void RefrigerationCaseGridController::addColumns(const std::vector<QString> & fi
   }
 }
 
+QString RefrigerationCaseGridController::getColor(const model:: ModelObject & modelObject)
+{
+  QColor defaultColor(Qt::lightGray);
+  QString color(defaultColor.name());
+
+  std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+
+  boost::optional<model::RefrigerationCase> refrigerationCase = modelObject.optionalCast<model::RefrigerationCase>();
+  OS_ASSERT(refrigerationCase);
+
+  boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationCase->system();
+  if(!refrigerationSystem){
+    return color;
+  }
+
+  std::vector<model::RefrigerationSystem>::iterator it;
+  it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
+  if(it != refrigerationSystems.end()){
+    int index = std::distance(refrigerationSystems.begin(), it);
+    if(index >= static_cast<int>(m_colors.size())){
+      index = m_colors.size() - 1; // similar to scheduleView's approach
+    }
+    color = this->m_colors.at(index).name();
+  }
+
+  return color;
+}
+
+void RefrigerationCaseGridController::checkSelectedFields()
+{
+  if(!this->m_hasHorizontalHeader) return;
+
+  // Don't show the name column check box
+  // From above in addColumns, we know that NAME is the first entry
+  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
+  OS_ASSERT(horizontalHeaderWidget);
+  horizontalHeaderWidget->m_checkBox->hide();
+
+  OSGridController::checkSelectedFields();
+}
+
 void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
 {
   boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
@@ -490,10 +536,9 @@ void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
 
 RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
   const QString & headerText,
-  IddObjectType iddObjectType,
   model::Model model,
   std::vector<model::ModelObject> modelObjects) :
-  OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
+  OSGridController(isIP, headerText, model, modelObjects)
 {
   setCategoriesAndFields();
 }
@@ -521,7 +566,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Dimensions"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
-  
+
   {
     std::vector<QString> fields;
     fields.push_back(INSULATEDFLOORUVALUE);
@@ -529,7 +574,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Construction"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
-  
+
   {
     std::vector<QString> fields;
     //fields.push_back("Stocking Door Area (ft2)");
@@ -593,7 +638,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
-  
+
   {
     std::vector<QString> fields;
     fields.push_back(RESTOCKINGSCHEDULE);
@@ -609,8 +654,11 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
 }
 
-void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & fields)
+void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields)
 {
+  // always show name column
+  fields.insert(fields.begin(), NAME);
+
   m_baseConcepts.clear();
 
   Q_FOREACH(QString field, fields){
@@ -676,7 +724,7 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
                             //QString("Btu/hr*ft^2*F"), // TODO this crashes in OSQuantityEdit assert for conversion
                             m_isIP,
                             &model::RefrigerationWalkIn::insulatedFloorUValue,
-                            &model::RefrigerationWalkIn::setInsulatedFloorUValue); 
+                            &model::RefrigerationWalkIn::setInsulatedFloorUValue);
     }else if(field == RATEDCOILCOOLINGCAPACITY){
       addQuantityEditColumn(QString(RATEDCOILCOOLINGCAPACITY),
                             QString("W"),
@@ -744,6 +792,47 @@ void RefrigerationWalkInGridController::addColumns(const std::vector<QString> & 
 //      OS_ASSERT(false); TODO add this back at a later time
     }
   }
+}
+
+QString RefrigerationWalkInGridController::getColor(const model:: ModelObject & modelObject)
+{
+  QColor defaultColor(Qt::lightGray);
+  QString color(defaultColor.name());
+
+  std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+
+  boost::optional<model::RefrigerationWalkIn> refrigerationWalkIn = modelObject.optionalCast<model::RefrigerationWalkIn>();
+  OS_ASSERT(refrigerationWalkIn);
+
+  boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationWalkIn->system();
+  if(!refrigerationSystem){
+    return color;
+  }
+
+  std::vector<model::RefrigerationSystem>::iterator it;
+  it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
+  if(it != refrigerationSystems.end()){
+    int index = std::distance(refrigerationSystems.begin(), it);
+    if(index >= static_cast<int>(m_colors.size())){
+      index = m_colors.size() - 1; // similar to scheduleView's approach
+    }
+    color = this->m_colors.at(index).name();
+  }
+
+  return color;
+}
+
+void RefrigerationWalkInGridController::checkSelectedFields()
+{
+  if(!this->m_hasHorizontalHeader) return;
+
+  // Don't show the name column check box
+  // From above in addColumns, we know that NAME is the first entry
+  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
+  OS_ASSERT(horizontalHeaderWidget);
+  horizontalHeaderWidget->m_checkBox->hide();
+
+  OSGridController::checkSelectedFields();
 }
 
 void RefrigerationWalkInGridController::onItemDropped(const OSItemId& itemId)

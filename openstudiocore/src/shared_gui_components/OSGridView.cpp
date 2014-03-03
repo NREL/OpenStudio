@@ -1,17 +1,17 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
  *  All rights reserved.
- *  
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -50,7 +50,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridLayout->setContentsMargins(0,0,0,0);
   m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    
+
   QButtonGroup * buttonGroup = new QButtonGroup();
   bool isConnected = false;
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
@@ -81,16 +81,10 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
     buttonLayout->addWidget(button,0,Qt::AlignLeft);
     buttonGroup->addButton(button,buttonGroup->buttons().size());
   }
-  std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
-  if(buttons.size() > 0){
-    QPushButton * button = qobject_cast<QPushButton *>(buttons.at(0));
-    OS_ASSERT(button);
-    button->setChecked(true);
-  }
   buttonLayout->addStretch();
 
   QVBoxLayout * layout = 0;
-  
+
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
@@ -98,15 +92,15 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   DarkGradientHeader * header = new DarkGradientHeader();
   header->label->setText(headerText);
-  
-  QWidget * widget = new QWidget;  
-  
+
+  QWidget * widget = new QWidget;
+
   OSCollapsibleView * collabsibleView = new OSCollapsibleView(this);
   layout->addWidget(collabsibleView);
   collabsibleView->setHeader(header);
   collabsibleView->setContent(widget);
   collabsibleView->setExpanded(true);
-  
+
   setGridController(m_gridController);
 
   QVBoxLayout * m_contentLayout = 0;
@@ -120,7 +114,13 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   setContentsMargins(5,5,5,5);
 
-  refreshAll();
+  std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
+  if(buttons.size() > 0){
+    QPushButton * button = qobject_cast<QPushButton *>(buttons.at(0));
+    OS_ASSERT(button);
+    button->setChecked(true);
+    selectCategory(0);
+  }
 }
 
 void OSGridView::setGridController(OSGridController * gridController)
@@ -147,7 +147,7 @@ void OSGridView::setGridController(OSGridController * gridController)
 
   isConnected = connect(m_gridController,SIGNAL(modelReset()),this,SLOT(refreshAll()));
   OS_ASSERT(isConnected);
-    
+
   refreshAll();
 }
 
@@ -211,17 +211,8 @@ void OSGridView::addWidget(int row, int column)
   QWidget * widget = m_gridController->widgetAt(row,column);
 
   OS_ASSERT(m_gridLayout);
-  
+
   m_gridLayout->addWidget(widget,row,column);
-}
-
-void OSGridView::setVerticalHeader(bool visible, QString title)
-{
-  OS_ASSERT(m_gridLayout);
-
-  QLabel * label = new QLabel(title);
-  label->setVisible(visible);
-  m_gridLayout->addWidget(label,0,0);
 }
 
 void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
@@ -253,7 +244,7 @@ void OSGridView::selectCategory(int index)
   m_gridController->categorySelected(index);
 
   refreshAll();
-  
+
 }
 
 } // openstudio

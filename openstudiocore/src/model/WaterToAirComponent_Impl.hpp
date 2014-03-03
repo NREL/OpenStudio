@@ -79,9 +79,9 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
 
   virtual void disconnect();
 
-  bool removeFromAirLoopHVAC();
+  virtual bool removeFromAirLoopHVAC();
 
-  bool removeFromPlantLoop();
+  virtual bool removeFromPlantLoop();
  private:
   REGISTER_LOGGER("openstudio.model.WaterToAirComponent");
 };

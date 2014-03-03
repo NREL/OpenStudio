@@ -496,4 +496,15 @@ namespace openstudio{
     return result;
   }
 
+  std::vector<Point3d> moveVerticesTowardsPoint(const Point3dVector& vertices, const Point3d& point, double distance)
+  {
+    Point3dVector result;
+    BOOST_FOREACH(const Point3d& vertex, vertices){
+      Vector3d vector = point-vertex;
+      vector.setLength(distance);
+      result.push_back(vertex+vector);
+    }
+    return result;
+  }
+
 } // openstudio

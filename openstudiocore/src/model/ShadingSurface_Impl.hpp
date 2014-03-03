@@ -29,6 +29,7 @@ namespace model {
 class ShadingSurfaceGroup;
 class Schedule;
 class ShadingSurface;
+class DaylightingDeviceShelf;
 
 namespace detail {
 
@@ -139,6 +140,9 @@ namespace detail {
     void autocalculateNumberofVertices();
 
     //@}
+
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.ShadingSurface");
