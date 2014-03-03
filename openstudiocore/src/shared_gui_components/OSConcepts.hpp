@@ -233,8 +233,10 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
     std::string result;
     boost::optional<ChoiceType> typedValue = m_getter();
     if (typedValue) {
-      std::string result = m_toString(*typedValue);
-      OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+      result = m_toString(*typedValue);
+      if (!result.empty()) {
+        OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+      }
     }
     return result;
   }

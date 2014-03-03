@@ -244,14 +244,11 @@ void OSComboBox2::onCurrentIndexChanged(const QString & text)
   OS_ASSERT(m_modelObject);
 
   std::string value = text.toStdString();
-  m_choiceConcept->set(value);
 
-  // test if property changed
-  std::string actualValue = m_choiceConcept->get();
-  if (!istringEqual(actualValue, value)) {
-    // failed, reset combo box
-    onModelObjectChanged();
-  }
+  this->blockSignals(true);
+  m_choiceConcept->set(value);
+  onModelObjectChanged(); // will be sure to display actual value
+  this->blockSignals(false);
 }
 
 void OSComboBox2::onDataSourceChange(int i)
