@@ -188,7 +188,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
 
-    cellColor = getColor(mo);
+    // Only color the first 2 columns
+    if(column < 2){
+      cellColor = getColor(mo);
+    }
 
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
