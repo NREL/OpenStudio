@@ -57,13 +57,13 @@ int main(int argc, char *argv[])
   }
 #endif
 
-//#if _DEBUG || (__GNUC__ && !NDEBUG)
+#if _DEBUG || (__GNUC__ && !NDEBUG)
   openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));
   fileLog.setLogLevel(Debug);
-//#else
-//  openstudio::Logger::instance().standardOutLogger().setLogLevel(Warn);
-//#endif
+#else
+  openstudio::Logger::instance().standardOutLogger().setLogLevel(Warn);
+#endif
 
   // list of Ruby modules we want to load into the interpreter
   std::vector<std::string> modules;
