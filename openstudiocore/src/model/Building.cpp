@@ -214,12 +214,13 @@ namespace detail {
     std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
-    // make unique
-    it = std::unique(result.begin(), result.end(), IstringEqual()); 
-    result.resize( std::distance(result.begin(),it) ); 
-
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
 
     // add current to front
     if (standardsBuildingType){
@@ -687,6 +688,78 @@ namespace detail {
     return Transformation::rotation(Vector3d(0,0,1), -degToRad(this->northAxis()));
   }
 
+  std::vector<std::vector<Point3d> > Building_Impl::generateSkylightPattern(double skylightToFloorRatio, double desiredWidth, double desiredHeight) const
+  {
+    std::vector<std::vector<Point3d> > result;
+
+    if (skylightToFloorRatio <= 0.0){
+      return result;
+    }else if (skylightToFloorRatio >= 1.0){
+      return result;
+    }
+
+    if (desiredWidth <= 0){
+      return result;
+    }
+
+    if (desiredHeight <= 0){
+      return result;
+    }
+
+    // find extents of building 
+    double xmin = std::numeric_limits<double>::max();
+    double xmax = std::numeric_limits<double>::min();
+    double ymin = std::numeric_limits<double>::max();
+    double ymax = std::numeric_limits<double>::min();
+    BOOST_FOREACH(const Space& space, this->spaces()){
+      Transformation transformation = space.buildingTransformation();
+      BOOST_FOREACH(const Surface& surface, space.surfaces()){
+        if (istringEqual("RoofCeiling", surface.surfaceType()) &&
+            istringEqual("Outdoors", surface.outsideBoundaryCondition())){
+          std::vector<Point3d> vertices = transformation*surface.vertices();
+          BOOST_FOREACH(const Point3d& vertex, vertices){
+            xmin = std::min(xmin, vertex.x());
+            xmax = std::max(xmax, vertex.x());
+            ymin = std::min(ymin, vertex.y());
+            ymax = std::max(ymax, vertex.y());
+          }
+        }
+      }
+    }
+    if ((xmin > xmax) || (ymin > ymax)){
+      return result;
+    }
+
+    double floorPrintWidth = (xmax-xmin);
+    double floorPrintHeight = (ymax-ymin);
+    double floorPrintArea = floorPrintWidth * floorPrintHeight;
+    double desiredArea = desiredWidth * desiredHeight;
+    double numSkylights = skylightToFloorRatio*floorPrintArea/desiredArea;
+    double numSkylightsX = std::sqrt(skylightToFloorRatio)*floorPrintWidth/desiredWidth;
+    double numSkylightsY = std::sqrt(skylightToFloorRatio)*floorPrintHeight/desiredHeight;
+
+    double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/numSkylightsX;
+    double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/numSkylightsY;
+
+    for (double x = xSpace/2.0; x < floorPrintWidth - xSpace/2.0; x += desiredWidth + xSpace){
+      for (double y = ySpace/2.0; y < floorPrintHeight - ySpace/2.0; y += desiredHeight + ySpace){
+
+        double x2 = std::min(x+desiredWidth, floorPrintWidth - xSpace/2.0);
+        double y2 = std::min(y+desiredHeight, floorPrintHeight - ySpace/2.0);
+
+        std::vector<Point3d> skylight;
+        skylight.push_back(Point3d(x,y,0));
+        skylight.push_back(Point3d(x2,y,0));
+        skylight.push_back(Point3d(x2,y2,0));
+        skylight.push_back(Point3d(x,y2,0));
+
+        result.push_back(skylight);
+      }
+    }
+
+    return result;
+  }
+
   openstudio::Quantity Building_Impl::northAxis_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,false);
@@ -1091,6 +1164,11 @@ double Building::infiltrationDesignAirChangesPerHour() const {
 Transformation Building::transformation() const
 {
   return getImpl<detail::Building_Impl>()->transformation();
+}
+
+std::vector<std::vector<Point3d> > Building::generateSkylightPattern(double skylightToFloorRatio, double desiredWidth, double desiredHeight) const
+{
+  return getImpl<detail::Building_Impl>()->generateSkylightPattern(skylightToFloorRatio, desiredWidth, desiredHeight);
 }
 
 /// @cond

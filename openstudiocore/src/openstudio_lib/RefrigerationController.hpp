@@ -32,7 +32,7 @@ class QWidget;
 
 namespace openstudio {
 
-class RefrigerationSystemGridView;
+class GridLayoutItem;
 class RefrigerationSystemView;
 class RefrigerationSystemListController;
 class RefrigerationScene;
@@ -95,9 +95,7 @@ class RefrigerationController : public QObject
 
   QPointer<RefrigerationView> m_refrigerationView;
 
-  // TODO QPointer<RefrigerationGridView> m_refrigerationGridView;
-
-  QPointer<RefrigerationSystemGridView> m_refrigerationSystemGridView;
+  QPointer<GridLayoutItem> m_refrigerationSystemGridView;
 
   QPointer<RefrigerationSystemView> m_detailView;
 

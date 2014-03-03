@@ -35,9 +35,11 @@
 
 #include <QDir>
 #include <QDateTime>
+#include <QUrl>
 
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
+#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -288,10 +290,10 @@ namespace detail {
       }
     }
 
-
     // Add ruby script file name
+    openstudio::path outpath = outdir(false);
+
     try {
-      openstudio::path outpath = outdir();
       FileInfo fi = rjb.toWorkItem().files.getLastByExtension("rb");
       if (!rjb.mergedJobs().empty())
       {
@@ -334,10 +336,23 @@ namespace detail {
 
     if (rjb.userScriptJob()){
 
+      typedef std::pair<QUrl, openstudio::path> RequiredFileType;
+
+      boost::optional<openstudio::path> lastEpwFilePath;
+
       try {
         FileInfo osm = allInputFiles().getLastByExtension("osm");
         std::string lastOpenStudioModelPathArgument = "--lastOpenStudioModelPath=" + toString(osm.fullPath);
         addParameter("ruby", lastOpenStudioModelPathArgument);
+
+        // DLM: this does not seem to work on the top level input OSM, we may need to make the call to compute these required files
+        // before this code is run
+        BOOST_FOREACH(const RequiredFileType& requiredFile, osm.requiredFiles){
+          if (istringEqual(".epw", toString(requiredFile.second.extension()))){
+            lastEpwFilePath = requiredFile.second;
+            LOG(Info, "Found last EpwFile '" << toString(lastEpwFilePath->filename()) << "' attached to last OpenStudio Model");
+          }
+        }
       } catch (const std::exception &) {
       }
 
@@ -345,6 +360,14 @@ namespace detail {
         FileInfo idf = allInputFiles().getLastByExtension("idf");
         std::string lastEnergyPlusWorkspacePathArgument = "--lastEnergyPlusWorkspacePath=" + toString(idf.fullPath);
         addParameter("ruby", lastEnergyPlusWorkspacePathArgument);
+
+        // DLM: assume that an EPW file attached to last idf is more recent that EPW file attached to last osm
+        BOOST_FOREACH(const RequiredFileType& requiredFile, idf.requiredFiles){
+          if (istringEqual(".epw", toString(requiredFile.second.extension()))){
+            lastEpwFilePath = requiredFile.second;
+            LOG(Info, "Found last EpwFile '" << toString(lastEpwFilePath->filename()) << "' attached to last EnergyPlus Workspace");
+          }
+        }
       } catch (const std::exception &) {
       }
 
@@ -353,6 +376,11 @@ namespace detail {
         std::string lastEnergyPlusSqlFilePathArgument = "--lastEnergyPlusSqlFilePath=" + toString(sql.fullPath);
         addParameter("ruby", lastEnergyPlusSqlFilePathArgument);
       } catch (const std::exception &) {
+      }
+
+      if (lastEpwFilePath){
+        std::string lastEpwFilePathArgument = "--lastEpwFilePathArgument=" + toString(boost::filesystem::complete(*lastEpwFilePath, outpath));
+        addParameter("ruby", lastEpwFilePathArgument);
       }
     }
 

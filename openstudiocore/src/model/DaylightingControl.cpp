@@ -393,7 +393,35 @@ namespace detail {
         result = (this->handle() == control->handle());
       }
     }
-    return result;  }
+    return result;  
+  }
+
+  bool DaylightingControl_Impl::aimAt(const Point3d& target)
+  {
+    Point3d position = this->position();
+    Vector3d vector = target - position;
+
+    if (!vector.normalize()){
+      return false;
+    }
+
+    Vector3d yAxis(0,1,0);
+    Vector3d rotationAxis = yAxis.cross(vector);
+
+    if (!rotationAxis.normalize()){
+      return false;
+    }
+
+    double angle = getAngle(yAxis, vector);
+    Transformation transformation = Transformation::rotation(rotationAxis, angle);
+    EulerAngles eulerAngles = transformation.eulerAngles();
+
+    this->setPsiRotationAroundXAxis(eulerAngles.psi());
+    this->setThetaRotationAroundYAxis(eulerAngles.theta());
+    this->setPhiRotationAroundZAxis(eulerAngles.phi());
+
+    return true;
+  }
 
   int DaylightingControl_Impl::spaceIndex() const
   {
@@ -641,6 +669,11 @@ bool DaylightingControl::isPrimaryDaylightingControl() const
 bool DaylightingControl::isSecondaryDaylightingControl() const
 {
   return getImpl<detail::DaylightingControl_Impl>()->isSecondaryDaylightingControl();
+}
+
+bool DaylightingControl::aimAt(const Point3d& target)
+{
+  return getImpl<detail::DaylightingControl_Impl>()->aimAt(target);
 }
 
 /// @cond

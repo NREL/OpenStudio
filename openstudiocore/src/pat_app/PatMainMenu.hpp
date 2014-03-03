@@ -66,6 +66,8 @@ class PatMainMenu : public QMenuBar
 
   void changeMeasuresClicked();
 
+  void configureProxyClicked();
+
   void exitClicked();
 
   void helpClicked();
@@ -102,6 +104,7 @@ class PatMainMenu : public QMenuBar
   QAction * m_showToolsAction;
   QAction * m_exitAction;
   QAction * m_changeMeasuresDir;
+  QAction * m_configureProxy;
   QAction * m_helpAction;
   QAction * m_aboutAction;
 

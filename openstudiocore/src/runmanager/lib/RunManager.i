@@ -148,6 +148,7 @@
 %template(OptionalWorkItem) boost::optional<openstudio::runmanager::WorkItem>;
 %template(OptionalRunManager) boost::optional<openstudio::runmanager::RunManager>;
 %template(OptionalTools) boost::optional<openstudio::runmanager::Tools>;
+%template(OptionalFiles) boost::optional<openstudio::runmanager::Files>;
 
 %template(ErrorTypeStringPair) std::pair<openstudio::runmanager::ErrorType, std::string>;
 

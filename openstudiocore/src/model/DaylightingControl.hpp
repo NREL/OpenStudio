@@ -181,6 +181,9 @@ class MODEL_API DaylightingControl : public SpaceItem {
   /// Is this the secondary control point for the containing ThermalZone.
   bool isSecondaryDaylightingControl() const;
 
+  /// Keeps current position and orients the view towards the target, target is in space coordinates.
+  bool aimAt(const Point3d& target);
+
  protected:
   /// @cond
   typedef detail::DaylightingControl_Impl ImplType;

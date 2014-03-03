@@ -56,4 +56,20 @@
 %include <utilities/geometry/BoundingBox.hpp>
 %include <utilities/geometry/Intersection.hpp>
 
+%extend openstudio::Vector3d{
+  std::string __str__() const {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+}
+
+%extend openstudio::Point3d{
+  std::string __str__() const {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+}
+
 #endif //UTILITIES_GEOMETRY_GEOMETRY_I 

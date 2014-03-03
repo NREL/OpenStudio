@@ -516,6 +516,8 @@ namespace detail {
     */
     std::vector<Point3d> floorPrint() const;
 
+    bool isPlenum() const;
+
    private:
     REGISTER_LOGGER("openstudio.model.Space");
 

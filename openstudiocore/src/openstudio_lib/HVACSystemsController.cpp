@@ -22,6 +22,8 @@
 #include "RefrigerationGraphicsItems.hpp"
 #include "RefrigerationGridController.hpp"
 #include "RefrigerationGridView.hpp"
+#include "VRFController.hpp"
+#include "VRFGraphicsItems.hpp"
 #include "LoopLibraryDialog.hpp"
 #include "HVACSystemsView.hpp"
 #include "LoopScene.hpp"
@@ -106,6 +108,7 @@ namespace openstudio {
 
 const QString SHW = "SHW";
 const QString REFRIGERATION = "REFRIGERATION";
+const QString VRF = "VRF";
 
 HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & model)
   : QObject(),
@@ -219,6 +222,7 @@ void HVACSystemsController::update()
 
     systemComboBox->addItem("Service Hot Water",SHW);
     systemComboBox->addItem("Refrigeration",REFRIGERATION);
+    systemComboBox->addItem("VRF",VRF);
 
     // Set system combo box current index
     QString handle = currentHandle();
@@ -235,6 +239,14 @@ void HVACSystemsController::update()
     else if( handle == REFRIGERATION ) 
     {
       int index = systemComboBox->findData(REFRIGERATION);
+
+      OS_ASSERT(index >= 0);
+      
+      systemComboBox->setCurrentIndex(index);
+    }
+    else if( handle == VRF ) 
+    {
+      int index = systemComboBox->findData(VRF);
 
       OS_ASSERT(index >= 0);
       
@@ -267,7 +279,7 @@ void HVACSystemsController::update()
     m_hvacLayoutController.reset();
     m_hvacControlsController.reset();
     m_refrigerationController.reset();
-    //m_refrigerationGridController.reset();
+    m_vrfController.reset();
 
     if( handle == REFRIGERATION )
     {
@@ -297,6 +309,24 @@ void HVACSystemsController::update()
         OS_ASSERT(isConnected);
 
         // TODO m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
+      }
+      else
+      {
+          m_hvacControlsController = boost::shared_ptr<HVACControlsController>(new HVACControlsController(this));
+
+          m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->noControlsView());
+      }
+    }
+    else if( handle == VRF )
+    {
+      m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
+      m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
+
+      if( m_hvacSystemsView->hvacToolbarView->topologyViewButton->isChecked() )
+      {
+        m_vrfController = boost::shared_ptr<VRFController>(new VRFController());
+
+        m_hvacSystemsView->mainViewSwitcher->setView(m_vrfController->vrfView());
       }
       else
       {
