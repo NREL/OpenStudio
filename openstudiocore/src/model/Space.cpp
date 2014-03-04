@@ -3413,9 +3413,9 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
   Transformation buildingToGridTransformation = Transformation::rotation(Vector3d(0,0,1), -openstudio::degToRad(directionOfRelativeNorth));
 
   // rotate positive amount around the z axis, EnergyPlus defines rotation clockwise
-  Transformation gridToBuildingTransformation = Transformation::rotation(Vector3d(0,0,1), openstudio::degToRad(directionOfRelativeNorth));
+  Transformation gridToBuildingTransformation = buildingToGridTransformation.inverse();
 
-  // find extents in grid space 
+  // find extents in grid coordinate system 
   double xmin = std::numeric_limits<double>::max();
   double xmax = std::numeric_limits<double>::min();
   double ymin = std::numeric_limits<double>::max();
@@ -3445,17 +3445,23 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
   double floorPrintArea = floorPrintWidth * floorPrintHeight;
   double desiredArea = desiredWidth * desiredHeight;
   double numSkylights = skylightToProjectedFloorRatio*floorPrintArea/desiredArea;
+
   double numSkylightsX = std::sqrt(skylightToProjectedFloorRatio)*floorPrintWidth/desiredWidth;
   double numSkylightsY = std::sqrt(skylightToProjectedFloorRatio)*floorPrintHeight/desiredHeight;
 
-  double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/numSkylightsX;
-  double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/numSkylightsY;
+  // space is distance from end of one skylight to beginning of next
+  double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/(std::ceil(numSkylightsX));
+  double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/(std::ceil(numSkylightsY));
 
-  for (double x = xSpace/2.0; x < floorPrintWidth - xSpace/2.0; x += desiredWidth + xSpace){
-    for (double y = ySpace/2.0; y < floorPrintHeight - ySpace/2.0; y += desiredHeight + ySpace){
+  if ((xSpace <= 0.0) || (ySpace <= 0.0)){
+    return result;
+  }
 
-      double x2 = std::min(x+desiredWidth, floorPrintWidth - xSpace/2.0);
-      double y2 = std::min(y+desiredHeight, floorPrintHeight - ySpace/2.0);
+  for (double x = xmin + xSpace/2.0; x < xmax - xSpace/2.0; x += desiredWidth + xSpace){
+    for (double y = ymin + ySpace/2.0; y < ymax - ySpace/2.0; y += desiredHeight + ySpace){
+
+      double x2 = std::min(x+desiredWidth, xmax - xSpace/2.0);
+      double y2 = std::min(y+desiredHeight, ymax - ySpace/2.0);
 
       // skylight in grid coordinates
       std::vector<Point3d> skylight;
