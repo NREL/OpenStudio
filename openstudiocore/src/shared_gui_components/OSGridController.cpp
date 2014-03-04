@@ -164,18 +164,18 @@ QWidget * OSGridController::widgetAt(int row, int column)
 {
   OS_ASSERT(row >= 0);
   OS_ASSERT(column >= 0);
-
-  OS_ASSERT(m_modelObjects.size() > static_cast<unsigned>(row));
-  OS_ASSERT(m_baseConcepts.size() > static_cast<unsigned>(column));
+  
+  // Note: If there is a horizontal header row,  m_modelObjects[0] starts on gridLayout[1]
+  int modelObjectRow = m_hasHorizontalHeader ? row - 1 : row; 
+  
+  OS_ASSERT(static_cast<int>(m_modelObjects.size()) > modelObjectRow);
+  OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
   QWidget * widget = 0;
 
   bool isConnected = false;
 
   QString cellColor("#FFFFFF"); // white
-
-  // Note: If there is a horizontal header row,  m_modelObjects[0] starts on gridLayout[1]
-  int modelObjectRow = m_hasHorizontalHeader ? row - 1 : row;
 
   if(m_hasHorizontalHeader && row == 0){
     if(column == 0){
@@ -451,7 +451,11 @@ void OSGridController::setCustomCategoryAndFields()
 
 int OSGridController::rowCount() const
 {
-  return m_modelObjects.size();
+  if(m_hasHorizontalHeader){
+    return m_modelObjects.size() + 1;
+  } else {
+    return m_modelObjects.size();
+  }
 }
 
 int OSGridController::columnCount() const
