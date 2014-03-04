@@ -26,6 +26,7 @@
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
+#include "../utilities/idf/Handle.hpp"
 
 class QGraphicsView;
 class QPushButton;
@@ -690,9 +691,22 @@ class SecondaryDetailView : public QGraphicsObject
 
   virtual ~SecondaryDetailView() {}
 
+  ZoomInButtonItem * zoomInButtonItem;
+  RemoveButtonItem * removeButtonItem;
+
   QRectF boundingRect() const;
+  QRectF nameRect();
 
   void setName(const QString & name);
+  void setHandle(const Handle & handle);
+
+  static double width();
+  static double height();
+
+  signals:
+
+  void zoomInOnSystemClicked(const Handle & handle);
+  void removeClicked(const Handle & handle);
 
   protected:
 
@@ -700,9 +714,15 @@ class SecondaryDetailView : public QGraphicsObject
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget );
 
+  private slots:
+
+  void onZoomButtonClicked();
+  void onRemoveButtonClicked();
+
   private:
 
   QString m_name;
+  Handle m_handle;
 };
 
 class RefrigerationSecondaryView : public QGraphicsObject

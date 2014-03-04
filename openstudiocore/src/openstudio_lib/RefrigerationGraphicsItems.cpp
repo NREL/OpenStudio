@@ -1275,7 +1275,7 @@ void RefrigerationSHXView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 
 QRectF SecondaryDropZoneView::boundingRect() const
 {
-  return QRectF(0,0,RefrigerationSystemView::componentHeight * 3.0,RefrigerationSystemView::componentHeight);
+  return QRectF(0,0,RefrigerationCasesView::summaryRect().width(),RefrigerationSystemView::componentHeight);
 }
 
 void SecondaryDropZoneView::paint( QPainter *painter, 
@@ -1294,6 +1294,43 @@ void SecondaryDropZoneView::paint( QPainter *painter,
 SecondaryDetailView::SecondaryDetailView()
   : QGraphicsObject()
 {
+  zoomInButtonItem = new ZoomInButtonItem();
+  zoomInButtonItem->setParentItem(this);
+  zoomInButtonItem->setPos(width() - RefrigerationSystemView::margin - zoomInButtonItem->boundingRect().width(),RefrigerationSystemView::margin);
+  bool bingo = connect(zoomInButtonItem,SIGNAL(mouseClicked()),this,SLOT(onZoomButtonClicked()));
+  OS_ASSERT(bingo);
+
+  removeButtonItem = new RemoveButtonItem();
+  removeButtonItem->setParentItem(this);
+  removeButtonItem->setPos(zoomInButtonItem->x() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin); 
+  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
+  OS_ASSERT(bingo);
+}
+
+double SecondaryDetailView::width()
+{
+  return RefrigerationCasesView::summaryRect().width();
+}
+
+double SecondaryDetailView::height()
+{
+  return RefrigerationSystemView::componentHeight / 2.0;
+}
+
+QRectF SecondaryDetailView::nameRect()
+{
+  return QRectF(RefrigerationSystemView::margin,RefrigerationSystemView::margin,
+                removeButtonItem->x() - RefrigerationSystemView::margin * 2.0,height() - RefrigerationSystemView::margin * 2.0); 
+}
+
+void SecondaryDetailView::onRemoveButtonClicked()
+{
+  emit removeClicked(m_handle);
+}
+
+void SecondaryDetailView::onZoomButtonClicked()
+{
+  emit zoomInOnSystemClicked(m_handle);
 }
 
 void SecondaryDetailView::setName(const QString & name)
@@ -1302,9 +1339,15 @@ void SecondaryDetailView::setName(const QString & name)
   update();
 }
 
+void SecondaryDetailView::setHandle(const Handle & handle)
+{
+  m_handle = handle;
+  update();
+}
+
 QRectF SecondaryDetailView::boundingRect() const
 {
-  return QRectF(0,0,RefrigerationSystemView::componentHeight * 3.0,RefrigerationSystemView::componentHeight / 2.0);
+  return QRectF(0,0,width(),height());
 }
 
 void SecondaryDetailView::paint( QPainter *painter, 
@@ -1316,7 +1359,7 @@ void SecondaryDetailView::paint( QPainter *painter,
   painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
 
   painter->drawRect(boundingRect());
-  painter->drawText(boundingRect(),Qt::AlignCenter,m_name);
+  painter->drawText(nameRect(),Qt::AlignCenter,m_name);
 }
 
 RefrigerationSecondaryView::RefrigerationSecondaryView()
@@ -1381,7 +1424,7 @@ void RefrigerationSecondaryView::paint( QPainter *painter,
 
 QRectF RefrigerationSecondaryView::boundingRect() const
 {
-  return QRectF(0,0,RefrigerationSystemView::componentHeight * 3.0,m_height);
+  return QRectF(0,0,RefrigerationCasesView::summaryRect().width(),m_height);
 }
 
 QRectF RefrigerationSystemDropZoneView::boundingRect() const

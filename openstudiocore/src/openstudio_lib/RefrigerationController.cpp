@@ -25,6 +25,7 @@
 #include "MainWindow.hpp"
 #include "MainRightColumnController.hpp"
 #include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 #include "../model/RefrigerationSystem.hpp"
 #include "../model/RefrigerationSystem_Impl.hpp"
 #include "../model/RefrigerationCondenserAirCooled.hpp"
@@ -67,7 +68,6 @@ RefrigerationController::RefrigerationController()
   m_refrigerationSystemGridView->setMargin(RefrigerationSystemView::margin);
 
   m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController(this));
-
   m_refrigerationSystemGridView->setListController(m_refrigerationSystemListController);
 
   m_refrigerationSystemGridView->setDelegate(QSharedPointer<RefrigerationSystemItemDelegate>(new RefrigerationSystemItemDelegate()));
@@ -80,6 +80,8 @@ RefrigerationController::RefrigerationController()
 RefrigerationController::~RefrigerationController()
 {
   delete m_refrigerationView;
+
+  delete m_refrigerationScene;
 }
 
 boost::optional<model::RefrigerationSystem> RefrigerationController::cascadeSystem(const model::RefrigerationCondenserCascade & condenser)
@@ -105,6 +107,17 @@ boost::optional<model::RefrigerationSystem> RefrigerationController::cascadeSyst
   return result;
 }
 
+void RefrigerationController::zoomInOnSystem(const Handle & handle)
+{
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  model::Model t_model = doc->model();
+  
+  if( boost::optional<model::RefrigerationSystem> system = t_model.getModelObject<model::RefrigerationSystem>(handle) )
+  {
+    zoomInOnSystem(system.get());
+  }
+}
+
 void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem)
 {
   model::OptionalModelObject mo;
@@ -115,18 +128,22 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 
   m_currentSystem = refrigerationSystem;
 
-  m_refrigerationScene = QSharedPointer<QGraphicsScene>(new QGraphicsScene());
+  if( m_refrigerationScene )
+  {
+    m_refrigerationScene->deleteLater();
+  }
+
+  m_refrigerationScene = new QGraphicsScene();
 
   m_refrigerationView->header->show();
 
-  // These get deleted with when the scene is deleted
   m_detailView = new RefrigerationSystemView();
 
   refresh();
 
   m_refrigerationScene->addItem(m_detailView);
 
-  m_refrigerationView->graphicsView->setScene(m_refrigerationScene.data());
+  m_refrigerationView->graphicsView->setScene(m_refrigerationScene);
 
   bool bingo;
 
@@ -391,6 +408,30 @@ void RefrigerationController::removeSubCooler(const OSItemId & itemid)
   }
 }
 
+void RefrigerationController::removeLoad(const Handle & handle)
+{
+  if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
+  {
+    if(boost::optional<model::RefrigerationSystem> cascadeSystem = model->getModelObject<model::RefrigerationSystem>(handle))
+    {
+      OS_ASSERT(m_currentSystem);
+      if( boost::optional<model::ModelObject> condenserModelObject = cascadeSystem->refrigerationCondenser() )
+      {
+        if( boost::optional<model::RefrigerationCondenserCascade> condenserCascade = condenserModelObject->optionalCast<model::RefrigerationCondenserCascade>() )
+        {
+          m_currentSystem->removeCascadeCondenserLoad(condenserCascade.get());
+          refresh();
+        }
+      }
+    }
+    else if(boost::optional<model::RefrigerationCondenserCascade> condenserCascade = model->getModelObject<model::RefrigerationCondenserCascade>(handle))
+    {
+      condenserCascade->remove();
+      refresh();
+    }
+  }
+}
+
 void RefrigerationController::onSHXViewDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
@@ -443,15 +484,10 @@ void RefrigerationController::refreshNow()
   if( m_detailView )
   {
     m_detailView->refrigerationCondenserView->setCondenserId(OSItemId());
-
     m_detailView->refrigerationSubCoolerView->setId(OSItemId());
-
     m_detailView->refrigerationSHXView->setId(OSItemId());
-
     m_detailView->refrigerationCasesView->removeAllCaseDetailViews();
-
     m_detailView->refrigerationCompressorView->removeAllCompressorDetailViews();
-
     m_detailView->refrigerationSecondaryView->removeAllSecondaryDetailViews();
 
     if( m_currentSystem )
@@ -487,13 +523,21 @@ void RefrigerationController::refreshNow()
            ++it )
       {
         SecondaryDetailView * detailView = new SecondaryDetailView();
+        bool bingo = connect(detailView,SIGNAL(zoomInOnSystemClicked(const Handle &)),
+                             this,SLOT(zoomInOnSystem(const Handle &)));
+        OS_ASSERT(bingo);
+        bingo = connect(detailView,SIGNAL(removeClicked(const Handle &)),
+                        this,SLOT(removeLoad(const Handle &)));
+        OS_ASSERT(bingo);
         if( boost::optional<model::RefrigerationSystem> t_cascadeSystem = cascadeSystem(*it) )
         {
           detailView->setName(QString::fromStdString(t_cascadeSystem->name().get()));
+          detailView->setHandle(t_cascadeSystem->handle());
         }
         else
         {
           detailView->setName(QString::fromStdString(it->name().get()));
+          detailView->setHandle(it->handle());
         }
         m_detailView->refrigerationSecondaryView->insertSecondaryDetailView(0,detailView);
       }
@@ -655,6 +699,11 @@ QSharedPointer<RefrigerationSystemListController> RefrigerationController::refri
 RefrigerationSystemListController::RefrigerationSystemListController(RefrigerationController * refrigerationController)
   : m_refrigerationController(refrigerationController)
 {
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  model::Model t_model = doc->model();
+  bool bingo = connect(t_model.getImpl<model::detail::Model_Impl>().get(),SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                       this,SLOT(onModelObjectAdd(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)));
+  OS_ASSERT(bingo);
 }
 
 RefrigerationController * RefrigerationSystemListController::refrigerationController() const
@@ -709,8 +758,14 @@ void RefrigerationSystemListController::createNewSystem()
   if( boost::optional<model::Model> model = OSAppBase::instance()->currentModel() )
   {
     model::RefrigerationSystem system(model.get());
+  }
+}
 
-    emit itemInserted(systemIndex(system));
+void RefrigerationSystemListController::onModelObjectAdd(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+{
+  if( iddObjectType == model::RefrigerationSystem::iddObjectType() )
+  {
+    emit itemInserted(systemIndex(object.cast<model::RefrigerationSystem>()));
   }
 }
 
@@ -730,8 +785,6 @@ void RefrigerationSystemListController::addSystem(const OSItemId & itemid)
       {
         model::RefrigerationSystem systemClone = 
           system->clone(model.get()).cast<model::RefrigerationSystem>();
-
-        emit itemInserted(systemIndex(systemClone));
       }
     }
   }

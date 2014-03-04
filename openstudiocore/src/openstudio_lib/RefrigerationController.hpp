@@ -58,6 +58,8 @@ class RefrigerationController : public QObject
 
   public slots:
 
+  void zoomInOnSystem(const Handle & handle);
+
   void zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem);
 
   void zoomOutToSystemGridView();
@@ -90,6 +92,8 @@ class RefrigerationController : public QObject
 
   void removeSubCoolerLiquidSuction(const OSItemId & itemid);
 
+  void removeLoad(const Handle &);
+
   void inspectOSItem(const OSItemId & itemid);
 
   private:
@@ -104,7 +108,8 @@ class RefrigerationController : public QObject
 
   QSharedPointer<QGraphicsScene> m_refrigerationGridScene;
 
-  QSharedPointer<QGraphicsScene> m_refrigerationScene;
+  //QSharedPointer<QGraphicsScene> m_refrigerationScene;
+  QPointer<QGraphicsScene> m_refrigerationScene;
 
   bool m_dirty;
 
@@ -132,6 +137,10 @@ class RefrigerationSystemListController : public OSListController
   void createNewSystem();
 
   void removeSystem(model::RefrigerationSystem & refrigerationSystem);
+
+  private slots:
+
+  void onModelObjectAdd(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
   private:
 
