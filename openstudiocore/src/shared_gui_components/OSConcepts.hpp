@@ -192,6 +192,31 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
   std::map<std::string,ChoiceType> m_choicesMap;
 };
 
+template<typename ChoiceType, typename DataSourceType>
+class RequiredChoiceSaveDataSourceConceptImpl : public RequiredChoiceConceptImpl<ChoiceType> {
+ public:
+  RequiredChoiceSaveDataSourceConceptImpl(
+      boost::shared_ptr<DataSourceType> dataSource,
+      boost::function<std::string (ChoiceType)> toString,
+      boost::function<std::vector<ChoiceType> ()> choices,
+      boost::function<ChoiceType ()> getter,
+      boost::function<bool (ChoiceType)> setter,
+      boost::optional<NoFailAction> reset=boost::none,
+      boost::optional<BasicQuery> isDefaulted=boost::none)
+    : RequiredChoiceConceptImpl<ChoiceType>(toString,
+                                            choices,
+                                            getter,
+                                            setter,
+                                            reset,
+                                            isDefaulted),
+      m_dataSource(dataSource)
+  {}
+
+  virtual ~RequiredChoiceSaveDataSourceConceptImpl() {}
+ private:
+  boost::shared_ptr<DataSourceType> m_dataSource;
+};
+
 /** Concept of an optional choice, that is, one in which an empty choice (converted
  *  to an empty string) is possible. There is no default, but the current value
  *  can be cleared. */
@@ -282,7 +307,7 @@ class ComboBoxConcept : public BaseConcept
   virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) = 0;
 };
 
-template<typename DataSourceType, typename ChoiceType>
+template<typename ChoiceType, typename DataSourceType>
 class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
 {
   public:
@@ -304,17 +329,19 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
   virtual ~ComboBoxRequiredChoiceImpl() {}
 
   virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) {
-    m_obj = obj.cast<DataSourceType>();
-    return boost::shared_ptr<ChoiceConcept>(
-          new RequiredChoiceConceptImpl<ChoiceType>(m_toString,
-                                                    m_choices,
-                                                    boost::bind(m_getter,m_obj.get_ptr()),
-                                                    boost::bind(m_setter,m_obj.get_ptr(),_1)));
+    boost::shared_ptr<DataSourceType> dataSource = boost::shared_ptr<DataSourceType>(
+        new DataSourceType(obj.cast<DataSourceType>()));
+    boost::shared_ptr<ChoiceConcept> result = boost::shared_ptr<ChoiceConcept>(
+          new RequiredChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
+               dataSource,
+               m_toString,
+               m_choices,
+               boost::bind(m_getter,dataSource.get()),
+               boost::bind(m_setter,dataSource.get(),_1)));
+    return result;
   }
 
  private:
-  boost::optional<DataSourceType> m_obj; // hold a copy so can bind to pointer
-
   boost::function<std::string (ChoiceType)> m_toString;
   boost::function<std::vector<ChoiceType> (void)> m_choices;
   boost::function<std::string (DataSourceType *)>  m_getter;

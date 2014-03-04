@@ -421,28 +421,28 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             &model::RefrigerationCase::averageRefrigerantChargeInventory,
                             &model::RefrigerationCase::setAverageRefrigerantChargeInventory);
     }else if(field == LATENTCASECREDITCURVETYPE){
-      addComboBoxColumn<model::RefrigerationCase,std::string>(
+      addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(LATENTCASECREDITCURVETYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             &model::RefrigerationCase::latentCaseCreditCurveTypeValues,
             &model::RefrigerationCase::latentCaseCreditCurveType,
             &model::RefrigerationCase::setLatentCaseCreditCurveType);
     }else if(field == ANTISWEATHEATERCONTROLTYPE){
-      addComboBoxColumn<model::RefrigerationCase,std::string>(
+      addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(ANTISWEATHEATERCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             &model::RefrigerationCase::antiSweatHeaterControlTypeValues,
             &model::RefrigerationCase::antiSweatHeaterControlType,
             &model::RefrigerationCase::setAntiSweatHeaterControlType);
     }else if(field == CASEDEFROSTTYPE){
-      addComboBoxColumn<model::RefrigerationCase,std::string>(
+      addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(CASEDEFROSTTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             &model::RefrigerationCase::caseDefrostTypeValues,
             &model::RefrigerationCase::caseDefrostType,
             &model::RefrigerationCase::setCaseDefrostType);
     }else if(field == DEFROSTENERGYCORRECTIONCURVETYPE){
-      addComboBoxColumn<model::RefrigerationCase,std::string>(
+      addComboBoxColumn<std::string,model::RefrigerationCase>(
             QString(DEFROSTENERGYCORRECTIONCURVETYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             &model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues,
@@ -673,14 +673,14 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
 
   Q_FOREACH(QString field, fields){
     if(field == DEFROSTTYPE){
-      addComboBoxColumn<model::RefrigerationWalkIn,std::string>(
+      addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             &model::RefrigerationWalkIn::defrostTypeValues,
             &model::RefrigerationWalkIn::defrostType,
             &model::RefrigerationWalkIn::setDefrostType);
     }else if(field == DEFROSTCONTROLTYPE){
-      addComboBoxColumn<model::RefrigerationWalkIn,std::string>(
+      addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTCONTROLTYPE),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             &model::RefrigerationWalkIn::defrostControlTypeValues,

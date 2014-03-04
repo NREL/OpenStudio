@@ -72,7 +72,7 @@ public:
     m_baseConcepts.push_back(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(headingLabel,getter,setter)));
   }
 
-  template<typename DataSourceType, typename ChoiceType>
+  template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
                          boost::function<std::string (ChoiceType)> toString,
                          boost::function<std::vector<ChoiceType> ()> choices,
@@ -80,7 +80,7 @@ public:
                          boost::function<bool (DataSourceType*, ChoiceType)> setter)
   {
     m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(
-        new ComboBoxRequiredChoiceImpl<DataSourceType,ChoiceType>(headingLabel,
+        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
                                                                   toString,
                                                                   choices,
                                                                   getter,
