@@ -582,7 +582,7 @@ MODEL_API void unmatchSurfaces(std::vector<Space>& spaces);
 /// Resulting pattern will be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
 MODEL_API std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Space>& spaces, 
                                                                      double directionOfRelativeNorth,
-                                                                     double skylightToFloorRatio, 
+                                                                     double skylightToProjectedFloorRatio, 
                                                                      double desiredWidth, double desiredHeight);
 
 /** \relates Space*/

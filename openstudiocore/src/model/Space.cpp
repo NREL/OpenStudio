@@ -3386,14 +3386,14 @@ void unmatchSurfaces(std::vector<Space>& spaces)
 
 std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Space>& spaces, 
                                                            double directionOfRelativeNorth,
-                                                           double skylightToFloorRatio, 
+                                                           double skylightToProjectedFloorRatio, 
                                                            double desiredWidth, double desiredHeight) 
 {
   std::vector<std::vector<Point3d> > result;
 
-  if (skylightToFloorRatio <= 0.0){
+  if (skylightToProjectedFloorRatio <= 0.0){
     return result;
-  }else if (skylightToFloorRatio >= 1.0){
+  }else if (skylightToProjectedFloorRatio >= 1.0){
     return result;
   }
 
@@ -3444,9 +3444,9 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
   double floorPrintHeight = (ymax-ymin);
   double floorPrintArea = floorPrintWidth * floorPrintHeight;
   double desiredArea = desiredWidth * desiredHeight;
-  double numSkylights = skylightToFloorRatio*floorPrintArea/desiredArea;
-  double numSkylightsX = std::sqrt(skylightToFloorRatio)*floorPrintWidth/desiredWidth;
-  double numSkylightsY = std::sqrt(skylightToFloorRatio)*floorPrintHeight/desiredHeight;
+  double numSkylights = skylightToProjectedFloorRatio*floorPrintArea/desiredArea;
+  double numSkylightsX = std::sqrt(skylightToProjectedFloorRatio)*floorPrintWidth/desiredWidth;
+  double numSkylightsY = std::sqrt(skylightToProjectedFloorRatio)*floorPrintHeight/desiredHeight;
 
   double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/numSkylightsX;
   double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/numSkylightsY;
