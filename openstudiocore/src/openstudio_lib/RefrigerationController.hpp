@@ -108,7 +108,6 @@ class RefrigerationController : public QObject
 
   QSharedPointer<QGraphicsScene> m_refrigerationGridScene;
 
-  //QSharedPointer<QGraphicsScene> m_refrigerationScene;
   QPointer<QGraphicsScene> m_refrigerationScene;
 
   bool m_dirty;
@@ -129,6 +128,8 @@ class RefrigerationSystemListController : public OSListController
   QSharedPointer<OSListItem> itemAt(int i);
 
   int count();
+
+  void reset();
 
   public slots:
 

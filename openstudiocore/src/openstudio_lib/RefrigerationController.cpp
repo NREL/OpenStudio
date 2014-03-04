@@ -214,6 +214,8 @@ void RefrigerationController::zoomOutToSystemGridView()
 
   m_refrigerationView->header->hide();
 
+  m_refrigerationSystemListController->reset();
+
   refresh();
 
   m_refrigerationView->graphicsView->setScene(m_refrigerationGridScene.data());
@@ -704,6 +706,11 @@ RefrigerationSystemListController::RefrigerationSystemListController(Refrigerati
   bool bingo = connect(t_model.getImpl<model::detail::Model_Impl>().get(),SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                        this,SLOT(onModelObjectAdd(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)));
   OS_ASSERT(bingo);
+}
+
+void RefrigerationSystemListController::reset()
+{
+  emit modelReset();
 }
 
 RefrigerationController * RefrigerationSystemListController::refrigerationController() const
