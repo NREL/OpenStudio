@@ -28,6 +28,7 @@ namespace model {
 
 class InteriorPartitionSurfaceGroup;
 class InteriorPartitionSurface;
+class DaylightingDeviceShelf;
 
 namespace detail {
 
@@ -146,6 +147,8 @@ namespace detail {
     bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
 
     void resetInteriorPartitionSurfaceGroup();
+
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
    protected:
    private:
