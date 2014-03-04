@@ -140,16 +140,26 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   scrollArea->setBackgroundRole(QPalette::NoRole);
   layout->addWidget(scrollArea);
 
-  std::vector<model::ModelObject> caseModelObjects = castVector<model::ModelObject>(model.getModelObjects<model::RefrigerationCase>());
+  model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
   std::vector<model::RefrigerationCase> refrigerationCases = model.getModelObjects<model::RefrigerationCase>();
+  std::vector<model::ModelObject> caseModelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
+  caseModelObjects.push_back(model::RefrigerationCase(model,schedule)); // TODO remove these test entries
+  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
+  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
+  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
+  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
+
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
-  std::vector<model::ModelObject> walkInModelObjects = castVector<model::ModelObject>(model.getModelObjects<model::RefrigerationWalkIn>());
-
   std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
+  std::vector<model::ModelObject> walkInModelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
+  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule)); // TODO remove these test entries
+  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
+  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
+
   RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
   scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
@@ -185,10 +195,10 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back("Rack Name");
+    //fields.push_back("Rack Name"); // TODO system.name
     //fields.push_back("Rack Saturated Suction Temperature (F)");
     //fields.push_back("Fixture Name");
-    fields.push_back(THERMALZONE);
+    //fields.push_back(THERMALZONE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -463,15 +473,15 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
     }else if(field == REFRIGERATEDCASERESTOCKINGSCHEDULE){
       //boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const; TODO
     }else if(field == CASECREDITFRACTIONSCHEDULE){
-      //boost::optional<Schedule> caseCreditFractionSchedule() const; TODO // TODO OSDouble?
+      //boost::optional<Schedule> caseCreditFractionSchedule() const; TODO
     }else if(field == AVAILABILITYSCHEDULE){
       //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == THERMALZONE){
       //addDropZoneColumn(QString(THERMALZONE),
       //  &model::RefrigerationCase::thermalZone,
-      //  &model::RefrigerationCase::setThermalZone); // TODO
+      //  &model::RefrigerationCase::setThermalZone); TODO
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
-      //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; // TODO
+      //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
                             &model::RefrigerationCase::name,
@@ -529,7 +539,7 @@ void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
   boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
   if (modelObject){
     if (modelObject->optionalCast<model::RefrigerationCase>()){
-      // TODO how to add this to model
+      modelObject->clone(m_model);
     }
   }
 }
@@ -549,7 +559,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back("Rack Name");
+    //fields.push_back("Rack Name"); // TODO system.name
     //fields.push_back("Rack Saturated Suction Temperature (F)");
     //fields.push_back("Walk-in Type");
     //fields.push_back("Manufacturer & Model No.");
@@ -840,7 +850,7 @@ void RefrigerationWalkInGridController::onItemDropped(const OSItemId& itemId)
   boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
   if (modelObject){
     if (modelObject->optionalCast<model::RefrigerationWalkIn>()){
-      // TODO how to add this to model
+      modelObject->clone(m_model);
     }
   }
 }
