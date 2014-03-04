@@ -132,16 +132,48 @@ OptionalInt getProjectRadianceJobIndex(const openstudio::analysisdriver::SimpleP
 {
   openstudio::analysis::Problem problem = t_project.analysis().problem();
   OptionalInt index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-  if (index && *index > 0 && problem.workflow()[*index - 1].isWorkItem()) {
-    openstudio::runmanager::WorkItem wi = problem.workflow()[*index - 1].workItem();
-    if (wi.jobkeyname == "pat-radiance-job")
+  LOG_FREE(Trace, "WorkflowTools", "ModelToIdf job found " << (index?"true":"false"));
+
+  if (index)
+  {
+    LOG_FREE(Trace, "WorkflowTools", "ModelToIdf job found at " << *index);
+  } else {
+    return OptionalInt();
+  }
+
+  int i = *index - 1;
+
+  std::vector<openstudio::analysis::WorkflowStep> workflow = problem.workflow();
+  if (i > 0 && workflow[i].isWorkItem() && workflow[i].workItem().jobkeyname == "pat-radiance-job")
+  {
+    return i;
+  } else {
+    return OptionalInt();
+  }
+}
+
+
+OptionalInt getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem)
+{
+  OptionalInt stopIndex = t_problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
+  if (stopIndex)
+  {
+    int idx = *stopIndex;
+    if (idx > 0)
     {
-      return *index - 1;
+      --idx;
+      std::vector<openstudio::analysis::WorkflowStep> workflow = t_problem.workflow();
+
+      if (workflow[idx].isWorkItem() && workflow[idx].workItem().jobkeyname == "pat-radiance-job")
+      {
+        return idx;
+      }
     }
   }
 
-  return OptionalInt();
+  return stopIndex;
 }
+
 
 bool projectHasRadiance(const openstudio::analysisdriver::SimpleProject &t_project)
 {

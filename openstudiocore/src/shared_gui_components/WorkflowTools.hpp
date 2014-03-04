@@ -17,6 +17,11 @@ namespace openstudio
     class Model;
   }
 
+  namespace analysis
+  {
+    class Problem;
+  }
+
   namespace analysisdriver
   {
     class SimpleProject;
@@ -32,6 +37,8 @@ namespace openstudio
   void addRadianceToProject(openstudio::analysisdriver::SimpleProject &t_project);
 
   void removeRadianceFromProject(openstudio::analysisdriver::SimpleProject &t_project);
+
+  boost::optional<int> getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem);
 }
 
 #endif

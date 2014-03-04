@@ -141,6 +141,7 @@ RunTabController::RunTabController()
 
  
     bool radianceEnabled = openstudio::projectHasRadiance(*project); 
+    LOG(Debug, "Project has radiance " << radianceEnabled);
     runView->runStatusView->setRadianceEnabled(radianceEnabled);
     m_radianceEnabled = radianceEnabled;
   }
