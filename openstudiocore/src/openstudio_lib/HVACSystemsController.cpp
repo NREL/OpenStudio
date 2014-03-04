@@ -308,7 +308,7 @@ void HVACSystemsController::update()
                                    m_refrigerationGridController.get()->refrigerationGridView(), SIGNAL(toggleUnitsClicked(bool)));
         OS_ASSERT(isConnected);
 
-        // TODO m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
+        m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
       }
       else
       {
