@@ -959,7 +959,7 @@ OptionalModelObject Loop_Impl::demandComponent( openstudio::Handle handle )
     }
   }
 
-  OptionalModelObject Loop_Impl::supplyComponent( openstudio::Handle handle )
+  OptionalModelObject Loop_Impl::supplyComponent( openstudio::Handle handle ) const
   {
     HVACComponent inletComp = supplyInletNode();
     HVACComponent outletComp = supplyOutletNode();
