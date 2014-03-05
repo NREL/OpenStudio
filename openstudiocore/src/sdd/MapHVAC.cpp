@@ -3792,6 +3792,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       spm.setMaximumSetpointTemperature(rstSupHi.get());
     }
+
+    // WetBulbApproach
+    QDomElement wetBulbApproachElement = fluidSysElement.firstChildElement("WetBulbApproach");
+    value = wetBulbApproachElement.text().toDouble(&ok);
+    if( ok )
+    {
+      spm.setOffsetTemperatureDifference(value * 5.0 / 9.0);
+    }
   }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"OutsideAirReset") )
   {
@@ -4576,28 +4584,53 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
   {
     model::CoolingTowerVariableSpeed tower(model);
 
-    QDomElement entTempDsgnElement = htRejElement.firstChildElement("EntTempDsgn");
+    QDomElement wetBulbApproachElement = htRejElement.parentNode().firstChildElement("WetBulbApproach");
+    QDomElement dsgnSupWtrTempElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrTemp");
+    QDomElement dsgnSupWtrDelTElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrDelT");
 
-    QDomElement lvgTempDsgnElement = htRejElement.firstChildElement("LvgTempDsgn");
+    boost::optional<double> wetBulbApproach;
+    boost::optional<double> dsgnSupWtrTemp;
+    boost::optional<double> dsgnSupWtrDelT;
 
-    boost::optional<double> entTempDsgn;
-    boost::optional<double> lvgTempDsgn;
-
-    value = entTempDsgnElement.text().toDouble(&ok);
+    value = wetBulbApproachElement.text().toDouble(&ok);
     if( ok )
     {
-      entTempDsgn = unitToUnit(value,"F","C").get();
+      wetBulbApproach = value * 5.0 / 9.0;
     }
 
-    value = lvgTempDsgnElement.text().toDouble(&ok);
+    value = dsgnSupWtrTempElement.text().toDouble(&ok);
     if( ok )
     {
-      lvgTempDsgn = unitToUnit(value,"F","C").get();
+      dsgnSupWtrTemp = unitToUnit(value,"F","C");
     }
 
-    if( entTempDsgn && lvgTempDsgn )
+    value = dsgnSupWtrDelTElement.text().toDouble(&ok);
+    if( ok )
     {
-      tower.setDesignRangeTemperature(entTempDsgn.get() - lvgTempDsgn.get());
+      dsgnSupWtrDelT = value * 5.0 / 9.0; 
+    }
+
+    if( dsgnSupWtrDelT )
+    {
+      tower.setDesignRangeTemperature(dsgnSupWtrDelT.get());
+    }
+
+    if( dsgnSupWtrTemp && wetBulbApproach )
+    {
+      tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - wetBulbApproach.get());
+    }
+    else if( dsgnSupWtrTemp )
+    {
+      tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - 5.55556);
+    }
+
+    if( wetBulbApproach )
+    {
+      tower.setDesignApproachTemperature(wetBulbApproach.get());
+    }
+    else
+    {
+      tower.setDesignApproachTemperature(5.55556);
     }
 
     if( ! autosize() )
