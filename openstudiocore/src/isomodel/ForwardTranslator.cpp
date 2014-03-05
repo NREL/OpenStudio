@@ -1437,13 +1437,8 @@ namespace isomodel {
 
     if (OSM_extract_infil_rate) {
       //first check to see if there effective leakage areas defined and if !those, then design flow rates;
-<<<<<<< HEAD
       if (!model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
-        std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
-=======
-      if (!model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
-        //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
->>>>>>> develop
+        //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
 
         /// \todo no reason for this to be in a loop
         //      BOOST_FOREACH(const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil, infiltration) {
