@@ -197,6 +197,9 @@ public:
 
   QWidget * widgetAt(int row, int column);
 
+  // Call this function on a model update
+  virtual void refreshModelObjects() = 0;
+
 protected:
 
   // This function determines the category for
@@ -247,6 +250,8 @@ protected:
 
   bool m_isIP;
 
+  std::vector<model::ModelObject> m_modelObjects;
+
 private:
 
   void loadQSettings();
@@ -254,8 +259,6 @@ private:
   void saveQSettings() const;
 
   void setCustomCategoryAndFields();
-
-  std::vector<model::ModelObject> m_modelObjects;
 
   QButtonGroup * m_horizontalHeaderBtnGrp;
 

@@ -477,9 +477,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
     }else if(field == AVAILABILITYSCHEDULE){
       //boost::optional<Schedule> availabilitySchedule() const; TODO
     }else if(field == THERMALZONE){
-      //addDropZoneColumn(QString(THERMALZONE),
-      //  &model::RefrigerationCase::thermalZone,
-      //  &model::RefrigerationCase::setThermalZone); TODO
+      //addComboBoxColumn<model::RefrigerationCase,std::string>(
+      //      QString(THERMALZONE),
+      //      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      //      &model::RefrigerationCase::thermalZone,
+      //      &model::RefrigerationCase::setThermalZone);
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){
@@ -540,8 +542,15 @@ void RefrigerationCaseGridController::onItemDropped(const OSItemId& itemId)
   if (modelObject){
     if (modelObject->optionalCast<model::RefrigerationCase>()){
       modelObject->clone(m_model);
+      emit modelReset();
     }
   }
+}
+
+void RefrigerationCaseGridController::refreshModelObjects()
+{
+  std::vector<model::RefrigerationCase> refrigerationCases = m_model.getModelObjects<model::RefrigerationCase>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
 }
 
 RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
@@ -851,9 +860,17 @@ void RefrigerationWalkInGridController::onItemDropped(const OSItemId& itemId)
   if (modelObject){
     if (modelObject->optionalCast<model::RefrigerationWalkIn>()){
       modelObject->clone(m_model);
+      emit modelReset();
     }
   }
 }
+
+void RefrigerationWalkInGridController::refreshModelObjects()
+{
+  std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = m_model.getModelObjects<model::RefrigerationWalkIn>();
+  m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
+}
+
 
 } // openstudio
 

@@ -63,6 +63,8 @@ public:
 
   virtual ~RefrigerationCaseGridController() {}
 
+  virtual void refreshModelObjects();
+
 protected:
 
   virtual void setCategoriesAndFields();
@@ -92,6 +94,8 @@ public:
     std::vector<model::ModelObject> modelObjects);
 
   virtual ~RefrigerationWalkInGridController() {}
+
+  virtual void refreshModelObjects();
 
 protected:
 

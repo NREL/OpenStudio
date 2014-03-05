@@ -194,6 +194,8 @@ void OSGridView::refreshAll()
 
   if( m_gridController )
   {
+    m_gridController->refreshModelObjects();
+
     for( int i = 0; i < m_gridController->rowCount(); i++ )
     {
       for( int j = 0; j < m_gridController->columnCount(); j++ )
