@@ -172,6 +172,8 @@ class OSComboBox2 : public QComboBox {
 
   void onCurrentIndexChanged(const QString & text);
 
+  void onChoicesRefreshTrigger();
+
   void onDataSourceChange(int);
 
   void onDataSourceAdd(int);

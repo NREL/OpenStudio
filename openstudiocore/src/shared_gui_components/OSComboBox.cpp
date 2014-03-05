@@ -251,6 +251,25 @@ void OSComboBox2::onCurrentIndexChanged(const QString & text)
   this->blockSignals(false);
 }
 
+void OSComboBox2::onChoicesRefreshTrigger() {
+  m_values = m_choiceConcept->choices();
+  this->blockSignals(true);
+  
+  clear();
+  for( std::vector<std::string>::iterator it = m_values.begin();
+       it < m_values.end();
+       ++it )
+  {
+    addItem(QString::fromStdString(*it));
+  }
+
+  // re-initialize
+  onModelObjectChanged();
+
+  this->blockSignals(false);
+  setEnabled(true);
+}
+
 void OSComboBox2::onDataSourceChange(int i)
 {
   this->setItemText(i,m_dataSource->valueAt(i));
@@ -291,6 +310,26 @@ void OSComboBox2::completeBind() {
     OS_ASSERT(isConnected);
 
     isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
+    OS_ASSERT(isConnected);
+
+    // isConnected = connect( m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(),
+    //                        SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    //                        this,
+    //                        SLOT(onChoicesRefreshTrigger()) );
+    // OS_ASSERT(isConnected);
+
+    // isConnected = connect( m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(),
+    //                        SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+    //                        this,
+    //                        SLOT(onChoicesRefreshTrigger()) );
+    // OS_ASSERT(isConnected);
+
+    // if this is too burdensome, implement Workspace_Impl onNameChange() signal and uncomment the above two connections.
+    // (IdfObject_Impl already has onNameChange(); Workspace_Impl::onChange() includes object addition and removal.)
+    isConnected = connect( m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(),
+                           SIGNAL(onChange()),
+                           this,
+                           SLOT(onChoicesRefreshTrigger()) );
     OS_ASSERT(isConnected);
 
     // populate choices
