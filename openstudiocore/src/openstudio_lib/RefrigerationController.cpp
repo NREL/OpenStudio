@@ -881,6 +881,7 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
     boost::optional<model::RefrigerationSystem> system = listItem->system();
     RefrigerationController * refrigerationController = qobject_cast<RefrigerationSystemListController *>(dataSource->controller())->refrigerationController();
     refrigerationController->refreshRefrigerationSystemView(refrigerationSystemMiniView->refrigerationSystemView,system);
+    refrigerationSystemMiniView->adjustLayout();
 
     itemView = refrigerationSystemMiniView;
   }

@@ -71,13 +71,9 @@ RefrigerationSystemMiniView::RefrigerationSystemMiniView()
 {
   refrigerationSystemView = new RefrigerationSystemView();
   refrigerationSystemView->setParentItem(this);
+  refrigerationSystemView->setEnabled(false);
 
-  refrigerationSystemView->setTransform(QTransform((contentRect().width() - 20) / refrigerationSystemView->boundingRect().width(),
-                                        0,0,
-                                        (contentRect().height() - 20)  / refrigerationSystemView->boundingRect().height(),
-                                        0,0));
-
-  refrigerationSystemView->setPos(contentRect().x() + 10,contentRect().y() + 10);
+  adjustLayout();
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
@@ -86,6 +82,31 @@ RefrigerationSystemMiniView::RefrigerationSystemMiniView()
   zoomInButtonItem = new ZoomInButtonItem();
   zoomInButtonItem->setParentItem(this);
   zoomInButtonItem->setPos(removeButtonItem->pos().x() - 10 - zoomInButtonItem->boundingRect().width(),headerHeight() / 2.0 - zoomInButtonItem->boundingRect().height() / 2.0);
+
+  setAcceptDrops(false);
+}
+
+void RefrigerationSystemMiniView::adjustLayout()
+{
+  double dx = (contentRect().width() - 20) / refrigerationSystemView->boundingRect().width();
+  double dy = (contentRect().height() - 20)  / refrigerationSystemView->boundingRect().height();
+
+  if( dx < dy )
+  {
+    dy = dx;
+  }
+  else
+  {
+    dx = dy;
+  }
+
+  refrigerationSystemView->setTransform(QTransform(dx,
+                                        0,0,
+                                        dy,
+                                        0,0));
+
+  refrigerationSystemView->setPos(contentRect().x() + contentRect().width() / 2.0 - refrigerationSystemView->boundingRect().width() * dx / 2.0,
+                                  contentRect().y() + contentRect().height() / 2.0 - refrigerationSystemView->boundingRect().height() * dy / 2.0);
 }
 
 QRectF RefrigerationSystemMiniView::boundingRect() const

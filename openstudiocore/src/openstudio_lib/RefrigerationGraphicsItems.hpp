@@ -111,6 +111,8 @@ class RefrigerationSystemMiniView : public QGraphicsObject
 
   QRectF boundingRect() const;
 
+  void adjustLayout();
+
   static QSize cellSize();
 
   public slots:
