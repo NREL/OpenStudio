@@ -51,6 +51,156 @@
 
 namespace openstudio {
 
+void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystemView * systemView, boost::optional<model::RefrigerationSystem> & system)
+{
+  OS_ASSERT(systemView);
+
+  systemView->refrigerationCondenserView->setCondenserId(OSItemId());
+  systemView->refrigerationSubCoolerView->setId(OSItemId());
+  systemView->refrigerationSHXView->setId(OSItemId());
+  systemView->refrigerationCasesView->removeAllCaseDetailViews();
+  systemView->refrigerationCompressorView->removeAllCompressorDetailViews();
+  systemView->refrigerationSecondaryView->removeAllSecondaryDetailViews();
+
+  if( system )
+  {
+    systemView->setId(OSItemId(system->handle(),QString(),false));
+
+    if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> subcooler = system->liquidSuctionHeatExchangerSubcooler() )
+    {
+      systemView->refrigerationSHXView->setId(OSItemId(subcooler->handle(),QString(),false));
+
+      systemView->refrigerationSHXView->setName(QString::fromStdString(subcooler->name().get()));
+    }
+
+    if( boost::optional<model::RefrigerationSubcoolerMechanical> subcooler = system->mechanicalSubcooler() )
+    {
+      systemView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle(),QString(),false));
+
+      systemView->refrigerationSubCoolerView->setName(QString::fromStdString(subcooler->name().get()));
+    }
+
+    if( boost::optional<model::ModelObject> condenser = system->refrigerationCondenser() )
+    {
+      systemView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle(),QString(),false));
+
+      systemView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
+    }
+
+    // insert secondary systems
+
+    std::vector<model::RefrigerationCondenserCascade> cascadeCondensers = system->cascadeCondenserLoads();
+    for( std::vector<model::RefrigerationCondenserCascade>::iterator it = cascadeCondensers.begin();
+         it != cascadeCondensers.end();
+         ++it )
+    {
+      SecondaryDetailView * detailView = new SecondaryDetailView();
+      bool bingo = connect(detailView,SIGNAL(zoomInOnSystemClicked(const Handle &)),
+                           this,SLOT(zoomInOnSystem(const Handle &)));
+      OS_ASSERT(bingo);
+      bingo = connect(detailView,SIGNAL(removeClicked(const Handle &)),
+                      this,SLOT(removeLoad(const Handle &)));
+      OS_ASSERT(bingo);
+      if( boost::optional<model::RefrigerationSystem> t_cascadeSystem = cascadeSystem(*it) )
+      {
+        detailView->setName(QString::fromStdString(t_cascadeSystem->name().get()));
+        detailView->setHandle(t_cascadeSystem->handle());
+      }
+      else
+      {
+        detailView->setName(QString::fromStdString(it->name().get()));
+        detailView->setHandle(it->handle());
+      }
+      systemView->refrigerationSecondaryView->insertSecondaryDetailView(0,detailView);
+    }
+
+    // insert compressors
+
+    std::vector<model::RefrigerationCompressor> compressors = system->compressors();
+
+    int compressorIndex = 1;
+
+    for( std::vector<model::RefrigerationCompressor>::iterator it = compressors.begin();
+         it != compressors.end();
+         ++it )
+    {
+      RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
+
+      detailView->setId(OSItemId(it->handle(),QString(),false));
+
+      detailView->setLabel(QString::number(compressorIndex));
+
+      bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
+                           this,SLOT(removeCompressor(const OSItemId &)));
+      OS_ASSERT(bingo);
+
+      bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                      this,SLOT(inspectOSItem(const OSItemId &)));
+      OS_ASSERT(bingo);
+
+      systemView->refrigerationCompressorView->insertCompressorDetailView(0,detailView);
+
+      compressorIndex++;
+    }
+
+    // insert cases
+
+    std::vector<model::RefrigerationCase> cases = system->cases();
+
+    systemView->refrigerationCasesView->setNumberOfDisplayCases(cases.size());
+
+    for( std::vector<model::RefrigerationCase>::iterator it = cases.begin();
+         it != cases.end();
+         ++it )
+    {
+      RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
+
+      detailView->setId(OSItemId(it->handle(),QString(),false));
+
+      detailView->setName(QString::fromStdString(it->name().get()));
+
+      bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
+                           this,SLOT(removeCase(const OSItemId &)));
+      OS_ASSERT(bingo);
+
+      bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                      this,SLOT(inspectOSItem(const OSItemId &)));
+      OS_ASSERT(bingo);
+
+      systemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
+    }
+
+    // insert walkins
+
+    std::vector<model::RefrigerationWalkIn> walkins = system->walkins();
+
+    systemView->refrigerationCasesView->setNumberOfWalkinCases(walkins.size());
+
+    for( std::vector<model::RefrigerationWalkIn>::iterator it = walkins.begin();
+         it != walkins.end();
+         ++it )
+    {
+      RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
+
+      detailView->setId(OSItemId(it->handle(),QString(),false));
+
+      detailView->setName(QString::fromStdString(it->name().get()));
+
+      bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
+                           this,SLOT(removeCase(const OSItemId &)));
+      OS_ASSERT(bingo);
+
+      bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
+                      this,SLOT(inspectOSItem(const OSItemId &)));
+      OS_ASSERT(bingo);
+
+      systemView->refrigerationCasesView->insertCaseDetailView(0,detailView);
+    }
+
+    systemView->adjustLayout();
+  }
+}
+
 RefrigerationController::RefrigerationController()
   : QObject()
 {
@@ -485,150 +635,7 @@ void RefrigerationController::refreshNow()
 
   if( m_detailView )
   {
-    m_detailView->refrigerationCondenserView->setCondenserId(OSItemId());
-    m_detailView->refrigerationSubCoolerView->setId(OSItemId());
-    m_detailView->refrigerationSHXView->setId(OSItemId());
-    m_detailView->refrigerationCasesView->removeAllCaseDetailViews();
-    m_detailView->refrigerationCompressorView->removeAllCompressorDetailViews();
-    m_detailView->refrigerationSecondaryView->removeAllSecondaryDetailViews();
-
-    if( m_currentSystem )
-    {
-      m_detailView->setId(OSItemId(m_currentSystem->handle(),QString(),false));
-
-      if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> subcooler = m_currentSystem->liquidSuctionHeatExchangerSubcooler() )
-      {
-        m_detailView->refrigerationSHXView->setId(OSItemId(subcooler->handle(),QString(),false));
-
-        m_detailView->refrigerationSHXView->setName(QString::fromStdString(subcooler->name().get()));
-      }
-
-      if( boost::optional<model::RefrigerationSubcoolerMechanical> subcooler = m_currentSystem->mechanicalSubcooler() )
-      {
-        m_detailView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle(),QString(),false));
-
-        m_detailView->refrigerationSubCoolerView->setName(QString::fromStdString(subcooler->name().get()));
-      }
-
-      if( boost::optional<model::ModelObject> condenser = m_currentSystem->refrigerationCondenser() )
-      {
-        m_detailView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle(),QString(),false));
-
-        m_detailView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
-      }
-
-      // insert secondary systems
-
-      std::vector<model::RefrigerationCondenserCascade> cascadeCondensers = m_currentSystem->cascadeCondenserLoads();
-      for( std::vector<model::RefrigerationCondenserCascade>::iterator it = cascadeCondensers.begin();
-           it != cascadeCondensers.end();
-           ++it )
-      {
-        SecondaryDetailView * detailView = new SecondaryDetailView();
-        bool bingo = connect(detailView,SIGNAL(zoomInOnSystemClicked(const Handle &)),
-                             this,SLOT(zoomInOnSystem(const Handle &)));
-        OS_ASSERT(bingo);
-        bingo = connect(detailView,SIGNAL(removeClicked(const Handle &)),
-                        this,SLOT(removeLoad(const Handle &)));
-        OS_ASSERT(bingo);
-        if( boost::optional<model::RefrigerationSystem> t_cascadeSystem = cascadeSystem(*it) )
-        {
-          detailView->setName(QString::fromStdString(t_cascadeSystem->name().get()));
-          detailView->setHandle(t_cascadeSystem->handle());
-        }
-        else
-        {
-          detailView->setName(QString::fromStdString(it->name().get()));
-          detailView->setHandle(it->handle());
-        }
-        m_detailView->refrigerationSecondaryView->insertSecondaryDetailView(0,detailView);
-      }
-
-      // insert compressors
-
-      std::vector<model::RefrigerationCompressor> compressors = m_currentSystem->compressors();
-
-      int compressorIndex = 1;
-
-      for( std::vector<model::RefrigerationCompressor>::iterator it = compressors.begin();
-           it != compressors.end();
-           ++it )
-      {
-        RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
-
-        detailView->setId(OSItemId(it->handle(),QString(),false));
-
-        detailView->setLabel(QString::number(compressorIndex));
-
-        bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
-                             this,SLOT(removeCompressor(const OSItemId &)));
-        OS_ASSERT(bingo);
-
-        bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                        this,SLOT(inspectOSItem(const OSItemId &)));
-        OS_ASSERT(bingo);
-
-        m_detailView->refrigerationCompressorView->insertCompressorDetailView(0,detailView);
-
-        compressorIndex++;
-      }
-
-      // insert cases
-
-      std::vector<model::RefrigerationCase> cases = m_currentSystem->cases();
-
-      m_detailView->refrigerationCasesView->setNumberOfDisplayCases(cases.size());
-
-      for( std::vector<model::RefrigerationCase>::iterator it = cases.begin();
-           it != cases.end();
-           ++it )
-      {
-        RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
-
-        detailView->setId(OSItemId(it->handle(),QString(),false));
-
-        detailView->setName(QString::fromStdString(it->name().get()));
-
-        bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
-                             this,SLOT(removeCase(const OSItemId &)));
-        OS_ASSERT(bingo);
-
-        bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                        this,SLOT(inspectOSItem(const OSItemId &)));
-        OS_ASSERT(bingo);
-
-        m_detailView->refrigerationCasesView->insertCaseDetailView(0,detailView);
-      }
-
-      // insert walkins
-
-      std::vector<model::RefrigerationWalkIn> walkins = m_currentSystem->walkins();
-
-      m_detailView->refrigerationCasesView->setNumberOfWalkinCases(walkins.size());
-
-      for( std::vector<model::RefrigerationWalkIn>::iterator it = walkins.begin();
-           it != walkins.end();
-           ++it )
-      {
-        RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
-
-        detailView->setId(OSItemId(it->handle(),QString(),false));
-
-        detailView->setName(QString::fromStdString(it->name().get()));
-
-        bool bingo = connect(detailView,SIGNAL(removeClicked(const OSItemId &)),
-                             this,SLOT(removeCase(const OSItemId &)));
-        OS_ASSERT(bingo);
-
-        bingo = connect(detailView,SIGNAL(inspectClicked(const OSItemId &)),
-                        this,SLOT(inspectOSItem(const OSItemId &)));
-        OS_ASSERT(bingo);
-
-        m_detailView->refrigerationCasesView->insertCaseDetailView(0,detailView);
-      }
-
-      m_detailView->adjustLayout();
-    }
+    refreshRefrigerationSystemView(m_detailView,m_currentSystem);
   }
   
   m_dirty = false;
@@ -706,6 +713,9 @@ RefrigerationSystemListController::RefrigerationSystemListController(Refrigerati
   bool bingo = connect(t_model.getImpl<model::detail::Model_Impl>().get(),SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                        this,SLOT(onModelObjectAdd(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)));
   OS_ASSERT(bingo);
+
+  bingo = connect(this,SIGNAL(itemInsertedPrivate(int)),this,SIGNAL(itemInserted(int)),Qt::QueuedConnection);
+  OS_ASSERT(bingo);
 }
 
 void RefrigerationSystemListController::reset()
@@ -772,7 +782,7 @@ void RefrigerationSystemListController::onModelObjectAdd(const WorkspaceObject& 
 {
   if( iddObjectType == model::RefrigerationSystem::iddObjectType() )
   {
-    emit itemInserted(systemIndex(object.cast<model::RefrigerationSystem>()));
+    emit itemInsertedPrivate(systemIndex(object.cast<model::RefrigerationSystem>()));
   }
 }
 
@@ -831,6 +841,11 @@ QString RefrigerationSystemListItem::systemName() const
   return QString::fromStdString(m_refrigerationSystem.name().get());
 }
 
+model::RefrigerationSystem RefrigerationSystemListItem::system() const
+{
+  return m_refrigerationSystem;
+}
+
 void RefrigerationSystemListItem::remove()
 {
   qobject_cast<RefrigerationSystemListController *>(controller())->removeSystem(m_refrigerationSystem);
@@ -862,6 +877,10 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
     OS_ASSERT(bingo);
 
     refrigerationSystemMiniView->setName(listItem->systemName());
+
+    boost::optional<model::RefrigerationSystem> system = listItem->system();
+    RefrigerationController * refrigerationController = qobject_cast<RefrigerationSystemListController *>(dataSource->controller())->refrigerationController();
+    refrigerationController->refreshRefrigerationSystemView(refrigerationSystemMiniView->refrigerationSystemView,system);
 
     itemView = refrigerationSystemMiniView;
   }

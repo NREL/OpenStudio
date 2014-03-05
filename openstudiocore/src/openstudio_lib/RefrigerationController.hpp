@@ -56,6 +56,8 @@ class RefrigerationController : public QObject
 
   static boost::optional<model::RefrigerationSystem> cascadeSystem(const model::RefrigerationCondenserCascade & condenser);
 
+  void refreshRefrigerationSystemView(RefrigerationSystemView * systemView, boost::optional<model::RefrigerationSystem> & system);
+
   public slots:
 
   void zoomInOnSystem(const Handle & handle);
@@ -122,21 +124,21 @@ class RefrigerationSystemListController : public OSListController
   public:
 
   RefrigerationSystemListController(RefrigerationController * refrigerationController);
-
   RefrigerationController * refrigerationController() const;
 
   QSharedPointer<OSListItem> itemAt(int i);
-
   int count();
 
   void reset();
 
+  signals:
+
+  void itemInsertedPrivate(int i);
+
   public slots:
 
   void addSystem(const OSItemId & itemid);
-
   void createNewSystem();
-
   void removeSystem(model::RefrigerationSystem & refrigerationSystem);
 
   private slots:
@@ -146,9 +148,7 @@ class RefrigerationSystemListController : public OSListController
   private:
 
   std::vector<model::RefrigerationSystem> systems() const;
-
   int systemIndex(const model::RefrigerationSystem & system) const;
-
   QPointer<RefrigerationController> m_refrigerationController;
 };
 
@@ -182,15 +182,14 @@ class RefrigerationSystemListItem : public OSListItem
   public:
 
   RefrigerationSystemListItem(const model::RefrigerationSystem & refrigerationSystem, OSListController * listController = 0);
-
   virtual ~RefrigerationSystemListItem() {}
 
   QString systemName() const;
+  model::RefrigerationSystem system() const;
 
   public slots:
 
   void remove();
-
   void zoomInOnSystem();
 
   private:
