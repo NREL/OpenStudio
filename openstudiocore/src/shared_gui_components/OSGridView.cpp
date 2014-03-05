@@ -204,6 +204,11 @@ void OSGridView::refreshAll()
       }
     }
   }
+  // NOTE This was added to make dissimilar widgets types in a given column to
+  // fill and justify correctly.  It appeared to be the most simple solution.
+  QWidget * widget = new QWidget();
+  widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
+  m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
 }
 
 void OSGridView::addWidget(int row, int column)
