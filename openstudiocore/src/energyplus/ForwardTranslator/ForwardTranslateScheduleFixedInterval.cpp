@@ -95,7 +95,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
 
   // New version assumes that the interval is less than one day.
   // The original version did not, so it was a bit more complicated.
-  double intervalDays = modelObject.intervalLength();
   // The last date data was written
   Date lastDate = firstReportDateTime.date();
   Time dayDelta = Time(1.0);
@@ -116,10 +115,9 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
 
   // Start the input into the schedule object
   unsigned fieldIndex = Schedule_CompactFields::ScheduleTypeLimitsName + 1;
-  idfObject.setString(fieldIndex, interpolateField);
-  ++fieldIndex;
+  //idfObject.setString(fieldIndex, interpolateField);
+  //++fieldIndex;
   fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
-
 
   for(unsigned int i=start; i < values.size()-1; i++)
   {
