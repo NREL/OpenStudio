@@ -2258,4 +2258,15 @@ std::ostream& operator<<(std::ostream& os, const IdfObject& idfObject){
   return idfObject.print(os);
 }
 
+std::string objectName(const IdfObject& obj) {
+  std::string result;
+  if (obj.name()) {
+    result = obj.name().get();
+  }
+  else {
+    result = obj.iddObject().name();
+  }
+  return result;
+}
+
 } // openstudio

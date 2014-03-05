@@ -390,7 +390,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
   }
 
   QWidget * wrapper = new QWidget();
-  wrapper->setFixedSize(QSize(200,70));
   wrapper->setObjectName("TableCell");
 
   QString style;
@@ -408,9 +407,9 @@ QWidget * OSGridController::widgetAt(int row, int column)
   if(row == 0){
     layout->setContentsMargins(0,0,0,0);
   } else {
-    layout->setContentsMargins(20,20,20,20);
+    layout->setContentsMargins(5,5,5,5);
   }
-  layout->addWidget(widget);
+  layout->addWidget(widget,0,Qt::AlignTop | Qt::AlignCenter);
   wrapper->setLayout(layout);
 
   return wrapper;
