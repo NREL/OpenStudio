@@ -730,12 +730,13 @@ bool referencesEqual(const IddField& field1, const IddField& field2) {
   StringVector refs1 = field1.properties().references;
   StringVector refs2 = field2.properties().references;
 
-  unsigned start = 0;        // start index for refs2
   unsigned n = refs2.size();
   BoolVector found(n,false);
 
   // to be equal, must be same size
   if (refs1.size() == refs2.size()) {
+    unsigned start = 0;        // start index for refs2
+    
     // look for refs1 in turn
     BOOST_FOREACH(const std::string& ref1,refs1) {
       for (unsigned i = start; i < n; ++i) {

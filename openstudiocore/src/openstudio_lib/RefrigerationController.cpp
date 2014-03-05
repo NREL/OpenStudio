@@ -60,7 +60,9 @@ RefrigerationController::RefrigerationController()
   OS_ASSERT(bingo);
 
   // These get deleted with when the scene is deleted
-  m_refrigerationSystemGridView = new RefrigerationSystemGridView();
+  m_refrigerationSystemGridView = new GridLayoutItem();
+  m_refrigerationSystemGridView->setCellSize(RefrigerationSystemMiniView::cellSize());
+  m_refrigerationSystemGridView->setMargin(RefrigerationSystemView::margin);
 
   m_refrigerationSystemListController = QSharedPointer<RefrigerationSystemListController>(new RefrigerationSystemListController(this));
 
@@ -75,22 +77,7 @@ RefrigerationController::RefrigerationController()
 
 RefrigerationController::~RefrigerationController()
 {
-  if( m_refrigerationView )
-  {
-    delete m_refrigerationView;
-  }
-
-  // This is for completeness, but will be taken care of when the scene is deleted.
-  if( m_refrigerationSystemGridView )
-  {
-    delete m_refrigerationSystemGridView;
-  }
-
-  // This is for completeness, but will be taken care of when the scene is deleted.
-  if( m_detailView )
-  {
-    delete m_detailView;
-  }
+  delete m_refrigerationView;
 }
 
 void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrigerationSystem)
@@ -413,7 +400,7 @@ void RefrigerationController::refreshNow()
 
       for( std::vector<model::RefrigerationCompressor>::iterator it = compressors.begin();
            it != compressors.end();
-           it++ )
+           ++it )
       {
         RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
 
@@ -442,7 +429,7 @@ void RefrigerationController::refreshNow()
 
       for( std::vector<model::RefrigerationCase>::iterator it = cases.begin();
            it != cases.end();
-           it++ )
+           ++it )
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
@@ -469,7 +456,7 @@ void RefrigerationController::refreshNow()
 
       for( std::vector<model::RefrigerationWalkIn>::iterator it = walkins.begin();
            it != walkins.end();
-           it++ )
+           ++it )
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
@@ -598,7 +585,7 @@ int RefrigerationSystemListController::systemIndex(const model::RefrigerationSys
 
   for( std::vector<model::RefrigerationSystem>::const_iterator it = _systems.begin();
        it != _systems.end();
-       it++ )
+       ++it )
   {
     if( *it == system )
     {

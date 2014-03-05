@@ -78,8 +78,8 @@ FileInfo FileInfo::complete(const openstudio::path &t_basePath) const
 
 bool FileInfo::operator<(const FileInfo &fi) const
 {
-  return (filename < fi.filename)
-         || (filename == fi.filename && lastModified < fi.lastModified);
+  return (fullPath < fi.fullPath)
+         || (fullPath == fi.fullPath && lastModified < fi.lastModified);
 }
 
 bool FileInfo::operator==(const FileInfo &t_rhs) const
@@ -115,6 +115,16 @@ void FileInfo::addRequiredFile(const QUrl &t_url, const openstudio::path &t_targ
   }
 
   requiredFiles.push_back(std::make_pair(t_url, t_target));
+}
+
+void FileInfo::prependRequiredFilePath(const openstudio::path &t_path)
+{
+  for (std::vector<std::pair<QUrl, openstudio::path> >::iterator itr = requiredFiles.begin();
+       itr != requiredFiles.end();
+       ++itr)
+  {
+    itr->second = t_path / itr->second;
+  }
 }
 
 void FileInfo::addRequiredFile(const QUrl &t_url)

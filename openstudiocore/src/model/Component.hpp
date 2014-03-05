@@ -63,7 +63,7 @@ class MODEL_API Component : public Model {
    *  for this Component. */
   ComponentData componentData() const;
 
-  /** Returns the primary ModelObject of this Component. Can be used to assess the Component
+  /** Returns the primary ModelObject of this Component. Can be used to access the Component
    *  type by using .optionalCast or iddObjectType(). */
   ModelObject primaryObject() const;
 

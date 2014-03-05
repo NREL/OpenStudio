@@ -875,11 +875,10 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
 void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == IddObjectType::OS_SpaceType){
-    bool isConnected = false;
-    isConnected = connect(impl.get(),
-                          SIGNAL(onRelationshipChange(int, Handle, Handle)),
-                          this, 
-                          SLOT(onSpaceTypeRelationshipChange(int, Handle, Handle)));
+    bool isConnected = connect(impl.get(),
+                               SIGNAL(onRelationshipChange(int, Handle, Handle)),
+                               this, 
+                               SLOT(onSpaceTypeRelationshipChange(int, Handle, Handle)));
     OS_ASSERT(isConnected);
     return;
   }
@@ -1100,9 +1099,8 @@ void SpaceLoadInstancesWidget::addSpaceLoadInstance(const model::SpaceLoadInstan
 {
   SpaceLoadInstanceMiniView* spaceLoadInstanceMiniView = new SpaceLoadInstanceMiniView(spaceLoadInstance, isDefault);
 
-  bool isConnected = false;
-  isConnected = connect(spaceLoadInstanceMiniView, SIGNAL(removeClicked(SpaceLoadInstanceMiniView*)),
-                        this, SLOT(remove(SpaceLoadInstanceMiniView*)));
+  bool isConnected = connect(spaceLoadInstanceMiniView, SIGNAL(removeClicked(SpaceLoadInstanceMiniView*)),
+                             this, SLOT(remove(SpaceLoadInstanceMiniView*)));
   OS_ASSERT(isConnected);
 
   m_mainVLayout->addWidget(spaceLoadInstanceMiniView);

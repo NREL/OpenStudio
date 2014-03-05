@@ -272,7 +272,7 @@ namespace detail {
 
     for( std::vector<AirTerminalSingleDuctParallelPIUReheat>::iterator it = airTerminalSingleDuctParallelPIUReheatObjects.begin();
     it < airTerminalSingleDuctParallelPIUReheatObjects.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> fan = it->fan() )
       {
@@ -291,7 +291,7 @@ namespace detail {
 
     for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
     it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> fan = it->supplyAirFan() )
       {
@@ -315,7 +315,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
       {
@@ -334,7 +334,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACPackagedTerminalAirConditioner>::iterator it = zoneHVACPackagedTerminalAirConditioners.begin();
     it < zoneHVACPackagedTerminalAirConditioners.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
       {
@@ -353,7 +353,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACPackagedTerminalHeatPump>::iterator it = zoneHVACPackagedTerminalHeatPumps.begin();
     it < zoneHVACPackagedTerminalHeatPumps.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
       {
@@ -372,7 +372,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
     it < zoneHVACUnitHeater.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->supplyAirFan() )
       {

@@ -796,9 +796,9 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
 
   bool isConnected = false;
   isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
+                             SIGNAL(itemClicked(OSItem*)),
+                             this, 
+                             SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
   vLayout->addStretch();

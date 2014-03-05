@@ -188,8 +188,7 @@ namespace detail {
   }
 
   bool ScheduleTypeLimits_Impl::setUnitType(std::string unitType) {
-    bool result = false;
-    result = setString(OS_ScheduleTypeLimitsFields::UnitType, unitType);
+    bool result = setString(OS_ScheduleTypeLimitsFields::UnitType, unitType);
     return result;
   }
 

@@ -90,6 +90,9 @@ namespace openstudio{
   /// mean of all elements
   UTILITIES_API double mean(const Matrix& matrix);
 
+  /// get the connected components from an NxN adjacency matrix (1.0 for i-j connected, 0.0 for i-j not connected)
+  UTILITIES_API std::vector<std::vector<unsigned> > findConnectedComponents(const Matrix& matrix);
+
   // from the boost vault:
   // The following code inverts the matrix input using LU-decomposition with backsubstitution of unit vectors. Reference: Numerical Recipies in C, 2nd ed., by Press, Teukolsky, Vetterling & Flannery.
   /// Matrix inversion routine, using lu_factorize and lu_substitute in uBLAS to invert a matrix */

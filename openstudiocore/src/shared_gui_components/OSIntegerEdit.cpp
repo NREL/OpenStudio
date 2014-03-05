@@ -34,6 +34,7 @@ namespace openstudio {
 OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }
@@ -317,6 +318,7 @@ void OSIntegerEdit2::setPrecision(const std::string& str) {
 OSIntegerEdit::OSIntegerEdit( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }

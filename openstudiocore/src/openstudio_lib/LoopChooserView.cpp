@@ -103,7 +103,7 @@ void LoopChooserView::layoutView()
 
     for( std::vector<model::PlantLoop>::iterator it = loops.begin();
           it < loops.end();
-          it++ )
+          ++it )
     {
       LoopChooserItem * loopChooserItem = new LoopChooserItem(*it,this);
       m_loopChooserItems.push_back(loopChooserItem);
@@ -145,7 +145,7 @@ LoopChooserItem * LoopChooserView::loopChooserItemForLoop(std::string loopName)
 {
   for( std::vector<LoopChooserItem *>::iterator it = m_loopChooserItems.begin();
        it < m_loopChooserItems.end();
-       it++ )
+       ++it )
   {
     if( (*it)->loopName() == loopName )
     {

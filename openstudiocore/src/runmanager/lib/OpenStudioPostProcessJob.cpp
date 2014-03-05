@@ -167,63 +167,62 @@ namespace detail {
 
       std::vector<Attribute> attributes = PostProcessReporting::go(sqlFile);
 
-      boost::optional<model::Building> building = model->getOptionalUniqueModelObject<model::Building>();
-      if (building)
-      {
-        LOG(Debug,"Extracting attributes from model::Building.");
-        boost::optional<Attribute> attribute;
-        
-        boost::optional<double> value = building->floorArea();
-        if (value){
-          attribute = Attribute("floorArea", *value, "m^2");
-          attribute->setDisplayName("Floor Area");
-          attributes.push_back(*attribute);
-        }
-
-        value = building->conditionedFloorArea();
-        if (value){
-          attribute = Attribute("conditionedFloorArea", *value, "m^2");
-          attribute->setDisplayName("Conditioned Floor Area");
-          attributes.push_back(*attribute);
-        }
+      // ETH@20140219 - Not great to add an object here either, but needed for
+      // Facility, and Building is really the same case. (If get this far with 
+      // simulation, no harm in accessing data through Building, which has 
+      // smart defaults for all fields.)
+      model::Building building = model->getUniqueModelObject<model::Building>();
+      LOG(Debug,"Extracting attributes from model::Building.");
+      boost::optional<Attribute> attribute;
+      
+      boost::optional<double> value = building.floorArea();
+      if (value){
+        attribute = Attribute("floorArea", *value, "m^2");
+        attribute->setDisplayName("Floor Area");
+        attributes.push_back(*attribute);
       }
 
-      boost::optional<model::Facility> facility = model->getOptionalUniqueModelObject<model::Facility>();
-      if (facility){
-        LOG(Debug,"Extracting attributes from model::Facility.");     
+      value = building.conditionedFloorArea();
+      if (value){
+        attribute = Attribute("conditionedFloorArea", *value, "m^2");
+        attribute->setDisplayName("Conditioned Floor Area");
+        attributes.push_back(*attribute);
+      }
 
-        boost::optional<Attribute> attribute;
+      // ETH@20140218 - Not great to add an object here, but otherwise, do not get 
+      // calibration results table in PAT.
+      model::Facility facility = model->getUniqueModelObject<model::Facility>();
+      LOG(Debug,"Extracting attributes from model::Facility.");     
 
-        boost::optional<double> value = facility->economicsCapitalCost();
-        if (value){
-          attribute = Attribute("economicsCapitalCost", *value, "$");
-          attribute->setDisplayName("Capital Cost");
-          attributes.push_back(*attribute);
-        }
+      value = facility.economicsCapitalCost();
+      if (value){
+        attribute = Attribute("economicsCapitalCost", *value, "$");
+        attribute->setDisplayName("Capital Cost");
+        attributes.push_back(*attribute);
+      }
 
-        value = facility->economicsTLCC();
-        if (value){
-          attribute = Attribute("economicsTLCC", *value, "$");
-          attribute->setDisplayName("Total Life Cycle Cost");
-          attributes.push_back(*attribute);
-        }
+      value = facility.economicsTLCC();
+      if (value){
+        attribute = Attribute("economicsTLCC", *value, "$");
+        attribute->setDisplayName("Total Life Cycle Cost");
+        attributes.push_back(*attribute);
+      }
 
-        value = facility->annualWaterTotalCost();
-        if (value){
-          attribute = Attribute("annualWaterTotalCost", *value, "$");
-          attribute->setDisplayName("Annual Water Total Cost");
-          attributes.push_back(*attribute);
-        }
+      value = facility.annualWaterTotalCost();
+      if (value){
+        attribute = Attribute("annualWaterTotalCost", *value, "$");
+        attribute->setDisplayName("Annual Water Total Cost");
+        attributes.push_back(*attribute);
+      }
 
-        attribute = facility->endUsesAttribute();
-        if (attribute){
-          attributes.push_back(*attribute);
-        }
+      attribute = facility.endUsesAttribute();
+      if (attribute){
+        attributes.push_back(*attribute);
+      }
 
-        attribute = facility->calibrationResultAttribute();
-        if (attribute){
-          attributes.push_back(*attribute);
-        }
+      attribute = facility.calibrationResultAttribute();
+      if (attribute){
+        attributes.push_back(*attribute);
       }
 
       boost::optional<model::TimeDependentValuation> timeDependentValuation = model->getOptionalUniqueModelObject<model::TimeDependentValuation>();

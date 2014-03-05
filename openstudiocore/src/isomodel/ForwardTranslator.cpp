@@ -1061,7 +1061,11 @@ namespace isomodel {
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times
 
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times;
+<<<<<<< HEAD
       std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getConcreteModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
+=======
+      //std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
+>>>>>>> develop
 
       double total_zone_area = 0;
       double heat_setpoint_occ_total=0;
@@ -1437,8 +1441,13 @@ namespace isomodel {
 
     if (OSM_extract_infil_rate) {
       //first check to see if there effective leakage areas defined and if !those, then design flow rates;
+<<<<<<< HEAD
       if (!model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
         std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
+=======
+      if (!model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
+        //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
+>>>>>>> develop
 
         /// \todo no reason for this to be in a loop
         //      BOOST_FOREACH(const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil, infiltration) {
@@ -1507,8 +1516,7 @@ namespace isomodel {
               infil_rate_temp = infil.flowperSpaceFloorArea().get() * st.floorArea();
               LOG(Debug, "Infiltration Object #" << count << " is Flow/Area, " << infil_rate_temp << " m3/s added");
             } else if (rate_type == "AirChanges/Hour") {
-              infil_rate_temp= 0;
-              infil_rate_temp = infil.flowperSpaceFloorArea().get() * st.floorArea();
+              infil_rate_temp= infil.flowperSpaceFloorArea().get() * st.floorArea();
               LOG(Debug, "Infiltration Object #" << count << " is AirChanges/Hour, " << infil_rate_temp << " m3/s added");
             } else {
               infil_rate_temp = infil.airChangesperHour().get() * st_volume;
@@ -1614,7 +1622,7 @@ namespace isomodel {
             // if the component is a water cooling coil, do !save but instead save the attached plant loop;
           } else if (component.optionalCast<openstudio::model::CoilHeatingWater>()) {
             // if the component is a heating coil, don't save and search the attached plant loop;
-            std::vector<openstudio::model::ModelObject> plant_loop_components = component.optionalCast<openstudio::model::CoilHeatingWater>().get().plantLoop().get().supplyComponents();
+            //std::vector<openstudio::model::ModelObject> plant_loop_components = component.optionalCast<openstudio::model::CoilHeatingWater>().get().plantLoop().get().supplyComponents();
             // get the cooling coil plant loop;
             plant_loops_array.push_back(component.optionalCast<openstudio::model::CoilHeatingWater>().get().plantLoop().get());
             plant_loops_area_array.push_back(zone_area);
@@ -1737,8 +1745,7 @@ namespace isomodel {
       // go through the cooling coil array list and add up the COP*zone area and zone area to compute zonearea weighted COP;
       double cop_sum = 0.0;
       double cop_area_sum = 0.0;
-      std::vector<std::string> cooling_coil_name_array;
-
+      
       for (size_t i = 0; i < cooling_coil_array.size(); ++i) {
         openstudio::model::HVACComponent coil = cooling_coil_array[i];
         double area = cooling_coil_area_array[i];

@@ -59,5 +59,14 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
   }
 
   ASSERT_EQ(5u,vrf.terminals().size());
+
+  model::Model m2;
+
+  boost::optional<AirConditionerVariableRefrigerantFlow> vrfClone = vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlow>(); 
+  ASSERT_TRUE(vrfClone);
+
+  ASSERT_TRUE(vrfClone->terminals().empty()); 
+
+  ASSERT_TRUE(! vrfClone->remove().empty()); 
 }
 

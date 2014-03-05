@@ -34,6 +34,8 @@
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/WorkItem.hpp>
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
@@ -1144,7 +1146,21 @@ void DataPointJobItemView::update()
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
-    dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
+    bool nameSet = false;
+    if (m_workflowStepJob.step.workItemType() == runmanager::JobType::UserScript) {
+      runmanager::RubyJobBuilder rjb(m_workflowStepJob.step.workItem());
+      if (OptionalUUID measureUUID = rjb.bclMeasureUUID()) {
+        boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+        OS_ASSERT(project);
+        if (OptionalBCLMeasure measure = project->getMeasureByUUID(*measureUUID)) {
+          dataPointJobHeaderView->setName(measure->name());
+          nameSet = true;
+        }
+      }
+    }
+    if (!nameSet) {
+      dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
+    }
   }
 
   OS_ASSERT(m_workflowStepJob.job);
@@ -1152,7 +1168,7 @@ void DataPointJobItemView::update()
   dataPointJobHeaderView->setLastRunTime(m_workflowStepJob.job->lastRun());
   dataPointJobHeaderView->setStatus(m_workflowStepJob.job->status(), m_workflowStepJob.job->canceled());
 
-  openstudio::runmanager::JobErrors jobErrors = m_workflowStepJob.job->errors();
+  openstudio::runmanager::JobErrors jobErrors = m_workflowStepJob.errors().get();
 
   // DLM: would we rather put these in order of when they were logged?
 
@@ -1177,7 +1193,7 @@ void DataPointJobItemView::update()
   // also display std err if job failed and it exists and is not empty
   if (m_workflowStepJob.job->lastRun() && !m_workflowStepJob.job->running() && !jobErrors.succeeded()){
     try{
-      runmanager::Files files(m_workflowStepJob.job->outputFiles());
+      runmanager::Files files(m_workflowStepJob.outputFiles().get());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
       std::ifstream ifs(toString(stdErrPath).c_str());
       std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());

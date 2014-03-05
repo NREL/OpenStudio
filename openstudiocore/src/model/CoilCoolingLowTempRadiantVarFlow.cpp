@@ -111,7 +111,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACLowTempRadiantVarFlow>::iterator it = zoneHVACLowTempRadiantVarFlows.begin();
     it < zoneHVACLowTempRadiantVarFlows.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->coolingCoil() )
       {

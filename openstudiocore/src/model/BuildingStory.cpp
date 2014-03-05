@@ -110,8 +110,7 @@ namespace detail {
   }
 
   void BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
-    bool result = false;
-    result = setDouble(OS_BuildingStoryFields::NominalZCoordinate, nominalZCoordinate);
+    bool result = setDouble(OS_BuildingStoryFields::NominalZCoordinate, nominalZCoordinate);
     OS_ASSERT(result);
   }
   
@@ -131,8 +130,7 @@ namespace detail {
   }
 
   bool BuildingStory_Impl::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
-    bool result = false;
-    result = setDouble(OS_BuildingStoryFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
+    bool result = setDouble(OS_BuildingStoryFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
     return result;
   }
 

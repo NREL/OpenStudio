@@ -120,6 +120,11 @@ namespace detail {
       return false;
     }
 
+    if( thermalZone.isPlenum() )
+    {
+      return false;
+    }
+
     removeFromThermalZone();
 
     thermalZone.setUseIdealAirLoads(false);
@@ -187,7 +192,7 @@ namespace detail {
     std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 

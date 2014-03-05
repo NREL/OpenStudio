@@ -134,8 +134,6 @@ WaterUseConnectionsDetailItem::WaterUseConnectionsDetailItem(WaterUseConnections
 
   // Drop Zone
 
-  std::vector<model::ModelObject> modelObjects;
-
   WaterUseEquipmentDropZoneItem * dropBranchItem = new WaterUseEquipmentDropZoneItem(this);
 
   dropBranchItem->setModelObject(waterUseConnections);
@@ -391,8 +389,6 @@ ServiceWaterItem::ServiceWaterItem(ServiceWaterScene * serviceWaterScene)
   i = i + straightItem->getHGridLength();
 
   // Drop Zone
-
-  std::vector<model::ModelObject> modelObjects;
 
   WaterUseConnectionsDropZoneItem * dropBranchItem = new WaterUseConnectionsDropZoneItem(this);
 

@@ -217,7 +217,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
   {
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator _zoneBoundary = zoneBoundaries.begin();
        _zoneBoundary != zoneBoundaries.end();
-       _zoneBoundary++ )
+       ++_zoneBoundary )
     {
       IdfExtensibleGroup eg = refrigerationWalkIn.pushExtensibleGroup();
 

@@ -227,6 +227,8 @@ TEST_F(ModelFixture, UniqueModelObjects)
   modelObjectHandles.push_back(openstudio::toString(airLoopHVAC4.handle()));
   modelObjectHandles.push_back(openstudio::toString(airLoopHVAC5.handle()));
 
+  // DLM: have to sort before calling unique, unique only works on consecutive elements
+  std::sort(modelObjectHandles.begin(),modelObjectHandles.end());
   std::vector<std::string>::iterator end = std::unique(modelObjectHandles.begin(),modelObjectHandles.end());
   std::vector<std::string> uniqueModelObjectHandles(modelObjectHandles.begin(),end);
 
@@ -243,6 +245,8 @@ TEST_F(ModelFixture, UniqueModelObjects)
   workspaceObjectNames.push_back(airLoopHVAC4.name().get());
   workspaceObjectNames.push_back(airLoopHVAC5.name().get());
 
+  // DLM: have to sort before calling unique, unique only works on consecutive elements
+  std::sort(workspaceObjectNames.begin(),workspaceObjectNames.end());
   end = std::unique(workspaceObjectNames.begin(),workspaceObjectNames.end());
   std::vector<std::string> uniqueWorkspaceObjectNames(workspaceObjectNames.begin(),end);
 

@@ -255,7 +255,7 @@ namespace gbxml {
     // space type
     boost::optional<model::SpaceType> spaceType = building.spaceType();
     if (spaceType){
-      std::string spaceTypeName = spaceType->name().get();
+      //std::string spaceTypeName = spaceType->name().get();
       // todo: map to gbXML types
       //result.setAttribute("buildingType", escapeName(spaceTypeName));
     }
@@ -300,7 +300,7 @@ namespace gbxml {
     // space type
     boost::optional<model::SpaceType> spaceType = space.spaceType();
     if (spaceType){
-      std::string spaceTypeName = spaceType->name().get();
+      //std::string spaceTypeName = spaceType->name().get();
       // todo: map to gbXML types
       //result.setAttribute("spaceType", escapeName(spaceTypeName));
     }
@@ -369,7 +369,7 @@ namespace gbxml {
     // construction
     boost::optional<model::ConstructionBase> construction = surface.construction();
     if (construction){
-      std::string constructionName = construction->name().get();
+      //std::string constructionName = construction->name().get();
       // todo:: translate construction
       //result.setAttribute("constructionIdRef", "constructionName");
     }
@@ -534,7 +534,7 @@ namespace gbxml {
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
     if (construction){
-      std::string constructionName = construction->name().get();
+      //std::string constructionName = construction->name().get();
       // todo: translate construction
       // result.setAttribute("constructionIdRef", "constructionName");
     }

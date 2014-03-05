@@ -363,8 +363,7 @@ namespace detail {
   }
 
   bool Luminaire_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_LuminaireFields::Multiplier, multiplier);
+    bool result = setDouble(OS_LuminaireFields::Multiplier, multiplier);
     return result;
   }
 
@@ -374,8 +373,7 @@ namespace detail {
   }
 
   void Luminaire_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = false;
-    result = setString(OS_LuminaireFields::EndUseSubcategory, endUseSubcategory);
+    bool result = setString(OS_LuminaireFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
   }
 

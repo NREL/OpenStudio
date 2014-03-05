@@ -71,10 +71,8 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
                                        new UtilityBillsInspectorView(model,parent),
                                        parent)
 {
-  bool isConnected = false;
-
-  isConnected = connect(modelObjectInspectorView(),SIGNAL(enableAddNewObjectButton( bool )),
-    this,SIGNAL(enableAddNewObjectButton( bool )) );
+  bool isConnected = connect(modelObjectInspectorView(),SIGNAL(enableAddNewObjectButton( bool )),
+                             this,SIGNAL(enableAddNewObjectButton( bool )) );
   OS_ASSERT(isConnected);
 }
 

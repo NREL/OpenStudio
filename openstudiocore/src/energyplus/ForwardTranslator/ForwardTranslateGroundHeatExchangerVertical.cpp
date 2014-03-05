@@ -158,7 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
   {
     for( std::vector< std::pair<double,double> >::iterator it = gFunctions.begin();
        it != gFunctions.end();
-       it++ )
+       ++it )
     {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 

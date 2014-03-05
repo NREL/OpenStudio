@@ -101,7 +101,7 @@ namespace detail {
 
     for( std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam>::iterator it = airTerminalSingleDuctConstantVolumeCooledBeam.begin();
     it < airTerminalSingleDuctConstantVolumeCooledBeam.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it-> coilCoolingCooledBeam() )
       {

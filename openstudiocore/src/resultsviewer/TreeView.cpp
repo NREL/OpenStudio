@@ -315,7 +315,6 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
     int textWidth = fontMetrics().width(fileItem->text(0))+30;
     if (textWidth > this->columnWidth(0)) this->setColumnWidth(0,textWidth);
 
-    QTreeWidgetItem* envItem = NULL;
     QTreeWidgetItem* reportFreqItem = NULL;
     QTreeWidgetItem* variableNameItem = NULL;
     QTreeWidgetItem* keyValueItem = NULL;
@@ -324,17 +323,17 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
     // environment period branch
     std::vector<std::string> vecEnvPeriods(sqlFile.availableEnvPeriods());
     std::vector<std::string>::iterator iterEnv;
-    for (iterEnv=vecEnvPeriods.begin();iterEnv!=vecEnvPeriods.end();iterEnv++)
+    for (iterEnv=vecEnvPeriods.begin();iterEnv!=vecEnvPeriods.end();++iterEnv)
     {
       s = toQString(*iterEnv);
       // add to file branch
-      envItem = new QTreeWidgetItem(fileItem, ddtEnv);
+      QTreeWidgetItem* envItem = new QTreeWidgetItem(fileItem, ddtEnv);
       envItem->setText(0, s);
 
       // setup reporting frequency branch
       std::vector<std::string> vecReportFreq(sqlFile.availableReportingFrequencies(*iterEnv));
       std::vector<std::string>::iterator iterReportFreq;
-      for (iterReportFreq=vecReportFreq.begin();iterReportFreq!=vecReportFreq.end();iterReportFreq++)
+      for (iterReportFreq=vecReportFreq.begin();iterReportFreq!=vecReportFreq.end();++iterReportFreq)
       {
         // skip runPeriod
         if (sqlFile.reportingFrequencyFromDB(*iterReportFreq))
@@ -352,7 +351,7 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
           // setup variable name branch
           std::vector<std::string> vecVariableName(sqlFile.availableVariableNames(*iterEnv, *iterReportFreq));
           std::vector<std::string>::iterator iterVariableName;
-          for (iterVariableName=vecVariableName.begin();iterVariableName!=vecVariableName.end();iterVariableName++)
+          for (iterVariableName=vecVariableName.begin();iterVariableName!=vecVariableName.end();++iterVariableName)
           {
             s = toQString(*iterVariableName);
             // add to reporting frequency branch
@@ -362,7 +361,7 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
 
             std::vector<std::string> vecKeyValue(sqlFile.availableKeyValues(*iterEnv, *iterReportFreq,*iterVariableName));
             std::vector<std::string>::iterator iterKeyValue;
-            for (iterKeyValue=vecKeyValue.begin();iterKeyValue!=vecKeyValue.end();iterKeyValue++)
+            for (iterKeyValue=vecKeyValue.begin();iterKeyValue!=vecKeyValue.end();++iterKeyValue)
             {
               s = toQString(*iterKeyValue);
               // add to variable name branch
@@ -406,11 +405,11 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
         variableNameItem->setText(0, "Illuminance Map");
         variableNameItem->setData(0, Qt::UserRole, RVD_ILLUMINANCEMAP);
         std::vector<std::string>::iterator iterIlluminanceMap;
-        for (iterIlluminanceMap=vecIlluminanceMaps.begin();iterIlluminanceMap!=vecIlluminanceMaps.end();iterIlluminanceMap++)
+        for (iterIlluminanceMap=vecIlluminanceMaps.begin();iterIlluminanceMap!=vecIlluminanceMaps.end();++iterIlluminanceMap)
         {
           std::vector<std::string> vecKeyValue(sqlFile.illuminanceMapZoneNames(*iterIlluminanceMap));
           std::vector<std::string>::iterator iterKeyValue;
-          for (iterKeyValue=vecKeyValue.begin();iterKeyValue!=vecKeyValue.end();iterKeyValue++)
+          for (iterKeyValue=vecKeyValue.begin();iterKeyValue!=vecKeyValue.end();++iterKeyValue)
           {
             s = toQString(*iterKeyValue);
             // add to variable name branch
@@ -505,12 +504,11 @@ void TreeView::applyFilter(QString& filterText)
     ++itAll;
   }
   // check all leaf nodes
-  bool showBranch;
-  QTreeWidgetItem *parent;
   QTreeWidgetItemIterator it(this,QTreeWidgetItemIterator::NoChildren); // bottom level
   while (*it) 
   {
-    showBranch = false;
+    QTreeWidgetItem *parent;
+    bool showBranch = false;
     if (regExp.exactMatch((*it)->text(0)))
     {
       showBranch = true;

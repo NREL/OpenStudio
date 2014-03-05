@@ -32,8 +32,6 @@
 int main(int argc, char *argv[])
 {
   try {
-    std::stringstream ss;
-
     // set up program options
     std::string outdir;
     boost::program_options::options_description opts("Options",100);

@@ -267,7 +267,6 @@ void Economics::calculateCashFlowSavings( const std::vector< double >& refCashFl
 {
   if(refCashFlows.size() != selCashFlows.size()) return;
 
-  double PVIF = 0.0;
   m_cashFlowSavings.clear();
   m_discountedCashFlowSavings.clear();
   // TODO replace resize in project with push_back
@@ -281,7 +280,7 @@ void Economics::calculateCashFlowSavings( const std::vector< double >& refCashFl
   m_discountedCashFlowSavings.resize(m_analysisPeriod + 1);
   for (unsigned i = 0; i < m_discountedCashFlowSavings.size(); i++)
   {
-    PVIF = double( 1 ) / ( pow( 1 + m_discountRate, static_cast<int>(i) ) );
+    double PVIF = double( 1 ) / ( pow( 1 + m_discountRate, static_cast<int>(i) ) );
     m_discountedCashFlowSavings.at(i) = PVIF * ( selCashFlows.at(i) - refCashFlows.at(i) );
   }
 }
@@ -629,8 +628,7 @@ double Economics::getTLCC( BuildingType buildingType )
 
 double Economics::getVirtualRate( BuildingType buildingType, VirtualRateType virtualRateType )
 {
-  double result = 0.0;
-  result = - 9999;
+  double result = - 9999;
   if ( buildingType == btReference ) 
     /* # with m_refBuilding do */
     {
@@ -675,10 +673,10 @@ double Economics::getVirtualRate( BuildingType buildingType, VirtualRateType vir
 double Economics::levelizedCostOfEnergy( const double TLCC, LevelizationType levelOn )
 {
   double result = 0.0;
-  double UCRF = 0.0; //Uniform Capital Recovery Factor
   double dResult = 0.0;
   //LCOE pg48 equation 4-7 Walter Short   -- todo: cost savings -
-  UCRF = ( m_discountRate * ( pow( 1 + m_discountRate, m_analysisPeriod ) ) ) / ( pow( 1 + m_discountRate, m_analysisPeriod ) - 1 );
+  //Uniform Capital Recovery Factor
+  double UCRF = ( m_discountRate * ( pow( 1 + m_discountRate, m_analysisPeriod ) ) ) / ( pow( 1 + m_discountRate, m_analysisPeriod ) - 1 );
   if ( levelOn == ltCost ) 
   {
     if ( m_totalEnergyCostSavings != 0 ) 
@@ -764,8 +762,6 @@ double Economics::payBack( const std::vector< double >& cashFlowSavings )
   double fracYr = 0.0;
   int iIter = 0;
   int PAYBACK_ITER_MAX = 20;
-  diff = 0;
-  bFound = false;
   iIter = 1;
   while ( ( ! bFound ) && ( iIter < PAYBACK_ITER_MAX ) ) 
   {

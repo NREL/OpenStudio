@@ -743,7 +743,6 @@ namespace detail {
     }
     boost::optional<std::string> meterSpecificEndUse = this->meterSpecificEndUse();
 
-    std::string variableName;
     if (fuelType != FuelType::Electricity){
       return boost::none;
     }

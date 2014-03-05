@@ -71,7 +71,7 @@ HVACTemplateHelperDialog::HVACTemplateHelperDialog(const model::Model & model, Q
 
   for( std::vector<model::ThermalZone>::iterator it = m_zones.begin();
        it < m_zones.end();
-       it++ )
+       ++it )
   {
     QCheckBox * checkBox = new QCheckBox();
 
@@ -115,7 +115,7 @@ std::vector<model::ThermalZone> HVACTemplateHelperDialog::selectedZones()
 
   for( std::vector<model::ThermalZone>::iterator it = m_zones.begin();
        it < m_zones.end();
-       it++ )
+       ++it )
   {
     QCheckBox * checkBox = qobject_cast<QCheckBox *>(m_buttonGroup->button(i));
 

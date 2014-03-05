@@ -132,13 +132,13 @@ namespace detail {
 
     for( std::vector<WaterUseConnections>::iterator it = connections.begin();
          it != connections.end();
-         it++ )
+         ++it )
     {
       std::vector<WaterUseEquipment> equipment = it->waterUseEquipment();
 
       for( std::vector<WaterUseEquipment>::iterator it2 = equipment.begin();
            it2 != equipment.end();
-           it2++ )
+           ++it2 )
       {
         if( it2->handle() == handle() )
         {

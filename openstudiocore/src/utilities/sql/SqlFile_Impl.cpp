@@ -394,7 +394,8 @@ namespace openstudio{
         close();
         init(m_path);
       }catch(const std::exception&e){
-        LOG(Error, "Exception while opening database: " << e.what());
+        LOG(Error, "Exception while opening database at '" << toString(m_path) 
+            << "': " << e.what());
         result = false;
       }
       return result;
@@ -680,10 +681,6 @@ namespace openstudio{
           dt -= openstudio::Time(0,0,0,1);
         }
 
-
-
-        std::stringstream insertReportVariableDataDictionary;
-
         int month = dt.date().monthOfYear().value();
         int day = dt.date().dayOfMonth();
         int hour = dt.time().hours();
@@ -761,10 +758,10 @@ namespace openstudio{
     void SqlFile_Impl::retrieveDataDictionary()
     {
       std::string table, name, keyValue, units, rf;
-      int dictionaryIndex, code;
 
       if (m_db)
       {
+        int dictionaryIndex, code;
 
         std::stringstream s;
         sqlite3_stmt* sqlStmtPtr;
@@ -800,7 +797,7 @@ namespace openstudio{
 
           for(envPeriodsItr = envPeriods.begin();
               envPeriodsItr != envPeriods.end();
-              envPeriodsItr++)
+              ++envPeriodsItr)
           {
             std::string queryEnvPeriod = boost::to_upper_copy(envPeriodsItr->second);
             m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,envPeriodsItr->first,name,keyValue,queryEnvPeriod,rf,units,table));
@@ -831,7 +828,7 @@ namespace openstudio{
 
           for(envPeriodsItr = envPeriods.begin();
               envPeriodsItr != envPeriods.end();
-              envPeriodsItr++)
+              ++envPeriodsItr)
           {
             std::string queryEnvPeriod = boost::to_upper_copy(envPeriodsItr->second);
             m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,envPeriodsItr->first,name,keyValue,queryEnvPeriod,rf,units,table));
@@ -896,7 +893,18 @@ namespace openstudio{
                               TableName='General' AND \
                               RowName='Hours Simulated' AND \
                               Units='hrs'";
-      return execAndReturnFirstDouble(s);
+      boost::optional<double> ret = execAndReturnFirstDouble(s);
+
+      if (ret) return ret;
+
+      // Otherwise, let's try to calculate it:
+      return execAndReturnFirstDouble(
+        "select "
+        "    (select max(t.hour + ((t.simulationdays-1) * 24)) as mintime from time t join reportmeterdata r on (t.timeindex=r.timeindex))"
+        "  - (select min(t.hour + ((t.simulationdays-1) * 24)) as mintime from time t join reportmeterdata r on (t.timeindex=r.timeindex))"
+        "  + 1;"
+       );
+
     }
 
     boost::optional<double> SqlFile_Impl::netSiteEnergy() const
@@ -1774,7 +1782,7 @@ namespace openstudio{
 
       std::vector<std::string> vecKeyValues = availableKeyValues(envPeriod, reportingFrequency, timeSeriesName);
       std::vector<std::string>::iterator iter;
-      for (iter=vecKeyValues.begin();iter!=vecKeyValues.end();iter++)
+      for (iter=vecKeyValues.begin();iter!=vecKeyValues.end();++iter)
       {
         ts = timeSeries(envPeriod, reportingFrequency, timeSeriesName, *iter);
         if (ts){
@@ -2331,7 +2339,6 @@ namespace openstudio{
     openstudio::DateTimeVector SqlFile_Impl::dateTimeVec(const DataDictionaryItem& dataDictionary)
     {
       openstudio::DateTimeVector dateTimes;
-      unsigned month, day, hour, minute;//, simulationDay;
 
       if (m_db) {
         std::stringstream s;
@@ -2363,6 +2370,7 @@ namespace openstudio{
         s2 << code;
         LOG(Debug, s2.str());
         while (code == SQLITE_ROW) {
+          unsigned month, day, hour, minute;//, simulationDay;
           month = sqlite3_column_int(sqlStmtPtr, 0);
           day = sqlite3_column_int(sqlStmtPtr, 1);
           hour = sqlite3_column_int(sqlStmtPtr, 2);

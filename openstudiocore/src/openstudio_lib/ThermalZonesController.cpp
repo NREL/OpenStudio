@@ -151,7 +151,7 @@ void ThermalZonesController::addComponentToZone(model::ThermalZone & zone, Handl
 
     for( std::vector<model::ModelObject>::iterator it = existingComps.begin();
          it < existingComps.end();
-         it++ )
+         ++it )
     {
       if( boost::optional<model::ZoneHVACComponent> hvacComp = it->optionalCast<model::ZoneHVACComponent>() )
       {

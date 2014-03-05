@@ -28,7 +28,7 @@ namespace openstudio {
 namespace model {
 
 // forward declaration
-class ConstructionBaseStandardsInformation;
+class StandardsInformationConstruction;
 class RenderingColor;
 
 namespace detail {
@@ -67,7 +67,7 @@ namespace detail {
     //@{
 
     /** Returns this construction's standards information, constructing a new object if necessary. */
-    ConstructionBaseStandardsInformation standardsInformation() const;
+    StandardsInformationConstruction standardsInformation() const;
 
     virtual double getNetArea() const;
 

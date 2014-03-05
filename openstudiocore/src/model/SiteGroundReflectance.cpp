@@ -195,8 +195,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setJanuaryGroundReflectance(double januaryGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, januaryGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, januaryGroundReflectance);
     return result;
   }
 
@@ -206,8 +205,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setFebruaryGroundReflectance(double februaryGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, februaryGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, februaryGroundReflectance);
     return result;
   }
 
@@ -217,8 +215,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setMarchGroundReflectance(double marchGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::MarchGroundReflectance, marchGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::MarchGroundReflectance, marchGroundReflectance);
     return result;
   }
 
@@ -228,8 +225,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setAprilGroundReflectance(double aprilGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::AprilGroundReflectance, aprilGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::AprilGroundReflectance, aprilGroundReflectance);
     return result;
   }
 
@@ -239,8 +235,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setMayGroundReflectance(double mayGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::MayGroundReflectance, mayGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::MayGroundReflectance, mayGroundReflectance);
     return result;
   }
 
@@ -250,8 +245,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setJuneGroundReflectance(double juneGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::JuneGroundReflectance, juneGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::JuneGroundReflectance, juneGroundReflectance);
     return result;
   }
 
@@ -261,8 +255,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setJulyGroundReflectance(double julyGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::JulyGroundReflectance, julyGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::JulyGroundReflectance, julyGroundReflectance);
     return result;
   }
 
@@ -272,8 +265,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setAugustGroundReflectance(double augustGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::AugustGroundReflectance, augustGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::AugustGroundReflectance, augustGroundReflectance);
     return result;
   }
 
@@ -283,8 +275,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setSeptemberGroundReflectance(double septemberGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, septemberGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, septemberGroundReflectance);
     return result;
   }
 
@@ -294,8 +285,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setOctoberGroundReflectance(double octoberGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, octoberGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, octoberGroundReflectance);
     return result;
   }
 
@@ -305,8 +295,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setNovemberGroundReflectance(double novemberGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, novemberGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, novemberGroundReflectance);
     return result;
   }
 
@@ -316,8 +305,7 @@ namespace detail {
   }
 
   bool SiteGroundReflectance_Impl::setDecemberGroundReflectance(double decemberGroundReflectance) {
-    bool result = false;
-    result = setDouble(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, decemberGroundReflectance);
+    bool result = setDouble(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, decemberGroundReflectance);
     return result;
   }
 

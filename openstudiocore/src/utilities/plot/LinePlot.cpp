@@ -327,7 +327,7 @@ QColor LinePlot::curveColor(QColor &lastColor)
   if ( (colorIt == m_colorVec.end()) ||  (*colorIt == m_colorVec.back()) ) {
     return (m_colorVec.at(0));
   } else {
-    colorIt++;
+    ++colorIt;
     return *colorIt;
   }
 }
@@ -335,11 +335,10 @@ QColor LinePlot::curveColor(QColor &lastColor)
 void LinePlot::setLineThickness(const int &width)
 {
   const QwtPlotItemList &listPlotItem = m_qwtPlot->itemList();
-  QwtPlotItem *plotItem;
   QwtPlotItemIterator itPlotItem;
   for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
   {
-    plotItem = *itPlotItem;
+    QwtPlotItem *plotItem = *itPlotItem;
     if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
     {
       QwtPlotCurve *curve = (QwtPlotCurve *) plotItem;
@@ -450,12 +449,11 @@ int LinePlot::numberOfCurves()
 {
   /// multiple curves based on units
   const QwtPlotItemList &listPlotItem = m_qwtPlot->itemList();
-  QwtPlotItem *plotItem;
   QwtPlotItemIterator itPlotItem;
   int curveCount = 0;
   for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
   {
-    plotItem = *itPlotItem;
+    QwtPlotItem *plotItem = *itPlotItem;
     if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
     {
       curveCount++;

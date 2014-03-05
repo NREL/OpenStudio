@@ -115,8 +115,7 @@ namespace detail {
   }
 
   bool RenderingColor_Impl::setRenderingRedValue(int renderingRedValue, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Rendering_ColorFields::RenderingRedValue, renderingRedValue, driverMethod);
+    bool result = setInt(OS_Rendering_ColorFields::RenderingRedValue, renderingRedValue, driverMethod);
     return result;
   }
 
@@ -125,8 +124,7 @@ namespace detail {
   }
 
   bool RenderingColor_Impl::setRenderingGreenValue(int renderingGreenValue, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Rendering_ColorFields::RenderingGreenValue, renderingGreenValue);
+    bool result = setInt(OS_Rendering_ColorFields::RenderingGreenValue, renderingGreenValue);
     return result;
   }
 
@@ -135,8 +133,7 @@ namespace detail {
   }
 
   bool RenderingColor_Impl::setRenderingBlueValue(int renderingBlueValue, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Rendering_ColorFields::RenderingBlueValue, renderingBlueValue, driverMethod);
+    bool result = setInt(OS_Rendering_ColorFields::RenderingBlueValue, renderingBlueValue, driverMethod);
     return result;
   }
 
@@ -145,8 +142,7 @@ namespace detail {
   }
 
   bool RenderingColor_Impl::setRenderingAlphaValue(int renderingAlphaValue, bool driverMethod) {
-    bool result = false;
-    result = setInt(OS_Rendering_ColorFields::RenderingAlphaValue, renderingAlphaValue, driverMethod);
+    bool result = setInt(OS_Rendering_ColorFields::RenderingAlphaValue, renderingAlphaValue, driverMethod);
     return result;
   }
 

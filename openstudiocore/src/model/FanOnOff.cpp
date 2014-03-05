@@ -393,7 +393,7 @@ namespace detail {
 
     for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
     it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> fan = it->supplyAirFan() )
       {
@@ -412,7 +412,7 @@ namespace detail {
     std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
     for( std::vector<ZoneHVACComponent>::iterator it = zoneHVACComponent.begin();
     it < zoneHVACComponent.end();
-    it++ )
+    ++it )
     {
       switch(it->iddObject().type().value())
       {
@@ -462,9 +462,9 @@ FanOnOff::FanOnOff(const Model& model, Schedule& availabilitySchedule)
   {
     OS_ASSERT(getImpl<detail::FanOnOff_Impl>());
 
-    bool ok = setAvailabilitySchedule(availabilitySchedule);
+    setAvailabilitySchedule(availabilitySchedule);
 
-    ok = setFanEfficiency(0.6);
+    bool ok = setFanEfficiency(0.6);
     OS_ASSERT(ok);
     setPressureRise(300);
     autosizeMaximumFlowRate();
@@ -501,9 +501,9 @@ FanOnOff::FanOnOff(const Model& model,
   {
     OS_ASSERT(getImpl<detail::FanOnOff_Impl>());
 
-    bool ok = setAvailabilitySchedule(availabilitySchedule);
+    setAvailabilitySchedule(availabilitySchedule);
 
-    ok = setFanEfficiency(0.6);
+    bool ok = setFanEfficiency(0.6);
     OS_ASSERT(ok);
     setPressureRise(300);
     autosizeMaximumFlowRate();

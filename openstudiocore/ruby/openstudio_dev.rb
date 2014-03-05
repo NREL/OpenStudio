@@ -82,7 +82,7 @@ if OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Ruby
 elsif OpenStudio::RemoteBCL::initializeSSL()
   puts "OpenSSL loaded"
 else
-  raise "Unable to initialize OpenSSL: Verify that ruby can assess the OpenSSL libraries"
+  raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
 end  
 
 

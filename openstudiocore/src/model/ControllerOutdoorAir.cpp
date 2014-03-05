@@ -188,7 +188,7 @@ namespace detail {
     AirLoopHVACOutdoorAirSystemVector::iterator it;
     for( it = oaSystems.begin();
     it != oaSystems.end();
-    it++
+    ++it
         )
     {
       if(it->getControllerOutdoorAir().handle() == this->handle())

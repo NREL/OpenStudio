@@ -26,7 +26,7 @@
 namespace openstudio {
 namespace model {
 
-class ConstructionBaseStandardsInformation;
+class StandardsInformationConstruction;
 class RenderingColor;
 
 namespace detail{
@@ -47,7 +47,7 @@ class MODEL_API ConstructionBase : public ResourceObject {
   //@{
 
   /** Returns this construction's standards information, constructing a new object if necessary. */
-  ConstructionBaseStandardsInformation standardsInformation() const;
+  StandardsInformationConstruction standardsInformation() const;
 
   //@}
 

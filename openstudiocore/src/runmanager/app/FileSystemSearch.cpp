@@ -218,8 +218,6 @@ namespace runmanager {
     {
       return;
     }
-
-    std::set<QString> paths;
    
     if (m_recursive)
     {

@@ -387,6 +387,11 @@ namespace detail {
       return false;
     }
 
+    if( thermalZone.isPlenum() )
+    {
+      return false;
+    }
+
     removeFromThermalZone();
 
     thermalZone.setUseIdealAirLoads(false);
@@ -414,9 +419,7 @@ ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(con
   OS_ASSERT(getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>());
 
 
-  bool ok = true;
-  
-  ok = setAvailabilitySchedule(availabilitySchedule);
+  bool ok = setAvailabilitySchedule(availabilitySchedule);
      
   if (!ok) 
   {

@@ -150,11 +150,11 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
         thermalZone = portList->thermalZone();
       }
 
-      if( thermalZone || outlet->optionalCast<AirLoopHVACZoneMixer>() )
+      if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
       {
         if( boost::optional<ModelObject> inlet = node.inletModelObject() )
         {
-          if( boost::optional<AirLoopHVACZoneSplitter> splitter = inlet->optionalCast<AirLoopHVACZoneSplitter>() )
+          if( boost::optional<Splitter> splitter = inlet->optionalCast<Splitter>() )
           {
             boost::optional<ModelObject> sourceModelObject = inlet;
             boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
@@ -183,7 +183,6 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
                 AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
                 thermalZone->addEquipment(mo);
- //               thermalZone->setHeatingPriority(mo,1);
                 thermalZone->setCoolingPriority(mo,1);
               }
 
@@ -203,8 +202,6 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     Model _model = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
 
-    std::vector<IdfObject> result;
-
     HVACComponent _coolingCoil = coilCoolingCooledBeam();
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
@@ -216,7 +213,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     std::vector<ThermalZone> thermalZones = _model.getConcreteModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 
