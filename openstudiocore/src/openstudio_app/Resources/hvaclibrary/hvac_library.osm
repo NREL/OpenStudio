@@ -2591,6 +2591,17 @@ OS:Refrigeration:Condenser:AirCooled,
   ,                                       !- Condensate Receiver Refrigerant Inventory {kg}
   ;                                       !- Condensate Piping Refrigerant Inventory {kg}
 
+OS:Refrigeration:Condenser:Cascade,
+  {e739be92-9f20-4e31-a98c-49e9727dd37b}, !- Handle
+  Cascading Condenser,      !- Name
+  -4,                                     !- Rated Condensing Temperature {C}
+  3,                                      !- Rated Approach Temperature Difference {deltaC}
+  20000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  Fixed,                                  !- Condensing Temperature Control Type
+  ,
+  ,
+  ;
+
 OS:Curve:Linear,
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Handle
   Refrigeration Condenser Air Cooled HR Curve, !- Name
@@ -2738,12 +2749,12 @@ OS:ScheduleTypeLimits,
   Continuous;                             !- Numeric Type
 
 OS:Refrigeration:System,
-  {c5203f94-88c4-413e-af5c-938dee4249e2}, !- Handle
-  Refrigeration System,                   !- Name
-  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Refrigerated CaseAndWalkInList Name
-  ,                                       !- Refrigeration TransferLoad List Name
+  {d94c076d-2f56-436e-84eb-8f8b77ff0dd1}, !- Handle
+  Refrigeration System,                 !- Name
+  {7434e491-ed4e-43dc-b2af-0370833430b8}, !- Refrigerated CaseAndWalkInList Name
+  {3cd7697b-8f3d-487d-9ef3-c2ccf8635a5f}, !- Refrigeration TransferLoad List Name
   ,                                       !- Refrigeration Condenser Name
-  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- CompressorList Name
+  {ec8867e9-18dd-44cd-bd2b-61500ce34da4}, !- CompressorList Name
   21,                                     !- Minimum Condensing Temperature {C}
   R404a,                                  !- Refrigeration System Working Fluid Type
   ConstantSuctionTemperature,             !- Suction Temperature Control Type
@@ -2754,15 +2765,23 @@ OS:Refrigeration:System,
   ,                                       !- End-Use Subcategory
   ,                                       !- Intercooler Type
   ,                                       !- Shell-and-Coil Intercooler Effectiveness
-  ;                                       !- High-Stage CompressorList Name
+  {db92a6fd-85be-488e-ad32-42c50fecc9df}; !- High-Stage CompressorList Name
 
 OS:ModelObjectList,
-  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Handle
-  Refrigeration System Case and Walkin List; !- Name
+  {7434e491-ed4e-43dc-b2af-0370833430b8}, !- Handle
+  Refrigeration System Case and Walkin List 1; !- Name
 
 OS:ModelObjectList,
-  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- Handle
-  Refrigeration System Compressor List;   !- Name
+  {3cd7697b-8f3d-487d-9ef3-c2ccf8635a5f}, !- Handle
+  Refrigeration System Transfer Load List 1; !- Name
+
+OS:ModelObjectList,
+  {ec8867e9-18dd-44cd-bd2b-61500ce34da4}, !- Handle
+  Refrigeration System Compressor List 1; !- Name
+
+OS:ModelObjectList,
+  {db92a6fd-85be-488e-ad32-42c50fecc9df}, !- Handle
+  Refrigeration System High Stage Compressor List 1; !- Name
 
 OS:Refrigeration:Subcooler:Mechanical,
   {95085174-fabf-4659-a947-6ec9fc65c977}, !- Handle
