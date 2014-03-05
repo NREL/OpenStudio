@@ -260,29 +260,7 @@ namespace detail {
     else if ( (object = demandComponent(handle)) ) {
       return object;
     }
-<<<<<<< HEAD
     return object;
-=======
-    return result;
-  }
-
-  boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
-  {
-    OptionalModelObject result;
-
-    ModelObjectVector allComponents = supplyComponents();
-    ModelObjectVector::iterator it;
-    for( it = allComponents.begin();
-         it != allComponents.end();
-         it++ )
-    {
-      if( it->handle() == handle )
-      {
-        return OptionalModelObject(*it);
-      }
-    }
-    return result;
->>>>>>> develop
   }
 
   ModelObject Loop_Impl::clone(Model model) const

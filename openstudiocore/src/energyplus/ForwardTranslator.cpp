@@ -239,24 +239,16 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (fullModelTranslation){
 
     // translate life cycle cost parameters
-<<<<<<< HEAD
-    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
-    if (!lifeCycleCostParameters){
-      // only warn if costs are present
-      if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
-        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
-=======
     if( ! m_excludeLCCObjects ){
       boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
       if (!lifeCycleCostParameters){
         // only warn if costs are present
-        if (!model.getModelObjects<LifeCycleCost>().empty()){
+        if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
           LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
         }
         
         // always add this object so E+ results section exists
         lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
->>>>>>> develop
       }
       translateAndMapModelObject(*lifeCycleCostParameters);
     }

@@ -1061,11 +1061,7 @@ namespace isomodel {
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times
 
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times;
-<<<<<<< HEAD
-      std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getConcreteModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
-=======
-      //std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
->>>>>>> develop
+      //std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getConcreteModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
 
       double total_zone_area = 0;
       double heat_setpoint_occ_total=0;

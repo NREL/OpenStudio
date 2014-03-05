@@ -126,12 +126,8 @@ void ZoneChooserView::layoutView()
   }
 
   std::vector<model::ThermalZone> zones;
-<<<<<<< HEAD
   zones = m_splitter->model().getConcreteModelObjects<model::ThermalZone>();
-=======
-  zones = m_splitter->model().getModelObjects<model::ThermalZone>();
   std::sort(zones.begin(),zones.end(),WorkspaceObjectNameLess());
->>>>>>> develop
 
   for( std::vector<model::ThermalZone>::iterator it = zones.begin();
         it < zones.end();
