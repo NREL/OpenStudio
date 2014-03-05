@@ -183,6 +183,16 @@ class MODEL_API Surface : public PlanarSurface {
   0 if this surface is not a wall. */
   double windowToWallRatio() const;
 
+  /** Get the skylight to roof ratio for this surface. Calculated as 
+  sum(surface.skylights.netArea)/surface.grossArea if this surface is a roof, returns
+  0 if this surface is not a roof. */
+  double skylightToRoofRatio() const;
+
+  /** Get the skylight to projected floor ratio for this surface. Calculated as 
+  sum(surface.skylights.netArea)/project(surface to z=0 plane).grossArea if this surface is a roof, returns
+  0 if this surface is not a roof. */
+  double skylightToProjectedFloorRatio() const;
+
   /** Sets the window to wall ratio for this surface using a single banded window.  
    *  Uses applyViewAndDaylightingGlassRatios for implementation. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr);
