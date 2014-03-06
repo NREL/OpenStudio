@@ -699,7 +699,7 @@ void MeasureListController::addItemForDuplicateMeasure(const analysis::Measure& 
 
   bool ok = measureGroup.insert(index,duplicateMeasure);
   OS_ASSERT(ok);
-  OS_ASSERT(measureGroup.numMeasures(false) == n + 1);
+  OS_ASSERT(measureGroup.numMeasures(false) == static_cast<unsigned>(n + 1));
   // let everyone know about the new item
   analysis::RubyMeasureVector measuresInList = measures();
   analysis::RubyMeasureVector::const_iterator it = std::find_if(

@@ -76,7 +76,7 @@ RubyJobBuilder::RubyJobBuilder(const openstudio::path &t_json)
 RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem, 
                                const openstudio::path& t_originalBasePath,
                                const openstudio::path& t_newBasePath)
-  : m_userScriptJob(false)
+  : m_userScriptJob(false), m_jobkeyname(t_workItem.jobkeyname)
 {
   try {
     FileInfo fi = t_workItem.files.getLastByKey("rb");
@@ -90,7 +90,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
     } else if (toString(m_script.filename()) == "DaylightCalculations.rb") {
       const std::string jobkeyname = t_workItem.jobkeyname;
       RubyJobBuilder rjb(t_workItem);
-      LOG(Debug, "Attempting to rebuild radiance job");
+      LOG(Info, "Attempting to rebuild radiance job");
 
       setScriptFile(getOpenStudioRubyScriptsPath() / toPath("openstudio/radiance/DaylightCalculations.rb"));
 
@@ -104,10 +104,10 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
         openstudio::path possibleRadianceLocation = openstudio::toPath(params[1]);
         if (boost::filesystem::exists(possibleRadianceLocation))
         {
-          LOG(Debug, "Radiance found at path in script params: " << openstudio::toString(possibleRadianceLocation));
+          LOG(Info, "Radiance found at path in script params: " << openstudio::toString(possibleRadianceLocation));
           radianceLocation = possibleRadianceLocation;
         } else {
-          LOG(Debug, "Radiance NOT found at path in script params: " << openstudio::toString(possibleRadianceLocation));
+          LOG(Info, "Radiance NOT found at path in script params: " << openstudio::toString(possibleRadianceLocation));
         }
       }
 
@@ -123,10 +123,10 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
           openstudio::path possibleRadianceLocation = loc[0].localBinPath.parent_path();
           if (boost::filesystem::exists(possibleRadianceLocation))
           {
-            LOG(Debug, "Radiance found at path set by configoptions object set for current application " << openstudio::toString(possibleRadianceLocation));
+            LOG(Info, "Radiance found at path set by configoptions object set for current application " << openstudio::toString(possibleRadianceLocation));
             radianceLocation = possibleRadianceLocation;
           } else {
-            LOG(Debug, "Radiance NOT found at path set by configoptions object set for current application " << openstudio::toString(possibleRadianceLocation));
+            LOG(Info, "Radiance NOT found at path set by configoptions object set for current application " << openstudio::toString(possibleRadianceLocation));
           }
         }
       }
@@ -144,10 +144,10 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
           openstudio::path possibleRadianceLocation = loc[0].localBinPath.parent_path();
           if (boost::filesystem::exists(possibleRadianceLocation))
           {
-            LOG(Debug, "Radiance found at path set by configoptions object after fastFindRadiance " << openstudio::toString(possibleRadianceLocation));
+            LOG(Info, "Radiance found at path set by configoptions object after fastFindRadiance " << openstudio::toString(possibleRadianceLocation));
             radianceLocation = possibleRadianceLocation;
           } else {
-            LOG(Debug, "Radiance NOT found at path set by configoptions object after fastFindRadiance " << openstudio::toString(possibleRadianceLocation));
+            LOG(Info, "Radiance NOT found at path set by configoptions object after fastFindRadiance " << openstudio::toString(possibleRadianceLocation));
           }
         }
       }
@@ -155,7 +155,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
       // something went wrong, just use the known default locations
       if (radianceLocation.empty())
       {
-        LOG(Debug, "Radiance path being set for OS default ");
+        LOG(Info, "Radiance path being set for OS default ");
 #ifdef Q_OS_WIN32
         radianceLocation = openstudio::toPath("C:\\Program Files (x86)\\Radiance\bin");
 #else
@@ -165,12 +165,14 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
 
       WorkItem rebuiltRadianceJob = Workflow::radianceDaylightCalculations(getOpenStudioRubyIncludePath(), radianceLocation);
       rebuiltRadianceJob.jobkeyname = jobkeyname;
+      m_jobkeyname = jobkeyname;
 
-      LOG(Debug, "Initializing from rebuiltRadianceJob.params, JSON Source: " << rebuiltRadianceJob.toJSON());
+      LOG(Info, "Initializing from rebuiltRadianceJob.params, JSON Source: " << rebuiltRadianceJob.toJSON());
       initializeFromParams(rebuiltRadianceJob.params, t_originalBasePath, t_newBasePath);
+      LOG(Info, "setting ruby include dir: " << openstudio::toString(getOpenStudioRubyIncludePath()));
       clearIncludeDir();
       setIncludeDir(getOpenStudioRubyIncludePath());
-      LOG(Debug, "Rebuild of radiance job successfull, returning");
+      LOG(Info, "Rebuild of radiance job successfull, returning");
 
       return;
     } else {
@@ -535,9 +537,9 @@ WorkItem RubyJobBuilder::toWorkItem(const std::vector<openstudio::path> &t_requi
 
   if (m_userScriptJob)
   {
-    return runmanager::WorkItem(JobType::UserScript, Tools(), toParams(), files);
+    return runmanager::WorkItem(JobType::UserScript, Tools(), toParams(), files, m_jobkeyname);
   } else {
-    return runmanager::WorkItem(JobType::Ruby, Tools(), toParams(), files);
+    return runmanager::WorkItem(JobType::Ruby, Tools(), toParams(), files, m_jobkeyname);
   }
 }
 

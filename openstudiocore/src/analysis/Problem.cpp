@@ -1433,7 +1433,8 @@ namespace detail {
 
       if (step.isWorkItem()) {
         runmanager::WorkItem workItem = step.workItem();
-        if (workItem.type == runmanager::JobType::UserScript) {
+        if (workItem.type == runmanager::JobType::UserScript
+            || workItem.type == runmanager::JobType::Ruby) {
           runmanager::RubyJobBuilder rjb(workItem);
           rjb.setIncludeDir(rubyIncludeDirectory);
           workItem = rjb.toWorkItem();

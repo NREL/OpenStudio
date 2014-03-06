@@ -263,6 +263,8 @@ namespace runmanager {
       boost::optional<openstudio::UUID> m_originalUUID;
 
       bool m_userScriptJob;
+      std::string m_jobkeyname;
+
       boost::optional<openstudio::UUID> m_bclMeasureUUID;
 
       static bool stringToBool(const std::string &t_val);
