@@ -58,6 +58,7 @@ class RefrigerationController : public QObject
   QSharedPointer<RefrigerationSystemListController> refrigerationSystemListController() const;
 
   static boost::optional<model::RefrigerationSystem> cascadeSystem(const model::RefrigerationCondenserCascade & condenser);
+  static boost::optional<model::RefrigerationSystem> supplySystem(const model::RefrigerationCondenserCascade & condenser);
 
   void refreshRefrigerationSystemView(RefrigerationSystemView * systemView, boost::optional<model::RefrigerationSystem> & system);
 

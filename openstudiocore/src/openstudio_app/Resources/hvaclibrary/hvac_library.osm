@@ -2783,6 +2783,49 @@ OS:ModelObjectList,
   {db92a6fd-85be-488e-ad32-42c50fecc9df}, !- Handle
   Refrigeration System High Stage Compressor List 1; !- Name
 
+OS:Refrigeration:System,
+  {2443bf2b-46a6-49bd-a044-6d8a8c6a7a30}, !- Handle
+  Cascade System,                         !- Name
+  {98d6c46c-2737-49b8-b1b1-548afc4b4276}, !- Refrigerated CaseAndWalkInList Name
+  {f1cd5b78-5da2-4ed2-bac3-3f4815682658}, !- Refrigeration TransferLoad List Name
+  {8c1ef62d-e23d-4791-9b59-ed9122d27cde}, !- Refrigeration Condenser Name
+  {93bf30a9-2362-4aa0-8ab5-8a3a8ee011e1}, !- CompressorList Name
+  21,                                     !- Minimum Condensing Temperature {C}
+  R404a,                                  !- Refrigeration System Working Fluid Type
+  ConstantSuctionTemperature,             !- Suction Temperature Control Type
+  ,                                       !- Mechanical Subcooler Name
+  ,                                       !- Liquid Suction Heat Exchanger Subcooler Name
+  ,                                       !- Sum UA Suction Piping {W/K}
+  ,                                       !- Suction Piping Zone Name
+  ,                                       !- End-Use Subcategory
+  ,                                       !- Intercooler Type
+  ,                                       !- Shell-and-Coil Intercooler Effectiveness
+  {0361fdf7-9895-4bce-abc3-baeb8acc651d}; !- High-Stage CompressorList Name
+
+OS:ModelObjectList,
+  {98d6c46c-2737-49b8-b1b1-548afc4b4276}, !- Handle
+  Refrigeration System 1 Case and Walkin List; !- Name
+
+OS:ModelObjectList,
+  {f1cd5b78-5da2-4ed2-bac3-3f4815682658}, !- Handle
+  Refrigeration System 1 Transfer Load List; !- Name
+
+OS:ModelObjectList,
+  {93bf30a9-2362-4aa0-8ab5-8a3a8ee011e1}, !- Handle
+  Refrigeration System 1 Compressor List; !- Name
+
+OS:ModelObjectList,
+  {0361fdf7-9895-4bce-abc3-baeb8acc651d}, !- Handle
+  Refrigeration System 1 High Stage Compressor List; !- Name
+
+OS:Refrigeration:Condenser:Cascade,
+  {8c1ef62d-e23d-4791-9b59-ed9122d27cde}, !- Handle
+  Cascade Condenser,                      !- Name
+  -4,                                     !- Rated Condensing Temperature {C}
+  3,                                      !- Rated Approach Temperature Difference {deltaC}
+  20000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  Fixed;                                  !- Condensing Temperature Control Type
+
 OS:Refrigeration:Subcooler:Mechanical,
   {95085174-fabf-4659-a947-6ec9fc65c977}, !- Handle
   Refrigeration Subcooler Mechanical,     !- Name

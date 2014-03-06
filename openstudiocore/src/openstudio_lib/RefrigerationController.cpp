@@ -234,6 +234,27 @@ RefrigerationController::~RefrigerationController()
   delete m_refrigerationScene;
 }
 
+boost::optional<model::RefrigerationSystem> RefrigerationController::supplySystem(const model::RefrigerationCondenserCascade & condenser)
+{
+  boost::optional<model::RefrigerationSystem> result;
+
+  model::Model t_model = condenser.model();
+  std::vector<model::RefrigerationSystem> systems = t_model.getConcreteModelObjects<model::RefrigerationSystem>();
+  for(std::vector<model::RefrigerationSystem>::iterator it = systems.begin();
+      it != systems.end();
+      ++it)
+  {
+    std::vector<model::RefrigerationCondenserCascade> condenserLoads = it->cascadeCondenserLoads();
+    if( std::find(condenserLoads.begin(),condenserLoads.end(),condenser) != condenserLoads.end() )
+    {
+      result = *it;
+      break;
+    }
+  }
+
+  return result;
+}
+
 boost::optional<model::RefrigerationSystem> RefrigerationController::cascadeSystem(const model::RefrigerationCondenserCascade & condenser)
 {
   boost::optional<model::RefrigerationSystem> result;
@@ -461,9 +482,16 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
       {
         if( boost::optional<model::RefrigerationCondenserCascade> cascadeCondenser = condenserModelObject->optionalCast<model::RefrigerationCondenserCascade>() )
         {
-          if( ! cascadeSystem(cascadeCondenser.get()) )
+          // If condenser is not already a load on another system
+          if( ! supplySystem(cascadeCondenser.get()) )
           {
-            // TODO: clone and add some stuff
+            model::RefrigerationSystem systemClone = 
+              system->clone(t_model).cast<model::RefrigerationSystem>();
+            boost::optional<model::RefrigerationCondenserCascade> cascadeCondenserClone =
+              systemClone.refrigerationCondenser()->optionalCast<model::RefrigerationCondenserCascade>();
+            OS_ASSERT(cascadeCondenserClone);
+            m_currentSystem->addCascadeCondenserLoad(cascadeCondenserClone.get());
+
             refresh();
           }
         }
@@ -475,8 +503,7 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
 
         model::RefrigerationCondenserCascade newCascadeCondenser(t_model);
         systemClone.setRefrigerationCondenser(newCascadeCondenser);
-        bool bingo = m_currentSystem->addCascadeCondenserLoad(newCascadeCondenser);
-        OS_ASSERT(bingo);
+        m_currentSystem->addCascadeCondenserLoad(newCascadeCondenser);
 
         refresh();
       }
