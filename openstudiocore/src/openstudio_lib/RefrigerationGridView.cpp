@@ -145,11 +145,6 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
   std::vector<model::RefrigerationCase> refrigerationCases = model.getModelObjects<model::RefrigerationCase>();
   std::vector<model::ModelObject> caseModelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule)); // TODO remove these test entries
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
-  caseModelObjects.push_back(model::RefrigerationCase(model,schedule));
 
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
@@ -157,9 +152,6 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
   std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
   std::vector<model::ModelObject> walkInModelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
-  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule)); // TODO remove these test entries
-  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
-  walkInModelObjects.push_back(model::RefrigerationWalkIn(model,schedule));
 
   RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
@@ -478,21 +470,77 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           &model::RefrigerationCase::setCaseLightingSchedule,
           boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetCaseLightingSchedule));
     }else if(field == CASEDEFROSTSCHEDULE){
-      //boost::optional<Schedule> caseDefrostSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
+          QString(CASEDEFROSTSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationCase",
+                                  "Case Defrost")),
+          &model::RefrigerationCase::caseDefrostSchedule,
+          &model::RefrigerationCase::setCaseDefrostSchedule,
+          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetCaseDefrostSchedule));
     }else if(field == CASEDEFROSTDRIPDOWNSCHEDULE){
-      //boost::optional<Schedule> caseDefrostDripDownSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
+          QString(CASEDEFROSTDRIPDOWNSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationCase",
+                                  "Case Defrost Drip Down")),
+          &model::RefrigerationCase::caseDefrostDripDownSchedule,
+          &model::RefrigerationCase::setCaseDefrostDripDownSchedule,
+          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetCaseDefrostDripDownSchedule));
     }else if(field == REFRIGERATEDCASERESTOCKINGSCHEDULE){
-      //boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
+          QString(REFRIGERATEDCASERESTOCKINGSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationCase",
+                                  "Refrigerated Case Restocking")),
+          &model::RefrigerationCase::refrigeratedCaseRestockingSchedule,
+          &model::RefrigerationCase::setRefrigeratedCaseRestockingSchedule,
+          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetRefrigeratedCaseRestockingSchedule));
     }else if(field == CASECREDITFRACTIONSCHEDULE){
-      //boost::optional<Schedule> caseCreditFractionSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
+          QString(CASECREDITFRACTIONSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationCase",
+                                  "Case Credit Fraction")),
+          &model::RefrigerationCase::caseCreditFractionSchedule,
+          &model::RefrigerationCase::setCaseCreditFractionSchedule,
+          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetCaseCreditFractionSchedule));
     }else if(field == AVAILABILITYSCHEDULE){
-      //boost::optional<Schedule> availabilitySchedule() const; TODO
+        addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
+          QString(AVAILABILITYSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationCase",
+                                  "Availability")),
+          &model::RefrigerationCase::availabilitySchedule,
+          &model::RefrigerationCase::setAvailabilitySchedule,
+          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetAvailabilitySchedule));
     }else if(field == THERMALZONE){
-      //addComboBoxColumn<model::RefrigerationCase,std::string>(
-      //      QString(THERMALZONE),
-      //      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      //      &model::RefrigerationCase::thermalZone,
-      //      &model::RefrigerationCase::setThermalZone);
+      //addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
+      //    QString(THERMALZONE),
+      //    &openstudio::objectName,
+      //    boost::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+      //                boost::bind(&openstudio::model::getCompatibleThermalZones, TODO getCompatibleThermalZones not yet available
+      //                            m_model,
+      //                            "RefrigerationCase",
+      //                            "Thermal Zone")),
+      //    &model::RefrigerationCase::thermalZone,
+      //    &model::RefrigerationCase::setThermalZone,
+      //    boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetThermalZone));
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){
@@ -789,6 +837,17 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory);
     }else if(field == DEFROSTSCHEDULE){
       //Schedule defrostSchedule() const; TODO
+      //addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+      //    QString(DEFROSTSCHEDULE),
+      //    &openstudio::objectName,
+      //    boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+      //                boost::bind(&openstudio::model::getCompatibleSchedules,
+      //                            m_model,
+      //                            "RefrigerationWalkIn",
+      //                            "Defrost")),
+      //    &model::RefrigerationWalkIn::defrostSchedule,
+      //    &model::RefrigerationWalkIn::setDefrostSchedule,
+      //    boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetDefrostSchedule)); // TODO resetDefrostSchedule not available
     }else if(field == DEFROSTPOWER){
       addQuantityEditColumn(QString(DEFROSTPOWER),
                             QString("W"),
@@ -802,15 +861,65 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                          &model::RefrigerationWalkIn::temperatureTerminationDefrostFractiontoIce,
                          &model::RefrigerationWalkIn::setTemperatureTerminationDefrostFractiontoIce);
     }else if(field == AVAILABILITYSCHEDULE){
-      //boost::optional<Schedule> availabilitySchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+          QString(AVAILABILITYSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationWalkIn",
+                                  "Availability")),
+          &model::RefrigerationWalkIn::availabilitySchedule,
+          &model::RefrigerationWalkIn::setAvailabilitySchedule,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetAvailabilitySchedule));
     }else if(field == HEATINGPOWERSCHEDULE){
-      //boost::optional<Schedule> heatingPowerSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+          QString(HEATINGPOWERSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationWalkIn",
+                                  "Heating Power")),
+          &model::RefrigerationWalkIn::heatingPowerSchedule,
+          &model::RefrigerationWalkIn::setHeatingPowerSchedule,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetHeatingPowerSchedule));
     }else if(field == LIGHTINGSCHEDULE){
-      //boost::optional<Schedule> lightingSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+          QString(LIGHTINGSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationWalkIn",
+                                  "Lighting")),
+          &model::RefrigerationWalkIn::lightingSchedule,
+          &model::RefrigerationWalkIn::setLightingSchedule,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetLightingSchedule));
     }else if(field == DEFROSTDRIPDOWNSCHEDULE){
-      //boost::optional<Schedule> defrostDripDownSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+          QString(DEFROSTDRIPDOWNSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationWalkIn",
+                                  "Defrost Drip Down")),
+          &model::RefrigerationWalkIn::defrostDripDownSchedule,
+          &model::RefrigerationWalkIn::setDefrostDripDownSchedule,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetDefrostDripDownSchedule));
     }else if(field == RESTOCKINGSCHEDULE){
-      //boost::optional<Schedule> restockingSchedule() const; TODO
+      addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+          QString(RESTOCKINGSCHEDULE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationWalkIn",
+                                  "Restocking")),
+          &model::RefrigerationWalkIn::restockingSchedule,
+          &model::RefrigerationWalkIn::setRestockingSchedule,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetRestockingSchedule));
     }else if(field == ZONEBOUNDARIES){
       //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const; TODO
     }else if(field == NAME){
