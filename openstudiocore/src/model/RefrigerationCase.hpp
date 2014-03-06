@@ -317,7 +317,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetAverageRefrigerantChargeInventory();
 
-  void addToSystem(RefrigerationSystem & system);
+  bool addToSystem(RefrigerationSystem & system);
 
   void removeFromSystem();
 

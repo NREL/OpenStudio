@@ -87,6 +87,7 @@
 #define STANDARDCASEFANPOWERPERUNITLENGTH "Standard Case Fan Power per Unit Length"
 #define STANDARDCASELIGHTINGPOWERPERUNITLENGTH "Standard Case Lighting Power per Unit Length"
 #define THERMALZONE "Thermal Zone"
+#define RACK "Rack"
 #define UNDERCASEHVACRETURNAIRFRACTION "Under Case HVAC Return Air Fraction"
 
 // Walk In Fields
@@ -190,7 +191,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back("Rack Name"); // TODO system.name
+    fields.push_back(RACK);
     //fields.push_back("Rack Saturated Suction Temperature (F)");
     //fields.push_back("Fixture Name");
     fields.push_back(THERMALZONE);
@@ -540,6 +541,15 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           &model::RefrigerationCase::thermalZone,
           &model::RefrigerationCase::setThermalZone,
           boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetThermalZone));
+    }else if(field == RACK){
+      addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationCase>(
+          QString(RACK),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
+                      boost::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model)),
+          &model::RefrigerationCase::system,
+          &model::RefrigerationCase::addToSystem,
+          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::removeFromSystem));
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){
@@ -626,7 +636,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back("Rack Name"); // TODO system.name
+    fields.push_back(RACK);
     //fields.push_back("Rack Saturated Suction Temperature (F)");
     //fields.push_back("Walk-in Type");
     //fields.push_back("Manufacturer & Model No.");
@@ -925,6 +935,15 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       addNameLineEditColumn(QString(NAME),
                               &model::RefrigerationWalkIn::name,
                               &model::RefrigerationWalkIn::setName);
+    }else if(field == RACK){
+      addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationWalkIn>(
+          QString(RACK),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
+                      boost::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model)),
+          &model::RefrigerationWalkIn::system,
+          &model::RefrigerationWalkIn::addToSystem,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::removeFromSystem));
     }else{
       // unhandled
 //      OS_ASSERT(false); TODO add this back at a later time

@@ -807,8 +807,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName);
   }
 
-  void RefrigerationCase_Impl::addToSystem(RefrigerationSystem & system) {
-    system.addCase(this->getObject<RefrigerationCase>());
+  bool RefrigerationCase_Impl::addToSystem(RefrigerationSystem & system) {
+    return system.addCase(this->getObject<RefrigerationCase>());
   }
 
   void RefrigerationCase_Impl::removeFromSystem() {
@@ -1387,8 +1387,8 @@ void RefrigerationCase::resetAverageRefrigerantChargeInventory() {
   getImpl<detail::RefrigerationCase_Impl>()->resetAverageRefrigerantChargeInventory();
 }
 
-void RefrigerationCase::addToSystem(RefrigerationSystem & system) {
-  getImpl<detail::RefrigerationCase_Impl>()->addToSystem(system);
+bool RefrigerationCase::addToSystem(RefrigerationSystem & system) {
+  return getImpl<detail::RefrigerationCase_Impl>()->addToSystem(system);
 }
 
 void RefrigerationCase::removeFromSystem() {

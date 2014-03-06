@@ -326,7 +326,7 @@ namespace detail {
 
     void resetAverageRefrigerantChargeInventory();
 
-    void addToSystem(RefrigerationSystem & system);
+    bool addToSystem(RefrigerationSystem & system);
 
     void removeFromSystem();
 

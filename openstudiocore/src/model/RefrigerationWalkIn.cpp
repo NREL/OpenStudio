@@ -535,8 +535,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_WalkInFields::DefrostScheduleName);
   }
 
-  void RefrigerationWalkIn_Impl::addToSystem(RefrigerationSystem & system) {
-    system.addWalkin(this->getObject<RefrigerationWalkIn>());
+  bool RefrigerationWalkIn_Impl::addToSystem(RefrigerationSystem & system) {
+    return system.addWalkin(this->getObject<RefrigerationWalkIn>());
   }
 
   void RefrigerationWalkIn_Impl::removeFromSystem() {
@@ -851,8 +851,8 @@ void RefrigerationWalkIn::resetInsulatedFloorUValue() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetInsulatedFloorUValue();
 }
 
-void RefrigerationWalkIn::addToSystem(RefrigerationSystem & system) {
-  getImpl<detail::RefrigerationWalkIn_Impl>()->addToSystem(system);
+bool RefrigerationWalkIn::addToSystem(RefrigerationSystem & system) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->addToSystem(system);
 }
 
 void RefrigerationWalkIn::removeFromSystem() {
