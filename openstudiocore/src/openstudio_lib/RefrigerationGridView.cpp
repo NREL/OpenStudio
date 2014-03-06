@@ -38,6 +38,8 @@
 #include <model/ScheduleTypeRegistry.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
 #include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
@@ -191,7 +193,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     //fields.push_back("Rack Name"); // TODO system.name
     //fields.push_back("Rack Saturated Suction Temperature (F)");
     //fields.push_back("Fixture Name");
-    //fields.push_back(THERMALZONE);
+    fields.push_back(THERMALZONE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -530,17 +532,14 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           &model::RefrigerationCase::setAvailabilitySchedule,
           boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetAvailabilitySchedule));
     }else if(field == THERMALZONE){
-      //addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
-      //    QString(THERMALZONE),
-      //    &openstudio::objectName,
-      //    boost::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-      //                boost::bind(&openstudio::model::getCompatibleThermalZones, TODO getCompatibleThermalZones not yet available
-      //                            m_model,
-      //                            "RefrigerationCase",
-      //                            "Thermal Zone")),
-      //    &model::RefrigerationCase::thermalZone,
-      //    &model::RefrigerationCase::setThermalZone,
-      //    boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetThermalZone));
+      addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
+          QString(THERMALZONE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+                      boost::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model)),
+          &model::RefrigerationCase::thermalZone,
+          &model::RefrigerationCase::setThermalZone,
+          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetThermalZone));
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){
