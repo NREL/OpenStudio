@@ -509,6 +509,35 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
       }
     }
   }
+  else if( doc->fromModel(itemid) )
+  {
+    boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
+    OS_ASSERT(mo); 
+
+    if( boost::optional<model::RefrigerationSystem> system 
+          = mo->optionalCast<model::RefrigerationSystem>() )
+    {
+      if( boost::optional<model::ModelObject> condenserModelObject = system->refrigerationCondenser() )
+      {
+        if( boost::optional<model::RefrigerationCondenserCascade> cascadeCondenser = condenserModelObject->optionalCast<model::RefrigerationCondenserCascade>() )
+        {
+          // If condenser is not already a load on another system
+          if( ! supplySystem(cascadeCondenser.get()) )
+          {
+            m_currentSystem->addCascadeCondenserLoad(cascadeCondenser.get());
+            refresh();
+          }
+        }
+      }
+      else
+      {
+        model::RefrigerationCondenserCascade newCascadeCondenser(t_model);
+        system->setRefrigerationCondenser(newCascadeCondenser);
+        m_currentSystem->addCascadeCondenserLoad(newCascadeCondenser);
+        refresh();
+      }
+    }
+  }
 }
 
 void RefrigerationController::onCasesViewDrop(const OSItemId & itemid)
