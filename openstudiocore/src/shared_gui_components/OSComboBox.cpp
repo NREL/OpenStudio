@@ -26,6 +26,7 @@
 #include <utilities/idf/WorkspaceObject_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 #include <QEvent>
+#include <QCompleter>
 
 namespace openstudio {
 
@@ -173,6 +174,8 @@ OSComboBox2::OSComboBox2( QWidget * parent )
   : QComboBox(parent)
 {
   this->setAcceptDrops(false);
+  QCompleter* completer = new QCompleter();
+  this->setCompleter(completer);
   setEnabled(false);
 }
 
