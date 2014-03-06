@@ -198,6 +198,26 @@ class PlenumChooserView : public QWidget
   QToolButton * newReturnPlenumButton;
 };
 
+class RefrigerationWalkinInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationWalkinInspectorView(QWidget * parent = 0);
+
+  virtual ~RefrigerationWalkinInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+
+  private:
+
+  InspectorGadget * m_walkinInspectorGadget;
+  QWidget * m_zoneBoundaryWidget;
+  bool m_displayIP;
+  boost::optional<model::ModelObject> m_modelObject;
+};
+
 class ThermalZoneInspectorView : public BaseInspectorView
 {
   Q_OBJECT;

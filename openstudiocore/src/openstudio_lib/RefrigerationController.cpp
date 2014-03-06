@@ -255,15 +255,13 @@ void RefrigerationController::onCasesViewDrop(const OSItemId & itemid)
     else if( boost::optional<model::RefrigerationWalkIn> _walkin 
               = mo->optionalCast<model::RefrigerationWalkIn>())
     {
-      //model::RefrigerationWalkIn walkinClone = 
-      //  _walkin->clone(m_currentSystem->model()).cast<model::RefrigerationWalkIn>();
-
-      //m_currentSystem->addWalkin(walkinClone);
-
-      //refresh();
-      QMessageBox box(doc->mainWindow());
-      box.setText("Walkins are not yet supported by OpenStudio.");
-      box.exec();
+      model::RefrigerationWalkIn walkinClone = 
+        _walkin->clone(m_currentSystem->model()).cast<model::RefrigerationWalkIn>();
+      m_currentSystem->addWalkin(walkinClone);
+      refresh();
+      //QMessageBox box(doc->mainWindow());
+      //box.setText("Walkins are not yet supported by OpenStudio.");
+      //box.exec();
     }
   }
 }
