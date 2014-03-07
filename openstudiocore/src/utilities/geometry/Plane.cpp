@@ -319,6 +319,16 @@ namespace openstudio{
     return Point3d(x,y,z);
   }
 
+  std::vector<Point3d> Plane::project(const std::vector<Point3d>& points) const
+  {
+    std::vector<Point3d> result;
+    result.reserve(points.size());
+    BOOST_FOREACH(const Point3d& point, points){
+      result.push_back(this->project(point));
+    }
+    return result;
+  }
+
   bool Plane::pointOnPlane(const Point3d& point, double tol) const
   {
     // project point to plane

@@ -509,6 +509,38 @@ namespace detail{
     }
   }
 
+  boost::optional<ModelObject> Node_Impl::setpointManager() const
+  {
+    boost::optional<ModelObject> result;
+
+    if( boost::optional<SetpointManagerSingleZoneReheat> spm = getSetpointManagerSingleZoneReheat() )
+    {
+      result = spm;
+    }
+    else if( boost::optional<SetpointManagerMixedAir> spm = getSetpointManagerMixedAir() )
+    {
+      result = spm;
+    }
+    else if( boost::optional<SetpointManagerScheduled> spm = setpointManagerScheduled() )
+    {
+      result = spm;
+    }
+    else if( boost::optional<SetpointManagerFollowOutdoorAirTemperature> spm = setpointManagerFollowOutdoorAirTemperature() )
+    {
+      result = spm;
+    }
+    else if( boost::optional<SetpointManagerOutdoorAirReset> spm = setpointManagerOutdoorAirReset() )
+    {
+      result = spm;
+    }
+    else if( boost::optional<SetpointManagerWarmest> spm = setpointManagerWarmest() )
+    {
+      result = spm;
+    }
+
+    return result;
+  }
+
 } // detail
 
 // create a new Node object in the model's workspace

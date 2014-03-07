@@ -219,3 +219,111 @@ TEST_F(DataFixture,Matrix_ReturnsDoubleFunctions)
   EXPECT_DOUBLE_EQ(-1.0,minimum(B));
   EXPECT_DOUBLE_EQ(5.0/6.0,mean(B));
 }
+
+
+TEST_F(DataFixture, Matrix_FindConnectedComponents)
+{
+  std::vector<std::vector<unsigned> > result;
+
+  // non-symetric
+  {
+    Matrix A(2,3,0.0);
+    result = findConnectedComponents(A);
+    EXPECT_TRUE(result.empty());
+  }
+    
+  // empty
+  {
+    Matrix A(0,0,0.0);
+    result = findConnectedComponents(A);
+    EXPECT_TRUE(result.empty());
+  }
+
+  // single
+  {
+    Matrix A(1,1,0.0);
+    A(0,0) = 1.0;
+    result = findConnectedComponents(A);
+    ASSERT_EQ(1u, result.size());
+    ASSERT_EQ(1u, result[0].size());
+    EXPECT_EQ(0u, result[0][0]);
+  }
+
+  // 2x2 identity
+  {
+    Matrix A(2,2,0.0);
+    A(0,0) = 1.0;
+    A(1,1) = 1.0;
+    result = findConnectedComponents(A);
+    ASSERT_EQ(2u, result.size());
+    ASSERT_EQ(1u, result[0].size());
+    EXPECT_EQ(0u, result[0][0]);
+    ASSERT_EQ(1u, result[1].size());
+    EXPECT_EQ(1u, result[1][0]);
+  }
+
+  // 3x3 identity
+  {
+    Matrix A(3,3,0.0);
+    A(0,0) = 1.0;
+    A(1,1) = 1.0;
+    A(2,2) = 1.0;
+    result = findConnectedComponents(A);
+    ASSERT_EQ(3u, result.size());
+    ASSERT_EQ(1u, result[0].size());
+    EXPECT_EQ(0u, result[0][0]);
+    ASSERT_EQ(1u, result[1].size());
+    EXPECT_EQ(1u, result[1][0]);
+    ASSERT_EQ(1u, result[2].size());
+    EXPECT_EQ(2u, result[2][0]);
+  }
+
+  // 3x3 1-2 symetric, 3
+  {
+    Matrix A(3,3,0.0);
+    A(0,0) = 1.0;
+    A(0,1) = 1.0;
+    A(1,0) = 1.0;
+    A(1,1) = 1.0;
+    A(2,2) = 1.0;
+    result = findConnectedComponents(A);
+    ASSERT_EQ(2u, result.size());
+    ASSERT_EQ(2u, result[0].size());
+    EXPECT_EQ(0u, result[0][0]);
+    EXPECT_EQ(1u, result[0][1]);
+    ASSERT_EQ(1u, result[1].size());
+    EXPECT_EQ(2u, result[1][0]);
+  }
+
+  // 3x3 1-2 asymetric, 3
+  {
+    Matrix A(3,3,0.0);
+    A(0,0) = 1.0;
+    A(0,1) = 1.0;
+    A(1,1) = 1.0;
+    A(2,2) = 1.0;
+    result = findConnectedComponents(A);
+    ASSERT_EQ(2u, result.size());
+    ASSERT_EQ(2u, result[0].size());
+    EXPECT_EQ(0u, result[0][0]);
+    EXPECT_EQ(1u, result[0][1]);
+    ASSERT_EQ(1u, result[1].size());
+    EXPECT_EQ(2u, result[1][0]);
+  }
+
+  // 3x3 1-2 asymetric, 3
+  {
+    Matrix A(3,3,0.0);
+    A(0,0) = 1.0;
+    A(1,0) = 1.0;
+    A(1,1) = 1.0;
+    A(2,2) = 1.0;
+    result = findConnectedComponents(A);
+    ASSERT_EQ(2u, result.size());
+    ASSERT_EQ(2u, result[0].size());
+    EXPECT_EQ(0u, result[0][0]);
+    EXPECT_EQ(1u, result[0][1]);
+    ASSERT_EQ(1u, result[1].size());
+    EXPECT_EQ(2u, result[1][0]);
+  }
+}

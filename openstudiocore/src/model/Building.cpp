@@ -688,6 +688,11 @@ namespace detail {
     return Transformation::rotation(Vector3d(0,0,1), -degToRad(this->northAxis()));
   }
 
+  std::vector<std::vector<Point3d> > Building_Impl::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const
+  {
+    return openstudio::model::generateSkylightPattern(this->spaces(), 0.0, skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
+  }
+
   openstudio::Quantity Building_Impl::northAxis_SI() const
   {
     OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,false);
@@ -1092,6 +1097,11 @@ double Building::infiltrationDesignAirChangesPerHour() const {
 Transformation Building::transformation() const
 {
   return getImpl<detail::Building_Impl>()->transformation();
+}
+
+std::vector<std::vector<Point3d> > Building::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const
+{
+  return getImpl<detail::Building_Impl>()->generateSkylightPattern(skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
 }
 
 /// @cond
