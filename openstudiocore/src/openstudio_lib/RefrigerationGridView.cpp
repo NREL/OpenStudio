@@ -116,6 +116,13 @@
 
 namespace openstudio {
 
+struct ModelObjectNameSorter{
+  // sort by name
+  bool operator()(const model::ModelObject & lhs, const model::ModelObject & rhs){
+    return (lhs.name() < rhs.name());
+  }
+};
+
 RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & model, QWidget * parent)
   : QWidget(parent),
   m_isIP(isIP)
@@ -172,7 +179,7 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
                         refrigerationWalkInGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // TODO for horizontal system list
+  std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // NOTE for horizontal system list
 
 }
 
@@ -187,13 +194,11 @@ RefrigerationCaseGridController::RefrigerationCaseGridController(bool isIP,
 
 void RefrigerationCaseGridController::setCategoriesAndFields()
 {
-  // TODO strings below should be replaced with the tokens defined above
 
   {
     std::vector<QString> fields;
     fields.push_back(RACK);
     //fields.push_back("Rack Saturated Suction Temperature (F)");
-    //fields.push_back("Fixture Name");
     fields.push_back(THERMALZONE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -221,7 +226,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     fields.push_back(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH);
     fields.push_back(CASECREDITFRACTIONSCHEDULE);
     fields.push_back(RATEDLATENTHEATRATIO);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling Capacity"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling\nCapacity"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -250,7 +255,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     fields.push_back(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH);
     fields.push_back(HUMIDITYATZEROANTISWEATHEATERENERGY);
     fields.push_back(FRACTIONOFANTISWEATHEATERENERGYTOCASE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Case Anti-Sweat Heaters"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Case\nAnti-Sweat\nHeaters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -265,7 +270,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     //fields.push_back("Defrost 4 Start Time");
     //fields.push_back("Defrost 5 Start Time");
     //fields.push_back("Defrost 6 Start Time");
-    fields.push_back(DEFROSTENERGYCORRECTIONCURVE);
+    //fields.push_back(DEFROSTENERGYCORRECTIONCURVE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -558,7 +563,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             &model::RefrigerationCase::setName);
     }else{
       // unhandled
-//      OS_ASSERT(false); TODO add this back at a later time
+      OS_ASSERT(false);
     }
   }
 }
@@ -619,6 +624,7 @@ void RefrigerationCaseGridController::refreshModelObjects()
 {
   std::vector<model::RefrigerationCase> refrigerationCases = m_model.getModelObjects<model::RefrigerationCase>();
   m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
+  std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 
 RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
@@ -632,7 +638,6 @@ RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
 
 void RefrigerationWalkInGridController::setCategoriesAndFields()
 {
-  // TODO strings below should be replaced with the tokens defined above
 
   {
     std::vector<QString> fields;
@@ -669,7 +674,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     //fields.push_back("Stocking Door R-Value (hr-ft2-F/Btu)");
     //fields.push_back("Stocking Door Opening Schedule");
     //fields.push_back("Stocking Door Opening Protection");
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Stocking Doors"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Stocking\nDoors"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -845,7 +850,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             &model::RefrigerationWalkIn::averageRefrigerantChargeInventory,
                             &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory);
     }else if(field == DEFROSTSCHEDULE){
-      //Schedule defrostSchedule() const; TODO
+      //Schedule defrostSchedule() const;
       //addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
       //    QString(DEFROSTSCHEDULE),
       //    &openstudio::objectName,
@@ -946,7 +951,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::removeFromSystem));
     }else{
       // unhandled
-//      OS_ASSERT(false); TODO add this back at a later time
+      OS_ASSERT(false);
     }
   }
 }
@@ -1007,8 +1012,8 @@ void RefrigerationWalkInGridController::refreshModelObjects()
 {
   std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = m_model.getModelObjects<model::RefrigerationWalkIn>();
   m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
+  std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
-
 
 } // openstudio
 

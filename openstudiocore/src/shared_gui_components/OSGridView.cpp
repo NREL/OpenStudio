@@ -37,6 +37,9 @@
 #include <QLabel>
 #include <QPushButton>
 
+#define WIDTH  80
+#define HEIGHT 60
+
 namespace openstudio {
 
 OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, QWidget * parent)
@@ -58,7 +61,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   OS_ASSERT(isConnected);
 
   QHBoxLayout * buttonLayout = new QHBoxLayout();
-  buttonLayout->setSpacing(10);
+  buttonLayout->setSpacing(3);
   buttonLayout->setContentsMargins(0,0,0,0);
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
@@ -66,6 +69,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   //OSDropZone * dropZone = new OSDropZone(vectorController, true, "Drag and Drop from Library");
   OSDropZone * dropZone = new OSDropZone(vectorController);
   dropZone->setMaxItems(1);
+  dropZone->setFixedSize(WIDTH,HEIGHT);
 
   isConnected = connect(dropZone,SIGNAL(itemDropped(const OSItemId&)),
     m_gridController,SLOT(onItemDropped(const OSItemId&)));
@@ -77,6 +81,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
     button = new QPushButton(categories.at(i));
+    button->setFixedSize(WIDTH,HEIGHT);
     button->setCheckable(true);
     buttonLayout->addWidget(button,0,Qt::AlignLeft);
     buttonGroup->addButton(button,buttonGroup->buttons().size());

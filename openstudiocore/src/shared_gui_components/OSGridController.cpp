@@ -181,17 +181,14 @@ QWidget * OSGridController::widgetAt(int row, int column)
     if(column == 0){
       setHorizontalHeader();
       // Each concept should have its own column
-      //OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size()); TODO uncomment this later, once all types are supported
+      OS_ASSERT(m_horizontalHeader.size() == m_baseConcepts.size());
     }
     widget = m_horizontalHeader.at(column);
   } else {
 
     model::ModelObject mo = m_modelObjects[modelObjectRow];
 
-    // Only color the first 2 columns
-    if(column < 2){
-      cellColor = getColor(mo);
-    }
+    cellColor = getColor(mo);
 
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
@@ -397,8 +394,14 @@ QWidget * OSGridController::widgetAt(int row, int column)
   style.append("  background-color: ");
   style.append(cellColor);
   style.append(";");
-  style.append("  border-bottom: 1px solid black;");
+  if(row == 0){
+    style.append("  border-top: 1px solid black;");
+  }
+  if(column == 0){
+    style.append("  border-left: 1px solid black;");
+  }
   style.append("  border-right: 1px solid black;");
+  style.append("  border-bottom: 1px solid black;");
   style.append("}");
   wrapper->setStyleSheet(style);
 
