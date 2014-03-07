@@ -159,8 +159,7 @@ end
 # make a run manager
 runDir = outPath / OpenStudio::Path.new("gen_eplus/")
 runmanager_path = OpenStudio::Path.new("runmanager.db")
-runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true)
-runmanager.setPaused(true)
+runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
 
 # run 
 runDir = OpenStudio::system_complete(runDir)
