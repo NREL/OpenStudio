@@ -19,445 +19,814 @@
 #include "PrjModel.hpp"
 #include "PrjReader.hpp"
 #include "SimFile.hpp"
+
+#include "PrjModelImpl.hpp"
+
 #include <QFile>
 
 namespace openstudio {
 namespace contam {
 
+PrjModel::PrjModel()
+{
+  d = new detail::PrjModelImpl;
+}
+
 PrjModel::PrjModel(openstudio::path path)
 {
-  read(path);
+  d = new detail::PrjModelImpl;
+  d->read(path);
 }
 
 PrjModel::PrjModel(std::string filename)
 {
-  read(filename);
+  d = new detail::PrjModelImpl;
+  d->read(filename);
 }
 
 PrjModel::PrjModel(Reader &input)
 {
-  read(input);
+  d = new detail::PrjModelImpl;
+  d->read(input);
+}
+
+PrjModel::PrjModel(const PrjModel &other) : d(other.d)
+{}
+
+PrjModel::~PrjModel()
+{}
+
+PrjModel& PrjModel::operator=(const PrjModel &other)
+{
+  d = other.d;
+  return *this;
+}
+
+bool PrjModel::operator==(const PrjModel &other) const
+{
+  return d==other.d;
+}
+
+bool PrjModel::operator!=(const PrjModel &other) const
+{
+  return d!=other.d;
 }
 
 bool PrjModel::read(openstudio::path path)
 {
-  return read(openstudio::toString(path));
+  return d->read(openstudio::toString(path));
 }
 
 bool PrjModel::read(std::string filename)
 {
-  QFile fp(QString().fromStdString(filename));
-
-  d->valid = false;
-  if (fp.open(QFile::ReadOnly))
-  {
-    QTextStream stream(&fp);
-    Reader input(&stream);
-    read(input);
-
-  }
-  return d->valid;
+  return d->read(filename);
 }
 
 bool PrjModel::read(Reader &input)
 {
-  d->valid = false;
-  // Section 1: Project, Weather, Simulation, and Output Controls
-  d->rc.read(input); // Read the run control section
-  input.read999(FILELINE);
-  // Section 2: Species and Contaminants
-  d->contaminants = input.readIntVector(FILELINEC false);
-  d->species = input.readSectionVector<Species>(FILELINEC "species");
-  // Section 3: Level and Icon Data
-  d->levels = input.readSectionVector<Level>(FILELINEC "level");
-  // Section 4: Day Schedules
-  d->daySchedules = input.readSectionVector<DaySchedule>(FILELINEC "day schedule");
-  // Section 5: Week Schedules
-  d->weekSchedules = input.readSectionVector<WeekSchedule>(FILELINEC "week schedule");
-  // Section 6: Wind Pressure Profiles
-  d->windPressureProfiles = input.readSectionVector<WindPressureProfile>(FILELINEC "wind pressure profiles");
-  // Section 7: Kinetic Reactions
-  std::string kinr = input.readSection(FILELINE); // Skip it
-  d->unsupported["KineticReaction"] = kinr;
-  // Section 8a: Filter Elements
-  std::string flte = input.readSection(FILELINE); // Skip it
-  d->unsupported["FilterElement"] = flte;
-  // Section 8b: Filters
-  std::string filt = input.readSection(FILELINE); // Skip it
-  d->unsupported["Filter"] = filt;
-  // Section 9: Source/Sink Elements
-  std::string cse = input.readSection(FILELINE); // Skip it
-  d->unsupported["SourceSink"] = cse;
-  // Section 10: Airflow Elements
-  d->airflowElements = input.readElementVector<AirflowElement>(FILELINEC "airflow element");
-  // Section 11: Duct Elements
-  std::string dfe = input.readSection(FILELINE); // Skip it
-  d->unsupported["DuctElement"] = dfe;
-  // Section 12a: Control Super Elements
-  std::string selmt = input.readSection(FILELINE); // Skip it
-  d->unsupported["ControlSuperElements"] = selmt;
-  // Section 12b: Control Nodes
-  d->controlNodes = input.readElementVector<ControlNode>(FILELINEC "control node");
-  // Section 13: Simple Air Handling System (AHS)
-  d->ahs = input.readSectionVector<Ahs>(FILELINEC "ahs");
-  // Section 14: Zones
-  d->zones = input.readSectionVector<Zone>(FILELINEC "zone");
-  // Section 15: Initial Zone Concentrations
-  readZoneIc(input);
-  // Section 16: Airflow Paths
-  d->paths = input.readSectionVector<Path>(FILELINEC "path");
-  // Section 17: Duct Junctions
-  std::string jct = input.readSection(FILELINE); // Skip it
-  d->unsupported["DuctJunction"] = jct;
-  // Section 18: Initial Junction Concentrations
-  std::string jctic = input.readSection(FILELINE); // Skip it
-  d->unsupported["JunctionIC"] = jctic;
-  // Section 19: Duct Segments
-  std::string dct = input.readSection(FILELINE); // Skip it
-  d->unsupported["DuctSegment"] = dct;
-  // Section 20: Source/Sinks
-  std::string css = input.readSection(FILELINE); // Skip it
-  d->unsupported["SourceSink"] = css;
-  // Section 21: Occupancy Schedules
-  std::string osch = input.readSection(FILELINE); // Skip it
-  d->unsupported["OccupancySchedule"] = osch;
-  // Section 22: Exposures
-  std::string pexp = input.readSection(FILELINE); // Skip it
-  d->unsupported["Exposure"] = pexp;
-  // Section 23: Annotations
-  std::string note = input.readSection(FILELINE); // Skip it
-  d->unsupported["Annotation"] = note;
-  input.readEnd(FILELINE);
-  d->valid = true;
-  return true;
+  return d->read(input);
 }
 
 std::string PrjModel::toString()
 {
-  std::string output;
-  if(!d->valid)
-  {
-    return output;
-  }
-  // Section 1: Project, Weather, Simulation, and Output Controls
-  output += d->rc.write();
-  output += "-999\n";
-  // Section 2: Species and Contaminants
-  output += writeArray(d->contaminants,"contaminants:");
-  output += writeSectionVector(d->species,"species:");
-  // Section 3: Level and Icon Data
-  output += writeSectionVector(d->levels,"levels:");
-  // Section 4: Day Schedules
-  output += writeSectionVector(d->daySchedules,"day-schedules:");
-  // Section 5: Week Schedules
-  output += writeSectionVector(d->weekSchedules,"week-schedules:");
-  // Section 6: Wind Pressure Profiles
-  output += writeSectionVector(d->windPressureProfiles,"wind pressure profiles:");
-  // Section 7: Kinetic Reactions
-  output += d->unsupported["KineticReaction"];
-  // Section 8a: Filter Elements
-  output += d->unsupported["FilterElement"];
-  // Section 8b: Filters
-  output += d->unsupported["Filter"];
-  // Section 9: Source/Sink Elements
-  output += d->unsupported["SourceSink"];
-  // Section 10: Airflow Elements
-  output += writeSectionVector(d->airflowElements,"flow elements:");
-  // Section 11: Duct Elements
-  output += d->unsupported["DuctElement"];
-  // Section 12a: Control Super Elements
-  output += d->unsupported["ControlSuperElements"];
-  // Section 12b: Control Nodes
-  //output += m_unsupported["ControlNode"];
-  output += writeSectionVector(d->controlNodes,"control nodes:");
-  // Section 13: Simple Air Handling System (AHS)
-  output += writeSectionVector(d->ahs,"simple AHS:");
-  // Section 14: Zones
-  output += writeSectionVector(d->zones,"zones:");
-  // Section 15: Initial Zone Concentrations
-  output += writeZoneIc();
-  // Section 16: Airflow Paths
-  output += writeSectionVector(d->paths,"flow paths:");
-  // Section 17: Duct Junctions
-  output += d->unsupported["DuctJunction"];
-  // Section 18: Initial Junction Concentrations
-  output += d->unsupported["JunctionIC"];
-  // Section 19: Duct Segments
-  output += d->unsupported["DuctSegment"];
-  // Section 20: Source/Sinks
-  output += d->unsupported["SourceSink"];
-  // Section 21: Occupancy Schedules
-  output += d->unsupported["OccupancySchedule"];
-  // Section 22: Exposures
-  output += d->unsupported["Exposure"];
-  // Section 23: Annotations
-  output += d->unsupported["Annotation"];
-  // End of the PRJ file
-  output += "* end project file.";
-  return output;
+  return d->toString();
 }
 
-std::vector<std::vector<int> > PrjModel::zoneExteriorFlowPaths()
+std::string PrjModel::programName() const
 {
-  std::vector<std::vector<int> > paths(d->zones.size());
-
-  for(unsigned int i=0;i<d->paths.size();i++)
-  {
-    if(d->paths[i].pzn() == -1)
-    {
-      int nr = d->paths[i].pzm();
-      if(nr > 0 && (unsigned int)nr<=d->zones.size())
-      {
-        paths[nr-1].push_back(-d->paths[i].nr()); // This flow path is negative for flow into zone
-      }
-    }
-    else if(d->paths[i].pzm() == -1)
-    {
-      int nr = d->paths[i].pzn();
-      if(nr > 0 && (unsigned int)nr<=d->zones.size())
-      {
-        paths[nr-1].push_back(d->paths[i].nr()); // This flow path is positive for flow into zone
-      }
-    }
-  }
-  return paths;
+  return d->programName();
 }
 
-std::vector<TimeSeries> PrjModel::zoneInfiltration(SimFile *sim)
+void PrjModel::setProgramName(const std::string &name)
 {
-  // This should probably include a lot more checks of things and is written in
-  // somewhat strange way to avoid taking too much advantage of the specifics 
-  // of the text form outputs.
-  std::vector<TimeSeries> results;
-  std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
-  unsigned int ntimes = sim->dateTimes().size();
-  for(unsigned int i=0; i<d->zones.size(); i++)
-  {
-    // This is lame, but I can't tell for sure if the values of a Vector are actually zero.
-    Vector inf = createVector(std::vector<double>(ntimes,0));
-    for(unsigned int j=0; j<paths[i].size(); j++)
-    {
-      if(paths[i][j] > 0) // Positive values are infiltration
-      {
-        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(paths[i][j]);
-        if(optFlow)
-        {
-          Vector flow = optFlow.get().values();
-          for(unsigned int k=0; k<ntimes; k++)
-          {
-            if(flow[k] > 0)
-            {
-              inf[k] += flow[k];
-            }
-          }
-        }
-        else
-        {
-          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
-          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
-          // for getting here, and for now we won't issue a warning.
-        }
-      }
-      else // Negative values are infiltration
-      {
-        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(paths[i][j]);
-        if(optFlow)
-        {
-          Vector flow = optFlow.get().values();
-          for(unsigned int k=0; k<ntimes; k++)
-          {
-            if(flow[k] < 0)
-            {
-              inf[k] -= flow[k];
-            }
-          }
-        }
-        else
-        {
-          // See above comment
-        }
-      }
-    }
-    results.push_back(openstudio::TimeSeries(sim->dateTimes(),inf,"kg/s"));
-  }
-  return results;
+  d->setProgramName(name);
 }
 
-std::vector<TimeSeries> PrjModel::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
+std::string PrjModel::version() const
 {
-  // This should probably include a lot more checks of things and is written in
-  // somewhat strange way to avoid taking too much advantage of the specifics 
-  // of the text form outputs.
-  std::vector<TimeSeries> results;
-  std::vector<std::vector<int> > paths = zoneExteriorFlowPaths();
-  unsigned int ntimes = 1;
-  std::vector<DateTime> dateTimes = sim->dateTimes();
-  if(sim->dateTimes().size()!=1)
-  {
-    ntimes = sim->dateTimes().size()-1;
-    dateTimes = std::vector<DateTime>(dateTimes.begin() + 1,dateTimes.end());
-  }
-  for(unsigned int i=0; i<pathNrs.size(); i++)
-  {
-    Vector inf = createVector(std::vector<double>(ntimes,0.0));
-    if(pathNrs[i]<=0 || (unsigned)pathNrs[i] > d->paths.size())
-    {
-      // Possibly should issue a warning here, the path number is out of range
-    }
-    else
-    {
-      contam::Path path = d->paths[pathNrs[i]-1];
-      if(path.pzn() == -1)
-      {
-        // This flow path is negative for flow into zone
-        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
-        if(optFlow)
-        {
-          Vector flow = optFlow.get().values();
-          for(unsigned int k=0; k<ntimes; k++)
-          {
-            if(flow[k] < 0)
-            {
-              inf[k] = -flow[k];
-            }
-          }
-        }
-        else
-        {
-          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
-          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
-          // for getting here, and for now we won't issue a warning.
-        }
-      }
-      else if(path.pzm() == -1)
-      {
-        // This flow path is positive for flow into zone
-        boost::optional<openstudio::TimeSeries> optFlow = sim->pathFlow(path.nr());
-        if(optFlow)
-        {
-          Vector flow = optFlow.get().values();
-          for(unsigned int k=0; k<ntimes; k++)
-          {
-              if(flow[k] > 0)
-              {
-              inf[k] = flow[k];
-            }
-          }
-        }
-        else
-        {
-          // Perhaps a warning? This shouldn't really happen unless someone has excluded a path from the 
-          // results file for some reason - which is unlikely to be accidental. So there must be a good reason
-          // for getting here, and for now we won't issue a warning.
-        }
-      }
-      else
-      {
-        // Another situation that might need a warning, since the path is not connected to the ambient
-      }
-    }
-    // Save the time series
-    results.push_back(openstudio::TimeSeries(dateTimes,inf,"kg/s"));
-  }
-  return results;
+  return d->version();
 }
 
-void PrjModel::rebuildContaminants()
+void PrjModel::setVersion(const std::string &version)
 {
-  d->contaminants.clear();
-  for(unsigned int i=1;i<=d->species.size();i++)
-  {
-    d->species[i].setNr(i);
-    if(d->species[i].sflag())
-    {
-      d->contaminants.push_back(i);
-    }
-  }
+  d->setVersion(version);
 }
 
-void PrjModel::readZoneIc(Reader &input)
+int PrjModel::echo() const
 {
-  unsigned int nn = input.readUInt(FILELINE);
-  if(nn != 0)
-  {
-    unsigned int nctm = d->contaminants.size();
-    if(nn != nctm*d->zones.size())
-    {
-      QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
-#ifndef NOFILELINE
-      mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
-#endif
-      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
-    }
-    for(unsigned int i=0;i<d->zones.size();i++)
-    {
-      unsigned int nr = input.readUInt(FILELINE);
-      if(nr != i+1)
-      {
-        QString mesg = QString("Mismatch between zone IC number and zone number at line %1 ")
-          .arg(input.lineNumber());
-#ifndef NOFILELINE
-        mesg +=  QString(" (%1,%2)").arg(__FILE__).arg(__LINE__);
-#endif
-        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
-      }
-      std::vector<RX> ic;
-      for(unsigned int j=0;j<nctm;j++)
-      {
-        ic.push_back(input.readNumber<RX>(FILELINE));
-      }
-      d->zones[i].setIc(ic);
-    }
-  }
-  input.read999("Failed to find zone IC section termination" CFILELINE);
+  return d->echo();
 }
 
-std::string PrjModel::writeZoneIc(int start)
+void PrjModel::setEcho(const int echo)
 {
-  int offset = 1;
-  if(start != 0)
-  {
-    offset = 1-start;
-  }
-  int nctm = d->contaminants.size()*(d->zones.size()-start);
-  std::string string = openstudio::toString(nctm) + " ! initial zone concentrations:\n";
-  if(nctm)
-  {
-    for(unsigned int i=start;i<d->zones.size();i++)
-    {
-      string += openstudio::toString(i+offset);
-      for(unsigned int j=0;j<d->contaminants.size();j++)
-      {
-        string += ' ' + openstudio::toString(d->zones[i].ic(j));
-      }
-      string += '\n';
-    }
-  }
-  return string  + "-999\n";
+  d->setEcho(echo);
+}
+
+std::string PrjModel::desc() const
+{
+  return d->desc();
+}
+
+void PrjModel::setDesc(const std::string &prjdesc)
+{
+  d->setDesc(prjdesc);
+}
+
+int PrjModel::skheight() const
+{
+  return d->skheight();
+}
+
+void PrjModel::setSkheight(const int skheight)
+{
+  d->setSkheight(skheight);
+}
+
+int PrjModel::skwidth() const
+{
+  return d->skwidth();
+}
+
+void PrjModel::setSkwidth(const int skwidth)
+{
+  d->setSkwidth(skwidth);
+}
+
+int PrjModel::def_units() const
+{
+  return d->def_units();
+}
+
+void PrjModel::setDef_units(const int def_units)
+{
+  d->setDef_units(def_units);
+}
+
+int PrjModel::def_flows() const
+{
+  return d->def_flows();
+}
+
+void PrjModel::setDef_flows(const int def_flows)
+{
+  d->setDef_flows(def_flows);
+}
+
+double PrjModel::def_T() const
+{
+  return d->def_T();
+}
+
+bool PrjModel::setDef_T(const double def_T)
+{
+  return d->setDef_T(def_T);
+}
+
+bool PrjModel::setDef_T(const std::string &def_T)
+{
+  return d->setDef_T(def_T);
+}
+
+int PrjModel::udefT() const
+{
+  return d->udefT();
+}
+
+void PrjModel::setUdefT(const int udefT)
+{
+  d->setUdefT(udefT);
+}
+
+double PrjModel::rel_N() const
+{
+  return d->rel_N();
+}
+
+bool PrjModel::setRel_N(const double rel_N)
+{
+  return d->setRel_N(rel_N);
+}
+
+bool PrjModel::setRel_N(const std::string &rel_N)
+{
+  return d->setRel_N(rel_N);
+}
+
+double PrjModel::wind_H() const
+{
+  return d->wind_H();
+}
+
+bool PrjModel::setWind_H(const double wind_H)
+{
+  return d->setWind_H(wind_H);
+}
+
+bool PrjModel::setWind_H(const std::string &wind_H)
+{
+  return d->setWind_H(wind_H);
+}
+
+int PrjModel::uwH() const
+{
+  return d->uwH();
+}
+
+void PrjModel::setUwH(const int uwH)
+{
+  d->setUwH(uwH);
+}
+
+double PrjModel::wind_Ao() const
+{
+  return d->wind_Ao();
+}
+
+bool PrjModel::setWind_Ao(const double wind_Ao)
+{
+  return d->setWind_Ao(wind_Ao);
+}
+
+bool PrjModel::setWind_Ao(const std::string &wind_Ao)
+{
+  return d->setWind_Ao(wind_Ao);
+}
+
+double PrjModel::wind_a() const
+{
+  return d->wind_a();
+}
+
+bool PrjModel::setWind_a(const double wind_a)
+{
+  return d->setWind_a(wind_a);
+}
+
+bool PrjModel::setWind_a(const std::string &wind_a)
+{
+  return d->setWind_a(wind_a);
+}
+
+double PrjModel::scale() const
+{
+  return d->scale();
+}
+
+bool PrjModel::setScale(const double scale)
+{
+  return d->setScale(scale);
+}
+
+bool PrjModel::setScale(const std::string &scale)
+{
+  return d->setScale(scale);
+}
+
+int PrjModel::uScale() const
+{
+  return d->uScale();
+}
+
+void PrjModel::setUScale(const int uScale)
+{
+  d->setUScale(uScale);
+}
+
+int PrjModel::orgRow() const
+{
+  return d->orgRow();
+}
+
+void PrjModel::setOrgRow(const int orgRow)
+{
+  d->setOrgRow(orgRow);
+}
+
+int PrjModel::orgCol() const
+{
+  return d->orgCol();
+}
+
+void PrjModel::setOrgCol(const int orgCol)
+{
+  d->setOrgCol(orgCol);
+}
+
+int PrjModel::invYaxis() const
+{
+  return d->invYaxis();
+}
+
+void PrjModel::setInvYaxis(const int invYaxis)
+{
+  d->setInvYaxis(invYaxis);
+}
+
+int PrjModel::showGeom() const
+{
+  return d->showGeom();
+}
+
+void PrjModel::setShowGeom(const int showGeom)
+{
+  d->setShowGeom(showGeom);
+}
+
+WeatherData PrjModel::ssWeather() const
+{
+  return d->ssWeather();
+}
+
+void PrjModel::setSsWeather(const WeatherData &ssWeather)
+{
+  d->setSsWeather(ssWeather);
+}
+
+WeatherData PrjModel::wptWeather() const
+{
+  return d->wptWeather();
+}
+
+void PrjModel::setWptWeather(const WeatherData &wptWeather)
+{
+  d->setWptWeather(wptWeather);
+}
+
+std::string PrjModel::WTHpath() const
+{
+  return d->WTHpath();
+}
+
+void PrjModel::setWTHpath(const std::string &WTHpath)
+{
+  d->setWTHpath(WTHpath);
+}
+
+std::string PrjModel::CTMpath() const
+{
+  return d->CTMpath();
+}
+
+void PrjModel::setCTMpath(const std::string &CTMpath)
+{
+  d->setCTMpath(CTMpath);
+}
+
+std::string PrjModel::CVFpath() const
+{
+  return d->CVFpath();
+}
+
+void PrjModel::setCVFpath(const std::string &CVFpath)
+{
+  d->setCVFpath(CVFpath);
+}
+
+std::string PrjModel::DVFpath() const
+{
+  return d->DVFpath();
+}
+
+void PrjModel::setDVFpath(const std::string &DVFpath)
+{
+  d->setDVFpath(DVFpath);
+}
+
+std::string PrjModel::WPCfile() const
+{
+  return d->WPCfile();
+}
+
+void PrjModel::setWPCfile(const std::string &WPCfile)
+{
+  d->setWPCfile(WPCfile);
+}
+
+std::string PrjModel::EWCfile() const
+{
+  return d->EWCfile();
+}
+
+void PrjModel::setEWCfile(const std::string &EWCfile)
+{
+  d->setEWCfile(EWCfile);
+}
+
+std::string PrjModel::WPCdesc() const
+{
+  return d->WPCdesc();
+}
+
+void PrjModel::setWPCdesc(const std::string &WPCdesc)
+{
+  d->setWPCdesc(WPCdesc);
+}
+
+double PrjModel::X0() const
+{
+  return d->X0();
+}
+
+bool PrjModel::setX0(const double X0)
+{
+  return d->setX0(X0);
+}
+
+bool PrjModel::setX0(const std::string &X0)
+{
+  return d->setX0(X0);
+}
+
+double PrjModel::Y0() const
+{
+  return d->Y0();
+}
+
+bool PrjModel::setY0(const double Y0)
+{
+  return d->setY0(Y0);
+}
+
+bool PrjModel::setY0(const std::string &Y0)
+{
+  return d->setY0(Y0);
+}
+
+double PrjModel::Z0() const
+{
+  return d->Z0();
+}
+
+bool PrjModel::setZ0(const double Z0)
+{
+  return d->setZ0(Z0);
+}
+
+bool PrjModel::setZ0(const std::string &Z0)
+{
+  return d->setZ0(Z0);
+}
+
+double PrjModel::angle() const
+{
+  return d->angle();
+}
+
+bool PrjModel::setAngle(const double angle)
+{
+  return d->setAngle(angle);
+}
+
+bool PrjModel::setAngle(const std::string &angle)
+{
+  return d->setAngle(angle);
+}
+
+int PrjModel::u_XYZ() const
+{
+  return d->u_XYZ();
+}
+
+void PrjModel::setU_XYZ(const int u_XYZ)
+{
+  d->setU_XYZ(u_XYZ);
+}
+
+double PrjModel::epsPath() const
+{
+  return d->epsPath();
+}
+
+bool PrjModel::setEpsPath(const double epsPath)
+{
+  return d->setEpsPath(epsPath);
+}
+
+bool PrjModel::setEpsPath(const std::string &epsPath)
+{
+  return d->setEpsPath(epsPath);
+}
+
+double PrjModel::epsSpcs() const
+{
+  return d->epsSpcs();
+}
+
+bool PrjModel::setEpsSpcs(const double epsSpcs)
+{
+  return d->setEpsSpcs(epsSpcs);
+}
+
+bool PrjModel::setEpsSpcs(const std::string &epsSpcs)
+{
+  return d->setEpsSpcs(epsSpcs);
+}
+
+std::string PrjModel::tShift() const
+{
+  return d->tShift();
+}
+
+void PrjModel::setTShift(const std::string &tShift)
+{
+  d->setTShift(tShift);
+}
+
+std::string PrjModel::dStart() const
+{
+  return d->dStart();
+}
+
+void PrjModel::setDStart(const std::string &dStart)
+{
+  d->setDStart(dStart);
+}
+
+std::string PrjModel::dEnd() const
+{
+  return d->dEnd();
+}
+
+void PrjModel::setDEnd(const std::string &dEnd)
+{
+  d->setDEnd(dEnd);
+}
+
+int PrjModel::useWPCwp() const
+{
+  return d->useWPCwp();
+}
+
+void PrjModel::setUseWPCwp(const int useWPCwp)
+{
+  d->setUseWPCwp(useWPCwp);
+}
+
+int PrjModel::useWPCmf() const
+{
+  return d->useWPCmf();
+}
+
+void PrjModel::setUseWPCmf(const int useWPCmf)
+{
+  d->setUseWPCmf(useWPCmf);
+}
+
+int PrjModel::wpctrig() const
+{
+  return d->wpctrig();
+}
+
+void PrjModel::setWpctrig(const int wpctrig)
+{
+  d->setWpctrig(wpctrig);
+}
+
+double PrjModel::latd() const
+{
+    return d->latd();
+}
+
+bool PrjModel::setLatd(const double latd)
+{
+    return d->setLatd(latd);
+}
+
+bool PrjModel::setLatd(const std::string &latd)
+{
+    return d->setLatd(latd);
+}
+
+double PrjModel::lgtd() const
+{
+    return d->lgtd();
+}
+
+bool PrjModel::setLgtd(const double lgtd)
+{
+    return d->setLgtd(lgtd);
+}
+
+bool PrjModel::setLgtd(const std::string &lgtd)
+{
+    return d->setLgtd(lgtd);
+}
+
+double PrjModel::Tznr() const
+{
+    return d->Tznr();
+}
+
+bool PrjModel::setTznr(const double Tznr)
+{
+    return d->setTznr(Tznr);
+}
+
+bool PrjModel::setTznr(const std::string &Tznr)
+{
+    return d->setTznr(Tznr);
+}
+
+double PrjModel::altd() const
+{
+    return d->altd();
+}
+
+bool PrjModel::setAltd(const double altd)
+{
+    return d->setAltd(altd);
+}
+
+bool PrjModel::setAltd(const std::string &altd)
+{
+    return d->setAltd(altd);
+}
+
+double PrjModel::Tgrnd() const
+{
+    return d->Tgrnd();
+}
+
+bool PrjModel::setTgrnd(const double Tgrnd)
+{
+    return d->setTgrnd(Tgrnd);
+}
+
+bool PrjModel::setTgrnd(const std::string &Tgrnd)
+{
+    return d->setTgrnd(Tgrnd);
+}
+
+int PrjModel::utg() const
+{
+    return d->utg();
+}
+
+void PrjModel::setUtg(const int utg)
+{
+    d->setUtg(utg);
+}
+
+int PrjModel::u_a() const
+{
+    return d->u_a();
+}
+
+void PrjModel::setU_a(const int u_a)
+{
+    d->setU_a(u_a);
+}
+
+RunControl PrjModel::rc() const
+{
+  return d->rc();
+}
+void PrjModel::setRc(const RunControl rc)
+{
+  d->setRc(rc);
+}
+
+std::vector<int> PrjModel::contaminants() const
+{
+  return d->contaminants();
+}
+
+std::vector <Species> PrjModel::species() const
+{
+  return d->species();
+}
+void PrjModel::setSpecies(const std::vector<Species> species)
+{
+  d->setSpecies(species);
+}
+
+std::vector <Level> PrjModel::levels() const
+{
+  return d->levels();
+}
+void PrjModel::setLevels(const std::vector<Level> levels)
+{
+  d->setLevels(levels);
+}
+void PrjModel::addLevel(Level level)
+{
+  d->addLevel(level);
+}
+
+std::vector <DaySchedule> PrjModel::daySchedules() const
+{
+  return d->daySchedules();
+}
+void PrjModel::setDaySchedules(const std::vector<DaySchedule> daySchedules)
+{
+  d->setDaySchedules(daySchedules);
+}
+
+std::vector <WeekSchedule> PrjModel::weekSchedules() const
+{
+  return d->weekSchedules();
+}
+void PrjModel::setWeekSchedules(const std::vector<WeekSchedule> weekSchedules)
+{
+  d->setWeekSchedules(weekSchedules);
+}
+
+std::vector <WindPressureProfile> PrjModel::windPressureProfiles() const
+{
+  return d->windPressureProfiles();
+}
+void PrjModel::setWindPressureProfiles(const std::vector<WindPressureProfile> windPressureProfiles)
+{
+  d->setWindPressureProfiles(windPressureProfiles);
+}
+
+std::vector<PlrTest1> PrjModel::getPlrTest1() const
+{
+  return d->getPlrTest1();
+}
+
+bool PrjModel::addAirflowElement(PlrTest1 element)
+{
+  return d->addAirflowElement(element);
 }
 
 int PrjModel::airflowElementNrByName(std::string name) const
 {
-  for(int i=0;i<d->airflowElements.size();i++)
-  {
-    if(d->airflowElements[i]->name() == name)
-    {
-      return d->airflowElements[i]->nr();
-    }
-  }
-  return 0;
+  return d->airflowElementNrByName(name);
 }
 
-bool PrjModel::setSteadyWeather(double windSpeed, double windDirection)
+bool PrjModel::replaceAirflowElement(int nr, PlrTest1 element)
 {
-  if(windSpeed < 0)
-  {
-    windSpeed = -windSpeed; // Maybe should return false in this case?
-  }
-  // Is a negative wind direction allowed? Will have to check
-  d->rc.ssWeather().setWindspd(QString().sprintf("%g",windSpeed).toStdString());
-  d->rc.ssWeather().setWinddir(QString().sprintf("%g",windDirection).toStdString());
-  return true;
+  return d->replaceAirflowElement(nr,element);
+}
+
+std::vector<CvfDat> PrjModel::getCvfDat() const
+{
+  return d->getCvfDat();
+}
+
+bool PrjModel::addControlNode(CvfDat element, bool sequence)
+{
+  return d->addControlNode(element,sequence);
+}
+
+std::vector <Ahs> PrjModel::ahs() const
+{
+  return d->ahs();
+}
+void PrjModel::setAhs(const std::vector<Ahs> ahs)
+{
+  d->setAhs(ahs);
+}
+void PrjModel::addAhs(Ahs ahs)
+{
+  d->addAhs(ahs);
+}
+
+std::vector<Zone> PrjModel::zones() const
+{
+  return d->zones();
+}
+void PrjModel::setZones(const std::vector<Zone> zones)
+{
+  d->setZones(zones);
+}
+void PrjModel::addZone(Zone zone)
+{
+  d->addZone(zone);
+}
+
+std::vector<Path> PrjModel::paths() const
+{
+  return d->paths();
+}
+void PrjModel::setPaths(const std::vector<Path> paths)
+{
+  d->setPaths(paths);
+}
+void PrjModel::addPath(Path path)
+{
+  d->addPath(path);
+}
+
+bool PrjModel::valid() const
+{
+  return d->valid();
+}
+
+std::vector<std::vector<int> > PrjModel::zoneExteriorFlowPaths()
+{
+  return d->zoneExteriorFlowPaths();
+}
+
+std::vector<TimeSeries> PrjModel::zoneInfiltration(SimFile *sim)
+{
+  return d->zoneInfiltration(sim);
+}
+
+std::vector<TimeSeries> PrjModel::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
+{
+  return d->pathInfiltration(pathNrs, sim);
 }
 
 } // contam
