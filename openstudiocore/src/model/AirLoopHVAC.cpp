@@ -19,6 +19,10 @@
 
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/SizingSystem.hpp>
 #include <model/SizingSystem_Impl.hpp>
 #include <model/Node.hpp>
@@ -27,6 +31,8 @@
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
+#include <model/StraightComponent.hpp>
+#include <model/StraightComponent_Impl.hpp>
 #include <model/WaterToAirComponent.hpp>
 #include <model/WaterToAirComponent_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -206,28 +212,27 @@ namespace detail {
   {
     ModelObjectVector modelObjects;
     ModelObjectVector::iterator it;
-    modelObjects = this->components();
 
+    sizingSystem().remove();
+
+    availabilityManagerAssignmentList().remove();
+
+    modelObjects = supplyComponents();
     for(it = modelObjects.begin();
         it != modelObjects.end();
         ++it)
     {
       if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
       {
-        comp->disconnectAirSide();
-      }
-      else if( boost::optional<ThermalZone> tz = it->optionalCast<ThermalZone>() )
-      {
-      }
-      else if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
-      {
-        comp->disconnect();
+        comp->removeFromAirLoopHVAC();
+        if( ! comp->plantLoop() )
+        {
+          comp->remove();
+        }
       }
     }
 
-    sizingSystem().remove();
-
-    availabilityManagerAssignmentList().remove();
+    modelObjects = components();
 
     std::vector<openstudio::IdfObject> idfObjects =  ModelObject_Impl::remove();
 
@@ -237,11 +242,12 @@ namespace detail {
     {
       if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
       {
-        if( ! it->optionalCast<ThermalZone>() )
+        if( ! it->handle().isNull() )
         {
-          if( ! it->handle().isNull() )
+          comp->disconnect();
+          if( ! comp->optionalCast<ThermalZone>() )
           {
-            it->cast<HVACComponent>().remove();
+            comp->remove();
           }
         }
       }
@@ -263,7 +269,7 @@ namespace detail {
     return result;
   }
 
-  OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC_Impl::airLoopHVACOutdoorAirSystem()
+  OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC_Impl::airLoopHVACOutdoorAirSystem() const
   {
     OptionalAirLoopHVACOutdoorAirSystem result;
     ModelObjectVector modelObjects;
@@ -282,31 +288,91 @@ namespace detail {
     return result;
   }
 
-  bool AirLoopHVAC_Impl::addBranchForZone(ThermalZone & thermalZone, OptionalStraightComponent optAirTerminal)
+  boost::optional<ThermalZone> AirLoopHVAC_Impl::zoneForLastBranch(Mixer & mixer)
   {
-    Model _model = model();
-
-    if( _model != thermalZone.model() )
+    if( OptionalNode node = mixer.lastInletModelObject()->optionalCast<Node>() )
     {
-      LOG(Error,"Cannot add zone: " << thermalZone.briefDescription() << " as child of :" << briefDescription()
-            << ", because they are not in the same Model.");
+      return node->inletModelObject()->optionalCast<ThermalZone>();
+    }
+    else
+    {
+      return boost::none;
+    }
+  }
 
-      return false;
+  boost::optional<StraightComponent> AirLoopHVAC_Impl::terminalForLastBranch(Mixer & mixer)
+  {
+    if( OptionalNode node = mixer.lastInletModelObject()->optionalCast<Node>() )
+    {
+      if( boost::optional<ThermalZone> zone = node->inletModelObject()->optionalCast<ThermalZone>() )
+      {
+        boost::optional<Node> zoneInletNode = zone->inletPortList().airLoopHVACModelObject()->optionalCast<Node>();
+
+        OS_ASSERT( zoneInletNode );
+
+        boost::optional<ModelObject> mo = zoneInletNode->inletModelObject();
+
+        OS_ASSERT( mo );
+
+        if( ! mo->optionalCast<Splitter>() )
+        {
+          if( boost::optional<StraightComponent> hvacComponent = mo->optionalCast<StraightComponent>() )
+          {
+            return hvacComponent;
+          }
+        }
+      }
+      else
+      {
+        boost::optional<ModelObject> mo = node->inletModelObject();
+
+        OS_ASSERT( mo );
+
+        if( ! mo->optionalCast<Splitter>() && ! mo->optionalCast<Mixer>() && ! mo->optionalCast<Node>() )
+        {
+          if( boost::optional<StraightComponent> hvacComponent = mo->optionalCast<StraightComponent>() )
+          {
+            return hvacComponent;
+          }
+        }
+      }
     }
 
-    if( optAirTerminal && _model != optAirTerminal->model() )
-    {
-      LOG(Error,"Cannot add branch for terminal: " << optAirTerminal->briefDescription()
-            << ", because they are not in the same Model.");
+    return boost::none;
+  }
 
+  bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, 
+                                              AirLoopHVAC & airLoopHVAC,
+                                              Splitter & splitter,
+                                              Mixer & mixer,
+                                              OptionalStraightComponent & optAirTerminal)
+  {
+    Model _model = thermalZone.model();
+
+    if( (optAirTerminal && _model != optAirTerminal->model()) ||
+         _model != splitter.model() || 
+         _model != mixer.model() )
+    {
       return false;
     }
 
     if( optAirTerminal && optAirTerminal->airLoopHVAC() )
     {
-      LOG(Error,"Cannot add branch for terminal: " << optAirTerminal->briefDescription()
-            << ", because it is already attached to an AirLoopHVAC object.");
+      return false;
+    }
 
+    if( thermalZone.isPlenum() )
+    {
+      return false;
+    }
+
+    if( ! airLoopHVAC.demandComponent(splitter.handle()) )
+    {
+      return false;
+    }
+
+    if( ! airLoopHVAC.demandComponent(mixer.handle()) )
+    {
       return false;
     }
 
@@ -317,86 +383,42 @@ namespace detail {
       airLoopHVAC->removeBranchForZone(thermalZone);
     }
 
-    AirLoopHVACZoneSplitter _zoneSplitter = zoneSplitter();
-    AirLoopHVACZoneMixer _zoneMixer = zoneMixer();
-
-    boost::optional<ThermalZone> lastThermalZone = zoneForLastBranch();
-    boost::optional<HVACComponent> lastAirTerminal = terminalForLastBranch();
-
     boost::optional<Node> node;
-    boost::optional<HVACComponent> terminal;
-    boost::optional<PlantLoop> plant;
 
-    if( ((! lastThermalZone) && (! lastAirTerminal)) )
+    std::vector<ModelObject> objects = airLoopHVAC.demandComponents(splitter,mixer);
+    if( objects.size() == 3u )
     {
-      boost::optional<ModelObject> mo = _zoneSplitter.outletModelObject(0);
-      if( mo )
-      {
-        node = mo->optionalCast<Node>();
-      }
+      node = objects[1].optionalCast<Node>();
     }
-    else if( (! lastThermalZone) && lastAirTerminal )
-    {
-      terminal = lastAirTerminal->clone(_model).cast<HVACComponent>();
-      plant = plantForAirTerminal(lastAirTerminal.get());
-      //  setPlantForAirTerminal(lastAirTerminalClone,plantLoop.get());
-      lastAirTerminal->remove();
 
-      boost::optional<ModelObject> mo = _zoneSplitter.outletModelObject(0);
-      if( mo )
-      {
-        node = mo->optionalCast<Node>();
-      }
-    }
-    else if( lastThermalZone )
+    if( ! node )
     {
-      int nextOutletPort = _zoneSplitter.nextOutletPort();
-      int nextInletPort = _zoneMixer.nextInletPort();
+      int nextOutletPort = splitter.nextOutletPort();
+      int nextInletPort = mixer.nextInletPort();
 
       Node newNode(_model);
 
-      _model.connect( _zoneSplitter,
+      _model.connect( splitter,
                       nextOutletPort,
                       newNode,
                       newNode.inletPort() );
       _model.connect( newNode,
                       newNode.outletPort(),
-                      _zoneMixer,
+                      mixer,
                       nextInletPort );
 
       node = newNode;
-
-      if( lastAirTerminal )
-      {
-        terminal = lastAirTerminal->clone(_model).cast<HVACComponent>();
-        plant = plantForAirTerminal(lastAirTerminal.get());
-      }
     }
 
     OS_ASSERT(node);
 
-    if( optAirTerminal )
-    {
-      if( terminal )
-      {
-        terminal->remove();
-      }
-
-      terminal = optAirTerminal;
-    }
-
     thermalZone.addToNode(node.get());
 
-    if( terminal )
+    if( optAirTerminal )
     {
       Node airInletNode = thermalZone.inletPortList().airLoopHVACModelObject()->cast<Node>();
 
-      terminal->addToNode(airInletNode);
-
-      if( plant )
-      {
-        setPlantForAirTerminal(terminal.get(),plant.get());
-      }
+      optAirTerminal->addToNode(airInletNode);
     }
 
     return true;
@@ -449,132 +471,82 @@ namespace detail {
     }
   }
 
-  boost::optional<ThermalZone> AirLoopHVAC_Impl::zoneForLastBranch()
-  {
-    AirLoopHVACZoneMixer mixer = zoneMixer();
-
-    if( OptionalNode node = mixer.lastInletModelObject()->optionalCast<Node>() )
-    {
-      return node->inletModelObject()->optionalCast<ThermalZone>();
-    }
-    else
-    {
-      return boost::none;
-    }
-  }
-
-  boost::optional<HVACComponent> AirLoopHVAC_Impl::terminalForLastBranch()
-  {
-    AirLoopHVACZoneMixer mixer = zoneMixer();
-
-    if( OptionalNode node = mixer.lastInletModelObject()->optionalCast<Node>() )
-    {
-      if( boost::optional<ThermalZone> zone = node->inletModelObject()->optionalCast<ThermalZone>() )
-      {
-        boost::optional<Node> zoneInletNode = zone->inletPortList().airLoopHVACModelObject()->optionalCast<Node>();
-
-        OS_ASSERT( zoneInletNode );
-
-        boost::optional<ModelObject> mo = zoneInletNode->inletModelObject();
-
-        OS_ASSERT( mo );
-
-        if( ! mo->optionalCast<AirLoopHVACZoneSplitter>() )
-        {
-          if( boost::optional<HVACComponent> hvacComponent = mo->optionalCast<HVACComponent>() )
-          {
-            return hvacComponent;
-          }
-        }
-      }
-      else
-      {
-        boost::optional<ModelObject> mo = node->inletModelObject();
-
-        OS_ASSERT( mo );
-
-        if( ! mo->optionalCast<AirLoopHVACZoneSplitter>() )
-        {
-          if( boost::optional<HVACComponent> hvacComponent = mo->optionalCast<HVACComponent>() )
-          {
-            return hvacComponent;
-          }
-        }
-      }
-    }
-
-    return boost::none;
-  }
-
   bool AirLoopHVAC_Impl::removeBranchForZone(ThermalZone & thermalZone)
   {
     Model _model = model();
+    boost::optional<AirLoopHVAC> t_airLoopHVAC = thermalZone.airLoopHVAC();
 
-    AirLoopHVACZoneSplitter _zoneSplitter = zoneSplitter();
-    AirLoopHVACZoneMixer _zoneMixer = zoneMixer();
-
-    int _nextBranchIndex = _zoneMixer.nextBranchIndex();
-    for( int i = 0; i < _nextBranchIndex; i++ )
+    if( ! t_airLoopHVAC )
     {
-      HVACComponent outletComponent = _zoneSplitter.outletModelObject(i)->cast<HVACComponent>();
-      HVACComponent inletComponent = _zoneMixer.inletModelObject(i)->cast<HVACComponent>();
+      return false;
+    }
 
-      std::vector<ModelObject> modelObjects;
-      modelObjects = demandComponents( outletComponent,
-                                       inletComponent,
-                                       IddObjectType::OS_ThermalZone );
+    if( t_airLoopHVAC->handle() != handle() )
+    {
+      return false;
+    }
 
+    thermalZone.removeSupplyPlenum();
+    thermalZone.removeReturnPlenum();
 
-      ThermalZone thisBranchThermalZone =
-        modelObjects.front().cast<ThermalZone>();
-      if( thisBranchThermalZone == thermalZone )
+    std::vector<ModelObject> modelObjects;
+    AirLoopHVACZoneSplitter zoneSplitter = t_airLoopHVAC->zoneSplitter();
+    AirLoopHVACZoneMixer zoneMixer = t_airLoopHVAC->zoneMixer();
+    boost::optional<ModelObject> splitterOutletObject;
+    boost::optional<ModelObject> mixerInletObject;
+    std::vector<ModelObject>::iterator findit;
+
+    modelObjects = t_airLoopHVAC->demandComponents(thermalZone,zoneMixer);
+    findit = std::find(modelObjects.begin(),modelObjects.end(),zoneMixer);
+    mixerInletObject = *(findit - 1);
+
+    modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,thermalZone);
+    findit = std::find(modelObjects.begin(),modelObjects.end(),zoneSplitter);
+    splitterOutletObject = *(findit + 1);
+
+    OS_ASSERT(splitterOutletObject);
+    OS_ASSERT(mixerInletObject);
+
+    modelObjects = t_airLoopHVAC->demandComponents(splitterOutletObject->cast<HVACComponent>(),mixerInletObject->cast<HVACComponent>());
+    
+    zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(splitterOutletObject.get()));
+    zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(mixerInletObject.get()));
+
+    for( std::vector<ModelObject>::iterator it = modelObjects.begin();
+         it < modelObjects.end();
+         it++ )
+    {
+      it->cast<HVACComponent>().disconnect();
+    }
+
+    for( std::vector<ModelObject>::reverse_iterator it = modelObjects.rbegin();
+         it < modelObjects.rend();
+         it++ )
+    {
+      if( ! it->optionalCast<ThermalZone>() )
       {
-        std::vector<ModelObject> allModelObjects;
-        allModelObjects = demandComponents( outletComponent,
-                                            inletComponent );
-        _zoneSplitter.removePortForBranch(i);
-        _zoneMixer.removePortForBranch(i);
-        for( std::vector<ModelObject>::iterator it = allModelObjects.begin();
-             it < allModelObjects.end();
-             ++it )
-        {
-          it->cast<HVACComponent>().disconnect();
-        }
-
-        if( ! _zoneSplitter.lastOutletModelObject() )
-        {
-          Node newNode(_model);
-
-          _model.connect(_zoneSplitter,_zoneSplitter.nextOutletPort(),newNode,newNode.inletPort());
-
-          _model.connect(newNode,newNode.outletPort(),_zoneMixer,_zoneMixer.nextInletPort());
-        }
-
-        //std::vector<ModelObject> zoneEquipment = thermalZone.equipment();
-
-        for( std::vector<ModelObject>::iterator it = allModelObjects.begin();
-             it < allModelObjects.end();
-             ++it )
-        {
-          if( ! it->optionalCast<ThermalZone>() )
-          {
-            it->cast<HVACComponent>().remove();
-          }
-        }
-
-        if( boost::optional<SetpointManagerSingleZoneReheat> spm = supplyOutletNode().getSetpointManagerSingleZoneReheat() )
-        {
-          if( spm->controlZone() == thermalZone )
-          {
-            spm->resetControlZone();
-          }
-        }
-
-        return true;
+        it->remove();
       }
     }
 
-    return false;
+    if( boost::optional<SetpointManagerSingleZoneReheat> spm = t_airLoopHVAC->supplyOutletNode().getSetpointManagerSingleZoneReheat() )
+    {
+      if( spm->controlZone() == thermalZone )
+      {
+        spm->resetControlZone();
+      }
+    }
+
+    if( (! zoneSplitter.lastOutletModelObject()) || (! zoneMixer.lastInletModelObject()) )
+    {
+      Node newNode(_model);
+
+      _model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),newNode,newNode.inletPort());
+
+      _model.connect(newNode,newNode.outletPort(),zoneMixer,zoneMixer.nextInletPort());
+    }
+
+    return true;
   }
 
   AirLoopHVACZoneMixer AirLoopHVAC_Impl::zoneMixer()
@@ -648,7 +620,7 @@ namespace detail {
     }
   }
 
-  boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode()
+  boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode() const
   {
     if( airLoopHVACOutdoorAirSystem() )
     {
@@ -718,21 +690,72 @@ namespace detail {
   {
     boost::optional<StraightComponent> comp;
 
-    return addBranchForZone(thermalZone,comp);
+    return addBranchForZoneImpl(thermalZone,comp);
   }
 
   bool AirLoopHVAC_Impl::addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal)
   {
     boost::optional<StraightComponent> comp = airTerminal;
 
-    return addBranchForZone(thermalZone, comp);
+    return addBranchForZoneImpl(thermalZone, comp);
   }
 
-  bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent airTerminal)
+  bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, OptionalStraightComponent airTerminal)
+  {
+    bool result = true;
+    bool complete = false;
+
+    Splitter splitter = zoneSplitter();
+    Mixer mixer = zoneMixer();
+
+    if( ! airTerminal )
+    {
+      std::vector<ModelObject> modelObjects = demandComponents(splitter,mixer);
+      // Only clone last air terminal if there is are no plenums
+      if( subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects).empty() &&
+          subsetCastVector<AirLoopHVACReturnPlenum>(modelObjects).empty() )
+      { 
+        boost::optional<StraightComponent> lastAirTerminal = terminalForLastBranch(mixer);
+        boost::optional<ThermalZone> lastThermalZone = zoneForLastBranch(mixer);
+
+        if(lastAirTerminal && lastThermalZone)
+        {
+          boost::optional<PlantLoop> plantLoop = plantForAirTerminal(lastAirTerminal.get());
+          Model t_model = model();
+          airTerminal = lastAirTerminal->clone(t_model).cast<StraightComponent>();
+          if( plantLoop )
+          {
+            setPlantForAirTerminal(airTerminal.get(),plantLoop.get());
+          }
+        }
+        else if(lastAirTerminal)
+        {
+          boost::optional<ModelObject> mo = lastAirTerminal->outletModelObject();
+          OS_ASSERT(mo);
+          boost::optional<Node> node = mo->optionalCast<Node>();
+          OS_ASSERT(node);
+          result = thermalZone.addToNode(node.get());
+          complete = true;
+        }
+      }
+    }
+
+    if( ! complete )
+    {
+      AirLoopHVAC airLoopHVAC = getObject<AirLoopHVAC>();
+      return addBranchForZoneImpl(thermalZone,airLoopHVAC,splitter,mixer,airTerminal);
+    }
+    else
+    {
+      return result;
+    }
+  }
+
+  bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent hvacComponent)
   {
     Model _model = this->model();
 
-    if( airTerminal.model() != _model )
+    if( hvacComponent.model() != _model )
     {
       return false;
     }
@@ -749,7 +772,7 @@ namespace detail {
           if ( (node->outletModelObject().get() == mixer) &&
                 (node->inletModelObject().get() == splitter) )
           {
-            if( airTerminal.addToNode(node.get()) )
+            if( hvacComponent.addToNode(node.get()) )
             {
               return true;
             }
@@ -769,7 +792,7 @@ namespace detail {
     _model.connect(splitter,nextOutletPort,node,node.inletPort());
     _model.connect(node,node.outletPort(),mixer,nextInletPort);
 
-    if( airTerminal.addToNode(node) )
+    if( hvacComponent.addToNode(node) )
     {
       return true;
     }
@@ -926,7 +949,7 @@ namespace detail {
     return wo->cast<AvailabilityManagerAssignmentList>();
   }
 
-  boost::optional<Node> AirLoopHVAC_Impl::mixedAirNode()
+  boost::optional<Node> AirLoopHVAC_Impl::mixedAirNode() const
   {
     boost::optional<Node> result;
 
@@ -1032,7 +1055,7 @@ std::vector<IdfObject> AirLoopHVAC::remove()
   return getImpl<detail::AirLoopHVAC_Impl>()->remove();
 }
 
-OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC::airLoopHVACOutdoorAirSystem()
+OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC::airLoopHVACOutdoorAirSystem() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->airLoopHVACOutdoorAirSystem();
 }
@@ -1074,7 +1097,7 @@ std::vector<Node> AirLoopHVAC::zoneSplitterOutletNodes(int zoneSplitterIndex)
 bool AirLoopHVAC::addBranchForZone(openstudio::model::ThermalZone & thermalZone,
                                    boost::optional<StraightComponent> optAirTerminal)
 {
-  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone( thermalZone, optAirTerminal );
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZoneImpl( thermalZone, optAirTerminal );
 }
 
 ModelObject AirLoopHVAC::clone(Model model) const
@@ -1159,9 +1182,9 @@ bool AirLoopHVAC::addBranchForZone(ThermalZone & thermalZone, StraightComponent 
   return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
 }
 
-bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent airTerminal)
+bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent component)
 {
-  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForHVACComponent(airTerminal);
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForHVACComponent(component);
 }
 
 SizingSystem AirLoopHVAC::sizingSystem() const

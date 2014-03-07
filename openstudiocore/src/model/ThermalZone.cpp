@@ -19,6 +19,12 @@
 
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
+#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/ZoneHVACEquipmentList.hpp>
 #include <model/ZoneHVACEquipmentList_Impl.hpp>
 #include <model/Model.hpp>
@@ -1627,6 +1633,11 @@ namespace detail {
       return false;
     }
 
+    if( isPlenum() )
+    {
+      return false;
+    }
+
     boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC();
 
     if( airLoop )
@@ -1642,15 +1653,12 @@ namespace detail {
         currentAirLoopHVAC->removeBranchForZone(thisObject);
       }
 
-      Splitter splitter = airLoop->demandSplitter();
-      Mixer mixer = airLoop->demandMixer();
-
       boost::optional<ModelObject> inletObj = node.inletModelObject();
       boost::optional<ModelObject> outletObj = node.outletModelObject();
 
       if( inletObj && outletObj )
       {
-        if( (inletObj.get() == splitter) && (outletObj.get() == mixer) )
+        if( (! inletObj->optionalCast<ThermalZone>()) && outletObj->optionalCast<Mixer>() )
         {
           Node newNode(_model);
           ThermalZone thisobj = getObject<ThermalZone>();
@@ -1666,7 +1674,30 @@ namespace detail {
                           newNode, newNode.inletPort() );
 
           _model.connect( newNode, newNode.outletPort(),
-                          mixer, oldMixerPort );
+                          outletObj.get(), oldMixerPort );
+
+          // Add the terminal to equipment list
+          if( (! inletObj->optionalCast<Splitter>()) && (! inletObj->optionalCast<Node>()) )
+          {
+            addEquipment(inletObj.get());            
+
+            if( boost::optional<AirTerminalSingleDuctParallelPIUReheat> terminal = inletObj->optionalCast<AirTerminalSingleDuctParallelPIUReheat>() )
+            {
+              Node secondaryInletNode(_model);
+
+              PortList t_exhaustPortList = exhaustPortList();
+
+              _model.connect( t_exhaustPortList,
+                              t_exhaustPortList.nextPort(),
+                              secondaryInletNode,
+                              secondaryInletNode.inletPort() );
+
+              _model.connect( secondaryInletNode,
+                              secondaryInletNode.outletPort(),
+                              terminal.get(),
+                              terminal->secondaryAirInletPort() );
+            }
+          }
 
           setUseIdealAirLoads(false);
 
@@ -1755,7 +1786,7 @@ namespace detail {
     zoneHVACEquipmentList().setHeatingPriority(equipment,priority);
   }
   
-  std::vector<ModelObject> ThermalZone_Impl::equipment()
+  std::vector<ModelObject> ThermalZone_Impl::equipment() const
   {
     return zoneHVACEquipmentList().equipment();
   }
@@ -1790,6 +1821,267 @@ namespace detail {
     ZoneHVACEquipmentList equipmentList(tz);
 
     return tz;
+  }
+
+  boost::optional<AirLoopHVACSupplyPlenum> ThermalZone_Impl::airLoopHVACSupplyPlenum() const
+  {
+    boost::optional<AirLoopHVACSupplyPlenum> result;
+
+    std::vector<AirLoopHVACSupplyPlenum> plenums = model().getModelObjects<AirLoopHVACSupplyPlenum>();
+
+    for(std::vector<AirLoopHVACSupplyPlenum>::iterator it = plenums.begin();
+        it != plenums.end();
+        it++)
+    {
+      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      {
+        if( tz->handle() == handle() )
+        {
+          result = *it;
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<AirLoopHVACReturnPlenum> ThermalZone_Impl::airLoopHVACReturnPlenum() const
+  {
+    boost::optional<AirLoopHVACReturnPlenum> result;
+
+    std::vector<AirLoopHVACReturnPlenum> plenums = model().getModelObjects<AirLoopHVACReturnPlenum>();
+
+    for(std::vector<AirLoopHVACReturnPlenum>::iterator it = plenums.begin();
+        it != plenums.end();
+        it++)
+    {
+      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      {
+        if( tz->handle() == handle() )
+        {
+          return *it;
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  bool ThermalZone_Impl::isPlenum() const
+  {
+    bool result = false;
+    if( airLoopHVACReturnPlenum() || airLoopHVACSupplyPlenum() )
+    {
+      result = true;
+    }
+    return result;
+  }
+
+  bool ThermalZone_Impl::canBePlenum() const
+  {
+    bool result = true;
+
+    if( airLoopHVAC() || (! equipment().empty()) )
+    {
+      result = false;
+    }
+
+    return result;
+  }
+
+  bool ThermalZone_Impl::setSupplyPlenum(const ThermalZone & plenumZone)
+  {
+    bool result = true;
+
+    if( ! plenumZone.canBePlenum() )
+    {
+      result = false; 
+    }
+
+    boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
+    if( ! t_airLoopHVAC )
+    {
+      result = false;
+    }
+
+    boost::optional<AirLoopHVACSupplyPlenum> plenum;
+
+    if( result )
+    {
+      plenum = plenumZone.getImpl<ThermalZone_Impl>()->airLoopHVACSupplyPlenum();
+      boost::optional<AirLoopHVAC> plenumAirLoop;
+
+      if( plenum )
+      {
+        plenumAirLoop = plenum->airLoopHVAC();
+      }
+      
+      if( plenumAirLoop )
+      {
+        if( plenumAirLoop.get() != t_airLoopHVAC.get() )
+        {
+          result = false;
+        }
+      }
+    }
+
+    Model t_model = model();
+
+    if( result )
+    {
+      if( ! plenum )
+      {
+        plenum = AirLoopHVACSupplyPlenum(t_model);
+        plenum->setThermalZone(plenumZone);
+      }
+    }
+
+    if( result )
+    {
+      removeSupplyPlenum();
+
+      model::ModelObject mo = t_airLoopHVAC->demandComponents(t_airLoopHVAC->zoneSplitter(),getObject<ThermalZone>(),Node::iddObjectType()).front();
+      Node node = mo.cast<Node>();
+
+      OS_ASSERT(plenum);
+      result = plenum->addToNode(node);
+    }
+
+    return result;
+  }
+
+  void ThermalZone_Impl::removeSupplyPlenum()
+  {
+    Model t_model = model();
+    boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
+
+    if( t_airLoopHVAC )
+    {
+      AirLoopHVACZoneSplitter zoneSplitter = t_airLoopHVAC->zoneSplitter();
+      std::vector<ModelObject> modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,getObject<ThermalZone>());
+      std::vector<AirLoopHVACSupplyPlenum> plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
+      boost::optional<AirLoopHVACSupplyPlenum> plenum;
+
+      if( ! plenums.empty() )
+      {
+        plenum = plenums.front();
+      }
+
+      if( plenum )
+      {
+        if( plenum->outletModelObjects().size() == 1u )
+        {
+          plenum->remove();
+        }
+        else
+        {
+          std::vector<ModelObject>::iterator it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+          ModelObject plenumOutletModelObject = *(it + 1);
+          unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
+          unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
+          plenum->removePortForBranch(branchIndex);
+          t_model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),plenumOutletModelObject,port);
+        }
+      }
+    }
+  }
+  bool ThermalZone_Impl::setReturnPlenum(const ThermalZone & plenumZone)
+  {
+    bool result = true;
+
+    if( ! plenumZone.canBePlenum() )
+    {
+      result = false; 
+    }
+
+    boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
+    if( ! t_airLoopHVAC )
+    {
+      result = false;
+    }
+
+    boost::optional<AirLoopHVACReturnPlenum> plenum;
+
+    if( result )
+    {
+      plenum = plenumZone.getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum();
+      boost::optional<AirLoopHVAC> plenumAirLoop;
+
+      if( plenum )
+      {
+        plenumAirLoop = plenum->airLoopHVAC();
+      }
+      
+      if( plenumAirLoop )
+      {
+        if( plenumAirLoop.get() != t_airLoopHVAC.get() )
+        {
+          result = false;
+        }
+      }
+    }
+
+    Model t_model = model();
+
+    if( result )
+    {
+      if( ! plenum )
+      {
+        plenum = AirLoopHVACReturnPlenum(t_model);
+        plenum->setThermalZone(plenumZone);
+      }
+    }
+
+    if( result )
+    {
+      removeReturnPlenum();
+
+      model::ModelObject mo = t_airLoopHVAC->demandComponents(getObject<ThermalZone>(),t_airLoopHVAC->zoneMixer(),Node::iddObjectType()).front();
+      Node node = mo.cast<Node>();
+
+      OS_ASSERT(plenum);
+      result = plenum->addToNode(node);
+    }
+
+    return result;
+  }
+
+  void ThermalZone_Impl::removeReturnPlenum()
+  {
+    Model t_model = model();
+    boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
+
+    if( t_airLoopHVAC )
+    {
+      AirLoopHVACZoneMixer zoneMixer = t_airLoopHVAC->zoneMixer();
+      std::vector<ModelObject> modelObjects = t_airLoopHVAC->demandComponents(getObject<ThermalZone>(),zoneMixer);
+      std::vector<AirLoopHVACReturnPlenum> plenums = subsetCastVector<AirLoopHVACReturnPlenum>(modelObjects);
+      boost::optional<AirLoopHVACReturnPlenum> plenum;
+
+      if( ! plenums.empty() )
+      {
+        plenum = plenums.front();
+      }
+
+      if( plenum )
+      {
+        if( plenum->inletModelObjects().size() == 1u )
+        {
+          plenum->remove();
+        }
+        else
+        {
+          std::vector<ModelObject>::iterator it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+          ModelObject plenumInletModelObject = *(it - 1);
+          unsigned branchIndex = plenum->branchIndexForInletModelObject(plenumInletModelObject);
+          unsigned port = plenum->connectedObjectPort(plenum->inletPort(branchIndex)).get();
+          plenum->removePortForBranch(branchIndex);
+          t_model.connect(plenumInletModelObject,port,zoneMixer,zoneMixer.nextInletPort());
+        }
+      }
+    }
   }
 
 } // detail
@@ -2258,7 +2550,7 @@ void ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned pri
   getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
 }
 
-std::vector<ModelObject> ThermalZone::equipment()
+std::vector<ModelObject> ThermalZone::equipment() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipment();
 }
@@ -2276,6 +2568,36 @@ std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder()
 void ThermalZone::removeEquipment(const ModelObject & equipment)
 {
   getImpl<detail::ThermalZone_Impl>()->removeEquipment(equipment);
+}
+
+bool ThermalZone::isPlenum() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->isPlenum();
+}
+
+bool ThermalZone::canBePlenum() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->canBePlenum();
+}
+
+bool ThermalZone::setSupplyPlenum(const ThermalZone & plenumZone)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSupplyPlenum(plenumZone);
+}
+
+void ThermalZone::removeSupplyPlenum()
+{
+  getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum();
+}
+
+bool ThermalZone::setReturnPlenum(const ThermalZone & plenumZone)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setReturnPlenum(plenumZone);
+}
+
+void ThermalZone::removeReturnPlenum()
+{
+  getImpl<detail::ThermalZone_Impl>()->removeReturnPlenum();
 }
 
 /// @cond

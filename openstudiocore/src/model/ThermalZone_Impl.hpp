@@ -278,7 +278,7 @@ namespace detail {
     /// Resets the rendering color.
     void resetRenderingColor();
 
-    std::vector<ModelObject> equipment();
+    std::vector<ModelObject> equipment() const;
 
     /// returns all spaces in this thermal zone
     std::vector<Space> spaces() const;
@@ -407,6 +407,17 @@ namespace detail {
     ZoneHVACEquipmentList zoneHVACEquipmentList() const;
 
     virtual ModelObject clone(Model model) const;
+
+    boost::optional<AirLoopHVACSupplyPlenum> airLoopHVACSupplyPlenum() const;
+
+    boost::optional<AirLoopHVACReturnPlenum> airLoopHVACReturnPlenum() const;
+
+    bool isPlenum() const;
+    bool canBePlenum() const;
+    bool setSupplyPlenum(const ThermalZone & plenumZone);
+    void removeSupplyPlenum();
+    bool setReturnPlenum(const ThermalZone & plenumZone);
+    void removeReturnPlenum();
 
    protected:
 

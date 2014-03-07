@@ -295,7 +295,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
     m_idfObjects.push_back(globalGeometryRules);
-  
+
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
     BOOST_FOREACH(UtilityBill utilityBill, utilityBills){
@@ -419,6 +419,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
       retVal = translateAirLoopHVAC(airLoopHVAC);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_ReturnPlenum :
+    {
+      model::AirLoopHVACReturnPlenum airLoopHVACReturnPlenum = modelObject.cast<AirLoopHVACReturnPlenum>();
+      retVal = translateAirLoopHVACReturnPlenum(airLoopHVACReturnPlenum);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_SupplyPlenum :
+    {
+      model::AirLoopHVACSupplyPlenum airLoopHVACSupplyPlenum = modelObject.cast<AirLoopHVACSupplyPlenum>();
+      retVal = translateAirLoopHVACSupplyPlenum(airLoopHVACSupplyPlenum);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat :

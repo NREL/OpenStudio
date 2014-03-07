@@ -108,7 +108,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
       runner.registerValue("femp_max_cvrmse",maxCVRMSE.get,"%")
     end        
 
-    energyElec = "var consumption = {\n\t\"Electricity Consumption\":{\n\t\t\"units\":\"kWh\",\n"
+    energyElec = "\t\"Electricity Consumption\":{\n\t\t\"units\":\"kWh\",\n"
     energyDemand =  "\t\"Electricity Demand\":{\n\t\t\"units\":\"kW\",\n"
     energyGas = "\t\"Natural Gas Consumption\":{\n\t\t\"units\":\"therms\",\n"
     tempStartDate = ""
@@ -128,6 +128,9 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     gasNMBE = "\t\t\t\t\"NMBE\":["
     peakDemandUnitConversionFactor = 1.0
     consumptionUnitConversionFactor = 1.0
+    hasElec = false
+    hasDemand = false
+    hasGas = false
 
     missingData = false
     # must have a runPeriod
@@ -178,14 +181,14 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
       string = ""
       string << "\t\t\"cvrsme\":\"" << cvrsme.to_s << "\",\n\t\t\"nmbe\":\"" << nmbe.to_s << "\",\n\t\t\t\"data\":{\n"
 
-      hasDemand = false;
+      hasDemandValues = false;
       if not utilityBill.peakDemandUnitConversionFactor.empty?
-        hasDemand = true;
+        hasDemandValues = true;
         energyElec << string
         energyDemand << string
         peakDemandUnitConversionFactor = utilityBill.peakDemandUnitConversionFactor.get
       else
-        hasDemand = false;
+        hasDemandValues = false;
         energyGas << string
       end
 
@@ -209,12 +212,13 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           runner.registerValue("utility_bill_#{bill_index}_period_#{period_index}_end_date",billingPeriod.endDate.to_s)
         end
 
-        if hasDemand
+        if hasDemandValues
           elecStartDate << tempStartDate << ","
           elecEndDate << tempEndDate << ","
 
           consumption = billingPeriod.consumption
           if not consumption.empty?
+            hasElec = true
             elecActualConsumption << consumption.get.to_s
             actual_consumption += consumption.get
             if os_version >= min_version_feature1
@@ -229,6 +233,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
 
           consumption = billingPeriod.modelConsumption
           if not consumption.empty?
+            hasElec = true
             temp = consumption.get / consumptionUnitConversionFactor
             elecModelConsumption << temp.round.to_s
             modeled_consumption += temp
@@ -241,9 +246,10 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
             elecModelConsumption << "0"
           end
           elecModelConsumption << ","
-
+         
           peakDemand = billingPeriod.peakDemand
           if not peakDemand.empty?
+            hasDemand = true
             actualPeakDemand << peakDemand.get.to_s
             if peakDemand.get > actual_demand
               actual_demand = peakDemand.get
@@ -260,6 +266,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
 
           peakDemand = billingPeriod.modelPeakDemand
           if not peakDemand.empty?
+            hasDemand = true
             temp = peakDemand.get / 1000
             temp_str = sprintf "%.1f", temp
             modelPeakDemand << temp_str.to_s
@@ -310,6 +317,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
 
           consumption = billingPeriod.consumption
           if not consumption.empty?
+            hasGas = true
             gasActualConsumption << consumption.get.to_s
             actual_consumption += consumption.get
             if os_version >= min_version_feature1
@@ -324,6 +332,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
 
           consumption = billingPeriod.modelConsumption
           if not consumption.empty?
+            hasGas = true
             temp = consumption.get / consumptionUnitConversionFactor
             gasModelConsumption << temp.round.to_s
             modeled_consumption += temp
@@ -413,10 +422,28 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     gasNMBE = gasNMBE[0..-2]
     gasNMBE << "]\n"
     energyGas << gasStartDate << gasEndDate << gasActualConsumption << gasModelConsumption << gasNMBE
-    energyGas << "\t\t}\n" << "\t}\n" << "};"
+    energyGas << "\t\t}\n" << "\t},\n"
 
-    energy << energyElec << energyDemand << energyGas
+    
+        energy  << "var consumption = {\n"
 
+    
+    if hasElec
+        energy << energyElec
+    end
+
+    if hasDemand
+        energy << energyDemand
+    end
+    
+    if hasGas
+        energy << energyGas
+    end
+
+
+        energy  << "};" 
+
+    
     # echo out our values
     #runner.registerInfo("This building is named #{building_name}.")
 

@@ -570,6 +570,29 @@ namespace detail {
     }
   }
 
+  void LayeredConstruction_Impl::ensureUniqueLayers()
+  {
+    // loop through extensible groups
+    BOOST_FOREACH(const IdfExtensibleGroup& idfGroup,extensibleGroups()) {
+      ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+      // get object pointed to by extensible group
+      // unit test checks that both layered constructions have extensible groups of size 1
+      // implementation must change if that test starts failing
+      OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
+      if (!oMaterial) {
+        LOG(Warn,"Skipping layer " << group.groupIndex() << " in " << briefDescription()
+            << ", as there is no Material object referenced by the corresponding field.");
+        continue;
+      }
+      unsigned numSources = oMaterial->getModelObjectSources<LayeredConstruction>().size();
+      if (numSources > 1){
+        ModelObject newMaterial = oMaterial->clone();
+        bool test = group.setPointer(0, newMaterial.handle());
+        OS_ASSERT(test);
+      } 
+    }
+  }
+
   void LayeredConstruction_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const
   {
     // Inherit lower-level errors
@@ -709,6 +732,10 @@ bool LayeredConstruction::setInsulation(const OpaqueMaterial& insulationLayer) {
 
 void LayeredConstruction::resetInsulation() {
   getImpl<detail::LayeredConstruction_Impl>()->resetInsulation();
+}
+
+void LayeredConstruction::ensureUniqueLayers() {
+  getImpl<detail::LayeredConstruction_Impl>()->ensureUniqueLayers();
 }
 
 bool LayeredConstruction::layersAreValid(const std::vector<Material>& materials)

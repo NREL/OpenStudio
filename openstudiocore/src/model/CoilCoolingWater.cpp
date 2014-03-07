@@ -368,14 +368,24 @@ namespace detail {
     return boost::none;
   }
 
-  std::vector<openstudio::IdfObject> CoilCoolingWater_Impl::remove()
+  bool CoilCoolingWater_Impl::removeFromPlantLoop()
   {
     if( boost::optional<ControllerWaterCoil> controller = this->controllerWaterCoil() )
     {
       controller->remove();
     }
 
-    return WaterToAirComponent_Impl::remove();
+    return WaterToAirComponent_Impl::removeFromPlantLoop();
+  }
+
+  std::vector<openstudio::IdfObject> CoilCoolingWater_Impl::remove()
+  {
+    if( isRemovable() )
+    {
+      return WaterToAirComponent_Impl::remove();
+    }
+
+    return std::vector<IdfObject>();
   }
 
   ModelObject CoilCoolingWater_Impl::clone(Model model) const

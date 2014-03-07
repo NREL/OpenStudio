@@ -42,6 +42,7 @@ class WeatherFile;
 class Component;
 class ComponentData;
 class Schedule;
+class SpaceType;
 
 namespace detail {
   class Model_Impl;
@@ -112,6 +113,10 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
+
+  /** Get the space type used for plenums if there is one.
+   *  Create a new space type if necessary and add it to the model */
+  SpaceType plenumSpaceType() const;
 
   //@}
   /** @name Setters */
