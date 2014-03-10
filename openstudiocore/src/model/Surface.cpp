@@ -1580,9 +1580,10 @@ namespace detail {
       ShadingSurface shadingSurface(transformation*exteriorShadingVertices, model);
       shadingSurface.setShadingSurfaceGroup(shadingGroup);
 
-      if (interiorShelf){
-        interiorShelf->setOutsideShelf(shadingSurface);
-      }
+      // EnergyPlus expects outside shelf to be on daylight window, we prefer to shade the view window so do not add this here
+       //if (interiorShelf){
+      //  interiorShelf->setOutsideShelf(shadingSurface);
+      //}
     }
 
     return result;
