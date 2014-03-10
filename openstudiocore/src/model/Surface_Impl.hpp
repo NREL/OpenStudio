@@ -227,6 +227,10 @@ namespace detail {
 
     double windowToWallRatio() const;
 
+    double skylightToRoofRatio() const;
+
+    double skylightToProjectedFloorRatio() const;
+
     boost::optional<SubSurface> setWindowToWallRatio(double wwr);
     
     boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);

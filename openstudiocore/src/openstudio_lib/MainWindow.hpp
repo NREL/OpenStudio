@@ -135,6 +135,11 @@ class MainWindow : public QMainWindow
 
   void toggleUnits(bool displayIP);
 
+  private slots:
+  
+  void configureProxyClicked();
+  void loadProxySettings();
+
 };
 
 } // openstudio

@@ -395,6 +395,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
   ../shared_gui_components/MeasureManager.hpp
+  ../shared_gui_components/NetworkProxyDialog.cpp
+  ../shared_gui_components/NetworkProxyDialog.hpp  
   ../shared_gui_components/OSCheckBox.cpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.cpp
@@ -424,7 +426,7 @@ SET( ${target_name}_SRC
   ../shared_gui_components/OSUnsignedEdit.cpp
   ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.cpp
-  ../shared_gui_components/OSViewSwitcher.hpp
+  ../shared_gui_components/OSViewSwitcher.hpp  
   ../shared_gui_components/PageNavigator.cpp
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/ProcessEventsProgressBar.cpp
@@ -436,7 +438,7 @@ SET( ${target_name}_SRC
   ../shared_gui_components/VariableView.cpp
   ../shared_gui_components/VariableView.hpp
   ../shared_gui_components/WorkflowTools.cpp
-  ../shared_gui_components/WorkflowTools.hpp
+  ../shared_gui_components/WorkflowTools.hpp 
 
   #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
 )
@@ -657,6 +659,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/NetworkProxyDialog.hpp
 
 )
 

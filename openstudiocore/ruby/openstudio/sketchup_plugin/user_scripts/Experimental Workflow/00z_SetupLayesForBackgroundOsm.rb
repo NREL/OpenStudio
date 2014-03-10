@@ -52,7 +52,7 @@ class SetupLayersForBackgroundOsm < OpenStudio::Ruleset::UtilityUserScript
     # create layers matched to OpenStudio surface group types
     layers = skp_model.layers
     new_layer = layers.add("OpenStudio BackgroundModel SiteShadingGroup")
-    new_layer = layers.add("OpenStudio BackgroundModel BuildingAndSpaceShadingGroup")
+    new_layer = layers.add("OpenStudio BackgroundModel ShadingGroup")
     new_layer = layers.add("OpenStudio BackgroundModel Space")
     new_layer = layers.add("OpenStudio BackgroundModel InteriorPartitionSurfaceGroup")
 
