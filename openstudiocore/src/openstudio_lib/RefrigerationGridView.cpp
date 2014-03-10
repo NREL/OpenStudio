@@ -473,7 +473,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                       boost::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Case Lighting")),
+                                  "Case Lighting")), // NOTE these strings found in ScheduleTypeRegistry
           &model::RefrigerationCase::caseLightingSchedule,
           &model::RefrigerationCase::setCaseLightingSchedule,
           boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetCaseLightingSchedule));
@@ -497,7 +497,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                       boost::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Case Defrost Drip Down")),
+                                  "Case Defrost Drip-Down")),
           &model::RefrigerationCase::caseDefrostDripDownSchedule,
           &model::RefrigerationCase::setCaseDefrostDripDownSchedule,
           boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetCaseDefrostDripDownSchedule));
@@ -918,7 +918,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                       boost::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationWalkIn",
-                                  "Defrost Drip Down")),
+                                  "Defrost Drip-Down")),
           &model::RefrigerationWalkIn::defrostDripDownSchedule,
           &model::RefrigerationWalkIn::setDefrostDripDownSchedule,
           boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetDefrostDripDownSchedule));
