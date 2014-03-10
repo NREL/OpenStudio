@@ -32,6 +32,8 @@ namespace openstudio{
 
 bool pointEqual(const openstudio::Point3d& a, const openstudio::Point3d& b);
 
+bool pointsEqual(const std::vector<openstudio::Point3d>& a, const std::vector<openstudio::Point3d>& b);
+
 bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b);
 
 class GeometryFixture : public ::testing::Test {

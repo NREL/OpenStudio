@@ -169,7 +169,7 @@ namespace detail {
 
     bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow & component);
 
-    ModelObject clone(Model & model) const;
+    ModelObject clone(Model model) const;
 
     std::vector<ModelObject> children() const;
 

@@ -34,6 +34,21 @@ bool pointEqual(const openstudio::Point3d& a, const openstudio::Point3d& b)
   return diff.length() <= 0.0001;
 }
 
+bool pointsEqual(const std::vector<openstudio::Point3d>& a, const std::vector<openstudio::Point3d>& b)
+{
+  if (a.size() != b.size()){
+    return false;
+  }
+
+  for (unsigned i = 0; i < a.size(); ++i){
+    if (!pointEqual(a[i], b[i])){
+      return false;
+    }
+  }
+
+  return true;
+}
+
 bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b)
 {
   Vector3d diff = a-b;

@@ -30,6 +30,10 @@
 #include <model/Building_Impl.hpp>
 #include <model/Space.hpp>
 #include <model/Space_Impl.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
+#include <model/SubSurface.hpp>
+#include <model/SubSurface_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ShadingSurfaceGroup_FieldEnums.hxx>
@@ -237,13 +241,11 @@ namespace detail {
     bool result = false;
 
     if (istringEqual("Site", shadingSurfaceType)){
+      resetSpace();
       result = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, shadingSurfaceType);
-      bool test = setString(OS_ShadingSurfaceGroupFields::SpaceName, "");
-      OS_ASSERT(test);
     }else if (istringEqual("Building", shadingSurfaceType)){
+      resetSpace();
       result = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, shadingSurfaceType);
-      bool test = setString(OS_ShadingSurfaceGroupFields::SpaceName, "");
-      OS_ASSERT(test);
     }else if (istringEqual("Space", shadingSurfaceType)){
       result = this->space();
       if (result){
@@ -311,20 +313,114 @@ namespace detail {
     if (result){
       bool test = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, "Space");
       OS_ASSERT(test);
+
+      boost::optional<SubSurface> shadedSubSurface = this->shadedSubSurface();
+      if (shadedSubSurface){
+        boost::optional<Space> otherSpace = shadedSubSurface->space();
+        if (otherSpace){
+          if (space.handle() == otherSpace->handle()){
+            // ok
+          }else{
+            resetShadedObject();
+          }
+        }else{
+          resetShadedObject();
+        }
+      }
     }
     return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetSpace() {
     if (space()) {
-      bool ok = setShadingSurfaceType("Building");
+      resetShadedObject();
+
+      // do not call setShadingSurfaceType("Building"), infinite recursion issue
+      bool ok = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, "Building", false);
       OS_ASSERT(ok);
+      ok = setString(OS_ShadingSurfaceGroupFields::SpaceName, "", false);
+      OS_ASSERT(ok);
+
+      this->emitChangeSignals();
+    }else{
+      OS_ASSERT(!shadedSubSurface());
+      OS_ASSERT(!shadedSurface());
     }
   }
 
   ShadingSurfaceVector ShadingSurfaceGroup_Impl::shadingSurfaces() const
   {
     return getObject<ModelObject>().getModelObjectSources<ShadingSurface>(ShadingSurface::iddObjectType());
+  }
+
+  boost::optional<SubSurface> ShadingSurfaceGroup_Impl::shadedSubSurface() const
+  {
+    boost::optional<SubSurface> result;
+    OptionalWorkspaceObject subSurface = getTarget(OS_ShadingSurfaceGroupFields::ShadedObjectName);
+    if (subSurface){
+      result = subSurface->optionalCast<SubSurface>();
+    }
+    return result;
+  }
+
+  boost::optional<Surface> ShadingSurfaceGroup_Impl::shadedSurface() const
+  {
+    boost::optional<Surface> result;
+    OptionalWorkspaceObject surface = getTarget(OS_ShadingSurfaceGroupFields::ShadedObjectName);
+    if (surface){
+      result = surface->optionalCast<Surface>();
+    }
+    return result;
+  }
+
+  bool ShadingSurfaceGroup_Impl::setShadedSubSurface(const SubSurface& subSurface)
+  {
+    boost::optional<Space> space = this->space();
+    if (!space){
+      return false;
+    }
+
+    boost::optional<Space> otherSpace = subSurface.space();
+    if (!otherSpace){
+      return false;
+    }
+
+    if (space->handle() != otherSpace->handle()){
+      return false;
+    }
+
+    bool test = setPointer(OS_ShadingSurfaceGroupFields::ShadedObjectName, subSurface.handle());
+    OS_ASSERT(test);
+
+    return test;
+  }
+
+  bool ShadingSurfaceGroup_Impl::setShadedSurface(const Surface& surface)
+  {
+    boost::optional<Space> space = this->space();
+    if (!space){
+      return false;
+    }
+
+    boost::optional<Space> otherSpace = surface.space();
+    if (!otherSpace){
+      return false;
+    }
+
+    if (space->handle() != otherSpace->handle()){
+      return false;
+    }
+
+    bool test = setPointer(OS_ShadingSurfaceGroupFields::ShadedObjectName, surface.handle());
+    OS_ASSERT(test);
+
+    return test;
+  }
+
+  void ShadingSurfaceGroup_Impl::resetShadedObject()
+  {
+    bool test = setString(OS_ShadingSurfaceGroupFields::ShadedObjectName, "");
+    OS_ASSERT(test);
   }
 
   boost::optional<ModelObject> ShadingSurfaceGroup_Impl::spaceAsModelObject() const {
@@ -400,6 +496,31 @@ void ShadingSurfaceGroup::resetSpace() {
 ShadingSurfaceVector ShadingSurfaceGroup::shadingSurfaces() const
 {
   return getImpl<detail::ShadingSurfaceGroup_Impl>()->shadingSurfaces();
+}
+
+boost::optional<SubSurface> ShadingSurfaceGroup::shadedSubSurface() const
+{
+  return getImpl<detail::ShadingSurfaceGroup_Impl>()->shadedSubSurface();
+}
+
+boost::optional<Surface> ShadingSurfaceGroup::shadedSurface() const
+{
+  return getImpl<detail::ShadingSurfaceGroup_Impl>()->shadedSurface();
+}
+
+bool ShadingSurfaceGroup::setShadedSubSurface(const SubSurface& subSurface)
+{
+  return getImpl<detail::ShadingSurfaceGroup_Impl>()->setShadedSubSurface(subSurface);
+}
+
+bool ShadingSurfaceGroup::setShadedSurface(const Surface& surface)
+{
+  return getImpl<detail::ShadingSurfaceGroup_Impl>()->setShadedSurface(surface);
+}
+
+void ShadingSurfaceGroup::resetShadedObject()
+{
+  return getImpl<detail::ShadingSurfaceGroup_Impl>()->resetShadedObject();
 }
 
 /// @cond

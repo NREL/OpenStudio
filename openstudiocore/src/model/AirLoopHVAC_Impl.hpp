@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -25,10 +25,13 @@
 namespace openstudio {
 namespace model {
 
+class AirLoopHVAC;
 class Node;
 class AirLoopHVACOutdoorAirSystem;
 class AirLoopHVACZoneSplitter;
 class AirLoopHVACZoneMixer;
+class AirLoopHVACSupplyPlenum;
+class AirLoopHVACReturnPlenum;
 class ThermalZone;
 class PlantLoop;
 class SizingSystem;
@@ -87,7 +90,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Node demandOutletNode() const;
 
-  boost::optional<Node> reliefAirNode();
+  boost::optional<Node> reliefAirNode() const;
+
+  boost::optional<Node> mixedAirNode() const;
 
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
 
@@ -99,14 +104,11 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void replaceAirLoopSupplyComp(ModelObject targetObj, ModelObject newObj);
 
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem();
+  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
   AirLoopHVACZoneMixer zoneMixer();
 
   AirLoopHVACZoneSplitter zoneSplitter();
-
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, 
-                        boost::optional<StraightComponent> optAirTerminal);
 
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
@@ -118,10 +120,6 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const;
 
-  boost::optional<ThermalZone> zoneForLastBranch();
-
-  boost::optional<HVACComponent> terminalForLastBranch();
-
   Splitter demandSplitter();
 
   Mixer demandMixer();
@@ -129,6 +127,24 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
   bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+
+  bool addBranchForZone(ThermalZone & thermalZone, 
+                        Splitter & splitter,
+                        Mixer & mixer,
+                        StraightComponent & airTerminal);
+
+  bool addBranchForZone(ThermalZone & thermalZone, 
+                        Splitter & splitter,
+                        Mixer & mixer);
+
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
+                            boost::optional<StraightComponent> optAirTerminal);
+
+  bool moveBranchForZone(ThermalZone & thermalZone,
+                         Splitter & newSplitter);
+
+  bool moveBranchForZone(ThermalZone & thermalZone,
+                         Mixer & newMixer);
 
   bool addBranchForHVACComponent(HVACComponent airTerminal);
 
@@ -146,13 +162,20 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::string nightCycleControlType() const;
 
-  boost::optional<Node> mixedAirNode();
+  static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
+                                   AirLoopHVAC & airLoopHVAC,
+                                   Splitter & splitter,
+                                   Mixer & mixer,
+                                   boost::optional<StraightComponent> & optAirTerminal);
 
+  static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
+
+  static boost::optional<StraightComponent> terminalForLastBranch(Mixer & mixer);
+
+  static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
+
+  static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
   private:
-
-  boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
-
-  void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
 
   AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
 

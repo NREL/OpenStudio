@@ -47,6 +47,8 @@
 #include <model/Schedule.hpp>
 #include <model/LifeCycleCost.hpp>
 #include <model/SpaceInfiltrationDesignFlowRate.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
 
 #include <utilities/core/UUID.hpp>
 
@@ -1279,4 +1281,73 @@ TEST_F(ModelFixture, Space_InfiltrationDesignFlowRate) {
   EXPECT_DOUBLE_EQ(7.0491803278688531E-4,building.infiltrationDesignFlowPerExteriorSurfaceArea());
   EXPECT_DOUBLE_EQ(11.944444444444446E-4,building.infiltrationDesignFlowPerExteriorWallArea());
   EXPECT_DOUBLE_EQ(1.72,building.infiltrationDesignAirChangesPerHour());
+}
+
+TEST_F(ModelFixture,Space_Plenum)
+{
+  model::Model model = openstudio::model::Model();
+
+  model::SpaceType spaceType(model);
+
+  model::Building building = model.getUniqueModelObject<model::Building>();
+  EXPECT_TRUE(building.setSpaceType(spaceType));
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<model::SpaceType>().size());
+
+  model::ThermalZone supplyZone(model);
+  model::ThermalZone zone(model);
+  model::ThermalZone returnZone(model);
+
+  model::Space supplySpace(model);
+  EXPECT_TRUE(supplySpace.setThermalZone(supplyZone));
+  model::Space space(model);
+  EXPECT_TRUE(space.setThermalZone(zone));
+  model::Space returnSpace(model);
+  EXPECT_TRUE(returnSpace.setThermalZone(returnZone));
+
+  ASSERT_TRUE(supplySpace.spaceType());
+  EXPECT_EQ(spaceType.handle(), supplySpace.spaceType()->handle());
+  EXPECT_TRUE(supplySpace.partofTotalFloorArea());
+  ASSERT_TRUE(space.spaceType());
+  EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
+  EXPECT_TRUE(space.partofTotalFloorArea());
+  ASSERT_TRUE(returnSpace.spaceType());
+  EXPECT_EQ(spaceType.handle(), returnSpace.spaceType()->handle());
+  EXPECT_TRUE(returnSpace.partofTotalFloorArea());
+
+  model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
+
+  bool result = airLoopHVAC.addBranchForZone(zone);
+  EXPECT_TRUE(result);
+  result = zone.setSupplyPlenum(supplyZone);
+  EXPECT_TRUE(result);
+  result = zone.setReturnPlenum(returnZone);
+  EXPECT_TRUE(result);
+
+  ASSERT_TRUE(supplySpace.spaceType());
+  EXPECT_NE(spaceType.handle(), supplySpace.spaceType()->handle());
+  EXPECT_FALSE(supplySpace.partofTotalFloorArea());
+  ASSERT_TRUE(space.spaceType());
+  EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
+  EXPECT_TRUE(space.partofTotalFloorArea());
+  ASSERT_TRUE(returnSpace.spaceType());
+  EXPECT_NE(spaceType.handle(), returnSpace.spaceType()->handle());
+  EXPECT_FALSE(returnSpace.partofTotalFloorArea());
+
+  EXPECT_EQ(2u, model.getConcreteModelObjects<model::SpaceType>().size());
+
+  SpaceType plenumSpaceType = model.plenumSpaceType();
+
+  EXPECT_EQ(2u, model.getConcreteModelObjects<model::SpaceType>().size());
+
+  ASSERT_TRUE(supplySpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), supplySpace.spaceType()->handle());
+  EXPECT_FALSE(supplySpace.partofTotalFloorArea());
+  ASSERT_TRUE(space.spaceType());
+  EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
+  EXPECT_TRUE(space.partofTotalFloorArea());
+  ASSERT_TRUE(returnSpace.spaceType());
+  EXPECT_EQ(plenumSpaceType.handle(), returnSpace.spaceType()->handle());
+  EXPECT_FALSE(returnSpace.partofTotalFloorArea());
+
 }

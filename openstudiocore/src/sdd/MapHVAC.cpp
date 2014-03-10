@@ -1802,17 +1802,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
         fan.setName(nameElement.text().toStdString());
 
         // OverallEff
+        boost::optional<double> overallEff;
         value = overallEffElement.text().toDouble(&ok);
         if( ok )
         {
-          fan.setFanEfficiency(value);
+          overallEff = value;
         }
 
         // MtrEff
+        boost::optional<double> mtrEff;
         value = mtrEffElement.text().toDouble(&ok);
         if( ok )
         {
-          fan.setMotorEfficiency(value);
+          mtrEff = value;
+        }
+
+        if( overallEff && mtrEff )
+        {
+          fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+          fan.setMotorEfficiency(mtrEff.get());
         }
 
         // FlowCap
@@ -1864,17 +1872,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
       fan.setName(nameElement.text().toStdString());
 
       // OverallEff
+      boost::optional<double> overallEff;
       value = overallEffElement.text().toDouble(&ok);
       if( ok )
       {
-        fan.setFanEfficiency(value);
+        overallEff = value;
       }
 
       // MtrEff
+      boost::optional<double> mtrEff;
       value = mtrEffElement.text().toDouble(&ok);
       if( ok )
       {
-        fan.setMotorEfficiency(value);
+        mtrEff = value;
+      }
+
+      if( overallEff && mtrEff )
+      {
+        fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+        fan.setMotorEfficiency(mtrEff.get());
       }
 
       // FlowCap
@@ -1913,16 +1929,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
     fan.setName(nameElement.text().toStdString());
 
+    // OverallEff
+    boost::optional<double> overallEff;
     value = overallEffElement.text().toDouble(&ok);
     if( ok )
     {
-      fan.setFanEfficiency(value);
+      overallEff = value;
     }
 
+    // MtrEff
+    boost::optional<double> mtrEff;
     value = mtrEffElement.text().toDouble(&ok);
     if( ok )
     {
-      fan.setMotorEfficiency(value);
+      mtrEff = value;
+    }
+
+    if( overallEff && mtrEff )
+    {
+      fan.setFanEfficiency(overallEff.get() * mtrEff.get());
+      fan.setMotorEfficiency(mtrEff.get());
     }
 
     // FlowCap
@@ -3766,6 +3792,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       spm.setMaximumSetpointTemperature(rstSupHi.get());
     }
+
+    // WetBulbApproach
+    QDomElement wetBulbApproachElement = fluidSysElement.firstChildElement("WetBulbApproach");
+    value = wetBulbApproachElement.text().toDouble(&ok);
+    if( ok )
+    {
+      spm.setOffsetTemperatureDifference(value * 5.0 / 9.0);
+    }
   }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"OutsideAirReset") )
   {
@@ -4259,7 +4293,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setMotorEfficiency(mtrEff.get());
     }
 
-    if( ! autosize() )
+    if( autosize() )
+    {
+      QDomElement totHdElement = pumpElement.firstChildElement("TotHd");
+      value = totHdElement.text().toDouble(&ok);
+      if( ok )
+      {
+        // ft water to Pa
+        double totHd = value * 2989.067;
+        pump.setRatedPumpHead(totHd);
+      }
+    }
+    else
     {
       boost::optional<double> flowCap;
       boost::optional<double> pwr;
@@ -4307,7 +4352,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setMotorEfficiency(mtrEff.get());
     }
 
-    if( ! autosize() )
+    if( autosize() )
+    {
+      QDomElement totHdElement = pumpElement.firstChildElement("TotHd");
+      value = totHdElement.text().toDouble(&ok);
+      if( ok )
+      {
+        // ft water to Pa
+        double totHd = value * 2989.067;
+        pump.setRatedPumpHead(totHd);
+      }
+    }
+    else
     {
       boost::optional<double> flowCap;
       boost::optional<double> flowMin;
@@ -4528,28 +4584,53 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
   {
     model::CoolingTowerVariableSpeed tower(model);
 
-    QDomElement entTempDsgnElement = htRejElement.firstChildElement("EntTempDsgn");
+    QDomElement wetBulbApproachElement = htRejElement.parentNode().firstChildElement("WetBulbApproach");
+    QDomElement dsgnSupWtrTempElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrTemp");
+    QDomElement dsgnSupWtrDelTElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrDelT");
 
-    QDomElement lvgTempDsgnElement = htRejElement.firstChildElement("LvgTempDsgn");
+    boost::optional<double> wetBulbApproach;
+    boost::optional<double> dsgnSupWtrTemp;
+    boost::optional<double> dsgnSupWtrDelT;
 
-    boost::optional<double> entTempDsgn;
-    boost::optional<double> lvgTempDsgn;
-
-    value = entTempDsgnElement.text().toDouble(&ok);
+    value = wetBulbApproachElement.text().toDouble(&ok);
     if( ok )
     {
-      entTempDsgn = unitToUnit(value,"F","C").get();
+      wetBulbApproach = value * 5.0 / 9.0;
     }
 
-    value = lvgTempDsgnElement.text().toDouble(&ok);
+    value = dsgnSupWtrTempElement.text().toDouble(&ok);
     if( ok )
     {
-      lvgTempDsgn = unitToUnit(value,"F","C").get();
+      dsgnSupWtrTemp = unitToUnit(value,"F","C");
     }
 
-    if( entTempDsgn && lvgTempDsgn )
+    value = dsgnSupWtrDelTElement.text().toDouble(&ok);
+    if( ok )
     {
-      tower.setDesignRangeTemperature(entTempDsgn.get() - lvgTempDsgn.get());
+      dsgnSupWtrDelT = value * 5.0 / 9.0; 
+    }
+
+    if( dsgnSupWtrDelT )
+    {
+      tower.setDesignRangeTemperature(dsgnSupWtrDelT.get());
+    }
+
+    if( dsgnSupWtrTemp && wetBulbApproach )
+    {
+      tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - wetBulbApproach.get());
+    }
+    else if( dsgnSupWtrTemp )
+    {
+      tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - 5.55556);
+    }
+
+    if( wetBulbApproach )
+    {
+      tower.setDesignApproachTemperature(wetBulbApproach.get());
+    }
+    else
+    {
+      tower.setDesignApproachTemperature(5.55556);
     }
 
     if( ! autosize() )
@@ -4985,6 +5066,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   model::Schedule setpointTempSchedule = serviceHotWaterSetpointSchedule(model);
 
   waterHeaterMixed.setSetpointTemperatureSchedule(setpointTempSchedule);
+
+  // HIR_fPLRCrvRef
+
+  QDomElement hirfPLRCrvRefElement = element.firstChildElement("HIR_fPLRCrvRef");
+  boost::optional<model::CurveCubic> hirfPLRCrv = model.getModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().toStdString());
+  if( hirfPLRCrv )
+  {
+    waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
+  }
 
   return waterHeaterMixed;
 }
@@ -5690,6 +5780,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvD
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing Y Maximum Limit");
   }
 
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
+  }
+
   return curve;
 }
 
@@ -5768,6 +5874,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvC
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
   }
 
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
+  }
+
   return curve;
 }
 
@@ -5838,6 +5960,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
     curve.setMaximumValueofx(100.0);
 
     LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
+
+  // MaxOut
+  QDomElement maxOutElement = element.firstChildElement("MaxOut");
+  value = maxOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMaximumCurveOutput(value);
+  }
+
+  // MinOut
+  QDomElement minOutElement = element.firstChildElement("MinOut");
+  value = minOutElement.text().toDouble(&ok);
+  if( ok )
+  {
+    curve.setMinimumCurveOutput(value);
   }
 
   return curve;

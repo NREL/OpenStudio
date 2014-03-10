@@ -70,6 +70,7 @@
 #include <model/FanConstantVolume.hpp>
 #include <model/FanOnOff.hpp>
 #include <model/FanVariableVolume.hpp>
+#include <model/FanZoneExhaust.hpp>
 #include <model/Model.hpp>
 #include <model/ScheduleCompact.hpp>
 #include <model/SetpointManagerMixedAir.hpp>

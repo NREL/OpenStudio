@@ -278,6 +278,8 @@ namespace runmanager {
     std::vector<openstudio::path> searchPaths = m_searchPaths;
 
     std::sort(searchPaths.begin(), searchPaths.end()); // Sort them
+
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
     searchPaths.erase(std::unique(searchPaths.begin(), searchPaths.end()), searchPaths.end()); // Erase duplicate elements
 #ifdef Q_OS_WIN32
     // For Windows, maintain drive order while searching the deepest paths first

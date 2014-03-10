@@ -62,11 +62,11 @@ class InspectorController : public QObject
   void layoutModelObject( model::OptionalModelObject &, bool readOnly );
 
   void addBranchForZone(model::ThermalZone &);
-
   void removeBranchForZone(model::ThermalZone &);
+  void moveBranchForZoneSupply(model::ThermalZone & zone, const Handle & newPlenumHandle);
+  void moveBranchForZoneReturn(model::ThermalZone & zone, const Handle & newPlenumHandle);
 
   void addToLoop(model::Loop &, boost::optional<model::HVACComponent> &);
-
   void removeFromLoop(model::Loop &, boost::optional<model::HVACComponent> &);
 
   void toggleUnits(bool displayIP);

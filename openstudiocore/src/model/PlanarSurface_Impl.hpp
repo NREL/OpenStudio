@@ -193,6 +193,9 @@ namespace detail {
     /// Get a triangulation of this surface, subsurfaces will be replaced by holes in the triangulation
     std::vector<std::vector<Point3d> > triangulation() const;
 
+    /// Return the centroid of this planar surface's vertices
+    Point3d centroid() const;
+
     //@}
    protected:
 

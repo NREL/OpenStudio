@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef MODEL_CONSTRUCTIONBASESTANDARDSINFORMATION_HPP
-#define MODEL_CONSTRUCTIONBASESTANDARDSINFORMATION_HPP
+#ifndef MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
+#define MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
 
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject.hpp>
@@ -30,26 +30,21 @@ class ConstructionBase;
 class Material;
 
 namespace detail {
-  class ConstructionBaseStandardsInformation_Impl;
+  class ConstructionBase_Impl;
+  class StandardsInformationConstruction_Impl;
 }
 
-/** ConstructionBaseStandardsInformation is the ModelObject that wraps OpenStudio IDD object 
- *  'OS:StandardsInformation:ConstructionFields'. ConstructionBaseStandardsInformation provides a 
+/** StandardsInformationConstruction is the ModelObject that wraps OpenStudio IDD object 
+ *  'OS:StandardsInformation:ConstructionFields'. StandardsInformationConstruction provides a 
  *  place to register information about a construction that building energy standards often need 
  *  to know, but is irrelevant to simulation. It contains user-specified values that are not 
  *  generally checked against input or output data. */
-class MODEL_API ConstructionBaseStandardsInformation : public ModelObject {
+class MODEL_API StandardsInformationConstruction : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  /** Create new, blank object. */
-  explicit ConstructionBaseStandardsInformation(Model& model);
-
-  /** Create new object as child of construction. */
-  explicit ConstructionBaseStandardsInformation(const ConstructionBase& construction);
-
-  virtual ~ConstructionBaseStandardsInformation() {}
+  virtual ~StandardsInformationConstruction() {}
 
   //@}
   /** @name Static Methods */
@@ -66,17 +61,18 @@ class MODEL_API ConstructionBaseStandardsInformation : public ModelObject {
   //@{
 
   /** Return the ConstructionBase object that this object describes. */
-  boost::optional<ConstructionBase> construction() const;
+  ConstructionBase construction() const;
 
   /** Return the surface type to which this construction should be applied. */
-  std::string intendedSurfaceType() const;
+  boost::optional<std::string> intendedSurfaceType() const;
 
-  /** Return the construction type, that is, a descriptor like 'Mass' or 'Wood-Framed' that 
-   *  describes the basic type of construction. To be used with standardsinterface, this 
-   *  string should match an appropriate enumeration value in the 
-   *  standardsinterface::DataDictionary. The enumeration for which this should be a value
-   *  generally varies by intendedSurfaceType(). */
-  std::string constructionType() const;
+  /** This is a freeform field used to identify the construction type for standards.
+       \note Standards applied to this model will use this field to determine correct constructions.
+       \note More information can be found at https://github.com/NREL/openstudio-standards. */
+  boost::optional<std::string> standardsConstructionType() const;
+
+  /** Returns a list of suggestions for standards construction type based on intendedSurfaceType. */
+  std::vector<std::string> suggestedStandardsConstructionTypes() const;
 
   /** Return the layer of construction() whose thickness can be perturbed (usually to reach a 
    *  certain property value for the overall construction), if the construction() exists and is a 
@@ -84,25 +80,21 @@ class MODEL_API ConstructionBaseStandardsInformation : public ModelObject {
   boost::optional<Material> perturbableLayer() const;
 
   /** Return a description of the perturbableLayer(), for instance, 'Insulation'.*/
-  std::string perturbableLayerType() const;
+  boost::optional<std::string> perturbableLayerType() const;
 
   //@}
   /** @name Setters */
-  //@{
-
-  /** Point this object to construction. If this object already points to (a different) construction,
-   *  then that relationship will be lost. If you want the two constructions to have the same 
-   *  standards information, you will need to clone the original ConstructionBaseStandardsInformation,
-   *  then point the clone to the other construction. */
-  void setConstruction(const ConstructionBase& construction);
+  //@
 
   /** Sets the intendedSurfaceType to type. \sa intendedSurfaceTypeValues */
   bool setIntendedSurfaceType(const std::string& type);
+  void resetIntendedSurfaceType();
 
   /** Set the constructionType to type. To be used with standardsinterface, this string should 
    *  match an appropriate enumeration value in the standardsinterface::DataDictionary. The 
    *  enumeration for which this should be a value generally varies by intendedSurfaceType(). */
-  void setConstructionType(const std::string& type);
+  void setStandardsConstructionType(const std::string& type);
+  void resetStandardsConstructionType();
 
   /** Set the perturbableLayer to the one at layerIndex. Returns false if construction() is not a 
    *  LayeredConstruction or 
@@ -127,31 +119,36 @@ class MODEL_API ConstructionBaseStandardsInformation : public ModelObject {
   /** Set the perturbableLayerType to type. Can be one of the provided types, or a free-form 
    *  string. \sa standardPerturbableLayerTypeValues */
   void setPerturbableLayerType(const std::string& type);
+  void resetPerturbableLayerType();
 
   //@}
  protected:
   /// @cond
-  typedef detail::ConstructionBaseStandardsInformation_Impl ImplType;
+  typedef detail::StandardsInformationConstruction_Impl ImplType;
 
   friend class Model;
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::ConstructionBaseStandardsInformation_Impl;
+  friend class detail::StandardsInformationConstruction_Impl;
+  friend class detail::ConstructionBase_Impl;
 
-  explicit ConstructionBaseStandardsInformation(
-      boost::shared_ptr<detail::ConstructionBaseStandardsInformation_Impl> impl);  
+  /** Create new object as child of construction. */
+  explicit StandardsInformationConstruction(const ConstructionBase& construction);
+
+  explicit StandardsInformationConstruction(
+      boost::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);  
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.ConstructionBaseStandardsInformation");
+  REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
 };
 
-/** \relates ConstructionBaseStandardsInformation */
-typedef boost::optional<ConstructionBaseStandardsInformation> OptionalConstructionBaseStandardsInformation;
+/** \relates StandardsInformationConstruction */
+typedef boost::optional<StandardsInformationConstruction> OptionalStandardsInformationConstruction;
 
-/** \relates ConstructionBaseStandardsInformation */
-typedef std::vector<ConstructionBaseStandardsInformation> ConstructionBaseStandardsInformationVector;
+/** \relates StandardsInformationConstruction */
+typedef std::vector<StandardsInformationConstruction> StandardsInformationConstructionVector;
 
 } // model
 } // openstudio 
 
-#endif // MODEL_CONSTRUCTIONBASESTANDARDSINFORMATION_HPP
+#endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP

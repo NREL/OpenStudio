@@ -1,4 +1,4 @@
-!IDD_Version 1.2.2
+!IDD_Version 1.3.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -724,9 +724,11 @@ OS:ClimateZones,
        \type handle
        \required-field
   A2, \field Active Institution
+       \deprecated
        \type alpha
        \default ASHRAE
   N1, \field Active Year
+       \deprecated
        \type integer
        \minimum 0
        \default 2006
@@ -1999,10 +2001,20 @@ OS:SpaceType,
   A5, \field Group Rendering Name
        \type object-list
        \object-list GroupRenderingNames
-  A6; \field Design Specification Outdoor Air Object Name
+  A6, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-
+  A7, \field Standards Building Type
+       \type alpha
+       \note This is a freeform field used to identify the building type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8; \field Standards Space Type
+       \type alpha
+       \note This is a freeform field used to identify the space type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+        
 OS:ModelObjectList,
        \min-fields 1
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
@@ -3213,26 +3225,35 @@ OS:StandardsInformation:Construction,
        \object-list ConstructionNames
   A3, \field Intended Surface Type
        \type choice
+       \key AtticFloor
+       \key AtticWall
+       \key AtticRoof
+       \key DemisingFloor
+       \key DemisingWall
+       \key DemisingRoof
        \key ExteriorFloor
-       \key ExposedExteriorFloor
        \key ExteriorWall
        \key ExteriorRoof
        \key ExteriorWindow
        \key ExteriorDoor
+       \key GlassDoor
+       \key GroundContactFloor
+       \key GroundContactWall
+       \key GroundContactRoof
        \key InteriorFloor
        \key InteriorWall
        \key InteriorCeiling
        \key InteriorPartition
        \key InteriorWindow
        \key InteriorDoor
-       \key GlassDoor
        \key OverheadDoor
        \key Skylight
        \key TubularDaylightDome
        \key TubularDaylightDiffuser
-  A4, \field Construction Type
-       \note Free-form field for use with relevant Data Dictionary enumerations.
-       \note Examples: "Metal building roof", "Wood-framed", "Mass Heavy", etc.
+  A4, \field Standards Construction Type
+       \note This is a freeform field used to identify the construction type for standards.
+       \note Standards applied to this model will use this field to determine correct constructions.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
        \type alpha
   N1, \field Perturbable Layer
        \note If the construction is layered, this is the index (starting at 0)
@@ -4249,7 +4270,8 @@ OS:Building,
        \required-field
        \reference BuildingNames
        \reference SpaceAndSpaceGroupNames
-  A3, \field Building Type
+  A3, \field Building Sector Type
+       \deprecated
        \type choice
        \default Commercial
        \key Commercial
@@ -4272,9 +4294,20 @@ OS:Building,
   A5, \field Default Construction Set Name
        \type object-list
        \object-list DefaultConstructionSetNames
-  A6; \field Default Schedule Set Name
+  A6, \field Default Schedule Set Name
        \type object-list
        \object-list DefaultScheduleSetNames
+  N3, \field Standards Number of Stories
+       \type integer
+       \minimum 0
+  N4, \field Standards Number of Above Ground Stories
+       \type integer
+       \minimum 0
+  A7; \field Standards Building Type
+       \type alpha
+       \note This is a freeform field used to identify the building type for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
 
 OS:DaylightingDevice:Shelf,
        \min-fields 1
@@ -4469,11 +4502,14 @@ OS:ShadingSurfaceGroup,
        \type real
        \units m
        \default 0
-  N4; \field Z Origin
+  N4, \field Z Origin
        \type real
        \units m
        \default 0
-
+  A5; \field Shaded Object Name
+       \type object-list
+       \object-list SurfAndSubSurfNames
+       
 OS:Space,
        \min-fields 1
   A1, \field Handle
@@ -4525,33 +4561,6 @@ OS:Space,
   A9; \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-
-OS:StandardsInformation:Building,
-       \unique-object
-       \extensible:4
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  N1, \field Number of Stories
-       \type integer
-       \minimum 0
-  N2, \field Number of Above Ground Stories
-       \type integer
-       \minimum 0
-  A2, \field Building Type Institution Name
-       \type alpha
-       \begin-extensible
-  A3, \field Building Type Document Name
-       \note List a Standard (ASHARE 90.1, ASHRAE 62.1), or other differentiator,
-       \note such as "occupancy", "ventilation", etc.
-       \type alpha
-  A4, \field Building Type Document Year
-       \type integer
-       \minimum 0
-  A5; \field Building Type Value
-       \type alpha
-       \required-field
 
 OS:Surface,
        \extensible:3
@@ -6392,7 +6401,7 @@ OS:Refrigeration:Subcooler:LiquidSuction,
         \note Applicable only and required for liquid suction heat exchangers (LSHX)
         \note Design vapor inlet temperature must be less than or equal to
         \note      the Liquid inlet design temp
-
+    
 OS:Refrigeration:System,
         \min-fields 8
   A1,   \field Handle
@@ -7612,6 +7621,56 @@ OS:AirLoopHVAC:OutdoorAirSystem,
        \required-field
        \object-list ConnectionNames
   A9; \field Return Air Stream Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+
+OS:AirLoopHVAC:ReturnPlenum,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \min-fields 1
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \reference ReturnPathComponentNames
+       \reference ConnectionObject
+   A3, \field ThermalZone
+       \type object-list
+       \object-list ThermalZoneNames
+   A4, \field Outlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5, \field Induced Air Outlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A6; \field Inlet 1 Node
+       \begin-extensible
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+
+OS:AirLoopHVAC:SupplyPlenum,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \min-fields 1
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \reference SupplyPathComponentNames
+       \reference ConnectionObject
+   A3, \field Thermal Zone
+       \type object-list
+       \object-list ThermalZoneNames
+   A4, \field Inlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5; \field Outlet 1 Node
+       \begin-extensible
        \type object-list
        \required-field
        \object-list ConnectionNames
@@ -12899,6 +12958,64 @@ OS:Fan:OnOff,
        \type alpha
        \retaincase
        \default General
+       
+OS:Fan:ZoneExhaust,
+       \memo Models a fan that exhausts air from a zone.
+  \min-fields 10
+  A1, \field Handle
+       \type handle
+       \required-field  
+  A2, \field Name
+       \type alpha  
+       \required-field
+       \reference FansZoneExhaust
+       \reference ConnectionObject       
+  A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N1, \field Fan Efficiency
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \required-field
+  N2, \field Pressure Rise
+       \units Pa
+       \ip-units inH2O
+       \required-field
+  N3, \field Maximum Flow Rate
+       \units m3/s
+       \minimum 0.0
+  A4, \field Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames       
+  A5, \field Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A6, \field End-Use Subcategory
+       \type alpha
+       \retaincase
+       \required-field
+  A7, \field Flow Fraction Schedule Name
+       \note If field is used, then when fan runs the exhausted air flow rate is controlled to be the scheduled fraction times the Maximum Flow Rate
+       \type object-list
+       \object-list ScheduleNames
+  A8, \field System Availability Manager Coupling Mode
+       \note Control if fan is to be interlocked with HVAC system Availability Managers or not.
+       \type choice
+       \key Coupled
+       \key Decoupled
+       \required-field
+  A9, \field Minimum Zone Temperature Limit Schedule Name
+       \note If field is used, the exhaust fan will not run if the zone temperature is lower than this limit
+       \type object-list
+       \object-list ScheduleNames
+  A10; \field Balanced Exhaust Fraction Schedule Name
+       \note Used to control fan's impact on flow at the return air node. Enter the portion of the exhaust that is balanced by simple airflows.
+       \note
+       \type object-list
+       \object-list ScheduleNames       
 
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \min-fields 24

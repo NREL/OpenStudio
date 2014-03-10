@@ -32,17 +32,13 @@ namespace detail {
 };
 
 class Node;
-
 class AirLoopHVACOutdoorAirSystem;
-
 class AirLoopHVACZoneSplitter;
-
 class AirLoopHVACZoneMixer;
-
+class AirLoopHVACSupplyPlenum;
+class AirLoopHVACReturnPlenum;
 class StraightComponent;
-
 class ThermalZone;
-
 class SizingSystem;
 
 /** AirLoopHVAC is an interface to the EnergyPlus IDD object named "AirLoopHVAC"
@@ -197,7 +193,7 @@ class MODEL_API AirLoopHVAC : public Loop
    * A freshly constructed AirLoopHVAC object will not have an outdoor air system
    * and this method will return a false optional.
    */
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem();
+  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
   /** Adds a new branch on the demand side of the air loop for a zone labeled zoneLabel
    * and returns true if the operation was successful. The method will return false if the Zone
@@ -213,10 +209,10 @@ class MODEL_API AirLoopHVAC : public Loop
   bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
 
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
-   *  Returns true if the airTerminal was accepted, otherwise false.  The demand side
-   *  of the air loop must be empty for this operation to succeed.
+   *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,
+   *  can be an air terminal, AirLoopHVACSupplyPlenum, or airLoopHVACReturnPlenum.
    **/
-  bool addBranchForHVACComponent(HVACComponent airTerminal);
+  bool addBranchForHVACComponent(HVACComponent hvacComponent);
 
   /** Removes the Zone identified by zoneLabel from the air loop and returns true
    * upon successful removal.

@@ -77,10 +77,15 @@
 
 #include <utilities/core/Assert.hpp>
 
+#include <QFile>
+#include <qjson/parser.h>
+
 namespace openstudio {
 namespace model {
 
 namespace detail {
+
+  QMap<QString, QVariant> SpaceType_Impl::m_standardsSpaceTypeMap;
 
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
@@ -251,6 +256,173 @@ namespace detail {
   void SpaceType_Impl::resetRenderingColor()
   {
     setString(OS_SpaceTypeFields::GroupRenderingName, "");
+  }
+
+  boost::optional<std::string> SpaceType_Impl::standardsBuildingType() const
+  {
+    return getString(OS_SpaceTypeFields::StandardsBuildingType, false, true);
+  }
+
+  std::vector<std::string> SpaceType_Impl::suggestedStandardsBuildingTypes() const
+  {
+    std::vector<std::string> result;
+  
+    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+
+    // include values from json
+    parseStandardsSpaceTypeMap();
+    QMap<QString, QVariant>::const_iterator i = m_standardsSpaceTypeMap.constBegin();
+    for (; i != m_standardsSpaceTypeMap.constEnd(); ++i) {
+      result.push_back(toString(i.key()));
+    }
+
+    // include values from model
+
+    boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+    boost::optional<std::string> buildingStandardsBuildingType;
+    if (building){
+      buildingStandardsBuildingType = building->standardsBuildingType();
+    }
+
+    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+      boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
+      if (otherBuildingType){
+        result.push_back(*otherBuildingType);
+      }
+    }
+
+    // remove buildingStandardsBuildingType and standardsBuildingType
+    IstringFind finder;
+    if (buildingStandardsBuildingType){
+      finder.addTarget(*buildingStandardsBuildingType);
+    }
+    if (standardsBuildingType){
+      finder.addTarget(*standardsBuildingType);
+    }
+    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    result.resize( std::distance(result.begin(),it) ); 
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
+
+    // add building value to front
+    if (buildingStandardsBuildingType){
+      result.insert(result.begin(), *buildingStandardsBuildingType);
+    }
+
+    // add current to front
+    if (standardsBuildingType){
+      result.insert(result.begin(), *standardsBuildingType);
+    }
+
+    return result;
+  }
+
+  bool SpaceType_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsBuildingType, standardsBuildingType);
+    OS_ASSERT(test);
+    return test;
+  }
+
+  void SpaceType_Impl::resetStandardsBuildingType()
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsBuildingType, "");
+    OS_ASSERT(test);
+  }
+
+  boost::optional<std::string> SpaceType_Impl::standardsSpaceType() const
+  {
+    return getString(OS_SpaceTypeFields::StandardsSpaceType, false, true);
+  }
+
+  std::vector<std::string> SpaceType_Impl::suggestedStandardsSpaceTypes() const
+  {
+    std::vector<std::string> result;
+
+    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+    boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
+
+    // include values from json
+    parseStandardsSpaceTypeMap();
+    if (standardsBuildingType){
+      if (m_standardsSpaceTypeMap.contains(toQString(*standardsBuildingType))){
+        QList<QVariant> values = m_standardsSpaceTypeMap[toQString(*standardsBuildingType)].toList();
+        QList<QVariant>::const_iterator i = values.constBegin();
+        for (; i != values.constEnd(); ++i) {
+          result.push_back(toString(i->toString()));
+        }
+      }
+    }
+
+    // include values from model
+    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+
+      boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
+      if (standardsBuildingType && otherBuildingType){
+        // need to be the same
+        if (standardsBuildingType.get() != otherBuildingType.get()){
+          continue;
+        }
+      }else if (!standardsBuildingType && !otherBuildingType){
+        // both empty
+      }else{
+        // different
+        continue;
+      }
+
+      boost::optional<std::string> otherSpaceType = other.standardsSpaceType();
+      if (otherSpaceType){
+        result.push_back(*otherSpaceType);
+      }
+    }
+
+    // remove buildingStandardsBuildingType and standardsBuildingType
+    IstringFind finder;
+    if (standardsSpaceType){
+      finder.addTarget(*standardsSpaceType);
+    }
+    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    result.resize( std::distance(result.begin(),it) ); 
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
+
+    // add current to front
+    if (standardsSpaceType){
+      result.insert(result.begin(), *standardsSpaceType);
+    }
+
+    return result;
+  }
+
+  bool SpaceType_Impl::setStandardsSpaceType(const std::string& standardsSpaceType)
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsSpaceType, standardsSpaceType);
+    OS_ASSERT(test);
+    return test;
+  }
+
+  void SpaceType_Impl::resetStandardsSpaceType()
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsSpaceType, "");
+    OS_ASSERT(test);
   }
 
   std::vector<Space> SpaceType_Impl::spaces() const
@@ -1158,6 +1330,21 @@ namespace detail {
     OS_ASSERT(count == 1);
   }
 
+  void SpaceType_Impl::parseStandardsSpaceTypeMap() const
+  {
+    if (m_standardsSpaceTypeMap.empty()){
+      QFile file(":/resources/standards/nrel_space_types.json");
+      if (file.open(QFile::ReadOnly)) {
+        QJson::Parser parser;
+        bool ok(false);
+        QVariant variant = parser.parse(&file,&ok);
+        OS_ASSERT(ok);
+        file.close();
+        m_standardsSpaceTypeMap = variant.toMap();
+      }
+    }
+  }
+
 } // detail
 
 SpaceType::SpaceType(const Model& model)
@@ -1219,6 +1406,46 @@ bool SpaceType::setRenderingColor(const RenderingColor& renderingColor)
 void SpaceType::resetRenderingColor()
 {
   getImpl<detail::SpaceType_Impl>()->resetRenderingColor();
+}
+
+boost::optional<std::string> SpaceType::standardsBuildingType() const
+{
+  return getImpl<detail::SpaceType_Impl>()->standardsBuildingType();
+}
+
+std::vector<std::string> SpaceType::suggestedStandardsBuildingTypes() const
+{
+  return getImpl<detail::SpaceType_Impl>()->suggestedStandardsBuildingTypes();
+}
+
+bool SpaceType::setStandardsBuildingType(const std::string& standardsBuildingType)
+{
+  return getImpl<detail::SpaceType_Impl>()->setStandardsBuildingType(standardsBuildingType);
+}
+
+void SpaceType::resetStandardsBuildingType()
+{
+  getImpl<detail::SpaceType_Impl>()->resetStandardsBuildingType();
+}
+
+boost::optional<std::string> SpaceType::standardsSpaceType() const
+{
+  return getImpl<detail::SpaceType_Impl>()->standardsSpaceType();
+}
+
+std::vector<std::string> SpaceType::suggestedStandardsSpaceTypes() const
+{
+  return getImpl<detail::SpaceType_Impl>()->suggestedStandardsSpaceTypes();
+}
+
+bool SpaceType::setStandardsSpaceType(const std::string& standardsSpaceType)
+{
+  return getImpl<detail::SpaceType_Impl>()->setStandardsSpaceType(standardsSpaceType);
+}
+
+void SpaceType::resetStandardsSpaceType()
+{
+  getImpl<detail::SpaceType_Impl>()->resetStandardsSpaceType();
 }
 
 std::vector<Space> SpaceType::spaces() const

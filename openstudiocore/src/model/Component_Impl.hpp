@@ -71,7 +71,7 @@ namespace detail {
     /** Returns object that lists meta-data and contents of this Component. */
     ComponentData componentData() const;
 
-    /** Returns the primary ModelObject of this Component. Can be used to assess the Component
+    /** Returns the primary ModelObject of this Component. Can be used to access the Component
      *  type by using .optionalCast and/or iddObject().type(). */
     ModelObject primaryObject() const;
 

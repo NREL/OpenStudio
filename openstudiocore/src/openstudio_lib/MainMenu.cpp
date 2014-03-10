@@ -19,6 +19,8 @@
 
 #include <openstudio_lib/MainMenu.hpp>
 #include <QMenu>
+#include <utilities/core/Assert.hpp>
+
 
 namespace openstudio {
 
@@ -41,7 +43,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   QAction * showRunManagerPreferences = new QAction(tr("Show Tools"), this);
 
   //QAction * showRubyConsoleAction;
-  QAction * exitAction;
+  QAction * exitAction = 0;
   if (!m_isPlugin){
     //showRubyConsoleAction = new QAction(tr("Show &Ruby Console"), this);
     exitAction = new QAction(tr("E&xit"), this);
@@ -100,6 +102,15 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   m_displayIPUnitsAction = new QAction(tr("English (&I-P)"),this);
   connect(m_displayIPUnitsAction, SIGNAL(triggered()),this,SLOT(displayIPUnitsClicked()));
   m_preferencesMenu->addAction(m_displayIPUnitsAction);
+
+
+  m_configureProxy = new QAction(tr("&Configure Internet Proxy"),this);
+
+  bool isConnected = connect(m_configureProxy, SIGNAL(triggered()),this,SIGNAL(configureProxyClicked()));
+  OS_ASSERT(isConnected);
+
+  m_preferencesMenu->addAction(m_configureProxy);
+
 
   // Online BCL menu
   m_windowMenu = new QMenu(tr("&Online BCL"),this);

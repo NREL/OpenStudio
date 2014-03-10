@@ -243,6 +243,33 @@ namespace detail {
     return true;  
   }
 
+  bool GlareSensor_Impl::aimAt(const Point3d& target)
+  {
+    Point3d position = this->position();
+    Vector3d vector = target - position;
+
+    if (!vector.normalize()){
+      return false;
+    }
+
+    Vector3d yAxis(0,1,0);
+    Vector3d rotationAxis = yAxis.cross(vector);
+
+    if (!rotationAxis.normalize()){
+      return false;
+    }
+
+    double angle = getAngle(yAxis, vector);
+    Transformation transformation = Transformation::rotation(rotationAxis, angle);
+    EulerAngles eulerAngles = transformation.eulerAngles();
+
+    this->setPsiRotationAroundXAxis(eulerAngles.psi());
+    this->setThetaRotationAroundYAxis(eulerAngles.theta());
+    this->setPhiRotationAroundZAxis(eulerAngles.phi());
+
+    return true;
+  }
+
   //bool GlareSensor_Impl::isPrimaryGlareSensor() const
   //{
   //  bool result = false;
@@ -401,6 +428,11 @@ openstudio::Transformation GlareSensor::transformation() const {
 bool GlareSensor::setTransformation(const openstudio::Transformation& transformation)
 {
   return getImpl<detail::GlareSensor_Impl>()->setTransformation(transformation);
+}
+
+bool GlareSensor::aimAt(const Point3d& target)
+{
+  return getImpl<detail::GlareSensor_Impl>()->aimAt(target);
 }
 
 /// @cond
