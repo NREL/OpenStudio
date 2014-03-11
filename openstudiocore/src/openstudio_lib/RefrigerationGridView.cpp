@@ -461,7 +461,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                       boost::bind(&openstudio::model::getCompatibleSchedules,
                                   m_model,
                                   "RefrigerationCase",
-                                  "Case Lighting")), // NOTE these strings found in ScheduleTypeRegistry
+                                  "Case Lighting")), // NOTE these strings found in ScheduleTypeRegistry.cpp
           &model::RefrigerationCase::caseLightingSchedule,
           &model::RefrigerationCase::setCaseLightingSchedule,
           boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetCaseLightingSchedule));
@@ -919,6 +919,91 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           &model::RefrigerationWalkIn::system,
           &model::RefrigerationWalkIn::addToSystem,
           boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::removeFromSystem));
+    }else if(field == ZONEBOUNDARYTHERMALZONE){
+      addComboBoxColumn<model::ThermalZone,model::RefrigerationWalkIn>(
+          QString(ZONEBOUNDARYTHERMALZONE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+                      boost::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model)),
+          &model::RefrigerationWalkIn::zoneBoundaryThermalZone,
+          &model::RefrigerationWalkIn::setZoneBoundaryThermalZone,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone));
+    }else if(field == ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE),
+                            QString("m^2"),
+                            QString("m^2"),
+                            QString("ft^2"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryTotalInsulatedSurfaceAreaFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
+    }else if(field == ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE),
+                            QString("m^2"),
+                            QString("m^2"),
+                            QString("ft^2"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryAreaofGlassReachInDoorsFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryAreaofGlassReachInDoorsFacingZone);
+    }else if(field == ZONEBOUNDARYHEIGHTOFGLASSREACHINDOORSFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYHEIGHTOFGLASSREACHINDOORSFACINGZONE),
+                            QString("m"),
+                            QString("m"),
+                            QString("ft"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryHeightofGlassReachInDoorsFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryHeightofGlassReachInDoorsFacingZone);
+    }else if(field == ZONEBOUNDARYAREAOFSTOCKINGDOORSFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYAREAOFSTOCKINGDOORSFACINGZONE),
+                            QString("m^2"),
+                            QString("m^2"),
+                            QString("ft^2"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryAreaofStockingDoorsFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryAreaofStockingDoorsFacingZone);
+    }else if(field == ZONEBOUNDARYHEIGHTOFSTOCKINGDOORSFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYHEIGHTOFSTOCKINGDOORSFACINGZONE),
+                            QString("m"),
+                            QString("m"),
+                            QString("ft"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryHeightofStockingDoorsFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryHeightofStockingDoorsFacingZone);
+    }else if(field == ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE),
+                            QString("W/m^2*K"),
+                            QString("W/m^2*K"),
+                            QString("Btu/hr*ft^2*F"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryInsulatedSurfaceUValueFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryInsulatedSurfaceUValueFacingZone);
+    }else if(field == ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE),
+                            QString("W/m^2*K"),
+                            QString("W/m^2*K"),
+                            QString("Btu/hr*ft^2*F"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryGlassReachInDoorUValueFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryGlassReachInDoorUValueFacingZone);
+    }else if(field == ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE){
+      addQuantityEditColumn(QString(ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE),
+                            QString("W/m^2*K"),
+                            QString("W/m^2*K"),
+                            QString("Btu/hr*ft^2*F"),
+                            m_isIP,
+                            &model::RefrigerationWalkIn::zoneBoundaryStockingDoorUValueFacingZone,
+                            &model::RefrigerationWalkIn::setZoneBoundaryStockingDoorUValueFacingZone);
+    }else if(field == ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE){
+      addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
+          QString(ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE),
+          &openstudio::objectName,
+          boost::bind(&openstudio::sortByObjectName<model::Schedule>,
+                      boost::bind(&openstudio::model::getCompatibleSchedules,
+                                  m_model,
+                                  "RefrigerationWalkInZoneBoundary",
+                                  "Stocking Door Opening  Facing Zone")),
+          &model::RefrigerationWalkIn::zoneBoundaryStockingDoorOpeningScheduleFacingZone,
+          &model::RefrigerationWalkIn::setZoneBoundaryStockingDoorOpeningScheduleFacingZone,
+          boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone));
     }else{
       // unhandled
       OS_ASSERT(false);
