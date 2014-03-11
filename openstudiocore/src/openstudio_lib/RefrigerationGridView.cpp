@@ -113,6 +113,16 @@
 #define RESTOCKINGSCHEDULE "Restocking Schedule"
 #define TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE "Temperature Termination Defrost Fraction to Ice"
 #define ZONEBOUNDARIES "Zone Boundaries"
+#define ZONEBOUNDARYTHERMALZONE "Thermal Zone"
+#define ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE "Total Insulated Surface Area Facing Zone"
+#define ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE "Area of Glass Reach In Doors Facing Zone"
+#define ZONEBOUNDARYHEIGHTOFGLASSREACHINDOORSFACINGZONE "Height of Glass Reach In Doors Facing Zone"
+#define ZONEBOUNDARYAREAOFSTOCKINGDOORSFACINGZONE "Area of Stocking Doors Facing Zone"
+#define ZONEBOUNDARYHEIGHTOFSTOCKINGDOORSFACINGZONE "Height of Stocking Doors Facing Zone"
+#define ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE "Insulated Surface U Value Facing Zone"
+#define ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE "Glass Reach In Door U Value Facing Zone"
+#define ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE "Stocking Door U Value Facing Zone"
+#define ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE "Stocking Door Opening Schedule Facing Zone"
 
 namespace openstudio {
 
@@ -198,16 +208,9 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(RACK);
-    //fields.push_back("Rack Saturated Suction Temperature (F)");
     fields.push_back(THERMALZONE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
-
-  {
-    std::vector<QString> fields;
     fields.push_back(CASELENGTH);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Dimensions"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -262,23 +265,8 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(CASEDEFROSTPOWERPERUNITLENGTH);
-    //fields.push_back("Duration of Cycle (mins)");
-    //fields.push_back("Drip Time (mins)");
-    //fields.push_back("Defrost 1 Start Time");
-    //fields.push_back("Defrost 2 Start Time");
-    //fields.push_back("Defrost 3 Start Time");
-    //fields.push_back("Defrost 4 Start Time");
-    //fields.push_back("Defrost 5 Start Time");
-    //fields.push_back("Defrost 6 Start Time");
-    //fields.push_back(DEFROSTENERGYCORRECTIONCURVE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost"),fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
-
-  {
-    std::vector<QString> fields;
     fields.push_back(REFRIGERATEDCASERESTOCKINGSCHEDULE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Restocking"),fields);
+    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost\nAnd\nRestocking"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -642,19 +630,18 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(RACK);
-    //fields.push_back("Rack Saturated Suction Temperature (F)");
-    //fields.push_back("Walk-in Type");
-    //fields.push_back("Manufacturer & Model No.");
-    //fields.push_back("Zone Adjacent");
+    fields.push_back(ZONEBOUNDARYTHERMALZONE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    //fields.push_back("Length (ft)");
-    //fields.push_back("Width (ft)");
-    //fields.push_back("Height (ft)");
+    fields.push_back(ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE);
+    fields.push_back(ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE);
+    fields.push_back(ZONEBOUNDARYHEIGHTOFGLASSREACHINDOORSFACINGZONE);
+    fields.push_back(ZONEBOUNDARYAREAOFSTOCKINGDOORSFACINGZONE);
+    fields.push_back(ZONEBOUNDARYHEIGHTOFSTOCKINGDOORSFACINGZONE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Dimensions"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -662,19 +649,10 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(INSULATEDFLOORUVALUE);
-    //fields.push_back("Wall/Roof R-Value");
+    fields.push_back(ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE);
+    fields.push_back(ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE);
+    fields.push_back(ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Construction"),fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
-
-  {
-    std::vector<QString> fields;
-    //fields.push_back("Stocking Door Area (ft2)");
-    //fields.push_back("Stocking Door Height (ft)");
-    //fields.push_back("Stocking Door R-Value (hr-ft2-F/Btu)");
-    //fields.push_back("Stocking Door Opening Schedule");
-    //fields.push_back("Stocking Door Opening Protection");
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Stocking\nDoors"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -716,16 +694,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     std::vector<QString> fields;
     fields.push_back(DEFROSTTYPE);
     fields.push_back(DEFROSTCONTROLTYPE);
-    //fields.push_back("Drain/Supplemental (Drain and Drip-Pan only) Heaters (W)");
     fields.push_back(DEFROSTPOWER);
-    //fields.push_back("Duraction of Cycle (mins)");
-    //fields.push_back("Drip Time (mins)");
-    //fields.push_back("Defrost 1 Start Time");
-    //fields.push_back("Defrost 2 Start Time");
-    //fields.push_back("Defrost 3 Start Time");
-    //fields.push_back("Defrost 4 Start Time");
-    //fields.push_back("Defrost 5 Start Time");
-    //fields.push_back("Defrost 6 Start Time");
     fields.push_back(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Defrost"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -734,6 +703,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(RESTOCKINGSCHEDULE);
+    fields.push_back(ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Restocking"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
