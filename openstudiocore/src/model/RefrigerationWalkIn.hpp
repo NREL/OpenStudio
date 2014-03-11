@@ -23,6 +23,7 @@
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject.hpp>
 #include <model/RefrigerationSystem.hpp>
+#include <model/ThermalZone.hpp>
 
 namespace openstudio {
 
@@ -120,6 +121,26 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   boost::optional<RefrigerationSystem> system() const;
 
+  boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
+
+  boost::optional<double> zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const;
+
+  boost::optional<double> zoneBoundaryAreaofGlassReachInDoorsFacingZone() const;
+
+  boost::optional<double> zoneBoundaryHeightofGlassReachInDoorsFacingZone() const;
+
+  boost::optional<double> zoneBoundaryAreaofStockingDoorsFacingZone() const;
+
+  boost::optional<double> zoneBoundaryHeightofStockingDoorsFacingZone() const;
+
+  boost::optional<double> zoneBoundaryInsulatedSurfaceUValueFacingZone() const;
+
+  boost::optional<double> zoneBoundaryGlassReachInDoorUValueFacingZone() const;
+
+  boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
+
+  boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -193,6 +214,30 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   bool addToSystem(RefrigerationSystem & system);
 
   void removeFromSystem();
+
+  bool setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone);
+
+  void resetZoneBoundaryThermalZone();
+
+  bool setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
+
+  void setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+
+  void setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+
+  void setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
+
+  void setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
+
+  bool setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone);
+
+  bool setZoneBoundaryGlassReachInDoorUValueFacingZone(double zoneBoundaryGlassReachInDoorUValueFacingZone);
+
+  bool setZoneBoundaryStockingDoorUValueFacingZone(double zoneBoundaryStockingDoorUValueFacingZone);
+
+  bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
+
+  void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
 
   //@}
   /** @name Other */
