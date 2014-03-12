@@ -9,6 +9,8 @@
 #define UTILITIES_API
 #define RUNMANAGER_API
 
+%feature("director") RunManagerWatcher;  
+
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
@@ -37,6 +39,7 @@
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
   #include <runmanager/lib/MergedJobResults.hpp>
+  #include <runmanager/lib/RunManagerWatcher.hpp>
   
   #include <ruleset/OSArgument.hpp>
   #include <utilities/core/Path.hpp>
@@ -185,6 +188,7 @@
 %include <runmanager/lib/ConfigOptions.hpp>
 %include <runmanager/lib/TreeStatus.hpp>
 %include <runmanager/lib/JobStatusWidget.hpp>
+%include <runmanager/lib/RunManagerWatcher.hpp>
 
 #endif // RUNMANAGER_RUNMANAGER_I
 

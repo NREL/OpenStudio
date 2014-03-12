@@ -71,7 +71,7 @@ namespace runmanager {
   /// Operator overload for streaming ToolLocationInfo to ostream
   RUNMANAGER_API std::ostream &operator<<(std::ostream &os, const ToolLocationInfo &epi);
 
-     
+
   //! Stores configuration options for the runmanager project
   //! \sa openstudio::runmanager::Configuration
   class RUNMANAGER_API ConfigOptions
