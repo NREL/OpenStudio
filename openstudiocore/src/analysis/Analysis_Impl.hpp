@@ -278,11 +278,11 @@ namespace detail {
    signals:
     void seedChanged();
 
-    void removedDataPoint(const UUID& dataPointUUID);
+    void removedDataPoint(const openstudio::UUID& dataPointUUID);
 
     void removedAllDataPoints();
 
-    void clearedDataPointResults(const UUID& dataPointUUID);
+    void clearedDataPointResults(const openstudio::UUID& dataPointUUID);
 
     void clearedAllResults();
    protected:
