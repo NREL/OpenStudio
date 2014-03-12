@@ -59,6 +59,7 @@ namespace openstudio{
         m_lastCompleteDataPointUUIDs(),
         m_lastDataPointJSON(),
         m_lastDownloadDataPointSuccess(false),
+        m_lastDeleteDataPointSuccess(false),
         m_errors(),
         m_warnings()
     {
@@ -380,6 +381,22 @@ namespace openstudio{
     bool OSServer_Impl::lastDownloadDataPointSuccess() const
     {
       return m_lastDownloadDataPointSuccess;
+    }
+
+    bool OSServer_Impl::deleteDataPoint(const UUID& analysisUUID,
+                                        const UUID& dataPointUUID,
+                                        int msec)
+    {
+      if (requestDeleteDataPoint(analysisUUID,dataPointUUID)) {
+        if (waitForFinished(msec)) {
+          return lastDeleteDataPointSuccess();
+        }
+      }
+      return false;
+    }
+
+    bool OSServer_Impl::lastDeleteDataPointSuccess() const {
+      return m_lastDeleteDataPointSuccess;
     }
 
     bool OSServer_Impl::waitForFinished(int msec)
@@ -963,6 +980,27 @@ namespace openstudio{
       m_networkReply = m_networkAccessManager->get(request);
 
       bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDownloadDataPointComplete()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
+    bool OSServer_Impl::requestDeleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID)
+    {
+      clearErrorsAndWarnings();
+
+      m_lastDeleteDataPointSuccess = false;
+
+      if (!m_mutex->tryLock()) {
+        return false;
+      }
+
+      QString id = toQString(removeBraces(dataPointUUID));
+      QUrl url(m_url.toString().append("/data_points/").append(id));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->deleteResource(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDeleteDataPoint()));
       OS_ASSERT(test);
 
       return true;
@@ -1598,6 +1636,25 @@ namespace openstudio{
       emit requestProcessed(success);
     }
 
+    void OSServer_Impl::processDeleteDataPoint()
+    {
+      bool success = false;
+
+      logNetworkReply("processDeleteDataPoint");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastDeleteDataPointSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      resetNetworkReply();
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
     void OSServer_Impl::logUploadProgress(qint64 bytesSent, qint64 bytesTotal) {
       if (bytesTotal == -1) {
         LOG(Debug,"Unknown number of bytes in upload.");
@@ -1995,6 +2052,15 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastDownloadDataPointSuccess();
   }
 
+  bool OSServer::deleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, int msec)
+  {
+    return getImpl<detail::OSServer_Impl>()->deleteDataPoint(analysisUUID,dataPointUUID,msec);
+  }
+
+  bool OSServer::lastDeleteDataPointSuccess() const {
+    return getImpl<detail::OSServer_Impl>()->lastDeleteDataPointSuccess();
+  }
+
   bool OSServer::waitForFinished(int msec) 
   {
     return getImpl<detail::OSServer_Impl>()->waitForFinished(msec);
@@ -2108,6 +2174,10 @@ namespace openstudio{
   bool OSServer::startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath) 
   {
     return getImpl<detail::OSServer_Impl>()->startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath);
+  }
+
+  bool OSServer::requestDeleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID) {
+    return getImpl<detail::OSServer_Impl>()->requestDeleteDataPoint(analysisUUID,dataPointUUID);
   }
 
   bool OSServer::connect(const char* signal,
