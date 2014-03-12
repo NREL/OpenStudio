@@ -2033,9 +2033,9 @@ model::ConstructionBase ForwardTranslator::interiorPartitionSurfaceConstruction(
   }
 
   StandardOpaqueMaterial material(model, "MediumSmooth", 0.0254, 0.16, 800, 1090);
-  material.setThermalAbsorptance(0.2);
-  material.setSolarAbsorptance(0.2);
-  material.setVisibleAbsorptance(0.1);
+  material.setThermalAbsorptance(0.4);
+  material.setSolarAbsorptance(0.4);
+  material.setVisibleAbsorptance(0.3);
 
   model::Construction construction(model);
   construction.setName("Interior Partition Surface Construction");
