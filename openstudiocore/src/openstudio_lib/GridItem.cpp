@@ -1205,6 +1205,8 @@ QColor SystemItem::plenumColor(const Handle & plenumHandle)
     {
       color = SchedulesView::colors[index];
     }
+
+    // DLM: Create a RenderingColor and associate it with the thermal zone?
   }
 
   return color;
