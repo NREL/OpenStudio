@@ -1311,6 +1311,14 @@ namespace detail {
     bool doExteriorShading = (doViewGlass && (exteriorShadingProjectionFactor > 0));
     bool doInteriorShelf = (doDaylightGlass && (interiorShelfProjectionFactor > 0));
     bool doViewAndDaylightGlass = (doViewGlass && doDaylightGlass);
+
+    // ignore these user arguments?
+    if (!doViewGlass){
+      desiredViewGlassSillHeight = 0.0;
+    }
+    if (!doDaylightGlass){
+      desiredDaylightingGlassHeaderHeight = 0.0;
+    }
     
     // new coordinate system has z' in direction of outward normal, y' is up
     double xmin = std::numeric_limits<double>::max();
