@@ -72,27 +72,28 @@ namespace detail {
       m_numDetailsTries(0),
       m_waitForAlreadyRunningDataPoints(false),
       m_numDeleteDataPointTries(0),
-      m_requestDeleteProject(false)
+      m_needToDeleteProject(false),
+      m_numDeleteProjectTries(0)
   {
     bool connected;
-    connected = m_project.analysis()->connect(SIGNAL(removedDataPoint(const openstudio::UUID&)),
-                                              this,
-                                              SLOT(dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID&)));
+    connected = m_project.analysis().connect(SIGNAL(removedDataPoint(const openstudio::UUID&)),
+                                             this,
+                                             SLOT(dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID&)));
     OS_ASSERT(connected);
 
-    connected = m_project.analysis()->connect(SIGNAL(clearedDataPointResults(const openstudio::UUID&)),
-                                              this,
-                                              SLOT(dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID&)));
+    connected = m_project.analysis().connect(SIGNAL(clearedDataPointResults(const openstudio::UUID&)),
+                                             this,
+                                             SLOT(dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID&)));
     OS_ASSERT(connected);
 
-    connected = m_project.analysis()->connect(SIGNAL(removedAllDataPoints()),
-                                              this,
-                                              SLOT(allDataPointsOrResultsRemovedFromAnalysis()));
+    connected = m_project.analysis().connect(SIGNAL(removedAllDataPoints()),
+                                             this,
+                                             SLOT(allDataPointsOrResultsRemovedFromAnalysis()));
     OS_ASSERT(connected);
 
-    connected = m_project.analysis()->connect(SIGNAL(clearedAllResults()),
-                                              this,
-                                              SLOT(allDataPointsOrResultsRemovedFromAnalysis()));
+    connected = m_project.analysis().connect(SIGNAL(clearedAllResults()),
+                                             this,
+                                             SLOT(allDataPointsOrResultsRemovedFromAnalysis()));
     OS_ASSERT(connected);
   }
 
@@ -1386,7 +1387,7 @@ namespace detail {
         // DLM: are these 1 second checks?  this is only 5 minutes.  Should we wait longer here?
         m_maxAnalysisNotRunningCount = 300; // wait up to 15 minutes for DataPoints to stop running
       }
-      if (m_requestDeleteProject) {
+      if (m_needToDeleteProject) {
         requestProjectDeletion();
         return;
       }
@@ -1395,7 +1396,7 @@ namespace detail {
     }
 
     if (!success) {
-      if (m_requestDeleteProject) {
+      if (m_needToDeleteProject) {
         registerProjectDeletionFailure();
       }
       else {
@@ -1440,7 +1441,7 @@ namespace detail {
       emit iterationProgress(numCompleteDataPoints(),numDataPointsInIteration());
 
       if (m_deleteDataPointsQueue.empty()) {
-        test = m_requestDeleteDataPoint->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointDeletedFromServer(bool)));
+        bool test = m_requestDeleteDataPoint->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointDeletedFromServer(bool)));
         OS_ASSERT(test);
         appendErrorsAndWarnings(*m_requestDeleteDataPoint);
         m_requestDeleteDataPoint.reset();
@@ -1466,11 +1467,57 @@ namespace detail {
   }
 
   void CloudAnalysisDriver_Impl::allDataPointsOrResultsRemovedFromAnalysis() {
+    LOG(Info,"All data points or results deleted locally. Will try to delete the project from the server.");
+    m_needToDeleteProject = true;
 
+    if (isRunning() || isDownloading()) {
+      requestStop(false);
+    }
+    else {
+      requestProjectDeletion();
+    }
   }
 
   void CloudAnalysisDriver_Impl::projectDeletedFromServer(bool success) {
+    success = success && m_requestDeleteProject->lastDeleteProjectSuccess();
 
+    if (!success) {
+      ++m_numDeleteProjectTries;
+      if (m_numDeleteProjectTries >= 30) {
+        logError("Unable to delete project from server.");
+      }
+      else {
+        QTimer::singleShot(1000,this,SLOT(requestDeleteProjectRetry()));
+        return;
+      }
+    }
+
+    if (success) {
+      bool test = m_requestDeleteProject->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(projectDeletedFromServer(bool)));
+      OS_ASSERT(test);
+      appendErrorsAndWarnings(*m_requestDeleteProject);
+      m_requestDeleteProject.reset();
+      OS_ASSERT(!isRunning() && !isDownloading() && !isStopping());
+      resetState();
+      setStatus(AnalysisStatus::Idle);
+      emit resultsChanged();
+      emit iterationProgress(numCompleteDataPoints(),numDataPointsInIteration());
+    }
+
+    if (!success) {
+      registerProjectDeletionFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::requestDeleteProjectRetry() {
+    LOG(Debug,"Trying to delete project from the server for the " << (m_numDeleteProjectTries + 1)
+        << "th time.");
+
+    bool success = requestProjectDeletion();
+
+    if (!success) {
+      registerProjectDeletionFailure();
+    }
   }
 
   void CloudAnalysisDriver_Impl::resetState() {
@@ -1499,8 +1546,9 @@ namespace detail {
     m_noNewReadyDataPointsCount = 0;
     m_numDetailsTries = 0;
     m_numDeleteDataPointTries = 0;
+    m_numDeleteProjectTries = 0;
 
-    m_requestDeleteProject = false;
+    m_needToDeleteProject = false;
   }
 
   void CloudAnalysisDriver_Impl::logError(const std::string& error) {
@@ -1837,10 +1885,15 @@ namespace detail {
 
   bool CloudAnalysisDriver_Impl::requestNextDataPointDeletion() {
     if (!m_requestDeleteDataPoint) {
-      m_requestDeleteDataPoint = OSServer(*url);
+      if (OptionalUrl url = session().serverUrl()) {
+        m_requestDeleteDataPoint = OSServer(*url);
 
-      bool test = m_requestDeleteDataPoint->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointDeletedFromServer(bool)),Qt::QueuedConnection);
-      OS_ASSERT(test);
+        bool test = m_requestDeleteDataPoint->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointDeletedFromServer(bool)),Qt::QueuedConnection);
+        OS_ASSERT(test);
+      }
+      else {
+        return false;
+      }
     }
     return m_requestDeleteDataPoint->requestDeleteDataPoint(project().analysis().uuid(),
                                                             m_deleteDataPointsQueue.front().uuid());
@@ -1853,7 +1906,18 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::requestProjectDeletion() {
-    // HERE
+    OS_ASSERT(!m_requestDeleteProject);
+    if (OptionalUrl url = session().serverUrl()) {
+      setStatus(AnalysisStatus::Stopping);
+
+      m_requestDeleteProject = OSServer(*url);
+
+      bool test = m_requestDeleteProject->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectDeletedFromServer(bool)));
+      OS_ASSERT(test);
+
+      return m_requestDeleteProject->requestDeleteProject(project().projectDatabase().handle());
+    }
+    return false;
   }
 
   void CloudAnalysisDriver_Impl::registerProjectDeletionFailure() {
@@ -1951,13 +2015,24 @@ namespace detail {
     }
 
     vit = std::find(m_runningQueue.begin(),m_runningQueue.end(),dataPoint);
+    if (vit != m_runningQueue.end()) {
+      m_runningQueue.erase(vit);
+    }
 
     dit = std::find(m_jsonQueue.begin(),m_jsonQueue.end(),dataPoint);
+    if (dit != m_jsonQueue.end()) {
+      m_jsonQueue.erase(dit);
+    }
 
     vit = std::find(m_preDetailsQueue.begin(),m_preDetailsQueue.end(),dataPoint);
+    if (vit != m_preDetailsQueue.end()) {
+      m_preDetailsQueue.erase(vit);
+    }
 
     dit = std::find(m_detailsQueue.begin(),m_detailsQueue.end(),dataPoint);
-
+    if (dit != m_detailsQueue.end()) {
+      m_detailsQueue.erase(dit);
+    }
   }
 
   std::string CloudAnalysisDriver_Impl::sessionTag() const {

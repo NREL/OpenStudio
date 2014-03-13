@@ -318,6 +318,8 @@ namespace detail {
      // Process result of request to delete project from server.
      void projectDeletedFromServer(bool success);
 
+     void requestDeleteProjectRetry();
+
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
 
@@ -382,7 +384,8 @@ namespace detail {
 
     // stop analysis and delete project
     boost::optional<OSServer> m_requestDeleteProject;
-    bool m_requestDeleteProject;
+    bool m_needToDeleteProject;
+    unsigned m_numDeleteProjectTries;
 
     void resetState();
 
