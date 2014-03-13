@@ -465,14 +465,20 @@ namespace detail {
     }
   }
 
-  void LocalProcess::processZombied(QProcess::ProcessError t_e)
+  void LocalProcess::processZombied(QProcess::ProcessError /*t_e*/)
   {
     m_fileCheckTimer.stop();
-    LOG(Info, "Process appears to be zombied");
-    emit error(t_e);
+    LOG(Info, "Process appears to be zombied"); 
+
+    // but this isn't necessarily an error because it's probably due to miscaught signals.
+    //emit error(t_e);
 
     QCoreApplication::processEvents();
     directoryChanged(openstudio::toQString(m_outdir));
+
+    emit finished(0, QProcess::NormalExit);
+    emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Idle));
+
   }
 
   void LocalProcess::processError(QProcess::ProcessError t_e)
