@@ -81,7 +81,8 @@ boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceShelf( m
 
     boost::optional<ConstructionBase> construction = insideShelf->construction();
     if (!construction){
-      construction = interiorPartitionSurfaceConstruction(modelObject.model());
+      Model t_model = modelObject.model();
+      construction = interiorPartitionSurfaceConstruction(t_model);
     }
     OS_ASSERT(construction);
     newSurface.setConstruction(*construction);
@@ -98,7 +99,8 @@ boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceShelf( m
     
     boost::optional<ConstructionBase> construction = outsideShelf->construction();
     if (!construction){
-      construction = exteriorSurfaceConstruction(modelObject.model());
+      Model t_model = modelObject.model();
+      construction = exteriorSurfaceConstruction(t_model);
     }
     OS_ASSERT(construction);
     idfObject.setString(DaylightingDevice_ShelfFields::OutsideShelfConstructionName, construction->name().get());
