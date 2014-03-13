@@ -42,7 +42,7 @@
 
 namespace openstudio {
 
-OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, QWidget * parent)
+OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, const QString & dropZoneText, QWidget * parent)
   : QWidget(parent),
   m_gridLayout(0),
   m_CollapsibleView(0),
@@ -66,10 +66,8 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-  //OSDropZone * dropZone = new OSDropZone(vectorController, true, "Drag and Drop from Library");
-  OSDropZone * dropZone = new OSDropZone(vectorController);
+  OSDropZone * dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH,HEIGHT));
   dropZone->setMaxItems(1);
-  dropZone->setFixedSize(WIDTH,HEIGHT);
 
   isConnected = connect(dropZone,SIGNAL(itemDropped(const OSItemId&)),
     m_gridController,SLOT(onItemDropped(const OSItemId&)));

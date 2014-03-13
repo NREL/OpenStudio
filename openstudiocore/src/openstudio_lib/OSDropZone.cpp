@@ -47,8 +47,9 @@ using namespace openstudio::model;
 namespace openstudio {
 
 OSDropZone2::OSDropZone2(OSVectorController* vectorController,
+                       const QSize & size,
+                       const QString & text,
                        bool growsHorizontally,
-                       //const std::string & text,
                        QWidget * parent )
   : QWidget(parent),
     m_vectorController(vectorController),
@@ -59,8 +60,8 @@ OSDropZone2::OSDropZone2(OSVectorController* vectorController,
     m_allowAdd(false),
     m_growsHorizontally(growsHorizontally),
     m_useLargeIcon(false),
-    //m_text(text)
-    m_text("Drag From Library")
+    m_text(text),
+    m_size(size)
 {
   QWidget * mainBox = new QWidget();
   mainBox->setObjectName("mainBox");
@@ -379,7 +380,7 @@ void OSDropZone2::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   if (numItems < m_maxItems){
-    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text);
+    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text, m_size);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
     bool isConnected = false;
@@ -432,8 +433,9 @@ void OSDropZone2::setUseLargeIcon(bool useLargeIcon)
 }
 
 OSDropZone::OSDropZone(OSVectorController* vectorController,
+                       const QString & text,
+                       const QSize & size,
                        bool growsHorizontally,
-                       //const std::string & text,
                        QWidget * parent )
   : QWidget(parent),
     m_vectorController(vectorController),
@@ -444,8 +446,8 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
     m_allowAdd(false),
     m_growsHorizontally(growsHorizontally),
     m_useLargeIcon(false),
-    //m_text(text)
-    m_text("Drag From Library")
+    m_text(text),
+    m_size(size)
 {
   QWidget * mainBox = new QWidget();
   mainBox->setObjectName("mainBox");
@@ -493,8 +495,13 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
   QString mainBoxStyle;
   mainBoxStyle.append("QWidget#OSDropZone {");
   mainBoxStyle.append(" background: #CECECE;");
-  mainBoxStyle.append(" border: 2px dashed #808080;");
-  mainBoxStyle.append(" border-radius: 10px;");
+  if(m_size.height() && m_size.width()){ 
+    mainLayout->setContentsMargins(0,0,0,0);
+    mainBoxStyle.append(" border: none;"); 
+  } else {
+    mainBoxStyle.append(" border: 2px dashed #808080;");
+    mainBoxStyle.append(" border-radius: 10px;"); 
+  }
   mainBoxStyle.append("}");
   setStyleSheet(mainBoxStyle);
 
@@ -560,7 +567,14 @@ bool OSDropZone::setMaxItems(int max)
     emit itemsRequested();
     if( max == 1 )
     {
-      if(m_growsHorizontally){
+      if(m_size.height() && m_size.width())
+      { 
+        m_scrollArea->setFixedHeight(m_size.height());
+        m_scrollArea->setMaximumWidth(m_size.width());
+        setMaximumHeight(m_size.height());
+        setMaximumWidth(m_size.width());
+      }
+      else if(m_growsHorizontally){
         m_scrollArea->setFixedHeight(OSItem::ITEM_HEIGHT);
         m_scrollArea->setMaximumWidth(OSItem::ITEM_WIDTH);
         setMaximumWidth(OSItem::ITEM_WIDTH + 20);
@@ -573,7 +587,14 @@ bool OSDropZone::setMaxItems(int max)
     }
     else
     {
-      if(m_growsHorizontally){
+      if(m_size.height() && m_size.width())
+      {
+        m_scrollArea->setFixedHeight(m_size.height());
+        m_scrollArea->setMaximumWidth(m_size.width());
+        setMaximumHeight(m_size.height());
+        setMaximumWidth(m_size.width());
+      }
+      else if(m_growsHorizontally){
         m_scrollArea->setFixedHeight(OSItem::ITEM_SIDE);
         m_scrollArea->setMaximumWidth(QWIDGETSIZE_MAX);
         setMaximumWidth(QWIDGETSIZE_MAX);
@@ -705,7 +726,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   if (numItems < m_maxItems){
-    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text);
+    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text, m_size);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
     bool isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
@@ -757,9 +778,11 @@ void OSDropZone::setUseLargeIcon(bool useLargeIcon)
 }
 
 OSItemDropZone::OSItemDropZone(bool growsHorizontally,
-                               const std::string & text,
+                               const QString & text,
+                               const QSize & size,
                                QWidget * parent)
   : QWidget(parent),
+  m_size(size),
   m_growsHorizontally(growsHorizontally)
 {
   setAcceptDrops(true);
@@ -779,7 +802,7 @@ OSItemDropZone::OSItemDropZone(bool growsHorizontally,
 
   QLabel * label = new QLabel();
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  label->setText(text.c_str());
+  label->setText(text);
   label->setWordWrap(true);
 
   label->setStyleSheet("QLabel { font: bold; color: #808080}");
@@ -793,7 +816,18 @@ void OSItemDropZone::setExtensible(bool extensible)
 {
   QString style;
 
-  if( extensible )
+  if(m_size.height() && m_size.width())
+  {
+    style.append("QWidget#DropBox {");
+    style.append(" background: #CECECE;");
+    style.append(" border: 2px dashed #808080;");
+    style.append(" border-radius: 3px;");
+    style.append("}");
+
+    setFixedWidth(m_size.width());
+    setFixedHeight(m_size.height()); 
+  }
+  else if( extensible )
   {
     style.append("QWidget#DropBox {");
     style.append(" background: #CECECE;");
@@ -879,7 +913,6 @@ void OSDropZoneItem::setSize(double width, double height)
   prepareGeometryChange();
   m_width = width;
   m_height = height;
-  m_text = QString("Drop Item");
 }
 
 void OSDropZoneItem::setText(const QString & text)

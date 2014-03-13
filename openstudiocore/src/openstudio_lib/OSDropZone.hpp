@@ -49,8 +49,9 @@ class OSDropZone2 : public QWidget
 public:
 
   OSDropZone2(OSVectorController* vectorController,
+             const QSize & size = QSize(0,0),
+             const QString & text = QString("Drag From Library"),
              bool m_growsHorizontally = true,
-             //const std::string & text = "Drag From Library",
              QWidget * parent = 0 );
 
   virtual ~OSDropZone2() {}
@@ -152,7 +153,8 @@ private:
   boost::optional<ModelObjectSetter> m_set;
   boost::optional<NoFailAction> m_reset;
   boost::optional<BasicQuery> m_isDefaulted;
-  std::string m_text;
+  QString m_text;
+  QSize m_size;
 };
 
 class OSDropZone : public QWidget
@@ -162,8 +164,9 @@ class OSDropZone : public QWidget
 public:
 
   OSDropZone(OSVectorController* vectorController,
+             const QString & text = "Drag From Library",
+             const QSize & size = QSize(0,0),
              bool m_growsHorizontally = true,
-             //const std::string & text = "Drag From Library",
              QWidget * parent = 0 );
 
   virtual ~OSDropZone() {}
@@ -239,7 +242,8 @@ private:
   QPushButton * m_addButton;
   bool m_growsHorizontally;
   bool m_useLargeIcon;
-  std::string m_text;
+  QString m_text;
+  QSize m_size;
 };
 
 class OSItemDropZone : public QWidget
@@ -247,8 +251,9 @@ class OSItemDropZone : public QWidget
   Q_OBJECT
 
 public:
-  OSItemDropZone(bool m_growsHorizontally,
-                 const std::string & text,
+  OSItemDropZone(bool growsHorizontally,
+                 const QString & text,
+                 const QSize & size,
                  QWidget * parent = 0);
 
   virtual ~OSItemDropZone() {}
@@ -263,7 +268,8 @@ protected:
   void dragEnterEvent( QDragEnterEvent * event );
   void dropEvent( QDropEvent * event );
 
-public:
+private:
+  QSize m_size;
   bool m_growsHorizontally;
 
 };

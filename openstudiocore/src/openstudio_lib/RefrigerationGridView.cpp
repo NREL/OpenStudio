@@ -167,14 +167,14 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   std::vector<model::ModelObject> caseModelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
 
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
-  OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", parent);
+  OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", "Drop\nCase", parent);
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
   std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
   std::vector<model::ModelObject> walkInModelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
 
   RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
-  OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", parent);
+  OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", "Drop\nWalk In", parent);
   scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
 
   scrollLayout->addStretch(1);
@@ -820,7 +820,6 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             &model::RefrigerationWalkIn::averageRefrigerantChargeInventory,
                             &model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory);
     }else if(field == DEFROSTSCHEDULE){
-      //Schedule defrostSchedule() const;
       //addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
       //    QString(DEFROSTSCHEDULE),
       //    &openstudio::objectName,
@@ -831,7 +830,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
       //                            "Defrost")),
       //    &model::RefrigerationWalkIn::defrostSchedule,
       //    &model::RefrigerationWalkIn::setDefrostSchedule,
-      //    boost::optional<boost::function<void (model::RefrigerationWalkIn*)> >(&model::RefrigerationWalkIn::resetDefrostSchedule)); // TODO resetDefrostSchedule not available
+      //    boost::none);
     }else if(field == DEFROSTPOWER){
       addQuantityEditColumn(QString(DEFROSTPOWER),
                             QString("W"),
