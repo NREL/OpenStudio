@@ -304,6 +304,8 @@ public slots:
 
   virtual void onItemDropped(const OSItemId& itemId) = 0;
 
+  void toggleUnits(bool displayIP);
+
 private slots:
 
   void horizontalHeaderChecked(int index);

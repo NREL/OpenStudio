@@ -188,6 +188,14 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         refrigerationWalkInGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
+  
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        refrigerationCaseGridController, SLOT(toggleUnits(bool)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        refrigerationWalkInGridController, SLOT(toggleUnits(bool)));
+  OS_ASSERT(isConnected);
 
   std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // NOTE for horizontal system list
 

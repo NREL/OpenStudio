@@ -487,6 +487,11 @@ void OSGridController::horizontalHeaderChecked(int index)
   setCustomCategoryAndFields();
 }
 
+void OSGridController::toggleUnits(bool displayIP)
+{
+  m_isIP = displayIP;
+}
+
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
   m_label(new QLabel(fieldName)),
