@@ -1006,7 +1006,14 @@ void CloudMonitorWorker::monitorCloudRunning()
 
     if( ! m_cloudServiceRunning )
     {
-      m_cloudRunning = detail::checkCloudRunning();
+      // Fixing OS_ASSERT crash on exiting PAT with Cloud running, 
+      // but definitely not fixing it in the best way. TODO: Do it right.
+      try {
+        m_cloudRunning = detail::checkCloudRunning();
+      }
+      catch (...) {
+        m_cloudRunning = false;
+      }
       m_authenticated = detail::checkAuthenticated();
       m_internetAvailable = detail::checkInternetAvailable();
       m_count++;
