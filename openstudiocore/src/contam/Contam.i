@@ -40,10 +40,10 @@
 
 // DLM: this is neccesary for now due to https://github.com/NREL/OpenStudio/issues/679
 // eventually we should compile C# code into separate namespaces
-#ifdef SWIGCSHARP
+// #ifdef SWIGCSHARP
 %rename(PrjDataPoint) openstudio::contam::DataPoint;
 %rename(PrjPath) openstudio::contam::Path;
-#endif
+// #endif
 
 %include <contam/PrjSubobjects.hpp>
 %include <contam/PrjPublic.hpp>
