@@ -222,7 +222,7 @@ protected:
   // This function determines the category for
   // each button, and the fields associated with
   // each category
-  virtual void setCategoriesAndFields() = 0;
+  virtual void setCategoriesAndFields();
 
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
@@ -259,7 +259,7 @@ protected:
 
   std::vector<QString> m_currentFields;
 
-  std::vector<QString> m_customCategories;
+  std::vector<QString> m_customFields;
 
   static const std::vector<QColor> m_colors;
 

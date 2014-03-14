@@ -207,7 +207,7 @@ void OSGridView::refreshAll()
       }
     }
   }
-  // NOTE This was added to make dissimilar widgets types in a given column to
+  // NOTE This was added to make dissimilar widget types in a given column to
   // fill and justify correctly.  It appeared to be the most simple solution.
   QWidget * widget = new QWidget();
   widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);

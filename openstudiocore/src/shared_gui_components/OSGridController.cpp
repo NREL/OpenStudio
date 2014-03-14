@@ -64,7 +64,7 @@ OSGridController::OSGridController(bool isIP,
     m_currentCategory(QString()),
     m_currentCategoryIndex(0),
     m_currentFields(std::vector<QString> ()),
-    m_customCategories(std::vector<QString>()),
+    m_customFields(std::vector<QString>()),
     m_model(model),
     m_isIP(isIP),
     m_modelObjects(modelObjects),
@@ -82,19 +82,28 @@ OSGridController::~OSGridController()
 void OSGridController::loadQSettings()
 {
   QSettings settings("OpenStudio", m_headerText);
-  m_customCategories = settings.value("customCategories").toStringList().toVector().toStdVector();
+  m_customFields = settings.value("customFields").toStringList().toVector().toStdVector();
 }
 
 void OSGridController::saveQSettings() const
 {
   QSettings settings("OpenStudio", m_headerText);
   QVector<QVariant> vector;
-  for(unsigned i = 0; i < m_customCategories.size(); i++){
-    QVariant variant = m_customCategories.at(i);
+  for(unsigned i = 0; i < m_customFields.size(); i++){
+    QVariant variant = m_customFields.at(i);
     vector.push_back(variant);
   }
   QList<QVariant> list = vector.toList();
   settings.setValue("customCategories", list);
+}
+
+void OSGridController::setCategoriesAndFields()
+{
+  std::vector<QString> fields;
+  std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),fields);
+  m_categoriesAndFields.push_back(categoryAndFields);
+
+  setCustomCategoryAndFields();
 }
 
 std::vector<QString> OSGridController::categories()
@@ -424,8 +433,8 @@ void OSGridController::checkSelectedFields()
   if(!this->m_hasHorizontalHeader) return;
 
   std::vector<QString>::iterator it;
-  for(unsigned j = 0; j < m_customCategories.size(); j++){
-    it = std::find(m_currentFields.begin(), m_currentFields.end() ,m_customCategories.at(j));
+  for(unsigned j = 0; j < m_customFields.size(); j++){
+    it = std::find(m_currentFields.begin(), m_currentFields.end() ,m_customFields.at(j));
     if( it != m_currentFields.end() ){
       int index = std::distance(m_currentFields.begin(), it);
       HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
@@ -448,7 +457,7 @@ void OSGridController::setCustomCategoryAndFields()
     m_categoriesAndFields.erase(m_categoriesAndFields.begin() + index);
   }
 
-  std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),m_customCategories);
+  std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),m_customFields);
   m_categoriesAndFields.push_back(categoryAndFields);
 }
 
@@ -476,12 +485,12 @@ void OSGridController::horizontalHeaderChecked(int index)
   QCheckBox * checkBox = qobject_cast<QCheckBox *>(m_horizontalHeaderBtnGrp->button(index));
   OS_ASSERT(checkBox);
   if(checkBox->isChecked()){
-    m_customCategories.push_back(m_currentFields.at(index));
+    m_customFields.push_back(m_currentFields.at(index));
   } else {
     std::vector<QString>::iterator it;
-    it = std::find(m_customCategories.begin(), m_customCategories.end(), m_currentFields.at(index));
-    if( it != m_customCategories.end() ){
-      m_customCategories.erase(it);
+    it = std::find(m_customFields.begin(), m_customFields.end(), m_currentFields.at(index));
+    if( it != m_customFields.end() ){
+      m_customFields.erase(it);
     }
   }
   setCustomCategoryAndFields();

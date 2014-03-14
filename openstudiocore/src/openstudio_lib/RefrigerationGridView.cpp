@@ -278,11 +278,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
-  {
-    std::vector<QString> fields;
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+  OSGridController::setCategoriesAndFields();
 
 }
 void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
@@ -716,11 +712,7 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
-  {
-    std::vector<QString> fields;
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+  OSGridController::setCategoriesAndFields();
 
 }
 
