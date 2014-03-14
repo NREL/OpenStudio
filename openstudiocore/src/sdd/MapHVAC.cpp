@@ -3127,6 +3127,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   QDomElement airSystemElement;
 
   // Add an air terminal to serve the zone
+  // Connect to plenum(s) if required
   if( airLoopHVAC )
   {
     bool terminalFound = false;
@@ -3198,6 +3199,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       }
 
       if( terminalFound ) { break; }
+    }
+
+    QDomElement rtnPlenumZnRefElement = thermalZoneElement.firstChildElement("RtnPlenumZnRef");
+    boost::optional<model::ThermalZone> returnPlenumZone;
+    returnPlenumZone = model.getModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().toStdString()); 
+    if( returnPlenumZone )
+    {
+      thermalZone.setReturnPlenum(returnPlenumZone.get());  
+    }
+
+    QDomElement supPlenumZnRefElement = thermalZoneElement.firstChildElement("SupPlenumZnRef");
+    boost::optional<model::ThermalZone> supplyPlenumZone;
+    supplyPlenumZone = model.getModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().toStdString());
+    if( supplyPlenumZone )
+    {
+      thermalZone.setSupplyPlenum(supplyPlenumZone.get());
     }
   }
 
