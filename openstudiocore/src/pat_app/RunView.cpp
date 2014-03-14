@@ -493,8 +493,10 @@ void RunStatusView::on_selectAllDataPoints(bool checked)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
 
-    // Can only select points if project is idle
-    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+    // Can only select points if project is idle (including in error)
+    analysisdriver::AnalysisStatus status = project->status();
+    bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                          (status == analysisdriver::AnalysisStatus::Error));
 
     if (!isProjectIdle){
       return;
@@ -518,8 +520,10 @@ void RunStatusView::on_clearSelectionDataPoints(bool checked)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
 
-    // Can only select points if project is idle
-    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+    // Can only select points if project is idle (including in error)
+    analysisdriver::AnalysisStatus status = project->status();
+    bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                          (status == analysisdriver::AnalysisStatus::Error));
 
     if (!isProjectIdle){
       return;
@@ -558,8 +562,10 @@ void RunStatusView::on_selectAllClears(bool checked)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
 
-    // Can only clear points if project is idle
-    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+    // Can only clear points if project is idle (including in error)
+    analysisdriver::AnalysisStatus status = project->status();
+    bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                          (status == analysisdriver::AnalysisStatus::Error));
 
     if (isProjectIdle){
       QMessageBox::StandardButton test = QMessageBox::question(this, "Clear Results", "Do you want to clear all results?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
@@ -907,10 +913,12 @@ void DataPointRunHeaderView::update()
 
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
-  // Can only select points if project is idle
+  // Can only select points if project is idle (including in error)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   OS_ASSERT(project);
-  bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+  analysisdriver::AnalysisStatus status = project->status();
+  bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                        (status == analysisdriver::AnalysisStatus::Error));
 
   // Ignore signal if dataPoint has data
   bool isCompleteOrStarted = this->m_dataPoint.complete() || !this->m_dataPoint.directory().empty();
@@ -940,10 +948,12 @@ void DataPointRunHeaderView::on_downloadClicked(bool checked)
 
 void DataPointRunHeaderView::on_clearClicked(bool checked)
 {
-  // Can only clear points if project is idle
+  // Can only clear points if project is idle (including in error)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   OS_ASSERT(project);
-  bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+  analysisdriver::AnalysisStatus status = project->status();
+  bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                        (status == analysisdriver::AnalysisStatus::Error));
 
   if (isProjectIdle){
     analysis::Analysis analysis = project->analysis();
