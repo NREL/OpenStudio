@@ -79,7 +79,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
     button = new QPushButton(categories.at(i));
-    button->setFixedSize(WIDTH,HEIGHT);
+    button->setMinimumSize(WIDTH,HEIGHT);
     button->setCheckable(true);
     buttonLayout->addWidget(button,0,Qt::AlignLeft);
     buttonGroup->addButton(button,buttonGroup->buttons().size());
