@@ -780,10 +780,9 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             &model::RefrigerationWalkIn::setInsulatedFloorSurfaceArea);
     }else if(field == INSULATEDFLOORUVALUE){
       addQuantityEditColumn(QString(INSULATEDFLOORUVALUE),
-                            QString("W/m^2-K"),
-                            QString("W/m^2-K"),
-                            QString("W/m^2-K"),
-                            //QString("Btu/hr*ft^2*F"), // TODO this crashes in OSQuantityEdit assert for conversion
+                            QString("W/m^2*K"),
+                            QString("W/m^2*K"),
+                            QString("Btu/hr*ft^2*F"),
                             m_isIP,
                             &model::RefrigerationWalkIn::insulatedFloorUValue,
                             &model::RefrigerationWalkIn::setInsulatedFloorUValue);
