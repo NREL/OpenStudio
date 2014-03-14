@@ -20,6 +20,8 @@
 #include "RunManager_Impl.hpp"
 #include "Configuration.hpp"
 #include <utilities/core/Application.hpp>
+#include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <boost/bind.hpp>
 #include <runmanager/lib/runmanagerdatabase.hxx>
 #include "JobFactory.hpp"
@@ -31,10 +33,18 @@
 #include <QElapsedTimer>
 #include <utilities/core/System.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <QtConcurrentRun>
 #include <QFuture>
 #include <OpenStudio.hxx>
 
+#include <qjson/serializer.h>
+#include <qjson/parser.h>
+#include "RubyJobUtils.hpp"
+#include "WorkItem.hpp"
+#include "JSONWorkflowOptions.hpp"
+#include "JobFactory.hpp"
+#include <ruleset/OSArgument.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -1054,7 +1064,7 @@ namespace detail {
         {
           // as a special case, we want to preserve the basePath if it has been set
           JobParams jps(params);
-          jps.append("job_base_path", openstudio::toString(basePath));
+          jps.append("job_t_basePath", openstudio::toString(basePath));
           params = jps.params();
         }
 
@@ -1733,6 +1743,336 @@ namespace detail {
     }
   }
 
+  ruleset::OSArgument makeArg(const std::string &arg_name, const QVariant &arg_value)
+  {
+    switch (arg_value.type())
+    {
+      case QVariant::UInt:
+      case QVariant::Int:
+      case QVariant::LongLong:
+      case QVariant::ULongLong:
+        {
+          ruleset::OSArgument arg = ruleset::OSArgument::makeIntegerArgument(arg_name);
+          arg.setValue(arg_value.toInt());
+          return arg;
+        }
+
+      case QVariant::Double:
+        {
+          ruleset::OSArgument arg = ruleset::OSArgument::makeDoubleArgument(arg_name);
+          arg.setValue(arg_value.toDouble());
+          return arg;
+        }
+
+      case QVariant::Bool:
+        {
+          ruleset::OSArgument arg = ruleset::OSArgument::makeBoolArgument(arg_name);
+          arg.setValue(arg_value.toBool());
+          return arg;
+        }
+
+      case QVariant::String:
+        {
+          ruleset::OSArgument arg = ruleset::OSArgument::makeStringArgument(arg_name);
+          arg.setValue(openstudio::toString(arg_value.toString()));
+          return arg;
+        }
+
+
+      default:
+        throw std::runtime_error(std::string("Unhandled Type: ") + arg_value.typeName());
+    }
+    throw std::runtime_error("Unknown error building OSArgument");
+  }
+
+  bool setArgValue(std::map<std::string, ruleset::OSArgument> &argument_map, const std::string &wf_arg_name, const QVariant &wf_arg_value)
+  {
+    std::map<std::string, ruleset::OSArgument>::iterator itr = argument_map.find(wf_arg_name);
+
+    ruleset::OSArgument arg = makeArg(wf_arg_name, wf_arg_value);
+
+    if (itr == argument_map.end())
+    {
+      argument_map.insert(std::make_pair(wf_arg_name, arg));
+    } else {
+      itr->second = arg.clone();
+    }
+
+    return true; // is there really a failure case here?
+  }
+
+  openstudio::runmanager::Job RunManager_Impl::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
+  {
+    QJson::Parser parser;
+    bool ok = false;
+    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
+    if (!ok) {
+      LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+    }
+    return runWorkflow(variant, t_basePath, t_runPath, t_tools, t_options);
+  }
+
+  openstudio::runmanager::Job RunManager_Impl::runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
+  {
+    QFile file(toQString(t_jsonPath));
+    if (file.open(QFile::ReadOnly)) {
+      QJson::Parser parser;
+      bool ok(false);
+      QVariant variant = parser.parse(&file,&ok);
+      file.close();
+      if (!ok) {
+        LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+      }
+      return runWorkflow(variant, t_basePath, t_runPath, t_tools, t_options);
+    }
+
+    LOG_FREE_AND_THROW("openstudio.Json","Could not open file " << toString(t_jsonPath) << " for reading.");
+  }
+
+  openstudio::runmanager::Job RunManager_Impl::runWorkflow(const QVariant &t_variant, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+      const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
+  {
+    if (t_variant.isNull())
+    {
+      throw std::runtime_error("Provided JSON was empty");
+    }
+
+    QVariantMap data = t_variant.toMap();
+
+    QVariantMap data_point_json = data["data_point"].toMap();
+    QVariantMap analysis_json = data["analysis"].toMap();
+
+    LOG(Debug, "Parsing Analysis JSON input & Applying Measures");
+    // by hand for now, go and get the information about the measures;
+    if (!analysis_json.empty()) {
+      LOG(Debug, "Loading baseline model");
+
+      openstudio::path baseline_model_path;
+
+      QVariantMap analysis_seed_json = analysis_json["seed"].toMap();
+      if (!analysis_seed_json.empty()) {
+        LOG(Debug, openstudio::toString(analysis_json["seed"].toString()));
+
+        // Some reason this hash is not indifferent access;
+        if (!analysis_seed_json["path"].isNull()) {
+
+          // This last(2) needs to be cleaned up.  Why don't we know the path of the file;
+          baseline_model_path = completeAndNormalize(t_basePath / openstudio::toPath(analysis_seed_json["path"].toString()));
+          if (!boost::filesystem::exists(baseline_model_path)) {
+            throw std::runtime_error("Seed model " + openstudio::toString(baseline_model_path) + " did not exist");
+          }
+        } else {
+          throw std::runtime_error("No seed model path in JSON defined");
+        }
+      } else {
+        throw std::runtime_error("No seed model block");
+      }
+
+      openstudio::path weather_file_path;
+
+      if (!analysis_json["weather_file"].isNull()) {
+        if (!analysis_json["weather_file"].toMap()["path"].isNull()) {
+          weather_file_path = completeAndNormalize(t_basePath / openstudio::toPath(analysis_json["weather_file"].toMap()["path"].toString()));
+          if (!boost::filesystem::exists(weather_file_path)) {
+            throw std::runtime_error("Could not find weather file for simulation " + openstudio::toString(weather_file_path) );
+          }
+        } else {
+          throw std::runtime_error("No weather file path defined");
+        }
+      } else {
+        throw std::runtime_error("No weather file block defined");
+      }
+
+
+      QVariantMap analysis_problem_json = analysis_json["problem"].toMap();
+
+      // iterate over the workflow and grab the measures;
+      if (!analysis_problem_json["workflow"].isNull() )
+      {
+        std::vector<RubyJobBuilder> measures;
+        std::vector<RubyJobBuilder> energyplusmeasures;
+
+        QVariantList workflows = analysis_problem_json["workflow"].toList();
+
+        for (QVariantList::const_iterator wfitr = workflows.begin();
+             wfitr != workflows.end();
+             ++wfitr)
+        {
+
+          QVariantMap wf = wfitr->toMap();
+          // process the measure
+
+          openstudio::path measure_path = openstudio::completeAndNormalize(t_basePath / toPath(wf["bcl_measure_directory"].toString()));
+          std::string measure_name = toString(wf["bcl_measure_class_name_ADDME"].toString());
+          std::string workflow_name = toString(wf["name"].toString());
+
+          /*
+          cannot be done without embedded ruby 
+          arguments = measure.arguments(@model);
+
+          /// Create argument map and initialize all the arguments;
+          argument_map = OpenStudio::Ruleset::OSArgumentMap.new;
+          arguments.each do |v| {
+            argument_map[v.name] = v.clone;
+          }
+          */
+
+          LOG(Debug, "iterate over arguments for workflow item " << workflow_name );
+
+          QVariantList wf_arguments = wf["arguments"].toList();
+
+          std::map<std::string, ruleset::OSArgument> argument_map;
+
+
+          for (QVariantList::const_iterator wf_arg_itr = wf_arguments.begin();
+               wf_arg_itr != wf_arguments.end();
+               ++wf_arg_itr)
+          {
+            QVariantMap wf_arg = wf_arg_itr->toMap();
+            QVariant wf_arg_value = wf_arg["value"];
+            std::string wf_arg_name = openstudio::toString(wf_arg["name"].toString());
+
+            if (!wf_arg_value.isNull()) {
+              LOG(Debug, "Setting argument value " << wf_arg_name << " to " << toString(wf_arg_value.toString()));
+
+              // v = argument_map[toQString(wf_arg_name)];
+
+              // no way to test this without embedded ruby interpreter
+              // if (not v) { throw std::runtime_error("Could not find argument map in measure" ); }
+
+              bool value_set = setArgValue(argument_map, wf_arg_name, wf_arg_value);
+
+              if (!value_set)
+              {
+                throw std::runtime_error("Could not set argument " + wf_arg_name + " of value " + openstudio::toString(wf_arg_value.toString()) + " on model");
+              }
+            } else {
+              if (t_options.throwOnNoWorkflowVariable)  { throw std::runtime_error("Value for argument " + wf_arg_name + " not set in argument list" ); }
+              LOG(Debug, "Value for argument " << wf_arg_name << " not set in argument list therefore will use default");
+              break;
+            }
+          }
+
+          LOG(Debug, "iterate over variables for workflow item " << workflow_name );
+
+          QVariantList wf_variables = wf["variables"].toList();
+
+          for (QVariantList::const_iterator wf_var_itr = wf_variables.begin();
+               wf_var_itr != wf_variables.end();
+               ++wf_var_itr)
+          {
+            QVariantMap wf_var = wf_var_itr->toMap();
+            QString variable_uuid = wf_var["uuid"].toString(); // this is what the variable value is set to
+
+            if (!wf_var["argument"].isNull()) 
+            {
+              std::string variable_name = toString(wf_var["argument"].toMap()["name"].toString());
+
+              if (variable_name.empty())
+              {
+                throw std::runtime_error("no variable name set for the argument object");
+              }
+
+              /*
+               * Since Nick did not provide any example of a datapoint json, this must not be critical for this work
+               
+              // Get the value from the data point json that was set via R / Problem Formulation;
+              if (!data_point_json["data_point"].isNull()) {
+                if (!data_point_json["data_point"].toMap()["set_variable_values"].isNull()) {
+                  QVariant variable_value = data_point_json["data_point"].toMap()["set_variable_values"].toMap()[variable_uuid];
+                  if (!variable_value.isNull()) {
+                    LOG(Debug, "Setting variable " << variable_name << " to " << openstudio::toString(variable_value.toString()));
+
+                    bool value_set = setArgValue(argument_map, variable_name, variable_value);
+
+                    if (!value_set)
+                    {
+                      throw std::runtime_error("Could not set variable " + variable_name + " of value " + openstudio::toString(variable_value.toString()) + " on model");
+                    }
+                  } else {
+                    if (t_options.throwOnNoWorkflowVariable)  { 
+                      throw std::runtime_error("Value for variable " + variable_name + ":" + openstudio::toString(variable_uuid) + " not set in datapoint object" ); 
+                    }
+
+                    LOG(Debug, "Value for variable " << variable_name << ":" << openstudio::toString(variable_uuid) << " not set in datapoint object");
+                    break;
+                  }
+                } else {
+                  throw std::runtime_error("No block for set_variable_values in data point record");
+                }
+              } else {
+                throw std::runtime_error("No block for data_point in data_point record");
+              }
+              */
+            } else {
+              throw std::runtime_error("Variable is defined but no argument is present");
+            }
+          }
+
+          if (wf["measure_type"].toString() == "RubyMeasure") {
+            BCLMeasure measure(measure_path);
+
+            measures.push_back(RubyJobBuilder(measure, argument_map, openstudio::toPath("")));
+          } else if (wf["measure_type"].toString() == "EnergyPlusMeasure") {
+            BCLMeasure measure(measure_path);
+
+            energyplusmeasures.push_back(RubyJobBuilder(measure, argument_map, openstudio::toPath("")));
+          }
+
+        }
+
+
+        Workflow wf;
+
+        for (std::vector<RubyJobBuilder>::iterator itr = measures.begin();
+             itr != measures.end();
+             ++itr)
+        {
+          itr->setIncludeDir(getOpenStudioRubyIncludePath());
+          wf.addJob(itr->toWorkItem());
+        }
+
+        wf.addJob(openstudio::runmanager::JobType::ModelToIdf);
+        wf.addJob(openstudio::runmanager::JobType::ExpandObjects);
+
+        for (std::vector<RubyJobBuilder>::iterator itr = energyplusmeasures.begin();
+             itr != energyplusmeasures.end();
+             ++itr)
+        {
+          itr->setIncludeDir(getOpenStudioRubyIncludePath());
+          wf.addJob(itr->toWorkItem());
+        }
+
+        if (t_options.flatOutDir)
+        {
+          JobParams params;
+          params.append(JobParam("flatoutdir"));
+          wf.add(params);
+        }
+
+        wf.addJob(openstudio::runmanager::JobType::EnergyPlus);
+        wf.add(t_tools);
+
+        openstudio::runmanager::Job j = wf.create(t_runPath, baseline_model_path, weather_file_path);
+        if (t_options.optimizeJobTree)
+        {
+          JobFactory::optimizeJobTree(j);
+        }
+
+
+        enqueue(j, true, openstudio::path());
+        return j;
+      } else {
+        throw std::runtime_error("JSON does not contain a workflow object");
+      }
+    } else {
+      throw std::runtime_error("JSON does not contain an analysis object");
+    }
+  }
+
+
   bool RunManager_Impl::enqueue(const openstudio::runmanager::Job &job, bool force, const openstudio::path &basePath)
   {
     boost::optional<openstudio::runmanager::Job> result = enqueueImpl(job,force,basePath);
@@ -1784,6 +2124,7 @@ namespace detail {
   boost::optional<openstudio::runmanager::Job> RunManager_Impl::enqueueImpl(openstudio::runmanager::Job job, bool force, const openstudio::path &t_basePath)
   {
     boost::optional<Job> result;
+    bool addedSignal = false;
 
     UUID uuid = job.uuid();
     LOG(Info, "Enqueing Job: " << toString(uuid) << " " << job.description());
@@ -1849,6 +2190,7 @@ namespace detail {
         job.setTreeRunnable(false);
         job.setRunnable(force);
         job.setTreeCanceled(false);
+        addedSignal = true;
       }
 
       // If the item does not already exist in queue, create it and
@@ -1904,6 +2246,11 @@ namespace detail {
     if (finishedjob)
     {
       enqueueImpl(*finishedjob, force, t_basePath);
+    }
+
+    if (addedSignal)
+    {
+      emit jobTreeAdded(job.uuid());
     }
 
     return result;

@@ -21,6 +21,7 @@ namespace openstudio
     public:
       // Saves to / loads from the QSettings object passed in
       NetworkProxyDialog(QSettings &t_settings, QWidget *t_parent);
+      virtual ~NetworkProxyDialog() {}
 
       QNetworkProxy createProxy();
 

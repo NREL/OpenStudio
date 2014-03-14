@@ -45,6 +45,7 @@ namespace detail {
   class Workflow;
   class RunManagerStatus;
   class RunManager;
+  struct JSONWorkflowOptions;
 
 
   /// Handle to a RunManagerStatus dialog
@@ -64,7 +65,7 @@ namespace detail {
         : m_statusUI(t_statusUI)
       {
       }
-           
+
       boost::shared_ptr<RunManagerStatus> m_statusUI;
   };
 
@@ -92,6 +93,30 @@ namespace detail {
       /// \param[in] t_useStatusGUI Enable the use of Job status GUI elements
       RunManager(const openstudio::path &DB, bool t_new = false, bool t_paused = false, bool t_initializeui=true, bool t_useStatusGUI = true);
       ~RunManager();
+
+      /// Executes a workflow which is defined by a JSON string from Nick
+      ///
+      /// To monitor the progress of the workflow use the RunManagerWatcher object
+      ///
+      /// \sa openstudio::runmanager::RunManagerWatcher
+      ///
+      /// \param[in] t_json the JSON string to execute. See various input files from Nick for definition.
+      /// \param[in] t_basePath the path of the directory containing the input files necessary
+      /// \param[in] t_runPath directory to execute the simulations in
+      /// \param[in] t_tools tools to use for executing job
+      /// \param[in] t_options set of options for job creation
+      openstudio::runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
+
+      /// Executes a workflow which is defined by a JSON string from Nick
+      ///
+      /// \param[in] t_json the path to a json file to load and parse
+      /// \param[in] t_basePath the path of the directory containing the input files necessary
+      /// \param[in] t_runPath directory to execute the simulations in
+      /// \param[in] t_tools tools to use for executing job
+      /// \param[in] t_options set of options for job creation
+      openstudio::runmanager::Job runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
       /// Return tue if the given job is out of date
       /// \todo This should probably be removed in favor of openstudio::runmanager::Job::isOutOfDate

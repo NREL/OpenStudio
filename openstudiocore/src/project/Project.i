@@ -40,6 +40,7 @@
   #include <runmanager/lib/Workflow.hpp>
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
+  #include <runmanager/lib/RunManagerWatcher.hpp>
   
   #include <utilities/cloud/AWSProvider.hpp>
   #include <utilities/cloud/VagrantProvider.hpp>

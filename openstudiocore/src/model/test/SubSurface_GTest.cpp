@@ -21,10 +21,14 @@
 
 #include <model/test/ModelFixture.hpp>
 #include <model/Space.hpp>
+#include <model/Space_Impl.hpp>
 #include <model/Surface.hpp>
 #include <model/Surface_Impl.hpp>
 #include <model/SubSurface.hpp>
 #include <model/SubSurface_Impl.hpp>
+#include <model/Building.hpp>
+#include <model/Building_Impl.hpp>
+#include <model/Construction.hpp>
 #include <model/Model_Impl.hpp>
 
 #include <utilities/geometry/Geometry.hpp>
@@ -36,6 +40,20 @@
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+void removeSubSurfaces(Surface& surface){
+  BOOST_FOREACH(SubSurface s, surface.subSurfaces()){
+    s.remove();
+  }
+  EXPECT_EQ(0, surface.subSurfaces().size());
+}
+
+void removeSubSurfaces(Model& model){
+  BOOST_FOREACH(SubSurface s, model.getModelObjects<SubSurface>()){
+    s.remove();
+  }
+  EXPECT_EQ(0, model.getModelObjects<SubSurface>().size());
+}
 
 /* HAS TO WAIT UNTIL WE GET A GOOD OSM EXAMPLE
 TEST_F(ModelFixture, SubSurface_In_File)
@@ -442,4 +460,406 @@ TEST_F(ModelFixture, ExampleDaylightingControlPlacement)
   EXPECT_DOUBLE_EQ(5, point.x());
   EXPECT_DOUBLE_EQ(1, point.y());
   EXPECT_DOUBLE_EQ(1, point.z());
+}
+
+TEST_F(ModelFixture, SkylightPattern_SingleSurface)
+{
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+  std::vector<Point3dVector> pattern; 
+  std::vector<SubSurface> skylights; 
+
+  // no geometry yet
+  pattern = building.generateSkylightPattern(0.00, 1.5, 1);
+  EXPECT_EQ(0, pattern.size());
+
+  Space space(model);
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(30,0,0));
+  vertices.push_back(Point3d(30,20,0));
+  vertices.push_back(Point3d(0,20,0));
+  
+  Surface roof(vertices, model);
+  roof.setSpace(space);
+  EXPECT_DOUBLE_EQ(600.0, roof.grossArea());
+  EXPECT_EQ("RoofCeiling", roof.surfaceType());
+  EXPECT_EQ(0, roof.subSurfaces().size());
+  EXPECT_DOUBLE_EQ(0.0, roof.skylightToRoofRatio());
+  EXPECT_DOUBLE_EQ(0.0, roof.skylightToProjectedFloorRatio());
+
+  // bad inputs
+  pattern = building.generateSkylightPattern(0.00, 1.5, 1);
+  EXPECT_EQ(0, pattern.size());
+  pattern = building.generateSkylightPattern(0.05, 0, 1);
+  EXPECT_EQ(0, pattern.size());
+  pattern = building.generateSkylightPattern(0.05, 1.5, 0);
+  EXPECT_EQ(0, pattern.size());
+
+  // 5% square
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.05, 1, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_EQ(pattern.size(), skylights.size());
+  EXPECT_NEAR(0.05, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.05, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  // 3% square
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.03, 1, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_EQ(pattern.size(), skylights.size());
+  EXPECT_NEAR(0.03, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.03, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  // 5% rectangle
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.05, 1.5, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_EQ(pattern.size(), skylights.size());
+  EXPECT_NEAR(0.05, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.05, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  // 3% rectangle
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.03, 1.5, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_EQ(pattern.size(), skylights.size());
+  EXPECT_NEAR(0.03, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.03, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  // existing subsurfaces
+  removeSubSurfaces(roof);
+  vertices.clear();
+  vertices.push_back(Point3d(20,10,0));
+  vertices.push_back(Point3d(22,10,0));
+  vertices.push_back(Point3d(22,12,0));
+  vertices.push_back(Point3d(20,12,0));
+  SubSurface skylight(vertices, model);
+  skylight.setSurface(roof);
+  EXPECT_DOUBLE_EQ(4.0, skylight.grossArea());
+  EXPECT_EQ("Skylight", skylight.subSurfaceType());
+  EXPECT_NEAR(4.0/600.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(4.0/600.0, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  pattern = building.generateSkylightPattern(0.03, 1.5, 1);
+  EXPECT_FALSE(pattern.empty());
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_TRUE(skylights.empty());
+  EXPECT_NEAR(4.0/600.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(4.0/600.0, roof.skylightToProjectedFloorRatio(), 0.001);
+}
+
+
+TEST_F(ModelFixture, SkylightPattern_SingleSurface2)
+{
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+  std::vector<Point3dVector> pattern; 
+  std::vector<SubSurface> skylights; 
+
+  // no geometry yet
+  pattern = building.generateSkylightPattern(0.00, 1.5, 1);
+  EXPECT_EQ(0, pattern.size());
+
+  Space space(model);
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(10,-10,0));
+  vertices.push_back(Point3d(40,-10,0));
+  vertices.push_back(Point3d(40,10,0));
+  vertices.push_back(Point3d(10,10,0));
+  
+  Surface roof(vertices, model);
+  roof.setSpace(space);
+  EXPECT_DOUBLE_EQ(600.0, roof.grossArea());
+  EXPECT_EQ("RoofCeiling", roof.surfaceType());
+  EXPECT_EQ(0, roof.subSurfaces().size());
+  EXPECT_DOUBLE_EQ(0.0, roof.skylightToRoofRatio());
+  EXPECT_DOUBLE_EQ(0.0, roof.skylightToProjectedFloorRatio());
+
+  // 5% square
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.05, 1, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_NEAR(0.05, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.05, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  space.setXOrigin(4);
+  space.setYOrigin(6);
+  space.setZOrigin(20);
+
+  // 3% square
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.03, 1, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_NEAR(0.03, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.03, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  space.setDirectionofRelativeNorth(25);
+
+  // 5% rectangle
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.05, 1.5, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_NEAR(0.05, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.05, roof.skylightToProjectedFloorRatio(), 0.001);
+
+  space.setDirectionofRelativeNorth(-25);
+
+  // 3% rectangle
+  removeSubSurfaces(roof);
+  EXPECT_NEAR(0.0, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.0, roof.skylightToProjectedFloorRatio(), 0.001);
+  pattern = building.generateSkylightPattern(0.03, 1.5, 1);
+  skylights = roof.createSubSurfaces(pattern, 0.01, boost::none);
+  EXPECT_NEAR(0.03, roof.skylightToRoofRatio(), 0.001);
+  EXPECT_NEAR(0.03, roof.skylightToProjectedFloorRatio(), 0.001);
+}
+
+void checkExpectedSkylightRatios(const Model& model, double expectedRoofArea, double expectedSkylightRatio, double tol)
+{
+  double totalGrossRoofArea = 0.0;
+  double totalSkylightArea = 0.0;
+  BOOST_FOREACH(Surface surface, model.getModelObjects<Surface>()){
+    boost::optional<Space> space = surface.space();
+    ASSERT_TRUE(space);
+    double multiplier = space->multiplier();
+    if (istringEqual("RoofCeiling", surface.surfaceType()) &&
+        istringEqual("Outdoors", surface.outsideBoundaryCondition())){
+
+      double grossRoofArea = surface.grossArea();
+      double netRoofArea = surface.netArea();
+      double skylightToRoofRatio = surface.skylightToRoofRatio();
+      double skylightArea = skylightToRoofRatio*grossRoofArea;
+      
+      EXPECT_NEAR(netRoofArea, grossRoofArea-skylightArea, 0.001);
+
+      totalGrossRoofArea += multiplier*grossRoofArea;
+      totalSkylightArea += multiplier*skylightArea;
+    }
+  }
+
+  if (totalGrossRoofArea > 0){
+    double ratio = totalSkylightArea/totalGrossRoofArea;
+    EXPECT_NEAR(expectedSkylightRatio, ratio, tol);
+  }
+}
+
+TEST_F(ModelFixture, SkylightPattern_PerimCore)
+{
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+  std::vector<Point3dVector> pattern; 
+  std::vector<SubSurface> skylights; 
+
+  // no geometry yet
+  pattern = building.generateSkylightPattern(0.00, 1.5, 1);
+  EXPECT_EQ(0, pattern.size());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  std::vector<Space> spaces;
+  Space space(model);
+  spaces.push_back(space);
+
+  std::vector<Point3d> vertices;
+
+  vertices.clear();
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(5,5,0));
+  vertices.push_back(Point3d(5,15,0));
+  vertices.push_back(Point3d(0,20,0));
+  Surface roofWest(vertices, model);
+  roofWest.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofWest.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(30,0,0));
+  vertices.push_back(Point3d(15,5,0));
+  vertices.push_back(Point3d(5,5,0));
+  Surface roofSouth(vertices, model);
+  roofSouth.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofSouth.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(30,0,0));
+  vertices.push_back(Point3d(30,20,0));
+  vertices.push_back(Point3d(5,15,0));
+  vertices.push_back(Point3d(5,5,0));
+  Surface roofEast(vertices, model);
+  roofEast.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofEast.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(5,15,0));
+  vertices.push_back(Point3d(15,15,0));
+  vertices.push_back(Point3d(30,20,0));
+  vertices.push_back(Point3d(0,20,0));
+  Surface roofNorth(vertices, model);
+  roofNorth.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofNorth.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(5,5,0));
+  vertices.push_back(Point3d(15,5,0));
+  vertices.push_back(Point3d(15,15,0));
+  vertices.push_back(Point3d(5,15,0));
+  Surface roofCore(vertices, model);
+  roofCore.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofCore.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  // 5% square
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = building.generateSkylightPattern(0.05, 1, 1);
+  skylights = applySkylightPattern(pattern, spaces, boost::none);
+  EXPECT_LE(pattern.size(), skylights.size());
+  checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
+
+  // 3% square
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = building.generateSkylightPattern(0.03, 1, 1);
+  skylights = applySkylightPattern(pattern, spaces, boost::none);
+  EXPECT_LE(pattern.size(), skylights.size());
+  checkExpectedSkylightRatios(model, 600.0, 0.03, 0.005);
+
+  // 5% rectangle
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = building.generateSkylightPattern(0.05, 1.5, 1);
+  skylights = applySkylightPattern(pattern, spaces, boost::none);
+  EXPECT_LE(pattern.size(), skylights.size());
+  checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
+
+  // 3% rectangle
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = building.generateSkylightPattern(0.03, 1.5, 1);
+  skylights = applySkylightPattern(pattern, spaces, boost::none);
+  EXPECT_LE(pattern.size(), skylights.size());
+  checkExpectedSkylightRatios(model, 600.0, 0.03, 0.005);
+}
+
+
+TEST_F(ModelFixture, SkylightPattern_PerimCore_Rotated)
+{
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+  std::vector<Point3dVector> pattern; 
+  std::vector<SubSurface> skylights; 
+
+  // no geometry yet
+  pattern = building.generateSkylightPattern(0.00, 1.5, 1);
+  EXPECT_EQ(0, pattern.size());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  std::vector<Space> spaces;
+  Space space(model);
+  spaces.push_back(space);
+
+  std::vector<Point3d> vertices;
+
+  vertices.clear();
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(5,5,0));
+  vertices.push_back(Point3d(5,15,0));
+  vertices.push_back(Point3d(0,20,0));
+  Surface roofWest(vertices, model);
+  roofWest.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofWest.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(30,0,0));
+  vertices.push_back(Point3d(15,5,0));
+  vertices.push_back(Point3d(5,5,0));
+  Surface roofSouth(vertices, model);
+  roofSouth.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofSouth.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(30,0,0));
+  vertices.push_back(Point3d(30,20,0));
+  vertices.push_back(Point3d(5,15,0));
+  vertices.push_back(Point3d(5,5,0));
+  Surface roofEast(vertices, model);
+  roofEast.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofEast.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(5,15,0));
+  vertices.push_back(Point3d(15,15,0));
+  vertices.push_back(Point3d(30,20,0));
+  vertices.push_back(Point3d(0,20,0));
+  Surface roofNorth(vertices, model);
+  roofNorth.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofNorth.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  vertices.clear();
+  vertices.push_back(Point3d(5,5,0));
+  vertices.push_back(Point3d(15,5,0));
+  vertices.push_back(Point3d(15,15,0));
+  vertices.push_back(Point3d(5,15,0));
+  Surface roofCore(vertices, model);
+  roofCore.setSpace(space);
+  EXPECT_EQ("RoofCeiling", roofCore.surfaceType());
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+
+  // 5% square
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = generateSkylightPattern(spaces, 90, 0.05, 1, 1);
+  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
+
+  // 3% square
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = generateSkylightPattern(spaces, 45, 0.03, 1, 1);
+  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  checkExpectedSkylightRatios(model, 600.0, 0.03, 0.006);  // BUMP this up a bit
+
+  // 5% rectangle
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = generateSkylightPattern(spaces, 135, 0.05, 1, 1);
+  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
+
+  // 3% rectangle
+  removeSubSurfaces(model);
+  checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
+  pattern = generateSkylightPattern(spaces, 180, 0.03, 1, 1);
+  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  checkExpectedSkylightRatios(model, 600.0, 0.03, 0.005);
 }
