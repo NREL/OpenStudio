@@ -226,6 +226,14 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->addItem("Whole System");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
+  }else if (newName == "Refrigeration"){
+    m_taxonomySecondLevelComboBox->addItem("Refrigeration Controls");
+    m_taxonomySecondLevelComboBox->addItem("Cases and Walkins");
+    m_taxonomySecondLevelComboBox->addItem("Compressors");
+    m_taxonomySecondLevelComboBox->addItem("Condensers");
+    m_taxonomySecondLevelComboBox->addItem("Heat Reclaim");
+    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
+    m_taxonomySecondLevelComboBox->setEnabled(true);    
   }else if (newName == "Service Water Heating"){
     m_taxonomySecondLevelComboBox->addItem("Water Use");
     m_taxonomySecondLevelComboBox->addItem("Water Heating");
