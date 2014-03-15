@@ -225,16 +225,19 @@ void OSComboBox2::unbind() {
 void OSComboBox2::onModelObjectChanged() {
   OS_ASSERT(m_modelObject);
 
-  std::string value = m_choiceConcept->get();
+  if( m_choiceConcept )
+  {
+    std::string value = m_choiceConcept->get();
 
-  std::vector<std::string>::const_iterator it = std::find(m_values.begin(),
-                                                          m_values.end(),
-                                                          value);
+    std::vector<std::string>::const_iterator it = std::find(m_values.begin(),
+                                                            m_values.end(),
+                                                            value);
 
-  int i = int(it - m_values.begin());
-  this->blockSignals(true);
-  setCurrentIndex(i);
-  this->blockSignals(false);
+    int i = int(it - m_values.begin());
+    this->blockSignals(true);
+    setCurrentIndex(i);
+    this->blockSignals(false);
+  }
 }
 
 void OSComboBox2::onModelObjectRemoved(Handle handle)
@@ -246,31 +249,37 @@ void OSComboBox2::onCurrentIndexChanged(const QString & text)
 {
   OS_ASSERT(m_modelObject);
 
-  std::string value = text.toStdString();
+  if( m_choiceConcept )
+  {
+    std::string value = text.toStdString();
 
-  this->blockSignals(true);
-  m_choiceConcept->set(value);
-  onModelObjectChanged(); // will be sure to display actual value
-  this->blockSignals(false);
+    this->blockSignals(true);
+    m_choiceConcept->set(value);
+    onModelObjectChanged(); // will be sure to display actual value
+    this->blockSignals(false);
+  }
 }
 
 void OSComboBox2::onChoicesRefreshTrigger() {
-  m_values = m_choiceConcept->choices();
-  this->blockSignals(true);
-  
-  clear();
-  for( std::vector<std::string>::iterator it = m_values.begin();
-       it < m_values.end();
-       ++it )
+  if( m_choiceConcept )
   {
-    addItem(QString::fromStdString(*it));
+    m_values = m_choiceConcept->choices();
+    this->blockSignals(true);
+    
+    clear();
+    for( std::vector<std::string>::iterator it = m_values.begin();
+         it < m_values.end();
+         ++it )
+    {
+      addItem(QString::fromStdString(*it));
+    }
+
+    // re-initialize
+    onModelObjectChanged();
+
+    this->blockSignals(false);
+    setEnabled(true);
   }
-
-  // re-initialize
-  onModelObjectChanged();
-
-  this->blockSignals(false);
-  setEnabled(true);
 }
 
 void OSComboBox2::onDataSourceChange(int i)
