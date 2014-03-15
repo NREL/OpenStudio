@@ -2591,6 +2591,42 @@ OS:Refrigeration:Condenser:AirCooled,
   ,                                       !- Condensate Receiver Refrigerant Inventory {kg}
   ;                                       !- Condensate Piping Refrigerant Inventory {kg}
 
+OS:Refrigeration:Condenser:EvaporativeCooled,
+  {5fdbc0e0-d650-469d-8866-8c6d8f6b8b46}, !- Handle
+  Refrigeration Condenser Evaporative Cooled, !- Name
+  43100,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  0,                                      !- Rated Subcooling Temperature Difference {deltaC}
+  VariableSpeed,                          !- Fan Speed Control Type
+  373,                                    !- Rated Fan Power {W}
+  0.2,                                    !- Minimum Fan Air Flow Ratio {dimensionless}
+  6.63,                                   !- Approach Temperature Constant Term {C}
+  0.468,                                  !- Approach Temperature Coefficient 2 {C}
+  17.93,                                  !- Approach Temperature Coefficient 3 {C}
+  -0.322,                                 !- Approach Temperature Coefficient 4 {dimensionless}
+  0.6,                                    !- Minimum Capacity Factor {dimensionless}
+  4.8,                                    !- Maximum Capacity Factor {dimensionless}
+  ,                                       !- Air Inlet Node Name
+  1.37,                                   !- Rated Air Flow Rate {m3/s}
+  66.7,                                   !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  250;                                    !- Rated Water Pump Power {W}
+
+OS:Refrigeration:Condenser:WaterCooled,
+  {257357d5-041a-479c-894c-68cc5cff9e82}, !- Handle
+  Refrigeration Condenser Water Cooled, !- Name
+  58000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  29.4,                                   !- Rated Condensing Temperature {C}
+  0,                                      !- Rated Subcooling Temperature Difference {deltaC}
+  10,                                     !- Rated Water Inlet Temperature {C}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ConstantFlow,                           !- Water-Cooled Loop Flow Type
+  ,                                       !- Water Outlet Temperature Schedule Name
+  0.0025,                                 !- Water Design Flow Rate {m3/s}
+  0.003,                                  !- Water Maximum Flow Rate {m3/s}
+  55,                                     !- Water Maximum Water Outlet Temperature {C}
+  10;                                     !- Water Minimum Water Inlet Temperature {C}
+
 OS:Curve:Linear,
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Handle
   Refrigeration Condenser Air Cooled HR Curve, !- Name

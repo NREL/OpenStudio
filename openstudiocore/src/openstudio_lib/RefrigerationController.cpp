@@ -24,11 +24,16 @@
 #include "OSItem.hpp"
 #include "MainWindow.hpp"
 #include "MainRightColumnController.hpp"
+#include "IconLibrary.hpp"
 #include "../model/Model.hpp"
 #include "../model/RefrigerationSystem.hpp"
 #include "../model/RefrigerationSystem_Impl.hpp"
 #include "../model/RefrigerationCondenserAirCooled.hpp"
 #include "../model/RefrigerationCondenserAirCooled_Impl.hpp"
+#include "../model/RefrigerationCondenserEvaporativeCooled.hpp"
+#include "../model/RefrigerationCondenserEvaporativeCooled_Impl.hpp"
+#include "../model/RefrigerationCondenserWaterCooled.hpp"
+#include "../model/RefrigerationCondenserWaterCooled_Impl.hpp"
 #include "../model/RefrigerationCompressor.hpp"
 #include "../model/RefrigerationCompressor_Impl.hpp"
 #include "../model/RefrigerationCase.hpp"
@@ -197,6 +202,36 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
 
       model::RefrigerationCondenserAirCooled condenserClone = 
         condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserAirCooled>();
+
+      m_currentSystem->setRefrigerationCondenser(condenserClone);
+
+      refresh();
+    }
+    else if( boost::optional<model::RefrigerationCondenserEvaporativeCooled> condenser 
+          = mo->optionalCast<model::RefrigerationCondenserEvaporativeCooled>() )
+    {
+      if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
+      {
+        currentCondenser->remove();
+      }
+
+      model::RefrigerationCondenserEvaporativeCooled condenserClone = 
+        condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserEvaporativeCooled>();
+
+      m_currentSystem->setRefrigerationCondenser(condenserClone);
+
+      refresh();
+    }
+    else if( boost::optional<model::RefrigerationCondenserWaterCooled> condenser 
+          = mo->optionalCast<model::RefrigerationCondenserWaterCooled>() )
+    {
+      if( boost::optional<model::ModelObject> currentCondenser = m_currentSystem->refrigerationCondenser() )
+      {
+        currentCondenser->remove();
+      }
+
+      model::RefrigerationCondenserWaterCooled condenserClone = 
+        condenser->clone(m_currentSystem->model()).cast<model::RefrigerationCondenserWaterCooled>();
 
       m_currentSystem->setRefrigerationCondenser(condenserClone);
 
@@ -390,6 +425,9 @@ void RefrigerationController::refreshNow()
         m_detailView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle(),QString(),false));
 
         m_detailView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
+
+        const QPixmap * pixmap = IconLibrary::Instance().findIcon(condenser->iddObjectType().value());
+        m_detailView->refrigerationCondenserView->setIcon(*pixmap);
       }
 
       // insert compressors

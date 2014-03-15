@@ -727,8 +727,9 @@ void RefrigerationCaseDetailView::paint( QPainter *painter,
 }
 
 RefrigerationCondenserView::RefrigerationCondenserView()
-  : m_pixmap(QPixmap(":/images/condensor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight))
 {
+  setIcon(QPixmap(":/images/air_cooled.png"));
+
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -739,6 +740,12 @@ RefrigerationCondenserView::RefrigerationCondenserView()
   OS_ASSERT(bingo);
 
   setCondenserId(OSItemId());
+}
+
+void RefrigerationCondenserView::setIcon(const QPixmap & pixmap)
+{
+  m_pixmap = pixmap.scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
+  update();
 }
 
 void RefrigerationCondenserView::mousePressEvent(QGraphicsSceneMouseEvent * event)
