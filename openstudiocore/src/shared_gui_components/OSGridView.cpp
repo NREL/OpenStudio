@@ -37,8 +37,13 @@
 #include <QLabel>
 #include <QPushButton>
 
-#define WIDTH  80
-#define HEIGHT 60
+#ifdef Q_OS_MAC
+  #define WIDTH  110
+  #define HEIGHT 60
+#else
+  #define WIDTH  80
+  #define HEIGHT 60
+#endif
 
 namespace openstudio {
 
@@ -79,7 +84,11 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
     button = new QPushButton(categories.at(i));
+#ifdef Q_OS_MAC
+    button->setFixedSize(WIDTH,HEIGHT);
+#else
     button->setMinimumSize(WIDTH,HEIGHT);
+#endif
     button->setCheckable(true);
     buttonLayout->addWidget(button,0,Qt::AlignLeft);
     buttonGroup->addButton(button,buttonGroup->buttons().size());
