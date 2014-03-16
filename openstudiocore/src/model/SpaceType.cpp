@@ -85,7 +85,7 @@ namespace model {
 
 namespace detail {
 
-  QMap<QString, QVariant> SpaceType_Impl::m_standardsSpaceTypeMap;
+  QMap<QString, QVariant> SpaceType_Impl::m_standardsMap;
 
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
@@ -270,10 +270,26 @@ namespace detail {
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
     // include values from json
-    parseStandardsSpaceTypeMap();
-    QMap<QString, QVariant>::const_iterator i = m_standardsSpaceTypeMap.constBegin();
-    for (; i != m_standardsSpaceTypeMap.constEnd(); ++i) {
-      result.push_back(toString(i.key()));
+    parseStandardsMap();
+
+    QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
+    Q_FOREACH(QString template_name, templates.uniqueKeys()){
+      std::string t = toString(template_name);
+
+      QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
+      Q_FOREACH(QString climate_set_name, climate_sets.uniqueKeys()){
+
+        std::string c = toString(climate_set_name);
+        
+        QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
+        Q_FOREACH(QString building_type_name, building_types.uniqueKeys()){
+          
+          std::string b = toString(building_type_name);
+
+          result.push_back(toString(building_type_name));
+
+        }
+      }
     }
 
     // include values from model
@@ -352,13 +368,26 @@ namespace detail {
     boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
 
     // include values from json
-    parseStandardsSpaceTypeMap();
     if (standardsBuildingType){
-      if (m_standardsSpaceTypeMap.contains(toQString(*standardsBuildingType))){
-        QList<QVariant> values = m_standardsSpaceTypeMap[toQString(*standardsBuildingType)].toList();
-        QList<QVariant>::const_iterator i = values.constBegin();
-        for (; i != values.constEnd(); ++i) {
-          result.push_back(toString(i->toString()));
+      parseStandardsMap();
+
+      QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
+      Q_FOREACH(QString template_name, templates.uniqueKeys()){
+        std::string t = toString(template_name);
+
+        QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
+        Q_FOREACH(QString climate_set_name, climate_sets.uniqueKeys()){
+
+          std::string c = toString(climate_set_name);
+          
+          QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
+          QMap<QString, QVariant> specific_types = building_types[toQString(*standardsBuildingType)].toMap();
+          Q_FOREACH(QString specific_type_name, specific_types.uniqueKeys()){
+            std::string s = toString(specific_type_name);
+
+            result.push_back(toString(specific_type_name));
+
+          }
         }
       }
     }
@@ -1330,17 +1359,17 @@ namespace detail {
     OS_ASSERT(count == 1);
   }
 
-  void SpaceType_Impl::parseStandardsSpaceTypeMap() const
+  void SpaceType_Impl::parseStandardsMap() const
   {
-    if (m_standardsSpaceTypeMap.empty()){
-      QFile file(":/resources/standards/nrel_space_types.json");
+    if (m_standardsMap.empty()){
+      QFile file(":/resources/standards/OpenStudio_Standards.json");
       if (file.open(QFile::ReadOnly)) {
         QJson::Parser parser;
         bool ok(false);
         QVariant variant = parser.parse(&file,&ok);
         OS_ASSERT(ok);
         file.close();
-        m_standardsSpaceTypeMap = variant.toMap();
+        m_standardsMap = variant.toMap();
       }
     }
   }
