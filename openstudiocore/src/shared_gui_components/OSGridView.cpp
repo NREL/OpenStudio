@@ -40,6 +40,8 @@
 #ifdef Q_OS_MAC
   #define WIDTH  110
   #define HEIGHT 60
+  #define WIDTH_DZ 98
+  #define HEIGHT_DZ 48
 #else
   #define WIDTH  80
   #define HEIGHT 60
@@ -71,7 +73,12 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-  OSDropZone * dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH,HEIGHT));
+  OSDropZone * dropZone = 0; 
+#ifdef Q_OS_MAC
+    dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
+#else
+    dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH,HEIGHT));
+#endif
   dropZone->setMaxItems(1);
 
   isConnected = connect(dropZone,SIGNAL(itemDropped(const OSItemId&)),
