@@ -2507,6 +2507,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     coilCooling.setName(nameElement.text().toStdString());
 
+    coilCooling.setTypeOfAnalysis("DetailedAnalysis");
+
     // Plant
 
     QDomElement fluidSegNameElement = coolingCoilElement.firstChildElement("FluidSegInRef");

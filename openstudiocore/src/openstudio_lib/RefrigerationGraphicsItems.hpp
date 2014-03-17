@@ -276,6 +276,8 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
 
   void setCondenserName(const QString & name);
 
+  void setIcon(const QPixmap & pixmap);
+
   static QSizeF size();
 
   signals:
