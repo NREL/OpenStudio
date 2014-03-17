@@ -509,6 +509,11 @@ void OSGridController::onComboBoxIndexChanged(int index)
 {
 }
 
+void OSGridController::reset()
+{
+  emit modelReset();
+}
+
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
   : QWidget(parent),
   m_label(new QLabel(fieldName)),

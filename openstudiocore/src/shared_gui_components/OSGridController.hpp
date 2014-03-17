@@ -308,6 +308,10 @@ public slots:
 
   virtual void onComboBoxIndexChanged(int index);
 
+protected slots:
+
+  void reset();
+
 private slots:
 
   void horizontalHeaderChecked(int index);

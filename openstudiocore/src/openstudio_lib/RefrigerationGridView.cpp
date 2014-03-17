@@ -49,6 +49,7 @@
 #include <QLabel>
 #include <QScrollArea>
 #include <QSettings>
+#include <QTimer>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
@@ -627,7 +628,8 @@ void RefrigerationCaseGridController::onComboBoxIndexChanged(int index)
   for(unsigned index = 0; index < m_horizontalHeader.size(); index++){
   horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
-      emit modelReset();
+      // NOTE required due to a race condition
+      QTimer::singleShot(0, this, SLOT(reset()));
       break;
     }
   }
@@ -1090,7 +1092,8 @@ void RefrigerationWalkInGridController::onComboBoxIndexChanged(int index)
   for(unsigned index = 0; index < m_horizontalHeader.size(); index++){
   horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
-      emit modelReset();
+      // NOTE required due to a race condition
+      QTimer::singleShot(0, this, SLOT(reset()));
       break;
     }
   }
