@@ -392,6 +392,10 @@ namespace detail {
       }
     }
 
+    // always add these hard coded types
+    result.push_back("Attic");
+    result.push_back("Plenum");
+
     // include values from model
     BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
       if (other.handle() == this->handle()){
