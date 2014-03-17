@@ -92,7 +92,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
       systemView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
 
       const QPixmap * pixmap = IconLibrary::Instance().findIcon(condenser->iddObjectType().value());
-      m_detailView->refrigerationCondenserView->setIcon(*pixmap);
+      systemView->refrigerationCondenserView->setIcon(*pixmap);
     }
 
     // insert secondary systems
@@ -443,7 +443,7 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
       m_currentSystem->setRefrigerationCondenser(condenserClone);
 
       refresh();
-
+    }
     else if( boost::optional<model::RefrigerationCondenserEvaporativeCooled> condenser 
           = mo->optionalCast<model::RefrigerationCondenserEvaporativeCooled>() )
     {
