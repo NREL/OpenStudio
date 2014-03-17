@@ -619,6 +619,20 @@ void RefrigerationCaseGridController::refreshModelObjects()
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
 }
 
+void RefrigerationCaseGridController::onComboBoxIndexChanged(int index)
+{
+  // Note: find the correct system color on RACK change,
+  // but currently unable to know which row changed.
+  HorizontalHeaderWidget * horizontalHeaderWidget = 0;
+  for(unsigned index = 0; index < m_horizontalHeader.size(); index++){
+  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
+    if(horizontalHeaderWidget->m_label->text() == RACK){
+      emit modelReset();
+      break;
+    }
+  }
+}
+
 RefrigerationWalkInGridController::RefrigerationWalkInGridController(bool isIP,
   const QString & headerText,
   model::Model model,
@@ -1066,6 +1080,20 @@ void RefrigerationWalkInGridController::refreshModelObjects()
   std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = m_model.getModelObjects<model::RefrigerationWalkIn>();
   m_modelObjects = subsetCastVector<model::ModelObject>(refrigerationWalkIns);
   std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
+}
+
+void RefrigerationWalkInGridController::onComboBoxIndexChanged(int index)
+{
+  // Note: find the correct system color on RACK change,
+  // but currently unable to know which row changed.
+  HorizontalHeaderWidget * horizontalHeaderWidget = 0;
+  for(unsigned index = 0; index < m_horizontalHeader.size(); index++){
+  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
+    if(horizontalHeaderWidget->m_label->text() == RACK){
+      emit modelReset();
+      break;
+    }
+  }
 }
 
 } // openstudio

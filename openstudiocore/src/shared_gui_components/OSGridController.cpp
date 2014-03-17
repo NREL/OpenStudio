@@ -220,6 +220,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         widget = comboBox;
 
+        isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(onComboBoxIndexChanged(int)));
+        OS_ASSERT(isConnected);
+
     } else if(QSharedPointer<ValueEditConcept<double> > doubleEditConcept = baseConcept.dynamicCast<ValueEditConcept<double> >()) {
 
         OSDoubleEdit2 * doubleEdit = new OSDoubleEdit2();
@@ -499,6 +503,10 @@ void OSGridController::horizontalHeaderChecked(int index)
 void OSGridController::toggleUnits(bool displayIP)
 {
   m_isIP = displayIP;
+}
+
+void OSGridController::onComboBoxIndexChanged(int index)
+{
 }
 
 HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)

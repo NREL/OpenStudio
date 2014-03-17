@@ -79,6 +79,8 @@ public slots:
 
   virtual void onItemDropped(const OSItemId& itemId);
 
+  virtual void onComboBoxIndexChanged(int index);
+
 };
 
 class RefrigerationWalkInGridController : public OSGridController
@@ -110,6 +112,8 @@ protected:
 public slots:
 
   virtual void onItemDropped(const OSItemId& itemId);
+
+  virtual void onComboBoxIndexChanged(int index);
 
 };
 

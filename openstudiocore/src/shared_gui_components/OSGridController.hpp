@@ -306,6 +306,8 @@ public slots:
 
   void toggleUnits(bool displayIP);
 
+  virtual void onComboBoxIndexChanged(int index);
+
 private slots:
 
   void horizontalHeaderChecked(int index);
