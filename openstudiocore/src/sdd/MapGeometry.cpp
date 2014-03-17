@@ -1583,7 +1583,7 @@ namespace sdd {
     OptionalQuantity floorAreaIP = QuantityConverter::instance().convert(floorAreaSI, ipSys);
     OS_ASSERT(floorAreaIP);
     OS_ASSERT(floorAreaIP->units() == IPUnit(IPExpnt(0,2,0)));
-    QDomElement floorAreaElement = doc.createElement("FlrArea");
+    QDomElement floorAreaElement = doc.createElement("Area");  // SAC 3/14/14
     result.appendChild(floorAreaElement);
     floorAreaElement.appendChild(doc.createTextNode(QString::number(floorAreaIP->value())));
 
