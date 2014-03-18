@@ -308,6 +308,10 @@ void HVACSystemsController::update()
                                    m_refrigerationGridController.get()->refrigerationGridView(), SIGNAL(toggleUnitsClicked(bool)));
         OS_ASSERT(isConnected);
 
+        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                              this, SLOT(toggleUnits(bool)));
+        OS_ASSERT(isConnected);
+
         m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
       }
       else
@@ -354,6 +358,10 @@ void HVACSystemsController::update()
 
         bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                                    m_refrigerationGridController.get()->refrigerationGridView(), SIGNAL(toggleUnitsClicked(bool)));
+        OS_ASSERT(isConnected);
+
+        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                              this, SLOT(toggleUnits(bool)));
         OS_ASSERT(isConnected);
 
         m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationGridController->refrigerationGridView());
@@ -438,6 +446,11 @@ void HVACSystemsController::onObjectRemoved(const WorkspaceObject & workspaceObj
 
 void HVACSystemsController::onObjectChanged()
 {
+}
+
+void HVACSystemsController::toggleUnits(bool displayIP)
+{
+  m_isIP = displayIP;
 }
 
 void HVACLayoutController::addLibraryObjectToTopLevel(OSItemId itemid)

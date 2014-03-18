@@ -25,12 +25,17 @@
 namespace openstudio {
 
 HVACSystemsTabController::HVACSystemsTabController(bool isIP, const model::Model& model)
-  : MainTabController(new HVACSystemsTabView())
+  : MainTabController(new HVACSystemsTabView()),
+  m_isIP(isIP)
 {
   m_hvacSystemsController = boost::shared_ptr<HVACSystemsController>(new HVACSystemsController(isIP, model));
 
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_hvacSystemsController.get(), SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        this, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   this->mainContentWidget()->addTabWidget(m_hvacSystemsController->hvacSystemsView());
@@ -39,6 +44,11 @@ HVACSystemsTabController::HVACSystemsTabController(bool isIP, const model::Model
 void HVACSystemsTabController::clearSceneSelection()
 {
   m_hvacSystemsController->clearSceneSelection();
+}
+
+void HVACSystemsTabController::toggleUnits(bool displayIP)
+{
+  m_isIP = displayIP;
 }
 
 } // openstudio

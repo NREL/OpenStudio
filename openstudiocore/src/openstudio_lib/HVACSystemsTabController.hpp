@@ -43,9 +43,16 @@ class HVACSystemsTabController : public MainTabController
 
   boost::shared_ptr<HVACSystemsController> m_hvacSystemsController;
 
+  bool m_isIP;
+
   signals:
   
   void toggleUnitsClicked(bool displayIP);
+
+private slots:
+
+  void toggleUnits(bool displayIP);
+
 };
 
 } // openstudio

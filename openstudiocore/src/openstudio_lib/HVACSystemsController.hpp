@@ -126,6 +126,8 @@ class HVACSystemsController : public QObject
 
   void onSystemComboBoxIndexChanged(int i);
 
+  void toggleUnits(bool displayIP);
+
   private:
 
   std::vector<IddObjectType> systemComboBoxTypes() const;
