@@ -29,10 +29,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 
 #include <string>
 #include <ostream>
 #include <vector>
+#include <algorithm>
 
 namespace openstudio{
  
@@ -451,6 +453,18 @@ std::vector<Handle> getHandles(const std::vector<T>& objects)
   HandleVector result;
   BOOST_FOREACH (const T& object, objects) { result.push_back(object.handle()); }
   return result;
+}
+
+/** Returns obj.name().get() if it exists. Otherwise, returns the IddObject.name(), 
+ *  which is a good choice for unique objects. */
+UTILITIES_API std::string objectName(const IdfObject& obj);
+
+template<typename T>
+std::vector<T> sortByObjectName(std::vector<T> objects) {
+  std::sort(objects.begin(),
+            objects.end(),
+            boost::bind(&istringLess,boost::bind(&objectName,_1),boost::bind(&objectName,_1)));
+  return objects;
 }
 
 } // openstudio

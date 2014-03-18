@@ -61,6 +61,26 @@ class OSDoubleEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
+  void bind(model::ModelObject& modelObject,
+            DoubleGetter get,
+            DoubleSetterVoidReturn set,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bind(model::ModelObject& modelObject,
+            OptionalDoubleGetter get,
+            DoubleSetterVoidReturn set,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
   void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
             DoubleGetter get,
             boost::optional<DoubleSetter> set=boost::none,
@@ -97,6 +117,7 @@ class OSDoubleEdit2: public QLineEdit {
   boost::optional<DoubleGetter> m_get;
   boost::optional<OptionalDoubleGetter> m_getOptional;
   boost::optional<DoubleSetter> m_set;
+  boost::optional<DoubleSetterVoidReturn> m_setVoidReturn;
   boost::optional<NoFailAction> m_reset;
   boost::optional<NoFailAction> m_autosize;
   boost::optional<NoFailAction> m_autocalculate;

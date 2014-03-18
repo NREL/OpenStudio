@@ -33,7 +33,7 @@ class HVACSystemsTabController : public MainTabController
 
   public:
 
-  HVACSystemsTabController(const model::Model& model);
+  HVACSystemsTabController(bool isIP, const model::Model& model);
 
   virtual ~HVACSystemsTabController() {}
 
@@ -42,6 +42,17 @@ class HVACSystemsTabController : public MainTabController
   private:
 
   boost::shared_ptr<HVACSystemsController> m_hvacSystemsController;
+
+  bool m_isIP;
+
+  signals:
+  
+  void toggleUnitsClicked(bool displayIP);
+
+private slots:
+
+  void toggleUnits(bool displayIP);
+
 };
 
 } // openstudio
