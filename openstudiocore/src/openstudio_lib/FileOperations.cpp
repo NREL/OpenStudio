@@ -406,7 +406,7 @@ namespace openstudio {
 
     // DLM: eventually put saveRunManagerDatabase here, needs to happen before saveModelTempDir
 
-    // DLM: evenually add this back in too
+    // DLM: eventually add this back in too
     //saveModelTempDir(modelTempDir, modelPath);
     
     return modelPath;
