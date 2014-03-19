@@ -69,6 +69,8 @@
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/SetpointManagerWarmest_Impl.hpp>
+#include <model/RenderingColor.hpp>
+#include <model/RenderingColor_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Splitter.hpp>
@@ -1070,17 +1072,47 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
   model::Node supplyInletNode = m_loop.supplyInletNode();
   model::Node supplyOutletNode = m_loop.supplyOutletNode();
 
-  std::vector<model::ModelObject> supplyPlenums = loop.demandComponents(model::AirLoopHVACSupplyPlenum::iddObjectType());
-  std::vector<model::ModelObject> returnPlenums = loop.demandComponents(model::AirLoopHVACReturnPlenum::iddObjectType());
-  std::vector<model::ModelObject> plenums = supplyPlenums;
-  plenums.insert(plenums.end(),returnPlenums.begin(),returnPlenums.end());
+  std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(loop.demandComponents());
+  std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(loop.demandComponents());
+
   int i = 0;
-  for(std::vector<model::ModelObject>::iterator it = plenums.begin();
-      it != plenums.end();
+
+  for(std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
+      it != supplyPlenums.end();
       ++it)
   {
+    if( boost::optional<model::ThermalZone> tz = it->thermalZone() )
+    {
+      if( boost::optional<model::RenderingColor> rc = tz->renderingColor() )
+      {
+        QColor color;
+        color.setRed(rc->renderingRedValue());
+        color.setBlue(rc->renderingBlueValue());
+        color.setGreen(rc->renderingGreenValue());
+        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+      }
+    }
     m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
-    ++i;
+    i++;
+  }
+
+  for(std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
+      it != returnPlenums.end();
+      ++it)
+  {
+    if( boost::optional<model::ThermalZone> tz = it->thermalZone() )
+    {
+      if( boost::optional<model::RenderingColor> rc = tz->renderingColor() )
+      {
+        QColor color;
+        color.setRed(rc->renderingRedValue());
+        color.setBlue(rc->renderingBlueValue());
+        color.setGreen(rc->renderingGreenValue());
+        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+      }
+    }
+    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    i++;
   }
 
   m_supplySideItem = new SupplySideItem( this,
@@ -1152,18 +1184,29 @@ int SystemItem::plenumIndex(const Handle & plenumHandle)
 QColor SystemItem::plenumColor(const Handle & plenumHandle)
 {
   QColor color;
-  int index = plenumIndex(plenumHandle);
-  if( index < 0 )
+
+  std::map<Handle,QColor>::iterator it = m_plenumColorMap.find(plenumHandle);
+  if( it != m_plenumColorMap.end() )
   {
-    color = SchedulesView::colors[0];
-  }
-  else if( index > 12 )
-  {
-    color = SchedulesView::colors[12];
+    color = it->second;
   }
   else
   {
-    color = SchedulesView::colors[index];
+    int index = plenumIndex(plenumHandle);
+    if( index < 0 )
+    {
+      color = SchedulesView::colors[0];
+    }
+    else if( index > 12 )
+    {
+      color = SchedulesView::colors[12];
+    }
+    else
+    {
+      color = SchedulesView::colors[index];
+    }
+
+    // DLM: Create a RenderingColor and associate it with the thermal zone?
   }
 
   return color;
