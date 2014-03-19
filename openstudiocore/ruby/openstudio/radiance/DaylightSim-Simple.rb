@@ -408,14 +408,13 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
   tempIO = IO.popen(t_cmd)
 
 
-  temp = tempIO.readlines
+  val_lines = tempIO.readlines("\n")
   tempIO.close
 
   linenum = 0
 
   puts "#{Time.now.getutc}: Parsing result"
   values = []
-  val_lines = temp.split(/\n/)
  
   has_header = false
   if not val_lines.empty?
