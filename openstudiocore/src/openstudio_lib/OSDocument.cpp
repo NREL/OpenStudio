@@ -469,7 +469,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // HVAC Systems
 
-  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(m_model) );
+  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_hvacSystemsTabController->mainContentWidget(),
                                 HVAC_SYSTEMS,
                                 "HVAC Systems",
@@ -477,6 +477,10 @@ OSDocument::OSDocument( openstudio::model::Model library,
                                 ":images/off_hvac_tab.png" );
   connect(m_hvacSystemsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForHVACSystemsSubTab(int)));
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        m_hvacSystemsTabController.get(), SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 
   //******************************************************************************************************
   //

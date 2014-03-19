@@ -145,6 +145,11 @@ MODEL_API std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(
     const std::string& className,
     const std::string& scheduleDisplayName);
 
+MODEL_API std::vector<Schedule> getCompatibleSchedules(
+    const Model& model,
+    const std::string& className,
+    const std::string& scheduleDisplayName);
+
 } // model
 } // openstudio
 
