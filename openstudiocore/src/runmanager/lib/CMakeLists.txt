@@ -139,8 +139,13 @@ SET( runmanager_src
   SimulationEngine.cpp
   JSON.cpp
   JSON.hpp
-  
+
   MergedJobResults.hpp
+
+  RunManagerWatcher.hpp
+  RunManagerWatcher.cpp
+
+  JSONWorkflowOptions.hpp
 )
 
 IF( BUILD_TESTING OR BUILD_PACKAGE )
@@ -210,6 +215,7 @@ SET( runmanager_moc
   ModelToRadPreProcessJob.hpp
   DakotaJob.hpp
   SimulationEngine.hpp
+  RunManagerWatcher.hpp
 )
 
 SET( runmanager_test_moc
@@ -235,8 +241,8 @@ SOURCE_GROUP( runmanager FILES ${runmanager_src} ${runmanager_moc_src} )
 SOURCE_GROUP( runmanager_documentation FILES ${rmkt_documentation_src} )
 
 SET( runmanager_src
-  ${runmanager_src}  
-  ${runmanager_moc_src}  
+  ${runmanager_src}
+  ${runmanager_moc_src}
   ${runmanager_UIS}
   ${runmanager_documentation}
 )
@@ -266,6 +272,7 @@ SET( runmanager_test_src
   Test/ErrorEstimation_GTest.cpp
   Test/JSON_GTest.cpp
   Test/ExternallyManagedJobs_GTest.cpp
+  Test/RunJSONWorkflow_GTest.cpp
   "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx"
 )
 
@@ -282,13 +289,13 @@ AddPCH(openstudio_runmanager)
 
 IF( OPENSSL_FOUND AND BUILD_WITH_OPENSSL )
   TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel libssh_static ${OPENSSL_LIBRARIES}) 
-   
+
   IF(MSVC)
     TARGET_LINK_LIBRARIES(${target_name} delayimp ws2_32)
-    
+
     SET_TARGET_PROPERTIES(${target_name} PROPERTIES LINK_FLAGS "/DELAYLOAD:libeay32.dll")
   ENDIF()
-  
+
   ADD_DEFINITIONS(-DRUNMANAGER_HAVE_OPENSSL)
 ELSE()
   TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel)

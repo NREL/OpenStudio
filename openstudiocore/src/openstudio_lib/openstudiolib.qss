@@ -260,13 +260,6 @@ QToolButton {
   border: none;
 }
 
-systemoutliner--SystemFooterWidget {
-  background: white;
-  border: none;
-  padding: 0;
-  margin: 0;
-}
-
 QGraphicsView {
   border: none;
 }

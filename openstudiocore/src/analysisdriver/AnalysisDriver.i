@@ -40,6 +40,7 @@
   #include <runmanager/lib/JobErrors.hpp>
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
+  #include <runmanager/lib/RunManagerWatcher.hpp>
 
   #include <analysis/ConcreteAnalysisObjects.hpp>
 

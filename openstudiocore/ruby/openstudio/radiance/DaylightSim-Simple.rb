@@ -469,11 +469,10 @@ end
 
 def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
   if t_verbose == 'v'
-    puts "#{Time.now.getutc}: simulation commandis: #{t_cmds}"
+    puts "#{Time.now.getutc}: simulation commands: #{t_cmds}"
   end        
   puts "#{Time.now.getutc}: Executing simulation"
   
-
   allValues = []
 
   t_cmds.each do | command | 
@@ -483,8 +482,24 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
 
     puts "#{Time.now.getutc}: Parsing result"
     cmdValues = []
+    val_lines = temp.split(/\n/)
+    
+    has_header = false
+    if not val_lines.empty?
+      has_header = /RADIANCE/.match(val_lines[0])
+    end
+    header_read = false
+  
     linenum = 0
-    temp.split(/\n/).each do |val|
+    val_lines.each do |val|
+      if has_header and not header_read
+        if /^\s?\d/.match(val)
+          header_read = true
+        else
+          next
+        end
+      end
+    
       line = OpenStudio::Radiance::parseGenDayMtxLine(val)
       if line.size != 8760
         abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
@@ -496,12 +511,6 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   end
 
   values = []
-
-
-  # preset all 0's for the result values
-  allValues[0].size().times do |row|
-    values << Array.new(8760, 0)
-  end
 
   # this might be slow, but the idea is that we are looping over each window's contributions
   # if the particular index should contribute light, then we add it to the value
@@ -554,6 +563,11 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
         end
 
         if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
+          if index >= values.size
+            puts "index is #{index} but values.size is only #{values.size}"
+          elsif hour >= values[index].size
+            puts "hour is #{hour} but values.size[index] is only #{values[index].size}"
+          end
           illum = [values[index][hour]]
           index = index + 1
         end
