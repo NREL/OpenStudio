@@ -355,7 +355,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
     # do map
     exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} \
-      -I+ -h -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
+      -I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
 
 #    if t_options.verbose == 'v'
       puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
@@ -415,7 +415,23 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
 
   puts "#{Time.now.getutc}: Parsing result"
   values = []
-  temp.split(/\n/).each do |val|
+  val_lines = temp.split(/\n/)
+ 
+  has_header = false
+  if not val_lines.empty?
+    has_header = /RADIANCE/.match(val_lines[0])
+  end
+  header_read = false
+  
+  val_lines.each do |val|
+    if has_header and not header_read
+      if /^\s?\d/.match(val)
+        header_read = true
+      else
+        next
+      end
+    end
+    
     line = OpenStudio::Radiance::parseGenDayMtxLine(val)
     if line.size != 8760
       abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
@@ -423,7 +439,7 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
 #      puts "Line Parsed: #{line}"
     end
     linenum = linenum + 1
-    values << line;
+    values << line
   end
 
   if values.empty?
@@ -454,6 +470,11 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
         end
 
         if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
+          if index >= values.size
+            puts "index is #{index} but values.size is only #{values.size}"
+          elsif hour >= values[index].size
+            puts "hour is #{hour} but values.size[index] is only #{values[index].size}"
+          end
           illum = [values[index][hour]]
           index = index + 1
         end
