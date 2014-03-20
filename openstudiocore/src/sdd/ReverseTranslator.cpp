@@ -526,9 +526,20 @@ namespace sdd {
         }
       }
 
-      // request 15 min timestep
-      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
-      timestep.setNumberOfTimestepsPerHour(4);
+      bool ok;
+      // timestep
+      QDomElement numTimeStepsPerHrElement = projectElement.firstChildElement("NumTimeStepsPerHr");
+      int numTimeStepsPerHr = numTimeStepsPerHrElement.text().toInt(&ok);
+      if( ok )
+      {
+        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+        timestep.setNumberOfTimestepsPerHour(numTimeStepsPerHr);
+      }
+      else
+      {
+        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+        timestep.setNumberOfTimestepsPerHour(4);
+      }
 
       // request output meters for TDV calculations
       std::set<int> fuelTypes = FuelType::getValues();
