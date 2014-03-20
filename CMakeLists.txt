@@ -34,7 +34,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
-OPTION( BUILD_DOCUMENTATION "Build Documenation" OFF )
+OPTION( BUILD_DOCUMENTATION "Build Documentation" OFF )
 
 IF(BUILD_DOCUMENTATION)
   Find_Package( Doxygen REQUIRED )
