@@ -753,8 +753,8 @@ void StartCloudWorker::startWorking()
  
     if(serverUrl){
 
-      unsigned waitMS = 3000;
-      int increment = 2;
+      unsigned waitMS = 3000; // 3000
+      int increment = 15; // 15
       int maxTries = increment;
       for(int i = 0; i < maxTries; i++)
       {
