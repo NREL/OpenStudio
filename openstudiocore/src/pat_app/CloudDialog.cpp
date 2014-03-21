@@ -305,9 +305,18 @@ void CloudDialog::on_backButton(bool checked)
         QMessageBox::critical(this, "Authentication Failed", error);
         return;
       }
-      m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
-      this->backButton()->setText("Back");
+    }else if( m_cloudResourceComboBox->currentText() == VAGRANT_PROVIDER){
+      VagrantSettings vagrantSettings;
+      std::string serverUsername = m_vagrantProviderWidget->m_serverUsernameLineEdit->text().toStdString();
+      std::string serverPassword = m_vagrantProviderWidget->m_serverPasswordLineEdit->text().toStdString();
+      if (serverUsername.empty() || serverPassword.empty()) {
+        QString error("The User Name and Password cannot be empty");
+        QMessageBox::critical(this, "Authentication Failed", error);
+        return;
+      }
     }
+    m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
+    this->backButton()->setText("Back");
   }
 }
 
@@ -340,7 +349,28 @@ void CloudDialog::on_okButton(bool checked)
       QMessageBox::critical(this, "Authentication Failed", error);
       return;
     }
+  }else if( m_cloudResourceComboBox->currentText() == VAGRANT_PROVIDER){
+    VagrantSettings vagrantSettings;
+
+    std::string serverUsername = m_vagrantProviderWidget->m_serverUsernameLineEdit->text().toStdString();
+    std::string serverPassword = m_vagrantProviderWidget->m_serverPasswordLineEdit->text().toStdString();
+    if (serverUsername.empty() || serverPassword.empty()) {
+      QString error("The User Name and Password cannot be empty");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
+
+    std::string serverDir = m_vagrantProviderWidget->m_serverDirLineEdit->text().toStdString();
+    std::string serverAddress = m_vagrantProviderWidget->m_serverAddressIpLineEdit->text().toStdString();
+    std::string workerDir = m_vagrantProviderWidget->m_workerDirLineEdit->text().toStdString();
+    std::string workerAddress = m_vagrantProviderWidget->m_workerAddressIpLineEdit->text().toStdString();
+    if (serverDir.empty() || serverAddress.empty() || workerDir.empty() || workerAddress.empty()) {
+      QString error("Server and Worker Directories and IP Addresses are required");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
   }
+
   // Save data
   boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
   if(cloudProviderWidget.is_initialized()){
@@ -373,9 +403,9 @@ void CloudDialog::cloudResourceChanged(const QString & text)
     this->m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
   } else if(text == VAGRANT_PROVIDER) {
     m_vagrantProviderWidget->loadData();
-    this->backButton()->setEnabled(false);
+    this->backButton()->setEnabled(m_iAcceptCheckBox->isChecked());
     m_legalAgreement->show();
-    m_iAcceptCheckBox->hide();
+    m_iAcceptCheckBox->show();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
@@ -708,12 +738,12 @@ void VagrantProviderWidget::loadData()
   m_serverPasswordLineEdit->setText(vagrantSettings.password().c_str());
 
   url = vagrantSettings.serverUrl();
-  m_serverAddressIpLineEdit->setText(url.path());
+  m_serverAddressIpLineEdit->setText(url.host());
   m_serverPortIpLineEdit->setText(temp.setNum(url.port()));
   m_serverDirLineEdit->setText(toQString(vagrantSettings.serverPath()));
 
   url = vagrantSettings.serverUrl();
-  m_workerAddressIpLineEdit->setText(url.path());
+  m_workerAddressIpLineEdit->setText(url.host());
   m_workerPortIpLineEdit->setText(temp.setNum(url.port()));
   m_workerDirLineEdit->setText(toQString(vagrantSettings.workerPath()));
 
@@ -734,13 +764,13 @@ void VagrantProviderWidget::saveData()
 
   Url url;
   
-  url.setPath( m_serverAddressIpLineEdit->text());
+  url.setHost( m_serverAddressIpLineEdit->text());
   url.setPort(m_serverPortIpLineEdit->text().toInt());
   vagrantSettings.setServerUrl(url);
   
   vagrantSettings.setWorkerPath(toPath(m_workerDirLineEdit->text().toStdString()));
 
-  url.setPath(m_workerAddressIpLineEdit->text());
+  url.setHost(m_workerAddressIpLineEdit->text());
   url.setPort(m_workerPortIpLineEdit->text().toInt());
   vagrantSettings.setWorkerUrl(url);
 

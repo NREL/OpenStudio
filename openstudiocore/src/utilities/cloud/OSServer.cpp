@@ -67,11 +67,18 @@ namespace openstudio{
       openstudio::Application::instance().application();
 
       if (m_url.scheme().isEmpty()){
-        //LOG(Debug, "Url before: " << toString(m_url.toString()));
+        QString urlString = m_url.toString();
+        //LOG(Debug, "Url before: " << toString(urlString));
         //LOG(Debug, "Url valid: " << m_url.isValid());
         //LOG(Debug, "Url relative: " << m_url.isRelative());
+        
         //m_url.setScheme("http"); // DLM: this was not adding //
-        m_url.setUrl("http://" + m_url.toString());
+        if (urlString.startsWith("//")){
+          m_url.setUrl("http:" + urlString);
+        }else{
+          m_url.setUrl("http://" + urlString);
+        }
+
         //LOG(Debug, "Url after: " << toString(m_url.toString()));
         //LOG(Debug, "Url valid: " << m_url.isValid());
         //LOG(Debug, "Url relative: " << m_url.isRelative());
