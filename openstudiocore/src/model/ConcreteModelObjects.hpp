@@ -177,6 +177,7 @@
 #include <model/RefrigerationCondenserCascade.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationCondenserWaterCooled.hpp>
+#include <model/RefrigerationDefrostCycleParameters.hpp>
 #include <model/RefrigerationGasCoolerAirCooled.hpp>
 #include <model/RefrigerationSubcoolerLiquidSuction.hpp>
 #include <model/RefrigerationSubcoolerMechanical.hpp>
@@ -430,6 +431,7 @@
 #include <model/RefrigerationCondenserCascade_Impl.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
 #include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
+#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
 #include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
 #include <model/RefrigerationSubcoolerLiquidSuction_Impl.hpp>
 #include <model/RefrigerationSubcoolerMechanical_Impl.hpp>

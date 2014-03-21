@@ -341,6 +341,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserWaterCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationDefrostCycleParameters);
     REGISTER_CONSTRUCTOR(RefrigerationGasCoolerAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationSubcoolerMechanical);
     REGISTER_CONSTRUCTOR(RefrigerationSubcoolerLiquidSuction);
@@ -627,6 +628,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserWaterCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationDefrostCycleParameters);
     REGISTER_COPYCONSTRUCTORS(RefrigerationGasCoolerAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerMechanical);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSubcoolerLiquidSuction);
