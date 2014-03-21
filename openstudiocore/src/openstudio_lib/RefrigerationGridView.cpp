@@ -566,6 +566,8 @@ QString RefrigerationCaseGridController::getColor(const model:: ModelObject & mo
   QColor defaultColor(Qt::lightGray);
   QString color(defaultColor.name());
 
+  return color; // TODO delete
+
   std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
 
   boost::optional<model::RefrigerationCase> refrigerationCase = modelObject.optionalCast<model::RefrigerationCase>();
@@ -629,7 +631,7 @@ void RefrigerationCaseGridController::onComboBoxIndexChanged(int index)
   horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
       // NOTE required due to a race condition
-      QTimer::singleShot(0, this, SLOT(reset()));
+      //QTimer::singleShot(0, this, SLOT(reset())); TODO
       break;
     }
   }
@@ -1030,6 +1032,8 @@ QString RefrigerationWalkInGridController::getColor(const model:: ModelObject & 
   QColor defaultColor(Qt::lightGray);
   QString color(defaultColor.name());
 
+  return color; // TODO delete
+
   std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
 
   boost::optional<model::RefrigerationWalkIn> refrigerationWalkIn = modelObject.optionalCast<model::RefrigerationWalkIn>();
@@ -1093,7 +1097,7 @@ void RefrigerationWalkInGridController::onComboBoxIndexChanged(int index)
   horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
       // NOTE required due to a race condition
-      QTimer::singleShot(0, this, SLOT(reset()));
+      //QTimer::singleShot(0, this, SLOT(reset())); TODO
       break;
     }
   }
