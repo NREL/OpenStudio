@@ -803,20 +803,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             hvacComponent.addToNode(dropNode.get());
 
-            if( ! autosize() )
+            if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
             {
-              if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
+              boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
+              OS_ASSERT(controller);
+
+              controller->setMinimumActuatedFlow(0.0);
+
+              if( ! autosize() )
               {
-                boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
-
-                OS_ASSERT(controller);
-
                 controller->setControllerConvergenceTolerance(0.1);
-
                 boost::optional<double> maxFlow = coilCoolingWater->designWaterFlowRate();
-
                 OS_ASSERT(maxFlow);
-
                 controller->setMaximumActuatedFlow(maxFlow.get() * 1.25);
               }
             }
@@ -842,10 +840,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           if( boost::optional<model::CoilHeatingWater> coilHeatingWater = hvacComponent.optionalCast<model::CoilHeatingWater>() )
           {
             boost::optional<model::ControllerWaterCoil> controller = coilHeatingWater->controllerWaterCoil();
-
             OS_ASSERT(controller);
 
             controller->setControllerConvergenceTolerance(0.1);
+            controller->setMinimumActuatedFlow(0.0);
 
             if( ! autosize() )
             {
@@ -868,12 +866,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               double maxFlow = capacity.get() / ( density * cp * std::abs(inletTemp.get() - outletTemp.get()));
 
               controller->setMaximumActuatedFlow(maxFlow * 1.25);
-
-              controller->setMinimumActuatedFlow(maxFlow * 1.25 * 0.05);
-            }
-            else
-            {
-              controller->setMinimumActuatedFlow(0.000001);
             }
           }
         }
@@ -2518,6 +2510,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       plant->addDemandBranchForComponent(coilCooling);
     }
 
+    coilCooling.autosizeDesignInletAirTemperature();
+    coilCooling.autosizeDesignOutletAirTemperature();
+    coilCooling.autosizeDesignInletAirHumidityRatio();
+    coilCooling.autosizeDesignOutletAirHumidityRatio();
+
     if( ! autosize() )
     {
       // Design Water Volum Flow Rate of Coil
@@ -2529,40 +2526,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       // Design defaults
 
       coilCooling.setDesignInletWaterTemperature(7.22); // From Sizing Plant
-
-      coilCooling.setDesignInletAirTemperature(25.0); // Assumption
-
-      coilCooling.setDesignOutletAirTemperature(12.8); // From Sizing System
-
-      coilCooling.setDesignInletAirHumidityRatio(0.012); // Assumption
-
-      coilCooling.setDesignOutletAirHumidityRatio(0.0085); // From Sizing System
-
-      // Find related/containing systems (aka figure out the context of the coil)
-
-      QDomElement sysElement;
-
-      QDomElement airSysElement = coolingCoilElement.parentNode().parentNode().toElement();
-
-      QDomElement znSysElement = coolingCoilElement.parentNode().toElement();
-
-      if( airSysElement.tagName().compare("AirSys",Qt::CaseInsensitive) == 0 )
-      {
-        sysElement = airSysElement;
-      }
-      else if( znSysElement.tagName().compare("ZnSys",Qt::CaseInsensitive) == 0 )
-      {
-        sysElement = znSysElement;
-      }
-
-      QDomElement clgDsgnSupAirTempElement = sysElement.firstChildElement("ClgDsgnSupAirTemp");
-
-      value = clgDsgnSupAirTempElement.text().toDouble(&ok);
-
-      if( ok )
-      {
-        coilCooling.setDesignOutletAirTemperature(unitToUnit(value,"F","C").get());
-      }
 
       if( plant )
       {
