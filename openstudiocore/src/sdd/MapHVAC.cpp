@@ -4597,6 +4597,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       tower.setDesignRangeTemperature(dsgnSupWtrDelT.get());
     }
 
+    tower.setDesignInletAirWetBulbTemperature(20.01);
+
     if( dsgnSupWtrTemp && wetBulbApproach )
     {
       tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - wetBulbApproach.get());
