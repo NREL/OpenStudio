@@ -668,53 +668,51 @@ RefrigerationDefrostCycleParameters::RefrigerationDefrostCycleParameters(const M
   : ModelObject(RefrigerationDefrostCycleParameters::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationDefrostCycleParameters_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
 }
 
 IddObjectType RefrigerationDefrostCycleParameters::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Refrigeration_DefrostCycleParameters);
 }
 
-boost::optional<int> RefrigerationDefrostCycleParameters::durationofDefrostCycle() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->durationofDefrostCycle();
-}
+// boost::optional<int> RefrigerationDefrostCycleParameters::durationofDefrostCycle() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->durationofDefrostCycle();
+// }
 
-boost::optional<int> RefrigerationDefrostCycleParameters::dripDownTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->dripDownTime();
-}
+// boost::optional<int> RefrigerationDefrostCycleParameters::dripDownTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->dripDownTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost1StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost1StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost1StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost1StartTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost2StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost2StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost2StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost2StartTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost3StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost3StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost3StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost3StartTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost4StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost4StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost4StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost4StartTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost5StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost5StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost5StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost5StartTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost6StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost6StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost6StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost6StartTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost7StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost7StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost7StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost7StartTime();
+// }
 
-boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost8StartTime() const {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost8StartTime();
-}
+// boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost8StartTime() const {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost8StartTime();
+// }
 
 // boost::optional<int> RefrigerationDefrostCycleParameters::defrost1HourStartTime() const {
 //   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost1HourStartTime();
@@ -780,53 +778,53 @@ boost::optional<openstudio::Time> RefrigerationDefrostCycleParameters::defrost8S
 //   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->defrost8MinuteStartTime();
 // }
 
-bool RefrigerationDefrostCycleParameters::setDurationofDefrostCycle(int durationofDefrostCycle) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDurationofDefrostCycle(durationofDefrostCycle);
-}
+// bool RefrigerationDefrostCycleParameters::setDurationofDefrostCycle(int durationofDefrostCycle) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDurationofDefrostCycle(durationofDefrostCycle);
+// }
 
-void RefrigerationDefrostCycleParameters::resetDurationofDefrostCycle() {
-  getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->resetDurationofDefrostCycle();
-}
+// void RefrigerationDefrostCycleParameters::resetDurationofDefrostCycle() {
+//   getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->resetDurationofDefrostCycle();
+// }
 
-bool RefrigerationDefrostCycleParameters::setDripDownTime(int dripDownTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDripDownTime(dripDownTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDripDownTime(int dripDownTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDripDownTime(dripDownTime);
+// }
 
-void RefrigerationDefrostCycleParameters::resetDripDownTime() {
-  getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->resetDripDownTime();
-}
+// void RefrigerationDefrostCycleParameters::resetDripDownTime() {
+//   getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->resetDripDownTime();
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost1StartTime(const openstudio::Time& defrost1StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost1StartTime(defrost1StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost1StartTime(const openstudio::Time& defrost1StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost1StartTime(defrost1StartTime);
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost2StartTime(defrost2StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost2StartTime(defrost2StartTime);
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost3StartTime(defrost3StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost3StartTime(defrost3StartTime);
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost4StartTime(defrost4StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost4StartTime(defrost4StartTime);
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost5StartTime(defrost5StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost5StartTime(defrost5StartTime);
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost6StartTime(defrost6StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost6StartTime(defrost6StartTime);
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost7StartTime(defrost7StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost7StartTime(defrost7StartTime);
+// }
 
-bool RefrigerationDefrostCycleParameters::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
-  return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost8StartTime(defrost8StartTime);
-}
+// bool RefrigerationDefrostCycleParameters::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
+//   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost8StartTime(defrost8StartTime);
+// }
 
 // bool RefrigerationDefrostCycleParameters::setDefrost1HourStartTime(int defrost1HourStartTime) {
 //   return getImpl<detail::RefrigerationDefrostCycleParameters_Impl>()->setDefrost1HourStartTime(defrost1HourStartTime);

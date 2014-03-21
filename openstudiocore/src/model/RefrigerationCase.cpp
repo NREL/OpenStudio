@@ -30,11 +30,14 @@
 #include <model/ScheduleTypeRegistry.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/RefrigerationDefrostCycleParameters.hpp>
+#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Case_FieldEnums.hxx>
 
 #include <utilities/units/Unit.hpp>
+#include <utilities/time/Time.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -416,6 +419,91 @@ namespace detail {
     return isEmpty(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory);
   }
 
+  boost::optional<RefrigerationDefrostCycleParameters> RefrigerationCase_Impl::optionalCaseDefrostCycleParameters() const {
+    return getObject<ModelObject>().getModelObjectTarget<RefrigerationDefrostCycleParameters>(OS_Refrigeration_CaseFields::CaseDefrostCycleParametersName);
+  }
+
+  RefrigerationDefrostCycleParameters RefrigerationCase_Impl::caseDefrostCycleParameters() {
+    boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters();
+    if( !defrostCycleParameters ) {
+      defrostCycleParameters = RefrigerationDefrostCycleParameters(this->model());
+      OS_ASSERT(defrostCycleParameters);
+      bool result = setCaseDefrostCycleParameters(*defrostCycleParameters);
+      OS_ASSERT(result);
+    }
+    return *defrostCycleParameters;
+  }
+
+  boost::optional<int> RefrigerationCase_Impl::durationofDefrostCycle() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->durationofDefrostCycle();
+    }
+    return boost::none;
+  }
+
+  boost::optional<int> RefrigerationCase_Impl::dripDownTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->dripDownTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost1StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost1StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost2StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost2StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost3StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost3StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost4StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost4StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost5StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost5StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost6StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost6StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost7StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost7StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationCase_Impl::defrost8StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost8StartTime();
+    }
+    return boost::none;
+  }
+
   bool RefrigerationCase_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Refrigeration_CaseFields::AvailabilityScheduleName,
                               "RefrigerationCase",
@@ -790,6 +878,110 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool RefrigerationCase_Impl::setCaseDefrostCycleParameters(const RefrigerationDefrostCycleParameters& caseDefrostCycleParameters) {
+    return setPointer(OS_Refrigeration_CaseFields::CaseDefrostCycleParametersName, caseDefrostCycleParameters.handle());
+  }
+
+  bool RefrigerationCase_Impl::setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDurationofDefrostCycle(durationofDefrostCycle);
+  }
+
+  void RefrigerationCase_Impl::resetDurationofDefrostCycle() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDurationofDefrostCycle();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDripDownTime(boost::optional<int> dripDownTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDripDownTime(dripDownTime);
+  }
+
+  void RefrigerationCase_Impl::resetDripDownTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDripDownTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost1StartTime(const openstudio::Time& defrost1StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost1StartTime(defrost1StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost1StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost1StartTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost2StartTime(defrost2StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost2StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost2StartTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost3StartTime(defrost3StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost3StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost3StartTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost4StartTime(defrost4StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost4StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost4StartTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost5StartTime(defrost5StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost5StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost5StartTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost6StartTime(defrost6StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost6StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost6StartTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost7StartTime(defrost7StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost7StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost7StartTime();
+    }
+  }
+
+  bool RefrigerationCase_Impl::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
+      return this->caseDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost8StartTime(defrost8StartTime);
+  }
+
+  void RefrigerationCase_Impl::resetDefrost8StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalCaseDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost8StartTime();
+    }
+  }
+
   boost::optional<CurveCubic> RefrigerationCase_Impl::optionalLatentCaseCreditCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName);
   }
@@ -1091,6 +1283,46 @@ bool RefrigerationCase::isAverageRefrigerantChargeInventoryDefaulted() const {
   return getImpl<detail::RefrigerationCase_Impl>()->isAverageRefrigerantChargeInventoryDefaulted();
 }
 
+boost::optional<int> RefrigerationCase::durationofDefrostCycle() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->durationofDefrostCycle();
+}
+
+boost::optional<int> RefrigerationCase::dripDownTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->dripDownTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost1StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost1StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost2StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost2StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost3StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost3StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost4StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost4StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost5StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost5StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost6StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost6StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost7StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost7StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationCase::defrost8StartTime() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->defrost8StartTime();
+}
+
 bool RefrigerationCase::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::RefrigerationCase_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -1357,6 +1589,54 @@ void RefrigerationCase::setAverageRefrigerantChargeInventory(double averageRefri
 
 void RefrigerationCase::resetAverageRefrigerantChargeInventory() {
   getImpl<detail::RefrigerationCase_Impl>()->resetAverageRefrigerantChargeInventory();
+}
+
+bool RefrigerationCase::setDurationofDefrostCycle(int durationofDefrostCycle) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDurationofDefrostCycle(durationofDefrostCycle);
+}
+
+void RefrigerationCase::resetDurationofDefrostCycle() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDurationofDefrostCycle();
+}
+
+bool RefrigerationCase::setDripDownTime(int dripDownTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDripDownTime(dripDownTime);
+}
+
+void RefrigerationCase::resetDripDownTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDripDownTime();
+}
+
+bool RefrigerationCase::setDefrost1StartTime(const openstudio::Time& defrost1StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost1StartTime(defrost1StartTime);
+}
+
+bool RefrigerationCase::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost2StartTime(defrost2StartTime);
+}
+
+bool RefrigerationCase::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost3StartTime(defrost3StartTime);
+}
+
+bool RefrigerationCase::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost4StartTime(defrost4StartTime);
+}
+
+bool RefrigerationCase::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost5StartTime(defrost5StartTime);
+}
+
+bool RefrigerationCase::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost6StartTime(defrost6StartTime);
+}
+
+bool RefrigerationCase::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost7StartTime(defrost7StartTime);
+}
+
+bool RefrigerationCase::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrost8StartTime(defrost8StartTime);
 }
 
 /// @cond

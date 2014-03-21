@@ -25,7 +25,7 @@
 
 namespace openstudio {
 
-    class Time;
+class Time;
 
 namespace model {
 
@@ -83,38 +83,6 @@ namespace detail {
 
     boost::optional<openstudio::Time> defrost8StartTime() const;
 
-    // boost::optional<int> defrost1HourStartTime() const;
-
-    // boost::optional<int> defrost1MinuteStartTime() const;
-
-    // boost::optional<int> defrost2HourStartTime() const;
-
-    // boost::optional<int> defrost2MinuteStartTime() const;
-
-    // boost::optional<int> defrost3HourStartTime() const;
-
-    // boost::optional<int> defrost3MinuteStartTime() const;
-
-    // boost::optional<int> defrost4HourStartTime() const;
-
-    // boost::optional<int> defrost4MinuteStartTime() const;
-
-    // boost::optional<int> defrost5HourStartTime() const;
-
-    // boost::optional<int> defrost5MinuteStartTime() const;
-
-    // boost::optional<int> defrost6HourStartTime() const;
-
-    // boost::optional<int> defrost6MinuteStartTime() const;
-
-    // boost::optional<int> defrost7HourStartTime() const;
-
-    // boost::optional<int> defrost7MinuteStartTime() const;
-
-    // boost::optional<int> defrost8HourStartTime() const;
-
-    // boost::optional<int> defrost8MinuteStartTime() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -158,70 +126,6 @@ namespace detail {
     bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
     void resetDefrost8StartTime();
-
-    // bool setDefrost1HourStartTime(boost::optional<int> defrost1HourStartTime);
-
-    // void resetDefrost1HourStartTime();
-
-    // bool setDefrost1MinuteStartTime(boost::optional<int> defrost1MinuteStartTime);
-
-    // void resetDefrost1MinuteStartTime();
-
-    // bool setDefrost2HourStartTime(boost::optional<int> defrost2HourStartTime);
-
-    // void resetDefrost2HourStartTime();
-
-    // bool setDefrost2MinuteStartTime(boost::optional<int> defrost2MinuteStartTime);
-
-    // void resetDefrost2MinuteStartTime();
-
-    // bool setDefrost3HourStartTime(boost::optional<int> defrost3HourStartTime);
-
-    // void resetDefrost3HourStartTime();
-
-    // bool setDefrost3MinuteStartTime(boost::optional<int> defrost3MinuteStartTime);
-
-    // void resetDefrost3MinuteStartTime();
-
-    // bool setDefrost4HourStartTime(boost::optional<int> defrost4HourStartTime);
-
-    // void resetDefrost4HourStartTime();
-
-    // bool setDefrost4MinuteStartTime(boost::optional<int> defrost4MinuteStartTime);
-
-    // void resetDefrost4MinuteStartTime();
-
-    // bool setDefrost5HourStartTime(boost::optional<int> defrost5HourStartTime);
-
-    // void resetDefrost5HourStartTime();
-
-    // bool setDefrost5MinuteStartTime(boost::optional<int> defrost5MinuteStartTime);
-
-    // void resetDefrost5MinuteStartTime();
-
-    // bool setDefrost6HourStartTime(boost::optional<int> defrost6HourStartTime);
-
-    // void resetDefrost6HourStartTime();
-
-    // bool setDefrost6MinuteStartTime(boost::optional<int> defrost6MinuteStartTime);
-
-    // void resetDefrost6MinuteStartTime();
-
-    // bool setDefrost7HourStartTime(boost::optional<int> defrost7HourStartTime);
-
-    // void resetDefrost7HourStartTime();
-
-    // bool setDefrost7MinuteStartTime(boost::optional<int> defrost7MinuteStartTime);
-
-    // void resetDefrost7MinuteStartTime();
-
-    // bool setDefrost8HourStartTime(boost::optional<int> defrost8HourStartTime);
-
-    // void resetDefrost8HourStartTime();
-
-    // bool setDefrost8MinuteStartTime(boost::optional<int> defrost8MinuteStartTime);
-
-    // void resetDefrost8MinuteStartTime();
 
     //@}
     /** @name Other */

@@ -24,11 +24,15 @@
 #include <model/ParentObject_Impl.hpp>
 
 namespace openstudio {
+
+class Time;
+
 namespace model {
 
 class Schedule;
 class ThermalZone;
 class CurveCubic;
+class RefrigerationDefrostCycleParameters;
 
 namespace detail {
 
@@ -186,6 +190,30 @@ namespace detail {
 
     bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
+    boost::optional<RefrigerationDefrostCycleParameters> optionalCaseDefrostCycleParameters() const;
+
+    RefrigerationDefrostCycleParameters caseDefrostCycleParameters();
+
+    boost::optional<int> durationofDefrostCycle() const;
+
+    boost::optional<int> dripDownTime() const;
+
+    boost::optional<openstudio::Time> defrost1StartTime() const;
+
+    boost::optional<openstudio::Time> defrost2StartTime() const;
+
+    boost::optional<openstudio::Time> defrost3StartTime() const;
+
+    boost::optional<openstudio::Time> defrost4StartTime() const;
+
+    boost::optional<openstudio::Time> defrost5StartTime() const;
+
+    boost::optional<openstudio::Time> defrost6StartTime() const;
+
+    boost::optional<openstudio::Time> defrost7StartTime() const;
+
+    boost::optional<openstudio::Time> defrost8StartTime() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -323,6 +351,48 @@ namespace detail {
     void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
+
+    bool setCaseDefrostCycleParameters(const RefrigerationDefrostCycleParameters& caseDefrostCycleParameters);
+
+    bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
+
+    void resetDurationofDefrostCycle();
+
+    bool setDripDownTime(boost::optional<int> dripDownTime);
+
+    void resetDripDownTime();
+
+    bool setDefrost1StartTime(const openstudio::Time& defrost1StartTime);
+
+    void resetDefrost1StartTime();
+
+    bool setDefrost2StartTime(const openstudio::Time& defrost2StartTime);
+
+    void resetDefrost2StartTime();
+
+    bool setDefrost3StartTime(const openstudio::Time& defrost3StartTime);
+
+    void resetDefrost3StartTime();
+
+    bool setDefrost4StartTime(const openstudio::Time& defrost4StartTime);
+
+    void resetDefrost4StartTime();
+
+    bool setDefrost5StartTime(const openstudio::Time& defrost5StartTime);
+
+    void resetDefrost5StartTime();
+
+    bool setDefrost6StartTime(const openstudio::Time& defrost6StartTime);
+
+    void resetDefrost6StartTime();
+
+    bool setDefrost7StartTime(const openstudio::Time& defrost7StartTime);
+
+    void resetDefrost7StartTime();
+
+    bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
+
+    void resetDefrost8StartTime();
 
     //@}
     /** @name Other */
