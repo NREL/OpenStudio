@@ -403,8 +403,8 @@ namespace detail {
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
-    static QMap<QString, QVariant> m_standardsSpaceTypeMap;
-    void parseStandardsSpaceTypeMap() const;
+    static QMap<QString, QVariant> m_standardsMap;
+    void parseStandardsMap() const;
   };
 
 } // detail

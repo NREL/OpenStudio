@@ -755,6 +755,12 @@ void OSDocument::runComplete()
     // copy all the simulation output to the save location
     // do not want to save the database or osm here
     saveModelTempDir(toPath(m_modelTempDir), toPath(m_savePath));
+
+    // search for E+ and Radiance results in the save directory
+    openstudio::path searchPath = toPath(m_savePath).parent_path() / toPath(m_savePath).stem() / openstudio::toPath("run");
+    if (boost::filesystem::exists(searchPath)) {
+      m_resultsTabController->searchForExistingResults(searchPath);
+    }
   }
 }
 
