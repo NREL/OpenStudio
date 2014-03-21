@@ -284,7 +284,7 @@ void CloudDialog::on_backButton(bool checked)
     m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->backButton()->setText("Continue");
   } else if(m_pageStackedWidget->currentIndex() == m_loginPageIdx) {
-      if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
+    if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
       AWSSettings awsSettings;
       std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
       std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
@@ -319,27 +319,28 @@ void CloudDialog::on_cancelButton(bool checked)
 
 void CloudDialog::on_okButton(bool checked)
 {
-  AWSSettings awsSettings;
-  std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
-  std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
-  if (accessKey.empty() || secretKey.empty()) {
-    QString error("The Access Key and Secret Key cannot be empty");
-    QMessageBox::critical(this, "Authentication Failed", error);
-    return;
+  if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
+    AWSSettings awsSettings;
+    std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
+    std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
+    if (accessKey.empty() || secretKey.empty()) {
+      QString error("The Access Key and Secret Key cannot be empty");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
+    bool validAccessKey = awsSettings.validAccessKey(accessKey);
+    if(!validAccessKey){
+      QString error("You have entered an invalid Access Key");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
+    bool validSecretKey = awsSettings.validSecretKey(secretKey);
+    if(!validSecretKey){
+      QString error("You have entered an invalid Secret Key");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
   }
-  bool validAccessKey = awsSettings.validAccessKey(accessKey);
-  if(!validAccessKey){
-    QString error("You have entered an invalid Access Key");
-    QMessageBox::critical(this, "Authentication Failed", error);
-    return;
-  }
-  bool validSecretKey = awsSettings.validSecretKey(secretKey);
-  if(!validSecretKey){
-    QString error("You have entered an invalid Secret Key");
-    QMessageBox::critical(this, "Authentication Failed", error);
-    return;
-  }
-
   // Save data
   boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
   if(cloudProviderWidget.is_initialized()){
@@ -372,9 +373,9 @@ void CloudDialog::cloudResourceChanged(const QString & text)
     this->m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
   } else if(text == VAGRANT_PROVIDER) {
     m_vagrantProviderWidget->loadData();
-    this->backButton()->setEnabled(m_iAcceptCheckBox->isChecked());
+    this->backButton()->setEnabled(false);
     m_legalAgreement->show();
-    m_iAcceptCheckBox->show();
+    m_iAcceptCheckBox->hide();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
@@ -716,9 +717,9 @@ void VagrantProviderWidget::loadData()
   m_workerPortIpLineEdit->setText(temp.setNum(url.port()));
   m_workerDirLineEdit->setText(toQString(vagrantSettings.workerPath()));
 
-  m_waitCheckBox->setChecked(vagrantSettings.terminationDelayEnabled());
+  //m_waitCheckBox->setChecked(vagrantSettings.terminationDelayEnabled());
 
-  m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
+  //m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
 }
 
 void VagrantProviderWidget::saveData()
@@ -743,10 +744,12 @@ void VagrantProviderWidget::saveData()
   url.setPort(m_workerPortIpLineEdit->text().toInt());
   vagrantSettings.setWorkerUrl(url);
 
-  vagrantSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
+  //vagrantSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
 
-  unsigned wait = m_waitLineEdit->text().toUInt();
-  vagrantSettings.setTerminationDelay(wait);
+  //unsigned wait = m_waitLineEdit->text().toUInt();
+  //vagrantSettings.setTerminationDelay(wait);
+
+  vagrantSettings.saveToSettings(true);
 }
 
 //***** SLOTS *****
