@@ -115,6 +115,9 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
+    boost::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
+    t_model->blockSignals(true);
+
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
          it != zoneBoundaries.end();
@@ -123,6 +126,8 @@ namespace detail {
       std::vector<IdfObject> removedZoneBoundaries = it->remove();
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
     }      
+
+    t_model->blockSignals(false);
 
     std::vector<IdfObject> removedRRefrigerationWalkIn = ModelObject_Impl::remove();
     result.insert(result.end(), removedRRefrigerationWalkIn.begin(), removedRRefrigerationWalkIn.end());
