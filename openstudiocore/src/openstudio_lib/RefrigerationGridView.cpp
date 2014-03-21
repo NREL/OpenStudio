@@ -566,27 +566,28 @@ QString RefrigerationCaseGridController::getColor(const model:: ModelObject & mo
   QColor defaultColor(Qt::lightGray);
   QString color(defaultColor.name());
 
-  return color; // TODO delete
+  // TODO: The code below is currently commented out because a refresh crash bug is precluding rack color
+  // updates due to rack assignments to cases and walk-ins.  No colors are better than wrong colors.
 
-  std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+  //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
 
-  boost::optional<model::RefrigerationCase> refrigerationCase = modelObject.optionalCast<model::RefrigerationCase>();
-  OS_ASSERT(refrigerationCase);
+  //boost::optional<model::RefrigerationCase> refrigerationCase = modelObject.optionalCast<model::RefrigerationCase>();
+  //OS_ASSERT(refrigerationCase);
 
-  boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationCase->system();
-  if(!refrigerationSystem){
-    return color;
-  }
+  //boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationCase->system();
+  //if(!refrigerationSystem){
+  //  return color;
+  //}
 
-  std::vector<model::RefrigerationSystem>::iterator it;
-  it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
-  if(it != refrigerationSystems.end()){
-    int index = std::distance(refrigerationSystems.begin(), it);
-    if(index >= static_cast<int>(m_colors.size())){
-      index = m_colors.size() - 1; // similar to scheduleView's approach
-    }
-    color = this->m_colors.at(index).name();
-  }
+  //std::vector<model::RefrigerationSystem>::iterator it;
+  //it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
+  //if(it != refrigerationSystems.end()){
+  //  int index = std::distance(refrigerationSystems.begin(), it);
+  //  if(index >= static_cast<int>(m_colors.size())){
+  //    index = m_colors.size() - 1; // similar to scheduleView's approach
+  //  }
+  //  color = this->m_colors.at(index).name();
+  //}
 
   return color;
 }
@@ -631,6 +632,8 @@ void RefrigerationCaseGridController::onComboBoxIndexChanged(int index)
   horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
       // NOTE required due to a race condition
+      // Code below commented out due to a very infrequent crash in the bowels of Qt appears to be exasperated by this refresh.
+      // A new refresh scheme with finer granularity may eliminate the problem, and restore rack colors.
       //QTimer::singleShot(0, this, SLOT(reset())); TODO
       break;
     }
@@ -1032,27 +1035,28 @@ QString RefrigerationWalkInGridController::getColor(const model:: ModelObject & 
   QColor defaultColor(Qt::lightGray);
   QString color(defaultColor.name());
 
-  return color; // TODO delete
+  // TODO: The code below is currently commented out because a refresh crash bug is precluding rack color
+  // updates due to rack assignments to cases and walk-ins.  No colors are better than wrong colors.
 
-  std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
+  //std::vector<model::RefrigerationSystem> refrigerationSystems = m_model.getModelObjects<model::RefrigerationSystem>();
 
-  boost::optional<model::RefrigerationWalkIn> refrigerationWalkIn = modelObject.optionalCast<model::RefrigerationWalkIn>();
-  OS_ASSERT(refrigerationWalkIn);
+  //boost::optional<model::RefrigerationWalkIn> refrigerationWalkIn = modelObject.optionalCast<model::RefrigerationWalkIn>();
+  //OS_ASSERT(refrigerationWalkIn);
 
-  boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationWalkIn->system();
-  if(!refrigerationSystem){
-    return color;
-  }
+  //boost::optional<model::RefrigerationSystem> refrigerationSystem = refrigerationWalkIn->system();
+  //if(!refrigerationSystem){
+  //  return color;
+  //}
 
-  std::vector<model::RefrigerationSystem>::iterator it;
-  it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
-  if(it != refrigerationSystems.end()){
-    int index = std::distance(refrigerationSystems.begin(), it);
-    if(index >= static_cast<int>(m_colors.size())){
-      index = m_colors.size() - 1; // similar to scheduleView's approach
-    }
-    color = this->m_colors.at(index).name();
-  }
+  //std::vector<model::RefrigerationSystem>::iterator it;
+  //it = std::find(refrigerationSystems.begin(), refrigerationSystems.end(), refrigerationSystem.get());
+  //if(it != refrigerationSystems.end()){
+  //  int index = std::distance(refrigerationSystems.begin(), it);
+  //  if(index >= static_cast<int>(m_colors.size())){
+  //    index = m_colors.size() - 1; // similar to scheduleView's approach
+  //  }
+  //  color = this->m_colors.at(index).name();
+  //}
 
   return color;
 }
@@ -1097,6 +1101,8 @@ void RefrigerationWalkInGridController::onComboBoxIndexChanged(int index)
   horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
       // NOTE required due to a race condition
+      // Code below commented out due to a very infrequent crash in the bowels of Qt appears to be exasperated by this refresh.
+      // A new refresh scheme with finer granularity may eliminate the problem, and restore rack colors.
       //QTimer::singleShot(0, this, SLOT(reset())); TODO
       break;
     }
