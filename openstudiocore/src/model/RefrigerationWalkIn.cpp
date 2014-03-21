@@ -117,6 +117,11 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
+    if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
+      std::vector<IdfObject> removedDefrostCycleParameters = walkinDefrostCycleParameters->remove();
+      result.insert(result.end(), removedDefrostCycleParameters.begin(), removedDefrostCycleParameters.end());
+    }
+
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
          it != zoneBoundaries.end();
@@ -126,8 +131,8 @@ namespace detail {
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
     }      
 
-    std::vector<IdfObject> removedRRefrigerationWalkIn = ModelObject_Impl::remove();
-    result.insert(result.end(), removedRRefrigerationWalkIn.begin(), removedRRefrigerationWalkIn.end());
+    std::vector<IdfObject> removedRefrigerationWalkIn = ModelObject_Impl::remove();
+    result.insert(result.end(), removedRefrigerationWalkIn.begin(), removedRefrigerationWalkIn.end());
 
     return result;
   }
@@ -135,6 +140,10 @@ namespace detail {
   ModelObject RefrigerationWalkIn_Impl::clone(Model model) const
   {
     RefrigerationWalkIn modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkIn>();
+
+    if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
+      modelObjectClone.getImpl<RefrigerationWalkIn_Impl>()->setWalkinDefrostCycleParameters(walkinDefrostCycleParameters->clone(model).cast<RefrigerationDefrostCycleParameters>());
+    }
 
     modelObjectClone.removeAllZoneBoundaries();
 

@@ -118,11 +118,30 @@ namespace detail {
 
     if (boost::optional<CurveCubic> latentCaseCreditCurve = this->latentCaseCreditCurve()) {
       modelObjectClone.setLatentCaseCreditCurve(latentCaseCreditCurve.get().clone(model).cast<CurveCubic>());
-    }    
+    }
+
+    if (boost::optional<RefrigerationDefrostCycleParameters> caseDefrostCycleParameters = this->optionalCaseDefrostCycleParameters()) {
+      modelObjectClone.getImpl<RefrigerationCase_Impl>()->setCaseDefrostCycleParameters(caseDefrostCycleParameters->clone(model).cast<RefrigerationDefrostCycleParameters>());
+    }
 
     modelObjectClone.resetThermalZone();
 
     return modelObjectClone;
+  }
+
+  std::vector<IdfObject> RefrigerationCase_Impl::remove()
+  {
+    std::vector<IdfObject> result;
+
+    if (boost::optional<RefrigerationDefrostCycleParameters> caseDefrostCycleParameters = this->optionalCaseDefrostCycleParameters()) {
+      std::vector<IdfObject> removedDefrostCycleParameters = caseDefrostCycleParameters->remove();
+      result.insert(result.end(), removedDefrostCycleParameters.begin(), removedDefrostCycleParameters.end());
+    }
+
+    std::vector<IdfObject> removedRefrigerationCase = ParentObject_Impl::remove();
+    result.insert(result.end(), removedRefrigerationCase.begin(), removedRefrigerationCase.end());
+
+    return result;
   }
 
   std::vector<IddObjectType> RefrigerationCase_Impl::allowableChildTypes() const

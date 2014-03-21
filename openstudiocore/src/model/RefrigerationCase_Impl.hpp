@@ -68,6 +68,8 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const;
 
+    virtual std::vector<IdfObject> remove();
+
     virtual std::vector<IddObjectType> allowableChildTypes() const;
 
     virtual std::vector<ModelObject> children() const;

@@ -27,6 +27,8 @@
 #include <model/ScheduleCompact.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
+#include <model/RefrigerationDefrostCycleParameters.hpp>
+#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -711,4 +713,102 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData)
 	EXPECT_DOUBLE_EQ( -5.56, testObjectClone2.designEvaporatorTemperatureorBrineInletTemperature().get() );
 	EXPECT_EQ( "OffCycle", testObjectClone2.caseDefrostType() );
     EXPECT_EQ( "None", testObjectClone2.defrostEnergyCorrectionCurveType() );
+}
+
+TEST_F(ModelFixture, RefrigerationCase_DefrostCycleParameters)
+{
+    Model model;
+    ScheduleCompact cds(model);
+    RefrigerationCase testObject = RefrigerationCase(model, cds);
+
+    std::vector<RefrigerationDefrostCycleParameters> refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
+
+    EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+
+    EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
+
+    testObjectClone.remove();
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
+
+    EXPECT_TRUE(testObject.setDurationofDefrostCycle(10));
+    EXPECT_DOUBLE_EQ(10, *testObject.durationofDefrostCycle());
+
+    EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(1, refrigerationCaseDefrostCycleParameters.size());
+
+    EXPECT_TRUE(testObject.setDripDownTime(5));
+    EXPECT_DOUBLE_EQ(5, *testObject.dripDownTime());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(1, refrigerationCaseDefrostCycleParameters.size());
+
+    Time testTime = Time(0, 1, 15);
+    EXPECT_TRUE(testObject.setDefrost1StartTime(Time(0, 1, 15)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost1StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost1StartTime()->minutes());
+
+    testTime = Time(0, 2, 16);
+    EXPECT_TRUE(testObject.setDefrost2StartTime(Time(0, 2, 16)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost2StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost2StartTime()->minutes());
+
+    testTime = Time(0, 3, 17);
+    EXPECT_TRUE(testObject.setDefrost3StartTime(Time(0, 3, 17)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost3StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost3StartTime()->minutes());
+
+    testTime = Time(0, 4, 18);
+    EXPECT_TRUE(testObject.setDefrost4StartTime(Time(0, 4, 18)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost4StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost4StartTime()->minutes());
+
+    testTime = Time(0, 5, 19);
+    EXPECT_TRUE(testObject.setDefrost5StartTime(Time(0, 5, 19)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost5StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost5StartTime()->minutes());
+
+    testTime = Time(0, 6, 20);
+    EXPECT_TRUE(testObject.setDefrost6StartTime(Time(0, 6, 20)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost6StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost6StartTime()->minutes());
+
+    testTime = Time(0, 7, 21);
+    EXPECT_TRUE(testObject.setDefrost7StartTime(Time(0, 7, 21)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost7StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost7StartTime()->minutes());
+
+    testTime = Time(0, 8, 22);
+    EXPECT_TRUE(testObject.setDefrost8StartTime(Time(0, 8, 22)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost8StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost8StartTime()->minutes());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(1, refrigerationCaseDefrostCycleParameters.size());
+
+    testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+
+    EXPECT_TRUE(testObjectClone.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    EXPECT_TRUE(testObjectClone.setDurationofDefrostCycle(10));
+
+    EXPECT_TRUE(testObjectClone.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(2, refrigerationCaseDefrostCycleParameters.size());
+
+    testObject.remove();
+    testObjectClone.remove();
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
 }
