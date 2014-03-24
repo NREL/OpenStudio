@@ -31,6 +31,7 @@ namespace openstudio {
 
 class ProgressBar;
 class Transformation;
+class Time;
 
 namespace model{
 
@@ -725,6 +726,11 @@ class ENERGYPLUS_API ForwardTranslator {
   /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
    *  IdfFile if successful. */
   boost::optional<IdfFile> findIdfFile(const std::string& path);
+
+  boost::optional<IdfObject> createSimpleSchedule(const std::string & name,
+                                                  const std::vector< std::pair<openstudio::Time, double> > & defaultDay,
+                                                  const std::vector< std::pair<openstudio::Time, double> > & summerDesignDay = std::vector< std::pair<openstudio::Time, double> > (),
+                                                  const std::vector< std::pair<openstudio::Time, double> > & winterDesignDay = std::vector< std::pair<openstudio::Time, double> > ());
 
   /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
    *  fluidType. Returns an uninitialized object if unsuccessful for any reason. If successful, returns
