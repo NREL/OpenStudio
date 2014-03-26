@@ -16,7 +16,7 @@ IF(GIT_FOUND)
                   OUTPUT_VARIABLE GIT_VERSION
                   ERROR_QUIET
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
-  IF(${RESULT} EQUAL 0 AND NOT ${GIT_VERSION} EQUAL ${CMAKE_VERSION_BUILD})
+  IF(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${CMAKE_VERSION_BUILD}")
     SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
   ENDIF()
 ENDIF()
@@ -34,7 +34,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
-OPTION( BUILD_DOCUMENTATION "Build Documenation" OFF )
+OPTION( BUILD_DOCUMENTATION "Build Documentation" OFF )
 
 IF(BUILD_DOCUMENTATION)
   Find_Package( Doxygen REQUIRED )

@@ -83,12 +83,26 @@ void ConstructionInspectorView::createLayout()
   ++row;
 
   // Standards
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,3);
+
+  ++row;
+
+  label = new QLabel();
+  label->setText("Measure Tags (Optional):");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   QVBoxLayout* vLayout = new QVBoxLayout();
 
   label = new QLabel();
   label->setText("Intended Surface Type: ");
-  label->setObjectName("H2");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_intendedSurfaceType = new OSComboBox2();
@@ -101,7 +115,7 @@ void ConstructionInspectorView::createLayout()
 
   label = new QLabel();
   label->setText("Standards Construction Type: ");
-  label->setObjectName("H2");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_standardsConstructionType = new QComboBox();
@@ -111,6 +125,13 @@ void ConstructionInspectorView::createLayout()
   vLayout->addWidget(m_standardsConstructionType);
 
   mainGridLayout->addLayout(vLayout,row,1);
+
+  ++row;
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,3);
 
   ++row;
 
