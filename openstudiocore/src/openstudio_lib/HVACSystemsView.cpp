@@ -117,7 +117,6 @@ HVACToolbarView::HVACToolbarView()
   controlsViewButton->setText("Control");
   zoomButtonGroup->addButton(controlsViewButton);
   controlLayout->addWidget(controlsViewButton);
-  controlsViewButton->hide();
 
   gridViewButton = new GrayButton();
   gridViewButton->setCheckable(true);
