@@ -258,6 +258,8 @@ void OSQuantityEdit2::onEditingFinished() {
 
         if (m_set) {
           (*m_set)(*modelValue);
+        } else if (m_setVoidReturn){
+          (*m_setVoidReturn)(*modelValue);
         }
       }
       catch (...) {}
