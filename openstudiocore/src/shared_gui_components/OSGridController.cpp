@@ -289,8 +289,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
         OSLineEdit2 * nameLineEdit = new OSLineEdit2();
 
         nameLineEdit->bind(mo,
-                           OptionalStringGetterBoolArg(boost::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),mo,_1)),
-                           boost::optional<StringSetterOptionalStringReturn>(boost::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,_1)));
+                           OptionalStringGetter(boost::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),mo,true)),
+                           boost::optional<StringSetter>(boost::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,_1)));
 
         widget = nameLineEdit;
 
