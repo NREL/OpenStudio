@@ -752,7 +752,8 @@ namespace detail {
   }
 
   bool Analysis_Impl::saveJSON(const openstudio::path& p,
-                               const AnalysisSerializationOptions& options,                               bool overwrite) const
+                               const AnalysisSerializationOptions& options,
+                               bool overwrite) const
   {
     QVariant json = toVariant(options);
     return openstudio::saveJSON(json,p,overwrite);

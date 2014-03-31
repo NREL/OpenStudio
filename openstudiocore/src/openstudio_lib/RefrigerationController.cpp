@@ -382,25 +382,25 @@ void RefrigerationController::refreshNow()
 
     if( m_currentSystem )
     {
-      m_detailView->setId(OSItemId(m_currentSystem->handle(),QString(),false));
+      m_detailView->setId(OSItemId(m_currentSystem->handle().toString(),QString(),false));
 
       if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> subcooler = m_currentSystem->liquidSuctionHeatExchangerSubcooler() )
       {
-        m_detailView->refrigerationSHXView->setId(OSItemId(subcooler->handle(),QString(),false));
+        m_detailView->refrigerationSHXView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
 
         m_detailView->refrigerationSHXView->setName(QString::fromStdString(subcooler->name().get()));
       }
 
       if( boost::optional<model::RefrigerationSubcoolerMechanical> subcooler = m_currentSystem->mechanicalSubcooler() )
       {
-        m_detailView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle(),QString(),false));
+        m_detailView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
 
         m_detailView->refrigerationSubCoolerView->setName(QString::fromStdString(subcooler->name().get()));
       }
 
       if( boost::optional<model::ModelObject> condenser = m_currentSystem->refrigerationCondenser() )
       {
-        m_detailView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle(),QString(),false));
+        m_detailView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle().toString(),QString(),false));
 
         m_detailView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
       }
@@ -417,7 +417,7 @@ void RefrigerationController::refreshNow()
       {
         RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
 
-        detailView->setId(OSItemId(it->handle(),QString(),false));
+        detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
         detailView->setLabel(QString::number(compressorIndex));
 
@@ -446,7 +446,7 @@ void RefrigerationController::refreshNow()
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
-        detailView->setId(OSItemId(it->handle(),QString(),false));
+        detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
         detailView->setName(QString::fromStdString(it->name().get()));
 
@@ -473,7 +473,7 @@ void RefrigerationController::refreshNow()
       {
         RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
-        detailView->setId(OSItemId(it->handle(),QString(),false));
+        detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
         detailView->setName(QString::fromStdString(it->name().get()));
 

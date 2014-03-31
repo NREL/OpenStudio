@@ -211,12 +211,12 @@ double VectorLinePlotData::y(size_t pos) const
  * --------------------------------------
 */
 
-LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WFlags flags /*= 0*/) : Plot2D(parent, flags)
+LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) : Plot2D(parent, flags)
 {
   init();
 }
 
-LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WFlags flags)
+LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WindowFlags flags)
 {
   Application::instance().application();
   return LinePlot::Ptr(new LinePlot(parent, flags));

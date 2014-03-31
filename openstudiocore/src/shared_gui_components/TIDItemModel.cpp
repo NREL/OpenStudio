@@ -51,7 +51,7 @@ public:
 
     QDomNodeList children = element.childNodes();
 
-    for( uint i = 0;
+    for( int i = 0;
          i < children.length();
          i++ )
     {

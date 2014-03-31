@@ -21,7 +21,7 @@
 
 namespace resultsviewer{
 
-PlotViewProperties::PlotViewProperties(QWidget *parent, Qt::WFlags flags)
+PlotViewProperties::PlotViewProperties(QWidget *parent, Qt::WindowFlags flags)
   : QDialog(parent, flags)
 {
   ui.setupUi(this);

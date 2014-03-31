@@ -50,7 +50,7 @@
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
 #include <utilities/data/TimeSeries.hpp>
 
-#include <QtCore/QMetaProperty>
+#include <QMetaProperty>
 
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>

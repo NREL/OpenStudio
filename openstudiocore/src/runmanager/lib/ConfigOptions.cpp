@@ -35,7 +35,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <Windows.h>
 // Undefine "max" defined by microsoft which conflicts with std::max
 #undef max
@@ -244,7 +244,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRTraceToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -262,7 +262,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toExpandObjectsToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -286,7 +286,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toBasementToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -324,7 +324,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toSlabToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -361,7 +361,7 @@ namespace runmanager {
   openstudio::runmanager::ToolInfo 
     ConfigOptions::toXMLPreprocessorToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -378,7 +378,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toEPlusToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -403,7 +403,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toIES2RadToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -420,7 +420,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRaImageToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
     static const char exename[] = "ra_bmp";
 #else
@@ -441,7 +441,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRadToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -458,7 +458,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -475,7 +475,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toDakotaToolInfo(const std::pair<ToolVersion, ToolLocationInfo>& dakota) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";

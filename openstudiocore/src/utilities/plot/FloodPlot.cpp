@@ -420,7 +420,7 @@ void MatrixFloodPlotData::init(){
  * --------------------------------------
 */
 
-FloodPlot::FloodPlot(QWidget* parent, Qt::WFlags flags) : Plot2D(parent, flags)
+FloodPlot::FloodPlot(QWidget* parent, Qt::WindowFlags flags) : Plot2D(parent, flags)
 {
   init();
 }
@@ -433,7 +433,7 @@ FloodPlot::FloodPlot(const Matrix& m)
   floodPlotData(data);
 }
 
-FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WFlags flags)
+FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WindowFlags flags)
 {
   Application::instance().application();
   return FloodPlot::Ptr(new FloodPlot(parent, flags));

@@ -23,7 +23,7 @@
 #include <string>
 #include <QTimer>
 #include "RunManager.hpp"
-#include <ui_RunManagerStatus.hxx>
+#include <ui_RunManagerStatus.h>
 #include "JobErrors.hpp"
 #include "JobStatusWidget.hpp"
 
@@ -41,7 +41,7 @@ namespace runmanager {
   public:
     //! Create a RunManagerStatus dialog for displaying job status
     //! \param[in] errors The errors to display
-    RunManagerStatus(QWidget *parent, Qt::WFlags flags, const RunManager &t_runmanager);
+    RunManagerStatus(QWidget *parent, Qt::WindowFlags flags, const RunManager &t_runmanager);
     virtual ~RunManagerStatus();
 
   private:

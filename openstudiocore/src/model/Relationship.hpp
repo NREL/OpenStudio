@@ -26,8 +26,8 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <QtCore/QVariant>
-#include <QtCore/QMetaProperty>
+#include <QVariant>
+#include <QMetaProperty>
 
 #include <string>
 

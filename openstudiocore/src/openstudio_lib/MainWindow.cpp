@@ -36,6 +36,7 @@
 #include <QGraphicsView>
 #include <QListWidget>
 #include <QMenuBar>
+#include <QMimeData>
 #include <QScrollArea>
 #include <QSettings>
 #include <QSizePolicy>

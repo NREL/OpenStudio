@@ -26,9 +26,9 @@
 #include <utilities/sql/SqlFile.hpp>
 #include <resultsviewer/ResultsViewerData.hpp>
 
-#include <QtGui/QMainWindow>
-#include <QtCore/QList>
-#include <QtGui/QMenu>
+#include <QMainWindow>
+#include <QList>
+#include <QMenu>
 #include <QTreeWidget>
 #include <string>
 #include <QApplication>

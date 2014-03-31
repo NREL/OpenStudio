@@ -22,7 +22,7 @@
 namespace openstudio {
 namespace runmanager {
 
-  JobErrorsDisplay::JobErrorsDisplay(QWidget *parent, Qt::WFlags flags, const JobErrors &joberror)
+  JobErrorsDisplay::JobErrorsDisplay(QWidget *parent, Qt::WindowFlags flags, const JobErrors &joberror)
     : QDialog(parent, flags)
   {
     ui.setupUi(this);

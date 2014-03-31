@@ -82,7 +82,7 @@ namespace openstudio{
     std::cout << "[Qt] <" << type << "> " << msg << std::endl;
   }
 
-  /// convienience function for SWIG, prefer macros in C++
+  /// convenience function for SWIG, prefer macros in C++
   void logFree(LogLevel level, const std::string& channel, const std::string& message)
   {
     BOOST_LOG_SEV(openstudio::Logger::instance().loggerFromChannel(channel), level) << message;
@@ -121,13 +121,13 @@ namespace openstudio{
     //this->addSink(m_standardErrLogger.sink());
 
     // register Qt message handler
-    qInstallMsgHandler(logQtMessage);
+    //qInstallMsgHandler(logQtMessage);
   }
 
   LoggerSingleton::~LoggerSingleton()
   {
     // unregister Qt message handler
-    qInstallMsgHandler(consoleLogQtMessage);
+    //qInstallMsgHandler(consoleLogQtMessage);
 
     delete m_mutex;
   }

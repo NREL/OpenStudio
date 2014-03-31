@@ -22,10 +22,6 @@ SET( ${target_name}_SRC
   StartupMenu.cpp
 )
 
-## ui files
-#SET( ${target_name}_UI 
-#)
-
 # moc files
 SET( ${target_name}_moc
   OpenStudioApp.hpp
@@ -33,18 +29,8 @@ SET( ${target_name}_moc
   StartupMenu.hpp
 )
 
-## resource files
-#SET( ${target_name}_qrc
-#  SystemOutliner.qrc
-#)
-
 ## Qt UI generation
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
-
-#qt4_wrap_ui( ${target_name}_UIS ${${target_name}_UI} )
-
-# generate rules for building source files from the resources
-#qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
 # configure the AboutBox.hpp file
 # this needs to be configured to embed the build number
@@ -79,11 +65,8 @@ ADD_EXECUTABLE( ${target_name}
   WIN32
   MACOSX_BUNDLE
   ${${target_name}_SRC}
-  #${${target_name}_UI}
-  #${${target_name}_UIS}
   ${${target_name}_moc_src}
   ${${target_name}_moc}
-  #${${target_name}_qrcs}
   ${ICON_SRC}
 )
 
@@ -107,15 +90,12 @@ AddPCH(${target_name})
 IF(APPLE)
   SET_TARGET_PROPERTIES(${target_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
   SET(plugin_dest_dir OpenStudio.app/Contents/MacOS)
-  SET(qtconf_dest_dir OpenStudio.app/Contents/Resources)
   SET(APPS "\${CMAKE_INSTALL_PREFIX}/OpenStudio.app")
 ELSEIF(WIN32)
   SET(plugin_dest_dir bin)
-  SET(qtconf_dest_dir bin)
   SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudio.exe")
 ELSE()
   SET(plugin_dest_dir bin)
-  SET(qtconf_dest_dir bin)
   SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenStudio")
 ENDIF()
 
@@ -126,30 +106,31 @@ INSTALL(TARGETS OpenStudio
 
 if( APPLE OR WIN32 )
 
-install( PROGRAMS "${QT_QSQLITE_PLUGIN_RELEASE}"
-         DESTINATION "${plugin_dest_dir}/sqldrivers/" 
-       )
+  get_target_property(QT_QSQLITE_PLUGIN Qt5::QSQLiteDriverPlugin LOCATION)
 
-get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN_RELEASE}" NAME)
+  install( PROGRAMS "${QT_QSQLITE_PLUGIN}"
+           DESTINATION "${plugin_dest_dir}/sqldrivers/" 
+         )
 
-SET(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
+  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
+
+  set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
 
 endif()
 
-# Install  qt_menu.nib on Apple
-IF( APPLE )
-  INSTALL(CODE "
-      file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-      DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/\") 
-      " )
-ENDIF()
+if( WIN32 )
 
-# Install a qt.conf file
-IF( APPLE OR WIN32 )
-  INSTALL(CODE "
-      file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"\")
-      " )
-ENDIF()
+  get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+
+  install( PROGRAMS "${QT_WINDOWS_PLUGIN}"
+           DESTINATION "${plugin_dest_dir}/platforms/" 
+         )
+
+  get_filename_component(QWINDOWS_PLUGIN_NAME "${QT_WINDOWS_PLUGIN}" NAME)
+
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QWINDOWS_PLUGIN_NAME}")
+
+endif()
 
 
 # directories to look for dependencies
@@ -211,6 +192,20 @@ IF( WIN32 OR APPLE )
       " )
 ENDIF()
 
+IF( WIN32 )
+  include(GetPrerequisites)
+    INSTALL(CODE "
+    include(GetPrerequisites)
+    GET_PREREQUISITES(\"${APPS}\" PREREQS 0 0 \"${APPS}\" \"${DIRS}\")
+    FOREACH(PREREQ \${PREREQS})
+      #message(\"\${PREREQ}\")
+      IF( \"\${PREREQ}\" MATCHES \".*ruby.*\" )
+        gp_resolve_item(\"${APPS}\" \"\${PREREQ}\" \"${APPS}\" \"${DIRS}\" FULL_PREREQ)
+        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${FULL_PREREQ}\" \"\${CMAKE_INSTALL_PREFIX}/bin/\")
+      ENDIF()
+    ENDFOREACH()
+    " )
+ENDIF()
 
 # Due to duplication of the Apple Qt framework inside of the OpenStudio application
 # we need to fix up and include the Ruby libraries inside of the application

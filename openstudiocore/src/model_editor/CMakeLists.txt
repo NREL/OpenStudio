@@ -94,13 +94,13 @@ SET( ${target_name}_qrc
 CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
 ## Qt MOC generation
-qt4_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
+qt5_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
 
 ## Qt UI Generation
-qt4_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
+qt5_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 
 # make the shared library
 ADD_LIBRARY( ${target_name} SHARED
@@ -195,13 +195,13 @@ SET( ${target_name}_qrc
 )
 
 ## Qt MOC generation
-qt4_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
+qt5_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
 
 ## Qt UI generation
-qt4_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
+qt5_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 
 # configure the AboutBox.hpp file
 # this needs to be configured to embed the build number

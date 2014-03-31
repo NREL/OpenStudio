@@ -242,7 +242,6 @@ SET( ${target_name}_depends
   litesql
   litesql-util
   miniziplib
-  qjson
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
   ${QT_LIBS}
@@ -315,12 +314,12 @@ ENDFOREACH()
 ###############################################################################
 
 ## Qt MOC generation
-qt4_wrap_cpp( bcl_moc_src ${bcl_moc} )
-qt4_wrap_cpp( cloud_moc_src ${cloud_moc} )
-qt4_wrap_cpp( core_moc_src ${core_moc} )
-qt4_wrap_cpp( idf_moc_src ${idfxx_moc} )
-qt4_wrap_cpp( data_moc_src ${data_moc} )
-qt4_wrap_cpp( plot_moc_src ${plot_moc} )
+qt5_wrap_cpp( bcl_moc_src ${bcl_moc} )
+qt5_wrap_cpp( cloud_moc_src ${cloud_moc} )
+qt5_wrap_cpp( core_moc_src ${core_moc} )
+qt5_wrap_cpp( idf_moc_src ${idfxx_moc} )
+qt5_wrap_cpp( data_moc_src ${data_moc} )
+qt5_wrap_cpp( plot_moc_src ${plot_moc} )
 
 # qrc files
 SET( bcl_qrc
@@ -328,7 +327,7 @@ SET( bcl_qrc
 )
 
 # generate rules for building source files from the resources
-qt4_add_resources(bcl_qrc_src ${bcl_qrc})
+qt5_add_resources(bcl_qrc_src ${bcl_qrc})
 # set up groups of source files for Visual Studio
 SOURCE_GROUP( bcl FILES ${bcl_src} )
 SOURCE_GROUP( cloud FILES ${cloud_src} )

@@ -36,7 +36,7 @@
 
 #include <boost/bind.hpp>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <Windows.h>
 #else
 #include <signal.h>
@@ -196,7 +196,7 @@ namespace detail {
 
     // set up path to be binary directory to catch ancillary tools
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     env.insert("PATH", openstudio::toQString(m_tool.localBinPath.parent_path()) + ";" + env.value("PATH"));
 #else
     env.insert("PATH", openstudio::toQString(m_tool.localBinPath.parent_path()) + ":" + env.value("PATH"));
@@ -230,7 +230,7 @@ namespace detail {
   {
     if (t_process.state() == QProcess::Running)
     {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
       PROCESS_INFORMATION *pinfo = (PROCESS_INFORMATION*)t_process.pid();
       if (pinfo)
       {

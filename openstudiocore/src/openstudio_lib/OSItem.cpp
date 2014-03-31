@@ -30,16 +30,17 @@
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
+#include <QDrag>
 #include <QLabel>
+#include <QMetaType>
+#include <QMimeData>
 #include <QMouseEvent>
+#include <QPaintEngine>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
 #include <QResizeEvent>
 #include <QStyleOption>
-#include <QMimeData>
-#include <QMetaType>
-#include <QPaintEngine>
 
 namespace openstudio {
 

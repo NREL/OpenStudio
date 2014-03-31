@@ -44,7 +44,7 @@ StartupView::StartupView( QWidget * parent )
 
   setStyleSheet("openstudio--StartupView { background: #E6E6E6; }");
   
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   setWindowFlags(Qt::FramelessWindowHint);
 #else
   setWindowFlags(Qt::CustomizeWindowHint);
@@ -174,7 +174,7 @@ StartupView::StartupView( QWidget * parent )
 
 void StartupView::resizeEvent(QResizeEvent * event)
 {
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   QPainterPath path;
   path.addRoundedRect(rect(),9.0,9.0);
   QPolygon p = path.toFillPolygon().toPolygon();

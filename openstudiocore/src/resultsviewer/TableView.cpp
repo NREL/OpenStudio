@@ -36,8 +36,8 @@ namespace resultsviewer{
     setContextMenuPolicy(Qt::CustomContextMenu);
     horizontalHeader()->setSortIndicator(0,Qt::AscendingOrder);
     horizontalHeader()->setSortIndicatorShown(true);
-    horizontalHeader()->setClickable(true);
-    horizontalHeader()->setMovable(true);
+    horizontalHeader()->setSectionsClickable(true);
+    horizontalHeader()->setSectionsMovable(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     m_slHeaders  << tr("Variable Name") << tr("Key Value") << tr("Reporting Frequency") << tr("Alias") << tr("Environment Period") << tr("File");

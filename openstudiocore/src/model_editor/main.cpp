@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
   app.setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");
   app.setApplicationName("ModelEditor");
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
   //app.setQuitOnLastWindowClosed(false);
   #endif
 

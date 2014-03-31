@@ -26,12 +26,12 @@
 #include <utilities/core/String.hpp>
 #include <utilities/core/System.hpp>
 
-#include <qjson/parser.h>
-#include <qjson/serializer.h>
-
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QList>
 #include <QProcess>
 #include <QSettings>
@@ -1553,11 +1553,9 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("launch_server");
       
-      QVariantMap options;
-      options.insert("instance_type", toQString(m_awsSettings.serverInstanceType()));
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      QJsonObject options;
+      options["instance_type"] = QJsonValue(toQString(m_awsSettings.serverInstanceType()));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1575,21 +1573,19 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("launch_workers");
       
-      QVariantMap options;
-      options.insert("instance_type", toQString(m_awsSettings.workerInstanceType()));
-      options.insert("num", m_awsSettings.numWorkers());
-      options.insert("server_id", toQString(m_awsSession.serverId()));
-      options.insert("server_procs", m_awsSession.numServerProcessors());
-      options.insert("timestamp", toQString(m_awsSession.timestamp()));
+      QJsonObject options;
+      options["instance_type"] = QJsonValue(toQString(m_awsSettings.workerInstanceType()));
+      options["num"] = QJsonValue(static_cast<int>(m_awsSettings.numWorkers()));
+      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      options["server_procs"] = QJsonValue(static_cast<int>(m_awsSession.numServerProcessors()));
+      options["timestamp"] = QJsonValue(toQString(m_awsSession.timestamp()));
 
       if (m_privateKey.open()) {
         m_privateKey.write(m_awsSession.privateKey().c_str());
-        options.insert("private_key", m_privateKey.fileName());
+        options["private_key"] = QJsonValue(m_privateKey.fileName());
         m_privateKey.close();
       }
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1607,11 +1603,9 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("instance_status");
       
-      QVariantMap options;
-      options.insert("instance_id", toQString(m_awsSession.serverId()));
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      QJsonObject options;
+      options["instance_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1645,17 +1639,15 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("terminate_session");
       
-      QVariantMap options;
+      QJsonObject options;
       QStringList workerIds;
       Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
         workerIds.push_back(toQString(workerId));
       }
-      options.insert("server_id", toQString(m_awsSession.serverId()));
-      options.insert("worker_ids", workerIds);
+      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      options["worker_ids"] = QJsonValue::fromVariant(workerIds);
       
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1673,17 +1665,15 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("termination_status");
       
-      QVariantMap options;
+      QJsonObject options;
       QStringList workerIds;
       Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
         workerIds.push_back(toQString(workerId));
       }
-      options.insert("server_id", toQString(m_awsSession.serverId()));
-      options.insert("worker_ids", workerIds);
+      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      options["worker_ids"] = QJsonValue::fromVariant(workerIds);
       
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1729,16 +1719,15 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) return true;
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) return true;
 
-        int code = map["error"].toMap()["code"].toInt();
+        int code = json.object()["error"].toObject()["code"].toInt();
         return (code != 503);
       } else {
-        logError("Error parsing serviceAvailable JSON: " + toString(parser.errorString()));
+        logError("Error parsing serviceAvailable JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1751,20 +1740,19 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) return true;
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) return true;
 
-        int code = map["error"].toMap()["code"].toInt();
+        int code = json.object()["error"].toObject()["code"].toInt();
         if (code == 401) {
           logError("Invalid Access Key");
         } else if (code == 403) {
           logError("Invalid Secret Key");
         }
       } else {
-        logError("Error parsing validateCredentials JSON: " + toString(parser.errorString()));
+        logError("Error parsing validateCredentials JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1777,18 +1765,17 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          m_lastTotalInstances = map["instances"].toUInt();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          m_lastTotalInstances = json.object()["instances"].toInt();
           if (m_awsSettings.numWorkers() + 1 + m_lastTotalInstances <= 20) return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing resourcesAvailableToStart JSON: " + toString(parser.errorString()));
+        logError("Error parsing resourcesAvailableToStart JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1801,25 +1788,24 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          m_awsSession.setTimestamp(map["timestamp"].toString().toStdString());
-          m_awsSession.setPrivateKey(map["private_key"].toString().toStdString());
-          m_awsSession.setServerUrl(Url(map["server"].toMap()["ip"].toString()));
-          m_awsSession.setServerId(map["server"].toMap()["id"].toString().toStdString());
-          m_awsSession.setNumServerProcessors(map["server"].toMap()["procs"].toUInt());
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          m_awsSession.setTimestamp(json.object()["timestamp"].toString().toStdString());
+          m_awsSession.setPrivateKey(json.object()["private_key"].toString().toStdString());
+          m_awsSession.setServerUrl(Url(json.object()["server"].toObject()["ip"].toString()));
+          m_awsSession.setServerId(json.object()["server"].toObject()["id"].toString().toStdString());
+          m_awsSession.setNumServerProcessors(json.object()["server"].toObject()["procs"].toInt());
 
-          emit CloudProvider_Impl::serverStarted(Url(map["server"].toMap()["ip"].toString()));
+          emit CloudProvider_Impl::serverStarted(Url(json.object()["server"].toObject()["ip"].toString()));
 
           return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing serverStarted JSON: " + toString(parser.errorString()));
+        logError("Error parsing serverStarted JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1833,18 +1819,17 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
           unsigned numWorkerProcessors = 0;
-          Q_FOREACH(QVariant worker, map["workers"].toList()) {
-            m_awsSession.addWorkerUrl(Url(worker.toMap()["ip"].toString()));
-            m_awsSession.addWorkerId(worker.toMap()["id"].toString().toStdString());
-            if (numWorkerProcessors == 0) numWorkerProcessors = worker.toMap()["procs"].toUInt();
+          Q_FOREACH(QJsonValue worker, json.object()["workers"].toArray()) {
+            m_awsSession.addWorkerUrl(Url(worker.toObject()["ip"].toString()));
+            m_awsSession.addWorkerId(worker.toObject()["id"].toString().toStdString());
+            if (numWorkerProcessors == 0) numWorkerProcessors = worker.toObject()["procs"].toInt();
 
-            emit CloudProvider_Impl::workerStarted(Url(worker.toMap()["ip"].toString()));
+            emit CloudProvider_Impl::workerStarted(Url(worker.toObject()["ip"].toString()));
           }
           m_awsSession.setNumWorkerProcessors(numWorkerProcessors);
 
@@ -1852,10 +1837,10 @@ namespace openstudio{
           
           return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing workerStarted JSON: " + toString(parser.errorString()));
+        logError("Error parsing workerStarted JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1868,19 +1853,18 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          std::string status = map[toQString(m_awsSession.serverId())].toString().toStdString();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          std::string status = json.object()[toQString(m_awsSession.serverId())].toString().toStdString();
           if (status == "running") return true;
           logError("Server is not running (" + m_awsSession.serverId() + ": " + status + ")");
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         }
       } else {
-        logError("Error parsing checkServerRunning JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkServerRunning JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1893,15 +1877,14 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
           std::vector<std::string> running;
           std::vector<std::string> notRunning;
           Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
-            std::string status = map[toQString(workerId)].toString().toStdString();
+            std::string status = json.object()[toQString(workerId)].toString().toStdString();
             if (status == "running") {
               running.push_back(workerId);
             } else {
@@ -1912,10 +1895,10 @@ namespace openstudio{
           QString output = QString::number(notRunning.size()) + "/" + QString::number(m_awsSession.workerIds().size()) + " workers are not running (" + toQString(boost::algorithm::join(notRunning, ", ")) + ")";
           logError(output.toStdString());
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing checkWorkerRunning JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkWorkerRunning JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1928,21 +1911,20 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
           m_lastTerminateCompleted = true;
 
           emit CloudProvider_Impl::terminated();
           
           return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing instancesStopped JSON: " + toString(parser.errorString()));
+        logError("Error parsing instancesStopped JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1955,21 +1937,20 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          if (map["all_instances_terminated"].toBool()) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          if (json.object()["all_instances_terminated"].toBool()) {
             emit CloudProvider_Impl::terminated();
             
             return true;
           }
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing checkTerminated JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkTerminated JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1982,14 +1963,13 @@ namespace openstudio{
         return 0.0;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          return map["estimated_charges"].toDouble();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          return json.object()["estimated_charges"].toDouble();
         } else {
-          QString message = map["error"].toMap()["message"].toString();
+          QString message = json.object()["error"].toObject()["message"].toString();
           if (message == "InvalidClientTokenId") {
             logError("Invalid Access Key");
           } else if (message == "SignatureDoesNotMatch") {
@@ -1999,7 +1979,7 @@ namespace openstudio{
           }
         } 
       } else {
-        logError("Error parsing checkEstimatedCharges JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkEstimatedCharges JSON: " + toString(err.errorString()));
       }
       
       return 0.0;
@@ -2012,24 +1992,23 @@ namespace openstudio{
         return 0;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          return map["total_instances"].toUInt();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          return json.object()["total_instances"].toInt();
         } else {
-          int code = map["error"].toMap()["code"].toInt();
+          int code = json.object()["error"].toObject()["code"].toInt();
           if (code == 401) {
             logError("Invalid Access Key");
           } else if (code == 403) {
             logError("Invalid Secret Key");
           } else {
-            logError(map["error"].toMap()["message"].toString().toStdString());
+            logError(json.object()["error"].toObject()["message"].toString().toStdString());
           }
         } 
       } else {
-        logError("Error parsing checkTotalInstances JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkTotalInstances JSON: " + toString(err.errorString()));
       }
       
       return 0;

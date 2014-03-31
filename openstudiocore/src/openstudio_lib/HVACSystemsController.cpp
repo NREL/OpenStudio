@@ -567,7 +567,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
 
   if( boost::optional<model::Loop> loop = modelObject.optionalCast<model::Loop>() )
   {
-    m_hvacSystemsController->setCurrentHandle(loop->handle());
+    m_hvacSystemsController->setCurrentHandle(loop->handle().toString());
 
     return;
   }
@@ -582,7 +582,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
       {
         if( boost::optional<model::PlantLoop> plantLoop = comp->plantLoop() )
         {
-          m_hvacSystemsController->setCurrentHandle(plantLoop->handle());
+          m_hvacSystemsController->setCurrentHandle(plantLoop->handle().toString());
         }
 
         return;
@@ -591,7 +591,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
       {
         if( boost::optional<model::AirLoopHVAC> airLoopHVAC = comp->airLoopHVAC() )
         {
-          m_hvacSystemsController->setCurrentHandle(airLoopHVAC->handle());
+          m_hvacSystemsController->setCurrentHandle(airLoopHVAC->handle().toString());
         }
 
         return;
@@ -606,7 +606,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
         {
           if( boost::optional<model::PlantLoop> secondaryPlantLoop = comp->secondaryPlantLoop() )
           {
-            m_hvacSystemsController->setCurrentHandle(secondaryPlantLoop->handle());
+            m_hvacSystemsController->setCurrentHandle(secondaryPlantLoop->handle().toString());
 
             return;
           }
@@ -619,7 +619,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
         {
           if( boost::optional<model::PlantLoop> plantLoop = comp->plantLoop() )
           {
-            m_hvacSystemsController->setCurrentHandle(plantLoop->handle());
+            m_hvacSystemsController->setCurrentHandle(plantLoop->handle().toString());
 
             return;
           }
@@ -697,7 +697,7 @@ void HVACSystemsController::addToModel(AddToModelEnum addToModelEnum)
 
   if( loop )
   {
-    m_currentHandle = loop->handle();
+    m_currentHandle = loop->handle().toString();
   }
 }
 
@@ -745,11 +745,11 @@ void HVACSystemsController::onRemoveLoopClicked()
 
     if( i == 0 )
     {
-      setCurrentHandle(QUuid(chooser->itemData(i + 1).toString()));
+      setCurrentHandle(QUuid(chooser->itemData(i + 1).toString()).toString());
     }
     else
     {
-      setCurrentHandle(QUuid(chooser->itemData(i - 1).toString()));
+      setCurrentHandle(QUuid(chooser->itemData(i - 1).toString()).toString());
     }
 
     loop->remove();
@@ -762,7 +762,7 @@ void HVACLayoutController::onModelObjectSelected(model::OptionalModelObject & mo
   {
     if( boost::optional<model::WaterUseConnections> waterUseConnections = modelObject->optionalCast<model::WaterUseConnections>() )
     {
-      m_hvacSystemsController->setCurrentHandle(waterUseConnections->handle());
+      m_hvacSystemsController->setCurrentHandle(waterUseConnections->handle().toString());
     }
     else
     {
@@ -1292,7 +1292,7 @@ void HVACLayoutController::goToServiceWaterScene()
 {
   // A null QUuid signals the service water scene
 
-  m_hvacSystemsController->setCurrentHandle(QUuid());
+  m_hvacSystemsController->setCurrentHandle(QUuid().toString());
 }
 
 void HVACLayoutController::clearSceneSelection()

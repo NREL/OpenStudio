@@ -72,11 +72,21 @@ FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/worker_script.sh.template" DESTINATIO
 # install qt plugins and fixup for apple
 
 IF( WIN32 OR APPLE )
-  install( PROGRAMS "${QT_QSQLITE_PLUGIN_RELEASE}"
+  get_target_property(QT_QSQLITE_PLUGIN Qt5::QSQLiteDriverPlugin LOCATION)
+
+  install( PROGRAMS "${QT_QSQLITE_PLUGIN}"
            DESTINATION "Ruby/openstudio/sqldrivers/"
          )
 
-  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN_RELEASE}" NAME)
+  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
+
+  IF( WIN32 )
+    get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+
+    install( PROGRAMS "${QT_WINDOWS_PLUGIN}"
+             DESTINATION "Ruby/openstudio/platforms/" 
+           )
+  ENDIF()
 
   IF(APPLE)
     SET(QTPLUGIN "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME}")
@@ -136,7 +146,6 @@ IF (BUILD_RUBY_GEM)
       execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_directory \"\${CMAKE_INSTALL_PREFIX}/share/openstudio/osversion\" \"${GEMDIR}/share/openstudio/osversion\")
 
       IF( qtinstalled )
-        file(WRITE \"${GEMDIR}/lib/qt.conf\" \"\")
         execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_directory \"${QT_PLUGINS_DIR}\" \"${GEMDIR}/lib/plugins\")
       ENDIF()
 

@@ -22,7 +22,7 @@
 
 #include <QDialog>
 
-#include <model_editor/ui_precisiondialog.hxx>
+#include <model_editor/ui_precisiondialog.h>
 #include <model_editor/ModelEditorAPI.hpp>
 
 class MODELEDITOR_API IGPrecisionDialog:

@@ -32,12 +32,12 @@ SET( ${target_name}_qrc
 )
 
 ## Qt UI generation
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
-qt4_wrap_ui( ${target_name}_UIS ${${target_name}_UI} )
+qt5_wrap_ui( ${target_name}_UIS ${${target_name}_UI} )
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 
 # configure the AboutBox.hpp file
 # this needs to be configured to embed the build number
@@ -93,12 +93,10 @@ TARGET_LINK_LIBRARIES( ${target_name}  ${depends} )
 # Now the installation stuff below
 #--------------------------------------------------------------------------------
 SET(plugin_dest_dir bin)
-SET(qtconf_dest_dir bin)
 SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/RunManager")
 IF(APPLE)
   SET_TARGET_PROPERTIES(${target_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
   SET(plugin_dest_dir RunManager.app/Contents/MacOS)
-  SET(qtconf_dest_dir RunManager.app/Contents/Resources)
   SET(APPS "\${CMAKE_INSTALL_PREFIX}/RunManager.app")
 ENDIF(APPLE)
 IF(WIN32)
@@ -113,27 +111,6 @@ INSTALL(TARGETS RunManager
     RUNTIME DESTINATION bin
     )
 
-
-#--------------------------------------------------------------------------------
-# Install needed Qt plugins by copying directories from the qt installation
-# One can cull what gets copied by using 'REGEX "..." EXCLUDE'
-#INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${plugin_dest_dir}/plugins )
-
-#--------------------------------------------------------------------------------
-# install a qt.conf file
-# this inserts some cmake code into the install script to write the file
-IF( APPLE )
-  INSTALL(CODE "
-      file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-      DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/\") 
-      " )
-ENDIF()
-
-IF( APPLE OR WIN32 )
-  INSTALL(CODE "
-      file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"\")
-      " )
-ENDIF()
 
 # Linux desktop integration
 IF (UNIX AND NOT APPLE AND "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
@@ -159,16 +136,23 @@ ENDIF()
 # directories to look for dependencies
 SET(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
 
-# Now the work of copying dependencies into the bundle/package
-# The quotes are escaped and variables to use at install time have their $ escaped
-# An alternative is the do a configure_file() on a script and use install(SCRIPT  ...).
-# Note that the image plugins depend on QtSvg and QtXml, and it got those copied
-# over.
+if( WIN32 )
+
+  get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+
+  install( PROGRAMS "${QT_WINDOWS_PLUGIN}"
+           DESTINATION "${plugin_dest_dir}/platforms/" 
+         )
+
+  get_filename_component(QWINDOWS_PLUGIN_NAME "${QT_WINDOWS_PLUGIN}" NAME)
+
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QWINDOWS_PLUGIN_NAME}")
+
+endif()
+
 IF( WIN32 OR APPLE )
   INSTALL(CODE "
-      file(GLOB_RECURSE QTPLUGINS
-        \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
       include(BundleUtilities)
-      fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
+      fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
       " )
 ENDIF()

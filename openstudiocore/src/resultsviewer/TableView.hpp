@@ -26,7 +26,7 @@
 #include <utilities/sql/SqlFile.hpp>
 #include <resultsviewer/ResultsViewerData.hpp>
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QTableWidget>
 #include <string>
 #include <QApplication>

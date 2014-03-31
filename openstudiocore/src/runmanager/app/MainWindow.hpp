@@ -22,7 +22,7 @@
 
 #include <runmanager/app/AboutBox.hpp>
 #include <runmanager/app/FileSystemSearch.hpp>
-#include <runmanager/app/ui_MainWindow.hxx>
+#include <runmanager/app/ui_MainWindow.h>
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/JobStatusWidget.hpp>
 #include <runmanager/lib/RunManager.hpp>
@@ -55,7 +55,7 @@ namespace runmanager {
     Q_OBJECT
 
   public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0, bool newdb = false);
+    MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0, bool newdb = false);
     virtual ~MainWindow();
 
   protected:

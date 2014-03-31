@@ -23,7 +23,7 @@
 #include <string>
 #include <QTimer>
 #include <runmanager/lib//RunManager.hpp>
-#include <runmanager/lib/ui_RunManagerStatusWidget.hxx>
+#include <runmanager/lib/ui_RunManagerStatusWidget.h>
 #include "JobErrors.hpp"
 #include "RunManagerAPI.hpp"
 #include <QStandardItem>

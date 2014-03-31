@@ -272,7 +272,7 @@ QSharedPointer<LibraryTypeListController> LocalLibraryController::createLibraryL
 
     QDomNodeList termElements = taxonomyElement.elementsByTagName("term");
 
-    for( uint j = 0; j < termElements.length(); j++ )
+    for( int j = 0; j < termElements.length(); j++ )
     {
       QDomElement termElement = termElements.at(j).toElement();
 

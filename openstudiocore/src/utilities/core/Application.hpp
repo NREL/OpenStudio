@@ -23,7 +23,7 @@
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/core/Singleton.hpp>
 
-#include <QtGui/QApplication>
+#include <QApplication>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>

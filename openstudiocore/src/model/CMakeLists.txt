@@ -1075,7 +1075,7 @@ SET( ${target_name}_moc
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
 
 SET( ${target_name}_depends

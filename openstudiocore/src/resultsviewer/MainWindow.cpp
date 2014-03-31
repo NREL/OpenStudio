@@ -27,6 +27,7 @@
 
 #include <QComboBox>
 #include <QDesktopServices>
+#include <QDrag>
 #include <QProcess>
 #include <QProgressDialog>
 #include <QSplitter>
@@ -41,7 +42,7 @@ using openstudio::toQString;
 
 namespace resultsviewer{
 
-  MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
+  MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     : QMainWindow(parent, flags)
   {
     // plot number used when plots are created - keeps track of max number created
